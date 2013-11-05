@@ -21,6 +21,7 @@ import java.util.List;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.metadata.NoDataException;
@@ -51,10 +52,11 @@ import com.vaadin.shared.AbstractComponentState;
 public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
     public static final String SUBPART_SEPARATOR = "#";
-    private ComponentLocator componentLocator;
 
-    public VaadinFinderLocatorStrategy(ComponentLocator componentLocator) {
-        this.componentLocator = componentLocator;
+    private final ApplicationConnection client;
+
+    public VaadinFinderLocatorStrategy(ApplicationConnection clientConnection) {
+        client = clientConnection;
     }
 
     /**
@@ -77,8 +79,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         if (path.startsWith("//VNotification")) {
             return findNotificationByPath(path);
         }
-        return getElementByPathStartingAtConnector(path, componentLocator
-                .getClient().getUIConnector());
+        return getElementByPathStartingAtConnector(path,
+                client.getUIConnector());
     }
 
     /**
@@ -112,7 +114,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
     @Override
     public Element getElementByPathStartingAt(String path, Element root) {
         return getElementByPathStartingAtConnector(path,
-                Util.findPaintable(componentLocator.getClient(), root));
+                Util.findPaintable(client, root));
     }
 
     /**

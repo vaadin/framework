@@ -20,7 +20,6 @@ import java.util.List;
 
 import com.google.gwt.user.client.Element;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.BrowserInfo;
 
 /**
  * ComponentLocator provides methods for generating a String locator for a given
@@ -34,14 +33,12 @@ import com.vaadin.client.BrowserInfo;
 public class ComponentLocator {
 
     private final List<LocatorStrategy> locatorStrategies;
-    private final LegacyLocatorStrategy legacyLocatorStrategy = new LegacyLocatorStrategy(
-            this);
 
     /**
      * Reference to ApplicationConnection instance.
      */
 
-    private ApplicationConnection client;
+    private final ApplicationConnection client;
 
     /**
      * Construct a ComponentLocator for the given ApplicationConnection.
@@ -51,8 +48,8 @@ public class ComponentLocator {
      */
     public ComponentLocator(ApplicationConnection client) {
         this.client = client;
-        locatorStrategies = Arrays.asList(
-                new VaadinFinderLocatorStrategy(this), legacyLocatorStrategy);
+        locatorStrategies = Arrays.asList(new VaadinFinderLocatorStrategy(
+                client), new LegacyLocatorStrategy(client));
     }
 
     /**
@@ -74,44 +71,13 @@ public class ComponentLocator {
      *         String locator could not be created.
      */
     public String getPathForElement(Element targetElement) {
-        // For now, only use the legacy locator to find paths
-        return legacyLocatorStrategy
-                .getPathForElement(getElement(targetElement));
-    }
-
-    /**
-     * Returns the element passed to the method. Or in case of Firefox 15,
-     * returns the real element that is in the DOM instead of the element passed
-     * to the method (which is the same element but not ==).
-     * 
-     * @param targetElement
-     *            the element to return
-     * @return the element passed to the method
-     */
-    private Element getElement(Element targetElement) {
-        if (targetElement == null) {
-            return null;
+        for (LocatorStrategy strategy : locatorStrategies) {
+            String path = strategy.getPathForElement(targetElement);
+            if (null != path) {
+                return path;
+            }
         }
-
-        if (!BrowserInfo.get().isFirefox()) {
-            return targetElement;
-        }
-
-        if (BrowserInfo.get().getBrowserMajorVersion() != 15) {
-            return targetElement;
-        }
-
-        // Firefox 15, you make me sad
-        if (targetElement.getNextSibling() != null) {
-            return (Element) targetElement.getNextSibling()
-                    .getPreviousSibling();
-        }
-        if (targetElement.getPreviousSibling() != null) {
-            return (Element) targetElement.getPreviousSibling()
-                    .getNextSibling();
-        }
-        // No siblings so this is the only child
-        return (Element) targetElement.getParentNode().getChild(0);
+        return null;
     }
 
     /**
@@ -127,9 +93,6 @@ public class ComponentLocator {
      *         could not be located.
      */
     public Element getElementByPath(String path) {
-        // As LegacyLocatorStrategy always is the last item in the list, it is
-        // always used as a last resort if no other strategies claim
-        // responsibility for the path syntax.
         for (LocatorStrategy strategy : locatorStrategies) {
             Element element = strategy.getElementByPath(path);
             if (null != element) {
@@ -153,9 +116,6 @@ public class ComponentLocator {
      *         could not be located.
      */
     public Element getElementByPathStartingAt(String path, Element root) {
-        // As LegacyLocatorStrategy always is the last item in the list, it is
-        // always used as a last resort if no other strategies claim
-        // responsibility for the path syntax.
         for (LocatorStrategy strategy : locatorStrategies) {
             Element element = strategy.getElementByPathStartingAt(path, root);
             if (null != element) {

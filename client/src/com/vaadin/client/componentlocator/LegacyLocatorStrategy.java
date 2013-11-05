@@ -25,6 +25,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.ServerConnector;
@@ -53,7 +54,7 @@ import com.vaadin.shared.communication.SharedState;
  * @author Vaadin Ltd
  */
 public class LegacyLocatorStrategy implements LocatorStrategy {
-    private final ComponentLocator componentLocator;
+
     /**
      * Separator used in the String locator between a parent and a child widget.
      */
@@ -70,14 +71,16 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      */
     static final String ROOT_ID = "Root";
 
-    public LegacyLocatorStrategy(ComponentLocator componentLocator) {
-        this.componentLocator = componentLocator;
+    private final ApplicationConnection client;
+
+    public LegacyLocatorStrategy(ApplicationConnection clientConnection) {
+        client = clientConnection;
     }
 
     @Override
     public String getPathForElement(Element targetElement) {
-        ComponentConnector connector = Util.findPaintable(
-                componentLocator.getClient(), targetElement);
+        ComponentConnector connector = Util
+                .findPaintable(client, targetElement);
 
         Widget w = null;
         if (connector != null) {
@@ -189,14 +192,12 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
         String parts[] = path.split(LegacyLocatorStrategy.SUBPART_SEPARATOR, 2);
         String widgetPath = parts[0];
 
-        Widget baseWidget = null;
-        if (null != baseElement) {
-            // Note that this only works if baseElement can be mapped to a
-            // widget to which the path is relative. Otherwise, the current
-            // implementation simply interprets the path as if baseElement was
-            // null.
-            baseWidget = Util.findWidget(baseElement, null);
-        }
+        // Note that this only works if baseElement can be mapped to a
+        // widget to which the path is relative. Otherwise, the current
+        // implementation simply interprets the path as if baseElement was
+        // null.
+        Widget baseWidget = Util.findWidget(baseElement, null);
+
         Widget w = getWidgetFromPath(widgetPath, baseWidget);
         if (w == null || !Util.isAttachedAndDisplayed(w)) {
             return null;
@@ -209,7 +210,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
             // Contains dom reference to a sub element of the widget
             String subPath = widgetPath.substring(pos);
-            return getElementByDOMPath(baseElement, subPath);
+            return getElementByDOMPath(w.getElement(), subPath);
         } else if (parts.length == 2) {
             if (w instanceof SubPartAware) {
                 return ((SubPartAware) w).getSubPartElement(parts[1]);
@@ -283,7 +284,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
         String parts[] = path.split(PARENTCHILD_SEPARATOR);
         Element element = baseElement;
 
-        for (String part : parts) {
+        for (int i = 0, l = parts.length; i < l; ++i) {
+            String part = parts[i];
             if (part.startsWith("domChild[")) {
                 String childIndexString = part.substring("domChild[".length(),
                         part.length() - 1);
@@ -311,6 +313,14 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                     return null;
                 }
 
+            } else {
+
+                path = parts[i];
+                for (int j = i + 1; j < l; ++j) {
+                    path += PARENTCHILD_SEPARATOR + parts[j];
+                }
+
+                return getElementByPathStartingAt(path, element);
             }
         }
 
@@ -386,10 +396,10 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
         } else if (w instanceof VUI) {
             return "";
         } else if (w instanceof VWindow) {
-            Connector windowConnector = ConnectorMap.get(
-                    componentLocator.getClient()).getConnector(w);
-            List<WindowConnector> subWindowList = componentLocator.getClient()
-                    .getUIConnector().getSubWindows();
+            Connector windowConnector = ConnectorMap.get(client)
+                    .getConnector(w);
+            List<WindowConnector> subWindowList = client.getUIConnector()
+                    .getSubWindows();
             int indexOfSubWindow = subWindowList.indexOf(windowConnector);
             return PARENTCHILD_SEPARATOR + "VWindow[" + indexOfSubWindow + "]";
         } else if (w instanceof RootPanel) {
@@ -442,6 +452,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * @return The Widget identified by the String locator or null if the widget
      *         could not be identified.
      */
+    @SuppressWarnings("unchecked")
     private Widget getWidgetFromPath(String path, Widget baseWidget) {
         Widget w = baseWidget;
         String parts[] = path.split(PARENTCHILD_SEPARATOR);
@@ -452,17 +463,19 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
             if (part.equals(ROOT_ID)) {
                 w = RootPanel.get();
             } else if (part.equals("")) {
-                w = componentLocator.getClient().getUIConnector().getWidget();
+                if (w == null) {
+                    w = client.getUIConnector().getWidget();
+                }
             } else if (w == null) {
                 String id = part;
                 // Must be old static pid (PID_S*)
-                ServerConnector connector = ConnectorMap.get(
-                        componentLocator.getClient()).getConnector(id);
+                ServerConnector connector = ConnectorMap.get(client)
+                        .getConnector(id);
                 if (connector == null) {
                     // Lookup by component id
                     // TODO Optimize this
-                    connector = findConnectorById(componentLocator.getClient()
-                            .getUIConnector(), id.substring(5));
+                    connector = findConnectorById(client.getUIConnector(),
+                            id.substring(5));
                 }
 
                 if (connector instanceof ComponentConnector) {
@@ -516,7 +529,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                 if (w instanceof VOverlay
                         && "VCalendarPanel".equals(widgetClassName)) {
                     // Vaadin 7.1 adds a wrapper for datefield popups
-                    parent = (Iterable<?>) ((Iterable) parent).iterator()
+                    parent = (Iterable<?>) ((Iterable<?>) parent).iterator()
                             .next();
                 }
                 /*
@@ -576,8 +589,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                  * compatibility
                  */
                 if (widgetClassName.equals("VWindow")) {
-                    List<WindowConnector> windows = componentLocator
-                            .getClient().getUIConnector().getSubWindows();
+                    List<WindowConnector> windows = client.getUIConnector()
+                            .getSubWindows();
                     List<VWindow> windowWidgets = new ArrayList<VWindow>(
                             windows.size());
                     for (WindowConnector wc : windows) {
@@ -585,7 +598,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                     }
                     iterator = windowWidgets.iterator();
                 } else if (widgetClassName.equals("VContextMenu")) {
-                    return componentLocator.getClient().getContextMenu();
+                    return client.getContextMenu();
                 } else {
                     iterator = (Iterator<? extends Widget>) parent.iterator();
                 }
