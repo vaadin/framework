@@ -131,8 +131,6 @@ public class W3ConformanceTests extends AbstractDirectoryScanningSassTests {
          * required!
          */
         final String[] excludelist = new String[] {
-                // Probable bug/limitation (filed as #12832)
-                "http://www.w3.org/Style/CSS/Test/CSS3/Selectors/current/html/tests/css3-modsel-15b.html",
 
                 // Probable bug/limitation (filed as #12833)
                 "http://www.w3.org/Style/CSS/Test/CSS3/Selectors/current/html/tests/css3-modsel-67.html",
@@ -148,7 +146,7 @@ public class W3ConformanceTests extends AbstractDirectoryScanningSassTests {
                 "http://www.w3.org/Style/CSS/Test/CSS3/Selectors/current/html/tests/css3-modsel-76b.html",
                 "http://www.w3.org/Style/CSS/Test/CSS3/Selectors/current/html/tests/css3-modsel-83.html",
 
-                // Probable bug/limitation (files as #12835)
+                // Invalid CSS, although sass-lang compiler accepts (see #12835)
                 "http://www.w3.org/Style/CSS/Test/CSS3/Selectors/current/html/tests/css3-modsel-154.html",
 
                 // Invalid CSS? sass-lang compiler fails

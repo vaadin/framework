@@ -1269,18 +1269,12 @@ String simple_selector(String selector, char comb) :
     pseudoElt = null;
 }
 {
-    ( simple_current=element_name() 
-	( cond=hash(cond) | cond=_class(cond) 
-	  | cond=attrib(cond) | cond=pseudo(cond) )*
-      | cond=hash(cond) ( cond=_class(cond) 
-			  | cond=attrib(cond) | cond=pseudo(cond) )*
-      | cond=_class(cond) ( cond=hash(cond) | cond=_class(cond) 
-		       | cond=attrib(cond) | cond=pseudo(cond) )*
-      | cond=pseudo(cond) ( cond=hash(cond) | cond=_class(cond) 
-		       | cond=attrib(cond) | cond=pseudo(cond) )*
-      | cond=attrib(cond) ( cond=hash(cond) | cond=_class(cond) 
-			    | cond=attrib(cond) | cond=pseudo(cond) )*
-      )
+    (  (simple_current=element_name() 
+	     ( cond=hash(cond) | cond=_class(cond) 
+	       | cond=attrib(cond) | cond=pseudo(cond) )* )
+     | ( cond = hash(cond) | cond=_class(cond) 
+	     | cond=attrib(cond) | cond=pseudo(cond) )+      
+     )
 	{
 	    if (simple_current == null) {
 		simple_current = "";
@@ -1726,8 +1720,7 @@ void includeDirective() :
     (<S>)*
     (name = property()|name = variableName(){ name = "$"+name;}
          |(name = functionName() 
-           args = argValuelist()) <RPARAN>)
-    (<S>)*
+           args = argValuelist()) <RPARAN> (<S>)*)
     ((";"(<S>)*)+
            {documentHandler.includeDirective(name, args);}
     | <LBRACE> (<S>)* {documentHandler.startIncludeContentBlock(name);}
