@@ -31,7 +31,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
-import org.junit.runner.Description;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -62,18 +61,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
             String className = testClass.getSimpleName();
             screenshotBaseName = className + "-" + testMethod;
-        }
-
-        @Override
-        protected void failed(Throwable e, Description description) {
-
-            // Notify Teamcity of failed test
-            if (!System.getProperty("teamcity.version", "").equals("")) {
-                System.out.print("##teamcity[publishArtifacts '");
-                System.out.println(getScreenshotErrorBaseName()
-                        + "* => screenshot-errors']");
-            }
-        }
+        };
     };
 
     /**
@@ -129,9 +117,28 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
             // Matched one comparison but not all, remove all error images +
             // HTML files
         } else {
-            // All comparisons failed, keep the main error image + HTML
-            screenshotFailures.add(mainReference.getName());
-            referenceToKeep = mainReference;
+            // Ensure we use the correct browser version (e.g. if running IE11
+            // and only an IE 10 reference was available, then mainReference
+            // will be for IE 10, not 11)
+            String originalName = getScreenshotReferenceName(identifier);
+            File exactVersionFile = new File(originalName);
+
+            if (!exactVersionFile.equals(mainReference)) {
+                // Rename png+html to have the correct version
+                File correctPng = getErrorFileFromReference(exactVersionFile);
+                File producedPng = getErrorFileFromReference(mainReference);
+                File correctHtml = htmlFromPng(correctPng);
+                File producedHtml = htmlFromPng(producedPng);
+
+                producedPng.renameTo(correctPng);
+                producedHtml.renameTo(correctHtml);
+                referenceToKeep = exactVersionFile;
+                screenshotFailures.add(exactVersionFile.getName());
+            } else {
+                // All comparisons failed, keep the main error image + HTML
+                screenshotFailures.add(mainReference.getName());
+                referenceToKeep = mainReference;
+            }
         }
 
         // Remove all PNG/HTML files we no longer need (failed alternative
@@ -140,15 +147,24 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
             File failurePng = getErrorFileFromReference(failedAlternative);
             if (failedAlternative != referenceToKeep) {
                 // Delete png + HTML
-                String htmlFileName = failurePng.getName().replace(".png",
-                        ".html");
-                File failureHtml = new File(failurePng.getParentFile(),
-                        htmlFileName);
+                File failureHtml = htmlFromPng(failurePng);
 
                 failurePng.delete();
                 failureHtml.delete();
             }
         }
+    }
+
+    /**
+     * Returns a new File which points to a .html file instead of the given .png
+     * file
+     * 
+     * @param png
+     * @return
+     */
+    private static File htmlFromPng(File png) {
+        return new File(png.getParentFile(), png.getName().replaceAll(
+                "\\.png$", ".png.html"));
     }
 
     /**

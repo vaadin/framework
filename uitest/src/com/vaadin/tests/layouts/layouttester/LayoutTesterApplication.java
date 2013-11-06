@@ -20,18 +20,20 @@ public class LayoutTesterApplication extends AbstractTestCase {
     Button nextButton = new Button("Next");
     private int layoutIndex = -1;
 
-    private static final String[] layoutGetters = new String[] {
-            "getCaptionsTests", "getIconsTests",
-            "getRequiredErrorIndicatorsTests", "getAlignmentTests",
-            "getExpandRatiosTests", "getMarginSpacingTests",
-            "getComponentAddReplaceMoveTests", "getComponentSizingTests",
-            "getLayoutSizingTests" };
+    static final String[] layoutGetters = new String[] { "getCaptionsTests",
+            "getIconsTests", "getRequiredErrorIndicatorsTests",
+            "getAlignmentTests", "getExpandRatiosTests",
+            "getMarginSpacingTests", "getComponentAddReplaceMoveTests",
+            "getComponentSizingTests", "getLayoutSizingTests" };
+    public static final String NEXT_BUTTON_ID = "nextButton";
+    private static final String LAYOUT_SELECT_ID = "layoutSelect";
 
     private LegacyWindow mainWindow;
     private NativeSelect layoutSelector;
 
     @Override
     public void init() {
+        nextButton.setId(NEXT_BUTTON_ID);
         mainWindow = new LegacyWindow("LayoutTesterApplication");
         setMainWindow(mainWindow);
         nextLayout();
@@ -112,6 +114,7 @@ public class LayoutTesterApplication extends AbstractTestCase {
     private NativeSelect getLayoutTypeSelect() {
         if (layoutSelector == null) {
             layoutSelector = new NativeSelect();
+            layoutSelector.setId(LAYOUT_SELECT_ID);
             layoutSelector.addItem(VerticalLayout.class);
             layoutSelector.addItem(HorizontalLayout.class);
             layoutSelector.addItem(GridLayout.class);

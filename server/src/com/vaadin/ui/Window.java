@@ -77,6 +77,16 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         public void windowModeChanged(WindowMode newState) {
             setWindowMode(newState);
         }
+
+        @Override
+        public void windowMoved(int x, int y) {
+            if (x != getState(false).positionX) {
+                setPositionX(x);
+            }
+            if (y != getState(false).positionY) {
+                setPositionY(y);
+            }
+        }
     };
 
     /**

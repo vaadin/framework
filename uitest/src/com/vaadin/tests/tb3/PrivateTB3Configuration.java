@@ -90,11 +90,12 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     }
 
     @Override
-    protected String getDeploymentPort() {
-        String port = getProperty(PORT_PROPERTY);
+    protected int getDeploymentPort() {
+        String portString = getProperty(PORT_PROPERTY);
 
-        if (port == null || "".equals(port)) {
-            port = "8888";
+        int port = 8888;
+        if (portString != null && !"".equals(portString)) {
+            port = Integer.parseInt(portString);
         }
 
         return port;

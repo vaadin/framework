@@ -1526,8 +1526,8 @@ void controlDirective() :
 void ifContentStatement() :
 {}
 {
-    contentDirective() | includeDirective() | media() | extendDirective() | styleRuleOrDeclarationOrNestedProperties() 
-    | keyframes() | LOOKAHEAD(variable()) variable() | listModifyDirective() | controlDirective()
+    contentDirective() | includeDirective() | media() | extendDirective() | styleRuleOrDeclarationOrNestedProperties()
+    | keyframes() | LOOKAHEAD(variable()) variable() | listModifyDirective() | controlDirective() | atRuleDeclaration()
 }
 
 void ifDirective() :
@@ -1543,7 +1543,7 @@ void ifDirective() :
   { documentHandler.startIfElseDirective();
     documentHandler.ifDirective(evaluator);
    }
-  ( ifContentStatement() )*
+  ( ifContentStatement() | fontFace() )*
   < RBRACE >(< S >)*
   (elseDirective())*
   { documentHandler.endIfElseDirective(); }
@@ -1562,7 +1562,7 @@ void elseDirective() :
   { if(!evaluator.trim().equals("")){ documentHandler.ifDirective(evaluator); }
     else{ documentHandler.elseDirective(); }  
   }
-  ( ifContentStatement() )*
+  ( ifContentStatement() | fontFace() )*
   < RBRACE >(< S >)*
 }
 
@@ -2382,8 +2382,9 @@ LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result
 		   && (Character.isDigit(s.charAt(i)) || (s.charAt(i) == '.'))) {
 		i++;
 	    }
+
 	    result = LexicalUnitImpl.createDimen(n.beginLine, n.beginColumn, prev, 
-						 Float.valueOf(s.substring(0, i)).floatValue(),
+						 number(op,n,s.length()-i),
 						 s.substring(i));
 	}
     | result=function(op, prev) ) )

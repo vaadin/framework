@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.LiveValue;
 import com.google.gwt.aria.client.RelevantValue;
@@ -63,6 +64,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -295,7 +297,7 @@ public class ApplicationConnection {
         }
 
         @Override
-        public com.google.gwt.event.shared.GwtEvent.Type<CommunicationHandler> getAssociatedType() {
+        public Type<CommunicationHandler> getAssociatedType() {
             return TYPE;
         }
 
@@ -315,7 +317,7 @@ public class ApplicationConnection {
         }
 
         @Override
-        public com.google.gwt.event.shared.GwtEvent.Type<CommunicationHandler> getAssociatedType() {
+        public Type<CommunicationHandler> getAssociatedType() {
             return TYPE;
         }
 
@@ -350,13 +352,41 @@ public class ApplicationConnection {
         public static Type<CommunicationHandler> TYPE = new Type<CommunicationHandler>();
 
         @Override
-        public com.google.gwt.event.shared.GwtEvent.Type<CommunicationHandler> getAssociatedType() {
+        public Type<CommunicationHandler> getAssociatedType() {
             return TYPE;
         }
 
         @Override
         protected void dispatch(CommunicationHandler handler) {
             handler.onResponseHandlingStarted(this);
+        }
+    }
+
+    /**
+     * Event triggered when a application is stopped by calling
+     * {@link ApplicationConnection#setApplicationRunning(false)}.
+     * 
+     * To listen for the event add a {@link ApplicationStoppedHandler} by
+     * invoking
+     * {@link ApplicationConnection#addHandler(ApplicationStoppedEvent.Type, ApplicationStoppedHandler)}
+     * to the {@link ApplicationConnection}
+     * 
+     * @since 7.1.8
+     * @author Vaadin Ltd
+     */
+    public static class ApplicationStoppedEvent extends
+            GwtEvent<ApplicationStoppedHandler> {
+
+        public static Type<ApplicationStoppedHandler> TYPE = new Type<ApplicationStoppedHandler>();
+
+        @Override
+        public Type<ApplicationStoppedHandler> getAssociatedType() {
+            return TYPE;
+        }
+
+        @Override
+        protected void dispatch(ApplicationStoppedHandler listener) {
+            listener.onApplicationStopped(this);
         }
     }
 
@@ -376,6 +406,27 @@ public class ApplicationConnection {
          *         perform normal error reporting.
          */
         public boolean onError(String details, int statusCode);
+    }
+
+    /**
+     * A listener for listening to application stopped events. The listener can
+     * be added to a {@link ApplicationConnection} by invoking
+     * {@link ApplicationConnection#addHandler(ApplicationStoppedEvent.Type, ApplicationStoppedHandler)}
+     * 
+     * @since 7.1.8
+     * @author Vaadin Ltd
+     */
+    public interface ApplicationStoppedHandler extends EventHandler {
+
+        /**
+         * Triggered when the {@link ApplicationConnection} marks a previously
+         * running application as stopped by invoking
+         * {@link ApplicationConnection#setApplicationRunning(false)}
+         * 
+         * @param event
+         *            the event triggered by the {@link ApplicationConnection}
+         */
+        void onApplicationStopped(ApplicationStoppedEvent event);
     }
 
     private CommunicationErrorHandler communicationErrorDelegate = null;
@@ -755,6 +806,10 @@ public class ApplicationConnection {
                     showCommunicationError(details, statusCode);
                 }
                 endRequest();
+
+                // Consider application not running any more and prevent all
+                // future requests
+                setApplicationRunning(false);
             }
 
             @Override
@@ -886,10 +941,10 @@ public class ApplicationConnection {
 
         VConsole.log("JSON parsing took "
                 + (new Date().getTime() - start.getTime()) + "ms");
-        if (applicationRunning) {
+        if (isApplicationRunning()) {
             handleReceivedJSONMessage(start, jsonText, json);
         } else {
-            applicationRunning = true;
+            setApplicationRunning(true);
             handleWhenCSSLoaded(jsonText, json);
         }
     }
@@ -1125,7 +1180,7 @@ public class ApplicationConnection {
         retryCanceledActiveRequest = false;
         webkitMaybeIgnoringRequests = false;
 
-        if (applicationRunning) {
+        if (isApplicationRunning()) {
             checkForPendingVariableBursts();
             runPostRequestHooks(configuration.getRootPanelId());
         }
@@ -1460,7 +1515,7 @@ public class ApplicationConnection {
                                 error.getString("message"),
                                 error.getString("url"));
 
-                        applicationRunning = false;
+                        setApplicationRunning(false);
                     }
                     Profiler.leave("Error handling");
                 }
@@ -2383,6 +2438,12 @@ public class ApplicationConnection {
      */
     public void addMethodInvocationToQueue(MethodInvocation invocation,
             boolean delayed, boolean lastOnly) {
+        if (!isApplicationRunning()) {
+            getLogger()
+                    .warning(
+                            "Trying to invoke method on not yet started or stopped application");
+            return;
+        }
         String tag;
         if (lastOnly) {
             tag = invocation.getLastOnlyTag();
@@ -2441,7 +2502,7 @@ public class ApplicationConnection {
     private boolean deferedSendPending = false;
 
     private void doSendPendingVariableChanges() {
-        if (applicationRunning) {
+        if (isApplicationRunning()) {
             if (hasActiveRequest() || (push != null && !push.isActive())) {
                 // skip empty queues if there are pending bursts to be sent
                 if (pendingInvocations.size() > 0 || pendingBursts.size() == 0) {
@@ -2453,6 +2514,11 @@ public class ApplicationConnection {
             } else {
                 buildAndSendVariableBurst(pendingInvocations);
             }
+        } else {
+            getLogger()
+                    .warning(
+                            "Trying to send variable changes from not yet started or stopped application");
+            return;
         }
     }
 
@@ -3388,6 +3454,9 @@ public class ApplicationConnection {
     }
 
     public void setApplicationRunning(boolean running) {
+        if (applicationRunning && !running) {
+            eventBus.fireEvent(new ApplicationStoppedEvent());
+        }
         applicationRunning = running;
     }
 
@@ -3488,6 +3557,10 @@ public class ApplicationConnection {
         } else {
             return "XHR";
         }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(ApplicationConnection.class.getName());
     }
 
 }

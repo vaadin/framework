@@ -34,6 +34,18 @@ import com.vaadin.ui.UI;
 
 public abstract class PushLargeData extends AbstractTestUIWithLog {
 
+    // 1MB
+    static final int DEFAULT_SIZE_BYTES = 1000 * 1000;
+
+    // Every other second
+    static final int DEFAULT_DELAY_MS = 2000;
+
+    // 20 MB is enough for streaming to reconnect
+    static final int DEFAULT_DATA_TO_PUSH = 20 * 1000 * 1000;
+
+    static final int DEFAULT_DURATION_MS = DEFAULT_DATA_TO_PUSH
+            / DEFAULT_SIZE_BYTES * DEFAULT_DELAY_MS;
+
     private Label dataLabel = new Label();
 
     private final ExecutorService executor = Executors
@@ -49,9 +61,9 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
         final TextField duration = new TextField("Duration (ms)");
         duration.setConverter(Integer.class);
 
-        dataSize.setValue((1000 * 1000) + "");
-        interval.setValue(2000 + "");
-        duration.setValue(40 * 1000 + "");
+        dataSize.setValue(DEFAULT_SIZE_BYTES + "");
+        interval.setValue(DEFAULT_DELAY_MS + "");
+        duration.setValue(DEFAULT_DURATION_MS + "");
 
         addComponent(dataSize);
         addComponent(interval);
@@ -114,7 +126,9 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
                     @Override
                     public void run() {
                         PushLargeData ui = (PushLargeData) UI.getCurrent();
-                        ui.getDataLabel().setValue(
+                        // Using description as it is not rendered to the DOM
+                        // immediately
+                        ui.getDataLabel().setDescription(
                                 System.currentTimeMillis() + ": " + data);
                         ui.log("Package " + idx + " pushed");
                     }

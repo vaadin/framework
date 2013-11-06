@@ -32,6 +32,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -448,6 +449,35 @@ public class Util {
     }
 
     /**
+     * Calculates maximum horizontal scrolling value for the given element.
+     * 
+     * @since 7.1.9
+     * @param element
+     *            which scrollLeft should be calculated
+     * @return maximum value for scrollLeft of the given element
+     */
+    public static int getMaxScrollLeft(final Element element) {
+        int scrollWidth = element.getScrollWidth();
+        int clientWidth = element.getClientWidth();
+        return scrollWidth - clientWidth;
+    }
+
+    /**
+     * Checks if scrollLeft of the element is at its maximum value. Returns
+     * false if the element can't be scrolled horizontally.
+     * 
+     * @since 7.1.9
+     * @param element
+     *            which scrollLeft should be checked
+     * @return true, if scrollLeft is at maximum (false if element can't be
+     *         scrolled horizontally)
+     */
+    public static boolean isScrollLeftAtMax(final Element element) {
+        int scrollLeft = element.getScrollLeft();
+        return scrollLeft != 0 && scrollLeft == getMaxScrollLeft(element);
+    }
+
+    /**
      * Run workaround for webkits overflow auto issue.
      * 
      * See: our bug #2138 and https://bugs.webkit.org/show_bug.cgi?id=21462
@@ -468,6 +498,8 @@ public class Util {
             // check the scrolltop value before hiding the element
             final int scrolltop = elem.getScrollTop();
             final int scrollleft = elem.getScrollLeft();
+            final boolean scrollLeftAtMax = isScrollLeftAtMax(elem);
+
             elem.getStyle().setProperty("overflow", "hidden");
 
             Scheduler.get().scheduleDeferred(new Command() {
@@ -489,6 +521,12 @@ public class Util {
                         // position
                         elem.setScrollTop(scrollvalue - 1);
                         elem.setScrollTop(scrollvalue);
+                    }
+
+                    // keep horizontal scroll at max if it was before vertical
+                    // scroll bar was added/removed
+                    if (scrollLeftAtMax) {
+                        elem.setScrollLeft(getMaxScrollLeft(elem));
                     }
 
                     // fix for #6940 : Table horizontal scroll sometimes not
@@ -515,6 +553,56 @@ public class Util {
             });
         }
 
+    }
+
+    /**
+     * Prevents some browsers from adding scroll bars to a component (such as a
+     * Window) whose contents fit in the component.
+     * <p>
+     * See: bugs #11994 and #12736.
+     * 
+     * @param contentNode
+     *            an element that is scrollable
+     * 
+     * @since 7.1.8
+     */
+    public static void removeUnneededScrollbars(final Element scrollable) {
+        if (BrowserInfo.get().isWebkit()) {
+
+            /*
+             * Shake up the DOM a bit to make the window shed unnecessary
+             * scrollbars and resize correctly afterwards. This resulting code
+             * took over a week to summon forth, and involved some pretty hairy
+             * black magic. Don't touch it unless you know what you're doing!
+             * Fixes ticket #11994. Later modified to fix ticket #12736.
+             */
+            Scheduler.get().scheduleFinally(new ScheduledCommand() {
+
+                @Override
+                public void execute() {
+                    // Adjusting the width or height may change the scroll
+                    // position, so store the current position
+                    int horizontalScrollPosition = scrollable.getScrollLeft();
+                    int verticalScrollPosition = scrollable.getScrollTop();
+
+                    final String oldWidth = scrollable.getStyle().getWidth();
+                    final String oldHeight = scrollable.getStyle().getHeight();
+
+                    scrollable.getStyle().setWidth(110, Unit.PCT);
+                    scrollable.getOffsetWidth();
+                    scrollable.getStyle().setProperty("width", oldWidth);
+                    scrollable.getStyle().setHeight(110, Unit.PCT);
+                    scrollable.getOffsetHeight();
+                    scrollable.getStyle().setProperty("height", oldHeight);
+
+                    // Restore the scroll position
+                    scrollable.setScrollLeft(horizontalScrollPosition);
+                    scrollable.setScrollTop(verticalScrollPosition);
+
+                }
+            });
+
+        }
     }
 
     /**

@@ -34,6 +34,7 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
+import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
@@ -52,7 +53,8 @@ import com.vaadin.shared.ui.window.WindowState;
 @Connect(value = com.vaadin.ui.Window.class)
 public class WindowConnector extends AbstractSingleComponentContainerConnector
         implements Paintable, BeforeShortcutActionListener,
-        SimpleManagedLayout, PostLayoutListener, MayScrollChildren {
+        SimpleManagedLayout, PostLayoutListener, MayScrollChildren,
+        WindowMoveHandler {
 
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this) {
         @Override
@@ -99,6 +101,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         super.init();
 
         VWindow window = getWidget();
+        window.id = getConnectorId();
+        window.client = getConnection();
 
         getLayoutManager().registerDependency(this,
                 window.contentPanel.getElement());
@@ -110,6 +114,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
                 DoubleClickEvent.getType());
 
         window.setOwner(getConnection().getUIConnector().getWidget());
+
+        window.addMoveHandler(this);
     }
 
     @Override
@@ -126,9 +132,6 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
 
         VWindow window = getWidget();
         String connectorId = getConnectorId();
-
-        window.id = getConnectorId();
-        window.client = client;
 
         // Workaround needed for Testing Tools (GWT generates window DOM
         // slightly different in different browsers).
@@ -400,5 +403,12 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
          * tooltips are properly hidden. (#11448)
          */
         return true;
+    }
+
+    @Override
+    public void onWindowMove(WindowMoveEvent event) {
+        RpcProxy.create(WindowServerRpc.class, this).windowMoved(
+                event.getNewX(), event.getNewY());
+
     }
 }

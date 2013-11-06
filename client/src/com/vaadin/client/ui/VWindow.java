@@ -33,6 +33,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -47,6 +48,8 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Util;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
+import com.vaadin.client.ui.window.WindowMoveEvent;
+import com.vaadin.client.ui.window.WindowMoveHandler;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.window.WindowMode;
 
@@ -342,36 +345,11 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         if (!visibilityChangesDisabled) {
             super.setVisible(visible);
         }
-
         if (visible && BrowserInfo.get().isWebkit()) {
-
-            /*
-             * Shake up the DOM a bit to make the window shed unnecessary
-             * scrollbars and resize correctly afterwards. This resulting code
-             * took over a week to summon forth, and involved some pretty hairy
-             * black magic. Don't touch it unless you know what you're doing!
-             * Fixes ticket #11994
-             */
-            Scheduler.get().scheduleFinally(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    final com.google.gwt.dom.client.Element scrollable = contents
-                            .getFirstChildElement();
-                    final String oldWidth = scrollable.getStyle().getWidth();
-                    final String oldHeight = scrollable.getStyle().getHeight();
-
-                    scrollable.getStyle().setWidth(110, Unit.PCT);
-                    scrollable.getOffsetWidth();
-                    scrollable.getStyle().setProperty("width", oldWidth);
-
-                    scrollable.getStyle().setHeight(110, Unit.PCT);
-                    scrollable.getOffsetHeight();
-                    scrollable.getStyle().setProperty("height", oldHeight);
-
-                    updateContentsSize();
-                    positionOrSizeUpdated();
-                }
-            });
+            Util.removeUnneededScrollbars((Element) contents
+                    .getFirstChildElement());
+            updateContentsSize();
+            positionOrSizeUpdated();
         }
     }
 
@@ -946,6 +924,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         dragging = false;
         hideDraggingCurtain();
         DOM.releaseCapture(getElement());
+
+        // fire move event
+        fireEvent(new WindowMoveEvent(uidlPositionX, uidlPositionY));
     }
 
     @Override
@@ -1059,6 +1040,16 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         LayoutManager layoutManager = getLayoutManager();
         return layoutManager.getOuterWidth(getElement())
                 - contentPanel.getElement().getOffsetWidth();
+    }
+
+    /**
+     * Adds a Handler for when user moves the window.
+     * 
+     * @since 7.1.9
+     * @return {@link HandlerRegistration} used to remove the handler
+     */
+    public HandlerRegistration addMoveHandler(WindowMoveHandler handler) {
+        return addHandler(handler, WindowMoveEvent.getType());
     }
 
 }

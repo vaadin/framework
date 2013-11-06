@@ -67,7 +67,7 @@ public interface Constants {
 
     // Keep the version number in sync with push/build.xml and other locations
     // listed in that file
-    static final String REQUIRED_ATMOSPHERE_RUNTIME_VERSION = "1.0.14.vaadin4";
+    static final String REQUIRED_ATMOSPHERE_RUNTIME_VERSION = "1.0.18.vaadin1";
 
     static final String INVALID_ATMOSPHERE_VERSION_WARNING = "\n"
             + "=================================================================\n"

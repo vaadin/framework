@@ -56,6 +56,7 @@ import com.vaadin.client.DateTimeService;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.util.SharedUtil;
 
 @SuppressWarnings("deprecation")
 public class VCalendarPanel extends FocusableFlexTable implements
@@ -2214,9 +2215,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * @param startDate
      *            - the allowed range's start date
      */
-    public void setRangeStart(Date rangeStart) {
-        if (this.rangeStart != rangeStart) {
-            this.rangeStart = rangeStart;
+    public void setRangeStart(Date newRangeStart) {
+        if (!SharedUtil.equals(rangeStart, newRangeStart)) {
+            rangeStart = newRangeStart;
             if (initialRenderDone) {
                 // Dynamic updates to the range needs to render the calendar to
                 // update the element stylenames
@@ -2233,9 +2234,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * @param endDate
      *            - the allowed range's end date
      */
-    public void setRangeEnd(Date rangeEnd) {
-        if (this.rangeEnd != rangeEnd) {
-            this.rangeEnd = rangeEnd;
+    public void setRangeEnd(Date newRangeEnd) {
+        if (!SharedUtil.equals(rangeEnd, newRangeEnd)) {
+            rangeEnd = newRangeEnd;
             if (initialRenderDone) {
                 // Dynamic updates to the range needs to render the calendar to
                 // update the element stylenames
