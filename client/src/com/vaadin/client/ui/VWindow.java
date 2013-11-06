@@ -360,6 +360,12 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 public void execute() {
                     final com.google.gwt.dom.client.Element scrollable = contents
                             .getFirstChildElement();
+
+                    // Adjusting the width or height may change the scroll
+                    // position, so store the current position
+                    int horizontalScrollPosition = scrollable.getScrollLeft();
+                    int verticalScrollPosition = scrollable.getScrollTop();
+
                     final String oldWidth = scrollable.getStyle().getWidth();
                     final String oldHeight = scrollable.getStyle().getHeight();
 
@@ -370,6 +376,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                     scrollable.getStyle().setHeight(110, Unit.PCT);
                     scrollable.getOffsetHeight();
                     scrollable.getStyle().setProperty("height", oldHeight);
+
+                    // Restore the scroll position
+                    scrollable.setScrollLeft(horizontalScrollPosition);
+                    scrollable.setScrollTop(verticalScrollPosition);
 
                     updateContentsSize();
                     positionOrSizeUpdated();
