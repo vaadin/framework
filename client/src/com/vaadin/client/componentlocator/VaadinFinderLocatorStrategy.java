@@ -241,6 +241,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
                     }
                 }
 
+                return null;
+
             } else {
                 int index = Integer.valueOf(predicateString);
                 return index < potentialMatches.size() ? potentialMatches

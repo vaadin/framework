@@ -499,7 +499,16 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                 String widgetClassName = split[0];
                 String indexString = split[1].substring(0,
                         split[1].length() - 1);
-                int widgetPosition = Integer.parseInt(indexString);
+
+                int widgetPosition;
+                try {
+                    widgetPosition = Integer.parseInt(indexString);
+                } catch (NumberFormatException e) {
+                    // We've probably been fed a new-style Vaadin locator with a
+                    // string-form predicate, that doesn't match anything in the
+                    // search space.
+                    return null;
+                }
 
                 // AbsolutePanel in GridLayout has been removed -> skip it
                 if (w instanceof VGridLayout
