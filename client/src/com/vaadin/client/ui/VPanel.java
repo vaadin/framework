@@ -24,7 +24,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Focusable;
-import com.vaadin.client.Util;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 
@@ -207,6 +206,5 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
             touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
         }
         touchScrollHandler.addElement(contentNode);
-        Util.removeUnneededScrollbars(contentNode);
     }
 }
