@@ -32,7 +32,6 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -516,56 +515,6 @@ public class Util {
             });
         }
 
-    }
-
-    /**
-     * Prevents some browsers from adding scroll bars to a component (such as a
-     * Window) whose contents fit in the component.
-     * <p>
-     * See: bugs #11994 and #12736.
-     * 
-     * @param contentNode
-     *            an element that is scrollable
-     * 
-     * @since 7.1.8
-     */
-    public static void removeUnneededScrollbars(final Element scrollable) {
-        if (BrowserInfo.get().isWebkit()) {
-
-            /*
-             * Shake up the DOM a bit to make the window shed unnecessary
-             * scrollbars and resize correctly afterwards. This resulting code
-             * took over a week to summon forth, and involved some pretty hairy
-             * black magic. Don't touch it unless you know what you're doing!
-             * Fixes ticket #11994. Later modified to fix ticket #12736.
-             */
-            Scheduler.get().scheduleFinally(new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    // Adjusting the width or height may change the scroll
-                    // position, so store the current position
-                    int horizontalScrollPosition = scrollable.getScrollLeft();
-                    int verticalScrollPosition = scrollable.getScrollTop();
-
-                    final String oldWidth = scrollable.getStyle().getWidth();
-                    final String oldHeight = scrollable.getStyle().getHeight();
-
-                    scrollable.getStyle().setWidth(110, Unit.PCT);
-                    scrollable.getOffsetWidth();
-                    scrollable.getStyle().setProperty("width", oldWidth);
-                    scrollable.getStyle().setHeight(110, Unit.PCT);
-                    scrollable.getOffsetHeight();
-                    scrollable.getStyle().setProperty("height", oldHeight);
-
-                    // Restore the scroll position
-                    scrollable.setScrollLeft(horizontalScrollPosition);
-                    scrollable.setScrollTop(verticalScrollPosition);
-
-                }
-            });
-
-        }
     }
 
     /**
