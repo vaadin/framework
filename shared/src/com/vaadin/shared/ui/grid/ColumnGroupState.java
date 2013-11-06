@@ -13,43 +13,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.vaadin.shared.ui.grid;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Column state DTO for transferring column properties from the server to the
- * client
+ * The column group data shared between the server and the client
  * 
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class GridColumnState implements Serializable {
+public class ColumnGroupState implements Serializable {
 
     /**
-     * Id used by grid connector to map server side column with client side
-     * column
+     * The columns that is included in the group
      */
-    public String id;
+    public List<String> columns = new ArrayList<String>();
 
     /**
-     * Header caption for the column
+     * The header text of the group
      */
     public String header;
 
     /**
-     * Footer caption for the column
+     * The footer text of the group
      */
     public String footer;
-
-    /**
-     * Has the column been hidden. By default the column is visible.
-     */
-    public boolean visible = true;
-
-    /**
-     * Column width in pixels. Default column width is 100px.
-     */
-    public int width = 100;
-
 }

@@ -32,6 +32,8 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.ui.components.grid.ColumnGroup;
+import com.vaadin.ui.components.grid.ColumnGroupRow;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.GridColumn;
 
@@ -110,9 +112,15 @@ public class GridColumns {
         assertEquals(100, column.getWidth());
         assertEquals(column.getWidth(), getColumnState("column1").width);
 
-        column.setWidth(-1);
-        assertEquals(-1, column.getWidth());
-        assertEquals(-1, getColumnState("column1").width);
+        try {
+            column.setWidth(-1);
+            fail("Setting width to -1 should throw exception");
+        } catch (IllegalArgumentException iae) {
+
+        }
+
+        assertEquals(100, column.getWidth());
+        assertEquals(100, getColumnState("column1").width);
     }
 
     @Test
@@ -126,6 +134,7 @@ public class GridColumns {
 
         try {
             column.setHeaderCaption("asd");
+
             fail("Succeeded in modifying a detached column");
         } catch (IllegalStateException ise) {
             // Detached state should throw exception
@@ -157,7 +166,7 @@ public class GridColumns {
     }
 
     @Test
-    public void testAddingColumn() {
+    public void testAddingColumn() throws Exception {
         grid.getContainerDatasource().addContainerProperty("columnX",
                 String.class, "");
         GridColumn column = grid.getColumn("columnX");
@@ -165,33 +174,72 @@ public class GridColumns {
     }
 
     @Test
-    public void testHeaderVisiblility() {
+    public void testHeaderVisiblility() throws Exception {
 
-        assertTrue(grid.isHeaderVisible());
-        assertTrue(state.headerVisible);
+        assertTrue(grid.isColumnHeadersVisible());
+        assertTrue(state.columnHeadersVisible);
 
-        grid.setHeaderVisible(false);
-        assertFalse(grid.isHeaderVisible());
-        assertFalse(state.headerVisible);
+        grid.setColumnHeadersVisible(false);
+        assertFalse(grid.isColumnHeadersVisible());
+        assertFalse(state.columnHeadersVisible);
 
-        grid.setHeaderVisible(true);
-        assertTrue(grid.isHeaderVisible());
-        assertTrue(state.headerVisible);
+        grid.setColumnHeadersVisible(true);
+        assertTrue(grid.isColumnHeadersVisible());
+        assertTrue(state.columnHeadersVisible);
     }
 
     @Test
-    public void testFooterVisibility() {
+    public void testFooterVisibility() throws Exception {
 
-        assertTrue(grid.isFooterVisible());
-        assertTrue(state.footerVisible);
+        assertFalse(grid.isColumnFootersVisible());
+        assertFalse(state.columnFootersVisible);
 
-        grid.setFooterVisible(false);
-        assertFalse(grid.isFooterVisible());
-        assertFalse(state.footerVisible);
+        grid.setColumnFootersVisible(false);
+        assertFalse(grid.isColumnFootersVisible());
+        assertFalse(state.columnFootersVisible);
 
-        grid.setFooterVisible(true);
-        assertTrue(grid.isFooterVisible());
-        assertTrue(state.footerVisible);
+        grid.setColumnFootersVisible(true);
+        assertTrue(grid.isColumnFootersVisible());
+        assertTrue(state.columnFootersVisible);
+    }
+
+    @Test
+    public void testColumnGroups() throws Exception {
+
+        // Add a new row
+        ColumnGroupRow row = grid.addColumnGroupRow();
+        assertTrue(state.columnGroupRows.size() == 1);
+
+        // Add a group by property id
+        ColumnGroup columns12 = row.addGroup("column1", "column2");
+        assertTrue(state.columnGroupRows.get(0).groups.size() == 1);
+
+        // Set header of column
+        columns12.setHeaderCaption("Column12");
+        assertEquals("Column12",
+                state.columnGroupRows.get(0).groups.get(0).header);
+
+        // Set footer of column
+        columns12.setFooterCaption("Footer12");
+        assertEquals("Footer12",
+                state.columnGroupRows.get(0).groups.get(0).footer);
+
+        // Add another group by column instance
+        ColumnGroup columns34 = row.addGroup(grid.getColumn("column3"),
+                grid.getColumn("column4"));
+        assertTrue(state.columnGroupRows.get(0).groups.size() == 2);
+
+        // add another group row
+        ColumnGroupRow row2 = grid.addColumnGroupRow();
+        assertTrue(state.columnGroupRows.size() == 2);
+
+        // add a group by combining the two previous groups
+        ColumnGroup columns1234 = row2.addGroup(columns12, columns34);
+        assertTrue(columns1234.getColumns().size() == 4);
+
+        // Insert a group as the second group
+        ColumnGroupRow newRow2 = grid.addColumnGroupRow(1);
+        assertTrue(state.columnGroupRows.size() == 3);
     }
 
     private GridColumnState getColumnState(Object propertyId) {

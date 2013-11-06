@@ -16,6 +16,8 @@
 
 package com.vaadin.ui.components.grid;
 
+import java.io.Serializable;
+
 import com.vaadin.shared.ui.grid.GridColumnState;
 
 /**
@@ -25,10 +27,10 @@ import com.vaadin.shared.ui.grid.GridColumnState;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class GridColumn {
+public class GridColumn implements Serializable {
 
     /**
-     * The shared state of the column
+     * The state of the column shared to the client
      */
     private final GridColumnState state;
 
@@ -138,9 +140,16 @@ public class GridColumn {
      *            the new pixel width of the column
      * @throws IllegalStateException
      *             if the column is no longer attached to any grid
+     * @throws IllegalArgumentException
+     *             thrown if pixel width is less than zero
      */
-    public void setWidth(int pixelWidth) throws IllegalStateException {
+    public void setWidth(int pixelWidth) throws IllegalStateException,
+            IllegalArgumentException {
         checkColumnIsAttached();
+        if (pixelWidth < 0) {
+            throw new IllegalArgumentException(
+                    "Pixel width should be greated than 0");
+        }
         state.width = pixelWidth;
         grid.markAsDirty();
     }

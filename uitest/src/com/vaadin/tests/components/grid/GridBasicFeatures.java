@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.AbstractComponentTest;
+import com.vaadin.ui.components.grid.ColumnGroup;
+import com.vaadin.ui.components.grid.ColumnGroupRow;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.GridColumn;
 
@@ -32,6 +34,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
     private final int COLUMNS = 10;
 
+    private int columnGroupRows = 0;
+
     @Override
     protected Grid constructComponent() {
 
@@ -42,18 +46,49 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             ds.addContainerProperty("Column" + col, String.class, "");
         }
 
+        // Create grid
         Grid grid = new Grid(ds);
 
-        // Headers and footers
+        // Add footer values (header values are automatically created)
         for (int col = 0; col < COLUMNS; col++) {
-            GridColumn column = grid.getColumn("Column" + col);
-            column.setHeaderCaption("Column " + col);
-            column.setFooterCaption("Footer " + col);
+            grid.getColumn("Column" + col).setFooterCaption("Footer " + col);
         }
 
         createColumnActions();
 
+        createHeaderActions();
+
+        createFooterActions();
+
+        createColumnGroupActions();
+
         return grid;
+    }
+
+    protected void createHeaderActions() {
+        createCategory("Headers", null);
+
+        createBooleanAction("Visible", "Headers", true,
+                new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid grid, Boolean value, Object data) {
+                        grid.setColumnHeadersVisible(value);
+                    }
+                });
+    }
+
+    protected void createFooterActions() {
+        createCategory("Footers", null);
+
+        createBooleanAction("Visible", "Footers", false,
+                new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid grid, Boolean value, Object data) {
+                        grid.setColumnFootersVisible(value);
+                    }
+                });
     }
 
     protected void createColumnActions() {
@@ -77,46 +112,6 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }, c);
 
-            createBooleanAction("Footer", "Column" + c, true,
-                    new Command<Grid, Boolean>() {
-
-                        @Override
-                        public void execute(Grid grid, Boolean value,
-                                Object columnIndex) {
-                            Object propertyId = (new ArrayList(grid
-                                    .getContainerDatasource()
-                                    .getContainerPropertyIds())
-                                    .get((Integer) columnIndex));
-                            GridColumn column = grid.getColumn(propertyId);
-                            String footer = column.getFooterCaption();
-                            if (footer == null) {
-                                column.setFooterCaption("Footer " + columnIndex);
-                            } else {
-                                column.setFooterCaption(null);
-                            }
-                        }
-                    }, c);
-
-            createBooleanAction("Header", "Column" + c, true,
-                    new Command<Grid, Boolean>() {
-
-                        @Override
-                        public void execute(Grid grid, Boolean value,
-                                Object columnIndex) {
-                            Object propertyId = (new ArrayList(grid
-                                    .getContainerDatasource()
-                                    .getContainerPropertyIds())
-                                    .get((Integer) columnIndex));
-                            GridColumn column = grid.getColumn(propertyId);
-                            String header = column.getHeaderCaption();
-                            if (header == null) {
-                                column.setHeaderCaption("Column " + columnIndex);
-                            } else {
-                                column.setHeaderCaption(null);
-                            }
-                        }
-                    }, c);
-
             createClickAction("Remove", "Column" + c,
                     new Command<Grid, String>() {
 
@@ -128,6 +123,72 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }, null, c);
 
         }
+
+    }
+
+    protected void createColumnGroupActions() {
+        createCategory("Column groups", null);
+
+        createClickAction("Add group row", "Column groups",
+                new Command<Grid, String>() {
+
+                    @Override
+                    public void execute(Grid grid, String value, Object data) {
+                        final ColumnGroupRow row = grid.addColumnGroupRow();
+                        columnGroupRows++;
+                        createCategory("Column group row " + columnGroupRows,
+                                "Column groups");
+
+                        createBooleanAction("Header Visible",
+                                "Column group row " + columnGroupRows, true,
+                                new Command<Grid, Boolean>() {
+
+                                    @Override
+                                    public void execute(Grid grid,
+                                            Boolean value, Object columnIndex) {
+                                        row.setHeaderVisible(value);
+                                    }
+                                }, row);
+
+                        createBooleanAction("Footer Visible",
+                                "Column group row " + columnGroupRows, false,
+                                new Command<Grid, Boolean>() {
+
+                                    @Override
+                                    public void execute(Grid grid,
+                                            Boolean value, Object columnIndex) {
+                                        row.setFooterVisible(value);
+                                    }
+                                }, row);
+
+                        for (int i = 0; i < COLUMNS; i += 2) {
+                            final int columnIndex = i;
+                            createClickAction("Group Column " + columnIndex
+                                    + " & " + (columnIndex + 1),
+                                    "Column group row " + columnGroupRows,
+                                    new Command<Grid, Integer>() {
+
+                                        @Override
+                                        public void execute(Grid c,
+                                                Integer value, Object data) {
+                                            final ColumnGroup group = row
+                                                    .addGroup(
+                                                            "Column" + value,
+                                                            "Column"
+                                                                    + (value + 1));
+
+                                            group.setHeaderCaption("Column "
+                                                    + value + " & "
+                                                    + (value + 1));
+
+                                            group.setFooterCaption("Column "
+                                                    + value + " & "
+                                                    + (value + 1));
+                                        }
+                                    }, i, row);
+                        }
+                    }
+                }, null, null);
 
     }
 

@@ -40,13 +40,17 @@ public class GridState extends AbstractComponentState {
     public List<GridColumnState> columns = new ArrayList<GridColumnState>();
 
     /**
-     * Are the header row(s) visible. By default they are visible.
+     * Is the column header row visible
      */
-    public boolean headerVisible = true;
+    public boolean columnHeadersVisible = true;
 
     /**
-     * Are the footer row(s) visible. By default they are visible.
+     * Is the column footer row visible
      */
-    public boolean footerVisible = true;
+    public boolean columnFootersVisible = false;
 
+    /**
+     * The column groups added to the grid
+     */
+    public List<ColumnGroupRowState> columnGroupRows = new ArrayList<ColumnGroupRowState>();
 }

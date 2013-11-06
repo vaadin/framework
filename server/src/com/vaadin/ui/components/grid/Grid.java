@@ -16,7 +16,9 @@
 
 package com.vaadin.ui.components.grid;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -28,6 +30,7 @@ import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.data.Container.PropertySetChangeNotifier;
 import com.vaadin.server.KeyMapper;
+import com.vaadin.shared.ui.grid.ColumnGroupRowState;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.ui.AbstractComponent;
@@ -52,17 +55,25 @@ import com.vaadin.ui.AbstractComponent;
  */
 public class Grid extends AbstractComponent {
 
+    /**
+     * The data source attached to the grid
+     */
     private Container.Indexed datasource;
 
     /**
-     * Property id -> Column instance mapping
+     * Property id to column instance mapping
      */
     private final Map<Object, GridColumn> columns = new HashMap<Object, GridColumn>();
 
     /**
-     * Key generator for column server->client communication
+     * Key generator for column server-to-client communication
      */
     private final KeyMapper<Object> columnKeys = new KeyMapper<Object>();
+
+    /**
+     * The column groups added to the grid
+     */
+    private final List<ColumnGroupRow> columnGroupRows = new ArrayList<ColumnGroupRow>();
 
     /**
      * Property listener for listening to changes in data source properties.
@@ -144,11 +155,11 @@ public class Grid extends AbstractComponent {
             if (!columns.containsKey(propertyId)) {
                 GridColumn column = appendColumn(propertyId);
 
-                // By default use property id as column caption
+                // Add by default property id as column header
                 column.setHeaderCaption(String.valueOf(propertyId));
-
             }
         }
+
     }
 
     /**
@@ -177,27 +188,27 @@ public class Grid extends AbstractComponent {
      * @param visible
      *            <code>true</code> if the header rows should be visible
      */
-    public void setHeaderVisible(boolean visible) {
-        getState().headerVisible = visible;
+    public void setColumnHeadersVisible(boolean visible) {
+        getState().columnHeadersVisible = visible;
     }
 
     /**
      * Are the header rows visible?
      * 
-     * @return <code>true</code> if the header is visible
+     * @return <code>true</code> if the headers of the columns are visible
      */
-    public boolean isHeaderVisible() {
-        return getState(false).headerVisible;
+    public boolean isColumnHeadersVisible() {
+        return getState(false).columnHeadersVisible;
     }
 
     /**
      * Sets the footer rows visible.
      * 
      * @param visible
-     *            <code>true</code> if the header rows should be visible
+     *            <code>true</code> if the footer rows should be visible
      */
-    public void setFooterVisible(boolean visible) {
-        getState().footerVisible = visible;
+    public void setColumnFootersVisible(boolean visible) {
+        getState().columnFootersVisible = visible;
     }
 
     /**
@@ -205,23 +216,108 @@ public class Grid extends AbstractComponent {
      * 
      * @return <code>true</code> if the footer rows should be visible
      */
-    public boolean isFooterVisible() {
-        return getState(false).footerVisible;
+    public boolean isColumnFootersVisible() {
+        return getState(false).columnFootersVisible;
+    }
+
+    /**
+     * <p>
+     * Adds a new column group to the grid.
+     * 
+     * <p>
+     * Column group rows are rendered in the header and footer of the grid.
+     * Column group rows are made up of column groups which groups together
+     * columns for adding a common auxiliary header or footer for the columns.
+     * </p>
+     * </p>
+     * 
+     * <p>
+     * Example usage:
+     * 
+     * <pre>
+     * // Add a new column group row to the grid
+     * ColumnGroupRow row = grid.addColumnGroupRow();
+     * 
+     * // Group &quot;Column1&quot; and &quot;Column2&quot; together to form a header in the row
+     * ColumnGroup column12 = row.addGroup(&quot;Column1&quot;, &quot;Column2&quot;);
+     * 
+     * // Set a common header for &quot;Column1&quot; and &quot;Column2&quot;
+     * column12.setHeader(&quot;Column 1&amp;2&quot;);
+     * </pre>
+     * 
+     * </p>
+     * 
+     * @return a column group instance you can use to add column groups
+     */
+    public ColumnGroupRow addColumnGroupRow() {
+        ColumnGroupRowState state = new ColumnGroupRowState();
+        ColumnGroupRow row = new ColumnGroupRow(this, state, columnKeys);
+        columnGroupRows.add(row);
+        getState().columnGroupRows.add(state);
+        return row;
+    }
+
+    /**
+     * Adds a new column group to the grid at a specific index
+     * 
+     * @param rowIndex
+     *            the index of the row
+     * @return a column group instance you can use to add column groups
+     */
+    public ColumnGroupRow addColumnGroupRow(int rowIndex) {
+        ColumnGroupRowState state = new ColumnGroupRowState();
+        ColumnGroupRow row = new ColumnGroupRow(this, state, columnKeys);
+        columnGroupRows.add(rowIndex, row);
+        getState().columnGroupRows.add(rowIndex, state);
+        return row;
+    }
+
+    /**
+     * Removes a column group.
+     * 
+     * @param row
+     *            the row to remove
+     */
+    public void removeColumnGroupRow(ColumnGroupRow row) {
+        columnGroupRows.remove(row);
+        getState().columnGroupRows.remove(row.getState());
+    }
+
+    /**
+     * Gets the column group rows.
+     * 
+     * @return an unmodifiable list of column group rows
+     */
+    public List<ColumnGroupRow> getColumnGroupRows() {
+        return Collections.unmodifiableList(new ArrayList<ColumnGroupRow>(
+                columnGroupRows));
     }
 
     /**
      * Used internally by the {@link Grid} to get a {@link GridColumn} by
      * referencing its generated state id. Also used by {@link GridColumn} to
-     * verify if it has been detached from the {@link Grid}
+     * verify if it has been detached from the {@link Grid}.
      * 
      * @param columnId
-     *            The client id generated for the column when the column is
+     *            the client id generated for the column when the column is
      *            added to the grid
-     * @return The column with the id or <code>null</code> if not found
+     * @return the column with the id or <code>null</code> if not found
      */
     GridColumn getColumnByColumnId(String columnId) {
-        Object propertyId = columnKeys.get(columnId);
+        Object propertyId = getPropertyIdByColumnId(columnId);
         return getColumn(propertyId);
+    }
+
+    /**
+     * Used internally by the {@link Grid} to get a property id by referencing
+     * the columns generated state id.
+     * 
+     * @param columnId
+     *            The state id of the column
+     * @return The column instance or null if not found
+     */
+    Object getPropertyIdByColumnId(String columnId) {
+        return columnKeys.get(columnId);
     }
 
     @Override
@@ -241,7 +337,7 @@ public class Grid extends AbstractComponent {
      * @param datasourcePropertyId
      *            The property id of a property in the datasource
      */
-    protected GridColumn appendColumn(Object datasourcePropertyId) {
+    private GridColumn appendColumn(Object datasourcePropertyId) {
         if (datasourcePropertyId == null) {
             throw new IllegalArgumentException("Property id cannot be null");
         }

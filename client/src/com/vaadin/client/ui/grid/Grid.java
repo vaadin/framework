@@ -55,7 +55,7 @@ import com.vaadin.shared.util.SharedUtil;
 public class Grid<T> extends Composite {
 
     /**
-     * Escalator used internally by the grid to render the rows
+     * Escalator used internally by grid to render the rows
      */
     private Escalator escalator = GWT.create(Escalator.class);
 
@@ -65,8 +65,23 @@ public class Grid<T> extends Composite {
     private final List<GridColumn<T>> columns = new ArrayList<GridColumn<T>>();
 
     /**
-     * Base class for grid columns internally used by the Grid. You should use
-     * {@link GridColumn} when creating new columns.
+     * The column groups rows added to the grid
+     */
+    private final List<ColumnGroupRow> columnGroupRows = new ArrayList<ColumnGroupRow>();
+
+    /**
+     * Are the headers for the columns visible
+     */
+    private boolean columnHeadersVisible = false;
+
+    /**
+     * Are the footers for the columns visible
+     */
+    private boolean columnFootersVisible = false;
+
+    /**
+     * Base class for grid columns internally used by the Grid. The user should
+     * use {@link GridColumn} when creating new columns.
      * 
      * @param <T>
      *            the row type
@@ -74,12 +89,17 @@ public class Grid<T> extends Composite {
     public static abstract class AbstractGridColumn<T> {
 
         /**
-         * Grid associated with the column
+         * The grid the column is associated with
          */
         private Grid<T> grid;
 
         /**
-         * Text displayed in the column header
+         * Should the column be visible in the grid
+         */
+        private boolean visible;
+
+        /**
+         * The text displayed in the header of the column
          */
         private String header;
 
@@ -87,11 +107,6 @@ public class Grid<T> extends Composite {
          * Text displayed in the column footer
          */
         private String footer;
-
-        /**
-         * Is the column visible
-         */
-        private boolean visible;
 
         /**
          * Internally used by the grid to set itself
@@ -125,14 +140,15 @@ public class Grid<T> extends Composite {
          *            the text displayed in the column header
          */
         public void setHeaderCaption(String caption) {
-            if (SharedUtil.equals(caption, this.header)) {
+            if (SharedUtil.equals(caption, header)) {
                 return;
             }
 
-            this.header = caption;
+            header = caption;
 
             if (grid != null) {
                 grid.refreshHeader();
+
             }
         }
 
@@ -153,11 +169,11 @@ public class Grid<T> extends Composite {
          *            the text displayed in the footer of the column
          */
         public void setFooterCaption(String caption) {
-            if (SharedUtil.equals(caption, this.footer)) {
+            if (SharedUtil.equals(caption, footer)) {
                 return;
             }
 
-            this.footer = caption;
+            footer = caption;
 
             if (grid != null) {
                 grid.refreshFooter();
@@ -177,7 +193,8 @@ public class Grid<T> extends Composite {
          * Sets a column as visible in the grid.
          * 
          * @param visible
-         *            Set to <code>true</code> to show the column in the grid
+         *            <code>true</code> if the column should be displayed in the
+         *            grid
          */
         public void setVisible(boolean visible) {
             if (this.visible == visible) {
@@ -206,8 +223,9 @@ public class Grid<T> extends Composite {
          * Returns the text that should be displayed in the cell.
          * 
          * @param row
-         *            the row object that provides the cell content
-         * @return The cell content of the row
+         *            The row object that provides the cell content.
+         * 
+         * @return The cell content
          */
         public abstract String getValue(T row);
 
@@ -221,6 +239,122 @@ public class Grid<T> extends Composite {
     }
 
     /**
+     * Base class for header / footer escalator updater
+     */
+    protected abstract class HeaderFooterEscalatorUpdater implements
+            EscalatorUpdater {
+
+        /**
+         * The row container which contains the header or footer rows
+         */
+        private RowContainer rows;
+
+        /**
+         * Should the index be counted from 0-> or 0<-
+         */
+        private boolean inverted;
+
+        /**
+         * Constructs an updater for updating a header / footer
+         * 
+         * @param rows
+         *            The row container
+         * @param inverted
+         *            Should index counting be inverted
+         */
+        public HeaderFooterEscalatorUpdater(RowContainer rows, boolean inverted) {
+            this.rows = rows;
+            this.inverted = inverted;
+        }
+
+        /**
+         * Gets the header/footer caption value
+         * 
+         * @return The value that should be rendered for the column caption
+         */
+        public abstract String getColumnValue(GridColumn column);
+
+        /**
+         * Gets the group caption value
+         * 
+         * @param group
+         *            The group for with the caption value should be returned
+         * @return The value that should be rendered for the column caption
+         */
+        public abstract String getGroupValue(ColumnGroup group);
+
+        /**
+         * Is the row visible in the header/footer
+         * 
+         * @return <code>true</code> if the row should be visible
+         */
+        public abstract boolean isRowVisible(ColumnGroupRow row);
+
+        /**
+         * Should the first row be visible
+         * 
+         * @return <code>true</code> if the first row should be visible
+         */
+        public abstract boolean firstRowIsVisible();
+
+        @Override
+        public void updateCells(Row row, List<Cell> cellsToUpdate) {
+
+            int rowIndex;
+            if (inverted) {
+                rowIndex = rows.getRowCount() - row.getRow() - 1;
+            } else {
+                rowIndex = row.getRow();
+            }
+
+            if (firstRowIsVisible() && rowIndex == 0) {
+                // column headers
+                for (Cell cell : cellsToUpdate) {
+                    int columnIndex = cell.getColumn();
+                    GridColumn column = columns.get(columnIndex);
+                    cell.getElement().setInnerText(getColumnValue(column));
+                }
+
+            } else if (columnGroupRows.size() > 0) {
+                // Adjust for headers
+                if (firstRowIsVisible()) {
+                    rowIndex--;
+                }
+
+                // Adjust for previous invisible header rows
+                ColumnGroupRow groupRow = null;
+                for (int i = 0, realIndex = 0; i < columnGroupRows.size(); i++) {
+                    groupRow = columnGroupRows.get(i);
+                    if (isRowVisible(groupRow)) {
+                        if (realIndex == rowIndex) {
+                            rowIndex = realIndex;
+                            break;
+                        }
+                        realIndex++;
+                    }
+                }
+
+                assert groupRow != null;
+
+                for (Cell cell : cellsToUpdate) {
+                    int columnIndex = cell.getColumn();
+                    GridColumn column = columns.get(columnIndex);
+                    ColumnGroup group = getGroupForColumn(groupRow, column);
+
+                    if (group != null) {
+                        // FIXME Should merge the group cells when escalator
+                        // supports it
+                        cell.getElement().setInnerText(getGroupValue(group));
+                    } else {
+                        // Cells are reused
+                        cell.getElement().setInnerHTML(null);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Creates a new instance.
      */
     public Grid() {
@@ -229,6 +363,9 @@ public class Grid<T> extends Composite {
         escalator.getHeader().setEscalatorUpdater(createHeaderUpdater());
         escalator.getBody().setEscalatorUpdater(createBodyUpdater());
         escalator.getFooter().setEscalatorUpdater(createFooterUpdater());
+
+        refreshHeader();
+        refreshFooter();
     }
 
     /**
@@ -238,18 +375,26 @@ public class Grid<T> extends Composite {
      * @return the updater that updates the data in the escalator.
      */
     private EscalatorUpdater createHeaderUpdater() {
-        return new EscalatorUpdater() {
+        return new HeaderFooterEscalatorUpdater(escalator.getHeader(), true) {
 
             @Override
-            public void updateCells(Row row, List<Cell> cellsToUpdate) {
-                if (isHeaderVisible()) {
-                    for (Cell cell : cellsToUpdate) {
-                        AbstractGridColumn<T> column = columns.get(cell
-                                .getColumn());
-                        cell.getElement().setInnerText(
-                                column.getHeaderCaption());
-                    }
-                }
+            public boolean isRowVisible(ColumnGroupRow row) {
+                return row.isHeaderVisible();
+            }
+
+            @Override
+            public String getGroupValue(ColumnGroup group) {
+                return group.getHeaderCaption();
+            }
+
+            @Override
+            public String getColumnValue(GridColumn column) {
+                return column.getHeaderCaption();
+            }
+
+            @Override
+            public boolean firstRowIsVisible() {
+                return isColumnHeadersVisible();
             }
         };
     }
@@ -275,40 +420,80 @@ public class Grid<T> extends Composite {
      * @return the updater that updates the data in the escalator.
      */
     private EscalatorUpdater createFooterUpdater() {
-        return new EscalatorUpdater() {
+        return new HeaderFooterEscalatorUpdater(escalator.getFooter(), false) {
 
             @Override
-            public void updateCells(Row row, List<Cell> cellsToUpdate) {
-                if (isFooterVisible()) {
-                    for (Cell cell : cellsToUpdate) {
-                        AbstractGridColumn<T> column = columns.get(cell
-                                .getColumn());
-                        cell.getElement().setInnerText(
-                                column.getFooterCaption());
-                    }
-                }
+            public boolean isRowVisible(ColumnGroupRow row) {
+                return row.isFooterVisible();
+            }
+
+            @Override
+            public String getGroupValue(ColumnGroup group) {
+                return group.getFooterCaption();
+            }
+
+            @Override
+            public String getColumnValue(GridColumn column) {
+                return column.getFooterCaption();
+            }
+
+            @Override
+            public boolean firstRowIsVisible() {
+                return isColumnFootersVisible();
             }
         };
     }
 
     /**
-     * Refreshes all header rows.
+     * Refreshes header or footer rows on demand
+     * 
+     * @param rows
+     *            The row container
+     * @param firstRowIsVisible
+     *            is the first row visible
+     * @param isHeader
+     *            <code>true</code> if we refreshing the header, else assumed
+     *            the footer
      */
-    private void refreshHeader() {
-        RowContainer header = escalator.getHeader();
-        if (isHeaderVisible() && header.getRowCount() > 0) {
-            header.refreshRows(0, header.getRowCount());
+    private void refreshRowContainer(RowContainer rows,
+            boolean firstRowIsVisible, boolean isHeader) {
+
+        // Count needed rows
+        int totalRows = firstRowIsVisible ? 1 : 0;
+        for (ColumnGroupRow row : columnGroupRows) {
+            if (isHeader ? row.isHeaderVisible() : row.isFooterVisible()) {
+                totalRows++;
+            }
+        }
+
+        // Add or Remove rows on demand
+        int rowDiff = totalRows - rows.getRowCount();
+        if (rowDiff > 0) {
+            rows.insertRows(0, rowDiff);
+        } else if (rowDiff < 0) {
+            rows.removeRows(0, -rowDiff);
+        }
+
+        // Refresh all the rows
+        if (rows.getRowCount() > 0) {
+            rows.refreshRows(0, rows.getRowCount());
         }
     }
 
     /**
-     * Refreshes all footer rows.
+     * Refreshes all header rows
      */
-    private void refreshFooter() {
-        RowContainer footer = escalator.getFooter();
-        if (isFooterVisible() && footer.getRowCount() > 0) {
-            footer.refreshRows(0, footer.getRowCount());
-        }
+    void refreshHeader() {
+        refreshRowContainer(escalator.getHeader(), isColumnHeadersVisible(),
+                true);
+    }
+
+    /**
+     * Refreshes all footer rows
+     */
+    void refreshFooter() {
+        refreshRowContainer(escalator.getFooter(), isColumnFootersVisible(),
+                false);
     }
 
     /**
@@ -388,71 +573,200 @@ public class Grid<T> extends Composite {
      *             if the column index does not exist in the grid
      */
     public GridColumn<T> getColumn(int index) throws IllegalArgumentException {
-        try {
-            return columns.get(index);
-        } catch (ArrayIndexOutOfBoundsException aioobe) {
-            throw new IllegalStateException("Column not found.", aioobe);
+        if (index < 0 || index >= columns.size()) {
+            throw new IllegalStateException("Column not found.");
         }
+        return columns.get(index);
     }
 
     /**
-     * Sets the header row visible.
+     * Set the column headers visible.
+     * 
+     * <p>
+     * A column header is a single cell header on top of each column reserved
+     * for a specific header for that column. The column header can be set by
+     * {@link GridColumn#setHeaderCaption(String)} and column headers cannot be
+     * merged with other column headers.
+     * </p>
+     * 
+     * <p>
+     * All column headers occupy the first header row of the grid. If you do not
+     * wish to show the column headers in the grid you should hide the row by
+     * setting visibility of the header row to <code>false</code>.
+     * </p>
+     * 
+     * <p>
+     * If you want to merge the column headers into groups you can use
+     * {@link ColumnGroupRow}s to group columns together and give them a common
+     * header. See {@link #addColumnGroupRow()} for details.
+     * </p>
+     * 
+     * <p>
+     * The header row is by default visible.
+     * </p>
      * 
      * @param visible
-     *            true if header rows should be visible
+     *            <code>true</code> if header rows should be visible
      */
-    public void setHeaderVisible(boolean visible) {
-        if (visible == isHeaderVisible()) {
+    public void setColumnHeadersVisible(boolean visible) {
+        if (visible == isColumnHeadersVisible()) {
             return;
         }
-
-        RowContainer header = escalator.getHeader();
-
-        // TODO Should support multiple headers
-        if (visible) {
-            header.insertRows(0, 1);
-        } else {
-            header.removeRows(0, 1);
-        }
+        columnHeadersVisible = visible;
+        refreshHeader();
     }
 
     /**
-     * Are the header row(s) visible?
+     * Are the column headers visible
      * 
-     * @return <code>true</code> if the header is visible
+     * @return <code>true</code> if they are visible
      */
-    public boolean isHeaderVisible() {
-        return escalator.getHeader().getRowCount() > 0;
+    public boolean isColumnHeadersVisible() {
+        return columnHeadersVisible;
     }
 
     /**
-     * Sets the footer row(s) visible.
+     * Set the column footers visible.
+     * 
+     * <p>
+     * A column footer is a single cell footer below of each column reserved for
+     * a specific footer for that column. The column footer can be set by
+     * {@link GridColumn#setFooterCaption(String)} and column footers cannot be
+     * merged with other column footers.
+     * </p>
+     * 
+     * <p>
+     * All column footers occupy the first footer row of the grid. If you do not
+     * wish to show the column footers in the grid you should hide the row by
+     * setting visibility of the footer row to <code>false</code>.
+     * </p>
+     * 
+     * <p>
+     * If you want to merge the column footers into groups you can use
+     * {@link ColumnGroupRow}s to group columns together and give them a common
+     * footer. See {@link #addColumnGroupRow()} for details.
+     * </p>
+     * 
+     * <p>
+     * The footer row is by default hidden.
+     * </p>
      * 
      * @param visible
-     *            true if header rows should be visible
+     *            <code>true</code> if the footer row should be visible
      */
-    public void setFooterVisible(boolean visible) {
-        if (visible == isFooterVisible()) {
+    public void setColumnFootersVisible(boolean visible) {
+        if (visible == isColumnFootersVisible()) {
             return;
         }
-
-        RowContainer footer = escalator.getFooter();
-
-        // TODO Should support multiple footers
-        if (visible) {
-            footer.insertRows(0, 1);
-        } else {
-            footer.removeRows(0, 1);
-        }
+        this.columnFootersVisible = visible;
+        refreshFooter();
     }
 
     /**
-     * Are the footer row(s) visible?
+     * Are the column footers visible
      * 
-     * @return <code>true</code> if the footer is visible
+     * @return <code>true</code> if they are visible
+     * 
      */
-    public boolean isFooterVisible() {
-        return escalator.getFooter().getRowCount() > 0;
+    public boolean isColumnFootersVisible() {
+        return columnFootersVisible;
+    }
+
+    /**
+     * Adds a new column group row to the grid.
+     * 
+     * <p>
+     * Column group rows are rendered in the header and footer of the grid.
+     * Column group rows are made up of column groups which groups together
+     * columns for adding a common auxiliary header or footer for the columns.
+     * </p>
+     * 
+     * Example usage:
+     * 
+     * <pre>
+     * // Add a new column group row to the grid
+     * ColumnGroupRow row = grid.addColumnGroupRow();
+     * 
+     * // Group &quot;Column1&quot; and &quot;Column2&quot; together to form a header in the row
+     * ColumnGroup column12 = row.addGroup(&quot;Column1&quot;, &quot;Column2&quot;);
+     * 
+     * // Set a common header for &quot;Column1&quot; and &quot;Column2&quot;
+     * column12.setHeader(&quot;Column 1&amp;2&quot;);
+     * 
+     * // Set a common footer for &quot;Column1&quot; and &quot;Column2&quot;
+     * column12.setFooter(&quot;Column 1&amp;2&quot;);
+     * </pre>
+     * 
+     * @return a column group row instance you can use to add column groups
+     */
+    public ColumnGroupRow addColumnGroupRow() {
+        ColumnGroupRow row = new ColumnGroupRow(this);
+        columnGroupRows.add(row);
+        refreshHeader();
+        refreshFooter();
+        return row;
+    }
+
+    /**
+     * Adds a new column group row to the grid at a specific index.
+     * 
+     * @see #addColumnGroupRow() {@link Grid#addColumnGroupRow()} for example
+     *      usage
+     * 
+     * @param rowIndex
+     *            the index where the column group row should be added
+     * @return a column group row instance you can use to add column groups
+     */
+    public ColumnGroupRow addColumnGroupRow(int rowIndex) {
+        ColumnGroupRow row = new ColumnGroupRow(this);
+        columnGroupRows.add(rowIndex, row);
+        refreshHeader();
+        refreshFooter();
+        return row;
+    }
+
+    /**
+     * Removes a column group row
+     * 
+     * @param row
+     *            The row to remove
+     */
+    public void removeColumnGroupRow(ColumnGroupRow row) {
+        columnGroupRows.remove(row);
+        refreshHeader();
+        refreshFooter();
+    }
+
+    /**
+     * Get the column group rows
+     * 
+     * @return a unmodifiable list of column group rows
+     * 
+     */
+    public List<ColumnGroupRow> getColumnGroupRows() {
+        return Collections.unmodifiableList(new ArrayList<ColumnGroupRow>(
+                columnGroupRows));
+    }
+
+    /**
+     * Returns the column group for a row and column
+     * 
+     * @param row
+     *            The row of the column
+     * @param column
+     *            the column to get the group for
+     * @return A column group for the row and column or <code>null</code> if not
+     *         found.
+     */
+    private static ColumnGroup getGroupForColumn(ColumnGroupRow row,
+            GridColumn column) {
+        for (ColumnGroup group : row.getGroups()) {
+            List<GridColumn> columns = group.getColumns();
+            if (columns.contains(column)) {
+                return group;
+            }
+        }
+        return null;
     }
 
     @Override

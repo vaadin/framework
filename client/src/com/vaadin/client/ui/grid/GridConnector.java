@@ -16,15 +16,19 @@
 
 package com.vaadin.client.ui.grid;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.ColumnGroupRowState;
+import com.vaadin.shared.ui.grid.ColumnGroupState;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridState;
 
@@ -38,6 +42,10 @@ import com.vaadin.shared.ui.grid.GridState;
 @Connect(com.vaadin.ui.components.grid.Grid.class)
 public class GridConnector extends AbstractComponentConnector {
 
+    /**
+     * Custom implementation of the custom grid column using a String[] to
+     * represent the cell value
+     */
     private class CustomGridColumn extends GridColumn<String[]> {
 
         @Override
@@ -47,7 +55,9 @@ public class GridConnector extends AbstractComponentConnector {
         }
     }
 
-    // Maps a generated column id -> A grid column instance
+    /**
+     * Maps a generated column id to a grid column instance
+     */
     private Map<String, CustomGridColumn> columnIdToColumn = new HashMap<String, CustomGridColumn>();
 
     @Override
@@ -71,16 +81,6 @@ public class GridConnector extends AbstractComponentConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        // Header
-        if (stateChangeEvent.hasPropertyChanged("headerVisible")) {
-            getWidget().setHeaderVisible(getState().headerVisible);
-        }
-
-        // Footer
-        if (stateChangeEvent.hasPropertyChanged("footerVisible")) {
-            getWidget().setFooterVisible(getState().footerVisible);
-        }
-
         // Column updates
         if (stateChangeEvent.hasPropertyChanged("columns")) {
 
@@ -92,7 +92,7 @@ public class GridConnector extends AbstractComponentConnector {
 
             // Add new columns
             for (int columnIndex = currentColumns; columnIndex < totalColumns; columnIndex++) {
-                addColumnFromStateChangeEvent(columnIndex, stateChangeEvent);
+                addColumnFromStateChangeEvent(columnIndex);
             }
 
             // Update old columns
@@ -100,8 +100,25 @@ public class GridConnector extends AbstractComponentConnector {
                 // FIXME Currently updating all column header / footers when a
                 // change in made in one column. When the framework supports
                 // quering a specific item in a list then it should do so here.
-                updateColumnFromStateChangeEvent(columnIndex, stateChangeEvent);
+                updateColumnFromStateChangeEvent(columnIndex);
             }
+        }
+
+        // Header
+        if (stateChangeEvent.hasPropertyChanged("columnHeadersVisible")) {
+            getWidget()
+                    .setColumnHeadersVisible(getState().columnHeadersVisible);
+        }
+
+        // Footer
+        if (stateChangeEvent.hasPropertyChanged("columnFootersVisible")) {
+            getWidget()
+                    .setColumnFootersVisible(getState().columnFootersVisible);
+        }
+
+        // Column row groups
+        if (stateChangeEvent.hasPropertyChanged("columnGroupRows")) {
+            updateColumnGroupsFromStateChangeEvent();
         }
     }
 
@@ -110,12 +127,8 @@ public class GridConnector extends AbstractComponentConnector {
      * 
      * @param columnIndex
      *            The index of the column to update
-     * @param stateChangeEvent
-     *            The state change event that contains the changes for the
-     *            column
      */
-    private void updateColumnFromStateChangeEvent(int columnIndex,
-            StateChangeEvent stateChangeEvent) {
+    private void updateColumnFromStateChangeEvent(int columnIndex) {
         GridColumn<String[]> column = getWidget().getColumn(columnIndex);
         GridColumnState columnState = getState().columns.get(columnIndex);
         updateColumnFromState(column, columnState);
@@ -126,30 +139,30 @@ public class GridConnector extends AbstractComponentConnector {
      * 
      * @param columnIndex
      *            The index of the column, according to how it
-     * @param stateChangeEvent
      */
-    private void addColumnFromStateChangeEvent(int columnIndex,
-            StateChangeEvent stateChangeEvent) {
+    private void addColumnFromStateChangeEvent(int columnIndex) {
         GridColumnState state = getState().columns.get(columnIndex);
         CustomGridColumn column = new CustomGridColumn();
         updateColumnFromState(column, state);
+
         columnIdToColumn.put(state.id, column);
+
         getWidget().addColumn(column, columnIndex);
     }
 
     /**
-     * Updates fields in column from a {@link GridColumnState} DTO
+     * Updates the column values from a state
      * 
      * @param column
      *            The column to update
      * @param state
-     *            The state to update from
+     *            The state to get the data from
      */
     private static void updateColumnFromState(GridColumn<String[]> column,
             GridColumnState state) {
+        column.setVisible(state.visible);
         column.setHeaderCaption(state.header);
         column.setFooterCaption(state.footer);
-        column.setVisible(state.visible);
     }
 
     /**
@@ -173,6 +186,37 @@ public class GridConnector extends AbstractComponentConnector {
                 CustomGridColumn column = columnIdToColumn.get(id);
                 columnIdIterator.remove();
                 getWidget().removeColumn(column);
+            }
+        }
+    }
+
+    /**
+     * Updates the column groups from a state change
+     */
+    private void updateColumnGroupsFromStateChangeEvent() {
+
+        // FIXME When something changes the header/footer rows will be
+        // re-created. At some point we should optimize this so partial updates
+        // can be made on the header/footer.
+        for (ColumnGroupRow row : getWidget().getColumnGroupRows()) {
+            getWidget().removeColumnGroupRow(row);
+        }
+
+        for (ColumnGroupRowState rowState : getState().columnGroupRows) {
+            ColumnGroupRow row = getWidget().addColumnGroupRow();
+            row.setFooterVisible(rowState.footerVisible);
+            row.setHeaderVisible(rowState.headerVisible);
+
+            for (ColumnGroupState groupState : rowState.groups) {
+                List<GridColumn> columns = new ArrayList<GridColumn>();
+                for (String columnId : groupState.columns) {
+                    CustomGridColumn column = columnIdToColumn.get(columnId);
+                    columns.add(column);
+                }
+                ColumnGroup group = row.addGroup(columns
+                        .toArray(new GridColumn[columns.size()]));
+                group.setFooterCaption(groupState.footer);
+                group.setHeaderCaption(groupState.header);
             }
         }
     }
