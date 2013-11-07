@@ -132,9 +132,6 @@ public class W3ConformanceTests extends AbstractDirectoryScanningSassTests {
          */
         final String[] excludelist = new String[] {
 
-                // Probable bug/limitation (filed as #12833)
-                "http://www.w3.org/Style/CSS/Test/CSS3/Selectors/current/html/tests/css3-modsel-67.html",
-
                 // Probable bug/limitation (filed as #12834)
                 "http://www.w3.org/Style/CSS/Test/CSS3/Selectors/current/html/tests/css3-modsel-73.html",
                 "http://www.w3.org/Style/CSS/Test/CSS3/Selectors/current/html/tests/css3-modsel-73b.html",

@@ -1204,6 +1204,77 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         String str = s.toString().trim();
         if (str.length() > 0) {
           ml.addItem(str);
+<<<<<<< HEAD
+        }
+      }
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+  final public String medium() throws ParseException {
+ Token n;
+    n = jj_consume_token(IDENT);
+                {if (true) return convertIdent(n.image);}
+    throw new Error("Missing return statement in function");
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+  final public void page() throws ParseException {
+ boolean start = false;
+ Token n = null;
+ String page = null;
+ String pseudo = null;
+    try {
+      jj_consume_token(PAGE_SYM);
+      label_27:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[35] = jj_gen;
+          break label_27;
+        }
+        jj_consume_token(S);
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case IDENT:
+        n = jj_consume_token(IDENT);
+        label_28:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case S:
+            ;
+            break;
+          default:
+            jj_la1[36] = jj_gen;
+            break label_28;
+          }
+          jj_consume_token(S);
+        }
+        break;
+      default:
+        jj_la1[37] = jj_gen;
+        ;
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case COLON:
+        pseudo = pseudo_page();
+        break;
+      default:
+        jj_la1[38] = jj_gen;
+        ;
+      }
+          if (n != null) {
+              page = convertIdent(n.image);
+          }
+      jj_consume_token(LBRACE);
+      label_29:
+=======
         }
       }
   }
@@ -2122,6 +2193,2989 @@ char connector = ' ';
         }
       }
       break;
+    case HASH:
+      cond = hash(cond);
+      label_55:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case LBRACKET:
+        case DOT:
+        case COLON:
+          ;
+          break;
+        default:
+          jj_la1[77] = jj_gen;
+          break label_55;
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case DOT:
+          cond = _class(cond);
+          break;
+        case LBRACKET:
+          cond = attrib(cond);
+          break;
+        case COLON:
+          cond = pseudo(cond);
+          break;
+        default:
+          jj_la1[78] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+      }
+      break;
+    case DOT:
+      cond = _class(cond);
+      label_56:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case LBRACKET:
+        case DOT:
+        case COLON:
+        case HASH:
+          ;
+          break;
+        default:
+          jj_la1[79] = jj_gen;
+          break label_56;
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case HASH:
+          cond = hash(cond);
+          break;
+        case DOT:
+          cond = _class(cond);
+          break;
+        case LBRACKET:
+          cond = attrib(cond);
+          break;
+        case COLON:
+          cond = pseudo(cond);
+          break;
+        default:
+          jj_la1[80] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+      }
+      break;
+    case COLON:
+      cond = pseudo(cond);
+      label_57:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case LBRACKET:
+        case DOT:
+        case COLON:
+        case HASH:
+          ;
+          break;
+        default:
+          jj_la1[81] = jj_gen;
+          break label_57;
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case HASH:
+          cond = hash(cond);
+          break;
+        case DOT:
+          cond = _class(cond);
+          break;
+        case LBRACKET:
+          cond = attrib(cond);
+          break;
+        case COLON:
+          cond = pseudo(cond);
+          break;
+        default:
+          jj_la1[82] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+      }
+      break;
+    case LBRACKET:
+      cond = attrib(cond);
+      label_58:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case LBRACKET:
+        case DOT:
+        case COLON:
+        case HASH:
+          ;
+          break;
+        default:
+          jj_la1[83] = jj_gen;
+          break label_58;
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case HASH:
+          cond = hash(cond);
+          break;
+        case DOT:
+          cond = _class(cond);
+          break;
+        case LBRACKET:
+          cond = attrib(cond);
+          break;
+        case COLON:
+          cond = pseudo(cond);
+          break;
+        default:
+          jj_la1[84] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+      }
+      break;
+    default:
+      jj_la1[85] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+            if (simple_current == null) {
+                simple_current = "";
+            }
+            if (cond != null) {
+                simple_current = simple_current + cond;
+            }
+            StringBuilder builder = new StringBuilder();
+            switch (comb) {
+                case ' ':
+                    if(selector!=null){
+                        builder.append(selector).append(" ");
+                    }
+                    break;
+                case '+':
+                case '>':
+                case '~':
+                    if(selector!=null){
+                        builder.append(selector).append(" ");
+                    }
+                    builder.append(comb).append(" ");
+                    break;
+                default:
+                    {if (true) throw new ParseException("invalid state. send a bug report");}
+            }
+            builder.append(simple_current);
+            selector = builder.toString();
+
+            if (pseudoElt != null) {
+                selector = selector + pseudoElt;
+            }
+            {if (true) return selector;}
+    throw new Error("Missing return statement in function");
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+  final public String _class(String pred) throws ParseException {
+ Token t;
+String s = ".";
+    jj_consume_token(DOT);
+    label_59:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case IDENT:
+        t = jj_consume_token(IDENT);
+                   s += t.image;
+        break;
+      case INTERPOLATION:
+        t = jj_consume_token(INTERPOLATION);
+                                                           s += t.image;
+        break;
+      default:
+        jj_la1[86] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case INTERPOLATION:
+      case IDENT:
+        ;
+        break;
+      default:
+        jj_la1[87] = jj_gen;
+        break label_59;
+      }
+    }
+          if (pred == null) {
+              {if (true) return s;}
+          } else {
+              {if (true) return pred + s;}
+          }
+    throw new Error("Missing return statement in function");
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+  final public String element_name() throws ParseException {
+ Token t; String s = "";
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case INTERPOLATION:
+    case IDENT:
+      label_60:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case IDENT:
+          t = jj_consume_token(IDENT);
+                 s += t.image;
+          break;
+        case INTERPOLATION:
+          t = jj_consume_token(INTERPOLATION);
+                                                        s += t.image;
+          break;
+        default:
+          jj_la1[88] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case INTERPOLATION:
+        case IDENT:
+          ;
+          break;
+        default:
+          jj_la1[89] = jj_gen;
+          break label_60;
+        }
+      }
+      {if (true) return s;}
+      break;
+    case ANY:
+      jj_consume_token(ANY);
+      {if (true) return "*";}
+      break;
+    case PARENT:
+      jj_consume_token(PARENT);
+      {if (true) return "&";}
+      break;
+    default:
+      jj_la1[90] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+  final public String attrib(String pred) throws ParseException {
+    int cases = 0;
+    Token att = null;
+    Token val = null;
+    String attValue = null;
+    jj_consume_token(LBRACKET);
+    label_61:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[91] = jj_gen;
+        break label_61;
+      }
+      jj_consume_token(S);
+    }
+    att = jj_consume_token(IDENT);
+    label_62:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[92] = jj_gen;
+        break label_62;
+      }
+      jj_consume_token(S);
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case DASHMATCH:
+    case CARETMATCH:
+    case DOLLARMATCH:
+    case STARMATCH:
+    case INCLUDES:
+    case EQ:
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case EQ:
+        jj_consume_token(EQ);
+                          cases = 1;
+        break;
+      case INCLUDES:
+        jj_consume_token(INCLUDES);
+                          cases = 2;
+        break;
+      case DASHMATCH:
+        jj_consume_token(DASHMATCH);
+                          cases = 3;
+        break;
+      case CARETMATCH:
+        jj_consume_token(CARETMATCH);
+                           cases = 4;
+        break;
+      case DOLLARMATCH:
+        jj_consume_token(DOLLARMATCH);
+                            cases = 5;
+        break;
+      case STARMATCH:
+        jj_consume_token(STARMATCH);
+                          cases = 6;
+        break;
+      default:
+        jj_la1[93] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      label_63:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[94] = jj_gen;
+          break label_63;
+        }
+        jj_consume_token(S);
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case IDENT:
+        val = jj_consume_token(IDENT);
+                        attValue = val.image;
+        break;
+      case STRING:
+        val = jj_consume_token(STRING);
+                           attValue = val.image;
+        break;
+      default:
+        jj_la1[95] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      label_64:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[96] = jj_gen;
+          break label_64;
+        }
+        jj_consume_token(S);
+      }
+      break;
+    default:
+      jj_la1[97] = jj_gen;
+      ;
+    }
+    jj_consume_token(RBRACKET);
+      String name = convertIdent(att.image);
+      String c;
+      switch (cases) {
+          case 0:
+          c = name;
+          break;
+          case 1:
+          c = name + "=" + attValue;
+          break;
+          case 2:
+          c = name + "~=" + attValue;
+          break;
+          case 3:
+          c = name + "|=" +attValue;
+          break;
+          case 4:
+          c = name + "^=" +attValue;
+          break;
+          case 5:
+          c = name + "$=" +attValue;
+          break;
+          case 6:
+          c = name + "*=" +attValue;
+          break;
+          default:
+          // never reached.
+          c = null;
+      }
+      c = "[" + c + "]";
+      if (pred == null) {
+          {if (true) return c;}
+      } else {
+          {if (true) return pred + c;}
+      }
+    throw new Error("Missing return statement in function");
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+  final public String pseudo(String pred) throws ParseException {
+ Token n;
+Token param;
+String d;
+boolean isPseudoElement = false;
+    jj_consume_token(COLON);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case COLON:
+      jj_consume_token(COLON);
+             isPseudoElement=true;
+      break;
+    default:
+      jj_la1[98] = jj_gen;
+      ;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case IDENT:
+      n = jj_consume_token(IDENT);
+            String s = ":" + convertIdent(n.image);
+            if (isPseudoElement) {
+                if (pseudoElt != null) {
+                    {if (true) throw new CSSParseException("duplicate pseudo element definition "
+                                                + s, getLocator());}
+                } else {
+                    pseudoElt = ":"+s;
+                    {if (true) return pred;}
+                }
+            } else {
+                String c = s;
+                if (pred == null) {
+                    {if (true) return c;}
+                } else {
+                    {if (true) return pred + c;}
+                }
+            }
+      break;
+    case FUNCTION:
+      n = jj_consume_token(FUNCTION);
+      label_65:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[99] = jj_gen;
+          break label_65;
+        }
+        jj_consume_token(S);
+      }
+      d = skipStatementUntilMatchingRightParan();
+      jj_consume_token(RPARAN);
+                  // accept anything between function and a right parenthesis
+                  String f = convertIdent(n.image);
+                  String colons = isPseudoElement ? "::" : ":";
+                  String pseudofn = colons + f + d + ")";
+                      if (pred == null) {
+                          {if (true) return pseudofn;}
+                      } else {
+                          {if (true) return pred + pseudofn;}
+                  }
+      break;
+    default:
+      jj_la1[100] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+  final public String hash(String pred) throws ParseException {
+ Token n;
+    n = jj_consume_token(HASH);
+      String d = n.image;
+      if (pred == null) {
+          {if (true) return d;}
+      } else {
+          {if (true) return pred + d;}
+      }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void variable() throws ParseException {
+        String name;
+        LexicalUnitImpl exp = null;
+        boolean guarded = false;
+        String raw;
+    try {
+      name = variableName();
+      jj_consume_token(COLON);
+      label_66:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[101] = jj_gen;
+          break label_66;
+        }
+        jj_consume_token(S);
+      }
+      exp = expr();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case GUARDED_SYM:
+        guarded = guarded();
+        break;
+      default:
+        jj_la1[102] = jj_gen;
+        ;
+      }
+      label_67:
+      while (true) {
+        jj_consume_token(SEMICOLON);
+        label_68:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case S:
+            ;
+            break;
+          default:
+            jj_la1[103] = jj_gen;
+            break label_68;
+          }
+          jj_consume_token(S);
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case SEMICOLON:
+          ;
+          break;
+        default:
+          jj_la1[104] = jj_gen;
+          break label_67;
+        }
+      }
+                    documentHandler.variable(name, exp, guarded);
+    } catch (JumpException e) {
+            skipAfterExpression();
+    } catch (NumberFormatException e) {
+            if (errorHandler != null) {
+                errorHandler.error(new CSSParseException("Invalid number "
+                                                  + e.getMessage(),
+                                                  getLocator(),
+                                                  e));
+            }
+            reportWarningSkipText(getLocator(), skipAfterExpression());
+    } catch (ParseException e) {
+            if (errorHandler != null) {
+                if (e.currentToken != null) {
+                        LocatorImpl li = new LocatorImpl(this,
+                                                      e.currentToken.next.beginLine,
+                                                      e.currentToken.next.beginColumn-1);
+                        reportError(li, e);
+                } else {
+                        reportError(getLocator(), e);
+            }
+                skipAfterExpression();
+            } else {
+                skipAfterExpression();
+            }
+    }
+  }
+
+  final public void controlDirective() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case IF_SYM:
+      ifDirective();
+      break;
+    case EACH_SYM:
+      eachDirective();
+      break;
+    default:
+      jj_la1[105] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public void ifContentStatement() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case CONTENT_SYM:
+      contentDirective();
+      break;
+    case INCLUDE_SYM:
+      includeDirective();
+      break;
+    case MEDIA_SYM:
+      media();
+      break;
+    case EXTEND_SYM:
+      extendDirective();
+      break;
+    case PLUS:
+    case PRECEDES:
+    case SIBLING:
+    case LBRACKET:
+    case ANY:
+    case PARENT:
+    case DOT:
+    case COLON:
+    case INTERPOLATION:
+    case DEBUG_SYM:
+    case WARN_SYM:
+    case IDENT:
+    case HASH:
+      styleRuleOrDeclarationOrNestedProperties();
+      break;
+    case KEY_FRAME_SYM:
+      keyframes();
+      break;
+    default:
+      jj_la1[106] = jj_gen;
+      if (jj_2_3(2147483647)) {
+        variable();
+      } else {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case VARIABLE:
+          listModifyDirective();
+          break;
+        case EACH_SYM:
+        case IF_SYM:
+          controlDirective();
+          break;
+        default:
+          jj_la1[107] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+      }
+    }
+  }
+
+  final public void ifDirective() throws ParseException {
+  Token n = null;
+  String s = null;
+  String evaluator = "";
+    jj_consume_token(IF_SYM);
+    label_69:
+    while (true) {
+      s = booleanExpressionToken();
+                                   evaluator += s;
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+      case EQ:
+      case PLUS:
+      case MINUS:
+      case PRECEDES:
+      case SUCCEEDS:
+      case DIV:
+      case ANY:
+      case LPARAN:
+      case RPARAN:
+      case COMPARE:
+      case OR:
+      case AND:
+      case NOT_EQ:
+      case IDENT:
+      case NUMBER:
+      case VARIABLE:
+      case CONTAINS:
+        ;
+        break;
+      default:
+        jj_la1[108] = jj_gen;
+        break label_69;
+      }
+    }
+    jj_consume_token(LBRACE);
+    label_70:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[109] = jj_gen;
+        break label_70;
+      }
+      jj_consume_token(S);
+    }
+    documentHandler.startIfElseDirective();
+    documentHandler.ifDirective(evaluator);
+    label_71:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PLUS:
+      case PRECEDES:
+      case SIBLING:
+      case LBRACKET:
+      case ANY:
+      case PARENT:
+      case DOT:
+      case COLON:
+      case INTERPOLATION:
+      case INCLUDE_SYM:
+      case DEBUG_SYM:
+      case WARN_SYM:
+      case EACH_SYM:
+      case IF_SYM:
+      case EXTEND_SYM:
+      case CONTENT_SYM:
+      case IDENT:
+      case VARIABLE:
+      case HASH:
+      case MEDIA_SYM:
+      case KEY_FRAME_SYM:
+        ;
+        break;
+      default:
+        jj_la1[110] = jj_gen;
+        break label_71;
+      }
+      ifContentStatement();
+    }
+    jj_consume_token(RBRACE);
+    label_72:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[111] = jj_gen;
+        break label_72;
+      }
+      jj_consume_token(S);
+    }
+    label_73:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ELSE_SYM:
+        ;
+        break;
+      default:
+        jj_la1[112] = jj_gen;
+        break label_73;
+      }
+      elseDirective();
+    }
+    documentHandler.endIfElseDirective();
+  }
+
+  final public void elseDirective() throws ParseException {
+  String evaluator = "";
+  Token n = null;
+  String s = null;
+    jj_consume_token(ELSE_SYM);
+    label_74:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[113] = jj_gen;
+        break label_74;
+      }
+      jj_consume_token(S);
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case IF:
+      jj_consume_token(IF);
+      label_75:
+      while (true) {
+        s = booleanExpressionToken();
+                                            evaluator += s;
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+        case EQ:
+        case PLUS:
+        case MINUS:
+        case PRECEDES:
+        case SUCCEEDS:
+        case DIV:
+        case ANY:
+        case LPARAN:
+        case RPARAN:
+        case COMPARE:
+        case OR:
+        case AND:
+        case NOT_EQ:
+        case IDENT:
+        case NUMBER:
+        case VARIABLE:
+        case CONTAINS:
+          ;
+          break;
+        default:
+          jj_la1[114] = jj_gen;
+          break label_75;
+        }
+      }
+      break;
+    default:
+      jj_la1[115] = jj_gen;
+      ;
+    }
+    jj_consume_token(LBRACE);
+    label_76:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[116] = jj_gen;
+        break label_76;
+      }
+      jj_consume_token(S);
+    }
+    if(!evaluator.trim().equals("")){ documentHandler.ifDirective(evaluator); }
+    else{ documentHandler.elseDirective(); }
+    label_77:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PLUS:
+      case PRECEDES:
+      case SIBLING:
+      case LBRACKET:
+      case ANY:
+      case PARENT:
+      case DOT:
+      case COLON:
+      case INTERPOLATION:
+      case INCLUDE_SYM:
+      case DEBUG_SYM:
+      case WARN_SYM:
+      case EACH_SYM:
+      case IF_SYM:
+      case EXTEND_SYM:
+      case CONTENT_SYM:
+      case IDENT:
+      case VARIABLE:
+      case HASH:
+      case MEDIA_SYM:
+      case KEY_FRAME_SYM:
+        ;
+        break;
+      default:
+        jj_la1[117] = jj_gen;
+        break label_77;
+      }
+      ifContentStatement();
+    }
+    jj_consume_token(RBRACE);
+    label_78:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[118] = jj_gen;
+        break label_78;
+      }
+      jj_consume_token(S);
+    }
+  }
+
+  final public String booleanExpressionToken() throws ParseException {
+  Token n = null;
+  String s = null;
+    if (jj_2_4(2147483647)) {
+      s = containsDirective();
+    } else {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case VARIABLE:
+        n = jj_consume_token(VARIABLE);
+        break;
+      case IDENT:
+        n = jj_consume_token(IDENT);
+        break;
+      case NUMBER:
+        n = jj_consume_token(NUMBER);
+        break;
+      case LPARAN:
+        n = jj_consume_token(LPARAN);
+        break;
+      case RPARAN:
+        n = jj_consume_token(RPARAN);
+        break;
+      case PLUS:
+        n = jj_consume_token(PLUS);
+        break;
+      case MINUS:
+        n = jj_consume_token(MINUS);
+        break;
+      case DIV:
+        n = jj_consume_token(DIV);
+        break;
+      case ANY:
+        n = jj_consume_token(ANY);
+        break;
+      case COMPARE:
+        n = jj_consume_token(COMPARE);
+        break;
+      case EQ:
+        n = jj_consume_token(EQ);
+        break;
+      case PRECEDES:
+        n = jj_consume_token(PRECEDES);
+        break;
+      case SUCCEEDS:
+        n = jj_consume_token(SUCCEEDS);
+        break;
+      case OR:
+        n = jj_consume_token(OR);
+        break;
+      case AND:
+        n = jj_consume_token(AND);
+        break;
+      case S:
+        n = jj_consume_token(S);
+        break;
+      case NOT_EQ:
+        n = jj_consume_token(NOT_EQ);
+        break;
+      default:
+        jj_la1[119] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
+   if(n!=null){{if (true) return n.image;}}
+   else{{if (true) return s;}}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void eachDirective() throws ParseException {
+  Token var;
+  ArrayList<String> list = null;
+  String listVariable = null;
+    jj_consume_token(EACH_SYM);
+    label_79:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[120] = jj_gen;
+        break label_79;
+      }
+      jj_consume_token(S);
+    }
+    var = jj_consume_token(VARIABLE);
+    label_80:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[121] = jj_gen;
+        break label_80;
+      }
+      jj_consume_token(S);
+    }
+    jj_consume_token(EACH_IN);
+    label_81:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[122] = jj_gen;
+        break label_81;
+      }
+      jj_consume_token(S);
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case IDENT:
+      list = stringList();
+   documentHandler.startEachDirective(var.image, list);
+      break;
+    case VARIABLE:
+      listVariable = variableName();
+   documentHandler.startEachDirective(var.image, listVariable);
+      break;
+    default:
+      jj_la1[123] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(LBRACE);
+    label_82:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[124] = jj_gen;
+        break label_82;
+      }
+      jj_consume_token(S);
+    }
+    label_83:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PLUS:
+      case PRECEDES:
+      case SIBLING:
+      case LBRACKET:
+      case ANY:
+      case PARENT:
+      case DOT:
+      case COLON:
+      case INTERPOLATION:
+      case INCLUDE_SYM:
+      case DEBUG_SYM:
+      case WARN_SYM:
+      case EACH_SYM:
+      case IF_SYM:
+      case EXTEND_SYM:
+      case CONTENT_SYM:
+      case IDENT:
+      case VARIABLE:
+      case HASH:
+      case MEDIA_SYM:
+      case KEY_FRAME_SYM:
+        ;
+        break;
+      default:
+        jj_la1[125] = jj_gen;
+        break label_83;
+      }
+      ifContentStatement();
+    }
+    jj_consume_token(RBRACE);
+    label_84:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[126] = jj_gen;
+        break label_84;
+      }
+      jj_consume_token(S);
+    }
+    documentHandler.endEachDirective();
+  }
+
+  final public ArrayList<String > stringList() throws ParseException {
+        ArrayList<String > strings = new ArrayList<String >();
+        Token input;
+    input = jj_consume_token(IDENT);
+    label_85:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[127] = jj_gen;
+        break label_85;
+      }
+      jj_consume_token(S);
+    }
+          strings.add(input.image);
+    label_86:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case COMMA:
+        ;
+        break;
+      default:
+        jj_la1[128] = jj_gen;
+        break label_86;
+      }
+      jj_consume_token(COMMA);
+      label_87:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[129] = jj_gen;
+          break label_87;
+        }
+        jj_consume_token(S);
+      }
+      input = jj_consume_token(IDENT);
+                                               strings.add(input.image);
+      label_88:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+<<<<<<< HEAD
+          jj_la1[39] = jj_gen;
+          break label_29;
+        }
+        jj_consume_token(S);
+      }
+          start = true;
+          documentHandler.startPage(page, pseudo);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case INTERPOLATION:
+      case IDENT:
+        declaration();
+        break;
+      default:
+        jj_la1[40] = jj_gen;
+        ;
+      }
+      label_30:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case SEMICOLON:
+          ;
+          break;
+        default:
+          jj_la1[41] = jj_gen;
+          break label_30;
+        }
+        jj_consume_token(SEMICOLON);
+        label_31:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case S:
+            ;
+            break;
+          default:
+            jj_la1[42] = jj_gen;
+            break label_31;
+          }
+          jj_consume_token(S);
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case INTERPOLATION:
+        case IDENT:
+          declaration();
+          break;
+        default:
+          jj_la1[43] = jj_gen;
+          ;
+        }
+      }
+      jj_consume_token(RBRACE);
+      label_32:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[44] = jj_gen;
+          break label_32;
+        }
+        jj_consume_token(S);
+      }
+    } catch (ParseException e) {
+     if (errorHandler != null) {
+         LocatorImpl li = new LocatorImpl(this,
+                                          e.currentToken.next.beginLine,
+                                          e.currentToken.next.beginColumn-1);
+         reportError(li, e);
+         skipStatement();
+         // reportWarningSkipText(li, skipStatement());
+     } else {
+         skipStatement();
+     }
+    } finally {
+     if (start) {
+         documentHandler.endPage(page, pseudo);
+     }
+    }
+  }
+
+  final public String pseudo_page() throws ParseException {
+  Token n;
+    jj_consume_token(COLON);
+    n = jj_consume_token(IDENT);
+    label_33:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[45] = jj_gen;
+        break label_33;
+      }
+      jj_consume_token(S);
+    }
+                             {if (true) return convertIdent(n.image);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void fontFace() throws ParseException {
+    boolean start = false;
+    try {
+      jj_consume_token(FONT_FACE_SYM);
+      label_34:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[46] = jj_gen;
+          break label_34;
+        }
+        jj_consume_token(S);
+      }
+      jj_consume_token(LBRACE);
+      label_35:
+=======
+          jj_la1[130] = jj_gen;
+          break label_88;
+        }
+        jj_consume_token(S);
+      }
+    }
+          {if (true) return strings;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void mixinDirective() throws ParseException {
+    String name;
+    ArrayList<VariableNode> args = null;
+    String body;
+    jj_consume_token(MIXIN_SYM);
+    label_89:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[131] = jj_gen;
+        break label_89;
+      }
+      jj_consume_token(S);
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case INTERPOLATION:
+    case IDENT:
+      name = property();
+      break;
+    case FUNCTION:
+      name = functionName();
+      args = arglist();
+      jj_consume_token(RPARAN);
+      label_90:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[132] = jj_gen;
+          break label_90;
+        }
+        jj_consume_token(S);
+      }
+      break;
+    default:
+      jj_la1[133] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(LBRACE);
+    label_91:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[134] = jj_gen;
+        break label_91;
+      }
+      jj_consume_token(S);
+    }
+     documentHandler.startMixinDirective(name, args);
+    label_92:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PLUS:
+      case PRECEDES:
+      case SIBLING:
+      case LBRACKET:
+      case ANY:
+      case PARENT:
+      case DOT:
+      case COLON:
+      case INTERPOLATION:
+      case INCLUDE_SYM:
+      case DEBUG_SYM:
+      case WARN_SYM:
+      case EACH_SYM:
+      case IF_SYM:
+      case EXTEND_SYM:
+      case CONTENT_SYM:
+      case IDENT:
+      case VARIABLE:
+      case HASH:
+      case MEDIA_SYM:
+      case PAGE_SYM:
+      case FONT_FACE_SYM:
+      case KEY_FRAME_SYM:
+        ;
+        break;
+      default:
+        jj_la1[135] = jj_gen;
+        break label_92;
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PLUS:
+      case PRECEDES:
+      case SIBLING:
+      case LBRACKET:
+      case ANY:
+      case PARENT:
+      case DOT:
+      case COLON:
+      case INTERPOLATION:
+      case INCLUDE_SYM:
+      case DEBUG_SYM:
+      case WARN_SYM:
+      case EACH_SYM:
+      case IF_SYM:
+      case EXTEND_SYM:
+      case CONTENT_SYM:
+      case IDENT:
+      case VARIABLE:
+      case HASH:
+      case MEDIA_SYM:
+      case KEY_FRAME_SYM:
+        ifContentStatement();
+        break;
+      case FONT_FACE_SYM:
+        fontFace();
+        break;
+      case PAGE_SYM:
+        page();
+        break;
+      default:
+        jj_la1[136] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
+    jj_consume_token(RBRACE);
+    label_93:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[137] = jj_gen;
+        break label_93;
+      }
+      jj_consume_token(S);
+    }
+     documentHandler.endMixinDirective(name, args);
+  }
+
+  final public ArrayList<VariableNode> arglist() throws ParseException {
+    ArrayList<VariableNode> args = new ArrayList<VariableNode>();
+    VariableNode arg;
+    boolean hasNonOptionalArgument = false;
+    arg = mixinArg();
+    label_94:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case COMMA:
+        ;
+        break;
+      default:
+        jj_la1[138] = jj_gen;
+        break label_94;
+      }
+      jj_consume_token(COMMA);
+      label_95:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[139] = jj_gen;
+          break label_95;
+        }
+        jj_consume_token(S);
+      }
+                                      hasNonOptionalArgument = checkMixinForNonOptionalArguments(arg, hasNonOptionalArgument); args.add(arg);
+      arg = mixinArg();
+    }
+      hasNonOptionalArgument = checkMixinForNonOptionalArguments(arg, hasNonOptionalArgument); args.add(arg);
+        {if (true) return args;}
+    throw new Error("Missing return statement in function");
+  }
+
+  boolean checkMixinForNonOptionalArguments(VariableNode arg, boolean hasNonOptionalArguments) throws ParseException {
+        boolean currentArgHasArguments = arg.getExpr() != null && arg.getExpr().getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE && arg.getExpr().getNextLexicalUnit() != null;
+
+        if(currentArgHasArguments)
+        {
+                if(hasNonOptionalArguments)
+                {
+                        throw new ParseException("Sass Error: Required argument $"+ arg.getName() +" must come before any optional arguments.");
+                }
+                return hasNonOptionalArguments;
+        }else
+        {
+        return true;
+        }
+  }
+
+  final public VariableNode mixinArg() throws ParseException {
+    String name;
+    Token variable = null;
+    LexicalUnitImpl first = null;
+    LexicalUnitImpl prev = null;
+    LexicalUnitImpl next = null;
+    name = variableName();
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case COLON:
+    case VARIABLE:
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case COLON:
+        jj_consume_token(COLON);
+        label_96:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case S:
+            ;
+            break;
+          default:
+            jj_la1[140] = jj_gen;
+            break label_96;
+          }
+          jj_consume_token(S);
+        }
+        first = nonVariableTerm(null);
+        prev = first;
+        label_97:
+        while (true) {
+          if (jj_2_5(3)) {
+            ;
+          } else {
+            break label_97;
+          }
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case COMMA:
+            jj_consume_token(COMMA);
+            label_98:
+            while (true) {
+              switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+              case S:
+                ;
+                break;
+              default:
+                jj_la1[141] = jj_gen;
+                break label_98;
+              }
+              jj_consume_token(S);
+            }
+            break;
+          default:
+            jj_la1[142] = jj_gen;
+            ;
+          }
+          prev = nonVariableTerm(prev);
+        }
+        break;
+      case VARIABLE:
+        variable = jj_consume_token(VARIABLE);
+                                    first = LexicalUnitImpl.createVariable(token.beginLine, token.beginColumn,
+                 prev, variable.image);
+        break;
+      default:
+        jj_la1[143] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      break;
+    default:
+      jj_la1[144] = jj_gen;
+      ;
+    }
+        VariableNode arg = new VariableNode(name, first, false);
+        {if (true) return arg;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public ArrayList<LexicalUnitImpl> argValuelist() throws ParseException {
+    ArrayList<LexicalUnitImpl> args = new ArrayList<LexicalUnitImpl>();
+    LexicalUnitImpl first = null;
+    LexicalUnitImpl next = null;
+    LexicalUnitImpl prev = null;
+    first = term(null);
+                         args.add(first); prev = first;
+    label_99:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PLUS:
+      case MINUS:
+      case DOT:
+      case COLON:
+      case TO:
+      case THROUGH:
+      case FROM:
+      case STRING:
+      case IDENT:
+      case NUMBER:
+      case URL:
+      case VARIABLE:
+      case PERCENTAGE:
+      case PT:
+      case MM:
+      case CM:
+      case PC:
+      case IN:
+      case PX:
+      case EMS:
+      case LEM:
+      case REM:
+      case EXS:
+      case DEG:
+      case RAD:
+      case GRAD:
+      case MS:
+      case SECOND:
+      case HZ:
+      case KHZ:
+      case DIMEN:
+      case HASH:
+      case UNICODERANGE:
+      case FUNCTION:
+        ;
+        break;
+      default:
+        jj_la1[145] = jj_gen;
+        break label_99;
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case COLON:
+        jj_consume_token(COLON);
+        label_100:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case S:
+            ;
+            break;
+          default:
+            jj_la1[146] = jj_gen;
+            break label_100;
+          }
+          jj_consume_token(S);
+        }
+        break;
+      default:
+        jj_la1[147] = jj_gen;
+        ;
+      }
+      next = term(prev);
+                                                                                              prev.setNextLexicalUnit(next); prev = next;
+    }
+    label_101:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case COMMA:
+        ;
+        break;
+      default:
+        jj_la1[148] = jj_gen;
+        break label_101;
+      }
+      jj_consume_token(COMMA);
+      label_102:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+<<<<<<< HEAD
+          jj_la1[47] = jj_gen;
+          break label_35;
+        }
+        jj_consume_token(S);
+      }
+        start = true; documentHandler.startFontFace();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case INTERPOLATION:
+      case IDENT:
+        declaration();
+        break;
+      default:
+        jj_la1[48] = jj_gen;
+        ;
+      }
+      label_36:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case SEMICOLON:
+          ;
+          break;
+        default:
+          jj_la1[49] = jj_gen;
+          break label_36;
+        }
+        jj_consume_token(SEMICOLON);
+        label_37:
+=======
+          jj_la1[149] = jj_gen;
+          break label_102;
+        }
+        jj_consume_token(S);
+      }
+      first = term(null);
+                         args.add(first); prev = first;
+      label_103:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case PLUS:
+        case MINUS:
+        case DOT:
+        case COLON:
+        case TO:
+        case THROUGH:
+        case FROM:
+        case STRING:
+        case IDENT:
+        case NUMBER:
+        case URL:
+        case VARIABLE:
+        case PERCENTAGE:
+        case PT:
+        case MM:
+        case CM:
+        case PC:
+        case IN:
+        case PX:
+        case EMS:
+        case LEM:
+        case REM:
+        case EXS:
+        case DEG:
+        case RAD:
+        case GRAD:
+        case MS:
+        case SECOND:
+        case HZ:
+        case KHZ:
+        case DIMEN:
+        case HASH:
+        case UNICODERANGE:
+        case FUNCTION:
+          ;
+          break;
+        default:
+          jj_la1[150] = jj_gen;
+          break label_103;
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case COLON:
+          jj_consume_token(COLON);
+          label_104:
+          while (true) {
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+            case S:
+              ;
+              break;
+            default:
+              jj_la1[151] = jj_gen;
+              break label_104;
+            }
+            jj_consume_token(S);
+          }
+          break;
+        default:
+          jj_la1[152] = jj_gen;
+          ;
+        }
+        next = term(prev);
+                                                                                              prev.setNextLexicalUnit(next); prev = next;
+      }
+    }
+     {if (true) return args;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void includeDirective() throws ParseException {
+    String name;
+    ArrayList<LexicalUnitImpl> args=null;
+    jj_consume_token(INCLUDE_SYM);
+    label_105:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[153] = jj_gen;
+        break label_105;
+      }
+      jj_consume_token(S);
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case INTERPOLATION:
+    case IDENT:
+      name = property();
+      break;
+    case VARIABLE:
+      name = variableName();
+                                              name = "$"+name;
+      break;
+    case FUNCTION:
+      name = functionName();
+      args = argValuelist();
+      jj_consume_token(RPARAN);
+      break;
+    default:
+      jj_la1[154] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    label_106:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[155] = jj_gen;
+        break label_106;
+      }
+      jj_consume_token(S);
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case SEMICOLON:
+      label_107:
+      while (true) {
+        jj_consume_token(SEMICOLON);
+        label_108:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case S:
+            ;
+            break;
+          default:
+<<<<<<< HEAD
+            jj_la1[50] = jj_gen;
+            break label_37;
+=======
+            jj_la1[156] = jj_gen;
+            break label_108;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+          }
+          jj_consume_token(S);
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+<<<<<<< HEAD
+        case INTERPOLATION:
+        case IDENT:
+          declaration();
+          break;
+        default:
+          jj_la1[51] = jj_gen;
+          ;
+        }
+      }
+      jj_consume_token(RBRACE);
+      label_38:
+=======
+        case SEMICOLON:
+          ;
+          break;
+        default:
+          jj_la1[157] = jj_gen;
+          break label_107;
+        }
+      }
+            documentHandler.includeDirective(name, args);
+      break;
+    case LBRACE:
+      jj_consume_token(LBRACE);
+      label_109:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[158] = jj_gen;
+          break label_109;
+        }
+        jj_consume_token(S);
+      }
+                       documentHandler.startIncludeContentBlock(name);
+      label_110:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case PLUS:
+        case PRECEDES:
+        case SIBLING:
+        case LBRACKET:
+        case ANY:
+        case PARENT:
+        case DOT:
+        case COLON:
+        case INTERPOLATION:
+        case DEBUG_SYM:
+        case WARN_SYM:
+        case IDENT:
+        case HASH:
+          ;
+          break;
+        default:
+          jj_la1[159] = jj_gen;
+          break label_110;
+        }
+        styleRuleOrDeclarationOrNestedProperties();
+      }
+      jj_consume_token(RBRACE);
+      label_111:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+<<<<<<< HEAD
+          jj_la1[52] = jj_gen;
+          break label_38;
+        }
+        jj_consume_token(S);
+      }
+    } catch (ParseException e) {
+     reportError(getLocator(), e);
+     skipStatement();
+     // reportWarningSkipText(getLocator(), skipStatement());
+
+    } finally {
+     if (start) {
+         documentHandler.endFontFace();
+     }
+=======
+          jj_la1[160] = jj_gen;
+          break label_111;
+        }
+        jj_consume_token(S);
+      }
+                       documentHandler.endIncludeContentBlock();
+      break;
+    default:
+      jj_la1[161] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public String interpolation() throws ParseException {
+  Token n;
+    n = jj_consume_token(INTERPOLATION);
+    {if (true) return n.image;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void listModifyDirective() throws ParseException {
+    String list = null;
+    String remove = null;
+    String separator = null;
+    String variable = null;
+    Token n = null;
+    Token type = null;
+    //refactor, remove those 3 LOOKAHEAD(5).
+      n = jj_consume_token(VARIABLE);
+                    variable = n.image;
+    label_112:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[162] = jj_gen;
+        break label_112;
+      }
+      jj_consume_token(S);
+    }
+    jj_consume_token(COLON);
+    label_113:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[163] = jj_gen;
+        break label_113;
+      }
+      jj_consume_token(S);
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case APPEND:
+      type = jj_consume_token(APPEND);
+      break;
+    case REMOVE:
+      type = jj_consume_token(REMOVE);
+      break;
+    case CONTAINS:
+      type = jj_consume_token(CONTAINS);
+      break;
+    default:
+      jj_la1[164] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    label_114:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[165] = jj_gen;
+        break label_114;
+      }
+      jj_consume_token(S);
+    }
+    list = listModifyDirectiveArgs(0);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case RPARAN:
+      jj_consume_token(RPARAN);
+      break;
+    default:
+      jj_la1[166] = jj_gen;
+      ;
+    }
+    jj_consume_token(COMMA);
+    label_115:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[167] = jj_gen;
+        break label_115;
+      }
+      jj_consume_token(S);
+    }
+    remove = listModifyDirectiveArgs(1);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case COMMA:
+      jj_consume_token(COMMA);
+      label_116:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[168] = jj_gen;
+          break label_116;
+        }
+        jj_consume_token(S);
+      }
+      n = jj_consume_token(IDENT);
+                                     separator = n.image;
+      label_117:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[169] = jj_gen;
+          break label_117;
+        }
+        jj_consume_token(S);
+      }
+      break;
+    default:
+      jj_la1[170] = jj_gen;
+      ;
+    }
+    jj_consume_token(RPARAN);
+      switch (type.kind) {
+      case APPEND:
+          documentHandler.appendDirective(variable,list,remove,separator);
+          break;
+      case REMOVE:
+          documentHandler.removeDirective(variable,list,remove,separator);
+          break;
+      case CONTAINS:
+          if(variable == null){
+              variable = "$var_"+UUID.randomUUID();
+          }
+          documentHandler.containsDirective(variable,list,remove,separator);
+          break;
+      default:
+          break;
+      }
+    label_118:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[171] = jj_gen;
+        break label_118;
+      }
+      jj_consume_token(S);
+    }
+    jj_consume_token(SEMICOLON);
+    label_119:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[172] = jj_gen;
+        break label_119;
+      }
+      jj_consume_token(S);
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+    }
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+<<<<<<< HEAD
+  final public void atRuleDeclaration() throws ParseException {
+ Token n;
+ String ret;
+    n = jj_consume_token(ATKEYWORD);
+        ret=skipStatement();
+        if ((ret != null) && (ret.charAt(0) == '@')) {
+            documentHandler.unrecognizedRule(ret);
+        } else {
+            reportWarningSkipText(getLocator(), ret);
+        }
+  }
+
+  final public void skipUnknownRule() throws ParseException {
+  Token n;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case ATKEYWORD:
+      n = jj_consume_token(ATKEYWORD);
+      break;
+    case CDO:
+      n = jj_consume_token(CDO);
+      break;
+    case CHARSET_SYM:
+      n = jj_consume_token(CHARSET_SYM);
+      break;
+    case COMMA:
+      n = jj_consume_token(COMMA);
+      break;
+    case DASHMATCH:
+      n = jj_consume_token(DASHMATCH);
+      break;
+    case FONT_FACE_SYM:
+      n = jj_consume_token(FONT_FACE_SYM);
+      break;
+    case FUNCTION:
+      n = jj_consume_token(FUNCTION);
+      break;
+    case IMPORTANT_SYM:
+      n = jj_consume_token(IMPORTANT_SYM);
+      break;
+    case IMPORT_SYM:
+      n = jj_consume_token(IMPORT_SYM);
+      break;
+    case INCLUDES:
+      n = jj_consume_token(INCLUDES);
+      break;
+    case LBRACE:
+      n = jj_consume_token(LBRACE);
+      break;
+    case MEDIA_SYM:
+      n = jj_consume_token(MEDIA_SYM);
+      break;
+    case NONASCII:
+      n = jj_consume_token(NONASCII);
+      break;
+    case NUMBER:
+      n = jj_consume_token(NUMBER);
+      break;
+    case PAGE_SYM:
+      n = jj_consume_token(PAGE_SYM);
+      break;
+    case PERCENTAGE:
+      n = jj_consume_token(PERCENTAGE);
+      break;
+    case STRING:
+      n = jj_consume_token(STRING);
+      break;
+    case UNICODERANGE:
+      n = jj_consume_token(UNICODERANGE);
+      break;
+    case URL:
+      n = jj_consume_token(URL);
+      break;
+    case SEMICOLON:
+      n = jj_consume_token(SEMICOLON);
+      break;
+    case MINUS:
+      n = jj_consume_token(MINUS);
+      break;
+    case UNKNOWN:
+      n = jj_consume_token(UNKNOWN);
+      break;
+    default:
+      jj_la1[53] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+     String ret;
+     Locator loc = getLocator();
+     ret=skipStatement();
+     if ((ret != null) && (n.image.charAt(0) == '@')) {
+         documentHandler.unrecognizedRule(ret);
+     } else {
+     reportWarningSkipText(loc, ret);
+     }
+=======
+  final public void appendDirective() throws ParseException {
+        String list = null;
+        String remove = null;
+        String separator = null;
+        String variable = null;
+        Token n = null;
+    n = jj_consume_token(VARIABLE);
+                    variable = n.image;
+    label_120:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[173] = jj_gen;
+        break label_120;
+      }
+      jj_consume_token(S);
+    }
+    jj_consume_token(COLON);
+    label_121:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[174] = jj_gen;
+        break label_121;
+      }
+      jj_consume_token(S);
+    }
+    jj_consume_token(APPEND);
+    label_122:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[175] = jj_gen;
+        break label_122;
+      }
+      jj_consume_token(S);
+    }
+    list = listModifyDirectiveArgs(0);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case RPARAN:
+      jj_consume_token(RPARAN);
+      break;
+    default:
+      jj_la1[176] = jj_gen;
+      ;
+    }
+    jj_consume_token(COMMA);
+    label_123:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[177] = jj_gen;
+        break label_123;
+      }
+      jj_consume_token(S);
+    }
+    remove = listModifyDirectiveArgs(1);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case COMMA:
+      jj_consume_token(COMMA);
+      label_124:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[178] = jj_gen;
+          break label_124;
+        }
+        jj_consume_token(S);
+      }
+      n = jj_consume_token(IDENT);
+                                     separator = n.image;
+      label_125:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[179] = jj_gen;
+          break label_125;
+        }
+        jj_consume_token(S);
+      }
+      break;
+    default:
+      jj_la1[180] = jj_gen;
+      ;
+    }
+    jj_consume_token(RPARAN);
+    documentHandler.appendDirective(variable,list,remove,separator);
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+<<<<<<< HEAD
+  final public char combinator() throws ParseException {
+char connector = ' ';
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case PLUS:
+    case PRECEDES:
+    case SIBLING:
+      connector = combinatorChar();
+      break;
+    case S:
+      jj_consume_token(S);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PLUS:
+      case PRECEDES:
+      case SIBLING:
+        connector = combinatorChar();
+        break;
+      default:
+        jj_la1[54] = jj_gen;
+        ;
+      }
+      break;
+    default:
+      jj_la1[55] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+                                               {if (true) return connector;}
+    throw new Error("Missing return statement in function");
+  }
+
+/**to refactor combinator and reuse in selector().*/
+  final public char combinatorChar() throws ParseException {
+ Token t;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case PLUS:
+      t = jj_consume_token(PLUS);
+      break;
+    case PRECEDES:
+      t = jj_consume_token(PRECEDES);
+      break;
+    case SIBLING:
+      t = jj_consume_token(SIBLING);
+      break;
+    default:
+      jj_la1[56] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    label_39:
+=======
+  final public void removeDirective() throws ParseException {
+    String list = null;
+    String remove = null;
+    String separator = null;
+    String variable = null;
+    Token n = null;
+    n = jj_consume_token(VARIABLE);
+                    variable = n.image;
+    label_126:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+<<<<<<< HEAD
+        jj_la1[57] = jj_gen;
+        break label_39;
+      }
+      jj_consume_token(S);
+    }
+        {if (true) return t.image.charAt(0);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void microsoftExtension() throws ParseException {
+  Token n;
+  String name = "";
+  String value = "";
+    // This is not really taking the syntax of filter rules into account
+      n = jj_consume_token(MICROSOFT_RULE);
+    label_40:
+=======
+        jj_la1[181] = jj_gen;
+        break label_126;
+      }
+      jj_consume_token(S);
+    }
+    jj_consume_token(COLON);
+    label_127:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+<<<<<<< HEAD
+        jj_la1[58] = jj_gen;
+        break label_40;
+      }
+      jj_consume_token(S);
+    }
+                                    name = n.image;
+    jj_consume_token(COLON);
+    label_41:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case IDENT:
+        n = jj_consume_token(IDENT);
+                          value += n.image;
+        break;
+      case NUMBER:
+        n = jj_consume_token(NUMBER);
+                            value += n.image;
+        break;
+      case STRING:
+        n = jj_consume_token(STRING);
+                            value += n.image;
+        break;
+      case COMMA:
+        n = jj_consume_token(COMMA);
+                           value += n.image;
+        break;
+      case INTERPOLATION:
+        n = jj_consume_token(INTERPOLATION);
+                                   value += n.image;
+        break;
+      case COLON:
+        n = jj_consume_token(COLON);
+                           value += n.image;
+        break;
+      case FUNCTION:
+        n = jj_consume_token(FUNCTION);
+                              value += n.image;
+        break;
+      case RPARAN:
+        n = jj_consume_token(RPARAN);
+                            value += n.image;
+        break;
+      case EQ:
+        n = jj_consume_token(EQ);
+                        value += n.image;
+        break;
+      case DOT:
+        n = jj_consume_token(DOT);
+                         value += n.image;
+        break;
+      case S:
+        n = jj_consume_token(S);
+                       if(value.lastIndexOf(' ') != value.length()-1)
+        { value += n.image; }
+        break;
+      default:
+        jj_la1[59] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+      case EQ:
+      case COMMA:
+      case DOT:
+      case RPARAN:
+      case COLON:
+      case INTERPOLATION:
+      case STRING:
+      case IDENT:
+      case NUMBER:
+      case FUNCTION:
+        ;
+        break;
+      default:
+        jj_la1[60] = jj_gen;
+        break label_41;
+      }
+    }
+    jj_consume_token(SEMICOLON);
+    label_42:
+=======
+        jj_la1[182] = jj_gen;
+        break label_127;
+      }
+      jj_consume_token(S);
+    }
+    jj_consume_token(REMOVE);
+    label_128:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[183] = jj_gen;
+        break label_128;
+      }
+      jj_consume_token(S);
+    }
+    list = listModifyDirectiveArgs(0);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case RPARAN:
+      jj_consume_token(RPARAN);
+      break;
+    default:
+      jj_la1[184] = jj_gen;
+      ;
+    }
+    jj_consume_token(COMMA);
+    label_129:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+<<<<<<< HEAD
+        jj_la1[61] = jj_gen;
+        break label_42;
+      }
+      jj_consume_token(S);
+    }
+          documentHandler.microsoftDirective(name, value);
+=======
+        jj_la1[185] = jj_gen;
+        break label_129;
+      }
+      jj_consume_token(S);
+    }
+    remove = listModifyDirectiveArgs(1);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case COMMA:
+      jj_consume_token(COMMA);
+      label_130:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[186] = jj_gen;
+          break label_130;
+        }
+        jj_consume_token(S);
+      }
+      n = jj_consume_token(IDENT);
+                                     separator = n.image;
+      label_131:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[187] = jj_gen;
+          break label_131;
+        }
+        jj_consume_token(S);
+      }
+      break;
+    default:
+      jj_la1[188] = jj_gen;
+      ;
+    }
+    jj_consume_token(RPARAN);
+    documentHandler.removeDirective(variable,list,remove,separator);
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+<<<<<<< HEAD
+  final public String property() throws ParseException {
+ Token t;String s = "";
+    label_43:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case IDENT:
+        t = jj_consume_token(IDENT);
+                 s += t.image;
+        break;
+      case INTERPOLATION:
+        t = jj_consume_token(INTERPOLATION);
+                                                        s += t.image;
+        break;
+      default:
+        jj_la1[62] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case INTERPOLATION:
+      case IDENT:
+        ;
+        break;
+      default:
+        jj_la1[63] = jj_gen;
+        break label_43;
+      }
+    }
+    label_44:
+=======
+  final public String containsDirective() throws ParseException {
+        String list = null;
+        String remove = null;
+        String separator = null;
+        String variable = null;
+        Token n = null;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case VARIABLE:
+      n = jj_consume_token(VARIABLE);
+                     variable = n.image;
+      label_132:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[189] = jj_gen;
+          break label_132;
+        }
+        jj_consume_token(S);
+      }
+      jj_consume_token(COLON);
+      label_133:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[190] = jj_gen;
+          break label_133;
+        }
+        jj_consume_token(S);
+      }
+      break;
+    default:
+      jj_la1[191] = jj_gen;
+      ;
+    }
+    jj_consume_token(CONTAINS);
+    label_134:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+<<<<<<< HEAD
+        jj_la1[64] = jj_gen;
+        break label_44;
+      }
+      jj_consume_token(S);
+    }
+        {if (true) return s;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String variableName() throws ParseException {
+ Token n;
+    n = jj_consume_token(VARIABLE);
+    label_45:
+=======
+        jj_la1[192] = jj_gen;
+        break label_134;
+      }
+      jj_consume_token(S);
+    }
+    list = listModifyDirectiveArgs(0);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case RPARAN:
+      jj_consume_token(RPARAN);
+      break;
+    default:
+      jj_la1[193] = jj_gen;
+      ;
+    }
+    jj_consume_token(COMMA);
+    label_135:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+<<<<<<< HEAD
+        jj_la1[65] = jj_gen;
+        break label_45;
+      }
+      jj_consume_token(S);
+    }
+                         {if (true) return convertIdent(n.image.substring(1));}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String functionName() throws ParseException {
+ Token n;
+    n = jj_consume_token(FUNCTION);
+    label_46:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[66] = jj_gen;
+        break label_46;
+      }
+      jj_consume_token(S);
+    }
+                           {if (true) return convertIdent(n.image.substring(0, n.image.length()-1));}
+    throw new Error("Missing return statement in function");
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+  final public void styleRule() throws ParseException {
+    boolean start = false;
+    ArrayList<String> l = null;
+    Token save;
+    Locator loc;
+    try {
+      l = selectorList();
+                        save = token;
+      jj_consume_token(LBRACE);
+      label_47:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[67] = jj_gen;
+          break label_47;
+        }
+        jj_consume_token(S);
+      }
+         start = true;
+         documentHandler.startSelector(l);
+      label_48:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case PLUS:
+        case PRECEDES:
+        case SIBLING:
+        case LBRACKET:
+        case ANY:
+        case PARENT:
+        case DOT:
+        case COLON:
+        case INTERPOLATION:
+        case INCLUDE_SYM:
+        case DEBUG_SYM:
+        case WARN_SYM:
+        case EACH_SYM:
+        case IF_SYM:
+        case EXTEND_SYM:
+        case CONTENT_SYM:
+        case MICROSOFT_RULE:
+        case IDENT:
+        case VARIABLE:
+        case HASH:
+        case IMPORT_SYM:
+        case MEDIA_SYM:
+        case KEY_FRAME_SYM:
+          ;
+          break;
+        default:
+          jj_la1[68] = jj_gen;
+          break label_48;
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case PLUS:
+        case PRECEDES:
+        case SIBLING:
+        case LBRACKET:
+        case ANY:
+        case PARENT:
+        case DOT:
+        case COLON:
+        case INTERPOLATION:
+        case INCLUDE_SYM:
+        case DEBUG_SYM:
+        case WARN_SYM:
+        case EACH_SYM:
+        case IF_SYM:
+        case EXTEND_SYM:
+        case CONTENT_SYM:
+        case IDENT:
+        case VARIABLE:
+        case HASH:
+        case MEDIA_SYM:
+        case KEY_FRAME_SYM:
+          ifContentStatement();
+          break;
+        case MICROSOFT_RULE:
+          microsoftExtension();
+          break;
+        case IMPORT_SYM:
+          importDeclaration();
+          break;
+        default:
+          jj_la1[69] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+      }
+      jj_consume_token(RBRACE);
+      label_49:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[70] = jj_gen;
+          break label_49;
+        }
+        jj_consume_token(S);
+      }
+    } catch (ThrowedParseException e) {
+     if (errorHandler != null) {
+         LocatorImpl li = new LocatorImpl(this,
+                                          e.e.currentToken.next.beginLine,
+                                          e.e.currentToken.next.beginColumn-1);
+         reportError(li, e.e);
+     }
+    } catch (ParseException e) {
+     reportError(getLocator(), e);
+     skipStatement();
+     // reportWarningSkipText(getLocator(), skipStatement());
+
+    } catch (TokenMgrError e) {
+     reportWarningSkipText(getLocator(), skipStatement());
+    } finally {
+     if (start) {
+         documentHandler.endSelector();
+     }
+    }
+  }
+
+  final public ArrayList<String> selectorList() throws ParseException {
+     ArrayList<String> selectors = new  ArrayList<String>();
+     String selector;
+    selector = selector();
+    label_50:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case COMMA:
+        ;
+        break;
+      default:
+        jj_la1[71] = jj_gen;
+        break label_50;
+      }
+      jj_consume_token(COMMA);
+      label_51:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[72] = jj_gen;
+          break label_51;
+        }
+        jj_consume_token(S);
+      }
+                                        selectors.add(selector);
+      selector = selector();
+    }
+    selectors.add(selector);
+    {if (true) return selectors;}
+    throw new Error("Missing return statement in function");
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+  final public String selector() throws ParseException {
+    String selector = null;
+    char    comb;
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case LBRACKET:
+      case ANY:
+      case PARENT:
+      case DOT:
+      case COLON:
+      case INTERPOLATION:
+      case IDENT:
+      case HASH:
+        selector = simple_selector(null, ' ');
+        break;
+      case PLUS:
+      case PRECEDES:
+      case SIBLING:
+        comb = combinatorChar();
+        selector = simple_selector(selector, comb);
+        break;
+      default:
+        jj_la1[73] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      label_52:
+      while (true) {
+        if (jj_2_2(2)) {
+          ;
+        } else {
+          break label_52;
+        }
+        comb = combinator();
+        selector = simple_selector(selector, comb);
+      }
+      label_53:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[74] = jj_gen;
+          break label_53;
+        }
+        jj_consume_token(S);
+      }
+       {if (true) return selector;}
+    } catch (ParseException e) {
+     /*
+     Token t = getToken(1);
+     StringBuffer s = new StringBuffer();
+     s.append(getToken(0).image);
+     while ((t.kind != COMMA) && (t.kind != SEMICOLON) 
+	    && (t.kind != LBRACE) && (t.kind != EOF)) {
+	 s.append(t.image);
+	 getNextToken();
+	 t = getToken(1);
+     }
+     reportWarningSkipText(getLocator(), s.toString());
+     */
+     Token t = getToken(1);
+     while ((t.kind != COMMA) && (t.kind != SEMICOLON)
+            && (t.kind != LBRACE) && (t.kind != EOF)) {
+         getNextToken();
+         t = getToken(1);
+     }
+
+     {if (true) throw new ThrowedParseException(e);}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+  final public String simple_selector(String selector, char comb) throws ParseException {
+    String simple_current = null;
+    String cond = null;
+
+    pseudoElt = null;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case ANY:
+    case PARENT:
+    case INTERPOLATION:
+    case IDENT:
+      simple_current = element_name();
+      label_54:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case LBRACKET:
+        case DOT:
+        case COLON:
+        case HASH:
+          ;
+          break;
+        default:
+          jj_la1[75] = jj_gen;
+          break label_54;
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case HASH:
+          cond = hash(cond);
+          break;
+        case DOT:
+          cond = _class(cond);
+          break;
+        case LBRACKET:
+          cond = attrib(cond);
+          break;
+        case COLON:
+          cond = pseudo(cond);
+          break;
+        default:
+          jj_la1[76] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+      }
+      break;
     case LBRACKET:
     case DOT:
     case COLON:
@@ -2237,11 +5291,695 @@ String s = ".";
               {if (true) return pred + s;}
           }
     throw new Error("Missing return statement in function");
+=======
+        jj_la1[194] = jj_gen;
+        break label_135;
+      }
+      jj_consume_token(S);
+    }
+    remove = listModifyDirectiveArgs(1);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case COMMA:
+      jj_consume_token(COMMA);
+      label_136:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[195] = jj_gen;
+          break label_136;
+        }
+        jj_consume_token(S);
+      }
+      n = jj_consume_token(IDENT);
+                                     separator = n.image;
+      label_137:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[196] = jj_gen;
+          break label_137;
+        }
+        jj_consume_token(S);
+      }
+      break;
+    default:
+      jj_la1[197] = jj_gen;
+      ;
+    }
+    jj_consume_token(RPARAN);
+      /*
+       *if it is not in the form like "$contains : contains($items, .v-button);"
+       *for example in @if, like "@if (contains(a b c, b))", then create a temp
+       *variable for contains(a b c, b);
+       */
+      if(variable == null){
+          variable = "$var_"+UUID.randomUUID();
+      }
+      documentHandler.containsDirective(variable,list,remove,separator);
+      {if (true) return variable;}
+    throw new Error("Missing return statement in function");
+  }
+
+  String listModifyDirectiveArgs(int nest) throws ParseException {
+        String list = "";
+        int nesting = nest;
+        Token t = null;
+
+        while(true)
+        {
+                t = getToken(1);
+                String s = t.image;
+                if(t.kind == VARIABLE||t.kind == IDENT)
+                {
+                  list += s;
+                }else if(s.toLowerCase().equals("auto")||s.toLowerCase().equals("space")||s.toLowerCase().equals("comma"))
+                {
+                        int i = 2;
+                        Token temp = getToken(i);
+                        boolean isLast = true;
+                        while(temp.kind != SEMICOLON)
+                        {
+                                if(temp.kind != RPARAN || temp.kind != S)
+                                {
+                                  isLast = false;
+                                }
+                                i++;
+                                temp = getToken(i);
+                        }
+
+                        if(isLast)
+                        {
+                        return list;
+                        }
+                }
+                else if(t.kind == STRING)
+                {
+                        list += s.substring(1,s.length()).substring(0,s.length()-2);
+
+                }else if(t.kind == LPARAN)
+                {
+                        nesting++;
+                        if(nesting > nest+1)
+                        {
+                                throw new CSSParseException("Only one ( ) pair per parameter allowed", getLocator());
+                        }
+                }else if(t.kind == RPARAN)
+                {
+                        nesting--;
+                        if(nesting == 0)
+                        {
+                                return list;
+                        }
+                } else if(t.kind == COMMA)
+                {
+                        if(nesting == nest)
+                        {
+                          return list;
+                        }else
+                        {
+                          list += ",";
+                        }
+
+                }else if(t.kind == S)
+                {
+                  list += " ";
+                } else if(t.kind == LBRACE)
+                {
+                  throw new CSSParseException("Invalid token,'{' found", getLocator());
+                }
+
+                getNextToken();
+        }
+  }
+
+  final public Node returnDirective() throws ParseException {
+    String raw;
+    raw = skipStatement();
+         {if (true) return null;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void debuggingDirective() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case DEBUG_SYM:
+      debugDirective();
+      break;
+    case WARN_SYM:
+      warnDirective();
+      break;
+    default:
+      jj_la1[198] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public void debugDirective() throws ParseException {
+    jj_consume_token(DEBUG_SYM);
+    String content = skipStatementUntilSemiColon();
+    // TODO should evaluate the content expression, call documentHandler.debugDirective() etc.
+    System.out.println(content);
+    label_138:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[199] = jj_gen;
+        break label_138;
+      }
+      jj_consume_token(S);
+    }
+  }
+
+  final public void warnDirective() throws ParseException {
+    jj_consume_token(WARN_SYM);
+    String content = skipStatementUntilSemiColon();
+    // TODO should evaluate the content expression, call documentHandler.warnDirective() etc.
+    System.err.println(content);
+    label_139:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[200] = jj_gen;
+        break label_139;
+      }
+      jj_consume_token(S);
+    }
+  }
+
+  final public Node forDirective() throws ParseException {
+    String var;
+    String from;
+    String to;
+    boolean exclusive;
+    String body;
+    Token tok;
+    var = variableName();
+        int[] toThrough = {TO, THROUGH};
+        from = skipStatementUntil(toThrough);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case TO:
+      tok = jj_consume_token(TO);
+                 exclusive = true;
+      break;
+    case THROUGH:
+      tok = jj_consume_token(THROUGH);
+                       exclusive = false;
+      break;
+    default:
+      jj_la1[201] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    to = skipStatementUntilLeftBrace();
+    label_140:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[202] = jj_gen;
+        break label_140;
+      }
+      jj_consume_token(S);
+    }
+    body = skipStatement();
+     {if (true) return documentHandler.forDirective(var, from, to, exclusive, body);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Node whileDirective() throws ParseException {
+    String condition;
+    String body;
+    condition = skipStatementUntilLeftBrace();
+    body = skipStatement();
+        {if (true) return documentHandler.whileDirective(condition, body);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void extendDirective() throws ParseException {
+ ArrayList<String> list;
+    jj_consume_token(EXTEND_SYM);
+    label_141:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[203] = jj_gen;
+        break label_141;
+      }
+      jj_consume_token(S);
+    }
+    list = selectorList();
+    label_142:
+    while (true) {
+      jj_consume_token(SEMICOLON);
+      label_143:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[204] = jj_gen;
+          break label_143;
+        }
+        jj_consume_token(S);
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case SEMICOLON:
+        ;
+        break;
+      default:
+        jj_la1[205] = jj_gen;
+        break label_142;
+      }
+    }
+     documentHandler.extendDirective(list);
+  }
+
+  final public void contentDirective() throws ParseException {
+    jj_consume_token(CONTENT_SYM);
+    label_144:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[206] = jj_gen;
+        break label_144;
+      }
+      jj_consume_token(S);
+    }
+    label_145:
+    while (true) {
+      jj_consume_token(SEMICOLON);
+      label_146:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[207] = jj_gen;
+          break label_146;
+        }
+        jj_consume_token(S);
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case SEMICOLON:
+        ;
+        break;
+      default:
+        jj_la1[208] = jj_gen;
+        break label_145;
+      }
+    }
+     documentHandler.contentDirective();
+  }
+
+  Node importDirective() throws ParseException {
+    return null;
+  }
+
+  Node charsetDirective() throws ParseException {
+    return null;
+  }
+
+  Node mozDocumentDirective() throws ParseException {
+    return null;
+  }
+
+  Node supportsDirective() throws ParseException {
+    return null;
+  }
+
+  final public void nestedProperties() throws ParseException {
+ String name;
+LexicalUnit exp;
+    name = property();
+    jj_consume_token(COLON);
+    label_147:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[209] = jj_gen;
+        break label_147;
+      }
+      jj_consume_token(S);
+    }
+    jj_consume_token(LBRACE);
+    label_148:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[210] = jj_gen;
+        break label_148;
+      }
+      jj_consume_token(S);
+    }
+      documentHandler.startNestedProperties(name);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case INTERPOLATION:
+    case IDENT:
+      declaration();
+      break;
+    default:
+      jj_la1[211] = jj_gen;
+      ;
+    }
+    label_149:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case SEMICOLON:
+        ;
+        break;
+      default:
+        jj_la1[212] = jj_gen;
+        break label_149;
+      }
+      jj_consume_token(SEMICOLON);
+      label_150:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[213] = jj_gen;
+          break label_150;
+        }
+        jj_consume_token(S);
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case INTERPOLATION:
+      case IDENT:
+        declaration();
+        break;
+      default:
+        jj_la1[214] = jj_gen;
+        ;
+      }
+    }
+    jj_consume_token(RBRACE);
+      documentHandler.endNestedProperties(name);
+    label_151:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[215] = jj_gen;
+        break label_151;
+      }
+      jj_consume_token(S);
+    }
   }
 
 /**
  * @exception ParseException exception during the parse
  */
+  final public void styleRuleOrDeclarationOrNestedProperties() throws ParseException {
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case DEBUG_SYM:
+      case WARN_SYM:
+        debuggingDirective();
+        break;
+      default:
+        jj_la1[216] = jj_gen;
+        if (jj_2_6(2147483647)) {
+          styleRule();
+        } else if (jj_2_7(3)) {
+          declarationOrNestedProperties();
+        } else {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case PLUS:
+          case PRECEDES:
+          case SIBLING:
+          case LBRACKET:
+          case ANY:
+          case PARENT:
+          case DOT:
+          case COLON:
+          case INTERPOLATION:
+          case IDENT:
+          case HASH:
+            styleRule();
+            break;
+          default:
+            jj_la1[217] = jj_gen;
+            jj_consume_token(-1);
+            throw new ParseException();
+          }
+        }
+      }
+    } catch (JumpException e) {
+     skipAfterExpression();
+     // reportWarningSkipText(getLocator(), skipAfterExpression());
+
+    } catch (ParseException e) {
+     if (errorHandler != null) {
+         if (e.currentToken != null) {
+             LocatorImpl li = new LocatorImpl(this,
+                                              e.currentToken.next.beginLine,
+                                              e.currentToken.next.beginColumn-1);
+             reportError(li, e);
+         } else {
+             reportError(getLocator(), e);
+         }
+         skipAfterExpression();
+         /*
+         LocatorImpl loc = (LocatorImpl) getLocator();
+         loc.column--;
+         reportWarningSkipText(loc, skipAfterExpression());
+         */
+     } else {
+         skipAfterExpression();
+     }
+    }
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+  final public void declarationOrNestedProperties() throws ParseException {
+  boolean important = false;
+  String name;
+  LexicalUnitImpl exp;
+  Token save;
+  String comment = null;
+    try {
+      name = property();
+       save = token;
+      jj_consume_token(COLON);
+      label_152:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[218] = jj_gen;
+          break label_152;
+        }
+        jj_consume_token(S);
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PLUS:
+      case MINUS:
+      case DOT:
+      case TO:
+      case THROUGH:
+      case FROM:
+      case STRING:
+      case IDENT:
+      case NUMBER:
+      case URL:
+      case VARIABLE:
+      case PERCENTAGE:
+      case PT:
+      case MM:
+      case CM:
+      case PC:
+      case IN:
+      case PX:
+      case EMS:
+      case LEM:
+      case REM:
+      case EXS:
+      case DEG:
+      case RAD:
+      case GRAD:
+      case MS:
+      case SECOND:
+      case HZ:
+      case KHZ:
+      case DIMEN:
+      case HASH:
+      case UNICODERANGE:
+      case FUNCTION:
+        exp = expr();
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case IMPORTANT_SYM:
+          important = prio();
+          break;
+        default:
+          jj_la1[219] = jj_gen;
+          ;
+        }
+         Token next = getToken(1);
+         if(next.kind == SEMICOLON || next.kind == RBRACE){
+             while(next.kind == SEMICOLON){
+                 skipStatement();
+                 next = getToken(1);
+             }
+             //only add special token kept for sprites '/**'
+             if(token.specialToken!=null && token.specialToken!=null && token.specialToken.image.startsWith("/**")){
+                 documentHandler.property(name, exp, important, token.specialToken.image);
+             }else{
+                 documentHandler.property(name, exp, important, null);
+             }
+         }
+        break;
+      case LBRACE:
+        jj_consume_token(LBRACE);
+        label_153:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case S:
+            ;
+            break;
+          default:
+            jj_la1[220] = jj_gen;
+            break label_153;
+          }
+          jj_consume_token(S);
+        }
+         documentHandler.startNestedProperties(name);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case INTERPOLATION:
+        case IDENT:
+          declaration();
+          break;
+        default:
+          jj_la1[221] = jj_gen;
+          ;
+        }
+        label_154:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case SEMICOLON:
+            ;
+            break;
+          default:
+            jj_la1[222] = jj_gen;
+            break label_154;
+          }
+          jj_consume_token(SEMICOLON);
+          label_155:
+          while (true) {
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+            case S:
+              ;
+              break;
+            default:
+              jj_la1[223] = jj_gen;
+              break label_155;
+            }
+            jj_consume_token(S);
+          }
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case INTERPOLATION:
+          case IDENT:
+            declaration();
+            break;
+          default:
+            jj_la1[224] = jj_gen;
+            ;
+          }
+        }
+        jj_consume_token(RBRACE);
+        label_156:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case S:
+            ;
+            break;
+          default:
+            jj_la1[225] = jj_gen;
+            break label_156;
+          }
+          jj_consume_token(S);
+        }
+         documentHandler.endNestedProperties(name);
+        break;
+      default:
+        jj_la1[226] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    } catch (JumpException e) {
+     skipAfterExpression();
+     // reportWarningSkipText(getLocator(), skipAfterExpression());
+
+    } catch (NumberFormatException e) {
+     if (errorHandler != null) {
+         errorHandler.error(new CSSParseException("Invalid number "
+                                                  + e.getMessage(),
+                                                  getLocator(),
+                                                  e));
+     }
+     reportWarningSkipText(getLocator(), skipAfterExpression());
+    } catch (ParseException e) {
+     if (errorHandler != null) {
+         if (e.currentToken != null) {
+             LocatorImpl li = new LocatorImpl(this,
+                                              e.currentToken.next.beginLine,
+                                              e.currentToken.next.beginColumn-1);
+             reportError(li, e);
+         } else {
+             reportError(getLocator(), e);
+         }
+         skipAfterExpression();
+         /*
+         LocatorImpl loc = (LocatorImpl) getLocator();
+         loc.column--;
+         reportWarningSkipText(loc, skipAfterExpression());
+         */
+     } else {
+         skipAfterExpression();
+     }
+    }
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+<<<<<<< HEAD
   final public String element_name() throws ParseException {
  Token t; String s = "";
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -2289,11 +6027,77 @@ String s = ".";
       throw new ParseException();
     }
     throw new Error("Missing return statement in function");
+=======
+  final public void declaration() throws ParseException {
+  boolean important = false;
+  String name;
+  LexicalUnit exp;
+  Token save;
+    try {
+      name = property();
+       save = token;
+      jj_consume_token(COLON);
+      label_157:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[227] = jj_gen;
+          break label_157;
+        }
+        jj_consume_token(S);
+      }
+      exp = expr();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case IMPORTANT_SYM:
+        important = prio();
+        break;
+      default:
+        jj_la1[228] = jj_gen;
+        ;
+      }
+         documentHandler.property(name, exp, important);
+    } catch (JumpException e) {
+     skipAfterExpression();
+     // reportWarningSkipText(getLocator(), skipAfterExpression());
+
+    } catch (NumberFormatException e) {
+     if (errorHandler != null) {
+         errorHandler.error(new CSSParseException("Invalid number "
+                                                  + e.getMessage(),
+                                                  getLocator(),
+                                                  e));
+     }
+     reportWarningSkipText(getLocator(), skipAfterExpression());
+    } catch (ParseException e) {
+     if (errorHandler != null) {
+         if (e.currentToken != null) {
+             LocatorImpl li = new LocatorImpl(this,
+                                              e.currentToken.next.beginLine,
+                                              e.currentToken.next.beginColumn-1);
+             reportError(li, e);
+         } else {
+             reportError(getLocator(), e);
+         }
+         skipAfterExpression();
+         /*
+	 LocatorImpl loc = (LocatorImpl) getLocator();
+	 loc.column--;
+	 reportWarningSkipText(loc, skipAfterExpression());
+	 */
+     } else {
+         skipAfterExpression();
+     }
+    }
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
   }
 
 /**
  * @exception ParseException exception during the parse
  */
+<<<<<<< HEAD
   final public String attrib(String pred) throws ParseException {
     int cases = 0;
     Token att = null;
@@ -2301,12 +6105,18 @@ String s = ".";
     String attValue = null;
     jj_consume_token(LBRACKET);
     label_58:
+=======
+  final public boolean prio() throws ParseException {
+    jj_consume_token(IMPORTANT_SYM);
+    label_158:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case S:
         ;
         break;
       default:
+<<<<<<< HEAD
         jj_la1[85] = jj_gen;
         break label_58;
       }
@@ -2314,12 +6124,27 @@ String s = ".";
     }
     att = jj_consume_token(IDENT);
     label_59:
+=======
+        jj_la1[229] = jj_gen;
+        break label_158;
+      }
+      jj_consume_token(S);
+    }
+                             {if (true) return true;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public boolean guarded() throws ParseException {
+    jj_consume_token(GUARDED_SYM);
+    label_159:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case S:
         ;
         break;
       default:
+<<<<<<< HEAD
         jj_la1[86] = jj_gen;
         break label_59;
       }
@@ -2440,12 +6265,21 @@ String s = ".";
       } else {
           {if (true) return pred + c;}
       }
+=======
+        jj_la1[230] = jj_gen;
+        break label_159;
+      }
+      jj_consume_token(S);
+    }
+                          {if (true) return true;}
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     throw new Error("Missing return statement in function");
   }
 
 /**
  * @exception ParseException exception during the parse
  */
+<<<<<<< HEAD
   final public String pseudo(String pred) throws ParseException {
  Token n;
 Token param;
@@ -2485,12 +6319,66 @@ boolean isPseudoElement = false;
     case FUNCTION:
       n = jj_consume_token(FUNCTION);
       label_62:
+=======
+  final public LexicalUnitImpl operator(LexicalUnitImpl prev) throws ParseException {
+ Token n;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case COMMA:
+      /* (comments copied from basic_arithmetics.scss)
+      *supports:
+      * 1. standard arithmetic operations (+, -, *, /, %)
+      * 2. / is treated as css operator, unless one of its operands is variable or there is another binary arithmetic operator
+      *limits:
+      * 1. cannot mix arithmetic and css operations, e.g. "margin: 1px + 3px 2px" will fail
+      * 2. space between add and minus operator and their following operand is mandatory. e.g. "1 + 2" is valid, "1+2" is not
+      * 3. parenthesis is not supported now.  
+      */
+      n = jj_consume_token(COMMA);
+      label_160:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case S:
           ;
           break;
         default:
+          jj_la1[231] = jj_gen;
+          break label_160;
+        }
+        jj_consume_token(S);
+      }
+                 {if (true) return LexicalUnitImpl.createComma(n.beginLine,
+            n.beginColumn,
+            prev);}
+      break;
+    case DIV:
+      n = jj_consume_token(DIV);
+      label_161:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[232] = jj_gen;
+          break label_161;
+        }
+        jj_consume_token(S);
+      }
+                  {if (true) return LexicalUnitImpl.createSlash(n.beginLine,
+            n.beginColumn,
+            prev);}
+      break;
+    case ANY:
+      n = jj_consume_token(ANY);
+      label_162:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+<<<<<<< HEAD
           jj_la1[93] = jj_gen;
           break label_62;
         }
@@ -2510,6 +6398,73 @@ boolean isPseudoElement = false;
       break;
     default:
       jj_la1[94] = jj_gen;
+=======
+          jj_la1[233] = jj_gen;
+          break label_162;
+        }
+        jj_consume_token(S);
+      }
+                   {if (true) return LexicalUnitImpl.createMultiply(n.beginLine,
+            n.beginColumn,
+            prev);}
+      break;
+    case MOD:
+      n = jj_consume_token(MOD);
+      label_163:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[234] = jj_gen;
+          break label_163;
+        }
+        jj_consume_token(S);
+      }
+                   {if (true) return LexicalUnitImpl.createModulo(n.beginLine,
+            n.beginColumn,
+            prev);}
+      break;
+    case PLUS:
+      n = jj_consume_token(PLUS);
+      label_164:
+      while (true) {
+        jj_consume_token(S);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[235] = jj_gen;
+          break label_164;
+        }
+      }
+                  {if (true) return LexicalUnitImpl.createAdd(n.beginLine,
+        n.beginColumn,
+        prev);}
+      break;
+    case MINUS:
+      n = jj_consume_token(MINUS);
+      label_165:
+      while (true) {
+        jj_consume_token(S);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case S:
+          ;
+          break;
+        default:
+          jj_la1[236] = jj_gen;
+          break label_165;
+        }
+      }
+                  {if (true) return LexicalUnitImpl.createMinus(n.beginLine,
+        n.beginColumn,
+        prev);}
+      break;
+    default:
+      jj_la1[237] = jj_gen;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -2519,6 +6474,7 @@ boolean isPseudoElement = false;
 /**
  * @exception ParseException exception during the parse
  */
+<<<<<<< HEAD
   final public String hash(String pred) throws ParseException {
  Token n;
     n = jj_consume_token(HASH);
@@ -5495,10 +9451,687 @@ LexicalUnitImpl result = null;
       jj_consume_token(S);
     }
     {if (true) return result;}
+=======
+  final public LexicalUnitImpl expr() throws ParseException {
+    LexicalUnitImpl first, res;
+    char op;
+    first = term(null);
+                      res = first;
+    label_166:
+    while (true) {
+      if (jj_2_8(2)) {
+        ;
+      } else {
+        break label_166;
+      }
+      if (jj_2_9(2)) {
+        res = operator(res);
+      } else {
+        ;
+      }
+      res = term(res);
+    }
+    {if (true) return first;}
     throw new Error("Missing return statement in function");
   }
 
 /**
+ * @exception ParseException exception during the parse
+ */
+  final public char unaryOperator() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case MINUS:
+      jj_consume_token(MINUS);
+        {if (true) return '-';}
+      break;
+    case PLUS:
+      jj_consume_token(PLUS);
+        {if (true) return '+';}
+      break;
+    default:
+      jj_la1[238] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+/**
+ * @exception ParseException exception during the parse
+ */
+  final public LexicalUnitImpl term(LexicalUnitImpl prev) throws ParseException {
+  LexicalUnitImpl result = null;
+  Token n = null;
+  char op = ' ';
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case PLUS:
+    case MINUS:
+    case DOT:
+    case TO:
+    case THROUGH:
+    case FROM:
+    case STRING:
+    case IDENT:
+    case NUMBER:
+    case URL:
+    case PERCENTAGE:
+    case PT:
+    case MM:
+    case CM:
+    case PC:
+    case IN:
+    case PX:
+    case EMS:
+    case LEM:
+    case REM:
+    case EXS:
+    case DEG:
+    case RAD:
+    case GRAD:
+    case MS:
+    case SECOND:
+    case HZ:
+    case KHZ:
+    case DIMEN:
+    case HASH:
+    case UNICODERANGE:
+    case FUNCTION:
+      result = nonVariableTerm(prev);
+      break;
+    case VARIABLE:
+      result = variableTerm(prev);
+      break;
+    default:
+      jj_la1[239] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+          {if (true) return result;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public LexicalUnitImpl variableTerm(LexicalUnitImpl prev) throws ParseException {
+  LexicalUnitImpl result = null;
+  String varName = "";
+    varName = variableName();
+          result = LexicalUnitImpl.createVariable(token.beginLine, token.beginColumn,
+                 prev, varName); {if (true) return result;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) throws ParseException {
+LexicalUnitImpl result = null;
+  Token n = null;
+  char op = ' ';
+  String varName;
+  String s = "";
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case PLUS:
+    case MINUS:
+    case NUMBER:
+    case PERCENTAGE:
+    case PT:
+    case MM:
+    case CM:
+    case PC:
+    case IN:
+    case PX:
+    case EMS:
+    case LEM:
+    case REM:
+    case EXS:
+    case DEG:
+    case RAD:
+    case GRAD:
+    case MS:
+    case SECOND:
+    case HZ:
+    case KHZ:
+    case DIMEN:
+    case FUNCTION:
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PLUS:
+      case MINUS:
+        op = unaryOperator();
+        break;
+      default:
+        jj_la1[240] = jj_gen;
+        ;
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case NUMBER:
+        n = jj_consume_token(NUMBER);
+          result = LexicalUnitImpl.createNumber(n.beginLine, n.beginColumn,
+                                                prev, number(op, n, 0));
+        break;
+      case PERCENTAGE:
+        n = jj_consume_token(PERCENTAGE);
+          result = LexicalUnitImpl.createPercentage(n.beginLine, n.beginColumn,
+                                                    prev, number(op, n, 1));
+        break;
+      case PT:
+        n = jj_consume_token(PT);
+          result = LexicalUnitImpl.createPT(n.beginLine, n.beginColumn,
+                                            prev, number(op, n, 2));
+        break;
+      case CM:
+        n = jj_consume_token(CM);
+          result = LexicalUnitImpl.createCM(n.beginLine, n.beginColumn,
+                                            prev, number(op, n, 2));
+        break;
+      case MM:
+        n = jj_consume_token(MM);
+          result = LexicalUnitImpl.createMM(n.beginLine, n.beginColumn,
+                                            prev, number(op, n, 2));
+        break;
+      case PC:
+        n = jj_consume_token(PC);
+          result = LexicalUnitImpl.createPC(n.beginLine, n.beginColumn,
+                                            prev, number(op, n, 2));
+        break;
+      case IN:
+        n = jj_consume_token(IN);
+          result = LexicalUnitImpl.createIN(n.beginLine, n.beginColumn,
+                                            prev, number(op, n, 2));
+        break;
+      case PX:
+        n = jj_consume_token(PX);
+          result = LexicalUnitImpl.createPX(n.beginLine, n.beginColumn,
+                                            prev, number(op, n, 2));
+        break;
+      case EMS:
+        n = jj_consume_token(EMS);
+          result = LexicalUnitImpl.createEMS(n.beginLine, n.beginColumn,
+                                             prev, number(op, n, 2));
+        break;
+      case LEM:
+        n = jj_consume_token(LEM);
+          result = LexicalUnitImpl.createLEM(n.beginLine, n.beginColumn,
+                                             prev, number(op, n, 3));
+        break;
+      case REM:
+        n = jj_consume_token(REM);
+          result = LexicalUnitImpl.createREM(n.beginLine, n.beginColumn,
+                                             prev, number(op, n, 3));
+        break;
+      case EXS:
+        n = jj_consume_token(EXS);
+          result = LexicalUnitImpl.createEXS(n.beginLine, n.beginColumn,
+                                             prev, number(op, n, 2));
+        break;
+      case DEG:
+        n = jj_consume_token(DEG);
+          result = LexicalUnitImpl.createDEG(n.beginLine, n.beginColumn,
+                                             prev, number(op, n, 3));
+        break;
+      case RAD:
+        n = jj_consume_token(RAD);
+          result = LexicalUnitImpl.createRAD(n.beginLine, n.beginColumn,
+                                             prev, number(op, n, 3));
+        break;
+      case GRAD:
+        n = jj_consume_token(GRAD);
+          result = LexicalUnitImpl.createGRAD(n.beginLine, n.beginColumn,
+                                              prev, number(op, n, 3));
+        break;
+      case SECOND:
+        n = jj_consume_token(SECOND);
+          result = LexicalUnitImpl.createS(n.beginLine, n.beginColumn,
+                                           prev, number(op, n, 1));
+        break;
+      case MS:
+        n = jj_consume_token(MS);
+          result = LexicalUnitImpl.createMS(n.beginLine, n.beginColumn,
+                                            prev, number(op, n, 2));
+        break;
+      case HZ:
+        n = jj_consume_token(HZ);
+          result = LexicalUnitImpl.createHZ(n.beginLine, n.beginColumn,
+                                            prev, number(op, n, 2));
+        break;
+      case KHZ:
+        n = jj_consume_token(KHZ);
+          result = LexicalUnitImpl.createKHZ(n.beginLine, n.beginColumn,
+                                             prev, number(op, n, 3));
+        break;
+      case DIMEN:
+        n = jj_consume_token(DIMEN);
+            s = n.image;
+            int i = 0;
+            while (i < s.length()
+                   && (Character.isDigit(s.charAt(i)) || (s.charAt(i) == '.'))) {
+                i++;
+            }
+            result = LexicalUnitImpl.createDimen(n.beginLine, n.beginColumn, prev,
+                                                 Float.valueOf(s.substring(0, i)).floatValue(),
+                                                 s.substring(i));
+        break;
+      case FUNCTION:
+        result = function(op, prev);
+        break;
+      default:
+        jj_la1[241] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      break;
+    case DOT:
+    case TO:
+    case THROUGH:
+    case FROM:
+    case STRING:
+    case IDENT:
+    case URL:
+    case HASH:
+    case UNICODERANGE:
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case STRING:
+        n = jj_consume_token(STRING);
+          result =
+          LexicalUnitImpl.createString(n.beginLine, n.beginColumn, prev,
+                                       convertStringIndex(n.image, 1,
+                                                          n.image.length() -1));
+        break;
+      case DOT:
+      case TO:
+      case THROUGH:
+      case FROM:
+      case IDENT:
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case DOT:
+          jj_consume_token(DOT);
+              s+=".";
+          break;
+        default:
+          jj_la1[242] = jj_gen;
+          ;
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case IDENT:
+          n = jj_consume_token(IDENT);
+          break;
+        case TO:
+          n = jj_consume_token(TO);
+          break;
+        case THROUGH:
+          n = jj_consume_token(THROUGH);
+          break;
+        case FROM:
+          n = jj_consume_token(FROM);
+          break;
+        default:
+          jj_la1[243] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+        s += convertIdent(n.image);
+        if ("inherit".equals(s)) {
+            result = LexicalUnitImpl.createInherit(n.beginLine, n.beginColumn,
+                                               prev);
+        } else {
+            result = LexicalUnitImpl.createIdent(n.beginLine, n.beginColumn,
+                                               prev, convertIdent(n.image));
+        }
+
+          /* /
+         Auto correction code used in the CSS Validator but must not
+          be used by a conformant CSS2 parser.
+	 * Common error :
+	 * H1 {
+	 *   color : black
+	 *   background : white
+	 * }
+	 *
+	Token t = getToken(1);
+	Token semicolon = new Token();
+	semicolon.kind = SEMICOLON;
+	semicolon.image = ";";
+	if (t.kind == COLON) {
+	    // @@SEEME. (generate a warning?)
+	    // @@SEEME if expression is a single ident, 
+	       generate an error ?
+	    rejectToken(semicolon);
+	    
+	    result = prev;
+	}
+	/ */
+
+        break;
+      case HASH:
+        result = hexcolor(prev);
+        break;
+      case URL:
+        result = url(prev);
+        break;
+      case UNICODERANGE:
+        result = unicode(prev);
+        break;
+      default:
+        jj_la1[244] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      break;
+    default:
+      jj_la1[245] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    label_167:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[246] = jj_gen;
+        break label_167;
+      }
+      jj_consume_token(S);
+    }
+    {if (true) return result;}
+    throw new Error("Missing return statement in function");
+  }
+
+/**
+ * Handle all CSS2 functions.
+ * @exception ParseException exception during the parse
+ */
+  final public LexicalUnitImpl function(char operator, LexicalUnitImpl prev) throws ParseException {
+ Token n;
+ LexicalUnit params = null;
+    n = jj_consume_token(FUNCTION);
+    label_168:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S:
+        ;
+        break;
+      default:
+        jj_la1[247] = jj_gen;
+        break label_168;
+      }
+      jj_consume_token(S);
+    }
+        String fname = convertIdent(n.image);
+        if("alpha(".equals(fname)){
+            String body = skipStatementUntilSemiColon();
+            {if (true) return LexicalUnitImpl.createIdent(n.beginLine, n.beginColumn,
+                 null, "alpha("+body);}
+        }else if("expression(".equals(fname)){
+            String body = skipStatementUntilSemiColon();
+            {if (true) return LexicalUnitImpl.createIdent(n.beginLine, n.beginColumn,
+                 null, "expression("+body);}
+        }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case PLUS:
+    case MINUS:
+    case DOT:
+    case TO:
+    case THROUGH:
+    case FROM:
+    case STRING:
+    case IDENT:
+    case NUMBER:
+    case URL:
+    case VARIABLE:
+    case PERCENTAGE:
+    case PT:
+    case MM:
+    case CM:
+    case PC:
+    case IN:
+    case PX:
+    case EMS:
+    case LEM:
+    case REM:
+    case EXS:
+    case DEG:
+    case RAD:
+    case GRAD:
+    case MS:
+    case SECOND:
+    case HZ:
+    case KHZ:
+    case DIMEN:
+    case HASH:
+    case UNICODERANGE:
+    case FUNCTION:
+      params = expr();
+      break;
+    default:
+      jj_la1[248] = jj_gen;
+      ;
+    }
+    jj_consume_token(RPARAN);
+        if (operator != ' ') {
+            {if (true) throw new CSSParseException("invalid operator before a function.",
+                                        getLocator());}
+        }
+        String f = convertIdent(n.image);
+        LexicalUnitImpl l = (LexicalUnitImpl) params;
+        boolean loop = true;
+        if ("rgb(".equals(f)) {
+            // this is a RGB declaration (e.g. rgb(255, 50%, 0) )
+            int i = 0;
+            while (loop && l != null && i < 5) {
+                switch (i) {
+                    case 0:
+                    case 2:
+                    case 4:
+                        if ((l.getLexicalUnitType() != LexicalUnit.SAC_INTEGER)
+                            && (l.getLexicalUnitType() != LexicalUnit.SAC_PERCENTAGE)) {
+                            loop = false;
+                        }
+                        break;
+                    case 1:
+                    case 3:
+                        if (l.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA) {
+                            loop = false;
+                        }
+                        break;
+                    default:
+                        {if (true) throw new ParseException("implementation error");}
+                }
+                if (loop) {
+                    l = (LexicalUnitImpl) l.getNextLexicalUnit();
+                    i ++;
+                }
+            }
+            if ((i == 5) && loop && (l == null)) {
+                {if (true) return LexicalUnitImpl.createRGBColor(n.beginLine,
+                                                      n.beginColumn,
+                                                      prev, params);}
+            } else {
+                if (errorHandler != null) {
+                    String errorText;
+                    Locator loc;
+                    if (i < 5) {
+                        if (params == null) {
+                            loc = new LocatorImpl(this, n.beginLine,
+                                                  n.beginColumn-1);
+                            errorText = "not enough parameters.";
+                        } else if (l == null) {
+                            loc = new LocatorImpl(this, n.beginLine,
+                                                  n.beginColumn-1);
+                            errorText = "not enough parameters: "
+                                + params.toString();
+                        } else {
+                            loc = new LocatorImpl(this, l.getLineNumber(),
+                                                  l.getColumnNumber());
+                            errorText = "invalid parameter: "
+                                + l.toString();
+                        }
+                    } else {
+                        loc = new LocatorImpl(this, l.getLineNumber(),
+                                              l.getColumnNumber());
+                        errorText = "too many parameters: "
+                            + l.toString();
+                    }
+                    errorHandler.error(new CSSParseException(errorText, loc));
+                }
+
+                {if (true) throw new JumpException();}
+            }
+        } else if ("counter".equals(f)) {
+            int i = 0;
+            while (loop && l != null && i < 3) {
+                switch (i) {
+                    case 0:
+                    case 2:
+                        if (l.getLexicalUnitType() != LexicalUnit.SAC_IDENT) {
+                            loop = false;
+                        }
+                        break;
+                    case 1:
+                        if (l.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA) {
+                            loop = false;
+                        }
+                        break;
+                    default:
+                        {if (true) throw new ParseException("implementation error");}
+                }
+                l = (LexicalUnitImpl) l.getNextLexicalUnit();
+                i ++;
+            }
+            if (((i == 1) || (i == 3)) && loop && (l == null)) {
+                {if (true) return LexicalUnitImpl.createCounter(n.beginLine, n.beginColumn,
+                                                     prev, params);}
+            }
+
+        } else if ("counters(".equals(f)) {
+
+            int i = 0;
+            while (loop && l != null && i < 5) {
+                switch (i) {
+                    case 0:
+                    case 4:
+                        if (l.getLexicalUnitType() != LexicalUnit.SAC_IDENT) {
+                            loop = false;
+                        }
+                        break;
+                    case 2:
+                        if (l.getLexicalUnitType() != LexicalUnit.SAC_STRING_VALUE) {
+                            loop = false;
+                        }
+                        break;
+                    case 1:
+                    case 3:
+                        if (l.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA) {
+                            loop = false;
+                        }
+                        break;
+                    default:
+                        {if (true) throw new ParseException("implementation error");}
+                }
+                l = (LexicalUnitImpl) l.getNextLexicalUnit();
+                i ++;
+            }
+            if (((i == 3) || (i == 5)) && loop && (l == null)) {
+                {if (true) return LexicalUnitImpl.createCounters(n.beginLine, n.beginColumn,
+                                                      prev, params);}
+            }
+        } else if ("attr(".equals(f)) {
+            if ((l != null)
+                && (l.getNextLexicalUnit() == null)
+                && (l.getLexicalUnitType() == LexicalUnit.SAC_IDENT)) {
+                {if (true) return LexicalUnitImpl.createAttr(l.getLineNumber(),
+                                                  l.getColumnNumber(),
+                                                  prev, l.getStringValue());}
+            }
+        } else if ("rect(".equals(f)) {
+            int i = 0;
+            while (loop && l != null && i < 7) {
+                switch (i) {
+                    case 0:
+                    case 2:
+                    case 4:
+                    case 6:
+                        switch (l.getLexicalUnitType()) {
+                        case LexicalUnit.SAC_INTEGER:
+                            if (l.getIntegerValue() != 0) {
+                                loop = false;
+                            }
+                            break;
+                        case LexicalUnit.SAC_IDENT:
+                            if (!l.getStringValue().equals("auto")) {
+                                loop = false;
+                            }
+                            break;
+                        case LexicalUnit.SAC_EM:
+                        case LexicalUnit.SAC_EX:
+                        case LexicalUnit.SAC_PIXEL:
+                        case LexicalUnit.SAC_CENTIMETER:
+                        case LexicalUnit.SAC_MILLIMETER:
+                        case LexicalUnit.SAC_INCH:
+                        case LexicalUnit.SAC_POINT:
+                        case LexicalUnit.SAC_PICA:
+                            // nothing
+                            break;
+                        default:
+                            loop = false;
+                        }
+                        break;
+                    case 1:
+                    case 3:
+                    case 5:
+                        if (l.getLexicalUnitType() != LexicalUnit.SAC_OPERATOR_COMMA) {
+                            loop = false;
+                        }
+                        break;
+                    default:
+                        {if (true) throw new ParseException("implementation error");}
+                }
+                l = (LexicalUnitImpl) l.getNextLexicalUnit();
+                i ++;
+            }
+            if ((i == 7) && loop && (l == null)) {
+                {if (true) return LexicalUnitImpl.createRect(n.beginLine, n.beginColumn,
+                                                  prev, params);}
+            }
+        }
+        {if (true) return LexicalUnitImpl.createFunction(n.beginLine, n.beginColumn, prev,
+                                              f.substring(0,
+                                                        f.length() -1),
+                                              params);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public LexicalUnitImpl unicode(LexicalUnitImpl prev) throws ParseException {
+  Token n;
+    n = jj_consume_token(UNICODERANGE);
+     LexicalUnitImpl params = null;
+     String s = n.image.substring(2);
+     int index = s.indexOf('-');
+     if (index == -1) {
+         params = LexicalUnitImpl.createInteger(n.beginLine, n.beginColumn,
+                                                params, Integer.parseInt(s, 16));
+     } else {
+         String s1 = s.substring(0, index);
+         String s2 = s.substring(index);
+
+         params = LexicalUnitImpl.createInteger(n.beginLine, n.beginColumn,
+                                                params, Integer.parseInt(s1, 16));
+         params = LexicalUnitImpl.createInteger(n.beginLine, n.beginColumn,
+                                                params, Integer.parseInt(s2, 16));
+     }
+
+     {if (true) return LexicalUnitImpl.createUnicodeRange(n.beginLine, n.beginColumn,
+                                               prev, params);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public LexicalUnitImpl url(LexicalUnitImpl prev) throws ParseException {
+  Token n;
+    n = jj_consume_token(URL);
+   String urlname = n.image.substring(4, n.image.length()-1).trim();
+   {if (true) return LexicalUnitImpl.createURL(n.beginLine, n.beginColumn, prev, urlname);}
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+    throw new Error("Missing return statement in function");
+  }
+
+/**
+<<<<<<< HEAD
  * Handle all CSS2 functions.
  * @exception ParseException exception during the parse
  */
@@ -5860,11 +10493,142 @@ LexicalUnitImpl result = null;
                 s.append(tok.image);
             }
             getNextToken();
+=======
+ * @exception ParseException exception during the parse
+ */
+  final public LexicalUnitImpl hexcolor(LexicalUnitImpl prev) throws ParseException {
+ Token n;
+    n = jj_consume_token(HASH);
+     int r;
+     LexicalUnitImpl first, params = null;
+     String s = n.image.substring(1);
+
+     if(s.length()!=3 && s.length()!=6) {
+         first = null;
+         {if (true) throw new CSSParseException("invalid hexadecimal notation for RGB: " + s,
+                                     getLocator());}
+     }
+     {if (true) return LexicalUnitImpl.createIdent(n.beginLine, n.beginColumn,
+             prev, n.image);}
+    throw new Error("Missing return statement in function");
+  }
+
+  float number(char operator, Token n, int lengthUnit) throws ParseException {
+    String image  = n.image;
+    float f = 0;
+
+    if (lengthUnit != 0) {
+        image = image.substring(0, image.length() - lengthUnit);
+    }
+    f = Float.valueOf(image).floatValue();
+    return (operator == '-')? -f: f;
+  }
+
+  String skipStatementUntilSemiColon() throws ParseException {
+    int[] semicolon = {SEMICOLON};
+    return skipStatementUntil(semicolon);
+  }
+
+  String skipStatementUntilLeftBrace() throws ParseException {
+    int[] lBrace = {LBRACE};
+    return skipStatementUntil(lBrace);
+  }
+
+  String skipStatementUntilRightParan() throws ParseException {
+    int[] rParan = {RPARAN};
+    return skipStatementUntil(rParan);
+  }
+
+  String skipStatementUntilMatchingRightParan() throws ParseException {
+        int[] leftTokens = {LPARAN, FUNCTION}; // a FUNCTION also contains "("
+        int[] rightTokens = {RPARAN};
+        StringBuffer s = new StringBuffer();
+    int difference = 1;
+    Token tok;
+    while(difference != 0){
+        tok = getToken(1);
+        if(tok.kind == EOF) {
+            return null;
+        }
+        for(int sym : leftTokens){
+            if(tok.kind == sym){
+                difference++;
+            }
+        }
+        for(int sym : rightTokens){
+                if(tok.kind == sym){
+                difference--;
+            }
+        }
+        if(difference != 0){
+            if (tok.image != null) {
+                s.append(tok.image);
+            }
+            getNextToken();
         }
     }
     return s.toString().trim();
   }
 
+  String skipStatementUntil(int[] symbols) throws ParseException {
+    StringBuffer s = new StringBuffer();
+    boolean stop = false;
+    Token tok;
+    while(!stop){
+        tok = getToken(1);
+        if(tok.kind == EOF) {
+            return null;
+        }
+        for(int sym : symbols){
+            if(tok.kind == sym){
+                stop = true;
+                break;
+            }
+        }
+        if(!stop){
+            if (tok.image != null) {
+                s.append(tok.image);
+            }
+            getNextToken();
+        }
+    }
+    return s.toString().trim();
+  }
+
+  String skipStatement() throws ParseException {
+    StringBuffer s = new StringBuffer();
+    Token tok = getToken(0);
+    if (tok.image != null) {
+        s.append(tok.image);
+    }
+    while (true) {
+        tok = getToken(1);
+        if (tok.kind == EOF) {
+            return null;
+        }
+        s.append(tok.image);
+        if (tok.kind == LBRACE) {
+            getNextToken();
+            s.append(skip_to_matching_brace());
+            getNextToken();
+            tok = getToken(1);
+            break;
+        } else if (tok.kind == RBRACE) {
+            getNextToken();
+            tok = getToken(1);
+            break;
+        } else if (tok.kind == SEMICOLON) {
+            getNextToken();
+            tok = getToken(1);
+            break;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+        }
+        getNextToken();
+    }
+    return s.toString().trim();
+  }
+
+<<<<<<< HEAD
   String skipStatement() throws ParseException {
     StringBuffer s = new StringBuffer();
     Token tok = getToken(0);
@@ -5916,6 +10680,29 @@ LexicalUnitImpl result = null;
         if (tok.kind == EOF) {
             break;
         }
+=======
+    // skip white space
+    while (true) {
+        if (tok.kind != S) {
+            break;
+        }
+        tok = getNextToken();
+        tok = getToken(1);
+    }
+
+    return s.toString().trim();
+  }
+
+  String skip_to_matching_brace() throws ParseException {
+    StringBuffer s = new StringBuffer();
+    Token tok;
+    int nesting = 1;
+    while (true) {
+        tok = getToken(1);
+        if (tok.kind == EOF) {
+            break;
+        }
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
         s.append(tok.image);
         if (tok.kind == LBRACE) {
             nesting++;
@@ -6022,15 +10809,24 @@ LexicalUnitImpl result = null;
 // TODO required by original parser but not used by Vaadin?
   final public void _parseRule() throws ParseException {
  String ret = null;
+<<<<<<< HEAD
     label_166:
+=======
+    label_169:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case S:
         ;
         break;
       default:
+<<<<<<< HEAD
         jj_la1[243] = jj_gen;
         break label_166;
+=======
+        jj_la1[249] = jj_gen;
+        break label_169;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
       }
       jj_consume_token(S);
     }
@@ -6065,7 +10861,11 @@ LexicalUnitImpl result = null;
       fontFace();
       break;
     default:
+<<<<<<< HEAD
       jj_la1[244] = jj_gen;
+=======
+      jj_la1[250] = jj_gen;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
       ret = skipStatement();
                     if ((ret == null) || (ret.length() == 0)) {
                         {if (true) return;}
@@ -6080,15 +10880,24 @@ LexicalUnitImpl result = null;
   }
 
   final public void _parseImportRule() throws ParseException {
+<<<<<<< HEAD
     label_167:
+=======
+    label_170:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case S:
         ;
         break;
       default:
+<<<<<<< HEAD
         jj_la1[245] = jj_gen;
         break label_167;
+=======
+        jj_la1[251] = jj_gen;
+        break label_170;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
       }
       jj_consume_token(S);
     }
@@ -6096,15 +10905,24 @@ LexicalUnitImpl result = null;
   }
 
   final public void _parseMediaRule() throws ParseException {
+<<<<<<< HEAD
     label_168:
+=======
+    label_171:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case S:
         ;
         break;
       default:
+<<<<<<< HEAD
         jj_la1[246] = jj_gen;
         break label_168;
+=======
+        jj_la1[252] = jj_gen;
+        break label_171;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
       }
       jj_consume_token(S);
     }
@@ -6112,15 +10930,24 @@ LexicalUnitImpl result = null;
   }
 
   final public void _parseDeclarationBlock() throws ParseException {
+<<<<<<< HEAD
     label_169:
+=======
+    label_172:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case S:
         ;
         break;
       default:
+<<<<<<< HEAD
         jj_la1[247] = jj_gen;
         break label_169;
+=======
+        jj_la1[253] = jj_gen;
+        break label_172;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
       }
       jj_consume_token(S);
     }
@@ -6130,29 +10957,49 @@ LexicalUnitImpl result = null;
       declaration();
       break;
     default:
+<<<<<<< HEAD
       jj_la1[248] = jj_gen;
       ;
     }
     label_170:
+=======
+      jj_la1[254] = jj_gen;
+      ;
+    }
+    label_173:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case SEMICOLON:
         ;
         break;
       default:
+<<<<<<< HEAD
         jj_la1[249] = jj_gen;
         break label_170;
       }
       jj_consume_token(SEMICOLON);
       label_171:
+=======
+        jj_la1[255] = jj_gen;
+        break label_173;
+      }
+      jj_consume_token(SEMICOLON);
+      label_174:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case S:
           ;
           break;
         default:
+<<<<<<< HEAD
           jj_la1[250] = jj_gen;
           break label_171;
+=======
+          jj_la1[256] = jj_gen;
+          break label_174;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
         }
         jj_consume_token(S);
       }
@@ -6162,7 +11009,11 @@ LexicalUnitImpl result = null;
         declaration();
         break;
       default:
+<<<<<<< HEAD
         jj_la1[251] = jj_gen;
+=======
+        jj_la1[257] = jj_gen;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
         ;
       }
     }
@@ -6171,15 +11022,24 @@ LexicalUnitImpl result = null;
   final public ArrayList<String> _parseSelectors() throws ParseException {
   ArrayList<String> p = null;
     try {
+<<<<<<< HEAD
       label_172:
+=======
+      label_175:
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case S:
           ;
           break;
         default:
+<<<<<<< HEAD
           jj_la1[252] = jj_gen;
           break label_172;
+=======
+          jj_la1[258] = jj_gen;
+          break label_175;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
         }
         jj_consume_token(S);
       }
@@ -6254,6 +11114,7 @@ LexicalUnitImpl result = null;
     finally { jj_save(8, xla); }
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_206() {
     if (jj_scan_token(MINUS)) return true;
     Token xsp;
@@ -6282,6 +11143,14 @@ LexicalUnitImpl result = null;
   }
 
   private boolean jj_3R_204() {
+=======
+  private boolean jj_3R_188() {
+    if (jj_3R_213()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_210() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(MOD)) return true;
     Token xsp;
     while (true) {
@@ -6291,7 +11160,11 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_203() {
+=======
+  private boolean jj_3R_209() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(ANY)) return true;
     Token xsp;
     while (true) {
@@ -6301,7 +11174,11 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_202() {
+=======
+  private boolean jj_3R_208() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(DIV)) return true;
     Token xsp;
     while (true) {
@@ -6311,7 +11188,11 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_201() {
+=======
+  private boolean jj_3R_207() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(COMMA)) return true;
     Token xsp;
     while (true) {
@@ -6321,6 +11202,7 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_182() {
     Token xsp;
     xsp = jj_scanpos;
@@ -6335,6 +11217,22 @@ LexicalUnitImpl result = null;
     if (jj_3R_205()) {
     jj_scanpos = xsp;
     if (jj_3R_206()) return true;
+=======
+  private boolean jj_3R_185() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_207()) {
+    jj_scanpos = xsp;
+    if (jj_3R_208()) {
+    jj_scanpos = xsp;
+    if (jj_3R_209()) {
+    jj_scanpos = xsp;
+    if (jj_3R_210()) {
+    jj_scanpos = xsp;
+    if (jj_3R_211()) {
+    jj_scanpos = xsp;
+    if (jj_3R_212()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     }
     }
@@ -6343,6 +11241,7 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_209() {
     if (jj_3R_208()) return true;
     return false;
@@ -6358,6 +11257,16 @@ LexicalUnitImpl result = null;
     if (jj_scan_token(23)) return true;
     }
     }
+=======
+  private boolean jj_3R_215() {
+    if (jj_3R_214()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_213() {
+    if (jj_scan_token(GUARDED_SYM)) return true;
+    Token xsp;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     while (true) {
       xsp = jj_scanpos;
       if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
@@ -6365,6 +11274,7 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_188() {
     if (jj_scan_token(S)) return true;
     Token xsp;
@@ -6376,6 +11286,18 @@ LexicalUnitImpl result = null;
   private boolean jj_3R_207() {
     if (jj_scan_token(GUARDED_SYM)) return true;
     Token xsp;
+=======
+  private boolean jj_3R_214() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(18)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(22)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(23)) return true;
+    }
+    }
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     while (true) {
       xsp = jj_scanpos;
       if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
@@ -6383,14 +11305,20 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_173() {
     if (jj_3R_183()) return true;
+=======
+  private boolean jj_3R_176() {
+    if (jj_3R_186()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(COLON)) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
       if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
     }
+<<<<<<< HEAD
     if (jj_3R_184()) return true;
     xsp = jj_scanpos;
     if (jj_3R_185()) jj_scanpos = xsp;
@@ -6398,10 +11326,20 @@ LexicalUnitImpl result = null;
     while (true) {
       xsp = jj_scanpos;
       if (jj_3R_186()) { jj_scanpos = xsp; break; }
+=======
+    if (jj_3R_187()) return true;
+    xsp = jj_scanpos;
+    if (jj_3R_188()) jj_scanpos = xsp;
+    if (jj_3R_189()) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_189()) { jj_scanpos = xsp; break; }
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_187() {
     if (jj_3R_208()) return true;
     return false;
@@ -6413,11 +11351,36 @@ LexicalUnitImpl result = null;
     if (jj_3R_187()) {
     jj_scanpos = xsp;
     if (jj_3R_188()) return true;
+=======
+  private boolean jj_3R_191() {
+    if (jj_scan_token(S)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_215()) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3R_190() {
+    if (jj_3R_214()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_177() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_190()) {
+    jj_scanpos = xsp;
+    if (jj_3R_191()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_191() {
+=======
+  private boolean jj_3R_197() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(VARIABLE)) return true;
     Token xsp;
     while (true) {
@@ -6432,10 +11395,17 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_176() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_191()) jj_scanpos = xsp;
+=======
+  private boolean jj_3R_179() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_197()) jj_scanpos = xsp;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(CONTAINS)) return true;
     while (true) {
       xsp = jj_scanpos;
@@ -6445,17 +11415,29 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_259() {
+=======
+  private boolean jj_3R_217() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(HASH)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_276() {
+=======
+  private boolean jj_3R_287() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(IDENT)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_277() {
+=======
+  private boolean jj_3R_288() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(FUNCTION)) return true;
     Token xsp;
     while (true) {
@@ -6466,11 +11448,16 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_275() {
+=======
+  private boolean jj_3R_286() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(COLON)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_262() {
     if (jj_scan_token(COLON)) return true;
     Token xsp;
@@ -6480,30 +11467,58 @@ LexicalUnitImpl result = null;
     if (jj_3R_276()) {
     jj_scanpos = xsp;
     if (jj_3R_277()) return true;
+=======
+  private boolean jj_3R_219() {
+    if (jj_scan_token(COLON)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_286()) jj_scanpos = xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_287()) {
+    jj_scanpos = xsp;
+    if (jj_3R_288()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     return false;
   }
 
   private boolean jj_3_7() {
+<<<<<<< HEAD
     if (jj_3R_180()) return true;
     return false;
   }
 
   private boolean jj_3R_198() {
+=======
+    if (jj_3R_183()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_204() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(LBRACE)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_287() {
+=======
+  private boolean jj_3R_307() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(STRING)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_285() {
+=======
+  private boolean jj_3R_305() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(STARMATCH)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_284() {
     if (jj_scan_token(DOLLARMATCH)) return true;
     return false;
@@ -6515,30 +11530,60 @@ LexicalUnitImpl result = null;
   }
 
   private boolean jj_3R_283() {
+=======
+  private boolean jj_3R_306() {
+    if (jj_scan_token(IDENT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_304() {
+    if (jj_scan_token(DOLLARMATCH)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_303() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(CARETMATCH)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_282() {
+=======
+  private boolean jj_3R_302() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(DASHMATCH)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_281() {
+=======
+  private boolean jj_3R_301() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(INCLUDES)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_267() {
+=======
+  private boolean jj_3R_268() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(INTERPOLATION)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_280() {
+=======
+  private boolean jj_3R_300() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(EQ)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_197() {
     if (jj_3R_184()) return true;
     return false;
@@ -6558,6 +11603,27 @@ LexicalUnitImpl result = null;
     if (jj_3R_284()) {
     jj_scanpos = xsp;
     if (jj_3R_285()) return true;
+=======
+  private boolean jj_3R_203() {
+    if (jj_3R_187()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_293() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_300()) {
+    jj_scanpos = xsp;
+    if (jj_3R_301()) {
+    jj_scanpos = xsp;
+    if (jj_3R_302()) {
+    jj_scanpos = xsp;
+    if (jj_3R_303()) {
+    jj_scanpos = xsp;
+    if (jj_3R_304()) {
+    jj_scanpos = xsp;
+    if (jj_3R_305()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     }
     }
@@ -6568,9 +11634,15 @@ LexicalUnitImpl result = null;
       if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
     }
     xsp = jj_scanpos;
+<<<<<<< HEAD
     if (jj_3R_286()) {
     jj_scanpos = xsp;
     if (jj_3R_287()) return true;
+=======
+    if (jj_3R_306()) {
+    jj_scanpos = xsp;
+    if (jj_3R_307()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     while (true) {
       xsp = jj_scanpos;
@@ -6580,12 +11652,20 @@ LexicalUnitImpl result = null;
   }
 
   private boolean jj_3_6() {
+<<<<<<< HEAD
     if (jj_3R_179()) return true;
+=======
+    if (jj_3R_182()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(LBRACE)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_261() {
+=======
+  private boolean jj_3R_220() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(LBRACKET)) return true;
     Token xsp;
     while (true) {
@@ -6598,13 +11678,22 @@ LexicalUnitImpl result = null;
       if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
     }
     xsp = jj_scanpos;
+<<<<<<< HEAD
     if (jj_3R_274()) jj_scanpos = xsp;
+=======
+    if (jj_3R_293()) jj_scanpos = xsp;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(RBRACKET)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_180() {
     if (jj_3R_196()) return true;
+=======
+  private boolean jj_3R_183() {
+    if (jj_3R_202()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(COLON)) return true;
     Token xsp;
     while (true) {
@@ -6612,48 +11701,85 @@ LexicalUnitImpl result = null;
       if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
     }
     xsp = jj_scanpos;
+<<<<<<< HEAD
     if (jj_3R_197()) {
     jj_scanpos = xsp;
     if (jj_3R_198()) return true;
+=======
+    if (jj_3R_203()) {
+    jj_scanpos = xsp;
+    if (jj_3R_204()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_279() {
+=======
+  private boolean jj_3R_299() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(INTERPOLATION)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_265() {
     if (jj_3R_184()) return true;
     return false;
   }
 
   private boolean jj_3R_245() {
+=======
+  private boolean jj_3R_266() {
+    if (jj_3R_187()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_254() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(PARENT)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_244() {
+=======
+  private boolean jj_3R_253() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(ANY)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_258() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_266()) {
     jj_scanpos = xsp;
     if (jj_3R_267()) return true;
+=======
+  private boolean jj_3R_263() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_267()) {
+    jj_scanpos = xsp;
+    if (jj_3R_268()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_266() {
+=======
+  private boolean jj_3R_267() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(IDENT)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_210() {
     Token xsp;
     xsp = jj_scanpos;
@@ -6662,22 +11788,45 @@ LexicalUnitImpl result = null;
     if (jj_3R_244()) {
     jj_scanpos = xsp;
     if (jj_3R_245()) return true;
+=======
+  private boolean jj_3R_216() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_252()) {
+    jj_scanpos = xsp;
+    if (jj_3R_253()) {
+    jj_scanpos = xsp;
+    if (jj_3R_254()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     }
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_243() {
     Token xsp;
     if (jj_3R_258()) return true;
     while (true) {
       xsp = jj_scanpos;
       if (jj_3R_258()) { jj_scanpos = xsp; break; }
+=======
+  private boolean jj_3R_252() {
+    Token xsp;
+    if (jj_3R_263()) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_263()) { jj_scanpos = xsp; break; }
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_251() {
+=======
+  private boolean jj_3R_256() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(FUNCTION)) return true;
     Token xsp;
     while (true) {
@@ -6685,12 +11834,20 @@ LexicalUnitImpl result = null;
       if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
     }
     xsp = jj_scanpos;
+<<<<<<< HEAD
     if (jj_3R_265()) jj_scanpos = xsp;
+=======
+    if (jj_3R_266()) jj_scanpos = xsp;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(RPARAN)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_177() {
+=======
+  private boolean jj_3R_180() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(COMMA)) return true;
     Token xsp;
     while (true) {
@@ -6700,6 +11857,7 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_273() {
     Token xsp;
     xsp = jj_scanpos;
@@ -6711,10 +11869,19 @@ LexicalUnitImpl result = null;
   }
 
   private boolean jj_3R_278() {
+=======
+  private boolean jj_3R_247() {
+    if (jj_3R_260()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_298() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(IDENT)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_238() {
     if (jj_3R_255()) return true;
     return false;
@@ -6727,12 +11894,37 @@ LexicalUnitImpl result = null;
 
   private boolean jj_3R_236() {
     if (jj_3R_253()) return true;
+=======
+  private boolean jj_3R_246() {
+    if (jj_3R_259()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_281() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_298()) {
+    jj_scanpos = xsp;
+    if (jj_3R_299()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_245() {
+    if (jj_3R_258()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_297() {
+    if (jj_3R_219()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     return false;
   }
 
   private boolean jj_3_5() {
     Token xsp;
     xsp = jj_scanpos;
+<<<<<<< HEAD
     if (jj_3R_177()) jj_scanpos = xsp;
     if (jj_3R_178()) return true;
     return false;
@@ -6745,10 +11937,25 @@ LexicalUnitImpl result = null;
     while (true) {
       xsp = jj_scanpos;
       if (jj_3R_273()) { jj_scanpos = xsp; break; }
+=======
+    if (jj_3R_180()) jj_scanpos = xsp;
+    if (jj_3R_181()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_218() {
+    if (jj_scan_token(DOT)) return true;
+    Token xsp;
+    if (jj_3R_281()) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_281()) { jj_scanpos = xsp; break; }
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_249() {
     if (jj_3R_262()) return true;
     return false;
@@ -6789,26 +11996,174 @@ LexicalUnitImpl result = null;
     if (jj_3R_271()) {
     jj_scanpos = xsp;
     if (jj_3R_272()) return true;
+=======
+  private boolean jj_3R_295() {
+    if (jj_3R_218()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_290() {
+    if (jj_3R_218()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_292() {
+    if (jj_3R_219()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_280() {
+    if (jj_3R_219()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_283() {
+    if (jj_3R_218()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_285() {
+    if (jj_3R_219()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_296() {
+    if (jj_3R_220()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_273() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_294()) {
+    jj_scanpos = xsp;
+    if (jj_3R_295()) {
+    jj_scanpos = xsp;
+    if (jj_3R_296()) {
+    jj_scanpos = xsp;
+    if (jj_3R_297()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     }
     }
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_269() {
     if (jj_3R_259()) return true;
     return false;
   }
 
   private boolean jj_3R_252() {
+=======
+  private boolean jj_3R_294() {
+    if (jj_3R_217()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_272() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_289()) {
+    jj_scanpos = xsp;
+    if (jj_3R_290()) {
+    jj_scanpos = xsp;
+    if (jj_3R_291()) {
+    jj_scanpos = xsp;
+    if (jj_3R_292()) return true;
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_289() {
+    if (jj_3R_217()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_277() {
+    if (jj_3R_219()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_271() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_282()) {
+    jj_scanpos = xsp;
+    if (jj_3R_283()) {
+    jj_scanpos = xsp;
+    if (jj_3R_284()) {
+    jj_scanpos = xsp;
+    if (jj_3R_285()) return true;
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_282() {
+    if (jj_3R_217()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_291() {
+    if (jj_3R_220()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_279() {
+    if (jj_3R_220()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_284() {
+    if (jj_3R_220()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_270() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_278()) {
+    jj_scanpos = xsp;
+    if (jj_3R_279()) {
+    jj_scanpos = xsp;
+    if (jj_3R_280()) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_275() {
+    if (jj_3R_218()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_278() {
+    if (jj_3R_218()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_257() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(DOT)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_235() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_252()) jj_scanpos = xsp;
+=======
+  private boolean jj_3R_244() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_257()) jj_scanpos = xsp;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     xsp = jj_scanpos;
     if (jj_scan_token(72)) {
     jj_scanpos = xsp;
@@ -6823,6 +12178,7 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_211() {
     Token xsp;
     xsp = jj_scanpos;
@@ -6833,12 +12189,48 @@ LexicalUnitImpl result = null;
     if (jj_3R_248()) {
     jj_scanpos = xsp;
     if (jj_3R_249()) return true;
+=======
+  private boolean jj_3R_243() {
+    if (jj_scan_token(STRING)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_242() {
+    if (jj_3R_256()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_196() {
+    if (jj_3R_220()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_273()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_199() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_243()) {
+    jj_scanpos = xsp;
+    if (jj_3R_244()) {
+    jj_scanpos = xsp;
+    if (jj_3R_245()) {
+    jj_scanpos = xsp;
+    if (jj_3R_246()) {
+    jj_scanpos = xsp;
+    if (jj_3R_247()) return true;
+    }
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     }
     }
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_246() {
     if (jj_3R_259()) return true;
     return false;
@@ -6860,10 +12252,44 @@ LexicalUnitImpl result = null;
     while (true) {
       xsp = jj_scanpos;
       if (jj_3R_211()) { jj_scanpos = xsp; break; }
+=======
+  private boolean jj_3R_195() {
+    if (jj_3R_219()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_272()) { jj_scanpos = xsp; break; }
     }
     return false;
   }
 
+  private boolean jj_3R_276() {
+    if (jj_3R_220()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_194() {
+    if (jj_3R_218()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_271()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_193() {
+    if (jj_3R_217()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_270()) { jj_scanpos = xsp; break; }
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+    }
+    return false;
+  }
+
+<<<<<<< HEAD
   private boolean jj_3R_193() {
     Token xsp;
     xsp = jj_scanpos;
@@ -6877,33 +12303,83 @@ LexicalUnitImpl result = null;
     jj_scanpos = xsp;
     if (jj_3R_238()) return true;
     }
+=======
+  private boolean jj_3R_269() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_274()) {
+    jj_scanpos = xsp;
+    if (jj_3R_275()) {
+    jj_scanpos = xsp;
+    if (jj_3R_276()) {
+    jj_scanpos = xsp;
+    if (jj_3R_277()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     }
     }
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_189() {
     if (jj_3R_210()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
       if (jj_3R_268()) { jj_scanpos = xsp; break; }
+=======
+  private boolean jj_3R_274() {
+    if (jj_3R_217()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_192() {
+    if (jj_3R_216()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_269()) { jj_scanpos = xsp; break; }
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_175() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_189()) {
     jj_scanpos = xsp;
     if (jj_3R_190()) return true;
+=======
+  private boolean jj_3R_241() {
+    if (jj_scan_token(DIMEN)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_178() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_192()) {
+    jj_scanpos = xsp;
+    if (jj_3R_193()) {
+    jj_scanpos = xsp;
+    if (jj_3R_194()) {
+    jj_scanpos = xsp;
+    if (jj_3R_195()) {
+    jj_scanpos = xsp;
+    if (jj_3R_196()) return true;
+    }
+    }
+    }
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     return false;
   }
 
   private boolean jj_3R_240() {
+<<<<<<< HEAD
     if (jj_3R_208()) return true;
     if (jj_3R_175()) return true;
     return false;
@@ -6920,45 +12396,87 @@ LexicalUnitImpl result = null;
   }
 
   private boolean jj_3R_230() {
+=======
+    if (jj_scan_token(KHZ)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_249() {
+    if (jj_3R_214()) return true;
+    if (jj_3R_178()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_239() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(HZ)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_229() {
+=======
+  private boolean jj_3R_238() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(MS)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_228() {
+=======
+  private boolean jj_3R_237() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(SECOND)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_227() {
+=======
+  private boolean jj_3R_236() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(GRAD)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_226() {
+=======
+  private boolean jj_3R_235() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(RAD)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_225() {
+=======
+  private boolean jj_3R_234() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(DEG)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_224() {
+=======
+  private boolean jj_3R_233() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(EXS)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_223() {
+=======
+  private boolean jj_3R_232() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(REM)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3_2() {
     if (jj_3R_174()) return true;
     if (jj_3R_175()) return true;
@@ -6976,12 +12494,47 @@ LexicalUnitImpl result = null;
   }
 
   private boolean jj_3R_195() {
+=======
+  private boolean jj_3R_231() {
+    if (jj_scan_token(LEM)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_230() {
+    if (jj_scan_token(EMS)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_229() {
+    if (jj_scan_token(PX)) return true;
+    return false;
+  }
+
+  private boolean jj_3_2() {
+    if (jj_3R_177()) return true;
+    if (jj_3R_178()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_228() {
+    if (jj_scan_token(IN)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_227() {
+    if (jj_scan_token(PC)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_201() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(COMMA)) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
       if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
     }
+<<<<<<< HEAD
     if (jj_3R_194()) return true;
     return false;
   }
@@ -7007,6 +12560,33 @@ LexicalUnitImpl result = null;
     if (jj_3R_239()) {
     jj_scanpos = xsp;
     if (jj_3R_240()) return true;
+=======
+    if (jj_3R_200()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_248() {
+    if (jj_3R_178()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_226() {
+    if (jj_scan_token(MM)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_225() {
+    if (jj_scan_token(CM)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_200() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_248()) {
+    jj_scanpos = xsp;
+    if (jj_3R_249()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     while (true) {
       xsp = jj_scanpos;
@@ -7019,6 +12599,7 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_218() {
     if (jj_scan_token(PC)) return true;
     return false;
@@ -7035,15 +12616,23 @@ LexicalUnitImpl result = null;
   }
 
   private boolean jj_3R_215() {
+=======
+  private boolean jj_3R_224() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(PT)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_214() {
+=======
+  private boolean jj_3R_223() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(PERCENTAGE)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3_1() {
     if (jj_3R_173()) return true;
     return false;
@@ -7097,6 +12686,33 @@ LexicalUnitImpl result = null;
     jj_scanpos = xsp;
     if (jj_3R_221()) {
     jj_scanpos = xsp;
+=======
+  private boolean jj_3R_206() {
+    if (jj_3R_251()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_222() {
+    if (jj_scan_token(NUMBER)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_221() {
+    if (jj_3R_255()) return true;
+    return false;
+  }
+
+  private boolean jj_3_1() {
+    if (jj_3R_176()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_198() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_221()) jj_scanpos = xsp;
+    xsp = jj_scanpos;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_3R_222()) {
     jj_scanpos = xsp;
     if (jj_3R_223()) {
@@ -7119,7 +12735,29 @@ LexicalUnitImpl result = null;
     jj_scanpos = xsp;
     if (jj_3R_232()) {
     jj_scanpos = xsp;
+<<<<<<< HEAD
     if (jj_3R_233()) return true;
+=======
+    if (jj_3R_233()) {
+    jj_scanpos = xsp;
+    if (jj_3R_234()) {
+    jj_scanpos = xsp;
+    if (jj_3R_235()) {
+    jj_scanpos = xsp;
+    if (jj_3R_236()) {
+    jj_scanpos = xsp;
+    if (jj_3R_237()) {
+    jj_scanpos = xsp;
+    if (jj_3R_238()) {
+    jj_scanpos = xsp;
+    if (jj_3R_239()) {
+    jj_scanpos = xsp;
+    if (jj_3R_240()) {
+    jj_scanpos = xsp;
+    if (jj_3R_241()) {
+    jj_scanpos = xsp;
+    if (jj_3R_242()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     }
     }
@@ -7143,12 +12781,31 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_178() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_192()) {
     jj_scanpos = xsp;
     if (jj_3R_193()) return true;
+=======
+  private boolean jj_3R_182() {
+    if (jj_3R_200()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_201()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_181() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_198()) {
+    jj_scanpos = xsp;
+    if (jj_3R_199()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     while (true) {
       xsp = jj_scanpos;
@@ -7157,12 +12814,17 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_253() {
+=======
+  private boolean jj_3R_258() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(HASH)) return true;
     return false;
   }
 
   private boolean jj_3_4() {
+<<<<<<< HEAD
     if (jj_3R_176()) return true;
     return false;
   }
@@ -7173,10 +12835,23 @@ LexicalUnitImpl result = null;
   }
 
   private boolean jj_3R_254() {
+=======
+    if (jj_3R_179()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_251() {
+    if (jj_3R_186()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_259() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(URL)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_199() {
     if (jj_3R_178()) return true;
     return false;
@@ -7193,11 +12868,25 @@ LexicalUnitImpl result = null;
     if (jj_3R_199()) {
     jj_scanpos = xsp;
     if (jj_3R_200()) return true;
+=======
+  private boolean jj_3R_205() {
+    if (jj_3R_181()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_184() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_205()) {
+    jj_scanpos = xsp;
+    if (jj_3R_206()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     return false;
   }
 
   private boolean jj_3_9() {
+<<<<<<< HEAD
     if (jj_3R_182()) return true;
     return false;
   }
@@ -7218,16 +12907,51 @@ LexicalUnitImpl result = null;
     if (jj_3R_263()) {
     jj_scanpos = xsp;
     if (jj_3R_264()) return true;
-    }
+=======
+    if (jj_3R_185()) return true;
     return false;
   }
 
-  private boolean jj_3R_263() {
-    if (jj_scan_token(MINUS)) return true;
+  private boolean jj_3R_262() {
+    if (jj_scan_token(INTERPOLATION)) return true;
+    return false;
+  }
+
+  private boolean jj_3_3() {
+    if (jj_3R_176()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_265() {
+    if (jj_scan_token(PLUS)) return true;
     return false;
   }
 
   private boolean jj_3R_255() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_264()) {
+    jj_scanpos = xsp;
+    if (jj_3R_265()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+    }
+    return false;
+  }
+
+<<<<<<< HEAD
+  private boolean jj_3R_263() {
+=======
+  private boolean jj_3R_264() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
+    if (jj_scan_token(MINUS)) return true;
+    return false;
+  }
+
+<<<<<<< HEAD
+  private boolean jj_3R_255() {
+=======
+  private boolean jj_3R_260() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(UNICODERANGE)) return true;
     return false;
   }
@@ -7236,12 +12960,21 @@ LexicalUnitImpl result = null;
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_9()) jj_scanpos = xsp;
+<<<<<<< HEAD
     if (jj_3R_181()) return true;
     return false;
   }
 
   private boolean jj_3R_183() {
     if (jj_scan_token(VARIABLE)) return true;
+=======
+    if (jj_3R_184()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_189() {
+    if (jj_scan_token(SEMICOLON)) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -7250,47 +12983,87 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_186() {
     if (jj_scan_token(SEMICOLON)) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
       if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
+=======
+  private boolean jj_3R_187() {
+    if (jj_3R_184()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_8()) { jj_scanpos = xsp; break; }
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_184() {
     if (jj_3R_181()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
       if (jj_3_8()) { jj_scanpos = xsp; break; }
+=======
+  private boolean jj_3R_186() {
+    if (jj_scan_token(VARIABLE)) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_241() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_256()) {
     jj_scanpos = xsp;
     if (jj_3R_257()) return true;
+=======
+  private boolean jj_3R_250() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_261()) {
+    jj_scanpos = xsp;
+    if (jj_3R_262()) return true;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_256() {
+=======
+  private boolean jj_3R_261() {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     if (jj_scan_token(IDENT)) return true;
     return false;
   }
 
+<<<<<<< HEAD
   private boolean jj_3R_196() {
     Token xsp;
     if (jj_3R_241()) return true;
     while (true) {
       xsp = jj_scanpos;
       if (jj_3R_241()) { jj_scanpos = xsp; break; }
+=======
+  private boolean jj_3R_202() {
+    Token xsp;
+    if (jj_3R_250()) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_250()) { jj_scanpos = xsp; break; }
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     }
     while (true) {
       xsp = jj_scanpos;
@@ -7299,6 +13072,31 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+<<<<<<< HEAD
+=======
+  private boolean jj_3R_212() {
+    if (jj_scan_token(MINUS)) return true;
+    Token xsp;
+    if (jj_scan_token(1)) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_211() {
+    if (jj_scan_token(PLUS)) return true;
+    Token xsp;
+    if (jj_scan_token(1)) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
   /** Generated Token Manager. */
   public ParserTokenManager token_source;
   /** Current token. */
@@ -7309,7 +13107,11 @@ LexicalUnitImpl result = null;
   private Token jj_scanpos, jj_lastpos;
   private int jj_la;
   private int jj_gen;
+<<<<<<< HEAD
   final private int[] jj_la1 = new int[253];
+=======
+  final private int[] jj_la1 = new int[259];
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
@@ -7321,6 +13123,7 @@ LexicalUnitImpl result = null;
       jj_la1_init_3();
    }
    private static void jj_la1_init_0() {
+<<<<<<< HEAD
       jj_la1_0 = new int[] {0x0,0x302,0x302,0x0,0x300,0x2,0x2,0x2,0xd4c40000,0x0,0x300,0x2,0x300,0x2,0x0,0x2,0x2,0x2,0x0,0x0,0x2,0x2,0x0,0x2,0x0,0x2,0x2,0xd4c40000,0xd4c40000,0x2,0x2,0x2,0xd4fd1500,0xd4fd1500,0x2,0x2,0x2,0x0,0x0,0x2,0x0,0x200000,0x2,0x0,0x2,0x2,0x2,0x2,0x0,0x200000,0x2,0x0,0x2,0x391500,0xc40000,0xc40002,0xc40000,0x2,0x2,0x80120002,0x80120002,0x2,0x0,0x0,0x2,0x2,0x2,0x2,0xd4c40000,0xd4c40000,0x2,0x100000,0x2,0xd4c40000,0x2,0x84000000,0x84000000,0x84000000,0x84000000,0xd4000000,0x0,0x0,0x0,0x0,0x50000000,0x2,0x2,0x3f000,0x2,0x0,0x2,0x3f000,0x0,0x2,0x0,0x2,0x0,0x2,0x200000,0x0,0xd4c40000,0x0,0x134e0002,0x2,0xd4c40000,0x2,0x0,0x2,0x134e0002,0x0,0x2,0xd4c40000,0x2,0x134e0002,0x2,0x2,0x2,0x0,0x2,0xd4c40000,0x2,0x2,0x100000,0x2,0x2,0x2,0x2,0x0,0x2,0xd4c40000,0xd4c40000,0x2,0x100000,0x2,0x2,0x2,0x100000,0x0,0x0,0x800c0000,0x2,0x0,0x100000,0x2,0x800c0000,0x2,0x0,0x2,0x2,0x0,0x2,0x200000,0x2,0xd4c40000,0x2,0x200400,0x2,0x2,0x0,0x2,0x0,0x2,0x2,0x2,0x100000,0x2,0x2,0x2,0x2,0x2,0x0,0x2,0x2,0x2,0x100000,0x2,0x2,0x2,0x0,0x2,0x2,0x2,0x100000,0x2,0x2,0x0,0x2,0x0,0x2,0x2,0x2,0x100000,0x0,0x2,0x2,0x0,0x2,0x2,0x2,0x200000,0x2,0x2,0x200000,0x2,0x2,0x0,0x200000,0x2,0x0,0x2,0x0,0xd4c40000,0x2,0x0,0x2,0x0,0x200000,0x2,0x0,0x2,0x800c0400,0x2,0x0,0x2,0x2,0x2,0x2,0x2,0x2,0x2,0x2,0x321c0000,0xc0000,0x800c0000,0xc0000,0x0,0x80000000,0x0,0x80000000,0x800c0000,0x2,0x2,0x800c0000,0x2,0xd4c40000,0x2,0x2,0x2,0x0,0x200000,0x2,0x0,0x2,};
    }
    private static void jj_la1_init_1() {
@@ -7331,6 +13134,18 @@ LexicalUnitImpl result = null;
    }
    private static void jj_la1_init_3() {
       jj_la1_3 = new int[] {0x8,0x80,0x80,0x2,0x80,0x0,0x0,0x0,0x75,0x0,0x80,0x0,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x45,0x45,0x0,0x0,0x0,0xc401bf,0xc401bf,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xc401be,0x0,0x0,0x0,0x0,0x0,0x400000,0x400000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x47,0x47,0x0,0x0,0x0,0x1,0x0,0x1,0x1,0x1,0x1,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x400000,0x0,0x0,0x0,0x0,0x0,0x45,0x0,0x200000,0x0,0x45,0x0,0x0,0x0,0x200000,0x0,0x0,0x45,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x45,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x400000,0x0,0x75,0x75,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x440001,0x0,0x0,0x0,0x0,0x440001,0x0,0x0,0x0,0x0,0x400000,0x0,0x0,0x0,0x1,0x0,0x0,0x0,0x0,0x380000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0x0,0x100,0x0,0x0,0x0,0x0,0x0,0x0,0x440001,0x0,0x100,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x440001,0x0,0x400000,0x0,0x0,0x40001,0x440001,0x0,0x0,0x440001,0x0,0x37,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+=======
+      jj_la1_0 = new int[] {0x0,0x302,0x302,0x0,0x300,0x2,0x2,0x2,0xd4c40000,0x0,0x300,0x2,0x300,0x2,0x0,0x2,0x2,0x2,0x0,0x0,0x2,0x2,0x0,0x2,0x0,0x2,0x2,0xd4c40000,0xd4c40000,0x2,0x2,0x2,0xd4fd1500,0xd4fd1500,0x2,0x2,0x2,0x0,0x0,0x2,0x0,0x200000,0x2,0x0,0x2,0x2,0x2,0x2,0x0,0x200000,0x2,0x0,0x2,0x391500,0xc40000,0xc40002,0xc40000,0x2,0x2,0x80120002,0x80120002,0x2,0x0,0x0,0x2,0x2,0x2,0x2,0xd4c40000,0xd4c40000,0x2,0x100000,0x2,0xd4c40000,0x2,0x84000000,0x84000000,0x84000000,0x84000000,0x84000000,0x84000000,0x84000000,0x84000000,0x84000000,0x84000000,0xd4000000,0x0,0x0,0x0,0x0,0x50000000,0x2,0x2,0x3f000,0x2,0x0,0x2,0x3f000,0x0,0x2,0x0,0x2,0x0,0x2,0x200000,0x0,0xd4c40000,0x0,0x134e0002,0x2,0xd4c40000,0x2,0x0,0x2,0x134e0002,0x0,0x2,0xd4c40000,0x2,0x134e0002,0x2,0x2,0x2,0x0,0x2,0xd4c40000,0x2,0x2,0x100000,0x2,0x2,0x2,0x2,0x0,0x2,0xd4c40000,0xd4c40000,0x2,0x100000,0x2,0x2,0x2,0x100000,0x0,0x0,0x800c0000,0x2,0x0,0x100000,0x2,0x800c0000,0x2,0x0,0x2,0x0,0x2,0x2,0x200000,0x2,0xd4c40000,0x2,0x200400,0x2,0x2,0x0,0x2,0x0,0x2,0x2,0x2,0x100000,0x2,0x2,0x2,0x2,0x2,0x0,0x2,0x2,0x2,0x100000,0x2,0x2,0x2,0x0,0x2,0x2,0x2,0x100000,0x2,0x2,0x0,0x2,0x0,0x2,0x2,0x2,0x100000,0x0,0x2,0x2,0x0,0x2,0x2,0x2,0x200000,0x2,0x2,0x200000,0x2,0x2,0x0,0x200000,0x2,0x0,0x2,0x0,0xd4c40000,0x2,0x0,0x2,0x0,0x200000,0x2,0x0,0x2,0x800c0400,0x2,0x0,0x2,0x2,0x2,0x2,0x2,0x2,0x2,0x2,0x321c0000,0xc0000,0x800c0000,0xc0000,0x0,0x80000000,0x0,0x80000000,0x800c0000,0x2,0x2,0x800c0000,0x2,0xd4c40000,0x2,0x2,0x2,0x0,0x200000,0x2,0x0,0x2,};
+   }
+   private static void jj_la1_init_1() {
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x566000c0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x80,0x80,0x0,0x0,0x120000,0x0,0x120000,0x0,0x0,0x564000c0,0x564000c0,0x0,0x0,0x0,0x60001c0,0x60001c0,0x0,0x0,0x0,0x0,0x40,0x0,0x80,0x0,0x0,0x80,0x0,0x0,0x0,0x0,0x80,0x0,0x0,0x80,0x0,0x100,0x0,0x0,0x0,0x0,0x0,0xc2,0xc2,0x0,0x80,0x80,0x0,0x0,0x0,0x0,0x564000c0,0x564000c0,0x0,0x0,0x0,0xc0,0x0,0x40,0x40,0x40,0x40,0x40,0x40,0x40,0x40,0x40,0x40,0xc0,0x80,0x80,0x80,0x80,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x40,0x0,0x0,0x0,0x0,0x0,0x0,0x50000000,0x64000c0,0x50000000,0x3f,0x0,0x564000c0,0x0,0x80000000,0x0,0x3f,0x0,0x0,0x564000c0,0x0,0x3f,0x0,0x0,0x0,0x0,0x0,0x564000c0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x80,0x0,0x564000c0,0x564000c0,0x0,0x0,0x0,0x0,0x0,0x0,0x40,0x40,0x160040,0x0,0x40,0x0,0x0,0x160040,0x0,0x40,0x0,0x80,0x0,0x0,0x0,0x0,0x60000c0,0x0,0x0,0x0,0x0,0x0,0x0,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x2,0x0,0x0,0x0,0x0,0x6000000,0x0,0x0,0x60000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x80,0x0,0x0,0x80,0x0,0x6000000,0xc0,0x0,0x0,0x0,0x80,0x0,0x0,0x80,0x0,0x160000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x160000,0x0,0x0,0x0,0x160000,0x160000,0x160000,0x0,0x0,0x160000,0x0,0x60000c0,0x0,0x0,0x0,0x80,0x0,0x0,0x80,0x0,};
+   }
+   private static void jj_la1_init_2() {
+      jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x100,0x1000,0x0,0x0,0x0,0x0,0x880,0x0,0x0,0x0,0x100,0x100,0x0,0x0,0x2000,0x0,0x2000,0x0,0x0,0x1119,0x1119,0x0,0x0,0x0,0x2b80,0x2b80,0x0,0x0,0x0,0x100,0x0,0x0,0x100,0x0,0x0,0x100,0x0,0x0,0x0,0x0,0x100,0x0,0x0,0x100,0x0,0x2a80,0x0,0x0,0x0,0x0,0x0,0x380,0x380,0x0,0x100,0x100,0x0,0x0,0x0,0x0,0x1119,0x1119,0x0,0x0,0x0,0x100,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x100,0x100,0x100,0x100,0x100,0x100,0x0,0x0,0x0,0x0,0x180,0x0,0x0,0x0,0x0,0x100,0x0,0x40,0x0,0x0,0x0,0x109,0x1000,0x1300,0x0,0x1109,0x0,0x0,0x0,0x1300,0x20,0x0,0x1109,0x0,0x1300,0x0,0x0,0x0,0x1100,0x0,0x1109,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x100,0x0,0x1109,0x1109,0x0,0x0,0x0,0x0,0x0,0x0,0x1000,0x1000,0xfffffb80,0x0,0x0,0x0,0x0,0xfffffb80,0x0,0x0,0x0,0x1100,0x0,0x0,0x0,0x0,0x100,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x100,0x0,0x0,0x100,0x0,0x0,0x100,0x0,0x0,0x0,0x100,0x0,0x0,0x100,0x0,0xfffffb80,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xfffffb80,0x0,0xffffe200,0x0,0x100,0x980,0xffffeb80,0x0,0x0,0xfffffb80,0x0,0x100,0x0,0x0,0x0,0x100,0x0,0x0,0x100,0x0,};
+   }
+   private static void jj_la1_init_3() {
+      jj_la1_3 = new int[] {0x8,0x80,0x80,0x2,0x80,0x0,0x0,0x0,0x75,0x0,0x80,0x0,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x45,0x45,0x0,0x0,0x0,0xc401bf,0xc401bf,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xc401be,0x0,0x0,0x0,0x0,0x0,0x400000,0x400000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x47,0x47,0x0,0x0,0x0,0x1,0x0,0x1,0x1,0x0,0x0,0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x400000,0x0,0x0,0x0,0x0,0x0,0x45,0x0,0x200000,0x0,0x45,0x0,0x0,0x0,0x200000,0x0,0x0,0x45,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x45,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x400000,0x0,0x75,0x75,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x440001,0x0,0x0,0x0,0x0,0x440001,0x0,0x0,0x0,0x400000,0x0,0x0,0x0,0x0,0x1,0x0,0x0,0x0,0x0,0x380000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0x0,0x100,0x0,0x0,0x0,0x0,0x0,0x0,0x440001,0x0,0x100,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x440001,0x0,0x400000,0x0,0x0,0x40001,0x440001,0x0,0x0,0x440001,0x0,0x37,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[9];
   private boolean jj_rescan = false;
@@ -7342,7 +13157,11 @@ LexicalUnitImpl result = null;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
+<<<<<<< HEAD
     for (int i = 0; i < 253; i++) jj_la1[i] = -1;
+=======
+    for (int i = 0; i < 259; i++) jj_la1[i] = -1;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -7352,7 +13171,11 @@ LexicalUnitImpl result = null;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
+<<<<<<< HEAD
     for (int i = 0; i < 253; i++) jj_la1[i] = -1;
+=======
+    for (int i = 0; i < 259; i++) jj_la1[i] = -1;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -7362,7 +13185,11 @@ LexicalUnitImpl result = null;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
+<<<<<<< HEAD
     for (int i = 0; i < 253; i++) jj_la1[i] = -1;
+=======
+    for (int i = 0; i < 259; i++) jj_la1[i] = -1;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -7372,7 +13199,11 @@ LexicalUnitImpl result = null;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
+<<<<<<< HEAD
     for (int i = 0; i < 253; i++) jj_la1[i] = -1;
+=======
+    for (int i = 0; i < 259; i++) jj_la1[i] = -1;
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -7489,7 +13320,11 @@ LexicalUnitImpl result = null;
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
+<<<<<<< HEAD
     for (int i = 0; i < 253; i++) {
+=======
+    for (int i = 0; i < 259; i++) {
+>>>>>>> 21c3bff... A fix for handling nested parentheses in sass (#12833)
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
