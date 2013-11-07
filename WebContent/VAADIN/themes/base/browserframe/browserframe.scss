@@ -1,0 +1,7 @@
+@mixin base-browserframe {
+
+ 	/* Removes duplicate scrollbars in some cases  */
+	.v-browserframe {
+		font-size: 0;
+	}
+}
