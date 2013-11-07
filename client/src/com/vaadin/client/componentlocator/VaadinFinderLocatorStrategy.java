@@ -192,9 +192,10 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * @return The predicate string for the path fragment or null if none.
      */
     private String extractPredicateString(String pathFragment) {
-        int ixOpenBracket = pathFragment.indexOf('[');
+        int ixOpenBracket = indexOfIgnoringQuotes(pathFragment, '[');
         if (ixOpenBracket >= 0) {
-            int ixCloseBracket = pathFragment.indexOf(']', ixOpenBracket);
+            int ixCloseBracket = indexOfIgnoringQuotes(pathFragment, ']',
+                    ixOpenBracket);
             return pathFragment.substring(ixOpenBracket + 1, ixCloseBracket);
         }
         return null;
@@ -376,12 +377,39 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      *         the path.
      */
     private String[] splitFirstFragmentFromTheRest(String path) {
-        int ixOfSlash = path.indexOf('/');
+        int ixOfSlash = indexOfIgnoringQuotes(path, '/');
         if (ixOfSlash > 0) {
             return new String[] { path.substring(0, ixOfSlash),
                     path.substring(ixOfSlash) };
         }
         return new String[] { path };
+    }
+
+    private int indexOfIgnoringQuotes(String str, char find) {
+        return indexOfIgnoringQuotes(str, find, 0);
+    }
+
+    private int indexOfIgnoringQuotes(String str, char find, int startingAt) {
+        boolean quote = false;
+        String quoteChars = "'\"";
+        char currentQuote = '"';
+        for (int i = startingAt; i < str.length(); ++i) {
+            char cur = str.charAt(i);
+            if (quote) {
+                if (cur == currentQuote) {
+                    quote = !quote;
+                }
+                continue;
+            } else if (cur == find) {
+                return i;
+            } else {
+                if (quoteChars.indexOf(cur) >= 0) {
+                    currentQuote = cur;
+                    quote = !quote;
+                }
+            }
+        }
+        return -1;
     }
 
 }
