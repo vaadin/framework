@@ -18,6 +18,7 @@ package com.vaadin.sass.internal.handler;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.DocumentHandler;
@@ -50,7 +51,7 @@ public interface SCSSDocumentHandler extends DocumentHandler {
 
     void endNestedProperties(String name);
 
-    void includeDirective(String name, Collection<LexicalUnitImpl> args);
+    void includeDirective(String name, List<LexicalUnitImpl> args);
 
     void importStyle(String uri, SACMediaList media, boolean isURL);
 
@@ -98,7 +99,7 @@ public interface SCSSDocumentHandler extends DocumentHandler {
 
     void contentDirective();
 
-    void startIncludeContentBlock(String name);
+    void startIncludeContentBlock(String name, List<LexicalUnitImpl> args);
 
     void endIncludeContentBlock();
 

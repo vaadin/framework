@@ -18,6 +18,7 @@ package com.vaadin.sass.internal.handler;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Stack;
 
 import org.w3c.css.sac.CSSException;
@@ -244,7 +245,7 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     }
 
     @Override
-    public void includeDirective(String name, Collection<LexicalUnitImpl> args) {
+    public void includeDirective(String name, List<LexicalUnitImpl> args) {
         MixinNode node = new MixinNode(name, args);
         nodeStack.peek().appendChild(node);
     }
@@ -374,8 +375,8 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     }
 
     @Override
-    public void startIncludeContentBlock(String name) {
-        MixinNode node = new MixinNode(name);
+    public void startIncludeContentBlock(String name, List<LexicalUnitImpl> args) {
+        MixinNode node = new MixinNode(name, args);
         nodeStack.peek().appendChild(node);
         nodeStack.push(node);
 
