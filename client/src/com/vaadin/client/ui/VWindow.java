@@ -343,7 +343,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             super.setVisible(visible);
         }
 
-        if (visible && BrowserInfo.get().isWebkit()) {
+        if (visible
+                && BrowserInfo.get().requiresPositionAbsoluteOverflowAutoFix()) {
 
             /*
              * Shake up the DOM a bit to make the window shed unnecessary
