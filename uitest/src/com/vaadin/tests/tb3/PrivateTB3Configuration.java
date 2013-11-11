@@ -80,6 +80,9 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     @Override
     protected String getDeploymentHostname() {
+        if (runLocally()) {
+            return "localhost";
+        }
         String hostName = getProperty(HOSTNAME_PROPERTY);
 
         if (hostName == null || "".equals(hostName)) {
