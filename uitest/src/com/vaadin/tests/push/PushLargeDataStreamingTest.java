@@ -19,12 +19,12 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import com.vaadin.tests.tb3.WebsocketTest;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class PushLargeDataStreamingTest extends WebsocketTest {
+public class PushLargeDataStreamingTest extends MultiBrowserTest {
 
     @Test
-    public void testWebsocketLargeData() {
+    public void testStreamingLargeData() {
         openTestURL();
 
         // Without this there is a large chance that we will wait for all pushes
@@ -39,17 +39,23 @@ public class PushLargeDataStreamingTest extends WebsocketTest {
     }
 
     private void push() {
+        // Wait for startButton to be present
+        waitForElementToBePresent(vaadinLocatorById("startButton"));
+
         String logRow0Id = "Log_row_0";
         By logRow0 = vaadinLocatorById(logRow0Id);
 
         vaadinElementById("startButton").click();
-        waitUntil(ExpectedConditions.not(ExpectedConditions
-                .textToBePresentInElement(logRow0, "Push complete")));
+        // Wait for push to start
+        waitUntil(ExpectedConditions.textToBePresentInElement(logRow0,
+                "Package "));
 
-        // Pushes each 2000ms for 40s
-        sleep(40000);
+        // Wait for until push should be done
+        sleep(PushLargeData.DEFAULT_DURATION_MS);
 
+        // Wait until push is actually done
         waitUntil(ExpectedConditions.textToBePresentInElement(logRow0,
                 "Push complete"));
     }
+
 }

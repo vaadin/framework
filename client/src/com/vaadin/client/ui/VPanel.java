@@ -218,7 +218,7 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
          * Don't touch it unless you know what you're doing! Fixes ticket
          * #12727.
          * 
-         * This solution comes from ticket #11994: Windows get unnecessary
+         * This solution comes from the ticket #11994: Windows get unnecessary
          * scroll bars in WebKit when content is 100% wide.
          */
         if (BrowserInfo.get().isWebkit()) {
@@ -227,6 +227,10 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
                 public void execute() {
                     final com.google.gwt.dom.client.Element scrollable = contentNode
                             .getFirstChildElement();
+
+                    int contentNodeScrollTop = contentNode.getScrollTop();
+                    int contentNodeScrollLeft = contentNode.getScrollLeft();
+
                     final String oldWidth = scrollable.getStyle().getWidth();
                     final String oldHeight = scrollable.getStyle().getHeight();
 
@@ -237,9 +241,12 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
                     scrollable.getStyle().setHeight(110, Unit.PCT);
                     scrollable.getOffsetHeight();
                     scrollable.getStyle().setProperty("height", oldHeight);
+
+                    // Recovering scroll position:
+                    contentNode.setScrollTop(contentNodeScrollTop);
+                    contentNode.setScrollLeft(contentNodeScrollLeft);
                 }
             });
         }
-
     }
 }
