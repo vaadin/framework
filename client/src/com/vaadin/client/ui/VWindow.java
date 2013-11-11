@@ -61,6 +61,8 @@ import com.vaadin.client.Util;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.client.ui.window.WindowMoveEvent;
+import com.vaadin.client.ui.window.WindowMoveHandler;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.window.WindowMode;
@@ -1172,6 +1174,9 @@ public class VWindow extends VWindowOverlay implements
         dragging = false;
         hideDraggingCurtain();
         DOM.releaseCapture(getElement());
+
+        // fire move event
+        fireEvent(new WindowMoveEvent(uidlPositionX, uidlPositionY));
     }
 
     @Override
@@ -1387,4 +1392,16 @@ public class VWindow extends VWindowOverlay implements
             removeTabBlockHandlers();
         }
     }
+
+    /**
+     * Adds a Handler for when user moves the window.
+     * 
+     * @since 7.1.9
+     * 
+     * @return {@link HandlerRegistration} used to remove the handler
+     */
+    public HandlerRegistration addMoveHandler(WindowMoveHandler handler) {
+        return addHandler(handler, WindowMoveEvent.getType());
+    }
+
 }

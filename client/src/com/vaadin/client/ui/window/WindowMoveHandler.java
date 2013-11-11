@@ -13,15 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.window;
+package com.vaadin.client.ui.window;
 
-import com.vaadin.shared.communication.ServerRpc;
-import com.vaadin.shared.ui.ClickRpc;
+import com.google.gwt.event.shared.EventHandler;
 
-public interface WindowServerRpc extends ClickRpc, ServerRpc {
+/**
+ * Handler for {@link WindowMoveEvent}s
+ * 
+ * @since 7.1.9
+ * @author Vaadin Ltd
+ */
+public interface WindowMoveHandler extends EventHandler {
 
-    public void windowModeChanged(WindowMode newState);
-
-    public void windowMoved(int x, int y);
-
+    /**
+     * Called when the VWindow was moved by the user.
+     * 
+     * @param event
+     *            Contains new coordinates for the VWindow
+     */
+    public void onWindowMove(WindowMoveEvent event);
 }
