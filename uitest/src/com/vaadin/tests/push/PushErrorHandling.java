@@ -42,9 +42,11 @@ public class PushErrorHandling extends AbstractTestUI {
                         ((String) null).length(); // Null-pointer exception
                     }
                 });
+        button.setId("npeButton");
         addComponent(button);
 
         final Table view = new Table("testtable");
+        view.setId("testtable");
         view.setSelectable(true);
         view.setMultiSelect(false);
         view.setImmediate(true);

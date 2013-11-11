@@ -39,17 +39,21 @@ public class PushLargeDataWebsocketTest extends WebsocketTest {
     }
 
     private void push() {
+        // Wait for startButton to be present
+        waitForElementToBePresent(vaadinLocatorById("startButton"));
+
         String logRow0Id = "Log_row_0";
         By logRow0 = vaadinLocatorById(logRow0Id);
 
-        testBench(driver).waitForVaadin();
         vaadinElementById("startButton").click();
-        waitUntil(ExpectedConditions.not(ExpectedConditions
-                .textToBePresentInElement(logRow0, "Push complete")));
+        // Wait for push to start
+        waitUntil(ExpectedConditions.textToBePresentInElement(logRow0,
+                "Package"));
 
-        // Pushes each 2000ms for 40s
-        sleep(40000);
+        // Wait for until push should be done
+        sleep(PushLargeData.DEFAULT_DURATION_MS);
 
+        // Wait until push is actually done
         waitUntil(ExpectedConditions.textToBePresentInElement(logRow0,
                 "Push complete"));
     }

@@ -328,6 +328,11 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         new WebDriverWait(driver, 10).until(ExpectedConditions.not(condition));
     }
 
+    protected void waitForElementToBePresent(By by) {
+        waitUntil(ExpectedConditions.not(ExpectedConditions
+                .invisibilityOfElementLocated(by)));
+    }
+
     /**
      * For tests extending {@link AbstractTestUIWithLog}, returns the element
      * for the Nth log row
