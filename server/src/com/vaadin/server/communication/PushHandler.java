@@ -264,11 +264,12 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
                 return;
             }
 
+            UI ui = null;
             session.lock();
             try {
                 VaadinSession.setCurrent(session);
                 // Sets UI.currentInstance
-                final UI ui = service.findUI(vaadinRequest);
+                ui = service.findUI(vaadinRequest);
                 if (ui == null) {
                     sendNotificationAndDisconnect(resource,
                             UidlRequestHandler.getUINotFoundErrorJSON(service,
@@ -282,8 +283,19 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
                 SystemMessages msg = service.getSystemMessages(
                         ServletPortletHelper.findLocale(null, null,
                                 vaadinRequest), vaadinRequest);
+
+                AtmosphereResource errorResource = resource;
+                if (ui != null && ui.getPushConnection() != null) {
+                    // We MUST use the opened push connection if there is one.
+                    // Otherwise we will write the response to the wrong request
+                    // when using streaming (the client -> server request
+                    // instead of the opened push channel)
+                    errorResource = ((AtmospherePushConnection) ui
+                            .getPushConnection()).getResource();
+                }
+
                 sendNotificationAndDisconnect(
-                        resource,
+                        errorResource,
                         VaadinService.createCriticalNotificationJSON(
                                 msg.getInternalErrorCaption(),
                                 msg.getInternalErrorMessage(), null,

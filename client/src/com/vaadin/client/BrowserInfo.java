@@ -347,6 +347,22 @@ public class BrowserInfo {
     }
 
     /**
+     * Indicates whether the browser might require juggling to properly update
+     * sizes inside elements with overflow: auto when adjusting absolutely
+     * positioned elements.
+     * <p>
+     * See https://bugs.webkit.org/show_bug.cgi?id=123958 and
+     * http://code.google.com/p/chromium/issues/detail?id=316549
+     * 
+     * @since 7.1.8
+     * @return <code>true</code> if the browser requires the workaround,
+     *         otherwise <code>false</code>
+     */
+    public boolean requiresPositionAbsoluteOverflowAutoFix() {
+        return (getWebkitVersion() > 0) && Util.getNativeScrollbarSize() > 0;
+    }
+
+    /**
      * Checks if the browser is run on iOS
      * 
      * @return true if the browser is run on iOS, false otherwise

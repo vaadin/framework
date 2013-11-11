@@ -343,6 +343,9 @@ public class TableConnector extends AbstractHasComponentsConnector implements
             Scheduler.get().scheduleFinally(new ScheduledCommand() {
                 @Override
                 public void execute() {
+                    // IE8 needs some hacks to measure sizes correctly
+                    Util.forceIE8Redraw(getWidget().getElement());
+
                     getLayoutManager().setNeedsMeasure(TableConnector.this);
                     ServerConnector parent = getParent();
                     if (parent instanceof ComponentConnector) {
