@@ -6,6 +6,7 @@ import com.vaadin.client.ui.grid.CellRenderer;
 import com.vaadin.client.ui.grid.ColumnConfiguration;
 import com.vaadin.client.ui.grid.Escalator;
 import com.vaadin.client.ui.grid.RowContainer;
+import com.vaadin.client.ui.grid.ScrollDestination;
 
 public class VTestGrid extends Composite {
     public static class HeaderRenderer implements CellRenderer {
@@ -58,7 +59,7 @@ public class VTestGrid extends Composite {
     public VTestGrid() {
         initWidget(escalator);
         final ColumnConfiguration cConf = escalator.getColumnConfiguration();
-        cConf.insertColumns(cConf.getColumnCount(), 5);
+        cConf.insertColumns(cConf.getColumnCount(), 10);
 
         final RowContainer h = escalator.getHeader();
         h.setCellRenderer(new HeaderRenderer());
@@ -83,5 +84,23 @@ public class VTestGrid extends Composite {
 
     public ColumnConfiguration getColumnConfiguration() {
         return escalator.getColumnConfiguration();
+    }
+
+    public void scrollToRow(int index, ScrollDestination destination,
+            int padding) {
+        if (padding != 0) {
+            escalator.scrollToRow(index, destination, padding);
+        } else {
+            escalator.scrollToRow(index, destination);
+        }
+    }
+
+    public void scrollToColumn(int index, ScrollDestination destination,
+            int padding) {
+        if (padding != 0) {
+            escalator.scrollToColumn(index, destination, padding);
+        } else {
+            escalator.scrollToColumn(index, destination);
+        }
     }
 }

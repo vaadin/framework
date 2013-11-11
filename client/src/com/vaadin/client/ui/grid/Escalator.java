@@ -211,6 +211,10 @@ public class Escalator extends Widget {
      * escalator DOM). NOTE: these bits can most often also be identified by
      * searching for code that call scrollElem.getScrollTop();.
      */
+    /*
+     * [[frozencol]]: This needs to be re-inspected once frozen columns are
+     * being implemented.
+     */
 
     private static final int ROW_HEIGHT_PX = 20;
     private static final int COLUMN_WIDTH_PX = 100;
@@ -432,6 +436,54 @@ public class Escalator extends Widget {
                 element.detachEvent("onmousewheel", this.@com.vaadin.client.ui.grid.JsniWorkaround::mousewheelListenerFunction);
             }
         }-*/;
+
+        public void scrollToColumn(final int columnIndex,
+                final ScrollDestination destination, final int padding) {
+            // TODO [[colwidth]]
+            final int targetStartPx = COLUMN_WIDTH_PX * columnIndex;
+            final int targetEndPx = targetStartPx + COLUMN_WIDTH_PX;
+
+            /*
+             * TODO [[frozencol]]: offset startPx by the pixels occupied by
+             * frozen columns.
+             */
+            final int viewportStartPx = getScrollLeft();
+            int viewportEndPx = viewportStartPx + getElement().getOffsetWidth();
+            if (needsVerticalScrollbars()) {
+                viewportEndPx -= Util.getNativeScrollbarSize();
+            }
+
+            final double scrollLeft = destination.getScrollPos(targetStartPx,
+                    targetEndPx, viewportStartPx, viewportEndPx, padding);
+
+            /*
+             * note that it doesn't matter if the scroll would go beyond the
+             * content, since the browser will adjust for that, and everything
+             * fall into line accordingly.
+             */
+            setScrollLeft((int) scrollLeft);
+        }
+
+        public void scrollToRow(final int rowIndex,
+                final ScrollDestination destination, final int padding) {
+            // TODO [[rowheight]]
+            final int targetStartPx = ROW_HEIGHT_PX * rowIndex;
+            final int targetEndPx = targetStartPx + ROW_HEIGHT_PX;
+
+            final double viewportStartPx = getScrollTop();
+            final double viewportEndPx = viewportStartPx
+                    + body.calculateHeight();
+
+            final double scrollTop = destination.getScrollPos(targetStartPx,
+                    targetEndPx, viewportStartPx, viewportEndPx, padding);
+
+            /*
+             * note that it doesn't matter if the scroll would go beyond the
+             * content, since the browser will adjust for that, and everything
+             * falls into line accordingly.
+             */
+            setScrollTop(scrollTop);
+        }
     }
 
     private static class CellImpl implements Cell {
@@ -2100,12 +2152,17 @@ public class Escalator extends Widget {
      * @throws IndexOutOfBoundsException
      *             if {@code columnIndex} is not a valid index for an existing
      *             column
+     * @throws IllegalArgumentException
+     *             if {@code columnIndex} indicates a column that is set to be
+     *             frozen
      */
     public void scrollToColumn(final int columnIndex,
             final ScrollDestination destination)
             throws IndexOutOfBoundsException {
-        // FIXME [[escalator]]
-        throw new UnsupportedOperationException("Not implemented yet");
+        // TODO [[frozencol]] throw IAE if frozen
+        verifyValidColumnIndex(columnIndex);
+
+        scroller.scrollToColumn(columnIndex, destination, 0);
     }
 
     /**
@@ -2126,13 +2183,31 @@ public class Escalator extends Widget {
      * @throws IllegalArgumentException
      *             if {@code destination} is {@link ScrollDestination#MIDDLE},
      *             because having a padding on a centered column is undefined
-     *             behavior.
+     *             behavior
+     * @throws IllegalArgumentException
+     *             if {@code columnIndex} indicates a column that is set to be
+     *             frozen
      */
     public void scrollToColumn(final int columnIndex,
             final ScrollDestination destination, final int padding)
             throws IndexOutOfBoundsException, IllegalArgumentException {
-        // FIXME [[escalator]]
-        throw new UnsupportedOperationException("Not implemented yet");
+        // TODO [[frozencol]] throw IAE if frozen
+        if (destination == ScrollDestination.MIDDLE) {
+            throw new IllegalArgumentException(
+                    "You cannot have a padding with a MIDDLE destination");
+        }
+        verifyValidColumnIndex(columnIndex);
+
+        scroller.scrollToColumn(columnIndex, destination, padding);
+    }
+
+    private void verifyValidColumnIndex(final int columnIndex)
+            throws IndexOutOfBoundsException {
+        if (columnIndex < 0
+                || columnIndex >= columnConfiguration.getColumnCount()) {
+            throw new IndexOutOfBoundsException("The given column index "
+                    + columnIndex + " does not exist.");
+        }
     }
 
     /**
@@ -2150,8 +2225,9 @@ public class Escalator extends Widget {
     public void scrollToRow(final int rowIndex,
             final ScrollDestination destination)
             throws IndexOutOfBoundsException {
-        // FIXME [[escalator]]
-        throw new UnsupportedOperationException("Not implemented yet");
+        verifyValidRowIndex(rowIndex);
+
+        scroller.scrollToRow(rowIndex, destination, 0);
     }
 
     /**
@@ -2161,7 +2237,6 @@ public class Escalator extends Widget {
      * 
      * @param rowIndex
      *            the index of the logical row to scroll to
-     * 
      * @param destination
      *            where the row should be aligned visually after scrolling
      * @param padding
@@ -2177,8 +2252,20 @@ public class Escalator extends Widget {
     public void scrollToRow(final int rowIndex,
             final ScrollDestination destination, final int padding)
             throws IndexOutOfBoundsException, IllegalArgumentException {
-        // FIXME [[escalator]]
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (destination == ScrollDestination.MIDDLE) {
+            throw new IllegalArgumentException(
+                    "You cannot have a padding with a MIDDLE destination");
+        }
+        verifyValidRowIndex(rowIndex);
+
+        scroller.scrollToRow(rowIndex, destination, padding);
+    }
+
+    private void verifyValidRowIndex(final int rowIndex) {
+        if (rowIndex < 0 || rowIndex >= body.getRowCount()) {
+            throw new IndexOutOfBoundsException("The given row index "
+                    + rowIndex + " does not exist.");
+        }
     }
 
     private void recalculateElementSizes() {

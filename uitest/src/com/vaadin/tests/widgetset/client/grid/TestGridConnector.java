@@ -16,6 +16,7 @@
 package com.vaadin.tests.widgetset.client.grid;
 
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.server.grid.TestGrid;
 
@@ -49,6 +50,33 @@ public class TestGridConnector extends AbstractComponentConnector {
             public void insertColumns(int offset, int amount) {
                 getWidget().getColumnConfiguration().insertColumns(offset,
                         amount);
+            }
+
+            @Override
+            public void scrollToRow(int index, String destination, int padding) {
+                getWidget().scrollToRow(index, getDestination(destination),
+                        padding);
+            }
+
+            @Override
+            public void scrollToColumn(int index, String destination,
+                    int padding) {
+                getWidget().scrollToColumn(index, getDestination(destination),
+                        padding);
+            }
+
+            private ScrollDestination getDestination(String destination) {
+                final ScrollDestination d;
+                if (destination.equals("start")) {
+                    d = ScrollDestination.START;
+                } else if (destination.equals("middle")) {
+                    d = ScrollDestination.MIDDLE;
+                } else if (destination.equals("end")) {
+                    d = ScrollDestination.END;
+                } else {
+                    d = ScrollDestination.ANY;
+                }
+                return d;
             }
         });
     }

@@ -23,23 +23,80 @@ package com.vaadin.client.ui.grid;
  * @author Vaadin Ltd
  */
 public enum ScrollDestination {
+
     /**
-     * "scrollIntoView" i.e. scroll as little as possible to show the target
-     * element. If the element fits into view, this works as START or END
-     * depending on the current scroll position. If the element does not fit
-     * into view, this works as START.
+     * Scroll as little as possible to show the target element. If the element
+     * fits into view, this works as START or END depending on the current
+     * scroll position. If the element does not fit into view, this works as
+     * START.
      */
-    ANY,
+    ANY {
+        @Override
+        double getScrollPos(final double targetStartPx,
+                final double targetEndPx, final double viewportStartPx,
+                final double viewportEndPx, final int padding) {
+
+            final double startScrollPos = targetStartPx - padding;
+            final double viewportLength = viewportEndPx - viewportStartPx;
+            final double endScrollPos = targetEndPx + padding - viewportLength;
+
+            if (startScrollPos < viewportStartPx) {
+                return startScrollPos;
+            } else if (targetEndPx + padding > viewportEndPx) {
+                return endScrollPos;
+            } else {
+                // NOOP, it's already visible
+                return viewportStartPx;
+            }
+        }
+    },
+
     /**
-     * Scrolls so that the element is shown at the start of the view port.
+     * Scrolls so that the element is shown at the start of the viewport. The
+     * viewport will, however, not scroll beyond its contents.
      */
-    START,
+    START {
+        @Override
+        double getScrollPos(final double targetStartPx,
+                final double targetEndPx, final double viewportStartPx,
+                final double viewportEndPx, final int padding) {
+            return targetStartPx - padding;
+        }
+    },
+
     /**
-     * Scrolls so that the element is shown in the middle of the view port.
+     * Scrolls so that the element is shown in the middle of the viewport. The
+     * viewport will, however, not scroll beyond its contents, given more
+     * elements than what the viewport is able to show at once. Under no
+     * circumstances will the viewport scroll before its first element.
      */
-    MIDDLE,
+    MIDDLE {
+        @Override
+        double getScrollPos(final double targetStartPx,
+                final double targetEndPx, final double viewportStartPx,
+                final double viewportEndPx, final int padding) {
+            final double targetMiddle = targetStartPx
+                    + (targetEndPx - targetStartPx) / 2;
+            final double viewportLength = viewportEndPx - viewportStartPx;
+            return targetMiddle - viewportLength / 2;
+        }
+    },
+
     /**
-     * Scrolls so that the element is shown at the end of the view port.
+     * Scrolls so that the element is shown at the end of the viewport. The
+     * viewport will, however, not scroll before its first element.
      */
-    END
+    END {
+        @Override
+        double getScrollPos(final double targetStartPx,
+                final double targetEndPx, final double viewportStartPx,
+                final double viewportEndPx, final int padding) {
+            final double viewportLength = viewportEndPx - viewportStartPx;
+            return targetEndPx + padding - viewportLength;
+        }
+    };
+
+    abstract double getScrollPos(final double targetStartPx,
+            final double targetEndPx, final double viewportStartPx,
+            final double viewportEndPx, final int padding);
 }

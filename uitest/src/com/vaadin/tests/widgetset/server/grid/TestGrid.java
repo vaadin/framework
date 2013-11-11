@@ -53,4 +53,12 @@ public class TestGrid extends AbstractComponent {
     private TestGridClientRpc rpc() {
         return getRpcProxy(TestGridClientRpc.class);
     }
+
+    public void scrollToRow(int index, String destination, int padding) {
+        rpc().scrollToRow(index, destination, padding);
+    }
+
+    public void scrollToColumn(int index, String destination, int padding) {
+        rpc().scrollToColumn(index, destination, padding);
+    }
 }

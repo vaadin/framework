@@ -25,4 +25,8 @@ public interface TestGridClientRpc extends ClientRpc {
     void insertColumns(int offset, int amount);
 
     void removeColumns(int offset, int amount);
+
+    void scrollToRow(int index, String destination, int padding);
+
+    void scrollToColumn(int index, String destination, int padding);
 }

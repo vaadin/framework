@@ -25,6 +25,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 
 /**
@@ -48,9 +49,9 @@ public class GridTest extends AbstractTestUI {
                     @Override
                     @SuppressWarnings("boxing")
                     public void buttonClick(final ClickEvent event) {
-                        int offset = Integer.valueOf(insertRowsOffset
+                        final int offset = Integer.valueOf(insertRowsOffset
                                 .getValue());
-                        int amount = Integer.valueOf(insertRowsAmount
+                        final int amount = Integer.valueOf(insertRowsAmount
                                 .getValue());
                         grid.insertRows(offset, amount);
                     }
@@ -67,9 +68,9 @@ public class GridTest extends AbstractTestUI {
                     @Override
                     @SuppressWarnings("boxing")
                     public void buttonClick(final ClickEvent event) {
-                        int offset = Integer.valueOf(removeRowsOffset
+                        final int offset = Integer.valueOf(removeRowsOffset
                                 .getValue());
-                        int amount = Integer.valueOf(removeRowsAmount
+                        final int amount = Integer.valueOf(removeRowsAmount
                                 .getValue());
                         grid.removeRows(offset, amount);
                     }
@@ -86,9 +87,9 @@ public class GridTest extends AbstractTestUI {
                     @Override
                     @SuppressWarnings("boxing")
                     public void buttonClick(final ClickEvent event) {
-                        int offset = Integer.valueOf(insertColumnsOffset
+                        final int offset = Integer.valueOf(insertColumnsOffset
                                 .getValue());
-                        int amount = Integer.valueOf(insertColumnsAmount
+                        final int amount = Integer.valueOf(insertColumnsAmount
                                 .getValue());
                         grid.insertColumns(offset, amount);
                     }
@@ -105,14 +106,88 @@ public class GridTest extends AbstractTestUI {
                     @Override
                     @SuppressWarnings("boxing")
                     public void buttonClick(final ClickEvent event) {
-                        int offset = Integer.valueOf(removeColumnsOffset
+                        final int offset = Integer.valueOf(removeColumnsOffset
                                 .getValue());
-                        int amount = Integer.valueOf(removeColumnsAmount
+                        final int amount = Integer.valueOf(removeColumnsAmount
                                 .getValue());
                         grid.removeColumns(offset, amount);
                     }
                 }));
         addComponent(removeColumnsLayout);
+
+        final HorizontalLayout rowScroll = new HorizontalLayout();
+        final NativeSelect destination = new NativeSelect();
+        destination.setNullSelectionAllowed(false);
+        destination.addItem("any");
+        destination.setValue("any");
+        destination.addItem("start");
+        destination.addItem("end");
+        destination.addItem("middle");
+        rowScroll.addComponent(destination);
+        final TextField rowIndex = new TextField();
+        rowScroll.addComponent(rowIndex);
+        final TextField rowPadding = new TextField();
+        rowScroll.addComponent(rowPadding);
+        rowScroll.addComponent(new Button("scroll to row",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(final ClickEvent event) {
+                        int index;
+                        try {
+                            index = Integer.valueOf(rowIndex.getValue());
+                        } catch (NumberFormatException e) {
+                            index = 0;
+                        }
+
+                        int padding;
+                        try {
+                            padding = Integer.valueOf(rowPadding.getValue());
+                        } catch (NumberFormatException e) {
+                            padding = 0;
+                        }
+
+                        grid.scrollToRow(index,
+                                (String) destination.getValue(), padding);
+                    }
+                }));
+        addComponent(rowScroll);
+
+        final HorizontalLayout colScroll = new HorizontalLayout();
+        final NativeSelect colDestination = new NativeSelect();
+        colDestination.setNullSelectionAllowed(false);
+        colDestination.addItem("any");
+        colDestination.setValue("any");
+        colDestination.addItem("start");
+        colDestination.addItem("end");
+        colDestination.addItem("middle");
+        colScroll.addComponent(colDestination);
+        final TextField colIndex = new TextField();
+        colScroll.addComponent(colIndex);
+        final TextField colPadding = new TextField();
+        colScroll.addComponent(colPadding);
+        colScroll.addComponent(new Button("scroll to column",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(final ClickEvent event) {
+                        int index;
+                        try {
+                            index = Integer.valueOf(colIndex.getValue());
+                        } catch (NumberFormatException e) {
+                            index = 0;
+                        }
+
+                        int padding;
+                        try {
+                            padding = Integer.valueOf(colPadding.getValue());
+                        } catch (NumberFormatException e) {
+                            padding = 0;
+                        }
+
+                        grid.scrollToColumn(index,
+                                (String) colDestination.getValue(), padding);
+                    }
+                }));
+        addComponent(colScroll);
     }
 
     @Override
