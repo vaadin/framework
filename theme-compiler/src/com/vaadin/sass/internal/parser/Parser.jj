@@ -848,7 +848,7 @@ void keyframes() :
   n=<KEY_FRAME_SYM> ( <S> )* {keyframeName = n.image;}
   (n = <IDENT>{animationname += n.image; }|n = < INTERPOLATION >{ animationname += n.image; })+(<S>)*
    {start = true; documentHandler.startKeyFrames(keyframeName, animationname); }
-   <LBRACE> ( <S> )* ( keyframeSelector() )* <RBRACE> ( <S> )*
+   <LBRACE> ( <S> )* ( keyframeSelector() | contentDirective() )* <RBRACE> ( <S> )*
  } catch (ParseException e) {
      reportError(getLocator(), e);
      skipStatement();
@@ -862,14 +862,17 @@ void keyframes() :
 void keyframeSelector():
 {
     Token n;
+    String selector = "";
     boolean start = false;
 }
 {
     try{
-        (n = <FROM> | n = <TO> | n = <PERCENTAGE>) (<S>)* <LBRACE> (<S>)*
+        (n = <FROM> | n = <TO> | n = <PERCENTAGE>){selector += n.image;} (<S>)*
+        (<COMMA> (<S>)* (n = <FROM> | n = <TO> | n = <PERCENTAGE>) {selector += (", " + n.image);} (<S>)* )*
+          <LBRACE> (<S>)*
         {
           start = true;
-          documentHandler.startKeyframeSelector(n.image);
+          documentHandler.startKeyframeSelector(selector);
          }
         (ifContentStatement() | microsoftExtension() )*
         <RBRACE> (<S>)*
@@ -1720,11 +1723,11 @@ void includeDirective() :
     (<S>)*
     (name = property()|name = variableName(){ name = "$"+name;}
          |(name = functionName() 
-           args = argValuelist()) <RPARAN> (<S>)*)
+           args = argValuelist()) <RPARAN>(<S>)*)
     ((";"(<S>)*)+
            {documentHandler.includeDirective(name, args);}
-    | <LBRACE> (<S>)* {documentHandler.startIncludeContentBlock(name);}
-      (styleRuleOrDeclarationOrNestedProperties())*
+    | <LBRACE> (<S>)* {documentHandler.startIncludeContentBlock(name, args);}
+      (styleRuleOrDeclarationOrNestedProperties() | keyframeSelector())*
       <RBRACE> (<S>)* {documentHandler.endIncludeContentBlock();}
     )
 }

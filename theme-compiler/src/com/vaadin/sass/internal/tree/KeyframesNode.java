@@ -54,7 +54,8 @@ public class KeyframesNode extends Node implements IVariableNode {
             if (animationName != null && animationName.contains(interpolation)) {
                 if (animationName.contains(interpolation)) {
                     animationName = animationName.replaceAll(Pattern
-                            .quote(interpolation), node.getExpr().toString());
+                            .quote(interpolation), node.getExpr()
+                            .unquotedString());
                 }
             }
         }
