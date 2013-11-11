@@ -537,7 +537,8 @@ public class VWindow extends VWindowOverlay implements
             super.setVisible(visible);
         }
         if (visible && BrowserInfo.get().isWebkit()) {
-            Util.removeUnneededScrollbars(contents);
+            Util.removeUnneededScrollbars((Element) contents
+                    .getFirstChildElement());
             updateContentsSize();
             positionOrSizeUpdated();
         }

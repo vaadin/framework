@@ -19,7 +19,6 @@ package com.vaadin.tests.tb3;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Before;
@@ -197,7 +196,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * 
      * @return The port teh test is running on, by default 8888
      */
-    protected abstract String getDeploymentPort();
+    protected abstract int getDeploymentPort();
 
     /**
      * Produces a collection of browsers to run the test on. This method is
@@ -306,18 +305,31 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     /**
-     * Waits a short while for the given condition to become true. Use e.g. as
+     * Waits up to 10s for the given condition to become true. Use e.g. as
      * {@link #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
      * 
      * @param condition
      *            the condition to wait for to become true
      */
     protected void waitUntil(ExpectedCondition<Boolean> condition) {
-        new WebDriverWait(driver, 10).until(condition);
+        waitUntil(condition, 10);
     }
 
     /**
-     * Waits a short while for the given condition to become false. Use e.g. as
+     * Waits the given number of seconds for the given condition to become true.
+     * Use e.g. as {@link
+     * #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
+     * 
+     * @param condition
+     *            the condition to wait for to become true
+     */
+    protected void waitUntil(ExpectedCondition<Boolean> condition,
+            long timeoutInSeconds) {
+        new WebDriverWait(driver, timeoutInSeconds).until(condition);
+    }
+
+    /**
+     * Waits up to 10s for the given condition to become false. Use e.g. as
      * {@link #waitUntilNot(ExpectedConditions.textToBePresentInElement(by,
      * text))}
      * 
@@ -325,7 +337,20 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      *            the condition to wait for to become false
      */
     protected void waitUntilNot(ExpectedCondition<Boolean> condition) {
-        new WebDriverWait(driver, 10).until(ExpectedConditions.not(condition));
+        waitUntilNot(condition, 10);
+    }
+
+    /**
+     * Waits the given number of seconds for the given condition to become
+     * false. Use e.g. as {@link
+     * #waitUntilNot(ExpectedConditions.textToBePresentInElement(by, text))}
+     * 
+     * @param condition
+     *            the condition to wait for to become false
+     */
+    protected void waitUntilNot(ExpectedCondition<Boolean> condition,
+            long timeoutInSeconds) {
+        waitUntil(ExpectedConditions.not(condition), timeoutInSeconds);
     }
 
     protected void waitForElementToBePresent(By by) {
@@ -480,14 +505,6 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
                 return cls;
             }
         } catch (Exception e) {
-        }
-        Class<?> enclosingClass = getClass().getEnclosingClass();
-        if (enclosingClass != null) {
-            if (UI.class.isAssignableFrom(enclosingClass)) {
-                Logger.getLogger(getClass().getName())
-                        .severe("Test is an static inner class to the UI. This will no longer be supported in the future. The test should be named UIClassTest and reside in the same package as the UI");
-                return enclosingClass;
-            }
         }
         throw new RuntimeException(
                 "Could not determine UI class. Ensure the test is named UIClassTest and is in the same package as the UIClass");
@@ -650,6 +667,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
          */
         public static DesiredCapabilities safari(int version) {
             DesiredCapabilities c = DesiredCapabilities.safari();
+            c.setPlatform(Platform.MAC);
             c.setVersion("" + version);
             return c;
         }

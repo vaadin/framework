@@ -525,12 +525,11 @@ public class Util {
      * See: bugs #11994 and #12736.
      * 
      * @param contentNode
-     *            an element that contains a scrollable element as its first
-     *            child
+     *            an element that is scrollable
      * 
      * @since 7.1.8
      */
-    public static void removeUnneededScrollbars(final Element contentNode) {
+    public static void removeUnneededScrollbars(final Element scrollable) {
         if (BrowserInfo.get().isWebkit()) {
 
             /*
@@ -544,9 +543,6 @@ public class Util {
 
                 @Override
                 public void execute() {
-                    final com.google.gwt.dom.client.Element scrollable = contentNode
-                            .getFirstChildElement();
-
                     // Adjusting the width or height may change the scroll
                     // position, so store the current position
                     int horizontalScrollPosition = scrollable.getScrollLeft();
@@ -556,10 +552,10 @@ public class Util {
                     final String oldHeight = scrollable.getStyle().getHeight();
 
                     scrollable.getStyle().setWidth(110, Unit.PCT);
-                    scrollable.getStyle().setHeight(110, Unit.PCT);
                     scrollable.getOffsetWidth();
-                    scrollable.getOffsetHeight();
                     scrollable.getStyle().setProperty("width", oldWidth);
+                    scrollable.getStyle().setHeight(110, Unit.PCT);
+                    scrollable.getOffsetHeight();
                     scrollable.getStyle().setProperty("height", oldHeight);
 
                     // Restore the scroll position
