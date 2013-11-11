@@ -1029,6 +1029,98 @@ public class LayoutManager {
     }
 
     /**
+     * Gets the top border of the given element, provided that it has been
+     * measured. These elements are guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured top border of the element in pixels.
+     */
+    public int getBorderTop(Element element) {
+        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        return getMeasuredSize(element, nullSize).getBorderTop();
+    }
+
+    /**
+     * Gets the left border of the given element, provided that it has been
+     * measured. These elements are guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured left border of the element in pixels.
+     */
+    public int getBorderLeft(Element element) {
+        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        return getMeasuredSize(element, nullSize).getBorderLeft();
+    }
+
+    /**
+     * Gets the bottom border of the given element, provided that it has been
+     * measured. These elements are guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured bottom border of the element in pixels.
+     */
+    public int getBorderBottom(Element element) {
+        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        return getMeasuredSize(element, nullSize).getBorderBottom();
+    }
+
+    /**
+     * Gets the right border of the given element, provided that it has been
+     * measured. These elements are guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured right border of the element in pixels.
+     */
+    public int getBorderRight(Element element) {
+        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        return getMeasuredSize(element, nullSize).getBorderRight();
+    }
+
+    /**
      * Gets the padding width (left padding + right padding) of the given
      * element, provided that it has been measured. These elements are
      * guaranteed to be measured:
