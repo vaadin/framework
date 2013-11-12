@@ -1,5 +1,8 @@
 package com.vaadin.tests.widgetset.client.grid;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.user.client.ui.Composite;
 import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.CellRenderer;
@@ -9,77 +12,130 @@ import com.vaadin.client.ui.grid.RowContainer;
 import com.vaadin.client.ui.grid.ScrollDestination;
 
 public class VTestGrid extends Composite {
-    public static class HeaderRenderer implements CellRenderer {
-        private int i = 0;
 
-        @Override
-        public void renderCell(final Cell cell) {
-            cell.getElement().setInnerText("Header " + (i++));
-        }
-    }
+    private static class Data {
+        private int columnCounter = 0;
+        private int rowCounter = 0;
+        private final List<Integer> columns = new ArrayList<Integer>();
+        private final List<Integer> rows = new ArrayList<Integer>();
 
-    public static class BodyRenderer implements CellRenderer {
-        private int i = 0;
-        private int ri = 0;
-
-        @Override
-        public void renderCell(final Cell cell) {
-            if (cell.getColumn() != 0) {
-                cell.getElement().setInnerText("Cell #" + (i++));
-            } else {
-                cell.getElement().setInnerText(
-                        "Logical row " + cell.getRow() + "/" + (ri++));
+        public void insertRows(int offset, int amount) {
+            List<Integer> newRows = new ArrayList<Integer>();
+            for (int i = 0; i < amount; i++) {
+                newRows.add(rowCounter++);
             }
+            rows.addAll(offset, newRows);
+        }
 
-            double c = i * .1;
-            int r = (int) ((Math.cos(c) + 1) * 128);
-            int g = (int) ((Math.cos(c / Math.PI) + 1) * 128);
-            int b = (int) ((Math.cos(c / (Math.PI * 2)) + 1) * 128);
-            cell.getElement().getStyle()
-                    .setBackgroundColor("rgb(" + r + "," + g + "," + b + ")");
-            if ((r * .8 + g * 1.3 + b * .9) / 3 < 127) {
-                cell.getElement().getStyle().setColor("white");
-            } else {
-                cell.getElement().getStyle().clearColor();
+        public void insertColumns(int offset, int amount) {
+            List<Integer> newColumns = new ArrayList<Integer>();
+            for (int i = 0; i < amount; i++) {
+                newColumns.add(columnCounter++);
+            }
+            columns.addAll(offset, newColumns);
+        }
+
+        public CellRenderer createHeaderRenderer() {
+            return new CellRenderer() {
+                @Override
+                public void renderCell(Cell cell) {
+                    int columnName = columns.get(cell.getColumn());
+                    cell.getElement().setInnerText("Header " + columnName);
+                }
+            };
+        }
+
+        public CellRenderer createFooterRenderer() {
+            return new CellRenderer() {
+                @Override
+                public void renderCell(Cell cell) {
+                    int columnName = columns.get(cell.getColumn());
+                    cell.getElement().setInnerText("Footer " + columnName);
+                }
+            };
+        }
+
+        public CellRenderer createBodyRenderer() {
+            return new CellRenderer() {
+                int i = 0;
+
+                @Override
+                public void renderCell(Cell cell) {
+                    int columnName = columns.get(cell.getColumn());
+                    int rowName = rows.get(cell.getRow());
+                    String cellInfo = columnName + "," + rowName + " (" + i
+                            + ")";
+
+                    if (cell.getColumn() > 0) {
+                        cell.getElement().setInnerText("Cell: " + cellInfo);
+                    } else {
+                        cell.getElement().setInnerText(
+                                "Row " + cell.getRow() + ": " + cellInfo);
+                    }
+
+                    double c = i * .1;
+                    int r = (int) ((Math.cos(c) + 1) * 128);
+                    int g = (int) ((Math.cos(c / Math.PI) + 1) * 128);
+                    int b = (int) ((Math.cos(c / (Math.PI * 2)) + 1) * 128);
+                    cell.getElement()
+                            .getStyle()
+                            .setBackgroundColor(
+                                    "rgb(" + r + "," + g + "," + b + ")");
+                    if ((r * .8 + g * 1.3 + b * .9) / 3 < 127) {
+                        cell.getElement().getStyle().setColor("white");
+                    } else {
+                        cell.getElement().getStyle().clearColor();
+                    }
+
+                    i++;
+                }
+            };
+        }
+
+        public void removeRows(int offset, int amount) {
+            for (int i = 0; i < amount; i++) {
+                rows.remove(offset);
             }
         }
-    }
 
-    public static class FooterRenderer implements CellRenderer {
-        private int i = 0;
-
-        @Override
-        public void renderCell(final Cell cell) {
-            cell.getElement().setInnerText("Footer " + (i++));
+        public void removeColumns(int offset, int amount) {
+            for (int i = 0; i < amount; i++) {
+                columns.remove(offset);
+            }
         }
     }
 
     private Escalator escalator = new Escalator();
+    private Data data = new Data();
 
     public VTestGrid() {
         initWidget(escalator);
-        final ColumnConfiguration cConf = escalator.getColumnConfiguration();
-        cConf.insertColumns(cConf.getColumnCount(), 10);
+        RowContainer header = escalator.getHeader();
+        header.setCellRenderer(data.createHeaderRenderer());
+        header.insertRows(0, 1);
 
-        final RowContainer h = escalator.getHeader();
-        h.setCellRenderer(new HeaderRenderer());
-        h.insertRows(0, 1);
+        RowContainer footer = escalator.getFooter();
+        footer.setCellRenderer(data.createFooterRenderer());
+        footer.insertRows(0, 1);
 
-        final RowContainer b = escalator.getBody();
-        b.setCellRenderer(new BodyRenderer());
-        b.insertRows(0, 10);
+        escalator.getBody().setCellRenderer(data.createBodyRenderer());
 
-        final RowContainer f = escalator.getFooter();
-        f.setCellRenderer(new FooterRenderer());
-        f.insertRows(0, 1);
+        insertRows(0, 100);
+        insertColumns(0, 10);
 
         setWidth(TestGridState.DEFAULT_WIDTH);
         setHeight(TestGridState.DEFAULT_HEIGHT);
 
     }
 
-    public RowContainer getBody() {
-        return escalator.getBody();
+    public void insertRows(int offset, int number) {
+        data.insertRows(offset, number);
+        escalator.getBody().insertRows(offset, number);
+    }
+
+    public void insertColumns(int offset, int number) {
+        data.insertColumns(offset, number);
+        escalator.getColumnConfiguration().insertColumns(offset, number);
     }
 
     public ColumnConfiguration getColumnConfiguration() {
@@ -102,5 +158,15 @@ public class VTestGrid extends Composite {
         } else {
             escalator.scrollToColumn(index, destination);
         }
+    }
+
+    public void removeRows(int offset, int amount) {
+        data.removeRows(offset, amount);
+        escalator.getBody().removeRows(offset, amount);
+    }
+
+    public void removeColumns(int offset, int amount) {
+        data.removeColumns(offset, amount);
+        escalator.getColumnConfiguration().removeColumns(offset, amount);
     }
 }

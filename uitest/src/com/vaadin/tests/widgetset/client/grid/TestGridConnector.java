@@ -32,24 +32,22 @@ public class TestGridConnector extends AbstractComponentConnector {
         registerRpc(TestGridClientRpc.class, new TestGridClientRpc() {
             @Override
             public void insertRows(int offset, int amount) {
-                getWidget().getBody().insertRows(offset, amount);
+                getWidget().insertRows(offset, amount);
             }
 
             @Override
             public void removeRows(int offset, int amount) {
-                getWidget().getBody().removeRows(offset, amount);
+                getWidget().removeRows(offset, amount);
             }
 
             @Override
             public void removeColumns(int offset, int amount) {
-                getWidget().getColumnConfiguration().removeColumns(offset,
-                        amount);
+                getWidget().removeColumns(offset, amount);
             }
 
             @Override
             public void insertColumns(int offset, int amount) {
-                getWidget().getColumnConfiguration().insertColumns(offset,
-                        amount);
+                getWidget().insertColumns(offset, amount);
             }
 
             @Override

@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.AttachEvent;
@@ -214,6 +215,10 @@ public class Escalator extends Widget {
     /*
      * [[frozencol]]: This needs to be re-inspected once frozen columns are
      * being implemented.
+     */
+    /*
+     * [[widgets]]: This needs to be re-inspected once GWT/Vaadin widgets are
+     * being supported.
      */
 
     private static final int ROW_HEIGHT_PX = 20;
@@ -689,23 +694,26 @@ public class Escalator extends Widget {
                 return addedRows;
             }
 
-            Node referenceNode;
+            Node referenceRow;
             if (root.getChildCount() != 0 && visualIndex != 0) {
                 // get the row node we're inserting stuff after
-                referenceNode = root.getChild(visualIndex - 1);
+                referenceRow = root.getChild(visualIndex - 1);
             } else {
                 // index is 0, so just prepend.
-                referenceNode = null;
+                referenceRow = null;
             }
 
             for (int row = visualIndex; row < visualIndex + numberOfRows; row++) {
                 final Element tr = DOM.createTR();
                 addedRows.add(tr);
+                tr.addClassName(CLASS_NAME + "-row");
+                referenceRow = insertAfterReferenceAndUpdateIt(root, tr,
+                        referenceRow);
 
                 for (int col = 0; col < columnConfiguration.getColumnCount(); col++) {
                     final Element cellElem = createCellElement();
-                    paintCell(cellElem, row, col);
                     tr.appendChild(cellElem);
+                    paintCell(cellElem, row, col);
                 }
 
                 /*
@@ -715,32 +723,29 @@ public class Escalator extends Widget {
                  * updated to reduce the number of reflows.
                  */
                 recalculateRowWidth(tr);
-                tr.addClassName(CLASS_NAME + "-row");
-
-                if (referenceNode != null) {
-                    root.insertAfter(tr, referenceNode);
-                } else {
-                    /*
-                     * referencenode being null means we have index 0, i.e. make
-                     * it the first row
-                     */
-                    /*
-                     * TODO [[optimize]]: Is insertFirst or append faster for an
-                     * empty root?
-                     */
-                    root.insertFirst(tr);
-                }
-
-                /*
-                 * to get the rows to appear one after another in a logical
-                 * order, update the reference
-                 */
-                referenceNode = tr;
             }
 
             recalculateSectionHeight();
 
             return addedRows;
+        }
+
+        private Node insertAfterReferenceAndUpdateIt(final Element parent,
+                final Element elem, final Node referenceNode) {
+            if (referenceNode != null) {
+                parent.insertAfter(elem, referenceNode);
+            } else {
+                /*
+                 * referencenode being null means we have offset 0, i.e. make it
+                 * the first row
+                 */
+                /*
+                 * TODO [[optimize]]: Is insertFirst or append faster for an
+                 * empty root?
+                 */
+                parent.insertFirst(elem);
+            }
+            return elem;
         }
 
         protected void recalculateSectionHeight() {
@@ -844,6 +849,83 @@ public class Escalator extends Widget {
          */
         abstract protected Element getTrByVisualIndex(int index)
                 throws IndexOutOfBoundsException;
+
+        abstract protected int getTopVisualRowLogicalIndex();
+
+        protected void paintRemoveColumns(final int offset,
+                final int numberOfColumns) {
+            final NodeList<Node> childNodes = root.getChildNodes();
+            for (int visualRowIndex = 0; visualRowIndex < childNodes
+                    .getLength(); visualRowIndex++) {
+                final Node tr = childNodes.getItem(visualRowIndex);
+
+                for (int column = 0; column < numberOfColumns; column++) {
+                    // TODO [[widgets]]
+                    tr.getChild(offset).removeFromParent();
+                }
+                recalculateRowWidth((Element) tr);
+            }
+
+            final int firstRemovedColumnLeft = offset * COLUMN_WIDTH_PX;
+            final boolean columnsWereRemovedFromLeftOfTheViewport = scroller.lastScrollLeft > firstRemovedColumnLeft;
+
+            if (columnsWereRemovedFromLeftOfTheViewport) {
+                final int removedColumnsPxAmount = numberOfColumns
+                        * COLUMN_WIDTH_PX;
+                final int leftByDiff = (int) (scroller.lastScrollLeft - removedColumnsPxAmount);
+                final int newScrollLeft = Math.max(firstRemovedColumnLeft,
+                        leftByDiff);
+                scrollerElem.setScrollLeft(newScrollLeft);
+            }
+
+            // this needs to be after the scroll position adjustment above.
+            scroller.recalculateScrollbarsForVirtualViewport();
+
+        }
+
+        protected void paintInsertColumns(final int offset,
+                final int numberOfColumns) {
+            final NodeList<Node> childNodes = root.getChildNodes();
+            final int topVisualRowLogicalIndex = getTopVisualRowLogicalIndex();
+
+            for (int row = 0; row < childNodes.getLength(); row++) {
+                final Element tr = getTrByVisualIndex(row);
+
+                Node referenceCell;
+                if (offset != 0) {
+                    referenceCell = tr.getChild(offset - 1);
+                } else {
+                    referenceCell = null;
+                }
+
+                for (int col = offset; col < offset + numberOfColumns; col++) {
+                    final Element cellElem = createCellElement();
+                    referenceCell = insertAfterReferenceAndUpdateIt(tr,
+                            cellElem, referenceCell);
+                    paintCell(cellElem, topVisualRowLogicalIndex + row, col);
+                }
+
+                /*
+                 * TODO [[optimize]] [[colwidth]]: When this method is updated
+                 * to measure things instead of using hardcoded values, it would
+                 * be better to do everything at once after all rows have been
+                 * updated to reduce the number of reflows.
+                 */
+                recalculateRowWidth(tr);
+            }
+
+            // this needs to be before the scrollbar adjustment.
+            scroller.recalculateScrollbarsForVirtualViewport();
+
+            final boolean columnsWereAddedToTheLeftOfViewport = scroller.lastScrollLeft > offset
+                    * COLUMN_WIDTH_PX;
+
+            if (columnsWereAddedToTheLeftOfViewport) {
+                scrollerElem
+                        .setScrollLeft((int) (scroller.lastScrollLeft + numberOfColumns
+                                * COLUMN_WIDTH_PX));
+            }
+        }
     }
 
     private abstract class AbstractStaticRowContainer extends
@@ -856,6 +938,7 @@ public class Escalator extends Widget {
         protected void paintRemoveRows(final int index, final int numberOfRows) {
             for (int i = index; i < index + numberOfRows; i++) {
                 final Element tr = (Element) root.getChild(i);
+                // TODO [[widgets]]
                 tr.removeFromParent();
             }
             recalculateSectionHeight();
@@ -870,6 +953,11 @@ public class Escalator extends Widget {
                 throw new IndexOutOfBoundsException("No such visual index: "
                         + index);
             }
+        }
+
+        @Override
+        protected int getTopVisualRowLogicalIndex() {
+            return 0;
         }
     }
 
@@ -1374,6 +1462,7 @@ public class Escalator extends Widget {
                     for (int i = 0; i < escalatorRowsToRemove; i++) {
                         final Element tr = visualRowOrder
                                 .remove(removedVisualInside.getStart());
+                        // TODO [[widgets]]
                         tr.removeFromParent();
                         rowTopPosMap.remove(tr);
                     }
@@ -1733,6 +1822,15 @@ public class Escalator extends Widget {
             tBodyScrollTop = scrollTop;
             position.set(bodyElem, -tBodyScrollLeft, -tBodyScrollTop);
         }
+
+        @Override
+        protected int getTopVisualRowLogicalIndex() {
+            if (!visualRowOrder.isEmpty()) {
+                return getLogicalRowIndex(visualRowOrder.getFirst());
+            } else {
+                return 0;
+            }
+        }
     }
 
     private class ColumnConfigurationImpl implements ColumnConfiguration {
@@ -1751,17 +1849,11 @@ public class Escalator extends Widget {
         public void removeColumns(final int index, final int numberOfColumns) {
             assertArgumentsAreValidAndWithinRange(index, numberOfColumns);
 
-            columns--;
+            columns -= numberOfColumns;
 
-            // FIXME [[escalator]]: broken on escalator
             if (hasSomethingInDom()) {
                 for (final AbstractRowContainer rowContainer : rowContainers) {
-                    for (int row = 0; row < rowContainer.getRowCount(); row++) {
-                        final Node tr = rowContainer.root.getChild(row);
-                        for (int col = 0; col < numberOfColumns; col++) {
-                            tr.getChild(index).removeFromParent();
-                        }
-                    }
+                    rowContainer.paintRemoveColumns(index, numberOfColumns);
                 }
             }
         }
@@ -1807,58 +1899,9 @@ public class Escalator extends Widget {
             }
 
             columns += numberOfColumns;
-            if (!hasColumnAndRowData()) {
-                return;
-            }
-
-            for (final AbstractRowContainer rowContainer : rowContainers) {
-                // FIXME: broken on escalator
-                final Element element = rowContainer.root;
-
-                for (int row = 0; row < element.getChildCount(); row++) {
-                    final Element tr = (Element) element.getChild(row);
-
-                    Node referenceElement;
-                    if (index != 0) {
-                        referenceElement = tr.getChild(index - 1);
-                    } else {
-                        referenceElement = null;
-                    }
-
-                    for (int col = index; col < index + numberOfColumns; col++) {
-                        final Element cellElem = rowContainer
-                                .createCellElement();
-                        rowContainer.paintCell(cellElem, row, col);
-
-                        if (referenceElement != null) {
-                            tr.insertAfter(cellElem, referenceElement);
-                        } else {
-                            /*
-                             * referenceElement being null means we have index
-                             * 0, make it the first cell.
-                             */
-                            /*
-                             * TODO [[optimize]]: Is insertFirst or append
-                             * faster for an empty tr?
-                             */
-                            tr.insertFirst(cellElem);
-                        }
-
-                        /*
-                         * update reference to insert cells in logical order,
-                         * the latter after the former
-                         */
-                        referenceElement = cellElem;
-                    }
-
-                    /*
-                     * TODO [[optimize]] [[colwidth]]: When this method is
-                     * updated to measure things instead of using hardcoded
-                     * values, it would be better to do everything at once after
-                     * all rows have been updated to reduce the number of
-                     * reflows.
-                     */
-                    recalculateRowWidth(tr);
+            if (hasColumnAndRowData()) {
+                for (final AbstractRowContainer rowContainer : rowContainers) {
+                    rowContainer.paintInsertColumns(index, numberOfColumns);
                 }
             }
         }
