@@ -11,9 +11,6 @@
     <ivy:settings file="ivysettings-publish.xml" id="publish.settings" />
     <property file="publish.properties" />
 
-    <available property="ant-jsch.present" file="${ant.home}/lib/ant-jsch.jar" />
-    <available property="jsch.present" file="${ant.home}/lib/jsch-0.1.48.jar" />
-
     <target name="nightly.publish" depends="nightly.download.publish, nightly.maven.publish">
 
     </target>

@@ -590,11 +590,11 @@ public class TreeTable extends Table implements Hierarchical {
         // does not change component hierarchy during paint
         containerSupportsPartialUpdates = (newDataSource instanceof ItemSetChangeNotifier) && false;
 
-        if (!(newDataSource instanceof Hierarchical)) {
+        if (newDataSource != null && !(newDataSource instanceof Hierarchical)) {
             newDataSource = new ContainerHierarchicalWrapper(newDataSource);
         }
 
-        if (!(newDataSource instanceof Ordered)) {
+        if (newDataSource != null && !(newDataSource instanceof Ordered)) {
             newDataSource = new HierarchicalContainerOrderedWrapper(
                     (Hierarchical) newDataSource);
         }

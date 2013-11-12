@@ -345,11 +345,47 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         if (!visibilityChangesDisabled) {
             super.setVisible(visible);
         }
-        if (visible && BrowserInfo.get().isWebkit()) {
-            Util.removeUnneededScrollbars((Element) contents
-                    .getFirstChildElement());
-            updateContentsSize();
-            positionOrSizeUpdated();
+
+        if (visible
+                && BrowserInfo.get().requiresPositionAbsoluteOverflowAutoFix()) {
+
+            /*
+             * Shake up the DOM a bit to make the window shed unnecessary
+             * scrollbars and resize correctly afterwards. This resulting code
+             * took over a week to summon forth, and involved some pretty hairy
+             * black magic. Don't touch it unless you know what you're doing!
+             * Fixes ticket #11994
+             */
+            Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    final com.google.gwt.dom.client.Element scrollable = contents
+                            .getFirstChildElement();
+
+                    // Adjusting the width or height may change the scroll
+                    // position, so store the current position
+                    int horizontalScrollPosition = scrollable.getScrollLeft();
+                    int verticalScrollPosition = scrollable.getScrollTop();
+
+                    final String oldWidth = scrollable.getStyle().getWidth();
+                    final String oldHeight = scrollable.getStyle().getHeight();
+
+                    scrollable.getStyle().setWidth(110, Unit.PCT);
+                    scrollable.getOffsetWidth();
+                    scrollable.getStyle().setProperty("width", oldWidth);
+
+                    scrollable.getStyle().setHeight(110, Unit.PCT);
+                    scrollable.getOffsetHeight();
+                    scrollable.getStyle().setProperty("height", oldHeight);
+
+                    // Restore the scroll position
+                    scrollable.setScrollLeft(horizontalScrollPosition);
+                    scrollable.setScrollTop(verticalScrollPosition);
+
+                    updateContentsSize();
+                    positionOrSizeUpdated();
+                }
+            });
         }
     }
 

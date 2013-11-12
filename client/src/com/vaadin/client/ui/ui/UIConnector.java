@@ -130,11 +130,16 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                     @Override
                     public void execute() {
-                        if (sessionExpired) {
-                            getConnection().showSessionExpiredError(null);
-                        } else {
-                            getState().enabled = false;
-                            updateEnabledState(getState().enabled);
+                        // Only notify user if we're still running and not eg.
+                        // navigating away (#12298)
+                        if (getConnection().isApplicationRunning()) {
+                            if (sessionExpired) {
+                                getConnection().showSessionExpiredError(null);
+                            } else {
+                                getState().enabled = false;
+                                updateEnabledState(getState().enabled);
+                            }
+                            getConnection().setApplicationRunning(false);
                         }
                     }
                 });
@@ -192,7 +197,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
-        getWidget().rendering = true;
         getWidget().id = getConnectorId();
         boolean firstPaint = getWidget().connection == null;
         getWidget().connection = client;
@@ -285,9 +289,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             childIndex++;
         }
         if (isClosed) {
-            // don't render the content, something else will be opened to this
-            // browser view
-            getWidget().rendering = false;
+            // We're navigating away, so stop the application.
+            client.setApplicationRunning(false);
             return;
         }
 
@@ -397,7 +400,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 }
             });
         }
-        getWidget().rendering = false;
     }
 
     /**

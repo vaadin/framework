@@ -204,6 +204,13 @@
         </antcall>
     </target>
 
+    <target name="integration-test-jboss-eap6">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="jbosseap6" />
+        </antcall>
+    </target>
+
     <target name="integration-test-glassfish2">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
@@ -395,6 +402,7 @@
             <antcall target="integration-test-jboss5" />
             <antcall target="integration-test-jboss6" />
             <antcall target="integration-test-jboss7" />
+            <antcall target="integration-test-jboss-eap6" />
             <antcall target="integration-test-jetty5" />
             <antcall target="integration-test-jetty6" />
             <antcall target="integration-test-jetty7" />

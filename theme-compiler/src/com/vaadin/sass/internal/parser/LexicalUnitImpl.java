@@ -377,6 +377,19 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         }
     }
 
+    // A helper method for sass interpolation
+    public String unquotedString() {
+        String result = toString();
+        if (result.length() >= 2
+                && ((result.charAt(0) == '"' && result
+                        .charAt(result.length() - 1) == '"') || (result
+                        .charAt(0) == '\'' && result
+                        .charAt(result.length() - 1) == '\''))) {
+            result = result.substring(1, result.length() - 1);
+        }
+        return result;
+    }
+
     @Override
     public LexicalUnitImpl divide(LexicalUnitImpl denominator) {
         if (denominator.getLexicalUnitType() != SAC_INTEGER

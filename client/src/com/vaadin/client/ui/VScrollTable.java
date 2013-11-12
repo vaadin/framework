@@ -4234,8 +4234,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         // Already updated by setColWidth called from
                         // TableHeads.updateCellsFromUIDL in case of a server
                         // side resize
-                        final String width = col.getStringAttribute("width");
-                        c.setWidth(Integer.parseInt(width), true);
+                        final int width = col.getIntAttribute("width");
+                        c.setWidth(width, true);
                     }
                 } else if (recalcWidths) {
                     c.setUndefinedWidth();
