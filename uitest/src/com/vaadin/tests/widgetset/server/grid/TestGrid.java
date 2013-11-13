@@ -61,4 +61,8 @@ public class TestGrid extends AbstractComponent {
     public void scrollToColumn(int index, String destination, int padding) {
         rpc().scrollToColumn(index, destination, padding);
     }
+
+    public void setFrozenColumns(int frozenColumns) {
+        rpc().setFrozenColumns(frozenColumns);
+    }
 }

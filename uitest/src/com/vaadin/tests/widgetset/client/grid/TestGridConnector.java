@@ -76,6 +76,12 @@ public class TestGridConnector extends AbstractComponentConnector {
                 }
                 return d;
             }
+
+            @Override
+            public void setFrozenColumns(int frozenColumns) {
+                getWidget().getColumnConfiguration().setFrozenColumnCount(
+                        frozenColumns);
+            }
         });
     }
 

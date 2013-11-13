@@ -213,10 +213,6 @@ public class Escalator extends Widget {
      * searching for code that call scrollElem.getScrollTop();.
      */
     /*
-     * [[frozencol]]: This needs to be re-inspected once frozen columns are
-     * being implemented.
-     */
-    /*
      * [[widgets]]: This needs to be re-inspected once GWT/Vaadin widgets are
      * being supported.
      */
@@ -226,8 +222,8 @@ public class Escalator extends Widget {
 
     /** An inner class that handles all logic related to scrolling. */
     private class Scroller extends JsniWorkaround {
-        private double lastScrollTop = -1;
-        private double lastScrollLeft = -1;
+        private double lastScrollTop = 0;
+        private double lastScrollLeft = 0;
 
         public Scroller() {
             super(Escalator.this);
@@ -312,9 +308,10 @@ public class Escalator extends Widget {
                     .setHeight(innerScrollerHeight, Unit.PX);
 
             // TODO [[colwidth]]: adjust for variable column widths.
+            int columnsToScroll = columnConfiguration.getColumnCount()
+                    - columnConfiguration.getFrozenColumnCount();
             innerScrollerElem.getStyle().setWidth(
-                    COLUMN_WIDTH_PX * columnConfiguration.getColumnCount(),
-                    Unit.PX);
+                    COLUMN_WIDTH_PX * columnsToScroll, Unit.PX);
 
             // we might've got new or got rid of old scrollbars.
             recalculateTableWrapperSize();
@@ -361,7 +358,11 @@ public class Escalator extends Widget {
             final int scrollTop = scrollerElem.getScrollTop();
 
             if (lastScrollLeft != scrollLeft) {
-                // TODO [[frozen]]: frozen columns should be offset here.
+                for (int i = 0; i < columnConfiguration.frozenColumns; i++) {
+                    header.updateFreezePosition(i, scrollLeft);
+                    body.updateFreezePosition(i, scrollLeft);
+                    footer.updateFreezePosition(i, scrollLeft);
+                }
 
                 position.set(headElem, -scrollLeft, 0);
 
@@ -444,16 +445,27 @@ public class Escalator extends Widget {
 
         public void scrollToColumn(final int columnIndex,
                 final ScrollDestination destination, final int padding) {
-            // TODO [[colwidth]]
-            final int targetStartPx = COLUMN_WIDTH_PX * columnIndex;
-            final int targetEndPx = targetStartPx + COLUMN_WIDTH_PX;
+            assert columnIndex >= columnConfiguration.frozenColumns : "Can't scroll to a frozen column";
 
+            // TODO [[colwidth]]
             /*
-             * TODO [[frozencol]]: offset startPx by the pixels occupied by
+             * To cope with frozen columns, we just pretend those columns are
+             * not there at all when calculating the position of the target
+             * column and the boundaries of the viewport. The resulting
+             * scrollLeft will be correct without compensation since the DOM
+             * structure effectively means that scrollLeft also ignores the
              * frozen columns.
              */
+            final int frozenPixels = columnConfiguration.frozenColumns
+                    * COLUMN_WIDTH_PX;
+
+            final int targetStartPx = COLUMN_WIDTH_PX * columnIndex
+                    - frozenPixels;
+            final int targetEndPx = targetStartPx + COLUMN_WIDTH_PX;
+
             final int viewportStartPx = getScrollLeft();
-            int viewportEndPx = viewportStartPx + getElement().getOffsetWidth();
+            int viewportEndPx = viewportStartPx + getElement().getOffsetWidth()
+                    - frozenPixels;
             if (needsVerticalScrollbars()) {
                 viewportEndPx -= Util.getNativeScrollbarSize();
             }
@@ -689,6 +701,12 @@ public class Escalator extends Widget {
                 for (int col = 0; col < columnConfiguration.getColumnCount(); col++) {
                     final Element cellElem = createCellElement();
                     tr.appendChild(cellElem);
+
+                    // Set stylename and position if new cell is frozen
+                    if (col < columnConfiguration.frozenColumns) {
+                        cellElem.addClassName("frozen");
+                        position.set(cellElem, scroller.lastScrollLeft, 0);
+                    }
                 }
 
                 refreshRow(tr, row);
@@ -844,7 +862,7 @@ public class Escalator extends Widget {
         }
 
         protected void paintInsertColumns(final int offset,
-                final int numberOfColumns) {
+                final int numberOfColumns, boolean frozen) {
             final NodeList<Node> childNodes = root.getChildNodes();
             final int topVisualRowLogicalIndex = getTopVisualRowLogicalIndex();
 
@@ -875,6 +893,12 @@ public class Escalator extends Widget {
                 recalculateRowWidth(tr);
             }
 
+            if (frozen) {
+                for (int col = offset; col < offset + numberOfColumns; col++) {
+                    setColumnFrozen(col, true);
+                }
+            }
+
             // this needs to be before the scrollbar adjustment.
             scroller.recalculateScrollbarsForVirtualViewport();
 
@@ -885,6 +909,37 @@ public class Escalator extends Widget {
                 scrollerElem
                         .setScrollLeft((int) (scroller.lastScrollLeft + numberOfColumns
                                 * COLUMN_WIDTH_PX));
+            }
+        }
+
+        public void setColumnFrozen(int column, boolean frozen) {
+            final NodeList<Node> childNodes = root.getChildNodes();
+
+            for (int row = 0; row < childNodes.getLength(); row++) {
+                final Element tr = childNodes.getItem(row).cast();
+
+                Element cell = (Element) tr.getChild(column);
+                if (frozen) {
+                    cell.addClassName("frozen");
+                } else {
+                    cell.removeClassName("frozen");
+                    position.reset(cell);
+                }
+            }
+
+            if (frozen) {
+                updateFreezePosition(column, scroller.lastScrollLeft);
+            }
+        }
+
+        public void updateFreezePosition(int column, double scrollLeft) {
+            final NodeList<Node> childNodes = root.getChildNodes();
+
+            for (int row = 0; row < childNodes.getLength(); row++) {
+                final Element tr = childNodes.getItem(row).cast();
+
+                Element cell = (Element) tr.getChild(column);
+                position.set(cell, scrollLeft, 0);
             }
         }
     }
@@ -1796,6 +1851,7 @@ public class Escalator extends Widget {
 
     private class ColumnConfigurationImpl implements ColumnConfiguration {
         private int columns = 0;
+        private int frozenColumns = 0;
 
         /**
          * {@inheritDoc}
@@ -1811,6 +1867,26 @@ public class Escalator extends Widget {
             assertArgumentsAreValidAndWithinRange(index, numberOfColumns);
 
             flyweightRow.removeCells(index, numberOfColumns);
+
+            // Cope with removing frozen columns
+            if (index < frozenColumns) {
+                if (index + numberOfColumns < frozenColumns) {
+                    /*
+                     * Last removed column was frozen, meaning that all removed
+                     * columns were frozen. Just decrement the number of frozen
+                     * columns accordingly.
+                     */
+                    frozenColumns -= numberOfColumns;
+                } else {
+                    /*
+                     * If last removed column was not frozen, we have removed
+                     * columns beyond the frozen range, so all remaining frozen
+                     * columns are to the left of the removed columns.
+                     */
+                    frozenColumns = index;
+                }
+            }
+
             columns -= numberOfColumns;
 
             if (hasSomethingInDom()) {
@@ -1862,9 +1938,17 @@ public class Escalator extends Widget {
 
             flyweightRow.addCells(index, numberOfColumns);
             columns += numberOfColumns;
+
+            // Either all or none of the new columns are frozen
+            boolean frozen = index < frozenColumns;
+            if (frozen) {
+                frozenColumns += numberOfColumns;
+            }
+
             if (hasColumnAndRowData()) {
                 for (final AbstractRowContainer rowContainer : rowContainers) {
-                    rowContainer.paintInsertColumns(index, numberOfColumns);
+                    rowContainer.paintInsertColumns(index, numberOfColumns,
+                            frozen);
                 }
             }
         }
@@ -1872,6 +1956,53 @@ public class Escalator extends Widget {
         @Override
         public int getColumnCount() {
             return columns;
+        }
+
+        @Override
+        public void setFrozenColumnCount(int count)
+                throws IllegalArgumentException {
+            if (count < 0 || count > columns) {
+                throw new IllegalArgumentException(
+                        "count must be between 0 and the current number of columns ("
+                                + columns + ")");
+            }
+            int oldCount = frozenColumns;
+            if (count == oldCount) {
+                return;
+            }
+
+            frozenColumns = count;
+
+            if (hasSomethingInDom()) {
+                // Are we freezing or unfreezing?
+                boolean frozen = count > oldCount;
+
+                int firstAffectedCol;
+                int firstUnaffectedCol;
+
+                if (frozen) {
+                    firstAffectedCol = oldCount;
+                    firstUnaffectedCol = count;
+                } else {
+                    firstAffectedCol = count;
+                    firstUnaffectedCol = oldCount;
+                }
+
+                for (int col = firstAffectedCol; col < firstUnaffectedCol; col++) {
+                    header.setColumnFrozen(col, frozen);
+                    body.setColumnFrozen(col, frozen);
+                    footer.setColumnFrozen(col, frozen);
+                }
+            }
+
+            scrollerElem.getStyle().setLeft(frozenColumns * COLUMN_WIDTH_PX,
+                    Unit.PX);
+            scroller.recalculateScrollbarsForVirtualViewport();
+        }
+
+        @Override
+        public int getFrozenColumnCount() {
+            return frozenColumns;
         }
     }
 
@@ -2160,12 +2291,18 @@ public class Escalator extends Widget {
      * @throws IndexOutOfBoundsException
      *             if {@code columnIndex} is not a valid index for an existing
      *             column
+     * @throws IllegalArgumentException
+     *             if the column is frozen
      */
     public void scrollToColumn(final int columnIndex,
             final ScrollDestination destination)
-            throws IndexOutOfBoundsException {
-        // TODO [[frozencol]] throw IAE if frozen
+            throws IndexOutOfBoundsException, IllegalArgumentException {
         verifyValidColumnIndex(columnIndex);
+
+        if (columnIndex < columnConfiguration.frozenColumns) {
+            throw new IllegalArgumentException("The given column index "
+                    + columnIndex + " is frozen.");
+        }
 
         scroller.scrollToColumn(columnIndex, destination, 0);
     }
@@ -2188,17 +2325,21 @@ public class Escalator extends Widget {
      * @throws IllegalArgumentException
      *             if {@code destination} is {@link ScrollDestination#MIDDLE},
      *             because having a padding on a centered column is undefined
-     *             behavior
+     *             behavior or if the column is frozen
      */
     public void scrollToColumn(final int columnIndex,
             final ScrollDestination destination, final int padding)
             throws IndexOutOfBoundsException, IllegalArgumentException {
-        // TODO [[frozencol]] throw IAE if frozen
         if (destination == ScrollDestination.MIDDLE) {
             throw new IllegalArgumentException(
                     "You cannot have a padding with a MIDDLE destination");
         }
         verifyValidColumnIndex(columnIndex);
+
+        if (columnIndex < columnConfiguration.frozenColumns) {
+            throw new IllegalArgumentException("The given column index "
+                    + columnIndex + " is frozen.");
+        }
 
         scroller.scrollToColumn(columnIndex, destination, padding);
     }

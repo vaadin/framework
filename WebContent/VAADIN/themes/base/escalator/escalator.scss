@@ -8,16 +8,12 @@ $border-color: #aaa;
 	background-color: $background-color;
 }
 
-.#{$primaryStyleName}-cell {
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
-
 .#{$primaryStyleName}-scroller {
 	position: absolute;
 	overflow: auto;
 	height: inherit;
-	width: inherit; /* width will be overridden if we have frozen columns */
+	left: 0; /* Left position adjusted to align with frozen columns */
+	right: 0;
 }
 
 .#{$primaryStyleName}-tablewrapper {
@@ -87,6 +83,13 @@ $border-color: #aaa;
 	border: 1px solid $border-color;
 	padding: 2px;
 	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.#{$primaryStyleName}-cell.frozen {
+	position: relative;
+	z-index: 0;
 }
 
 }

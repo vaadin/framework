@@ -27,6 +27,9 @@ public interface ColumnConfiguration {
 
     /**
      * Removes columns at a certain index.
+     * <p>
+     * If any of the removed columns were frozen, the number of frozen columns
+     * will be reduced by the number of the removed columns that were frozen.
      * 
      * @param index
      *            the index of the first column to be removed
@@ -53,6 +56,10 @@ public interface ColumnConfiguration {
      * The contents of the inserted columns will be queried from the respective
      * cell renderers in the header, body and footer.
      * <p>
+     * If there are frozen columns and the first added column is to the left of
+     * the last frozen column, the number of frozen columns will be increased by
+     * the number of inserted columns.
+     * <p>
      * <em>Note:</em> Only the contents of the inserted columns will be
      * rendered. If inserting new columns affects the contents of existing
      * columns, {@link RowContainer#refreshRows(int, int)} needs to be called as
@@ -78,4 +85,25 @@ public interface ColumnConfiguration {
      * @return the number of columns in the escalator
      */
     public int getColumnCount();
+
+    /**
+     * Sets the number of leftmost columns that are not affected by horizontal
+     * scrolling.
+     * 
+     * @param count
+     *            the number of columns to freeze
+     * 
+     * @throws IllegalArgumentException
+     *             if the column count is &lt; 0 or &gt; the number of columns
+     * 
+     */
+    public void setFrozenColumnCount(int count) throws IllegalArgumentException;
+
+    /**
+     * Get the number of leftmost columns that are not affected by horizontal
+     * scrolling.
+     * 
+     * @return the number of frozen columns
+     */
+    public int getFrozenColumnCount();
 }

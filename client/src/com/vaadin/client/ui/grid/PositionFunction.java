@@ -36,6 +36,11 @@ interface PositionFunction {
             e.getStyle().setProperty("transform",
                     "translate3d(" + x + "px, " + y + "px, 0)");
         }
+
+        @Override
+        public void reset(Element e) {
+            e.getStyle().clearProperty("transform");
+        }
     }
 
     /**
@@ -47,6 +52,11 @@ interface PositionFunction {
         public void set(Element e, double x, double y) {
             e.getStyle().setProperty("transform",
                     "translate(" + x + "px," + y + "px)");
+        }
+
+        @Override
+        public void reset(Element e) {
+            e.getStyle().clearProperty("transform");
         }
     }
 
@@ -60,6 +70,11 @@ interface PositionFunction {
             e.getStyle().setProperty("webkitTransform",
                     "translate3d(" + x + "px," + y + "px,0)");
         }
+
+        @Override
+        public void reset(Element e) {
+            e.getStyle().clearProperty("webkitTransform");
+        }
     }
 
     /**
@@ -71,6 +86,12 @@ interface PositionFunction {
         public void set(Element e, double x, double y) {
             e.getStyle().setLeft(x, Unit.PX);
             e.getStyle().setTop(y, Unit.PX);
+        }
+
+        @Override
+        public void reset(Element e) {
+            e.getStyle().clearLeft();
+            e.getStyle().clearTop();
         }
     }
 
@@ -85,4 +106,13 @@ interface PositionFunction {
      *            the y coordinate, in pixels
      */
     void set(Element e, double x, double y);
+
+    /**
+     * Resets any previously applied positioning, clearing the used style
+     * attributes.
+     * 
+     * @param e
+     *            the element for which to reset the positioning
+     */
+    void reset(Element e);
 }

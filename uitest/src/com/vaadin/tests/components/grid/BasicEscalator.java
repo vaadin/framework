@@ -57,9 +57,9 @@ public class BasicEscalator extends AbstractTestUI {
                     @Override
                     @SuppressWarnings("boxing")
                     public void buttonClick(final ClickEvent event) {
-                        final int offset = Integer.valueOf(insertRowsOffset
+                        final int offset = Integer.parseInt(insertRowsOffset
                                 .getValue());
-                        final int amount = Integer.valueOf(insertRowsAmount
+                        final int amount = Integer.parseInt(insertRowsAmount
                                 .getValue());
                         grid.insertRows(offset, amount);
                     }
@@ -80,9 +80,9 @@ public class BasicEscalator extends AbstractTestUI {
                     @Override
                     @SuppressWarnings("boxing")
                     public void buttonClick(final ClickEvent event) {
-                        final int offset = Integer.valueOf(removeRowsOffset
+                        final int offset = Integer.parseInt(removeRowsOffset
                                 .getValue());
-                        final int amount = Integer.valueOf(removeRowsAmount
+                        final int amount = Integer.parseInt(removeRowsAmount
                                 .getValue());
                         grid.removeRows(offset, amount);
                     }
@@ -99,9 +99,9 @@ public class BasicEscalator extends AbstractTestUI {
                     @Override
                     @SuppressWarnings("boxing")
                     public void buttonClick(final ClickEvent event) {
-                        final int offset = Integer.valueOf(insertColumnsOffset
+                        final int offset = Integer.parseInt(insertColumnsOffset
                                 .getValue());
-                        final int amount = Integer.valueOf(insertColumnsAmount
+                        final int amount = Integer.parseInt(insertColumnsAmount
                                 .getValue());
                         grid.insertColumns(offset, amount);
                     }
@@ -118,9 +118,9 @@ public class BasicEscalator extends AbstractTestUI {
                     @Override
                     @SuppressWarnings("boxing")
                     public void buttonClick(final ClickEvent event) {
-                        final int offset = Integer.valueOf(removeColumnsOffset
+                        final int offset = Integer.parseInt(removeColumnsOffset
                                 .getValue());
-                        final int amount = Integer.valueOf(removeColumnsAmount
+                        final int amount = Integer.parseInt(removeColumnsAmount
                                 .getValue());
                         grid.removeColumns(offset, amount);
                     }
@@ -146,14 +146,14 @@ public class BasicEscalator extends AbstractTestUI {
                     public void buttonClick(final ClickEvent event) {
                         int index;
                         try {
-                            index = Integer.valueOf(rowIndex.getValue());
+                            index = Integer.parseInt(rowIndex.getValue());
                         } catch (NumberFormatException e) {
                             index = 0;
                         }
 
                         int padding;
                         try {
-                            padding = Integer.valueOf(rowPadding.getValue());
+                            padding = Integer.parseInt(rowPadding.getValue());
                         } catch (NumberFormatException e) {
                             padding = 0;
                         }
@@ -183,14 +183,14 @@ public class BasicEscalator extends AbstractTestUI {
                     public void buttonClick(final ClickEvent event) {
                         int index;
                         try {
-                            index = Integer.valueOf(colIndex.getValue());
+                            index = Integer.parseInt(colIndex.getValue());
                         } catch (NumberFormatException e) {
                             index = 0;
                         }
 
                         int padding;
                         try {
-                            padding = Integer.valueOf(colPadding.getValue());
+                            padding = Integer.parseInt(colPadding.getValue());
                         } catch (NumberFormatException e) {
                             padding = 0;
                         }
@@ -200,6 +200,20 @@ public class BasicEscalator extends AbstractTestUI {
                     }
                 }));
         addComponent(colScroll);
+
+        final TextField freezeCount = new TextField();
+        freezeCount.setConverter(Integer.class);
+        freezeCount.setNullRepresentation("");
+        addComponent(new HorizontalLayout(freezeCount, new Button(
+                "set frozen columns", new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        grid.setFrozenColumns(((Integer) freezeCount
+                                .getConvertedValue()).intValue());
+                        freezeCount.setValue(null);
+                    }
+                })));
+
     }
 
     @Override
