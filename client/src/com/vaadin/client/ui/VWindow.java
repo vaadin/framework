@@ -22,6 +22,7 @@ import java.util.Comparator;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
@@ -66,6 +67,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     private static boolean orderingDefered;
 
     public static final String CLASSNAME = "v-window";
+
+    private static final String MODAL_WINDOW_OPEN_CLASSNAME = "v-modal-window-open";
 
     private static final int STACKING_OFFSET_PIXELS = 15;
 
@@ -528,10 +531,14 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             getOverlayContainer().appendChild(getModalityCurtain());
         }
 
+        Document.get().getBody().addClassName(MODAL_WINDOW_OPEN_CLASSNAME);
     }
 
     private void hideModalityCurtain() {
+        Document.get().getBody().removeClassName(MODAL_WINDOW_OPEN_CLASSNAME);
+
         modalityCurtain.removeFromParent();
+
         if (BrowserInfo.get().isIE()) {
             // IE leaks memory in certain cases unless we release the reference
             // (#9197)
