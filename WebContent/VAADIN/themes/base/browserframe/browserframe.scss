@@ -4,4 +4,8 @@
 	.v-browserframe {
 		font-size: 0;
 	}
+	/* Some times a browser frame can contain a span with altenate text */
+	.v-browserframe > span {
+		font-size: $font-size;
+	}
 }
