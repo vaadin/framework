@@ -19,37 +19,37 @@ package com.vaadin.client.ui.grid;
 import com.google.gwt.user.client.Element;
 
 /**
- * A representation of a single cell.
- * <p>
- * A Cell instance will be provided to the {@link EscalatorUpdater} responsible
- * for rendering the cells in a certain {@link RowContainer}.
+ * A representation of a row in an {@link Escalator}.
  * 
  * @since 7.2
  * @author Vaadin Ltd
  */
-public interface Cell {
+public interface Row {
     /**
-     * Gets the index of the row this cell is in.
+     * Gets the escalator containing the row.
      * 
-     * @return the index of the row this cell is in
+     * @return the escalator containing the row
+     */
+    public Escalator getEscalator();
+
+    /**
+     * Gets the row index.
+     * 
+     * @return the row index
      */
     public int getRow();
 
     /**
-     * Gets the index of the column this cell is in.
-     * 
-     * @return the index of the column this cell is in
-     */
-    public int getColumn();
-
-    /**
-     * Gets the root element for this cell. The {@link EscalatorUpdater} may
-     * update the class names of the element, add inline styles and freely
-     * modify the contents.
+     * Gets the root element for this row.
      * <p>
-     * Avoid modifying the dimensions or positioning of the cell element.
+     * The {@link EscalatorUpdater} may update the class names of the element
+     * and add inline styles, but may not modify the contained DOM structure.
+     * <p>
+     * If you wish to modify the cells within this row element, access them via
+     * the <code>List&lt;{@link Cell}&gt;</code> objects passed in to
+     * {@code EscalatorUpdater.updateCells(Row, List)}
      * 
-     * @return The root element for this cell. Never <code>null</code>.
+     * @return the root element of the row
      */
     public Element getElement();
 }

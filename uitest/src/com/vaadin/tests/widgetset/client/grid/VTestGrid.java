@@ -5,9 +5,10 @@ import java.util.List;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.vaadin.client.ui.grid.Cell;
-import com.vaadin.client.ui.grid.CellRenderer;
 import com.vaadin.client.ui.grid.ColumnConfiguration;
 import com.vaadin.client.ui.grid.Escalator;
+import com.vaadin.client.ui.grid.EscalatorUpdater;
+import com.vaadin.client.ui.grid.Row;
 import com.vaadin.client.ui.grid.RowContainer;
 import com.vaadin.client.ui.grid.ScrollDestination;
 
@@ -19,52 +20,61 @@ public class VTestGrid extends Composite {
         private final List<Integer> columns = new ArrayList<Integer>();
         private final List<Integer> rows = new ArrayList<Integer>();
 
-        public void insertRows(int offset, int amount) {
-            List<Integer> newRows = new ArrayList<Integer>();
+        @SuppressWarnings("boxing")
+        public void insertRows(final int offset, final int amount) {
+            final List<Integer> newRows = new ArrayList<Integer>();
             for (int i = 0; i < amount; i++) {
                 newRows.add(rowCounter++);
             }
             rows.addAll(offset, newRows);
         }
 
-        public void insertColumns(int offset, int amount) {
-            List<Integer> newColumns = new ArrayList<Integer>();
+        @SuppressWarnings("boxing")
+        public void insertColumns(final int offset, final int amount) {
+            final List<Integer> newColumns = new ArrayList<Integer>();
             for (int i = 0; i < amount; i++) {
                 newColumns.add(columnCounter++);
             }
             columns.addAll(offset, newColumns);
         }
 
-        public CellRenderer createHeaderRenderer() {
-            return new CellRenderer() {
+        public EscalatorUpdater createHeaderUpdater() {
+            return new EscalatorUpdater() {
                 @Override
-                public void renderCell(Cell cell) {
-                    int columnName = columns.get(cell.getColumn());
-                    cell.getElement().setInnerText("Header " + columnName);
+                public void updateCells(final Row row,
+                        final List<Cell> cellsToUpdate) {
+                    for (final Cell cell : cellsToUpdate) {
+                        final Integer columnName = columns
+                                .get(cell.getColumn());
+                        cell.getElement().setInnerText("Header " + columnName);
+                    }
                 }
             };
         }
 
-        public CellRenderer createFooterRenderer() {
-            return new CellRenderer() {
+        public EscalatorUpdater createFooterUpdater() {
+            return new EscalatorUpdater() {
                 @Override
-                public void renderCell(Cell cell) {
-                    int columnName = columns.get(cell.getColumn());
-                    cell.getElement().setInnerText("Footer " + columnName);
+                public void updateCells(final Row row,
+                        final List<Cell> cellsToUpdate) {
+                    for (final Cell cell : cellsToUpdate) {
+                        final Integer columnName = columns
+                                .get(cell.getColumn());
+                        cell.getElement().setInnerText("Footer " + columnName);
+                    }
                 }
             };
         }
 
-        public CellRenderer createBodyRenderer() {
-            return new CellRenderer() {
-                int i = 0;
+        public EscalatorUpdater createBodyUpdater() {
+            return new EscalatorUpdater() {
+                private int i = 0;
 
-                @Override
-                public void renderCell(Cell cell) {
-                    int columnName = columns.get(cell.getColumn());
-                    int rowName = rows.get(cell.getRow());
-                    String cellInfo = columnName + "," + rowName + " (" + i
-                            + ")";
+                public void renderCell(final Cell cell) {
+                    final Integer columnName = columns.get(cell.getColumn());
+                    final Integer rowName = rows.get(cell.getRow());
+                    final String cellInfo = columnName + "," + rowName + " ("
+                            + i + ")";
 
                     if (cell.getColumn() > 0) {
                         cell.getElement().setInnerText("Cell: " + cellInfo);
@@ -73,10 +83,10 @@ public class VTestGrid extends Composite {
                                 "Row " + cell.getRow() + ": " + cellInfo);
                     }
 
-                    double c = i * .1;
-                    int r = (int) ((Math.cos(c) + 1) * 128);
-                    int g = (int) ((Math.cos(c / Math.PI) + 1) * 128);
-                    int b = (int) ((Math.cos(c / (Math.PI * 2)) + 1) * 128);
+                    final double c = i * .1;
+                    final int r = (int) ((Math.cos(c) + 1) * 128);
+                    final int g = (int) ((Math.cos(c / Math.PI) + 1) * 128);
+                    final int b = (int) ((Math.cos(c / (Math.PI * 2)) + 1) * 128);
                     cell.getElement()
                             .getStyle()
                             .setBackgroundColor(
@@ -89,36 +99,44 @@ public class VTestGrid extends Composite {
 
                     i++;
                 }
+
+                @Override
+                public void updateCells(final Row row,
+                        final List<Cell> cellsToUpdate) {
+                    for (final Cell cell : cellsToUpdate) {
+                        renderCell(cell);
+                    }
+                }
             };
         }
 
-        public void removeRows(int offset, int amount) {
+        public void removeRows(final int offset, final int amount) {
             for (int i = 0; i < amount; i++) {
                 rows.remove(offset);
             }
         }
 
-        public void removeColumns(int offset, int amount) {
+        public void removeColumns(final int offset, final int amount) {
             for (int i = 0; i < amount; i++) {
                 columns.remove(offset);
             }
         }
     }
 
-    private Escalator escalator = new Escalator();
-    private Data data = new Data();
+    private final Escalator escalator = new Escalator();
+    private final Data data = new Data();
 
     public VTestGrid() {
         initWidget(escalator);
-        RowContainer header = escalator.getHeader();
-        header.setCellRenderer(data.createHeaderRenderer());
+        final RowContainer header = escalator.getHeader();
+        header.setEscalatorUpdater(data.createHeaderUpdater());
         header.insertRows(0, 1);
 
-        RowContainer footer = escalator.getFooter();
-        footer.setCellRenderer(data.createFooterRenderer());
+        final RowContainer footer = escalator.getFooter();
+        footer.setEscalatorUpdater(data.createFooterUpdater());
         footer.insertRows(0, 1);
 
-        escalator.getBody().setCellRenderer(data.createBodyRenderer());
+        escalator.getBody().setEscalatorUpdater(data.createBodyUpdater());
 
         insertRows(0, 100);
         insertColumns(0, 10);
@@ -128,12 +146,12 @@ public class VTestGrid extends Composite {
 
     }
 
-    public void insertRows(int offset, int number) {
+    public void insertRows(final int offset, final int number) {
         data.insertRows(offset, number);
         escalator.getBody().insertRows(offset, number);
     }
 
-    public void insertColumns(int offset, int number) {
+    public void insertColumns(final int offset, final int number) {
         data.insertColumns(offset, number);
         escalator.getColumnConfiguration().insertColumns(offset, number);
     }
@@ -142,8 +160,8 @@ public class VTestGrid extends Composite {
         return escalator.getColumnConfiguration();
     }
 
-    public void scrollToRow(int index, ScrollDestination destination,
-            int padding) {
+    public void scrollToRow(final int index,
+            final ScrollDestination destination, final int padding) {
         if (padding != 0) {
             escalator.scrollToRow(index, destination, padding);
         } else {
@@ -151,8 +169,8 @@ public class VTestGrid extends Composite {
         }
     }
 
-    public void scrollToColumn(int index, ScrollDestination destination,
-            int padding) {
+    public void scrollToColumn(final int index,
+            final ScrollDestination destination, final int padding) {
         if (padding != 0) {
             escalator.scrollToColumn(index, destination, padding);
         } else {
@@ -160,12 +178,12 @@ public class VTestGrid extends Composite {
         }
     }
 
-    public void removeRows(int offset, int amount) {
+    public void removeRows(final int offset, final int amount) {
         data.removeRows(offset, amount);
         escalator.getBody().removeRows(offset, amount);
     }
 
-    public void removeColumns(int offset, int amount) {
+    public void removeColumns(final int offset, final int amount) {
         data.removeColumns(offset, amount);
         escalator.getColumnConfiguration().removeColumns(offset, amount);
     }

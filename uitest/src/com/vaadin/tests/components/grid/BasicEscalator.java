@@ -33,16 +33,24 @@ import com.vaadin.ui.TextField;
  * @author Vaadin Ltd
  */
 @Widgetset(TestingWidgetSet.NAME)
-public class GridTest extends AbstractTestUI {
+public class BasicEscalator extends AbstractTestUI {
+    public static final String ESCALATOR = "escalator";
+    public static final String INSERT_ROWS_OFFSET = "iro";
+    public static final String INSERT_ROWS_AMOUNT = "ira";
+    public static final String INSERT_ROWS_BUTTON = "irb";
+
     @Override
     protected void setup(final VaadinRequest request) {
         final TestGrid grid = new TestGrid();
+        grid.setId(ESCALATOR);
         addComponent(grid);
 
         final Layout insertRowsLayout = new HorizontalLayout();
         final TextField insertRowsOffset = new TextField();
+        insertRowsOffset.setId(INSERT_ROWS_OFFSET);
         insertRowsLayout.addComponent(insertRowsOffset);
         final TextField insertRowsAmount = new TextField();
+        insertRowsAmount.setId(INSERT_ROWS_AMOUNT);
         insertRowsLayout.addComponent(insertRowsAmount);
         insertRowsLayout.addComponent(new Button("insert rows",
                 new Button.ClickListener() {
@@ -55,7 +63,11 @@ public class GridTest extends AbstractTestUI {
                                 .getValue());
                         grid.insertRows(offset, amount);
                     }
-                }));
+                }) {
+            {
+                setId(INSERT_ROWS_BUTTON);
+            }
+        });
         addComponent(insertRowsLayout);
 
         final Layout removeRowsLayout = new HorizontalLayout();

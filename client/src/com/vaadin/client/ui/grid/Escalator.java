@@ -491,38 +491,10 @@ public class Escalator extends Widget {
         }
     }
 
-    private static class CellImpl implements Cell {
-        private final Element cellElem;
-        private final int row;
-        private final int column;
-
-        public CellImpl(final Element cellElem, final int row, final int column) {
-            this.cellElem = cellElem;
-            this.row = row;
-            this.column = column;
-        }
-
-        @Override
-        public int getRow() {
-            return row;
-        }
-
-        @Override
-        public int getColumn() {
-            return column;
-        }
-
-        @Override
-        public Element getElement() {
-            return cellElem;
-        }
-
-    }
-
     private static final String CLASS_NAME = "v-escalator";
 
     private abstract class AbstractRowContainer implements RowContainer {
-        private CellRenderer renderer = CellRenderer.NULL_RENDERER;
+        private EscalatorUpdater updater = EscalatorUpdater.NULL;
 
         private int rows;
 
@@ -555,17 +527,21 @@ public class Escalator extends Widget {
         }
 
         /**
-         * Returns a new element to be used as a cell in a row.
+         * Gets the tag name of an element to represent a cell in a row.
          * <p>
-         * Usually a {@code <th>} or {@code <td>}.
+         * Usually {@code "th"} or {@code "td"}.
+         * <p>
+         * <em>Note:</em> To actually <em>create</em> such an element, use
+         * {@link #createCellElement()} instead.
          * 
-         * @return a new element to be used as a cell in a row
+         * @return the tag name for the element to represent cells as
+         * @see #createCellElement()
          */
-        protected abstract Element createCellElement();
+        protected abstract String getCellElementTagName();
 
         @Override
-        public CellRenderer getCellRenderer() {
-            return renderer;
+        public EscalatorUpdater getEscalatorUpdater() {
+            return updater;
         }
 
         /**
@@ -578,13 +554,13 @@ public class Escalator extends Widget {
          * @see #hasColumnAndRowData()
          */
         @Override
-        public void setCellRenderer(final CellRenderer cellRenderer) {
-            if (cellRenderer == null) {
+        public void setEscalatorUpdater(final EscalatorUpdater escalatorUpdater) {
+            if (escalatorUpdater == null) {
                 throw new IllegalArgumentException(
-                        "cell renderer cannot be null");
+                        "escalator updater cannot be null");
             }
 
-            renderer = cellRenderer;
+            updater = escalatorUpdater;
 
             if (hasColumnAndRowData() && getRowCount() > 0) {
                 refreshRows(0, getRowCount());
@@ -713,8 +689,9 @@ public class Escalator extends Widget {
                 for (int col = 0; col < columnConfiguration.getColumnCount(); col++) {
                     final Element cellElem = createCellElement();
                     tr.appendChild(cellElem);
-                    paintCell(cellElem, row, col);
                 }
+
+                refreshRow(tr, row);
 
                 /*
                  * TODO [[optimize]] [[rowwidth]]: When this method is updated
@@ -798,44 +775,27 @@ public class Escalator extends Widget {
         }
 
         void refreshRow(final Node tr, final int logicalRowIndex) {
-            /*
-             * TODO [[API]]: update this to use the row-based updater API in
-             * Artur's "design" project in github.
-             */
+            flyweightRow.setup((Element) tr, logicalRowIndex);
+            updater.updateCells(flyweightRow, flyweightRow.getCells());
 
-            for (int col = 0; col < tr.getChildCount(); col++) {
-                paintCell((Element) tr.getChild(col), logicalRowIndex, col);
-            }
+            /*
+             * the "assert" guarantees that this code is run only during
+             * development/debugging.
+             */
+            assert flyweightRow.teardown();
         }
 
-        private void paintCell(final Element cellElem, final int row,
-                final int col) {
-            /*
-             * TODO [[optimize]]: Only do this for new cells or when a row
-             * height or column width actually changes. Or is it a NOOP when
-             * re-setting a property to its current value?
-             */
+        /**
+         * Create and setup an empty cell element.
+         * 
+         * @return a set-up empty cell element
+         */
+        public Element createCellElement() {
+            final Element cellElem = DOM.createElement(getCellElementTagName());
             cellElem.getStyle().setHeight(ROW_HEIGHT_PX, Unit.PX);
             cellElem.getStyle().setWidth(COLUMN_WIDTH_PX, Unit.PX);
-
-            /*
-             * TODO [[optimize]]: Don't create a new instance every time a cell
-             * is rendered
-             */
-            final CellImpl cell = new CellImpl(cellElem, row, col);
-            /*
-             * TODO [[optimize]] [[API]]: Let the renderer know whether the cell
-             * is new so that it can use a quicker route if it can deduct that
-             * the elements that it has put there in a previous rendering is
-             * still there and the contents only need to be updated.
-             */
-            renderer.renderCell(cell);
-
-            /*
-             * TODO [[optimize]]: Only do this for cells that have not already
-             * been rendered.
-             */
             cellElem.addClassName(CLASS_NAME + "-cell");
+            return cellElem;
         }
 
         /**
@@ -902,8 +862,9 @@ public class Escalator extends Widget {
                     final Element cellElem = createCellElement();
                     referenceCell = insertAfterReferenceAndUpdateIt(tr,
                             cellElem, referenceCell);
-                    paintCell(cellElem, topVisualRowLogicalIndex + row, col);
                 }
+
+                refreshRow(tr, topVisualRowLogicalIndex + row);
 
                 /*
                  * TODO [[optimize]] [[colwidth]]: When this method is updated
@@ -972,8 +933,8 @@ public class Escalator extends Widget {
         }
 
         @Override
-        protected Element createCellElement() {
-            return DOM.createTH();
+        protected String getCellElementTagName() {
+            return "th";
         }
     }
 
@@ -983,8 +944,8 @@ public class Escalator extends Widget {
         }
 
         @Override
-        protected Element createCellElement() {
-            return DOM.createTD();
+        protected String getCellElementTagName() {
+            return "td";
         }
     }
 
@@ -1778,8 +1739,8 @@ public class Escalator extends Widget {
         }
 
         @Override
-        protected Element createCellElement() {
-            return DOM.createTD();
+        protected String getCellElementTagName() {
+            return "td";
         }
 
         private double calculateHeight() {
@@ -1849,6 +1810,7 @@ public class Escalator extends Widget {
         public void removeColumns(final int index, final int numberOfColumns) {
             assertArgumentsAreValidAndWithinRange(index, numberOfColumns);
 
+            flyweightRow.removeCells(index, numberOfColumns);
             columns -= numberOfColumns;
 
             if (hasSomethingInDom()) {
@@ -1898,6 +1860,7 @@ public class Escalator extends Widget {
                                 + numberOfColumns);
             }
 
+            flyweightRow.addCells(index, numberOfColumns);
             columns += numberOfColumns;
             if (hasColumnAndRowData()) {
                 for (final AbstractRowContainer rowContainer : rowContainers) {
@@ -1911,6 +1874,8 @@ public class Escalator extends Widget {
             return columns;
         }
     }
+
+    private FlyweightRow flyweightRow = new FlyweightRow(this);
 
     /** The {@code <thead/>} tag. */
     private final Element headElem = DOM.createTHead();
@@ -2195,9 +2160,6 @@ public class Escalator extends Widget {
      * @throws IndexOutOfBoundsException
      *             if {@code columnIndex} is not a valid index for an existing
      *             column
-     * @throws IllegalArgumentException
-     *             if {@code columnIndex} indicates a column that is set to be
-     *             frozen
      */
     public void scrollToColumn(final int columnIndex,
             final ScrollDestination destination)
@@ -2227,9 +2189,6 @@ public class Escalator extends Widget {
      *             if {@code destination} is {@link ScrollDestination#MIDDLE},
      *             because having a padding on a centered column is undefined
      *             behavior
-     * @throws IllegalArgumentException
-     *             if {@code columnIndex} indicates a column that is set to be
-     *             frozen
      */
     public void scrollToColumn(final int columnIndex,
             final ScrollDestination destination, final int padding)
@@ -2290,7 +2249,7 @@ public class Escalator extends Widget {
      * @throws IllegalArgumentException
      *             if {@code destination} is {@link ScrollDestination#MIDDLE},
      *             because having a padding on a centered row is undefined
-     *             behavior.
+     *             behavior
      */
     public void scrollToRow(final int rowIndex,
             final ScrollDestination destination, final int padding)

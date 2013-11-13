@@ -28,24 +28,24 @@ package com.vaadin.client.ui.grid;
  */
 public interface RowContainer {
     /**
-     * Returns the current {@link CellRenderer} used to render cells.
+     * Returns the current {@link EscalatorUpdater} used to render cells.
      * 
-     * @return the current cell renderer
+     * @return the current escalator updater
      */
-    public CellRenderer getCellRenderer();
+    public EscalatorUpdater getEscalatorUpdater();
 
     /**
-     * Sets the {@link CellRenderer} to use when displaying data in the
+     * Sets the {@link EscalatorUpdater} to use when displaying data in the
      * escalator.
      * 
-     * @param cellRenderer
-     *            the cell renderer to use to render cells. May not be
+     * @param escalatorUpdater
+     *            the escalator updater to use to render cells. May not be
      *            <code>null</code>
      * @throws IllegalArgumentException
      *             if {@code cellRenderer} is <code>null</code>
-     * @see CellRenderer#NULL_RENDERER
+     * @see EscalatorUpdater#NULL
      */
-    public void setCellRenderer(CellRenderer cellRenderer)
+    public void setEscalatorUpdater(EscalatorUpdater escalatorUpdater)
             throws IllegalArgumentException;
 
     /**
@@ -74,7 +74,7 @@ public interface RowContainer {
      * downwards.
      * <p>
      * The contents of the inserted rows will subsequently be queried from the
-     * cell renderer.
+     * escalator updater.
      * <p>
      * <em>Note:</em> Only the contents of the inserted rows will be rendered.
      * If inserting new rows affects the contents of existing rows,
@@ -86,7 +86,7 @@ public interface RowContainer {
      *            {@link #getRowCount()} to add rows at the end
      * @param numberOfRows
      *            the number of rows to insert after the <code>index</code>
-     * @see #setCellRenderer(CellRenderer)
+     * @see #setEscalatorUpdater(EscalatorUpdater)
      * @throws IndexOutOfBoundsException
      *             if <code>index</code> is not an integer in the range
      *             <code>[0..{@link #getRowCount()}]</code>
@@ -106,7 +106,7 @@ public interface RowContainer {
      *            the index of the first row that will be updated
      * @param numberOfRows
      *            the number of rows to update, starting from the index
-     * @see #setCellRenderer(CellRenderer)
+     * @see #setEscalatorUpdater(EscalatorUpdater)
      * @throws IndexOutOfBoundsException
      *             if any integer number in the range
      *             <code>[index..(index+numberOfColumns)]</code> is not an
