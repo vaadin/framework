@@ -33,6 +33,7 @@ import org.junit.runners.model.Statement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.tests.tb3.AbstractTB3Test.BrowserUtil;
+import com.vaadin.tests.tb3.AbstractTB3Test.RunLocally;
 
 /**
  * This runner is loosely based on FactoryTestRunner by Ted Young
@@ -76,10 +77,11 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
                     .getOnlyConstructor().newInstance();
             Collection<DesiredCapabilities> desiredCapabilites = testClassInstance
                     .getBrowsersToTest();
-            if (testClassInstance.runLocally()) {
+            if (testClassInstance.getClass().getAnnotation(RunLocally.class) != null) {
                 desiredCapabilites = new ArrayList<DesiredCapabilities>();
-                desiredCapabilites.add(BrowserUtil
-                        .firefox(MultiBrowserTest.TESTED_FIREFOX_VERSION));
+                desiredCapabilites.add(testClassInstance.getClass()
+                        .getAnnotation(RunLocally.class).value()
+                        .getDesiredCapabilities());
             }
             for (DesiredCapabilities capabilities : desiredCapabilites) {
 

@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 import com.vaadin.tests.tb3.PrivateTB3Configuration;
 
 /**
@@ -47,8 +47,7 @@ public abstract class AbstractIntegrationTest extends PrivateTB3Configuration {
 
     @Parameters
     public static Collection<DesiredCapabilities> getBrowsersForTest() {
-        return Collections.singleton(BrowserUtil
-                .firefox(MultiBrowserTest.TESTED_FIREFOX_VERSION));
+        return Collections.singleton(Browser.FIREFOX.getDesiredCapabilities());
     }
 
 }

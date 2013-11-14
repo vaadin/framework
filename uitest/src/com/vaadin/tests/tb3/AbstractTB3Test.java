@@ -16,6 +16,10 @@
 
 package com.vaadin.tests.tb3;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +43,7 @@ import com.vaadin.server.UIProvider;
 import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 import com.vaadin.ui.UI;
 
 /**
@@ -76,8 +81,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     private boolean push = false;
     {
         // Default browser to run on unless setDesiredCapabilities is called
-        desiredCapabilities = BrowserUtil
-                .firefox(MultiBrowserTest.TESTED_FIREFOX_VERSION);
+        desiredCapabilities = Browser.FIREFOX.getDesiredCapabilities();
     }
 
     /**
@@ -103,8 +107,9 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      *             If something goes wrong
      */
     protected void setupDriver() throws Exception {
-        if (runLocally()) {
-            setupLocalDriver();
+        RunLocally runLocally = getClass().getAnnotation(RunLocally.class);
+        if (runLocally != null) {
+            setupLocalDriver(runLocally.value().getDesiredCapabilities());
             return;
         }
         DesiredCapabilities capabilities = getDesiredCapabilities();
@@ -129,14 +134,10 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
 
     }
 
-    /**
-     * Override and return true to run the test locally. This method is only to
-     * be used for developing tests.
-     * 
-     * @return true to run the test on a local browser, false to use the hub
-     */
-    public boolean runLocally() {
-        return false;
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    public @interface RunLocally {
+        public Browser value() default Browser.FIREFOX;
     }
 
     /**
@@ -144,7 +145,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * for debug purposes. Used only when {@link #runLocally()} is overridden to
      * return true;
      */
-    protected abstract void setupLocalDriver();
+    protected abstract void setupLocalDriver(
+            DesiredCapabilities desiredCapabilities);
 
     /**
      * Opens the given test (defined by {@link #getTestUrl()}, optionally with
@@ -212,9 +214,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @return The browsers to run the test on
      */
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singletonList(BrowserUtil
-                .firefox(MultiBrowserTest.TESTED_FIREFOX_VERSION));
-
+        return Collections.singletonList(Browser.FIREFOX
+                .getDesiredCapabilities());
     }
 
     /**
@@ -738,8 +739,53 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
          * @return true if the capabilities refer to IE8, false otherwise
          */
         public static boolean isIE8(DesiredCapabilities capabilities) {
-            return BrowserType.IE.equals(capabilities.getBrowserName())
-                    && "8".equals(capabilities.getVersion());
+            return isIE(capabilities) && "8".equals(capabilities.getVersion());
+        }
+
+        /**
+         * @param capabilities
+         *            The capabilities to check
+         * @return true if the capabilities refer to Internet Explorer, false
+         *         otherwise
+         */
+        public static boolean isIE(DesiredCapabilities capabilities) {
+            return BrowserType.IE.equals(capabilities.getBrowserName());
+        }
+
+        /**
+         * @param capabilities
+         *            The capabilities to check
+         * @return true if the capabilities refer to Chrome, false otherwise
+         */
+        public static boolean isChrome(DesiredCapabilities capabilities) {
+            return BrowserType.CHROME.equals(capabilities.getBrowserName());
+        }
+
+        /**
+         * @param capabilities
+         *            The capabilities to check
+         * @return true if the capabilities refer to Opera, false otherwise
+         */
+        public static boolean isOpera(DesiredCapabilities capabilities) {
+            return BrowserType.OPERA.equals(capabilities.getBrowserName());
+        }
+
+        /**
+         * @param capabilities
+         *            The capabilities to check
+         * @return true if the capabilities refer to Safari, false otherwise
+         */
+        public static boolean isSafari(DesiredCapabilities capabilities) {
+            return BrowserType.SAFARI.equals(capabilities.getBrowserName());
+        }
+
+        /**
+         * @param capabilities
+         *            The capabilities to check
+         * @return true if the capabilities refer to Firefox, false otherwise
+         */
+        public static boolean isFirefox(DesiredCapabilities capabilities) {
+            return BrowserType.FIREFOX.equals(capabilities.getBrowserName());
         }
 
         /**
@@ -751,21 +797,19 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
          */
         public static String getBrowserIdentifier(
                 DesiredCapabilities capabilities) {
-            String browserName = capabilities.getBrowserName();
-
-            if (BrowserType.IE.equals(browserName)) {
+            if (isIE(capabilities)) {
                 return "InternetExplorer";
-            } else if (BrowserType.FIREFOX.equals(browserName)) {
+            } else if (isFirefox(capabilities)) {
                 return "Firefox";
-            } else if (BrowserType.CHROME.equals(browserName)) {
+            } else if (isChrome(capabilities)) {
                 return "Chrome";
-            } else if (BrowserType.SAFARI.equals(browserName)) {
+            } else if (isSafari(capabilities)) {
                 return "Safari";
-            } else if (BrowserType.OPERA.equals(browserName)) {
+            } else if (isOpera(capabilities)) {
                 return "Opera";
             }
 
-            return browserName;
+            return capabilities.getBrowserName();
         }
 
         /**

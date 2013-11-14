@@ -30,23 +30,22 @@ public class VerifyBrowserVersionTest extends MultiBrowserTest {
 
     {
         expectedUserAgent
-                .put(BrowserUtil
-                        .firefox(MultiBrowserTest.TESTED_FIREFOX_VERSION),
+                .put(Browser.FIREFOX.getDesiredCapabilities(),
                         "Mozilla/5.0 (Windows NT 6.1; rv:24.0) Gecko/20100101 Firefox/24.0");
         expectedUserAgent
-                .put(BrowserUtil.ie(8),
+                .put(Browser.IE8.getDesiredCapabilities(),
                         "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)");
         expectedUserAgent
-                .put(BrowserUtil.ie(9),
+                .put(Browser.IE9.getDesiredCapabilities(),
                         "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
         expectedUserAgent
-                .put(BrowserUtil.ie(10),
+                .put(Browser.IE10.getDesiredCapabilities(),
                         "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)");
         expectedUserAgent
-                .put(BrowserUtil.ie(11),
+                .put(Browser.IE11.getDesiredCapabilities(),
                         "Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko");
         expectedUserAgent
-                .put(BrowserUtil.chrome(MultiBrowserTest.TESTED_CHROME_VERSION),
+                .put(Browser.CHROME.getDesiredCapabilities(),
                         "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.76 Safari/537.36");
 
     }

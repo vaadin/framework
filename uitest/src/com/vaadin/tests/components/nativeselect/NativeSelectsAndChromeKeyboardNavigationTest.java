@@ -22,7 +22,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -44,9 +43,8 @@ public class NativeSelectsAndChromeKeyboardNavigationTest extends
      */
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        DesiredCapabilities chrome = DesiredCapabilities.chrome();
-        chrome.setPlatform(Platform.WINDOWS);
-        return Collections.singletonList(chrome);
+        return Collections.singletonList(Browser.CHROME
+                .getDesiredCapabilities());
     }
 
     @Test
@@ -83,30 +81,6 @@ public class NativeSelectsAndChromeKeyboardNavigationTest extends
     protected Class<?> getUIClass() {
         return NativeSelects.class;
     }
-
-    // Uncomment this to debug test in local/portforwarded chromedriver
-    // @Override
-    // protected void setupLocalDriver() {
-    // WebDriver chromeDriver;
-    // try {
-    // chromeDriver = new RemoteWebDriver(
-    // new URL("http://localhost:9515"), getBrowsersToTest()
-    // .iterator().next());
-    // setDriver(chromeDriver);
-    // } catch (MalformedURLException e) {
-    // e.printStackTrace();
-    // }
-    // }
-    //
-    // /*
-    // * (non-Javadoc)
-    // *
-    // * @see com.vaadin.tests.tb3.AbstractTB3Test#runLocally()
-    // */
-    // @Override
-    // public boolean runLocally() {
-    // return false;
-    // }
 
     /**
      * @since
