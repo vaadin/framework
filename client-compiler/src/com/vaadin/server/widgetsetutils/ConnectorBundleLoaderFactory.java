@@ -38,11 +38,13 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameterizedType;
+import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.InvokationHandler;
@@ -449,7 +451,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writeIdentifiers(w, bundle);
         writeGwtConstructors(w, bundle);
         writeReturnTypes(w, bundle);
-        writeInvokers(w, bundle);
+        writeInvokers(logger, w, bundle);
         writeParamTypes(w, bundle);
         writeProxys(w, bundle);
         writeDelayedInfo(w, bundle);
@@ -700,10 +702,14 @@ public class ConnectorBundleLoaderFactory extends Generator {
         }
     }
 
-    private void writeInvokers(SplittingSourceWriter w, ConnectorBundle bundle) {
+    private void writeInvokers(TreeLogger logger, SplittingSourceWriter w,
+            ConnectorBundle bundle) throws UnableToCompleteException {
         Map<JClassType, Set<JMethod>> needsInvoker = bundle.getNeedsInvoker();
         for (Entry<JClassType, Set<JMethod>> entry : needsInvoker.entrySet()) {
             JClassType type = entry.getKey();
+
+            TreeLogger typeLogger = logger.branch(Type.DEBUG,
+                    "Creating invokers for " + type);
 
             Set<JMethod> methods = entry.getValue();
             for (JMethod method : methods) {
@@ -711,46 +717,142 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 writeClassLiteral(w, type);
                 w.print(", \"");
                 w.print(escape(method.getName()));
-                w.println("\", new Invoker() {");
-                w.indent();
+                w.print("\",");
 
-                w.println("public Object invoke(Object target, Object[] params) {");
-                w.indent();
+                if (method.isPublic()) {
+                    typeLogger.log(Type.DEBUG, "Invoking " + method.getName()
+                            + " using java");
 
-                JType returnType = method.getReturnType();
-                boolean hasReturnType = !"void".equals(returnType
-                        .getQualifiedSourceName());
-                if (hasReturnType) {
-                    w.print("return ");
+                    writeJavaInvoker(w, type, method);
+                } else {
+                    TreeLogger methodLogger = typeLogger.branch(Type.DEBUG,
+                            "Invoking " + method.getName() + " using jsni");
+                    // Must use JSNI to access non-public methods
+                    writeJsniInvoker(methodLogger, w, type, method);
                 }
 
-                JType[] parameterTypes = method.getParameterTypes();
-
-                w.print("((" + type.getQualifiedSourceName() + ") target)."
-                        + method.getName() + "(");
-                for (int i = 0; i < parameterTypes.length; i++) {
-                    JType parameterType = parameterTypes[i];
-                    if (i != 0) {
-                        w.print(", ");
-                    }
-                    String parameterTypeName = getBoxedTypeName(parameterType);
-                    w.print("(" + parameterTypeName + ") params[" + i + "]");
-                }
                 w.println(");");
-
-                if (!hasReturnType) {
-                    w.println("return null;");
-                }
-
-                w.outdent();
-                w.println("}");
-
-                w.outdent();
-                w.println("});");
 
                 w.splitIfNeeded();
             }
         }
+    }
+
+    private void writeJsniInvoker(TreeLogger logger, SplittingSourceWriter w,
+            JClassType type, JMethod method) throws UnableToCompleteException {
+        w.println("new JsniInvoker() {");
+        w.indent();
+
+        w.println(
+                "protected native Object jsniInvoke(Object target, %s<Object> params) /*-{ ",
+                JsArrayObject.class.getName());
+        w.indent();
+
+        JType returnType = method.getReturnType();
+        boolean hasReturnType = !"void".equals(returnType
+                .getQualifiedSourceName());
+
+        // Note that void is also a primitive type
+        boolean hasPrimitiveReturnType = hasReturnType
+                && returnType.isPrimitive() != null;
+
+        if (hasReturnType) {
+            w.print("return ");
+
+            if (hasPrimitiveReturnType) {
+                // Integer.valueOf(expression);
+                w.print("@%s::valueOf(%s)(", returnType.isPrimitive()
+                        .getQualifiedBoxedSourceName(), returnType
+                        .getJNISignature());
+
+                // Implementation tested briefly, but I don't dare leave it
+                // enabled since we are not using it in the framework and we
+                // have not tests for it.
+                logger.log(Type.ERROR,
+                        "JSNI invocation is not yet supported for methods with "
+                                + "primitive return types. Change your method "
+                                + "to public to be able to use conventional"
+                                + " Java invoking instead.");
+                throw new UnableToCompleteException();
+            }
+        }
+
+        JType[] parameterTypes = method.getParameterTypes();
+
+        w.print("target.@%s::" + method.getName() + "(*)(", method
+                .getEnclosingType().getQualifiedSourceName());
+        for (int i = 0; i < parameterTypes.length; i++) {
+            if (i != 0) {
+                w.print(", ");
+            }
+
+            w.print("params[" + i + "]");
+
+            JPrimitiveType primitive = parameterTypes[i].isPrimitive();
+            if (primitive != null) {
+                // param.intValue();
+                w.print(".@%s::%sValue()()",
+                        primitive.getQualifiedBoxedSourceName(),
+                        primitive.getQualifiedSourceName());
+            }
+        }
+
+        if (hasPrimitiveReturnType) {
+            assert hasReturnType;
+            w.print(")");
+        }
+
+        w.println(");");
+
+        if (!hasReturnType) {
+            w.println("return null;");
+        }
+
+        w.outdent();
+        w.println("}-*/;");
+
+        w.outdent();
+        w.print("}");
+    }
+
+    private void writeJavaInvoker(SplittingSourceWriter w, JClassType type,
+            JMethod method) {
+        w.println("new Invoker() {");
+        w.indent();
+
+        w.println("public Object invoke(Object target, Object[] params) {");
+        w.indent();
+
+        JType returnType = method.getReturnType();
+        boolean hasReturnType = !"void".equals(returnType
+                .getQualifiedSourceName());
+        if (hasReturnType) {
+            w.print("return ");
+        }
+
+        JType[] parameterTypes = method.getParameterTypes();
+
+        w.print("((" + type.getQualifiedSourceName() + ") target)."
+                + method.getName() + "(");
+        for (int i = 0; i < parameterTypes.length; i++) {
+            JType parameterType = parameterTypes[i];
+            if (i != 0) {
+                w.print(", ");
+            }
+            String parameterTypeName = getBoxedTypeName(parameterType);
+            w.print("(" + parameterTypeName + ") params[" + i + "]");
+        }
+        w.println(");");
+
+        if (!hasReturnType) {
+            w.println("return null;");
+        }
+
+        w.outdent();
+        w.println("}");
+
+        w.outdent();
+        w.print("}");
     }
 
     private void writeReturnTypes(SplittingSourceWriter w,
