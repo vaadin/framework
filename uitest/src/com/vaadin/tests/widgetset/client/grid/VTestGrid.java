@@ -187,4 +187,22 @@ public class VTestGrid extends Composite {
         data.removeColumns(offset, amount);
         escalator.getColumnConfiguration().removeColumns(offset, amount);
     }
+
+    @Override
+    public void setWidth(String width) {
+        escalator.setWidth(width);
+    }
+
+    @Override
+    public void setHeight(String height) {
+        escalator.setHeight(height);
+    }
+
+    public RowContainer getHeader() {
+        return escalator.getHeader();
+    }
+
+    public RowContainer getFooter() {
+        return escalator.getFooter();
+    }
 }

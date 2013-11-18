@@ -254,7 +254,8 @@ public class Grid<T> extends Composite {
         };
     }
 
-    // TODO Should be implemented bu the data sources
+    // TODO Should be implemented by the data sources
+    @SuppressWarnings("static-method")
     private EscalatorUpdater createBodyUpdater() {
         return new EscalatorUpdater() {
 
@@ -452,5 +453,15 @@ public class Grid<T> extends Composite {
      */
     public boolean isFooterVisible() {
         return escalator.getFooter().getRowCount() > 0;
+    }
+
+    @Override
+    public void setHeight(String height) {
+        escalator.setHeight(height);
+    }
+
+    @Override
+    public void setWidth(String width) {
+        escalator.setWidth(width);
     }
 }

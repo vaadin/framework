@@ -31,4 +31,12 @@ public interface TestGridClientRpc extends ClientRpc {
     void scrollToColumn(int index, String destination, int padding);
 
     void setFrozenColumns(int frozenColumns);
+
+    void insertHeaders(int index, int amount);
+
+    void removeHeaders(int index, int amount);
+
+    void insertFooters(int index, int amount);
+
+    void removeFooters(int index, int amount);
 }

@@ -16,6 +16,8 @@
 
 package com.vaadin.tests.components.grid;
 
+import java.util.Random;
+
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -39,6 +41,8 @@ public class BasicEscalator extends AbstractTestUI {
     public static final String INSERT_ROWS_AMOUNT = "ira";
     public static final String INSERT_ROWS_BUTTON = "irb";
 
+    private final Random random = new Random();
+
     @Override
     protected void setup(final VaadinRequest request) {
         final TestGrid grid = new TestGrid();
@@ -55,7 +59,6 @@ public class BasicEscalator extends AbstractTestUI {
         insertRowsLayout.addComponent(new Button("insert rows",
                 new Button.ClickListener() {
                     @Override
-                    @SuppressWarnings("boxing")
                     public void buttonClick(final ClickEvent event) {
                         final int offset = Integer.parseInt(insertRowsOffset
                                 .getValue());
@@ -78,7 +81,6 @@ public class BasicEscalator extends AbstractTestUI {
         removeRowsLayout.addComponent(new Button("remove rows",
                 new Button.ClickListener() {
                     @Override
-                    @SuppressWarnings("boxing")
                     public void buttonClick(final ClickEvent event) {
                         final int offset = Integer.parseInt(removeRowsOffset
                                 .getValue());
@@ -97,7 +99,6 @@ public class BasicEscalator extends AbstractTestUI {
         insertColumnsLayout.addComponent(new Button("insert columns",
                 new Button.ClickListener() {
                     @Override
-                    @SuppressWarnings("boxing")
                     public void buttonClick(final ClickEvent event) {
                         final int offset = Integer.parseInt(insertColumnsOffset
                                 .getValue());
@@ -116,7 +117,6 @@ public class BasicEscalator extends AbstractTestUI {
         removeColumnsLayout.addComponent(new Button("remove columns",
                 new Button.ClickListener() {
                     @Override
-                    @SuppressWarnings("boxing")
                     public void buttonClick(final ClickEvent event) {
                         final int offset = Integer.parseInt(removeColumnsOffset
                                 .getValue());
@@ -213,6 +213,56 @@ public class BasicEscalator extends AbstractTestUI {
                         freezeCount.setValue(null);
                     }
                 })));
+
+        addComponent(new Button("Resize randomly", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                int width = random.nextInt(300) + 500;
+                int height = random.nextInt(300) + 200;
+                grid.setWidth(width + "px");
+                grid.setHeight(height + "px");
+            }
+        }));
+
+        addComponent(new Button("Random headers count",
+                new Button.ClickListener() {
+                    private int headers = 1;
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        int diff = 0;
+                        while (diff == 0) {
+                            final int nextHeaders = random.nextInt(4);
+                            diff = nextHeaders - headers;
+                            headers = nextHeaders;
+                        }
+                        if (diff > 0) {
+                            grid.insertHeaders(0, diff);
+                        } else if (diff < 0) {
+                            grid.removeHeaders(0, -diff);
+                        }
+                    }
+                }));
+
+        addComponent(new Button("Random footers count",
+                new Button.ClickListener() {
+                    private int footers = 1;
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        int diff = 0;
+                        while (diff == 0) {
+                            final int nextFooters = random.nextInt(4);
+                            diff = nextFooters - footers;
+                            footers = nextFooters;
+                        }
+                        if (diff > 0) {
+                            grid.insertFooters(0, diff);
+                        } else if (diff < 0) {
+                            grid.removeFooters(0, -diff);
+                        }
+                    }
+                }));
 
     }
 

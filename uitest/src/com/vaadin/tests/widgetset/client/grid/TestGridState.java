@@ -22,9 +22,8 @@ import com.vaadin.shared.AbstractComponentState;
  * @author Vaadin Ltd
  */
 public class TestGridState extends AbstractComponentState {
-    // public static final String DEFAULT_HEIGHT = "400px";
-    public static final String DEFAULT_HEIGHT = "405px";
+    public static final String DEFAULT_HEIGHT = "400.0px";
 
     /* TODO: this should be "100%" before setting final. */
-    public static final String DEFAULT_WIDTH = "800px";
+    public static final String DEFAULT_WIDTH = "800.0px";
 }

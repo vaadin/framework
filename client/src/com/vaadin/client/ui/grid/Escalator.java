@@ -39,6 +39,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.grid.Escalator.JsniUtil.TouchHandlerBundle;
 import com.vaadin.client.ui.grid.PositionFunction.AbsolutePosition;
@@ -1135,11 +1136,13 @@ public class Escalator extends Widget {
         }
 
         protected void recalculateSectionHeight() {
+            Profiler.enter("Escalator.AbstractRowContainer.recalculateSectionHeight");
             final double newHeight = root.getChildCount() * ROW_HEIGHT_PX;
             if (newHeight != height) {
                 height = newHeight;
                 sectionHeightCalculated();
             }
+            Profiler.leave("Escalator.AbstractRowContainer.recalculateSectionHeight");
         }
 
         /**
@@ -1153,6 +1156,8 @@ public class Escalator extends Widget {
          */
         @Override
         public void refreshRows(final int index, final int numberOfRows) {
+            Profiler.enter("Escalator.AbstractRowContainer.refreshRows");
+
             assertArgumentsAreValidAndWithinRange(index, numberOfRows);
 
             if (!isAttached()) {
@@ -1181,6 +1186,8 @@ public class Escalator extends Widget {
                     refreshRow(tr, row);
                 }
             }
+
+            Profiler.leave("Escalator.AbstractRowContainer.refreshRows");
         }
 
         void refreshRow(final Node tr, final int logicalRowIndex) {
@@ -1344,7 +1351,7 @@ public class Escalator extends Widget {
         @Override
         protected void paintRemoveRows(final int index, final int numberOfRows) {
             for (int i = index; i < index + numberOfRows; i++) {
-                final Element tr = (Element) root.getChild(i);
+                final Element tr = (Element) root.getChild(index);
                 // TODO [[widgets]]
                 tr.removeFromParent();
             }
@@ -1365,6 +1372,18 @@ public class Escalator extends Widget {
         @Override
         protected int getTopVisualRowLogicalIndex() {
             return 0;
+        }
+
+        @Override
+        public void insertRows(int index, int numberOfRows) {
+            super.insertRows(index, numberOfRows);
+            recalculateElementSizes();
+        }
+
+        @Override
+        public void removeRows(int index, int numberOfRows) {
+            super.removeRows(index, numberOfRows);
+            recalculateElementSizes();
         }
     }
 
@@ -1422,6 +1441,10 @@ public class Escalator extends Widget {
         }
 
         public void updateEscalatorRowsOnScroll() {
+            if (visualRowOrder.isEmpty()) {
+                return;
+            }
+
             final int topRowPos = getRowTop(visualRowOrder.getFirst());
             // TODO [[mpixscroll]]
             final int scrollTop = tBodyScrollTop;
@@ -1746,12 +1769,25 @@ public class Escalator extends Widget {
             return rowTopPosMap.get(tr);
         }
 
+        /**
+         * Adds new physical escalator rows to the DOM at the given index if
+         * there's still a need for more escalator rows.
+         * <p>
+         * If Escalator already is at (or beyond) max capacity, this method does
+         * nothing to the DOM.
+         * 
+         * @param index
+         *            the index at which to add new escalator rows.
+         *            <em>Note:</em>It is assumed that the index is both the
+         *            visual index and the logical index.
+         * @param numberOfRows
+         *            the number of rows to add at <code>index</code>
+         * @return a list of the added rows
+         */
         private List<Element> fillAndPopulateEscalatorRowsIfNeeded(
                 final int index, final int numberOfRows) {
 
-            final int maxEscalatorRowCapacity = (int) Math
-                    .ceil(calculateHeight() / ROW_HEIGHT_PX) + 1;
-            final int escalatorRowsStillFit = maxEscalatorRowCapacity
+            final int escalatorRowsStillFit = getMaxEscalatorRowCapacity()
                     - root.getChildCount();
             final int escalatorRowsNeeded = Math.min(numberOfRows,
                     escalatorRowsStillFit);
@@ -1782,6 +1818,17 @@ public class Escalator extends Widget {
             } else {
                 return new ArrayList<Element>();
             }
+        }
+
+        private int getMaxEscalatorRowCapacity() {
+            final int maxEscalatorRowCapacity = (int) Math
+                    .ceil(calculateHeight() / ROW_HEIGHT_PX) + 1;
+            /*
+             * maxEscalatorRowCapacity can become negative if the headers and
+             * footers start to overlap. This is a crazy situation, but Vaadin
+             * blinks the components a lot, so it's feasible.
+             */
+            return Math.max(0, maxEscalatorRowCapacity);
         }
 
         @Override
@@ -2195,6 +2242,8 @@ public class Escalator extends Widget {
 
         @Override
         public void refreshRows(final int index, final int numberOfRows) {
+            Profiler.enter("Escalator.BodyRowContainer.refreshRows");
+
             final Range visualRange = convertToVisual(Range.withLength(index,
                     numberOfRows));
 
@@ -2207,6 +2256,8 @@ public class Escalator extends Widget {
                             firstLogicalRowIndex + rowNumber);
                 }
             }
+
+            Profiler.leave("Escalator.BodyRowContainer.refreshRows");
         }
 
         @Override
@@ -2234,6 +2285,156 @@ public class Escalator extends Widget {
             } else {
                 return 0;
             }
+        }
+
+        /**
+         * Make sure that there is a correct amount of escalator rows: Add more
+         * if needed, or remove any superfluous ones.
+         * <p>
+         * This method should be called when e.g. the height of the Escalator
+         * changes.
+         */
+        public void verifyEscalatorCount() {
+            /*
+             * This method indeed has a smell very similar to paintRemoveRows
+             * and paintInsertRows.
+             * 
+             * Unfortunately, those the code can't trivially be shared, since
+             * there are some slight differences in the respective
+             * responsibilities. The "paint" methods fake the addition and
+             * removal of rows, and make sure to either push existing data out
+             * of view, or draw new data into view. Only in some special cases
+             * will the DOM element count change.
+             * 
+             * This method, however, has the explicit responsibility to verify
+             * that when "something" happens, we still have the correct amount
+             * of escalator rows in the DOM, and if not, we make sure to modify
+             * that count. Only in some special cases do we need to take into
+             * account other things than simply modifying the DOM element count.
+             */
+
+            Profiler.enter("Escalator.BodyRowContainer.verifyEscalatorCount");
+
+            if (!isAttached()) {
+                return;
+            }
+
+            final int maxEscalatorRows = getMaxEscalatorRowCapacity();
+            final int neededEscalatorRows = Math.min(maxEscalatorRows,
+                    body.getRowCount());
+            final int neededEscalatorRowsDiff = neededEscalatorRows
+                    - visualRowOrder.size();
+
+            if (neededEscalatorRowsDiff > 0) {
+                // needs more
+
+                /*
+                 * This is a workaround for the issue where we might be scrolled
+                 * to the bottom, and the widget expands beyond the content
+                 * range
+                 */
+
+                final int index = visualRowOrder.size();
+                final int nextLastLogicalIndex;
+                if (!visualRowOrder.isEmpty()) {
+                    nextLastLogicalIndex = getLogicalRowIndex(visualRowOrder
+                            .getLast()) + 1;
+                } else {
+                    nextLastLogicalIndex = 0;
+                }
+
+                final boolean contentWillFit = nextLastLogicalIndex < getRowCount()
+                        - neededEscalatorRowsDiff;
+                if (contentWillFit) {
+                    final List<Element> addedRows = fillAndPopulateEscalatorRowsIfNeeded(
+                            index, neededEscalatorRowsDiff);
+
+                    /*
+                     * Since fillAndPopulateEscalatorRowsIfNeeded operates on
+                     * the assumption that index == visual index == logical
+                     * index, we thank for the added escalator rows, but since
+                     * they're painted in the wrong CSS position, we need to
+                     * move them to their actual locations.
+                     * 
+                     * Note: this is the second (see body.paintInsertRows)
+                     * occasion where fillAndPopulateEscalatorRowsIfNeeded would
+                     * behave "more correctly" if it only would add escalator
+                     * rows to the DOM and appropriate bookkeping, and not
+                     * actually populate them :/
+                     */
+                    moveAndUpdateEscalatorRows(
+                            Range.withLength(index, addedRows.size()), index,
+                            nextLastLogicalIndex);
+                } else {
+                    /*
+                     * TODO [[optimize]]
+                     * 
+                     * We're scrolled so far down that all rows can't be simply
+                     * appended at the end, since we might start displaying
+                     * escalator rows that don't exist. To avoid the mess that
+                     * is body.paintRemoveRows, this is a dirty hack that dumbs
+                     * the problem down to a more basic and already-solved
+                     * problem:
+                     * 
+                     * 1) scroll all the way up 2) add the missing escalator
+                     * rows 3) scroll back to the original position.
+                     * 
+                     * Letting the browser scroll back to our original position
+                     * will automatically solve any possible overflow problems,
+                     * since the browser will not allow us to scroll beyond the
+                     * actual content.
+                     */
+
+                    final double oldScrollTop = getScrollTop();
+                    setScrollTop(0);
+                    scroller.onScroll();
+                    fillAndPopulateEscalatorRowsIfNeeded(index,
+                            neededEscalatorRowsDiff);
+                    setScrollTop(oldScrollTop);
+                    scroller.onScroll();
+                    internalScrollEventCalls++;
+                }
+            }
+
+            else if (neededEscalatorRowsDiff < 0) {
+                // needs less
+
+                final ListIterator<Element> iter = visualRowOrder
+                        .listIterator(visualRowOrder.size());
+                for (int i = 0; i < -neededEscalatorRowsDiff; i++) {
+                    // TODO [[widgets]]
+                    final Element last = iter.previous();
+                    last.removeFromParent();
+                    iter.remove();
+                }
+
+                /*
+                 * If we were scrolled to the bottom so that we didn't have an
+                 * extra escalator row at the bottom, we'll probably end up with
+                 * blank space at the bottom of the escalator, and one extra row
+                 * above the header.
+                 * 
+                 * Experimentation idea #1: calculate "scrollbottom" vs content
+                 * bottom and remove one row from top, rest from bottom. This
+                 * FAILED, since setHeight has already happened, thus we never
+                 * will detect ourselves having been scrolled all the way to the
+                 * bottom.
+                 */
+
+                if (!visualRowOrder.isEmpty()) {
+                    final int firstRowTop = getRowTop(visualRowOrder.getFirst());
+                    final double firstRowMinTop = tBodyScrollTop
+                            - ROW_HEIGHT_PX;
+                    if (firstRowTop < firstRowMinTop) {
+                        final int newLogicalIndex = getLogicalRowIndex(visualRowOrder
+                                .getLast()) + 1;
+                        moveAndUpdateEscalatorRows(Range.withOnly(0),
+                                visualRowOrder.size(), newLogicalIndex);
+                    }
+                }
+            }
+
+            Profiler.leave("Escalator.BodyRowContainer.verifyEscalatorCount");
         }
     }
 
@@ -2416,6 +2617,9 @@ public class Escalator extends Widget {
      */
     private static final double RATIO_OF_40_DEGREES = Math.tan(2 * Math.PI / 9);
 
+    private static final String DEFAULT_WIDTH = "400.0px";
+    private static final String DEFAULT_HEIGHT = "400.0px";
+
     private FlyweightRow flyweightRow = new FlyweightRow(this);
 
     /** The {@code <thead/>} tag. */
@@ -2538,6 +2742,10 @@ public class Escalator extends Widget {
                 }
             }
         });
+
+        // init default dimensions
+        setHeight(null);
+        setWidth(null);
     }
 
     private void detectAndApplyPositionFunction() {
@@ -2639,7 +2847,8 @@ public class Escalator extends Widget {
      */
     @Override
     public void setWidth(final String width) {
-        super.setWidth(width);
+        super.setWidth(width != null && !width.isEmpty() ? width
+                : DEFAULT_WIDTH);
         recalculateElementSizes();
     }
 
@@ -2649,7 +2858,8 @@ public class Escalator extends Widget {
      */
     @Override
     public void setHeight(final String height) {
-        super.setHeight(height);
+        super.setHeight(height != null && !height.isEmpty() ? height
+                : DEFAULT_HEIGHT);
         recalculateElementSizes();
     }
 
@@ -2827,6 +3037,11 @@ public class Escalator extends Widget {
     }
 
     private void recalculateElementSizes() {
+        if (!isAttached()) {
+            return;
+        }
+
+        Profiler.enter("Escalator.recalculateElementSizes");
         width = getPreciseWidth(getElement());
         height = getPreciseHeight(getElement());
         for (final AbstractRowContainer rowContainer : rowContainers) {
@@ -2835,6 +3050,8 @@ public class Escalator extends Widget {
 
         scroller.recalculateTableWrapperSize();
         scroller.recalculateScrollbarsForVirtualViewport();
+        body.verifyEscalatorCount();
+        Profiler.leave("Escalator.recalculateElementSizes");
     }
 
     private boolean needsVerticalScrollbars() {

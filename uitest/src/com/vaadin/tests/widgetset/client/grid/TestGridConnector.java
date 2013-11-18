@@ -82,6 +82,26 @@ public class TestGridConnector extends AbstractComponentConnector {
                 getWidget().getColumnConfiguration().setFrozenColumnCount(
                         frozenColumns);
             }
+
+            @Override
+            public void insertHeaders(int index, int amount) {
+                getWidget().getHeader().insertRows(index, amount);
+            }
+
+            @Override
+            public void removeHeaders(int index, int amount) {
+                getWidget().getHeader().removeRows(index, amount);
+            }
+
+            @Override
+            public void insertFooters(int index, int amount) {
+                getWidget().getFooter().insertRows(index, amount);
+            }
+
+            @Override
+            public void removeFooters(int index, int amount) {
+                getWidget().getFooter().removeRows(index, amount);
+            }
         });
     }
 

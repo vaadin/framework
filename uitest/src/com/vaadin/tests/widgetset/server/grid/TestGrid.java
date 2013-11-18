@@ -65,4 +65,20 @@ public class TestGrid extends AbstractComponent {
     public void setFrozenColumns(int frozenColumns) {
         rpc().setFrozenColumns(frozenColumns);
     }
+
+    public void insertHeaders(int index, int amount) {
+        rpc().insertHeaders(index, amount);
+    }
+
+    public void removeHeaders(int index, int amount) {
+        rpc().removeHeaders(index, amount);
+    }
+
+    public void insertFooters(int index, int amount) {
+        rpc().insertFooters(index, amount);
+    }
+
+    public void removeFooters(int index, int amount) {
+        rpc().removeFooters(index, amount);
+    }
 }

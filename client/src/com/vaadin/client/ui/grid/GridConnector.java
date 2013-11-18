@@ -51,23 +51,13 @@ public class GridConnector extends AbstractComponentConnector {
     private Map<String, CustomGridColumn> columnIdToColumn = new HashMap<String, CustomGridColumn>();
 
     @Override
-    protected void init() {
-
-        // FIXME Escalator bug requires to do this when running compiled. Not
-        // required when in devmode. Most likely Escalator.setWidth() is called
-        // before attach and measuring from DOM does not work then.
-        getWidget().setWidth(getState().width);
-        getWidget().setHeight(getState().height);
-
-    }
-
-    @Override
     protected Grid<String[]> createWidget() {
         // FIXME Shouldn't be needed after #12873 has been fixed.
         return new Grid<String[]>();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Grid<String[]> getWidget() {
         return (Grid<String[]>) super.getWidget();
     }
@@ -155,7 +145,7 @@ public class GridConnector extends AbstractComponentConnector {
      * @param state
      *            The state to update from
      */
-    private void updateColumnFromState(GridColumn<String[]> column,
+    private static void updateColumnFromState(GridColumn<String[]> column,
             GridColumnState state) {
         column.setHeaderCaption(state.header);
         column.setFooterCaption(state.footer);
