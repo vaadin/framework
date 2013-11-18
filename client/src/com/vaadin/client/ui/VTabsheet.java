@@ -421,10 +421,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             }
 
             int index = getWidgetIndex(caption.getParent());
-            // IE needs explicit focus()
-            if (BrowserInfo.get().isIE()) {
-                getTabsheet().focus();
-            }
             getTabsheet().onTabSelected(index);
         }
 
@@ -619,6 +615,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             client.updateVariable(id, "selected", tabKeys.get(tabIndex)
                     .toString(), true);
             waitingForResponse = true;
+
+            tb.getTab(tabIndex).focus(); // move keyboard focus to active tab
         }
         // Note that we return true when tabIndex == activeTabIndex; the active
         // tab could be selected, it's just a no-op.
