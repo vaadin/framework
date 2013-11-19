@@ -107,16 +107,19 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      *             If something goes wrong
      */
     protected void setupDriver() throws Exception {
+        DesiredCapabilities capabilities;
+
         RunLocally runLocally = getClass().getAnnotation(RunLocally.class);
         if (runLocally != null) {
-            setupLocalDriver(runLocally.value().getDesiredCapabilities());
-            return;
-        }
-        DesiredCapabilities capabilities = getDesiredCapabilities();
+            capabilities = runLocally.value().getDesiredCapabilities();
+            setupLocalDriver(capabilities);
+        } else {
+            capabilities = getDesiredCapabilities();
 
-        WebDriver dr = TestBench.createDriver(new RemoteWebDriver(new URL(
-                getHubURL()), capabilities));
-        setDriver(dr);
+            WebDriver dr = TestBench.createDriver(new RemoteWebDriver(new URL(
+                    getHubURL()), capabilities));
+            setDriver(dr);
+        }
 
         int w = SCREENSHOT_WIDTH;
         int h = SCREENSHOT_HEIGHT;
