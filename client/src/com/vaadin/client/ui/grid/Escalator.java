@@ -24,8 +24,12 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
+import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
@@ -36,6 +40,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.Util;
+import com.vaadin.client.ui.grid.Escalator.JsniUtil.TouchHandlerBundle;
 import com.vaadin.client.ui.grid.PositionFunction.AbsolutePosition;
 import com.vaadin.client.ui.grid.PositionFunction.Translate3DPosition;
 import com.vaadin.client.ui.grid.PositionFunction.TranslatePosition;
@@ -148,9 +153,38 @@ abstract class JsniWorkaround {
      */
     protected final JavaScriptObject mousewheelListenerFunction;
 
+    /**
+     * A JavaScript function that handles the touch start DOM event, and passes
+     * it on to Java code.
+     * 
+     * @see TouchHandlerBundle#touchStart(Escalator.JsniUtil.TouchHandlerBundle.CustomTouchEvent)
+     */
+    protected JavaScriptObject touchStartFunction;
+
+    /**
+     * A JavaScript function that handles the touch move DOM event, and passes
+     * it on to Java code.
+     * 
+     * @see TouchHandlerBundle#touchMove(Escalator.JsniUtil.TouchHandlerBundle.CustomTouchEvent)
+     */
+    protected JavaScriptObject touchMoveFunction;
+
+    /**
+     * A JavaScript function that handles the touch end and cancel DOM events,
+     * and passes them on to Java code.
+     * 
+     * @see TouchHandlerBundle#touchEnd(Escalator.JsniUtil.TouchHandlerBundle.CustomTouchEvent)
+     */
+    protected JavaScriptObject touchEndFunction;
+
     protected JsniWorkaround(final Escalator escalator) {
         scrollListenerFunction = createScrollListenerFunction(escalator);
         mousewheelListenerFunction = createMousewheelListenerFunction(escalator);
+
+        final TouchHandlerBundle bundle = new TouchHandlerBundle(escalator);
+        touchStartFunction = bundle.getTouchStartHandler();
+        touchMoveFunction = bundle.getTouchMoveHandler();
+        touchEndFunction = bundle.getTouchEndHandler();
     }
 
     /**
@@ -217,6 +251,279 @@ public class Escalator extends Widget {
      * being supported.
      */
 
+    /**
+     * A utility class that contains utility methods that are usually called
+     * from JSNI.
+     * <p>
+     * The methods are moved in this class to minimize the amount of JSNI code
+     * as much as feasible.
+     */
+    static class JsniUtil {
+        public static class TouchHandlerBundle {
+
+            /**
+             * A <a href=
+             * "http://www.gwtproject.org/doc/latest/DevGuideCodingBasicsOverlay.html"
+             * >JavaScriptObject overlay</a> for the <a
+             * href="http://www.w3.org/TR/touch-events/">JavaScript
+             * TouchEvent</a> object.
+             * <p>
+             * This needs to be used in the touch event handlers, since GWT's
+             * {@link com.google.gwt.event.dom.client.TouchEvent TouchEvent}
+             * can't be cast from the JSNI call, and the
+             * {@link com.google.gwt.dom.client.NativeEvent NativeEvent} isn't
+             * properly populated with the correct values.
+             */
+            private final static class CustomTouchEvent extends
+                    JavaScriptObject {
+                protected CustomTouchEvent() {
+                }
+
+                public native NativeEvent getNativeEvent()
+                /*-{
+                    return this;
+                }-*/;
+
+                public native int getPageX()
+                /*-{
+                    return this.targetTouches[0].pageX;
+                }-*/;
+
+                public native int getPageY()
+                /*-{
+                    return this.targetTouches[0].pageY;
+                }-*/;
+            }
+
+            private double touches = 0;
+            private int lastX = 0;
+            private int lastY = 0;
+            private double lastTime = 0;
+            private boolean snappedScrollEnabled = true;
+            private double deltaX = 0;
+            private double deltaY = 0;
+
+            private final Escalator escalator;
+
+            public TouchHandlerBundle(final Escalator escalator) {
+                this.escalator = escalator;
+            }
+
+            public native JavaScriptObject getTouchStartHandler()
+            /*-{
+                // we need to store "this", since it won't be preserved on call.
+                var self = this;
+                return $entry(function (e) {
+                    self.@com.vaadin.client.ui.grid.Escalator.JsniUtil.TouchHandlerBundle::touchStart(*)(e);
+                });
+            }-*/;
+
+            public native JavaScriptObject getTouchMoveHandler()
+            /*-{
+                // we need to store "this", since it won't be preserved on call.
+                var self = this;
+                return $entry(function (e) {
+                    self.@com.vaadin.client.ui.grid.Escalator.JsniUtil.TouchHandlerBundle::touchMove(*)(e);
+                });
+            }-*/;
+
+            public native JavaScriptObject getTouchEndHandler()
+            /*-{
+                // we need to store "this", since it won't be preserved on call.
+                var self = this;
+                return $entry(function (e) {
+                    self.@com.vaadin.client.ui.grid.Escalator.JsniUtil.TouchHandlerBundle::touchEnd(*)(e);
+                });
+            }-*/;
+
+            public void touchStart(final CustomTouchEvent event) {
+                touches++;
+                if (touches != 1) {
+                    return;
+                }
+
+                escalator.scroller.cancelFlickScroll();
+
+                lastX = event.getPageX();
+                lastY = event.getPageY();
+
+                snappedScrollEnabled = true;
+            }
+
+            public void touchMove(final CustomTouchEvent event) {
+                if (touches != 1) {
+                    return;
+                }
+
+                final int x = event.getPageX();
+                final int y = event.getPageY();
+                deltaX = x - lastX;
+                deltaY = y - lastY;
+                lastX = x;
+                lastY = y;
+                lastTime = Duration.currentTimeMillis();
+
+                // snap the scroll to the major axes, at first.
+                if (snappedScrollEnabled) {
+                    final double oldDeltaX = deltaX;
+                    final double oldDeltaY = deltaY;
+
+                    /*
+                     * Scrolling snaps to 40 degrees vs. flick scroll's 30
+                     * degrees, since slow movements have poor resolution - it's
+                     * easy to interpret a slight angle as a steep angle, since
+                     * the sample rate is "unnecessarily" high. 40 simply felt
+                     * better than 30.
+                     */
+                    final double[] snapped = Escalator.snapDeltas(deltaX,
+                            deltaY, RATIO_OF_40_DEGREES);
+                    deltaX = snapped[0];
+                    deltaY = snapped[1];
+
+                    /*
+                     * if the snap failed once, let's follow the pointer from
+                     * now on.
+                     */
+                    if (oldDeltaX != 0 && deltaX == oldDeltaX && oldDeltaY != 0
+                            && deltaY == oldDeltaY) {
+                        snappedScrollEnabled = false;
+                    }
+                }
+
+                moveScrollFromEvent(escalator.scrollerElem, -deltaX, -deltaY,
+                        event.getNativeEvent());
+            }
+
+            public void touchEnd(@SuppressWarnings("unused")
+            final CustomTouchEvent event) {
+                touches--;
+
+                if (touches == 0) {
+                    escalator.scroller.handleFlickScroll(deltaX, deltaY,
+                            lastTime);
+                }
+            }
+        }
+
+        public static void moveScrollFromEvent(final Element scrollerElem,
+                final double deltaX, final double deltaY,
+                final NativeEvent event) {
+            /*
+             * TODO [[optimize]]: instead of calling getScollLeft/Top that
+             * potentially causes a reflow, update a new scroll absolute
+             * position.
+             */
+            if (!Double.isNaN(deltaX) && deltaX != 0) {
+                scrollerElem
+                        .setScrollLeft((int) (scrollerElem.getScrollLeft() + deltaX));
+            }
+            if (!Double.isNaN(deltaY) && deltaY != 0) {
+                scrollerElem
+                        .setScrollTop((int) (scrollerElem.getScrollTop() + deltaY));
+            }
+
+            /*
+             * TODO: only prevent if not scrolled to end/bottom. Or no? UX team
+             * needs to decide.
+             */
+            event.preventDefault();
+        }
+    }
+
+    /**
+     * The animation callback that handles the animation of a touch-scrolling
+     * flick with inertia.
+     */
+    private class FlickScrollAnimator implements AnimationCallback {
+        private static final double MIN_MAGNITUDE = 0.005;
+        private static final double MAX_SPEED = 7;
+
+        private double velX;
+        private double velY;
+        private double prevTime = 0;
+        private int millisLeft;
+        private double xFric;
+        private double yFric;
+
+        private boolean cancelled = false;
+
+        /**
+         * Creates a new animation callback to handle touch-scrolling flick with
+         * inertia.
+         * 
+         * @param deltaX
+         *            the last scrolling delta in the x-axis in a touchmove
+         * @param deltaY
+         *            the last scrolling delta in the y-axis in a touchmove
+         * @param lastTime
+         *            the timestamp of the last touchmove
+         */
+        public FlickScrollAnimator(final double deltaX, final double deltaY,
+                final double lastTime) {
+            final double currentTimeMillis = Duration.currentTimeMillis();
+            velX = Math.max(Math.min(deltaX / (currentTimeMillis - lastTime),
+                    MAX_SPEED), -MAX_SPEED);
+            velY = Math.max(Math.min(deltaY / (currentTimeMillis - lastTime),
+                    MAX_SPEED), -MAX_SPEED);
+            prevTime = lastTime;
+
+            /*
+             * If we're scrolling mainly in one of the four major directions,
+             * and only a teeny bit to any other side, snap the scroll to that
+             * major direction instead.
+             */
+            final double[] snapDeltas = Escalator.snapDeltas(velX, velY,
+                    RATIO_OF_30_DEGREES);
+            velX = snapDeltas[0];
+            velY = snapDeltas[1];
+
+            if (velX * velX + velY * velY > MIN_MAGNITUDE) {
+                millisLeft = 1500;
+                xFric = velX / millisLeft;
+                yFric = velY / millisLeft;
+            } else {
+                millisLeft = 0;
+            }
+
+        }
+
+        @Override
+        public void execute(final double timestamp) {
+            if (millisLeft <= 0 || cancelled) {
+                scroller.currentFlickScroller = null;
+                return;
+            }
+
+            final int lastLeft = tBodyScrollLeft;
+            final int lastTop = tBodyScrollTop;
+
+            final double timeDiff = timestamp - prevTime;
+            setScrollLeft((int) (tBodyScrollLeft - velX * timeDiff));
+            velX -= xFric * timeDiff;
+
+            setScrollTop(tBodyScrollTop - velY * timeDiff);
+            velY -= yFric * timeDiff;
+
+            cancelBecauseOfEdgeOrCornerMaybe(lastLeft, lastTop);
+
+            prevTime = timestamp;
+            millisLeft -= timeDiff;
+            AnimationScheduler.get().requestAnimationFrame(this);
+        }
+
+        private void cancelBecauseOfEdgeOrCornerMaybe(final int lastLeft,
+                final int lastTop) {
+            if (lastLeft == scrollerElem.getScrollLeft()
+                    && lastTop == scrollerElem.getScrollTop()) {
+                cancel();
+            }
+        }
+
+        public void cancel() {
+            cancelled = true;
+        }
+    }
+
     private static final int ROW_HEIGHT_PX = 20;
     private static final int COLUMN_WIDTH_PX = 100;
 
@@ -224,6 +531,11 @@ public class Escalator extends Widget {
     private class Scroller extends JsniWorkaround {
         private double lastScrollTop = 0;
         private double lastScrollLeft = 0;
+        /**
+         * The current flick scroll animator. This is <code>null</code> if the
+         * view isn't animating a flick scroll at the moment.
+         */
+        private FlickScrollAnimator currentFlickScroller;
 
         public Scroller() {
             super(Escalator.this);
@@ -251,24 +563,8 @@ public class Escalator extends Widget {
                     deltaY = -0.5*e.wheelDelta;
                 }
 
-                // TODO [[optimize]]: instead of using "+=" that potentially
-                // causes a reflow, update a new scroll absolute position.
-                if (!isNaN(deltaY)) {
-                    // the scroll event handler will make sure the content is moved around appropriately
-                    esc.@com.vaadin.client.ui.grid.Escalator::scrollerElem.scrollTop += deltaY;
-                }
-                
-                if (!isNaN(deltaX)) {
-                    // the scroll event handler will make sure the content is moved around appropriately
-                    esc.@com.vaadin.client.ui.grid.Escalator::scrollerElem.scrollLeft += deltaX;
-                }
-
-                // TODO: only prevent if not scrolled to end/bottom. Or no? UX team needs to decide.
-                if (e.preventDefault) {
-                    e.preventDefault();
-                } else {
-                    e.returnValue = false;
-                }
+                var scroller = esc.@com.vaadin.client.ui.grid.Escalator::scrollerElem;
+                @com.vaadin.client.ui.grid.Escalator.JsniUtil::moveScrollFromEvent(*)(scroller, deltaX, deltaY, e);
             });
         }-*/;
 
@@ -401,6 +697,14 @@ public class Escalator extends Widget {
         }
 
         public native void attachScrollListener(Element element)
+        /*
+         * Attaching events with JSNI instead of the GWT event mechanism because
+         * GWT didn't provide enough details in events, or triggering the event
+         * handlers with GWT bindings was unsuccessful. Maybe, with more time
+         * and skill, it could be done with better success. JavaScript overlay
+         * types might work. This might also get rid of the JsniWorkaround
+         * class.
+         */
         /*-{
              if (element.addEventListener) {
                  element.addEventListener("scroll", this.@com.vaadin.client.ui.grid.JsniWorkaround::scrollListenerFunction);
@@ -410,6 +714,14 @@ public class Escalator extends Widget {
         }-*/;
 
         public native void detachScrollListener(Element element)
+        /*
+         * Attaching events with JSNI instead of the GWT event mechanism because
+         * GWT didn't provide enough details in events, or triggering the event
+         * handlers with GWT bindings was unsuccessful. Maybe, with more time
+         * and skill, it could be done with better success. JavaScript overlay
+         * types might work. This might also get rid of the JsniWorkaround
+         * class.
+         */
         /*-{
             if (element.addEventListener) {
                 element.removeEventListener("scroll", this.@com.vaadin.client.ui.grid.JsniWorkaround::scrollListenerFunction);
@@ -419,8 +731,15 @@ public class Escalator extends Widget {
         }-*/;
 
         public native void attachMousewheelListener(Element element)
+        /*
+         * Attaching events with JSNI instead of the GWT event mechanism because
+         * GWT didn't provide enough details in events, or triggering the event
+         * handlers with GWT bindings was unsuccessful. Maybe, with more time
+         * and skill, it could be done with better success. JavaScript overlay
+         * types might work. This might also get rid of the JsniWorkaround
+         * class.
+         */
         /*-{
-
             if (element.addEventListener) {
                 // firefox likes "wheel", while others use "mousewheel"
                 var eventName = element.onwheel===undefined?"mousewheel":"wheel";
@@ -432,6 +751,14 @@ public class Escalator extends Widget {
         }-*/;
 
         public native void detachMousewheelListener(Element element)
+        /*
+         * Detaching events with JSNI instead of the GWT event mechanism because
+         * GWT didn't provide enough details in events, or triggering the event
+         * handlers with GWT bindings was unsuccessful. Maybe, with more time
+         * and skill, it could be done with better success. JavaScript overlay
+         * types might work. This might also get rid of the JsniWorkaround
+         * class.
+         */
         /*-{
             if (element.addEventListener) {
                 // firefox likes "wheel", while others use "mousewheel"
@@ -442,6 +769,70 @@ public class Escalator extends Widget {
                 element.detachEvent("onmousewheel", this.@com.vaadin.client.ui.grid.JsniWorkaround::mousewheelListenerFunction);
             }
         }-*/;
+
+        public native void attachTouchListeners(Element element)
+        /*
+         * Detaching events with JSNI instead of the GWT event mechanism because
+         * GWT didn't provide enough details in events, or triggering the event
+         * handlers with GWT bindings was unsuccessful. Maybe, with more time
+         * and skill, it could be done with better success. JavaScript overlay
+         * types might work. This might also get rid of the JsniWorkaround
+         * class.
+         */
+        /*-{
+            if (element.addEventListener) {
+                element.addEventListener("touchstart", this.@com.vaadin.client.ui.grid.JsniWorkaround::touchStartFunction);
+                element.addEventListener("touchmove", this.@com.vaadin.client.ui.grid.JsniWorkaround::touchMoveFunction);
+                element.addEventListener("touchend", this.@com.vaadin.client.ui.grid.JsniWorkaround::touchEndFunction);
+                element.addEventListener("touchcancel", this.@com.vaadin.client.ui.grid.JsniWorkaround::touchEndFunction);
+            } else {
+                // this would be IE8, but we don't support it with touch
+            }
+        }-*/;
+
+        public native void detachTouchListeners(Element element)
+        /*
+         * Detaching events with JSNI instead of the GWT event mechanism because
+         * GWT didn't provide enough details in events, or triggering the event
+         * handlers with GWT bindings was unsuccessful. Maybe, with more time
+         * and skill, it could be done with better success. JavaScript overlay
+         * types might work. This might also get rid of the JsniWorkaround
+         * class.
+         */
+        /*-{
+            if (element.removeEventListener) {
+                element.removeEventListener("touchstart", this.@com.vaadin.client.ui.grid.JsniWorkaround::touchStartFunction);
+                element.removeEventListener("touchmove", this.@com.vaadin.client.ui.grid.JsniWorkaround::touchMoveFunction);
+                element.removeEventListener("touchend", this.@com.vaadin.client.ui.grid.JsniWorkaround::touchEndFunction);
+                element.removeEventListener("touchcancel", this.@com.vaadin.client.ui.grid.JsniWorkaround::touchEndFunction);
+            } else {
+                // this would be IE8, but we don't support it with touch
+            }
+        }-*/;
+
+        private void cancelFlickScroll() {
+            if (currentFlickScroller != null) {
+                currentFlickScroller.cancel();
+            }
+        }
+
+        /**
+         * Handles a touch-based flick scroll.
+         * 
+         * @param deltaX
+         *            the last scrolling delta in the x-axis in a touchmove
+         * @param deltaY
+         *            the last scrolling delta in the y-axis in a touchmove
+         * @param lastTime
+         *            the timestamp of the last touchmove
+         */
+        public void handleFlickScroll(double deltaX, double deltaY,
+                double lastTime) {
+            currentFlickScroller = new FlickScrollAnimator(deltaX, deltaY,
+                    lastTime);
+            AnimationScheduler.get()
+                    .requestAnimationFrame(currentFlickScroller);
+        }
 
         public void scrollToColumn(final int columnIndex,
                 final ScrollDestination destination, final int padding) {
@@ -1026,9 +1417,6 @@ public class Escalator extends Widget {
         @Deprecated
         private final Map<Element, Integer> rowTopPosMap = new HashMap<Element, Integer>();
 
-        private int tBodyScrollTop = 0;
-        private int tBodyScrollLeft = 0;
-
         public BodyRowContainer(final Element bodyElement) {
             super(bodyElement);
         }
@@ -1489,7 +1877,7 @@ public class Escalator extends Widget {
                      * anything to scroll by. Let's make sure the viewport is
                      * scrolled to top, to render any rows possibly left above.
                      */
-                    body.setBodyScrollPosition(body.tBodyScrollLeft, 0);
+                    body.setBodyScrollPosition(tBodyScrollLeft, 0);
 
                     /*
                      * We might have removed some rows from the middle, so let's
@@ -2006,6 +2394,28 @@ public class Escalator extends Widget {
         }
     }
 
+    // abs(atan(y/x))*(180/PI) = n deg, x = 1, solve y
+    /**
+     * The solution to
+     * <code>|tan<sup>-1</sup>(<i>x</i>)|&times;(180/&pi;)&nbsp;=&nbsp;30</code>
+     * .
+     * <p>
+     * This constant is placed in the Escalator class, instead of an inner
+     * class, since even mathematical expressions aren't allowed in non-static
+     * inner classes for constants.
+     */
+    private static final double RATIO_OF_30_DEGREES = 1 / Math.sqrt(3);
+    /**
+     * The solution to
+     * <code>|tan<sup>-1</sup>(<i>x</i>)|&times;(180/&pi;)&nbsp;=&nbsp;40</code>
+     * .
+     * <p>
+     * This constant is placed in the Escalator class, instead of an inner
+     * class, since even mathematical expressions aren't allowed in non-static
+     * inner classes for constants.
+     */
+    private static final double RATIO_OF_40_DEGREES = Math.tan(2 * Math.PI / 9);
+
     private FlyweightRow flyweightRow = new FlyweightRow(this);
 
     /** The {@code <thead/>} tag. */
@@ -2014,6 +2424,9 @@ public class Escalator extends Widget {
     private final Element bodyElem = DOM.createTBody();
     /** The {@code <tfoot/>} tag. */
     private final Element footElem = DOM.createTFoot();
+
+    private int tBodyScrollTop = 0;
+    private int tBodyScrollLeft = 0;
 
     private final Element scrollerElem = DOM.createDiv();
     private final Element innerScrollerElem = DOM.createDiv();
@@ -2117,9 +2530,11 @@ public class Escalator extends Widget {
 
                     scroller.attachScrollListener(scrollerElem);
                     scroller.attachMousewheelListener(getElement());
+                    scroller.attachTouchListeners(getElement());
                 } else {
                     scroller.detachScrollListener(scrollerElem);
                     scroller.detachMousewheelListener(getElement());
+                    scroller.detachTouchListeners(getElement());
                 }
             }
         });
@@ -2439,7 +2854,7 @@ public class Escalator extends Widget {
     }
 
     /**
-     * A routing method for {@link Scroller#onScroll(double, double)}
+     * A routing method for {@link Scroller#onScroll(double, double)}.
      * <p>
      * This is a workaround for GWT and JSNI unable to properly handle inner
      * classes, so instead we call the outer class' method, which calls the
@@ -2450,5 +2865,37 @@ public class Escalator extends Widget {
      */
     private void onScroll() {
         scroller.onScroll();
+    }
+
+    /**
+     * Snap deltas of x and y to the major four axes (up, down, left, right)
+     * with a threshold of a number of degrees from those axes.
+     * 
+     * @param deltaX
+     *            the delta in the x axis
+     * @param deltaY
+     *            the delta in the y axis
+     * @param thresholdRatio
+     *            the threshold in ratio (0..1) between x and y for when to snap
+     * @return a two-element array: <code>[snappedX, snappedY]</code>
+     */
+    private static double[] snapDeltas(final double deltaX,
+            final double deltaY, final double thresholdRatio) {
+
+        final double[] array = new double[2];
+        if (deltaX != 0 && deltaY != 0) {
+            final double aDeltaX = Math.abs(deltaX);
+            final double aDeltaY = Math.abs(deltaY);
+            final double yRatio = aDeltaY / aDeltaX;
+            final double xRatio = aDeltaX / aDeltaY;
+
+            array[0] = (xRatio < thresholdRatio) ? 0 : deltaX;
+            array[1] = (yRatio < thresholdRatio) ? 0 : deltaY;
+        } else {
+            array[0] = deltaX;
+            array[1] = deltaY;
+        }
+
+        return array;
     }
 }
