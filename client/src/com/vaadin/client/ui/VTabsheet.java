@@ -1164,12 +1164,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             activeTabIndex = newTabIndex;
             if (isScrolledTabs()) {
                 // Scroll until the new active tab is visible
-                int newScrollerIndex = scrollerIndex;
-                while (tb.getTab(activeTabIndex).getAbsoluteLeft() < getAbsoluteLeft()
-                        && newScrollerIndex != -1) {
-                    newScrollerIndex = tb.scrollLeft(newScrollerIndex);
+                while (!tb.getTab(activeTabIndex).isVisible()) {
+                    scrollerIndex = tb.scrollLeft(scrollerIndex);
                 }
-                scrollerIndex = newScrollerIndex;
                 updateTabScroller();
             }
         }
