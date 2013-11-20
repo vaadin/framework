@@ -428,7 +428,7 @@ public class VTooltip extends VWindowOverlay {
             } else {
                 updatePosition(event, isFocused);
 
-                if (isShowing()) {
+                if (isShowing() && !isFocused) {
                     replaceCurrentTooltip();
                 } else {
                     showTooltip();

@@ -33,8 +33,6 @@ public class VNativeButton extends Button implements ClickHandler {
 
     public static final String CLASSNAME = "v-nativebutton";
 
-    protected String width = null;
-
     /** For internal use only. May be removed or replaced in the future. */
     public String paintableId;
 
@@ -121,12 +119,6 @@ public class VNativeButton extends Button implements ClickHandler {
                 cancelNextClick = true;
             }
         }
-    }
-
-    @Override
-    public void setWidth(String width) {
-        this.width = width;
-        super.setWidth(width);
     }
 
     /*

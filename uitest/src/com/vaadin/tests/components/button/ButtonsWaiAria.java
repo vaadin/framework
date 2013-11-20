@@ -32,6 +32,10 @@ public class ButtonsWaiAria extends ComponentTestCase<Button> {
         l = createButton("Tooltip Button", nat);
         l.setDescription("Tooltip");
         addTestComponent(l);
+
+        l = createButton("Another tooltip", nat);
+        l.setDescription("Another");
+        addTestComponent(l);
     }
 
     private Button createButton(String text, boolean nativeButton) {

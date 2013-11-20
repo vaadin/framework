@@ -124,6 +124,13 @@ public class GridLayoutTests extends AbstractLayoutTests {
         final Button button5 = new Button("Test remove row 0");
         final Button button6 = new Button("Test remove comp row3");
 
+        button1.setId("testButton1");
+        button2.setId("testButton2");
+        button3.setId("testButton3");
+        button4.setId("testButton4");
+        button5.setId("testButton5");
+        button6.setId("testButton6");
+
         baseLayout.addComponent(button1);
         baseLayout.addComponent(button2);
         baseLayout.addComponent(button3);
@@ -223,6 +230,10 @@ public class GridLayoutTests extends AbstractLayoutTests {
         final Button button4 = new Button("undefined size+add, table");
 
         glo.replaceComponent(x22, x22 = getTestTable());
+        button1.setId("testButton1");
+        button2.setId("testButton2");
+        button3.setId("testButton3");
+        button4.setId("testButton4");
 
         baseLayout.addComponent(button1);
         baseLayout.addComponent(button2);
@@ -287,6 +298,11 @@ public class GridLayoutTests extends AbstractLayoutTests {
         final Button button2 = new Button("set all cols expand 0.25");
         final Button button3 = new Button("set row 0 expand 0.5");
         final Button button4 = new Button("set row 3 expand 0.2");
+        button1.setId("testButton1");
+        button2.setId("testButton2");
+        button3.setId("testButton3");
+        button4.setId("testButton4");
+
         glo.setHeight("400px");
         glo.replaceComponent(x22, x22 = getTestTable());
 
@@ -396,6 +412,11 @@ public class GridLayoutTests extends AbstractLayoutTests {
         final Button button3 = new Button("Set fixed width and height 75%");
         final Button button4 = new Button("Set size full");
 
+        button1.setId("testButton1");
+        button2.setId("testButton2");
+        button3.setId("testButton3");
+        button4.setId("testButton4");
+
         glo.replaceComponent(x22, x22 = getTestTable());
 
         baseLayout.addComponent(button1);
@@ -466,6 +487,11 @@ public class GridLayoutTests extends AbstractLayoutTests {
         final Button button2 = new Button("Set spacing on");
         final Button button3 = new Button("Set margin off");
         final Button button4 = new Button("Set spacing off");
+
+        button1.setId("testButton1");
+        button2.setId("testButton2");
+        button3.setId("testButton3");
+        button4.setId("testButton4");
 
         baseLayout.addComponent(button1);
         baseLayout.addComponent(button2);

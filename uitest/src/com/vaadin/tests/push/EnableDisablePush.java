@@ -27,7 +27,7 @@ public class EnableDisablePush extends AbstractTestUI {
 
             try {
                 while (true) {
-                    TimeUnit.MILLISECONDS.sleep(1000);
+                    TimeUnit.MILLISECONDS.sleep(500);
 
                     access(new Runnable() {
                         @Override
@@ -42,6 +42,9 @@ public class EnableDisablePush extends AbstractTestUI {
                             }
                         }
                     });
+                    if (c == 3) {
+                        return;
+                    }
                 }
             } catch (InterruptedException e) {
             } catch (UIDetachedException e) {

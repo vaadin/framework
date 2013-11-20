@@ -559,7 +559,7 @@ TOKEN : /* basic tokens */
                          ( <H> )? ( <H> )? 
                     ( [ " ", "\t" , "\n" , "\r", "\f" ] )? >
   | < #ESCAPE     : <UNICODE> | ( "\\" [ " "-"~","\200"-"\377" ] ) >
-  | < #NMSTART    : ("-")?[ "a"-"z"] | <NONASCII> | <ESCAPE> >
+  | < #NMSTART    : ("-")?[ "a"-"z","_"] | <NONASCII> | <ESCAPE> >
   | < #NMCHAR	  : ["a"-"z", "0"-"9", "-", "_"] | <NONASCII> | <ESCAPE> >
   | < #STRINGCHAR : [ "\t"," ","!","#","$","%","&","("-"~" ] 
                     | "\\\n" | "\\\r\n" | "\\\r" | "\\\f" 
@@ -848,7 +848,7 @@ void keyframes() :
   n=<KEY_FRAME_SYM> ( <S> )* {keyframeName = n.image;}
   (n = <IDENT>{animationname += n.image; }|n = < INTERPOLATION >{ animationname += n.image; })+(<S>)*
    {start = true; documentHandler.startKeyFrames(keyframeName, animationname); }
-   <LBRACE> ( <S> )* ( keyframeSelector() )* <RBRACE> ( <S> )*
+   <LBRACE> ( <S> )* ( keyframeSelector() | contentDirective() )* <RBRACE> ( <S> )*
  } catch (ParseException e) {
      reportError(getLocator(), e);
      skipStatement();
@@ -862,14 +862,17 @@ void keyframes() :
 void keyframeSelector():
 {
     Token n;
+    String selector = "";
     boolean start = false;
 }
 {
     try{
-        (n = <FROM> | n = <TO> | n = <PERCENTAGE>) (<S>)* <LBRACE> (<S>)*
+        (n = <FROM> | n = <TO> | n = <PERCENTAGE>){selector += n.image;} (<S>)*
+        (<COMMA> (<S>)* (n = <FROM> | n = <TO> | n = <PERCENTAGE>) {selector += (", " + n.image);} (<S>)* )*
+          <LBRACE> (<S>)*
         {
           start = true;
-          documentHandler.startKeyframeSelector(n.image);
+          documentHandler.startKeyframeSelector(selector);
          }
         (ifContentStatement() | microsoftExtension() )*
         <RBRACE> (<S>)*
@@ -1269,18 +1272,12 @@ String simple_selector(String selector, char comb) :
     pseudoElt = null;
 }
 {
-    ( simple_current=element_name() 
-	( cond=hash(cond) | cond=_class(cond) 
-	  | cond=attrib(cond) | cond=pseudo(cond) )*
-      | cond=hash(cond) ( cond=_class(cond) 
-			  | cond=attrib(cond) | cond=pseudo(cond) )*
-      | cond=_class(cond) ( cond=hash(cond) | cond=_class(cond) 
-		       | cond=attrib(cond) | cond=pseudo(cond) )*
-      | cond=pseudo(cond) ( cond=hash(cond) | cond=_class(cond) 
-		       | cond=attrib(cond) | cond=pseudo(cond) )*
-      | cond=attrib(cond) ( cond=hash(cond) | cond=_class(cond) 
-			    | cond=attrib(cond) | cond=pseudo(cond) )*
-      )
+    (  (simple_current=element_name() 
+	     ( cond=hash(cond) | cond=_class(cond) 
+	       | cond=attrib(cond) | cond=pseudo(cond) )* )
+     | ( cond = hash(cond) | cond=_class(cond) 
+	     | cond=attrib(cond) | cond=pseudo(cond) )+      
+     )
 	{
 	    if (simple_current == null) {
 		simple_current = "";
@@ -1442,7 +1439,7 @@ boolean isPseudoElement = false;
 		}
 	    }
 	}
-	  | ( n=<FUNCTION> ( <S> )* d=skipStatementUntilRightParan() <RPARAN>
+	  | ( n=<FUNCTION> ( <S> )* d=skipStatementUntilMatchingRightParan() <RPARAN>
 	          {
 	          // accept anything between function and a right parenthesis
 	          String f = convertIdent(n.image);
@@ -1526,8 +1523,8 @@ void controlDirective() :
 void ifContentStatement() :
 {}
 {
-    contentDirective() | includeDirective() | media() | extendDirective() | styleRuleOrDeclarationOrNestedProperties() 
-    | keyframes() | LOOKAHEAD(variable()) variable() | listModifyDirective() | controlDirective()
+    contentDirective() | includeDirective() | media() | extendDirective() | styleRuleOrDeclarationOrNestedProperties()
+    | keyframes() | LOOKAHEAD(variable()) variable() | listModifyDirective() | controlDirective() | atRuleDeclaration()
 }
 
 void ifDirective() :
@@ -1543,7 +1540,7 @@ void ifDirective() :
   { documentHandler.startIfElseDirective();
     documentHandler.ifDirective(evaluator);
    }
-  ( ifContentStatement() )*
+  ( ifContentStatement() | fontFace() )*
   < RBRACE >(< S >)*
   (elseDirective())*
   { documentHandler.endIfElseDirective(); }
@@ -1562,7 +1559,7 @@ void elseDirective() :
   { if(!evaluator.trim().equals("")){ documentHandler.ifDirective(evaluator); }
     else{ documentHandler.elseDirective(); }  
   }
-  ( ifContentStatement() )*
+  ( ifContentStatement() | fontFace() )*
   < RBRACE >(< S >)*
 }
 
@@ -1726,11 +1723,11 @@ void includeDirective() :
     (<S>)*
     (name = property()|name = variableName(){ name = "$"+name;}
          |(name = functionName() 
-           args = argValuelist()) <RPARAN>)
+           args = argValuelist()) <RPARAN>(<S>)*)
     ((";"(<S>)*)+
            {documentHandler.includeDirective(name, args);}
-    | <LBRACE> (<S>)* {documentHandler.startIncludeContentBlock(name);}
-      (styleRuleOrDeclarationOrNestedProperties())*
+    | <LBRACE> (<S>)* {documentHandler.startIncludeContentBlock(name, args);}
+      (styleRuleOrDeclarationOrNestedProperties() | keyframeSelector())*
       <RBRACE> (<S>)* {documentHandler.endIncludeContentBlock();}
     )
 }
@@ -2381,8 +2378,9 @@ LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result
 		   && (Character.isDigit(s.charAt(i)) || (s.charAt(i) == '.'))) {
 		i++;
 	    }
+
 	    result = LexicalUnitImpl.createDimen(n.beginLine, n.beginColumn, prev, 
-						 Float.valueOf(s.substring(0, i)).floatValue(),
+						 number(op,n,s.length()-i),
 						 s.substring(i));
 	}
     | result=function(op, prev) ) )
@@ -2734,9 +2732,35 @@ String skipStatementUntilLeftBrace(){
 }
 
 JAVACODE
-String skipStatementUntilRightParan(){
-    int[] rParan = {RPARAN};
-    return skipStatementUntil(rParan);
+String skipStatementUntilMatchingRightParan(){
+    int[] leftTokens = {LPARAN, FUNCTION}; // a FUNCTION also contains "("
+    int[] rightTokens = {RPARAN};
+    StringBuffer s = new StringBuffer();
+    int difference = 1;
+    Token tok;
+    while(difference != 0){
+        tok = getToken(1);
+        if(tok.kind == EOF) {
+            return null;
+        }
+        for(int sym : leftTokens){
+            if(tok.kind == sym){
+                difference++;
+            }
+        }
+        for(int sym : rightTokens){
+            if(tok.kind == sym){
+                difference--;
+            }
+        }
+        if(difference != 0){
+            if (tok.image != null) {
+                s.append(tok.image);
+            }
+            getNextToken();
+        }
+    }
+    return s.toString().trim();
 }
 
 JAVACODE

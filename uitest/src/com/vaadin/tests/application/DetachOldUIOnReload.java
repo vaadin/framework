@@ -31,10 +31,6 @@ public class DetachOldUIOnReload extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        for (String message : getSessionMessages(false)) {
-            log(message);
-        }
-
         addComponent(new Label("This is UI " + getUIId()));
         addComponent(new Button("Reload page", new Button.ClickListener() {
             @Override
@@ -42,6 +38,15 @@ public class DetachOldUIOnReload extends AbstractTestUIWithLog {
                 getPage().reload();
             }
         }));
+        addComponent(new Button("Read log messages from session",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        for (String message : getSessionMessages(false)) {
+                            log(message);
+                        }
+                    }
+                }));
     }
 
     private List<String> getSessionMessages(boolean storeIfNeeded) {

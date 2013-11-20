@@ -80,7 +80,8 @@ public class BlockNode extends Node implements IVariableNode {
                 String interpolation = "#{$" + var.getName() + "}";
                 if (selector.contains(interpolation)) {
                     String replace = selector.replace(interpolation, var
-                            .getExpr().toString());
+                            .getExpr().unquotedString());
+
                     selectorList.add(selectorList.indexOf(selector), replace);
                     selectorList.remove(selector);
                 }

@@ -225,12 +225,14 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     protected void onReopen(AtmosphereResponse response) {
-        VConsole.log("Push connection re-established using " + transport);
+        VConsole.log("Push connection re-established using "
+                + response.getTransport());
         onConnect(response);
     }
 
     protected void onOpen(AtmosphereResponse response) {
-        VConsole.log("Push connection established using " + transport);
+        VConsole.log("Push connection established using "
+                + response.getTransport());
         onConnect(response);
     }
 
@@ -344,6 +346,10 @@ public class AtmospherePushConnection implements PushConnection {
 
     protected void onReconnect(JavaScriptObject request,
             final AtmosphereResponse response) {
+        if (state == State.CONNECTED) {
+            VConsole.log("No onClose was received before reconnect. Forcing state to closed.");
+            state = State.CONNECT_PENDING;
+        }
         VConsole.log("Reopening push connection");
     }
 

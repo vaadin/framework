@@ -207,10 +207,7 @@ public class BrowserInfo {
             return prefix + OS_ANDROID;
         } else if (browserDetails.isIOS()) {
             String iosClass = prefix + OS_IOS;
-            if (isIOS6()) {
-                iosClass += " " + prefix + OS_IOS + "6";
-            }
-            return iosClass;
+            return iosClass + " " + iosClass + getOperatingSystemMajorVersion();
         } else if (browserDetails.isWindows()) {
             return prefix + OS_WINDOWS;
         } else if (browserDetails.isLinux()) {
@@ -350,6 +347,22 @@ public class BrowserInfo {
     }
 
     /**
+     * Indicates whether the browser might require juggling to properly update
+     * sizes inside elements with overflow: auto when adjusting absolutely
+     * positioned elements.
+     * <p>
+     * See https://bugs.webkit.org/show_bug.cgi?id=123958 and
+     * http://code.google.com/p/chromium/issues/detail?id=316549
+     * 
+     * @since 7.1.8
+     * @return <code>true</code> if the browser requires the workaround,
+     *         otherwise <code>false</code>
+     */
+    public boolean requiresPositionAbsoluteOverflowAutoFix() {
+        return (getWebkitVersion() > 0) && Util.getNativeScrollbarSize() > 0;
+    }
+
+    /**
      * Checks if the browser is run on iOS
      * 
      * @return true if the browser is run on iOS, false otherwise
@@ -392,9 +405,9 @@ public class BrowserInfo {
         if (isAndroid() && isWebkit() && getWebkitVersion() >= 534) {
             return false;
         }
-        // iOS 6 Safari supports native scrolling; iOS 5 suffers from #8792
+        // iOS 6+ Safari supports native scrolling; iOS 5 suffers from #8792
         // TODO Should test other iOS browsers
-        if (isIOS6() && isWebkit()) {
+        if (isIOS() && isWebkit() && getOperatingSystemMajorVersion() >= 6) {
             return false;
         }
         return true;

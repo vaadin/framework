@@ -148,6 +148,22 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         return f;
     }
 
+    /**
+     * Returns the float value as a string unless the value is an integer. In
+     * that case returns the integer value as a string.
+     * 
+     * @return a string representing the value, either with or without decimals
+     */
+    public String getFloatOrInteger() {
+        float f = getFloatValue();
+        int i = (int) f;
+        if ((i) == f) {
+            return i + "";
+        } else {
+            return f + "";
+        }
+    }
+
     public void setFloatValue(float f) {
         this.f = f;
         i = (int) f;
@@ -274,7 +290,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
             text = Integer.toString(getIntegerValue(), 10);
             break;
         case LexicalUnit.SAC_REAL:
-            text = getFloatValue() + "";
+            text = getFloatOrInteger();
             break;
         case LexicalUnit.SAC_EM:
         case SCSSLexicalUnit.SAC_LEM:
@@ -295,13 +311,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         case LexicalUnit.SAC_HERTZ:
         case LexicalUnit.SAC_KILOHERTZ:
         case LexicalUnit.SAC_DIMENSION:
-            float f = getFloatValue();
-            int i = (int) f;
-            if ((i) == f) {
-                text = i + getDimensionUnitText();
-            } else {
-                text = f + getDimensionUnitText();
-            }
+            text = getFloatOrInteger() + getDimensionUnitText();
             break;
         case LexicalUnit.SAC_URI:
             text = "url(" + getStringValue() + ")";
@@ -365,6 +375,19 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         } else {
             return text;
         }
+    }
+
+    // A helper method for sass interpolation
+    public String unquotedString() {
+        String result = toString();
+        if (result.length() >= 2
+                && ((result.charAt(0) == '"' && result
+                        .charAt(result.length() - 1) == '"') || (result
+                        .charAt(0) == '\'' && result
+                        .charAt(result.length() - 1) == '\''))) {
+            result = result.substring(1, result.length() - 1);
+        }
+        return result;
     }
 
     @Override

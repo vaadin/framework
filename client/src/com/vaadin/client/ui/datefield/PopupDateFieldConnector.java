@@ -77,9 +77,6 @@ public class PopupDateFieldConnector extends TextualDateConnector {
 
         String oldLocale = getWidget().getCurrentLocale();
 
-        boolean lastReadOnlyState = getWidget().isReadonly();
-        boolean lastEnabledState = getWidget().isEnabled();
-
         getWidget().parsable = uidl.getBooleanAttribute("parsable");
 
         super.updateFromUIDL(uidl, client);
@@ -92,7 +89,8 @@ public class PopupDateFieldConnector extends TextualDateConnector {
                 .getCurrentResolution()) {
             getWidget().calendar.setResolution(getWidget()
                     .getCurrentResolution());
-            if (getWidget().calendar.getDate() != null) {
+            if (getWidget().calendar.getDate() != null
+                    && getWidget().getCurrentDate() != null) {
                 getWidget().calendar.setDate((Date) getWidget()
                         .getCurrentDate().clone());
                 // force re-render when changing resolution only
@@ -101,7 +99,7 @@ public class PopupDateFieldConnector extends TextualDateConnector {
         }
 
         // Force re-render of calendar if locale has changed (#12153)
-        if (getWidget().getCurrentLocale() != oldLocale) {
+        if (!getWidget().getCurrentLocale().equals(oldLocale)) {
             getWidget().calendar.renderCalendar();
         }
 
@@ -113,6 +111,7 @@ public class PopupDateFieldConnector extends TextualDateConnector {
                     .setFocusChangeListener(new FocusChangeListener() {
                         @Override
                         public void focusChanged(Date date) {
+
                             getWidget().updateValue(date);
                             getWidget().buildDate();
                             Date date2 = getWidget().calendar.getDate();
@@ -179,8 +178,16 @@ public class PopupDateFieldConnector extends TextualDateConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         getWidget().setTextFieldEnabled(getState().textFieldEnabled);
-        getWidget().setRangeStart(getState().rangeStart);
-        getWidget().setRangeEnd(getState().rangeEnd);
+        getWidget().setRangeStart(nullSafeDateClone(getState().rangeStart));
+        getWidget().setRangeEnd(nullSafeDateClone(getState().rangeEnd));
+    }
+
+    private Date nullSafeDateClone(Date date) {
+        if (date == null) {
+            return null;
+        } else {
+            return (Date) date.clone();
+        }
     }
 
     @Override

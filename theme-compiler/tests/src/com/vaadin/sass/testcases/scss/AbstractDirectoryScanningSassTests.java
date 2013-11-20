@@ -19,7 +19,6 @@ package com.vaadin.sass.testcases.scss;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -29,54 +28,93 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
+import org.w3c.css.sac.CSSException;
+import org.w3c.css.sac.CSSParseException;
 
 import com.vaadin.sass.internal.ScssStylesheet;
+import com.vaadin.sass.internal.handler.SCSSDocumentHandler;
+import com.vaadin.sass.internal.handler.SCSSDocumentHandlerImpl;
+import com.vaadin.sass.internal.handler.SCSSErrorHandler;
 import com.vaadin.sass.testcases.scss.SassTestRunner.FactoryTest;
 
 public abstract class AbstractDirectoryScanningSassTests {
 
     public static Collection<String> getScssResourceNames(URL directoryUrl)
-            throws URISyntaxException {
+            throws URISyntaxException, IOException {
         List<String> resources = new ArrayList<String>();
-        for (File scssFile : getScssFiles(directoryUrl)) {
-            resources.add(scssFile.getName());
+        for (String scssFile : getScssFiles(directoryUrl)) {
+            resources.add(scssFile);
         }
         return resources;
     }
 
-    private static File[] getScssFiles(URL directoryUrl)
-            throws URISyntaxException {
+    private static List<String> getScssFiles(URL directoryUrl)
+            throws URISyntaxException, IOException {
         URL sasslangUrl = directoryUrl;
         File sasslangDir = new File(sasslangUrl.toURI());
         File scssDir = new File(sasslangDir, "scss");
         Assert.assertTrue(scssDir.exists());
 
-        return scssDir.listFiles(new FilenameFilter() {
+        List<File> scssFiles = new ArrayList<File>();
+        addScssFilesRecursively(scssDir, scssFiles);
 
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".scss");
+        List<String> scssRelativeNames = new ArrayList<String>();
+        for (File f : scssFiles) {
+            String relativeName = f.getCanonicalPath().substring(
+                    scssDir.getCanonicalPath().length() + 1);
+            scssRelativeNames.add(relativeName);
+        }
+        return scssRelativeNames;
+    }
+
+    private static void addScssFilesRecursively(File scssDir,
+            List<File> scssFiles) {
+        for (File f : scssDir.listFiles()) {
+            if (f.isDirectory()) {
+                addScssFilesRecursively(f, scssFiles);
+            } else if (f.getName().endsWith(".scss")
+                    && !f.getName().startsWith("_")) {
+                scssFiles.add(f);
             }
-        });
+        }
     }
 
     protected abstract URL getResourceURL(String path);
 
     @FactoryTest
     public void compareScssWithCss(String scssResourceName) throws Exception {
-        String referenceCss;
         File scssFile = getSassLangResourceFile(scssResourceName);
-        File cssFile = getCssFile(scssFile);
-        referenceCss = IOUtils.toString(new FileInputStream(cssFile));
-        ScssStylesheet scssStylesheet = ScssStylesheet.get(scssFile
-                .getAbsolutePath());
+
+        SCSSDocumentHandler documentHandler = new SCSSDocumentHandlerImpl();
+        SCSSErrorHandler errorHandler = new SCSSErrorHandler() {
+            @Override
+            public void error(CSSParseException arg0) throws CSSException {
+                super.error(arg0);
+                Assert.fail(arg0.getMessage());
+            }
+
+            @Override
+            public void fatalError(CSSParseException arg0) throws CSSException {
+                super.error(arg0);
+                Assert.fail(arg0.getMessage());
+            }
+        };
+
+        ScssStylesheet scssStylesheet = ScssStylesheet.get(
+                scssFile.getCanonicalPath(), null, documentHandler,
+                errorHandler);
         scssStylesheet.compile();
         String parsedCss = scssStylesheet.toString();
 
-        String normalizedReference = normalize(referenceCss);
-        String normalizedParsed = normalize(parsedCss);
-        Assert.assertEquals("Original CSS and parsed CSS do not match for "
-                + scssResourceName, normalizedReference, normalizedParsed);
+        if (getCssFile(scssFile) != null) {
+            String referenceCss = IOUtils.toString(new FileInputStream(
+                    getCssFile(scssFile)));
+            String normalizedReference = normalize(referenceCss);
+            String normalizedParsed = normalize(parsedCss);
+
+            Assert.assertEquals("Original CSS and parsed CSS do not match for "
+                    + scssResourceName, normalizedReference, normalizedParsed);
+        }
     }
 
     private String normalize(String css) {
@@ -88,6 +126,9 @@ public abstract class AbstractDirectoryScanningSassTests {
         css = css.replaceAll("^[\n\r\t ]*", "");
         // remove trailing whitespace
         css = css.replaceAll("[\n\r\t ]*$", "");
+        css = css.replaceAll(";", ";\n");
+        css = css.replaceAll("\\{", "\\{\n");
+        css = css.replaceAll("}", "}\n");
         return css;
     }
 
@@ -103,7 +144,7 @@ public abstract class AbstractDirectoryScanningSassTests {
         return new File(res.toURI());
     }
 
-    private File getCssFile(File scssFile) {
-        return new File(scssFile.getAbsolutePath().replace("scss", "css"));
+    protected File getCssFile(File scssFile) throws IOException {
+        return new File(scssFile.getCanonicalPath().replace("scss", "css"));
     }
 }

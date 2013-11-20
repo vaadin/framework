@@ -23,7 +23,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Util;
 import com.vaadin.shared.ui.BorderStyle;
 
@@ -69,9 +68,6 @@ public class VLink extends HTML implements ClickHandler {
 
     /** For internal use only. May be removed or replaced in the future. */
     public Icon icon;
-
-    /** For internal use only. May be removed or replaced in the future. */
-    public ApplicationConnection client;
 
     public VLink() {
         super();

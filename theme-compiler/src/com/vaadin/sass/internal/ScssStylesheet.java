@@ -19,10 +19,10 @@ package com.vaadin.sass.internal;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -35,8 +35,9 @@ import com.vaadin.sass.internal.handler.SCSSErrorHandler;
 import com.vaadin.sass.internal.parser.ParseException;
 import com.vaadin.sass.internal.parser.Parser;
 import com.vaadin.sass.internal.parser.SCSSParseException;
+import com.vaadin.sass.internal.resolver.ClassloaderResolver;
+import com.vaadin.sass.internal.resolver.FilesystemResolver;
 import com.vaadin.sass.internal.resolver.ScssStylesheetResolver;
-import com.vaadin.sass.internal.resolver.VaadinResolver;
 import com.vaadin.sass.internal.tree.BlockNode;
 import com.vaadin.sass.internal.tree.MixinDefNode;
 import com.vaadin.sass.internal.tree.Node;
@@ -62,6 +63,8 @@ public class ScssStylesheet extends Node {
     private File file;
 
     private String charset;
+
+    private List<ScssStylesheetResolver> resolvers = new ArrayList<ScssStylesheetResolver>();
 
     /**
      * Read in a file SCSS and parse it into a ScssStylesheet
@@ -90,18 +93,48 @@ public class ScssStylesheet extends Node {
     }
 
     /**
-     * Main entry point for the SASS compiler. Takes in a file and encoding then
-     * builds up a ScssStylesheet tree out of it. Calling compile() on it will
-     * transform SASS into CSS. Calling toString() will print out the SCSS/CSS.
+     * Main entry point for the SASS compiler. Takes in a file and an optional
+     * parent style sheet, then builds up a ScssStylesheet tree out of it.
+     * Calling compile() on it will transform SASS into CSS. Calling toString()
+     * will print out the SCSS/CSS.
      * 
      * @param identifier
      *            The file path. If null then null is returned.
-     * @param encoding
+     * @param parentStylesheet
+     *            Style sheet from which to inherit resolvers and encoding. May
+     *            be null.
      * @return
      * @throws CSSException
      * @throws IOException
      */
-    public static ScssStylesheet get(String identifier, String encoding)
+    public static ScssStylesheet get(String identifier,
+            ScssStylesheet parentStylesheet) throws CSSException, IOException {
+        return get(identifier, parentStylesheet, new SCSSDocumentHandlerImpl(),
+                new SCSSErrorHandler());
+    }
+
+    /**
+     * Main entry point for the SASS compiler. Takes in a file, an optional
+     * parent stylesheet, and document and error handlers. Then builds up a
+     * ScssStylesheet tree out of it. Calling compile() on it will transform
+     * SASS into CSS. Calling toString() will print out the SCSS/CSS.
+     * 
+     * @param identifier
+     *            The file path. If null then null is returned.
+     * @param parentStylesheet
+     *            Style sheet from which to inherit resolvers and encoding. May
+     *            be null.
+     * @param documentHandler
+     *            Instance of document handler. May not be null.
+     * @param errorHandler
+     *            Instance of error handler. May not be null.
+     * @return
+     * @throws CSSException
+     * @throws IOException
+     */
+    public static ScssStylesheet get(String identifier,
+            ScssStylesheet parentStylesheet,
+            SCSSDocumentHandler documentHandler, SCSSErrorHandler errorHandler)
             throws CSSException, IOException {
         /*
          * The encoding to be used is passed through "encoding" parameter. the
@@ -120,18 +153,27 @@ public class ScssStylesheet extends Node {
         File file = new File(identifier);
         file = file.getCanonicalFile();
 
-        SCSSDocumentHandler handler = new SCSSDocumentHandlerImpl();
-        ScssStylesheet stylesheet = handler.getStyleSheet();
-
-        InputSource source = stylesheet.resolveStylesheet(identifier);
+        ScssStylesheet stylesheet = documentHandler.getStyleSheet();
+        if (parentStylesheet == null) {
+            // Use default resolvers
+            stylesheet.addResolver(new FilesystemResolver());
+            stylesheet.addResolver(new ClassloaderResolver());
+        } else {
+            // Use parent resolvers
+            stylesheet.setResolvers(parentStylesheet.getResolvers());
+        }
+        InputSource source = stylesheet.resolveStylesheet(identifier,
+                parentStylesheet);
         if (source == null) {
             return null;
         }
-        source.setEncoding(encoding);
+        if (parentStylesheet != null) {
+            source.setEncoding(parentStylesheet.getCharset());
+        }
 
         Parser parser = new Parser();
-        parser.setErrorHandler(new SCSSErrorHandler());
-        parser.setDocumentHandler(handler);
+        parser.setErrorHandler(errorHandler);
+        parser.setDocumentHandler(documentHandler);
 
         try {
             parser.parseStyleSheet(source);
@@ -145,21 +187,10 @@ public class ScssStylesheet extends Node {
         return stylesheet;
     }
 
-    private static ScssStylesheetResolver[] resolvers = null;
-
-    public static void setStylesheetResolvers(
-            ScssStylesheetResolver... styleSheetResolvers) {
-        resolvers = Arrays.copyOf(styleSheetResolvers,
-                styleSheetResolvers.length);
-    }
-
-    public InputSource resolveStylesheet(String identifier) {
-        if (resolvers == null) {
-            setStylesheetResolvers(new VaadinResolver());
-        }
-
-        for (ScssStylesheetResolver resolver : resolvers) {
-            InputSource source = resolver.resolve(identifier);
+    public InputSource resolveStylesheet(String identifier,
+            ScssStylesheet parentStylesheet) {
+        for (ScssStylesheetResolver resolver : getResolvers()) {
+            InputSource source = resolver.resolve(parentStylesheet, identifier);
             if (source != null) {
                 File f = new File(source.getURI());
                 setFile(f);
@@ -168,6 +199,38 @@ public class ScssStylesheet extends Node {
         }
 
         return null;
+    }
+
+    /**
+     * Retrieves a list of resolvers to use when resolving imports
+     * 
+     * @since 7.2
+     * @return the resolvers used to resolving imports
+     */
+    public List<ScssStylesheetResolver> getResolvers() {
+        return Collections.unmodifiableList(resolvers);
+    }
+
+    /**
+     * Sets the list of resolvers to use when resolving imports
+     * 
+     * @since 7.2
+     * @param resolvers
+     *            the resolvers to set
+     */
+    public void setResolvers(List<ScssStylesheetResolver> resolvers) {
+        this.resolvers = new ArrayList<ScssStylesheetResolver>(resolvers);
+    }
+
+    /**
+     * Adds the given resolver to the resolver list
+     * 
+     * @since 7.2
+     * @param resolver
+     *            The resolver to add
+     */
+    public void addResolver(ScssStylesheetResolver resolver) {
+        resolvers.add(resolver);
     }
 
     /**

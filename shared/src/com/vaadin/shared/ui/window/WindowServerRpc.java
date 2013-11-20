@@ -22,4 +22,6 @@ public interface WindowServerRpc extends ClickRpc, ServerRpc {
 
     public void windowModeChanged(WindowMode newState);
 
+    public void windowMoved(int x, int y);
+
 }

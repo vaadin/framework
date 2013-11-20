@@ -264,7 +264,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
 
         if (getWidget().focusedRow != null) {
             if (!getWidget().focusedRow.isAttached()
-                    && !getWidget().rowRequestHandler.isRunning()) {
+                    && !getWidget().rowRequestHandler.isRequestHandlerRunning()) {
                 // focused row has been orphaned, can't focus
                 if (getWidget().selectedRowKeys.contains(getWidget().focusedRow
                         .getKey())) {
@@ -343,6 +343,9 @@ public class TableConnector extends AbstractHasComponentsConnector implements
             Scheduler.get().scheduleFinally(new ScheduledCommand() {
                 @Override
                 public void execute() {
+                    // IE8 needs some hacks to measure sizes correctly
+                    Util.forceIE8Redraw(getWidget().getElement());
+
                     getLayoutManager().setNeedsMeasure(TableConnector.this);
                     ServerConnector parent = getParent();
                     if (parent instanceof ComponentConnector) {

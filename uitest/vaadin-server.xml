@@ -8,7 +8,7 @@
 
         <ivy:resolve log="download-only" file="${dir}/ivy.xml" />
         <ivy:cachepath pathid="classpath.jetty" conf="jetty-run" />
-        <java classname="org.mortbay.jetty.runner.Runner" fork="yes" output="${vaadin.basedir}/result/jetty.java.out" resultproperty="resultCode">
+        <java classname="org.mortbay.jetty.runner.Runner" fork="yes" output="${vaadin.basedir}/result/jetty.java.out" resultproperty="resultCode" maxmemory="1024m">
             <arg value="--port" />
             <arg value="8888" />
             <arg value="--out" />

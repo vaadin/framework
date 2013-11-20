@@ -16,9 +16,15 @@
 package com.vaadin.shared.ui.link;
 
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.ui.BorderStyle;
 
 public class LinkState extends AbstractComponentState {
     {
         primaryStyleName = "v-link";
     }
+    public String name = "";
+    public String target = null;
+    public BorderStyle targetBorder = BorderStyle.DEFAULT;
+    public int targetWidth = -1;
+    public int targetHeight = -1;
 }

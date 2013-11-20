@@ -24,6 +24,7 @@
             <param-name>application</param-name>
             <param-value>com.vaadin.tests.components.button.Buttons</param-value>
         </init-param>
+        <async-supported>true</async-supported>
     </servlet>
     <servlet>
         <servlet-name>Embed App 2</servlet-name>
@@ -32,6 +33,7 @@
             <param-name>UI</param-name>
             <param-value>com.vaadin.tests.components.label.MarginsInLabels</param-value>
         </init-param>
+        <async-supported>true</async-supported>
     </servlet>
     <servlet>
         <servlet-name>UI provider app</servlet-name>
@@ -44,6 +46,7 @@
             <param-name>UI</param-name>
             <param-value>com.vaadin.tests.VerifyAssertionsEnabled</param-value>
         </init-param>
+        <async-supported>true</async-supported>
     </servlet>
 
     <servlet>
@@ -70,6 +73,7 @@
             <param-name>testParam</param-name>
             <param-value>42</param-value>
         </init-param>
+        <async-supported>true</async-supported>
     </servlet>
 
     <servlet>
@@ -88,7 +92,7 @@
         <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
         <init-param>
             <param-name>UI</param-name>
-            <param-value>com.vaadin.tests.integration.IntegrationTestUI</param-value>
+            <param-value>com.vaadin.tests.integration.ServletIntegrationUI</param-value>
         </init-param>
         <async-supported>true</async-supported>
     </servlet>

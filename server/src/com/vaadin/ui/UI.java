@@ -24,6 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.event.Action;
@@ -31,10 +32,16 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.event.UIEvents.PollEvent;
+import com.vaadin.event.UIEvents.PollListener;
+import com.vaadin.event.UIEvents.PollNotifier;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ComponentSizeValidator.InvalidLayout;
+import com.vaadin.server.DefaultErrorHandler;
+import com.vaadin.server.ErrorHandler;
+import com.vaadin.server.ErrorHandlingRunnable;
 import com.vaadin.server.LocaleService;
 import com.vaadin.server.Page;
 import com.vaadin.server.PaintException;
@@ -91,7 +98,8 @@ import com.vaadin.util.CurrentInstance;
  * @since 7.0
  */
 public abstract class UI extends AbstractSingleComponentContainer implements
-        Action.Container, Action.Notifier, LegacyComponent, Focusable {
+        Action.Container, Action.Notifier, PollNotifier, LegacyComponent,
+        Focusable {
 
     /**
      * The application to which this UI belongs
@@ -163,10 +171,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
         @Override
         public void poll() {
-            /*
-             * No-op. This is only called to cause a server visit to check for
-             * changes.
-             */
+            fireEvent(new PollEvent(UI.this));
         }
     };
     private DebugWindowServerRpc debugRpc = new DebugWindowServerRpc() {
@@ -405,9 +410,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * @see #getSession()
      */
     public void setSession(VaadinSession session) {
-        if ((session == null) == (this.session == null)) {
+        if (session == null && this.session == null) {
             throw new IllegalStateException(
-                    "VaadinServiceSession has already been set. Old session: "
+                    "Session should never be set to null when UI.session is already null");
+        } else if (session != null && this.session != null) {
+            throw new IllegalStateException(
+                    "Session has already been set. Old session: "
                             + getSessionDetails(this.session)
                             + ". New session: " + getSessionDetails(session)
                             + ".");
@@ -1296,10 +1304,35 @@ public abstract class UI extends AbstractSingleComponentContainer implements
             throw new UIDetachedException();
         }
 
-        return session.access(new Runnable() {
+        return session.access(new ErrorHandlingRunnable() {
             @Override
             public void run() {
                 accessSynchronously(runnable);
+            }
+
+            @Override
+            public void handleError(Exception exception) {
+                try {
+                    if (runnable instanceof ErrorHandlingRunnable) {
+                        ErrorHandlingRunnable errorHandlingRunnable = (ErrorHandlingRunnable) runnable;
+
+                        errorHandlingRunnable.handleError(exception);
+                    } else {
+                        ConnectorErrorEvent errorEvent = new ConnectorErrorEvent(
+                                UI.this, exception);
+
+                        ErrorHandler errorHandler = com.vaadin.server.ErrorEvent
+                                .findErrorHandler(UI.this);
+
+                        if (errorHandler == null) {
+                            errorHandler = new DefaultErrorHandler();
+                        }
+
+                        errorHandler.error(errorEvent);
+                    }
+                } catch (Exception e) {
+                    getLogger().log(Level.SEVERE, e.getMessage(), e);
+                }
             }
         });
     }
@@ -1456,6 +1489,17 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public int getPollInterval() {
         return getState(false).pollInterval;
+    }
+
+    @Override
+    public void addPollListener(PollListener listener) {
+        addListener(EventId.POLL, PollEvent.class, listener,
+                PollListener.POLL_METHOD);
+    }
+
+    @Override
+    public void removePollListener(PollListener listener) {
+        removeListener(EventId.POLL, PollEvent.class, listener);
     }
 
     /**

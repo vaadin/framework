@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -33,6 +35,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.portlet.PortletSession;
@@ -83,6 +86,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         private final Map<Class<?>, CurrentInstance> instances = CurrentInstance
                 .getInstances(true);
         private final VaadinSession session;
+        private Runnable runnable;
 
         /**
          * Creates an instance for the given runnable
@@ -97,6 +101,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         public FutureAccess(VaadinSession session, Runnable runnable) {
             super(runnable, null);
             this.session = session;
+            this.runnable = runnable;
         }
 
         @Override
@@ -125,6 +130,36 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
          */
         public Map<Class<?>, CurrentInstance> getCurrentInstances() {
             return instances;
+        }
+
+        /**
+         * Handles exceptions thrown during the execution of this task.
+         * 
+         * @since 7.1.8
+         * @param exception
+         *            the thrown exception.
+         */
+        public void handleError(Exception exception) {
+            try {
+                if (runnable instanceof ErrorHandlingRunnable) {
+                    ErrorHandlingRunnable errorHandlingRunnable = (ErrorHandlingRunnable) runnable;
+
+                    errorHandlingRunnable.handleError(exception);
+                } else {
+                    ErrorEvent errorEvent = new ErrorEvent(exception);
+
+                    ErrorHandler errorHandler = ErrorEvent
+                            .findErrorHandler(session);
+
+                    if (errorHandler == null) {
+                        errorHandler = new DefaultErrorHandler();
+                    }
+
+                    errorHandler.error(errorEvent);
+                }
+            } catch (Exception e) {
+                getLogger().log(Level.SEVERE, e.getMessage(), e);
+            }
         }
     }
 
@@ -202,10 +237,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * session is serialized as long as it doesn't happen while some other
      * thread has the lock.
      */
-    private transient ConcurrentLinkedQueue<FutureAccess> pendingAccessQueue;
+    private transient ConcurrentLinkedQueue<FutureAccess> pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
 
     /**
-     * Create a new service session tied to a Vaadin service
+     * Creates a new VaadinSession tied to a VaadinService.
      * 
      * @param service
      *            the Vaadin service for the new session
@@ -1260,18 +1295,15 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Gets the queue of tasks submitted using {@link #access(Runnable)}.
+     * Gets the queue of tasks submitted using {@link #access(Runnable)}. It is
+     * safe to call this method and access the returned queue without holding
+     * the {@link #lock() session lock}.
      * 
      * @since 7.1
      * 
-     * @return the pending access queue
+     * @return the queue of pending access tasks
      */
     public Queue<FutureAccess> getPendingAccessQueue() {
-        if (pendingAccessQueue == null) {
-            // pendingAccessQueue is transient, so will be null after
-            // deserialization
-            pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
-        }
         return pendingAccessQueue;
     }
 
@@ -1285,6 +1317,16 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public String getCsrfToken() {
         assert hasLock();
         return csrfToken;
+    }
+
+    /**
+     * Override default deserialization logic to account for transient
+     * {@link #pendingAccessQueue}.
+     */
+    private void readObject(ObjectInputStream stream) throws IOException,
+            ClassNotFoundException {
+        stream.defaultReadObject();
+        pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
     }
 
     /**

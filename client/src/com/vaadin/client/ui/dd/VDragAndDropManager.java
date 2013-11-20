@@ -374,6 +374,17 @@ public class VDragAndDropManager {
                         public void onPreviewNativeEvent(
                                 NativePreviewEvent event) {
                             int typeInt = event.getTypeInt();
+                            if (typeInt == -1
+                                    && event.getNativeEvent().getType()
+                                            .contains("MSPointer")) {
+                                /*
+                                 * Ignore MSPointer events, until they are
+                                 * properly used (might improve usability on
+                                 * touch devices).
+                                 */
+                                return;
+                            }
+
                             switch (typeInt) {
                             case Event.ONMOUSEOVER:
                                 if (dragElement == null) {

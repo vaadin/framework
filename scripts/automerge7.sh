@@ -109,7 +109,7 @@ do
                         pendingCommit=
                         pendingCommitMessage=
                         echo
-                        echo "Stopping merge because $commit because of merge conflicts"
+                        echo "Stopping merge at $commit because of merge conflicts"
                         echo "The following commit must be manually merged."
                         show $commit
                         exit 3

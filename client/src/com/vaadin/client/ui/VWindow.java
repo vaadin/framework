@@ -61,6 +61,8 @@ import com.vaadin.client.Util;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.client.ui.window.WindowMoveEvent;
+import com.vaadin.client.ui.window.WindowMoveHandler;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.window.WindowMode;
@@ -537,7 +539,8 @@ public class VWindow extends VWindowOverlay implements
             super.setVisible(visible);
         }
 
-        if (visible && BrowserInfo.get().isWebkit()) {
+        if (visible
+                && BrowserInfo.get().requiresPositionAbsoluteOverflowAutoFix()) {
 
             /*
              * Shake up the DOM a bit to make the window shed unnecessary
@@ -551,6 +554,12 @@ public class VWindow extends VWindowOverlay implements
                 public void execute() {
                     final com.google.gwt.dom.client.Element scrollable = contents
                             .getFirstChildElement();
+
+                    // Adjusting the width or height may change the scroll
+                    // position, so store the current position
+                    int horizontalScrollPosition = scrollable.getScrollLeft();
+                    int verticalScrollPosition = scrollable.getScrollTop();
+
                     final String oldWidth = scrollable.getStyle().getWidth();
                     final String oldHeight = scrollable.getStyle().getHeight();
 
@@ -561,6 +570,10 @@ public class VWindow extends VWindowOverlay implements
                     scrollable.getStyle().setHeight(110, Unit.PCT);
                     scrollable.getOffsetHeight();
                     scrollable.getStyle().setProperty("height", oldHeight);
+
+                    // Restore the scroll position
+                    scrollable.setScrollLeft(horizontalScrollPosition);
+                    scrollable.setScrollTop(verticalScrollPosition);
 
                     updateContentsSize();
                     positionOrSizeUpdated();
@@ -1197,6 +1210,9 @@ public class VWindow extends VWindowOverlay implements
         dragging = false;
         hideDraggingCurtain();
         DOM.releaseCapture(getElement());
+
+        // fire move event
+        fireEvent(new WindowMoveEvent(uidlPositionX, uidlPositionY));
     }
 
     @Override
@@ -1412,4 +1428,16 @@ public class VWindow extends VWindowOverlay implements
             removeTabBlockHandlers();
         }
     }
+
+    /**
+     * Adds a Handler for when user moves the window.
+     * 
+     * @since 7.1.9
+     * 
+     * @return {@link HandlerRegistration} used to remove the handler
+     */
+    public HandlerRegistration addMoveHandler(WindowMoveHandler handler) {
+        return addHandler(handler, WindowMoveEvent.getType());
+    }
+
 }

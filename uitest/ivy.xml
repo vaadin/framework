@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ivy-module [
+    <!ENTITY jetty.version "8.1.9.v20130131">
+]>
 <ivy-module version="2.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
@@ -11,7 +14,7 @@
         <conf name="build" />
         <conf name="build-provided" visibility="private" />
         <conf name="ide" visibility="private" />
-        <conf name="jetty-run" extends="build" visibility="private" />
+        <conf name="jetty-run" visibility="private" />
     </configurations>
     <publications>
         <artifact type="war" ext="war" />
@@ -23,9 +26,6 @@
 
         <dependency org="javax.validation" name="validation-api"
             rev="1.0.0.GA" conf="build,ide -> default,sources" />
-        <!-- Servlet API -->
-        <dependency org="javax.servlet" name="servlet-api"
-            rev="2.4" conf="build-provided,ide -> default" />
         <!-- Google App Engine -->
         <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
             rev="1.2.1" conf="build-provided,ide -> default" />
@@ -33,7 +33,9 @@
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-server"
-            rev="${vaadin.version}" conf="build->build"></dependency>
+            rev="${vaadin.version}" conf="build->build">
+            <exclude org="javax.servlet"></exclude>
+        </dependency>
         <dependency org="com.vaadin" name="vaadin-client"
             rev="${vaadin.version}" conf="build->build"></dependency>
         <dependency org="com.vaadin" name="vaadin-client-compiled"
@@ -41,29 +43,38 @@
         <dependency org="com.vaadin" name="vaadin-themes"
             rev="${vaadin.version}" conf="build->build"></dependency>
         <dependency org="com.vaadin" name="vaadin-push" rev="${vaadin.version}"
-            conf="build->build"></dependency>
+            conf="build->build">
+            <exclude org="javax.servlet"></exclude>
+        </dependency>
 
         <!-- For compiling TestingWidgetSet -->
         <dependency org="com.vaadin" name="vaadin-client-compiler"
             rev="${vaadin.version}" conf="build-provided-> build"></dependency>
 
-        <!-- Newest Jetty does not work with Ivy currently (orbit -> jar 
-            mapping problem) -->
+        <!-- Servlet 3.0 API -->
+        <dependency org="javax.servlet" name="javax.servlet-api"
+            rev="3.0.1" conf="build-provided,ide -> default" />
+
         <dependency org="org.eclipse.jetty" name="jetty-server"
-            rev="7.5.0.v20110901" conf="ide, build-provided, jetty-run->default" />
+            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default">
+            <exclude org="org.eclipse.jetty.orbit"></exclude>
+        </dependency>
         <!-- jetty-servlets needed by ProxyTest, but not by jetty-runner -->
         <dependency org="org.eclipse.jetty" name="jetty-servlets"
-            rev="7.5.0.v20110901" conf="ide, build-provided, jetty-run->default" />
+            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default" />
         <dependency org="org.eclipse.jetty" name="jetty-websocket"
-            rev="7.5.0.v20110901" conf="ide, jetty-run->default" />
+            rev="&jetty.version;" conf="ide, jetty-run->default" />
         <dependency org="org.eclipse.jetty" name="jetty-webapp"
-            rev="7.5.0.v20110901" conf="ide, build-provided, jetty-run->default" />
+            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default" />
         <dependency org="org.mortbay.jetty" name="jetty-runner"
-            rev="7.5.0.v20110901" conf="jetty-run->default" />
+            rev="&jetty.version;" conf="ide, jetty-run->default">
+            <exclude org="org.eclipse.jetty.orbit"></exclude>
+        </dependency>
 
-        <dependency org="junit" name="junit" rev="4.5"
+        <dependency org="junit" name="junit" rev="4.11"
             conf="build,ide -> default" />
-
+        <dependency org="com.jcraft" name="jsch" rev="0.1.50"
+            conf="ide, build->default" />
         <dependency org="commons-codec" name="commons-codec"
             rev="1.5" conf="build,ide->default" />
         <dependency org="commons-io" name="commons-io" rev="2.2"
@@ -71,6 +82,8 @@
         <!-- Mainly for SQLContainer tests -->
         <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
             conf="build,ide -> default" />
+        <dependency org="com.vaadin" name="vaadin-testbench"
+            rev="3.1.1" conf="build-provided,ide -> default" />
     </dependencies>
 
 </ivy-module>

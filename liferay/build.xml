@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+<project name="liferay" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+    <description>
+        Builds the Liferay ZIP archive
+    </description>
+
+    <include file="../common.xml" as="common" />
+    <include file="../build.xml" as="vaadin" />
+
+    <property name="module.name" value="vaadin-liferay" />
+    <property name="result.dir" value="result" />
+    <property name="lib.dir" value="${result.dir}/lib" />
+    <property name="work.dir" value="${result.dir}/work" />
+    <property name="liferay.zip" location="${result.dir}/lib/${module.name}-${vaadin.version}.zip" />
+
+    <target name="publish-local" depends="build-zip" if="build.release">
+        <antcall target="common.publish-local">
+            <param name="conf" value="deps" />
+        </antcall>
+    </target>
+
+    <target name="fetch-jars">
+        <echo>Retriving prebuilt jars</echo>
+        <!-- Retrieve pre-build jars -->
+        <ivy:resolve />
+        <mkdir dir="${lib.dir}" />
+        <ivy:retrieve pattern="${lib.dir}/[artifact].[type]" conf="deps" />
+    </target>
+
+    <target name="unpack" depends="fetch-jars">
+        <echo>Unpacking jars into working directory</echo>
+        <mkdir dir="${work.dir}" />
+        <unjar src="${lib.dir}/vaadin-client-compiled.jar" dest="${work.dir}">
+            <patternset>
+                <include name="VAADIN/widgetsets/**/*" />
+            </patternset>
+        </unjar>
+        <unjar src="${lib.dir}/vaadin-themes.jar" dest="${work.dir}">
+            <patternset>
+                <include name="VAADIN/themes/base/**/*" />
+                <include name="VAADIN/themes/chameleon/**/*" />
+                <include name="VAADIN/themes/liferay/**/*" />
+                <include name="VAADIN/themes/runo/**/*" />
+                <include name="VAADIN/themes/reindeer/**/*" />
+            </patternset>
+        </unjar>
+        <unjar src="${lib.dir}/vaadin-push.jar" dest="${work.dir}">
+            <patternset>
+                <include name="VAADIN/vaadinPush.js" />
+                <include name="VAADIN/vaadinPush.debug.js" />
+            </patternset>
+        </unjar>
+        <unjar src="${lib.dir}/vaadin-server.jar" dest="${work.dir}">
+            <patternset>
+                <include name="VAADIN/vaadinBootstrap.js" />
+            </patternset>
+        </unjar>
+    </target>
+
+    <target name="build-zip" depends="unpack">
+        <echo>Building Liferay zip</echo>
+        <zip zipfile="${liferay.zip}">
+            <zipfileset dir="${work.dir}" />
+        </zip>
+    </target>
+
+    <target name="clean">
+        <antcall target="common.clean" />
+    </target>
+
+    <target name="checkstyle" />
+
+    <target name="test" depends="checkstyle" />
+
+</project>

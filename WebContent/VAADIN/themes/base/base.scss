@@ -40,6 +40,7 @@
 @import "widget/widget.scss";
 @import "window/window.scss";
 @import "debug/debug.scss";
+@import "browserframe/browserframe.scss";
 
 .v-vaadin-version:after {
 	content: "@version@";
@@ -65,6 +66,7 @@ $line-height: normal;
 	
 	@include base-absolutelayout;
 	@include base-accordion;
+	@include base-browserframe;
 	@include base-button;
 	@include base-nativebutton;
 	@include base-checkbox;

@@ -27,6 +27,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
     private static final String IE9_BETA_WINDOWS_7 = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
 
     private static final String IE10_WINDOWS_8 = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)";
+    private static final String IE11_WINDOWS_7 = "Mozilla/5.0 (Windows NT 6.1; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; rv:11.0) like Gecko";
 
     // "Version/" was added in 10.00
     private static final String OPERA964_WINDOWS = "Opera/9.64(Windows NT 5.1; U; en) Presto/2.1.1";
@@ -314,6 +315,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
 
     public void testIE8() {
         VBrowserDetails bd = new VBrowserDetails(IE8_WINDOWS);
+        assertTrident(bd);
         assertEngineVersion(bd, 4);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 8);
@@ -325,6 +327,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         VBrowserDetails bd = new VBrowserDetails(IE8_IN_IE7_MODE_WINDOWS);
         bd.setIEMode(7);
 
+        assertTrident(bd);
         assertEngineVersion(bd, 4);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 7);
@@ -335,6 +338,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
 
     public void testIE9() {
         VBrowserDetails bd = new VBrowserDetails(IE9_BETA_WINDOWS_7);
+        assertTrident(bd);
         assertEngineVersion(bd, 5);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 9);
@@ -346,6 +350,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         VBrowserDetails bd = new VBrowserDetails(IE9_IN_IE7_MODE_WINDOWS_7);
         // bd.setIE8InCompatibilityMode();
 
+        assertTrident(bd);
         assertEngineVersion(bd, 5);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 7);
@@ -362,6 +367,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
          * Trident/4.0 in example user agent string based on beta even though it
          * should be Trident/5.0 in real (non-beta) user agent strings
          */
+        assertTrident(bd);
         assertEngineVersion(bd, 4);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 8);
@@ -372,9 +378,20 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
 
     public void testIE10() {
         VBrowserDetails bd = new VBrowserDetails(IE10_WINDOWS_8);
+        assertTrident(bd);
         assertEngineVersion(bd, 6);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 10);
+        assertBrowserMinorVersion(bd, 0);
+        assertWindows(bd);
+    }
+
+    public void testIE11() {
+        VBrowserDetails bd = new VBrowserDetails(IE11_WINDOWS_7);
+        assertTrident(bd);
+        assertEngineVersion(bd, 7);
+        assertIE(bd);
+        assertBrowserMajorVersion(bd, 11);
         assertBrowserMinorVersion(bd, 0);
         assertWindows(bd);
     }
@@ -406,6 +423,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertTrue(browserDetails.isGecko());
         assertFalse(browserDetails.isWebKit());
         assertFalse(browserDetails.isPresto());
+        assertFalse(browserDetails.isTrident());
     }
 
     private void assertPresto(VBrowserDetails browserDetails) {
@@ -413,6 +431,15 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertFalse(browserDetails.isGecko());
         assertFalse(browserDetails.isWebKit());
         assertTrue(browserDetails.isPresto());
+        assertFalse(browserDetails.isTrident());
+    }
+
+    private void assertTrident(VBrowserDetails browserDetails) {
+        // Engine
+        assertFalse(browserDetails.isGecko());
+        assertFalse(browserDetails.isWebKit());
+        assertFalse(browserDetails.isPresto());
+        assertTrue(browserDetails.isTrident());
     }
 
     private void assertWebKit(VBrowserDetails browserDetails) {
@@ -420,6 +447,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertFalse(browserDetails.isGecko());
         assertTrue(browserDetails.isWebKit());
         assertFalse(browserDetails.isPresto());
+        assertFalse(browserDetails.isTrident());
     }
 
     private void assertFirefox(VBrowserDetails browserDetails) {

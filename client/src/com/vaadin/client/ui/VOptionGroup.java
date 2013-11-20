@@ -87,19 +87,42 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public boolean htmlContentAllowed = false;
 
+    private boolean wasHtmlContentAllowed = false;
+    private boolean wasMultiselect = false;
+
     public VOptionGroup() {
         super(CLASSNAME);
         panel = (Panel) optionsContainer;
         optionsToKeys = new HashMap<CheckBox, String>();
         optionsEnabled = new ArrayList<Boolean>();
+
+        wasMultiselect = isMultiselect();
     }
 
     /*
-     * Return true if no elements were changed, false otherwise.
+     * Try to update content of existing elements, rebuild panel entirely
+     * otherwise
      */
     @Override
     public void buildOptions(UIDL uidl) {
-        panel.clear();
+        /*
+         * In order to retain focus, we need to update values rather than
+         * recreate panel from scratch (#10451). However, the panel will be
+         * rebuilt (losing focus) if number of elements or their order is
+         * changed.
+         */
+        HashMap<String, CheckBox> keysToOptions = new HashMap<String, CheckBox>();
+        for (Map.Entry<CheckBox, String> entry : optionsToKeys.entrySet()) {
+            keysToOptions.put(entry.getValue(), entry.getKey());
+        }
+        ArrayList<Widget> existingwidgets = new ArrayList<Widget>();
+        ArrayList<Widget> newwidgets = new ArrayList<Widget>();
+
+        // Get current order of elements
+        for (Widget wid : panel) {
+            existingwidgets.add(wid);
+        }
+
         optionsEnabled.clear();
 
         if (isMultiselect()) {
@@ -110,7 +133,6 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
         for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL opUidl = (UIDL) it.next();
-            CheckBox op;
 
             String itemHtml = opUidl.getStringAttribute("caption");
             if (!htmlContentAllowed) {
@@ -124,33 +146,56 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
                         + Icon.CLASSNAME + "\" alt=\"\" />" + itemHtml;
             }
 
-            if (isMultiselect()) {
-                op = new VCheckBox();
-                op.setHTML(itemHtml);
-            } else {
-                op = new RadioButton(paintableId, itemHtml, true);
-                op.setStyleName("v-radiobutton");
+            String key = opUidl.getStringAttribute("key");
+            CheckBox op = keysToOptions.get(key);
+
+            // Need to recreate object if isMultiselect is changed (#10451)
+            // OR if htmlContentAllowed changed due to Safari 5 issue
+            if ((op == null) || (htmlContentAllowed != wasHtmlContentAllowed)
+                    || (isMultiselect() != wasMultiselect)) {
+                // Create a new element
+                if (isMultiselect()) {
+                    op = new VCheckBox();
+                } else {
+                    op = new RadioButton(paintableId);
+                    op.setStyleName("v-radiobutton");
+                }
+                if (icon != null && icon.length() != 0) {
+                    Util.sinkOnloadForImages(op.getElement());
+                    op.addHandler(iconLoadHandler, LoadEvent.getType());
+                }
+
+                op.addStyleName(CLASSNAME_OPTION);
+                op.addClickHandler(this);
+
+                optionsToKeys.put(op, key);
             }
 
-            if (icon != null && icon.length() != 0) {
-                Util.sinkOnloadForImages(op.getElement());
-                op.addHandler(iconLoadHandler, LoadEvent.getType());
-            }
-
-            op.addStyleName(CLASSNAME_OPTION);
+            op.setHTML(itemHtml);
             op.setValue(opUidl.getBooleanAttribute("selected"));
             boolean optionEnabled = !opUidl
                     .getBooleanAttribute(OptionGroupConstants.ATTRIBUTE_OPTION_DISABLED);
             boolean enabled = optionEnabled && !isReadonly() && isEnabled();
             op.setEnabled(enabled);
             optionsEnabled.add(optionEnabled);
+
             setStyleName(op.getElement(),
                     ApplicationConnection.DISABLED_CLASSNAME,
                     !(optionEnabled && isEnabled()));
-            op.addClickHandler(this);
-            optionsToKeys.put(op, opUidl.getStringAttribute("key"));
-            panel.add(op);
+
+            newwidgets.add(op);
         }
+
+        if (!newwidgets.equals(existingwidgets)) {
+            // Rebuild the panel, losing focus
+            panel.clear();
+            for (Widget wid : newwidgets) {
+                panel.add(wid);
+            }
+        }
+
+        wasHtmlContentAllowed = htmlContentAllowed;
+        wasMultiselect = isMultiselect();
     }
 
     @Override
