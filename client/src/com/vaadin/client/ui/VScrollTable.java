@@ -61,6 +61,8 @@ import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -123,7 +125,7 @@ import com.vaadin.shared.ui.table.TableConstants;
  */
 public class VScrollTable extends FlowPanel implements HasWidgets,
         ScrollHandler, VHasDropHandler, FocusHandler, BlurHandler, Focusable,
-        ActionOwner {
+        ActionOwner, SubPartAware {
 
     public static final String STYLENAME = "v-table";
 
@@ -5043,6 +5045,20 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
         }
 
+        public int indexOf(Widget row) {
+            int relIx = -1;
+            for (int ix = 0; ix < renderedRows.size(); ix++) {
+                if (renderedRows.get(ix) == row) {
+                    relIx = ix;
+                    break;
+                }
+            }
+            if (relIx >= 0) {
+                return this.firstRendered + relIx;
+            }
+            return -1;
+        }
+
         public class VScrollTableRow extends Panel implements ActionOwner {
 
             private static final int TOUCHSCROLL_TIMEOUT = 100;
@@ -7751,4 +7767,94 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         return this;
     }
 
+    private static final String SUBPART_HEADER = "header";
+    private static final String SUBPART_FOOTER = "footer";
+    private static final String SUBPART_ROW = "row";
+    private static final String SUBPART_COL = "col";
+    /** Matches header[ix] - used for extracting the index of the targeted header cell */
+    private static final RegExp SUBPART_HEADER_REGEXP = RegExp
+            .compile(SUBPART_HEADER + "\\[(\\d+)\\]");
+    /** Matches footer[ix] - used for extracting the index of the targeted footer cell */
+    private static final RegExp SUBPART_FOOTER_REGEXP = RegExp
+            .compile(SUBPART_FOOTER + "\\[(\\d+)\\]");
+    /** Matches row[ix] - used for extracting the index of the targeted row */
+    private static final RegExp SUBPART_ROW_REGEXP = RegExp.compile(SUBPART_ROW
+            + "\\[(\\d+)]");
+    /** Matches col[ix] - used for extracting the index of the targeted column */
+    private static final RegExp SUBPART_ROW_COL_REGEXP = RegExp
+            .compile(SUBPART_ROW + "\\[(\\d+)\\]/" + SUBPART_COL + "\\[(\\d+)\\]");
+
+    @Override
+    public Element getSubPartElement(String subPart) {
+        if (SUBPART_ROW_COL_REGEXP.test(subPart)) {
+            MatchResult result = SUBPART_ROW_COL_REGEXP.exec(subPart);
+            int rowIx = Integer.valueOf(result.getGroup(1));
+            int colIx = Integer.valueOf(result.getGroup(2));
+            VScrollTableRow row = scrollBody.getRowByRowIndex(rowIx);
+            if (row != null) {
+                Element rowElement = row.getElement();
+                if (colIx < rowElement.getChildCount()) {
+                    return rowElement.getChild(colIx).getFirstChild().cast();
+                }
+            }
+
+        } else if (SUBPART_ROW_REGEXP.test(subPart)) {
+            MatchResult result = SUBPART_ROW_REGEXP.exec(subPart);
+            int rowIx = Integer.valueOf(result.getGroup(1));
+            VScrollTableRow row = scrollBody.getRowByRowIndex(rowIx);
+            if (row != null) {
+                return row.getElement();
+            }
+
+        } else if (SUBPART_HEADER_REGEXP.test(subPart)) {
+            MatchResult result = SUBPART_HEADER_REGEXP.exec(subPart);
+            int headerIx = Integer.valueOf(result.getGroup(1));
+            HeaderCell headerCell = tHead.getHeaderCell(headerIx);
+            if (headerCell != null) {
+                return headerCell.getElement();
+            }
+
+        } else if (SUBPART_FOOTER_REGEXP.test(subPart)) {
+            MatchResult result = SUBPART_FOOTER_REGEXP.exec(subPart);
+            int footerIx = Integer.valueOf(result.getGroup(1));
+            FooterCell footerCell = tFoot.getFooterCell(footerIx);
+            if (footerCell != null) {
+                return footerCell.getElement();
+            }
+        }
+        // Nothing found.
+        return null;
+    }
+
+    @Override
+    public String getSubPartName(Element subElement) {
+        Widget widget = Util.findWidget(subElement, null);
+        if (widget instanceof HeaderCell) {
+            return SUBPART_HEADER + "[" + tHead.visibleCells.indexOf(widget)
+                    + "]";
+        } else if (widget instanceof FooterCell) {
+            return SUBPART_FOOTER + "[" + tFoot.visibleCells.indexOf(widget)
+                    + "]";
+        } else if (widget instanceof VScrollTableRow) {
+            // a cell in a row
+            VScrollTableRow row = (VScrollTableRow) widget;
+            int rowIx = scrollBody.indexOf(row);
+            if (rowIx >= 0) {
+                int colIx = -1;
+                for (int ix = 0; ix < row.getElement().getChildCount(); ix++) {
+                    if (row.getElement().getChild(ix).isOrHasChild(subElement)) {
+                        colIx = ix;
+                        break;
+                    }
+                }
+                if (colIx >= 0) {
+                    return SUBPART_ROW + "[" + rowIx + "]/" + SUBPART_COL + "["
+                            + colIx + "]";
+                }
+                return SUBPART_ROW + "[" + rowIx + "]";
+            }
+        }
+        // Nothing found.
+        return null;
+    }
 }

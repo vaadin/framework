@@ -116,6 +116,14 @@ public class SimpleTree extends ComplexPanel implements HasDoubleClickHandlers {
         }
     }
 
+    public boolean isOpen() {
+        return "-".equals(handle.getInnerHTML());
+    }
+
+    public String getCaption() {
+        return text.getInnerText();
+    }
+
     public SimpleTree(String caption) {
         this();
         setText(caption);

@@ -13,22 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client;
+package com.vaadin.client.debug.internal;
+
+import com.google.gwt.user.client.Element;
+import com.vaadin.client.ServerConnector;
 
 /**
- * ComponentLocator provides methods for generating a String locator for a given
- * DOM element and for locating a DOM element using a String locator.
+ * Listener for the selection of a connector in the debug window.
  * 
- * @since 5.4
- * @deprecated Moved to com.vaadin.client.componentlocator.ComponentLocator
+ * @since 7.1.4
  */
-public class ComponentLocator extends com.vaadin.client.componentlocator.ComponentLocator {
+public interface SelectConnectorListener {
     /**
-     * Construct a ComponentLocator for the given ApplicationConnection.
-     *
-     * @param client ApplicationConnection instance for the application.
+     * Listener method called when a connector has been selected. If a specific
+     * element of the connector was selected, it is also given.
+     * 
+     * @param connector
+     *            selected connector
+     * @param element
+     *            selected element of the connector or null if unknown
      */
-    public ComponentLocator(ApplicationConnection client) {
-        super(client);
-    }
+    public void select(ServerConnector connector, Element element);
 }
