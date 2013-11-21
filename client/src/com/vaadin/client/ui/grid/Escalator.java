@@ -46,6 +46,8 @@ import com.vaadin.client.ui.grid.PositionFunction.AbsolutePosition;
 import com.vaadin.client.ui.grid.PositionFunction.Translate3DPosition;
 import com.vaadin.client.ui.grid.PositionFunction.TranslatePosition;
 import com.vaadin.client.ui.grid.PositionFunction.WebkitTranslate3DPosition;
+import com.vaadin.client.ui.grid.ScrollbarBundle.HorizontalScrollbarBundle;
+import com.vaadin.client.ui.grid.ScrollbarBundle.VerticalScrollbarBundle;
 
 /*-
 
@@ -227,10 +229,6 @@ public class Escalator extends Widget {
      * re-measure)
      */
     /*
-     * [[escalator]]: This code will require alterations that are relevant for
-     * the escalator functionality.
-     */
-    /*
      * [[rowwidth]] [[colwidth]]: This code will require alterations that are
      * relevant for being able to support variable row heights or column widths.
      * NOTE: these bits can most often also be identified by searching for code
@@ -391,7 +389,7 @@ public class Escalator extends Widget {
                     }
                 }
 
-                moveScrollFromEvent(escalator.scrollerElem, -deltaX, -deltaY,
+                moveScrollFromEvent(escalator, -deltaX, -deltaY,
                         event.getNativeEvent());
             }
 
@@ -406,21 +404,16 @@ public class Escalator extends Widget {
             }
         }
 
-        public static void moveScrollFromEvent(final Element scrollerElem,
+        public static void moveScrollFromEvent(final Escalator escalator,
                 final double deltaX, final double deltaY,
                 final NativeEvent event) {
-            /*
-             * TODO [[optimize]]: instead of calling getScollLeft/Top that
-             * potentially causes a reflow, update a new scroll absolute
-             * position.
-             */
-            if (!Double.isNaN(deltaX) && deltaX != 0) {
-                scrollerElem
-                        .setScrollLeft((int) (scrollerElem.getScrollLeft() + deltaX));
+
+            if (!Double.isNaN(deltaX)) {
+                escalator.horizontalScrollbar.setScrollPosByDelta((int) deltaX);
             }
-            if (!Double.isNaN(deltaY) && deltaY != 0) {
-                scrollerElem
-                        .setScrollTop((int) (scrollerElem.getScrollTop() + deltaY));
+
+            if (!Double.isNaN(deltaY)) {
+                escalator.verticalScrollbar.setScrollPosByDelta((int) deltaY);
             }
 
             /*
@@ -514,8 +507,8 @@ public class Escalator extends Widget {
 
         private void cancelBecauseOfEdgeOrCornerMaybe(final int lastLeft,
                 final int lastTop) {
-            if (lastLeft == scrollerElem.getScrollLeft()
-                    && lastTop == scrollerElem.getScrollTop()) {
+            if (lastLeft == horizontalScrollbar.getScrollPos()
+                    && lastTop == verticalScrollbar.getScrollPos()) {
                 cancel();
             }
         }
@@ -564,8 +557,7 @@ public class Escalator extends Widget {
                     deltaY = -0.5*e.wheelDelta;
                 }
 
-                var scroller = esc.@com.vaadin.client.ui.grid.Escalator::scrollerElem;
-                @com.vaadin.client.ui.grid.Escalator.JsniUtil::moveScrollFromEvent(*)(scroller, deltaX, deltaY, e);
+                @com.vaadin.client.ui.grid.Escalator.JsniUtil::moveScrollFromEvent(*)(esc, deltaX, deltaY, e);
             });
         }-*/;
 
@@ -574,41 +566,35 @@ public class Escalator extends Widget {
          * that the sizes of the scroll handles appear correct in the browser
          */
         public void recalculateScrollbarsForVirtualViewport() {
-            double scrollerHeight = height - header.height;
-
-            /*
-             * It looks better this way: if we only have a vertical scrollbar,
-             * keep it between the header and footer. But if we have a
-             * horizontal scrollbar, envelop the footer also.
-             */
-            if (!needsHorizontalScrollbars()) {
-                scrollerHeight -= footer.height;
-            }
-
-            scrollerElem.getStyle().setHeight(scrollerHeight, Unit.PX);
-
-            final double scrollerTop = header.height;
-            scrollerElem.getStyle().setTop(scrollerTop, Unit.PX);
-
-            /*
-             * TODO [[freezecol]]: cut scrollerElem from the left to take freeze
-             * columns into account. innerScroller probably needs some
-             * adjustments too.
-             */
-
             // TODO [[rowheight]]: adjust for variable row heights.
-            double innerScrollerHeight = ROW_HEIGHT_PX * body.getRowCount();
+            int innerScrollerHeight = ROW_HEIGHT_PX * body.getRowCount();
+
+            double vScrollBottom = footer.height;
             if (needsHorizontalScrollbars()) {
-                innerScrollerHeight += footer.height;
+                vScrollBottom += horizontalScrollbar.getScrollbarThickness();
             }
-            innerScrollerElem.getStyle()
-                    .setHeight(innerScrollerHeight, Unit.PX);
+
+            verticalScrollbar.getElement().getStyle()
+                    .setTop(header.height, Unit.PX);
+            verticalScrollbar.getElement().getStyle()
+                    .setBottom(vScrollBottom, Unit.PX);
+            verticalScrollbar.setScrollSize(innerScrollerHeight);
 
             // TODO [[colwidth]]: adjust for variable column widths.
             int columnsToScroll = columnConfiguration.getColumnCount()
                     - columnConfiguration.getFrozenColumnCount();
-            innerScrollerElem.getStyle().setWidth(
-                    COLUMN_WIDTH_PX * columnsToScroll, Unit.PX);
+            horizontalScrollbar
+                    .setScrollSize(COLUMN_WIDTH_PX * columnsToScroll);
+
+            final Style hScrollbarStyle = horizontalScrollbar.getElement()
+                    .getStyle();
+            if (needsVerticalScrollbars()) {
+                final int hScrollbarRight = verticalScrollbar
+                        .getScrollbarThickness();
+                hScrollbarStyle.setRight(hScrollbarRight, Unit.PX);
+            } else {
+                hScrollbarStyle.clearRight();
+            }
 
             // we might've got new or got rid of old scrollbars.
             recalculateTableWrapperSize();
@@ -620,15 +606,15 @@ public class Escalator extends Widget {
          */
         public void recalculateTableWrapperSize() {
             double wrapperHeight = height;
-            if (scrollerElem.getOffsetWidth() < innerScrollerElem
-                    .getOffsetWidth()) {
-                wrapperHeight -= Util.getNativeScrollbarSize();
+            if (horizontalScrollbar.getOffsetSize() < horizontalScrollbar
+                    .getScrollSize()) {
+                wrapperHeight -= horizontalScrollbar.getScrollbarThickness();
             }
 
             double wrapperWidth = width;
-            if (scrollerElem.getOffsetHeight() - footer.height < innerScrollerElem
-                    .getOffsetHeight()) {
-                wrapperWidth -= Util.getNativeScrollbarSize();
+            if (verticalScrollbar.getOffsetSize() - footer.height < verticalScrollbar
+                    .getScrollSize()) {
+                wrapperWidth -= verticalScrollbar.getScrollbarThickness();
             }
 
             tableWrapper.getStyle().setHeight(wrapperHeight, Unit.PX);
@@ -651,8 +637,8 @@ public class Escalator extends Widget {
                 return;
             }
 
-            final int scrollLeft = scrollerElem.getScrollLeft();
-            final int scrollTop = scrollerElem.getScrollTop();
+            final int scrollLeft = horizontalScrollbar.getScrollPos();
+            final int scrollTop = verticalScrollbar.getScrollPos();
 
             if (lastScrollLeft != scrollLeft) {
                 for (int i = 0; i < columnConfiguration.frozenColumns; i++) {
@@ -895,7 +881,7 @@ public class Escalator extends Widget {
         }
     }
 
-    private static final String CLASS_NAME = "v-escalator";
+    static final String CLASS_NAME = "v-escalator";
 
     private abstract class AbstractRowContainer implements RowContainer {
         private EscalatorUpdater updater = EscalatorUpdater.NULL;
@@ -1165,11 +1151,11 @@ public class Escalator extends Widget {
             }
 
             /*
-             * TODO [[escalator]][[rowheight]]: even if no rows are evaluated in
-             * the current viewport, the heights of some unrendered rows might
-             * change in a refresh. This would cause the scrollbar to be
-             * adjusted (in scrollHeight and/or scrollTop). Do we want to take
-             * this into account?
+             * TODO [[rowheight]]: even if no rows are evaluated in the current
+             * viewport, the heights of some unrendered rows might change in a
+             * refresh. This would cause the scrollbar to be adjusted (in
+             * scrollHeight and/or scrollTop). Do we want to take this into
+             * account?
              */
             if (hasColumnAndRowData()) {
                 /*
@@ -1251,7 +1237,7 @@ public class Escalator extends Widget {
                 final int leftByDiff = (int) (scroller.lastScrollLeft - removedColumnsPxAmount);
                 final int newScrollLeft = Math.max(firstRemovedColumnLeft,
                         leftByDiff);
-                scrollerElem.setScrollLeft(newScrollLeft);
+                horizontalScrollbar.setScrollPos(newScrollLeft);
             }
 
             // this needs to be after the scroll position adjustment above.
@@ -1304,8 +1290,8 @@ public class Escalator extends Widget {
                     * COLUMN_WIDTH_PX;
 
             if (columnsWereAddedToTheLeftOfViewport) {
-                scrollerElem
-                        .setScrollLeft((int) (scroller.lastScrollLeft + numberOfColumns
+                horizontalScrollbar
+                        .setScrollPos((int) (scroller.lastScrollLeft + numberOfColumns
                                 * COLUMN_WIDTH_PX));
             }
         }
@@ -1562,10 +1548,9 @@ public class Escalator extends Widget {
              */
             scroller.recalculateScrollbarsForVirtualViewport();
 
-            final boolean addedRowsAboveCurrentViewport = index * ROW_HEIGHT_PX < scrollerElem
-                    .getScrollTop();
-            final boolean addedRowsBelowCurrentViewport = index * ROW_HEIGHT_PX > scrollerElem
-                    .getScrollTop() + calculateHeight();
+            final boolean addedRowsAboveCurrentViewport = index * ROW_HEIGHT_PX < getScrollTop();
+            final boolean addedRowsBelowCurrentViewport = index * ROW_HEIGHT_PX > getScrollTop()
+                    + calculateHeight();
 
             if (addedRowsAboveCurrentViewport) {
                 /*
@@ -1751,7 +1736,7 @@ public class Escalator extends Widget {
             }
 
             internalScrollEventCalls++;
-            scrollerElem.setScrollTop(scrollerElem.getScrollTop() + yDelta);
+            verticalScrollbar.setScrollPosByDelta(yDelta);
 
             final int snappedYDelta = yDelta - yDelta % ROW_HEIGHT_PX;
             for (final Element tr : visualRowOrder) {
@@ -1876,8 +1861,8 @@ public class Escalator extends Widget {
                 // TODO [[rowheight]]
                 final int yDelta = removedAbove.length() * ROW_HEIGHT_PX;
                 final int firstLogicalRowHeight = ROW_HEIGHT_PX;
-                final boolean removalScrollsToShowFirstLogicalRow = scrollerElem
-                        .getScrollTop() - yDelta < firstLogicalRowHeight;
+                final boolean removalScrollsToShowFirstLogicalRow = verticalScrollbar
+                        .getScrollPos() - yDelta < firstLogicalRowHeight;
 
                 if (removedVisualInside.isEmpty()
                         && (!removalScrollsToShowFirstLogicalRow || !firstVisualRowIsRemoved)) {
@@ -1895,7 +1880,8 @@ public class Escalator extends Widget {
                      * current negative scrolltop, presto!), so that it isn't
                      * aligned funnily
                      */
-                    adjustScrollPosIgnoreEvents(-scrollerElem.getScrollTop());
+                    adjustScrollPosIgnoreEvents(-verticalScrollbar
+                            .getScrollPos());
                 }
             }
 
@@ -2584,9 +2570,17 @@ public class Escalator extends Widget {
                 }
             }
 
-            scrollerElem.getStyle().setLeft(frozenColumns * COLUMN_WIDTH_PX,
-                    Unit.PX);
+            /*
+             * If decreasing the amount of frozen columns, and scrolled to the
+             * right, the scroll position will reset. So we need to remember the
+             * scroll position, and re-apply it once the scrollbar size has been
+             * adjusted.
+             */
+            int scrollPos = horizontalScrollbar.getScrollPos();
+            horizontalScrollbar.getElement().getStyle()
+                    .setLeft(frozenColumns * COLUMN_WIDTH_PX, Unit.PX);
             scroller.recalculateScrollbarsForVirtualViewport();
+            horizontalScrollbar.setScrollPos(scrollPos);
         }
 
         @Override
@@ -2632,8 +2626,8 @@ public class Escalator extends Widget {
     private int tBodyScrollTop = 0;
     private int tBodyScrollLeft = 0;
 
-    private final Element scrollerElem = DOM.createDiv();
-    private final Element innerScrollerElem = DOM.createDiv();
+    private final VerticalScrollbarBundle verticalScrollbar = new VerticalScrollbarBundle();
+    private final HorizontalScrollbarBundle horizontalScrollbar = new HorizontalScrollbarBundle();
 
     private final HeaderRowContainer header = new HeaderRowContainer(headElem);
     private final BodyRowContainer body = new BodyRowContainer(bodyElem);
@@ -2690,10 +2684,11 @@ public class Escalator extends Widget {
         setElement(root);
         setStyleName(CLASS_NAME);
 
-        scrollerElem.setClassName(CLASS_NAME + "-scroller");
-        root.appendChild(scrollerElem);
-
-        scrollerElem.appendChild(innerScrollerElem);
+        root.appendChild(verticalScrollbar.getElement());
+        root.appendChild(horizontalScrollbar.getElement());
+        verticalScrollbar.setScrollbarThickness(Util.getNativeScrollbarSize());
+        horizontalScrollbar
+                .setScrollbarThickness(Util.getNativeScrollbarSize());
 
         tableWrapper = DOM.createDiv();
         tableWrapper.setClassName(CLASS_NAME + "-tablewrapper");
@@ -2732,11 +2727,17 @@ public class Escalator extends Widget {
                     recalculateElementSizes();
                     body.paintInsertRows(0, body.getRowCount());
 
-                    scroller.attachScrollListener(scrollerElem);
+                    scroller.attachScrollListener(verticalScrollbar
+                            .getElement());
+                    scroller.attachScrollListener(horizontalScrollbar
+                            .getElement());
                     scroller.attachMousewheelListener(getElement());
                     scroller.attachTouchListeners(getElement());
                 } else {
-                    scroller.detachScrollListener(scrollerElem);
+                    scroller.detachScrollListener(verticalScrollbar
+                            .getElement());
+                    scroller.detachScrollListener(horizontalScrollbar
+                            .getElement());
                     scroller.detachMousewheelListener(getElement());
                     scroller.detachTouchListeners(getElement());
                 }
@@ -2870,7 +2871,7 @@ public class Escalator extends Widget {
      * @return the logical vertical scroll offset
      */
     public double getScrollTop() {
-        return scrollerElem.getScrollTop();
+        return verticalScrollbar.getScrollPos();
     }
 
     /**
@@ -2881,7 +2882,7 @@ public class Escalator extends Widget {
      *            the number of pixels to scroll vertically
      */
     public void setScrollTop(final double scrollTop) {
-        scrollerElem.setScrollTop((int) scrollTop);
+        verticalScrollbar.setScrollPos((int) scrollTop);
     }
 
     /**
@@ -2891,7 +2892,7 @@ public class Escalator extends Widget {
      * @return the logical horizontal scroll offset
      */
     public int getScrollLeft() {
-        return scrollerElem.getScrollLeft();
+        return horizontalScrollbar.getScrollPos();
     }
 
     /**
@@ -2902,7 +2903,7 @@ public class Escalator extends Widget {
      *            the number of pixels to scroll horizontally
      */
     public void setScrollLeft(final int scrollLeft) {
-        scrollerElem.setScrollLeft(scrollLeft);
+        horizontalScrollbar.setScrollPos(scrollLeft);
     }
 
     /**

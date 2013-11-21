@@ -11,9 +11,23 @@ $border-color: #aaa;
 .#{$primaryStyleName}-scroller {
 	position: absolute;
 	overflow: auto;
-	height: inherit;
+	z-index: 20;
+}
+
+.#{$primaryStyleName}-scroller-horizontal {
 	left: 0; /* Left position adjusted to align with frozen columns */
 	right: 0;
+	bottom: 0;
+	overflow-y: hidden;
+	-ms-overflow-y: hidden;
+}
+
+.#{$primaryStyleName}-scroller-vertical {
+	right: 0;
+	top: 0;    /* this will be overridden by code, but it's a good default behavior */
+	bottom: 0; /* this will be overridden by code, but it's a good default behavior */
+	overflow-x: hidden;
+	-ms-overflow-x: hidden;
 }
 
 .#{$primaryStyleName}-tablewrapper {
