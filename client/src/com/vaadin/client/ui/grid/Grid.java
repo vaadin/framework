@@ -21,6 +21,8 @@ import java.util.List;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.Composite;
+import com.vaadin.client.data.DataChangeHandler;
+import com.vaadin.client.data.DataSource;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
@@ -63,6 +65,8 @@ public class Grid<T> extends Composite {
      * List of columns in the grid. Order defines the visible order.
      */
     private final List<GridColumn<T>> columns = new ArrayList<GridColumn<T>>();
+
+    private DataSource<T> dataSource;
 
     /**
      * The column groups rows added to the grid
@@ -366,6 +370,20 @@ public class Grid<T> extends Composite {
 
         refreshHeader();
         refreshFooter();
+
+        escalator
+                .addRowVisibilityChangeHandler(new RowVisibilityChangeHandler() {
+                    @Override
+                    public void onRowVisibilityChange(
+                            RowVisibilityChangeEvent event) {
+                        if (dataSource != null) {
+                            dataSource.ensureAvailability(
+                                    event.getFirstVisibleRow(),
+                                    event.getVisibleRowCount());
+                        }
+                    }
+                });
+
     }
 
     /**
@@ -399,15 +417,33 @@ public class Grid<T> extends Composite {
         };
     }
 
-    // TODO Should be implemented by the data sources
-    @SuppressWarnings("static-method")
     private EscalatorUpdater createBodyUpdater() {
         return new EscalatorUpdater() {
 
             @Override
             public void updateCells(Row row, List<Cell> cellsToUpdate) {
+                int rowIndex = row.getRow();
+                if (dataSource == null) {
+                    setCellsLoading(cellsToUpdate);
+                    return;
+                }
+
+                T rowData = dataSource.getRow(rowIndex);
+                if (rowData == null) {
+                    setCellsLoading(cellsToUpdate);
+                    return;
+                }
+
                 for (Cell cell : cellsToUpdate) {
-                    cell.getElement().setInnerHTML("-");
+                    String value = getColumn(cell.getColumn())
+                            .getValue(rowData);
+                    cell.getElement().setInnerText(value);
+                }
+            }
+
+            private void setCellsLoading(List<Cell> cellsToUpdate) {
+                for (Cell cell : cellsToUpdate) {
+                    cell.getElement().setInnerText("...");
                 }
             }
         };
@@ -777,5 +813,52 @@ public class Grid<T> extends Composite {
     @Override
     public void setWidth(String width) {
         escalator.setWidth(width);
+    }
+
+    /**
+     * Sets the data source used by this grid.
+     * 
+     * @param dataSource
+     *            the data source to use, not null
+     * @throws IllegalArgumentException
+     *             if <code>dataSource</code> is <code>null</code>
+     */
+    public void setDataSource(DataSource<T> dataSource)
+            throws IllegalArgumentException {
+        if (dataSource == null) {
+            throw new IllegalArgumentException("dataSource can't be null.");
+        }
+
+        if (this.dataSource != null) {
+            this.dataSource.setDataChangeHandler(null);
+        }
+
+        this.dataSource = dataSource;
+        dataSource.setDataChangeHandler(new DataChangeHandler() {
+            @Override
+            public void dataUpdated(int firstIndex, int numberOfItems) {
+                escalator.getBody().refreshRows(firstIndex, numberOfItems);
+            }
+
+            @Override
+            public void dataRemoved(int firstIndex, int numberOfItems) {
+                escalator.getBody().removeRows(firstIndex, numberOfItems);
+            }
+
+            @Override
+            public void dataAdded(int firstIndex, int numberOfItems) {
+                escalator.getBody().insertRows(firstIndex, numberOfItems);
+            }
+        });
+
+        int previousRowCount = escalator.getBody().getRowCount();
+        if (previousRowCount != 0) {
+            escalator.getBody().removeRows(0, previousRowCount);
+        }
+
+        int estimatedSize = dataSource.getEstimatedSize();
+        if (estimatedSize > 0) {
+            escalator.getBody().insertRows(0, estimatedSize);
+        }
     }
 }

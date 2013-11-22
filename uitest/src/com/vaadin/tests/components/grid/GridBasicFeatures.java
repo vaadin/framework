@@ -17,6 +17,7 @@ package com.vaadin.tests.components.grid;
 
 import java.util.ArrayList;
 
+import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.components.grid.ColumnGroup;
@@ -36,6 +37,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
     private int columnGroupRows = 0;
 
+    private final int ROWS = 1000;
+
     @Override
     protected Grid constructComponent() {
 
@@ -44,6 +47,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         for (int col = 0; col < COLUMNS; col++) {
             ds.addContainerProperty("Column" + col, String.class, "");
+        }
+
+        for (int row = 0; row < ROWS; row++) {
+            Item item = ds.addItem(Integer.valueOf(row));
+            for (int col = 0; col < COLUMNS; col++) {
+                item.getItemProperty("Column" + col).setValue(
+                        "(" + row + ", " + col + ")");
+            }
         }
 
         // Create grid

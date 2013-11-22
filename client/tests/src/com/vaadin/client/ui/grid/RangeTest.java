@@ -209,4 +209,80 @@ public class RangeTest {
         assertTrue("no overlap allowed",
                 !Range.between(0, 10).endsAfter(Range.between(5, 10)));
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void combine_notOverlappingFirstSmaller() {
+        Range.between(0, 10).combineWith(Range.between(11, 20));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void combine_notOverlappingSecondLarger() {
+        Range.between(11, 20).combineWith(Range.between(0, 10));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void combine_firstEmptyNotOverlapping() {
+        Range.between(15, 15).combineWith(Range.between(0, 10));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void combine_secondEmptyNotOverlapping() {
+        Range.between(0, 10).combineWith(Range.between(15, 15));
+    }
+
+    @Test
+    public void combine_barelyOverlapping() {
+        Range r1 = Range.between(0, 10);
+        Range r2 = Range.between(10, 20);
+
+        // Test both ways, should give the same result
+        Range combined1 = r1.combineWith(r2);
+        Range combined2 = r2.combineWith(r1);
+        assertEquals(combined1, combined2);
+
+        assertEquals(0, combined1.getStart());
+        assertEquals(20, combined1.getEnd());
+    }
+
+    @Test
+    public void combine_subRange() {
+        Range r1 = Range.between(0, 10);
+        Range r2 = Range.between(2, 8);
+
+        // Test both ways, should give the same result
+        Range combined1 = r1.combineWith(r2);
+        Range combined2 = r2.combineWith(r1);
+        assertEquals(combined1, combined2);
+
+        assertEquals(r1, combined1);
+    }
+
+    @Test
+    public void combine_intersecting() {
+        Range r1 = Range.between(0, 10);
+        Range r2 = Range.between(5, 15);
+
+        // Test both ways, should give the same result
+        Range combined1 = r1.combineWith(r2);
+        Range combined2 = r2.combineWith(r1);
+        assertEquals(combined1, combined2);
+
+        assertEquals(0, combined1.getStart());
+        assertEquals(15, combined1.getEnd());
+
+    }
+
+    @Test
+    public void combine_emptyInside() {
+        Range r1 = Range.between(0, 10);
+        Range r2 = Range.between(5, 5);
+
+        // Test both ways, should give the same result
+        Range combined1 = r1.combineWith(r2);
+        Range combined2 = r2.combineWith(r1);
+        assertEquals(combined1, combined2);
+
+        assertEquals(r1, combined1);
+    }
+
 }

@@ -359,4 +359,26 @@ public final class Range {
     public Range[] splitAtFromStart(final int length) {
         return splitAt(getStart() + length);
     }
+
+    /**
+     * Combines two ranges to create a range containing all values in both
+     * ranges, provided there are no gaps between the ranges.
+     * 
+     * @param other
+     *            the range to combine with this range
+     * 
+     * @return the combined range
+     * 
+     * @throws IllegalArgumentException
+     *             if the two ranges aren't connected
+     */
+    public Range combineWith(Range other) throws IllegalArgumentException {
+        if (getStart() > other.getEnd() || other.getStart() > getEnd()) {
+            throw new IllegalArgumentException("There is a gap between " + this
+                    + " and " + other);
+        }
+
+        return Range.between(Math.min(getStart(), other.getStart()),
+                Math.max(getEnd(), other.getEnd()));
+    }
 }

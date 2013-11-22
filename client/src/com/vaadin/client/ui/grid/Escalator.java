@@ -39,6 +39,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.grid.Escalator.JsniUtil.TouchHandlerBundle;
@@ -1522,6 +1523,8 @@ public class Escalator extends Widget {
                     moveAndUpdateEscalatorRows(strayRow, 0, topLogicalIndex);
                 }
             }
+
+            fireRowVisibilityChangeEvent();
         }
 
         @Override
@@ -1715,6 +1718,8 @@ public class Escalator extends Widget {
                     newRowTop += ROW_HEIGHT_PX;
                 }
             }
+
+            fireRowVisibilityChangeEvent();
         }
 
         /**
@@ -2101,6 +2106,8 @@ public class Escalator extends Widget {
              * or it won't work correctly (due to setScrollTop invocation)
              */
             scroller.recalculateScrollbarsForVirtualViewport();
+
+            fireRowVisibilityChangeEvent();
         }
 
         private void paintRemoveRowsAtMiddle(final Range removedLogicalInside,
@@ -2418,6 +2425,10 @@ public class Escalator extends Widget {
                                 visualRowOrder.size(), newLogicalIndex);
                     }
                 }
+            }
+
+            if (neededEscalatorRowsDiff != 0) {
+                fireRowVisibilityChangeEvent();
             }
 
             Profiler.leave("Escalator.BodyRowContainer.verifyEscalatorCount");
@@ -3115,5 +3126,31 @@ public class Escalator extends Widget {
         }
 
         return array;
+    }
+
+    /**
+     * Adds an event handler that gets notified when the range of visible rows
+     * changes e.g. because of scrolling.
+     * 
+     * @param rowVisibilityChangeHadler
+     *            the event handler
+     * @return a handler registration for the added handler
+     */
+    public HandlerRegistration addRowVisibilityChangeHandler(
+            RowVisibilityChangeHandler rowVisibilityChangeHadler) {
+        return addHandler(rowVisibilityChangeHadler,
+                RowVisibilityChangeEvent.TYPE);
+    }
+
+    private void fireRowVisibilityChangeEvent() {
+        int visibleRangeStart = body.getLogicalRowIndex(body.visualRowOrder
+                .getFirst());
+        int visibleRangeEnd = body.getLogicalRowIndex(body.visualRowOrder
+                .getLast()) + 1;
+
+        int visibleRowCount = visibleRangeEnd - visibleRangeStart;
+
+        fireEvent(new RowVisibilityChangeEvent(visibleRangeStart,
+                visibleRowCount));
     }
 }

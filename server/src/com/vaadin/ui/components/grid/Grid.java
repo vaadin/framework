@@ -29,6 +29,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.data.Container.PropertySetChangeNotifier;
+import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.ColumnGroupRowState;
 import com.vaadin.shared.ui.grid.GridColumnState;
@@ -107,6 +108,8 @@ public class Grid extends AbstractComponent {
         }
     };
 
+    private RpcDataProviderExtension datasourceExtension;
+
     /**
      * Creates a new Grid using the given datasource.
      * 
@@ -140,7 +143,13 @@ public class Grid extends AbstractComponent {
                     .removePropertySetChangeListener(propertyListener);
         }
 
+        if (datasourceExtension != null) {
+            removeExtension(datasourceExtension);
+        }
+
         datasource = container;
+        datasourceExtension = new RpcDataProviderExtension(container);
+        datasourceExtension.extend(this);
 
         // Listen to changes in properties and remove columns if needed
         if (datasource instanceof PropertySetChangeNotifier) {

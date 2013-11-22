@@ -48,10 +48,15 @@ public class GridConnector extends AbstractComponentConnector {
      */
     private class CustomGridColumn extends GridColumn<String[]> {
 
+        private final int columnIndex;
+
+        public CustomGridColumn(int columnIndex) {
+            this.columnIndex = columnIndex;
+        }
+
         @Override
         public String getValue(String[] obj) {
-            // FIXME Should return something from the data source.
-            return null;
+            return obj[columnIndex];
         }
     }
 
@@ -142,7 +147,7 @@ public class GridConnector extends AbstractComponentConnector {
      */
     private void addColumnFromStateChangeEvent(int columnIndex) {
         GridColumnState state = getState().columns.get(columnIndex);
-        CustomGridColumn column = new CustomGridColumn();
+        CustomGridColumn column = new CustomGridColumn(columnIndex);
         updateColumnFromState(column, state);
 
         columnIdToColumn.put(state.id, column);
