@@ -99,7 +99,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         Profiler.enter("AbstractRemoteDataSource.checkCacheCoverage");
 
-        if (!requestedAvailability.intersects(cached)) {
+        if (!requestedAvailability.intersects(cached) || cached.isEmpty()) {
             /*
              * Simple case: no overlap between cached data and needed data.
              * Clear the cache and request new data

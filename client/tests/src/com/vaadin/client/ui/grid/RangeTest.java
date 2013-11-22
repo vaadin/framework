@@ -113,6 +113,24 @@ public class RangeTest {
     }
 
     @Test
+    public void split_valueBefore() {
+        Range range = Range.between(10, 20);
+        Range[] splitRanges = range.splitAt(5);
+
+        assertEquals(Range.between(10, 10), splitRanges[0]);
+        assertEquals(range, splitRanges[1]);
+    }
+
+    @Test
+    public void split_valueAfter() {
+        Range range = Range.between(10, 20);
+        Range[] splitRanges = range.splitAt(25);
+
+        assertEquals(range, splitRanges[0]);
+        assertEquals(Range.between(20, 20), splitRanges[1]);
+    }
+
+    @Test
     public void emptySplitTest() {
         final Range range = Range.between(5, 10);
         final Range[] split1 = range.splitAt(0);
@@ -137,10 +155,22 @@ public class RangeTest {
                 .intersects(Range.between(5, 15)));
         assertTrue("[0..10[ does not intersect [10..20[", !Range.between(0, 10)
                 .intersects(Range.between(10, 20)));
-        assertTrue("empty range does not intersect with [0..10[", !Range
-                .between(5, 5).intersects(Range.between(0, 10)));
-        assertTrue("[0..10[ does not intersect with empty range", !Range
-                .between(0, 10).intersects(Range.between(5, 5)));
+    }
+
+    @Test
+    public void intersects_emptyInside() {
+        assertTrue("[5..5[ does intersect with [0..10[", Range.between(5, 5)
+                .intersects(Range.between(0, 10)));
+        assertTrue("[0..10[ does intersect with [5..5[", Range.between(0, 10)
+                .intersects(Range.between(5, 5)));
+    }
+
+    @Test
+    public void intersects_emptyOutside() {
+        assertTrue("[15..15[ does not intersect with [0..10[",
+                !Range.between(15, 15).intersects(Range.between(0, 10)));
+        assertTrue("[0..10[ does not intersect with [15..15[",
+                !Range.between(0, 10).intersects(Range.between(15, 15)));
     }
 
     @Test

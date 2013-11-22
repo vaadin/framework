@@ -44,7 +44,7 @@ public final class Range {
     }
 
     /**
-     * Creates a range of all integers between two integers.
+     * Creates a range between two integers.
      * <p>
      * The range start is <em>inclusive</em> and the end is <em>exclusive</em>.
      * So, a range "between" 0 and 5 represents the numbers 0, 1, 2, 3 and 4,
@@ -70,7 +70,7 @@ public final class Range {
      *            the first integer to include in the range
      * @param length
      *            the length of the resulting range
-     * @return a range of all the integers from <code>start</code>, with
+     * @return a range starting from <code>start</code>, with
      *         <code>length</code> number of integers following
      * @throws IllegalArgumentException
      *             if length &lt; 0
@@ -110,7 +110,7 @@ public final class Range {
     }
 
     /**
-     * Returns the <em>inclusive</em>start point of this range.
+     * Returns the <em>inclusive</em> start point of this range.
      * 
      * @return the start point of this range
      */
@@ -146,21 +146,15 @@ public final class Range {
     }
 
     /**
-     * Checks whether this range and another range shares integers.
-     * <p>
-     * An empty range never intersects with any other range.
+     * Checks whether this range and another range are at least partially
+     * covering the same values.
      * 
      * @param other
      *            the other range to check against
-     * @return <code>true</code> if this and <code>other</code> have any
-     *         integers in common
+     * @return <code>true</code> if this and <code>other</code> intersect
      */
     public boolean intersects(final Range other) {
-        if (!isEmpty() && !other.isEmpty()) {
-            return getStart() < other.getEnd() && other.getStart() < getEnd();
-        } else {
-            return false;
-        }
+        return getStart() < other.getEnd() && other.getStart() < getEnd();
     }
 
     /**
@@ -328,9 +322,9 @@ public final class Range {
      */
     public Range[] splitAt(final int integer) {
         if (integer < start) {
-            return new Range[] { Range.withLength(integer, 0), this };
+            return new Range[] { Range.withLength(start, 0), this };
         } else if (integer >= end) {
-            return new Range[] { this, Range.withLength(integer, 0) };
+            return new Range[] { this, Range.withLength(end, 0) };
         } else {
             return new Range[] { new Range(start, integer),
                     new Range(integer, end) };
