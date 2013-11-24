@@ -192,4 +192,16 @@ public class GridColumn implements Serializable {
             throw new IllegalStateException("Column no longer exists.");
         }
     }
+
+    /**
+     * Sets this column as the last frozen column in its grid.
+     * 
+     * @throws IllegalArgumentException
+     *             if the column is no longer attached to any grid
+     * @see Grid#setLastFrozenColumn(GridColumn)
+     */
+    public void setLastFrozenColumn() {
+        checkColumnIsAttached();
+        grid.setLastFrozenColumn(this);
+    }
 }

@@ -105,6 +105,12 @@ public class Grid extends AbstractComponent {
                     appendColumn(propertyId);
                 }
             }
+
+            Object frozenPropertyId = columnKeys
+                    .get(getState(false).lastFrozenColumnId);
+            if (!columns.containsKey(frozenPropertyId)) {
+                setLastFrozenPropertyId(null);
+            }
         }
     };
 
@@ -158,6 +164,7 @@ public class Grid extends AbstractComponent {
         }
 
         getState().columns.clear();
+        setLastFrozenPropertyId(null);
 
         // Add columns
         for (Object propertyId : datasource.getContainerPropertyIds()) {
@@ -361,5 +368,80 @@ public class Grid extends AbstractComponent {
         columns.put(datasourcePropertyId, column);
 
         return column;
+    }
+
+    /**
+     * Sets (or unsets) the rightmost frozen column in the grid.
+     * <p>
+     * All columns up to and including the given column will be frozen in place
+     * when the grid is scrolled sideways.
+     * 
+     * @param lastFrozenColumn
+     *            the rightmost column to freeze, or <code>null</code> to not
+     *            have any columns frozen
+     * @throws IllegalArgumentException
+     *             if {@code lastFrozenColumn} is not a column from this grid
+     */
+    void setLastFrozenColumn(GridColumn lastFrozenColumn) {
+        /*
+         * TODO: If and when Grid supports column reordering or insertion of
+         * columns before other columns, make sure to mention that adding
+         * columns before lastFrozenColumn will change the frozen column count
+         */
+
+        if (lastFrozenColumn == null) {
+            getState().lastFrozenColumnId = null;
+        } else if (columns.containsValue(lastFrozenColumn)) {
+            getState().lastFrozenColumnId = lastFrozenColumn.getState().id;
+        } else {
+            throw new IllegalArgumentException(
+                    "The given column isn't attached to this grid");
+        }
+    }
+
+    /**
+     * Sets (or unsets) the rightmost frozen column in the grid.
+     * <p>
+     * All columns up to and including the indicated property will be frozen in
+     * place when the grid is scrolled sideways.
+     * <p>
+     * <em>Note:</em> If the container used by this grid supports a propertyId
+     * <code>null</code>, it can never be defined as the last frozen column, as
+     * a <code>null</code> parameter will always reset the frozen columns in
+     * Grid.
+     * 
+     * @param propertyId
+     *            the property id corresponding to the column that should be the
+     *            last frozen column, or <code>null</code> to not have any
+     *            columns frozen.
+     * @throws IllegalArgumentException
+     *             if {@code lastFrozenColumn} is not a column from this grid
+     */
+    public void setLastFrozenPropertyId(Object propertyId) {
+        final GridColumn column;
+        if (propertyId == null) {
+            column = null;
+        } else {
+            column = getColumn(propertyId);
+            if (column == null) {
+                throw new IllegalArgumentException(
+                        "property id does not exist.");
+            }
+        }
+        setLastFrozenColumn(column);
+    }
+
+    /**
+     * Gets the rightmost frozen column in the grid.
+     * <p>
+     * <em>Note:</em> Most often, this method returns the very value set with
+     * {@link #setLastFrozenPropertyId(Object)}. This value, however, can be
+     * reset to <code>null</code> if the column is detached from this grid.
+     * 
+     * @return the rightmost frozen column in the grid, or <code>null</code> if
+     *         no columns are frozen.
+     */
+    public Object getLastFrozenPropertyId() {
+        return columnKeys.get(getState().lastFrozenColumnId);
     }
 }

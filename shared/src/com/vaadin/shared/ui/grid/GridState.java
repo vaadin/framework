@@ -53,4 +53,12 @@ public class GridState extends AbstractComponentState {
      * The column groups added to the grid
      */
     public List<ColumnGroupRowState> columnGroupRows = new ArrayList<ColumnGroupRowState>();
+
+    /**
+     * The id for the last frozen column.
+     * 
+     * @see GridColumnState#id
+     */
+    public String lastFrozenColumnId = null;
+
 }

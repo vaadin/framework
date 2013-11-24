@@ -133,6 +133,15 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }, null, c);
 
+            createClickAction("Freeze", "Column" + c,
+                    new Command<Grid, String>() {
+
+                        @Override
+                        public void execute(Grid grid, String value, Object data) {
+                            grid.setLastFrozenPropertyId("Column" + data);
+                        }
+                    }, null, c);
+
         }
 
     }

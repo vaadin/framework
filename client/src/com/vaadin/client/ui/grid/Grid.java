@@ -83,6 +83,8 @@ public class Grid<T> extends Composite {
      */
     private boolean columnFootersVisible = false;
 
+    private GridColumn<T> lastFrozenColumn;
+
     /**
      * Base class for grid columns internally used by the Grid. The user should
      * use {@link GridColumn} when creating new columns.
@@ -560,6 +562,12 @@ public class Grid<T> extends Composite {
 
         ColumnConfiguration conf = escalator.getColumnConfiguration();
         conf.insertColumns(index, 1);
+
+        if (lastFrozenColumn != null
+                && ((AbstractGridColumn<T>) lastFrozenColumn)
+                        .findIndexOfColumn() < index) {
+            refreshFrozenColumns();
+        }
     }
 
     /**
@@ -578,6 +586,12 @@ public class Grid<T> extends Composite {
 
         ColumnConfiguration conf = escalator.getColumnConfiguration();
         conf.removeColumns(columnIndex, 1);
+
+        if (column.equals(lastFrozenColumn)) {
+            setLastFrozenColumn(null);
+        } else {
+            refreshFrozenColumns();
+        }
     }
 
     /**
@@ -860,5 +874,51 @@ public class Grid<T> extends Composite {
         if (estimatedSize > 0) {
             escalator.getBody().insertRows(0, estimatedSize);
         }
+    }
+
+    /**
+     * Sets the rightmost frozen column in the grid.
+     * <p>
+     * All columns up to and including the given column will be frozen in place
+     * when the grid is scrolled sideways.
+     * 
+     * @param lastFrozenColumn
+     *            the rightmost column to freeze, or <code>null</code> to not
+     *            have any columns frozen
+     * @throws IllegalArgumentException
+     *             if {@code lastFrozenColumn} is not a column from this grid
+     */
+    public void setLastFrozenColumn(GridColumn<T> lastFrozenColumn) {
+        this.lastFrozenColumn = lastFrozenColumn;
+        refreshFrozenColumns();
+    }
+
+    private void refreshFrozenColumns() {
+        final int frozenCount;
+        if (lastFrozenColumn != null) {
+            frozenCount = columns.indexOf(lastFrozenColumn) + 1;
+            if (frozenCount == 0) {
+                throw new IllegalArgumentException(
+                        "The given column isn't attached to this grid");
+            }
+        } else {
+            frozenCount = 0;
+        }
+
+        escalator.getColumnConfiguration().setFrozenColumnCount(frozenCount);
+    }
+
+    /**
+     * Gets the rightmost frozen column in the grid.
+     * <p>
+     * <em>Note:</em> Most usually, this method returns the very value set with
+     * {@link #setLastFrozenColumn(GridColumn)}. This value, however, can be
+     * reset to <code>null</code> if the column is removed from this grid.
+     * 
+     * @return the rightmost frozen column in the grid, or <code>null</code> if
+     *         no columns are frozen.
+     */
+    public GridColumn<T> getLastFrozenColumn() {
+        return lastFrozenColumn;
     }
 }

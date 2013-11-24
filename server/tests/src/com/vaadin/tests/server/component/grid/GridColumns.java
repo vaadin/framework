@@ -242,6 +242,20 @@ public class GridColumns {
         assertTrue(state.columnGroupRows.size() == 3);
     }
 
+    @Test
+    public void testFrozenColumnByPropertyId() {
+        assertNull("Grid should not start with a frozen column",
+                grid.getLastFrozenPropertyId());
+
+        Object propertyId = grid.getContainerDatasource()
+                .getContainerPropertyIds().iterator().next();
+        grid.setLastFrozenPropertyId(propertyId);
+        assertEquals(propertyId, grid.getLastFrozenPropertyId());
+
+        grid.getContainerDatasource().removeContainerProperty(propertyId);
+        assertNull(grid.getLastFrozenPropertyId());
+    }
+
     private GridColumnState getColumnState(Object propertyId) {
         String columnId = columnIdMapper.key(propertyId);
         for (GridColumnState columnState : state.columns) {

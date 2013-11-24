@@ -125,6 +125,18 @@ public class GridConnector extends AbstractComponentConnector {
         if (stateChangeEvent.hasPropertyChanged("columnGroupRows")) {
             updateColumnGroupsFromStateChangeEvent();
         }
+
+        if (stateChangeEvent.hasPropertyChanged("lastFrozenColumnId")) {
+            String frozenColId = getState().lastFrozenColumnId;
+            if (frozenColId != null) {
+                CustomGridColumn column = columnIdToColumn.get(frozenColId);
+                assert column != null : "Column to be frozen could not be found (id:"
+                        + frozenColId + ")";
+                getWidget().setLastFrozenColumn(column);
+            } else {
+                getWidget().setLastFrozenColumn(null);
+            }
+        }
     }
 
     /**
