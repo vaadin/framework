@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -207,5 +208,29 @@ public class GridColumnGroups {
         assertEquals("My footer", group.getFooterCaption());
         group.setFooterCaption(null);
         assertNull(group.getFooterCaption());
+    }
+
+    @Test
+    public void testColumnGroupDetachment() throws Exception {
+
+        ColumnGroupRow row = grid.addColumnGroupRow();
+        ColumnGroup group = row.addGroup("column1", "column2");
+
+        // Remove group
+        row.removeGroup(group);
+
+        try {
+            group.setHeaderCaption("Header");
+            fail("Should throw exception for setting header caption on detached group");
+        } catch (IllegalStateException ise) {
+
+        }
+
+        try {
+            group.setFooterCaption("Footer");
+            fail("Should throw exception for setting footer caption on detached group");
+        } catch (IllegalStateException ise) {
+
+        }
     }
 }

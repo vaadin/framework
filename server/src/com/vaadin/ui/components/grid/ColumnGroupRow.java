@@ -111,7 +111,7 @@ public class ColumnGroupRow implements Serializable {
         }
         this.state.groups.add(state);
 
-        ColumnGroup group = new ColumnGroup(grid, state,
+        ColumnGroup group = new ColumnGroup(grid, this, state,
                 Arrays.asList(propertyIds));
         groups.add(group);
 
@@ -160,7 +160,7 @@ public class ColumnGroupRow implements Serializable {
         }
 
         ColumnGroupState state = new ColumnGroupState();
-        ColumnGroup group = new ColumnGroup(grid, state, propertyIds);
+        ColumnGroup group = new ColumnGroup(grid, this, state, propertyIds);
         this.groups.add(group);
 
         // Update state

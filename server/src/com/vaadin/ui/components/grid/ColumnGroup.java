@@ -43,6 +43,11 @@ public class ColumnGroup implements Serializable {
     private final Grid grid;
 
     /**
+     * The column group row the column group is attached to
+     */
+    private final ColumnGroupRow row;
+
+    /**
      * The common state between the server and the client
      */
     private final ColumnGroupState state;
@@ -61,13 +66,15 @@ public class ColumnGroup implements Serializable {
      *            the sub groups who should be included in this group
      * 
      */
-    ColumnGroup(Grid grid, ColumnGroupState state, List<Object> propertyIds) {
+    ColumnGroup(Grid grid, ColumnGroupRow row, ColumnGroupState state,
+            List<Object> propertyIds) {
         if (propertyIds == null) {
             throw new IllegalArgumentException(
                     "propertyIds cannot be null. Use empty list instead.");
         }
 
         this.state = state;
+        this.row = row;
         columns = Collections.unmodifiableList(new ArrayList<Object>(
                 propertyIds));
         this.grid = grid;
@@ -80,6 +87,7 @@ public class ColumnGroup implements Serializable {
      *            the text displayed in the header of the column
      */
     public void setHeaderCaption(String header) {
+        checkGroupIsAttached();
         state.header = header;
         grid.markAsDirty();
     }
@@ -90,6 +98,7 @@ public class ColumnGroup implements Serializable {
      * @return the text displayed in the header of the column
      */
     public String getHeaderCaption() {
+        checkGroupIsAttached();
         return state.header;
     }
 
@@ -100,6 +109,7 @@ public class ColumnGroup implements Serializable {
      *            the text displayed in the footer of the column
      */
     public void setFooterCaption(String footer) {
+        checkGroupIsAttached();
         state.footer = footer;
         grid.markAsDirty();
     }
@@ -110,6 +120,7 @@ public class ColumnGroup implements Serializable {
      * @return the text displayed in the footer of the column
      */
     public String getFooterCaption() {
+        checkGroupIsAttached();
         return state.footer;
     }
 
@@ -138,4 +149,17 @@ public class ColumnGroup implements Serializable {
         return columns;
     }
 
+    /**
+     * Checks if column group is attached to a row and throws an
+     * {@link IllegalStateException} if it is not.
+     * 
+     * @throws IllegalStateException
+     *             if the column is no longer attached to any grid
+     */
+    protected void checkGroupIsAttached() throws IllegalStateException {
+        if (!row.getState().groups.contains(state)) {
+            throw new IllegalStateException(
+                    "Column Group has been removed from the row.");
+        }
+    }
 }
