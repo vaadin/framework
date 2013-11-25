@@ -1,0 +1,28 @@
+@mixin emptyarglist1(){
+	body{
+		color: blue;
+	}
+}
+
+@mixin emptyarglist2(){
+	h1{
+		text-align:center;
+	}
+}
+
+@mixin emptyarglist3{
+	p{
+		font-style:italic;
+	}	   
+}
+
+@mixin emptyarglist4{
+	table{
+		width: 100%;
+	}
+}
+
+@include emptyarglist1();
+@include emptyarglist2;
+@include emptyarglist3();
+@include emptyarglist4;
