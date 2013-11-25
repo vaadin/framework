@@ -90,10 +90,11 @@ public class GridConnector extends AbstractComponentConnector {
         if (stateChangeEvent.hasPropertyChanged("columns")) {
 
             int totalColumns = getState().columns.size();
-            int currentColumns = getWidget().getColumnCount();
 
             // Remove old columns
             purgeRemovedColumns();
+
+            int currentColumns = getWidget().getColumnCount();
 
             // Add new columns
             for (int columnIndex = currentColumns; columnIndex < totalColumns; columnIndex++) {
