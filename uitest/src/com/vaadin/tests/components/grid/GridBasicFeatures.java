@@ -181,7 +181,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                                     }
                                 }, row);
 
-                        for (int i = 0; i < COLUMNS; i += 2) {
+                        for (int i = 0; i < COLUMNS; i++) {
                             final int columnIndex = i;
                             createClickAction("Group Column " + columnIndex
                                     + " & " + (columnIndex + 1),
