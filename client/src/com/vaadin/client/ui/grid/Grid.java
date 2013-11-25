@@ -304,7 +304,7 @@ public class Grid<T> extends Composite {
         public abstract boolean firstRowIsVisible();
 
         @Override
-        public void updateCells(Row row, List<Cell> cellsToUpdate) {
+        public void updateCells(Row row, Iterable<Cell> cellsToUpdate) {
 
             int rowIndex;
             if (inverted) {
@@ -423,7 +423,7 @@ public class Grid<T> extends Composite {
         return new EscalatorUpdater() {
 
             @Override
-            public void updateCells(Row row, List<Cell> cellsToUpdate) {
+            public void updateCells(Row row, Iterable<Cell> cellsToUpdate) {
                 int rowIndex = row.getRow();
                 if (dataSource == null) {
                     setCellsLoading(cellsToUpdate);
@@ -443,7 +443,7 @@ public class Grid<T> extends Composite {
                 }
             }
 
-            private void setCellsLoading(List<Cell> cellsToUpdate) {
+            private void setCellsLoading(Iterable<Cell> cellsToUpdate) {
                 for (Cell cell : cellsToUpdate) {
                     cell.getElement().setInnerText("...");
                 }

@@ -42,8 +42,12 @@ public class VTestGrid extends Composite {
             return new EscalatorUpdater() {
                 @Override
                 public void updateCells(final Row row,
-                        final List<Cell> cellsToUpdate) {
+                        final Iterable<Cell> cellsToUpdate) {
                     for (final Cell cell : cellsToUpdate) {
+                        if (cell.getColumn() % 3 == 0) {
+                            cell.setColSpan(2);
+                        }
+
                         final Integer columnName = columns
                                 .get(cell.getColumn());
                         cell.getElement().setInnerText("Header " + columnName);
@@ -56,8 +60,12 @@ public class VTestGrid extends Composite {
             return new EscalatorUpdater() {
                 @Override
                 public void updateCells(final Row row,
-                        final List<Cell> cellsToUpdate) {
+                        final Iterable<Cell> cellsToUpdate) {
                     for (final Cell cell : cellsToUpdate) {
+                        if (cell.getColumn() % 3 == 1) {
+                            cell.setColSpan(2);
+                        }
+
                         final Integer columnName = columns
                                 .get(cell.getColumn());
                         cell.getElement().setInnerText("Footer " + columnName);
@@ -83,6 +91,10 @@ public class VTestGrid extends Composite {
                                 "Row " + cell.getRow() + ": " + cellInfo);
                     }
 
+                    if (cell.getColumn() % 3 == cell.getRow() % 3) {
+                        cell.setColSpan(3);
+                    }
+
                     final double c = i * .1;
                     final int r = (int) ((Math.cos(c) + 1) * 128);
                     final int g = (int) ((Math.cos(c / Math.PI) + 1) * 128);
@@ -102,7 +114,7 @@ public class VTestGrid extends Composite {
 
                 @Override
                 public void updateCells(final Row row,
-                        final List<Cell> cellsToUpdate) {
+                        final Iterable<Cell> cellsToUpdate) {
                     for (final Cell cell : cellsToUpdate) {
                         renderCell(cell);
                     }

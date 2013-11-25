@@ -16,7 +16,8 @@
 package com.vaadin.client.ui.grid;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.dom.client.Node;
@@ -33,12 +34,77 @@ import com.google.gwt.user.client.Element;
  * @see Escalator.AbstractRowContainer#refreshRow(Node, int)
  */
 class FlyweightRow implements Row {
+
+    static class CellIterator implements Iterator<Cell> {
+        /** A defensive copy of the cells in the current row. */
+        private final ArrayList<FlyweightCell> cells;
+        private int cursor = 0;
+        private int skipNext = 0;
+
+        public CellIterator(final Collection<FlyweightCell> cells) {
+            this.cells = new ArrayList<FlyweightCell>(cells);
+        }
+
+        @Override
+        public boolean hasNext() {
+            return cursor + skipNext < cells.size();
+        }
+
+        @Override
+        public FlyweightCell next() {
+            // if we needed to skip some cells since the last invocation.
+            for (int i = 0; i < skipNext; i++) {
+                cells.remove(cursor);
+            }
+            skipNext = 0;
+
+            final FlyweightCell cell = cells.get(cursor++);
+            cell.setup(this);
+            return cell;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException(
+                    "Cannot remove cells via iterator");
+        }
+
+        /**
+         * Sets the number of cells to skip when {@link #next()} is called the
+         * next time. Cell hiding is also handled eagerly in this method.
+         * 
+         * @param colspan
+         *            the number of cells to skip on next invocation of
+         *            {@link #next()}
+         */
+        public void setSkipNext(final int colspan) {
+            assert colspan > 0 : "Number of cells didn't make sense: "
+                    + colspan;
+            skipNext = colspan;
+        }
+
+        /**
+         * Gets the next <code>n</code> cells in the iterator, ignoring any
+         * possibly spanned cells.
+         * 
+         * @param n
+         *            the number of next cells to retrieve
+         * @return A list of next <code>n</code> cells, or less if there aren't
+         *         enough cells to retrieve
+         */
+        public List<FlyweightCell> rawPeekNext(final int n) {
+            final int from = Math.min(cursor, cells.size());
+            final int to = Math.min(cursor + n, cells.size());
+            return cells.subList(from, to);
+        }
+    }
+
     private static final int BLANK = Integer.MIN_VALUE;
 
     private int row;
     private Element element;
     private final Escalator escalator;
-    private final List<Cell> cells = new ArrayList<Cell>();
+    private final List<FlyweightCell> cells = new ArrayList<FlyweightCell>();
 
     public FlyweightRow(final Escalator escalator) {
         this.escalator = escalator;
@@ -70,6 +136,9 @@ class FlyweightRow implements Row {
     boolean teardown() {
         element = null;
         row = BLANK;
+        for (final FlyweightCell cell : cells) {
+            assert cell.teardown();
+        }
         return true;
     }
 
@@ -116,9 +185,14 @@ class FlyweightRow implements Row {
      * @see #setup(Element, int)
      * @see #teardown()
      */
-    List<Cell> getCells() {
+    Iterable<Cell> getCells() {
         assertSetup();
-        return Collections.unmodifiableList(cells);
+        return new Iterable<Cell>() {
+            @Override
+            public Iterator<Cell> iterator() {
+                return new CellIterator(cells);
+            }
+        };
     }
 
     /**

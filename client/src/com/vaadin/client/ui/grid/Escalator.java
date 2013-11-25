@@ -520,7 +520,7 @@ public class Escalator extends Widget {
     }
 
     private static final int ROW_HEIGHT_PX = 20;
-    private static final int COLUMN_WIDTH_PX = 100;
+    static final int COLUMN_WIDTH_PX = 100;
 
     /** An inner class that handles all logic related to scrolling. */
     private class Scroller extends JsniWorkaround {
@@ -1257,12 +1257,21 @@ public class Escalator extends Widget {
             // this needs to be after the scroll position adjustment above.
             scroller.recalculateScrollbarsForVirtualViewport();
 
+            /*
+             * Because we might remove columns where affected by colspans, it's
+             * easiest to simply redraw everything when columns are modified.
+             * 
+             * Yes, this is a TODO [[optimize]].
+             */
+            if (getRowCount() > 0
+                    && getColumnConfiguration().getColumnCount() > 0) {
+                refreshRows(0, getRowCount());
+            }
         }
 
         protected void paintInsertColumns(final int offset,
                 final int numberOfColumns, boolean frozen) {
             final NodeList<Node> childNodes = root.getChildNodes();
-            final int topVisualRowLogicalIndex = getTopVisualRowLogicalIndex();
 
             for (int row = 0; row < childNodes.getLength(); row++) {
                 final Element tr = getTrByVisualIndex(row);
@@ -1279,8 +1288,6 @@ public class Escalator extends Widget {
                     referenceCell = insertAfterReferenceAndUpdateIt(tr,
                             cellElem, referenceCell);
                 }
-
-                refreshRow(tr, topVisualRowLogicalIndex + row);
 
                 /*
                  * TODO [[optimize]] [[colwidth]]: When this method is updated
@@ -1307,6 +1314,17 @@ public class Escalator extends Widget {
                 horizontalScrollbar
                         .setScrollPos((int) (scroller.lastScrollLeft + numberOfColumns
                                 * COLUMN_WIDTH_PX));
+            }
+
+            /*
+             * Because we might insert columns where affected by colspans, it's
+             * easiest to simply redraw everything when columns are modified.
+             * 
+             * Yes, this is a TODO [[optimize]].
+             */
+            if (getRowCount() > 0
+                    && getColumnConfiguration().getColumnCount() > 1) {
+                refreshRows(0, getRowCount());
             }
         }
 
@@ -2216,6 +2234,9 @@ public class Escalator extends Widget {
         private Range convertToVisual(final Range logicalRange) {
             if (logicalRange.isEmpty()) {
                 return logicalRange;
+            } else if (visualRowOrder.isEmpty()) {
+                // empty range
+                return Range.withLength(0, 0);
             }
 
             /*

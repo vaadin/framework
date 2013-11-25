@@ -16,7 +16,6 @@
 
 package com.vaadin.client.ui.grid;
 
-import java.util.List;
 
 /**
  * A functional interface that allows client code to define how a certain row in
@@ -37,7 +36,8 @@ public interface EscalatorUpdater {
     /** An {@link EscalatorUpdater} that doesn't render anything. */
     public static final EscalatorUpdater NULL = new EscalatorUpdater() {
         @Override
-        public void updateCells(final Row row, final List<Cell> cellsToUpdate) {
+        public void updateCells(final Row row,
+                final Iterable<Cell> cellsToUpdate) {
             // NOOP
         }
     };
@@ -62,5 +62,5 @@ public interface EscalatorUpdater {
      *            You should neither store nor reuse the reference to the list,
      *            nor to the individual cells
      */
-    public void updateCells(Row row, List<Cell> cellsToUpdate);
+    public void updateCells(Row row, Iterable<Cell> cellsToUpdate);
 }

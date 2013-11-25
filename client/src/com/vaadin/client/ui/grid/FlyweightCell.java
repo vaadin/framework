@@ -15,7 +15,12 @@
  */
 package com.vaadin.client.ui.grid;
 
+import java.util.List;
+
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
+import com.vaadin.client.ui.grid.FlyweightRow.CellIterator;
 
 /**
  * An internal implementation of the {@link Cell} interface.
@@ -30,8 +35,11 @@ import com.google.gwt.user.client.Element;
  * @see FlyweightRow#removeCells(int, int)
  */
 class FlyweightCell implements Cell {
+    private static final String COLSPAN_ATTR = "colSpan";
+
     private final int column;
     private final FlyweightRow row;
+    private CellIterator currentIterator = null;
 
     public FlyweightCell(final FlyweightRow row, final int column) {
         this.row = row;
@@ -40,11 +48,13 @@ class FlyweightCell implements Cell {
 
     @Override
     public int getRow() {
+        assertSetup();
         return row.getRow();
     }
 
     @Override
     public int getColumn() {
+        assertSetup();
         return column;
     }
 
@@ -53,4 +63,87 @@ class FlyweightCell implements Cell {
         return (Element) row.getElement().getChild(column);
     }
 
+    void setup(final CellIterator cellIterator) {
+        currentIterator = cellIterator;
+
+        final Element e = getElement();
+        e.setPropertyInt(COLSPAN_ATTR, 1);
+        e.getStyle().setWidth(Escalator.COLUMN_WIDTH_PX, Unit.PX);
+        e.getStyle().clearDisplay();
+    }
+
+    /**
+     * Tear down the state of the Cell.
+     * <p>
+     * This is an internal check method, to prevent retrieving uninitialized
+     * data by calling {@link #getRow()}, {@link #getColumn()} or
+     * {@link #getElement()} at an improper time.
+     * <p>
+     * This should only be used with asserts ("
+     * <code>assert flyweightCell.teardown()</code> ") so that the code is never
+     * run when asserts aren't enabled.
+     * 
+     * @return always <code>true</code>
+     * @see FlyweightRow#teardown()
+     */
+    boolean teardown() {
+        currentIterator = null;
+        return true;
+    }
+
+    /**
+     * Asserts that the flyweight cell has properly been set up before trying to
+     * access any of its data.
+     */
+    private void assertSetup() {
+        assert currentIterator != null : "FlyweightCell was not properly "
+                + "initialized. This is either a bug in Grid/Escalator "
+                + "or a Cell reference has been stored and reused "
+                + "inappropriately.";
+    }
+
+    @Override
+    public void setColSpan(final int numberOfCells) {
+        /*-
+         * This will default to 1 if unset, as per DOM specifications:
+         * http://www.w3.org/TR/html5/tabular-data.html#attributes-common-to-td-and-th-elements
+         */
+        final int prevColSpan = getElement().getPropertyInt(COLSPAN_ATTR);
+        if (numberOfCells == 1 && prevColSpan == 1) {
+            return;
+        }
+
+        getElement().setPropertyInt(COLSPAN_ATTR, numberOfCells);
+        adjustCellWidthForSpan(numberOfCells);
+        hideOrRevealAdjacentCellElements(numberOfCells, prevColSpan);
+        currentIterator.setSkipNext(numberOfCells - 1);
+    }
+
+    private void adjustCellWidthForSpan(final int numberOfCells) {
+        final List<FlyweightCell> cellsToTheRight = currentIterator
+                .rawPeekNext(numberOfCells - 1);
+        final int widthsOfColumnsToTheRight = cellsToTheRight.size()
+                * Escalator.COLUMN_WIDTH_PX;
+        final int selfWidth = Escalator.COLUMN_WIDTH_PX;
+        getElement().getStyle().setWidth(selfWidth + widthsOfColumnsToTheRight,
+                Unit.PX);
+    }
+
+    private void hideOrRevealAdjacentCellElements(final int numberOfCells,
+            final int prevColSpan) {
+        final int affectedCellsNumber = Math.max(prevColSpan, numberOfCells);
+        final List<FlyweightCell> affectedCells = currentIterator
+                .rawPeekNext(affectedCellsNumber - 1);
+        if (prevColSpan < numberOfCells) {
+            for (int i = 0; i < affectedCells.size(); i++) {
+                affectedCells.get(prevColSpan + i - 1).getElement().getStyle()
+                        .setDisplay(Display.NONE);
+            }
+        } else if (prevColSpan > numberOfCells) {
+            for (int i = 0; i < affectedCells.size(); i++) {
+                affectedCells.get(numberOfCells + i - 1).getElement()
+                        .getStyle().clearDisplay();
+            }
+        }
+    }
 }

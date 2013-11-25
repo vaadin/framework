@@ -47,9 +47,27 @@ public interface Cell {
      * update the class names of the element, add inline styles and freely
      * modify the contents.
      * <p>
-     * Avoid modifying the dimensions or positioning of the cell element.
+     * Avoid modifying the dimensions, positioning or colspan of the cell
+     * element.
      * 
      * @return The root element for this cell. Never <code>null</code>.
      */
     public Element getElement();
+
+    /**
+     * Sets the column span of the cell.
+     * <p>
+     * This will overwrite any possible "colspan" attribute in the current
+     * element (i.e. the object returned by {@link #getElement()}). This will
+     * also handle internal bookkeeping, skip the rendering of any affected
+     * adjacent cells, and make sure that the current cell's dimensions are
+     * handled correctly.
+     * 
+     * @param numberOfCells
+     *            the number of cells to span to the right, or <code>1</code> to
+     *            unset any column spans
+     * @throws IllegalArgumentException
+     *             if <code>numberOfCells &lt; 1</code>
+     */
+    public void setColSpan(int numberOfCells) throws IllegalArgumentException;
 }
