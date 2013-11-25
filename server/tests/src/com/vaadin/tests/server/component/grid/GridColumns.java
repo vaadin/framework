@@ -32,8 +32,6 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.ui.components.grid.ColumnGroup;
-import com.vaadin.ui.components.grid.ColumnGroupRow;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.GridColumn;
 
@@ -201,45 +199,6 @@ public class GridColumns {
         grid.setColumnFootersVisible(true);
         assertTrue(grid.isColumnFootersVisible());
         assertTrue(state.columnFootersVisible);
-    }
-
-    @Test
-    public void testColumnGroups() throws Exception {
-
-        // Add a new row
-        ColumnGroupRow row = grid.addColumnGroupRow();
-        assertTrue(state.columnGroupRows.size() == 1);
-
-        // Add a group by property id
-        ColumnGroup columns12 = row.addGroup("column1", "column2");
-        assertTrue(state.columnGroupRows.get(0).groups.size() == 1);
-
-        // Set header of column
-        columns12.setHeaderCaption("Column12");
-        assertEquals("Column12",
-                state.columnGroupRows.get(0).groups.get(0).header);
-
-        // Set footer of column
-        columns12.setFooterCaption("Footer12");
-        assertEquals("Footer12",
-                state.columnGroupRows.get(0).groups.get(0).footer);
-
-        // Add another group by column instance
-        ColumnGroup columns34 = row.addGroup(grid.getColumn("column3"),
-                grid.getColumn("column4"));
-        assertTrue(state.columnGroupRows.get(0).groups.size() == 2);
-
-        // add another group row
-        ColumnGroupRow row2 = grid.addColumnGroupRow();
-        assertTrue(state.columnGroupRows.size() == 2);
-
-        // add a group by combining the two previous groups
-        ColumnGroup columns1234 = row2.addGroup(columns12, columns34);
-        assertTrue(columns1234.getColumns().size() == 4);
-
-        // Insert a group as the second group
-        ColumnGroupRow newRow2 = grid.addColumnGroupRow(1);
-        assertTrue(state.columnGroupRows.size() == 3);
     }
 
     @Test
