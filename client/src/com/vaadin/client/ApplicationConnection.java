@@ -64,7 +64,6 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -1417,6 +1416,9 @@ public class ApplicationConnection {
                     if (meta.containsKey("timedRedirect")) {
                         final ValueMap timedRedirect = meta
                                 .getValueMap("timedRedirect");
+                        if (redirectTimer != null) {
+                            redirectTimer.cancel();
+                        }
                         redirectTimer = new Timer() {
                             @Override
                             public void run() {
