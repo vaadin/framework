@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.shared.util.SharedUtil;
@@ -64,14 +65,14 @@ public class Grid<T> extends Composite {
     /**
      * List of columns in the grid. Order defines the visible order.
      */
-    private final List<GridColumn<T>> columns = new ArrayList<GridColumn<T>>();
+    private final List<GridColumn<?, T>> columns = new ArrayList<GridColumn<?, T>>();
 
     private DataSource<T> dataSource;
 
     /**
      * The column groups rows added to the grid
      */
-    private final List<ColumnGroupRow> columnGroupRows = new ArrayList<ColumnGroupRow>();
+    private final List<ColumnGroupRow<T>> columnGroupRows = new ArrayList<ColumnGroupRow<T>>();
 
     /**
      * Are the headers for the columns visible
@@ -83,16 +84,19 @@ public class Grid<T> extends Composite {
      */
     private boolean columnFootersVisible = false;
 
-    private GridColumn<T> lastFrozenColumn;
+    private GridColumn<?, T> lastFrozenColumn;
 
     /**
      * Base class for grid columns internally used by the Grid. The user should
      * use {@link GridColumn} when creating new columns.
      * 
+     * @param <C>
+     *            the column type
+     * 
      * @param <T>
      *            the row type
      */
-    public static abstract class AbstractGridColumn<T> {
+    public static abstract class AbstractGridColumn<C, T> {
 
         /**
          * The grid the column is associated with
@@ -113,6 +117,44 @@ public class Grid<T> extends Composite {
          * Text displayed in the column footer
          */
         private String footer;
+
+        /**
+         * Renderer for rendering a value into the cell
+         */
+        private Renderer<C> renderer = new Renderer<C>() {
+
+            @Override
+            public void renderCell(Cell cell, C value) {
+                if (value instanceof Widget) {
+                    cell.setWidget((Widget) value);
+                } else if (value instanceof String) {
+                    cell.getElement().setInnerText(value.toString());
+                } else {
+                    throw new IllegalArgumentException(
+                            "Cell value cannot be converted into a String. Please use a custom renderer to convert the value.");
+                }
+            }
+        };
+
+        /**
+         * Constructs a new column.
+         */
+        public AbstractGridColumn() {
+
+        }
+
+        /**
+         * Constructs a new column with a custom renderer.
+         * 
+         * @param renderer
+         *            The renderer to use for rendering the cells
+         */
+        public AbstractGridColumn(Renderer<C> renderer) {
+            if (renderer == null) {
+                throw new IllegalArgumentException("Renderer cannot be null.");
+            }
+            this.renderer = renderer;
+        }
 
         /**
          * Internally used by the grid to set itself
@@ -218,22 +260,36 @@ public class Grid<T> extends Composite {
                 } else {
                     conf.removeColumns(index, 1);
                 }
-
-                // TODO should update body as well
             }
 
             this.visible = visible;
         }
 
         /**
-         * Returns the text that should be displayed in the cell.
+         * Returns the data that should be rendered into the cell. By default
+         * returning Strings and Widgets are supported. If the return type is a
+         * String then it will be treated as preformatted text.
+         * <p>
+         * To support other types you will need to pass a custom renderer to the
+         * column via the column constructor.
          * 
          * @param row
          *            The row object that provides the cell content.
          * 
          * @return The cell content
          */
-        public abstract String getValue(T row);
+        public abstract C getValue(T row);
+
+        /**
+         * The renderer to render the cell width. By default renders the data as
+         * a String or adds the widget into the cell if the column type is of
+         * widget type.
+         * 
+         * @return The renderer to render the cell content with
+         */
+        public Renderer<C> getRenderer() {
+            return renderer;
+        }
 
         /**
          * Finds the index of this column instance
@@ -276,9 +332,12 @@ public class Grid<T> extends Composite {
         /**
          * Gets the header/footer caption value
          * 
+         * @param column
+         *            The column to get the value for.
+         * 
          * @return The value that should be rendered for the column caption
          */
-        public abstract String getColumnValue(GridColumn column);
+        public abstract String getColumnValue(GridColumn<?, T> column);
 
         /**
          * Gets the group caption value
@@ -287,14 +346,17 @@ public class Grid<T> extends Composite {
          *            The group for with the caption value should be returned
          * @return The value that should be rendered for the column caption
          */
-        public abstract String getGroupValue(ColumnGroup group);
+        public abstract String getGroupValue(ColumnGroup<T> group);
 
         /**
          * Is the row visible in the header/footer
          * 
+         * @param row
+         *            the row to check
+         * 
          * @return <code>true</code> if the row should be visible
          */
-        public abstract boolean isRowVisible(ColumnGroupRow row);
+        public abstract boolean isRowVisible(ColumnGroupRow<T> row);
 
         /**
          * Should the first row be visible
@@ -317,7 +379,7 @@ public class Grid<T> extends Composite {
                 // column headers
                 for (Cell cell : cellsToUpdate) {
                     int columnIndex = cell.getColumn();
-                    GridColumn column = columns.get(columnIndex);
+                    GridColumn<?, T> column = columns.get(columnIndex);
                     cell.getElement().setInnerText(getColumnValue(column));
                 }
 
@@ -328,7 +390,7 @@ public class Grid<T> extends Composite {
                 }
 
                 // Adjust for previous invisible header rows
-                ColumnGroupRow groupRow = null;
+                ColumnGroupRow<T> groupRow = null;
                 for (int i = 0, realIndex = 0; i < columnGroupRows.size(); i++) {
                     groupRow = columnGroupRows.get(i);
                     if (isRowVisible(groupRow)) {
@@ -344,8 +406,8 @@ public class Grid<T> extends Composite {
 
                 for (Cell cell : cellsToUpdate) {
                     int columnIndex = cell.getColumn();
-                    GridColumn column = columns.get(columnIndex);
-                    ColumnGroup group = getGroupForColumn(groupRow, column);
+                    GridColumn<?, T> column = columns.get(columnIndex);
+                    ColumnGroup<T> group = getGroupForColumn(groupRow, column);
 
                     if (group != null) {
                         // FIXME Should merge the group cells when escalator
@@ -398,17 +460,17 @@ public class Grid<T> extends Composite {
         return new HeaderFooterEscalatorUpdater(escalator.getHeader(), true) {
 
             @Override
-            public boolean isRowVisible(ColumnGroupRow row) {
+            public boolean isRowVisible(ColumnGroupRow<T> row) {
                 return row.isHeaderVisible();
             }
 
             @Override
-            public String getGroupValue(ColumnGroup group) {
+            public String getGroupValue(ColumnGroup<T> group) {
                 return group.getHeaderCaption();
             }
 
             @Override
-            public String getColumnValue(GridColumn column) {
+            public String getColumnValue(GridColumn<?, T> column) {
                 return column.getHeaderCaption();
             }
 
@@ -437,9 +499,9 @@ public class Grid<T> extends Composite {
                 }
 
                 for (Cell cell : cellsToUpdate) {
-                    String value = getColumn(cell.getColumn())
-                            .getValue(rowData);
-                    cell.getElement().setInnerText(value);
+                    GridColumn column = getColumn(cell.getColumn());
+                    Object value = column.getValue(rowData);
+                    column.getRenderer().renderCell(cell, value);
                 }
             }
 
@@ -461,17 +523,17 @@ public class Grid<T> extends Composite {
         return new HeaderFooterEscalatorUpdater(escalator.getFooter(), false) {
 
             @Override
-            public boolean isRowVisible(ColumnGroupRow row) {
+            public boolean isRowVisible(ColumnGroupRow<T> row) {
                 return row.isFooterVisible();
             }
 
             @Override
-            public String getGroupValue(ColumnGroup group) {
+            public String getGroupValue(ColumnGroup<T> group) {
                 return group.getFooterCaption();
             }
 
             @Override
-            public String getColumnValue(GridColumn column) {
+            public String getColumnValue(GridColumn<?, T> column) {
                 return column.getFooterCaption();
             }
 
@@ -498,7 +560,7 @@ public class Grid<T> extends Composite {
 
         // Count needed rows
         int totalRows = firstRowIsVisible ? 1 : 0;
-        for (ColumnGroupRow row : columnGroupRows) {
+        for (ColumnGroupRow<T> row : columnGroupRows) {
             if (isHeader ? row.isHeaderVisible() : row.isFooterVisible()) {
                 totalRows++;
             }
@@ -540,7 +602,7 @@ public class Grid<T> extends Composite {
      * @param column
      *            the column to add
      */
-    public void addColumn(GridColumn<T> column) {
+    public void addColumn(GridColumn<?, T> column) {
         ColumnConfiguration conf = escalator.getColumnConfiguration();
         addColumn(column, conf.getColumnCount());
     }
@@ -553,10 +615,10 @@ public class Grid<T> extends Composite {
      * @param column
      *            the column to add
      */
-    public void addColumn(GridColumn<T> column, int index) {
+    public void addColumn(GridColumn<?, T> column, int index) {
 
         // Register this grid instance with the column
-        ((AbstractGridColumn<T>) column).setGrid(this);
+        ((AbstractGridColumn<?, T>) column).setGrid(this);
 
         columns.add(index, column);
 
@@ -564,7 +626,7 @@ public class Grid<T> extends Composite {
         conf.insertColumns(index, 1);
 
         if (lastFrozenColumn != null
-                && ((AbstractGridColumn<T>) lastFrozenColumn)
+                && ((AbstractGridColumn<?, T>) lastFrozenColumn)
                         .findIndexOfColumn() < index) {
             refreshFrozenColumns();
         }
@@ -576,13 +638,13 @@ public class Grid<T> extends Composite {
      * @param column
      *            the column to remove
      */
-    public void removeColumn(GridColumn<T> column) {
+    public void removeColumn(GridColumn<?, T> column) {
 
         int columnIndex = columns.indexOf(column);
         columns.remove(columnIndex);
 
         // de-register column with grid
-        ((AbstractGridColumn<T>) column).setGrid(null);
+        ((AbstractGridColumn<?, T>) column).setGrid(null);
 
         ColumnConfiguration conf = escalator.getColumnConfiguration();
         conf.removeColumns(columnIndex, 1);
@@ -608,8 +670,8 @@ public class Grid<T> extends Composite {
      * 
      * @return A unmodifiable list of the columns in the grid
      */
-    public List<GridColumn<T>> getColumns() {
-        return Collections.unmodifiableList(new ArrayList<GridColumn<T>>(
+    public List<GridColumn<?, T>> getColumns() {
+        return Collections.unmodifiableList(new ArrayList<GridColumn<?, T>>(
                 columns));
     }
 
@@ -622,7 +684,8 @@ public class Grid<T> extends Composite {
      * @throws IllegalArgumentException
      *             if the column index does not exist in the grid
      */
-    public GridColumn<T> getColumn(int index) throws IllegalArgumentException {
+    public GridColumn<?, T> getColumn(int index)
+            throws IllegalArgumentException {
         if (index < 0 || index >= columns.size()) {
             throw new IllegalStateException("Column not found.");
         }
@@ -749,8 +812,8 @@ public class Grid<T> extends Composite {
      * 
      * @return a column group row instance you can use to add column groups
      */
-    public ColumnGroupRow addColumnGroupRow() {
-        ColumnGroupRow row = new ColumnGroupRow(this);
+    public ColumnGroupRow<T> addColumnGroupRow() {
+        ColumnGroupRow<T> row = new ColumnGroupRow<T>(this);
         columnGroupRows.add(row);
         refreshHeader();
         refreshFooter();
@@ -767,8 +830,8 @@ public class Grid<T> extends Composite {
      *            the index where the column group row should be added
      * @return a column group row instance you can use to add column groups
      */
-    public ColumnGroupRow addColumnGroupRow(int rowIndex) {
-        ColumnGroupRow row = new ColumnGroupRow(this);
+    public ColumnGroupRow<T> addColumnGroupRow(int rowIndex) {
+        ColumnGroupRow<T> row = new ColumnGroupRow<T>(this);
         columnGroupRows.add(rowIndex, row);
         refreshHeader();
         refreshFooter();
@@ -781,7 +844,7 @@ public class Grid<T> extends Composite {
      * @param row
      *            The row to remove
      */
-    public void removeColumnGroupRow(ColumnGroupRow row) {
+    public void removeColumnGroupRow(ColumnGroupRow<T> row) {
         columnGroupRows.remove(row);
         refreshHeader();
         refreshFooter();
@@ -793,8 +856,8 @@ public class Grid<T> extends Composite {
      * @return a unmodifiable list of column group rows
      * 
      */
-    public List<ColumnGroupRow> getColumnGroupRows() {
-        return Collections.unmodifiableList(new ArrayList<ColumnGroupRow>(
+    public List<ColumnGroupRow<T>> getColumnGroupRows() {
+        return Collections.unmodifiableList(new ArrayList<ColumnGroupRow<T>>(
                 columnGroupRows));
     }
 
@@ -808,10 +871,10 @@ public class Grid<T> extends Composite {
      * @return A column group for the row and column or <code>null</code> if not
      *         found.
      */
-    private static ColumnGroup getGroupForColumn(ColumnGroupRow row,
-            GridColumn column) {
-        for (ColumnGroup group : row.getGroups()) {
-            List<GridColumn> columns = group.getColumns();
+    private ColumnGroup<T> getGroupForColumn(ColumnGroupRow<T> row,
+            GridColumn<?, T> column) {
+        for (ColumnGroup<T> group : row.getGroups()) {
+            List<GridColumn<?, T>> columns = group.getColumns();
             if (columns.contains(column)) {
                 return group;
             }
@@ -888,7 +951,7 @@ public class Grid<T> extends Composite {
      * @throws IllegalArgumentException
      *             if {@code lastFrozenColumn} is not a column from this grid
      */
-    public void setLastFrozenColumn(GridColumn<T> lastFrozenColumn) {
+    public void setLastFrozenColumn(GridColumn<?, T> lastFrozenColumn) {
         this.lastFrozenColumn = lastFrozenColumn;
         refreshFrozenColumns();
     }
@@ -918,7 +981,7 @@ public class Grid<T> extends Composite {
      * @return the rightmost frozen column in the grid, or <code>null</code> if
      *         no columns are frozen.
      */
-    public GridColumn<T> getLastFrozenColumn() {
+    public GridColumn<?, T> getLastFrozenColumn() {
         return lastFrozenColumn;
     }
 }

@@ -19,7 +19,10 @@ import java.util.List;
 
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.grid.FlyweightRow.CellIterator;
 
 /**
@@ -39,11 +42,16 @@ class FlyweightCell implements Cell {
 
     private final int column;
     private final FlyweightRow row;
+
     private CellIterator currentIterator = null;
 
-    public FlyweightCell(final FlyweightRow row, final int column) {
+    private final Escalator escalator;
+
+    public FlyweightCell(final FlyweightRow row, final int column,
+            Escalator escalator) {
         this.row = row;
         this.column = column;
+        this.escalator = escalator;
     }
 
     @Override
@@ -146,4 +154,50 @@ class FlyweightCell implements Cell {
             }
         }
     }
+
+    @Override
+    public Widget getWidget() {
+        return Escalator.getWidgetFromCell(getElement());
+    }
+
+    @Override
+    public void setWidget(Widget widget) {
+
+        Widget oldWidget = getWidget();
+
+        // Validate
+        if (oldWidget == widget) {
+            return;
+        }
+
+        // Detach old child.
+        if (oldWidget != null) {
+            // Orphan.
+            Escalator.setParent(oldWidget, null);
+
+            // Physical detach.
+            getElement().removeChild(oldWidget.getElement());
+        }
+
+        // Remove any previous text nodes from previous
+        // setInnerText/setInnerHTML
+        getElement().removeAllChildren();
+
+        // Attach new child.
+        if (widget != null) {
+            // Detach new child from old parent.
+            widget.removeFromParent();
+
+            // Physical attach.
+            DOM.appendChild(getElement(), widget.getElement());
+
+            Escalator.setParent(widget, escalator);
+        }
+    }
+
+    @Override
+    public void setWidget(IsWidget w) {
+        setWidget(Widget.asWidgetOrNull(w));
+    }
+
 }

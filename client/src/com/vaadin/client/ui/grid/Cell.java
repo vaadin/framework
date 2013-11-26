@@ -17,6 +17,7 @@
 package com.vaadin.client.ui.grid;
 
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.HasOneWidget;
 
 /**
  * A representation of a single cell.
@@ -27,7 +28,8 @@ import com.google.gwt.user.client.Element;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public interface Cell {
+public interface Cell extends HasOneWidget {
+
     /**
      * Gets the index of the row this cell is in.
      * 

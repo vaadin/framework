@@ -16,10 +16,11 @@
 package com.vaadin.client.ui.grid;
 
 /**
- * Represents a column in the {@link Grid}.
- * 
- * @param <C>
- *            The column type
+ * Renderer for rending a value <T> into cell.
+ * <p>
+ * You can add a renderer to any column by overring the
+ * {@link GridColumn#getRenderer()} method and returning your own renderer. You
+ * can retrieve the cell element using {@link Cell#getElement()}.
  * 
  * @param <T>
  *            The row type
@@ -27,11 +28,16 @@ package com.vaadin.client.ui.grid;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public abstract class GridColumn<C, T> extends Grid.AbstractGridColumn<C, T> {
+public interface Renderer<T> {
 
-    /*
-     * This class is a convenience class so you do not have to reference
-     * Grid.AbstractGridColumn in your production code. The real implementation
-     * should be in the abstract class.
+    /**
+     * Called whenever the {@link Grid} updates a cell
+     * 
+     * @param cell
+     *            The cell that gets updated
+     * 
+     * @param data
+     *            The row data object
      */
+    public void renderCell(Cell cell, T data);
 }

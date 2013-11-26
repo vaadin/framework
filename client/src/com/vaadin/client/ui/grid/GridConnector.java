@@ -44,9 +44,9 @@ public class GridConnector extends AbstractComponentConnector {
 
     /**
      * Custom implementation of the custom grid column using a String[] to
-     * represent the cell value
+     * represent the cell value and String as a column type.
      */
-    private class CustomGridColumn extends GridColumn<String[]> {
+    private class CustomGridColumn extends GridColumn<String, String[]> {
 
         private final int columnIndex;
 
@@ -147,7 +147,7 @@ public class GridConnector extends AbstractComponentConnector {
      *            The index of the column to update
      */
     private void updateColumnFromStateChangeEvent(int columnIndex) {
-        GridColumn<String[]> column = getWidget().getColumn(columnIndex);
+        GridColumn<?, String[]> column = getWidget().getColumn(columnIndex);
         GridColumnState columnState = getState().columns.get(columnIndex);
         updateColumnFromState(column, columnState);
     }
@@ -176,7 +176,7 @@ public class GridConnector extends AbstractComponentConnector {
      * @param state
      *            The state to get the data from
      */
-    private static void updateColumnFromState(GridColumn<String[]> column,
+    private static void updateColumnFromState(GridColumn<?, String[]> column,
             GridColumnState state) {
         column.setVisible(state.visible);
         column.setHeaderCaption(state.header);
@@ -216,22 +216,22 @@ public class GridConnector extends AbstractComponentConnector {
         // FIXME When something changes the header/footer rows will be
         // re-created. At some point we should optimize this so partial updates
         // can be made on the header/footer.
-        for (ColumnGroupRow row : getWidget().getColumnGroupRows()) {
+        for (ColumnGroupRow<String[]> row : getWidget().getColumnGroupRows()) {
             getWidget().removeColumnGroupRow(row);
         }
 
         for (ColumnGroupRowState rowState : getState().columnGroupRows) {
-            ColumnGroupRow row = getWidget().addColumnGroupRow();
+            ColumnGroupRow<String[]> row = getWidget().addColumnGroupRow();
             row.setFooterVisible(rowState.footerVisible);
             row.setHeaderVisible(rowState.headerVisible);
 
             for (ColumnGroupState groupState : rowState.groups) {
-                List<GridColumn> columns = new ArrayList<GridColumn>();
+                List<GridColumn<String, String[]>> columns = new ArrayList<GridColumn<String, String[]>>();
                 for (String columnId : groupState.columns) {
                     CustomGridColumn column = columnIdToColumn.get(columnId);
                     columns.add(column);
                 }
-                ColumnGroup group = row.addGroup(columns
+                ColumnGroup<String[]> group = row.addGroup(columns
                         .toArray(new GridColumn[columns.size()]));
                 group.setFooterCaption(groupState.footer);
                 group.setHeaderCaption(groupState.header);

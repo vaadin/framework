@@ -157,7 +157,7 @@ class FlyweightRow implements Row {
     void addCells(final int index, final int numberOfColumns) {
         for (int i = 0; i < numberOfColumns; i++) {
             final int col = index + i;
-            cells.add(col, new FlyweightCell(this, col));
+            cells.add(col, new FlyweightCell(this, col, escalator));
         }
         updateRestOfCells(index + numberOfColumns);
     }
@@ -172,7 +172,7 @@ class FlyweightRow implements Row {
     private void updateRestOfCells(final int startPos) {
         // update the column number for the cells to the right
         for (int col = startPos; col < cells.size(); col++) {
-            cells.set(col, new FlyweightCell(this, col));
+            cells.set(col, new FlyweightCell(this, col, escalator));
         }
     }
 

@@ -29,7 +29,7 @@ import java.util.List;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class ColumnGroup {
+public class ColumnGroup<T> {
 
     /**
      * The text shown in the header
@@ -45,7 +45,7 @@ public class ColumnGroup {
      * The columns included in the group when also accounting for subgroup
      * columns
      */
-    private final List<GridColumn> columns;
+    private final List<GridColumn<?, T>> columns;
 
     /**
      * The grid associated with the column group
@@ -55,14 +55,14 @@ public class ColumnGroup {
     /**
      * Constructs a new column group
      */
-    ColumnGroup(Grid grid, Collection<GridColumn> columns) {
+    ColumnGroup(Grid grid, Collection<GridColumn<?, T>> columns) {
         if (columns == null) {
             throw new IllegalArgumentException(
                     "columns cannot be null. Pass an empty list instead.");
         }
         this.grid = grid;
-        this.columns = Collections.unmodifiableList(new ArrayList<GridColumn>(
-                columns));
+        this.columns = Collections
+                .unmodifiableList(new ArrayList<GridColumn<?, T>>(columns));
     }
 
     /**
@@ -111,7 +111,7 @@ public class ColumnGroup {
      * 
      * @return unmodifiable list of columns
      */
-    public List<GridColumn> getColumns() {
+    public List<GridColumn<?, T>> getColumns() {
         return columns;
     }
 }

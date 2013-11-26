@@ -27,20 +27,22 @@ import java.util.Set;
  * A column group row represents an auxiliary header or footer row added to the
  * grid. A column group row includes column groups that group columns together.
  * 
+ * @param <T>
+ *            Row type
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class ColumnGroupRow {
+public class ColumnGroupRow<T> {
 
     /**
      * The column groups in this row
      */
-    private List<ColumnGroup> groups = new ArrayList<ColumnGroup>();
+    private List<ColumnGroup<T>> groups = new ArrayList<ColumnGroup<T>>();
 
     /**
      * The grid associated with the column row
      */
-    private final Grid grid;
+    private final Grid<T> grid;
 
     /**
      * Is the header shown
@@ -59,7 +61,7 @@ public class ColumnGroupRow {
      *            Grid associated with this column
      * 
      */
-    ColumnGroupRow(Grid grid) {
+    ColumnGroupRow(Grid<T> grid) {
         this.grid = grid;
     }
 
@@ -71,9 +73,9 @@ public class ColumnGroupRow {
      * @return a column group representing the collection of columns added to
      *         the group.
      */
-    public ColumnGroup addGroup(GridColumn... columns) {
+    public ColumnGroup<T> addGroup(GridColumn<?, T>... columns) {
 
-        for (GridColumn column : columns) {
+        for (GridColumn<?, T> column : columns) {
             if (isColumnGrouped(column)) {
                 throw new IllegalArgumentException("Column "
                         + String.valueOf(column.getHeaderCaption())
@@ -81,7 +83,7 @@ public class ColumnGroupRow {
             }
         }
 
-        ColumnGroup group = new ColumnGroup(grid, Arrays.asList(columns));
+        ColumnGroup<T> group = new ColumnGroup<T>(grid, Arrays.asList(columns));
         groups.add(group);
         grid.refreshHeader();
         grid.refreshFooter();
@@ -97,15 +99,15 @@ public class ColumnGroupRow {
      *         the group.
      * 
      */
-    public ColumnGroup addGroup(ColumnGroup... groups) {
+    public ColumnGroup<T> addGroup(ColumnGroup<T>... groups) {
         assert groups != null : "groups cannot be null";
 
-        Set<GridColumn> columns = new HashSet<GridColumn>();
-        for (ColumnGroup group : groups) {
+        Set<GridColumn<?, T>> columns = new HashSet<GridColumn<?, T>>();
+        for (ColumnGroup<T> group : groups) {
             columns.addAll(group.getColumns());
         }
 
-        ColumnGroup group = new ColumnGroup(grid, columns);
+        ColumnGroup<T> group = new ColumnGroup<T>(grid, columns);
         this.groups.add(group);
         grid.refreshHeader();
         grid.refreshFooter();
@@ -118,7 +120,7 @@ public class ColumnGroupRow {
      * @param group
      *            The group to remove
      */
-    public void removeGroup(ColumnGroup group) {
+    public void removeGroup(ColumnGroup<T> group) {
         groups.remove(group);
         grid.refreshHeader();
         grid.refreshFooter();
@@ -129,7 +131,7 @@ public class ColumnGroupRow {
      * 
      * @return unmodifiable list of groups in this row
      */
-    public List<ColumnGroup> getGroups() {
+    public List<ColumnGroup<T>> getGroups() {
         return Collections.unmodifiableList(groups);
     }
 
@@ -177,8 +179,8 @@ public class ColumnGroupRow {
      * Iterates all the column groups and checks if the columns alread has been
      * added to a group.
      */
-    private boolean isColumnGrouped(GridColumn column) {
-        for (ColumnGroup group : groups) {
+    private boolean isColumnGrouped(GridColumn<?, T> column) {
+        for (ColumnGroup<T> group : groups) {
             if (group.getColumns().contains(column)) {
                 return true;
             }

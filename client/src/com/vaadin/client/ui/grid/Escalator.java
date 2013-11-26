@@ -246,10 +246,6 @@ public class Escalator extends Widget {
      * escalator DOM). NOTE: these bits can most often also be identified by
      * searching for code that call scrollElem.getScrollTop();.
      */
-    /*
-     * [[widgets]]: This needs to be re-inspected once GWT/Vaadin widgets are
-     * being supported.
-     */
 
     /**
      * A utility class that contains utility methods that are usually called
@@ -1236,8 +1232,9 @@ public class Escalator extends Widget {
                 final Node tr = childNodes.getItem(visualRowIndex);
 
                 for (int column = 0; column < numberOfColumns; column++) {
-                    // TODO [[widgets]]
-                    tr.getChild(offset).removeFromParent();
+                    Element cellElement = tr.getChild(offset).cast();
+                    detachPossibleWidgetFromCell(cellElement);
+                    cellElement.removeFromParent();
                 }
                 recalculateRowWidth((Element) tr);
             }
@@ -1266,6 +1263,18 @@ public class Escalator extends Widget {
             if (getRowCount() > 0
                     && getColumnConfiguration().getColumnCount() > 0) {
                 refreshRows(0, getRowCount());
+            }
+        }
+
+        void detachPossibleWidgetFromCell(Node cellNode) {
+            // Detach possible widget
+            Widget widget = getWidgetFromCell(cellNode);
+            if (widget != null) {
+                // Orphan.
+                setParent(widget, null);
+
+                // Physical detach.
+                cellNode.removeChild(widget.getElement());
             }
         }
 
@@ -1370,7 +1379,10 @@ public class Escalator extends Widget {
         protected void paintRemoveRows(final int index, final int numberOfRows) {
             for (int i = index; i < index + numberOfRows; i++) {
                 final Element tr = (Element) root.getChild(index);
-                // TODO [[widgets]]
+                for (int c = 0; c < tr.getChildCount(); c++) {
+                    detachPossibleWidgetFromCell((Element) tr.getChild(c)
+                            .cast());
+                }
                 tr.removeFromParent();
             }
             recalculateSectionHeight();
@@ -1935,7 +1947,10 @@ public class Escalator extends Widget {
                     for (int i = 0; i < escalatorRowsToRemove; i++) {
                         final Element tr = visualRowOrder
                                 .remove(removedVisualInside.getStart());
-                        // TODO [[widgets]]
+                        for (int c = 0; c < tr.getChildCount(); c++) {
+                            detachPossibleWidgetFromCell((Element) tr.getChild(
+                                    c).cast());
+                        }
                         tr.removeFromParent();
                         rowTopPosMap.remove(tr);
                     }
@@ -2429,8 +2444,11 @@ public class Escalator extends Widget {
                 final ListIterator<Element> iter = visualRowOrder
                         .listIterator(visualRowOrder.size());
                 for (int i = 0; i < -neededEscalatorRowsDiff; i++) {
-                    // TODO [[widgets]]
                     final Element last = iter.previous();
+                    for (int c = 0; c < last.getChildCount(); c++) {
+                        detachPossibleWidgetFromCell((Element) last.getChild(c)
+                                .cast());
+                    }
                     last.removeFromParent();
                     iter.remove();
                 }
@@ -3176,5 +3194,34 @@ public class Escalator extends Widget {
 
         fireEvent(new RowVisibilityChangeEvent(visibleRangeStart,
                 visibleRowCount));
+    }
+
+    /**
+     * Accesses the package private method Widget#setParent()
+     * 
+     * @param widget
+     *            The widget to access
+     * @param parent
+     *            The parent to set
+     */
+    static native final void setParent(Widget widget, Widget parent)
+    /*-{
+        widget.@com.google.gwt.user.client.ui.Widget::setParent(Lcom/google/gwt/user/client/ui/Widget;)(parent);
+    }-*/;
+
+    /**
+     * Returns the widget from a cell node or <code>null</code> if there is no
+     * widget in the cell
+     * 
+     * @param cellNode
+     *            The cell node
+     */
+    static Widget getWidgetFromCell(Node cellNode) {
+        Node possibleWidgetNode = cellNode.getFirstChild();
+        if (possibleWidgetNode != null
+                && possibleWidgetNode.getNodeType() == Node.ELEMENT_NODE) {
+            return Util.findWidget((Element) possibleWidgetNode, null);
+        }
+        return null;
     }
 }
