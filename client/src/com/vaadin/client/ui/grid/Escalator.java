@@ -597,6 +597,19 @@ public class Escalator extends Widget {
                 hScrollbarStyle.clearRight();
             }
 
+            /*
+             * If decreasing the amount of frozen columns, and scrolled to the
+             * right, the scroll position will reset. So we need to remember the
+             * scroll position, and re-apply it once the scrollbar size has been
+             * adjusted.
+             */
+            final int scrollPos = horizontalScrollbar.getScrollPos();
+            final int leftPos = getColumnConfiguration().getFrozenColumnCount()
+                    * COLUMN_WIDTH_PX;
+            horizontalScrollbar.getElement().getStyle()
+                    .setLeft(leftPos, Unit.PX);
+            horizontalScrollbar.setScrollPos(scrollPos);
+
             // we might've got new or got rid of old scrollbars.
             recalculateTableWrapperSize();
         }
@@ -2581,17 +2594,7 @@ public class Escalator extends Widget {
                 }
             }
 
-            /*
-             * If decreasing the amount of frozen columns, and scrolled to the
-             * right, the scroll position will reset. So we need to remember the
-             * scroll position, and re-apply it once the scrollbar size has been
-             * adjusted.
-             */
-            int scrollPos = horizontalScrollbar.getScrollPos();
-            horizontalScrollbar.getElement().getStyle()
-                    .setLeft(frozenColumns * COLUMN_WIDTH_PX, Unit.PX);
             scroller.recalculateScrollbarsForVirtualViewport();
-            horizontalScrollbar.setScrollPos(scrollPos);
         }
 
         @Override
