@@ -1741,16 +1741,32 @@ void includeDirective() :
 {
     <INCLUDE_SYM>
     (<S>)*
-    (name = property()|name = variableName(){ name = "$"+name;}
-         |(name = functionName() 
-           args = argValuelist()) <RPARAN>(<S>)*)
-    ((";"(<S>)*)+
-           {documentHandler.includeDirective(name, args);}
-    | <LBRACE> (<S>)* {documentHandler.startIncludeContentBlock(name, args);}
-      (styleRuleOrDeclarationOrNestedProperties() | keyframeSelector())*
-      <RBRACE> (<S>)* {documentHandler.endIncludeContentBlock();}
-    )
+    (name = property() | name = variableName(){ name = "$"+name;} 
+     | (name = functionName() args = argValuelist()) <RPARAN>(<S>)*)
+    {documentHandler.startInclude(name, args);}
+    (includeDirectiveBlockContents() | includeDirectiveTerminator())
+    {documentHandler.endInclude();}
 }
+
+void includeDirectiveTerminator():
+{}
+{
+    try {
+      (";"(<S>)*)+
+    }
+    catch (ParseException e) {
+      acceptMissingSemicolonBeforeRbrace(e);
+    }
+}
+
+void includeDirectiveBlockContents():
+{}
+{
+ <LBRACE> (<S>)*
+ (styleRuleOrDeclarationOrNestedProperties() | keyframeSelector())*
+ <RBRACE> (<S>)* 
+}
+
 
 String interpolation() :
 {
@@ -1976,11 +1992,16 @@ void debugDirective() :
 {
     <DEBUG_SYM>
     { 
-    String content = skipStatementUntilSemiColon();
+    String content = skipStatementUntil(new int[] {SEMICOLON,RBRACE});
     // TODO should evaluate the content expression, call documentHandler.debugDirective() etc.
     System.out.println(content);
     }
-    (<S>)*
+    try {
+      (";"(<S>)*)+
+    }
+    catch (ParseException e) {
+      acceptMissingSemicolonBeforeRbrace(e);
+    }
 }
 
 void warnDirective() :
@@ -1988,11 +2009,16 @@ void warnDirective() :
 {
     <WARN_SYM>
     { 
-    String content = skipStatementUntilSemiColon();
+    String content = skipStatementUntil(new int[] {SEMICOLON,RBRACE});
     // TODO should evaluate the content expression, call documentHandler.warnDirective() etc.
     System.err.println(content);
     }
-    (<S>)*
+    try {
+      (";"(<S>)*)+
+    }
+    catch (ParseException e) {
+      acceptMissingSemicolonBeforeRbrace(e);
+    }
 }
 
 Node forDirective() :
@@ -2035,8 +2061,13 @@ void extendDirective() :
     <EXTEND_SYM>
     (<S>)*
     list = selectorList()
-    (";"(<S>)*)+
     {documentHandler.extendDirective(list);}
+    try {
+      (";"(<S>)*)+
+    }
+    catch (ParseException e) {
+      acceptMissingSemicolonBeforeRbrace(e);
+    }
 }
 
 void contentDirective() : 
@@ -2044,7 +2075,12 @@ void contentDirective() :
 {
     <CONTENT_SYM>
     (<S>)*
-    (";"(<S>)*)+
+    try {
+      (";"(<S>)*)+
+    }
+    catch (ParseException e) {
+      acceptMissingSemicolonBeforeRbrace(e);
+    }
     {documentHandler.contentDirective();}
 }
 
@@ -3049,6 +3085,15 @@ ArrayList<String> _parseSelectors() :
 	throw (ParseException) e.e.fillInStackTrace();
     }
 }
+
+JAVACODE
+void acceptMissingSemicolonBeforeRbrace( ParseException parseException ) {
+    Token next = getToken(1);
+    if (next.kind != RBRACE) {
+        throw parseException;
+    }
+}
+
 
 /*
  * Local Variables:

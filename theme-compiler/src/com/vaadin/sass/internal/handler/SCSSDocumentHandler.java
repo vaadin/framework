@@ -51,8 +51,6 @@ public interface SCSSDocumentHandler extends DocumentHandler {
 
     void endNestedProperties(String name);
 
-    void includeDirective(String name, List<LexicalUnitImpl> args);
-
     void importStyle(String uri, SACMediaList media, boolean isURL);
 
     void property(String name, LexicalUnitImpl value, boolean important,
@@ -99,8 +97,8 @@ public interface SCSSDocumentHandler extends DocumentHandler {
 
     void contentDirective();
 
-    void startIncludeContentBlock(String name, List<LexicalUnitImpl> args);
+    void startInclude(String name, List<LexicalUnitImpl> args);
 
-    void endIncludeContentBlock();
+    void endInclude();
 
 }
