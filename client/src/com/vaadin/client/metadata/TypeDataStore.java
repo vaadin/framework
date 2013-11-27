@@ -69,6 +69,22 @@ public class TypeDataStore {
         return class1;
     }
 
+    // this is a very inefficient implementation for getting all the identifiers
+    // for a class
+    public FastStringSet findIdentifiersFor(Class<?> type) {
+        FastStringSet result = FastStringSet.create();
+
+        JsArrayString keys = identifiers.getKeys();
+        for (int i = 0; i < keys.length(); i++) {
+            String key = keys.get(i);
+            if (identifiers.get(key) == type) {
+                result.add(key);
+            }
+        }
+
+        return result;
+    }
+
     public static Type getType(Class<?> clazz) {
         return new Type(clazz);
     }
