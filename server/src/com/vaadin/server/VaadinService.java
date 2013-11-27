@@ -414,6 +414,9 @@ public abstract class VaadinService implements Serializable {
     /**
      * Adds a listener that gets notified when a Vaadin service session that has
      * been initialized for this service is destroyed.
+     * <p>
+     * The session being destroyed is locked and its UIs have been removed when
+     * the listeners are called.
      * 
      * @see #addSessionInitListener(SessionInitListener)
      * 
@@ -455,8 +458,11 @@ public abstract class VaadinService implements Serializable {
                         }
                     });
                 }
+                // for now, use the session error handler; in the future, could
+                // have an API for using some other handler for session init and
+                // destroy listeners
                 eventRouter.fireEvent(new SessionDestroyEvent(
-                        VaadinService.this, session));
+                        VaadinService.this, session), session.getErrorHandler());
             }
         });
     }
@@ -770,7 +776,12 @@ public abstract class VaadinService implements Serializable {
 
     private void onVaadinSessionStarted(VaadinRequest request,
             VaadinSession session) throws ServiceException {
-        eventRouter.fireEvent(new SessionInitEvent(this, session, request));
+        // for now, use the session error handler; in the future, could have an
+        // API for using some other handler for session init and destroy
+        // listeners
+
+        eventRouter.fireEvent(new SessionInitEvent(this, session, request),
+                session.getErrorHandler());
 
         ServletPortletHelper.checkUiProviders(session, this);
     }
