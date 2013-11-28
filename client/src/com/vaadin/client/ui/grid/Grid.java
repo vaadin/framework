@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.data.DataChangeHandler;
@@ -424,14 +425,15 @@ public class Grid<T> extends Composite {
                     int columnIndex = cell.getColumn();
                     GridColumn<?, T> column = columns.get(columnIndex);
                     ColumnGroup<T> group = getGroupForColumn(groupRow, column);
+                    Element cellElement = cell.getElement();
 
                     if (group != null) {
-                        // FIXME Should merge the group cells when escalator
-                        // supports it
-                        cell.getElement().setInnerText(getGroupValue(group));
+                        cellElement.setInnerText(getGroupValue(group));
+                        cell.setColSpan(group.getColumns().size());
                     } else {
                         // Cells are reused
-                        cell.getElement().setInnerHTML(null);
+                        cellElement.setInnerHTML(null);
+                        cell.setColSpan(1);
                     }
                 }
             }
