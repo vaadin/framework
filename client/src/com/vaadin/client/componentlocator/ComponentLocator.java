@@ -18,6 +18,8 @@ package com.vaadin.client.componentlocator;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.Element;
 import com.vaadin.client.ApplicationConnection;
 
@@ -94,12 +96,72 @@ public class ComponentLocator {
      */
     public Element getElementByPath(String path) {
         for (LocatorStrategy strategy : locatorStrategies) {
-            Element element = strategy.getElementByPath(path);
-            if (null != element) {
-                return element;
+            if (strategy.validatePath(path)) {
+                Element element = strategy.getElementByPath(path);
+                if (null != element) {
+                    return element;
+                }
             }
         }
         return null;
+    }
+
+    /**
+     * Locates elements using a String locator (path) which identifies DOM
+     * elements.
+     * 
+     * @since 7.2
+     * @param path
+     *            The String locator which identifies target elements.
+     * @return The JavaScriptArray of DOM elements identified by {@code path} or
+     *         empty array if elements could not be located.
+     */
+    public JsArray<Element> getElementsByPath(String path) {
+        JsArray<Element> jsElements = JavaScriptObject.createArray().cast();
+        for (LocatorStrategy strategy : locatorStrategies) {
+            if (strategy.validatePath(path)) {
+                List<Element> elements = strategy.getElementsByPath(path);
+                if (elements.size() > 0) {
+                    for (Element e : elements) {
+                        jsElements.push(e);
+                    }
+                    return jsElements;
+                }
+            }
+        }
+        return jsElements;
+    }
+
+    /**
+     * Locates elements using a String locator (path) which identifies DOM
+     * elements. The path starts from the specified root element.
+     * 
+     * @see #getElementByPath(String)
+     * 
+     * @since 7.2
+     * @param path
+     *            The path of elements to be found
+     * @param root
+     *            The root element where the path is anchored
+     * @return The JavaScriptArray of DOM elements identified by {@code path} or
+     *         empty array if elements could not be located.
+     */
+    public JsArray<Element> getElementsByPathStartingAt(String path,
+            Element root) {
+        JsArray<Element> jsElements = JavaScriptObject.createArray().cast();
+        for (LocatorStrategy strategy : locatorStrategies) {
+            if (strategy.validatePath(path)) {
+                List<Element> elements = strategy.getElementsByPathStartingAt(
+                        path, root);
+                if (elements.size() > 0) {
+                    for (Element e : elements) {
+                        jsElements.push(e);
+                    }
+                    return jsElements;
+                }
+            }
+        }
+        return jsElements;
     }
 
     /**
@@ -117,9 +179,12 @@ public class ComponentLocator {
      */
     public Element getElementByPathStartingAt(String path, Element root) {
         for (LocatorStrategy strategy : locatorStrategies) {
-            Element element = strategy.getElementByPathStartingAt(path, root);
-            if (null != element) {
-                return element;
+            if (strategy.validatePath(path)) {
+                Element element = strategy.getElementByPathStartingAt(path,
+                        root);
+                if (null != element) {
+                    return element;
+                }
             }
         }
         return null;
@@ -135,4 +200,5 @@ public class ComponentLocator {
     public ApplicationConnection getClient() {
         return client;
     }
+
 }

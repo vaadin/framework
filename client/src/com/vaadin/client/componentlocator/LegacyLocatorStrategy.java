@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -73,8 +74,16 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
     private final ApplicationConnection client;
 
+    private static final RegExp validSyntax = RegExp
+            .compile("^((\\w+::)?(PID_S\\w+)?)?(/[a-zA-Z0-9]+\\[\\d+\\])*$");
+
     public LegacyLocatorStrategy(ApplicationConnection clientConnection) {
         client = clientConnection;
+    }
+
+    @Override
+    public boolean validatePath(String path) {
+        return validSyntax.test(path);
     }
 
     @Override
@@ -178,11 +187,17 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Element getElementByPath(String path) {
         return getElementByPathStartingAt(path, null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Element getElementByPathStartingAt(String path, Element baseElement) {
         /*
@@ -217,6 +232,34 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
             }
         }
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Element> getElementsByPath(String path) {
+        // This type of search is not supported in LegacyLocator
+        List<Element> array = new ArrayList<Element>();
+        Element e = getElementByPath(path);
+        if (e != null) {
+            array.add(e);
+        }
+        return array;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Element> getElementsByPathStartingAt(String path, Element root) {
+        // This type of search is not supported in LegacyLocator
+        List<Element> array = new ArrayList<Element>();
+        Element e = getElementByPathStartingAt(path, root);
+        if (e != null) {
+            array.add(e);
+        }
+        return array;
     }
 
     /**
@@ -672,4 +715,5 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
         return null;
     }
+
 }

@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.componentlocator;
 
+import java.util.List;
+
 import com.google.gwt.user.client.Element;
 
 /**
@@ -28,6 +30,18 @@ import com.google.gwt.user.client.Element;
  * @author Vaadin Ltd
  */
 public interface LocatorStrategy {
+
+    /**
+     * Test the given input path for formatting errors. If a given path can not
+     * be validated, the locator strategy will not be attempted.
+     * 
+     * @param path
+     *            a locator path expression
+     * @return true, if the implementing class can process the given path,
+     *         otherwise false
+     */
+    boolean validatePath(String path);
+
     /**
      * Generates a String locator which uniquely identifies the target element.
      * The {@link #getElementByPath(String)} method can be used for the inverse
@@ -74,4 +88,35 @@ public interface LocatorStrategy {
      *         could not be located.
      */
     Element getElementByPathStartingAt(String path, Element root);
+
+    /**
+     * Locates all elements that match a String locator (path) which identifies
+     * DOM elements.
+     * 
+     * This functionality is limited in {@link LegacyLocatorStrategy}.
+     * 
+     * @param path
+     *            The String locator which identifies target elements.
+     * @return List that contains all matched elements. Empty list if none
+     *         found.
+     */
+    List<Element> getElementsByPath(String path);
+
+    /**
+     * Locates all elements that match a String locator (path) which identifies
+     * DOM elements. The path starts from the specified root element.
+     * 
+     * This functionality is limited in {@link LegacyLocatorStrategy}.
+     * 
+     * @see #getElementsByPath(String)
+     * 
+     * @param path
+     *            The String locator which identifies target elements.
+     * @param root
+     *            The element that is at the root of the path.
+     * @return List that contains all matched elements. Empty list if none
+     *         found.
+     */
+
+    List<Element> getElementsByPathStartingAt(String path, Element root);
 }
