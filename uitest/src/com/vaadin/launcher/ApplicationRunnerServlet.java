@@ -280,7 +280,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
 
         }
 
-        throw new ClassNotFoundException();
+        throw new ClassNotFoundException(baseName);
     }
 
     private Logger getLogger() {
