@@ -51,14 +51,20 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
     private final ExecutorService executor = Executors
             .newSingleThreadExecutor();
 
+    protected TextField dataSize;
+
+    protected TextField interval;
+
+    protected TextField duration;
+
     @Override
     protected void setup(VaadinRequest request) {
         dataLabel.setSizeUndefined();
-        final TextField dataSize = new TextField("Data size");
+        dataSize = new TextField("Data size");
         dataSize.setConverter(Integer.class);
-        final TextField interval = new TextField("Interval (ms)");
+        interval = new TextField("Interval (ms)");
         interval.setConverter(Integer.class);
-        final TextField duration = new TextField("Duration (ms)");
+        duration = new TextField("Duration (ms)");
         duration.setConverter(Integer.class);
 
         dataSize.setValue(DEFAULT_SIZE_BYTES + "");
