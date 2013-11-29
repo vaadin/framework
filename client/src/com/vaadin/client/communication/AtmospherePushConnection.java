@@ -348,6 +348,14 @@ public class AtmospherePushConnection implements PushConnection {
         state = State.CONNECT_PENDING;
     }
 
+    protected void onClientTimeout(AtmosphereResponse response) {
+        state = State.DISCONNECTED;
+        errorHandler
+                .onError(
+                        "Client unexpectedly disconnected. Ensure client timeout is disabled.",
+                        -1);
+    }
+
     protected void onReconnect(JavaScriptObject request,
             final AtmosphereResponse response) {
         if (state == State.CONNECTED) {
@@ -442,6 +450,7 @@ public class AtmospherePushConnection implements PushConnection {
             fallbackTransport: 'streaming',
             contentType: 'application/json; charset=UTF-8',
             reconnectInterval: 5000,
+            timeout: -1,
             maxReconnectOnClose: 10000000, 
             trackMessageLength: true,
             enableProtocol: false,
@@ -475,6 +484,9 @@ public class AtmospherePushConnection implements PushConnection {
         });
         config.onReconnect = $entry(function(request, response) {
             self.@com.vaadin.client.communication.AtmospherePushConnection::onReconnect(*)(request, response);
+        });
+        config.onClientTimeout = $entry(function(request) {
+            self.@com.vaadin.client.communication.AtmospherePushConnection::onClientTimeout(*)(request);
         });
 
         return $wnd.jQueryVaadin.atmosphere.subscribe(config);

@@ -25,7 +25,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public abstract class BasicPushTest extends MultiBrowserTest {
 
     @Test
-    public void testPush() {
+    public void testPush() throws InterruptedException {
         openTestURL();
 
         // Test client initiated push
