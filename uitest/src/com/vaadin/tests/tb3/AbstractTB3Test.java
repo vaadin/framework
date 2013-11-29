@@ -74,6 +74,11 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      */
     private static final int SCREENSHOT_WIDTH = 1500;
 
+    /**
+     * Timeout used by the TB grid
+     */
+    private static final int BROWSER_TIMEOUT_IN_MS = 30 * 1000;
+
     private DesiredCapabilities desiredCapabilities;
 
     private boolean debug = false;
@@ -641,17 +646,21 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     /**
-     * Helper method for sleeping X ms in a test. Catches and ignores
-     * InterruptedExceptions
+     * Sleeps for the given number of ms but ensures that the browser connection
+     * does not time out.
      * 
      * @param timeoutMillis
      *            Number of ms to wait
+     * @throws InterruptedException
      */
-    protected void sleep(int timeoutMillis) {
-        try {
-            Thread.sleep(timeoutMillis);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+    protected void sleep(int timeoutMillis) throws InterruptedException {
+        while (timeoutMillis > 0) {
+            int d = Math.min(BROWSER_TIMEOUT_IN_MS, timeoutMillis);
+            Thread.sleep(d);
+            timeoutMillis -= d;
+
+            // Do something to keep the connection alive
+            getDriver().getTitle();
         }
     }
 

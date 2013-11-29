@@ -24,7 +24,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class PushLargeDataStreamingTest extends MultiBrowserTest {
 
     @Test
-    public void testStreamingLargeData() {
+    public void testStreamingLargeData() throws InterruptedException {
         openTestURL();
 
         // Without this there is a large chance that we will wait for all pushes
@@ -38,7 +38,7 @@ public class PushLargeDataStreamingTest extends MultiBrowserTest {
 
     }
 
-    private void push() {
+    private void push() throws InterruptedException {
         // Wait for startButton to be present
         waitForElementToBePresent(vaadinLocatorById("startButton"));
 

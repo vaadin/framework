@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.window;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +63,7 @@ public class SubWindowsTextSelectionTest extends MultiBrowserTest {
     }
 
     @Test
-    public void verifyNoTextSelectionOnMove() throws MalformedURLException {
+    public void verifyNoTextSelectionOnMove() throws Exception {
 
         openTestURL();
 

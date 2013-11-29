@@ -24,7 +24,7 @@ import com.vaadin.tests.tb3.WebsocketTest;
 public class PushLargeDataWebsocketTest extends WebsocketTest {
 
     @Test
-    public void testWebsocketLargeData() {
+    public void testWebsocketLargeData() throws Exception {
         openTestURL();
 
         // Without this timing will be completly off as pushing "start" can
@@ -38,7 +38,7 @@ public class PushLargeDataWebsocketTest extends WebsocketTest {
 
     }
 
-    private void push() {
+    private void push() throws Exception {
         // Wait for startButton to be present
         waitForElementToBePresent(vaadinLocatorById("startButton"));
 
