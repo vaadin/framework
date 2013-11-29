@@ -40,23 +40,34 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  */
 public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
-    public static final int TESTED_SAFARI_VERSION = 7;
-    public static final int TESTED_CHROME_VERSION = 29;
-    public static final int TESTED_FIREFOX_VERSION = 24;
+    public enum Browser {
+        FIREFOX(BrowserUtil.firefox(24)), CHROME(BrowserUtil.chrome(29)), SAFARI(
+                BrowserUtil.safari(7)), IE8(BrowserUtil.ie(8)), IE9(BrowserUtil
+                .ie(9)), IE10(BrowserUtil.ie(10)), IE11(BrowserUtil.ie(11)), OPERA(
+                BrowserUtil.opera(17));
+        private DesiredCapabilities desiredCapabilities;
+
+        private Browser(DesiredCapabilities desiredCapabilities) {
+            this.desiredCapabilities = desiredCapabilities;
+        }
+
+        public DesiredCapabilities getDesiredCapabilities() {
+            return desiredCapabilities;
+        }
+    }
 
     static List<DesiredCapabilities> allBrowsers = new ArrayList<DesiredCapabilities>();
     static {
-        allBrowsers.add(BrowserUtil.ie(8));
-        allBrowsers.add(BrowserUtil.ie(9));
-        allBrowsers.add(BrowserUtil.ie(10));
-        allBrowsers.add(BrowserUtil.ie(11));
-        allBrowsers.add(BrowserUtil.firefox(TESTED_FIREFOX_VERSION));
+        allBrowsers.add(Browser.IE8.getDesiredCapabilities());
+        allBrowsers.add(Browser.IE9.getDesiredCapabilities());
+        allBrowsers.add(Browser.IE10.getDesiredCapabilities());
+        allBrowsers.add(Browser.IE11.getDesiredCapabilities());
+        allBrowsers.add(Browser.FIREFOX.getDesiredCapabilities());
         // Uncomment once we have the capability to run on Safari 6
-        // allBrowsers.add(BrowserUtil.safari(TESTED_SAFARI_VERSION));
-        allBrowsers.add(BrowserUtil.chrome(TESTED_CHROME_VERSION));
+        // allBrowsers.add(SAFARI);
+        allBrowsers.add(Browser.CHROME.getDesiredCapabilities());
         // Re-enable this when it is possible to run on a modern Opera version
-        // (15+)
-        // allBrowsers.add(BrowserUtil.opera(15));
+        // allBrowsers.add(Browser.OPERA.getDesiredCapabilities());
     }
 
     /**

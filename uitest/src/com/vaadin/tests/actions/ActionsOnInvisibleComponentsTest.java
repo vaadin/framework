@@ -18,12 +18,12 @@ public class ActionsOnInvisibleComponentsTest extends MultiBrowserTest {
     public List<DesiredCapabilities> getBrowsersToTest() {
         List<DesiredCapabilities> browsers = super.getBrowsersToTest();
         // sendKeys does nothing on these browsers
-        browsers.remove(BrowserUtil.firefox(24));
-        browsers.remove(BrowserUtil.ie(8));
-        browsers.remove(BrowserUtil.opera(12));
+        browsers.remove(Browser.FIREFOX.getDesiredCapabilities());
+        browsers.remove(Browser.IE8.getDesiredCapabilities());
+        browsers.remove(Browser.OPERA.getDesiredCapabilities());
 
         // Causes 'cannot focus element'
-        browsers.remove(BrowserUtil.chrome(29));
+        browsers.remove(Browser.CHROME.getDesiredCapabilities());
         return browsers;
     }
 

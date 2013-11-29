@@ -2,6 +2,7 @@
 <project name="tb3test" xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:ivy="antlib:org.apache.ivy.ant" basedir=".">
 
     <dirname property="tb3test.dir" file="${ant.file.tb3test}" />
+    <property name="report.dir" location="${tb3test.dir}/result/reports-tb3" />
 
     <ivy:resolve file="${tb3test.dir}/ivy.xml" conf="build, build-provided" />
     <ivy:cachepath pathid="classpath.tb3.lib" conf="build, build-provided" />
@@ -19,13 +20,16 @@
     <target name="run-tb3-suite">
         <fail unless="junit.test.suite" message="Define suite to run using junit.test.suite" />
         <fail unless="com.vaadin.testbench.screenshot.directory" message="Define screenshot directory using -Dcom.vaadin.testbench.screenshot.directory" />
-        <junit printsummary="withOutAndErr" fork="yes">
-            <formatter usefile="false" type="plain" />
+        <delete dir="${report.dir}" />
+        <mkdir dir="${report.dir}" />
+
+        <junit showoutput="no" printsummary="no" fork="yes">
+            <formatter type="xml" />
             <classpath refid="classpath.tb3" />
 
             <jvmarg value="-Dcom.vaadin.testbench.screenshot.directory=${com.vaadin.testbench.screenshot.directory}" />
             <jvmarg value="-Djava.awt.headless=true" />
-            <test name="${junit.test.suite}" />
+            <test name="${junit.test.suite}" todir="${report.dir}" />
         </junit>
 
     </target>

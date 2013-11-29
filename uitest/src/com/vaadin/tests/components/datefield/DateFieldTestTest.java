@@ -35,7 +35,12 @@ public class DateFieldTestTest extends MultiBrowserTest {
         menu("Component");
         menuSub("State");
         menu("Required");
+        assertRequiredIndicatorVisible();
         assertNoErrorNotification();
+    }
+
+    private void assertRequiredIndicatorVisible() {
+        getDriver().findElement(By.className("v-required-field-indicator"));
     }
 
     private void assertNoErrorNotification() {
@@ -57,6 +62,8 @@ public class DateFieldTestTest extends MultiBrowserTest {
         menu("Component");
         menuSub("State");
         menu("Required");
+
+        assertRequiredIndicatorVisible();
 
         menu("Component");
         menuSub("Features");
@@ -100,8 +107,8 @@ public class DateFieldTestTest extends MultiBrowserTest {
      * @param string
      */
     private void menuSub(String string) {
-        getDriver().findElement(
-                By.xpath("//span[text() = '" + string + "']")).click();
+        getDriver().findElement(By.xpath("//span[text() = '" + string + "']"))
+                .click();
         new Actions(getDriver()).moveByOffset(100, 0).build().perform();
     }
 
@@ -110,8 +117,8 @@ public class DateFieldTestTest extends MultiBrowserTest {
      * @param string
      */
     private void menu(String string) {
-        getDriver().findElement(
-                By.xpath("//span[text() = '" + string + "']")).click();
+        getDriver().findElement(By.xpath("//span[text() = '" + string + "']"))
+                .click();
 
     }
 

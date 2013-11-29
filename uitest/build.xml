@@ -150,8 +150,6 @@
         <echo>Checkstyle is disabled for uitest for now</echo>
     </target>
     <target name="test" depends="checkstyle">
-        <!--<antcall target="common.test.run" /> -->
-        <echo>WHAT? No JUnit tests for ${module.name}!</echo>
     </target>
 
     <target name="test-testbench" depends="clean-testbench-errors" description="Run all TestBench based tests, including server tests">

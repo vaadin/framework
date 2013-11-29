@@ -958,6 +958,12 @@ public class VWindow extends VWindowOverlay implements
             // dblclick handled in connector
             if (type != Event.ONDBLCLICK && draggable) {
                 if (type == Event.ONMOUSEDOWN) {
+                    /**
+                     * Prevents accidental selection of window caption or
+                     * content. (#12726)
+                     */
+                    event.preventDefault();
+
                     headerDragPending = event;
                 } else if (type == Event.ONMOUSEMOVE
                         && headerDragPending != null) {

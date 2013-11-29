@@ -26,8 +26,11 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.safari.SafariDriver;
 
 import com.vaadin.testbench.TestBench;
 
@@ -80,6 +83,9 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     @Override
     protected String getDeploymentHostname() {
+        if (getClass().getAnnotation(RunLocally.class) != null) {
+            return "localhost";
+        }
         String hostName = getProperty(HOSTNAME_PROPERTY);
 
         if (hostName == null || "".equals(hostName)) {
@@ -145,17 +151,29 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
      * @see com.vaadin.tests.tb3.AbstractTB3Test#setupLocalDriver()
      */
     @Override
-    protected void setupLocalDriver() {
-        String firefoxPath = getProperty("firefox.path");
+    protected void setupLocalDriver(DesiredCapabilities desiredCapabilities) {
         WebDriver driver;
-        if (firefoxPath != null) {
-            driver = new FirefoxDriver(
-                    new FirefoxBinary(new File(firefoxPath)), null);
+        if (BrowserUtil.isFirefox(desiredCapabilities)) {
+            String firefoxPath = getProperty("firefox.path");
+            if (firefoxPath != null) {
+                driver = new FirefoxDriver(new FirefoxBinary(new File(
+                        firefoxPath)), null);
+            } else {
+                driver = new FirefoxDriver();
+            }
+        } else if (BrowserUtil.isChrome(desiredCapabilities)) {
+            System.setProperty("webdriver.chrome.driver",
+                    getProperty("chrome.driver.path"));
+            driver = new ChromeDriver();
+        } else if (BrowserUtil.isSafari(desiredCapabilities)) {
+            driver = new SafariDriver();
         } else {
-            driver = new FirefoxDriver();
+            throw new RuntimeException(
+                    "Not implemented support for running locally on "
+                            + BrowserUtil
+                                    .getBrowserIdentifier(desiredCapabilities));
         }
         setDriver(TestBench.createDriver(driver));
-        setDesiredCapabilities(BrowserUtil
-                .firefox(MultiBrowserTest.TESTED_FIREFOX_VERSION));
+        setDesiredCapabilities(desiredCapabilities);
     }
 }

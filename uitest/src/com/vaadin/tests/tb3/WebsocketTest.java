@@ -25,6 +25,8 @@ import java.util.List;
 
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
+
 /**
  * A {@link MultiBrowserTest} which restricts the tests to the browsers which
  * support websocket
@@ -35,8 +37,8 @@ public abstract class WebsocketTest extends PrivateTB3Configuration {
     private static List<DesiredCapabilities> websocketBrowsers = new ArrayList<DesiredCapabilities>();
     static {
         websocketBrowsers.addAll(MultiBrowserTest.getAllBrowsers());
-        websocketBrowsers.remove(BrowserUtil.ie(8));
-        websocketBrowsers.remove(BrowserUtil.ie(9));
+        websocketBrowsers.remove(Browser.IE8.getDesiredCapabilities());
+        websocketBrowsers.remove(Browser.IE9.getDesiredCapabilities());
     }
 
     /**

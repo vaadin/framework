@@ -305,16 +305,20 @@
         <property name="test.src" location="${result.dir}/../tests/src" />
         <property name="test.classes" location="${result.dir}/tests/classes" />
 
+        <!-- Ensure report dir is empty before running tests -->
+        <property name="report.dir" location="${result.dir}/reports" />
+        <delete dir="${report.dir}" />
+        <mkdir dir="${report.dir}" />
 
-        <junit printsummary="withOutAndErr" fork="yes">
-            <formatter usefile="false" type="plain" />
+        <junit showoutput="no" printsummary="no" fork="yes">
+            <formatter type="xml" />
             <jvmarg value="-ea" />
             <classpath location="${test.classes}" />
             <classpath location="${classes}" />
             <classpath refid="classpath.compile.custom" />
             <classpath refid="classpath.test.dependencies" />
 
-            <batchtest fork="yes">
+            <batchtest fork="yes" todir="${report.dir}">
                 <fileset dir="${test.src}">
                     <exclude name="**/Abstract*" />
                     <exclude name="**/Mock*" />
@@ -363,7 +367,12 @@
         <ivy:cachepath pathid="classpath.test.dependencies" conf="test" />
     </target>
 
-    <target name="clean">
+    <target name="remove-test-reports">
+        <fail unless="result.dir" message="No result.dir parameter given" />
+        <delete dir="${result.dir}/reports" />
+    </target>
+
+    <target name="clean" depends="remove-test-reports">
         <fail unless="result.dir" message="No result.dir parameter given" />
         <delete dir="${result.dir}" />
     </target>

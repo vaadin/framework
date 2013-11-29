@@ -276,10 +276,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      */
     private int detachedScrollPosition = 0;
 
-    // fields used in fixing erroneously lost scrollLeft
-    int lastScrollBodyHeight = 0;
-    boolean lastScrollLeftWasAtMax = false;
-
     /**
      * Represents a select range of rows
      */
@@ -1009,15 +1005,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         initialContentReceived = true;
         sizeNeedsInit = true;
         scrollBody.restoreRowVisibility();
-
-        // At least FireFox requires that scrollLeft is restored deferred after
-        // scrollBody is recreated
-        Scheduler.get().scheduleFinally(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                restoreScrollLeft();
-            }
-        });
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -4245,8 +4232,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         // Already updated by setColWidth called from
                         // TableHeads.updateCellsFromUIDL in case of a server
                         // side resize
-                        final String width = col.getStringAttribute("width");
-                        c.setWidth(Integer.parseInt(width), true);
+                        final int width = col.getIntAttribute("width");
+                        c.setWidth(width, true);
                     }
                 } else if (recalcWidths) {
                     c.setUndefinedWidth();
@@ -6891,44 +6878,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     }
 
     /**
-     * Tries to restore horizontal scroll position if it was lost due to change
-     * in the height of scrollBody (#12652).
-     */
-    private void restoreScrollLeft() {
-        int upcomingScrollLeft = scrollLeft;
-
-        if (lastScrollLeftWasAtMax) {
-            upcomingScrollLeft = Util.getMaxScrollLeft(scrollBodyPanel
-                    .getElement());
-        }
-        scrollBodyPanel.getElement().setScrollLeft(upcomingScrollLeft);
-    }
-
-    /**
-     * Checks if restore of scrollLeft is needed by checking if height of the
-     * scrollBody has changed.
-     * 
-     * @return true, if restore is required
-     */
-    private boolean isScrollLeftRestoreRequired() {
-        return (scrollBody.getElement().getClientHeight() != lastScrollBodyHeight);
-    }
-
-    /**
      * This method has logic which rows needs to be requested from server when
      * user scrolls
      */
+
     @Override
     public void onScroll(ScrollEvent event) {
-        // restore in initializeRows() doesn't work right with Chrome
-        if (isScrollLeftRestoreRequired()) {
-            restoreScrollLeft();
-        }
-
-        lastScrollBodyHeight = scrollBody.getElement().getClientHeight();
-        lastScrollLeftWasAtMax = Util.isScrollLeftAtMax(scrollBodyPanel
-                .getElement());
-
         scrollLeft = scrollBodyPanel.getElement().getScrollLeft();
         scrollTop = scrollBodyPanel.getScrollPosition();
         /*
