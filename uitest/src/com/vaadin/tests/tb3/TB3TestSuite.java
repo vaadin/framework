@@ -223,6 +223,10 @@ public class TB3TestSuite extends Suite {
             if (!baseClass.isAssignableFrom(c)) {
                 return;
             }
+            if (!includeInSuite(c)) {
+                return;
+            }
+
             if (!Modifier.isAbstract(c.getModifiers()) && !c.isAnonymousClass()) {
                 result.add((Class<? extends T>) c);
             }
@@ -233,6 +237,20 @@ public class TB3TestSuite extends Suite {
             // Ignore. Client side classes will at least throw LinkageErrors
         }
 
+    }
+
+    /**
+     * @return true if the class should be included in the suite, false if not
+     */
+    private static boolean includeInSuite(Class<?> c) {
+        if (c.getAnnotation(ExcludeFromSuite.class) != null) {
+            return false;
+        }
+        if (c == Object.class) {
+            return true;
+        }
+
+        return includeInSuite(c.getSuperclass());
     }
 
 }
