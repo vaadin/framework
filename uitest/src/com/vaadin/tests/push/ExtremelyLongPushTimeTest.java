@@ -28,7 +28,7 @@ public abstract class ExtremelyLongPushTimeTest extends MultiBrowserTest {
     private static final int ONE_HOUR_IN_MS = 20 * 1000;
 
     @Test
-    public void test24HourPush() {
+    public void test24HourPush() throws Exception {
         openTestURL();
 
         // Without this there is a large chance that we will wait for all pushes
