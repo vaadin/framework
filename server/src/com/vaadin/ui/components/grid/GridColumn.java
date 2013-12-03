@@ -134,8 +134,6 @@ public class GridColumn implements Serializable {
     /**
      * Sets the width (in pixels).
      * 
-     * FIXME Currently not implemented.
-     * 
      * @param pixelWidth
      *            the new pixel width of the column
      * @throws IllegalStateException
@@ -151,6 +149,17 @@ public class GridColumn implements Serializable {
                     "Pixel width should be greated than 0");
         }
         state.width = pixelWidth;
+        grid.markAsDirty();
+    }
+
+    /**
+     * Marks the column width as undefined meaning that the grid is free to
+     * resize the column based on the cell contents and available space in the
+     * grid.
+     */
+    public void setWidthUndefined() {
+        checkColumnIsAttached();
+        state.width = -1;
         grid.markAsDirty();
     }
 

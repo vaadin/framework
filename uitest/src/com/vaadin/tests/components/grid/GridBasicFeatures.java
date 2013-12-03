@@ -142,8 +142,40 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }, null, c);
 
-        }
+            createCategory("Column" + c + " Width", "Column" + c);
 
+            createClickAction("Auto", "Column" + c + " Width",
+                    new Command<Grid, Integer>() {
+
+                        @Override
+                        public void execute(Grid grid, Integer value,
+                                Object columnIndex) {
+                            Object propertyId = (new ArrayList(grid
+                                    .getContainerDatasource()
+                                    .getContainerPropertyIds())
+                                    .get((Integer) columnIndex));
+                            GridColumn column = grid.getColumn(propertyId);
+                            column.setWidthUndefined();
+                        }
+                    }, -1, c);
+
+            for (int w = 50; w < 300; w += 50) {
+                createClickAction(w + "px", "Column" + c + " Width",
+                        new Command<Grid, Integer>() {
+
+                            @Override
+                            public void execute(Grid grid, Integer value,
+                                    Object columnIndex) {
+                                Object propertyId = (new ArrayList(grid
+                                        .getContainerDatasource()
+                                        .getContainerPropertyIds())
+                                        .get((Integer) columnIndex));
+                                GridColumn column = grid.getColumn(propertyId);
+                                column.setWidth(value);
+                            }
+                        }, w, c);
+            }
+        }
     }
 
     protected void createColumnGroupActions() {

@@ -298,6 +298,22 @@ public class Grid<T> extends Composite {
         private int findIndexOfColumn() {
             return grid.columns.indexOf(this);
         }
+
+        /**
+         * Sets the pixel width of the column. Use a negative value for the grid
+         * to autosize column based on content and available space
+         * 
+         * @param pixels
+         *            the width in pixels or negative for auto sizing
+         */
+        public void setWidth(int pixels) {
+            if (grid != null) {
+                int index = findIndexOfColumn();
+                ColumnConfiguration conf = grid.escalator
+                        .getColumnConfiguration();
+                conf.setColumnWidth(index, pixels);
+            }
+        }
     }
 
     /**

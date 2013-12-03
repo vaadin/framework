@@ -188,15 +188,55 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         // Freeze column 2
         selectMenuPath("Component", "Columns", "Column2", "Freeze");
 
-        WebElement cell = getDriver()
-                .findElement(
-                        By.xpath("//tbody[contains(@class, 'v-escalator-body')]/tr[1]/td[1]"));
+        WebElement cell = getBodyCellByRowAndColumn(1, 1);
         assertTrue(cell.getAttribute("class").contains("frozen"));
 
-        cell = getDriver()
-                .findElement(
-                        By.xpath("//tbody[contains(@class, 'v-escalator-body')]/tr[1]/td[2]"));
+        cell = getBodyCellByRowAndColumn(1, 2);
         assertTrue(cell.getAttribute("class").contains("frozen"));
+    }
+
+    @Test
+    public void testColumnWidths() throws Exception {
+        openTestURL();
+
+        // Default borders and margins implemented by escalator
+        int cellBorder = 1 + 1;
+        int cellMargin = 2 + 2;
+
+        // Default column width is 100px
+        WebElement cell = getBodyCellByRowAndColumn(1, 1);
+        assertEquals((100 - cellBorder - cellMargin) + "px",
+                cell.getCssValue("width"));
+
+        // Set first column to be 200px wide
+        selectMenuPath("Component", "Columns", "Column0", "Column0 Width",
+                "200px");
+
+        cell = getBodyCellByRowAndColumn(1, 1);
+        assertEquals((200 - cellBorder - cellMargin) + "px",
+                cell.getCssValue("width"));
+
+        // Set second column to be 150px wide
+        selectMenuPath("Component", "Columns", "Column1", "Column1 Width",
+                "150px");
+        cell = getBodyCellByRowAndColumn(1, 2);
+        assertEquals((150 - cellBorder - cellMargin) + "px",
+                cell.getCssValue("width"));
+
+        // Set first column to be auto sized (defaults to 100px currently)
+        selectMenuPath("Component", "Columns", "Column0", "Column0 Width",
+                "Auto");
+
+        cell = getBodyCellByRowAndColumn(1, 1);
+        assertEquals((100 - cellBorder - cellMargin) + "px",
+                cell.getCssValue("width"));
+
+    }
+
+    private WebElement getBodyCellByRowAndColumn(int row, int column) {
+        return getDriver().findElement(
+                By.xpath("//tbody[contains(@class, 'v-escalator-body')]/tr["
+                        + row + "]/td[" + column + "]"));
     }
 
     private void selectSubMenu(String menuCaption) {
