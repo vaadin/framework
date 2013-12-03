@@ -43,6 +43,7 @@ import com.vaadin.client.debug.internal.ProfilerSection;
 import com.vaadin.client.debug.internal.Section;
 import com.vaadin.client.debug.internal.TestBenchSection;
 import com.vaadin.client.debug.internal.VDebugWindow;
+import com.vaadin.client.event.PointerEventSupport;
 import com.vaadin.client.metadata.BundleLoadCallback;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.NoDataException;
@@ -609,6 +610,9 @@ public class ApplicationConfiguration implements EntryPoint {
         if (browserInfo.isIE() && browserInfo.getBrowserMajorVersion() >= 10) {
             enableIEPromptFix();
         }
+
+        // Register pointer events (must be done before any events are used)
+        PointerEventSupport.init();
 
         // Prepare the debugging window
         if (isDebugMode()) {
