@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.LexicalUnit;
 
+import com.vaadin.sass.internal.expression.exception.ArithmeticException;
 import com.vaadin.sass.internal.expression.exception.IncompatibleUnitsException;
 import com.vaadin.sass.internal.parser.LexicalUnitImpl;
 
@@ -121,5 +122,16 @@ public class ArithmeticExpressionEvaluatorTest {
         Assert.assertEquals(2, result.getIntegerValue());
         Assert.assertEquals(LexicalUnit.SAC_CENTIMETER,
                 result.getLexicalUnitType());
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void testNonExistingSignal() {
+        LexicalUnitImpl operand2Integer = LexicalUnitImpl.createInteger(2, 3,
+                null, 2);
+        LexicalUnitImpl operatorComma = LexicalUnitImpl.createComma(2, 3,
+                operand2Integer);
+        LexicalUnitImpl operand3Integer = LexicalUnitImpl.createInteger(2, 3,
+                operatorComma, 3);
+        LexicalUnitImpl result = evaluator.evaluate(operand2Integer);
     }
 }
