@@ -264,6 +264,31 @@ public class BasicEscalator extends AbstractTestUI {
                     }
                 }));
 
+        final Layout resizeColumnsLayout = new HorizontalLayout();
+        final TextField resizeColumnIndex = new TextField();
+        resizeColumnsLayout.addComponent(resizeColumnIndex);
+        final TextField resizeColumnPx = new TextField();
+        resizeColumnsLayout.addComponent(resizeColumnPx);
+        resizeColumnsLayout.addComponent(new Button("resize column",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(final ClickEvent event) {
+                        final int index = Integer.parseInt(resizeColumnIndex
+                                .getValue());
+                        final int px = Integer.parseInt(resizeColumnPx
+                                .getValue());
+                        grid.setColumnWidth(index, px);
+                    }
+                }));
+        addComponent(resizeColumnsLayout);
+
+        addComponent(new Button("Autoresize columns",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        grid.calculateColumnWidths();
+                    }
+                }));
     }
 
     @Override

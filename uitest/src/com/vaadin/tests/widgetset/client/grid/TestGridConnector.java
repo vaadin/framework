@@ -102,6 +102,16 @@ public class TestGridConnector extends AbstractComponentConnector {
             public void removeFooters(int index, int amount) {
                 getWidget().getFooter().removeRows(index, amount);
             }
+
+            @Override
+            public void setColumnWidth(int index, int px) {
+                getWidget().getColumnConfiguration().setColumnWidth(index, px);
+            }
+
+            @Override
+            public void calculateColumnWidths() {
+                getWidget().calculateColumnWidths();
+            }
         });
     }
 

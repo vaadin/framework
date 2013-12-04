@@ -33,6 +33,7 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.DOM;
@@ -230,10 +231,10 @@ public class Escalator extends Widget {
      * re-measure)
      */
     /*
-     * [[rowwidth]] [[colwidth]]: This code will require alterations that are
-     * relevant for being able to support variable row heights or column widths.
-     * NOTE: these bits can most often also be identified by searching for code
-     * reading the ROW_HEIGHT_PX and COL_WIDTH_PX constans.
+     * [[rowheight]]: This code will require alterations that are relevant for
+     * being able to support variable row heights. NOTE: these bits can most
+     * often also be identified by searching for code reading the ROW_HEIGHT_PX
+     * constant.
      */
     /*
      * [[API]]: Implementing this suggestion would require a change in the
@@ -516,7 +517,6 @@ public class Escalator extends Widget {
     }
 
     private static final int ROW_HEIGHT_PX = 20;
-    static final int COLUMN_WIDTH_PX = 100;
 
     /** An inner class that handles all logic related to scrolling. */
     private class Scroller extends JsniWorkaround {
@@ -577,11 +577,12 @@ public class Escalator extends Widget {
                     .setBottom(vScrollBottom, Unit.PX);
             verticalScrollbar.setScrollSize(innerScrollerHeight);
 
-            // TODO [[colwidth]]: adjust for variable column widths.
-            int columnsToScroll = columnConfiguration.getColumnCount()
-                    - columnConfiguration.getFrozenColumnCount();
-            horizontalScrollbar
-                    .setScrollSize(COLUMN_WIDTH_PX * columnsToScroll);
+            final Range unfrozenRange = Range.between(
+                    columnConfiguration.getFrozenColumnCount(),
+                    columnConfiguration.getColumnCount());
+            final int scrollwidth = columnConfiguration
+                    .getCalculatedColumnsWidth(unfrozenRange);
+            horizontalScrollbar.setScrollSize(scrollwidth);
 
             final Style hScrollbarStyle = horizontalScrollbar.getElement()
                     .getStyle();
@@ -600,8 +601,9 @@ public class Escalator extends Widget {
              * adjusted.
              */
             final int scrollPos = horizontalScrollbar.getScrollPos();
-            final int leftPos = getColumnConfiguration().getFrozenColumnCount()
-                    * COLUMN_WIDTH_PX;
+            final int leftPos = columnConfiguration
+                    .getCalculatedColumnsWidth(Range.withLength(0,
+                            columnConfiguration.frozenColumns));
             horizontalScrollbar.getElement().getStyle()
                     .setLeft(leftPos, Unit.PX);
             horizontalScrollbar.setScrollPos(scrollPos);
@@ -835,7 +837,6 @@ public class Escalator extends Widget {
                 final ScrollDestination destination, final int padding) {
             assert columnIndex >= columnConfiguration.frozenColumns : "Can't scroll to a frozen column";
 
-            // TODO [[colwidth]]
             /*
              * To cope with frozen columns, we just pretend those columns are
              * not there at all when calculating the position of the target
@@ -844,12 +845,15 @@ public class Escalator extends Widget {
              * structure effectively means that scrollLeft also ignores the
              * frozen columns.
              */
-            final int frozenPixels = columnConfiguration.frozenColumns
-                    * COLUMN_WIDTH_PX;
+            final int frozenPixels = columnConfiguration
+                    .getCalculatedColumnsWidth(Range.withLength(0,
+                            columnConfiguration.frozenColumns));
 
-            final int targetStartPx = COLUMN_WIDTH_PX * columnIndex
+            final int targetStartPx = columnConfiguration
+                    .getCalculatedColumnsWidth(Range.withLength(0, columnIndex))
                     - frozenPixels;
-            final int targetEndPx = targetStartPx + COLUMN_WIDTH_PX;
+            final int targetEndPx = targetStartPx
+                    + columnConfiguration.getColumnWidthActual(columnIndex);
 
             final int viewportStartPx = getScrollLeft();
             int viewportEndPx = viewportStartPx + getElement().getOffsetWidth()
@@ -1080,6 +1084,7 @@ public class Escalator extends Widget {
             }
 
             for (int row = visualIndex; row < visualIndex + numberOfRows; row++) {
+                final int rowHeight = ROW_HEIGHT_PX;
                 final Element tr = DOM.createTR();
                 addedRows.add(tr);
                 tr.addClassName(CLASS_NAME + "-row");
@@ -1087,7 +1092,10 @@ public class Escalator extends Widget {
                         referenceRow);
 
                 for (int col = 0; col < columnConfiguration.getColumnCount(); col++) {
-                    final Element cellElem = createCellElement();
+                    final int colWidth = columnConfiguration
+                            .getColumnWidthActual(col);
+                    final Element cellElem = createCellElement(rowHeight,
+                            colWidth);
                     tr.appendChild(cellElem);
 
                     // Set stylename and position if new cell is frozen
@@ -1098,15 +1106,8 @@ public class Escalator extends Widget {
                 }
 
                 refreshRow(tr, row);
-
-                /*
-                 * TODO [[optimize]] [[rowwidth]]: When this method is updated
-                 * to measure things instead of using hardcoded values, it would
-                 * be better to do everything at once after all rows have been
-                 * updated to reduce the number of reflows.
-                 */
-                recalculateRowWidth(tr);
             }
+            reapplyRowWidths();
 
             recalculateSectionHeight();
 
@@ -1172,11 +1173,6 @@ public class Escalator extends Widget {
                  * TODO [[rowheight]]: nudge rows down with
                  * refreshRowPositions() as needed
                  */
-                /*
-                 * TODO [[colwidth]]: reapply column and colspan widths as
-                 * needed
-                 */
-
                 for (int row = index; row < index + numberOfRows; row++) {
                     final Node tr = getTrByVisualIndex(row);
                     refreshRow(tr, row);
@@ -1187,7 +1183,8 @@ public class Escalator extends Widget {
         }
 
         void refreshRow(final Node tr, final int logicalRowIndex) {
-            flyweightRow.setup((Element) tr, logicalRowIndex);
+            flyweightRow.setup((Element) tr, logicalRowIndex,
+                    columnConfiguration.getCalculatedColumnWidths());
             updater.updateCells(flyweightRow, flyweightRow.getCells());
 
             /*
@@ -1200,12 +1197,18 @@ public class Escalator extends Widget {
         /**
          * Create and setup an empty cell element.
          * 
+         * @param width
+         *            the width of the cell, in pixels
+         * @param height
+         *            the height of the cell, in pixels
+         * 
          * @return a set-up empty cell element
          */
-        public Element createCellElement() {
+        @SuppressWarnings("hiding")
+        public Element createCellElement(final int height, final int width) {
             final Element cellElem = DOM.createElement(getCellElementTagName());
-            cellElem.getStyle().setHeight(ROW_HEIGHT_PX, Unit.PX);
-            cellElem.getStyle().setWidth(COLUMN_WIDTH_PX, Unit.PX);
+            cellElem.getStyle().setHeight(height, Unit.PX);
+            cellElem.getStyle().setWidth(width, Unit.PX);
             cellElem.addClassName(CLASS_NAME + "-cell");
             return cellElem;
         }
@@ -1225,7 +1228,8 @@ public class Escalator extends Widget {
         abstract protected int getTopVisualRowLogicalIndex();
 
         protected void paintRemoveColumns(final int offset,
-                final int numberOfColumns) {
+                final int numberOfColumns,
+                final List<ColumnConfigurationImpl.Column> removedColumns) {
             final NodeList<Node> childNodes = root.getChildNodes();
             for (int visualRowIndex = 0; visualRowIndex < childNodes
                     .getLength(); visualRowIndex++) {
@@ -1236,15 +1240,19 @@ public class Escalator extends Widget {
                     detachPossibleWidgetFromCell(cellElement);
                     cellElement.removeFromParent();
                 }
-                recalculateRowWidth((Element) tr);
             }
+            reapplyRowWidths();
 
-            final int firstRemovedColumnLeft = offset * COLUMN_WIDTH_PX;
+            final int firstRemovedColumnLeft = columnConfiguration
+                    .getCalculatedColumnsWidth(Range.withLength(0, offset));
             final boolean columnsWereRemovedFromLeftOfTheViewport = scroller.lastScrollLeft > firstRemovedColumnLeft;
 
             if (columnsWereRemovedFromLeftOfTheViewport) {
-                final int removedColumnsPxAmount = numberOfColumns
-                        * COLUMN_WIDTH_PX;
+                int removedColumnsPxAmount = 0;
+                for (ColumnConfigurationImpl.Column removedColumn : removedColumns) {
+                    removedColumnsPxAmount += removedColumn
+                            .getCalculatedWidth();
+                }
                 final int leftByDiff = (int) (scroller.lastScrollLeft - removedColumnsPxAmount);
                 final int newScrollLeft = Math.max(firstRemovedColumnLeft,
                         leftByDiff);
@@ -1283,6 +1291,7 @@ public class Escalator extends Widget {
             final NodeList<Node> childNodes = root.getChildNodes();
 
             for (int row = 0; row < childNodes.getLength(); row++) {
+                final int rowHeight = ROW_HEIGHT_PX;
                 final Element tr = getTrByVisualIndex(row);
 
                 Node referenceCell;
@@ -1293,19 +1302,15 @@ public class Escalator extends Widget {
                 }
 
                 for (int col = offset; col < offset + numberOfColumns; col++) {
-                    final Element cellElem = createCellElement();
+                    final int colWidth = columnConfiguration
+                            .getColumnWidthActual(col);
+                    final Element cellElem = createCellElement(rowHeight,
+                            colWidth);
                     referenceCell = insertAfterReferenceAndUpdateIt(tr,
                             cellElem, referenceCell);
                 }
-
-                /*
-                 * TODO [[optimize]] [[colwidth]]: When this method is updated
-                 * to measure things instead of using hardcoded values, it would
-                 * be better to do everything at once after all rows have been
-                 * updated to reduce the number of reflows.
-                 */
-                recalculateRowWidth(tr);
             }
+            reapplyRowWidths();
 
             if (frozen) {
                 for (int col = offset; col < offset + numberOfColumns; col++) {
@@ -1316,13 +1321,16 @@ public class Escalator extends Widget {
             // this needs to be before the scrollbar adjustment.
             scroller.recalculateScrollbarsForVirtualViewport();
 
-            final boolean columnsWereAddedToTheLeftOfViewport = scroller.lastScrollLeft > offset
-                    * COLUMN_WIDTH_PX;
+            int pixelsToInsertedColumn = columnConfiguration
+                    .getCalculatedColumnsWidth(Range.withLength(0, offset));
+            final boolean columnsWereAddedToTheLeftOfViewport = scroller.lastScrollLeft > pixelsToInsertedColumn;
 
             if (columnsWereAddedToTheLeftOfViewport) {
+                int insertedColumnsWidth = columnConfiguration
+                        .getCalculatedColumnsWidth(Range.withLength(offset,
+                                numberOfColumns));
                 horizontalScrollbar
-                        .setScrollPos((int) (scroller.lastScrollLeft + numberOfColumns
-                                * COLUMN_WIDTH_PX));
+                        .setScrollPos((int) (scroller.lastScrollLeft + insertedColumnsWidth));
             }
 
             /*
@@ -1365,6 +1373,92 @@ public class Escalator extends Widget {
 
                 Element cell = (Element) tr.getChild(column);
                 position.set(cell, scrollLeft, 0);
+            }
+        }
+
+        /**
+         * Iterates through all the cells in a column and returns the width of
+         * the widest element in this RowContainer.
+         * 
+         * @param index
+         *            the index of the column to inspect
+         * @return the pixel width of the widest element in the indicated column
+         */
+        public int calculateMaxColWidth(int index) {
+            Element row = (Element) root.getFirstChildElement();
+            int maxWidth = 0;
+            while (row != null) {
+                final Element cell = (Element) row.getChild(index);
+                final boolean isVisible = !cell.getStyle().getDisplay()
+                        .equals(Display.NONE.getCssName());
+                if (isVisible) {
+                    maxWidth = Math.max(maxWidth, cell.getScrollWidth());
+                }
+                row = (Element) row.getNextSiblingElement();
+            }
+            return maxWidth;
+        }
+
+        /**
+         * Reapplies all the cells' widths according to the calculated widths in
+         * the column configuration.
+         */
+        public void reapplyColumnWidths() {
+            Element row = (Element) root.getFirstChildElement();
+            while (row != null) {
+                Element cell = (Element) row.getFirstChildElement();
+                int columnIndex = 0;
+                while (cell != null) {
+                    @SuppressWarnings("hiding")
+                    final int width = getCalculatedColumnWidthWithColspan(cell,
+                            columnIndex);
+
+                    /*
+                     * TODO Should Escalator implement ProvidesResize at some
+                     * point, this is where we need to do that.
+                     */
+                    cell.getStyle().setWidth(width, Unit.PX);
+
+                    cell = (Element) cell.getNextSiblingElement();
+                    columnIndex++;
+                }
+                row = (Element) row.getNextSiblingElement();
+            }
+
+            reapplyRowWidths();
+        }
+
+        private int getCalculatedColumnWidthWithColspan(final Element cell,
+                final int columnIndex) {
+            final int colspan = cell.getPropertyInt(FlyweightCell.COLSPAN_ATTR);
+            Range spannedColumns = Range.withLength(columnIndex, colspan);
+
+            /*
+             * Since browsers don't explode with overflowing colspans, escalator
+             * shouldn't either.
+             */
+            if (spannedColumns.getEnd() > columnConfiguration.getColumnCount()) {
+                spannedColumns = Range.between(columnIndex,
+                        columnConfiguration.getColumnCount());
+            }
+            return columnConfiguration
+                    .getCalculatedColumnsWidth(spannedColumns);
+        }
+
+        /**
+         * Applies the total length of the columns to each row element.
+         * <p>
+         * <em>Note:</em> In contrast to {@link #reapplyColumnWidths()}, this
+         * method only modifies the width of the {@code <tr>} element, not the
+         * cells within.
+         */
+        protected void reapplyRowWidths() {
+            int rowWidth = columnConfiguration.calculateRowWidth();
+
+            com.google.gwt.dom.client.Element row = root.getFirstChildElement();
+            while (row != null) {
+                row.getStyle().setWidth(rowWidth, Unit.PX);
+                row = row.getNextSiblingElement();
             }
         }
     }
@@ -2488,8 +2582,35 @@ public class Escalator extends Widget {
     }
 
     private class ColumnConfigurationImpl implements ColumnConfiguration {
-        private int columns = 0;
+        public class Column {
+            private static final int DEFAULT_COLUMN_WIDTH_PX = 100;
+
+            private int definedWidth = -1;
+            private int calculatedWidth = DEFAULT_COLUMN_WIDTH_PX;
+
+            public void setWidth(int px) {
+                definedWidth = px;
+                calculatedWidth = (px >= 0) ? px : DEFAULT_COLUMN_WIDTH_PX;
+            }
+
+            public int getDefinedWidth() {
+                return definedWidth;
+            }
+
+            public int getCalculatedWidth() {
+                return calculatedWidth;
+            }
+        }
+
+        private final List<Column> columns = new ArrayList<Column>();
         private int frozenColumns = 0;
+
+        /**
+         * A cached array of all the calculated column widths.
+         * 
+         * @see #getCalculatedColumnWidths()
+         */
+        private int[] widthsArray = null;
 
         /**
          * {@inheritDoc}
@@ -2525,13 +2646,27 @@ public class Escalator extends Widget {
                 }
             }
 
-            columns -= numberOfColumns;
+            flyweightRow.removeCells(index, numberOfColumns);
+            List<Column> removedColumns = new ArrayList<Column>();
+            for (int i = 0; i < numberOfColumns; i++) {
+                removedColumns.add(columns.remove(i));
+            }
 
             if (hasSomethingInDom()) {
                 for (final AbstractRowContainer rowContainer : rowContainers) {
-                    rowContainer.paintRemoveColumns(index, numberOfColumns);
+                    rowContainer.paintRemoveColumns(index, numberOfColumns,
+                            removedColumns);
                 }
             }
+        }
+
+        /**
+         * Calculate the width of a row, as the sum of columns' widths.
+         * 
+         * @return the width of a row, in pixels
+         */
+        public int calculateRowWidth() {
+            return getCalculatedColumnsWidth(Range.between(0, getColumnCount()));
         }
 
         private void assertArgumentsAreValidAndWithinRange(final int index,
@@ -2575,7 +2710,10 @@ public class Escalator extends Widget {
             }
 
             flyweightRow.addCells(index, numberOfColumns);
-            columns += numberOfColumns;
+
+            for (int i = 0; i < numberOfColumns; i++) {
+                columns.add(index, new Column());
+            }
 
             // Either all or none of the new columns are frozen
             boolean frozen = index < frozenColumns;
@@ -2593,13 +2731,13 @@ public class Escalator extends Widget {
 
         @Override
         public int getColumnCount() {
-            return columns;
+            return columns.size();
         }
 
         @Override
         public void setFrozenColumnCount(int count)
                 throws IllegalArgumentException {
-            if (count < 0 || count > columns) {
+            if (count < 0 || count > getColumnCount()) {
                 throw new IllegalArgumentException(
                         "count must be between 0 and the current number of columns ("
                                 + columns + ")");
@@ -2639,6 +2777,85 @@ public class Escalator extends Widget {
         @Override
         public int getFrozenColumnCount() {
             return frozenColumns;
+        }
+
+        @Override
+        public void setColumnWidth(int index, int px)
+                throws IllegalArgumentException {
+            checkValidColumnIndex(index);
+
+            columns.get(index).setWidth(px);
+            widthsArray = null;
+
+            /*
+             * TODO [[optimize]]: only modify the elements that are actually
+             * modified.
+             */
+            header.reapplyColumnWidths();
+            body.reapplyColumnWidths();
+            footer.reapplyColumnWidths();
+            recalculateElementSizes();
+        }
+
+        private void checkValidColumnIndex(int index)
+                throws IllegalArgumentException {
+            if (!Range.withLength(0, getColumnCount()).contains(index)) {
+                throw new IllegalArgumentException(
+                        "The given column index does not exist");
+            }
+        }
+
+        @Override
+        public int getColumnWidth(int index) throws IllegalArgumentException {
+            checkValidColumnIndex(index);
+            return columns.get(index).getDefinedWidth();
+        }
+
+        @Override
+        public int getColumnWidthActual(int index) {
+            return columns.get(index).getCalculatedWidth();
+        }
+
+        /**
+         * Calculates the width of the columns in a given range.
+         * 
+         * @param columns
+         *            the columns to calculate
+         * @return the total width of the columns in the given
+         *         <code>columns</code>
+         */
+        int getCalculatedColumnsWidth(@SuppressWarnings("hiding")
+        final Range columns) {
+            /*
+             * This is an assert instead of an exception, since this is an
+             * internal method.
+             */
+            assert columns.isSubsetOf(Range.between(0, getColumnCount())) : "Range "
+                    + "was outside of current column range (i.e.: "
+                    + Range.between(0, getColumnCount())
+                    + ", but was given :"
+                    + columns;
+
+            int sum = 0;
+            for (int i = columns.getStart(); i < columns.getEnd(); i++) {
+                sum += getColumnWidthActual(i);
+            }
+            return sum;
+        }
+
+        void setCalculatedColumnWidth(int index, int width) {
+            columns.get(index).calculatedWidth = width;
+            widthsArray = null;
+        }
+
+        int[] getCalculatedColumnWidths() {
+            if (widthsArray == null) {
+                widthsArray = new int[getColumnCount()];
+                for (int i = 0; i < columns.size(); i++) {
+                    widthsArray[i] = columns.get(i).getCalculatedWidth();
+                }
+            }
+            return widthsArray;
         }
     }
 
@@ -3115,13 +3332,7 @@ public class Escalator extends Widget {
     }
 
     private boolean needsHorizontalScrollbars() {
-        // TODO [[colwidth]]: take variable column widths into account
-        return width < COLUMN_WIDTH_PX * columnConfiguration.getColumnCount();
-    }
-
-    private static void recalculateRowWidth(final Element tr) {
-        // TODO [[colwidth]]: adjust for variable column widths
-        tr.getStyle().setWidth(tr.getChildCount() * COLUMN_WIDTH_PX, Unit.PX);
+        return width < columnConfiguration.calculateRowWidth();
     }
 
     /**
@@ -3223,5 +3434,49 @@ public class Escalator extends Widget {
             return Util.findWidget((Element) possibleWidgetNode, null);
         }
         return null;
+    }
+
+    /**
+     * Forces the escalator to recalculate the widths of its columns.
+     * <p>
+     * All columns that haven't been assigned an explicit width will be resized
+     * to fit all currently visible contents.
+     * 
+     * @see ColumnConfiguration#setColumnWidth(int, int)
+     */
+    public void calculateColumnWidths() {
+        boolean widthsHaveChanged = false;
+        for (int colIndex = 0; colIndex < columnConfiguration.getColumnCount(); colIndex++) {
+            if (columnConfiguration.getColumnWidth(colIndex) >= 0) {
+                continue;
+            }
+
+            final int oldColumnWidth = columnConfiguration
+                    .getColumnWidthActual(colIndex);
+
+            int maxColumnWidth = 0;
+            maxColumnWidth = Math.max(maxColumnWidth,
+                    header.calculateMaxColWidth(colIndex));
+            maxColumnWidth = Math.max(maxColumnWidth,
+                    body.calculateMaxColWidth(colIndex));
+            maxColumnWidth = Math.max(maxColumnWidth,
+                    footer.calculateMaxColWidth(colIndex));
+
+            Logger.getLogger("Escalator.calculateColumnWidths").info(
+                    "#" + colIndex + ": " + maxColumnWidth + "px");
+
+            if (oldColumnWidth != maxColumnWidth) {
+                columnConfiguration.setCalculatedColumnWidth(colIndex,
+                        maxColumnWidth);
+                widthsHaveChanged = true;
+            }
+        }
+
+        if (widthsHaveChanged) {
+            header.reapplyColumnWidths();
+            body.reapplyColumnWidths();
+            footer.reapplyColumnWidths();
+            recalculateElementSizes();
+        }
     }
 }

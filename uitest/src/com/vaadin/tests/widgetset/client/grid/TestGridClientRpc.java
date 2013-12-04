@@ -39,4 +39,8 @@ public interface TestGridClientRpc extends ClientRpc {
     void insertFooters(int index, int amount);
 
     void removeFooters(int index, int amount);
+
+    void setColumnWidth(int index, int px);
+
+    void calculateColumnWidths();
 }

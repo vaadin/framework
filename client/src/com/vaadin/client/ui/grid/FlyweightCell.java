@@ -38,7 +38,7 @@ import com.vaadin.client.ui.grid.FlyweightRow.CellIterator;
  * @see FlyweightRow#removeCells(int, int)
  */
 class FlyweightCell implements Cell {
-    private static final String COLSPAN_ATTR = "colSpan";
+    static final String COLSPAN_ATTR = "colSpan";
 
     private final int column;
     private final FlyweightRow row;
@@ -76,7 +76,7 @@ class FlyweightCell implements Cell {
 
         final Element e = getElement();
         e.setPropertyInt(COLSPAN_ATTR, 1);
-        e.getStyle().setWidth(Escalator.COLUMN_WIDTH_PX, Unit.PX);
+        e.getStyle().setWidth(row.getColumnWidth(column), Unit.PX);
         e.getStyle().clearDisplay();
     }
 
@@ -128,11 +128,14 @@ class FlyweightCell implements Cell {
     }
 
     private void adjustCellWidthForSpan(final int numberOfCells) {
-        final List<FlyweightCell> cellsToTheRight = currentIterator
-                .rawPeekNext(numberOfCells - 1);
-        final int widthsOfColumnsToTheRight = cellsToTheRight.size()
-                * Escalator.COLUMN_WIDTH_PX;
-        final int selfWidth = Escalator.COLUMN_WIDTH_PX;
+        final int cellsToTheRight = currentIterator.rawPeekNext(
+                numberOfCells - 1).size();
+
+        final int selfWidth = row.getColumnWidth(column);
+        int widthsOfColumnsToTheRight = 0;
+        for (int i = 0; i < cellsToTheRight; i++) {
+            widthsOfColumnsToTheRight += row.getColumnWidth(column + i + 1);
+        }
         getElement().getStyle().setWidth(selfWidth + widthsOfColumnsToTheRight,
                 Unit.PX);
     }

@@ -103,6 +103,7 @@ class FlyweightRow implements Row {
 
     private int row;
     private Element element;
+    private int[] columnWidths = null;
     private final Escalator escalator;
     private final List<FlyweightCell> cells = new ArrayList<FlyweightCell>();
 
@@ -115,9 +116,10 @@ class FlyweightRow implements Row {
         return escalator;
     }
 
-    void setup(final Element e, final int row) {
+    void setup(final Element e, final int row, int[] columnWidths) {
         element = e;
         this.row = row;
+        this.columnWidths = columnWidths;
     }
 
     /**
@@ -136,6 +138,7 @@ class FlyweightRow implements Row {
     boolean teardown() {
         element = null;
         row = BLANK;
+        columnWidths = null;
         for (final FlyweightCell cell : cells) {
             assert cell.teardown();
         }
@@ -200,10 +203,15 @@ class FlyweightRow implements Row {
      * access any of its data.
      */
     private void assertSetup() {
-        assert element != null && row != BLANK : "Flyweight row was not "
+        assert element != null && row != BLANK && columnWidths != null : "Flyweight row was not "
                 + "properly initialized. Make sure the setup-method is "
                 + "called before retrieving data. This is either a bug "
                 + "in Escalator, or the instance of the flyweight row "
                 + "has been stored and accessed.";
+    }
+
+    int getColumnWidth(int column) {
+        assertSetup();
+        return columnWidths[column];
     }
 }

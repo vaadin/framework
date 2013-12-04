@@ -217,4 +217,8 @@ public class VTestGrid extends Composite {
     public RowContainer getFooter() {
         return escalator.getFooter();
     }
+
+    public void calculateColumnWidths() {
+        escalator.calculateColumnWidths();
+    }
 }

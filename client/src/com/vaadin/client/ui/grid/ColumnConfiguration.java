@@ -106,4 +106,41 @@ public interface ColumnConfiguration {
      * @return the number of frozen columns
      */
     public int getFrozenColumnCount();
+
+    /**
+     * Sets (or unsets) an explicit width for a column.
+     * 
+     * @param index
+     *            the index of the column for which to set a width
+     * @param px
+     *            the number of pixels the indicated column should be, or a
+     *            negative number to let the escalator decide
+     * @throws IllegalArgumentException
+     *             if <code>index</code> is not a valid column index
+     */
+    public void setColumnWidth(int index, int px)
+            throws IllegalArgumentException;
+
+    /**
+     * Returns the user-defined width of a column.
+     * 
+     * @param index
+     *            the index of the column for which to retrieve the width
+     * @return the column's width in pixels, or a negative number if the width
+     *         is implicitly decided by the escalator
+     * @throws IllegalArgumentException
+     *             if <code>index</code> is not a valid column index
+     */
+    public int getColumnWidth(int index) throws IllegalArgumentException;
+
+    /**
+     * Returns the actual width of a column.
+     * 
+     * @param index
+     *            the index of the column for which to retrieve the width
+     * @return the column's actual width in pixels
+     * @throws IllegalArgumentException
+     *             if <code>index</code> is not a valid column index
+     */
+    public int getColumnWidthActual(int index) throws IllegalArgumentException;
 }

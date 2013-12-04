@@ -81,4 +81,12 @@ public class TestGrid extends AbstractComponent {
     public void removeFooters(int index, int amount) {
         rpc().removeFooters(index, amount);
     }
+
+    public void setColumnWidth(int index, int px) {
+        rpc().setColumnWidth(index, px);
+    }
+
+    public void calculateColumnWidths() {
+        rpc().calculateColumnWidths();
+    }
 }
