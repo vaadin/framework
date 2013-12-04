@@ -39,7 +39,8 @@ public class PropertyDescriptorTest extends TestCase {
         Assert.assertEquals("John", property.getValue());
     }
 
-    public void testNestedPropertyDescriptorSerialization() throws Exception {
+    public void testSimpleNestedPropertyDescriptorSerialization()
+            throws Exception {
         NestedPropertyDescriptor<Person> pd = new NestedPropertyDescriptor<Person>(
                 "name", Person.class);
 
@@ -53,10 +54,9 @@ public class PropertyDescriptorTest extends TestCase {
         Assert.assertEquals("John", property.getValue());
     }
 
-    public void testNestedPropertyDescriptorWithNullBeansAllowedSerialization()
-            throws Exception {
+    public void testNestedPropertyDescriptorSerialization() throws Exception {
         NestedPropertyDescriptor<Person> pd = new NestedPropertyDescriptor<Person>(
-                "address.street", Person.class, true);
+                "address.street", Person.class);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         new ObjectOutputStream(baos).writeObject(pd);

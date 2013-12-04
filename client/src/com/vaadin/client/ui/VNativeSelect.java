@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.ui.ListBox;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.UIDL;
 
 public class VNativeSelect extends VOptionGroupBase implements Field {
@@ -98,6 +99,21 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
             // remove temporary empty item
             select.removeItem(0);
             firstValueIsTemporaryNullItem = false;
+            /*
+             * Workaround to achrome bug that may cause value change event not
+             * to fire when selection is done with keyboard.
+             * 
+             * http://dev.vaadin.com/ticket/10109
+             * 
+             * Problem is confirmed to exist only on Chrome-Win, but just
+             * execute in for all webkits. Probably exists also in other
+             * webkits/blinks on windows.
+             */
+            if (BrowserInfo.get().isWebkit()) {
+                select.getElement().blur();
+                select.getElement().focus();
+            }
+
         }
     }
 

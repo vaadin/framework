@@ -34,7 +34,6 @@ public class NestedPropertyDescriptor<BT> implements
 
     private final String name;
     private final Class<?> propertyType;
-    private final boolean nullBeansAllowed;
 
     /**
      * Creates a property descriptor that can create MethodProperty instances to
@@ -49,29 +48,10 @@ public class NestedPropertyDescriptor<BT> implements
      */
     public NestedPropertyDescriptor(String name, Class<BT> beanType)
             throws IllegalArgumentException {
-        this(name, beanType, false);
-    }
-
-    /**
-     * Creates a property descriptor that can create MethodProperty instances to
-     * access the underlying bean property.
-     * 
-     * @param name
-     *            of the property in a dotted path format, e.g. "address.street"
-     * @param beanType
-     *            type (class) of the top-level bean
-     * @param nullBeansAllowed
-     *            set true to allow null values from intermediate getters
-     * @throws IllegalArgumentException
-     *             if the property name is invalid
-     */
-    public NestedPropertyDescriptor(String name, Class<BT> beanType,
-            boolean nullBeansAllowed) throws IllegalArgumentException {
         this.name = name;
         NestedMethodProperty<?> property = new NestedMethodProperty<Object>(
-                beanType, name, nullBeansAllowed);
+                beanType, name);
         this.propertyType = property.getType();
-        this.nullBeansAllowed = nullBeansAllowed;
     }
 
     @Override
@@ -86,7 +66,7 @@ public class NestedPropertyDescriptor<BT> implements
 
     @Override
     public Property<?> createProperty(BT bean) {
-        return new NestedMethodProperty<Object>(bean, name, nullBeansAllowed);
+        return new NestedMethodProperty<Object>(bean, name);
     }
 
 }

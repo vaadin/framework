@@ -29,6 +29,7 @@ public class SliderDisableTest extends MultiBrowserTest {
         openTestURL();
         WebElement element = vaadinElement("/VVerticalLayout[0]/Slot[0]/VSlider[0]/domChild[2]/domChild[0]");
         new Actions(driver).dragAndDropBy(element, 112, 0).perform();
+        testBench().waitForVaadin();
         compareScreen("enabled");
         vaadinElementById("disableButton").click();
         compareScreen("disabled");

@@ -27,6 +27,9 @@
     <!-- Base url where the testable application is deployed -->
     <property name="deployment.url" value="http://${test.integration.server}:8080" />
 
+
+    <property name="report.dir" location="${integration_test.dir}/result/reports-integration" />
+
     <!-- ssh host values -->
     <property name="ant.hub" value="${test.integration.antfile}" />
     <property name="user" value="${test.integration.user}" />
@@ -56,6 +59,7 @@
             <property name="testfiles" value="${testfiles}" />
             <property name="test-output-dir" value="${integration_test.dir}/result/integration-test-output/${server-name}" />
             <property name="retries" value="0" />
+            <property name="report.qualifier" value="integration-tb2/${server-name}" />
 
             <fileset dir="." includes="test.xml" />
         </subant>
@@ -69,6 +73,7 @@
             <property name="server.start.succeeded" value="1" />
             <property name="testfiles" value="${testfiles-theme}" />
             <property name="test-output-dir" value="${integration_test.dir}/result/integration-test-output/${server-name}" />
+            <property name="report.qualifier" value="integration-theme-tb2/${server-name}" />
 
             <fileset dir="." includes="test.xml" />
         </subant>
@@ -87,6 +92,7 @@
             <property name="browsers" value="${test_browsers}" />
             <property name="testfiles" value="${test-GAE}" />
             <property name="test-output-dir" value="../build/integration-test-gae-output" />
+            <property name="report.qualifier" value="integration-gae-tb2/${server-name}" />
 
             <fileset dir="." includes="test.xml" />
         </subant>
@@ -105,16 +111,19 @@
         <fail unless="server-name" message="Server name must be defined in server-name" />
         <fail unless="deployment.url" message="Deplyoment url must be defined in deployment.url" />
         <fail unless="com.vaadin.testbench.screenshot.directory" message="Screenshot directory must be defined in com.vaadin.testbench.screenshot.directory" />
-
-        <junit printsummary="withOutAndErr" fork="yes">
-            <formatter usefile="false" type="plain" />
+	<property name="server.report.dir" location="${report.dir}/integration-test-tb3/${server-name}" />
+         <!-- The junit task does not create the report dir... -->
+        <mkdir dir="${server.report.dir}" />
+          
+        <junit showoutput="no" printsummary="no" fork="yes">
+            <formatter type="xml" />
             <classpath refid="classpath.tb3" />
 
             <jvmarg value="-Dcom.vaadin.testbench.screenshot.directory=${com.vaadin.testbench.screenshot.directory}" />
             <jvmarg value="-Ddeployment.url=${deployment.url}" />
             <jvmarg value="-Dserver-name=${server-name}" />
             <jvmarg value="-Djava.awt.headless=true" />
-            <test name="${junit.test.suite}" />
+            <test name="${junit.test.suite}" todir="${server.report.dir}" />
         </junit>
     </target>
 
@@ -360,6 +369,9 @@
         <property name="passphrase" value="${passphrase}" />
         <fail unless="sshkey.file" message="You must define an ssh.keyfile parameter" />
         <fail unless="com.vaadin.testbench.screenshot.directory" message="You must define a com.vaadin.testbench.screenshot.directory parameter" />
+        <delete dir="${report.dir}" />
+        <mkdir dir="${report.dir}" />
+
         <parallel>
             <antcontrib:trycatch property="tried">
                 <try>
