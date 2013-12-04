@@ -1082,7 +1082,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     @Override
     public void onBlur(BlurEvent event) {
-        if (focusedTab != null && event.getSource() instanceof Tab) {
+        if (focusedTab != null && focusedTab == event.getSource()) {
             focusedTab = null;
             if (client.hasEventListeners(this, EventId.BLUR)) {
                 client.updateVariable(id, EventId.BLUR, "", true);
