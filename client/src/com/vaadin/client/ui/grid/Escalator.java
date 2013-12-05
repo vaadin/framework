@@ -39,6 +39,7 @@ import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.Profiler;
@@ -50,6 +51,7 @@ import com.vaadin.client.ui.grid.PositionFunction.TranslatePosition;
 import com.vaadin.client.ui.grid.PositionFunction.WebkitTranslate3DPosition;
 import com.vaadin.client.ui.grid.ScrollbarBundle.HorizontalScrollbarBundle;
 import com.vaadin.client.ui.grid.ScrollbarBundle.VerticalScrollbarBundle;
+import com.vaadin.shared.util.SharedUtil;
 
 /*-
 
@@ -895,8 +897,6 @@ public class Escalator extends Widget {
         }
     }
 
-    static final String CLASS_NAME = "v-escalator";
-
     private abstract class AbstractRowContainer implements RowContainer {
         private EscalatorUpdater updater = EscalatorUpdater.NULL;
 
@@ -910,6 +910,12 @@ public class Escalator extends Widget {
 
         /** The height of the combined rows in the DOM. */
         protected double height = -1;
+
+        /**
+         * The primary style name of the escalator. Most commonly provided by
+         * Escalator as "v-escalator".
+         */
+        private String primaryStyleName = null;
 
         public AbstractRowContainer(final Element rowContainerElement) {
             root = rowContainerElement;
@@ -1087,7 +1093,7 @@ public class Escalator extends Widget {
                 final int rowHeight = ROW_HEIGHT_PX;
                 final Element tr = DOM.createTR();
                 addedRows.add(tr);
-                tr.addClassName(CLASS_NAME + "-row");
+                tr.addClassName(getStylePrimaryName() + "-row");
                 referenceRow = insertAfterReferenceAndUpdateIt(root, tr,
                         referenceRow);
 
@@ -1209,7 +1215,7 @@ public class Escalator extends Widget {
             final Element cellElem = DOM.createElement(getCellElementTagName());
             cellElem.getStyle().setHeight(height, Unit.PX);
             cellElem.getStyle().setWidth(width, Unit.PX);
-            cellElem.addClassName(CLASS_NAME + "-cell");
+            cellElem.addClassName(getStylePrimaryName() + "-cell");
             return cellElem;
         }
 
@@ -1461,6 +1467,47 @@ public class Escalator extends Widget {
                 row = row.getNextSiblingElement();
             }
         }
+
+        /**
+         * The primary style name for the container.
+         * 
+         * @param primaryStyleName
+         *            the style name to use as prefix for all row and cell style
+         *            names.
+         */
+        protected void setStylePrimaryName(String primaryStyleName) {
+            String oldStyle = getStylePrimaryName();
+            if (SharedUtil.equals(oldStyle, primaryStyleName)) {
+                return;
+            }
+
+            this.primaryStyleName = primaryStyleName;
+
+            // Update already rendered rows and cells
+            Node row = root.getFirstChild();
+            while (row != null) {
+                Element rowElement = row.cast();
+                UIObject.setStylePrimaryName(rowElement, primaryStyleName
+                        + "-row");
+                Node cell = row.getFirstChild();
+                while (cell != null) {
+                    Element cellElement = cell.cast();
+                    UIObject.setStylePrimaryName(cellElement, primaryStyleName
+                            + "-cell");
+                    cell = cell.getNextSibling();
+                }
+                row = row.getNextSibling();
+            }
+        }
+
+        /**
+         * Returns the primary style name of the container.
+         * 
+         * @return The primary style name or <code>null</code> if not set.
+         */
+        protected String getStylePrimaryName() {
+            return primaryStyleName;
+        }
     }
 
     private abstract class AbstractStaticRowContainer extends
@@ -1525,11 +1572,23 @@ public class Escalator extends Widget {
         protected String getCellElementTagName() {
             return "th";
         }
+
+        @Override
+        public void setStylePrimaryName(String primaryStyleName) {
+            super.setStylePrimaryName(primaryStyleName);
+            UIObject.setStylePrimaryName(root, primaryStyleName + "-header");
+        }
     }
 
     private class FooterRowContainer extends AbstractStaticRowContainer {
         public FooterRowContainer(final Element footElement) {
             super(footElement);
+        }
+
+        @Override
+        public void setStylePrimaryName(String primaryStyleName) {
+            super.setStylePrimaryName(primaryStyleName);
+            UIObject.setStylePrimaryName(root, primaryStyleName + "-footer");
         }
 
         @Override
@@ -1562,6 +1621,12 @@ public class Escalator extends Widget {
 
         public BodyRowContainer(final Element bodyElement) {
             super(bodyElement);
+        }
+
+        @Override
+        public void setStylePrimaryName(String primaryStyleName) {
+            super.setStylePrimaryName(primaryStyleName);
+            UIObject.setStylePrimaryName(root, primaryStyleName + "-body");
         }
 
         public void updateEscalatorRowsOnScroll() {
@@ -2952,7 +3017,6 @@ public class Escalator extends Widget {
 
         final Element root = DOM.createDiv();
         setElement(root);
-        setStyleName(CLASS_NAME);
 
         root.appendChild(verticalScrollbar.getElement());
         root.appendChild(horizontalScrollbar.getElement());
@@ -2961,20 +3025,17 @@ public class Escalator extends Widget {
                 .setScrollbarThickness(Util.getNativeScrollbarSize());
 
         tableWrapper = DOM.createDiv();
-        tableWrapper.setClassName(CLASS_NAME + "-tablewrapper");
+
         root.appendChild(tableWrapper);
 
         final Element table = DOM.createTable();
         tableWrapper.appendChild(table);
 
-        headElem.setClassName(CLASS_NAME + "-header");
         table.appendChild(headElem);
-
-        bodyElem.setClassName(CLASS_NAME + "-body");
         table.appendChild(bodyElem);
-
-        footElem.setClassName(CLASS_NAME + "-footer");
         table.appendChild(footElem);
+
+        setStylePrimaryName("v-escalator");
 
         /*
          * Size calculations work only after the Escalator has been attached to
@@ -3478,5 +3539,19 @@ public class Escalator extends Widget {
             footer.reapplyColumnWidths();
             recalculateElementSizes();
         }
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        super.setStylePrimaryName(style);
+
+        verticalScrollbar.setStylePrimaryName(style);
+        horizontalScrollbar.setStylePrimaryName(style);
+
+        UIObject.setStylePrimaryName(tableWrapper, style + "-tablewrapper");
+
+        header.setStylePrimaryName(style);
+        body.setStylePrimaryName(style);
+        footer.setStylePrimaryName(style);
     }
 }

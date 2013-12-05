@@ -17,6 +17,7 @@
 @import "embedded/embedded.scss";
 @import "escalator/escalator.scss";
 @import "formlayout/formlayout.scss";
+@import "grid/grid.scss";
 @import "gridlayout/gridlayout.scss";
 @import "label/label.scss";
 @import "link/link.scss";
@@ -87,6 +88,7 @@ $line-height: normal;
 	@include base-embedded;
 	@include base-escalator;
 	@include base-formlayout;
+	@include base-grid;
 	@include base-gridlayout;
 	@include base-label;
 	@include base-link;

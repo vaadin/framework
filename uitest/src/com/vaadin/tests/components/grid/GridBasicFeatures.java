@@ -16,6 +16,7 @@
 package com.vaadin.tests.components.grid;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
@@ -70,6 +71,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             grid.getColumn("Column" + col).setWidth(100 + col * 50);
         }
 
+        createGridActions();
+
         createColumnActions();
 
         createHeaderActions();
@@ -79,6 +82,23 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         createColumnGroupActions();
 
         return grid;
+    }
+
+    protected void createGridActions() {
+        LinkedHashMap<String, String> primaryStyleNames = new LinkedHashMap<String, String>();
+        primaryStyleNames.put("v-grid", "v-grid");
+        primaryStyleNames.put("v-escalator", "v-escalator");
+        primaryStyleNames.put("my-grid", "my-grid");
+
+        createMultiClickAction("Primary style name", "State",
+                primaryStyleNames, new Command<Grid, String>() {
+
+                    @Override
+                    public void execute(Grid grid, String value, Object data) {
+                        grid.setPrimaryStyleName(value);
+
+                    }
+                }, primaryStyleNames.get("v-grid"));
     }
 
     protected void createHeaderActions() {

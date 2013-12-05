@@ -39,9 +39,7 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         openTestURL();
 
         // Column headers should be visible
-        List<WebElement> cells = getDriver()
-                .findElements(
-                        By.xpath("//thead[contains(@class, 'v-escalator-header')]//th"));
+        List<WebElement> cells = getGridHeaderRowCells();
         assertEquals(10, cells.size());
         assertEquals("Column0", cells.get(0).getText());
         assertEquals("Column1", cells.get(1).getText());
@@ -52,19 +50,15 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
     public void testColumnFooterCaptions() throws Exception {
         openTestURL();
 
-        String footerCellPath = "//tfoot[contains(@class, 'v-escalator-footer')]"
-                + "//td[contains(@class, 'v-escalator-cell')]";
-
         // footer row should by default be hidden
-        assertEquals(0, getDriver().findElements(By.xpath(footerCellPath))
-                .size());
+        List<WebElement> cells = getGridFooterRowCells();
+        assertEquals(0, cells.size());
 
         // Open footer row
         selectMenuPath("Component", "Footers", "Visible");
 
         // Footers should now be visible
-        List<WebElement> cells = getDriver().findElements(
-                By.xpath(footerCellPath));
+        cells = getGridFooterRowCells();
         assertEquals(10, cells.size());
         assertEquals("Footer 0", cells.get(0).getText());
         assertEquals("Footer 1", cells.get(1).getText());
@@ -78,27 +72,24 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         // Hide column headers for this test
         selectMenuPath("Component", "Headers", "Visible");
 
-        String headerCellPath = "//thead[contains(@class, 'v-escalator-header')]//th";
+        List<WebElement> cells = getGridHeaderRowCells();
 
         // header row should be empty
-        assertEquals(0, getDriver().findElements(By.xpath(headerCellPath))
-                .size());
+        assertEquals(0, cells.size());
 
         // add a group row
         selectMenuPath("Component", "Column groups", "Add group row");
 
         // Empty group row cells should be present
-        assertEquals(10, getDriver().findElements(By.xpath(headerCellPath))
-                .size());
+        cells = getGridHeaderRowCells();
+        assertEquals(10, cells.size());
 
         // Group columns 0 & 1
         selectMenuPath("Component", "Column groups", "Column group row 1",
                 "Group Column 0 & 1");
 
-        List<WebElement> cells = getDriver().findElements(
-                By.xpath(headerCellPath));
+        cells = getGridHeaderRowCells();
         assertEquals("Column 0 & 1", cells.get(0).getText());
-        assertEquals("Column 0 & 1", cells.get(1).getText());
     }
 
     @Test
@@ -116,13 +107,8 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         selectMenuPath("Component", "Column groups", "Column group row 1",
                 "Group Column 0 & 1");
 
-        String footerCellPath = "//tfoot[contains(@class, 'v-escalator-footer')]"
-                + "//td[contains(@class, 'v-escalator-cell')]";
-
-        List<WebElement> cells = getDriver().findElements(
-                By.xpath(footerCellPath));
+        List<WebElement> cells = getGridFooterRowCells();
         assertEquals("Column 0 & 1", cells.get(0).getText());
-        assertEquals("Column 0 & 1", cells.get(1).getText());
     }
 
     @Test
@@ -150,16 +136,14 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         openTestURL();
 
         // Column 0 should be visible
-        String headerCellPath = "//thead[contains(@class, 'v-escalator-header')]//th";
-        List<WebElement> cells = getDriver().findElements(
-                By.xpath(headerCellPath));
+        List<WebElement> cells = getGridHeaderRowCells();
         assertEquals("Column0", cells.get(0).getText());
 
         // Hide column 0
         selectMenuPath("Component", "Columns", "Column0", "Visible");
 
         // Column 1 should now be the first cell
-        cells = getDriver().findElements(By.xpath(headerCellPath));
+        cells = getGridHeaderRowCells();
         assertEquals("Column1", cells.get(0).getText());
     }
 
@@ -168,16 +152,14 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         openTestURL();
 
         // Column 0 should be visible
-        String headerCellPath = "//thead[contains(@class, 'v-escalator-header')]//th";
-        List<WebElement> cells = getDriver().findElements(
-                By.xpath(headerCellPath));
+        List<WebElement> cells = getGridHeaderRowCells();
         assertEquals("Column0", cells.get(0).getText());
 
         // Hide column 0
         selectMenuPath("Component", "Columns", "Column0", "Remove");
 
         // Column 1 should now be the first cell
-        cells = getDriver().findElements(By.xpath(headerCellPath));
+        cells = getGridHeaderRowCells();
         assertEquals("Column1", cells.get(0).getText());
     }
 
@@ -251,13 +233,46 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         cell = getBodyCellByRowAndColumn(1, 1);
         assertEquals((100 - cellBorder - cellMargin) + "px",
                 cell.getCssValue("width"));
+    }
 
+    @Test
+    public void testPrimaryStyleNames() throws Exception {
+        openTestURL();
+
+        // v-grid is default primary style namea
+        assertPrimaryStylename("v-grid");
+
+        selectMenuPath("Component", "State", "Primary style name",
+                "v-escalator");
+        assertPrimaryStylename("v-escalator");
+
+        selectMenuPath("Component", "State", "Primary style name", "my-grid");
+        assertPrimaryStylename("my-grid");
+
+        selectMenuPath("Component", "State", "Primary style name", "v-grid");
+        assertPrimaryStylename("v-grid");
+    }
+
+    private void assertPrimaryStylename(String stylename) {
+        assertTrue(getGridElement().getAttribute("class").contains(stylename));
+
+        String tableWrapperStyleName = getTableWrapper().getAttribute("class");
+        assertTrue(tableWrapperStyleName.contains(stylename + "-tablewrapper"));
+
+        String hscrollStyleName = getHorizontalScroller().getAttribute("class");
+        assertTrue(hscrollStyleName.contains(stylename + "-scroller"));
+        assertTrue(hscrollStyleName
+                .contains(stylename + "-scroller-horizontal"));
+
+        String vscrollStyleName = getVerticalScroller().getAttribute("class");
+        assertTrue(vscrollStyleName.contains(stylename + "-scroller"));
+        assertTrue(vscrollStyleName.contains(stylename + "-scroller-vertical"));
     }
 
     private WebElement getBodyCellByRowAndColumn(int row, int column) {
         return getDriver().findElement(
-                By.xpath("//tbody[contains(@class, 'v-escalator-body')]/tr["
-                        + row + "]/td[" + column + "]"));
+                By.xpath("//div[@id='testComponent']//tbody/tr[" + row
+                        + "]/td[" + column + "]"));
     }
 
     private void selectSubMenu(String menuCaption) {
@@ -275,5 +290,34 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         for (int i = 1; i < menuCaptions.length; i++) {
             selectSubMenu(menuCaptions[i]);
         }
+    }
+
+    private WebElement getVerticalScroller() {
+        return getDriver().findElement(
+                By.xpath("//div[@id='testComponent']/div[1]"));
+    }
+
+    private WebElement getHorizontalScroller() {
+        return getDriver().findElement(
+                By.xpath("//div[@id='testComponent']/div[2]"));
+    }
+
+    private WebElement getTableWrapper() {
+        return getDriver().findElement(
+                By.xpath("//div[@id='testComponent']/div[3]"));
+    }
+
+    private WebElement getGridElement() {
+        return getDriver().findElement(By.id("testComponent"));
+    }
+
+    private List<WebElement> getGridHeaderRowCells() {
+        return getDriver().findElements(
+                By.xpath("//div[@id='testComponent']//thead//th"));
+    }
+
+    private List<WebElement> getGridFooterRowCells() {
+        return getDriver().findElements(
+                By.xpath("//div[@id='testComponent']//tfoot//td"));
     }
 }

@@ -476,6 +476,8 @@ public class Grid<T> extends Composite {
     public Grid() {
         initWidget(escalator);
 
+        setStylePrimaryName("v-grid");
+
         escalator.getHeader().setEscalatorUpdater(createHeaderUpdater());
         escalator.getBody().setEscalatorUpdater(createBodyUpdater());
         escalator.getFooter().setEscalatorUpdater(createFooterUpdater());
@@ -495,6 +497,13 @@ public class Grid<T> extends Composite {
                         }
                     }
                 });
+
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        super.setStylePrimaryName(style);
+        escalator.setStylePrimaryName(style);
 
     }
 

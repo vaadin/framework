@@ -31,7 +31,6 @@ import com.google.gwt.user.client.Element;
  * @see HorizontalScrollbarBundle
  */
 abstract class ScrollbarBundle {
-    private static final String CLASS_NAME = Escalator.CLASS_NAME + "-scroller";
 
     /**
      * The pixel size for OSX's invisible scrollbars.
@@ -50,8 +49,11 @@ abstract class ScrollbarBundle {
      * @see VerticalScrollbarBundle#getElement()
      */
     final static class VerticalScrollbarBundle extends ScrollbarBundle {
-        public VerticalScrollbarBundle() {
-            root.addClassName(CLASS_NAME + "-vertical");
+
+        @Override
+        public void setStylePrimaryName(String primaryStyleName) {
+            super.setStylePrimaryName(primaryStyleName);
+            root.addClassName(primaryStyleName + "-scroller-vertical");
         }
 
         @Override
@@ -111,8 +113,11 @@ abstract class ScrollbarBundle {
      * @see HorizontalScrollbarBundle#getElement()
      */
     final static class HorizontalScrollbarBundle extends ScrollbarBundle {
-        protected HorizontalScrollbarBundle() {
-            root.addClassName(CLASS_NAME + "-horizontal");
+
+        @Override
+        public void setStylePrimaryName(String primaryStyleName) {
+            super.setStylePrimaryName(primaryStyleName);
+            root.addClassName(primaryStyleName + "-scroller-horizontal");
         }
 
         @Override
@@ -172,7 +177,16 @@ abstract class ScrollbarBundle {
 
     private ScrollbarBundle() {
         root.appendChild(scrollSizeElement);
-        root.setClassName(CLASS_NAME);
+    }
+
+    /**
+     * Sets the primary style name
+     * 
+     * @param primaryStyleName
+     *            The primary style name to use
+     */
+    public void setStylePrimaryName(String primaryStyleName) {
+        root.setClassName(primaryStyleName + "-scroller");
     }
 
     /**
