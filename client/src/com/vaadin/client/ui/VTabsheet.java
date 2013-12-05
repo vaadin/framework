@@ -840,6 +840,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         if (tab == null) {
             tab = tb.addTab();
         }
+        if (selected) {
+            renderContent(tabUidl.getChildUIDL(0));
+            tb.selectTab(index);
+        }
         tab.updateFromUIDL(tabUidl);
         tab.setEnabledOnServer((!disabledTabKeys.contains(tabKeys.get(index))));
         tab.setHiddenOnServer(hidden);
@@ -856,11 +860,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
          * and tabs won't be too narrow in certain browsers
          */
         tab.recalculateCaptionWidth();
-
-        if (selected) {
-            renderContent(tabUidl.getChildUIDL(0));
-            tb.selectTab(index);
-        }
     }
 
     /**
