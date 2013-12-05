@@ -2849,7 +2849,7 @@ public class Escalator extends Widget {
         }
 
         int[] getCalculatedColumnWidths() {
-            if (widthsArray == null) {
+            if (widthsArray == null || widthsArray.length != getColumnCount()) {
                 widthsArray = new int[getColumnCount()];
                 for (int i = 0; i < columns.size(); i++) {
                     widthsArray[i] = columns.get(i).getCalculatedWidth();
