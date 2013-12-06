@@ -210,7 +210,16 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                 cached = newUsefulData;
             } else {
                 discardStaleCacheEntries();
-                cached = cached.combineWith(newUsefulData);
+
+                /*
+                 * everything might've become stale so we need to re-check for
+                 * emptiness.
+                 */
+                if (!cached.isEmpty()) {
+                    cached = cached.combineWith(newUsefulData);
+                } else {
+                    cached = newUsefulData;
+                }
             }
         }
 
