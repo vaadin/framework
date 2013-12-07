@@ -360,23 +360,16 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
     }
 
-    /*
-     * Tests if the component is in the immediate mode. Don't add a JavaDoc
-     * comment here, we use the default documentation from implemented
-     * interface.
-     */
     public boolean isImmediate() {
         return getState(false).immediate;
     }
 
     /**
-     * Sets the component's immediate mode to the specified status. This method
-     * will trigger a {@link RepaintRequestEvent}.
+     * Sets the component's immediate mode to the specified status.
      * 
      * @param immediate
      *            the boolean value specifying if the component should be in the
      *            immediate mode after the call.
-     * @see Component#isImmediate()
      */
     public void setImmediate(boolean immediate) {
         getState().immediate = immediate;
