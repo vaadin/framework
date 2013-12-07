@@ -2,18 +2,59 @@ package com.vaadin.tests.server.component.fieldgroup;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.data.fieldgroup.PropertyId;
+import com.vaadin.ui.Field;
+import com.vaadin.ui.TextField;
 
 public class BeanFieldGroupTest {
 
+    private static final String DEFAULT_FOR_BASIC_FIELD = "default";
+
     public static class MyBean {
+
+        private String basicField = DEFAULT_FOR_BASIC_FIELD;
+
+        private String anotherField;
 
         private MyNestedBean nestedBean = new MyNestedBean();
 
         public MyNestedBean getNestedBean() {
             return nestedBean;
+        }
+
+        /**
+         * @return the basicField
+         */
+        public String getBasicField() {
+            return basicField;
+        }
+
+        /**
+         * @param basicField
+         *            the basicField to set
+         */
+        public void setBasicField(String basicField) {
+            this.basicField = basicField;
+        }
+
+        /**
+         * @return the anotherField
+         */
+        public String getAnotherField() {
+            return anotherField;
+        }
+
+        /**
+         * @param anotherField
+         *            the anotherField to set
+         */
+        public void setAnotherField(String anotherField) {
+            this.anotherField = anotherField;
         }
     }
 
@@ -24,6 +65,59 @@ public class BeanFieldGroupTest {
         public String getHello() {
             return hello;
         }
+    }
+
+    public static class ViewStub {
+
+        TextField basicField = new TextField();
+
+        @PropertyId("anotherField")
+        TextField boundWithAnnotation = new TextField();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testStaticBindingHelper() {
+        MyBean myBean = new MyBean();
+
+        ViewStub viewStub = new ViewStub();
+        BeanFieldGroup<MyBean> bindFields = BeanFieldGroup
+                .bindFieldsUnbuffered(myBean, viewStub);
+
+        Field<String> field = (Field<String>) bindFields.getField("basicField");
+        Assert.assertEquals(DEFAULT_FOR_BASIC_FIELD, myBean.basicField);
+        field.setValue("Foo");
+        Assert.assertEquals("Foo", myBean.basicField);
+
+        field = (Field<String>) bindFields.getField("anotherField");
+        field.setValue("Foo");
+        Assert.assertEquals("Foo", myBean.anotherField);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testStaticBufferedBindingHelper() throws CommitException {
+        MyBean myBean = new MyBean();
+
+        ViewStub viewStub = new ViewStub();
+        BeanFieldGroup<MyBean> bindFields = BeanFieldGroup.bindFieldsBuffered(
+                myBean, viewStub);
+
+        Field<String> basicField = (Field<String>) bindFields
+                .getField("basicField");
+        basicField.setValue("Foo");
+        Assert.assertEquals(DEFAULT_FOR_BASIC_FIELD, myBean.basicField);
+
+        Field<String> anotherField = (Field<String>) bindFields
+                .getField("anotherField");
+        anotherField.setValue("Foo");
+        Assert.assertNull(myBean.anotherField);
+
+        bindFields.commit();
+
+        Assert.assertEquals("Foo", myBean.basicField);
+        Assert.assertEquals("Foo", myBean.anotherField);
+
     }
 
     @Test
