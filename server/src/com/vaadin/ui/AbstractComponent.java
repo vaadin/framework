@@ -38,6 +38,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.ui.Field.ValueChangeEvent;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -96,6 +97,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
     private boolean visible = true;
 
     private HasComponents parent;
+
+    private Boolean explicitImmediateValue;
 
     /* Constructor */
 
@@ -361,7 +364,17 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     public boolean isImmediate() {
-        return getState(false).immediate;
+        if (explicitImmediateValue != null) {
+            return explicitImmediateValue;
+        } else if (hasListeners(ValueChangeEvent.class)) {
+            /*
+             * Automatic immediate for fields that developers are interested
+             * about.
+             */
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -372,6 +385,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *            immediate mode after the call.
      */
     public void setImmediate(boolean immediate) {
+        explicitImmediateValue = immediate;
         getState().immediate = immediate;
     }
 
@@ -668,6 +682,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
         } else {
             getState().errorMessage = null;
         }
+
+        getState().immediate = isImmediate();
     }
 
     /* General event framework */
