@@ -22,11 +22,21 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.VUpload;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.upload.UploadClientRpc;
 import com.vaadin.ui.Upload;
 
 @Connect(Upload.class)
 public class UploadConnector extends AbstractComponentConnector implements
         Paintable {
+
+    public UploadConnector() {
+        registerRpc(UploadClientRpc.class, new UploadClientRpc() {
+            @Override
+            public void submitUpload() {
+                getWidget().submit();
+            }
+        });
+    }
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -35,10 +45,6 @@ public class UploadConnector extends AbstractComponentConnector implements
         }
         if (uidl.hasAttribute("notStarted")) {
             getWidget().t.schedule(400);
-            return;
-        }
-        if (uidl.hasAttribute("forceSubmit")) {
-            getWidget().submit();
             return;
         }
         getWidget().setImmediate(getState().immediate);
