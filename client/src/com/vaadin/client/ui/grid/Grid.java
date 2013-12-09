@@ -22,6 +22,7 @@ import java.util.List;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasVisibility;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
@@ -97,7 +98,8 @@ public class Grid<T> extends Composite {
      * @param <T>
      *            the row type
      */
-    public static abstract class AbstractGridColumn<C, T> {
+    public static abstract class AbstractGridColumn<C, T> implements
+            HasVisibility {
 
         /**
          * The grid the column is associated with
@@ -118,6 +120,11 @@ public class Grid<T> extends Composite {
          * Text displayed in the column footer
          */
         private String footer;
+
+        /**
+         * Width of column in pixels
+         */
+        private int width = 100;
 
         /**
          * Renderer for rendering a value into the cell
@@ -170,6 +177,9 @@ public class Grid<T> extends Composite {
             }
 
             this.grid = grid;
+
+            // enforce width set before attachment
+            setWidth(this.width);
         }
 
         /**
@@ -234,6 +244,7 @@ public class Grid<T> extends Composite {
          * 
          * @return <code>true</code> if the column is visible
          */
+        @Override
         public boolean isVisible() {
             return visible;
         }
@@ -245,6 +256,7 @@ public class Grid<T> extends Composite {
          *            <code>true</code> if the column should be displayed in the
          *            grid
          */
+        @Override
         public void setVisible(boolean visible) {
             if (this.visible == visible) {
                 return;
@@ -308,11 +320,29 @@ public class Grid<T> extends Composite {
          *            the width in pixels or negative for auto sizing
          */
         public void setWidth(int pixels) {
+            this.width = pixels;
+
             if (grid != null) {
                 int index = findIndexOfColumn();
                 ColumnConfiguration conf = grid.escalator
                         .getColumnConfiguration();
                 conf.setColumnWidth(index, pixels);
+            }
+        }
+
+        /**
+         * Returns the pixel width of the column
+         * 
+         * @return pixel width of the column
+         */
+        public int getWidth() {
+            if (grid == null) {
+                return this.width;
+            } else {
+                int index = findIndexOfColumn();
+                ColumnConfiguration conf = grid.escalator
+                        .getColumnConfiguration();
+                return conf.getColumnWidth(index);
             }
         }
     }
@@ -635,13 +665,15 @@ public class Grid<T> extends Composite {
      */
     public void addColumn(GridColumn<?, T> column, int index) {
 
-        // Register this grid instance with the column
-        ((AbstractGridColumn<?, T>) column).setGrid(this);
-
+        // Register column with grid
         columns.add(index, column);
 
+        // Insert column into escalator
         ColumnConfiguration conf = escalator.getColumnConfiguration();
         conf.insertColumns(index, 1);
+
+        // Register this grid instance with the column
+        ((AbstractGridColumn<?, T>) column).setGrid(this);
 
         if (lastFrozenColumn != null
                 && ((AbstractGridColumn<?, T>) lastFrozenColumn)

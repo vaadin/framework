@@ -65,6 +65,11 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             grid.getColumn("Column" + col).setFooterCaption("Footer " + col);
         }
 
+        // Set varying column widths
+        for (int col = 0; col < COLUMNS; col++) {
+            grid.getColumn("Column" + col).setWidth(100 + col * 50);
+        }
+
         createColumnActions();
 
         createHeaderActions();

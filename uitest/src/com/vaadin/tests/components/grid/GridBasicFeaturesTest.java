@@ -196,6 +196,27 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     @Test
+    public void testInitialColumnWidths() throws Exception {
+        openTestURL();
+
+        // Default borders and margins implemented by escalator
+        int cellBorder = 1 + 1;
+        int cellMargin = 2 + 2;
+
+        WebElement cell = getBodyCellByRowAndColumn(1, 1);
+        assertEquals((100 - cellBorder - cellMargin) + "px",
+                cell.getCssValue("width"));
+
+        cell = getBodyCellByRowAndColumn(1, 2);
+        assertEquals((150 - cellBorder - cellMargin) + "px",
+                cell.getCssValue("width"));
+
+        cell = getBodyCellByRowAndColumn(1, 3);
+        assertEquals((200 - cellBorder - cellMargin) + "px",
+                cell.getCssValue("width"));
+    }
+
+    @Test
     public void testColumnWidths() throws Exception {
         openTestURL();
 
