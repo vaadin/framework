@@ -178,7 +178,7 @@ public class Grid<T> extends Composite {
 
             this.grid = grid;
 
-            // enforce width set before attachment
+            setVisible(this.visible);
             setWidth(this.width);
         }
 
@@ -262,6 +262,8 @@ public class Grid<T> extends Composite {
                 return;
             }
 
+            this.visible = visible;
+
             // Remove column
             if (grid != null) {
                 int index = findIndexOfColumn();
@@ -275,7 +277,6 @@ public class Grid<T> extends Composite {
                 }
             }
 
-            this.visible = visible;
         }
 
         /**
@@ -309,7 +310,7 @@ public class Grid<T> extends Composite {
          * 
          */
         private int findIndexOfColumn() {
-            return grid.columns.indexOf(this);
+            return grid.findVisibleColumnIndex((GridColumn<?, T>) this);
         }
 
         /**
@@ -322,7 +323,7 @@ public class Grid<T> extends Composite {
         public void setWidth(int pixels) {
             this.width = pixels;
 
-            if (grid != null) {
+            if (grid != null && isVisible()) {
                 int index = findIndexOfColumn();
                 ColumnConfiguration conf = grid.escalator
                         .getColumnConfiguration();
@@ -425,9 +426,11 @@ public class Grid<T> extends Composite {
             if (firstRowIsVisible() && rowIndex == 0) {
                 // column headers
                 for (Cell cell : cellsToUpdate) {
-                    int columnIndex = cell.getColumn();
-                    GridColumn<?, T> column = columns.get(columnIndex);
-                    cell.getElement().setInnerText(getColumnValue(column));
+                    GridColumn<?, T> column = getColumnFromVisibleIndex(cell
+                            .getColumn());                 
+                    if (column != null) {
+                        cell.getElement().setInnerText(getColumnValue(column));
+                    }
                 }
 
             } else if (columnGroupRows.size() > 0) {
@@ -452,8 +455,8 @@ public class Grid<T> extends Composite {
                 assert groupRow != null;
 
                 for (Cell cell : cellsToUpdate) {
-                    int columnIndex = cell.getColumn();
-                    GridColumn<?, T> column = columns.get(columnIndex);
+                    GridColumn<?, T> column = getColumnFromVisibleIndex(cell
+                            .getColumn());
                     ColumnGroup<T> group = getGroupForColumn(groupRow, column);
                     Element cellElement = cell.getElement();
 
@@ -556,9 +559,12 @@ public class Grid<T> extends Composite {
                 }
 
                 for (Cell cell : cellsToUpdate) {
-                    GridColumn column = getColumn(cell.getColumn());
-                    Object value = column.getValue(rowData);
-                    column.getRenderer().renderCell(cell, value);
+                    GridColumn column = getColumnFromVisibleIndex(cell
+                            .getColumn());
+                    if (column != null) {
+                        Object value = column.getValue(rowData);
+                        column.getRenderer().renderCell(cell, value);
+                    }
                 }
             }
 
@@ -689,6 +695,31 @@ public class Grid<T> extends Composite {
                         .findIndexOfColumn() < index) {
             refreshFrozenColumns();
         }
+    }
+
+    private int findVisibleColumnIndex(GridColumn<?, T> column) {
+        int idx = 0;
+        for (GridColumn<?, T> c : columns) {
+            if (c == column) {
+                return idx;
+            } else if (c.isVisible()) {
+                idx++;
+            }
+        }
+        return -1;
+    }
+
+    private GridColumn<?, T> getColumnFromVisibleIndex(int index) {
+        int idx = -1;
+        for (GridColumn<?, T> c : columns) {
+            if (c.isVisible()) {
+                idx++;
+            }
+            if (index == idx) {
+                return c;
+            }
+        }
+        return null;
     }
 
     /**

@@ -2865,8 +2865,8 @@ public class Escalator extends Widget {
         private void checkValidColumnIndex(int index)
                 throws IllegalArgumentException {
             if (!Range.withLength(0, getColumnCount()).contains(index)) {
-                throw new IllegalArgumentException(
-                        "The given column index does not exist");
+                throw new IllegalArgumentException("The given column index ("
+                        + index + ") does not exist");
             }
         }
 
