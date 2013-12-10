@@ -18,6 +18,7 @@ package com.vaadin.client.ui.grid;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -73,7 +74,8 @@ public class ColumnGroupRow<T> {
      * @return a column group representing the collection of columns added to
      *         the group.
      */
-    public ColumnGroup<T> addGroup(GridColumn<?, T>... columns) {
+    public ColumnGroup<T> addGroup(GridColumn<?, T>... columns)
+            throws IllegalArgumentException {
 
         for (GridColumn<?, T> column : columns) {
             if (isColumnGrouped(column)) {
@@ -83,11 +85,59 @@ public class ColumnGroupRow<T> {
             }
         }
 
+        validateNewGroupProperties(Arrays.asList(columns));
+
         ColumnGroup<T> group = new ColumnGroup<T>(grid, Arrays.asList(columns));
         groups.add(group);
         grid.refreshHeader();
         grid.refreshFooter();
         return group;
+    }
+
+    private void validateNewGroupProperties(Collection<GridColumn<?, T>> columns) {
+
+        int rowIndex = grid.getColumnGroupRows().indexOf(this);
+        int parentRowIndex = rowIndex - 1;
+
+        // Get the parent row of this row.
+        ColumnGroupRow<T> parentRow = null;
+        if (parentRowIndex > -1) {
+            parentRow = grid.getColumnGroupRows().get(parentRowIndex);
+        }
+
+        if (parentRow == null) {
+            // A parentless row is always valid and is usually the first row
+            // added to the grid
+            return;
+        }
+
+        for (GridColumn<?, T> column : columns) {
+            if (parentRow.hasColumnBeenGrouped(column)) {
+                /*
+                 * If a property has been grouped in the parent row then all of
+                 * the properties in the parent group also needs to be included
+                 * in the child group for the groups to be valid
+                 */
+                ColumnGroup parentGroup = parentRow.getGroupForColumn(column);
+                if (!columns.containsAll(parentGroup.getColumns())) {
+                    throw new IllegalArgumentException(
+                            "Grouped properties overlaps previous grouping bounderies");
+                }
+            }
+        }
+    }
+
+    private boolean hasColumnBeenGrouped(GridColumn<?, T> column) {
+        return getGroupForColumn(column) != null;
+    }
+
+    private ColumnGroup<T> getGroupForColumn(GridColumn<?, T> column) {
+        for (ColumnGroup<T> group : groups) {
+            if (group.getColumns().contains(column)) {
+                return group;
+            }
+        }
+        return null;
     }
 
     /**
@@ -99,13 +149,16 @@ public class ColumnGroupRow<T> {
      *         the group.
      * 
      */
-    public ColumnGroup<T> addGroup(ColumnGroup<T>... groups) {
+    public ColumnGroup<T> addGroup(ColumnGroup<T>... groups)
+            throws IllegalArgumentException {
         assert groups != null : "groups cannot be null";
 
         Set<GridColumn<?, T>> columns = new HashSet<GridColumn<?, T>>();
         for (ColumnGroup<T> group : groups) {
             columns.addAll(group.getColumns());
         }
+
+        validateNewGroupProperties(columns);
 
         ColumnGroup<T> group = new ColumnGroup<T>(grid, columns);
         this.groups.add(group);

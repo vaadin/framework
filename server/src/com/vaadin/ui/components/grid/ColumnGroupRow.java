@@ -93,7 +93,8 @@ public class ColumnGroupRow implements Serializable {
      * @return a column group representing the collection of columns added to
      *         the group
      */
-    public ColumnGroup addGroup(Object... propertyIds) {
+    public ColumnGroup addGroup(Object... propertyIds)
+            throws IllegalArgumentException {
         assert propertyIds != null : "propertyIds cannot be null.";
 
         for (Object propertyId : propertyIds) {
@@ -103,6 +104,8 @@ public class ColumnGroupRow implements Serializable {
                         + " already belongs to another group.");
             }
         }
+
+        validateNewGroupProperties(Arrays.asList(propertyIds));
 
         ColumnGroupState state = new ColumnGroupState();
         for (Object propertyId : propertyIds) {
@@ -119,6 +122,43 @@ public class ColumnGroupRow implements Serializable {
         return group;
     }
 
+    private void validateNewGroupProperties(List<Object> propertyIds)
+            throws IllegalArgumentException {
+
+        /*
+         * Validate parent grouping
+         */
+        int rowIndex = grid.getColumnGroupRows().indexOf(this);
+        int parentRowIndex = rowIndex - 1;
+
+        // Get the parent row of this row.
+        ColumnGroupRow parentRow = null;
+        if (parentRowIndex > -1) {
+            parentRow = grid.getColumnGroupRows().get(parentRowIndex);
+        }
+
+        if (parentRow == null) {
+            // A parentless row is always valid and is usually the first row
+            // added to the grid
+            return;
+        }
+
+        for (Object id : propertyIds) {
+            if (parentRow.hasColumnBeenGrouped(id)) {
+                /*
+                 * If a property has been grouped in the parent row then all of
+                 * the properties in the parent group also needs to be included
+                 * in the child group for the groups to be valid
+                 */
+                ColumnGroup parentGroup = parentRow.getGroupForProperty(id);
+                if (!propertyIds.containsAll(parentGroup.getColumns())) {
+                    throw new IllegalArgumentException(
+                            "Grouped properties overlaps previous grouping bounderies");
+                }
+            }
+        }
+    }
+
     /**
      * Add a new group to the row by using column instances.
      * 
@@ -127,7 +167,8 @@ public class ColumnGroupRow implements Serializable {
      * @return a column group representing the collection of columns added to
      *         the group
      */
-    public ColumnGroup addGroup(GridColumn... columns) {
+    public ColumnGroup addGroup(GridColumn... columns)
+            throws IllegalArgumentException {
         assert columns != null : "columns cannot be null";
 
         List<Object> propertyIds = new ArrayList<Object>();
@@ -150,7 +191,8 @@ public class ColumnGroupRow implements Serializable {
      *         the group
      * 
      */
-    public ColumnGroup addGroup(ColumnGroup... groups) {
+    public ColumnGroup addGroup(ColumnGroup... groups)
+            throws IllegalArgumentException {
         assert groups != null : "groups cannot be null";
 
         // Gather all groups columns into one list
@@ -158,6 +200,8 @@ public class ColumnGroupRow implements Serializable {
         for (ColumnGroup group : groups) {
             propertyIds.addAll(group.getColumns());
         }
+
+        validateNewGroupProperties(propertyIds);
 
         ColumnGroupState state = new ColumnGroupState();
         ColumnGroup group = new ColumnGroup(grid, this, state, propertyIds);
@@ -204,12 +248,16 @@ public class ColumnGroupRow implements Serializable {
      * @return <code>true</code> if the column is included in a group
      */
     private boolean hasColumnBeenGrouped(Object propertyId) {
+        return getGroupForProperty(propertyId) != null;
+    }
+
+    private ColumnGroup getGroupForProperty(Object propertyId) {
         for (ColumnGroup group : groups) {
             if (group.isColumnInGroup(propertyId)) {
-                return true;
+                return group;
             }
         }
-        return false;
+        return null;
     }
 
     /**

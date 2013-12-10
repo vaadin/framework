@@ -233,4 +233,33 @@ public class GridColumnGroups {
 
         }
     }
+
+    @Test
+    public void testColumnGroupLimits() throws Exception {
+
+        ColumnGroupRow row = grid.addColumnGroupRow();
+        row.addGroup("column1", "column2");
+        row.addGroup("column3", "column4");
+
+        try {
+            row.addGroup("column2", "column3");
+            fail("Adding a group with already grouped properties should throw exception");
+        } catch (IllegalArgumentException iae) {
+
+        }
+
+        ColumnGroupRow row2 = grid.addColumnGroupRow();
+
+        try {
+            row2.addGroup("column2", "column3");
+            fail("Adding a group that breaks previous grouping boundaries should throw exception");
+        } catch (IllegalArgumentException iae) {
+
+        }
+
+        // This however should not throw an exception as it spans completely
+        // over the parent rows groups
+        row2.addGroup("column1", "column2", "column3", "column4");
+
+    }
 }
