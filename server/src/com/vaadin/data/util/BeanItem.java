@@ -255,12 +255,13 @@ public class BeanItem<BT> extends PropertysetItem {
     }
 
     /**
-     * Adds a nested property to the item.
+     * Adds a nested property to the item. The property must not exist in the
+     * item already and must of form "field1.field2" where field2 is a field in
+     * the object referenced to by field1. If an intermediate property returns
+     * null, the property will return a null value
      * 
      * @param nestedPropertyId
-     *            property id to add. This property must not exist in the item
-     *            already and must of of form "field1.field2" where field2 is a
-     *            field in the object referenced to by field1
+     *            property id to add.
      */
     public void addNestedProperty(String nestedPropertyId) {
         addItemProperty(nestedPropertyId, new NestedMethodProperty<Object>(

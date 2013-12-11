@@ -31,8 +31,9 @@ import com.vaadin.data.util.MethodProperty.MethodException;
  * The property is specified in the dotted notation, e.g. "address.street", and
  * can contain multiple levels of nesting.
  * 
- * When accessing the property value, all intermediate getters must return
- * non-null values.
+ * When accessing the property value, all intermediate getters must exist and
+ * should return non-null values when the property value is accessed. If an
+ * intermediate getter returns null, a null value will be returned.
  * 
  * @see MethodProperty
  * 
@@ -76,6 +77,8 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
      * Constructs a nested method property for a given object instance. The
      * property name is a dot separated string pointing to a nested property,
      * e.g. "manager.address.street".
+     * <p>
+     * Calling getValue will return null if any intermediate getter returns null
      * 
      * @param instance
      *            top-level bean to which the property applies
@@ -199,6 +202,9 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
             Object object = instance;
             for (Method m : getMethods) {
                 object = m.invoke(object);
+                if (object == null) {
+                    return null;
+                }
             }
             return (T) object;
         } catch (final Throwable e) {

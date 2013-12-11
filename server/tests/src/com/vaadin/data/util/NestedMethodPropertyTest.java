@@ -7,8 +7,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.junit.Assert;
 
 public class NestedMethodPropertyTest extends TestCase {
 
@@ -248,29 +249,16 @@ public class NestedMethodPropertyTest extends TestCase {
                 vaadin, "manager.address.street");
 
         joonas.setAddress(null);
-        try {
-            streetProperty.getValue();
-            fail();
-        } catch (Exception e) {
-            // should get exception
-        }
+        assertNull(streetProperty.getValue());
 
         vaadin.setManager(null);
-        try {
-            managerNameProperty.getValue();
-            fail();
-        } catch (Exception e) {
-            // should get exception
-        }
-        try {
-            streetProperty.getValue();
-            fail();
-        } catch (Exception e) {
-            // should get exception
-        }
+        assertNull(managerNameProperty.getValue());
+        assertNull(streetProperty.getValue());
 
         vaadin.setManager(joonas);
         Assert.assertEquals("Joonas", managerNameProperty.getValue());
+        Assert.assertNull(streetProperty.getValue());
+
     }
 
     public void testMultiLevelNestedPropertySetValue() {
@@ -312,6 +300,20 @@ public class NestedMethodPropertyTest extends TestCase {
                 new ByteArrayInputStream(baos.toByteArray())).readObject();
 
         Assert.assertEquals("Ruukinkatu 2-4", property2.getValue());
+    }
+
+    public void testSerializationWithIntermediateNull() throws IOException,
+            ClassNotFoundException {
+        vaadin.setManager(null);
+        NestedMethodProperty<String> streetProperty = new NestedMethodProperty<String>(
+                vaadin, "manager.address.street");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        new ObjectOutputStream(baos).writeObject(streetProperty);
+        @SuppressWarnings("unchecked")
+        NestedMethodProperty<String> property2 = (NestedMethodProperty<String>) new ObjectInputStream(
+                new ByteArrayInputStream(baos.toByteArray())).readObject();
+
+        Assert.assertNull(property2.getValue());
     }
 
     public void testIsReadOnly() {

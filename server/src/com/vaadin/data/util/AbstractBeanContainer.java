@@ -836,8 +836,9 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * Adds a nested container property for the container, e.g.
      * "manager.address.street".
      * 
-     * All intermediate getters must exist and must return non-null values when
-     * the property value is accessed.
+     * All intermediate getters must exist and should return non-null values
+     * when the property value is accessed. If an intermediate getter returns
+     * null, a null value will be returned.
      * 
      * @see NestedMethodProperty
      * 
@@ -854,8 +855,9 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * property to the container. The named property itself is removed from the
      * model as its subproperties are added.
      * 
-     * All intermediate getters must exist and must return non-null values when
-     * the property value is accessed.
+     * All intermediate getters must exist and should return non-null values
+     * when the property value is accessed. If an intermediate getter returns
+     * null, a null value will be returned.
      * 
      * @see NestedMethodProperty
      * @see #addNestedContainerProperty(String)

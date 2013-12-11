@@ -457,4 +457,17 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
                         .getValue());
     }
 
+    public void testNestedContainerPropertyWithNullBean() {
+        BeanContainer<String, NestedMethodPropertyTest.Person> container = new BeanContainer<String, NestedMethodPropertyTest.Person>(
+                NestedMethodPropertyTest.Person.class);
+        container.setBeanIdProperty("name");
+
+        container.addBean(new NestedMethodPropertyTest.Person("John", null));
+        assertTrue(container
+                .addNestedContainerProperty("address.postalCodeObject"));
+        assertTrue(container.addNestedContainerProperty("address.street"));
+        assertNull(container.getContainerProperty("John", "address.street")
+                .getValue());
+    }
+
 }
