@@ -142,9 +142,6 @@ public class TableConnector extends AbstractHasComponentsConnector implements
 
         getWidget().updateSortingProperties(uidl);
 
-        boolean keyboardSelectionOverRowFetchInProgress = getWidget()
-                .selectSelectedRows(uidl);
-
         getWidget().updateActionMap(uidl);
 
         getWidget().updateColumnProperties(uidl);
@@ -215,6 +212,9 @@ public class TableConnector extends AbstractHasComponentsConnector implements
                 }
             }
         }
+
+        boolean keyboardSelectionOverRowFetchInProgress = getWidget()
+                .selectSelectedRows(uidl);
 
         // If a row had an open context menu before the update, and after the
         // update there's a row with the same key as that row, restore the
