@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.HasVisibility;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
+import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
@@ -54,6 +55,9 @@ import com.vaadin.shared.util.SharedUtil;
  * TODO Explain about what a data source is and how it should be implemented.
  * </p>
  * 
+ * @param <T>
+ *            The row type of the grid. The row type is the POJO type from where
+ *            the data is retrieved into the column cells.
  * @since 7.2
  * @author Vaadin Ltd
  */
@@ -132,7 +136,7 @@ public class Grid<T> extends Composite {
         /**
          * Renderer for rendering a value into the cell
          */
-        private Renderer<C> renderer = new Renderer<C>() {
+        private Renderer<C> bodyRenderer = new Renderer<C>() {
 
             @Override
             public void renderCell(Cell cell, C value) {
@@ -146,6 +150,16 @@ public class Grid<T> extends Composite {
                 }
             }
         };
+
+        /**
+         * Renderer for rendering the header cell value into the cell
+         */
+        private Renderer<String> headerRenderer = new TextRenderer();
+
+        /**
+         * Renderer for rendering the footer cell value into the cell
+         */
+        private Renderer<String> footerRenderer = new TextRenderer();
 
         /**
          * Constructs a new column.
@@ -164,7 +178,29 @@ public class Grid<T> extends Composite {
             if (renderer == null) {
                 throw new IllegalArgumentException("Renderer cannot be null.");
             }
-            this.renderer = renderer;
+            this.bodyRenderer = renderer;
+        }
+
+        /**
+         * Constructs a new column with custom renderers for rows, header and
+         * footer cells.
+         * 
+         * @param bodyRenderer
+         *            The renderer to use for rendering body cells
+         * @param headerRenderer
+         *            The renderer to use for rendering header cells
+         * @param footerRenderer
+         *            The renderer to use for rendering footer cells
+         */
+        public AbstractGridColumn(Renderer<C> bodyRenderer,
+                Renderer<String> headerRenderer, Renderer<String> footerRenderer) {
+            this(bodyRenderer);
+            if (headerRenderer == null || footerRenderer == null) {
+                throw new IllegalArgumentException("Renderer cannot be null.");
+            }
+
+            this.headerRenderer = headerRenderer;
+            this.footerRenderer = footerRenderer;
         }
 
         /**
@@ -195,6 +231,56 @@ public class Grid<T> extends Composite {
          */
         public String getHeaderCaption() {
             return header;
+        }
+
+        /**
+         * Returns the renderer used for rendering the header cells
+         * 
+         * @return a renderer that renders header cells
+         */
+        public Renderer<String> getHeaderRenderer() {
+            return headerRenderer;
+        }
+
+        /**
+         * Sets the renderer that renders header cells. Should not be null.
+         * 
+         * @param renderer
+         *            The renderer to use for rendering header cells.
+         */
+        public void setHeaderRenderer(Renderer<String> renderer) {
+            if (renderer == null) {
+                throw new IllegalArgumentException("Renderer cannot be null.");
+            }
+            headerRenderer = renderer;
+            if (grid != null) {
+                grid.refreshHeader();
+            }
+        }
+
+        /**
+         * Returns the renderer used for rendering the footer cells
+         * 
+         * @return a renderer that renders footer cells
+         */
+        public Renderer<String> getFooterRenderer() {
+            return footerRenderer;
+        }
+
+        /**
+         * Sets the renderer that renders footer cells. Should not be null.
+         * 
+         * @param renderer
+         *            The renderer to use for rendering footer cells.
+         */
+        public void setFooterRenderer(Renderer<String> renderer) {
+            if (renderer == null) {
+                throw new IllegalArgumentException("Renderer cannot be null.");
+            }
+            footerRenderer = renderer;
+            if (grid != null) {
+                grid.refreshFooter();
+            }
         }
 
         /**
@@ -306,7 +392,7 @@ public class Grid<T> extends Composite {
          * @return The renderer to render the cell content with
          */
         public Renderer<C> getRenderer() {
-            return renderer;
+            return bodyRenderer;
         }
 
         /**
@@ -417,6 +503,25 @@ public class Grid<T> extends Composite {
          */
         public abstract boolean firstRowIsVisible();
 
+        /**
+         * The renderer that renders the cell
+         * 
+         * @param column
+         *            The column for which the cell should be rendered
+         * 
+         * @return renderer used for rendering
+         */
+        public abstract Renderer<String> getRenderer(GridColumn<?, T> column);
+
+        /**
+         * The renderer that renders the cell for column groups
+         * 
+         * @param group
+         *            The group that should be rendered
+         * @return renderer used for rendering
+         */
+        public abstract Renderer<String> getGroupRenderer(ColumnGroup<T> group);
+
         @Override
         public void updateCells(Row row, Iterable<Cell> cellsToUpdate) {
 
@@ -433,7 +538,8 @@ public class Grid<T> extends Composite {
                     GridColumn<?, T> column = getColumnFromVisibleIndex(cell
                             .getColumn());
                     if (column != null) {
-                        cell.getElement().setInnerText(getColumnValue(column));
+                        getRenderer(column).renderCell(cell,
+                                getColumnValue(column));
                     }
                 }
 
@@ -465,7 +571,8 @@ public class Grid<T> extends Composite {
                     Element cellElement = cell.getElement();
 
                     if (group != null) {
-                        cellElement.setInnerText(getGroupValue(group));
+                        getGroupRenderer(group).renderCell(cell,
+                                getGroupValue(group));
                         cell.setColSpan(group.getColumns().size());
                     } else {
                         // Cells are reused
@@ -542,6 +649,16 @@ public class Grid<T> extends Composite {
             public boolean firstRowIsVisible() {
                 return isColumnHeadersVisible();
             }
+
+            @Override
+            public Renderer<String> getRenderer(GridColumn<?, T> column) {
+                return column.getHeaderRenderer();
+            }
+
+            @Override
+            public Renderer<String> getGroupRenderer(ColumnGroup<T> group) {
+                return group.getHeaderRenderer();
+            }
         };
     }
 
@@ -607,6 +724,16 @@ public class Grid<T> extends Composite {
             @Override
             public boolean firstRowIsVisible() {
                 return isColumnFootersVisible();
+            }
+
+            @Override
+            public Renderer<String> getRenderer(GridColumn<?, T> column) {
+                return column.getFooterRenderer();
+            }
+
+            @Override
+            public Renderer<String> getGroupRenderer(ColumnGroup<T> group) {
+                return group.getFooterRenderer();
             }
         };
     }

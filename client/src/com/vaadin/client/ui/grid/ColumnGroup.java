@@ -21,11 +21,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.vaadin.client.ui.grid.renderers.TextRenderer;
+
 /**
  * Column groups are used to group columns together for adding common auxiliary
  * headers and footers. Columns groups are added to {@link ColumnGroupRow
  * ColumnGroupRows}.
  * 
+ * @param <T>
+ *            The row type of the grid. The row type is the POJO type from where
+ *            the data is retrieved into the column cells.
  * @since 7.2
  * @author Vaadin Ltd
  */
@@ -42,6 +47,16 @@ public class ColumnGroup<T> {
     private String footer;
 
     /**
+     * Renders the header cells for the column group
+     */
+    private Renderer<String> headerRenderer = new TextRenderer();
+
+    /**
+     * Renders the footer cells for the column group
+     */
+    private Renderer<String> footerRenderer = new TextRenderer();
+
+    /**
      * The columns included in the group when also accounting for subgroup
      * columns
      */
@@ -50,12 +65,12 @@ public class ColumnGroup<T> {
     /**
      * The grid associated with the column group
      */
-    private final Grid grid;
+    private final Grid<T> grid;
 
     /**
      * Constructs a new column group
      */
-    ColumnGroup(Grid grid, Collection<GridColumn<?, T>> columns) {
+    ColumnGroup(Grid<T> grid, Collection<GridColumn<?, T>> columns) {
         if (columns == null) {
             throw new IllegalArgumentException(
                     "columns cannot be null. Pass an empty list instead.");
@@ -113,5 +128,57 @@ public class ColumnGroup<T> {
      */
     public List<GridColumn<?, T>> getColumns() {
         return columns;
+    }
+
+    /**
+     * Returns the renderer used for rendering the header cells
+     * 
+     * @return a renderer that renders header cells
+     */
+    public Renderer<String> getHeaderRenderer() {
+        return headerRenderer;
+    }
+
+    /**
+     * Sets the renderer that renders header cells.
+     * 
+     * @param renderer
+     *            The renderer to use for rendering header cells. Must not be
+     *            null.
+     * @throws IllegalArgumentException
+     *             thrown when renderer is null
+     */
+    public void setHeaderRenderer(Renderer<String> renderer) {
+        if (renderer == null) {
+            throw new IllegalArgumentException("Renderer cannot be null.");
+        }
+        this.headerRenderer = renderer;
+        grid.refreshHeader();
+    }
+
+    /**
+     * Returns the renderer used for rendering the footer cells
+     * 
+     * @return a renderer that renders footer cells
+     */
+    public Renderer<String> getFooterRenderer() {
+        return footerRenderer;
+    }
+
+    /**
+     * Sets the renderer that renders footer cells.
+     * 
+     * @param renderer
+     *            The renderer to use for rendering footer cells. Must not be
+     *            null.
+     * @throws IllegalArgumentException
+     *             thrown when renderer is null
+     */
+    public void setFooterRenderer(Renderer<String> renderer) {
+        if (renderer == null) {
+            throw new IllegalArgumentException("Renderer cannot be null.");
+        }
+        this.footerRenderer = renderer;
+        grid.refreshFooter();
     }
 }
