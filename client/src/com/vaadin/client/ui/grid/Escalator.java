@@ -35,7 +35,6 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
@@ -3037,47 +3036,39 @@ public class Escalator extends Widget {
 
         setStylePrimaryName("v-escalator");
 
-        /*
-         * Size calculations work only after the Escalator has been attached to
-         * the DOM. It doesn't matter if the table is populated or not by this
-         * point, there's a lot of other stuff to calculate also. All sizes
-         * start working once the first sizes have been initialized.
-         */
-        addAttachHandler(new AttachEvent.Handler() {
-            @Override
-            public void onAttachOrDetach(final AttachEvent event) {
-                if (event.isAttached()) {
-
-                    /*
-                     * this specific order of method calls matters: header and
-                     * footer get defined heights, the body assumes to get the
-                     * rest.
-                     */
-                    header.paintInsertRows(0, header.getRowCount());
-                    footer.paintInsertRows(0, footer.getRowCount());
-                    recalculateElementSizes();
-                    body.paintInsertRows(0, body.getRowCount());
-
-                    scroller.attachScrollListener(verticalScrollbar
-                            .getElement());
-                    scroller.attachScrollListener(horizontalScrollbar
-                            .getElement());
-                    scroller.attachMousewheelListener(getElement());
-                    scroller.attachTouchListeners(getElement());
-                } else {
-                    scroller.detachScrollListener(verticalScrollbar
-                            .getElement());
-                    scroller.detachScrollListener(horizontalScrollbar
-                            .getElement());
-                    scroller.detachMousewheelListener(getElement());
-                    scroller.detachTouchListeners(getElement());
-                }
-            }
-        });
-
         // init default dimensions
         setHeight(null);
         setWidth(null);
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+
+        header.paintInsertRows(0, header.getRowCount());
+        footer.paintInsertRows(0, footer.getRowCount());
+        recalculateElementSizes();
+        body.paintInsertRows(0, body.getRowCount());
+
+        scroller.attachScrollListener(verticalScrollbar.getElement());
+        scroller.attachScrollListener(horizontalScrollbar.getElement());
+        scroller.attachMousewheelListener(getElement());
+        scroller.attachTouchListeners(getElement());
+    }
+
+    @Override
+    protected void onUnload() {
+
+        scroller.detachScrollListener(verticalScrollbar.getElement());
+        scroller.detachScrollListener(horizontalScrollbar.getElement());
+        scroller.detachMousewheelListener(getElement());
+        scroller.detachTouchListeners(getElement());
+
+        header.paintRemoveRows(0, header.getRowCount());
+        footer.paintRemoveRows(0, footer.getRowCount());
+        body.paintRemoveRows(0, body.getRowCount());
+
+        super.onUnload();
     }
 
     private void detectAndApplyPositionFunction() {
