@@ -79,13 +79,16 @@ public class Grid<T> extends Composite {
     /**
      * Are the headers for the columns visible
      */
-    private boolean columnHeadersVisible = false;
+    private boolean columnHeadersVisible = true;
 
     /**
      * Are the footers for the columns visible
      */
     private boolean columnFootersVisible = false;
 
+    /**
+     * The last column frozen counter from the left
+     */
     private GridColumn<?, T> lastFrozenColumn;
 
     /**
@@ -109,7 +112,7 @@ public class Grid<T> extends Composite {
         /**
          * Should the column be visible in the grid
          */
-        private boolean visible;
+        private boolean visible = true;
 
         /**
          * The text displayed in the header of the column
@@ -180,6 +183,8 @@ public class Grid<T> extends Composite {
 
             setVisible(this.visible);
             setWidth(this.width);
+            setHeaderCaption(this.header);
+            setFooterCaption(this.footer);
         }
 
         /**
@@ -207,7 +212,6 @@ public class Grid<T> extends Composite {
 
             if (grid != null) {
                 grid.refreshHeader();
-
             }
         }
 
@@ -427,7 +431,7 @@ public class Grid<T> extends Composite {
                 // column headers
                 for (Cell cell : cellsToUpdate) {
                     GridColumn<?, T> column = getColumnFromVisibleIndex(cell
-                            .getColumn());                 
+                            .getColumn());
                     if (column != null) {
                         cell.getElement().setInnerText(getColumnValue(column));
                     }
@@ -684,8 +688,11 @@ public class Grid<T> extends Composite {
         columns.add(index, column);
 
         // Insert column into escalator
-        ColumnConfiguration conf = escalator.getColumnConfiguration();
-        conf.insertColumns(index, 1);
+        if (column.isVisible()) {
+            int visibleIndex = findVisibleColumnIndex(column);
+            ColumnConfiguration conf = escalator.getColumnConfiguration();
+            conf.insertColumns(visibleIndex, 1);
+        }
 
         // Register this grid instance with the column
         ((AbstractGridColumn<?, T>) column).setGrid(this);
@@ -731,13 +738,16 @@ public class Grid<T> extends Composite {
     public void removeColumn(GridColumn<?, T> column) {
 
         int columnIndex = columns.indexOf(column);
+        int visibleIndex = findVisibleColumnIndex(column);
         columns.remove(columnIndex);
 
         // de-register column with grid
         ((AbstractGridColumn<?, T>) column).setGrid(null);
 
-        ColumnConfiguration conf = escalator.getColumnConfiguration();
-        conf.removeColumns(columnIndex, 1);
+        if (column.isVisible()) {
+            ColumnConfiguration conf = escalator.getColumnConfiguration();
+            conf.removeColumns(visibleIndex, 1);
+        }
 
         if (column.equals(lastFrozenColumn)) {
             setLastFrozenColumn(null);
