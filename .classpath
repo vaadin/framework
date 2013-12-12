@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="server/tests/src"/>
 	<classpathentry kind="src" path="client/tests/src"/>
+	<classpathentry kind="src" path="shared/tests/src"/>
 	<classpathentry kind="src" path="theme-compiler/tests/src"/>
 	<classpathentry kind="src" path="theme-compiler/src"/>
 	<classpathentry kind="src" path="theme-compiler/tests/resources"/>
