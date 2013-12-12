@@ -22,6 +22,10 @@
     <dependencies>
         <dependency org="com.vaadin" name="vaadin-shared-deps"
             rev="1.0.3" conf="build,ide,test->default" />
+
+        <dependency org="junit" name="junit" rev="4.11"
+            conf="test,ide -> default" />
+
     </dependencies>
 
 </ivy-module>
