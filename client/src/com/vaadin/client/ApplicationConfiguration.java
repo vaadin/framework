@@ -41,6 +41,7 @@ import com.vaadin.client.debug.internal.LogSection;
 import com.vaadin.client.debug.internal.NetworkSection;
 import com.vaadin.client.debug.internal.ProfilerSection;
 import com.vaadin.client.debug.internal.Section;
+import com.vaadin.client.debug.internal.TestBenchSection;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.metadata.BundleLoadCallback;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
@@ -511,6 +512,30 @@ public class ApplicationConfiguration implements EntryPoint {
         }
     }
 
+    /**
+     * Returns all tags for given class. Tags are used in
+     * {@link ApplicationConfiguration} to keep track of different classes and
+     * their hierarchy
+     * 
+     * @since 7.2
+     * @param classname
+     *            name of class which tags we want
+     * @return Integer array of tags pointing to this classname
+     */
+    public Integer[] getTagsForServerSideClassName(String classname) {
+        List<Integer> tags = new ArrayList<Integer>();
+
+        for (Map.Entry<Integer, String> entry : tagToServerSideClassName
+                .entrySet()) {
+            if (classname.equals(entry.getValue())) {
+                tags.add(entry.getKey());
+            }
+        }
+
+        Integer[] out = new Integer[tags.size()];
+        return tags.toArray(out);
+    }
+
     public Integer getParentTag(int tag) {
         return componentInheritanceMap.get(tag);
     }
@@ -595,6 +620,7 @@ public class ApplicationConfiguration implements EntryPoint {
             window.addSection((Section) GWT.create(InfoSection.class));
             window.addSection((Section) GWT.create(HierarchySection.class));
             window.addSection((Section) GWT.create(NetworkSection.class));
+            window.addSection((Section) GWT.create(TestBenchSection.class));
             if (Profiler.isEnabled()) {
                 window.addSection((Section) GWT.create(ProfilerSection.class));
             }
@@ -760,5 +786,4 @@ public class ApplicationConfiguration implements EntryPoint {
     private static final Logger getLogger() {
         return Logger.getLogger(ApplicationConfiguration.class.getName());
     }
-
 }

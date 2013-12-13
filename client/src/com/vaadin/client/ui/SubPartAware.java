@@ -17,7 +17,7 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ComponentLocator;
+import com.vaadin.client.componentlocator.ComponentLocator;
 
 /**
  * Interface implemented by {@link Widget}s which can provide identifiers for at
