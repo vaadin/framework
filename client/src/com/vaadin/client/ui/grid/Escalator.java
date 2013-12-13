@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
@@ -303,6 +304,54 @@ public class Escalator extends Widget {
             private double deltaY = 0;
 
             private final Escalator escalator;
+            private CustomTouchEvent latestTouchMoveEvent;
+            private AnimationCallback mover = new AnimationCallback() {
+                @Override
+                public void execute(double timestamp) {
+                    if (touches != 1) {
+                        return;
+                    }
+
+                    final int x = latestTouchMoveEvent.getPageX();
+                    final int y = latestTouchMoveEvent.getPageY();
+                    deltaX = x - lastX;
+                    deltaY = y - lastY;
+                    lastX = x;
+                    lastY = y;
+                    lastTime = timestamp;
+
+                    // snap the scroll to the major axes, at first.
+                    if (snappedScrollEnabled) {
+                        final double oldDeltaX = deltaX;
+                        final double oldDeltaY = deltaY;
+
+                        /*
+                         * Scrolling snaps to 40 degrees vs. flick scroll's 30
+                         * degrees, since slow movements have poor resolution -
+                         * it's easy to interpret a slight angle as a steep
+                         * angle, since the sample rate is "unnecessarily" high.
+                         * 40 simply felt better than 30.
+                         */
+                        final double[] snapped = Escalator.snapDeltas(deltaX,
+                                deltaY, RATIO_OF_40_DEGREES);
+                        deltaX = snapped[0];
+                        deltaY = snapped[1];
+
+                        /*
+                         * if the snap failed once, let's follow the pointer
+                         * from now on.
+                         */
+                        if (oldDeltaX != 0 && deltaX == oldDeltaX
+                                && oldDeltaY != 0 && deltaY == oldDeltaY) {
+                            snappedScrollEnabled = false;
+                        }
+                    }
+
+                    moveScrollFromEvent(escalator, -deltaX, -deltaY,
+                            latestTouchMoveEvent.getNativeEvent());
+                }
+            };
+            private AnimationHandle animationHandle;
 
             public TouchHandlerBundle(final Escalator escalator) {
                 this.escalator = escalator;
@@ -350,47 +399,20 @@ public class Escalator extends Widget {
             }
 
             public void touchMove(final CustomTouchEvent event) {
-                if (touches != 1) {
-                    return;
+                /*
+                 * since we only use the getPageX/Y, and calculate the diff
+                 * within the handler, we don't need to calculate any
+                 * intermediate deltas.
+                 */
+                latestTouchMoveEvent = event;
+
+                if (animationHandle != null) {
+                    animationHandle.cancel();
                 }
-
-                final int x = event.getPageX();
-                final int y = event.getPageY();
-                deltaX = x - lastX;
-                deltaY = y - lastY;
-                lastX = x;
-                lastY = y;
-                lastTime = Duration.currentTimeMillis();
-
-                // snap the scroll to the major axes, at first.
-                if (snappedScrollEnabled) {
-                    final double oldDeltaX = deltaX;
-                    final double oldDeltaY = deltaY;
-
-                    /*
-                     * Scrolling snaps to 40 degrees vs. flick scroll's 30
-                     * degrees, since slow movements have poor resolution - it's
-                     * easy to interpret a slight angle as a steep angle, since
-                     * the sample rate is "unnecessarily" high. 40 simply felt
-                     * better than 30.
-                     */
-                    final double[] snapped = Escalator.snapDeltas(deltaX,
-                            deltaY, RATIO_OF_40_DEGREES);
-                    deltaX = snapped[0];
-                    deltaY = snapped[1];
-
-                    /*
-                     * if the snap failed once, let's follow the pointer from
-                     * now on.
-                     */
-                    if (oldDeltaX != 0 && deltaX == oldDeltaX && oldDeltaY != 0
-                            && deltaY == oldDeltaY) {
-                        snappedScrollEnabled = false;
-                    }
-                }
-
-                moveScrollFromEvent(escalator, -deltaX, -deltaY,
-                        event.getNativeEvent());
+                animationHandle = AnimationScheduler.get()
+                        .requestAnimationFrame(mover, escalator.bodyElem);
+                event.getNativeEvent().preventDefault();
+                mover.execute(Duration.currentTimeMillis());
             }
 
             public void touchEnd(@SuppressWarnings("unused")
@@ -538,7 +560,24 @@ public class Escalator extends Widget {
         protected native JavaScriptObject createScrollListenerFunction(
                 Escalator esc)
         /*-{
+            var vScroll = esc.@com.vaadin.client.ui.grid.Escalator::verticalScrollbar;
+            var vScrollElem = vScroll.@com.vaadin.client.ui.grid.ScrollbarBundle::getElement()();
+
+            var hScroll = esc.@com.vaadin.client.ui.grid.Escalator::horizontalScrollbar;
+            var hScrollElem = hScroll.@com.vaadin.client.ui.grid.ScrollbarBundle::getElement()();
+
             return $entry(function(e) {
+                // in case the scroll event was native (i.e. scrollbars were dragged, or
+                // the scrollTop/Left was manually modified), the bundles have old cache
+                // values. We need to make sure that the caches are kept up to date.
+                if (e.target === vScrollElem) {
+                    vScroll.@com.vaadin.client.ui.grid.ScrollbarBundle::updateScrollPosFromDom()();
+                } else if (e.target === hScrollElem) {
+                    hScroll.@com.vaadin.client.ui.grid.ScrollbarBundle::updateScrollPosFromDom()();
+                } else {
+                    $wnd.console.error("unexpected scroll target: "+e.target);
+                }
+
                 esc.@com.vaadin.client.ui.grid.Escalator::onScroll()();
             });
         }-*/;
@@ -612,6 +651,9 @@ public class Escalator extends Widget {
 
             // we might've got new or got rid of old scrollbars.
             recalculateTableWrapperSize();
+
+            verticalScrollbar.recalculateMaxScrollPos();
+            horizontalScrollbar.recalculateMaxScrollPos();
         }
 
         /**
@@ -2966,7 +3008,22 @@ public class Escalator extends Widget {
     /** The {@code <tfoot/>} tag. */
     private final Element footElem = DOM.createTFoot();
 
+    /**
+     * TODO: investigate whether this field is now unnecessary, as
+     * {@link ScrollbarBundle} now caches its values.
+     * 
+     * @deprecated maybe...
+     */
+    @Deprecated
     private int tBodyScrollTop = 0;
+
+    /**
+     * TODO: investigate whether this field is now unnecessary, as
+     * {@link ScrollbarBundle} now caches its values.
+     * 
+     * @deprecated maybe...
+     */
+    @Deprecated
     private int tBodyScrollLeft = 0;
 
     private final VerticalScrollbarBundle verticalScrollbar = new VerticalScrollbarBundle();

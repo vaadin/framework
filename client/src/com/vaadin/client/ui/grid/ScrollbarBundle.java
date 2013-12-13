@@ -57,12 +57,12 @@ abstract class ScrollbarBundle {
         }
 
         @Override
-        public void setScrollPos(int px) {
+        protected void internalSetScrollPos(int px) {
             root.setScrollTop(px);
         }
 
         @Override
-        public int getScrollPos() {
+        protected int internalGetScrollPos() {
             return root.getScrollTop();
         }
 
@@ -121,12 +121,12 @@ abstract class ScrollbarBundle {
         }
 
         @Override
-        public void setScrollPos(int px) {
+        protected void internalSetScrollPos(int px) {
             root.setScrollLeft(px);
         }
 
         @Override
-        public int getScrollPos() {
+        protected int internalGetScrollPos() {
             return root.getScrollLeft();
         }
 
@@ -175,6 +175,9 @@ abstract class ScrollbarBundle {
     protected final Element scrollSizeElement = DOM.createDiv();
     protected boolean isInvisibleScrollbar = false;
 
+    private int scrollPos = 0;
+    private int maxScrollPos = 0;
+
     private ScrollbarBundle() {
         root.appendChild(scrollSizeElement);
     }
@@ -194,7 +197,7 @@ abstract class ScrollbarBundle {
      * 
      * @return the root element
      */
-    public Element getElement() {
+    public final Element getElement() {
         return root;
     }
 
@@ -204,12 +207,8 @@ abstract class ScrollbarBundle {
      * @param delta
      *            the delta in pixels to change the scroll position by
      */
-    public void setScrollPosByDelta(int delta) {
+    public final void setScrollPosByDelta(int delta) {
         if (delta != 0) {
-            /*
-             * TODO [[optimize]]: rewrite this so that we can evoid a potential
-             * reflow from getScrollPos()
-             */
             setScrollPos(getScrollPos() + delta);
         }
     }
@@ -230,9 +229,10 @@ abstract class ScrollbarBundle {
      * @param px
      *            the length of the scrollbar in pixels
      */
-    public void setOffsetSize(int px) {
+    public final void setOffsetSize(int px) {
         internalSetOffsetSize(px);
         forceScrollbar(needsScrollbars());
+        recalculateMaxScrollPos();
     }
 
     /**
@@ -259,7 +259,16 @@ abstract class ScrollbarBundle {
      * @param px
      *            the new scroll position in pixels
      */
-    public abstract void setScrollPos(int px);
+    public final void setScrollPos(int px) {
+        int oldScrollPos = scrollPos;
+        scrollPos = Math.max(0, Math.min(maxScrollPos, px));
+
+        if (oldScrollPos != scrollPos) {
+            internalSetScrollPos(px);
+        }
+    }
+
+    protected abstract void internalSetScrollPos(int px);
 
     /**
      * Gets the scroll position of the scrollbar in the axis the scrollbar is
@@ -267,7 +276,12 @@ abstract class ScrollbarBundle {
      * 
      * @return the new scroll position in pixels
      */
-    public abstract int getScrollPos();
+    public final int getScrollPos() {
+        assert internalGetScrollPos() == scrollPos : "calculated scroll position did not match the actual scroll position";
+        return scrollPos;
+    }
+
+    protected abstract int internalGetScrollPos();
 
     /**
      * Modifies {@link #scrollSizeElement scrollSizeElement's} dimensions in
@@ -288,9 +302,10 @@ abstract class ScrollbarBundle {
      *            the number of pixels the scrollbar should be able to scroll
      *            through
      */
-    public void setScrollSize(int px) {
+    public final void setScrollSize(int px) {
         internalSetScrollSize(px);
         forceScrollbar(needsScrollbars());
+        recalculateMaxScrollPos();
     }
 
     /**
@@ -323,7 +338,7 @@ abstract class ScrollbarBundle {
      * @param px
      *            the scrollbar's thickness in pixels
      */
-    public void setScrollbarThickness(int px) {
+    public final void setScrollbarThickness(int px) {
         isInvisibleScrollbar = (px == 0);
         internalSetScrollbarThickness(px != 0 ? px
                 : OSX_INVISIBLE_SCROLLBAR_FAKE_SIZE_PX);
@@ -345,7 +360,7 @@ abstract class ScrollbarBundle {
      * 
      * @return the scrollbar's thickness in pixels
      */
-    public int getScrollbarThickness() {
+    public final int getScrollbarThickness() {
         if (!isInvisibleScrollbar) {
             return internalGetScrollbarThickness();
         } else {
@@ -361,5 +376,23 @@ abstract class ScrollbarBundle {
      */
     protected boolean needsScrollbars() {
         return getOffsetSize() < getScrollSize();
+    }
+
+    public void recalculateMaxScrollPos() {
+        int scrollSize = getScrollSize();
+        int offsetSize = getOffsetSize();
+        maxScrollPos = Math.max(0, scrollSize - offsetSize);
+
+        // make sure that the correct max scroll position is maintained.
+        setScrollPos(scrollPos);
+    }
+
+    /**
+     * This is a method that JSNI can call to synchronize the object state from
+     * the DOM.
+     */
+    @SuppressWarnings("unused")
+    private final void updateScrollPosFromDom() {
+        scrollPos = internalGetScrollPos();
     }
 }
