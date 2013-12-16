@@ -27,8 +27,11 @@ public class PushConstants implements Serializable {
 
     /**
      * The size, in <b>bytes</b>, of the receiving buffer used by some servers.
+     * <p>
+     * Should not be set to a value equal to or greater than 32768 due to a
+     * Jetty 9.1 issue (see #13087)
      */
-    public static final int WEBSOCKET_BUFFER_SIZE = 65536;
+    public static final int WEBSOCKET_BUFFER_SIZE = 16384;
 
     /**
      * The maximum size, in <b>characters</b>, of a websocket message fragment.
