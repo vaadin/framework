@@ -110,8 +110,7 @@ public class Grid<T> extends Composite {
      * @param <T>
      *            the row type
      */
-    public static abstract class AbstractGridColumn<C, T> implements
-            HasVisibility {
+    static abstract class AbstractGridColumn<C, T> implements HasVisibility {
 
         /**
          * The grid the column is associated with

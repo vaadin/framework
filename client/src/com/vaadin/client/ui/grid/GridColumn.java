@@ -34,4 +34,21 @@ public abstract class GridColumn<C, T> extends Grid.AbstractGridColumn<C, T> {
      * Grid.AbstractGridColumn in your production code. The real implementation
      * should be in the abstract class.
      */
+
+    /**
+     * Constructs a new column.
+     */
+    public GridColumn() {
+        super();
+    }
+
+    /**
+     * Constructs a new column with a custom renderer.
+     * 
+     * @param renderer
+     *            The renderer to use for rendering the cells
+     */
+    public GridColumn(Renderer<C> renderer) {
+        super(renderer);
+    }
 }
