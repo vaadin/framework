@@ -13,12 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.server.communication;
 
-package com.vaadin.client.communication;
+import java.lang.reflect.Type;
 
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.metadata.Type;
+import com.vaadin.ui.ConnectorTracker;
 
 /**
  * Implementors of this interface knows how to serialize an Object of a given
@@ -30,43 +31,46 @@ import com.vaadin.client.metadata.Type;
  * result).
  * <p>
  * Each {@link JSONSerializer} implementation can handle an object of a single
- * type - see {@link Type#findSerializer()}.
+ * type.
  * <p>
- * This is the client side interface, see
- * com.vaadin.server.communication.JSONSerializer for the server side interface.
+ * This is the server side interface, see
+ * com.vaadin.client.communication.JSONSerializer for the client side interface.
  * 
- * @since 7.0
+ * @since 7.2
+ * @author Vaadin Ltd
  */
 public interface JSONSerializer<T> {
-
     /**
-     * Creates and deserializes an object received from the server. Must be
-     * compatible with {@link #serialize(Object, ApplicationConnection)} and
-     * also with the server side JsonCodec.encode method.
+     * Creates and deserializes an object received from the client. Must be
+     * compatible with {@link #serialize(Object, ConnectorTracker)} and also
+     * with the client side
+     * {@link com.vaadin.client.communication.JSONSerializer#serialize(Object, ApplicationConnection)}
+     * method.
+     * <p>
+     * The json parameter is of type Object as org.json JSON classes have no
+     * other common super class
      * 
      * @param type
-     *            the type to deserialize
+     *            The expected return type
      * @param jsonValue
-     *            JSON map from property name to property value
-     * @param connection
-     *            the application connection providing the context
-     * 
+     *            the value from the JSON
+     * @param connectorTracker
+     *            the connector tracker instance for the UI
      * @return A deserialized object
      */
-    T deserialize(Type type, JSONValue jsonValue,
-            ApplicationConnection connection);
+    T deserialize(Type type, Object jsonValue, ConnectorTracker connectorTracker);
 
     /**
      * Serialize the given object into JSON. Must be compatible with
-     * {@link #deserialize(Type, JSONValue, ApplicationConnection)} and also
-     * with the server side JsonCodec.decodeCustomType method.
+     * {@link #deserialize(Object, connectorTracker)} and the client side
+     * com.vaadin.client.communication.JSONSerializer
      * 
      * @param value
      *            The object to serialize
-     * @param connection
-     *            the application connection providing the context
+     * @param connectorTracker
+     *            The connector tracker instance for the UI
      * @return A JSON serialized version of the object
      */
-    JSONValue serialize(T value, ApplicationConnection connection);
+    Object serialize(T value, ConnectorTracker connectorTracker);
 
 }
