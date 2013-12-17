@@ -48,12 +48,12 @@ public class ColumnGroupRow<T> {
     /**
      * Is the header shown
      */
-    public boolean headerVisible = true;
+    private boolean headerVisible = true;
 
     /**
      * Is the footer shown
      */
-    public boolean footerVisible = false;
+    private boolean footerVisible = false;
 
     /**
      * Constructs a new column group row
