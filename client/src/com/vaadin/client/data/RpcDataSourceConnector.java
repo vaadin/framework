@@ -56,6 +56,16 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
             public void setRowData(int firstRow, List<String[]> rows) {
                 dataSource.setRowData(firstRow, rows);
             }
+
+            @Override
+            public void removeRowData(int firstRow, int count) {
+                dataSource.removeRowData(firstRow, count);
+            }
+
+            @Override
+            public void insertRowData(int firstRow, int count) {
+                dataSource.insertRowData(firstRow, count);
+            }
         });
     }
 

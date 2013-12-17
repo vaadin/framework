@@ -18,6 +18,7 @@ package com.vaadin.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.vaadin.data.Container.Indexed;
@@ -67,20 +68,22 @@ public class RpcDataProviderExtension extends AbstractExtension {
         Collection<?> propertyIds = container.getContainerPropertyIds();
         List<String[]> rows = new ArrayList<String[]>(itemIds.size());
         for (Object itemId : itemIds) {
-            Item item = container.getItem(itemId);
-            String[] row = new String[propertyIds.size()];
-
-            int i = 0;
-            for (Object propertyId : propertyIds) {
-                Object value = item.getItemProperty(propertyId).getValue();
-                String stringValue = String.valueOf(value);
-                row[i++] = stringValue;
-            }
-
-            rows.add(row);
+            rows.add(getRowData(propertyIds, itemId));
         }
-
         getRpcProxy(DataProviderRpc.class).setRowData(firstRow, rows);
+    }
+
+    private String[] getRowData(Collection<?> propertyIds, Object itemId) {
+        Item item = container.getItem(itemId);
+        String[] row = new String[propertyIds.size()];
+
+        int i = 0;
+        for (Object propertyId : propertyIds) {
+            Object value = item.getItemProperty(propertyId).getValue();
+            String stringValue = String.valueOf(value);
+            row[i++] = stringValue;
+        }
+        return row;
     }
 
     @Override
@@ -98,4 +101,48 @@ public class RpcDataProviderExtension extends AbstractExtension {
         super.extend(component);
     }
 
+    /**
+     * Informs the client side that new rows have been inserted into the data
+     * source.
+     * 
+     * @param index
+     *            the index at which new rows have been inserted
+     * @param count
+     *            the number of rows inserted at <code>index</code>
+     */
+    public void insertRowData(int index, int count) {
+        getState().containerSize += count;
+        getRpcProxy(DataProviderRpc.class).insertRowData(index, count);
+    }
+
+    /**
+     * Informs the client side that rows have been removed from the data source.
+     * 
+     * @param firstIndex
+     *            the index of the first row removed
+     * @param count
+     *            the number of rows removed
+     */
+    public void removeRowData(int firstIndex, int count) {
+        getState().containerSize -= count;
+        getRpcProxy(DataProviderRpc.class).removeRowData(firstIndex, count);
+    }
+
+    /**
+     * Informs the client side that data of a row has been modified in the data
+     * source.
+     * 
+     * @param index
+     *            the index of the row that was updated
+     */
+    public void updateRowData(int index) {
+        /*
+         * TODO: ignore duplicate requests for the same index during the same
+         * roundtrip.
+         */
+        Object itemId = container.getIdByIndex(index);
+        String[] row = getRowData(container.getContainerPropertyIds(), itemId);
+        getRpcProxy(DataProviderRpc.class).setRowData(index,
+                Collections.singletonList(row));
+    }
 }

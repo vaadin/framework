@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.ui.grid;
+package com.vaadin.shared.ui.grid;
 
 /**
  * An immutable representation of a range, marked by start and end points.

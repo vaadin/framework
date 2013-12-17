@@ -30,6 +30,7 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.ColumnGroupRowState;
 import com.vaadin.shared.ui.grid.ColumnGroupState;
 import com.vaadin.shared.ui.grid.GridColumnState;
+import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 
 /**
@@ -80,6 +81,21 @@ public class GridConnector extends AbstractComponentConnector {
     @Override
     public GridState getState() {
         return (GridState) super.getState();
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        getWidget().addRowVisibilityChangeHandler(
+                new RowVisibilityChangeHandler() {
+                    @Override
+                    public void onRowVisibilityChange(
+                            RowVisibilityChangeEvent event) {
+                        getRpcProxy(GridServerRpc.class).setVisibleRows(
+                                event.getFirstVisibleRow(),
+                                event.getVisibleRowCount());
+                    }
+                });
     }
 
     @Override

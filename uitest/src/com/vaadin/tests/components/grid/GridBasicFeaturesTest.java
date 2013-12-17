@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
@@ -251,6 +252,55 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
 
         selectMenuPath("Component", "State", "Primary style name", "v-grid");
         assertPrimaryStylename("v-grid");
+    }
+
+    /**
+     * Test that the current view is updated when a server-side container change
+     * occurs (without scrolling back and forth)
+     */
+    @Test
+    public void testItemSetChangeEvent() throws Exception {
+        openTestURL();
+
+        final By newRow = By.xpath("//td[text()='newcell: 0']");
+
+        assertTrue("Unexpected initial state", !elementIsFound(newRow));
+
+        selectMenuPath("Component", "Body rows", "Add first row");
+        assertTrue("Add row failed", elementIsFound(newRow));
+
+        selectMenuPath("Component", "Body rows", "Remove first row");
+        assertTrue("Remove row failed", !elementIsFound(newRow));
+    }
+
+    /**
+     * Test that the current view is updated when a property's value is reflect
+     * to the client, when the value is modified server-side.
+     */
+    @Test
+    public void testPropertyValueChangeEvent() throws Exception {
+        openTestURL();
+
+        assertEquals("Unexpected cell initial state", "(0, 0)",
+                getBodyCellByRowAndColumn(1, 1).getText());
+
+        selectMenuPath("Component", "Body rows",
+                "Modify first row (getItemProperty)");
+        assertEquals("(First) modification with getItemProperty failed",
+                "modified: 0", getBodyCellByRowAndColumn(1, 1).getText());
+
+        selectMenuPath("Component", "Body rows",
+                "Modify first row (getContainerProperty)");
+        assertEquals("(Second) modification with getItemProperty failed",
+                "modified: Column0", getBodyCellByRowAndColumn(1, 1).getText());
+    }
+
+    private boolean elementIsFound(By locator) {
+        try {
+            return driver.findElement(locator) != null;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     private void assertPrimaryStylename(String stylename) {

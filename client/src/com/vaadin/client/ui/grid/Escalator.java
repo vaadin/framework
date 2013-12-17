@@ -35,12 +35,12 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.grid.Escalator.JsniUtil.TouchHandlerBundle;
@@ -50,6 +50,7 @@ import com.vaadin.client.ui.grid.PositionFunction.TranslatePosition;
 import com.vaadin.client.ui.grid.PositionFunction.WebkitTranslate3DPosition;
 import com.vaadin.client.ui.grid.ScrollbarBundle.HorizontalScrollbarBundle;
 import com.vaadin.client.ui.grid.ScrollbarBundle.VerticalScrollbarBundle;
+import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.util.SharedUtil;
 
 /*-
@@ -1633,6 +1634,8 @@ public class Escalator extends Widget {
                 return;
             }
 
+            boolean rowsWereMoved = false;
+
             final int topRowPos = getRowTop(visualRowOrder.getFirst());
             // TODO [[mpixscroll]]
             final int scrollTop = tBodyScrollTop;
@@ -1655,6 +1658,8 @@ public class Escalator extends Widget {
                 final int logicalRowIndex = scrollTop / ROW_HEIGHT_PX;
                 moveAndUpdateEscalatorRows(Range.between(start, end), 0,
                         logicalRowIndex);
+
+                rowsWereMoved = (rowsToMove != 0);
             }
 
             else if (viewportOffset + ROW_HEIGHT_PX <= 0) {
@@ -1723,9 +1728,13 @@ public class Escalator extends Widget {
                             .get(1)) - 1;
                     moveAndUpdateEscalatorRows(strayRow, 0, topLogicalIndex);
                 }
+
+                rowsWereMoved = (rowsToMove != 0);
             }
 
-            fireRowVisibilityChangeEvent();
+            if (rowsWereMoved) {
+                fireRowVisibilityChangeEvent();
+            }
         }
 
         @Override
@@ -1805,6 +1814,8 @@ public class Escalator extends Widget {
                     setRowPosition(tr, 0, rowTop);
                     rowTop += ROW_HEIGHT_PX;
                 }
+
+                fireRowVisibilityChangeEvent();
             }
             return addedRows;
         }
@@ -1919,8 +1930,6 @@ public class Escalator extends Widget {
                     newRowTop += ROW_HEIGHT_PX;
                 }
             }
-
-            fireRowVisibilityChangeEvent();
         }
 
         /**
@@ -3181,9 +3190,15 @@ public class Escalator extends Widget {
      */
     @Override
     public void setHeight(final String height) {
+        final int escalatorRowsBefore = body.visualRowOrder.size();
+
         super.setHeight(height != null && !height.isEmpty() ? height
                 : DEFAULT_HEIGHT);
         recalculateElementSizes();
+
+        if (escalatorRowsBefore != body.visualRowOrder.size()) {
+            fireRowVisibilityChangeEvent();
+        }
     }
 
     /**
@@ -3437,26 +3452,30 @@ public class Escalator extends Widget {
      * Adds an event handler that gets notified when the range of visible rows
      * changes e.g. because of scrolling.
      * 
-     * @param rowVisibilityChangeHadler
+     * @param rowVisibilityChangeHandler
      *            the event handler
      * @return a handler registration for the added handler
      */
     public HandlerRegistration addRowVisibilityChangeHandler(
-            RowVisibilityChangeHandler rowVisibilityChangeHadler) {
-        return addHandler(rowVisibilityChangeHadler,
+            RowVisibilityChangeHandler rowVisibilityChangeHandler) {
+        return addHandler(rowVisibilityChangeHandler,
                 RowVisibilityChangeEvent.TYPE);
     }
 
     private void fireRowVisibilityChangeEvent() {
-        int visibleRangeStart = body.getLogicalRowIndex(body.visualRowOrder
-                .getFirst());
-        int visibleRangeEnd = body.getLogicalRowIndex(body.visualRowOrder
-                .getLast()) + 1;
+        if (!body.visualRowOrder.isEmpty()) {
+            int visibleRangeStart = body.getLogicalRowIndex(body.visualRowOrder
+                    .getFirst());
+            int visibleRangeEnd = body.getLogicalRowIndex(body.visualRowOrder
+                    .getLast()) + 1;
 
-        int visibleRowCount = visibleRangeEnd - visibleRangeStart;
+            int visibleRowCount = visibleRangeEnd - visibleRangeStart;
 
-        fireEvent(new RowVisibilityChangeEvent(visibleRangeStart,
-                visibleRowCount));
+            fireEvent(new RowVisibilityChangeEvent(visibleRangeStart,
+                    visibleRowCount));
+        } else {
+            fireEvent(new RowVisibilityChangeEvent(0, 0));
+        }
     }
 
     /**

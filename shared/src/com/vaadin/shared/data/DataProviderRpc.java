@@ -37,4 +37,25 @@ public interface DataProviderRpc extends ClientRpc {
      *            the updated row data
      */
     public void setRowData(int firstRowIndex, List<String[]> rowData);
+
+    /**
+     * Informs the client to remove row data.
+     * 
+     * @param firstRowIndex
+     *            the index of the first removed row
+     * @param count
+     *            the number of rows removed from <code>firstRowIndex</code> and
+     *            onwards
+     */
+    public void removeRowData(int firstRowIndex, int count);
+
+    /**
+     * Informs the client to insert new row data.
+     * 
+     * @param firstRowIndex
+     *            the index of the first new row
+     * @param count
+     *            the number of rows inserted at <code>firstRowIndex</code>
+     */
+    public void insertRowData(int firstRowIndex, int count);
 }

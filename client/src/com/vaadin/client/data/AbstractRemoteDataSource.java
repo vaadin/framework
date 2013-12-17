@@ -22,7 +22,7 @@ import java.util.List;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.Profiler;
-import com.vaadin.client.ui.grid.Range;
+import com.vaadin.shared.ui.grid.Range;
 
 /**
  * Base implementation for data sources that fetch data from a remote system.
@@ -237,5 +237,87 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         ensureCoverageCheck();
 
         Profiler.leave("AbstractRemoteDataSource.setRowData");
+    }
+
+    /**
+     * Informs this data source that the server has removed data.
+     * 
+     * @param firstRowIndex
+     *            the index of the first removed row
+     * @param count
+     *            the number of removed rows, starting from
+     *            <code>firstRowIndex</code>
+     */
+    protected void removeRowData(int firstRowIndex, int count) {
+        Profiler.enter("AbstractRemoteDataSource.removeRowData");
+
+        // pack the cached data
+        for (int i = 0; i < count; i++) {
+            Integer oldIndex = Integer.valueOf(firstRowIndex + count + i);
+            if (rowCache.containsKey(oldIndex)) {
+                Integer newIndex = Integer.valueOf(firstRowIndex + i);
+                rowCache.put(newIndex, rowCache.remove(oldIndex));
+            }
+        }
+
+        Range removedRange = Range.withLength(firstRowIndex, count);
+        if (removedRange.intersects(cached)) {
+            Range[] partitions = cached.partitionWith(removedRange);
+            Range remainsBefore = partitions[0];
+            Range transposedRemainsAfter = partitions[2].offsetBy(-removedRange
+                    .length());
+            cached = remainsBefore.combineWith(transposedRemainsAfter);
+        }
+        estimatedSize -= count;
+        dataChangeHandler.dataRemoved(firstRowIndex, count);
+        checkCacheCoverage();
+
+        Profiler.leave("AbstractRemoteDataSource.removeRowData");
+    }
+
+    /**
+     * Informs this data source that new data has been inserted from the server.
+     * 
+     * @param firstRowIndex
+     *            the destination index of the new row data
+     * @param count
+     *            the number of rows inserted
+     */
+    protected void insertRowData(int firstRowIndex, int count) {
+        Profiler.enter("AbstractRemoteDataSource.insertRowData");
+
+        if (cached.contains(firstRowIndex)) {
+            int oldCacheEnd = cached.getEnd();
+            /*
+             * We need to invalidate the cache from the inserted row onwards,
+             * since the cache wants to be a contiguous range. It doesn't
+             * support holes.
+             * 
+             * If holes were supported, we could shift the higher part of
+             * "cached" and leave a hole the size of "count" in the middle.
+             */
+            cached = cached.splitAt(firstRowIndex)[0];
+
+            for (int i = firstRowIndex; i < oldCacheEnd; i++) {
+                rowCache.remove(Integer.valueOf(i));
+            }
+        }
+
+        else if (firstRowIndex < cached.getStart()) {
+            Range oldCached = cached;
+            cached = cached.offsetBy(count);
+
+            for (int i = 0; i < rowCache.size(); i++) {
+                Integer oldIndex = Integer.valueOf(oldCached.getEnd() - i);
+                Integer newIndex = Integer.valueOf(cached.getEnd() - i);
+                rowCache.put(newIndex, rowCache.remove(oldIndex));
+            }
+        }
+
+        estimatedSize += count;
+        dataChangeHandler.dataAdded(firstRowIndex, count);
+        checkCacheCoverage();
+
+        Profiler.leave("AbstractRemoteDataSource.insertRowData");
     }
 }

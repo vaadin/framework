@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasVisibility;
 import com.google.gwt.user.client.ui.Widget;
@@ -73,6 +74,10 @@ public class Grid<T> extends Composite {
      */
     private final List<GridColumn<?, T>> columns = new ArrayList<GridColumn<?, T>>();
 
+    /**
+     * The datasource currently in use. <em>Note:</em> it is <code>null</code>
+     * on initialization, but not after that.
+     */
     private DataSource<T> dataSource;
 
     /**
@@ -1210,5 +1215,15 @@ public class Grid<T> extends Composite {
      */
     public GridColumn<?, T> getLastFrozenColumn() {
         return lastFrozenColumn;
+    }
+
+    public HandlerRegistration addRowVisibilityChangeHandler(
+            RowVisibilityChangeHandler handler) {
+        /*
+         * Reusing Escalator's RowVisibilityChangeHandler, since a scroll
+         * concept is too abstract. e.g. the event needs to be re-sent when the
+         * widget is resized.
+         */
+        return escalator.addRowVisibilityChangeHandler(handler);
     }
 }
