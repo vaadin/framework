@@ -42,6 +42,7 @@ public class TestClassesSerializable extends TestCase {
             "com\\.vaadin\\.event\\.FieldEvents", //
             "com\\.vaadin\\.event\\.LayoutEvents", //
             "com\\.vaadin\\.event\\.MouseEvents", //
+            "com\\.vaadin\\.event\\.UIEvents", //
             "com\\.vaadin\\.server\\.VaadinPortlet", //
             "com\\.vaadin\\.server\\.MockServletConfig", //
             "com\\.vaadin\\.server\\.MockServletContext", //

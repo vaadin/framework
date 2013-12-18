@@ -68,7 +68,7 @@ public class ServerRpcHandler implements Serializable {
      * @since 7.2
      * @author Vaadin Ltd
      */
-    public static class RpcRequest {
+    public static class RpcRequest implements Serializable {
 
         private final String csrfToken;
         private final JSONArray invocations;
