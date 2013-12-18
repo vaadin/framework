@@ -3114,7 +3114,18 @@ public class Escalator extends Widget {
         header.paintInsertRows(0, header.getRowCount());
         footer.paintInsertRows(0, footer.getRowCount());
         recalculateElementSizes();
-        body.paintInsertRows(0, body.getRowCount());
+        /*
+         * Note: There's no need to explicitly insert rows into the body.
+         * 
+         * recalculateElementSizes will recalculate the height of the body. This
+         * has the side-effect that as the body's size grows bigger (i.e. from 0
+         * to its actual height), more escalator rows are populated. Those
+         * escalator rows are then immediately rendered. This, in effect, is the
+         * same thing as inserting those rows.
+         * 
+         * In fact, having an extra paintInsertRows here would lead to duplicate
+         * rows.
+         */
 
         scroller.attachScrollListener(verticalScrollbar.getElement());
         scroller.attachScrollListener(horizontalScrollbar.getElement());
@@ -3431,6 +3442,16 @@ public class Escalator extends Widget {
         }
     }
 
+    /**
+     * Recalculates the dimensions for all elements that require manual
+     * calculations. Also updates the dimension caches.
+     * <p>
+     * <em>Note:</em> This method has the <strong>side-effect</strong>
+     * automatically makes sure that an appropriate amount of escalator rows are
+     * present. So, if the body area grows, more <strong>escalator rows might be
+     * inserted</strong>. Conversely, if the body area shrinks,
+     * <strong>escalator rows might be removed</strong>.
+     */
     private void recalculateElementSizes() {
         if (!isAttached()) {
             return;
