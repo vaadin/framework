@@ -99,6 +99,7 @@ $border-color: #aaa;
 	white-space: nowrap;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+	overflow:hidden;
 }
 
 .#{$primaryStyleName}-cell.frozen {
