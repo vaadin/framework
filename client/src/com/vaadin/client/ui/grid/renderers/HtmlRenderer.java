@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.grid.renderers;
 
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.Renderer;
@@ -22,19 +23,20 @@ import com.vaadin.client.ui.grid.Renderer;
 /**
  * Renders a string as HTML into a cell.
  * <p>
- * The html string is HTML-escaped string before rendering. For more information
- * about what kind of escaping is done see
- * {@link SafeHtmlUtils#htmlEscape(String)}.
+ * The html string is rendered as is without any escaping. It is up to the
+ * developer to ensure that the html string honors the {@link SafeHtml}
+ * contract. For more information see
+ * {@link SafeHtmlUtils#fromSafeConstant(String)}.
  * 
  * @since 7.2
  * @author Vaadin Ltd
- * @see SafeHtmlUtils#htmlEscape(String)
+ * @see SafeHtmlUtils#fromSafeConstant(String)
  */
 public class HtmlRenderer implements Renderer<String> {
 
     @Override
     public void renderCell(Cell cell, String htmlString) {
-        cell.getElement()
-                .setInnerSafeHtml(SafeHtmlUtils.fromString(htmlString));
+        cell.getElement().setInnerSafeHtml(
+                SafeHtmlUtils.fromSafeConstant(htmlString));
     }
 }
