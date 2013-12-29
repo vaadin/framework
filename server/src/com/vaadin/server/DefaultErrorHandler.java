@@ -16,11 +16,14 @@
 
 package com.vaadin.server;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.event.ListenerMethod.MethodException;
 import com.vaadin.server.ClientConnector.ConnectorErrorEvent;
+import com.vaadin.server.ServerRpcManager.RpcInvocationException;
 import com.vaadin.shared.Connector;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
@@ -32,7 +35,7 @@ public class DefaultErrorHandler implements ErrorHandler {
     }
 
     public static void doDefault(ErrorEvent event) {
-        final Throwable t = event.getThrowable();
+        Throwable t = event.getThrowable();
         if (t instanceof SocketException) {
             // Most likely client browser closed socket
             getLogger().info(
@@ -40,6 +43,8 @@ public class DefaultErrorHandler implements ErrorHandler {
                             + " Most likely client (browser) closed socket.");
             return;
         }
+
+        t = findRelevantThrowable(t);
 
         // Finds the original source of the error/exception
         AbstractComponent component = findAbstractComponent(event);
@@ -52,6 +57,40 @@ public class DefaultErrorHandler implements ErrorHandler {
 
         // also print the error on console
         getLogger().log(Level.SEVERE, "", t);
+    }
+
+    /**
+     * Vaadin wraps exceptions in its own and due to reflection usage there
+     * might be also other irrelevant exceptions that make no sense for Vaadin
+     * users (~developers using Vaadin). This method tries to choose the
+     * relevant one to be reported.
+     * 
+     * @since 7.2
+     * @param t
+     *            throwable given for default error handler
+     * @return the throwable that is relevant for Vaadin users
+     */
+    private static Throwable findRelevantThrowable(Throwable t) {
+        try {
+            if ((t instanceof RpcInvocationException)
+                    && (t.getCause() instanceof InvocationTargetException)) {
+                /*
+                 * RpcInvocationException (that always wraps irrelevant
+                 * java.lang.reflect.InvocationTargetException) might only be
+                 * relevant for core Vaadin developers.
+                 */
+                return findRelevantThrowable(t.getCause().getCause());
+            } else if (t instanceof MethodException) {
+                /*
+                 * Method exception might only be relevant for core Vaadin
+                 * developers.
+                 */
+                return t.getCause();
+            }
+        } catch (Exception e) {
+            // NOP, just return the original one
+        }
+        return t;
     }
 
     private static Logger getLogger() {
