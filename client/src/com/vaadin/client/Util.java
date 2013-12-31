@@ -866,7 +866,7 @@ public class Util {
                     element = (Element) element.getParentElement();
                 }
             }
-            if (eventListener != null) {
+            if (eventListener instanceof Widget) {
                 /*
                  * Then find the first widget of type class1 from widget
                  * hierarchy
