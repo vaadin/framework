@@ -991,6 +991,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         if (scrollBody != null) {
             scrollBody.removeFromParent();
         }
+
+        // Without this call the scroll position is messed up in IE even after
+        // the lazy scroller has set the scroll position to the first visible
+        // item
+        scrollBodyPanel.getScrollPosition();
+
         scrollBody = createScrollBody();
 
         scrollBody.renderInitialRows(rowData, uidl.getIntAttribute("firstrow"),
@@ -1121,7 +1127,28 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
     }
 
+    private boolean lazyScrollerIsActive;
+
+    private void disableLazyScroller() {
+        lazyScrollerIsActive = false;
+        scrollBodyPanel.getElement().getStyle().clearOverflowX();
+        scrollBodyPanel.getElement().getStyle().clearOverflowY();
+    }
+
+    private void enableLazyScroller() {
+        Scheduler.get().scheduleDeferred(lazyScroller);
+        lazyScrollerIsActive = true;
+        // prevent scrolling to jump in IE11
+        scrollBodyPanel.getElement().getStyle().setOverflowX(Overflow.HIDDEN);
+        scrollBodyPanel.getElement().getStyle().setOverflowY(Overflow.HIDDEN);
+    }
+
+    private boolean isLazyScrollerActive() {
+        return lazyScrollerIsActive;
+    }
+
     private ScheduledCommand lazyScroller = new ScheduledCommand() {
+
         @Override
         public void execute() {
             if (firstvisible > 0) {
@@ -1134,6 +1161,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                             .setScrollPosition(measureRowHeightOffset(firstvisible));
                 }
             }
+            disableLazyScroller();
         }
     };
 
@@ -1152,7 +1180,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // Only scroll if the first visible changes from the server side.
             // Else we might unintentionally scroll even when the scroll
             // position has not changed.
-            Scheduler.get().scheduleDeferred(lazyScroller);
+            enableLazyScroller();
         }
     }
 
@@ -2172,7 +2200,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         isNewBody = false;
 
         if (firstvisible > 0) {
-            Scheduler.get().scheduleDeferred(lazyScroller);
+            enableLazyScroller();
         }
 
         if (enabled) {
@@ -6871,6 +6899,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     @Override
     public void onScroll(ScrollEvent event) {
+        // Do not handle scroll events while there is scroll initiated from
+        // server side which is not yet executed (#11454)
+        if (isLazyScrollerActive()) {
+            return;
+        }
+
         scrollLeft = scrollBodyPanel.getElement().getScrollLeft();
         scrollTop = scrollBodyPanel.getScrollPosition();
         /*
