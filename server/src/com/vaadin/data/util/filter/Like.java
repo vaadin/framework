@@ -23,11 +23,11 @@ public class Like implements Filter {
     private final String value;
     private boolean caseSensitive;
 
-    public Like(String propertyId, String value) {
+    public Like(Object propertyId, String value) {
         this(propertyId, value, true);
     }
 
-    public Like(String propertyId, String value, boolean caseSensitive) {
+    public Like(Object propertyId, String value, boolean caseSensitive) {
         this.propertyId = propertyId;
         this.value = value;
         setCaseSensitive(caseSensitive);
