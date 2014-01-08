@@ -410,14 +410,12 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
         String[] fragments = splitFirstFragmentFromTheRest(path);
 
-        List<ComponentConnector> potentialMatches = new ArrayList<ComponentConnector>();
+        List<ComponentConnector> connectors = new ArrayList<ComponentConnector>();
         for (ComponentConnector parent : parents) {
-            potentialMatches.addAll(collectPotentialMatches(parent,
-                    fragments[0], findRecursively));
+            connectors.addAll(filterMatches(
+                    collectPotentialMatches(parent, fragments[0],
+                            findRecursively), extractPredicates(fragments[0])));
         }
-
-        List<ComponentConnector> connectors = filterMatches(potentialMatches,
-                extractPredicates(fragments[0]));
 
         if (!connectors.isEmpty() && fragments.length > 1) {
             return (findConnectorsByPath(fragments[1], connectors));
