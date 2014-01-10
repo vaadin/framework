@@ -19,7 +19,6 @@ package com.vaadin.server.communication;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,7 +42,6 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WebBrowser;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
@@ -84,14 +82,6 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
 
             VaadinSession session = ui.getSession();
             if (resource.transport() == TRANSPORT.STREAMING) {
-                // IE8 requires a longer padding to work properly if the
-                // initial message is small (#11573). Chrome does not work
-                // without the original padding...
-                WebBrowser browser = session.getBrowser();
-                if (browser.isIE() && browser.getBrowserMajorVersion() == 8) {
-                    resource.padding(LONG_PADDING);
-                }
-
                 // Must ensure that the streaming response contains
                 // "Connection: close", otherwise iOS 6 will wait for the
                 // response to this request before sending another request to
@@ -214,14 +204,6 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
         }
     };
 
-    private static final String LONG_PADDING;
-
-    static {
-        char[] array = new char[4096];
-        Arrays.fill(array, '-');
-        LONG_PADDING = String.copyValueOf(array);
-
-    }
     private VaadinServletService service;
 
     public PushHandler(VaadinServletService service) {

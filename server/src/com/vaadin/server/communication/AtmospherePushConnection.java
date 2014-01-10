@@ -94,7 +94,7 @@ public class AtmospherePushConnection implements PushConnection {
 
     private UI ui;
     private AtmosphereResource resource;
-    private Future<String> outgoingMessage;
+    private Future<Object> outgoingMessage;
     private FragmentedMessage incomingMessage;
 
     public AtmospherePushConnection(UI ui, AtmosphereResource resource) {
