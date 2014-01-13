@@ -28,6 +28,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -275,6 +276,21 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      */
     protected WebElement vaadinElement(String vaadinLocator) {
         return driver.findElement(vaadinLocator(vaadinLocator));
+    }
+
+    /**
+     * Uses JavaScript to determine the currently focused element.
+     * 
+     * @return Focused element or null
+     */
+    protected WebElement getFocusedElement() {
+        Object focusedElement = ((JavascriptExecutor) getDriver())
+                .executeScript("return document.activeElement");
+        if (null != focusedElement) {
+            return (WebElement) focusedElement;
+        } else {
+            return null;
+        }
     }
 
     /**
