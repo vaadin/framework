@@ -30,6 +30,8 @@ import com.vaadin.sass.internal.ScssStylesheet;
 
 public abstract class AbstractTestBase {
 
+    public static final String CR = "\r";
+
     protected ScssStylesheet stylesheet;
     protected String originalScss;
     protected String parsedScss;
@@ -69,17 +71,21 @@ public abstract class AbstractTestBase {
     public void testParser(String file) throws CSSException, IOException,
             URISyntaxException {
         originalScss = getFileContent(file);
+        originalScss = originalScss.replaceAll(CR, "");
         ScssStylesheet sheet = getStyleSheet(file);
         parsedScss = sheet.toString();
+        parsedScss = parsedScss.replace(CR, "");
         Assert.assertEquals("Original CSS and parsed CSS do not match",
                 originalScss, parsedScss);
     }
 
     public void testCompiler(String scss, String css) throws Exception {
         comparisonCss = getFileContent(css);
+        comparisonCss = comparisonCss.replaceAll(CR, "");
         ScssStylesheet sheet = getStyleSheet(scss);
         sheet.compile();
         parsedScss = sheet.toString();
+        parsedScss = parsedScss.replaceAll(CR, "");
         Assert.assertEquals("Original CSS and parsed CSS do not match",
                 comparisonCss, parsedScss);
     }
