@@ -731,13 +731,6 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
                 previous);
     }
 
-    @Override
-    public LexicalUnitImpl clone() {
-        LexicalUnitImpl cloned = new LexicalUnitImpl(type, line, column, prev);
-        cloned.replaceValue(this);
-        return cloned;
-    }
-
     /**
      * Tries to return the value for this {@link LexicalUnitImpl} without
      * considering any related units.
