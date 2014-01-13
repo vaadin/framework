@@ -71,3 +71,13 @@ WebContent/VAADIN/vaadinPush.debug.js
 # build result folders
 */result
 result
+
+# /theme-compiler
+/theme-compiler/result
+/theme-compiler/src/com/vaadin/sass/internal/parser/CharStream.java
+/theme-compiler/src/com/vaadin/sass/internal/parser/ParserImpl.java
+/theme-compiler/src/com/vaadin/sass/internal/parser/ParserImplConstants.java
+/theme-compiler/src/com/vaadin/sass/internal/parser/ParserImplTokenManager.java
+/theme-compiler/src/com/vaadin/sass/internal/parser/Token.java
+/theme-compiler/src/com/vaadin/sass/internal/parser/TokenMgrError.java
+/theme-compiler/src/com/vaadin/sass/internal/parser/ParseException.java

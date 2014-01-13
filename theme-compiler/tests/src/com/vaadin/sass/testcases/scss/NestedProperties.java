@@ -38,7 +38,7 @@ public class NestedProperties extends AbstractTestBase {
 
     @Test
     public void testParser() throws CSSException, IOException {
-        Parser parser = new Parser();
+        Parser parser = Parser.ParserAccessor.getParser();
         SCSSDocumentHandler handler = new SCSSDocumentHandlerImpl();
         parser.setDocumentHandler(handler);
         parser.parseStyleSheet(getClass().getResource(scss).getPath());

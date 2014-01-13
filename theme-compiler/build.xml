@@ -23,7 +23,7 @@
     <!--<property name="classes.exclude" value="com/vaadin/buildhelpers/**" 
         /> -->
 
-    <target name="parser">
+    <target name="parser" depends="-check-parser" unless="parser.exists">
         <!-- Copy javacc-5.0.jar to ${result.dir}/javacc/javacc.jar as the 
             javacc task requires the jar to be named javacc.jar -->
         <property name="javacc.home" location="${result.dir}/javacc" />
@@ -32,15 +32,29 @@
         <mkdir dir="${generate.dir}" />
         <!-- Generate new parser files in another directory, this ensure
         they are always generated -->
-        <copy file="${parser.src.dir}/Parser.jj" todir="${generate.dir}" />
-        <javacc target="${generate.dir}/Parser.jj" javacchome="${javacc.home}">
-        </javacc>
+        <copy todir="${generate.dir}">
+            <fileset dir="${parser.src.dir}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <javacc target="${generate.dir}/ParserImpl.jj" javacchome="${javacc.home}" errorreporting="true"/>
         <!-- Add headers to the generated files and copy back to src -->
         <antcontrib:foreach target="prepend.generated.file.header" param="path">
             <path>
                 <fileset dir="${generate.dir}" includes="*.java" excludes="ParseException.java" />
             </path>
         </antcontrib:foreach>
+        <copy todir="${parser.src.dir}">
+            <fileset dir="${generate.dir}">
+                <include name="*.jj"/>
+                <exclude name="ParserImpl.jj"/>
+            </fileset>
+            <globmapper from="*.jj" to="*.java"/>
+        </copy>
+    </target>
+
+    <target name="-check-parser">
+        <available file="${parser.src.dir}/ParserImpl.java"  property="parser.exists"/>
     </target>
 
     <target name="prepend.generated.file.header">
