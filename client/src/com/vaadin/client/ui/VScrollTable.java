@@ -1060,6 +1060,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         if (uidl.hasVariable("selected")) {
             final Set<String> selectedKeys = uidl
                     .getStringArrayVariableAsSet("selected");
+            removeUnselectedRowKeys(selectedKeys);
+
             if (scrollBody != null) {
                 Iterator<Widget> iterator = scrollBody.iterator();
                 while (iterator.hasNext()) {
@@ -1100,6 +1102,16 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
         unSyncedselectionsBeforeRowFetch = null;
         return keyboardSelectionOverRowFetchInProgress;
+    }
+
+    private void removeUnselectedRowKeys(final Set<String> selectedKeys) {
+        List<String> unselectedKeys = new ArrayList<String>(0);
+        for (String key : selectedRowKeys) {
+            if (!selectedKeys.contains(key)) {
+                unselectedKeys.add(key);
+            }
+        }
+        selectedRowKeys.removeAll(unselectedKeys);
     }
 
     /** For internal use only. May be removed or replaced in the future. */
