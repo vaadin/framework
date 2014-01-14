@@ -31,15 +31,16 @@ public class TooltipInWindow extends AbstractTestUI {
         Window window = new Window("Window", layout);
         layout.setSizeUndefined();
         window.center();
-        layout.addComponent(createTextField());
+        layout.addComponent(createTextField("tf1"));
 
         addWindow(window);
-        addComponent(createTextField());
+        addComponent(createTextField("tf2"));
     }
 
-    private TextField createTextField() {
+    private TextField createTextField(String id) {
         TextField tf = new TextField("TextField with a tooltip");
         tf.setDescription("My tooltip");
+        tf.setId(id);
         return tf;
     }
 
