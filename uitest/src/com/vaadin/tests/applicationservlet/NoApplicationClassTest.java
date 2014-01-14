@@ -25,7 +25,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class NoApplicationClass extends MultiBrowserTest {
+public class NoApplicationClassTest extends MultiBrowserTest {
 
     @Test
     public void testInvalidApplicationClass() {
@@ -33,7 +33,7 @@ public class NoApplicationClass extends MultiBrowserTest {
         String exceptionMessage = getDriver().findElement(By.xpath("//pre[2]"))
                 .getText();
         Assert.assertTrue(exceptionMessage
-                .contains("ServletException: ClassThatIsNotPresent"));
+                .contains("ServletException: java.lang.ClassNotFoundException: ClassThatIsNotPresent"));
     }
 
     @Override
