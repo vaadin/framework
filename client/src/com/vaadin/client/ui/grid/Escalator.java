@@ -2761,10 +2761,9 @@ public class Escalator extends Widget {
                 }
             }
 
-            flyweightRow.removeCells(index, numberOfColumns);
             List<Column> removedColumns = new ArrayList<Column>();
             for (int i = 0; i < numberOfColumns; i++) {
-                removedColumns.add(columns.remove(i));
+                removedColumns.add(columns.remove(index));
             }
 
             if (hasSomethingInDom()) {
