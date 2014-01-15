@@ -49,7 +49,7 @@ public class SelectItemCaptionRefresh extends AbstractTestUI {
         select.setItemCaption(itemId, "start");
 
         addComponent(select);
-        addComponent(new Button("click", clickListener));
+        addComponent(new Button("Update item's caption", clickListener));
     }
 
     /*
@@ -59,7 +59,7 @@ public class SelectItemCaptionRefresh extends AbstractTestUI {
      */
     @Override
     protected String getTestDescription() {
-        return "Selected option not updated when item caption changes in Select";
+        return "Selected option should be updated when item caption changes in the Select.";
     }
 
     /*

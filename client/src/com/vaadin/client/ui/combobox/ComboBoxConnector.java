@@ -37,6 +37,10 @@ import com.vaadin.ui.ComboBox;
 public class ComboBoxConnector extends AbstractFieldConnector implements
         Paintable, SimpleManagedLayout {
 
+    // oldSuggestionTextMatchTheOldSelection is used to detect when it's safe to
+    // update textbox text by a changed item caption.
+    private boolean oldSuggestionTextMatchTheOldSelection;
+
     /*
      * (non-Javadoc)
      * 
@@ -117,7 +121,10 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         boolean suggestionsChanged = !getWidget().initDone
                 || !newSuggestions.equals(getWidget().currentSuggestions);
 
+        oldSuggestionTextMatchTheOldSelection = false;
+
         if (suggestionsChanged) {
+            oldSuggestionTextMatchTheOldSelection = isWidgetsCurrentSelectionTextInTextBox();
             getWidget().currentSuggestions.clear();
 
             if (!getWidget().waitingForFilteringResponse) {
@@ -217,19 +224,31 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             }
             if (!getWidget().waitingForFilteringResponse
                     || getWidget().popupOpenerClicked) {
-                // Update text field if we've got a new
-                // selection
-                // Also update if we've got the same text to
-                // retain old text selection behavior
-                // OR if selected item caption is changed.
-                getWidget().setPromptingOff(suggestion.getReplacementString());
-                getWidget().selectedOptionKey = suggestionKey;
+                if (!suggestionKey.equals(getWidget().selectedOptionKey)
+                        || suggestion.getReplacementString().equals(
+                                getWidget().tb.getText())
+                        || oldSuggestionTextMatchTheOldSelection) {
+                    // Update text field if we've got a new
+                    // selection
+                    // Also update if we've got the same text to
+                    // retain old text selection behavior
+                    // OR if selected item caption is changed.
+                    getWidget().setPromptingOff(
+                            suggestion.getReplacementString());
+                    getWidget().selectedOptionKey = suggestionKey;
+                }
             }
             getWidget().currentSuggestion = suggestion;
             getWidget().setSelectedItemIcon(suggestion.getIconUri());
             // only a single item can be selected
             break;
         }
+    }
+
+    private boolean isWidgetsCurrentSelectionTextInTextBox() {
+        return getWidget().currentSuggestion != null
+                && getWidget().currentSuggestion.getReplacementString().equals(
+                        getWidget().tb.getText());
     }
 
     private void resetSelection() {
