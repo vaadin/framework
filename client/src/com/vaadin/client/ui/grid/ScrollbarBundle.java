@@ -231,7 +231,7 @@ abstract class ScrollbarBundle {
      */
     public final void setOffsetSize(int px) {
         internalSetOffsetSize(px);
-        forceScrollbar(needsScrollbars());
+        forceScrollbar(showsScrollHandle());
         recalculateMaxScrollPos();
     }
 
@@ -307,7 +307,7 @@ abstract class ScrollbarBundle {
      */
     public final void setScrollSize(int px) {
         internalSetScrollSize(px);
-        forceScrollbar(needsScrollbars());
+        forceScrollbar(showsScrollHandle());
         recalculateMaxScrollPos();
     }
 
@@ -372,12 +372,14 @@ abstract class ScrollbarBundle {
     }
 
     /**
-     * Checks whether the scrollbar should be active and needed, i.e. if the
-     * "content" is larger than the "frame".
+     * Checks whether the scrollbar's handle is visible.
+     * <p>
+     * In other words, this method checks whether the contents is larger than
+     * can visually fit in the element.
      * 
-     * @return <code>true</code> iff the scrollbar should be active and needed
+     * @return <code>true</code> iff the scrollbar's handle is visible
      */
-    protected boolean needsScrollbars() {
+    public boolean showsScrollHandle() {
         return getOffsetSize() < getScrollSize();
     }
 

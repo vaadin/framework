@@ -443,9 +443,9 @@ public class Escalator extends Widget {
              * needs to decide.
              */
             final boolean warrantedYScroll = deltaY != 0
-                    && escalator.verticalScrollbar.needsScrollbars();
+                    && escalator.verticalScrollbar.showsScrollHandle();
             final boolean warrantedXScroll = deltaX != 0
-                    && escalator.horizontalScrollbar.needsScrollbars();
+                    && escalator.horizontalScrollbar.showsScrollHandle();
             if (warrantedYScroll || warrantedXScroll) {
                 event.preventDefault();
             }
@@ -612,77 +612,63 @@ public class Escalator extends Widget {
          * that the sizes of the scroll handles appear correct in the browser
          */
         public void recalculateScrollbarsForVirtualViewport() {
-            // TODO [[rowheight]]: adjust for variable row heights.
-            int innerScrollerHeight = ROW_HEIGHT_PX * body.getRowCount();
+            int scrollContentHeight = ROW_HEIGHT_PX * body.getRowCount();
+            int scrollContentWidth = columnConfiguration.calculateRowWidth();
 
-            double vScrollBottom = footer.height;
-            if (needsHorizontalScrollbars()) {
-                vScrollBottom += horizontalScrollbar.getScrollbarThickness();
+            double tableWrapperHeight = height;
+            double tableWrapperWidth = width;
+
+            boolean verticalScrollNeeded = scrollContentHeight > tableWrapperHeight
+                    - header.height - footer.height;
+            boolean horizontalScrollNeeded = scrollContentWidth > tableWrapperWidth;
+
+            // One dimension got scrollbars, but not the other. Recheck time!
+            if (verticalScrollNeeded != horizontalScrollNeeded) {
+                if (!verticalScrollNeeded && horizontalScrollNeeded) {
+                    verticalScrollNeeded = scrollContentHeight > tableWrapperHeight
+                            - header.height
+                            - footer.height
+                            - horizontalScrollbar.getScrollbarThickness();
+                } else {
+                    horizontalScrollNeeded = scrollContentWidth > tableWrapperWidth
+                            - verticalScrollbar.getScrollbarThickness();
+                }
             }
 
-            verticalScrollbar.getElement().getStyle()
-                    .setTop(header.height, Unit.PX);
-            verticalScrollbar.getElement().getStyle()
-                    .setBottom(vScrollBottom, Unit.PX);
-            verticalScrollbar.setScrollSize(innerScrollerHeight);
-
-            final Range unfrozenRange = Range.between(
-                    columnConfiguration.getFrozenColumnCount(),
-                    columnConfiguration.getColumnCount());
-            final int scrollwidth = columnConfiguration
-                    .getCalculatedColumnsWidth(unfrozenRange);
-            horizontalScrollbar.setScrollSize(scrollwidth);
-
-            final Style hScrollbarStyle = horizontalScrollbar.getElement()
-                    .getStyle();
-            if (needsVerticalScrollbars()) {
-                final int hScrollbarRight = verticalScrollbar
+            // let's fix the table wrapper size, since it's now stable.
+            if (verticalScrollNeeded) {
+                tableWrapperWidth -= verticalScrollbar.getScrollbarThickness();
+            }
+            if (horizontalScrollNeeded) {
+                tableWrapperHeight -= horizontalScrollbar
                         .getScrollbarThickness();
-                hScrollbarStyle.setRight(hScrollbarRight, Unit.PX);
-            } else {
-                hScrollbarStyle.clearRight();
             }
+            tableWrapper.getStyle().setHeight(tableWrapperHeight, Unit.PX);
+            tableWrapper.getStyle().setWidth(tableWrapperWidth, Unit.PX);
+
+            verticalScrollbar.setOffsetSize((int) (tableWrapperHeight
+                    - footer.height - header.height));
+            verticalScrollbar.setScrollSize(scrollContentHeight);
 
             /*
              * If decreasing the amount of frozen columns, and scrolled to the
-             * right, the scroll position will reset. So we need to remember the
-             * scroll position, and re-apply it once the scrollbar size has been
-             * adjusted.
+             * right, the scroll position might reset. So we need to remember
+             * the scroll position, and re-apply it once the scrollbar size has
+             * been adjusted.
              */
-            final int scrollPos = horizontalScrollbar.getScrollPos();
-            final int leftPos = columnConfiguration
-                    .getCalculatedColumnsWidth(Range.withLength(0,
-                            columnConfiguration.frozenColumns));
+            int prevScrollPos = horizontalScrollbar.getScrollPos();
+
+            int unfrozenPixels = columnConfiguration
+                    .getCalculatedColumnsWidth(Range.between(
+                            columnConfiguration.getFrozenColumnCount(),
+                            columnConfiguration.getColumnCount()));
+            int frozenPixels = scrollContentWidth - unfrozenPixels;
+            double hScrollOffsetWidth = tableWrapperWidth - frozenPixels;
+            horizontalScrollbar.setOffsetSize((int) hScrollOffsetWidth);
+            horizontalScrollbar.setScrollSize(unfrozenPixels);
             horizontalScrollbar.getElement().getStyle()
-                    .setLeft(leftPos, Unit.PX);
-            horizontalScrollbar.setScrollPos(scrollPos);
-
-            // we might've got new or got rid of old scrollbars.
-            recalculateTableWrapperSize();
-
-            verticalScrollbar.recalculateMaxScrollPos();
-            horizontalScrollbar.recalculateMaxScrollPos();
-        }
-
-        /**
-         * Makes sure that the viewport of the table is the correct size, and
-         * that it takes any possible scrollbars into account
-         */
-        public void recalculateTableWrapperSize() {
-            double wrapperHeight = height;
-            if (horizontalScrollbar.getOffsetSize() < horizontalScrollbar
-                    .getScrollSize()) {
-                wrapperHeight -= horizontalScrollbar.getScrollbarThickness();
-            }
-
-            double wrapperWidth = width;
-            if (verticalScrollbar.getOffsetSize() - footer.height < verticalScrollbar
-                    .getScrollSize()) {
-                wrapperWidth -= verticalScrollbar.getScrollbarThickness();
-            }
-
-            tableWrapper.getStyle().setHeight(wrapperHeight, Unit.PX);
-            tableWrapper.getStyle().setWidth(wrapperWidth, Unit.PX);
+                    .setLeft(frozenPixels, Unit.PX);
+            horizontalScrollbar.setScrollPos(prevScrollPos);
         }
 
         /**
@@ -910,7 +896,7 @@ public class Escalator extends Widget {
             final int viewportStartPx = getScrollLeft();
             int viewportEndPx = viewportStartPx + getElement().getOffsetWidth()
                     - frozenPixels;
-            if (needsVerticalScrollbars()) {
+            if (verticalScrollbar.showsScrollHandle()) {
                 viewportEndPx -= Util.getNativeScrollbarSize();
             }
 
@@ -1616,6 +1602,7 @@ public class Escalator extends Widget {
         @Override
         protected void sectionHeightCalculated() {
             bodyElem.getStyle().setMarginTop(height, Unit.PX);
+            verticalScrollbar.getElement().getStyle().setTop(height, Unit.PX);
         }
 
         @Override
@@ -3471,20 +3458,9 @@ public class Escalator extends Widget {
             rowContainer.recalculateSectionHeight();
         }
 
-        scroller.recalculateTableWrapperSize();
         scroller.recalculateScrollbarsForVirtualViewport();
         body.verifyEscalatorCount();
         Profiler.leave("Escalator.recalculateElementSizes");
-    }
-
-    private boolean needsVerticalScrollbars() {
-        // TODO [[rowheight]]: take variable row heights into account
-        final double bodyHeight = ROW_HEIGHT_PX * body.getRowCount();
-        return height < header.height + bodyHeight + footer.height;
-    }
-
-    private boolean needsHorizontalScrollbars() {
-        return width < columnConfiguration.calculateRowWidth();
     }
 
     /**
