@@ -51,32 +51,80 @@ public class LocatorImpl implements Locator {
     int line;
     int column;
 
-    @Override
     public String getURI() {
         return uri;
     }
 
-    @Override
     public int getLineNumber() {
         return line;
     }
 
-    @Override
     public int getColumnNumber() {
         return column;
     }
 
     /**
-     * Creates a LocatorImpl
+     * Creates a new LocatorImpl
+     */
+    public LocatorImpl(Parser p) {
+        if (W3CDebug) {
+            System.err.println("LocatorImpl::newLocator(" + p + ");");
+        }
+        uri = p.source.getURI();
+        line = p.token.beginLine;
+        column = p.token.beginColumn;
+    }
+
+    /**
+     * Reinitializes a LocatorImpl
+     */
+    public LocatorImpl(Parser p, Token tok) {
+        if (W3CDebug) {
+            System.err.println("LocatorImpl::newLocator(" + p + ", " + tok
+                    + ");");
+        }
+        uri = p.source.getURI();
+        line = tok.beginLine;
+        column = tok.beginColumn;
+    }
+
+    /**
+     * Reinitializes a LocatorImpl
      */
     public LocatorImpl(Parser p, int line, int column) {
         if (W3CDebug) {
             System.err.println("LocatorImpl::newLocator(" + p + ", " + line
                     + ", " + column + ");");
         }
-        uri = p.getInputSource().getURI();
+        uri = p.source.getURI();
         this.line = line;
         this.column = column;
+    }
+
+    /**
+     * Reinitializes a LocatorImpl
+     */
+    public LocatorImpl reInit(Parser p) {
+        if (W3CDebug) {
+            System.err.println("LocatorImpl::reInit(" + p + ");");
+        }
+        uri = p.source.getURI();
+        line = p.token.beginLine;
+        column = p.token.beginColumn;
+        return this;
+    }
+
+    /**
+     * Reinitializes a LocatorImpl
+     */
+    public LocatorImpl reInit(Parser p, Token tok) {
+        if (W3CDebug) {
+            System.err.println("LocatorImpl::reInit(" + p + ", " + tok + ");");
+        }
+        uri = p.source.getURI();
+        line = tok.beginLine;
+        column = tok.beginColumn;
+        return this;
     }
 
     /**
@@ -87,7 +135,7 @@ public class LocatorImpl implements Locator {
             System.err.println("LocatorImpl::reInit(" + p + ", " + line + ", "
                     + column + ");");
         }
-        uri = p.getInputSource().getURI();
+        uri = p.source.getURI();
         this.line = line;
         this.column = column;
         return this;

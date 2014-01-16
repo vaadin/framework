@@ -171,7 +171,7 @@ public class ScssStylesheet extends Node {
             source.setEncoding(parentStylesheet.getCharset());
         }
 
-        Parser parser = Parser.ParserAccessor.getParser();
+        Parser parser = new Parser();
         parser.setErrorHandler(errorHandler);
         parser.setDocumentHandler(documentHandler);
 

@@ -43,7 +43,7 @@ public class ControlDirectives extends AbstractTestBase {
 
     @Test
     public void testParser() throws CSSException, IOException {
-        Parser parser = Parser.ParserAccessor.getParser();
+        Parser parser = new Parser();
         SCSSDocumentHandler handler = new SCSSDocumentHandlerImpl();
         parser.setDocumentHandler(handler);
         parser.parseStyleSheet(getClass().getResource(scss).getPath());

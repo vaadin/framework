@@ -34,7 +34,7 @@ public class ParserTest {
 
     @Test
     public void testParsePropertyValue() throws CSSException, IOException {
-        Parser parser = Parser.ParserAccessor.getParser();
+        Parser parser = new Parser();
 
         LexicalUnit value = parser.parsePropertyValue(new InputSource(
                 new StringReader("$margin/2;")));
@@ -53,7 +53,7 @@ public class ParserTest {
 
     @Test
     public void testCanIngoreSingleLineComment() {
-        Parser parser = Parser.ParserAccessor.getParser();
+        Parser parser = new Parser();
         SCSSDocumentHandler handler = new SCSSDocumentHandlerImpl();
         parser.setDocumentHandler(handler);
         try {

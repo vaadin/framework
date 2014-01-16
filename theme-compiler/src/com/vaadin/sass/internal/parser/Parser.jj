@@ -30,7 +30,7 @@ options {
        DEBUG_PARSER = true; */
 }
 
-PARSER_BEGIN(ParserImpl)
+PARSER_BEGIN(Parser)
 
 package com.vaadin.sass.internal.parser;
 
@@ -70,7 +70,7 @@ import com.vaadin.sass.internal.tree.*;
  * @author Philippe Le H�garet
  * @version $Revision: 1.15 $
  */
-public class ParserImpl implements org.w3c.css.sac.Parser, Parser {
+public class Parser implements org.w3c.css.sac.Parser {
 
     // replaces all \t, \n, etc with this StringBuffer.
     static final StringBuilder SPACE = new StringBuilder(" ");
@@ -91,7 +91,7 @@ public class ParserImpl implements org.w3c.css.sac.Parser, Parser {
     /**
      * Creates a new Parser
      */
-    public ParserImpl() {
+    public Parser() {
 	this((CharStream) null);
     }
 
@@ -397,17 +397,17 @@ public class ParserImpl implements org.w3c.css.sac.Parser, Parser {
     private LocatorImpl currentLocator;
     private Locator getLocator() {
 	if (currentLocator == null) {
-	    currentLocator = new LocatorImpl(this, token.beginLine, token.beginColumn);
+	    currentLocator = new LocatorImpl(this);
 	    return currentLocator;
 	}
-	return currentLocator.reInit(this, token.beginLine, token.beginColumn);
+	return currentLocator.reInit(this);
     }
     private LocatorImpl getLocator(Token save) {
 	if (currentLocator == null) {
-	    currentLocator = new LocatorImpl(this, save.beginLine, save.beginColumn);
+	    currentLocator = new LocatorImpl(this, save);
 	    return currentLocator;
 	}
-	return currentLocator.reInit(this, save.beginLine, save.beginColumn);
+	return currentLocator.reInit(this, save);
     }
 
     private void reportError(Locator l, Exception e) {
@@ -455,7 +455,7 @@ public class ParserImpl implements org.w3c.css.sac.Parser, Parser {
     }
 }
 
-PARSER_END(ParserImpl)
+PARSER_END(Parser)
 
 /*
  * The tokenizer 
@@ -465,7 +465,7 @@ PARSER_END(ParserImpl)
 TOKEN :
 {
     < S : ( [ " ", "\t" , "\n" , "\r", "\f" ] )+ > 
-	{ image = ParserImpl.SPACE; }
+	{ image = Parser.SPACE; }
 }
 
 /*

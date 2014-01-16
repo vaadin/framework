@@ -36,6 +36,7 @@
         <path location="${gwt.dev.super.src}" />
         <path location="${gwt.dev.src}" />
         <path refid="client-compiler.deps" />
+        <path refid="theme-compiler.deps" />
         <path refid="server.deps" />
         <path refid="shared.deps" />
         <path refid="uitest.deps" />
@@ -67,14 +68,9 @@
         </antcall>
     </target>
 
-    <target name="compile-theme" depends="generate-theme-compiler">
-        <path id="theme.classpath">
-            <path refid="classpath"/>
-            <path refid="theme-compiler.deps" />
-        </path>
-
+    <target name="compile-theme">
         <java classname="com.vaadin.buildhelpers.CompileTheme" failonerror="yes" fork="yes">
-            <classpath refid="theme.classpath" />
+            <classpath refid="classpath" />
             <jvmarg value="-Djava.awt.headless=true" />
             <arg value="--theme" />
             <arg value="${theme}" />
@@ -145,8 +141,5 @@
             <fileset dir="${push.js.dir}" includes="VAADIN/vaadinPush*">
             </fileset>
         </copy>
-    </target>
-    <target name="generate-theme-compiler">
-        <ant antfile="${basedir}/theme-compiler/build.xml" target="parser" dir="${basedir}/theme-compiler" />
     </target>
 </project>
