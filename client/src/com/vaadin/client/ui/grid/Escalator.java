@@ -567,15 +567,17 @@ public class Escalator extends Widget {
             var hScrollElem = hScroll.@com.vaadin.client.ui.grid.ScrollbarBundle::getElement()();
 
             return $entry(function(e) {
+                var target = e.target || e.srcElement; // IE8 uses e.scrElement
+            
                 // in case the scroll event was native (i.e. scrollbars were dragged, or
                 // the scrollTop/Left was manually modified), the bundles have old cache
                 // values. We need to make sure that the caches are kept up to date.
-                if (e.target === vScrollElem) {
+                if (target === vScrollElem) {
                     vScroll.@com.vaadin.client.ui.grid.ScrollbarBundle::updateScrollPosFromDom()();
-                } else if (e.target === hScrollElem) {
+                } else if (target === hScrollElem) {
                     hScroll.@com.vaadin.client.ui.grid.ScrollbarBundle::updateScrollPosFromDom()();
                 } else {
-                    $wnd.console.error("unexpected scroll target: "+e.target);
+                    $wnd.console.error("unexpected scroll target: "+target);
                 }
 
                 esc.@com.vaadin.client.ui.grid.Escalator::onScroll()();

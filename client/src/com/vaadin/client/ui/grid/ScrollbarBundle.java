@@ -277,7 +277,10 @@ abstract class ScrollbarBundle {
      * @return the new scroll position in pixels
      */
     public final int getScrollPos() {
-        assert internalGetScrollPos() == scrollPos : "calculated scroll position did not match the actual scroll position";
+        assert internalGetScrollPos() == scrollPos : "calculated scroll position ("
+                + scrollPos
+                + ") did not match the DOM element scroll position ("
+                + internalGetScrollPos() + ")";
         return scrollPos;
     }
 
