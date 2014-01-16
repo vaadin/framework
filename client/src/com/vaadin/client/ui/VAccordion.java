@@ -463,7 +463,6 @@ public class VAccordion extends VTabsheetBase {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Iterator<Widget> getWidgetIterator() {
         return widgets.iterator();
     }

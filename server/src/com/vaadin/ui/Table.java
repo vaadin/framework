@@ -2165,7 +2165,6 @@ public class Table extends AbstractSelect implements Action.Container,
             // more efficient implementation for containers supporting access by
             // index
 
-            Container.Indexed indexed = ((Container.Indexed) items);
             List<?> itemIds = getItemIds(firstIndex, rows);
             for (int i = 0; i < rows && i < itemIds.size(); i++) {
                 Object id = itemIds.get(i);

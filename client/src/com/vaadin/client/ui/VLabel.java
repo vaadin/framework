@@ -18,7 +18,6 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
 import com.vaadin.client.VTooltip;
@@ -27,8 +26,6 @@ public class VLabel extends HTML {
 
     public static final String CLASSNAME = "v-label";
     private static final String CLASSNAME_UNDEFINED_WIDTH = "v-label-undef-w";
-
-    private ApplicationConnection connection;
 
     public VLabel() {
         super();
@@ -70,10 +67,5 @@ public class VLabel extends HTML {
         } else {
             super.setText(text);
         }
-    }
-
-    /** For internal use only. May be removed or replaced in the future. */
-    public void setConnection(ApplicationConnection client) {
-        connection = client;
     }
 }

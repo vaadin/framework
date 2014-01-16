@@ -88,7 +88,6 @@ public class TicketTests {
         EasyMock.expect(delegate.getCountStatement())
                 .andAnswer(new IAnswer<StatementHelper>() {
                     @Override
-                    @SuppressWarnings("deprecation")
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();
                         StringBuffer query = new StringBuffer(

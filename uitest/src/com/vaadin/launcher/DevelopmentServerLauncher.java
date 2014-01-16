@@ -217,7 +217,6 @@ public class DevelopmentServerLauncher {
                             Socket accept = serverSocket.accept();
                             // First stop listening to the port
                             serverSocket.close();
-                            final Thread stopThread = Thread.currentThread();
 
                             // Start a thread that kills the JVM if
                             // server.stop() doesn't have any effect

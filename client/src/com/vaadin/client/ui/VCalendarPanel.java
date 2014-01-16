@@ -170,8 +170,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     private Resolution resolution = Resolution.YEAR;
 
-    private int focusedRow;
-
     private Timer mouseTimer;
 
     private Date value;
@@ -256,7 +254,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                             if (curday.getDate().equals(date)) {
                                 curday.addStyleDependentName(CN_FOCUSED);
                                 focusedDay = curday;
-                                focusedRow = i;
                                 return;
                             }
                         }
@@ -741,7 +738,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 }
                 if (curr.equals(focusedDate)) {
                     focusedDay = day;
-                    focusedRow = weekOfMonth;
                     if (hasFocus) {
                         day.addStyleDependentName(CN_FOCUSED);
                     }
@@ -1795,10 +1791,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
          * Updates the valus to correspond to the values in value
          */
         public void updateTimes() {
-            boolean selected = true;
             if (value == null) {
                 value = new Date();
-                selected = false;
             }
             if (getDateTimeService().isTwelveHourClock()) {
                 int h = value.getHours();
@@ -1831,10 +1825,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 ampm.setEnabled(isEnabled());
             }
 
-        }
-
-        private int getMilliseconds() {
-            return DateTimeService.getMilliseconds(value);
         }
 
         private DateTimeService getDateTimeService() {
@@ -2034,7 +2024,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private static final String SUBPART_HOUR_SELECT = "h";
     private static final String SUBPART_MINUTE_SELECT = "m";
     private static final String SUBPART_SECS_SELECT = "s";
-    private static final String SUBPART_MSECS_SELECT = "ms";
     private static final String SUBPART_AMPM_SELECT = "ampm";
     private static final String SUBPART_DAY = "day";
     private static final String SUBPART_MONTH_YEAR_HEADER = "header";

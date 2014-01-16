@@ -313,11 +313,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         private boolean closable = false;
         private Element closeButton;
         private Tab tab;
-        private ApplicationConnection client;
 
         TabCaption(Tab tab, ApplicationConnection client) {
             super(client);
-            this.client = client;
             this.tab = tab;
 
             AriaHelper.ensureHasId(getElement());

@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -54,9 +53,6 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0
  */
 public class FieldGroup implements Serializable {
-
-    private static final Logger logger = Logger.getLogger(FieldGroup.class
-            .getName());
 
     private Item itemDataSource;
     private boolean buffered = true;
@@ -1013,9 +1009,7 @@ public class FieldGroup implements Serializable {
      */
     public Field<?> buildAndBind(String caption, Object propertyId)
             throws BindException {
-        Class<?> type = getPropertyType(propertyId);
         return buildAndBind(caption, propertyId, Field.class);
-
     }
 
     /**

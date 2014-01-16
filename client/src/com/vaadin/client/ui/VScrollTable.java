@@ -6037,7 +6037,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             private Element getEventTargetTdOrTr(Event event) {
                 final Element eventTarget = event.getEventTarget().cast();
                 Widget widget = Util.findWidget(eventTarget, null);
-                final Element thisTrElement = getElement();
 
                 if (widget != this) {
                     /*

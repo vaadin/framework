@@ -35,7 +35,6 @@ public class MonthGrid extends FocusableGrid implements KeyDownHandler {
     private SimpleDayCell selectionEnd;
     private final VCalendar calendar;
     private boolean rangeSelectDisabled;
-    private boolean disabled;
     private boolean enabled = true;
     private final HandlerRegistration keyDownHandler;
 

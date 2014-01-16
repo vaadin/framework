@@ -31,7 +31,6 @@ import com.vaadin.event.ConnectorActionManager;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
-import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
@@ -85,8 +84,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
     private Unit heightUnit = Unit.PIXELS;
     private static final Pattern sizePattern = Pattern
             .compile("^(-?\\d+(\\.\\d+)?)(%|px|em|rem|ex|in|cm|mm|pt|pc)?$");
-
-    private ErrorHandler errorHandler = null;
 
     /**
      * Keeps track of the Actions added to this component; the actual

@@ -19,7 +19,6 @@
 package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.UIDL;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
 import com.vaadin.ui.AbstractSelect;
@@ -36,8 +35,6 @@ final public class VIsOverId extends VAcceptCriterion {
                     .getCurrentDropHandler();
             ComponentConnector dropHandlerConnector = currentDropHandler
                     .getConnector();
-            ConnectorMap paintableMap = ConnectorMap.get(currentDropHandler
-                    .getApplicationConnection());
 
             String pid2 = dropHandlerConnector.getConnectorId();
             if (pid2.equals(pid)) {

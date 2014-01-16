@@ -170,7 +170,6 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
 
-        final Element target = DOM.eventGetTarget(event);
         final int type = DOM.eventGetType(event);
         if (type == Event.ONKEYDOWN && shortcutHandler != null) {
             shortcutHandler.handleKeyboardEvent(event);

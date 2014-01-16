@@ -18,7 +18,6 @@ package com.vaadin.ui;
 
 import java.lang.reflect.Method;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractProperty;
@@ -55,9 +54,6 @@ import com.vaadin.shared.util.SharedUtil;
 public class Label extends AbstractComponent implements Property<String>,
         Property.Viewer, Property.ValueChangeListener,
         Property.ValueChangeNotifier, Comparable<Label> {
-
-    private static final Logger logger = Logger
-            .getLogger(Label.class.getName());
 
     /**
      * @deprecated As of 7.0, use {@link ContentMode#TEXT} instead

@@ -37,7 +37,6 @@ public class FetchReleaseNotesTickets {
         URLConnection connection = url.openConnection();
         InputStream urlStream = connection.getInputStream();
 
-        @SuppressWarnings("unchecked")
         List<String> tickets = IOUtils.readLines(urlStream);
 
         for (String ticket : tickets) {

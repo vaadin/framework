@@ -316,8 +316,6 @@ public class LegacyCommunicationManager implements Serializable {
     private final HashMap<Class<? extends ClientConnector>, Integer> typeToKey = new HashMap<Class<? extends ClientConnector>, Integer>();
     private int nextTypeKey = 0;
 
-    private BootstrapHandler bootstrapHandler;
-
     /**
      * @deprecated As of 7.1. Will be removed in the future.
      */

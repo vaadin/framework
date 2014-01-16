@@ -49,7 +49,6 @@ import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.ServerConnector;
@@ -192,7 +191,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
-        ConnectorMap paintableMap = ConnectorMap.get(getConnection());
         getWidget().id = getConnectorId();
         boolean firstPaint = getWidget().connection == null;
         getWidget().connection = client;

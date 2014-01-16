@@ -306,7 +306,7 @@ public class TestIndexedContainer extends AbstractInMemoryContainerTest {
         Capture<ItemAddEvent> capturedEvent = captureAddEvent(addListener);
         EasyMock.replay(addListener);
 
-        Object itemId = container.addItemAt(1);
+        container.addItemAt(1);
 
         assertEquals(1, capturedEvent.getValue().getFirstIndex());
     }
