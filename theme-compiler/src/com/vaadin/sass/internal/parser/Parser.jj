@@ -1491,6 +1491,7 @@ void variable() :
 		":" ( <S> )* exp=expr() ( guarded=guarded() )?(";"(<S>)*)+
 		//raw=skipStatementUntilSemiColon()
 		{
+		    exp = replaceNullValues(exp);
 		    documentHandler.variable(name, exp, guarded);
 		}
 	}catch (JumpException e) {
@@ -1518,6 +1519,24 @@ void variable() :
 		skipAfterExpression();
 	    }
 	}
+}
+
+JAVACODE
+LexicalUnitImpl replaceNullValues(LexicalUnitImpl unit) {
+    if(unit == null){
+        return null;
+    }
+    if (unit.getNextLexicalUnit() != null) {
+        unit.setNextLexicalUnit(replaceNullValues(unit.getNextLexicalUnit()));
+    }
+    if (unit.getLexicalUnitType() == SCSSLexicalUnit.SAC_IDENT
+            && "null".equals(unit.getStringValue())) {
+        LexicalUnitImpl next = unit.getNextLexicalUnit();
+        unit = LexicalUnitImpl.createNull(unit.getLineNumber(), unit.getColumnNumber(), 
+                                          unit.getPreviousLexicalUnit());
+        unit.setNextLexicalUnit(next);
+    }
+    return unit;
 }
 
 void controlDirective() :

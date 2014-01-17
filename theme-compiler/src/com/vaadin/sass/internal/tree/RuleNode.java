@@ -58,13 +58,18 @@ public class RuleNode extends Node implements IVariableNode {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(variable).append(": ").append(value.toString());
-        builder.append(important ? " !important;" : ";");
-        if (comment != null) {
-            builder.append(comment);
+        String stringValue = value.toString()
+                + (important ? " !important" : "");
+        if (!"".equals(stringValue.trim())) {
+            stringValue = variable + ": " + stringValue + ";";
+        } else {
+            stringValue = "";
         }
-        return builder.toString();
+
+        if (comment != null) {
+            stringValue += comment;
+        }
+        return stringValue;
     }
 
     public boolean isImportant() {
