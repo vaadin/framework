@@ -227,6 +227,10 @@ input::-ms-clear {
 	font-size: 0;
 	line-height: normal;
 }
+/* Set font-size in order to make Firefox scrolling better #11353 */
+.v-ff & .v-scrollable {
+	font-size: $font-size;
+}
 .v-ios.v-webkit & .v-scrollable {
 	-webkit-overflow-scrolling: touch; 
 }
