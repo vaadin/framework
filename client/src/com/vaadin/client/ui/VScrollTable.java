@@ -1325,7 +1325,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
         } else {
             // multiselect mode
-            setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
+            // this is a hack to get around an IE issue in
+            // MultiSelectWithRemovedRow test
+            if (firstRowInViewPort >= 0) {
+                setRowFocus(scrollBody.getRowByRowIndex(firstRowInViewPort));
+            } else {
+                setRowFocus(scrollBody.getRowByRowIndex(scrollBody
+                        .getFirstRendered()));
+            }
         }
     }
 
