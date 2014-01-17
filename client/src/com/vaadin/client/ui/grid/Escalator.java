@@ -442,7 +442,13 @@ public class Escalator extends Widget {
              * TODO: only prevent if not scrolled to end/bottom. Or no? UX team
              * needs to decide.
              */
-            event.preventDefault();
+            final boolean warrantedYScroll = deltaY != 0
+                    && escalator.verticalScrollbar.needsScrollbars();
+            final boolean warrantedXScroll = deltaX != 0
+                    && escalator.horizontalScrollbar.needsScrollbars();
+            if (warrantedYScroll || warrantedXScroll) {
+                event.preventDefault();
+            }
         }
     }
 
