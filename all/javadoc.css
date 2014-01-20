@@ -1,0 +1,236 @@
+@charset "UTF-8";
+
+/* 
+ * stylesheet for Vaadin Javadoc when compiled with Java 6 
+ */
+body {
+    background-color: rgb(244, 244, 240);
+    color: rgb(70, 68, 64);
+    font-size: 16px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: lighter;
+    line-height: 18px;
+    margin: 10px 14px;
+}
+
+body[onload] {
+    background-color: rgb(255, 255, 255);
+    margin: 8px 23px;
+}
+
+a:link,a:visited {
+    color: rgb(0, 180, 240);
+    text-decoration: none;
+}
+
+b {
+    font-weight: bolder;
+}
+
+code,pre {
+    font-family: Courier, monospace;
+}
+
+dt {
+    font-size: 12px;
+    color: rgb(120, 119, 109);
+    text-transform: uppercase;
+}
+
+dd>dl>dt {
+    font-size: 13px;
+    text-transform: none;
+}
+
+h2+dl>dt {
+    text-transform: none;
+}
+
+dt>pre,pre>dt {
+    text-transform: initial;
+}
+
+dd {
+    font-size: 14px;
+    margin-left: 2.5em;
+}
+
+dd:first-child {
+    font-size: 13px;
+}
+
+dd>dl>dd {
+    font-size: 12px;
+}
+
+h1 {
+    font-size: 32px
+}
+
+h2 {
+    font-size: 24px;
+}
+
+h3 {
+    font-size: 16px;
+}
+
+h1,h2,h3 {
+    line-height: 30px;
+}
+
+hr {
+    border: 1px solid rgb(233, 233, 225);
+}
+
+pre,h2+ul {
+    font-size: 12px;
+}
+
+table {
+    border: none;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 0;
+}
+
+th {
+    padding: 0 1ch;
+}
+
+.TableHeadingColor,.TableSubHeadingColor {
+    line-height: 30px;
+}
+
+.TableHeadingColor>th,.TableHeadingColor>th>font>b,.TableSubHeadingColor>th,.TableSubHeadingColor>th>b
+    {
+    font-weight: inherit;
+}
+
+.TableHeadingColor>th>font {
+    font-size: 18px;
+}
+
+.TableSubHeadingColor {
+    font-size: 14px;
+}
+
+.TableHeadingColor,.TableSubHeadingColor {
+    background: rgb(233, 233, 225);
+}
+
+.TableRowColor {
+    background: #FFFFFF;
+}
+
+.TableRowColor:nth-child(odd) {
+    background-color: rgb(244, 244, 240);
+}
+
+.TableRowColor>td {
+    font-size: 12px;
+    border: none;
+    padding: 1ex 1ch
+}
+
+.TableRowColor>td>font {
+    font-size: 11px;
+}
+
+.TableHeadingColor,.TableRowColor,.TableSubHeadingColor>th {
+    border: none;
+    border-color: transparent;
+}
+
+table[border="1"] {
+    border: 2px solid rgb(233, 233, 225);
+}
+
+.FrameTitleFont {
+    font-size: 18px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: bolder;
+    line-height: 30px;
+}
+
+.FrameHeadingFont {
+    font-size: 12px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    color: rgb(120, 119, 109);
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+td>.FrameHeadingFont {
+    margin-top: 12px;
+}
+
+.FrameItemFont {
+    font-size: 90%;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+.NavBarCell1 {
+    background-color: rgb(245, 245, 241);
+    border: 2px solid rgb(245, 245, 241);
+}
+
+.NavBarCell1+td[rowspan="3"] {
+    display: none;
+}
+
+.NavBarCell1,.NavBarCell1Rev {
+    font-size: 0;
+}
+
+.NavBarCell1>*,.NavBarCell1Rev>* {
+    font-size: 14px;
+}
+
+.NavBarCell1 .NavBarCell1,.NavBarCell1 .NavBarCell1Rev {
+    padding: 3px 8px;
+    line-height: 1;
+    vertical-align: baseline;
+}
+
+.NavBarCell1Rev {
+    background-color: rgb(0, 180, 240);
+    border-radius: 3px;
+}
+
+.NavBarFont1 {
+    font-family: Helvetica, Arial, sans-serif;
+    color: rgb(70, 68, 64);
+}
+
+.NavBarFont1Rev {
+    font-family: Helvetica, Arial, sans-serif;
+    color: rgb(255, 255, 255);
+}
+
+.NavBarCell2 {
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: #FFFFFF;
+    padding-top: 6px;
+}
+
+.NavBarCell2:first-child {
+    color: transparent;
+}
+
+.NavBarCell2>font,.NavBarCell3>font {
+    font-size: 11px;
+}
+
+.NavBarCell2>font>a>b {
+    font-weight: normal;
+}
+
+.NavBarCell3 {
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: #FFFFFF;
+}
