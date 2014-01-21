@@ -201,4 +201,20 @@ public class ComponentLocator {
         return client;
     }
 
+    /**
+     * Check if a given selector is valid for LegacyLocatorStrategy.
+     * 
+     * @param path
+     *            Vaadin selector path
+     * @return true if passes path validation with LegacyLocatorStrategy
+     */
+    public boolean isValidForLegacyLocator(String path) {
+        for (LocatorStrategy ls : locatorStrategies) {
+            if (ls instanceof LegacyLocatorStrategy) {
+                return ls.validatePath(path);
+            }
+        }
+        return false;
+    }
+
 }

@@ -55,25 +55,14 @@ public class TestBenchSection implements Section {
      */
     private static class SelectorWidget extends HTML implements
             MouseOverHandler, MouseOutHandler {
-        private static int selectorCounter = 1;
+        private final SelectorPath path;
 
-        final private SelectorPath path;
-        final private SelectorWidget parent;
-        final private int selectorIndex = selectorCounter++;
-
-        public SelectorWidget(final SelectorPath path,
-                final SelectorWidget parent) {
+        public SelectorWidget(final SelectorPath path) {
             this.path = path;
-            this.parent = parent;
 
-            String parentString = (parent != null) ? ("element" + parent.selectorIndex)
-                    : null;
-            String html = "<div class=\""
-                    + VDebugWindow.STYLENAME
+            String html = "<div class=\"" + VDebugWindow.STYLENAME
                     + "-selector\"><span class=\"tb-selector\">"
-                    + Util.escapeHTML("WebElement element" + selectorIndex
-                            + " = " + path.getJUnitSelector(parentString) + ";")
-                    + "</span></div>";
+                    + Util.escapeHTML(path.getElementQuery()) + "</span></div>";
             setHTML(html);
 
             addMouseOverHandler(this);
@@ -82,10 +71,10 @@ public class TestBenchSection implements Section {
 
         @Override
         public void onMouseOver(MouseOverEvent event) {
-            ApplicationConnection a = path.getLocator().getClient();
-            Element element = path.findElement();
+            Highlight.hideAll();
+
+            Element element = path.getElement();
             if (null != element) {
-                Highlight.hideAll();
                 Highlight.show(element);
             }
         }
@@ -96,12 +85,10 @@ public class TestBenchSection implements Section {
         }
     }
 
-    private final DebugButton tabButton = new DebugButton(Icon.SELECTOR,
+    private final DebugButton tabButton = new DebugButton(Icon.WARNING,
             "Pick Vaadin TestBench selectors");
 
     private final FlowPanel content = new FlowPanel();
-
-    private final HierarchyPanel hierarchyPanel = new HierarchyPanel();
 
     private final FlowPanel selectorPanel = new FlowPanel();
     // map from full path to SelectorWidget to enable reuse of old selectors
@@ -110,21 +97,14 @@ public class TestBenchSection implements Section {
     private final FlowPanel controls = new FlowPanel();
 
     private final Button find = new DebugButton(Icon.HIGHLIGHT,
-            "Select a component on the page to inspect it");
-    private final Button refreshHierarchy = new DebugButton(Icon.HIERARCHY,
-            "Refresh the connector hierarchy tree");
+            "Pick an element and generate a query for it");
+
+    private final Button clear = new DebugButton(Icon.CLEAR,
+            "Clear current elements");
 
     private HandlerRegistration highlightModeRegistration = null;
 
     public TestBenchSection() {
-        controls.add(refreshHierarchy);
-        refreshHierarchy.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        refreshHierarchy.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                hierarchyPanel.update();
-            }
-        });
 
         controls.add(find);
         find.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
@@ -135,15 +115,16 @@ public class TestBenchSection implements Section {
             }
         });
 
-        hierarchyPanel.addListener(new SelectConnectorListener() {
+        controls.add(clear);
+        clear.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
+        clear.addClickHandler(new ClickHandler() {
             @Override
-            public void select(ServerConnector connector, Element element) {
-                pickSelector(connector, element);
+            public void onClick(ClickEvent event) {
+                clearResults();
             }
         });
 
         content.setStylePrimaryName(VDebugWindow.STYLENAME + "-testbench");
-        content.add(hierarchyPanel);
         content.add(selectorPanel);
     }
 
@@ -209,33 +190,19 @@ public class TestBenchSection implements Section {
             highlightModeRegistration = null;
             find.removeStyleDependentName(VDebugWindow.STYLENAME_ACTIVE);
         }
+        Highlight.hideAll();
     }
 
     private void pickSelector(ServerConnector connector, Element element) {
-        SelectorPath path = SelectorPath.findTestBenchSelector(connector,
-                element);
 
-        if (null != path) {
-            addSelectorWidgets(path);
-        }
-    }
+        SelectorPath p = new SelectorPath(connector, Util
+                .findPaintable(connector.getConnection(), element).getWidget()
+                .getElement());
+        SelectorWidget w = new SelectorWidget(p);
 
-    private SelectorWidget addSelectorWidgets(SelectorPath path) {
-        // add selector widgets recursively from root towards children, reusing
-        // old ones
-        SelectorPath parent = path.getParent();
-        SelectorWidget parentWidget = null;
-        if (null != parent) {
-            parentWidget = addSelectorWidgets(parent);
-        }
-        SelectorWidget widget = selectorWidgets.get(path);
-        if (null == widget) {
-            // the parent has already been added above
-            widget = new SelectorWidget(path, parentWidget);
-            selectorWidgets.put(path, widget);
-            selectorPanel.add(widget);
-        }
-        return widget;
+        content.add(w);
+
+        stopFind();
     }
 
     private final NativePreviewHandler highlightModeHandler = new NativePreviewHandler() {
@@ -260,6 +227,7 @@ public class TestBenchSection implements Section {
 
                 // make sure that not finding the highlight element only
                 Highlight.hideAll();
+
                 eventTarget = Util.getElementFromPoint(event.getNativeEvent()
                         .getClientX(), event.getNativeEvent().getClientY());
                 ComponentConnector connector = findConnector(eventTarget);
@@ -302,6 +270,10 @@ public class TestBenchSection implements Section {
             }
         }
         return null;
+    }
+
+    private void clearResults() {
+        content.clear();
     }
 
 }

@@ -19,22 +19,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.FastStringSet;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.Util;
-import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.VNotification;
-import com.vaadin.shared.AbstractComponentState;
 
 /**
  * The VaadinFinder locator strategy implements an XPath-like syntax for
@@ -60,15 +56,11 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
     private final ApplicationConnection client;
 
     /**
-     * Internal container/descriptor for search predicates
-     * 
-     * @author Vaadin Ltd
+     * Internal descriptor for connector/element/widget name combinations
      */
-    private static final class Predicate {
-        private String name = "";
-        private String value = "";
-        private boolean wildcard = false;
-        private int index = -1;
+    private static final class ConnectorPath {
+        private String name;
+        private ComponentConnector connector;
     }
 
     public VaadinFinderLocatorStrategy(ApplicationConnection clientConnection) {
@@ -80,11 +72,176 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      */
     @Override
     public String getPathForElement(Element targetElement) {
-        // Path generation functionality is not yet implemented as there is no
-        // current need for it. This might be implemented in the future if the
-        // need arises. Until then, all locator generation is handled by
-        // LegacyLocatorStrategy.
-        return null;
+        if (targetElement == null) {
+            return "";
+        }
+
+        List<ConnectorPath> hierarchy = getConnectorHierarchyForElement(targetElement);
+        List<String> path = new ArrayList<String>();
+
+        // Assemble longname path components back-to-forth with useful
+        // predicates - first try ID, then caption.
+        for (int i = 0; i < hierarchy.size(); ++i) {
+            ConnectorPath cp = hierarchy.get(i);
+            String pathFragment = cp.name;
+            String identifier = getPropertyValue(cp.connector, "id");
+
+            if (identifier != null) {
+                pathFragment += "[id=\"" + identifier + "\"]";
+            } else {
+                identifier = getPropertyValue(cp.connector, "caption");
+                if (identifier != null) {
+                    pathFragment += "[caption=\"" + identifier + "\"]";
+                }
+            }
+            path.add(pathFragment);
+        }
+
+        if (path.size() == 0) {
+            // If we didn't find a single element, return null..
+            return null;
+        }
+
+        return getBestSelector(generateQueries(path), targetElement);
+    }
+
+    /**
+     * Search different queries for the best one. Use the fact that the lowest
+     * possible index is with the last selector. Last selector is the full
+     * search path containing the complete Component hierarchy.
+     * 
+     * @param selectors
+     *            List of selectors
+     * @param target
+     *            Target element
+     * @return Best selector string formatted with a post filter
+     */
+    private String getBestSelector(List<String> selectors, Element target) {
+        // The last selector gives us smallest list index for target element.
+        String bestSelector = selectors.get(selectors.size() - 1);
+        int min = getElementsByPath(bestSelector).indexOf(target);
+        if (selectors.size() > 1
+                && min == getElementsByPath(selectors.get(0)).indexOf(target)) {
+            // The first selector has same index as last. It's much shorter.
+            bestSelector = selectors.get(0);
+        } else if (selectors.size() > 2) {
+            // See if we get minimum from second last. If not then we already
+            // have the best one.. Second last one contains almost full
+            // component hierarchy.
+            if (getElementsByPath(selectors.get(selectors.size() - 2)).indexOf(
+                    target) == min) {
+                for (int i = 1; i < selectors.size() - 2; ++i) {
+                    // Loop through the remaining selectors and look for one
+                    // with the same index
+                    if (getElementsByPath(selectors.get(i)).indexOf(target) == min) {
+                        bestSelector = selectors.get(i);
+                        break;
+                    }
+                }
+
+            }
+        }
+        return "(" + bestSelector + ")[" + min + "]";
+
+    }
+
+    /**
+     * Function to generate all possible search paths for given component list.
+     * Function strips out all the com.vaadin.ui. prefixes from elements as this
+     * functionality makes generating a query later on easier.
+     * 
+     * @param components
+     *            List of components
+     * @return List of Vaadin selectors
+     */
+    private List<String> generateQueries(List<String> components) {
+        // Prepare to loop through all the elements.
+        List<String> paths = new ArrayList<String>();
+        int compIdx = 0;
+        String basePath = components.get(compIdx).replace("com.vaadin.ui.", "");
+        // Add a basic search for the first element (eg. //Button)
+        paths.add((components.size() == 1 ? "/" : "//") + basePath);
+        while (++compIdx < components.size()) {
+            // Loop through the remaining components
+            for (int i = components.size() - 1; i >= compIdx; --i) {
+                boolean recursive = false;
+                if (i > compIdx) {
+                    recursive = true;
+                }
+                paths.add((i == components.size() - 1 ? "/" : "//")
+                        + components.get(i).replace("com.vaadin.ui.", "")
+                        + (recursive ? "//" : "/") + basePath);
+            }
+            // Add the element at index compIdx to the basePath so it is
+            // included in all the following searches.
+            basePath = components.get(compIdx).replace("com.vaadin.ui.", "")
+                    + "/" + basePath;
+        }
+
+        return paths;
+    }
+
+    /**
+     * Helper method to get the string-form value of a named property of a
+     * component connector
+     * 
+     * @since 7.2
+     * @param c
+     *            any ComponentConnector instance
+     * @param propertyName
+     *            property name to test for
+     * @return a string, if the property is found, or null, if the property does
+     *         not exist on the object (or some other error is encountered).
+     */
+    private String getPropertyValue(ComponentConnector c, String propertyName) {
+        Property prop = AbstractConnector.getStateType(c).getProperty(
+                propertyName);
+        try {
+            return prop.getValue(c.getState()).toString();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Generate a list representing the top-to-bottom connector hierarchy for
+     * any given element. ConnectorPath element provides long- and short names,
+     * as well as connector and widget root element references.
+     * 
+     * @since 7.2
+     * @param elem
+     *            any Element that is part of a widget hierarchy
+     * @return a list of ConnectorPath objects, in descending order towards the
+     *         common root container.
+     */
+    private List<ConnectorPath> getConnectorHierarchyForElement(Element elem) {
+        Element e = elem;
+        ComponentConnector c = Util.findPaintable(client, e);
+        List<ConnectorPath> connectorHierarchy = new ArrayList<ConnectorPath>();
+
+        while (c != null) {
+
+            for (String id : getIDsForConnector(c)) {
+                ConnectorPath cp = new ConnectorPath();
+                cp.name = getFullClassName(id);
+                cp.connector = c;
+
+                // We want to make an exception for the UI object, since it's
+                // our default search context (and can't be found inside itself)
+                if (!cp.name.equals("com.vaadin.ui.UI")) {
+                    connectorHierarchy.add(cp);
+                }
+            }
+
+            e = (Element) e.getParentElement();
+            if (e != null) {
+                c = Util.findPaintable(client, e);
+                e = c != null ? c.getWidget().getElement() : null;
+            }
+
+        }
+
+        return connectorHierarchy;
     }
 
     private boolean isNotificationExpression(String path) {
@@ -118,21 +275,41 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      */
     @Override
     public List<Element> getElementsByPath(String path) {
+        List<SelectorPredicate> postFilters = SelectorPredicate
+                .extractPostFilterPredicates(path);
+        if (postFilters.size() > 0) {
+            path = path.substring(1, path.lastIndexOf(')'));
+        }
 
+        List<Element> elements = new ArrayList<Element>();
         if (isNotificationExpression(path)) {
-            List<Element> elements = new ArrayList<Element>();
 
             for (VNotification n : findNotificationsByPath(path)) {
                 elements.add(n.getElement());
             }
 
-            return elements;
+        } else {
+
+            elements.addAll(eliminateDuplicates(getElementsByPathStartingAtConnector(
+                    path, client.getUIConnector())));
         }
 
-        List<Element> elems = eliminateDuplicates(getElementsByPathStartingAtConnector(
-                path, client.getUIConnector()));
+        for (SelectorPredicate p : postFilters) {
+            // Post filtering supports only indexes and follows instruction
+            // blindly. Index that is outside of our list results into an empty
+            // list and multiple indexes are likely to ruin a search completely
+            if (p.getIndex() >= 0) {
+                if (p.getIndex() >= elements.size()) {
+                    elements.clear();
+                } else {
+                    Element e = elements.get(p.getIndex());
+                    elements.clear();
+                    elements.add(e);
+                }
+            }
+        }
 
-        return elems;
+        return elements;
     }
 
     /**
@@ -140,90 +317,56 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      */
     @Override
     public Element getElementByPath(String path) {
-        if (isNotificationExpression(path)) {
-            return findNotificationsByPath(path).get(0).getElement();
+        List<Element> elements = getElementsByPath(path);
+        if (elements.isEmpty()) {
+            return null;
         }
-        return getElementByPathStartingAtConnector(path,
-                client.getUIConnector());
+        return elements.get(0);
     }
 
     /**
-     * Generate a list of predicates from a single predicate string
-     * 
-     * @param str
-     *            a comma separated string of predicates
-     * @return a List of Predicate objects
+     * {@inheritDoc}
      */
-    private List<Predicate> extractPredicates(String path) {
-        List<Predicate> predicates = new ArrayList<Predicate>();
+    @Override
+    public Element getElementByPathStartingAt(String path, Element root) {
+        List<Element> elements = getElementsByPathStartingAt(path, root);
+        if (elements.isEmpty()) {
+            return null;
+        }
+        return elements.get(0);
 
-        String str = extractPredicateString(path);
-        if (null == str || str.length() == 0) {
-            return predicates;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Element> getElementsByPathStartingAt(String path, Element root) {
+        List<SelectorPredicate> postFilters = SelectorPredicate
+                .extractPostFilterPredicates(path);
+        if (postFilters.size() > 0) {
+            path = path.substring(1, path.lastIndexOf(')'));
         }
 
-        // Extract input strings
-        List<String> input = new ArrayList<String>();
-        {
-            int idx = indexOfIgnoringQuotes(str, ',', 0), p = 0;
-            if (idx == -1) {
-                input.add(str);
-            } else {
-                do {
-                    input.add(str.substring(p, idx));
-                    p = idx + 1;
-                    idx = indexOfIgnoringQuotes(str, ',', p);
-                } while (idx > -1);
-                input.add(str.substring(p));
-            }
-        }
+        List<Element> elements = getElementsByPathStartingAtConnector(path,
+                Util.findPaintable(client, root));
 
-        // Process each predicate into proper predicate descriptor
-        for (String s : input) {
-            Predicate p = new Predicate();
-            s = s.trim();
-
-            try {
-                // If we can parse out the predicate as a pure index argument,
-                // stop processing here.
-                p.index = Integer.parseInt(s);
-                predicates.add(p);
-
-                continue;
-            } catch (Exception e) {
-                p.index = -1;
-            }
-
-            int idx = indexOfIgnoringQuotes(s, '=');
-            if (idx < 0) {
-                continue;
-            }
-            p.name = s.substring(0, idx);
-            p.value = s.substring(idx + 1);
-
-            if (p.value.equals("?")) {
-                p.wildcard = true;
-                p.value = null;
-            } else {
-                // Only unquote predicate value once we're sure it's a proper
-                // value...
-
-                p.value = unquote(p.value);
-            }
-
-            predicates.add(p);
-        }
-
-        // Move any (and all) index predicates to last place in the list.
-        for (int i = 0, l = predicates.size(); i < l - 1; ++i) {
-            if (predicates.get(i).index > -1) {
-                predicates.add(predicates.remove(i));
-                --i;
-                --l;
+        for (SelectorPredicate p : postFilters) {
+            // Post filtering supports only indexes and follows instruction
+            // blindly. Index that is outside of our list results into an empty
+            // list and multiple indexes are likely to ruin a search completely
+            if (p.getIndex() >= 0) {
+                if (p.getIndex() >= elements.size()) {
+                    elements.clear();
+                } else {
+                    Element e = elements.get(p.getIndex());
+                    elements.clear();
+                    elements.add(e);
+                }
             }
         }
 
-        return predicates;
+        return elements;
     }
 
     /**
@@ -245,11 +388,12 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             }
         }
 
-        List<Predicate> predicates = extractPredicates(path);
-        for (Predicate p : predicates) {
+        List<SelectorPredicate> predicates = SelectorPredicate
+                .extractPredicates(path);
+        for (SelectorPredicate p : predicates) {
 
-            if (p.index > -1) {
-                VNotification n = notifications.get(p.index);
+            if (p.getIndex() > -1) {
+                VNotification n = notifications.get(p.getIndex());
                 notifications.clear();
                 if (n != null) {
                     notifications.add(n);
@@ -259,59 +403,6 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         }
 
         return eliminateDuplicates(notifications);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Element getElementByPathStartingAt(String path, Element root) {
-        return getElementByPathStartingAtConnector(path,
-                Util.findPaintable(client, root));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Element> getElementsByPathStartingAt(String path, Element root) {
-        List<Element> elements = getElementsByPathStartingAtConnector(path,
-                Util.findPaintable(client, root));
-        return elements;
-    }
-
-    /**
-     * Finds an element by the specified path, starting traversal of the
-     * connector hierarchy from the specified root.
-     * 
-     * @param path
-     *            the locator path
-     * @param root
-     *            the root connector
-     * @return the element identified by path or null if not found.
-     */
-    private Element getElementByPathStartingAtConnector(String path,
-            ComponentConnector root) {
-        String[] pathComponents = path.split(SUBPART_SEPARATOR);
-        ComponentConnector connector;
-        if (pathComponents[0].length() > 0) {
-            connector = findConnectorByPath(pathComponents[0], root);
-        } else {
-            connector = root;
-        }
-        if (connector != null) {
-            if (pathComponents.length > 1) {
-                // We have subparts
-                if (connector.getWidget() instanceof SubPartAware) {
-                    return ((SubPartAware) connector.getWidget())
-                            .getSubPartElement(pathComponents[1]);
-                } else {
-                    return null;
-                }
-            }
-            return connector.getWidget().getElement();
-        }
-        return null;
     }
 
     /**
@@ -356,41 +447,6 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
     }
 
     /**
-     * Recursively finds a connector for the element identified by the provided
-     * path by traversing the connector hierarchy starting from the
-     * {@code parent} connector.
-     * 
-     * @param path
-     *            The path identifying an element.
-     * @param parent
-     *            The connector to start traversing from.
-     * @return The connector identified by {@code path} or null if no such
-     *         connector could be found.
-     */
-    private ComponentConnector findConnectorByPath(String path,
-            ComponentConnector parent) {
-        boolean findRecursively = path.startsWith("//");
-        // Strip away the one or two slashes from the beginning of the path
-        path = path.substring(findRecursively ? 2 : 1);
-
-        String[] fragments = splitFirstFragmentFromTheRest(path);
-        List<ComponentConnector> potentialMatches = collectPotentialMatches(
-                parent, fragments[0], findRecursively);
-
-        List<ComponentConnector> connectors = filterMatches(potentialMatches,
-                extractPredicates(fragments[0]));
-
-        if (!connectors.isEmpty()) {
-            if (fragments.length > 1) {
-                return findConnectorByPath(fragments[1], connectors.get(0));
-            } else {
-                return connectors.get(0);
-            }
-        }
-        return null;
-    }
-
-    /**
      * Recursively finds connectors for the elements identified by the provided
      * path by traversing the connector hierarchy starting from {@code parents}
      * connectors.
@@ -414,35 +470,14 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         for (ComponentConnector parent : parents) {
             connectors.addAll(filterMatches(
                     collectPotentialMatches(parent, fragments[0],
-                            findRecursively), extractPredicates(fragments[0])));
+                            findRecursively), SelectorPredicate
+                            .extractPredicates(fragments[0])));
         }
 
         if (!connectors.isEmpty() && fragments.length > 1) {
             return (findConnectorsByPath(fragments[1], connectors));
         }
         return eliminateDuplicates(connectors);
-    }
-
-    /**
-     * Returns the predicate string, i.e. the string between the brackets in a
-     * path fragment. Examples: <code>
-     * VTextField[0] => 0
-     * VTextField[caption='foo'] => caption='foo'
-     * </code>
-     * 
-     * @param pathFragment
-     *            The path fragment from which to extract the predicate string.
-     * @return The predicate string for the path fragment or empty string if not
-     *         found.
-     */
-    private String extractPredicateString(String pathFragment) {
-        int ixOpenBracket = indexOfIgnoringQuotes(pathFragment, '[');
-        if (ixOpenBracket >= 0) {
-            int ixCloseBracket = indexOfIgnoringQuotes(pathFragment, ']',
-                    ixOpenBracket);
-            return pathFragment.substring(ixOpenBracket + 1, ixCloseBracket);
-        }
-        return "";
     }
 
     /**
@@ -458,13 +493,13 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      */
     private List<ComponentConnector> filterMatches(
             List<ComponentConnector> potentialMatches,
-            List<Predicate> predicates) {
+            List<SelectorPredicate> predicates) {
 
-        for (Predicate p : predicates) {
+        for (SelectorPredicate p : predicates) {
 
-            if (p.index > -1) {
+            if (p.getIndex() > -1) {
                 try {
-                    ComponentConnector v = potentialMatches.get(p.index);
+                    ComponentConnector v = potentialMatches.get(p.getIndex());
                     potentialMatches.clear();
                     potentialMatches.add(v);
                 } catch (IndexOutOfBoundsException e) {
@@ -476,20 +511,11 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
             for (int i = 0, l = potentialMatches.size(); i < l; ++i) {
 
-                ComponentConnector c = potentialMatches.get(i);
-                Property property = AbstractConnector.getStateType(c)
-                        .getProperty(p.name);
+                String propData = getPropertyValue(potentialMatches.get(i),
+                        p.getName());
 
-                Object propData;
-                try {
-                    propData = property.getValue(c.getState());
-                } catch (NoDataException e) {
-                    propData = null;
-                }
-
-                if ((p.wildcard && propData == null)
-                        || (!p.wildcard && !valueEqualsPropertyValue(p.value,
-                                property, c.getState()))) {
+                if ((p.isWildcard() && propData == null)
+                        || (!p.isWildcard() && !p.getValue().equals(propData))) {
                     potentialMatches.remove(i);
                     --l;
                     --i;
@@ -499,44 +525,6 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         }
 
         return eliminateDuplicates(potentialMatches);
-    }
-
-    /**
-     * Returns true if the value matches the value of the property in the state
-     * object.
-     * 
-     * @param value
-     *            The value to compare against.
-     * @param property
-     *            The property, whose value to check.
-     * @param state
-     *            The connector, whose state object contains the property.
-     * @return true if the values match.
-     */
-    private boolean valueEqualsPropertyValue(String value, Property property,
-            AbstractComponentState state) {
-        try {
-            return value.equals(property.getValue(state));
-        } catch (Exception e) {
-            // The property doesn't exist in the state object, so they aren't
-            // equal.
-            return false;
-        }
-    }
-
-    /**
-     * Removes the surrounding quotes from a string if it is quoted.
-     * 
-     * @param str
-     *            the possibly quoted string
-     * @return an unquoted version of str
-     */
-    private String unquote(String str) {
-        if ((str.startsWith("\"") && str.endsWith("\""))
-                || (str.startsWith("'") && str.endsWith("'"))) {
-            return str.substring(1, str.length() - 1);
-        }
-        return str;
     }
 
     /**
@@ -579,6 +567,15 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         return eliminateDuplicates(potentialMatches);
     }
 
+    private List<String> getIDsForConnector(ComponentConnector connector) {
+        Class<?> connectorClass = connector.getClass();
+        List<String> ids = new ArrayList<String>();
+
+        TypeDataStore.get().findIdentifiersFor(connectorClass).addAllTo(ids);
+
+        return ids;
+    }
+
     /**
      * Determines whether a connector matches a path fragment. This is done by
      * comparing the path fragment to the name of the widget type of the
@@ -593,16 +590,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      */
     private boolean connectorMatchesPathFragment(ComponentConnector connector,
             String widgetName) {
-        Class<?> connectorClass = connector.getClass();
-        List<String> ids = new ArrayList<String>();
 
-        FastStringSet identifiers = TypeDataStore.get().findIdentifiersFor(
-                connectorClass);
-        JsArrayString str = identifiers.dump();
-
-        for (int j = 0; j < str.length(); ++j) {
-            ids.add(str.get(j));
-        }
+        List<String> ids = getIDsForConnector(connector);
 
         Integer[] widgetTags = client.getConfiguration()
                 .getTagsForServerSideClassName(getFullClassName(widgetName));
@@ -677,39 +666,12 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      *         the path.
      */
     private String[] splitFirstFragmentFromTheRest(String path) {
-        int ixOfSlash = indexOfIgnoringQuotes(path, '/');
+        int ixOfSlash = LocatorUtil.indexOfIgnoringQuoted(path, '/');
         if (ixOfSlash > 0) {
             return new String[] { path.substring(0, ixOfSlash),
                     path.substring(ixOfSlash) };
         }
         return new String[] { path };
-    }
-
-    private int indexOfIgnoringQuotes(String str, char find) {
-        return indexOfIgnoringQuotes(str, find, 0);
-    }
-
-    private int indexOfIgnoringQuotes(String str, char find, int startingAt) {
-        boolean quote = false;
-        String quoteChars = "'\"";
-        char currentQuote = '"';
-        for (int i = startingAt; i < str.length(); ++i) {
-            char cur = str.charAt(i);
-            if (quote) {
-                if (cur == currentQuote) {
-                    quote = !quote;
-                }
-                continue;
-            } else if (cur == find) {
-                return i;
-            } else {
-                if (quoteChars.indexOf(cur) >= 0) {
-                    currentQuote = cur;
-                    quote = !quote;
-                }
-            }
-        }
-        return -1;
     }
 
     private String getSimpleClassName(String s) {
