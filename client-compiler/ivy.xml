@@ -58,6 +58,13 @@
         <dependency org="org.apache.james" name="apache-mime4j"
             rev="0.6" conf="build,ide -> default" />
 
+        <dependency org="org.apache.httpcomponents" name="httpclient"
+            rev="4.3.1" conf="build,ide -> default" />
+        <dependency org="org.apache.httpcomponents" name="httpcore"
+            rev="4.3" conf="build,ide -> default" />
+        <dependency org="org.apache.httpcomponents" name="httpmime"
+            rev="4.3.1" conf="build,ide -> default" />
+
         <dependency org="com.vaadin" name="vaadin-client-compiler-deps"
             rev="1.0.2" conf="build,ide -> default" />
 
