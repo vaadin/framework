@@ -13,37 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.tests.push;
 
-package com.vaadin.shared.ui.ui;
-
-/**
- * Transport modes for Push
- * 
- * @since 7.1
- * @author Vaadin Ltd
- */
-public enum Transport {
-    /**
-     * Websockets
-     */
-    WEBSOCKET("websocket"),
-    /**
-     * HTTP streaming
-     */
-    STREAMING("streaming"),
-    /**
-     * HTTP long polling
-     */
-    LONG_POLLING("long-polling");
-
-    private String identifier;
-
-    private Transport(String identifier) {
-        this.identifier = identifier;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
+public class BasicPushLongPollingTest extends BasicPushTest {
 }

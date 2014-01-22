@@ -13,37 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.tests.push;
 
-package com.vaadin.shared.ui.ui;
+import com.vaadin.annotations.Push;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ui.Transport;
+import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 
-/**
- * Transport modes for Push
- * 
- * @since 7.1
- * @author Vaadin Ltd
- */
-public enum Transport {
-    /**
-     * Websockets
-     */
-    WEBSOCKET("websocket"),
-    /**
-     * HTTP streaming
-     */
-    STREAMING("streaming"),
-    /**
-     * HTTP long polling
-     */
-    LONG_POLLING("long-polling");
+@Push(transport = Transport.LONG_POLLING)
+public class PushLargeDataLongPolling extends PushLargeData {
 
-    private String identifier;
-
-    private Transport(String identifier) {
-        this.identifier = identifier;
+    @Override
+    protected void setup(VaadinRequest request) {
+        super.setup(request);
+        getPushConfiguration().setParameter(
+                PushConfigurationState.FALLBACK_TRANSPORT_PARAM, "none");
     }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
 }
