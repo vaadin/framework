@@ -31,28 +31,30 @@
         <dependency org="commons-collections" name="commons-collections"
             rev="3.1" conf="build,ide -> default" />
         <dependency org="commons-logging" name="commons-logging"
-            rev="1.1.1" conf="build,ide -> default" />
+            rev="1.1.3" conf="build,ide -> default" />
 
         <dependency org="ant" name="ant" rev="1.6.5"
             conf="build,ide -> default" />
         <dependency org="net.sourceforge.cssparser" name="cssparser"
-            rev="0.9.5" conf="build,ide -> default" />
+            rev="0.9.11" conf="build,ide -> default" />
         <dependency org="ant" name="ant" rev="1.6.5"
             conf="build,ide -> default" />
         <dependency org="ant" name="ant-launcher" rev="1.6.5"
             conf="build,ide -> default" />
-        <dependency org="org.mortbay.jetty" name="jetty" rev="6.1.11"
-            conf="build,ide -> default" />
-        <dependency org="org.mortbay.jetty" name="jetty-util"
-            rev="6.1.11" conf="build,ide -> default" />
+
+        <dependency org="org.eclipse.jetty" name="jetty-server"
+            rev="8.1.12.v20130726" conf="build,ide -> default" />
+        <dependency org="org.eclipse.jetty" name="jetty-util"
+            rev="8.1.12.v20130726" conf="build,ide -> default" />
+
         <dependency org="org.jdesktop" name="swing-worker"
             rev="1.1" conf="build,ide -> default" />
         <dependency org="commons-codec" name="commons-codec"
-            rev="1.3" conf="build,ide -> default" />
-        <dependency org="commons-io" name="commons-io" rev="2.2"
+            rev="1.8" conf="build,ide -> default" />
+        <dependency org="commons-io" name="commons-io" rev="2.4"
             conf="build,ide -> default" />
-        <dependency org="commons-lang" name="commons-lang"
-            rev="2.6" conf="build,ide -> default" />
+        <dependency org="org.apache.commons" name="commons-lang3"
+            rev="3.1" conf="build,ide -> default" />
         <dependency org="org.apache.james" name="apache-mime4j"
             rev="0.6" conf="build,ide -> default" />
 
