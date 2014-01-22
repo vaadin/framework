@@ -65,6 +65,15 @@
         <dependency org="org.apache.httpcomponents" name="httpmime"
             rev="4.3.1" conf="build,ide -> default" />
 
+        <dependency org="net.sourceforge.nekohtml" name="nekohtml"
+            rev="1.9.19" conf="build,ide -> default" />
+        <dependency org="xalan" name="serializer" rev="2.7.1"
+            conf="build,ide -> default" />
+        <dependency org="xerces" name="xercesImpl" rev="2.11.0"
+            conf="build,ide -> default" />
+        <dependency org="xml-apis" name="xml-apis" rev="1.4.01"
+            conf="build,ide -> default" />
+
         <dependency org="com.vaadin" name="vaadin-client-compiler-deps"
             rev="1.0.2" conf="build,ide -> default" />
 
