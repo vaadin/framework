@@ -73,8 +73,8 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
         @Override
         public void run(AtmosphereResource resource, UI ui) throws IOException {
             getLogger().log(Level.FINER,
-                    "New push connection with transport {0}",
-                    resource.transport());
+                    "New push connection for resource {0} with transport {1}",
+                    new Object[] { resource.uuid(), resource.transport() });
 
             resource.addEventListener(PushHandler.this);
 
@@ -105,10 +105,9 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
 
             resource.suspend();
 
-            AtmospherePushConnection connection = new AtmospherePushConnection(
-                    ui, resource);
-
-            ui.setPushConnection(connection);
+            AtmospherePushConnection connection = getConnectionForUI(ui);
+            assert (connection != null);
+            connection.connect(resource);
         }
     };
 
@@ -172,11 +171,11 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
         @Override
         public void run(AtmosphereResource resource, UI ui) throws IOException {
             PushMode pushMode = ui.getPushConfiguration().getPushMode();
-            AtmospherePushConnection pushConnection = getConnectionForUI(ui);
+            AtmospherePushConnection connection = getConnectionForUI(ui);
 
             String id = resource.uuid();
 
-            if (pushConnection == null) {
+            if (connection == null) {
                 getLogger()
                         .log(Level.WARNING,
                                 "Could not find push connection to close: {0} with transport {1}",
@@ -199,7 +198,7 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
                                     "Connection unexpectedly closed for resource {0} with transport {1}",
                                     new Object[] { id, resource.transport() });
                 }
-                ui.setPushConnection(null);
+                connection.disconnect();
             }
         }
     };
@@ -333,10 +332,10 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
     private static AtmospherePushConnection getConnectionForUI(UI ui) {
         PushConnection pushConnection = ui.getPushConnection();
         if (pushConnection instanceof AtmospherePushConnection) {
-            assert pushConnection.isConnected();
             return (AtmospherePushConnection) pushConnection;
+        } else {
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -373,7 +372,7 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
                 break;
             case JSONP:
             case LONG_POLLING:
-                resource.resume();
+                disconnect(event);
                 break;
             default:
                 getLogger().log(Level.SEVERE, "Unknown transport {0}",
@@ -393,13 +392,6 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
     public void onThrowable(AtmosphereResourceEvent event) {
         getLogger().log(Level.SEVERE, "Exception in push connection",
                 event.throwable());
-        disconnect(event);
-    }
-
-    @Override
-    public void onResume(AtmosphereResourceEvent event) {
-        // Log event on trace level
-        super.onResume(event);
         disconnect(event);
     }
 
@@ -426,8 +418,8 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
      */
     private static void sendRefreshAndDisconnect(AtmosphereResource resource)
             throws IOException {
-        AtmospherePushConnection connection = new AtmospherePushConnection(
-                null, resource);
+        AtmospherePushConnection connection = new AtmospherePushConnection(null);
+        connection.connect(resource);
         try {
             connection.sendMessage(VaadinService
                     .createCriticalNotificationJSON(null, null, null, null));

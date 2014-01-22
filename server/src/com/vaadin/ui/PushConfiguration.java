@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.vaadin.server.VaadinSession;
+import com.vaadin.server.communication.AtmospherePushConnection;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
@@ -170,20 +171,32 @@ class PushConfigurationImpl implements PushConfiguration {
             throw new IllegalArgumentException("Push mode cannot be null");
         }
 
-        if (pushMode.isEnabled()) {
-            VaadinSession session = ui.getSession();
-            if (session != null && !session.getService().ensurePushAvailable()) {
-                throw new IllegalStateException(
-                        "Push is not available. See previous log messages for more information.");
-            }
+        VaadinSession session = ui.getSession();
+
+        if (session == null) {
+            throw new UIDetachedException(
+                    "Cannot set the push mode for a detached UI");
         }
 
-        /*
-         * Client-side will open a new connection or disconnect the old
-         * connection, so there's nothing more to do on the server at this
-         * point.
-         */
-        getState().mode = pushMode;
+        assert session.hasLock();
+
+        if (pushMode.isEnabled() && !session.getService().ensurePushAvailable()) {
+            throw new IllegalStateException(
+                    "Push is not available. See previous log messages for more information.");
+        }
+
+        PushMode oldMode = getState().mode;
+        if (oldMode != pushMode) {
+            getState().mode = pushMode;
+
+            if (!oldMode.isEnabled() && pushMode.isEnabled()) {
+                // The push connection is initially in a disconnected state;
+                // the client will establish the connection
+                ui.setPushConnection(new AtmospherePushConnection(ui));
+            }
+            // Nothing to do here if disabling push;
+            // the client will close the connection
+        }
     }
 
     /*
@@ -274,9 +287,8 @@ class PushConfigurationImpl implements PushConfiguration {
 
     @Override
     public Collection<String> getParameterNames() {
-        return Collections
-                .unmodifiableCollection(ui.getState(false).pushConfiguration.parameters
-                        .keySet());
+        return Collections.unmodifiableCollection(getState(false).parameters
+                .keySet());
     }
 
 }

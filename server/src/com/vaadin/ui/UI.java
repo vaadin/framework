@@ -55,6 +55,7 @@ import com.vaadin.server.communication.PushConnection;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.DebugWindowClientRpc;
 import com.vaadin.shared.ui.ui.DebugWindowServerRpc;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
@@ -422,8 +423,9 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         } else {
             if (session == null) {
                 detach();
-                // Close the push connection when UI is detached. Otherwise the
+                // Disable push when the UI is detached. Otherwise the
                 // push connection and possibly VaadinSession will live on.
+                getPushConfiguration().setPushMode(PushMode.DISABLED);
                 setPushConnection(null);
             }
             this.session = session;
@@ -549,8 +551,6 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     private Navigator navigator;
 
     private transient PushConnection pushConnection = null;
-
-    private boolean hasPendingPush = false;
 
     private LocaleService localeService = new LocaleService(this,
             getState(false).localeServiceState);
@@ -1368,6 +1368,9 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * Pushes the pending changes and client RPC invocations of this UI to the
      * client-side.
      * <p>
+     * If push is enabled, but the push connection is not currently open, the
+     * push will be done when the connection is established.
+     * <p>
      * As with all UI methods, the session must be locked when calling this
      * method. It is also recommended that {@link UI#getCurrent()} is set up to
      * return this UI since writing the response may invoke logic in any
@@ -1385,79 +1388,73 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public void push() {
         VaadinSession session = getSession();
-        if (session != null) {
-            assert session.hasLock();
 
-            /*
-             * Purge the pending access queue as it might mark a connector as
-             * dirty when the push would otherwise be ignored because there are
-             * no changes to push.
-             */
-            session.getService().runPendingAccessTasks(session);
-
-            if (!getConnectorTracker().hasDirtyConnectors()) {
-                // Do not push if there is nothing to push
-                return;
-            }
-
-            if (!getPushConfiguration().getPushMode().isEnabled()) {
-                throw new IllegalStateException("Push not enabled");
-            }
-
-            if (pushConnection == null) {
-                hasPendingPush = true;
-            } else {
-                pushConnection.push();
-            }
-        } else {
-            throw new UIDetachedException("Trying to push a detached UI");
+        if (session == null) {
+            throw new UIDetachedException("Cannot push a detached UI");
         }
+        assert session.hasLock();
+
+        if (!getPushConfiguration().getPushMode().isEnabled()) {
+            throw new IllegalStateException("Push not enabled");
+        }
+        assert pushConnection != null;
+
+        /*
+         * Purge the pending access queue as it might mark a connector as dirty
+         * when the push would otherwise be ignored because there are no changes
+         * to push.
+         */
+        session.getService().runPendingAccessTasks(session);
+
+        if (!getConnectorTracker().hasDirtyConnectors()) {
+            // Do not push if there is nothing to push
+            return;
+        }
+
+        pushConnection.push();
     }
 
     /**
      * Returns the internal push connection object used by this UI. This method
-     * should only be called by the framework. If the returned PushConnection is
-     * not null, it is guaranteed to have {@code isConnected() == true}.
+     * should only be called by the framework.
      * <p>
      * This method is not intended to be overridden. If it is overridden, care
      * should be taken since this method might be called in situations where
      * {@link UI#getCurrent()} does not return this UI.
      * 
-     * @return the push connection used by this UI, <code>null</code> if there
-     *         is no active push connection.
+     * @return the push connection used by this UI, or {@code null} if push is
+     *         not available.
      */
     public PushConnection getPushConnection() {
-        assert (pushConnection == null || pushConnection.isConnected());
+        assert !(getPushConfiguration().getPushMode().isEnabled() && pushConnection == null);
         return pushConnection;
     }
 
     /**
      * Sets the internal push connection object used by this UI. This method
-     * should only be called by the framework. If {@pushConnection} is not null,
-     * its {@code isConnected()} must be true.
+     * should only be called by the framework.
+     * <p>
+     * The {@code pushConnection} argument must be non-null if and only if
+     * {@code getPushConfiguration().getPushMode().isEnabled()}.
      * 
      * @param pushConnection
      *            the push connection to use for this UI
      */
     public void setPushConnection(PushConnection pushConnection) {
-        // If pushMode is disabled then there should never be a pushConnection
-        assert (pushConnection == null || getPushConfiguration().getPushMode()
-                .isEnabled());
-        assert (pushConnection == null || pushConnection.isConnected());
+        // If pushMode is disabled then there should never be a pushConnection;
+        // if enabled there should always be
+        assert (pushConnection == null)
+                ^ getPushConfiguration().getPushMode().isEnabled();
 
         if (pushConnection == this.pushConnection) {
             return;
         }
 
-        if (this.pushConnection != null) {
+        if (this.pushConnection != null && this.pushConnection.isConnected()) {
             this.pushConnection.disconnect();
         }
 
         this.pushConnection = pushConnection;
-        if (pushConnection != null && hasPendingPush) {
-            hasPendingPush = false;
-            pushConnection.push();
-        }
     }
 
     /**
