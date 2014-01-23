@@ -16,14 +16,14 @@
 package com.vaadin.client.ui.grid;
 
 /**
- * Renderer for rending a value <T> into cell.
+ * Renderer for rending a value &lt;T&gt; into cell.
  * <p>
  * You can add a renderer to any column by overring the
  * {@link GridColumn#getRenderer()} method and returning your own renderer. You
  * can retrieve the cell element using {@link Cell#getElement()}.
  * 
  * @param <T>
- *            The row type
+ *            The column type
  * 
  * @since 7.2
  * @author Vaadin Ltd
@@ -37,7 +37,7 @@ public interface Renderer<T> {
      *            The cell that gets updated
      * 
      * @param data
-     *            The row data object
+     *            The column data object
      */
     public void renderCell(Cell cell, T data);
 }
