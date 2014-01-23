@@ -65,9 +65,11 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
+import com.vaadin.client.communication.Heartbeat;
 import com.vaadin.client.communication.JavaScriptMethodInvocation;
 import com.vaadin.client.communication.JsonDecoder;
 import com.vaadin.client.communication.JsonEncoder;
@@ -427,6 +429,8 @@ public class ApplicationConnection {
 
     private VLoadingIndicator loadingIndicator;
 
+    private Heartbeat heartbeat = GWT.create(Heartbeat.class);
+
     public static class MultiStepDuration extends Duration {
         private int previousStep = elapsedMillis();
 
@@ -489,7 +493,7 @@ public class ApplicationConnection {
 
         getLoadingIndicator().show();
 
-        scheduleHeartbeat();
+        heartbeat.init(this);
 
         Window.addWindowClosingHandler(new ClosingHandler() {
             @Override
@@ -3310,20 +3314,11 @@ public class ApplicationConnection {
      * interval elapses if the interval is a positive number. Otherwise, does
      * nothing.
      * 
-     * @see #sendHeartbeat()
-     * @see ApplicationConfiguration#getHeartbeatInterval()
+     * @deprecated as of 7.2, use {@link Heartbeat#schedule()} instead
      */
+    @Deprecated
     protected void scheduleHeartbeat() {
-        final int interval = getConfiguration().getHeartbeatInterval();
-        if (interval > 0) {
-            VConsole.log("Scheduling heartbeat in " + interval + " seconds");
-            new Timer() {
-                @Override
-                public void run() {
-                    sendHeartbeat();
-                }
-            }.schedule(interval * 1000);
-        }
+        heartbeat.schedule();
     }
 
     /**
@@ -3332,51 +3327,12 @@ public class ApplicationConnection {
      * Heartbeat requests are used to inform the server that the client-side is
      * still alive. If the client page is closed or the connection lost, the
      * server will eventually close the inactive UI.
-     * <p>
-     * <b>TODO</b>: Improved error handling, like in doUidlRequest().
      * 
-     * @see #scheduleHeartbeat()
+     * @deprecated as of 7.2, use {@link Heartbeat#send()} instead
      */
+    @Deprecated
     protected void sendHeartbeat() {
-        final String uri = addGetParameters(
-                translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
-                        + ApplicationConstants.HEARTBEAT_PATH + '/'),
-                UIConstants.UI_ID_PARAMETER + "="
-                        + getConfiguration().getUIId());
-
-        final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
-
-        final RequestCallback callback = new RequestCallback() {
-
-            @Override
-            public void onResponseReceived(Request request, Response response) {
-                int status = response.getStatusCode();
-                if (status == Response.SC_OK) {
-                    // TODO Permit retry in some error situations
-                    VConsole.log("Heartbeat response OK");
-                    scheduleHeartbeat();
-                } else if (status == Response.SC_GONE) {
-                    showSessionExpiredError(null);
-                } else {
-                    VConsole.error("Failed sending heartbeat to server. Error code: "
-                            + status);
-                }
-            }
-
-            @Override
-            public void onError(Request request, Throwable exception) {
-                VConsole.error("Exception sending heartbeat: " + exception);
-            }
-        };
-
-        rb.setCallback(callback);
-
-        try {
-            VConsole.log("Sending heartbeat request...");
-            rb.send();
-        } catch (RequestException re) {
-            callback.onError(null, re);
-        }
+        heartbeat.send();
     }
 
     /**
