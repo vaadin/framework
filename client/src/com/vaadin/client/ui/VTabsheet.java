@@ -486,6 +486,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
             int index = getWidgetIndex(caption.getParent());
 
+            navigateTab(getTabsheet().focusedTabIndex, index);
+            getTabsheet().focusedTabIndex = index;
+            getTabsheet().focusedTab = getTab(index);
             getTabsheet().focus();
             getTabsheet().loadTabSheet(index);
         }
@@ -700,15 +703,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         if (activeTabIndex != tabIndex && canSelectTab(tabIndex)) {
             tb.selectTab(tabIndex);
 
-            // If this TabSheet already has focus, set the new selected tab
-            // as focused.
-            if (focusedTab != null) {
-                focusedTab = tb.getTab(tabIndex);
-                focusedTab.focus();
-            }
-
             activeTabIndex = tabIndex;
-            focusedTabIndex = tabIndex;
 
             addStyleDependentName("loading");
             // Hide the current contents so a loading indicator can be shown
