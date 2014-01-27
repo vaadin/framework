@@ -5857,12 +5857,15 @@ LexicalUnitImpl result = null;
         if ("rgb(".equals(f)) {
             // this is a RGB declaration (e.g. rgb(255, 50%, 0) )
             int i = 0;
+            boolean hasVariables = false;
             while (loop && l != null && i < 5) {
                 switch (i) {
                     case 0:
                     case 2:
                     case 4:
-                        if ((l.getLexicalUnitType() != LexicalUnit.SAC_INTEGER)
+                    if (l.getLexicalUnitType() == SCSSLexicalUnit.SCSS_VARIABLE) {
+                        hasVariables = true;
+                        } else if ((l.getLexicalUnitType() != LexicalUnit.SAC_INTEGER)
                             && (l.getLexicalUnitType() != LexicalUnit.SAC_PERCENTAGE)) {
                             loop = false;
                         }
@@ -5882,9 +5885,15 @@ LexicalUnitImpl result = null;
                 }
             }
             if ((i == 5) && loop && (l == null)) {
-                {if (true) return LexicalUnitImpl.createRGBColor(n.beginLine,
-                                                      n.beginColumn,
-                                                      prev, params);}
+                if (hasVariables) {
+            {if (true) return LexicalUnitImpl.createFunction(n.beginLine,
+                        n.beginColumn, prev,
+                        f.substring(0, f.length() - 1), params);}
+                } else {
+           {if (true) return LexicalUnitImpl.createRGBColor(n.beginLine,
+                        n.beginColumn,
+                        prev, params);}
+                }
             } else {
                 if (errorHandler != null) {
                     String errorText;
@@ -7221,6 +7230,11 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+  private boolean jj_3R_256() {
+    if (jj_scan_token(HASH)) return true;
+    return false;
+  }
+
   private boolean jj_3R_216() {
     if (jj_scan_token(NUMBER)) return true;
     return false;
@@ -7314,18 +7328,13 @@ LexicalUnitImpl result = null;
     return false;
   }
 
-  private boolean jj_3R_256() {
-    if (jj_scan_token(HASH)) return true;
+  private boolean jj_3R_257() {
+    if (jj_scan_token(URL)) return true;
     return false;
   }
 
   private boolean jj_3R_245() {
     if (jj_3R_186()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_257() {
-    if (jj_scan_token(URL)) return true;
     return false;
   }
 
@@ -7371,6 +7380,11 @@ LexicalUnitImpl result = null;
     return false;
   }
 
+  private boolean jj_3R_258() {
+    if (jj_scan_token(UNICODERANGE)) return true;
+    return false;
+  }
+
   private boolean jj_3R_197() {
     Token xsp;
     xsp = jj_scanpos;
@@ -7406,11 +7420,6 @@ LexicalUnitImpl result = null;
 
   private boolean jj_3R_266() {
     if (jj_scan_token(MINUS)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_258() {
-    if (jj_scan_token(UNICODERANGE)) return true;
     return false;
   }
 

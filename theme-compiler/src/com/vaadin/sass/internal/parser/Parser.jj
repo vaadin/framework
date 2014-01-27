@@ -2575,12 +2575,15 @@ LexicalUnitImpl function(char operator, LexicalUnitImpl prev) :
 	if ("rgb(".equals(f)) {
 	    // this is a RGB declaration (e.g. rgb(255, 50%, 0) )
 	    int i = 0;
+	    boolean hasVariables = false;
 	    while (loop && l != null && i < 5) {
 		switch (i) {
 		    case 0:
 		    case 2:
 		    case 4:
-			if ((l.getLexicalUnitType() != LexicalUnit.SAC_INTEGER)
+		    if (l.getLexicalUnitType() == SCSSLexicalUnit.SCSS_VARIABLE) {
+                        hasVariables = true;
+			} else if ((l.getLexicalUnitType() != LexicalUnit.SAC_INTEGER)
 			    && (l.getLexicalUnitType() != LexicalUnit.SAC_PERCENTAGE)) {
 			    loop = false;
 			}
@@ -2600,9 +2603,15 @@ LexicalUnitImpl function(char operator, LexicalUnitImpl prev) :
 		}
 	    }
 	    if ((i == 5) && loop && (l == null)) {
-		return LexicalUnitImpl.createRGBColor(n.beginLine,
-						      n.beginColumn,
-						      prev, params);
+	    	if (hasVariables) {
+            return LexicalUnitImpl.createFunction(n.beginLine,
+                        n.beginColumn, prev,
+                        f.substring(0, f.length() - 1), params);
+		} else {
+           return LexicalUnitImpl.createRGBColor(n.beginLine,
+                        n.beginColumn,
+                        prev, params);
+		}
 	    } else {
 		if (errorHandler != null) {
 		    String errorText;
