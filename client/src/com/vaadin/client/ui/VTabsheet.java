@@ -841,8 +841,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             tab = tb.addTab();
         }
         if (selected) {
-            renderContent(tabUidl.getChildUIDL(0));
             tb.selectTab(index);
+            renderContent(tabUidl.getChildUIDL(0));
         }
         tab.updateFromUIDL(tabUidl);
         tab.setEnabledOnServer((!disabledTabKeys.contains(tabKeys.get(index))));
