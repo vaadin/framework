@@ -30,6 +30,7 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
@@ -143,6 +144,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     private Element headerText;
 
     private boolean closable = true;
+
+    private boolean hasFocus;
 
     /**
      * If centered (via UIDL), the window should stay in the centered -mode
@@ -1048,6 +1051,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void onKeyDown(KeyDownEvent event) {
+        if (hasFocus && event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE) {
+            event.preventDefault();
+        }
+
         if (shortcutHandler != null) {
             shortcutHandler
                     .handleKeyboardEvent(Event.as(event.getNativeEvent()));
@@ -1057,6 +1064,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void onBlur(BlurEvent event) {
+        hasFocus = false;
+
         if (client.hasEventListeners(this, EventId.BLUR)) {
             client.updateVariable(id, EventId.BLUR, "", true);
         }
@@ -1064,6 +1073,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void onFocus(FocusEvent event) {
+        hasFocus = true;
+
         if (client.hasEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(id, EventId.FOCUS, "", true);
         }
