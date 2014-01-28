@@ -24,11 +24,22 @@
 package com.vaadin.sass.internal.parser;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.w3c.css.sac.LexicalUnit;
 
 import com.vaadin.sass.internal.expression.exception.IncompatibleUnitsException;
-import com.vaadin.sass.internal.util.ColorUtil;
+import com.vaadin.sass.internal.parser.function.AbsFunctionGenerator;
+import com.vaadin.sass.internal.parser.function.CeilFunctionGenerator;
+import com.vaadin.sass.internal.parser.function.DarkenFunctionGenerator;
+import com.vaadin.sass.internal.parser.function.DefaultFunctionGenerator;
+import com.vaadin.sass.internal.parser.function.FloorFunctionGenerator;
+import com.vaadin.sass.internal.parser.function.LightenFunctionGenerator;
+import com.vaadin.sass.internal.parser.function.RoundFunctionGenerator;
+import com.vaadin.sass.internal.parser.function.SCSSFunctionGenerator;
 import com.vaadin.sass.internal.util.DeepCopy;
 
 /**
@@ -325,30 +336,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         case LexicalUnit.SAC_RECT_FUNCTION:
         case LexicalUnit.SAC_FUNCTION:
             String funcName = getFunctionName();
-            LexicalUnitImpl firstParam = getParameters();
-            if ("round".equals(funcName)) {
-                firstParam
-                        .setFloatValue(Math.round(firstParam.getFloatValue()));
-                text = firstParam.toString();
-            } else if ("ceil".equals(funcName)) {
-                firstParam.setFloatValue((float) Math.ceil(firstParam
-                        .getFloatValue()));
-                text = firstParam.toString();
-            } else if ("floor".equals(funcName)) {
-                firstParam.setFloatValue((float) Math.floor(firstParam
-                        .getFloatValue()));
-                text = firstParam.toString();
-            } else if ("abs".equals(funcName)) {
-                firstParam.setFloatValue(Math.abs(firstParam.getFloatValue()));
-                text = firstParam.toString();
-            } else if ("darken".equals(funcName)) {
-                LexicalUnitImpl dark = ColorUtil.darken(this);
-                text = dark.toString();
-            } else if ("lighten".equals(funcName)) {
-                text = ColorUtil.lighten(this).toString();
-            } else {
-                text = getFunctionName() + "(" + getParameters() + ")";
-            }
+            text = serializeFunction(funcName);
             break;
         case LexicalUnit.SAC_IDENT:
             text = getStringValue();
@@ -777,5 +765,39 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
             unit.setParameters(replaceWith.getParameters());
         }
 
+    }
+
+    private String serializeFunction(String funcName) {
+        return getSerializer(funcName).printState(this);
+    }
+
+    private static SCSSFunctionGenerator getSerializer(String funcName) {
+        SCSSFunctionGenerator serializer = SERIALIZERS.get(funcName);
+        if (serializer == null) {
+            return DEFAULT_SERIALIZER;
+        } else {
+            return serializer;
+        }
+    }
+
+    private static List<SCSSFunctionGenerator> initSerializers() {
+        List<SCSSFunctionGenerator> list = new LinkedList<SCSSFunctionGenerator>();
+        list.add(new AbsFunctionGenerator());
+        list.add(new CeilFunctionGenerator());
+        list.add(new DarkenFunctionGenerator());
+        list.add(new FloorFunctionGenerator());
+        list.add(new LightenFunctionGenerator());
+        list.add(new RoundFunctionGenerator());
+        return list;
+    }
+
+    private static final Map<String, SCSSFunctionGenerator> SERIALIZERS = new HashMap<String, SCSSFunctionGenerator>();
+
+    private static final SCSSFunctionGenerator DEFAULT_SERIALIZER = new DefaultFunctionGenerator();
+
+    static {
+        for (SCSSFunctionGenerator serializer : initSerializers()) {
+            SERIALIZERS.put(serializer.getFunctionName(), serializer);
+        }
     }
 }
