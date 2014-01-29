@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.w3c.css.sac.ConditionFactory;
 import org.w3c.css.sac.Condition;
@@ -1203,7 +1205,7 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
 
     } finally {
      if (start) {
-         documentHandler.endMedia(ml);
+     documentHandler.endMedia(ml);
      }
     }
   }
@@ -4527,7 +4529,7 @@ boolean isPseudoElement = false;
     jj_consume_token(DEBUG_SYM);
     String content = skipStatementUntilSemiColon();
     // TODO should evaluate the content expression, call documentHandler.debugDirective() etc.
-    System.out.println(content);
+    Logger.getLogger(Parser.class.getName()).log(Level.INFO, content);
     label_138:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4546,7 +4548,7 @@ boolean isPseudoElement = false;
     jj_consume_token(WARN_SYM);
     String content = skipStatementUntilSemiColon();
     // TODO should evaluate the content expression, call documentHandler.warnDirective() etc.
-    System.err.println(content);
+    Logger.getLogger(Parser.class.getName()).log(Level.SEVERE, content);
     label_139:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {

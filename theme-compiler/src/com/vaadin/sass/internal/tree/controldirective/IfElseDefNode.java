@@ -15,6 +15,9 @@
  */
 package com.vaadin.sass.internal.tree.controldirective;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.vaadin.sass.internal.tree.Node;
 import com.vaadin.sass.internal.visitor.IfElseNodeHandler;
 
@@ -40,7 +43,8 @@ public class IfElseDefNode extends Node {
 
             IfElseNodeHandler.traverse(this);
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.getLogger(IfElseDefNode.class.getName()).log(Level.SEVERE,
+                    null, e);
         }
     }
 

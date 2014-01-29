@@ -139,6 +139,7 @@
             <fileset dir="${src}">
                 <patternset>
                     <include name="**/*.java" />
+                    <include name="**/*.properties" />
                 </patternset>
             </fileset>
             <fileset refid="common.files.for.all.jars" />
@@ -184,7 +185,7 @@
         <property name="src" location="{$result.dir}/../src" />
 
         <union id="jar.files">
-            <fileset dir="${classes}" excludes="${classes.exclude}" erroronmissingdir="false" />
+            <fileset dir="${classes}" excludes="${classes.exclude}" erroronmissingdir="false"/>
             <fileset dir="${src}" excludes="${jar.exclude}" erroronmissingdir="false" />
             <fileset refid="common.files.for.all.jars" />
             <union refid="extra.jar.includes" />
@@ -277,6 +278,9 @@
             <classpath refid="classpath.compile.dependencies" />
             <classpath refid="classpath.compile.custom" />
         </javac>
+        <copy todir="${classes}">
+            <fileset dir="${src}" includes="**/*.properties"/>
+        </copy>
     </target>
 
     <target name="exec-buildhelper" depends="compile">
