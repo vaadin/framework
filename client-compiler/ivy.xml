@@ -43,7 +43,9 @@
             conf="build,ide -> default" />
 
         <dependency org="org.eclipse.jetty" name="jetty-server"
-            rev="8.1.12.v20130726" conf="build,ide -> default" />
+            rev="8.1.12.v20130726" conf="build,ide -> default">
+            <exclude org="org.eclipse.jetty.orbit"></exclude>
+        </dependency>
         <dependency org="org.eclipse.jetty" name="jetty-util"
             rev="8.1.12.v20130726" conf="build,ide -> default" />
 
@@ -76,7 +78,7 @@
 
         <dependency org="com.ibm.icu" name="icu4j" rev="50.1.1"
             conf="build,ide -> default" />
-            
+
         <dependency org="com.vaadin" name="vaadin-client-compiler-deps"
             rev="1.1.0" conf="build,ide -> default" />
 
