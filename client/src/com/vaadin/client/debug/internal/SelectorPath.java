@@ -96,7 +96,7 @@ public class SelectorPath {
         if (index > 0) {
             elementQueryString = ".get(" + index + ");";
         } else {
-            elementQueryString = ".fist();";
+            elementQueryString = ".first();";
         }
         for (int i = 1; i < fragments.length; ++i) {
             if (fragments[i].isEmpty()) {
