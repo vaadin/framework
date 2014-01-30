@@ -868,18 +868,33 @@ public class Page implements Serializable {
     /**
      * Navigates this page to the given URI. The contents of this page in the
      * browser is replaced with whatever is returned for the given URI.
+     * <p>
+     * This method should not be used to start downloads, as the client side
+     * will assume the browser will navigate away when opening the URI. Use one
+     * of the {@code Page.open} methods or {@code FileDownloader} instead.
+     * 
+     * @see #open(String, String)
+     * @see FileDownloader
      * 
      * @param uri
      *            the URI to show
      */
     public void setLocation(String uri) {
-        openList.add(new OpenResource(uri, null, -1, -1, BORDER_DEFAULT, false));
+        openList.add(new OpenResource(uri, "_self", -1, -1, BORDER_DEFAULT,
+                false));
         uI.markAsDirty();
     }
 
     /**
      * Navigates this page to the given URI. The contents of this page in the
      * browser is replaced with whatever is returned for the given URI.
+     * <p>
+     * This method should not be used to start downloads, as the client side
+     * will assume the browser will navigate away when opening the URI. Use one
+     * of the {@code Page.open} methods or {@code FileDownloader} instead.
+     * 
+     * @see #open(String, String)
+     * @see FileDownloader
      * 
      * @param uri
      *            the URI to show
