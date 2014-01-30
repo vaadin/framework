@@ -73,7 +73,7 @@ public abstract class AbstractTestBase {
         originalScss = getFileContent(file);
         originalScss = originalScss.replaceAll(CR, "");
         ScssStylesheet sheet = getStyleSheet(file);
-        parsedScss = sheet.toString();
+        parsedScss = sheet.printState();
         parsedScss = parsedScss.replace(CR, "");
         Assert.assertEquals("Original CSS and parsed CSS do not match",
                 originalScss, parsedScss);
@@ -84,7 +84,7 @@ public abstract class AbstractTestBase {
         comparisonCss = comparisonCss.replaceAll(CR, "");
         ScssStylesheet sheet = getStyleSheet(scss);
         sheet.compile();
-        parsedScss = sheet.toString();
+        parsedScss = sheet.printState();
         parsedScss = parsedScss.replaceAll(CR, "");
         Assert.assertEquals("Original CSS and parsed CSS do not match",
                 comparisonCss, parsedScss);

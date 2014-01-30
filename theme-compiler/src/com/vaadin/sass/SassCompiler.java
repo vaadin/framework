@@ -56,9 +56,9 @@ public class SassCompiler {
 
         scss.compile();
         if (output == null) {
-            System.out.println(scss.toString());
+            System.out.println(scss.printState());
         } else {
-            writeFile(output, scss.toString());
+            writeFile(output, scss.printState());
         }
     }
 

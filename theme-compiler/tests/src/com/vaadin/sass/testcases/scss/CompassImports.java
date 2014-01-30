@@ -74,7 +74,7 @@ public class CompassImports extends AbstractTestBase {
         sheet.addResolver(new FilesystemResolver(additionalPath));
 
         sheet.compile();
-        parsedScss = sheet.toString();
+        parsedScss = sheet.printState();
         parsedScss = parsedScss.replaceAll(CR, "");
         Assert.assertEquals("Original CSS and parsed CSS do not match",
                 comparisonCss, parsedScss);

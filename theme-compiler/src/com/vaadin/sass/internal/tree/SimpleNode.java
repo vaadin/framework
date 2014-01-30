@@ -38,8 +38,13 @@ public class SimpleNode extends Node implements IVariableNode {
     }
 
     @Override
-    public String toString() {
+    public String printState() {
         return text;
+    }
+
+    @Override
+    public String toString() {
+        return printState();
     }
 
     @Override
@@ -47,7 +52,7 @@ public class SimpleNode extends Node implements IVariableNode {
         for (final VariableNode node : variables) {
             if (StringUtil.containsVariable(text, node.getName())) {
                 text = StringUtil.replaceVariable(text, node.getName(), node
-                        .getExpr().toString());
+                        .getExpr().printState());
             }
         }
     }

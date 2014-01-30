@@ -20,7 +20,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.vaadin.sass.internal.parser.LexicalUnitImpl;
+
 public abstract class Node implements Serializable {
+
+    public static BuildStringStrategy PRINT_STRATEGY = new PrintStrategy();
+
+    public static BuildStringStrategy TO_STRING_STRATEGY = new ToStringStrategy();
+
     private static final long serialVersionUID = 5914711715839294816L;
 
     protected ArrayList<Node> children;
@@ -108,11 +115,6 @@ public abstract class Node implements Serializable {
         return !children.isEmpty();
     }
 
-    @Override
-    public String toString() {
-        return "";
-    }
-
     /**
      * Method for manipulating the data contained within the {@link Node}.
      * 
@@ -123,12 +125,60 @@ public abstract class Node implements Serializable {
      */
     public abstract void traverse();
 
+    /**
+     * Prints out the current state of the node tree. Will return SCSS before
+     * compile and CSS after.
+     * 
+     * Result value could be null.
+     * 
+     * @since 7.2
+     * @return State as a string
+     */
+    public String printState() {
+        return null;
+    }
+
     public Node getParentNode() {
         return parentNode;
     }
 
     private void setParentNode(Node parentNode) {
         this.parentNode = parentNode;
+    }
+
+    public static interface BuildStringStrategy {
+
+        String build(Node node);
+
+        String build(LexicalUnitImpl unit);
+    }
+
+    public static class PrintStrategy implements BuildStringStrategy {
+
+        @Override
+        public String build(Node node) {
+            return node.printState();
+        }
+
+        @Override
+        public String build(LexicalUnitImpl unit) {
+            return unit.printState();
+        }
+
+    }
+
+    public static class ToStringStrategy implements BuildStringStrategy {
+
+        @Override
+        public String build(Node node) {
+            return node.toString();
+        }
+
+        @Override
+        public String build(LexicalUnitImpl unit) {
+            return unit.toString();
+        }
+
     }
 
 }

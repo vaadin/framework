@@ -16,6 +16,7 @@
 package com.vaadin.sass.internal.parser.function;
 
 import com.vaadin.sass.internal.parser.LexicalUnitImpl;
+import com.vaadin.sass.internal.tree.Node.BuildStringStrategy;
 import com.vaadin.sass.internal.util.ColorUtil;
 
 /**
@@ -31,8 +32,9 @@ public class DarkenFunctionGenerator implements SCSSFunctionGenerator {
     }
 
     @Override
-    public String printState(LexicalUnitImpl function) {
+    public String printState(LexicalUnitImpl function,
+            BuildStringStrategy strategy) {
         LexicalUnitImpl dark = ColorUtil.darken(function);
-        return dark.toString();
+        return strategy.build(dark);
     }
 }

@@ -40,6 +40,11 @@ public class NestPropertiesNode extends Node implements IVariableNode {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Nest properties node [ name = " + name + " ]";
+    }
+
     public Collection<RuleNode> unNesting() {
         List<RuleNode> result = new ArrayList<RuleNode>();
         for (Node child : children) {
@@ -69,6 +74,11 @@ public class NestPropertiesNode extends Node implements IVariableNode {
     @Override
     public void traverse() {
         NestedNodeHandler.traverse(this);
+    }
+
+    @Override
+    public String printState() {
+        return null;
     }
 
 }

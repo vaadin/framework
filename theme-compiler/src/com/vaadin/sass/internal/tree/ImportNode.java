@@ -43,7 +43,7 @@ public class ImportNode extends Node {
     }
 
     @Override
-    public String toString() {
+    public String printState() {
         StringBuilder builder = new StringBuilder("@import ");
         if (isURL) {
             builder.append("url(").append(uri).append(")");
@@ -57,6 +57,11 @@ public class ImportNode extends Node {
         }
         builder.append(";");
         return builder.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "Import node [" + printState() + "]";
     }
 
     public String getUri() {
@@ -76,4 +81,5 @@ public class ImportNode extends Node {
         // nested imports
         ImportNodeHandler.traverse(getParentNode());
     }
+
 }

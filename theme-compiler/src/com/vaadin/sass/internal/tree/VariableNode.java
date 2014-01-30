@@ -59,10 +59,13 @@ public class VariableNode extends Node implements IVariableNode {
     }
 
     @Override
+    public String printState() {
+        return buildString(PRINT_STRATEGY);
+    }
+
+    @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("$");
-        builder.append(name).append(": ").append(expr);
-        return builder.toString();
+        return "Variable node [" + buildString(TO_STRING_STRATEGY) + "]";
     }
 
     public void setGuarded(boolean guarded) {
@@ -74,11 +77,11 @@ public class VariableNode extends Node implements IVariableNode {
         for (final VariableNode node : variables) {
             if (!equals(node)) {
 
-                if (StringUtil
-                        .containsVariable(expr.toString(), node.getName())) {
+                if (StringUtil.containsVariable(expr.printState(),
+                        node.getName())) {
                     if (expr.getParameters() != null
                             && StringUtil.containsVariable(expr.getParameters()
-                                    .toString(), node.getName())) {
+                                    .printState(), node.getName())) {
                         replaceValues(expr.getParameters(), node);
                     } else if (expr.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE) {
                         replaceValues(expr, node);
@@ -92,7 +95,7 @@ public class VariableNode extends Node implements IVariableNode {
         while (unit != null) {
 
             if (unit.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE
-                    && unit.getValue().toString().equals(node.getName())) {
+                    && unit.getValueAsString().equals(node.getName())) {
                 LexicalUnitImpl.replaceValues(unit, node.getExpr());
             }
 
@@ -118,5 +121,11 @@ public class VariableNode extends Node implements IVariableNode {
             replaceVariables(ScssStylesheet.getVariables());
         }
         VariableNodeHandler.traverse(this);
+    }
+
+    private String buildString(BuildStringStrategy strategy) {
+        StringBuilder builder = new StringBuilder("$");
+        builder.append(name).append(": ").append(strategy.build(expr));
+        return builder.toString();
     }
 }

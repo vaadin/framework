@@ -132,7 +132,7 @@ public class SassLinker extends AbstractLinker {
                     if (!fileInfo.isMixin()) {
                         scss.compile();
                         InputStream is = new ByteArrayInputStream(scss
-                                .toString().getBytes());
+                                .printState().getBytes());
 
                         toReturn.add(this.emitInputStream(logger, is,
                                 fileInfo.getOriginalCssPath()));

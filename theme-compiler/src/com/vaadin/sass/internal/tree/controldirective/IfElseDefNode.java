@@ -24,13 +24,13 @@ import com.vaadin.sass.internal.visitor.IfElseNodeHandler;
 public class IfElseDefNode extends Node {
 
     @Override
+    public String printState() {
+        return buildString(PRINT_STRATEGY);
+    }
+
+    @Override
     public String toString() {
-        StringBuilder b = new StringBuilder();
-        for (final Node child : getChildren()) {
-            b.append(child.toString());
-            b.append("\n");
-        }
-        return b.toString();
+        return "IfElseDef node [" + buildString(TO_STRING_STRATEGY) + "]";
     }
 
     @Override
@@ -46,6 +46,15 @@ public class IfElseDefNode extends Node {
             Logger.getLogger(IfElseDefNode.class.getName()).log(Level.SEVERE,
                     null, e);
         }
+    }
+
+    private String buildString(BuildStringStrategy strategy) {
+        StringBuilder b = new StringBuilder();
+        for (final Node child : getChildren()) {
+            b.append(strategy.build(child));
+            b.append("\n");
+        }
+        return b.toString();
     }
 
 }

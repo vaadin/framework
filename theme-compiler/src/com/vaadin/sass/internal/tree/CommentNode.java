@@ -32,8 +32,13 @@ public class CommentNode extends Node {
     }
 
     @Override
-    public String toString() {
+    public String printState() {
         return comment;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment node [" + comment + "]";
     }
 
     @Override

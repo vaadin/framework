@@ -41,6 +41,11 @@ public class ExtendNode extends Node implements IVariableNode {
 
     }
 
+    @Override
+    public String toString() {
+        return "Extend node [" + getListAsString() + "]";
+    }
+
     public String getListAsString() {
         StringBuilder b = new StringBuilder();
         for (final String s : list) {

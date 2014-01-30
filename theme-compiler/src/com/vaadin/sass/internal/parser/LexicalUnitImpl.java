@@ -40,6 +40,8 @@ import com.vaadin.sass.internal.parser.function.FloorFunctionGenerator;
 import com.vaadin.sass.internal.parser.function.LightenFunctionGenerator;
 import com.vaadin.sass.internal.parser.function.RoundFunctionGenerator;
 import com.vaadin.sass.internal.parser.function.SCSSFunctionGenerator;
+import com.vaadin.sass.internal.tree.Node;
+import com.vaadin.sass.internal.tree.Node.BuildStringStrategy;
 import com.vaadin.sass.internal.util.DeepCopy;
 
 /**
@@ -253,127 +255,33 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         return params;
     }
 
+    /**
+     * Prints out the current state of the node tree. Will return SCSS before
+     * compile and CSS after.
+     * 
+     * Result value could be null.
+     * 
+     * @since 7.2
+     * @return State as a string
+     */
+    public String printState() {
+        return buildString(Node.PRINT_STRATEGY);
+    }
+
     @Override
     public String toString() {
-        short type = getLexicalUnitType();
-        String text = null;
-        switch (type) {
-        case SCSS_VARIABLE:
-            text = "$" + s;
-            break;
-        case SCSS_NULL:
-            text = "";
-            break;
-        case LexicalUnit.SAC_OPERATOR_COMMA:
-            text = ",";
-            break;
-        case LexicalUnit.SAC_OPERATOR_PLUS:
-            text = "+";
-            break;
-        case LexicalUnit.SAC_OPERATOR_MINUS:
-            text = "-";
-            break;
-        case LexicalUnit.SAC_OPERATOR_MULTIPLY:
-            text = "*";
-            break;
-        case LexicalUnit.SAC_OPERATOR_SLASH:
-            text = "/";
-            break;
-        case LexicalUnit.SAC_OPERATOR_MOD:
-            text = "%";
-            break;
-        case LexicalUnit.SAC_OPERATOR_EXP:
-            text = "^";
-            break;
-        case LexicalUnit.SAC_OPERATOR_LT:
-            text = "<";
-            break;
-        case LexicalUnit.SAC_OPERATOR_GT:
-            text = ">";
-            break;
-        case LexicalUnit.SAC_OPERATOR_LE:
-            text = "<=";
-            break;
-        case LexicalUnit.SAC_OPERATOR_GE:
-            text = "=>";
-            break;
-        case LexicalUnit.SAC_OPERATOR_TILDE:
-            text = "~";
-            break;
-        case LexicalUnit.SAC_INHERIT:
-            text = "inherit";
-            break;
-        case LexicalUnit.SAC_INTEGER:
-            text = Integer.toString(getIntegerValue(), 10);
-            break;
-        case LexicalUnit.SAC_REAL:
-            text = getFloatOrInteger();
-            break;
-        case LexicalUnit.SAC_EM:
-        case SCSSLexicalUnit.SAC_LEM:
-        case SCSSLexicalUnit.SAC_REM:
-        case LexicalUnit.SAC_EX:
-        case LexicalUnit.SAC_PIXEL:
-        case LexicalUnit.SAC_INCH:
-        case LexicalUnit.SAC_CENTIMETER:
-        case LexicalUnit.SAC_MILLIMETER:
-        case LexicalUnit.SAC_POINT:
-        case LexicalUnit.SAC_PICA:
-        case LexicalUnit.SAC_PERCENTAGE:
-        case LexicalUnit.SAC_DEGREE:
-        case LexicalUnit.SAC_GRADIAN:
-        case LexicalUnit.SAC_RADIAN:
-        case LexicalUnit.SAC_MILLISECOND:
-        case LexicalUnit.SAC_SECOND:
-        case LexicalUnit.SAC_HERTZ:
-        case LexicalUnit.SAC_KILOHERTZ:
-        case LexicalUnit.SAC_DIMENSION:
-            text = getFloatOrInteger() + getDimensionUnitText();
-            break;
-        case LexicalUnit.SAC_URI:
-            text = "url(" + getStringValue() + ")";
-            break;
-        case LexicalUnit.SAC_RGBCOLOR:
-        case LexicalUnit.SAC_COUNTER_FUNCTION:
-        case LexicalUnit.SAC_COUNTERS_FUNCTION:
-        case LexicalUnit.SAC_RECT_FUNCTION:
-        case LexicalUnit.SAC_FUNCTION:
-            String funcName = getFunctionName();
-            text = serializeFunction(funcName);
-            break;
-        case LexicalUnit.SAC_IDENT:
-            text = getStringValue();
-            break;
-        case LexicalUnit.SAC_STRING_VALUE:
-            // @@SEEME. not exact
-            text = "\"" + getStringValue() + "\"";
-            break;
-        case LexicalUnit.SAC_ATTR:
-            text = "attr(" + getStringValue() + ")";
-            break;
-        case LexicalUnit.SAC_UNICODERANGE:
-            text = "@@TODO";
-            break;
-        case LexicalUnit.SAC_SUB_EXPRESSION:
-            text = getSubValues().toString();
-            break;
-        default:
-            text = "@unknown";
-            break;
-        }
-        if (getNextLexicalUnit() != null) {
-            if (getNextLexicalUnit().getLexicalUnitType() == SAC_OPERATOR_COMMA) {
-                return text + getNextLexicalUnit();
-            }
-            return text + ' ' + getNextLexicalUnit();
+        String result = simpleAsString();
+        if (result == null) {
+            return "Lexical unit node [" + buildString(Node.TO_STRING_STRATEGY)
+                    + "]";
         } else {
-            return text;
+            return result;
         }
     }
 
     // A helper method for sass interpolation
     public String unquotedString() {
-        String result = toString();
+        String result = printState();
         if (result.length() >= 2
                 && ((result.charAt(0) == '"' && result
                         .charAt(result.length() - 1) == '"') || (result
@@ -389,7 +297,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         if (denominator.getLexicalUnitType() != SAC_INTEGER
                 && denominator.getLexicalUnitType() != SAC_REAL
                 && getLexicalUnitType() != denominator.getLexicalUnitType()) {
-            throw new IncompatibleUnitsException(toString());
+            throw new IncompatibleUnitsException(printState());
         }
         setFloatValue(getFloatValue() / denominator.getFloatValue());
         if (getLexicalUnitType() == denominator.getLexicalUnitType()) {
@@ -426,7 +334,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
                 && another.getLexicalUnitType() != SAC_INTEGER
                 && another.getLexicalUnitType() != SAC_REAL
                 && getLexicalUnitType() != another.getLexicalUnitType()) {
-            throw new IncompatibleUnitsException(toString());
+            throw new IncompatibleUnitsException(printState());
         }
         if (another.getLexicalUnitType() != SAC_INTEGER
                 && another.getLexicalUnitType() != SAC_REAL) {
@@ -438,7 +346,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
     @Override
     public LexicalUnitImpl modulo(LexicalUnitImpl another) {
         if (getLexicalUnitType() != another.getLexicalUnitType()) {
-            throw new IncompatibleUnitsException(toString());
+            throw new IncompatibleUnitsException(printState());
         }
         setIntegerValue(getIntegerValue() % another.getIntegerValue());
         setNextLexicalUnit(another.getNextLexicalUnit());
@@ -748,6 +656,15 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         }
     }
 
+    public String getValueAsString() {
+        Object value = getValue();
+        if (value == null) {
+            return null;
+        } else {
+            return value.toString();
+        }
+    }
+
     public void setFunctionName(String functionName) {
         fname = functionName;
     }
@@ -770,11 +687,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
 
     }
 
-    private String serializeFunction(String funcName) {
-        return getSerializer(funcName).printState(this);
-    }
-
-    private static SCSSFunctionGenerator getSerializer(String funcName) {
+    private static SCSSFunctionGenerator getGenerator(String funcName) {
         SCSSFunctionGenerator serializer = SERIALIZERS.get(funcName);
         if (serializer == null) {
             return DEFAULT_SERIALIZER;
@@ -804,7 +717,8 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         }
 
         @Override
-        public String printState(LexicalUnitImpl function) {
+        public String printState(LexicalUnitImpl function,
+                BuildStringStrategy strategy) {
             StringBuilder builder = new StringBuilder();
             LexicalUnitImpl firstParam = function.getParameters();
             float value = firstParam.getFloatValue();
@@ -826,7 +740,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
 
             firstParam.setStringValue(builder.append('%').toString());
 
-            return firstParam.toString();
+            return strategy.build(firstParam);
         }
 
     }
@@ -834,6 +748,137 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
     private static final Map<String, SCSSFunctionGenerator> SERIALIZERS = new HashMap<String, SCSSFunctionGenerator>();
 
     private static final SCSSFunctionGenerator DEFAULT_SERIALIZER = new DefaultFunctionGenerator();
+
+    private String simpleAsString() {
+        short type = getLexicalUnitType();
+        String text = null;
+        switch (type) {
+        case SCSS_VARIABLE:
+            text = "$" + s;
+            break;
+        case SCSS_NULL:
+            text = "";
+            break;
+        case LexicalUnit.SAC_OPERATOR_COMMA:
+            text = ",";
+            break;
+        case LexicalUnit.SAC_OPERATOR_PLUS:
+            text = "+";
+            break;
+        case LexicalUnit.SAC_OPERATOR_MINUS:
+            text = "-";
+            break;
+        case LexicalUnit.SAC_OPERATOR_MULTIPLY:
+            text = "*";
+            break;
+        case LexicalUnit.SAC_OPERATOR_SLASH:
+            text = "/";
+            break;
+        case LexicalUnit.SAC_OPERATOR_MOD:
+            text = "%";
+            break;
+        case LexicalUnit.SAC_OPERATOR_EXP:
+            text = "^";
+            break;
+        case LexicalUnit.SAC_OPERATOR_LT:
+            text = "<";
+            break;
+        case LexicalUnit.SAC_OPERATOR_GT:
+            text = ">";
+            break;
+        case LexicalUnit.SAC_OPERATOR_LE:
+            text = "<=";
+            break;
+        case LexicalUnit.SAC_OPERATOR_GE:
+            text = "=>";
+            break;
+        case LexicalUnit.SAC_OPERATOR_TILDE:
+            text = "~";
+            break;
+        case LexicalUnit.SAC_INHERIT:
+            text = "inherit";
+            break;
+        case LexicalUnit.SAC_INTEGER:
+            text = Integer.toString(getIntegerValue(), 10);
+            break;
+        case LexicalUnit.SAC_REAL:
+            text = getFloatOrInteger();
+            break;
+        case LexicalUnit.SAC_EM:
+        case SCSSLexicalUnit.SAC_LEM:
+        case SCSSLexicalUnit.SAC_REM:
+        case LexicalUnit.SAC_EX:
+        case LexicalUnit.SAC_PIXEL:
+        case LexicalUnit.SAC_INCH:
+        case LexicalUnit.SAC_CENTIMETER:
+        case LexicalUnit.SAC_MILLIMETER:
+        case LexicalUnit.SAC_POINT:
+        case LexicalUnit.SAC_PICA:
+        case LexicalUnit.SAC_PERCENTAGE:
+        case LexicalUnit.SAC_DEGREE:
+        case LexicalUnit.SAC_GRADIAN:
+        case LexicalUnit.SAC_RADIAN:
+        case LexicalUnit.SAC_MILLISECOND:
+        case LexicalUnit.SAC_SECOND:
+        case LexicalUnit.SAC_HERTZ:
+        case LexicalUnit.SAC_KILOHERTZ:
+        case LexicalUnit.SAC_DIMENSION:
+            text = getFloatOrInteger() + getDimensionUnitText();
+            break;
+        }
+        return text;
+    }
+
+    private String buildString(BuildStringStrategy strategy) {
+        short type = getLexicalUnitType();
+        String text = simpleAsString();
+        if (text == null) {
+            switch (type) {
+            case LexicalUnit.SAC_URI:
+                text = "url(" + getStringValue() + ")";
+                break;
+            case LexicalUnit.SAC_RGBCOLOR:
+            case LexicalUnit.SAC_COUNTER_FUNCTION:
+            case LexicalUnit.SAC_COUNTERS_FUNCTION:
+            case LexicalUnit.SAC_RECT_FUNCTION:
+            case LexicalUnit.SAC_FUNCTION:
+                text = buildFunctionString(strategy);
+                break;
+            case LexicalUnit.SAC_IDENT:
+                text = getStringValue();
+                break;
+            case LexicalUnit.SAC_STRING_VALUE:
+                // @@SEEME. not exact
+                text = "\"" + getStringValue() + "\"";
+                break;
+            case LexicalUnit.SAC_ATTR:
+                text = "attr(" + getStringValue() + ")";
+                break;
+            case LexicalUnit.SAC_UNICODERANGE:
+                text = "@@TODO";
+                break;
+            case LexicalUnit.SAC_SUB_EXPRESSION:
+                text = strategy.build(getSubValues());
+                break;
+            default:
+                text = "@unknown";
+                break;
+            }
+        }
+        if (getNextLexicalUnit() != null) {
+            if (getNextLexicalUnit().getLexicalUnitType() == SAC_OPERATOR_COMMA) {
+                return text + strategy.build(getNextLexicalUnit());
+            }
+            return text + ' ' + strategy.build(getNextLexicalUnit());
+        } else {
+            return text;
+        }
+    }
+
+    private String buildFunctionString(BuildStringStrategy strategy) {
+        SCSSFunctionGenerator generator = getGenerator(getFunctionName());
+        return generator.printState(this, strategy);
+    }
 
     static {
         for (SCSSFunctionGenerator serializer : initSerializers()) {

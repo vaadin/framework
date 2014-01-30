@@ -31,15 +31,13 @@ public class KeyframesNode extends Node implements IVariableNode {
     }
 
     @Override
+    public String printState() {
+        return buildString(PRINT_STRATEGY);
+    }
+
+    @Override
     public String toString() {
-        StringBuilder string = new StringBuilder();
-        string.append(keyframeName).append(" ").append(animationName)
-                .append(" {\n");
-        for (Node child : children) {
-            string.append("\t\t").append(child.toString()).append("\n");
-        }
-        string.append("\t}");
-        return string.toString();
+        return "Key frames node [" + buildString(TO_STRING_STRATEGY) + "]";
     }
 
     @Override
@@ -61,4 +59,14 @@ public class KeyframesNode extends Node implements IVariableNode {
         }
     }
 
+    private String buildString(BuildStringStrategy strategy) {
+        StringBuilder string = new StringBuilder();
+        string.append(keyframeName).append(" ").append(animationName)
+                .append(" {\n");
+        for (Node child : children) {
+            string.append("\t\t").append(strategy.build(child)).append("\n");
+        }
+        string.append("\t}");
+        return string.toString();
+    }
 }

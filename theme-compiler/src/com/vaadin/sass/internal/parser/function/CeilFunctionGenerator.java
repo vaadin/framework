@@ -16,6 +16,7 @@
 package com.vaadin.sass.internal.parser.function;
 
 import com.vaadin.sass.internal.parser.LexicalUnitImpl;
+import com.vaadin.sass.internal.tree.Node.BuildStringStrategy;
 
 /**
  * 
@@ -30,10 +31,11 @@ public class CeilFunctionGenerator implements SCSSFunctionGenerator {
     }
 
     @Override
-    public String printState(LexicalUnitImpl function) {
+    public String printState(LexicalUnitImpl function,
+            BuildStringStrategy strategy) {
         LexicalUnitImpl firstParam = function.getParameters();
         firstParam.setFloatValue((float) Math.ceil(firstParam.getFloatValue()));
-        return firstParam.toString();
+        return strategy.build(firstParam);
     }
 
 }

@@ -32,6 +32,12 @@ public abstract class ListModifyNode extends Node implements IVariableNode {
         return variable;
     }
 
+    @Override
+    public String toString() {
+        return "List append node [var = " + variable + " , list =" + list
+                + ", separator =" + separator + ", modify =" + modify + "]";
+    }
+
     public VariableNode getModifiedList() {
         final ArrayList<String> newList = new ArrayList<String>(list);
         modifyList(newList);
@@ -95,10 +101,10 @@ public abstract class ListModifyNode extends Node implements IVariableNode {
                 if (var.getName().equals(listVar.substring(1))) {
 
                     String[] split = null;
-                    if (var.getExpr().toString().contains(",")) {
-                        split = var.getExpr().toString().split(",");
+                    if (var.getExpr().printState().contains(",")) {
+                        split = var.getExpr().printState().split(",");
                     } else {
-                        split = var.getExpr().toString().split(" ");
+                        split = var.getExpr().printState().split(" ");
                     }
                     int i = list.indexOf(listVar);
                     for (final String s : split) {

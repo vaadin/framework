@@ -24,14 +24,14 @@ public class KeyframeSelectorNode extends Node {
     }
 
     @Override
+    public String printState() {
+        return buildString(PRINT_STRATEGY);
+    }
+
+    @Override
     public String toString() {
-        StringBuilder string = new StringBuilder();
-        string.append(selector).append(" {\n");
-        for (Node child : children) {
-            string.append("\t\t").append(child.toString()).append("\n");
-        }
-        string.append("\t}");
-        return string.toString();
+        return "Key frame selector node [" + buildString(TO_STRING_STRATEGY)
+                + "]";
     }
 
     @Override
@@ -39,4 +39,13 @@ public class KeyframeSelectorNode extends Node {
 
     }
 
+    public String buildString(BuildStringStrategy strategy) {
+        StringBuilder string = new StringBuilder();
+        string.append(selector).append(" {\n");
+        for (Node child : children) {
+            string.append("\t\t").append(strategy.build(child)).append("\n");
+        }
+        string.append("\t}");
+        return string.toString();
+    }
 }

@@ -103,11 +103,11 @@ public class CompileTheme {
         scss.compile();
         BufferedWriter out = new BufferedWriter(new FileWriter(stylesCssName));
         out.write(cssHeader.toString());
-        out.write(scss.toString().replace("@version@", version));
+        out.write(scss.printState().replace("@version@", version));
         out.close();
 
         System.out.println("Compiled CSS to " + stylesCssName + " ("
-                + scss.toString().length() + " bytes)");
+                + scss.printState().length() + " bytes)");
 
         createSprites(themeFolder, themeName);
         File oldCss = new File(stylesCssName);

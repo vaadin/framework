@@ -56,22 +56,22 @@ public class ImportNodeTest {
     }
 
     @Test
-    public void testToStringWhenIsURL() {
+    public void testSerializeWhenIsURL() {
         ImportNode node = new ImportNode("test", null, true);
-        Assert.assertEquals("@import url(test);", node.toString());
+        Assert.assertEquals("@import url(test);", node.printState());
     }
 
     @Test
-    public void testToStringWhenIsNotURL() {
+    public void testSerializeWhenIsNotURL() {
         ImportNode node = new ImportNode("test", null, false);
-        Assert.assertEquals("@import \"test\";", node.toString());
+        Assert.assertEquals("@import \"test\";", node.printState());
     }
 
     @Test
-    public void testToStringWithMediaQueries() {
+    public void testSerializeWithMediaQueries() {
         SACMediaListImpl ml = new SACMediaListImpl();
         ml.add("screen");
         ImportNode node = new ImportNode("test", ml, true);
-        Assert.assertEquals("@import url(test) screen;", node.toString());
+        Assert.assertEquals("@import url(test) screen;", node.printState());
     }
 }

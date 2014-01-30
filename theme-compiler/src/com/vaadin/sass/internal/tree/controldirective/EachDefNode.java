@@ -80,7 +80,7 @@ public class EachDefNode extends Node implements IVariableNode {
                     while (current != null) {
                         if (current.getValue() != null
                                 && current.getLexicalUnitType() != LexicalUnitImpl.SAC_OPERATOR_COMMA) {
-                            list.add(current.getValue().toString());
+                            list.add(current.getValueAsString());
                         }
                         current = current.getNextLexicalUnit();
                     }

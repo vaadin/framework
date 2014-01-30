@@ -41,33 +41,18 @@ public class BlockNode extends Node implements IVariableNode {
         this.selectorList = selectorList;
     }
 
-    public String toString(boolean indent) {
-        StringBuilder string = new StringBuilder();
-        int i = 0;
-        for (final String s : selectorList) {
-            string.append(s);
-            if (i != selectorList.size() - 1) {
-                string.append(", ");
-            }
-            i++;
-        }
-        string.append(" {\n");
-        for (Node child : children) {
-            if (indent) {
-                string.append("\t");
-            }
-            string.append("\t" + child.toString() + "\n");
-        }
-        if (indent) {
-            string.append("\t");
-        }
-        string.append("}");
-        return string.toString();
+    public String buildString(boolean indent) {
+        return buildString(indent, PRINT_STRATEGY);
+    }
+
+    @Override
+    public String printState() {
+        return buildString(false);
     }
 
     @Override
     public String toString() {
-        return toString(false);
+        return "BlockNode [" + buildString(true, TO_STRING_STRATEGY) + "]";
     }
 
     @Override
@@ -114,6 +99,30 @@ public class BlockNode extends Node implements IVariableNode {
             Logger.getLogger(BlockNode.class.getName()).log(Level.SEVERE, null,
                     e);
         }
+    }
+
+    private String buildString(boolean indent, BuildStringStrategy strategy) {
+        StringBuilder string = new StringBuilder();
+        int i = 0;
+        for (final String s : selectorList) {
+            string.append(s);
+            if (i != selectorList.size() - 1) {
+                string.append(", ");
+            }
+            i++;
+        }
+        string.append(" {\n");
+        for (Node child : children) {
+            if (indent) {
+                string.append("\t");
+            }
+            string.append("\t" + strategy.build(child) + "\n");
+        }
+        if (indent) {
+            string.append("\t");
+        }
+        string.append("}");
+        return string.toString();
     }
 
 }

@@ -81,7 +81,7 @@ public class ScssStylesheet extends Node {
     /**
      * Main entry point for the SASS compiler. Takes in a file and builds up a
      * ScssStylesheet tree out of it. Calling compile() on it will transform
-     * SASS into CSS. Calling toString() will print out the SCSS/CSS.
+     * SASS into CSS. Calling printState() will print out the SCSS/CSS.
      * 
      * @param identifier
      *            The file path. If null then null is returned.
@@ -97,8 +97,8 @@ public class ScssStylesheet extends Node {
     /**
      * Main entry point for the SASS compiler. Takes in a file and an optional
      * parent style sheet, then builds up a ScssStylesheet tree out of it.
-     * Calling compile() on it will transform SASS into CSS. Calling toString()
-     * will print out the SCSS/CSS.
+     * Calling compile() on it will transform SASS into CSS. Calling
+     * printState() will print out the SCSS/CSS.
      * 
      * @param identifier
      *            The file path. If null then null is returned.
@@ -119,7 +119,7 @@ public class ScssStylesheet extends Node {
      * Main entry point for the SASS compiler. Takes in a file, an optional
      * parent stylesheet, and document and error handlers. Then builds up a
      * ScssStylesheet tree out of it. Calling compile() on it will transform
-     * SASS into CSS. Calling toString() will print out the SCSS/CSS.
+     * SASS into CSS. Calling printState() will print out the SCSS/CSS.
      * 
      * @param identifier
      *            The file path. If null then null is returned.
@@ -279,27 +279,13 @@ public class ScssStylesheet extends Node {
      * types will implement themselves.
      */
     @Override
+    public String printState() {
+        return buildString(PRINT_STRATEGY);
+    }
+
+    @Override
     public String toString() {
-        StringBuilder string = new StringBuilder("");
-        String delimeter = "\n\n";
-        // add charset declaration, if it is not default "ASCII".
-        if (!"ASCII".equals(getCharset())) {
-            string.append("@charset \"").append(getCharset()).append("\";")
-                    .append(delimeter);
-        }
-        if (children.size() > 0) {
-            string.append(children.get(0).toString());
-        }
-        if (children.size() > 1) {
-            for (int i = 1; i < children.size(); i++) {
-                String childString = children.get(i).toString();
-                if (childString != null) {
-                    string.append(delimeter).append(childString);
-                }
-            }
-        }
-        String output = string.toString();
-        return output;
+        return "Stylesheet node [" + buildString(TO_STRING_STRATEGY) + "]";
     }
 
     public void addChild(int index, VariableNode node) {
@@ -460,6 +446,29 @@ public class ScssStylesheet extends Node {
         this.charset = charset;
     }
 
+    private String buildString(BuildStringStrategy strategy) {
+        StringBuilder string = new StringBuilder("");
+        String delimeter = "\n\n";
+        // add charset declaration, if it is not default "ASCII".
+        if (!"ASCII".equals(getCharset())) {
+            string.append("@charset \"").append(getCharset()).append("\";")
+                    .append(delimeter);
+        }
+        if (children.size() > 0) {
+            string.append(strategy.build(children.get(0)));
+        }
+        if (children.size() > 1) {
+            for (int i = 1; i < children.size(); i++) {
+                String childString = strategy.build(children.get(i));
+                if (childString != null) {
+                    string.append(delimeter).append(childString);
+                }
+            }
+        }
+        String output = string.toString();
+        return output;
+    }
+
     static {
         String logFile = System.getProperty("java.util.logging.config.file");
         if (logFile == null) {
@@ -474,4 +483,5 @@ public class ScssStylesheet extends Node {
             }
         }
     }
+
 }

@@ -16,6 +16,7 @@
 package com.vaadin.sass.internal.parser.function;
 
 import com.vaadin.sass.internal.parser.LexicalUnitImpl;
+import com.vaadin.sass.internal.tree.Node.BuildStringStrategy;
 
 /**
  * 
@@ -30,16 +31,18 @@ public class DefaultFunctionGenerator implements SCSSFunctionGenerator {
     }
 
     @Override
-    public String printState(LexicalUnitImpl function) {
+    public String printState(LexicalUnitImpl function,
+            BuildStringStrategy strategy) {
         StringBuilder builder = new StringBuilder(function.getFunctionName());
-        return builder.append('(').append(printParameters(function))
+        return builder.append('(').append(printParameters(function, strategy))
                 .append(')').toString();
     }
 
-    private String printParameters(LexicalUnitImpl function) {
+    private String printParameters(LexicalUnitImpl function,
+            BuildStringStrategy strategy) {
         if (function.getParameters() == null) {
             return null;
         }
-        return function.getParameters().toString();
+        return strategy.build(function.getParameters());
     }
 }

@@ -852,7 +852,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // cache it
             response.setHeader("Cache-Control", "no-cache");
             final String mimetype = getService().getMimeType(filename);
-            writeResponse(response, mimetype, scss.toString());
+            writeResponse(response, mimetype, scss.printState());
 
             return true;
         }

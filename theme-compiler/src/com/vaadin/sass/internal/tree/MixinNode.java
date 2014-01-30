@@ -45,8 +45,13 @@ public class MixinNode extends Node implements IVariableNode {
     }
 
     @Override
-    public String toString() {
+    public String printState() {
         return "name: " + name + " args: " + arglist;
+    }
+
+    @Override
+    public String toString() {
+        return "Mixin node [" + printState() + "]";
     }
 
     public String getName() {
@@ -88,11 +93,11 @@ public class MixinNode extends Node implements IVariableNode {
 
             if (name.startsWith("$")) {
                 if (name.equals("$" + var.getName())) {
-                    name = var.getExpr().toString();
+                    name = var.getExpr().printState();
                 }
             } else if (name.startsWith("#{") && name.endsWith("}")) {
                 if (name.equals("#{$" + var.getName() + "}")) {
-                    name = var.getExpr().toString();
+                    name = var.getExpr().printState();
                 }
             }
         }

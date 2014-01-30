@@ -37,7 +37,21 @@ public class MediaNode extends Node {
     }
 
     @Override
+    public String printState() {
+        return buildString(PRINT_STRATEGY, true);
+    }
+
+    @Override
     public String toString() {
+        return buildString(TO_STRING_STRATEGY, true);
+    }
+
+    @Override
+    public void traverse() {
+
+    }
+
+    private String buildString(BuildStringStrategy strategy, boolean indent) {
         StringBuilder builder = new StringBuilder("@media ");
         if (media != null) {
             for (int i = 0; i < media.getLength(); i++) {
@@ -49,20 +63,20 @@ public class MediaNode extends Node {
         }
         builder.append(" {\n");
         for (Node child : children) {
+            builder.append('\t');
             if (child instanceof BlockNode) {
-                builder.append("\t" + ((BlockNode) child).toString(true) + "\n");
-            } else {
-                builder.append("\t" + child.toString() + "\n");
-            }
+                if (PRINT_STRATEGY.equals(strategy)) {
+                    builder.append(((BlockNode) child).buildString(indent));
+                } else {
+                    builder.append(strategy.build(child));
 
+                }
+            } else {
+                builder.append(strategy.build(child));
+            }
+            builder.append('\n');
         }
         builder.append("}");
         return builder.toString();
     }
-
-    @Override
-    public void traverse() {
-
-    }
-
 }

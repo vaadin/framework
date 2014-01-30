@@ -35,14 +35,19 @@ public class MicrosoftRuleNode extends Node implements IVariableNode {
         for (final VariableNode var : variables) {
             if (StringUtil.containsVariable(value, var.getName())) {
                 value = StringUtil.replaceVariable(value, var.getName(), var
-                        .getExpr().toString());
+                        .getExpr().printState());
             }
         }
     }
 
     @Override
-    public String toString() {
+    public String printState() {
         return name + ": " + value + ";";
+    }
+
+    @Override
+    public String toString() {
+        return "MicrosoftRule node [" + printState() + "]";
     }
 
     @Override

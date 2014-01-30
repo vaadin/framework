@@ -16,6 +16,7 @@
 package com.vaadin.sass.internal.parser.function;
 
 import com.vaadin.sass.internal.parser.LexicalUnitImpl;
+import com.vaadin.sass.internal.tree.Node.BuildStringStrategy;
 
 /**
  * 
@@ -30,10 +31,11 @@ public class AbsFunctionGenerator implements SCSSFunctionGenerator {
     }
 
     @Override
-    public String printState(LexicalUnitImpl function) {
+    public String printState(LexicalUnitImpl function,
+            BuildStringStrategy strategy) {
         LexicalUnitImpl firstParam = function.getParameters();
         firstParam.setFloatValue(Math.abs(firstParam.getFloatValue()));
-        return firstParam.toString();
+        return strategy.build(firstParam);
     }
 
 }

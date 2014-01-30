@@ -39,6 +39,5 @@ public class ListContainsNode extends ListModifyNode {
         VariableNode node = new VariableNode(variable.substring(1),
                 LexicalUnitImpl.createString(contains), false);
         return node;
-
     }
 }

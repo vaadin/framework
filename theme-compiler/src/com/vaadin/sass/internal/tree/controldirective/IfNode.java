@@ -41,7 +41,7 @@ public class IfNode extends Node implements IfElseNode, IVariableNode {
 
     @Override
     public String toString() {
-        return "@if" + expression;
+        return "@if " + expression;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class IfNode extends Node implements IfElseNode, IVariableNode {
         for (final VariableNode node : variables) {
             if (StringUtil.containsVariable(expression, node.getName())) {
                 expression = StringUtil.replaceVariable(expression,
-                        node.getName(), node.getExpr().toString());
+                        node.getName(), node.getExpr().printState());
             }
         }
     }

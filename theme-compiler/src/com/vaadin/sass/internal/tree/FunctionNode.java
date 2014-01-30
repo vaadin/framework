@@ -50,7 +50,7 @@ public class FunctionNode extends Node implements IVariableNode {
         for (final VariableNode node : variables) {
             if (StringUtil.containsVariable(args, node.getName())) {
                 args = StringUtil.replaceVariable(args, node.getName(), node
-                        .getExpr().toString());
+                        .getExpr().printState());
             }
         }
     }
@@ -59,4 +59,5 @@ public class FunctionNode extends Node implements IVariableNode {
     public void traverse() {
         replaceVariables(ScssStylesheet.getVariables());
     }
+
 }

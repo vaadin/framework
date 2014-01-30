@@ -104,7 +104,7 @@ public abstract class AbstractDirectoryScanningSassTests {
                 scssFile.getCanonicalPath(), null, documentHandler,
                 errorHandler);
         scssStylesheet.compile();
-        String parsedCss = scssStylesheet.toString();
+        String parsedCss = scssStylesheet.printState();
 
         if (getCssFile(scssFile) != null) {
             String referenceCss = IOUtils.toString(new FileInputStream(

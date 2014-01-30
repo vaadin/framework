@@ -57,19 +57,13 @@ public class RuleNode extends Node implements IVariableNode {
     }
 
     @Override
-    public String toString() {
-        String stringValue = value.toString()
-                + (important ? " !important" : "");
-        if (!"".equals(stringValue.trim())) {
-            stringValue = variable + ": " + stringValue + ";";
-        } else {
-            stringValue = "";
-        }
+    public String printState() {
+        return buildString(PRINT_STRATEGY);
+    }
 
-        if (comment != null) {
-            stringValue += comment;
-        }
-        return stringValue;
+    @Override
+    public String toString() {
+        return "Rule node [" + buildString(TO_STRING_STRATEGY) + "]";
     }
 
     public boolean isImportant() {
@@ -104,12 +98,12 @@ public class RuleNode extends Node implements IVariableNode {
 
                 if (value.getParameters() != null) {
                     if (StringUtil.containsVariable(value.getParameters()
-                            .toString(), node.getName())) {
+                            .printState(), node.getName())) {
                         LexicalUnitImpl param = value.getParameters();
                         while (param != null) {
                             if (param.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE
-                                    && param.getValue().toString()
-                                            .equals(node.getName())) {
+                                    && param.getValueAsString().equals(
+                                            node.getName())) {
                                 param.replaceValue(node.getExpr());
                             }
                             param = param.getNextLexicalUnit();
@@ -120,11 +114,9 @@ public class RuleNode extends Node implements IVariableNode {
                     && value.getStringValue().contains(interpolation)) {
                 LexicalUnitImpl current = value;
                 while (current != null) {
-                    if (current.getValue().toString().contains(interpolation)) {
+                    if (current.getValueAsString().contains(interpolation)) {
 
-                        current.setStringValue(current
-                                .getValue()
-                                .toString()
+                        current.setStringValue(current.getValueAsString()
                                 .replaceAll(Pattern.quote(interpolation),
                                         node.getExpr().unquotedString()));
                     }
@@ -134,7 +126,7 @@ public class RuleNode extends Node implements IVariableNode {
                 LexicalUnitImpl current = value;
                 while (current != null) {
                     if (current.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE
-                            && current.getValue().toString()
+                            && current.getValueAsString()
                                     .equals(node.getName())) {
 
                         current.replaceValue(node.getExpr());
@@ -162,5 +154,22 @@ public class RuleNode extends Node implements IVariableNode {
         } else {
             replaceVariables(ScssStylesheet.getVariables());
         }
+    }
+
+    private String buildString(BuildStringStrategy strategy) {
+        String stringValue = strategy.build(value)
+                + (important ? " !important" : "");
+        StringBuilder builder = new StringBuilder();
+        if (!"".equals(stringValue.trim())) {
+            builder.append(variable);
+            builder.append(": ");
+            builder.append(stringValue);
+            builder.append(';');
+        }
+
+        if (comment != null) {
+            builder.append(comment);
+        }
+        return builder.toString();
     }
 }
