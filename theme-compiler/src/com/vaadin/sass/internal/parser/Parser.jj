@@ -912,16 +912,22 @@ void media() :
   <MEDIA_SYM> ( <S> )*
    mediaStatement(ml)
    { start = true; documentHandler.startMedia(ml); }
-   <LBRACE> ( <S> )* ( debuggingDirective() | styleRule() | skipUnknownRule() )* <RBRACE> ( <S> )*
+   <LBRACE> ( <S> )* ( mediaDirective() )*	<RBRACE> ( <S> )*
  } catch (ParseException e) {
      reportError(getLocator(), e);
      skipStatement();
      // reportWarningSkipText(getLocator(), skipStatement());
  } finally {
      if (start) {
-	 documentHandler.endMedia(ml);
+     documentHandler.endMedia(ml);
      }
  }
+}
+
+void mediaDirective() :
+{}
+{
+  debuggingDirective() | styleRule() | skipUnknownRule() | contentDirective()
 }
 
 void mediaStatement(MediaListImpl ml) :

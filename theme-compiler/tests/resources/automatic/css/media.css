@@ -1,3 +1,14 @@
+@media screen {
+	.v-view {
+		overflow: visible;
+	}
+	.details {
+		font-size: 1pt;
+		font-weight: bold;
+	}
+	width: 100%;
+}
+
 @media screen and (max-width: 480px) {
 	.abc {
 		background: red;
