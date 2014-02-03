@@ -28,7 +28,10 @@ import com.vaadin.server.NoOutputStreamException;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.StreamVariable.StreamingProgressEvent;
+import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.upload.UploadClientRpc;
+import com.vaadin.shared.ui.upload.UploadServerRpc;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Component for uploading files from client to server.
@@ -113,9 +116,16 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * The receiver must be set before performing an upload.
      */
     public Upload() {
+        registerRpc(new UploadServerRpc() {
+            @Override
+            public void change(String filename) {
+                fireEvent(new ChangeEvent(Upload.this, filename));
+            }
+        });
     }
 
     public Upload(String caption, Receiver uploadReceiver) {
+        this();
         setCaption(caption);
         receiver = uploadReceiver;
     }
@@ -486,6 +496,42 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
+     * Upload.ChangeEvent event is sent when the value (filename) of the upload
+     * changes.
+     * 
+     * @since 7.2
+     */
+    public static class ChangeEvent extends Component.Event {
+
+        private final String filename;
+
+        public ChangeEvent(Upload source, String filename) {
+            super(source);
+            this.filename = filename;
+        }
+
+        /**
+         * Uploads where the event occurred.
+         * 
+         * @return the Source of the event.
+         */
+        @Override
+        public Upload getSource() {
+            return (Upload) super.getSource();
+        }
+
+        /**
+         * Gets the file name.
+         * 
+         * @return the filename.
+         */
+        public String getFilename() {
+            return filename;
+        }
+
+    }
+
+    /**
      * Receives the events when the upload starts.
      * 
      * @author Vaadin Ltd.
@@ -551,6 +597,25 @@ public class Upload extends AbstractComponent implements Component.Focusable,
          *            the Upload successfull event.
          */
         public void uploadSucceeded(SucceededEvent event);
+    }
+
+    /**
+     * Listener for {@link ChangeEvent}
+     * 
+     * @since 7.2
+     */
+    public interface ChangeListener extends Serializable {
+
+        Method FILENAME_CHANGED = ReflectTools.findMethod(ChangeListener.class,
+                "filenameChanged", ChangeEvent.class);
+
+        /**
+         * A file has been selected but upload has not yet started.
+         * 
+         * @param event
+         *            the change event
+         */
+        public void filenameChanged(ChangeEvent event);
     }
 
     /**
@@ -737,6 +802,27 @@ public class Upload extends AbstractComponent implements Component.Focusable,
         if (progressListeners != null) {
             progressListeners.remove(listener);
         }
+    }
+
+    /**
+     * Adds a filename change event listener
+     * 
+     * @param listener
+     *            the Listener to add
+     */
+    public void addChangeListener(ChangeListener listener) {
+        super.addListener(EventId.CHANGE, ChangeEvent.class, listener,
+                ChangeListener.FILENAME_CHANGED);
+    }
+
+    /**
+     * Removes a filename change event listener
+     * 
+     * @param listener
+     *            the listener to be removed
+     */
+    public void removeChangeListener(ChangeListener listener) {
+        super.removeListener(EventId.CHANGE, ChangeEvent.class, listener);
     }
 
     /**
@@ -1040,7 +1126,11 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
                 @Override
                 public OutputStream getOutputStream() {
-                    OutputStream receiveUpload = receiver.receiveUpload(
+                    if (getReceiver() == null) {
+                        throw new IllegalStateException(
+                                "Upload cannot be performed without a receiver set");
+                    }
+                    OutputStream receiveUpload = getReceiver().receiveUpload(
                             lastStartedEvent.getFileName(),
                             lastStartedEvent.getMimeType());
                     lastStartedEvent = null;

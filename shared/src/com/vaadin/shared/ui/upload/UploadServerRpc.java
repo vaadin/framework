@@ -13,16 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared;
+package com.vaadin.shared.ui.upload;
 
-import java.io.Serializable;
+import com.vaadin.shared.communication.ServerRpc;
 
-public interface EventId extends Serializable {
-    public static final String BLUR = "blur";
-    public static final String FOCUS = "focus";
-    public static final String CLICK_EVENT_IDENTIFIER = "click";
-    public static final String LAYOUT_CLICK_EVENT_IDENTIFIER = "lClick";
-    public static final String POLL = "poll";
-    public static final String CHANGE = "change";
+public interface UploadServerRpc extends ServerRpc {
+
+    /**
+     * Event sent when the file name of the upload component is changed.
+     * 
+     * @param filename
+     *            The filename
+     */
+    void change(String filename);
 
 }
