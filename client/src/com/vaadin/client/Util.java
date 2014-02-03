@@ -1343,7 +1343,8 @@ public class Util {
             divElement.getStyle().setDisplay(Display.NONE);
 
             RootPanel.getBodyElement().appendChild(divElement);
-            divElement.setInnerHTML("<a href='" + escapeHTML(url) + "' ></a>");
+            divElement.setInnerHTML("<a href='" + escapeAttribute(url)
+                    + "' ></a>");
 
             AnchorElement a = divElement.getChild(0).cast();
             String href = a.getHref();
