@@ -715,6 +715,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             client.updateVariable(id, "selected", tabKeys.get(tabIndex)
                     .toString(), true);
             waitingForResponse = true;
+
+            tb.getTab(tabIndex).focus(); // move keyboard focus to active tab
         }
     }
 
