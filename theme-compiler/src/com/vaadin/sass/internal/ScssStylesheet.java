@@ -24,13 +24,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
 
-import com.vaadin.buildhelpers.CompileTheme;
 import com.vaadin.sass.internal.handler.SCSSDocumentHandler;
 import com.vaadin.sass.internal.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.internal.handler.SCSSErrorHandler;
@@ -458,20 +456,5 @@ public class ScssStylesheet extends Node {
 
     public void setCharset(String charset) {
         this.charset = charset;
-    }
-
-    static {
-        String logFile = System.getProperty("java.util.logging.config.file");
-        if (logFile == null) {
-            try {
-                LogManager.getLogManager().readConfiguration(
-                        CompileTheme.class
-                                .getResourceAsStream("/logging.properties"));
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

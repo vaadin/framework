@@ -20,7 +20,8 @@
     </path>
     <path id="classpath.test.custom" />
 
-    <property name="classes.exclude" value="**/*.properties"/>
+    <!--<property name="classes.exclude" value="com/vaadin/buildhelpers/**" 
+        /> -->
 
     <target name="parser">
         <!-- Copy javacc-5.0.jar to ${result.dir}/javacc/javacc.jar as the 

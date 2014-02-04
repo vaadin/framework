@@ -17,8 +17,6 @@
 package com.vaadin.sass.internal.tree;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.vaadin.sass.internal.visitor.ExtendNodeHandler;
 
@@ -56,8 +54,7 @@ public class ExtendNode extends Node implements IVariableNode {
             ExtendNodeHandler.traverse(this);
             getParentNode().removeChild(this);
         } catch (Exception e) {
-            Logger.getLogger(ExtendNode.class.getName()).log(Level.SEVERE,
-                    null, e);
+            e.printStackTrace();
         }
     }
 }

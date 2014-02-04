@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
@@ -100,7 +98,7 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     public ForNode forDirective(String var, String from, String to,
             boolean exclusive, String body) {
         ForNode node = new ForNode(var, from, to, exclusive, body);
-        log(node);
+        System.out.println(node);
         return node;
     }
 
@@ -128,7 +126,7 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     @Override
     public WhileNode whileDirective(String condition, String body) {
         WhileNode node = new WhileNode(condition, body);
-        log(node);
+        System.out.println(node);
         return node;
     }
 
@@ -140,14 +138,14 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
 
     @Override
     public void ignorableAtRule(String atRule) throws CSSException {
-        log("ignorableAtRule(String atRule): " + atRule);
+        System.out.println("ignorableAtRule(String atRule): " + atRule);
     }
 
     @Override
     public void namespaceDeclaration(String prefix, String uri)
             throws CSSException {
-        log("namespaceDeclaration(String prefix, String uri): " + prefix + ", "
-                + uri);
+        System.out.println("namespaceDeclaration(String prefix, String uri): "
+                + prefix + ", " + uri);
     }
 
     @Override
@@ -169,14 +167,14 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
 
     @Override
     public void startPage(String name, String pseudo_page) throws CSSException {
-        log("startPage(String name, String pseudo_page): " + name + ", "
-                + pseudo_page);
+        System.out.println("startPage(String name, String pseudo_page): "
+                + name + ", " + pseudo_page);
     }
 
     @Override
     public void endPage(String name, String pseudo_page) throws CSSException {
-        log("endPage(String name, String pseudo_page): " + name + ", "
-                + pseudo_page);
+        System.out.println("endPage(String name, String pseudo_page): " + name
+                + ", " + pseudo_page);
     }
 
     @Override
@@ -387,18 +385,5 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     @Override
     public void endIncludeContentBlock() {
         nodeStack.pop();
-    }
-
-    private void log(Object object) {
-        if (object != null) {
-            log(object.toString());
-        } else {
-            log(null);
-        }
-    }
-
-    private void log(String msg) {
-        Logger.getLogger(SCSSDocumentHandlerImpl.class.getName()).log(
-                Level.INFO, msg);
     }
 }

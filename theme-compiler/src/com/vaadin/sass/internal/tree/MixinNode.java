@@ -19,8 +19,6 @@ package com.vaadin.sass.internal.tree;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.parser.LexicalUnitImpl;
@@ -121,8 +119,7 @@ public class MixinNode extends Node implements IVariableNode {
             ScssStylesheet.closeVariableScope(variableScope);
 
         } catch (Exception e) {
-            Logger.getLogger(MixinNode.class.getName()).log(Level.SEVERE, null,
-                    e);
+            e.printStackTrace();
         }
     }
 

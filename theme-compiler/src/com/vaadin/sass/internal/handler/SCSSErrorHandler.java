@@ -15,8 +15,7 @@
  */
 package com.vaadin.sass.internal.handler;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.PrintStream;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.CSSParseException;
@@ -24,33 +23,38 @@ import org.w3c.css.sac.ErrorHandler;
 
 public class SCSSErrorHandler implements ErrorHandler {
 
+    private PrintStream errorStream;
+
+    public SCSSErrorHandler(PrintStream errorStream) {
+        this.errorStream = errorStream;
+    }
+
     public SCSSErrorHandler() {
+        this(System.out);
     }
 
     @Override
     public void error(CSSParseException arg0) throws CSSException {
-        log("Error when parsing file \n" + arg0.getURI() + " on line "
-                + arg0.getLineNumber() + ", column " + arg0.getColumnNumber());
-        log(arg0.getMessage() + "\n");
+        errorStream.println("Error when parsing file \n" + arg0.getURI()
+                + " on line " + arg0.getLineNumber() + ", column "
+                + arg0.getColumnNumber());
+        errorStream.println(arg0.getMessage() + "\n");
     }
 
     @Override
     public void fatalError(CSSParseException arg0) throws CSSException {
-        log("FATAL Error when parsing file \n" + arg0.getURI() + " on line "
-                + arg0.getLineNumber() + ", column " + arg0.getColumnNumber());
-        log(arg0.getMessage() + "\n");
+        errorStream.println("FATAL Error when parsing file \n" + arg0.getURI()
+                + " on line " + arg0.getLineNumber() + ", column "
+                + arg0.getColumnNumber());
+        errorStream.println(arg0.getMessage() + "\n");
     }
 
     @Override
     public void warning(CSSParseException arg0) throws CSSException {
-        log("Warning when parsing file \n" + arg0.getURI() + " on line "
-                + arg0.getLineNumber() + ", column " + arg0.getColumnNumber());
-        log(arg0.getMessage() + "\n");
-    }
-
-    private void log(String msg) {
-        Logger.getLogger(SCSSDocumentHandlerImpl.class.getName()).log(
-                Level.SEVERE, msg);
+        errorStream.println("Warning when parsing file \n" + arg0.getURI()
+                + " on line " + arg0.getLineNumber() + ", column "
+                + arg0.getColumnNumber());
+        errorStream.println(arg0.getMessage() + "\n");
     }
 
 }
