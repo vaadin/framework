@@ -53,16 +53,16 @@ public class Heartbeat {
     /**
      * Initializes the heartbeat for the given application connection
      * 
-     * @param applicationConnection
+     * @param connection
      *            the connection
      */
-    public void init(ApplicationConnection applicationConnection) {
-        interval = applicationConnection.getConfiguration()
-                .getHeartbeatInterval();
+    public void init(ApplicationConnection connection) {
+        this.connection = connection;
+        interval = connection.getConfiguration().getHeartbeatInterval();
         setInterval(interval);
         schedule();
 
-        applicationConnection.addHandler(
+        connection.addHandler(
                 ApplicationConnection.ApplicationStoppedEvent.TYPE,
                 new ApplicationConnection.ApplicationStoppedHandler() {
 
