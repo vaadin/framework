@@ -30,11 +30,11 @@ public class Property {
     }
 
     public Object getValue(Object bean) throws NoDataException {
-        return TypeDataStore.getGetter(this).invoke(bean);
+        return TypeDataStore.getValue(this, bean);
     }
 
     public void setValue(Object bean, Object value) throws NoDataException {
-        TypeDataStore.getSetter(this).invoke(bean, value);
+        TypeDataStore.setValue(this, bean, value);
     }
 
     public String getDelegateToWidgetMethodName() {
@@ -48,6 +48,10 @@ public class Property {
 
     public Type getType() throws NoDataException {
         return TypeDataStore.getType(this);
+    }
+
+    public Type getBeanType() {
+        return bean;
     }
 
     /**

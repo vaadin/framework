@@ -19,7 +19,9 @@ package com.vaadin.server.widgetsetutils.metadata;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -31,18 +33,29 @@ public class MethodProperty extends Property {
 
     private final JMethod setter;
 
-    private MethodProperty(JClassType beanType, JMethod setter) {
+    private final String getter;
+
+    private MethodProperty(JClassType beanType, JMethod setter, String getter) {
         super(getTransportFieldName(setter), beanType, setter
                 .getParameterTypes()[0]);
         this.setter = setter;
+        this.getter = getter;
+    }
+
+    @Override
+    public boolean hasAccessorMethods() {
+        return getter != null;
     }
 
     public static Collection<MethodProperty> findProperties(JClassType type) {
         Collection<MethodProperty> properties = new ArrayList<MethodProperty>();
 
-        List<JMethod> setters = getSetters(type);
+        Set<String> getters = new HashSet<String>();
+        List<JMethod> setters = getSetters(type, getters);
         for (JMethod setter : setters) {
-            properties.add(new MethodProperty(type, setter));
+            String getter = findGetter(type, setter);
+            properties.add(new MethodProperty(setter.getEnclosingType(),
+                    setter, getters.contains(getter) ? getter : null));
         }
 
         return properties;
@@ -53,9 +66,12 @@ public class MethodProperty extends Property {
      * 
      * @param beanType
      *            The type to check
+     * @param getters
+     *            Set that will be filled with names of getters.
      * @return A list of setter methods from the class and its parents
      */
-    private static List<JMethod> getSetters(JClassType beanType) {
+    private static List<JMethod> getSetters(JClassType beanType,
+            Set<String> getters) {
         List<JMethod> setterMethods = new ArrayList<JMethod>();
 
         while (beanType != null
@@ -63,13 +79,19 @@ public class MethodProperty extends Property {
                         Object.class.getName())) {
             for (JMethod method : beanType.getMethods()) {
                 // Process all setters that have corresponding fields
-                if (!method.isPublic() || method.isStatic()
-                        || !method.getName().startsWith("set")
-                        || method.getParameterTypes().length != 1) {
-                    // Not setter, skip to next method
+                if (!method.isPublic() || method.isStatic()) {
+                    // Not getter/setter, skip to next method
                     continue;
                 }
-                setterMethods.add(method);
+                String methodName = method.getName();
+                if (methodName.startsWith("set")
+                        && method.getParameterTypes().length == 1) {
+                    setterMethods.add(method);
+                } else if (method.getParameterTypes().length == 0
+                        && methodName.startsWith("is")
+                        || methodName.startsWith("get")) {
+                    getters.add(methodName);
+                }
             }
             beanType = beanType.getSuperclass();
         }
@@ -78,34 +100,26 @@ public class MethodProperty extends Property {
     }
 
     @Override
-    public void writeSetterBody(TreeLogger logger, SourceWriter w,
-            String beanVariable, String valueVariable) {
-        w.print("((");
-        w.print(getBeanType().getQualifiedSourceName());
-        w.print(") ");
-        w.print(beanVariable);
-        w.print(").");
-        w.print(setter.getName());
-        w.print("((");
-        w.print(getUnboxedPropertyTypeName());
-        w.print(") ");
-        w.print(valueVariable);
-        w.println(");");
+    public void writeGetterBody(TreeLogger logger, SourceWriter w,
+            String beanVariable) {
+        String value = String.format("%s.@%s::%s()()", beanVariable,
+                getBeanType().getQualifiedSourceName(), getter);
+        w.print("return ");
+        w.print(boxValue(value));
+        w.println(";");
     }
 
     @Override
-    public void writeGetterBody(TreeLogger logger, SourceWriter w,
-            String beanVariable) {
-        w.print("return ((");
-        w.print(getBeanType().getQualifiedSourceName());
-        w.print(") ");
-        w.print(beanVariable);
-        w.print(").");
-        w.print(findGetter(getBeanType(), setter));
-        w.print("();");
+    public void writeSetterBody(TreeLogger logger, SourceWriter w,
+            String beanVariable, String valueVariable) {
+        w.println("%s.@%s::%s(%s)(%s);", beanVariable, getBeanType()
+                .getQualifiedSourceName(), setter.getName(), setter
+                .getParameterTypes()[0].getJNISignature(),
+                unboxValue(valueVariable));
+
     }
 
-    private String findGetter(JClassType beanType, JMethod setterMethod) {
+    private static String findGetter(JClassType beanType, JMethod setterMethod) {
         JType setterParameterType = setterMethod.getParameterTypes()[0];
         String fieldName = setterMethod.getName().substring(3);
         if (setterParameterType.getQualifiedSourceName().equals(

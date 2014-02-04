@@ -34,8 +34,6 @@ public class TypeDataStore {
             .create();
     private final FastStringMap<ProxyHandler> proxyHandlers = FastStringMap
             .create();
-    private final FastStringMap<JsArrayObject<Property>> properties = FastStringMap
-            .create();
     private final FastStringMap<JsArrayString> delegateToWidgetProperties = FastStringMap
             .create();
 
@@ -46,11 +44,10 @@ public class TypeDataStore {
     private final FastStringMap<Invoker> invokers = FastStringMap.create();
     private final FastStringMap<Type[]> paramTypes = FastStringMap.create();
 
-    private final FastStringMap<Type> propertyTypes = FastStringMap.create();
-    private final FastStringMap<Invoker> setters = FastStringMap.create();
-    private final FastStringMap<Invoker> getters = FastStringMap.create();
     private final FastStringMap<String> delegateToWidget = FastStringMap
             .create();
+
+    private final JavaScriptObject jsTypeData = JavaScriptObject.createObject();
 
     public static TypeDataStore get() {
         return ConnectorBundleLoader.get().getTypeDataStore();
@@ -117,19 +114,10 @@ public class TypeDataStore {
         return invoker;
     }
 
-    public static Invoker getGetter(Property property) throws NoDataException {
-        Invoker getter = get().getters.get(property.getSignature());
-        if (getter == null) {
-            throw new NoDataException("There is no getter for "
-                    + property.getSignature());
-        }
-
-        return getter;
-    }
-
-    public void setGetter(Class<?> clazz, String propertyName, Invoker invoker) {
-        getters.put(new Property(getType(clazz), propertyName).getSignature(),
-                invoker);
+    public static Object getValue(Property property, Object target)
+            throws NoDataException {
+        return getJsPropertyValue(get().jsTypeData, property.getBeanType()
+                .getBaseTypeName(), property.getName(), target);
     }
 
     public static String getDelegateToWidget(Property property) {
@@ -243,51 +231,31 @@ public class TypeDataStore {
 
     public static JsArrayObject<Property> getPropertiesAsArray(Type type)
             throws NoDataException {
-        JsArrayObject<Property> properties = get().properties.get(type
-                .getSignature());
-        if (properties == null) {
-            throw new NoDataException("No property list for "
-                    + type.getSignature());
+        JsArrayString names = getJsPropertyNames(get().jsTypeData,
+                type.getBaseTypeName());
+
+        // Create Property instances for each property name
+        JsArrayObject<Property> properties = JavaScriptObject.createArray()
+                .cast();
+        for (int i = 0; i < names.length(); i++) {
+            properties.add(new Property(type, names.get(i)));
         }
+
         return properties;
     }
 
-    public void setProperties(Class<?> clazz, String[] propertyNames) {
-        JsArrayObject<Property> properties = JavaScriptObject.createArray()
-                .cast();
-        Type type = getType(clazz);
-        for (String name : propertyNames) {
-            properties.add(new Property(type, name));
-        }
-        this.properties.put(type.getSignature(), properties);
-    }
-
     public static Type getType(Property property) throws NoDataException {
-        Type type = get().propertyTypes.get(property.getSignature());
-        if (type == null) {
-            throw new NoDataException("No return type for "
-                    + property.getSignature());
-        }
-        return type;
+        return getJsPropertyType(get().jsTypeData, property.getBeanType()
+                .getBaseTypeName(), property.getName());
     }
 
-    public void setPropertyType(Class<?> clazz, String propertName, Type type) {
-        propertyTypes.put(
-                new Property(getType(clazz), propertName).getSignature(), type);
+    public void setPropertyType(Class<?> clazz, String propertyName, Type type) {
+        setJsPropertyType(jsTypeData, clazz.getName(), propertyName, type);
     }
 
-    public static Invoker getSetter(Property property) throws NoDataException {
-        Invoker setter = get().setters.get(property.getSignature());
-        if (setter == null) {
-            throw new NoDataException("No setter for "
-                    + property.getSignature());
-        }
-        return setter;
-    }
-
-    public void setSetter(Class<?> clazz, String propertyName, Invoker setter) {
-        setters.put(new Property(getType(clazz), propertyName).getSignature(),
-                setter);
+    public static void setValue(Property property, Object target, Object value) {
+        setJsPropertyValue(get().jsTypeData, property.getBeanType()
+                .getBaseTypeName(), property.getName(), target, value);
     }
 
     public void setSerializerFactory(Class<?> clazz, Invoker factory) {
@@ -304,6 +272,99 @@ public class TypeDataStore {
     }
 
     public static boolean hasProperties(Type type) {
-        return get().properties.containsKey(type.getSignature());
+        return hasJsProperties(get().jsTypeData, type.getBaseTypeName());
     }
+
+    public void setSuperClass(Class<?> baseClass, Class<?> superClass) {
+        String superClassName = superClass == null ? null : superClass
+                .getName();
+        setSuperClass(jsTypeData, baseClass.getName(), superClassName);
+    }
+
+    public void setPropertyData(Class<?> type, String propertyName,
+            JavaScriptObject propertyData) {
+        setPropertyData(jsTypeData, type.getName(), propertyName, propertyData);
+    }
+
+    private static native void setPropertyData(JavaScriptObject typeData,
+            String className, String propertyName, JavaScriptObject propertyData)
+    /*-{
+        typeData[className][propertyName] = propertyData;
+    }-*/;
+
+    /*
+     * This method sets up prototypes chain for <code>baseClassName</code>.
+     * Precondition is : <code>superClassName</code> had to be handled before
+     * its child <code>baseClassName</code>.
+     * 
+     * It makes all properties defined in the <code>superClassName</code>
+     * available for <code>baseClassName</code> as well.
+     */
+    private static native void setSuperClass(JavaScriptObject typeData,
+            String baseClassName, String superClassName)
+    /*-{
+        var parentType = typeData[superClassName];
+        if (parentType !== undefined ){
+            var ctor = function () {};
+            ctor.prototype = parentType;
+            typeData[baseClassName] = new ctor;
+        }
+        else {
+            typeData[baseClassName] = {};
+        } 
+    }-*/;
+
+    private static native boolean hasGetter(JavaScriptObject typeData,
+            String beanName, String propertyName)
+    /*-{
+        return typeData[beanName][propertyName].getter !== undefined;
+    }-*/;
+
+    private static native boolean hasSetter(JavaScriptObject typeData,
+            String beanName, String propertyName)
+    /*-{
+        return typeData[beanName][propertyName].setter !== undefined;
+    }-*/;
+
+    private static native Object getJsPropertyValue(JavaScriptObject typeData,
+            String beanName, String propertyName, Object beanInstance)
+    /*-{
+        return typeData[beanName][propertyName].getter(beanInstance);
+    }-*/;
+
+    private static native void setJsPropertyValue(JavaScriptObject typeData,
+            String beanName, String propertyName, Object beanInstance,
+            Object value)
+    /*-{
+        typeData[beanName][propertyName].setter(beanInstance, value);
+    }-*/;
+
+    private static native Type getJsPropertyType(JavaScriptObject typeData,
+            String beanName, String propertyName)
+    /*-{
+        return typeData[beanName][propertyName].type;
+    }-*/;
+
+    private static native void setJsPropertyType(JavaScriptObject typeData,
+            String beanName, String propertyName, Type type)
+    /*-{
+        typeData[beanName][propertyName].type = type;
+    }-*/;
+
+    private static native JsArrayString getJsPropertyNames(
+            JavaScriptObject typeData, String beanName)
+    /*-{
+        var names = [];
+        for(var name in typeData[beanName]) {
+            names.push(name);
+        }
+        return names;
+    }-*/;
+
+    private static native boolean hasJsProperties(JavaScriptObject typeData,
+            String beanName)
+    /*-{
+        return typeData[beanName] !== undefined ;
+    }-*/;
+
 }

@@ -53,6 +53,28 @@ public abstract class Property {
         }
     }
 
+    public String boxValue(String codeSnippet) {
+        JPrimitiveType primitive = propertyType.isPrimitive();
+        if (primitive == null) {
+            return codeSnippet;
+        } else {
+            return String.format("@%s::valueOf(%s)(%s)",
+                    primitive.getQualifiedBoxedSourceName(),
+                    propertyType.getJNISignature(), codeSnippet);
+        }
+    }
+
+    public String unboxValue(String codeSnippet) {
+        JPrimitiveType primitive = propertyType.isPrimitive();
+        if (primitive == null) {
+            return codeSnippet;
+        } else {
+            return String.format("%s.@%s::%sValue()()", codeSnippet,
+                    primitive.getQualifiedBoxedSourceName(),
+                    primitive.getSimpleSourceName());
+        }
+    }
+
     public JClassType getBeanType() {
         return beanType;
     }
@@ -62,6 +84,8 @@ public abstract class Property {
 
     public abstract void writeGetterBody(TreeLogger logger, SourceWriter w,
             String beanVariable);
+
+    public abstract boolean hasAccessorMethods();
 
     @Override
     public boolean equals(Object obj) {

@@ -38,18 +38,25 @@ public class FieldProperty extends Property {
     }
 
     @Override
+    public boolean hasAccessorMethods() {
+        return true;
+    }
+
+    @Override
     public void writeSetterBody(TreeLogger logger, SourceWriter w,
             String beanVariable, String valueVariable) {
-        w.print("((%s) %s).%s = (%s)%s;", getBeanType()
-                .getQualifiedSourceName(), beanVariable, getName(),
-                getUnboxedPropertyTypeName(), valueVariable);
+        w.println("%s.@%s::%s = %s;", beanVariable, getBeanType()
+                .getQualifiedSourceName(), getName(), unboxValue(valueVariable));
     }
 
     @Override
     public void writeGetterBody(TreeLogger logger, SourceWriter w,
             String beanVariable) {
-        w.print("return ((%s) %s).%s;", getBeanType().getQualifiedSourceName(),
-                beanVariable, getName());
+        String value = String.format("%s.@%s::%s", beanVariable, getBeanType()
+                .getQualifiedSourceName(), getName());
+        w.print("return ");
+        w.print(boxValue(value));
+        w.println(";");
     }
 
     public static Collection<FieldProperty> findProperties(JClassType type) {
@@ -57,7 +64,7 @@ public class FieldProperty extends Property {
 
         List<JField> fields = getPublicFields(type);
         for (JField field : fields) {
-            properties.add(new FieldProperty(type, field));
+            properties.add(new FieldProperty(field.getEnclosingType(), field));
         }
 
         return properties;
