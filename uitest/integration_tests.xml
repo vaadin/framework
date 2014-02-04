@@ -133,6 +133,12 @@
             <param name="target-server" value="tomcat7" />
         </antcall>
     </target>
+    <target name="integration-test-tomcat7apacheproxy">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="tomcat7apacheproxy" />
+        </antcall>
+    </target>
     <target name="integration-test-tomcat8">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
@@ -424,6 +430,7 @@
             <antcall target="integration-test-tomcat6" />
             <antcall target="integration-test-tomcat7" />
             <antcall target="integration-test-tomcat8" />
+            <antcall target="integration-test-tomcat7apacheproxy" />
             <antcall target="integration-test-websphere8" />
         </parallel>
 
