@@ -17,6 +17,8 @@
 package com.vaadin.sass.internal.tree;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.visitor.BlockNodeHandler;
@@ -109,7 +111,8 @@ public class BlockNode extends Node implements IVariableNode {
             BlockNodeHandler.traverse(this);
             replaceVariables(ScssStylesheet.getVariables());
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.getLogger(BlockNode.class.getName()).log(Level.SEVERE, null,
+                    e);
         }
     }
 

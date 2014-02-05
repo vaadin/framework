@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.w3c.css.sac.ConditionFactory;
 import org.w3c.css.sac.Condition;
@@ -1937,7 +1939,7 @@ void debugDirective() :
     { 
     String content = skipStatementUntilSemiColon();
     // TODO should evaluate the content expression, call documentHandler.debugDirective() etc.
-    System.out.println(content);
+    Logger.getLogger(Parser.class.getName()).log(Level.INFO, content);
     }
     (<S>)*
 }
@@ -1949,7 +1951,7 @@ void warnDirective() :
     { 
     String content = skipStatementUntilSemiColon();
     // TODO should evaluate the content expression, call documentHandler.warnDirective() etc.
-    System.err.println(content);
+    Logger.getLogger(Parser.class.getName()).log(Level.SEVERE, content);
     }
     (<S>)*
 }

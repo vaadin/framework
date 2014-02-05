@@ -19,6 +19,8 @@ package com.vaadin.sass.internal.visitor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.LexicalUnit;
@@ -78,9 +80,11 @@ public class ImportNodeHandler {
                                 importNode);
                         node.removeChild(importNode);
                     } catch (CSSException e) {
-                        e.printStackTrace();
+                        Logger.getLogger(ImportNodeHandler.class.getName())
+                                .log(Level.SEVERE, null, e);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Logger.getLogger(ImportNodeHandler.class.getName())
+                                .log(Level.SEVERE, null, e);
                     }
                 } else {
                     if (styleSheet != node) {

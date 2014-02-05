@@ -22,13 +22,15 @@ import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Utility for making deep copies (vs. clone()'s shallow copies) of objects.
  * Objects are first serialized and then deserialized. Error checking is fairly
  * minimal in this implementation. If an object is encountered that cannot be
  * serialized (or that references an object that cannot be serialized) an error
- * is printed to System.err and null is returned. Depending on your specific
+ * is printed to the logger and null is returned. Depending on your specific
  * application, it might make more sense to have copy(...) re-throw the
  * exception.
  */
@@ -56,9 +58,9 @@ public class DeepCopy {
                 obj = in.readObject();
                 in.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                log(e);
             } catch (ClassNotFoundException cnfe) {
-                cnfe.printStackTrace();
+                log(cnfe);
             }
             return obj;
         } else {
@@ -79,5 +81,9 @@ public class DeepCopy {
             copies.add((T) copy(object));
         }
         return copies;
+    }
+
+    private static void log(Throwable e) {
+        Logger.getLogger(DeepCopy.class.getName()).log(Level.SEVERE, null, e);
     }
 }

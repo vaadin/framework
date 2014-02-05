@@ -16,6 +16,9 @@
 
 package com.vaadin.sass.internal.selector;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.w3c.css.sac.CombinatorCondition;
 import org.w3c.css.sac.Condition;
 import org.w3c.css.sac.ConditionFactory;
@@ -115,7 +118,7 @@ public class SelectorUtil {
         } else if (selector.getSelectorType() == CompositeSelector.SCSS_COMPOSITE_SELECTOR) {
             return toString((CompositeSelector) selector);
         } else {
-            System.out.println("SU !Unknown selector type, type: "
+            log("SU !Unknown selector type, type: "
                     + selector.getSelectorType() + ", " + selector.toString());
         }
         return "";
@@ -162,8 +165,8 @@ public class SelectorUtil {
             PseudoClassConditionImpl pseudoClassCondition = (PseudoClassConditionImpl) condition;
             return ":" + pseudoClassCondition.getValue();
         } else {
-            System.out.println("CU !condition type not identified, type: "
-                    + conditionType + ", " + condition.toString());
+            log("CU !condition type not identified, type: " + conditionType
+                    + ", " + condition.toString());
             return "";
         }
     }
@@ -329,5 +332,9 @@ public class SelectorUtil {
         } else {
             throw new Exception("Invalid selector type");
         }
+    }
+
+    private static void log(String msg) {
+        Logger.getLogger(SelectorUtil.class.getName()).log(Level.INFO, msg);
     }
 }
