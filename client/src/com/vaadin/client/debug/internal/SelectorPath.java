@@ -130,6 +130,10 @@ public class SelectorPath {
             elementQueryString = queryFragment + elementQueryString;
         }
 
+        if (!path.startsWith("//")) {
+            elementQueryString = "$" + elementQueryString;
+        }
+
         // Return full Java variable assignment and eQuery
         return generateJavaVariable(fragments[fragments.length - 1])
                 + elementQueryString;
