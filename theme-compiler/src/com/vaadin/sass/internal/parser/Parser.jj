@@ -1663,9 +1663,11 @@ ArrayList<VariableNode> arglist() :
     boolean hasNonOptionalArgument = false;
 }
 {
-    arg=mixinArg() ( <COMMA> (<S>)* { hasNonOptionalArgument = checkMixinForNonOptionalArguments(arg, hasNonOptionalArgument); args.add(arg); } 
-        arg=mixinArg() )* 
-    { hasNonOptionalArgument = checkMixinForNonOptionalArguments(arg, hasNonOptionalArgument); args.add(arg); 
+    (arg=mixinArg() ( <COMMA> (<S>)* { hasNonOptionalArgument = checkMixinForNonOptionalArguments(arg, hasNonOptionalArgument); args.add(arg); }
+        arg=mixinArg() )*
+    { hasNonOptionalArgument = checkMixinForNonOptionalArguments(arg, hasNonOptionalArgument); args.add(arg); }
+    )?
+    {
         return args;
     }
 }
@@ -1725,10 +1727,11 @@ ArrayList<LexicalUnitImpl> argValuelist() :
     LexicalUnitImpl prev = null;
 }
 {
-    first = term(null) { args.add(first); prev = first;}((< COLON > (< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
-    ( <COMMA> (<S>)*
-    first = term(null) { args.add(first); prev = first;}((< COLON > (< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
-    )* 
+    (first = term(null) { args.add(first); prev = first;}((< COLON > (< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
+      ( <COMMA> (<S>)*
+      first = term(null) { args.add(first); prev = first;}((< COLON > (< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
+      )*
+    )?
     {return args;}
 }
 
