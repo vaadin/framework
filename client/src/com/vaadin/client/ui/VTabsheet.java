@@ -135,7 +135,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                     SelectedValue.FALSE);
 
             div = DOM.createDiv();
-            focusImpl.setTabIndex(td, -1);
+            setTabulatorIndex(-1);
             setStyleName(div, DIV_CLASSNAME);
 
             DOM.appendChild(td, div);
@@ -213,7 +213,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         public void setTabulatorIndex(int tabIndex) {
-            focusImpl.setTabIndex(td, tabIndex);
+            getElement().setTabIndex(tabIndex);
         }
 
         public boolean isClosable() {
@@ -1084,6 +1084,13 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                     SCROLLER_CLASSNAME + (scrolled ? "Prev" : "Prev-disabled"));
             DOM.setElementProperty(scrollerNext, "className",
                     SCROLLER_CLASSNAME + (clipped ? "Next" : "Next-disabled"));
+
+            // the active tab should be focusable if and only if it is visible
+            boolean isActiveTabVisible = scrollerIndex <= activeTabIndex
+                    && !isClipped(tb.selected);
+            tb.selected.setTabulatorIndex(isActiveTabVisible ? tabulatorIndex
+                    : -1);
+
         } else {
             DOM.setStyleAttribute(scroller, "display", "none");
         }
@@ -1295,8 +1302,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             }
 
             if (isScrolledTabs()) {
-                // Scroll until the new active tab is visible
-                while (!tb.getTab(activeTabIndex).isVisible()) {
+                // Scroll until the new focused tab is visible
+                while (!tb.getTab(focusedTabIndex).isVisible()) {
                     scrollerIndex = tb.scrollLeft(scrollerIndex);
                 }
                 updateTabScroller();
