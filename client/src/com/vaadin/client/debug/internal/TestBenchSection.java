@@ -201,8 +201,6 @@ public class TestBenchSection implements Section {
         SelectorWidget w = new SelectorWidget(p);
 
         content.add(w);
-
-        stopFind();
     }
 
     private final NativePreviewHandler highlightModeHandler = new NativePreviewHandler() {
@@ -222,6 +220,10 @@ public class TestBenchSection implements Section {
                         .getNativeEvent().getClientX(), event.getNativeEvent()
                         .getClientY());
                 if (VDebugWindow.get().getElement().isOrHasChild(eventTarget)) {
+                    if (isFindMode() && event.getTypeInt() == Event.ONCLICK) {
+                        stopFind();
+                        event.cancel();
+                    }
                     return;
                 }
 

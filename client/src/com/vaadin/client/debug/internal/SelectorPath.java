@@ -130,7 +130,7 @@ public class SelectorPath {
             elementQueryString = queryFragment + elementQueryString;
         }
 
-        if (!path.startsWith("//")) {
+        if (!tmpPath.startsWith("//")) {
             elementQueryString = "$" + elementQueryString;
         }
 
