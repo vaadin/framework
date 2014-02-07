@@ -99,7 +99,8 @@ public class ArithmeticExpressionEvaluator {
                         continue inputTermLoop;
                     }
                 }
-                throw new ArithmeticException();
+                throw new ArithmeticException("Illegal arithmetic expression",
+                        term);
             }
             if (current.getLexicalUnitType() == SCSSLexicalUnit.SCSS_OPERATOR_LEFT_PAREN) {
                 operators.push(Parentheses.LEFT);
@@ -115,7 +116,7 @@ public class ArithmeticExpressionEvaluator {
         while (!operators.isEmpty()) {
             Object operator = operators.pop();
             if (operator == Parentheses.LEFT) {
-                throw new ArithmeticException("Unexpected \"(\" found");
+                throw new ArithmeticException("Unexpected \"(\" found", term);
             }
             createNewOperand((BinaryOperator) operator, operands);
         }
@@ -123,7 +124,7 @@ public class ArithmeticExpressionEvaluator {
         if (!operands.isEmpty()) {
             LexicalUnitImpl operand = (LexicalUnitImpl) operands.peek();
             throw new ArithmeticException("Unexpected operand "
-                    + operand.toString() + " found");
+                    + operand.toString() + " found", term);
         }
         return expression;
     }

@@ -947,6 +947,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         if (tab == null) {
             tab = tb.addTab();
         }
+        if (selected) {
+            renderContent(tabUidl.getChildUIDL(0));
+            tb.selectTab(index);
+        }
         tab.updateFromUIDL(tabUidl);
         tab.setEnabledOnServer((!disabledTabKeys.contains(tabKeys.get(index))));
         tab.setHiddenOnServer(hidden);
@@ -963,11 +967,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
          * and tabs won't be too narrow in certain browsers
          */
         tab.recalculateCaptionWidth();
-
-        if (selected) {
-            renderContent(tabUidl.getChildUIDL(0));
-            tb.selectTab(index);
-        }
     }
 
     /**
@@ -1096,11 +1095,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         if (BrowserInfo.get().isSafari()) {
-            // fix tab height for safari, bugs sometimes if tabs contain icons
-            String property = tabs.getStyle().getProperty("height");
-            if (property == null || property.equals("")) {
-                tabs.getStyle().setPropertyPx("height", tb.getOffsetHeight());
-            }
             /*
              * another hack for webkits. tabscroller sometimes drops without
              * "shaking it" reproducable in
