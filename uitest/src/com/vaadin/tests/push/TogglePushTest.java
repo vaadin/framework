@@ -24,7 +24,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class TogglePushTest extends MultiBrowserTest {
 
     @Test
-    public void togglePushInInit() {
+    public void togglePushInInit() throws Exception {
         setPush(true);
         String url = getTestUrl();
 
@@ -58,7 +58,7 @@ public class TogglePushTest extends MultiBrowserTest {
     }
 
     @Test
-    public void togglePush() {
+    public void togglePush() throws InterruptedException {
         setPush(true);
         openTestURL();
         getDelayedCounterUpdateButton().click();

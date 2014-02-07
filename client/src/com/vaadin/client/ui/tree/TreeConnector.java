@@ -18,6 +18,7 @@ package com.vaadin.client.ui.tree;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
@@ -141,9 +142,24 @@ public class TreeConnector extends AbstractComponentConnector implements
             getWidget().lastSelection = getWidget().getNodeByKey(
                     getWidget().lastSelection.key);
         }
+
         if (getWidget().focusedNode != null) {
-            getWidget().setFocusedNode(
-                    getWidget().getNodeByKey(getWidget().focusedNode.key));
+
+            Set<String> selectedIds = getWidget().selectedIds;
+
+            // If the focused node is not between the selected nodes, we need to
+            // refresh the focused node to prevent an undesired scroll. #12618.
+            if (!selectedIds.isEmpty()
+                    && !selectedIds.contains(getWidget().focusedNode.key)) {
+                String keySelectedId = selectedIds.iterator().next();
+
+                TreeNode nodeToSelect = getWidget().getNodeByKey(keySelectedId);
+
+                getWidget().setFocusedNode(nodeToSelect);
+            } else {
+                getWidget().setFocusedNode(
+                        getWidget().getNodeByKey(getWidget().focusedNode.key));
+            }
         }
 
         if (getWidget().lastSelection == null
