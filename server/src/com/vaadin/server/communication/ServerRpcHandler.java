@@ -439,7 +439,7 @@ public class ServerRpcHandler implements Serializable {
                     "Ignoring RPC call to " + interfaceName + "." + methodName
                             + " in connector " + connector.getClass().getName()
                             + "(" + connectorId
-                            + ") as no RPC implementation is regsitered");
+                            + ") as no RPC implementation is registered");
             return null;
         }
 

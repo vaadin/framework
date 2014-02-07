@@ -20,7 +20,10 @@ textarea.v-textarea,
 input.#{$primaryStyleName}[type="text"],
 textarea.v-textarea,
 .v-filterselect {
-	padding: .1em;
+	padding-bottom: .1em;
+	padding-top: .1em;
+	padding-left: .2em;
+	padding-right: .2em;
 	}
 
 input.#{$primaryStyleName}[type="text"] {
@@ -29,7 +32,7 @@ input.#{$primaryStyleName}[type="text"] {
 
 input.v-widget.#{$primaryStyleName}[type="text"],
 .v-filterselect {
-	height: 1.6em;
+	height: 1.7em;
 	}
 
 &.v-app input.#{$primaryStyleName},

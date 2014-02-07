@@ -16,6 +16,8 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.core.client.GWT;
+
 public class UnknownComponentConnector extends AbstractComponentConnector {
 
     @Override
@@ -31,7 +33,9 @@ public class UnknownComponentConnector extends AbstractComponentConnector {
     public void setServerSideClassName(String serverClassName) {
         getWidget()
                 .setCaption(
-                        "Widgetset does not contain implementation for "
+                        "Widgetset '"
+                                + GWT.getModuleName()
+                                + "' does not contain implementation for "
                                 + serverClassName
                                 + ". Check its component connector's @Connect mapping, widgetsets "
                                 + "GWT module description file and re-compile your"

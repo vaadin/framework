@@ -28,6 +28,7 @@ import com.vaadin.server.NoOutputStreamException;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.StreamVariable.StreamingProgressEvent;
+import com.vaadin.shared.ui.upload.UploadClientRpc;
 
 /**
  * Component for uploading files from client to server.
@@ -107,11 +108,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     private int nextid;
 
     /**
-     * Flag to indicate that submitting file has been requested.
-     */
-    private boolean forceSubmit;
-
-    /**
      * Creates a new instance of Upload.
      * 
      * The receiver must be set before performing an upload.
@@ -155,11 +151,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
         if (notStarted) {
             target.addAttribute("notStarted", true);
             notStarted = false;
-            return;
-        }
-        if (forceSubmit) {
-            target.addAttribute("forceSubmit", true);
-            forceSubmit = true;
             return;
         }
         // The field should be focused
@@ -1011,12 +1002,11 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      */
     public void submitUpload() {
         markAsDirty();
-        forceSubmit = true;
+        getRpcProxy(UploadClientRpc.class).submitUpload();
     }
 
     @Override
     public void markAsDirty() {
-        forceSubmit = false;
         super.markAsDirty();
     }
 

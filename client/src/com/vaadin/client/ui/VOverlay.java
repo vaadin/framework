@@ -241,10 +241,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     private void removeShadowIfPresent() {
         if (isShadowAttached()) {
-            shadow.removeFromParent();
-
             // Remove event listener from the shadow
             unsinkShadowEvents();
+
+            shadow.removeFromParent();
         }
     }
 

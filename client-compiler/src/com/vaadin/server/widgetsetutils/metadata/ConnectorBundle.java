@@ -430,11 +430,11 @@ public class ConnectorBundle {
     }
 
     private static boolean isClientRpc(JClassType type) {
-        return isType(type, ClientRpc.class);
+        return isInterfaceType(type, ClientRpc.class);
     }
 
     private static boolean isServerRpc(JClassType type) {
-        return isType(type, ServerRpc.class);
+        return isInterfaceType(type, ServerRpc.class);
     }
 
     public static boolean isConnectedConnector(JClassType type) {
@@ -449,6 +449,10 @@ public class ConnectorBundle {
 
     public static boolean isConnectedComponentConnector(JClassType type) {
         return isConnected(type) && isType(type, ComponentConnector.class);
+    }
+
+    private static boolean isInterfaceType(JClassType type, Class<?> class1) {
+        return type.isInterface() != null && isType(type, class1);
     }
 
     private static boolean isType(JClassType type, Class<?> class1) {

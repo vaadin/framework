@@ -148,6 +148,10 @@ public abstract class AbstractTestUI extends UI {
         getLayout().addComponent(c);
     }
 
+    public void addComponents(Component... c) {
+        getLayout().addComponents(c);
+    }
+
     public void removeComponent(Component c) {
         getLayout().removeComponent(c);
     }

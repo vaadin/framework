@@ -18,6 +18,7 @@ package com.vaadin.server.communication;
 
 import java.io.IOException;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
 import org.atmosphere.client.TrackMessageSizeInterceptor;
@@ -58,10 +59,21 @@ public class PushRequestHandler implements RequestHandler,
     public PushRequestHandler(VaadinServletService service)
             throws ServiceException {
 
+        final ServletConfig config = service.getServlet().getServletConfig();
+
         atmosphere = new AtmosphereFramework() {
             @Override
             protected void analytics() {
                 // Overridden to disable version number check
+            }
+
+            @Override
+            public AtmosphereFramework addInitParameter(String name,
+                    String value) {
+                if (config.getInitParameter(name) == null) {
+                    super.addInitParameter(name, value);
+                }
+                return this;
             }
         };
 
@@ -93,7 +105,7 @@ public class PushRequestHandler implements RequestHandler,
                 "false");
 
         try {
-            atmosphere.init(service.getServlet().getServletConfig());
+            atmosphere.init(config);
 
             // Ensure the client-side knows how to split the message stream
             // into individual messages when using certain transports
