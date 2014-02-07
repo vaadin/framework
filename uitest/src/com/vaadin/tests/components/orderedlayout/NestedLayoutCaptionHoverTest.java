@@ -33,7 +33,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class NestedLayoutCaptionHoverTest extends MultiBrowserTest {
 
     @Test
-    public void testTooltipInNestedLayout() {
+    public void testTooltipInNestedLayout() throws Exception {
         openTestURL();
 
         WebElement caption = getDriver().findElement(

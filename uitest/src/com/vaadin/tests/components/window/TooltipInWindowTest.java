@@ -35,7 +35,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class TooltipInWindowTest extends MultiBrowserTest {
 
     @Test
-    public void testTooltipsInSubWindow() {
+    public void testTooltipsInSubWindow() throws Exception {
         openTestURL();
 
         WebElement textfield = vaadinElementById("tf1");
