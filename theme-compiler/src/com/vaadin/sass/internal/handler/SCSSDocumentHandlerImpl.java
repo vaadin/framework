@@ -247,12 +247,6 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     }
 
     @Override
-    public void includeDirective(String name, List<LexicalUnitImpl> args) {
-        MixinNode node = new MixinNode(name, args);
-        nodeStack.peek().appendChild(node);
-    }
-
-    @Override
     public void importStyle(String uri, SACMediaList media, boolean isURL) {
         ImportNode node = new ImportNode(uri, media, isURL);
         nodeStack.peek().appendChild(node);
@@ -377,7 +371,7 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     }
 
     @Override
-    public void startIncludeContentBlock(String name, List<LexicalUnitImpl> args) {
+    public void startInclude(String name, List<LexicalUnitImpl> args) {
         MixinNode node = new MixinNode(name, args);
         nodeStack.peek().appendChild(node);
         nodeStack.push(node);
@@ -385,7 +379,7 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     }
 
     @Override
-    public void endIncludeContentBlock() {
+    public void endInclude() {
         nodeStack.pop();
     }
 
