@@ -892,9 +892,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
         if (!isDateInsideRange(requestedNextMonthDate, Resolution.DAY)) {
             requestedNextMonthDate = adjustDateToFitInsideRange(requestedNextMonthDate);
         }
-        focusedDate.setYear(requestedNextMonthDate.getYear());
-        focusedDate.setMonth(requestedNextMonthDate.getMonth());
-        focusedDate.setDate(requestedNextMonthDate.getDate());
+
+        focusedDate.setTime(requestedNextMonthDate.getTime());
         displayedMonth.setMonth(displayedMonth.getMonth() + 1);
 
         renderCalendar();
@@ -949,9 +948,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         if (!isDateInsideRange(requestedPreviousMonthDate, Resolution.DAY)) {
             requestedPreviousMonthDate = adjustDateToFitInsideRange(requestedPreviousMonthDate);
         }
-        focusedDate.setYear(requestedPreviousMonthDate.getYear());
-        focusedDate.setMonth(requestedPreviousMonthDate.getMonth());
-        focusedDate.setDate(requestedPreviousMonthDate.getDate());
+        focusedDate.setTime(requestedPreviousMonthDate.getTime());
         displayedMonth.setMonth(displayedMonth.getMonth() - 1);
 
         renderCalendar();
