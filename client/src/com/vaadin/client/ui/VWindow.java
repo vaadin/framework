@@ -27,6 +27,7 @@ import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
@@ -82,6 +83,8 @@ public class VWindow extends VWindowOverlay implements
     private static boolean orderingDefered;
 
     public static final String CLASSNAME = "v-window";
+
+    private static final String MODAL_WINDOW_OPEN_CLASSNAME = "v-modal-window-open";
 
     private static final int STACKING_OFFSET_PIXELS = 15;
 
@@ -725,10 +728,14 @@ public class VWindow extends VWindowOverlay implements
             getOverlayContainer().appendChild(getModalityCurtain());
         }
 
+        Document.get().getBody().addClassName(MODAL_WINDOW_OPEN_CLASSNAME);
     }
 
     private void hideModalityCurtain() {
+        Document.get().getBody().removeClassName(MODAL_WINDOW_OPEN_CLASSNAME);
+
         modalityCurtain.removeFromParent();
+
         if (BrowserInfo.get().isIE()) {
             // IE leaks memory in certain cases unless we release the reference
             // (#9197)
