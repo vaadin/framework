@@ -1196,7 +1196,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     public void onBlur(BlurEvent event) {
         getApplicationConnection().getVTooltip().hideTooltip();
 
-        if (focusedTab != null && event.getSource() instanceof Tab) {
+        if (focusedTab != null && focusedTab == event.getSource()) {
             focusedTab.removeAssistiveDescription();
             focusedTab = null;
             if (client.hasEventListeners(this, EventId.BLUR)) {
