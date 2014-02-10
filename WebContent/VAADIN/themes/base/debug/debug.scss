@@ -251,6 +251,14 @@
 		width: 100%;
 	}
 	
+	.v-debugwindow-selector > span.value {
+	   width: 100%;
+	}
+	
+	.v-debugwindow-selector :hover {
+	   background: rgba(255,32,32,0.5);
+	}
+	
 	/* LOG */
 	.v-debugwindow-log {
 		font-family: monospace;

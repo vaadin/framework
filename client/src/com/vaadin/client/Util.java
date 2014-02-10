@@ -855,6 +855,7 @@ public class Util {
      * @param class1
      *            the Widget type to seek for
      */
+    @SuppressWarnings("unchecked")
     public static <T> T findWidget(Element element,
             Class<? extends Widget> class1) {
         if (element != null) {

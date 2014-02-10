@@ -116,7 +116,7 @@ public class ConnectorMap {
      *         no connector was found
      */
     public ComponentConnector getConnector(Widget widget) {
-        return getConnector(widget.getElement());
+        return widget == null ? null : getConnector(widget.getElement());
     }
 
     public void registerConnector(String id, ServerConnector connector) {
