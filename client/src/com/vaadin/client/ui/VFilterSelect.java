@@ -1988,6 +1988,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             return tb.getElement();
         } else if ("button".equals(subPart)) {
             return popupOpener.getElement();
+        } else if ("popup".equals(subPart) && suggestionPopup.isAttached()) {
+            return suggestionPopup.getElement();
         }
         return null;
     }
@@ -1998,6 +2000,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             return "textbox";
         } else if (popupOpener.getElement().isOrHasChild(subElement)) {
             return "button";
+        } else if (suggestionPopup.getElement().isOrHasChild(subElement)) {
+            return "popup";
         }
         return null;
     }
