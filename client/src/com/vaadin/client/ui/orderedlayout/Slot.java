@@ -19,9 +19,11 @@ package com.vaadin.client.ui.orderedlayout;
 import java.util.List;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -456,6 +458,9 @@ public final class Slot extends SimplePanel {
 
         // Caption wrappers
         Widget widget = getWidget();
+        final Element focusedElement = Util.getFocusedElement();
+        // By default focus will not be lost
+        boolean focusLost = false;
         if (captionText != null || iconUrl != null || error != null || required) {
             if (caption == null) {
                 caption = DOM.createDiv();
@@ -466,6 +471,10 @@ public final class Slot extends SimplePanel {
                 orphan(widget);
                 captionWrap.appendChild(widget.getElement());
                 adopt(widget);
+
+                // Made changes to DOM. Focus can be lost if it was in the
+                // widget.
+                focusLost = widget.getElement().isOrHasChild(focusedElement);
             }
         } else if (caption != null) {
             orphan(widget);
@@ -474,6 +483,9 @@ public final class Slot extends SimplePanel {
             captionWrap.removeFromParent();
             caption = null;
             captionWrap = null;
+
+            // Made changes to DOM. Focus can be lost if it was in the widget.
+            focusLost = widget.getElement().isOrHasChild(focusedElement);
         }
 
         // Caption text
@@ -558,6 +570,45 @@ public final class Slot extends SimplePanel {
                 setCaptionPosition(CaptionPosition.TOP);
             } else {
                 setCaptionPosition(CaptionPosition.RIGHT);
+            }
+        }
+
+        if (focusLost) {
+            // Find out what element is currently focused.
+            Element currentFocus = Util.getFocusedElement();
+            if (currentFocus != null
+                    && currentFocus.equals(Document.get().getBody())) {
+                // Focus has moved to BodyElement and should be moved back to
+                // original location. This happened because of adding or
+                // removing the captionWrap
+                focusedElement.focus();
+            } else if (currentFocus != focusedElement) {
+                // Focus is either moved somewhere else on purpose or IE has
+                // lost it. Investigate further.
+                Timer focusTimer = new Timer() {
+
+                    @Override
+                    public void run() {
+                        if (Util.getFocusedElement() == null) {
+                            // This should never become an infinite loop and
+                            // even if it does it will be stopped once something
+                            // is done with the browser.
+                            schedule(25);
+                        } else if (Util.getFocusedElement().equals(
+                                Document.get().getBody())) {
+                            // Focus found it's way to BodyElement. Now it can
+                            // be restored
+                            focusedElement.focus();
+                        }
+                    }
+                };
+                if (BrowserInfo.get().isIE8()) {
+                    // IE8 can't fix the focus immediately. It will fail.
+                    focusTimer.schedule(25);
+                } else {
+                    // Newer IE versions can handle things immediately.
+                    focusTimer.run();
+                }
             }
         }
     }

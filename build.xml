@@ -19,6 +19,7 @@
             <fileset dir="." includes="**/build.xml">
                 <exclude name="build.xml" />
                 <exclude name="build/**" />
+                <exclude name="bin/**" />
                 <exclude name="buildhelpers/**" />
             </fileset>
         </ivy:buildlist>

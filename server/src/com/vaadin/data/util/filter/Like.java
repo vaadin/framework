@@ -84,6 +84,10 @@ public class Like implements Filter {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
         // Only objects of the same class can be equal
         if (!getClass().equals(obj.getClass())) {
             return false;

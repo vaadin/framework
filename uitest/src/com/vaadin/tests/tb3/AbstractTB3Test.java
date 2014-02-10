@@ -28,9 +28,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.HasInputDevices;
+import org.openqa.selenium.interactions.Keyboard;
+import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -272,6 +276,21 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      */
     protected WebElement vaadinElement(String vaadinLocator) {
         return driver.findElement(vaadinLocator(vaadinLocator));
+    }
+
+    /**
+     * Uses JavaScript to determine the currently focused element.
+     * 
+     * @return Focused element or null
+     */
+    protected WebElement getFocusedElement() {
+        Object focusedElement = ((JavascriptExecutor) getDriver())
+                .executeScript("return document.activeElement");
+        if (null != focusedElement) {
+            return (WebElement) focusedElement;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -889,6 +908,24 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     public void onUncaughtException(Throwable t) {
         // Do nothing by default
 
+    }
+
+    /**
+     * Returns the mouse object for doing mouse commands
+     * 
+     * @return Returns the mouse
+     */
+    public Mouse getMouse() {
+        return ((HasInputDevices) getDriver()).getMouse();
+    }
+
+    /**
+     * Returns the keyboard object for controlling keyboard events
+     * 
+     * @return Return the keyboard
+     */
+    public Keyboard getKeyboard() {
+        return ((HasInputDevices) getDriver()).getKeyboard();
     }
 
 }

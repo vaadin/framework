@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components;
+package com.vaadin.tests.components.ui;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -23,19 +23,19 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
- * Tests that a user is notified about a missing component from the widgetset
+ * Tests if a component is included in a custom widgetset
+ * (com.vaadin.tests.widgetset.TestingWidgetSet)
+ * 
+ * @author Vaadin Ltd
  */
-public class UnknownComponentConnectorTest extends MultiBrowserTest {
+public class ComponentIncludedInCustomWidgetsetTest extends MultiBrowserTest {
 
     @Test
-    public void testConnectorNotFoundInWidgetset() throws Exception {
+    public void testComponentInTestingWidgetsetNotInDefaultWidgetset() {
         openTestURL();
-        WebElement component = vaadinElementById("no-connector-component");
-        assertTrue(component
-                .getText()
-                .startsWith(
-                        "Widgetset 'com.vaadin.DefaultWidgetSet' does not contain "
-                                + "implementation for com.vaadin.tests.components.UnknownComponentConnector."
-                                + "ComponentWithoutConnector."));
+        WebElement component = vaadinElementById("missing-component");
+        assertEquals(
+                "This component is available in TestingWidgetset, but not in DefaultWidgetset",
+                component.getText());
     }
 }
