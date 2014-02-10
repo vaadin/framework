@@ -474,7 +474,8 @@ public final class Slot extends SimplePanel {
 
                 // Made changes to DOM. Focus can be lost if it was in the
                 // widget.
-                focusLost = widget.getElement().isOrHasChild(focusedElement);
+                focusLost = (focusedElement == null ? false : widget
+                        .getElement().isOrHasChild(focusedElement));
             }
         } else if (caption != null) {
             orphan(widget);
@@ -485,7 +486,8 @@ public final class Slot extends SimplePanel {
             captionWrap = null;
 
             // Made changes to DOM. Focus can be lost if it was in the widget.
-            focusLost = widget.getElement().isOrHasChild(focusedElement);
+            focusLost = (focusedElement == null ? false : widget.getElement()
+                    .isOrHasChild(focusedElement));
         }
 
         // Caption text
