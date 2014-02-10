@@ -6977,8 +6977,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
 
         firstRowInViewPort = calcFirstRowInViewPort();
-        if (firstRowInViewPort > totalRows - pageLength) {
-            firstRowInViewPort = totalRows - pageLength;
+        int maxFirstRow = totalRows - pageLength;
+        if (firstRowInViewPort > maxFirstRow && maxFirstRow >= 0) {
+            firstRowInViewPort = maxFirstRow;
         }
 
         int postLimit = (int) (firstRowInViewPort + (pageLength - 1) + pageLength
