@@ -52,6 +52,9 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         Serializable {
     private static final long serialVersionUID = -6649833716809789399L;
 
+    private static int PRECISION = 100000;
+    private static int PERC_PRECISION_FACTOR = 100 * PRECISION;
+
     LexicalUnitImpl prev;
     LexicalUnitImpl next;
 
@@ -788,7 +791,44 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         list.add(new FloorFunctionGenerator());
         list.add(new LightenFunctionGenerator());
         list.add(new RoundFunctionGenerator());
+        list.add(new PercentageFunctionGenerator());
         return list;
+    }
+
+    private static class PercentageFunctionGenerator implements
+            SCSSFunctionGenerator {
+
+        @Override
+        public String getFunctionName() {
+            return "percentage";
+        }
+
+        @Override
+        public String printState(LexicalUnitImpl function) {
+            StringBuilder builder = new StringBuilder();
+            LexicalUnitImpl firstParam = function.getParameters();
+            float value = firstParam.getFloatValue();
+            value *= PERC_PRECISION_FACTOR;
+            int intValue = Math.round(value);
+            value = ((float) intValue) / PRECISION;
+
+            int resultIntValue = (int) value;
+
+            firstParam.type = SAC_PERCENTAGE;
+
+            if (intValue == resultIntValue * PRECISION) {
+                builder.append(resultIntValue);
+                firstParam.setIntegerValue(resultIntValue);
+            } else {
+                builder.append(value);
+                firstParam.setFloatValue(value);
+            }
+
+            firstParam.setStringValue(builder.append('%').toString());
+
+            return firstParam.toString();
+        }
+
     }
 
     private static final Map<String, SCSSFunctionGenerator> SERIALIZERS = new HashMap<String, SCSSFunctionGenerator>();
