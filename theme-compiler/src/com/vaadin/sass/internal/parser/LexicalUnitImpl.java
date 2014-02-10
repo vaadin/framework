@@ -247,6 +247,9 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         case SCSS_VARIABLE:
             text = "$" + s;
             break;
+        case SCSS_NULL:
+            text = "";
+            break;
         case LexicalUnit.SAC_OPERATOR_COMMA:
             text = ",";
             break;
@@ -490,6 +493,11 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
     public static LexicalUnitImpl createVariable(int line, int column,
             LexicalUnitImpl previous, String name) {
         return new LexicalUnitImpl(line, column, previous, SCSS_VARIABLE, name);
+    }
+
+    public static LexicalUnitImpl createNull(int line, int column,
+            LexicalUnitImpl previous) {
+        return new LexicalUnitImpl(line, column, previous, SCSS_NULL, "null");
     }
 
     public static LexicalUnitImpl createNumber(int line, int column,
