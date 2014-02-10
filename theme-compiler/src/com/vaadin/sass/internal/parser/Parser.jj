@@ -1994,12 +1994,12 @@ void debugDirective() :
 {
     <DEBUG_SYM>
     { 
-    String content = skipStatementUntil(new int[] {SEMICOLON,RBRACE});
+    String content = skipStatementUntil(new int[] {SEMICOLON,RBRACE,EOF});
     // TODO should evaluate the content expression, call documentHandler.debugDirective() etc.
     Logger.getLogger(Parser.class.getName()).log(Level.INFO, content);
     }
     try {
-      (";"(<S>)*)+
+      ";" (<S>)*
     }
     catch (ParseException e) {
       acceptMissingSemicolonBeforeRbrace(e);
@@ -2011,12 +2011,12 @@ void warnDirective() :
 {
     <WARN_SYM>
     { 
-    String content = skipStatementUntil(new int[] {SEMICOLON,RBRACE});
+    String content = skipStatementUntil(new int[] {SEMICOLON,RBRACE,EOF});
     // TODO should evaluate the content expression, call documentHandler.warnDirective() etc.
     Logger.getLogger(Parser.class.getName()).log(Level.SEVERE, content);
     }
     try {
-      (";"(<S>)*)+
+      ";" (<S>)*
     }
     catch (ParseException e) {
       acceptMissingSemicolonBeforeRbrace(e);
@@ -2859,27 +2859,27 @@ String skipStatementUntilMatchingRightParan(){
 JAVACODE
 String skipStatementUntil(int[] symbols){
     StringBuffer s = new StringBuffer();
-    boolean stop = false;
+    boolean found = false;
     Token tok;
-    while(!stop){
+    while(!found){
         tok = getToken(1);
-        if(tok.kind == EOF) {
-            return null;
-        }
         for(int sym : symbols){
             if(tok.kind == sym){
-                stop = true;
+                found = true;
                 break;
             }
         }
-        if(!stop){
+        if(tok.kind == EOF) {
+            break;
+        }
+        if(!found){
             if (tok.image != null) {
                 s.append(tok.image);
             }
             getNextToken();
         }
     }
-    return s.toString().trim();
+    return found ? s.toString().trim() : null;
 }
 
 
@@ -3117,7 +3117,7 @@ ArrayList<String> _parseSelectors() :
 JAVACODE
 void acceptMissingSemicolonBeforeRbrace( ParseException parseException ) {
     Token next = getToken(1);
-    if (next.kind != RBRACE) {
+    if (next.kind != RBRACE && next.kind!=EOF) {
         throw parseException;
     }
 }
