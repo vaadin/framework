@@ -462,13 +462,22 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     /**
-     * Gets the icon set for this component.
+     * Gets the URI of the icon set for this component.
      * 
-     * @return the URL of the icon, or <code>null</code> if no icon has been
+     * @return the URI of the icon, or <code>null</code> if no icon has been
      *         defined.
      */
-    protected String getIcon() {
+    protected String getIconUri() {
         return getResourceUrl(ComponentConstants.ICON_RESOURCE);
+    }
+
+    /**
+     * Gets the icon set for this component.
+     * 
+     * @return the icon, or <code>null</code> if no icon has been defined.
+     */
+    protected Icon getIcon() {
+        return getConnection().getIcon(getIconUri());
     }
 
     /*

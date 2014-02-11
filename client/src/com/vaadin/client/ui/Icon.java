@@ -13,55 +13,40 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.client.ui;
 
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.UIObject;
 import com.vaadin.client.ApplicationConnection;
 
-public class Icon extends UIObject {
+/**
+ * An abstract representation of an icon.
+ * 
+ * @since 7.2
+ * @author Vaadin Ltd
+ */
+public abstract class Icon extends UIObject {
+
     public static final String CLASSNAME = "v-icon";
-    private final ApplicationConnection client;
-    private String myUri;
 
-    public Icon(ApplicationConnection client) {
-        setElement(DOM.createImg());
-        DOM.setElementProperty(getElement(), "alt", "");
-        setStyleName(CLASSNAME);
-        this.client = client;
-    }
+    /**
+     * Sets the URI for the icon. The URI should be run trough
+     * {@link ApplicationConnection#translateVaadinUri(String)} before setting.
+     * <p>
+     * This might be a URL referencing a image (e.g {@link ImageIcon}) or a
+     * custom URI (e.g {@link FontIcon}).
+     * </p>
+     * 
+     * @param uri
+     *            the URI for this icon
+     */
+    public abstract void setUri(String uri);
 
-    public Icon(ApplicationConnection client, String uidlUri) {
-        this(client, uidlUri, "");
-    }
-
-    public Icon(ApplicationConnection client, String uidlUri, String iconAltText) {
-        this(client);
-        setUri(uidlUri, iconAltText);
-    }
-
-    public void setUri(String uidlUri) {
-        setUri(uidlUri, "");
-    }
-
-    public void setUri(String uidlUri, String uidlAlt) {
-        if (!uidlUri.equals(myUri)) {
-            /*
-             * Start sinking onload events, widgets responsibility to react. We
-             * must do this BEFORE we set src as IE fires the event immediately
-             * if the image is found in cache (#2592).
-             */
-            sinkEvents(Event.ONLOAD);
-
-            String uri = client.translateVaadinUri(uidlUri);
-            DOM.setElementProperty(getElement(), "src", uri);
-            myUri = uidlUri;
-        }
-
-        setAlternateText(uidlAlt);
-    }
+    /**
+     * Gets the current URI for this icon.
+     * 
+     * @return URI in use
+     */
+    public abstract String getUri();
 
     /**
      * Sets the alternate text for the icon.
@@ -69,8 +54,6 @@ public class Icon extends UIObject {
      * @param alternateText
      *            with the alternate text.
      */
-    public void setAlternateText(String alternateText) {
-        getElement().setAttribute("alt",
-                alternateText == null ? "" : alternateText);
-    }
+    public abstract void setAlternateText(String alternateText);
+
 }

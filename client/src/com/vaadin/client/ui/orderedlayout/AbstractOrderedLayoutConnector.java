@@ -32,6 +32,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractLayoutConnector;
+import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
@@ -244,6 +245,8 @@ public abstract class AbstractOrderedLayoutConnector extends
         URLReference iconUrl = child.getState().resources
                 .get(ComponentConstants.ICON_RESOURCE);
         String iconUrlString = iconUrl != null ? iconUrl.getURL() : null;
+        Icon icon = child.getConnection().getIcon(iconUrlString);
+
         List<String> styles = child.getState().styles;
         String error = child.getState().errorMessage;
         boolean showError = error != null;
@@ -258,8 +261,8 @@ public abstract class AbstractOrderedLayoutConnector extends
         }
         boolean enabled = child.isEnabled();
 
-        slot.setCaption(caption, iconUrlString, styles, error, showError,
-                required, enabled);
+        slot.setCaption(caption, icon, styles, error, showError, required,
+                enabled);
 
         AriaHelper.handleInputRequired(child.getWidget(), required);
         AriaHelper.handleInputInvalid(child.getWidget(), showError);

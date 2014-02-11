@@ -230,7 +230,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 itemHTML.append("<img src=\""
                         + Util.escapeAttribute(client.translateVaadinUri(item
                                 .getStringAttribute("icon"))) + "\" class=\""
-                        + Icon.CLASSNAME + "\" alt=\"\" />");
+                        + ImageIcon.CLASSNAME + "\" alt=\"\" />");
             }
             String itemText = item.getStringAttribute("text");
             if (!htmlContentAllowed) {

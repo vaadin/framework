@@ -295,8 +295,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         // Caption must be set before required header size is measured. If
         // the caption attribute is missing the caption should be cleared.
         String iconURL = null;
-        if (getIcon() != null) {
-            iconURL = getIcon();
+        if (getIconUri() != null) {
+            iconURL = getIconUri();
         }
 
         window.setAssistivePrefix(state.assistivePrefix);

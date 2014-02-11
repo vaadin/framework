@@ -260,21 +260,17 @@ public class VFormLayout extends SimplePanel {
 
             boolean isEmpty = true;
 
+            if (icon != null) {
+                getElement().removeChild(icon.getElement());
+                icon = null;
+            }
             if (state.resources.containsKey(ComponentConstants.ICON_RESOURCE)) {
-                if (icon == null) {
-                    icon = new Icon(owner.getConnection());
+                icon = owner.getConnection().getIcon(
+                        state.resources.get(ComponentConstants.ICON_RESOURCE)
+                                .getURL());
+                DOM.insertChild(getElement(), icon.getElement(), 0);
 
-                    DOM.insertChild(getElement(), icon.getElement(), 0);
-                }
-                icon.setUri(state.resources.get(
-                        ComponentConstants.ICON_RESOURCE).getURL());
                 isEmpty = false;
-            } else {
-                if (icon != null) {
-                    DOM.removeChild(getElement(), icon.getElement());
-                    icon = null;
-                }
-
             }
 
             if (state.caption != null) {

@@ -139,12 +139,10 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
                 itemHtml = Util.escapeHTML(itemHtml);
             }
 
-            String icon = opUidl.getStringAttribute("icon");
-            if (icon != null && icon.length() != 0) {
-                String iconUrl = client.translateVaadinUri(icon);
-                itemHtml = "<img src=\"" + Util.escapeAttribute(iconUrl)
-                        + "\" class=\"" + Icon.CLASSNAME + "\" alt=\"\" />"
-                        + itemHtml;
+            String iconUrl = opUidl.getStringAttribute("icon");
+            if (iconUrl != null && iconUrl.length() != 0) {
+                Icon icon = client.getIcon(iconUrl);
+                itemHtml = icon.getElement().getString() + itemHtml;
             }
 
             String key = opUidl.getStringAttribute("key");
@@ -161,7 +159,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
                     op = new RadioButton(paintableId);
                     op.setStyleName("v-radiobutton");
                 }
-                if (icon != null && icon.length() != 0) {
+                if (iconUrl != null && iconUrl.length() != 0) {
                     Util.sinkOnloadForImages(op.getElement());
                     op.addHandler(iconLoadHandler, LoadEvent.getType());
                 }

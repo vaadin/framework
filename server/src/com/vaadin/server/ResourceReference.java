@@ -67,6 +67,13 @@ public class ResourceReference extends URLReference {
             final String uri = "theme://"
                     + ((ThemeResource) resource).getResourceId();
             return uri;
+        } else if (resource instanceof FontIcon) {
+            // fonticon://[font-family]/[codepoint]
+            final FontIcon icon = (FontIcon) resource;
+            final String uri = ApplicationConstants.FONTICON_PROTOCOL_PREFIX
+                    + urlEncode(icon.getFontFamily()) + "/"
+                    + Integer.toHexString(icon.getCodepoint());
+            return uri;
         } else {
             throw new RuntimeException(getClass().getSimpleName()
                     + " does not support resources of type: "

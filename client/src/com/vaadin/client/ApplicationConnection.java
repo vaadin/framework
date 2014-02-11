@@ -65,6 +65,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -85,6 +86,9 @@ import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.AbstractConnector;
+import com.vaadin.client.ui.FontIcon;
+import com.vaadin.client.ui.Icon;
+import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.VContextMenu;
 import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VNotification.HideEvent;
@@ -3028,6 +3032,26 @@ public class ApplicationConnection {
                     "PID_VAADIN_CM");
         }
         return contextMenu;
+    }
+
+    /**
+     * Gets an {@link Icon} instance corresponding to a URI.
+     * 
+     * @since 7.2
+     * @param uri
+     * @return Icon object
+     */
+    public Icon getIcon(String uri) {
+        Icon icon;
+        if (uri == null) {
+            return null;
+        } else if (FontIcon.isFontIconUri(uri)) {
+            icon = GWT.create(FontIcon.class);
+        } else {
+            icon = GWT.create(ImageIcon.class);
+        }
+        icon.setUri(translateVaadinUri(uri));
+        return icon;
     }
 
     /**

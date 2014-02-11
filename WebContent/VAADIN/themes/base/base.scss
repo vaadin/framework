@@ -15,6 +15,7 @@
 @import "inlinedatefield/inlinedatefield.scss";
 @import "dragwrapper/dragwrapper.scss";
 @import "embedded/embedded.scss";
+@import "fonts/fonts.scss";
 @import "formlayout/formlayout.scss";
 @import "gridlayout/gridlayout.scss";
 @import "label/label.scss";
@@ -119,3 +120,4 @@ $line-height: normal;
 
 // always include, don't wrap in .themename{}
 @include debug-globals;
+@include fonts;
