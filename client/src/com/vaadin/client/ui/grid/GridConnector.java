@@ -29,9 +29,11 @@ import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.ColumnGroupRowState;
 import com.vaadin.shared.ui.grid.ColumnGroupState;
+import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 
 /**
  * Connects the client side {@link Grid} widget with the server side
@@ -96,6 +98,23 @@ public class GridConnector extends AbstractComponentConnector {
                                 event.getVisibleRowCount());
                     }
                 });
+
+        registerRpc(GridClientRpc.class, new GridClientRpc() {
+            @Override
+            public void scrollToStart() {
+                getWidget().scrollToStart();
+            }
+
+            @Override
+            public void scrollToEnd() {
+                getWidget().scrollToEnd();
+            }
+
+            @Override
+            public void scrollToRow(int row, ScrollDestination destination) {
+                getWidget().scrollToRow(row, destination);
+            }
+        });
     }
 
     @Override

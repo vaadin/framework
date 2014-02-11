@@ -18,6 +18,7 @@ package com.vaadin.client.ui.grid;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
@@ -28,6 +29,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
+import com.vaadin.shared.ui.grid.GridConstants;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
@@ -1225,4 +1228,91 @@ public class Grid<T> extends Composite {
          */
         return escalator.addRowVisibilityChangeHandler(handler);
     }
+
+    /**
+     * Scrolls to a certain row, using {@link ScrollDestination#ANY}.
+     * 
+     * @param rowIndex
+     *            zero-based index of the row to scroll to.
+     * @throws IllegalArgumentException
+     *             if rowIndex is below zero, or above the maximum value
+     *             supported by the data source.
+     */
+    public void scrollToRow(int rowIndex) throws IllegalArgumentException {
+        scrollToRow(rowIndex, ScrollDestination.ANY,
+                GridConstants.DEFAULT_PADDING);
+    }
+
+    /**
+     * Scrolls to a certain row, using user-specified scroll destination.
+     * 
+     * @param rowIndex
+     *            zero-based index of the row to scroll to.
+     * @param destination
+     *            desired destination placement of scrolled-to-row. See
+     *            {@link ScrollDestination} for more information.
+     * @throws IllegalArgumentException
+     *             if rowIndex is below zero, or above the maximum value
+     *             supported by the data source.
+     */
+    public void scrollToRow(int rowIndex, ScrollDestination destination)
+            throws IllegalArgumentException {
+        scrollToRow(rowIndex, destination,
+                destination == ScrollDestination.MIDDLE ? 0
+                        : GridConstants.DEFAULT_PADDING);
+    }
+
+    /**
+     * Scrolls to a certain row using only user-specified parameters.
+     * 
+     * @param rowIndex
+     *            zero-based index of the row to scroll to.
+     * @param destination
+     *            desired destination placement of scrolled-to-row. See
+     *            {@link ScrollDestination} for more information.
+     * @param paddingPx
+     *            number of pixels to overscroll. Behavior depends on
+     *            destination.
+     * @throws IllegalArgumentException
+     *             if {@code destination} is {@link ScrollDestination#MIDDLE}
+     *             and padding is nonzero, because having a padding on a
+     *             centered row is undefined behavior, or if rowIndex is below
+     *             zero or above the row count of the data source.
+     */
+    private void scrollToRow(int rowIndex, ScrollDestination destination,
+            int paddingPx) throws IllegalArgumentException {
+        int maxsize = escalator.getBody().getRowCount() - 1;
+
+        if (rowIndex < 0) {
+            throw new IllegalArgumentException("Row index (" + rowIndex
+                    + ") is below zero!");
+        }
+
+        if (rowIndex > maxsize) {
+            throw new IllegalArgumentException("Row index (" + rowIndex
+                    + ") is above maximum (" + maxsize + ")!");
+        }
+
+        escalator.scrollToRow(rowIndex, destination, paddingPx);
+    }
+
+    /**
+     * Scrolls to the beginning of the very first row.
+     */
+    public void scrollToStart() {
+        scrollToRow(0, ScrollDestination.START);
+    }
+
+    /**
+     * Scrolls to the end of the very last row.
+     */
+    public void scrollToEnd() {
+        scrollToRow(escalator.getBody().getRowCount() - 1,
+                ScrollDestination.END);
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(Grid.class.getName());
+    }
+
 }

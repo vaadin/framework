@@ -16,8 +16,8 @@
 package com.vaadin.tests.widgetset.client.grid;
 
 import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.client.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.tests.widgetset.server.grid.TestGrid;
 
 /**

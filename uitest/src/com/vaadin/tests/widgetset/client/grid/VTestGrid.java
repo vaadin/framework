@@ -10,7 +10,7 @@ import com.vaadin.client.ui.grid.Escalator;
 import com.vaadin.client.ui.grid.EscalatorUpdater;
 import com.vaadin.client.ui.grid.Row;
 import com.vaadin.client.ui.grid.RowContainer;
-import com.vaadin.client.ui.grid.ScrollDestination;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 
 public class VTestGrid extends Composite {
 
@@ -174,20 +174,12 @@ public class VTestGrid extends Composite {
 
     public void scrollToRow(final int index,
             final ScrollDestination destination, final int padding) {
-        if (padding != 0) {
-            escalator.scrollToRow(index, destination, padding);
-        } else {
-            escalator.scrollToRow(index, destination);
-        }
+        escalator.scrollToRow(index, destination, padding);
     }
 
     public void scrollToColumn(final int index,
             final ScrollDestination destination, final int padding) {
-        if (padding != 0) {
-            escalator.scrollToColumn(index, destination, padding);
-        } else {
-            escalator.scrollToColumn(index, destination);
-        }
+        escalator.scrollToColumn(index, destination, padding);
     }
 
     public void removeRows(final int offset, final int amount) {

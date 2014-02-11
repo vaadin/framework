@@ -42,10 +42,12 @@ import com.vaadin.data.Property.ValueChangeNotifier;
 import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.ColumnGroupRowState;
+import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
@@ -803,5 +805,57 @@ public class Grid extends AbstractComponent {
      */
     public Object getLastFrozenPropertyId() {
         return columnKeys.get(getState().lastFrozenColumnId);
+    }
+
+    /**
+     * Scrolls to a certain item, using {@link ScrollDestination#ANY}.
+     * 
+     * @param itemId
+     *            id of item to scroll to.
+     * @throws IllegalArgumentException
+     *             if the provided id is not recognized by the data source.
+     */
+    public void scrollToItem(Object itemId) throws IllegalArgumentException {
+        scrollToItem(itemId, ScrollDestination.ANY);
+    }
+
+    /**
+     * Scrolls to a certain item, using user-specified scroll destination.
+     * 
+     * @param itemId
+     *            id of item to scroll to.
+     * @param destination
+     *            value specifying desired position of scrolled-to row.
+     * @throws IllegalArgumentException
+     *             if the provided id is not recognized by the data source.
+     */
+    public void scrollToItem(Object itemId, ScrollDestination destination)
+            throws IllegalArgumentException {
+
+        int row = datasource.indexOfId(itemId);
+
+        if (row == -1) {
+            throw new IllegalArgumentException(
+                    "Item with specified ID does not exist in data source");
+        }
+
+        GridClientRpc clientRPC = getRpcProxy(GridClientRpc.class);
+        clientRPC.scrollToRow(row, destination);
+    }
+
+    /**
+     * Scrolls to the beginning of the first data row.
+     */
+    public void scrollToStart() {
+        GridClientRpc clientRPC = getRpcProxy(GridClientRpc.class);
+        clientRPC.scrollToStart();
+    }
+
+    /**
+     * Scrolls to the end of the last data row.
+     */
+    public void scrollToEnd() {
+        GridClientRpc clientRPC = getRpcProxy(GridClientRpc.class);
+        clientRPC.scrollToEnd();
     }
 }

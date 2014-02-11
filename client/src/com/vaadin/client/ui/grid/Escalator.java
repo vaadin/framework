@@ -52,6 +52,7 @@ import com.vaadin.client.ui.grid.PositionFunction.WebkitTranslate3DPosition;
 import com.vaadin.client.ui.grid.ScrollbarBundle.HorizontalScrollbarBundle;
 import com.vaadin.client.ui.grid.ScrollbarBundle.VerticalScrollbarBundle;
 import com.vaadin.shared.ui.grid.Range;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
 
 /*-
@@ -548,6 +549,80 @@ public class Escalator extends Widget {
 
     private static final int ROW_HEIGHT_PX = 20;
 
+    /**
+     * ScrollDestination case-specific handling logic.
+     */
+    private static double getScrollPos(final ScrollDestination destination,
+            final double targetStartPx, final double targetEndPx,
+            final double viewportStartPx, final double viewportEndPx,
+            final int padding) {
+
+        final double viewportLength = viewportEndPx - viewportStartPx;
+
+        switch (destination) {
+
+        /*
+         * Scroll as little as possible to show the target element. If the
+         * element fits into view, this works as START or END depending on the
+         * current scroll position. If the element does not fit into view, this
+         * works as START.
+         */
+        case ANY: {
+            final double startScrollPos = targetStartPx - padding;
+            final double endScrollPos = targetEndPx + padding - viewportLength;
+
+            if (startScrollPos < viewportStartPx) {
+                return startScrollPos;
+            } else if (targetEndPx + padding > viewportEndPx) {
+                return endScrollPos;
+            } else {
+                // NOOP, it's already visible
+                return viewportStartPx;
+            }
+        }
+
+        /*
+         * Scrolls so that the element is shown at the end of the viewport. The
+         * viewport will, however, not scroll before its first element.
+         */
+        case END: {
+            return targetEndPx + padding - viewportLength;
+        }
+
+        /*
+         * Scrolls so that the element is shown in the middle of the viewport.
+         * The viewport will, however, not scroll beyond its contents, given
+         * more elements than what the viewport is able to show at once. Under
+         * no circumstances will the viewport scroll before its first element.
+         */
+        case MIDDLE: {
+            final double targetMiddle = targetStartPx
+                    + (targetEndPx - targetStartPx) / 2;
+            return targetMiddle - viewportLength / 2;
+        }
+
+        /*
+         * Scrolls so that the element is shown at the start of the viewport.
+         * The viewport will, however, not scroll beyond its contents.
+         */
+        case START: {
+            return targetStartPx - padding;
+        }
+
+        /*
+         * Throw an error if we're here. This can only mean that
+         * ScrollDestination has been carelessly amended..
+         */
+        default: {
+            throw new IllegalArgumentException(
+                    "Internal: ScrollDestination has been modified, "
+                            + "but Escalator.getScrollPos has not been updated "
+                            + "to match new values.");
+        }
+        }
+
+    }
+
     /** An inner class that handles all logic related to scrolling. */
     private class Scroller extends JsniWorkaround {
         private double lastScrollTop = 0;
@@ -900,7 +975,7 @@ public class Escalator extends Widget {
                 viewportEndPx -= Util.getNativeScrollbarSize();
             }
 
-            final double scrollLeft = destination.getScrollPos(targetStartPx,
+            final double scrollLeft = getScrollPos(destination, targetStartPx,
                     targetEndPx, viewportStartPx, viewportEndPx, padding);
 
             /*
@@ -921,7 +996,7 @@ public class Escalator extends Widget {
             final double viewportEndPx = viewportStartPx
                     + body.calculateHeight();
 
-            final double scrollTop = destination.getScrollPos(targetStartPx,
+            final double scrollTop = getScrollPos(destination, targetStartPx,
                     targetEndPx, viewportStartPx, viewportEndPx, padding);
 
             /*
@@ -3307,33 +3382,6 @@ public class Escalator extends Widget {
 
     /**
      * Scrolls the body horizontally so that the column at the given index is
-     * visible.
-     * 
-     * @param columnIndex
-     *            the index of the column to scroll to
-     * @param destination
-     *            where the column should be aligned visually after scrolling
-     * @throws IndexOutOfBoundsException
-     *             if {@code columnIndex} is not a valid index for an existing
-     *             column
-     * @throws IllegalArgumentException
-     *             if the column is frozen
-     */
-    public void scrollToColumn(final int columnIndex,
-            final ScrollDestination destination)
-            throws IndexOutOfBoundsException, IllegalArgumentException {
-        verifyValidColumnIndex(columnIndex);
-
-        if (columnIndex < columnConfiguration.frozenColumns) {
-            throw new IllegalArgumentException("The given column index "
-                    + columnIndex + " is frozen.");
-        }
-
-        scroller.scrollToColumn(columnIndex, destination, 0);
-    }
-
-    /**
-     * Scrolls the body horizontally so that the column at the given index is
      * visible and there is at least {@code padding} pixels to the given scroll
      * destination.
      * 
@@ -3348,14 +3396,15 @@ public class Escalator extends Widget {
      *             if {@code columnIndex} is not a valid index for an existing
      *             column
      * @throws IllegalArgumentException
-     *             if {@code destination} is {@link ScrollDestination#MIDDLE},
-     *             because having a padding on a centered column is undefined
-     *             behavior or if the column is frozen
+     *             if {@code destination} is {@link ScrollDestination#MIDDLE}
+     *             and padding is nonzero, because having a padding on a
+     *             centered column is undefined behavior, or if the column is
+     *             frozen
      */
     public void scrollToColumn(final int columnIndex,
             final ScrollDestination destination, final int padding)
             throws IndexOutOfBoundsException, IllegalArgumentException {
-        if (destination == ScrollDestination.MIDDLE) {
+        if (destination == ScrollDestination.MIDDLE && padding != 0) {
             throw new IllegalArgumentException(
                     "You cannot have a padding with a MIDDLE destination");
         }
@@ -3379,26 +3428,6 @@ public class Escalator extends Widget {
     }
 
     /**
-     * Scrolls the body vertically so that the row at the given index is
-     * visible.
-     * 
-     * @param rowIndex
-     *            the index of the row to scroll to
-     * @param destination
-     *            where the row should be aligned visually after scrolling
-     * @throws IndexOutOfBoundsException
-     *             if {@code rowIndex} is not a valid index for an existing
-     *             logical row
-     */
-    public void scrollToRow(final int rowIndex,
-            final ScrollDestination destination)
-            throws IndexOutOfBoundsException {
-        verifyValidRowIndex(rowIndex);
-
-        scroller.scrollToRow(rowIndex, destination, 0);
-    }
-
-    /**
      * Scrolls the body vertically so that the row at the given index is visible
      * and there is at least {@literal padding} pixels to the given scroll
      * destination.
@@ -3413,14 +3442,14 @@ public class Escalator extends Widget {
      * @throws IndexOutOfBoundsException
      *             if {@code rowIndex} is not a valid index for an existing row
      * @throws IllegalArgumentException
-     *             if {@code destination} is {@link ScrollDestination#MIDDLE},
-     *             because having a padding on a centered row is undefined
-     *             behavior
+     *             if {@code destination} is {@link ScrollDestination#MIDDLE}
+     *             and padding is nonzero, because having a padding on a
+     *             centered row is undefined behavior
      */
     public void scrollToRow(final int rowIndex,
             final ScrollDestination destination, final int padding)
             throws IndexOutOfBoundsException, IllegalArgumentException {
-        if (destination == ScrollDestination.MIDDLE) {
+        if (destination == ScrollDestination.MIDDLE && padding != 0) {
             throw new IllegalArgumentException(
                     "You cannot have a padding with a MIDDLE destination");
         }
