@@ -2667,7 +2667,7 @@ boolean isPseudoElement = false;
         }
         jj_consume_token(S);
       }
-      d = skipStatementUntilRightParan();
+      d = skipStatementUntilMatchingRightParan();
       jj_consume_token(RPARAN);
                   // accept anything between function and a right parenthesis
                   String f = convertIdent(n.image);
@@ -6202,9 +6202,35 @@ LexicalUnitImpl result = null;
     return skipStatementUntil(lBrace);
   }
 
-  String skipStatementUntilRightParan() throws ParseException {
-    int[] rParan = {RPARAN};
-    return skipStatementUntil(rParan);
+  String skipStatementUntilMatchingRightParan() throws ParseException {
+    int[] leftTokens = {LPARAN, FUNCTION}; // a FUNCTION also contains "("
+    int[] rightTokens = {RPARAN};
+    StringBuffer s = new StringBuffer();
+    int difference = 1;
+    Token tok;
+    while(difference != 0){
+        tok = getToken(1);
+        if(tok.kind == EOF) {
+            return null;
+        }
+        for(int sym : leftTokens){
+            if(tok.kind == sym){
+                difference++;
+            }
+        }
+        for(int sym : rightTokens){
+            if(tok.kind == sym){
+                difference--;
+            }
+        }
+        if(difference != 0){
+            if (tok.image != null) {
+                s.append(tok.image);
+            }
+            getNextToken();
+        }
+    }
+    return s.toString().trim();
   }
 
   String skipStatementUntil(int[] symbols) throws ParseException {
