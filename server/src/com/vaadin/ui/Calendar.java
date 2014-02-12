@@ -1824,7 +1824,7 @@ public class Calendar extends AbstractComponent implements
             try {
                 Date start = formatter.parse(startDate);
                 for (Action.Handler ah : actionHandlers) {
-                    ah.handleAction(action, this, start);
+                    ah.handleAction(action, Calendar.this, start);
                 }
 
             } catch (ParseException e) {
@@ -1842,7 +1842,7 @@ public class Calendar extends AbstractComponent implements
                     DateConstants.ACTION_DATE_FORMAT_PATTERN);
             formatter.setTimeZone(getTimeZone());
             for (Action.Handler ah : actionHandlers) {
-                ah.handleAction(action, this, events.get(eventIndex));
+                ah.handleAction(action, Calendar.this, events.get(eventIndex));
             }
         }
     }

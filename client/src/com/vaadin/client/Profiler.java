@@ -297,10 +297,6 @@ public class Profiler {
         if (isEnabled()) {
             double now = Duration.currentTimeMillis();
 
-            StringBuilder stringBuilder = new StringBuilder(
-                    "Time since window.performance.timing events");
-            SimpleTree tree = new SimpleTree(stringBuilder.toString());
-
             String[] keys = new String[] { "navigationStart",
                     "unloadEventStart", "unloadEventEnd", "redirectStart",
                     "redirectEnd", "fetchStart", "domainLookupStart",

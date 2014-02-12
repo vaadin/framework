@@ -54,6 +54,21 @@ public class AbsFieldValueConversionError extends TestCase {
 
     }
 
+    public void testNullConversionMessages() {
+        TextField tf = new TextField();
+        tf.setConverter(new StringToIntegerConverter());
+        tf.setPropertyDataSource(new MethodProperty<String>(paulaBean, "age"));
+        tf.setConversionError(null);
+        tf.setValue("abc");
+        try {
+            tf.validate();
+            fail();
+        } catch (InvalidValueException e) {
+            Assert.assertEquals(null, e.getMessage());
+        }
+
+    }
+
     public void testDefaultConversionErrorMessage() {
         TextField tf = new TextField();
         tf.setConverter(new StringToIntegerConverter());

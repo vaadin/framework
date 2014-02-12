@@ -19,6 +19,7 @@ package com.vaadin.tests.widgetset.client;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -250,6 +251,11 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                         return bean.getValue() + 1;
                     }
                 });
+            }
+
+            @Override
+            public void sendDate(Date date) {
+                rpc.sendDate(date);
             }
         });
     }

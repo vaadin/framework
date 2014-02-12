@@ -17,16 +17,20 @@
 package com.vaadin.sass.internal.visitor;
 
 import com.vaadin.sass.internal.ScssStylesheet;
+import com.vaadin.sass.internal.parser.SCSSLexicalUnit;
 import com.vaadin.sass.internal.tree.VariableNode;
 
 public class VariableNodeHandler {
 
     public static void traverse(VariableNode node) {
-        if (ScssStylesheet.getVariable(node.getName()) == null
-                || !node.isGuarded()) {
+        VariableNode variable = ScssStylesheet.getVariable(node.getName());
+        if (!node.isGuarded()
+                || variable == null
+                || variable.getExpr() == null
+                || (variable.getExpr().getLexicalUnitType() == SCSSLexicalUnit.SCSS_NULL && variable
+                        .getExpr().getNextLexicalUnit() == null)) {
             ScssStylesheet.addVariable(node);
         }
         node.getParentNode().removeChild(node);
     }
-
 }

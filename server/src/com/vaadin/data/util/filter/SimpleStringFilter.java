@@ -82,6 +82,9 @@ public final class SimpleStringFilter implements Filter {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
 
         // Only ones of the objects of the same class can be equal
         if (!(obj instanceof SimpleStringFilter)) {

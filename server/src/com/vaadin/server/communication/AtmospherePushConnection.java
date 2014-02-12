@@ -22,22 +22,16 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
-import org.json.JSONException;
 
 import com.vaadin.shared.communication.PushConstants;
 import com.vaadin.ui.UI;
 
 /**
- * {@link PushConnection} implementation using the Atmosphere push support that
- * is by default included in Vaadin.
+ * A {@link PushConnection} implementation using the Atmosphere push support
+ * that is by default included in Vaadin.
  * 
  * @author Vaadin Ltd
  * @since 7.1
@@ -92,55 +86,84 @@ public class AtmospherePushConnection implements PushConnection {
         }
     }
 
+    protected enum State {
+        /**
+         * Not connected. Trying to push will set the connection state to
+         * PUSH_PENDING or RESPONSE_PENDING and defer sending the message until
+         * a connection is established.
+         */
+        DISCONNECTED,
+
+        /**
+         * Not connected. An asynchronous push is pending the opening of the
+         * connection.
+         */
+        PUSH_PENDING,
+
+        /**
+         * Not connected. A response to a client request is pending the opening
+         * of the connection.
+         */
+        RESPONSE_PENDING,
+
+        /**
+         * Connected. Messages can be sent through the connection.
+         */
+        CONNECTED;
+    }
+
+    private State state = State.DISCONNECTED;
     private UI ui;
     private AtmosphereResource resource;
-    private Future<String> outgoingMessage;
     private FragmentedMessage incomingMessage;
 
-    public AtmospherePushConnection(UI ui, AtmosphereResource resource) {
+    public AtmospherePushConnection(UI ui) {
         this.ui = ui;
-        this.resource = resource;
     }
 
     @Override
     public void push() {
-        assert isConnected();
-        try {
-            push(true);
-        } catch (IOException e) {
-            // TODO Error handling
-            throw new RuntimeException("Push failed", e);
-        }
+        push(true);
     }
 
     /**
-     * Pushes pending state changes and client RPC calls to the client.
+     * Pushes pending state changes and client RPC calls to the client. If
+     * {@code isConnected()} is false, defers the push until a connection is
+     * established.
      * 
      * @param async
      *            True if this push asynchronously originates from the server,
      *            false if it is a response to a client request.
-     * @throws IOException
      */
-    protected void push(boolean async) throws IOException {
-        Writer writer = new StringWriter();
-        try {
-            new UidlWriter().write(getUI(), writer, false, async);
-        } catch (JSONException e) {
-            throw new IOException("Error writing UIDL", e);
+    public void push(boolean async) {
+        if (!isConnected()) {
+            if (async && state != State.RESPONSE_PENDING) {
+                state = State.PUSH_PENDING;
+            } else {
+                state = State.RESPONSE_PENDING;
+            }
+        } else {
+            try {
+                Writer writer = new StringWriter();
+                new UidlWriter().write(getUI(), writer, false, async);
+                sendMessage("for(;;);[{" + writer.toString() + "}]");
+            } catch (Exception e) {
+                throw new RuntimeException("Push failed", e);
+            }
         }
-        sendMessage("for(;;);[{" + writer.toString() + "}]");
     }
 
     /**
-     * Sends the given message to the current client.
+     * Sends the given message to the current client. Cannot be called if
+     * {@isConnected()} is false.
      * 
      * @param message
      *            The message to send
      */
     void sendMessage(String message) {
+        assert (isConnected());
         // "Broadcast" the changes to the single client only
-        outgoingMessage = getResource().getBroadcaster().broadcast(message,
-                getResource());
+        getResource().getBroadcaster().broadcast(message, getResource());
     }
 
     /**
@@ -157,7 +180,7 @@ public class AtmospherePushConnection implements PushConnection {
      */
     protected Reader receiveMessage(Reader reader) throws IOException {
 
-        if (resource.transport() != TRANSPORT.WEBSOCKET) {
+        if (resource == null || resource.transport() != TRANSPORT.WEBSOCKET) {
             return reader;
         }
 
@@ -179,9 +202,37 @@ public class AtmospherePushConnection implements PushConnection {
 
     @Override
     public boolean isConnected() {
-        return resource != null
-                && resource.getBroadcaster().getAtmosphereResources()
-                        .contains(resource);
+        assert (state == State.CONNECTED) ^ (resource == null);
+        return state == State.CONNECTED;
+    }
+
+    /**
+     * Associates this {@code AtmospherePushConnection} with the given
+     * {@AtmosphereResource} representing an established
+     * push connection. If already connected, calls {@link #disconnect()} first.
+     * If there is a deferred push, carries it out via the new connection.
+     * 
+     * @since 7.2
+     */
+    public void connect(AtmosphereResource resource) {
+
+        assert resource != null;
+        assert resource != this.resource;
+
+        if (isConnected()) {
+            disconnect();
+        }
+
+        this.resource = resource;
+        State oldState = state;
+        state = State.CONNECTED;
+
+        if (oldState == State.PUSH_PENDING
+                || oldState == State.RESPONSE_PENDING) {
+            // Sending a "response" message (async=false) also takes care of a
+            // pending push, but not vice versa
+            push(oldState == State.PUSH_PENDING);
+        }
     }
 
     /**
@@ -202,33 +253,8 @@ public class AtmospherePushConnection implements PushConnection {
     @Override
     public void disconnect() {
         assert isConnected();
-
-        if (outgoingMessage != null) {
-            // Wait for the last message to be sent before closing the
-            // connection (assumes that futures are completed in order)
-            try {
-                outgoingMessage.get(1000, TimeUnit.MILLISECONDS);
-            } catch (TimeoutException e) {
-                getLogger()
-                        .log(Level.INFO,
-                                "Timeout waiting for messages to be sent to client before disconnect");
-            } catch (Exception e) {
-                getLogger()
-                        .log(Level.INFO,
-                                "Error waiting for messages to be sent to client before disconnect");
-            }
-            outgoingMessage = null;
-        }
-
         resource.resume();
         resource = null;
-    }
-
-    /**
-     * @since
-     * @return
-     */
-    private static Logger getLogger() {
-        return Logger.getLogger(AtmospherePushConnection.class.getName());
+        state = State.DISCONNECTED;
     }
 }

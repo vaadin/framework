@@ -59,7 +59,7 @@ public class ConnectorBundle {
     private final Set<JType> needsSerializeSupport = new HashSet<JType>();
     private final Map<JType, GeneratedSerializer> serializers = new HashMap<JType, GeneratedSerializer>();
 
-    private final Set<JClassType> needsPropertyList = new HashSet<JClassType>();
+    private final Set<JClassType> needsSuperClass = new HashSet<JClassType>();
     private final Set<JClassType> needsGwtConstructor = new HashSet<JClassType>();
     private final Set<JClassType> visitedTypes = new HashSet<JClassType>();
     private final Set<JClassType> needsProxySupport = new HashSet<JClassType>();
@@ -70,9 +70,7 @@ public class ConnectorBundle {
     private final Map<JClassType, Set<JMethod>> needsParamTypes = new HashMap<JClassType, Set<JMethod>>();
     private final Map<JClassType, Set<JMethod>> needsDelayedInfo = new HashMap<JClassType, Set<JMethod>>();
 
-    private final Set<Property> needsSetter = new HashSet<Property>();
-    private final Set<Property> needsType = new HashSet<Property>();
-    private final Set<Property> needsGetter = new HashSet<Property>();
+    private final Set<Property> needsProperty = new HashSet<Property>();
     private final Set<Property> needsDelegateToWidget = new HashSet<Property>();
 
     private ConnectorBundle(String name, ConnectorBundle previousBundle,
@@ -246,16 +244,18 @@ public class ConnectorBundle {
 
             logger.log(Type.INFO, "Will serialize " + type + " as a bean");
 
-            setNeedsPropertyList(typeAsClass);
+            JClassType needsSuperClass = typeAsClass;
+            while (needsSuperClass != null) {
+                if (needsSuperClass.isPublic()) {
+                    setNeedsSuperclass(needsSuperClass);
+                }
+                needsSuperClass = needsSuperClass.getSuperclass();
+            }
 
             for (Property property : getProperties(typeAsClass)) {
                 setNeedsGwtConstructor(property.getBeanType());
-                setNeedsSetter(property);
 
-                // Getters needed for reading previous value that should be
-                // passed to sub encoder
-                setNeedsGetter(property);
-                setNeedsType(property);
+                setNeedsProperty(property);
 
                 JType propertyType = property.getPropertyType();
                 setNeedsSerialize(propertyType);
@@ -304,80 +304,42 @@ public class ConnectorBundle {
         return Collections.unmodifiableMap(serializers);
     }
 
-    private void setNeedsGetter(Property property) {
-        if (!isNeedsGetter(property)) {
-            needsGetter.add(property);
+    private void setNeedsSuperclass(JClassType typeAsClass) {
+        if (!isNeedsSuperClass(typeAsClass)) {
+            needsSuperClass.add(typeAsClass);
         }
     }
 
-    private boolean isNeedsGetter(Property property) {
-        if (needsGetter.contains(property)) {
+    private boolean isNeedsSuperClass(JClassType typeAsClass) {
+        if (needsSuperClass.contains(typeAsClass)) {
             return true;
         } else {
             return previousBundle != null
-                    && previousBundle.isNeedsGetter(property);
+                    && previousBundle.isNeedsSuperClass(typeAsClass);
         }
     }
 
-    public Set<Property> getNeedsGetter() {
-        return Collections.unmodifiableSet(needsGetter);
+    public Set<JClassType> getNeedsSuperclass() {
+        return Collections.unmodifiableSet(needsSuperClass);
     }
 
-    private void setNeedsType(Property property) {
-        if (!isNeedsType(property)) {
-            needsType.add(property);
+    private void setNeedsProperty(Property property) {
+        if (!isNeedsProperty(property)) {
+            needsProperty.add(property);
         }
     }
 
-    public Set<Property> getNeedsType() {
-        return Collections.unmodifiableSet(needsType);
-    }
-
-    private boolean isNeedsType(Property property) {
-        if (needsType.contains(property)) {
+    private boolean isNeedsProperty(Property property) {
+        if (needsProperty.contains(property)) {
             return true;
         } else {
             return previousBundle != null
-                    && previousBundle.isNeedsType(property);
+                    && previousBundle.isNeedsProperty(property);
         }
     }
 
-    public void setNeedsSetter(Property property) {
-        if (!isNeedsSetter(property)) {
-            needsSetter.add(property);
-        }
-    }
-
-    private boolean isNeedsSetter(Property property) {
-        if (needsSetter.contains(property)) {
-            return true;
-        } else {
-            return previousBundle != null
-                    && previousBundle.isNeedsSetter(property);
-        }
-    }
-
-    public Set<Property> getNeedsSetter() {
-        return Collections.unmodifiableSet(needsSetter);
-    }
-
-    private void setNeedsPropertyList(JClassType type) {
-        if (!isNeedsPropertyList(type)) {
-            needsPropertyList.add(type);
-        }
-    }
-
-    private boolean isNeedsPropertyList(JClassType type) {
-        if (needsPropertyList.contains(type)) {
-            return true;
-        } else {
-            return previousBundle != null
-                    && previousBundle.isNeedsPropertyList(type);
-        }
-    }
-
-    public Set<JClassType> getNeedsPropertyListing() {
-        return Collections.unmodifiableSet(needsPropertyList);
+    public Set<Property> getNeedsProperty() {
+        return Collections.unmodifiableSet(needsProperty);
     }
 
     public Collection<Property> getProperties(JClassType type) {
@@ -430,11 +392,11 @@ public class ConnectorBundle {
     }
 
     private static boolean isClientRpc(JClassType type) {
-        return isType(type, ClientRpc.class);
+        return isInterfaceType(type, ClientRpc.class);
     }
 
     private static boolean isServerRpc(JClassType type) {
-        return isType(type, ServerRpc.class);
+        return isInterfaceType(type, ServerRpc.class);
     }
 
     public static boolean isConnectedConnector(JClassType type) {
@@ -449,6 +411,10 @@ public class ConnectorBundle {
 
     public static boolean isConnectedComponentConnector(JClassType type) {
         return isConnected(type) && isType(type, ComponentConnector.class);
+    }
+
+    private static boolean isInterfaceType(JClassType type, Class<?> class1) {
+        return type.isInterface() != null && isType(type, class1);
     }
 
     private static boolean isType(JClassType type, Class<?> class1) {

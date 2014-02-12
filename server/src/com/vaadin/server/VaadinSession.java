@@ -22,12 +22,15 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
@@ -420,6 +423,32 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         vaadinSession.service = service;
         vaadinSession.refreshLock();
         return vaadinSession;
+    }
+
+    /**
+     * Retrieves all {@link VaadinSession}s which are stored in the given HTTP
+     * session
+     * 
+     * @since 7.2
+     * @param httpSession
+     *            the HTTP session
+     * @return the found VaadinSessions
+     */
+    public static Collection<VaadinSession> getAllSessions(
+            HttpSession httpSession) {
+        Set<VaadinSession> sessions = new HashSet<VaadinSession>();
+        Enumeration<String> attributeNames = httpSession.getAttributeNames();
+
+        while (attributeNames.hasMoreElements()) {
+            String attributeName = attributeNames.nextElement();
+            if (attributeName.startsWith(VaadinSession.class.getName() + ".")) {
+                Object value = httpSession.getAttribute(attributeName);
+                if (value instanceof VaadinSession) {
+                    sessions.add((VaadinSession) value);
+                }
+            }
+        }
+        return sessions;
     }
 
     /**

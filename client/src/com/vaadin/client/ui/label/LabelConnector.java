@@ -36,12 +36,6 @@ public class LabelConnector extends AbstractComponentConnector {
     }
 
     @Override
-    protected void init() {
-        super.init();
-        getWidget().setConnection(getConnection());
-    }
-
-    @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         boolean sinkOnloads = false;

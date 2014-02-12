@@ -131,7 +131,7 @@ public class VTreeTable extends VScrollTable {
         private int indentWidth = -1;
         private int maxIndent = 0;
 
-        VTreeTableScrollBody() {
+        protected VTreeTableScrollBody() {
             super();
         }
 

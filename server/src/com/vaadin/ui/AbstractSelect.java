@@ -878,6 +878,37 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         return retval;
     }
 
+    /**
+     * Adds given items with given item ids to container.
+     * 
+     * @since 7.2
+     * @param itemId
+     *            item identifiers to be added to underlying container
+     * @throws UnsupportedOperationException
+     *             if the underlying container don't support adding items with
+     *             identifiers
+     */
+    public void addItems(Object... itemId) throws UnsupportedOperationException {
+        for (Object id : itemId) {
+            addItem(id);
+        }
+    }
+
+    /**
+     * Adds given items with given item ids to container.
+     * 
+     * @since 7.2
+     * @param itemIds
+     *            item identifiers to be added to underlying container
+     * @throws UnsupportedOperationException
+     *             if the underlying container don't support adding items with
+     *             identifiers
+     */
+    public void addItems(Collection<Object> itemIds)
+            throws UnsupportedOperationException {
+        addItems(itemIds.toArray());
+    }
+
     /*
      * (non-Javadoc)
      * 

@@ -52,4 +52,23 @@ public class FormLayout extends AbstractOrderedLayout {
         addComponents(children);
     }
 
+    /**
+     * @deprecated This method currently has no effect as expand ratios are not
+     *             implemented in FormLayout
+     */
+    @Override
+    @Deprecated
+    public void setExpandRatio(Component component, float ratio) {
+        super.setExpandRatio(component, ratio);
+    }
+
+    /**
+     * @deprecated This method currently has no effect as expand ratios are not
+     *             implemented in FormLayout
+     */
+    @Override
+    @Deprecated
+    public float getExpandRatio(Component component) {
+        return super.getExpandRatio(component);
+    }
 }

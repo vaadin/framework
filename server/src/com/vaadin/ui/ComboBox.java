@@ -56,8 +56,6 @@ public class ComboBox extends AbstractSelect implements
      */
     protected int pageLength = 10;
 
-    private int columns = 0;
-
     // Current page when the user is 'paging' trough options
     private int currentPage = -1;
 

@@ -783,15 +783,16 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             ConversionException e) {
         String conversionError = getConversionError();
 
-        if (dataSourceType != null) {
-            conversionError = conversionError.replace("{0}",
-                    dataSourceType.getSimpleName());
+        if (conversionError != null) {
+            if (dataSourceType != null) {
+                conversionError = conversionError.replace("{0}",
+                        dataSourceType.getSimpleName());
+            }
+            if (e != null) {
+                conversionError = conversionError.replace("{1}",
+                        e.getLocalizedMessage());
+            }
         }
-        if (e != null) {
-            conversionError = conversionError.replace("{1}",
-                    e.getLocalizedMessage());
-        }
-
         return conversionError;
     }
 
@@ -1085,6 +1086,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     public void addValueChangeListener(Property.ValueChangeListener listener) {
         addListener(AbstractField.ValueChangeEvent.class, listener,
                 VALUE_CHANGE_METHOD);
+        // ensure "automatic immediate handling" works
+        markAsDirty();
     }
 
     /**
@@ -1106,6 +1109,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     public void removeValueChangeListener(Property.ValueChangeListener listener) {
         removeListener(AbstractField.ValueChangeEvent.class, listener,
                 VALUE_CHANGE_METHOD);
+        // ensure "automatic immediate handling" works
+        markAsDirty();
     }
 
     /**

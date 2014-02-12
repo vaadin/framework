@@ -30,7 +30,11 @@ public enum Transport {
     /**
      * HTTP streaming
      */
-    STREAMING("streaming");
+    STREAMING("streaming"),
+    /**
+     * HTTP long polling
+     */
+    LONG_POLLING("long-polling");
 
     private String identifier;
 

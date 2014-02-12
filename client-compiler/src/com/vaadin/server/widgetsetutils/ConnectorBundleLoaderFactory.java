@@ -19,6 +19,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -74,6 +76,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         private final SourceWriter target;
         private final String baseName;
         private final int splitSize;
+        private final List<String> methodNames;
 
         // Seems to be undercounted by about 15%
         private int approximateChars = 0;
@@ -84,6 +87,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
             this.target = target;
             this.baseName = baseName;
             this.splitSize = splitSize;
+            methodNames = new ArrayList<String>();
+            methodNames.add(baseName);
         }
 
         @Override
@@ -169,17 +174,34 @@ public class ConnectorBundleLoaderFactory extends Generator {
         }
 
         public void splitIfNeeded() {
+            splitIfNeeded(false, null);
+        }
+
+        public void splitIfNeeded(boolean isNative, String params) {
             if (approximateChars > splitSize) {
                 String newMethod = baseName + wrapCount++;
-                println("%s();", newMethod);
-                outdent();
-                println("}");
-                println("private void %s() {", newMethod);
+                String args = params == null ? "" : params;
+                if (isNative) {
+                    outdent();
+                    println("}-*/;");
+                    println("private native void %s(%s) /*-{", newMethod, args);
+                } else {
+                    println("%s();", newMethod);
+                    outdent();
+                    println("}");
+                    println("private void %s(%s) {", newMethod, args);
+                }
+                methodNames.add(newMethod);
                 indent();
 
                 approximateChars = 0;
             }
         }
+
+        public List<String> getMethodNames() {
+            return Collections.unmodifiableList(methodNames);
+        }
+
     }
 
     @Override
@@ -227,6 +249,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
         w.indent();
 
         for (ConnectorBundle bundle : bundles) {
+            detectBadProperties(bundle, logger);
+
             String name = bundle.getName();
             boolean isEager = name
                     .equals(ConnectorBundleLoader.EAGER_BUNDLE_NAME);
@@ -275,12 +299,34 @@ public class ConnectorBundleLoaderFactory extends Generator {
             w.println("private void load() {");
             w.indent();
 
-            printBundleData(logger, w, bundle);
+            String loadNativeJsBundle = "loadJsBundle";
+            printBundleData(logger, w, bundle, loadNativeJsBundle);
 
             // Close load method
             w.outdent();
             w.println("}");
 
+            // Separate method for loading native JS stuff (e.g. callbacks)
+            String loadNativeJsMethodName = "loadNativeJs";
+            w.println("private native void %s(%s store) /*-{",
+                    loadNativeJsMethodName, TypeDataStore.class.getName());
+            w.indent();
+            List<String> jsMethodNames = printJsBundleData(logger, w, bundle,
+                    loadNativeJsMethodName);
+
+            w.outdent();
+            w.println("}-*/;");
+
+            // Call all generated native method inside one Java method to avoid
+            // refercences inside native methods to each other
+            w.println("private void %s(%s store) {", loadNativeJsBundle,
+                    TypeDataStore.class.getName());
+            w.indent();
+            printLoadJsBundleData(w, loadNativeJsBundle, jsMethodNames);
+            w.outdent();
+            w.println("}");
+
+            // onFailure method declaration starts
             w.println("public void onFailure(Throwable reason) {");
             w.indent();
 
@@ -315,25 +361,151 @@ public class ConnectorBundleLoaderFactory extends Generator {
         w.commit(logger);
     }
 
+    private void printLoadJsBundleData(SourceWriter w, String methodName,
+            List<String> methods) {
+        SplittingSourceWriter writer = new SplittingSourceWriter(w, methodName,
+                30000);
+
+        for (String method : methods) {
+            writer.println("%s(store);", method);
+            writer.splitIfNeeded();
+        }
+    }
+
+    private void detectBadProperties(ConnectorBundle bundle, TreeLogger logger)
+            throws UnableToCompleteException {
+        Map<JClassType, Set<String>> definedProperties = new HashMap<JClassType, Set<String>>();
+
+        for (Property property : bundle.getNeedsProperty()) {
+            JClassType beanType = property.getBeanType();
+            Set<String> usedPropertyNames = definedProperties.get(beanType);
+            if (usedPropertyNames == null) {
+                usedPropertyNames = new HashSet<String>();
+                definedProperties.put(beanType, usedPropertyNames);
+            }
+
+            String name = property.getName();
+            if (!usedPropertyNames.add(name)) {
+                logger.log(Type.ERROR, beanType.getQualifiedSourceName()
+                        + " has multiple properties with the name " + name
+                        + ". This can happen if there are multiple "
+                        + "setters with identical names ignoring case.");
+                throw new UnableToCompleteException();
+            }
+            if (!property.hasAccessorMethods()) {
+                logger.log(Type.ERROR, beanType.getQualifiedSourceName()
+                        + " has the property '" + name
+                        + "' without getter defined.");
+                throw new UnableToCompleteException();
+            }
+        }
+    }
+
+    private List<String> printJsBundleData(TreeLogger logger, SourceWriter w,
+            ConnectorBundle bundle, String methodName) {
+        SplittingSourceWriter writer = new SplittingSourceWriter(w, methodName,
+                30000);
+        Set<Property> needsProperty = bundle.getNeedsProperty();
+        for (Property property : needsProperty) {
+            writer.println("var data = {");
+            writer.indent();
+
+            writer.println("setter: function(bean, value) {");
+            writer.indent();
+            property.writeSetterBody(logger, writer, "bean", "value");
+            writer.outdent();
+            writer.println("},");
+
+            writer.println("getter: function(bean) {");
+            writer.indent();
+            property.writeGetterBody(logger, writer, "bean");
+            writer.outdent();
+            writer.println("}");
+
+            writer.outdent();
+            writer.println("};");
+
+            // Method declaration
+            writer.print(
+                    "store.@%s::setPropertyData(Ljava/lang/Class;Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)",
+                    TypeDataStore.class.getName());
+            writer.println("(@%s::class, '%s', data);", property.getBeanType()
+                    .getQualifiedSourceName(), property.getName());
+            writer.println();
+            writer.splitIfNeeded(true,
+                    String.format("%s store", TypeDataStore.class.getName()));
+        }
+        return writer.getMethodNames();
+    }
+
     private void printBundleData(TreeLogger logger, SourceWriter sourceWriter,
-            ConnectorBundle bundle) throws UnableToCompleteException {
+            ConnectorBundle bundle, String loadNativeJsMethodName)
+            throws UnableToCompleteException {
         // Split into new load method when reaching approximately 30000 bytes
         SplittingSourceWriter w = new SplittingSourceWriter(sourceWriter,
                 "load", 30000);
 
+        writeSuperClasses(w, bundle);
         writeIdentifiers(w, bundle);
         writeGwtConstructors(w, bundle);
         writeReturnTypes(w, bundle);
         writeInvokers(w, bundle);
         writeParamTypes(w, bundle);
         writeProxys(w, bundle);
-        wirteDelayedInfo(w, bundle);
-        writeProperites(logger, w, bundle);
-        writePropertyTypes(w, bundle);
-        writeSetters(logger, w, bundle);
-        writeGetters(logger, w, bundle);
+        writeDelayedInfo(w, bundle);
+
+        w.println("%s(store);", loadNativeJsMethodName);
+
+        // Must use Java code to generate Type data (because of Type[]), doing
+        // this after the JS property data has been initialized
+        writePropertyTypes(logger, w, bundle);
         writeSerializers(logger, w, bundle);
         writeDelegateToWidget(logger, w, bundle);
+    }
+
+    private void writeSuperClasses(SplittingSourceWriter w,
+            ConnectorBundle bundle) {
+        List<JClassType> needsSuperclass = new ArrayList<JClassType>(
+                bundle.getNeedsSuperclass());
+        // Emit in hierarchy order to ensure superclass is defined when
+        // referenced
+        Collections.sort(needsSuperclass, new Comparator<JClassType>() {
+
+            @Override
+            public int compare(JClassType type1, JClassType type2) {
+                int depthDiff = getDepth(type1) - getDepth(type2);
+                if (depthDiff != 0) {
+                    return depthDiff;
+                } else {
+                    // Just something to get a stable compare
+                    return type1.getName().compareTo(type2.getName());
+                }
+            }
+
+            private int getDepth(JClassType type) {
+                int depth = 0;
+                while (type != null) {
+                    depth++;
+                    type = type.getSuperclass();
+                }
+                return depth;
+            }
+        });
+
+        for (JClassType jClassType : needsSuperclass) {
+            JClassType superclass = jClassType.getSuperclass();
+            while (superclass != null && !superclass.isPublic()) {
+                superclass = superclass.getSuperclass();
+            }
+            String classLiteralString;
+            if (superclass == null) {
+                classLiteralString = "null";
+            } else {
+                classLiteralString = getClassLiteralString(superclass);
+            }
+            w.println("store.setSuperClass(%s, %s);",
+                    getClassLiteralString(jClassType), classLiteralString);
+        }
     }
 
     private void writeDelegateToWidget(TreeLogger logger,
@@ -378,64 +550,9 @@ public class ConnectorBundleLoaderFactory extends Generator {
         }
     }
 
-    private void writeGetters(TreeLogger logger, SplittingSourceWriter w,
+    private void writePropertyTypes(TreeLogger logger, SplittingSourceWriter w,
             ConnectorBundle bundle) {
-        Set<Property> properties = bundle.getNeedsSetter();
-        for (Property property : properties) {
-            w.print("store.setGetter(");
-            writeClassLiteral(w, property.getBeanType());
-            w.print(", \"");
-            w.print(escape(property.getName()));
-            w.println("\", new Invoker() {");
-            w.indent();
-
-            w.println("public Object invoke(Object bean, Object[] params) {");
-            w.indent();
-
-            property.writeGetterBody(logger, w, "bean");
-            w.println();
-
-            w.outdent();
-            w.println("}");
-
-            w.outdent();
-            w.println("});");
-
-            w.splitIfNeeded();
-        }
-    }
-
-    private void writeSetters(TreeLogger logger, SplittingSourceWriter w,
-            ConnectorBundle bundle) {
-        Set<Property> properties = bundle.getNeedsSetter();
-        for (Property property : properties) {
-            w.print("store.setSetter(");
-            writeClassLiteral(w, property.getBeanType());
-            w.print(", \"");
-            w.print(escape(property.getName()));
-            w.println("\", new Invoker() {");
-            w.indent();
-
-            w.println("public Object invoke(Object bean, Object[] params) {");
-            w.indent();
-
-            property.writeSetterBody(logger, w, "bean", "params[0]");
-
-            w.println("return null;");
-
-            w.outdent();
-            w.println("}");
-
-            w.outdent();
-            w.println("});");
-
-            w.splitIfNeeded();
-        }
-    }
-
-    private void writePropertyTypes(SplittingSourceWriter w,
-            ConnectorBundle bundle) {
-        Set<Property> properties = bundle.getNeedsType();
+        Set<Property> properties = bundle.getNeedsProperty();
         for (Property property : properties) {
             w.print("store.setPropertyType(");
             writeClassLiteral(w, property.getBeanType());
@@ -449,40 +566,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         }
     }
 
-    private void writeProperites(TreeLogger logger, SplittingSourceWriter w,
-            ConnectorBundle bundle) throws UnableToCompleteException {
-        Set<JClassType> needsPropertyListing = bundle.getNeedsPropertyListing();
-        for (JClassType type : needsPropertyListing) {
-            w.print("store.setProperties(");
-            writeClassLiteral(w, type);
-            w.print(", new String[] {");
-
-            Set<String> usedPropertyNames = new HashSet<String>();
-            Collection<Property> properties = bundle.getProperties(type);
-            for (Property property : properties) {
-                String name = property.getName();
-                if (!usedPropertyNames.add(name)) {
-                    logger.log(
-                            Type.ERROR,
-                            type.getQualifiedSourceName()
-                                    + " has multiple properties with the name "
-                                    + name
-                                    + ". This can happen if there are multiple setters with identical names exect casing.");
-                    throw new UnableToCompleteException();
-                }
-
-                w.print("\"");
-                w.print(name);
-                w.print("\", ");
-            }
-
-            w.println("});");
-
-            w.splitIfNeeded();
-        }
-    }
-
-    private void wirteDelayedInfo(SplittingSourceWriter w,
+    private void writeDelayedInfo(SplittingSourceWriter w,
             ConnectorBundle bundle) {
         Map<JClassType, Set<JMethod>> needsDelayedInfo = bundle
                 .getNeedsDelayedInfo();

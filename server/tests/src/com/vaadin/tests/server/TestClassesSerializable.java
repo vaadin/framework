@@ -42,6 +42,7 @@ public class TestClassesSerializable extends TestCase {
             "com\\.vaadin\\.event\\.FieldEvents", //
             "com\\.vaadin\\.event\\.LayoutEvents", //
             "com\\.vaadin\\.event\\.MouseEvents", //
+            "com\\.vaadin\\.event\\.UIEvents", //
             "com\\.vaadin\\.server\\.VaadinPortlet", //
             "com\\.vaadin\\.server\\.MockServletConfig", //
             "com\\.vaadin\\.server\\.MockServletContext", //
@@ -49,6 +50,8 @@ public class TestClassesSerializable extends TestCase {
             "com\\.vaadin\\.server\\.communication\\.FileUploadHandler\\$SimpleMultiPartInputStream", //
             "com\\.vaadin\\.server\\.communication\\.PushRequestHandler.*",
             "com\\.vaadin\\.server\\.communication\\.PushHandler.*", // PushHandler
+            "com\\.vaadin\\.server\\.communication\\.DateSerializer", //
+            "com\\.vaadin\\.server\\.communication\\.JSONSerializer", //
             // and its inner classes do not need to be serializable
             "com\\.vaadin\\.util\\.SerializerHelper", // fully static
             // class level filtering, also affecting nested classes and

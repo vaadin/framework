@@ -16,6 +16,7 @@
 
 package com.vaadin.tests.widgetset.client;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -79,4 +80,5 @@ public interface SerializerTestRpc extends ServerRpc, ClientRpc {
 
     public void sendBeanSubclass(SimpleTestBean bean);
 
+    public void sendDate(Date date);
 }

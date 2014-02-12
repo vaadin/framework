@@ -16,26 +16,217 @@
 
 package com.vaadin.tests.components.table;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.json.JSONObject;
+
 import com.vaadin.annotations.Push;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.server.ClientConnector;
+import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.Table;
 
 @Push
 public class TableRemovedQuicklySendsInvalidRpcCalls extends AbstractTestUI {
 
+    public static final String SUCCESS_CAPTION = "Success!";
+    public static final String BUTTON_ID = "blinkbutton";
+    public static final String FAILURE_CAPTION = "Test failed";
+
+    private class WrappedConnectorTracker extends ConnectorTracker {
+        private ConnectorTracker tracker;
+
+        private boolean initialDirtyHasBeenCalled = false;
+
+        public WrappedConnectorTracker(ConnectorTracker tracker) {
+            super(TableRemovedQuicklySendsInvalidRpcCalls.this);
+            this.tracker = tracker;
+        }
+
+        @Override
+        public void markAllConnectorsDirty() {
+            tracker.markAllConnectorsDirty();
+            if (initialDirtyHasBeenCalled) {
+                button.setCaption(FAILURE_CAPTION);
+            }
+            initialDirtyHasBeenCalled = true;
+        }
+
+        // DELEGATED METHODS BELOW:
+
+        @Override
+        public void registerConnector(ClientConnector connector) {
+            tracker.registerConnector(connector);
+        }
+
+        @Override
+        public void unregisterConnector(ClientConnector connector) {
+            tracker.unregisterConnector(connector);
+        }
+
+        @Override
+        public boolean isClientSideInitialized(ClientConnector connector) {
+            return tracker.isClientSideInitialized(connector);
+        }
+
+        @Override
+        public void markClientSideInitialized(ClientConnector connector) {
+            tracker.markClientSideInitialized(connector);
+        }
+
+        @Override
+        public void markAllClientSidesUninitialized() {
+            tracker.markAllClientSidesUninitialized();
+        }
+
+        @Override
+        public ClientConnector getConnector(String connectorId) {
+            return tracker.getConnector(connectorId);
+        }
+
+        @Override
+        public void cleanConnectorMap() {
+            tracker.cleanConnectorMap();
+        }
+
+        @Override
+        public void markDirty(ClientConnector connector) {
+            tracker.markDirty(connector);
+        }
+
+        @Override
+        public void markClean(ClientConnector connector) {
+            tracker.markClean(connector);
+        }
+
+        @Override
+        public void markAllConnectorsClean() {
+            tracker.markAllConnectorsClean();
+        }
+
+        @Override
+        public Collection<ClientConnector> getDirtyConnectors() {
+            return tracker.getDirtyConnectors();
+        }
+
+        @Override
+        public boolean hasDirtyConnectors() {
+            return tracker.hasDirtyConnectors();
+        }
+
+        @Override
+        public ArrayList<ClientConnector> getDirtyVisibleConnectors() {
+            return tracker.getDirtyVisibleConnectors();
+        }
+
+        @Override
+        public JSONObject getDiffState(ClientConnector connector) {
+            return tracker.getDiffState(connector);
+        }
+
+        @Override
+        public void setDiffState(ClientConnector connector, JSONObject diffState) {
+            tracker.setDiffState(connector, diffState);
+        }
+
+        @Override
+        public boolean isDirty(ClientConnector connector) {
+            return tracker.isDirty(connector);
+        }
+
+        @Override
+        public boolean isWritingResponse() {
+            return tracker.isWritingResponse();
+        }
+
+        @Override
+        public void setWritingResponse(boolean writingResponse) {
+            tracker.setWritingResponse(writingResponse);
+        }
+
+        @Override
+        public StreamVariable getStreamVariable(String connectorId,
+                String variableName) {
+            return tracker.getStreamVariable(connectorId, variableName);
+        }
+
+        @Override
+        public void addStreamVariable(String connectorId, String variableName,
+                StreamVariable variable) {
+            tracker.addStreamVariable(connectorId, variableName, variable);
+        }
+
+        @Override
+        public void cleanStreamVariable(String connectorId, String variableName) {
+            tracker.cleanStreamVariable(connectorId, variableName);
+        }
+
+        @Override
+        public String getSeckey(StreamVariable variable) {
+            return tracker.getSeckey(variable);
+        }
+
+        @Override
+        public boolean connectorWasPresentAsRequestWasSent(String connectorId,
+                long lastSyncIdSeenByClient) {
+            return tracker.connectorWasPresentAsRequestWasSent(connectorId,
+                    lastSyncIdSeenByClient);
+        }
+
+        @Override
+        public int getCurrentSyncId() {
+            return tracker.getCurrentSyncId();
+        }
+
+        @Override
+        public void cleanConcurrentlyRemovedConnectorIds(
+                int lastSyncIdSeenByClient) {
+            tracker.cleanConcurrentlyRemovedConnectorIds(lastSyncIdSeenByClient);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return tracker.equals(obj);
+        }
+
+        @Override
+        public int hashCode() {
+            return tracker.hashCode();
+        }
+
+        @Override
+        public String toString() {
+            return tracker.toString();
+        }
+    }
+
+    private Button button;
+    private WrappedConnectorTracker wrappedTracker = null;
+
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(new Button("Blink a table", new Button.ClickListener() {
+        button = new Button("Blink a table", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 blinkTable();
             }
-        }));
+        });
+        button.setId(BUTTON_ID);
+        addComponent(button);
+    }
+
+    @Override
+    public ConnectorTracker getConnectorTracker() {
+        if (wrappedTracker == null) {
+            wrappedTracker = new WrappedConnectorTracker(
+                    super.getConnectorTracker());
+        }
+        return wrappedTracker;
     }
 
     private void blinkTable() {
@@ -46,25 +237,6 @@ public class TableRemovedQuicklySendsInvalidRpcCalls extends AbstractTestUI {
         for (int i = 0; i < 50; i++) {
             table.addItem(new Object[] { "Row" }, new Object());
         }
-
-        table.addItemClickListener(new ItemClickListener() {
-            private int i;
-
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                /*
-                 * Ignore implementation. This is only an easy way to make the
-                 * client-side update table's variables (by furiously clicking
-                 * on the table row.
-                 * 
-                 * This way, we get variable changes queued. The push call will
-                 * then remove the Table, while the variable changes being still
-                 * in the queue, leading to the issue as described in the
-                 * ticket.
-                 */
-                System.out.println("clicky " + (++i));
-            }
-        });
 
         System.out.println("adding component");
         addComponent(table);
@@ -80,6 +252,7 @@ public class TableRemovedQuicklySendsInvalidRpcCalls extends AbstractTestUI {
                         public void run() {
                             System.out.println("removing component");
                             removeComponent(table);
+                            button.setCaption(SUCCESS_CAPTION);
                         }
                     });
                 } catch (InterruptedException e) {
@@ -87,7 +260,7 @@ public class TableRemovedQuicklySendsInvalidRpcCalls extends AbstractTestUI {
                 } finally {
                     getSession().unlock();
                 }
-            };
+            }
         }.start();
     }
 
@@ -96,8 +269,9 @@ public class TableRemovedQuicklySendsInvalidRpcCalls extends AbstractTestUI {
         return "Adding and subsequently quickly removing a table "
                 + "should not leave any pending RPC calls waiting "
                 + "in a Timer. Issue can be reproduced by "
-                + "1) pressing the button 2) clicking furiously "
-                + "on a row in the table.";
+                + "1) pressing the button 2) checking the server "
+                + "log for any error messages starting with "
+                + "\"RPC call to...\" .";
     }
 
     @Override

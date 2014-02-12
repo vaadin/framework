@@ -31,6 +31,7 @@ import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -45,6 +46,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.vaadin.server.communication.DateSerializer;
+import com.vaadin.server.communication.JSONSerializer;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.UidlValue;
@@ -176,6 +179,11 @@ public class JsonCodec implements Serializable {
      */
     private static Map<String, Class<?>> transportTypeToType = new HashMap<String, Class<?>>();
 
+    private static Map<Class<?>, JSONSerializer<?>> customSerializers = new HashMap<Class<?>, JSONSerializer<?>>();
+    static {
+        customSerializers.put(Date.class, new DateSerializer());
+    }
+
     static {
         registerType(String.class, JsonConstants.VTYPE_STRING);
         registerType(Connector.class, JsonConstants.VTYPE_CONNECTOR);
@@ -283,6 +291,9 @@ public class JsonCodec implements Serializable {
             Class<?> classForType = getClassForType(targetType);
             return decodeEnum(classForType.asSubclass(Enum.class),
                     (String) value);
+        } else if (customSerializers.containsKey(getClassForType(targetType))) {
+            return customSerializers.get(getClassForType(targetType))
+                    .deserialize(targetType, value, connectorTracker);
         } else {
             return decodeObject(targetType, (JSONObject) value,
                     connectorTracker);
@@ -676,6 +687,10 @@ public class JsonCodec implements Serializable {
             return encodeEnum((Enum<?>) value, connectorTracker);
         } else if (value instanceof JSONArray || value instanceof JSONObject) {
             return new EncodeResult(value);
+        } else if (customSerializers.containsKey(value.getClass())) {
+            JSONSerializer serializer = customSerializers.get(value.getClass());
+            return new EncodeResult(serializer.serialize(value,
+                    connectorTracker));
         } else if (valueType instanceof Class<?>) {
             // Any object that we do not know how to encode we encode by looping
             // through fields

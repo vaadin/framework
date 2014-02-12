@@ -55,6 +55,11 @@
 	margin: 0;
 	overflow: hidden;
 }
+
+.v-modal-window-open {
+	overflow: hidden;
+}
+
 $font-size: 16px;
 $line-height: normal;
 @mixin base {

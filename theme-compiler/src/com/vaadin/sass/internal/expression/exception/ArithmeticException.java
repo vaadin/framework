@@ -15,12 +15,28 @@
  */
 package com.vaadin.sass.internal.expression.exception;
 
+import com.vaadin.sass.internal.parser.LexicalUnitImpl;
+
 public class ArithmeticException extends RuntimeException {
     public ArithmeticException(String errorMsg) {
         super(errorMsg);
     }
 
-    public ArithmeticException() {
-        super("Illegal arithmetic expression");
+    public ArithmeticException(String error, LexicalUnitImpl term) {
+        super(buildMessage(error, term));
+    }
+
+    private static String buildMessage(String message, LexicalUnitImpl term) {
+        StringBuilder builder = new StringBuilder(message);
+
+        builder.append(": \"");
+        builder.append(term.toString());
+        builder.append("\" [");
+        builder.append(term.getLineNumber());
+        builder.append(",");
+        builder.append(term.getColumnNumber());
+        builder.append("]");
+
+        return builder.toString();
     }
 }

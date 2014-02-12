@@ -23,14 +23,17 @@ import com.vaadin.client.metadata.Type;
 /**
  * Implementors of this interface knows how to serialize an Object of a given
  * type to JSON and how to deserialize the JSON back into an object.
- * 
+ * <p>
  * The {@link #serialize(Object, ApplicationConnection)} and
  * {@link #deserialize(Type, JSONValue, ApplicationConnection)} methods must be
  * symmetric so they can be chained and produce the original result (or an equal
  * result).
- * 
+ * <p>
  * Each {@link JSONSerializer} implementation can handle an object of a single
  * type - see {@link Type#findSerializer()}.
+ * <p>
+ * This is the client side interface, see
+ * com.vaadin.server.communication.JSONSerializer for the server side interface.
  * 
  * @since 7.0
  */

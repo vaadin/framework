@@ -13,33 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.tests.components;
 
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.AbstractComponent;
+import static org.junit.Assert.assertTrue;
 
-public class UnknownComponentConnectorTest extends AbstractTestUI {
+import org.junit.Test;
+import org.openqa.selenium.WebElement;
 
-    public static class ComponentWithoutConnector extends AbstractComponent {
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
+/**
+ * Tests that a user is notified about a missing component from the widgetset
+ */
+public class UnknownComponentConnectorTest extends MultiBrowserTest {
+
+    @Test
+    public void testConnectorNotFoundInWidgetset() throws Exception {
+        openTestURL();
+        WebElement component = vaadinElementById("no-connector-component");
+        assertTrue(component
+                .getText()
+                .startsWith(
+                        "Widgetset 'com.vaadin.DefaultWidgetSet' does not contain "
+                                + "implementation for com.vaadin.tests.components.UnknownComponentConnector."
+                                + "ComponentWithoutConnector."));
     }
-
-    @Override
-    protected void setup(VaadinRequest request) {
-        addComponent(new ComponentWithoutConnector());
-    }
-
-    @Override
-    protected String getTestDescription() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

@@ -113,27 +113,27 @@ public abstract class AbstractTestUI extends UI {
     protected void setTransport(VaadinRequest request) {
         String transport = request.getParameter("transport");
         PushConfiguration config = getPushConfiguration();
-        PushMode mode = config.getPushMode();
 
         if ("xhr".equals(transport)) {
             config.setPushMode(PushMode.DISABLED);
         } else if ("websocket".equals(transport)) {
-            if (!mode.isEnabled()) {
-                config.setPushMode(PushMode.AUTOMATIC);
-            }
-            config.setTransport(Transport.WEBSOCKET);
-            // Ensure no fallback is used
-            getPushConfiguration().setParameter(
-                    PushConfigurationState.FALLBACK_TRANSPORT_PARAM, "none");
+            enablePush(Transport.WEBSOCKET);
         } else if ("streaming".equals(transport)) {
-            if (!mode.isEnabled()) {
-                config.setPushMode(PushMode.AUTOMATIC);
-            }
-            config.setTransport(Transport.STREAMING);
-            // Ensure no fallback is used
-            getPushConfiguration().setParameter(
-                    PushConfigurationState.FALLBACK_TRANSPORT_PARAM, "none");
+            enablePush(Transport.STREAMING);
+        } else if ("long-polling".equals(transport)) {
+            enablePush(Transport.LONG_POLLING);
         }
+    }
+
+    protected void enablePush(Transport transport) {
+        PushConfiguration config = getPushConfiguration();
+        if (!config.getPushMode().isEnabled()) {
+            config.setPushMode(PushMode.AUTOMATIC);
+        }
+        config.setTransport(transport);
+        // Ensure no fallback is used
+        getPushConfiguration().setParameter(
+                PushConfigurationState.FALLBACK_TRANSPORT_PARAM, "none");
     }
 
     private VerticalLayout layout;
@@ -146,6 +146,10 @@ public abstract class AbstractTestUI extends UI {
 
     public void addComponent(Component c) {
         getLayout().addComponent(c);
+    }
+
+    public void addComponents(Component... c) {
+        getLayout().addComponents(c);
     }
 
     public void removeComponent(Component c) {

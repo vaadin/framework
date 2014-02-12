@@ -15,8 +15,9 @@
  */
 package com.vaadin.tests.push;
 
-import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -25,26 +26,13 @@ public class PushFromInitTest extends MultiBrowserTest {
     public void testPushFromInit() {
         openTestURL();
 
-        for (int second = 0;; second++) {
-            if (second >= 30) {
-                Assert.fail("timeout");
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver input) {
+                return ("3. " + PushFromInit.LOG_AFTER_INIT)
+                        .equals(getLogRow(0));
             }
-            try {
-                if ("1. Logged in init".equals(vaadinElementById(
-                        "Log_row_1").getText())) {
-                    break;
-                }
-            } catch (Exception e) {
-            }
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-            }
-        }
-
-        Assert.assertEquals(
-                "2. Logged from background thread started in init",
-                vaadinElementById("Log_row_0").getText());
+        });
 
     }
 }

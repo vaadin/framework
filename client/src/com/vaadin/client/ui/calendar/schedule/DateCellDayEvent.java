@@ -42,7 +42,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.vaadin.client.Util;
-import com.vaadin.client.ui.VCalendar;
 import com.vaadin.shared.ui.calendar.DateConstants;
 
 /**
@@ -105,7 +104,6 @@ public class DateCellDayEvent extends FocusableHTML implements
         eventContent.addClassName("v-calendar-event-content");
         getElement().appendChild(eventContent);
 
-        VCalendar calendar = weekGrid.getCalendar();
         if (weekGrid.getCalendar().isEventResizeAllowed()) {
             topResizeBar = DOM.createDiv();
             bottomResizeBar = DOM.createDiv();
@@ -189,9 +187,11 @@ public class DateCellDayEvent extends FocusableHTML implements
         String escapedCaption = Util.escapeHTML(calendarEvent.getCaption());
         String timeAsText = calendarEvent.getTimeAsText();
         if (bigMode) {
-            innerHtml = "<span>" + timeAsText + "</span><br />" + escapedCaption;
+            innerHtml = "<span>" + timeAsText + "</span><br />"
+                    + escapedCaption;
         } else {
-            innerHtml = "<span>" + timeAsText + "<span>:</span></span> " + escapedCaption;
+            innerHtml = "<span>" + timeAsText + "<span>:</span></span> "
+                    + escapedCaption;
         }
         caption.setInnerHTML(innerHtml);
         eventContent.setInnerHTML("");

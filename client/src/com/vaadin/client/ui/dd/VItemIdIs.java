@@ -32,8 +32,6 @@ final public class VItemIdIs extends VAcceptCriterion {
             String pid = configuration.getStringAttribute("s");
             ComponentConnector dragSource = drag.getTransferable()
                     .getDragSource();
-            VDropHandler currentDropHandler = VDragAndDropManager.get()
-                    .getCurrentDropHandler();
             String pid2 = dragSource.getConnectorId();
             if (pid2.equals(pid)) {
                 Object searchedId = drag.getTransferable().getData("itemId");

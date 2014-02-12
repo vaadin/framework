@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.w3c.css.sac.ConditionFactory;
 import org.w3c.css.sac.Condition;
@@ -912,16 +914,22 @@ void media() :
   <MEDIA_SYM> ( <S> )*
    mediaStatement(ml)
    { start = true; documentHandler.startMedia(ml); }
-   <LBRACE> ( <S> )* ( debuggingDirective() | styleRule() | skipUnknownRule() )* <RBRACE> ( <S> )*
+   <LBRACE> ( <S> )* ( mediaDirective() )*	<RBRACE> ( <S> )*
  } catch (ParseException e) {
      reportError(getLocator(), e);
      skipStatement();
      // reportWarningSkipText(getLocator(), skipStatement());
  } finally {
      if (start) {
-	 documentHandler.endMedia(ml);
+     documentHandler.endMedia(ml);
      }
  }
+}
+
+void mediaDirective() :
+{}
+{
+  debuggingDirective() | styleRule() | skipUnknownRule() | contentDirective()
 }
 
 void mediaStatement(MediaListImpl ml) :
@@ -1485,6 +1493,7 @@ void variable() :
 		":" ( <S> )* exp=expr() ( guarded=guarded() )?(";"(<S>)*)+
 		//raw=skipStatementUntilSemiColon()
 		{
+		    exp = replaceNullValues(exp);
 		    documentHandler.variable(name, exp, guarded);
 		}
 	}catch (JumpException e) {
@@ -1512,6 +1521,24 @@ void variable() :
 		skipAfterExpression();
 	    }
 	}
+}
+
+JAVACODE
+LexicalUnitImpl replaceNullValues(LexicalUnitImpl unit) {
+    if(unit == null){
+        return null;
+    }
+    if (unit.getNextLexicalUnit() != null) {
+        unit.setNextLexicalUnit(replaceNullValues(unit.getNextLexicalUnit()));
+    }
+    if (unit.getLexicalUnitType() == SCSSLexicalUnit.SAC_IDENT
+            && "null".equals(unit.getStringValue())) {
+        LexicalUnitImpl next = unit.getNextLexicalUnit();
+        unit = LexicalUnitImpl.createNull(unit.getLineNumber(), unit.getColumnNumber(), 
+                                          unit.getPreviousLexicalUnit());
+        unit.setNextLexicalUnit(next);
+    }
+    return unit;
 }
 
 void controlDirective() :
@@ -1655,21 +1682,30 @@ ArrayList<VariableNode> arglist() :
     boolean hasNonOptionalArgument = false;
 }
 {
-    arg=mixinArg() ( <COMMA> (<S>)* { hasNonOptionalArgument = checkMixinForNonOptionalArguments(arg, hasNonOptionalArgument); args.add(arg); } 
-        arg=mixinArg() )* 
-    { hasNonOptionalArgument = checkMixinForNonOptionalArguments(arg, hasNonOptionalArgument); args.add(arg); 
+    (arg=mixinArg() ( <COMMA> (<S>)* { hasNonOptionalArgument = checkMixinForNonOptionalArguments(arg, hasNonOptionalArgument); args.add(arg); }
+        arg=mixinArg() )*
+    { hasNonOptionalArgument = checkMixinForNonOptionalArguments(arg, hasNonOptionalArgument); args.add(arg); }
+    )?
+    {
         return args;
     }
 }
 
 JAVACODE
-boolean checkMixinForNonOptionalArguments(VariableNode arg, boolean hasNonOptionalArguments){
+boolean checkMixinForNonOptionalArguments(VariableNode arg, boolean hasNonOptionalArguments)
+{
 	boolean currentArgHasArguments = arg.getExpr() != null && arg.getExpr().getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE && arg.getExpr().getNextLexicalUnit() != null;
-  	if(currentArgHasArguments)	{
-		if(hasNonOptionalArguments)		{			throw new ParseException("Sass Error: Required argument $"+ arg.getName() +" must come before any optional arguments.");
+  
+	if(currentArgHasArguments)
+	{
+		if(hasNonOptionalArguments)
+		{
+			throw new ParseException("Sass Error: Required argument $"+ arg.getName() +" must come before any optional arguments.");
 		}
 		return hasNonOptionalArguments;
-	}else	{	return true;
+	}else
+	{
+	return true;
 	}
 }
 
@@ -1684,9 +1720,13 @@ VariableNode mixinArg() :
 {
     name=variableName() (< COLON > (< S >)*
 
-    (      first = nonVariableTerm(null)      {
-        prev = first;      }
-	  (LOOKAHEAD(3)(< COMMA >(< S >)*)? prev = nonVariableTerm(prev))*	)
+    (
+      first = nonVariableTerm(null)
+      {
+        prev = first;
+      }
+	  (LOOKAHEAD(3)(< COMMA >(< S >)*)? prev = nonVariableTerm(prev))*
+	)
 	| (variable = < VARIABLE >{ first = LexicalUnitImpl.createVariable(token.beginLine, token.beginColumn,
                  prev, variable.image);}
 		
@@ -1706,10 +1746,11 @@ ArrayList<LexicalUnitImpl> argValuelist() :
     LexicalUnitImpl prev = null;
 }
 {
-    first = term(null) { args.add(first); prev = first;}((< COLON > (< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
-    ( <COMMA> (<S>)*
-    first = term(null) { args.add(first); prev = first;}((< COLON > (< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
-    )* 
+    (first = term(null) { args.add(first); prev = first;}((< COLON > (< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
+      ( <COMMA> (<S>)*
+      first = term(null) { args.add(first); prev = first;}((< COLON > (< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
+      )*
+    )?
     {return args;}
 }
 
@@ -1721,16 +1762,32 @@ void includeDirective() :
 {
     <INCLUDE_SYM>
     (<S>)*
-    (name = property()|name = variableName(){ name = "$"+name;}
-         |(name = functionName() 
-           args = argValuelist()) <RPARAN>(<S>)*)
-    ((";"(<S>)*)+
-           {documentHandler.includeDirective(name, args);}
-    | <LBRACE> (<S>)* {documentHandler.startIncludeContentBlock(name, args);}
-      (styleRuleOrDeclarationOrNestedProperties() | keyframeSelector())*
-      <RBRACE> (<S>)* {documentHandler.endIncludeContentBlock();}
-    )
+    (name = property() | name = variableName(){ name = "$"+name;} 
+     | (name = functionName() args = argValuelist()) <RPARAN>(<S>)*)
+    {documentHandler.startInclude(name, args);}
+    (includeDirectiveBlockContents() | includeDirectiveTerminator())
+    {documentHandler.endInclude();}
 }
+
+void includeDirectiveTerminator():
+{}
+{
+    try {
+      (";"(<S>)*)+
+    }
+    catch (ParseException e) {
+      acceptMissingSemicolonBeforeRbrace(e);
+    }
+}
+
+void includeDirectiveBlockContents():
+{}
+{
+ <LBRACE> (<S>)*
+ (styleRuleOrDeclarationOrNestedProperties() | keyframeSelector())*
+ <RBRACE> (<S>)* 
+}
+
 
 String interpolation() :
 {
@@ -1873,39 +1930,66 @@ String listModifyDirectiveArgs(int nest)
 	{
 	        t = getToken(1);
 		String s = t.image;
-		if(t.kind == VARIABLE||t.kind == IDENT)		{
+		if(t.kind == VARIABLE||t.kind == IDENT)
+		{
 		  list += s;
-		}else if(s.toLowerCase().equals("auto")||s.toLowerCase().equals("space")||s.toLowerCase().equals("comma"))		{
+		}else if(s.toLowerCase().equals("auto")||s.toLowerCase().equals("space")||s.toLowerCase().equals("comma"))
+		{
 			int i = 2;
 			Token temp = getToken(i);
 			boolean isLast = true;
 			while(temp.kind != SEMICOLON)
-			{				if(temp.kind != RPARAN || temp.kind != S)
-				{				  isLast = false;				}
+			{
+				if(temp.kind != RPARAN || temp.kind != S)
+				{
+				  isLast = false;
+				}
 				i++;
 				temp = getToken(i);
 			}
 
-		  	if(isLast)		  	{			return list;
+		  	if(isLast)
+		  	{
+			return list;
 			}
-		}		else if(t.kind == STRING)		{			list += s.substring(1,s.length()).substring(0,s.length()-2);
+		}
+		else if(t.kind == STRING)
+		{
+			list += s.substring(1,s.length()).substring(0,s.length()-2);
 			
-		}else if(t.kind == LPARAN)		{			nesting++;
-			if(nesting > nest+1)			{				throw new CSSParseException("Only one ( ) pair per parameter allowed", getLocator());
+		}else if(t.kind == LPARAN)
+		{
+			nesting++;
+			if(nesting > nest+1)
+			{
+				throw new CSSParseException("Only one ( ) pair per parameter allowed", getLocator());
 			}
-		}else if(t.kind == RPARAN)		{			nesting--;
-			if(nesting == 0)			{
+		}else if(t.kind == RPARAN)
+		{
+			nesting--;
+			if(nesting == 0)
+			{
 				return list;
 			}
-		} else if(t.kind == COMMA)		{
-			if(nesting == nest)			{
-			  return list;			}else			{
-			  list += ",";			}
+		} else if(t.kind == COMMA)
+		{
+			if(nesting == nest)
+			{
+			  return list;
+			}else
+			{
+			  list += ",";
+			}
 			  
-		}else if(t.kind == S)		{
-		  list += " ";		} else if(t.kind == LBRACE)		{
-		  throw new CSSParseException("Invalid token,'{' found", getLocator());		}
-				getNextToken();
+		}else if(t.kind == S)
+		{
+		  list += " ";
+		} else if(t.kind == LBRACE)
+		{
+		  throw new CSSParseException("Invalid token,'{' found", getLocator());
+		}
+		
+		getNextToken();
 	}
 }
 
@@ -1929,11 +2013,16 @@ void debugDirective() :
 {
     <DEBUG_SYM>
     { 
-    String content = skipStatementUntilSemiColon();
+    String content = skipStatementUntil(new int[] {SEMICOLON,RBRACE,EOF});
     // TODO should evaluate the content expression, call documentHandler.debugDirective() etc.
-    System.out.println(content);
+    Logger.getLogger(Parser.class.getName()).log(Level.INFO, content);
     }
-    (<S>)*
+    try {
+      ";" (<S>)*
+    }
+    catch (ParseException e) {
+      acceptMissingSemicolonBeforeRbrace(e);
+    }
 }
 
 void warnDirective() :
@@ -1941,11 +2030,16 @@ void warnDirective() :
 {
     <WARN_SYM>
     { 
-    String content = skipStatementUntilSemiColon();
+    String content = skipStatementUntil(new int[] {SEMICOLON,RBRACE,EOF});
     // TODO should evaluate the content expression, call documentHandler.warnDirective() etc.
-    System.err.println(content);
+    Logger.getLogger(Parser.class.getName()).log(Level.SEVERE, content);
     }
-    (<S>)*
+    try {
+      ";" (<S>)*
+    }
+    catch (ParseException e) {
+      acceptMissingSemicolonBeforeRbrace(e);
+    }
 }
 
 Node forDirective() :
@@ -1988,8 +2082,13 @@ void extendDirective() :
     <EXTEND_SYM>
     (<S>)*
     list = selectorList()
-    (";"(<S>)*)+
     {documentHandler.extendDirective(list);}
+    try {
+      (";"(<S>)*)+
+    }
+    catch (ParseException e) {
+      acceptMissingSemicolonBeforeRbrace(e);
+    }
 }
 
 void contentDirective() : 
@@ -1997,7 +2096,12 @@ void contentDirective() :
 {
     <CONTENT_SYM>
     (<S>)*
-    (";"(<S>)*)+
+    try {
+      (";"(<S>)*)+
+    }
+    catch (ParseException e) {
+      acceptMissingSemicolonBeforeRbrace(e);
+    }
     {documentHandler.contentDirective();}
 }
 
@@ -2297,14 +2401,20 @@ LexicalUnitImpl term(LexicalUnitImpl prev) :
       }
 }
 
-LexicalUnitImpl variableTerm(LexicalUnitImpl prev) :{
+LexicalUnitImpl variableTerm(LexicalUnitImpl prev) :
+{
   LexicalUnitImpl result = null;
-  String varName = "";}{
+  String varName = "";
+}
+{
   varName = variableName()
          {result = LexicalUnitImpl.createVariable(token.beginLine, token.beginColumn,
-                 prev, varName); return result;}}
+                 prev, varName); return result;}
+}
 
-LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result = null;
+LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :
+{
+LexicalUnitImpl result = null;
   Token n = null;
   char op = ' ';
   String varName;
@@ -2427,7 +2537,9 @@ LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result
 	| result=unicode(prev)
          ) ) ( <S> )*
   {
-    return result;  }}
+    return result;
+  }
+}
 
 /**
  * Handle all CSS2 functions.
@@ -2766,27 +2878,27 @@ String skipStatementUntilMatchingRightParan(){
 JAVACODE
 String skipStatementUntil(int[] symbols){
     StringBuffer s = new StringBuffer();
-    boolean stop = false;
+    boolean found = false;
     Token tok;
-    while(!stop){
+    while(!found){
         tok = getToken(1);
-        if(tok.kind == EOF) {
-            return null;
-        }
         for(int sym : symbols){
             if(tok.kind == sym){
-                stop = true;
+                found = true;
                 break;
             }
         }
-        if(!stop){
+        if(tok.kind == EOF) {
+            break;
+        }
+        if(!found){
             if (tok.image != null) {
                 s.append(tok.image);
             }
             getNextToken();
         }
     }
-    return s.toString().trim();
+    return found ? s.toString().trim() : null;
 }
 
 
@@ -3020,6 +3132,15 @@ ArrayList<String> _parseSelectors() :
 	throw (ParseException) e.e.fillInStackTrace();
     }
 }
+
+JAVACODE
+void acceptMissingSemicolonBeforeRbrace( ParseException parseException ) {
+    Token next = getToken(1);
+    if (next.kind != RBRACE && next.kind!=EOF) {
+        throw parseException;
+    }
+}
+
 
 /*
  * Local Variables:

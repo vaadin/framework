@@ -144,20 +144,55 @@ public class Highlight {
      */
     static Element show(Widget widget, String color) {
         if (widget != null) {
+            show(widget.getElement(), color);
+        }
+        return null;
+    }
+
+    /**
+     * Highlights the given {@link Element}.
+     * <p>
+     * Pass the returned {@link Element} to {@link #hide(Element)} to remove
+     * this particular highlight.
+     * </p>
+     * 
+     * @param element
+     *            Element to highlight
+     * @return Highlight element
+     */
+    static Element show(Element element) {
+        return show(element, DEFAULT_COLOR);
+    }
+
+    /**
+     * Highlight the given {@link Element} using the given color.
+     * <p>
+     * Pass the returned highlight {@link Element} to {@link #hide(Element)} to
+     * remove this particular highlight.
+     * </p>
+     * 
+     * @param element
+     *            Element to highlight
+     * @param color
+     *            Color of highlight
+     * @return Highlight element
+     */
+    static Element show(Element element, String color) {
+        if (element != null) {
             if (highlights == null) {
                 highlights = new HashSet<Element>();
             }
 
             Element highlight = DOM.createDiv();
             Style style = highlight.getStyle();
-            style.setTop(widget.getAbsoluteTop(), Unit.PX);
-            style.setLeft(widget.getAbsoluteLeft(), Unit.PX);
-            int width = widget.getOffsetWidth();
+            style.setTop(element.getAbsoluteTop(), Unit.PX);
+            style.setLeft(element.getAbsoluteLeft(), Unit.PX);
+            int width = element.getOffsetWidth();
             if (width < MIN_WIDTH) {
                 width = MIN_WIDTH;
             }
             style.setWidth(width, Unit.PX);
-            int height = widget.getOffsetHeight();
+            int height = element.getOffsetHeight();
             if (height < MIN_HEIGHT) {
                 height = MIN_HEIGHT;
             }
@@ -204,21 +239,6 @@ public class Highlight {
                 }
             }
             highlights = null;
-        }
-    }
-
-    /**
-     * Outputs debug information on the server - usually in the console of an
-     * IDE, with a clickable reference to the relevant code location.
-     * 
-     * @since 7.1
-     * @param connector
-     *            show debug info for this connector
-     */
-    static void showServerDebugInfo(ServerConnector connector) {
-        if (connector != null) {
-            connector.getConnection().getUIConnector()
-                    .showServerDebugInfo(connector);
         }
     }
 

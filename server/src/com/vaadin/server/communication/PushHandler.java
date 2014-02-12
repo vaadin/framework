@@ -19,7 +19,6 @@ package com.vaadin.server.communication;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,7 +42,6 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WebBrowser;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
@@ -75,8 +73,8 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
         @Override
         public void run(AtmosphereResource resource, UI ui) throws IOException {
             getLogger().log(Level.FINER,
-                    "New push connection with transport {0}",
-                    resource.transport());
+                    "New push connection for resource {0} with transport {1}",
+                    new Object[] { resource.uuid(), resource.transport() });
 
             resource.addEventListener(PushHandler.this);
 
@@ -84,14 +82,6 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
 
             VaadinSession session = ui.getSession();
             if (resource.transport() == TRANSPORT.STREAMING) {
-                // IE8 requires a longer padding to work properly if the
-                // initial message is small (#11573). Chrome does not work
-                // without the original padding...
-                WebBrowser browser = session.getBrowser();
-                if (browser.isIE() && browser.getBrowserMajorVersion() == 8) {
-                    resource.padding(LONG_PADDING);
-                }
-
                 // Must ensure that the streaming response contains
                 // "Connection: close", otherwise iOS 6 will wait for the
                 // response to this request before sending another request to
@@ -115,10 +105,9 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
 
             resource.suspend();
 
-            AtmospherePushConnection connection = new AtmospherePushConnection(
-                    ui, resource);
-
-            ui.setPushConnection(connection);
+            AtmospherePushConnection connection = getConnectionForUI(ui);
+            assert (connection != null);
+            connection.connect(resource);
         }
     };
 
@@ -182,11 +171,11 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
         @Override
         public void run(AtmosphereResource resource, UI ui) throws IOException {
             PushMode pushMode = ui.getPushConfiguration().getPushMode();
-            AtmospherePushConnection pushConnection = getConnectionForUI(ui);
+            AtmospherePushConnection connection = getConnectionForUI(ui);
 
             String id = resource.uuid();
 
-            if (pushConnection == null) {
+            if (connection == null) {
                 getLogger()
                         .log(Level.WARNING,
                                 "Could not find push connection to close: {0} with transport {1}",
@@ -209,19 +198,11 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
                                     "Connection unexpectedly closed for resource {0} with transport {1}",
                                     new Object[] { id, resource.transport() });
                 }
-                ui.setPushConnection(null);
+                connection.disconnect();
             }
         }
     };
 
-    private static final String LONG_PADDING;
-
-    static {
-        char[] array = new char[4096];
-        Arrays.fill(array, '-');
-        LONG_PADDING = String.copyValueOf(array);
-
-    }
     private VaadinServletService service;
 
     public PushHandler(VaadinServletService service) {
@@ -351,10 +332,10 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
     private static AtmospherePushConnection getConnectionForUI(UI ui) {
         PushConnection pushConnection = ui.getPushConnection();
         if (pushConnection instanceof AtmospherePushConnection) {
-            assert pushConnection.isConnected();
             return (AtmospherePushConnection) pushConnection;
+        } else {
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -391,7 +372,7 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
                 break;
             case JSONP:
             case LONG_POLLING:
-                resource.resume();
+                disconnect(event);
                 break;
             default:
                 getLogger().log(Level.SEVERE, "Unknown transport {0}",
@@ -411,13 +392,6 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
     public void onThrowable(AtmosphereResourceEvent event) {
         getLogger().log(Level.SEVERE, "Exception in push connection",
                 event.throwable());
-        disconnect(event);
-    }
-
-    @Override
-    public void onResume(AtmosphereResourceEvent event) {
-        // Log event on trace level
-        super.onResume(event);
         disconnect(event);
     }
 
@@ -444,8 +418,8 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
      */
     private static void sendRefreshAndDisconnect(AtmosphereResource resource)
             throws IOException {
-        AtmospherePushConnection connection = new AtmospherePushConnection(
-                null, resource);
+        AtmospherePushConnection connection = new AtmospherePushConnection(null);
+        connection.connect(resource);
         try {
             connection.sendMessage(VaadinService
                     .createCriticalNotificationJSON(null, null, null, null));

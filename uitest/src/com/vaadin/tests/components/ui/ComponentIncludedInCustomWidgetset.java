@@ -6,11 +6,13 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.widgetset.server.MissingFromDefaultWidgetsetComponent;
 
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
-public class TestUIWidgetset extends AbstractTestUI {
+public class ComponentIncludedInCustomWidgetset extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(new MissingFromDefaultWidgetsetComponent());
+        MissingFromDefaultWidgetsetComponent component = new MissingFromDefaultWidgetsetComponent();
+        component.setId("missing-component");
+        addComponent(component);
     }
 
     @Override

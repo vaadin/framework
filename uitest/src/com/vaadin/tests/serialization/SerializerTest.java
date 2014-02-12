@@ -16,15 +16,19 @@
 
 package com.vaadin.tests.serialization;
 
+import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TimeZone;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
@@ -137,6 +141,8 @@ public class SerializerTest extends AbstractTestUI {
                 ContentMode.PREFORMATTED, ContentMode.XML },
                 Arrays.asList(ContentMode.HTML, ContentMode.RAW));
 
+        rpc.sendDate(new Date(1));
+        rpc.sendDate(new Date(2013 - 1900, 5 - 1, 31, 11, 12, 13));
         testExtension.registerRpc(new SerializerTestRpc() {
             @Override
             public void sendBoolean(boolean value, Boolean boxedValue,
@@ -314,6 +320,15 @@ public class SerializerTest extends AbstractTestUI {
             @Override
             public void sendBeanSubclass(SimpleTestBean bean) {
                 log.log("sendBeanSubclass: " + bean.getValue());
+            }
+
+            @Override
+            public void sendDate(Date date) {
+                DateFormat format = DateFormat.getDateTimeInstance(
+                        DateFormat.LONG, DateFormat.FULL,
+                        new Locale("en", "fi"));
+                format.setTimeZone(TimeZone.getTimeZone("UTC"));
+                log.log("sendDate: " + format.format(date));
             }
 
         });

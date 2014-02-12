@@ -68,12 +68,14 @@ public class CompassImports extends AbstractTestBase {
     public void testCompiler(String scss, String css, String additionalPath)
             throws Exception {
         comparisonCss = getFileContent(css);
+        comparisonCss = comparisonCss.replaceAll(CR, "");
         ScssStylesheet sheet = getStyleSheet(scss);
         Assert.assertNotNull(sheet);
         sheet.addResolver(new FilesystemResolver(additionalPath));
 
         sheet.compile();
         parsedScss = sheet.toString();
+        parsedScss = parsedScss.replaceAll(CR, "");
         Assert.assertEquals("Original CSS and parsed CSS do not match",
                 comparisonCss, parsedScss);
     }

@@ -68,7 +68,7 @@ public class ServerRpcHandler implements Serializable {
      * @since 7.2
      * @author Vaadin Ltd
      */
-    public static class RpcRequest {
+    public static class RpcRequest implements Serializable {
 
         private final String csrfToken;
         private final JSONArray invocations;
@@ -439,7 +439,7 @@ public class ServerRpcHandler implements Serializable {
                     "Ignoring RPC call to " + interfaceName + "." + methodName
                             + " in connector " + connector.getClass().getName()
                             + "(" + connectorId
-                            + ") as no RPC implementation is regsitered");
+                            + ") as no RPC implementation is registered");
             return null;
         }
 

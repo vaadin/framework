@@ -10,4 +10,8 @@
 
     <entry-point class="com.vaadin.client.ApplicationConfiguration" />
 
+    <!-- Since 7.2. Compile all permutations (browser support) into one Javascript 
+        file. Speeds up compilation and does not make the Javascript significantly 
+        larger. -->
+    <collapse-all-properties />
 </module>

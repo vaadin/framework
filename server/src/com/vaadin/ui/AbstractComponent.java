@@ -31,13 +31,13 @@ import com.vaadin.event.ConnectorActionManager;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
-import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.ui.Field.ValueChangeEvent;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -85,8 +85,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
     private static final Pattern sizePattern = Pattern
             .compile("^(-?\\d+(\\.\\d+)?)(%|px|em|rem|ex|in|cm|mm|pt|pc)?$");
 
-    private ErrorHandler errorHandler = null;
-
     /**
      * Keeps track of the Actions added to this component; the actual
      * handling/notifying is delegated, usually to the containing window.
@@ -96,6 +94,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
     private boolean visible = true;
 
     private HasComponents parent;
+
+    private Boolean explicitImmediateValue;
 
     /* Constructor */
 
@@ -360,25 +360,29 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
     }
 
-    /*
-     * Tests if the component is in the immediate mode. Don't add a JavaDoc
-     * comment here, we use the default documentation from implemented
-     * interface.
-     */
     public boolean isImmediate() {
-        return getState(false).immediate;
+        if (explicitImmediateValue != null) {
+            return explicitImmediateValue;
+        } else if (hasListeners(ValueChangeEvent.class)) {
+            /*
+             * Automatic immediate for fields that developers are interested
+             * about.
+             */
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
-     * Sets the component's immediate mode to the specified status. This method
-     * will trigger a {@link RepaintRequestEvent}.
+     * Sets the component's immediate mode to the specified status.
      * 
      * @param immediate
      *            the boolean value specifying if the component should be in the
      *            immediate mode after the call.
-     * @see Component#isImmediate()
      */
     public void setImmediate(boolean immediate) {
+        explicitImmediateValue = immediate;
         getState().immediate = immediate;
     }
 
@@ -675,6 +679,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
         } else {
             getState().errorMessage = null;
         }
+
+        getState().immediate = isImmediate();
     }
 
     /* General event framework */

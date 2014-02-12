@@ -23,29 +23,20 @@ import com.vaadin.data.Validator.InvalidValueException;
 /**
  * <p>
  * Defines the interface to commit and discard changes to an object, supporting
- * read-through and write-through modes.
- * </p>
+ * buffering.
  * 
  * <p>
- * <i>Read-through mode</i> means that the value read from the buffered object
- * is constantly up to date with the data source. <i>Write-through</i> mode
- * means that all changes to the object are immediately updated to the data
- * source.
- * </p>
+ * In <i>buffered</i> mode the initial value is read from the data source and
+ * then buffered. Any subsequential writes or reads will be done on the buffered
+ * value. Calling {@link #commit()} will write the buffered value to the data
+ * source while calling {@link #discard()} while discard the buffered value and
+ * re-read the value from the data source.
  * 
  * <p>
- * Since these modes are independent, their combinations may result in some
- * behaviour that may sound surprising.
- * </p>
- * 
- * <p>
- * For example, if a <code>Buffered</code> object is in read-through mode but
- * not in write-through mode, the result is an object whose value is updated
- * directly from the data source only if it's not locally modified. If the value
- * is locally modified, retrieving the value from the object would result in a
- * value that is different than the one stored in the data source, even though
- * the object is in read-through mode.
- * </p>
+ * In <i>non-buffered</i> mode the value is always read directly from the data
+ * source. Any write is done directly to the data source with no buffering in
+ * between. Reads are also done directly from the data source. Calling
+ * {@link #commit()} or {@link #discard()} in this mode is efficiently a no-op.
  * 
  * @author Vaadin Ltd.
  * @since 3.0
@@ -77,25 +68,15 @@ public interface Buffered extends Serializable {
     public void discard() throws SourceException;
 
     /**
-     * Sets the object's buffered mode to the specified status.
+     * Sets the buffered mode to the specified status.
      * <p>
-     * When the object is in buffered mode, an internal buffer will be used to
-     * store changes until {@link #commit()} is called. Calling
-     * {@link #discard()} will revert the internal buffer to the value of the
-     * data source.
-     * </p>
+     * When in buffered mode, an internal buffer will be used to store changes
+     * until {@link #commit()} is called. Calling {@link #discard()} will revert
+     * the internal buffer to the value of the data source.
      * <p>
-     * This is an easier way to use {@link #setReadThrough(boolean)} and
-     * {@link #setWriteThrough(boolean)} and not as error prone. Changing
-     * buffered mode will change both the read through and write through state
-     * of the object.
-     * </p>
-     * <p>
-     * Mixing calls to {@link #setBuffered(boolean)}/{@link #isBuffered()} and
-     * {@link #setReadThrough(boolean)}/{@link #isReadThrough()} or
-     * {@link #setWriteThrough(boolean)}/{@link #isWriteThrough()} is generally
-     * a bad idea.
-     * </p>
+     * When in non-buffered mode both read and write operations will be done
+     * directly on the data source. In this mode the {@link #commit()} and
+     * {@link #discard()} methods serve no purpose.
      * 
      * @param buffered
      *            true if buffered mode should be turned on, false otherwise
@@ -104,10 +85,7 @@ public interface Buffered extends Serializable {
     public void setBuffered(boolean buffered);
 
     /**
-     * Checks the buffered mode of this Object.
-     * <p>
-     * This method only returns true if both read and write buffering is used.
-     * </p>
+     * Checks the buffered mode
      * 
      * @return true if buffered mode is on, false otherwise
      * @since 7.0

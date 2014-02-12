@@ -365,7 +365,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
         if (request instanceof RenderRequest) {
             return RequestType.RENDER;
         } else if (request instanceof ResourceRequest) {
-            ResourceRequest resourceRequest = (ResourceRequest) request;
             if (ServletPortletHelper.isUIDLRequest(vaadinRequest)) {
                 return RequestType.UIDL;
             } else if (PortletUIInitHandler.isUIInitRequest(vaadinRequest)) {

@@ -15,11 +15,10 @@
  */
 package com.vaadin.client.metadata;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gwt.core.shared.GWT;
+import com.vaadin.client.FastStringMap;
 import com.vaadin.client.metadata.AsyncBundleLoader.State;
 
 public abstract class ConnectorBundleLoader {
@@ -28,8 +27,9 @@ public abstract class ConnectorBundleLoader {
 
     private static ConnectorBundleLoader impl;
 
-    private Map<String, AsyncBundleLoader> asyncBlockLoaders = new HashMap<String, AsyncBundleLoader>();
-    private Map<String, String> identifierToBundle = new HashMap<String, String>();
+    private FastStringMap<AsyncBundleLoader> asyncBlockLoaders = FastStringMap
+            .create();
+    private FastStringMap<String> identifierToBundle = FastStringMap.create();
 
     private final TypeDataStore datStore = new TypeDataStore();
 

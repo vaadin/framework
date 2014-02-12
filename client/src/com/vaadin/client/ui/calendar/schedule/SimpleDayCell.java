@@ -83,7 +83,6 @@ public class SimpleDayCell extends FocusableFlowPanel implements
     private Widget clickedWidget;
     private HandlerRegistration bottomSpacerMouseDownHandler;
     private boolean scrollable = false;
-    private boolean eventCanceled;
     private MonthGrid monthGrid;
     private HandlerRegistration keyDownHandler;
 
