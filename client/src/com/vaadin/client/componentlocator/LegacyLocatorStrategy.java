@@ -75,7 +75,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
     private final ApplicationConnection client;
 
     private static final RegExp validSyntax = RegExp
-            .compile("^((\\w+::)?((PID_S)?\\w[-$_a-zA-Z0-9. ]*)?)?(/[-$_a-zA-Z0-9]+\\[\\d+\\])*/?(#.*)?$");
+            .compile("^((\\w+::)?((PID_S)?\\w[-$_a-zA-Z0-9.' ]*)?)?(/[-$_a-zA-Z0-9]+\\[\\d+\\])*/?(#.*)?$");
 
     public LegacyLocatorStrategy(ApplicationConnection clientConnection) {
         client = clientConnection;
