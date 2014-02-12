@@ -99,6 +99,15 @@ abstract class ScrollbarBundle {
     private static final int OSX_INVISIBLE_SCROLLBAR_FAKE_SIZE_PX = 13;
 
     /**
+     * The allowed value inaccuracy when comparing two double-typed pixel
+     * values.
+     * <p>
+     * Since we're comparing pixels on a screen, epsilon must be less than 1.
+     * 0.49 was deemed a perfectly fine and beautifully round number.
+     */
+    private static final double PIXEL_EPSILON = 0.49d;
+
+    /**
      * A representation of a single vertical scrollbar.
      * 
      * @see VerticalScrollbarBundle#getElement()
@@ -127,17 +136,17 @@ abstract class ScrollbarBundle {
         }
 
         @Override
-        public int getScrollSize() {
+        protected int internalGetScrollSize() {
             return scrollSizeElement.getOffsetHeight();
         }
 
         @Override
-        protected void internalSetOffsetSize(int px) {
+        protected void internalSetOffsetSize(double px) {
             root.getStyle().setHeight(px, Unit.PX);
         }
 
         @Override
-        public int getOffsetSize() {
+        public double getOffsetSize() {
             return root.getOffsetHeight();
         }
 
@@ -191,17 +200,17 @@ abstract class ScrollbarBundle {
         }
 
         @Override
-        public int getScrollSize() {
+        protected int internalGetScrollSize() {
             return scrollSizeElement.getOffsetWidth();
         }
 
         @Override
-        protected void internalSetOffsetSize(int px) {
+        protected void internalSetOffsetSize(double px) {
             root.getStyle().setWidth(px, Unit.PX);
         }
 
         @Override
-        public int getOffsetSize() {
+        public double getOffsetSize() {
             return root.getOffsetWidth();
         }
 
@@ -230,8 +239,8 @@ abstract class ScrollbarBundle {
     protected final Element scrollSizeElement = DOM.createDiv();
     protected boolean isInvisibleScrollbar = false;
 
-    private int scrollPos = 0;
-    private int maxScrollPos = 0;
+    private double scrollPos = 0;
+    private double maxScrollPos = 0;
 
     private boolean scrollHandleIsVisible = false;
 
@@ -242,6 +251,8 @@ abstract class ScrollbarBundle {
     private ScrollbarBundle() {
         root.appendChild(scrollSizeElement);
     }
+
+    protected abstract int internalGetScrollSize();
 
     /**
      * Sets the primary style name
@@ -263,12 +274,17 @@ abstract class ScrollbarBundle {
     }
 
     /**
-     * Modifies the scroll position of this scrollbar by a number of pixels
+     * Modifies the scroll position of this scrollbar by a number of pixels.
+     * <p>
+     * <em>Note:</em> Even though {@code double} values are used, they are
+     * currently only used as integers as large {@code int} (or small but fast
+     * {@code long}). This means, all values are truncated to zero decimal
+     * places.
      * 
      * @param delta
      *            the delta in pixels to change the scroll position by
      */
-    public final void setScrollPosByDelta(int delta) {
+    public final void setScrollPosByDelta(double delta) {
         if (delta != 0) {
             setScrollPos(getScrollPos() + delta);
         }
@@ -282,16 +298,21 @@ abstract class ScrollbarBundle {
      *            the new size of {@link #root} in the dimension this scrollbar
      *            is representing
      */
-    protected abstract void internalSetOffsetSize(int px);
+    protected abstract void internalSetOffsetSize(double px);
 
     /**
      * Sets the length of the scrollbar.
+     * <p>
+     * <em>Note:</em> Even though {@code double} values are used, they are
+     * currently only used as integers as large {@code int} (or small but fast
+     * {@code long}). This means, all values are truncated to zero decimal
+     * places.
      * 
      * @param px
      *            the length of the scrollbar in pixels
      */
-    public final void setOffsetSize(int px) {
-        internalSetOffsetSize(px);
+    public final void setOffsetSize(double px) {
+        internalSetOffsetSize(truncate(px));
         forceScrollbar(showsScrollHandle());
         recalculateMaxScrollPos();
         fireVisibilityChangeIfNeeded();
@@ -312,24 +333,65 @@ abstract class ScrollbarBundle {
      * 
      * @return the length of the scrollbar in pixels
      */
-    public abstract int getOffsetSize();
+    public abstract double getOffsetSize();
 
     /**
      * Sets the scroll position of the scrollbar in the axis the scrollbar is
      * representing.
+     * <p>
+     * <em>Note:</em> Even though {@code double} values are used, they are
+     * currently only used as integers as large {@code int} (or small but fast
+     * {@code long}). This means, all values are truncated to zero decimal
+     * places.
      * 
      * @param px
      *            the new scroll position in pixels
      */
-    public final void setScrollPos(int px) {
-        int oldScrollPos = scrollPos;
-        scrollPos = Math.max(0, Math.min(maxScrollPos, px));
+    public final void setScrollPos(double px) {
+        double oldScrollPos = scrollPos;
+        scrollPos = Math.max(0, Math.min(maxScrollPos, truncate(px)));
 
-        if (oldScrollPos != scrollPos) {
-            internalSetScrollPos(px);
+        if (!pixelValuesEqual(oldScrollPos, scrollPos)) {
+            /*
+             * This is where the value needs to be converted into an integer no
+             * matter how we flip it, since GWT expects an integer value.
+             * There's no point making a JSNI method that accepts doubles as the
+             * scroll position, since the browsers themselves don't support such
+             * large numbers (as of today, 25.3.2014). This double-ranged is
+             * only facilitating future virtual scrollbars.
+             */
+            internalSetScrollPos(toInt32(px));
         }
     }
 
+    /**
+     * Truncates a double such that no decimal places are retained.
+     * <p>
+     * E.g. {@code trunc(2.3d) == 2.0d} and {@code trunc(-2.3d) == -2.0d}.
+     * 
+     * @param num
+     *            the double value to be truncated
+     * @return the {@code num} value without any decimal digits
+     */
+    private static double truncate(double num) {
+        if (num > 0) {
+            return Math.floor(num);
+        } else {
+            return Math.ceil(num);
+        }
+    }
+
+    /**
+     * Modifies the element's scroll position (scrollTop or scrollLeft).
+     * <p>
+     * <em>Note:</em> The parameter here is a type of integer (instead of a
+     * double) by design. The browsers internally convert all double values into
+     * an integer value. To make this fact explicit, this API has chosen to
+     * force integers already at this level.
+     * 
+     * @param px
+     *            integer pixel value to scroll to
+     */
     protected abstract void internalSetScrollPos(int px);
 
     /**
@@ -338,14 +400,24 @@ abstract class ScrollbarBundle {
      * 
      * @return the new scroll position in pixels
      */
-    public final int getScrollPos() {
-        assert internalGetScrollPos() == scrollPos : "calculated scroll position ("
-                + scrollPos
+    public final double getScrollPos() {
+        assert internalGetScrollPos() == toInt32(scrollPos) : "calculated scroll position ("
+                + toInt32(scrollPos)
                 + ") did not match the DOM element scroll position ("
                 + internalGetScrollPos() + ")";
         return scrollPos;
     }
 
+    /**
+     * Retrieves the element's scroll position (scrollTop or scrollLeft).
+     * <p>
+     * <em>Note:</em> The parameter here is a type of integer (instead of a
+     * double) by design. The browsers internally convert all double values into
+     * an integer value. To make this fact explicit, this API has chosen to
+     * force integers already at this level.
+     * 
+     * @return integer pixel value of the scroll position
+     */
     protected abstract int internalGetScrollPos();
 
     /**
@@ -362,13 +434,18 @@ abstract class ScrollbarBundle {
     /**
      * Sets the amount of pixels the scrollbar needs to be able to scroll
      * through.
+     * <p>
+     * <em>Note:</em> Even though {@code double} values are used, they are
+     * currently only used as integers as large {@code int} (or small but fast
+     * {@code long}). This means, all values are truncated to zero decimal
+     * places.
      * 
      * @param px
      *            the number of pixels the scrollbar should be able to scroll
      *            through
      */
-    public final void setScrollSize(int px) {
-        internalSetScrollSize(px);
+    public final void setScrollSize(double px) {
+        internalSetScrollSize(toInt32(truncate(px)));
         forceScrollbar(showsScrollHandle());
         recalculateMaxScrollPos();
         fireVisibilityChangeIfNeeded();
@@ -381,7 +458,9 @@ abstract class ScrollbarBundle {
      * @return the number of pixels the scrollbar should be able to scroll
      *         through
      */
-    public abstract int getScrollSize();
+    public double getScrollSize() {
+        return internalGetScrollSize();
+    }
 
     /**
      * Modifies {@link #scrollSizeElement scrollSizeElement's} dimensions in the
@@ -447,8 +526,8 @@ abstract class ScrollbarBundle {
     }
 
     public void recalculateMaxScrollPos() {
-        int scrollSize = getScrollSize();
-        int offsetSize = getOffsetSize();
+        double scrollSize = getScrollSize();
+        double offsetSize = getOffsetSize();
         maxScrollPos = Math.max(0, scrollSize - offsetSize);
 
         // make sure that the correct max scroll position is maintained.
@@ -459,7 +538,6 @@ abstract class ScrollbarBundle {
      * This is a method that JSNI can call to synchronize the object state from
      * the DOM.
      */
-    @SuppressWarnings("unused")
     private final void updateScrollPosFromDom() {
         scrollPos = internalGetScrollPos();
     }
@@ -492,5 +570,33 @@ abstract class ScrollbarBundle {
                     scrollHandleIsVisible);
             getHandlerManager().fireEvent(event);
         }
+    }
+
+
+    /**
+     * Converts a double into an integer by JavaScript's terms.
+     * <p>
+     * Implementation copied from {@link Element#toInt32(double)}.
+     * 
+     * @param val
+     *            the double value to convert into an integer
+     * @return the double value converted to an integer
+     */
+    private static native int toInt32(double val)
+    /*-{
+        return val | 0;
+    }-*/;
+
+    /**
+     * Compares two double values with the error margin of
+     * {@link #PIXEL_EPSILON} (i.e. {@value #PIXEL_EPSILON})
+     * 
+     * @param num1
+     *            the first value for which to compare equality
+     * @param num2
+     *            the second value for which to compare equality
+     */
+    private static boolean pixelValuesEqual(final double num1, final double num2) {
+        return Math.abs(num1 - num2) <= PIXEL_EPSILON;
     }
 }
