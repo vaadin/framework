@@ -16,8 +16,8 @@
 
 package com.vaadin.client.ui.grid;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.Element;
 
 /**
  * A functional interface that can be used for positioning elements in the DOM.

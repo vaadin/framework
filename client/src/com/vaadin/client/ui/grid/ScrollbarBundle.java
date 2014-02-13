@@ -16,10 +16,10 @@
 
 package com.vaadin.client.ui.grid;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 
 /**
  * An element-like bundle representing a configurable and visual scrollbar in

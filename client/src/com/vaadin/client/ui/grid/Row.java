@@ -16,7 +16,7 @@
 
 package com.vaadin.client.ui.grid;
 
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.Element;
 
 /**
  * A representation of a row in an {@link Escalator}.

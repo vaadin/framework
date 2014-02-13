@@ -30,6 +30,7 @@ import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
@@ -38,7 +39,6 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -1427,7 +1427,7 @@ public class Escalator extends Widget {
          * @return the pixel width of the widest element in the indicated column
          */
         public int calculateMaxColWidth(int index) {
-            Element row = (Element) root.getFirstChildElement();
+            Element row = root.getFirstChildElement();
             int maxWidth = 0;
             while (row != null) {
                 final Element cell = (Element) row.getChild(index);
@@ -1436,7 +1436,7 @@ public class Escalator extends Widget {
                 if (isVisible) {
                     maxWidth = Math.max(maxWidth, cell.getScrollWidth());
                 }
-                row = (Element) row.getNextSiblingElement();
+                row = row.getNextSiblingElement();
             }
             return maxWidth;
         }
@@ -1446,9 +1446,9 @@ public class Escalator extends Widget {
          * the column configuration.
          */
         public void reapplyColumnWidths() {
-            Element row = (Element) root.getFirstChildElement();
+            Element row = root.getFirstChildElement();
             while (row != null) {
-                Element cell = (Element) row.getFirstChildElement();
+                Element cell = row.getFirstChildElement();
                 int columnIndex = 0;
                 while (cell != null) {
                     @SuppressWarnings("hiding")
@@ -1461,10 +1461,10 @@ public class Escalator extends Widget {
                      */
                     cell.getStyle().setWidth(width, Unit.PX);
 
-                    cell = (Element) cell.getNextSiblingElement();
+                    cell = cell.getNextSiblingElement();
                     columnIndex++;
                 }
-                row = (Element) row.getNextSiblingElement();
+                row = row.getNextSiblingElement();
             }
 
             reapplyRowWidths();
@@ -3563,7 +3563,10 @@ public class Escalator extends Widget {
         Node possibleWidgetNode = cellNode.getFirstChild();
         if (possibleWidgetNode != null
                 && possibleWidgetNode.getNodeType() == Node.ELEMENT_NODE) {
-            return Util.findWidget((Element) possibleWidgetNode, null);
+            @SuppressWarnings("deprecation")
+            com.google.gwt.user.client.Element castElement = (com.google.gwt.user.client.Element) possibleWidgetNode
+                    .cast();
+            return Util.findWidget(castElement, null);
         }
         return null;
     }
