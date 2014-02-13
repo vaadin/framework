@@ -41,6 +41,7 @@
         <ul>
             <li><a href="#overview">Overview of Vaadin
                     @version@ Release</a></li>
+			<li><a href="#security-fixes">Security fixes</a></li>
             <li><a href="#changelog">Change log for Vaadin
                     @version@</a></li>
             <li><a href="#enhancements">Enhancements in Vaadin
@@ -75,7 +76,44 @@
                 href="http://vaadin.com/download/release/@version-minor@/@version-minor@.0/release-notes.html">Release
                 Notes for Vaadin @version-minor@.0</a>.
         </p>
-
+        
+        <!-- ================================================================ -->
+		<h3 id="security-fixes">Security fixes in Vaadin Framework 7.1.11</h3>
+		
+		<p>
+		  Vaadin 7.1.11 fixes two security issues discovered during internal review. 
+		</p>
+		<p><b>Escaping of OptionGroup item icon URLs</b></p>
+		<p>
+			The issue affects OptionGroup with item icons. Proper escaping of the 
+			src-attribute on the client side was not ensured when using icons for 
+			OptionGroup items. This could potentially, in certain situations, allow
+			a malicious user to inject content, such as javascript, in order to 
+			perform a cross-site scripting (XSS) attack.
+		</p>
+		<p>
+			In order for an application to be vulnerable, user provided input must
+			be used to form a URL used to display an icon for an OptionGroup item, 
+			when showing that Option Group to other users.<br/>
+			The vulnerability has been classified as moderate, due to it's limited
+			application. 
+		</p>
+		<p><b>Escaping of URLs in Util.getAbsoluteUrl()</b></p>
+		<p>
+			The client side Util.getAbsoluteUrl() did not ensure proper escaping
+			of the given URL. This could potentially, in certain situations, allow
+			a malicious user to inject content, such as javascript, in order to 
+			perform a cross-site scripting (XSS) attack.
+		</p>
+		<p>
+			The method is used internally by the framework in such a manner that it
+			is unlikely this attack vector can be utilized in practice. However,
+			third party components, or future use of the method, could make an 
+			attack viable.<br/>
+			The vulnerability has been classified as moderate, due to it's limited
+			application. 
+		</p>
+        
         <h3 id="changelog">Change log for Vaadin @version@</h3>
 
         <p>This release includes the following closed issues:</p>

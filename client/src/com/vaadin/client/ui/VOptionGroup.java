@@ -142,8 +142,9 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
             String icon = opUidl.getStringAttribute("icon");
             if (icon != null && icon.length() != 0) {
                 String iconUrl = client.translateVaadinUri(icon);
-                itemHtml = "<img src=\"" + iconUrl + "\" class=\""
-                        + Icon.CLASSNAME + "\" alt=\"\" />" + itemHtml;
+                itemHtml = "<img src=\"" + Util.escapeAttribute(iconUrl)
+                        + "\" class=\"" + Icon.CLASSNAME + "\" alt=\"\" />"
+                        + itemHtml;
             }
 
             String key = opUidl.getStringAttribute("key");

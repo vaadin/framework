@@ -86,7 +86,7 @@ public interface Container extends Serializable {
      * Gets the {@link Item} with the given Item ID from the Container. If the
      * Container does not contain the requested Item, <code>null</code> is
      * returned.
-     * 
+     * <p>
      * Containers should not return Items that are filtered out.
      * 
      * @param itemId
@@ -108,11 +108,11 @@ public interface Container extends Serializable {
      * Gets the ID's of all visible (after filtering and sorting) Items stored
      * in the Container. The ID's cannot be modified through the returned
      * collection.
-     * 
+     * <p>
      * If the container is {@link Ordered}, the collection returned by this
      * method should follow that order. If the container is {@link Sortable},
      * the items should be in the sorted order.
-     * 
+     * <p>
      * Calling this method for large lazy containers can be an expensive
      * operation and should be avoided when practical.
      * 
@@ -145,7 +145,7 @@ public interface Container extends Serializable {
 
     /**
      * Gets the number of visible Items in the Container.
-     * 
+     * <p>
      * Filtering can hide items so that they will not be visible through the
      * container API.
      * 
@@ -155,7 +155,7 @@ public interface Container extends Serializable {
 
     /**
      * Tests if the Container contains the specified Item.
-     * 
+     * <p>
      * Filtering can hide items so that they will not be visible through the
      * container API, and this method should respect visibility of items (i.e.
      * only indicate visible items as being in the container) if feasible for
@@ -235,7 +235,7 @@ public interface Container extends Serializable {
     /**
      * Adds a new Property to all Items in the Container. The Property ID, data
      * type and default value of the new Property are given as parameters.
-     * 
+     * <p>
      * This functionality is optional.
      * 
      * @param propertyId
@@ -256,7 +256,7 @@ public interface Container extends Serializable {
     /**
      * Removes a Property specified by the given Property ID from the Container.
      * Note that the Property will be removed from all Items in the Container.
-     * 
+     * <p>
      * This functionality is optional.
      * 
      * @param propertyId
@@ -427,10 +427,8 @@ public interface Container extends Serializable {
     public interface Sortable extends Ordered {
 
         /**
-         * Sort method.
-         * 
          * Sorts the container items.
-         * 
+         * <p>
          * Sorting a container can irreversibly change the order of its items or
          * only change the order temporarily, depending on the container.
          * 
@@ -486,40 +484,34 @@ public interface Container extends Serializable {
 
         /**
          * Get the item id for the item at the position given by
-         * <code>index</code>. <br>
-         * <br>
-         * <b>Throws:</b> {@link IndexOutOfBoundsException} if
-         * <code>index</code> is outside the range of the container. (i.e.
-         * <code>index &lt; 0 || container.size()-1 &lt; index</code>)
+         * <code>index</code>.
+         * <p>
          * 
          * @param index
          *            the index of the requested item id
          * @return the item id of the item at the given index
+         * @throws IndexOutOfBoundsException
+         *             if <code>index</code> is outside the range of the
+         *             container. (i.e.
+         *             <code>index &lt; 0 || container.size()-1 &lt; index</code>
+         *             )
          */
         public Object getIdByIndex(int index);
 
         /**
          * Get <code>numberOfItems</code> consecutive item ids from the
-         * container, starting with the item id at <code>startIndex</code>. <br>
-         * <br>
-         * 
+         * container, starting with the item id at <code>startIndex</code>.
+         * <p>
          * Implementations should return at most <code>numberOfItems</code> item
          * ids, but can contain less if the container has less items than
          * required to fulfill the request. The returned list must hence contain
-         * all of the item ids from the range: <br>
-         * <br>
+         * all of the item ids from the range:
+         * <p>
          * <code>startIndex</code> to
-         * <code>max(startIndex + (numberOfItems-1), container.size()-1)</code>. <br>
-         * <br>
+         * <code>max(startIndex + (numberOfItems-1), container.size()-1)</code>.
+         * <p>
          * For quick migration to new API see:
          * {@link ContainerHelpers#getItemIdsUsingGetIdByIndex(int, int, Indexed)}
-         * . <br>
-         * <br>
-         * <b>Throws:</b> {@link IllegalArgumentException} if
-         * <code>numberOfItems</code> is < 0 <br>
-         * <b>Throws:</b> {@link IndexOutOfBoundsException} if
-         * <code>startIndex</code> is outside the range of the container. (i.e.
-         * <code>startIndex &lt; 0 || container.size()-1 &lt; startIndex</code>)
          * 
          * @param startIndex
          *            the index for the first item which id to include
@@ -528,6 +520,14 @@ public interface Container extends Serializable {
          *            start index, must be >= 0
          * @return List containing the requested item ids or empty list if
          *         <code>numberOfItems</code> == 0; not null
+         * 
+         * @throws IllegalArgumentException
+         *             if <code>numberOfItems</code> is < 0
+         * @throws IndexOutOfBoundsException
+         *             if <code>startIndex</code> is outside the range of the
+         *             container. (i.e.
+         *             <code>startIndex &lt; 0 || container.size()-1 &lt; startIndex</code>
+         *             )
          * 
          * @since 7.0
          */
@@ -777,7 +777,6 @@ public interface Container extends Serializable {
          * Note that being a leaf does not imply whether or not an Item is
          * allowed to have children.
          * </p>
-         * .
          * 
          * @param itemId
          *            ID of the Item to be tested
@@ -849,15 +848,15 @@ public interface Container extends Serializable {
 
         /**
          * Add a filter for given property.
-         * 
+         * <p>
          * The API {@link Filterable#addContainerFilter(Filter)} is recommended
          * instead of this method. A {@link SimpleStringFilter} can be used with
          * the new API to implement the old string filtering functionality.
-         * 
+         * <p>
          * The filter accepts items for which toString() of the value of the
          * given property contains or starts with given filterString. Other
          * items are not visible in the container when filtered.
-         * 
+         * <p>
          * If a container has multiple filters, only items accepted by all
          * filters are visible.
          * 
@@ -890,17 +889,17 @@ public interface Container extends Serializable {
 
     /**
      * Filter interface for container filtering.
-     * 
+     * <p>
      * If a filter does not support in-memory filtering,
      * {@link #passesFilter(Item)} should throw
      * {@link UnsupportedOperationException}.
-     * 
+     * <p>
      * Lazy containers must be able to map filters to their internal
      * representation (e.g. SQL or JPA 2.0 Criteria).
-     * 
+     * <p>
      * An {@link UnsupportedFilterException} can be thrown by the container if a
      * particular filter is not supported by the container.
-     * 
+     * <p>
      * An {@link Filter} should implement {@link #equals(Object)} and
      * {@link #hashCode()} correctly to avoid duplicate filter registrations
      * etc.
@@ -984,7 +983,7 @@ public interface Container extends Serializable {
     public interface Filterable extends Container, Serializable {
         /**
          * Adds a filter for the container.
-         * 
+         * <p>
          * If a container has multiple filters, only items accepted by all
          * filters are visible.
          * 
@@ -996,7 +995,7 @@ public interface Container extends Serializable {
 
         /**
          * Removes a filter from the container.
-         * 
+         * <p>
          * This requires that the equals() method considers the filters as
          * equivalent (same instance or properly implemented equals() method).
          */
@@ -1077,7 +1076,7 @@ public interface Container extends Serializable {
 
     /**
      * Container Item set change listener interface.
-     * 
+     * <p>
      * An item set change refers to addition, removal or reordering of items in
      * the container. A simple property value change is not an item set change.
      */
@@ -1098,7 +1097,7 @@ public interface Container extends Serializable {
      * listeners. By implementing this interface a class explicitly announces
      * that it will generate a <code>ItemSetChangeEvent</code> when its contents
      * are modified.
-     * 
+     * <p>
      * An item set change refers to addition, removal or reordering of items in
      * the container. A simple property value change is not an item set change.
      * 
@@ -1151,7 +1150,7 @@ public interface Container extends Serializable {
     /**
      * An <code>Event</code> object specifying the Container whose Property set
      * has changed.
-     * 
+     * <p>
      * A property set change means the addition, removal or other structural
      * changes to the properties of a container. Changes concerning the set of
      * items in the container and their property values are not property set
@@ -1170,7 +1169,7 @@ public interface Container extends Serializable {
     /**
      * The listener interface for receiving <code>PropertySetChangeEvent</code>
      * objects.
-     * 
+     * <p>
      * A property set change means the addition, removal or other structural
      * change of the properties (supported property IDs) of a container. Changes
      * concerning the set of items in the container and their property values
