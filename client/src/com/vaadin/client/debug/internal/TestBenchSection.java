@@ -85,7 +85,7 @@ public class TestBenchSection implements Section {
         }
     }
 
-    private final DebugButton tabButton = new DebugButton(Icon.WARNING,
+    private final DebugButton tabButton = new DebugButton(Icon.TESTBENCH,
             "Pick Vaadin TestBench selectors");
 
     private final FlowPanel content = new FlowPanel();
