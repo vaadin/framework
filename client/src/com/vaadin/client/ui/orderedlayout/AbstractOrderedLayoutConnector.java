@@ -297,9 +297,9 @@ public abstract class AbstractOrderedLayoutConnector extends
 
         // remove spacing as it is exists as separate elements that cannot be
         // removed easily after reordering the contents
-        Profiler.enter("AOLC.onConnectorHierarchyChange addOrMoveSlot temporarily remove spacing");
+        Profiler.enter("AOLC.onConnectorHierarchyChange temporarily remove spacing");
         layout.setSpacing(false);
-        Profiler.leave("AOLC.onConnectorHierarchyChange addOrMoveSlot temporarily remove spacing");
+        Profiler.leave("AOLC.onConnectorHierarchyChange temporarily remove spacing");
 
         for (ComponentConnector child : getChildComponents()) {
             Profiler.enter("AOLC.onConnectorHierarchyChange add children");
@@ -317,12 +317,12 @@ public abstract class AbstractOrderedLayoutConnector extends
         }
 
         // re-add spacing for the elements that should have it
-        Profiler.enter("AOLC.onConnectorHierarchyChange addOrMoveSlot setSpacing");
+        Profiler.enter("AOLC.onConnectorHierarchyChange setSpacing");
         // spacings were removed above
         if (getState().spacing) {
             layout.setSpacing(true);
         }
-        Profiler.leave("AOLC.onConnectorHierarchyChange addOrMoveSlot setSpacing");
+        Profiler.leave("AOLC.onConnectorHierarchyChange setSpacing");
 
         for (ComponentConnector child : previousChildren) {
             Profiler.enter("AOLC.onConnectorHierarchyChange remove children");
@@ -332,9 +332,7 @@ public abstract class AbstractOrderedLayoutConnector extends
                 if (slot.hasCaption()) {
                     slot.setCaptionResizeListener(null);
                 }
-                if (slot.getSpacingElement() != null) {
-                    slot.setSpacingResizeListener(null);
-                }
+                slot.setSpacingResizeListener(null);
                 child.removeStateChangeHandler(childStateChangeHandler);
                 layout.removeWidget(child.getWidget());
             }
