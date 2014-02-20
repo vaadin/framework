@@ -34,8 +34,8 @@ import com.vaadin.ui.UI;
 
 public abstract class PushLargeData extends AbstractTestUIWithLog {
 
-    // 1MB
-    static final int DEFAULT_SIZE_BYTES = 1000 * 1000;
+    // 250KB
+    static final int DEFAULT_SIZE_BYTES = 250 * 1000;
 
     // Every other second
     static final int DEFAULT_DELAY_MS = 2000;
