@@ -16,6 +16,7 @@
 
 package com.vaadin.tests.tb3;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -83,12 +84,21 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
                         .getAnnotation(RunLocally.class).value()
                         .getDesiredCapabilities());
             }
-            for (DesiredCapabilities capabilities : desiredCapabilites) {
 
+            TestNameSuffix testNameSuffixProperty = findAnnotation(
+                    testClassInstance.getClass(), TestNameSuffix.class);
+            for (DesiredCapabilities capabilities : desiredCapabilites) {
                 // Find any methods marked with @Test.
                 for (FrameworkMethod m : getTestClass().getAnnotatedMethods(
                         Test.class)) {
-                    tests.add(new TB3Method(m.getMethod(), capabilities));
+                    TB3Method method = new TB3Method(m.getMethod(),
+                            capabilities);
+                    if (testNameSuffixProperty != null) {
+                        method.setTestNameSuffix("-"
+                                + System.getProperty(testNameSuffixProperty
+                                        .property()));
+                    }
+                    tests.add(method);
                 }
             }
         } catch (Exception e) {
@@ -96,6 +106,27 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
         }
 
         return tests;
+    }
+
+    /**
+     * Finds the given annotation in the given class or one of its super
+     * classes. Return the first found annotation
+     * 
+     * @param searchClass
+     * @param annotationClass
+     * @return
+     */
+    private <T extends Annotation> T findAnnotation(Class<?> searchClass,
+            Class<T> annotationClass) {
+        if (searchClass == Object.class) {
+            return null;
+        }
+
+        if (searchClass.getAnnotation(annotationClass) != null) {
+            return searchClass.getAnnotation(annotationClass);
+        }
+
+        return findAnnotation(searchClass.getSuperclass(), annotationClass);
     }
 
     /*
@@ -141,10 +172,15 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
 
     private static class TB3Method extends FrameworkMethod {
         private DesiredCapabilities capabilities;
+        private String testNameSuffix = "";
 
         public TB3Method(Method method, DesiredCapabilities capabilities) {
             super(method);
             this.capabilities = capabilities;
+        }
+
+        public void setTestNameSuffix(String testNameSuffix) {
+            this.testNameSuffix = testNameSuffix;
         }
 
         @Override
@@ -156,9 +192,11 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
 
         @Override
         public String getName() {
-            return String.format("%s[%s]", getMethod().getName(),
+            return String.format("%s[%s]", getMethod().getName()
+                    + testNameSuffix,
                     BrowserUtil.getUniqueIdentifier(capabilities));
         }
 
     }
+
 }
