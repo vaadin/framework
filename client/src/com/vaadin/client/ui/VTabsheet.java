@@ -243,6 +243,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         public void focus() {
+            getTabsheet().scrollIntoView(this);
             focusImpl.focus(td);
         }
 
@@ -1160,13 +1161,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         } while (newTabIndex >= 0 && !newTab.isSelectable());
 
         if (newTabIndex >= 0) {
-            if (isScrolledTabs()) {
-                // Scroll until the new active tab is visible
-                while (!newTab.isVisible()) {
-                    scrollerIndex = tb.scrollLeft(scrollerIndex);
-                }
-                updateTabScroller();
-            }
             onTabSelected(newTabIndex);
             activeTabIndex = newTabIndex;
         }
@@ -1182,17 +1176,24 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         } while (newTabIndex < getTabCount() && !newTab.isSelectable());
 
         if (newTabIndex < getTabCount()) {
-            if (isClippedTabs()) {
-                // Scroll until the new active tab is completely visible
-                int newScrollerIndex = scrollerIndex;
-                while (isClipped(newTab) && newScrollerIndex != -1) {
-                    newScrollerIndex = tb.scrollRight(newScrollerIndex);
-                }
-                scrollerIndex = newScrollerIndex;
-                updateTabScroller();
-            }
             onTabSelected(newTabIndex);
             activeTabIndex = newTabIndex;
+        }
+    }
+
+    private void scrollIntoView(Tab tab) {
+        if (!tab.isHiddenOnServer()) {
+            if (isClipped(tab)) {
+                while (isClipped(tab) && scrollerIndex != -1) {
+                    scrollerIndex = tb.scrollRight(scrollerIndex);
+                }
+                updateTabScroller();
+            } else if (!tab.isVisible()) {
+                while (!tab.isVisible()) {
+                    scrollerIndex = tb.scrollLeft(scrollerIndex);
+                }
+                updateTabScroller();
+            }
         }
     }
 }
