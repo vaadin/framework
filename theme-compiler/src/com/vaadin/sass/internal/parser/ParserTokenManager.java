@@ -18,6 +18,7 @@ package com.vaadin.sass.internal.parser;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;

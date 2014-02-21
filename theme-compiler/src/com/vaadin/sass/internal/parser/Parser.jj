@@ -37,6 +37,7 @@ package com.vaadin.sass.internal.parser;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -752,15 +753,15 @@ void charset() :
 { Token n; }
 {  
     try {
-	<CHARSET_SYM> ( <S> )* n=<STRING> ( <S> )* ";"
+        <CHARSET_SYM> ( <S> )* n=<STRING> ( <S> )* (";" | acceptMissingSemicolon(EOF))
     } catch (ParseException e) {
         reportError(getLocator(e.currentToken.next), e);
-	skipStatement();
-	// reportWarningSkipText(getLocator(), skipStatement());
+    skipStatement();
+    // reportWarningSkipText(getLocator(), skipStatement());
     } catch (Exception e) {
         reportError(getLocator(), e);
-	skipStatement();
-	// reportWarningSkipText(getLocator(), skipStatement());
+    skipStatement();
+    // reportWarningSkipText(getLocator(), skipStatement());
     }
 }
 
@@ -819,7 +820,7 @@ void importDeclaration() :
 	       }
 	   }
 		  )
-       ( <S> )* mediaStatement(ml) ";"
+       ( <S> )* mediaStatement(ml) (";" | acceptMissingSemicolon(RBRACE, EOF))
        ( <S> )*
 	   {
 	       if (ml.getLength() == 0) {
@@ -1490,7 +1491,7 @@ void variable() :
 {
 	try{
 		name = variableName()
-		":" ( <S> )* exp=expr() ( guarded=guarded() )?(";"(<S>)*)+
+		":" ( <S> )* exp=expr() ( guarded=guarded() )? semicolonTerminator()
 		//raw=skipStatementUntilSemiColon()
 		{
 		    exp = replaceNullValues(exp);
@@ -1765,18 +1766,27 @@ void includeDirective() :
     (name = property() | name = variableName(){ name = "$"+name;} 
      | (name = functionName() args = argValuelist()) <RPARAN>(<S>)*)
     {documentHandler.startInclude(name, args);}
-    (includeDirectiveBlockContents() | includeDirectiveTerminator())
+    (includeDirectiveBlockContents() | semicolonTerminator())
     {documentHandler.endInclude();}
 }
 
-void includeDirectiveTerminator():
+void semicolonTerminator():
 {}
 {
-    try {
-      (";"(<S>)*)+
-    }
-    catch (ParseException e) {
-      acceptMissingSemicolonBeforeRbrace(e);
+    (";"(<S>)*)+ | acceptMissingSemicolon(RBRACE, EOF)
+}
+
+JAVACODE
+void acceptMissingSemicolon(Integer... acceptedTerminators) throws ParseException {
+    Token next = getToken(1);
+    ArrayList<Integer> terminators = new ArrayList<Integer>(Arrays.asList(acceptedTerminators));
+    if (!terminators.contains(next.kind)){
+        String message = "encountered \"" + next.image + "\". Was expecting one of \";\"";
+        for(int term : acceptedTerminators){
+            message += ", " + tokenImage[term];
+        }
+        ParseException e = new ParseException(message);
+        throw e;
     }
 }
 
@@ -2017,12 +2027,7 @@ void debugDirective() :
     // TODO should evaluate the content expression, call documentHandler.debugDirective() etc.
     Logger.getLogger(Parser.class.getName()).log(Level.INFO, content);
     }
-    try {
-      ";" (<S>)*
-    }
-    catch (ParseException e) {
-      acceptMissingSemicolonBeforeRbrace(e);
-    }
+    ( (";" (<S>)*) | acceptMissingSemicolon(RBRACE, EOF))
 }
 
 void warnDirective() :
@@ -2034,12 +2039,7 @@ void warnDirective() :
     // TODO should evaluate the content expression, call documentHandler.warnDirective() etc.
     Logger.getLogger(Parser.class.getName()).log(Level.SEVERE, content);
     }
-    try {
-      ";" (<S>)*
-    }
-    catch (ParseException e) {
-      acceptMissingSemicolonBeforeRbrace(e);
-    }
+    ( (";" (<S>)*) | acceptMissingSemicolon(RBRACE, EOF))
 }
 
 Node forDirective() :
@@ -2083,12 +2083,7 @@ void extendDirective() :
     (<S>)*
     list = selectorList()
     {documentHandler.extendDirective(list);}
-    try {
-      (";"(<S>)*)+
-    }
-    catch (ParseException e) {
-      acceptMissingSemicolonBeforeRbrace(e);
-    }
+    semicolonTerminator()
 }
 
 void contentDirective() : 
@@ -2096,12 +2091,7 @@ void contentDirective() :
 {
     <CONTENT_SYM>
     (<S>)*
-    try {
-      (";"(<S>)*)+
-    }
-    catch (ParseException e) {
-      acceptMissingSemicolonBeforeRbrace(e);
-    }
+    ( (";" (<S>)*) | acceptMissingSemicolon(RBRACE, EOF))
     {documentHandler.contentDirective();}
 }
 
@@ -3141,15 +3131,6 @@ ArrayList<String> _parseSelectors() :
 	throw (ParseException) e.e.fillInStackTrace();
     }
 }
-
-JAVACODE
-void acceptMissingSemicolonBeforeRbrace( ParseException parseException ) {
-    Token next = getToken(1);
-    if (next.kind != RBRACE && next.kind!=EOF) {
-        throw parseException;
-    }
-}
-
 
 /*
  * Local Variables:
