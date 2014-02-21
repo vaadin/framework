@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.push;
 
-public class LongPollingReconnectTest extends PushReconnectTest {
+public class ReconnectStreamingTest extends ReconnectTest {
 
     @Override
     protected Class<?> getUIClass() {
-        return BasicPushLongPolling.class;
+        return BasicPushStreaming.class;
     }
 
 }

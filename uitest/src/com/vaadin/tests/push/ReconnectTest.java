@@ -23,7 +23,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.tests.tb3.MultiBrowserTestWithProxy;
 
-public abstract class PushReconnectTest extends MultiBrowserTestWithProxy {
+public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
     @Test
     public void testShortDisconnect() throws Exception {
@@ -152,7 +152,7 @@ public abstract class PushReconnectTest extends MultiBrowserTestWithProxy {
 
             @Override
             public Boolean apply(WebDriver input) {
-                return BasicPushTest.getServerCounter(PushReconnectTest.this) > counter;
+                return BasicPushTest.getServerCounter(ReconnectTest.this) > counter;
             }
         }, 30);
     }
