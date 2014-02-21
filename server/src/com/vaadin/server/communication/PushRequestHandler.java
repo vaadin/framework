@@ -104,7 +104,7 @@ public class PushRequestHandler implements RequestHandler,
             trackMessageSize.configure(atmosphere.getAtmosphereConfig());
             atmosphere.interceptor(trackMessageSize);
         } catch (ServletException e) {
-            throw new ServiceException("Could not read atmosphere settings", e);
+            throw new ServiceException("Atmosphere init failed", e);
         }
     }
 
