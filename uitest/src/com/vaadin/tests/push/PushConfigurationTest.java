@@ -93,6 +93,40 @@ public class PushConfigurationTest extends WebsocketTest {
 
     }
 
+    @Test
+    public void testLongPolling() {
+        setDebug(true);
+        openTestURL();
+        int counter = getServerCounter();
+        assertGreaterOrEqual("Counter should be >= 1. Was: " + counter,
+                counter, 1);
+        new Select(getTransportSelect()).selectByVisibleText("LONG_POLLING");
+        new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
+        Assert.assertTrue(vaadinElement(
+                "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[5]/VLabel[0]/domChild[0]")
+                .getText()
+                .matches(
+                        "^[\\s\\S]*fallbackTransport: streaming[\\s\\S]*transport: long-polling[\\s\\S]*$"));
+        counter = getServerCounter();
+        final int waitCounter = counter + 2;
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                return (getServerCounter() >= waitCounter);
+            }
+        });
+
+        // Use debug console to verify we used the correct transport type
+        Assert.assertTrue(driver.getPageSource().contains(
+                "Push connection established using longpolling"));
+        Assert.assertFalse(driver.getPageSource().contains(
+                "Push connection established using streaming"));
+
+        new Select(getPushModeSelect()).selectByVisibleText("DISABLED");
+
+    }
+
     private WebElement getPushModeSelect() {
         return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[0]/VNativeSelect[0]/domChild[0]");
     }
