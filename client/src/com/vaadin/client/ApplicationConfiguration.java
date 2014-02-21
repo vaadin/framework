@@ -605,6 +605,11 @@ public class ApplicationConfiguration implements EntryPoint {
             enableIOS6castFix();
         }
 
+        // Enable IE prompt fix (#13367)
+        if (browserInfo.isIE() && browserInfo.getBrowserMajorVersion() >= 10) {
+            enableIEPromptFix();
+        }
+
         // Prepare the debugging window
         if (isDebugMode()) {
             /*
@@ -679,6 +684,25 @@ public class ApplicationConfiguration implements EntryPoint {
     /*-{
           Math.max = function(a,b) {return (a > b === 1 < 2)? a : b}
           Math.min = function(a,b) {return (a < b === 1 < 2)? a : b}
+    }-*/;
+
+    /**
+     * Make Metro versions of IE suggest switching to the desktop when
+     * window.prompt is called.
+     */
+    private static native void enableIEPromptFix()
+    /*-{
+        var prompt = $wnd.prompt;
+        $wnd.prompt = function () {
+            var result = prompt.apply($wnd, Array.prototype.slice.call(arguments));
+            if (result === undefined) {
+                // force the browser to suggest desktop mode
+                showModalDialog();
+                return null;
+            } else {
+                return result;
+            }
+        };
     }-*/;
 
     /**
