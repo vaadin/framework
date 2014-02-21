@@ -80,6 +80,9 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
     private boolean prompting = false;
     private int lastCursorPos = -1;
 
+    // used while checking if FF has set input prompt as value
+    private boolean possibleInputError = false;
+
     public VTextField() {
         this(DOM.createInputText());
     }
@@ -88,9 +91,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         super(node);
         setStyleName(CLASSNAME);
         addChangeHandler(this);
-        if (BrowserInfo.get().isIE()) {
-            // IE does not send change events when pressing enter in a text
-            // input so we handle it using a key listener instead
+        if (BrowserInfo.get().isIE() || BrowserInfo.get().isFirefox()) {
             addKeyDownHandler(this);
         }
         addFocusHandler(this);
@@ -260,6 +261,9 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         if (focusedTextField == this) {
             focusedTextField = null;
         }
+        if (BrowserInfo.get().isFirefox()) {
+            removeOnInputListener(getElement());
+        }
     }
 
     @Override
@@ -267,6 +271,11 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         super.onAttach();
         if (listenTextChangeEvents) {
             detachCutEventListener(getElement());
+        }
+        if (BrowserInfo.get().isFirefox()) {
+            // Workaround for FF setting input prompt as the value if esc is
+            // pressed while the field is focused and empty (#8051).
+            addOnInputListener(getElement());
         }
     }
 
@@ -433,8 +442,17 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
 
     @Override
     public void onKeyDown(KeyDownEvent event) {
-        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+        if (BrowserInfo.get().isIE()
+                && event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+            // IE does not send change events when pressing enter in a text
+            // input so we handle it using a key listener instead
             valueChange(false);
+        } else if (BrowserInfo.get().isFirefox()
+                && event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE
+                && getText().equals("")) {
+            // check after onInput event if inputPrompt has appeared as the
+            // value of the field
+            possibleInputError = true;
         }
     }
 
@@ -449,5 +467,25 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
     protected boolean isWordwrap() {
         String wrap = getElement().getAttribute("wrap");
         return !"off".equals(wrap);
+    }
+
+    private native void addOnInputListener(Element el)
+    /*-{
+        var self = this; 
+        el.oninput = $entry(function() {
+            self.@com.vaadin.client.ui.VTextField::checkForInputError()();
+        }); 
+    }-*/;
+
+    private native void removeOnInputListener(Element el)
+    /*-{
+        el.oninput = null;
+    }-*/;
+
+    private void checkForInputError() {
+        if (possibleInputError && getText().equals(inputPrompt)) {
+            setText("");
+        }
+        possibleInputError = false;
     }
 }

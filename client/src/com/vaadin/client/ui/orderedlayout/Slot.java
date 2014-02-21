@@ -127,7 +127,7 @@ public final class Slot extends SimplePanel {
     }
 
     /**
-     * Attached resize listeners to the widget, caption and spacing elements
+     * Attaches resize listeners to the widget, caption and spacing elements
      */
     private void attachListeners() {
         if (getWidget() != null && layout.getLayoutManager() != null) {
@@ -166,6 +166,8 @@ public final class Slot extends SimplePanel {
                 lm.removeElementResizeListener(getWidget().getElement(),
                         widgetResizeListener);
             }
+            // in many cases, the listener has already been removed by
+            // setSpacing(false)
             if (getSpacingElement() != null && spacingResizeListener != null) {
                 lm.removeElementResizeListener(getSpacingElement(),
                         spacingResizeListener);
@@ -314,6 +316,12 @@ public final class Slot extends SimplePanel {
              */
             getElement().getParentElement().insertBefore(spacer, getElement());
         } else if (!spacing && spacer != null) {
+            // Remove listener before spacer to avoid memory leak
+            LayoutManager lm = layout.getLayoutManager();
+            if (lm != null && spacingResizeListener != null) {
+                lm.removeElementResizeListener(spacer, spacingResizeListener);
+            }
+
             spacer.removeFromParent();
             spacer = null;
         }
