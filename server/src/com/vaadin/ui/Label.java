@@ -186,7 +186,8 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * Set the value of the label. Value of the label is the XML contents of the
-     * label.
+     * label. Since Vaadin 7.2, changing the value of Label instance with that
+     * method will fire ValueChangeEvent.
      * 
      * @param newStringValue
      *            the New value of the label.
@@ -194,7 +195,13 @@ public class Label extends AbstractComponent implements Property<String>,
     @Override
     public void setValue(String newStringValue) {
         if (getPropertyDataSource() == null) {
-            getState().text = newStringValue;
+
+            LabelState state = (LabelState) getState(false);
+            String oldTextValue = state.text;
+            if (!SharedUtil.equals(oldTextValue, newStringValue)) {
+                getState().text = newStringValue;
+                fireValueChange();
+            }
         } else {
             throw new IllegalStateException(
                     "Label is only a Property.Viewer and cannot update its data source");
@@ -223,7 +230,8 @@ public class Label extends AbstractComponent implements Property<String>,
     }
 
     /**
-     * Sets the property as data-source for viewing.
+     * Sets the property as data-source for viewing. Since Vaadin 7.2 a
+     * ValueChangeEvent is fired if the new value is different from previous.
      * 
      * @param newDataSource
      *            the new data source Property
@@ -253,7 +261,7 @@ public class Label extends AbstractComponent implements Property<String>,
         if (dataSource != null) {
             // Update the value from the data source. If data source was set to
             // null, retain the old value
-            getState().text = getDataSourceValue();
+            updateValueFromDataSource();
         }
 
         // Listens the new data source if possible
@@ -404,7 +412,8 @@ public class Label extends AbstractComponent implements Property<String>,
     private void updateValueFromDataSource() {
         // Update the internal value from the data source
         String newConvertedValue = getDataSourceValue();
-        if (!SharedUtil.equals(newConvertedValue, getState().text)) {
+        if (!SharedUtil.equals(newConvertedValue,
+                ((LabelState) getState(false)).text)) {
             getState().text = newConvertedValue;
             fireValueChange();
         }
