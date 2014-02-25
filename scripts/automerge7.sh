@@ -22,7 +22,7 @@ merge() {
         if [ "$mCommit" == "" ]
         then
                 echo "merge() missing commit id"
-                exit 1
+                exit 2
         fi
 
 #       echo "merge($mCommit)"
@@ -32,7 +32,7 @@ merge() {
         then
                 echo "Merge failed for commit $mCommit"
                 echo "Manual merge is needed"
-                exit 2
+                exit 3
         fi
         # Add a change id using git hook
         git commit --amend --no-edit
@@ -45,7 +45,7 @@ pushMerged() {
         if [ "$?" != "0" ]
         then
                 echo "Push failed!"
-                exit 2
+                exit 4
         fi
 }
 
@@ -61,7 +61,7 @@ maybe_commit_and_push() {
         if [ "$cpCommitMsg" == "" ]
         then
         	echo "Internal error, no commit message passed to maybe_commit_and_push()"
-        	exit 1;
+        	exit 5
         fi
 #       echo "maybe_commit_and_push: Merging $cpCommit"
         merge $cpCommit
@@ -82,7 +82,7 @@ if [ "$nothingToCommit" == "" ]
 then
 	git status
 	echo "Can not merge when there are unstaged changes."
-	exit 1;
+	exit 6
 fi 
 
 git checkout $TO
@@ -112,7 +112,7 @@ do
                         echo "Stopping merge at $commit because of merge conflicts"
                         echo "The following commit must be manually merged."
                         show $commit
-                        exit 3
+                        exit 7
 		        fi
         elif [ "$mergeDirective" == "no" ]
         then
@@ -136,7 +136,7 @@ do
                 echo "Stopping merge at $commit (merge: manual)"
                 echo "The following commit must be manually merged."
                 show $commit
-                exit 3
+                exit 8
         else
                 maybe_commit_and_push $pendingCommit "$pendingCommitMessage"
                 pendingCommit=
@@ -145,7 +145,7 @@ do
                 echo "Commit $commit contains an unknown merge directive, Merge: $mergeDirective"
                 echo "Stopping merge."
                 show $commit
-                exit 3
+                exit 9
         fi
 done
 
