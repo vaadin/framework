@@ -1,13 +1,15 @@
 package com.vaadin.tests.components.table;
 
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
-import com.vaadin.data.util.sqlcontainer.DataGenerator;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
-import com.vaadin.data.util.sqlcontainer.SQLTestsConstants;
+import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.QueryDelegate;
 import com.vaadin.data.util.sqlcontainer.query.TableQuery;
+import com.vaadin.data.util.sqlcontainer.query.generator.DefaultSQLGenerator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -32,19 +34,42 @@ public class TableScrollingWithSQLContainer extends UI {
         }
     }
 
+    private void generateTestData(JDBCConnectionPool connectionPool)
+            throws SQLException {
+        Connection conn = connectionPool.reserveConnection();
+        Statement statement = conn.createStatement();
+        try {
+            statement.execute("drop table PEOPLE");
+        } catch (SQLException e) {
+            // Will fail if table doesn't exist, which is OK.
+            conn.rollback();
+        }
+        statement
+                .execute("create table people (id integer generated always as identity,"
+                        + " name varchar(32), AGE INTEGER)");
+        statement.execute("alter table people add primary key (id)");
+        for (int i = 0; i < 5000; i++) {
+            statement
+                    .executeUpdate("insert into people values(default, 'Person "
+                            + i + "', '" + i % 99 + "')");
+        }
+        statement.close();
+        conn.commit();
+        connectionPool.releaseConnection(conn);
+    }
+
     static final String TABLE = "table";
 
     @Override
     public void init(VaadinRequest request) {
         try {
             SimpleJDBCConnectionPool connectionPool = new SimpleJDBCConnectionPool(
-                    SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
-                    SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
-            DataGenerator.addPeopleToDatabase(connectionPool);
-            DataGenerator.addFiveThousandPeople(connectionPool);
+                    "org.hsqldb.jdbc.JDBCDriver",
+                    "jdbc:hsqldb:mem:sqlcontainer", "SA", "", 2, 20);
+            generateTestData(connectionPool);
 
             TableQuery query = new TableQuery("people", connectionPool,
-                    SQLTestsConstants.sqlGen);
+                    new DefaultSQLGenerator());
 
             SQLContainer container = new LimitedSQLContainer(query);
 
