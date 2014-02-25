@@ -7,6 +7,11 @@ TO=master
 IGNORE_HEAD=origin/$IGNORE
 FROM_HEAD=origin/$FROM
 PUSH="origin HEAD:refs/for/$TO"
+EMAIL_AUTHOR=
+if [ "$1" = "email" ]
+then
+	EMAIL_AUTHOR=1
+fi
 
 show() {
         sCommit=$1
@@ -112,6 +117,13 @@ do
                         echo "Stopping merge at $commit because of merge conflicts"
                         echo "The following commit must be manually merged."
                         show $commit
+                        
+                        if [ "$EMAIL_AUTHOR" = "1" ]
+                        then
+                        	author=`git show --format=%aE -s $commit`
+                        	echo "Email sent to $author"
+                        	(show $commit ; echo ; git merge $commit) |mail -s "Merge of your commit $commit to $TO failed" $author
+                        fi
                         exit 7
 		        fi
         elif [ "$mergeDirective" == "no" ]
