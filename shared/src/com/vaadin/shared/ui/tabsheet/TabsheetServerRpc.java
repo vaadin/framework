@@ -15,29 +15,30 @@
  */
 package com.vaadin.shared.ui.tabsheet;
 
-import java.util.ArrayList;
+import com.vaadin.shared.communication.ServerRpc;
 
-import com.vaadin.shared.AbstractComponentState;
-
-public class TabsheetState extends AbstractComponentState {
-    public static final String PRIMARY_STYLE_NAME = "v-tabsheet";
-
-    {
-        primaryStyleName = PRIMARY_STYLE_NAME;
-    }
+/**
+ * Client to server RPC methods for the TabSheet.
+ * 
+ * @since 7.2
+ * @author Vaadin Ltd
+ */
+public interface TabsheetServerRpc extends ServerRpc {
 
     /**
-     * Index of the component when switching focus - not related to Tabsheet
-     * tabs.
+     * Tell server that a tab has been selected by the user.
+     * 
+     * @param key
+     *            internal key of the tab
      */
-    public int tabIndex;
+    void setSelected(String key);
 
-    public ArrayList<TabState> tabs = new ArrayList<TabState>();
-
-    /** true to show the tab bar, false to only show the contained component */
-    public boolean tabsVisible = true;
-
-    /** the key of the currently selected tab */
-    public String selected;
+    /**
+     * Tell server that a tab has been closed by the user.
+     * 
+     * @param key
+     *            internal key of the tab
+     */
+    void closeTab(String key);
 
 }

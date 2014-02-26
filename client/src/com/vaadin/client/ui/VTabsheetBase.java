@@ -25,28 +25,28 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.UIDL;
+import com.vaadin.client.ConnectorMap;
+import com.vaadin.shared.ui.tabsheet.TabState;
 
 public abstract class VTabsheetBase extends ComplexPanel {
 
     /** For internal use only. May be removed or replaced in the future. */
-    public String id;
-    /** For internal use only. May be removed or replaced in the future. */
-    public ApplicationConnection client;
+    protected ApplicationConnection client;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public final ArrayList<String> tabKeys = new ArrayList<String>();
+    protected final ArrayList<String> tabKeys = new ArrayList<String>();
     /** For internal use only. May be removed or replaced in the future. */
-    public Set<String> disabledTabKeys = new HashSet<String>();
+    protected Set<String> disabledTabKeys = new HashSet<String>();
 
     /** For internal use only. May be removed or replaced in the future. */
-    public int activeTabIndex = 0;
+    protected int activeTabIndex = 0;
     /** For internal use only. May be removed or replaced in the future. */
-    public int focusedTabIndex = 0;
+    protected boolean disabled;
     /** For internal use only. May be removed or replaced in the future. */
-    public boolean disabled;
+    protected boolean readonly;
+
     /** For internal use only. May be removed or replaced in the future. */
-    public boolean readonly;
+    protected AbstractComponentConnector connector;
 
     public VTabsheetBase(String classname) {
         setElement(DOM.createDiv());
@@ -61,14 +61,13 @@ public abstract class VTabsheetBase extends ComplexPanel {
     /**
      * Clears current tabs and contents
      */
-    abstract protected void clearPaintables();
+    protected abstract void clearPaintables();
 
     /**
      * Implement in extending classes. This method should render needed elements
      * and set the visibility of the tab according to the 'selected' parameter.
      */
-    public abstract void renderTab(final UIDL tabUidl, int index,
-            boolean selected, boolean hidden);
+    public abstract void renderTab(TabState tabState, int index);
 
     /**
      * Implement in extending classes. This method should return the number of
@@ -87,4 +86,79 @@ public abstract class VTabsheetBase extends ComplexPanel {
      * tab with the specified index.
      */
     public abstract void removeTab(int index);
+
+    /**
+     * Returns true if the width of the widget is undefined, false otherwise.
+     * 
+     * @since 7.2
+     * @return true if width of the widget is determined by its content
+     */
+    protected boolean isDynamicWidth() {
+        return getConnectorForWidget(this).isUndefinedWidth();
+    }
+
+    /**
+     * Returns true if the height of the widget is undefined, false otherwise.
+     * 
+     * @since 7.2
+     * @return true if width of the height is determined by its content
+     */
+    protected boolean isDynamicHeight() {
+        return getConnectorForWidget(this).isUndefinedHeight();
+    }
+
+    /**
+     * Sets the connector that should be notified of events etc.
+     * 
+     * For internal use only. This method may be removed or replaced in the
+     * future.
+     * 
+     * @since 7.2
+     * @param connector
+     */
+    public void setConnector(AbstractComponentConnector connector) {
+        this.connector = connector;
+    }
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public void clearTabKeys() {
+        tabKeys.clear();
+        disabledTabKeys.clear();
+    }
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public void addTabKey(String key, boolean disabled) {
+        tabKeys.add(key);
+        if (disabled) {
+            disabledTabKeys.add(key);
+        }
+    }
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public void setClient(ApplicationConnection client) {
+        this.client = client;
+    }
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public void setActiveTabIndex(int activeTabIndex) {
+        this.activeTabIndex = activeTabIndex;
+    }
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public void setEnabled(boolean enabled) {
+        disabled = !enabled;
+    }
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public void setReadonly(boolean readonly) {
+        this.readonly = readonly;
+    }
+
+    /** For internal use only. May be removed or replaced in the future. */
+    protected ComponentConnector getConnectorForWidget(Widget widget) {
+        return ConnectorMap.get(client).getConnector(widget);
+    }
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public abstract void selectTab(int index);
 }

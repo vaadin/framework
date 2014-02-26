@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui;
 
+import com.vaadin.shared.ui.accordion.AccordionState;
+
 /**
  * An accordion is a component similar to a {@link TabSheet}, but with a
  * vertical orientation and the selected component presented between tabs.
@@ -44,6 +46,16 @@ public class Accordion extends TabSheet {
     public Accordion(Component... components) {
         this();
         addComponents(components);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.TabSheet#getState()
+     */
+    @Override
+    protected AccordionState getState() {
+        return (AccordionState) super.getState();
     }
 
 }

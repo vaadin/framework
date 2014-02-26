@@ -15,7 +15,6 @@
  */
 package com.vaadin.client.ui;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -28,43 +27,41 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
-import com.vaadin.shared.ui.tabsheet.TabsheetBaseConstants;
-import com.vaadin.shared.ui.tabsheet.TabsheetConstants;
+import com.vaadin.shared.ComponentConstants;
+import com.vaadin.shared.ui.accordion.AccordionState;
+import com.vaadin.shared.ui.tabsheet.TabState;
+import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
 
 public class VAccordion extends VTabsheetBase {
 
-    public static final String CLASSNAME = "v-accordion";
+    public static final String CLASSNAME = AccordionState.PRIMARY_STYLE_NAME;
 
     private Set<Widget> widgets = new HashSet<Widget>();
 
-    /** For internal use only. May be removed or replaced in the future. */
-    public HashMap<StackItem, UIDL> lazyUpdateMap = new HashMap<StackItem, UIDL>();
-
-    private StackItem openTab = null;
+    private StackItem openTab;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public int selectedUIDLItemIndex = -1;
+    public int selectedItemIndex = -1;
 
     private final TouchScrollHandler touchScrollHandler;
 
     public VAccordion() {
         super(CLASSNAME);
+
         touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
     }
 
     @Override
-    public void renderTab(UIDL tabUidl, int index, boolean selected,
-            boolean hidden) {
+    public void renderTab(TabState tabState, int index) {
         StackItem item;
         int itemIndex;
+
         if (getWidgetCount() <= index) {
             // Create stackItem and render caption
-            item = new StackItem(tabUidl);
+            item = new StackItem();
             if (getWidgetCount() == 0) {
                 item.addStyleDependentName("first");
             }
@@ -72,23 +69,19 @@ public class VAccordion extends VTabsheetBase {
             add(item, getElement());
         } else {
             item = getStackItem(index);
-            item = moveStackItemIfNeeded(item, index, tabUidl);
+
             itemIndex = index;
         }
-        item.updateCaption(tabUidl);
+        item.updateCaption(tabState);
 
-        item.updateTabStyleName(tabUidl
-                .getStringAttribute(TabsheetConstants.TAB_STYLE_NAME));
+        item.updateTabStyleName(tabState.styleName);
 
-        item.setVisible(!hidden);
+        item.setVisible(tabState.visible);
+    }
 
-        if (selected) {
-            selectedUIDLItemIndex = itemIndex;
-        }
-
-        if (tabUidl.getChildCount() > 0) {
-            lazyUpdateMap.put(item, tabUidl.getChildUIDL(0));
-        }
+    @Override
+    public void selectTab(int index) {
+        selectedItemIndex = index;
     }
 
     @Override
@@ -110,69 +103,6 @@ public class VAccordion extends VTabsheetBase {
                 item.updateStyleNames(primaryStyleName);
             }
         }
-    }
-
-    /**
-     * This method tries to find out if a tab has been rendered with a different
-     * index previously. If this is the case it re-orders the children so the
-     * same StackItem is used for rendering this time. E.g. if the first tab has
-     * been removed all tabs which contain cached content must be moved 1 step
-     * up to preserve the cached content.
-     * 
-     * @param item
-     * @param newIndex
-     * @param tabUidl
-     * @return
-     */
-    private StackItem moveStackItemIfNeeded(StackItem item, int newIndex,
-            UIDL tabUidl) {
-        UIDL tabContentUIDL = null;
-        ComponentConnector tabContent = null;
-        if (tabUidl.getChildCount() > 0) {
-            tabContentUIDL = tabUidl.getChildUIDL(0);
-            tabContent = client.getPaintable(tabContentUIDL);
-        }
-
-        Widget itemWidget = item.getComponent();
-        if (tabContent != null) {
-            if (tabContent.getWidget() != itemWidget) {
-                /*
-                 * This is not the same widget as before, find out if it has
-                 * been moved
-                 */
-                int oldIndex = -1;
-                StackItem oldItem = null;
-                for (int i = 0; i < getWidgetCount(); i++) {
-                    Widget w = getWidget(i);
-                    oldItem = (StackItem) w;
-                    if (tabContent == oldItem.getComponent()) {
-                        oldIndex = i;
-                        break;
-                    }
-                }
-
-                if (oldIndex != -1 && oldIndex > newIndex) {
-                    /*
-                     * The tab has previously been rendered in another position
-                     * so we must move the cached content to correct position.
-                     * We move only items with oldIndex > newIndex to prevent
-                     * moving items already rendered in this update. If for
-                     * instance tabs 1,2,3 are removed and added as 3,2,1 we
-                     * cannot re-use "1" when we get to the third tab.
-                     */
-                    insert(oldItem, getElement(), newIndex, true);
-                    return oldItem;
-                }
-            }
-        } else {
-            // Tab which has never been loaded. Must assure we use an empty
-            // StackItem
-            Widget oldWidget = item.getComponent();
-            if (oldWidget != null) {
-                oldWidget.removeFromParent();
-            }
-        }
-        return item;
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -210,10 +140,14 @@ public class VAccordion extends VTabsheetBase {
 
     public void onSelectTab(StackItem item) {
         final int index = getWidgetIndex(item);
+
         if (index != activeTabIndex && !disabled && !readonly
                 && !disabledTabKeys.contains(tabKeys.get(index))) {
+
             addStyleDependentName("loading");
-            client.updateVariable(id, "selected", "" + tabKeys.get(index), true);
+
+            connector.getRpcProxy(TabsheetServerRpc.class).setSelected(
+                    tabKeys.get(index).toString());
         }
     }
 
@@ -296,7 +230,7 @@ public class VAccordion extends VTabsheetBase {
         private Element captionNode = DOM.createDiv();
         private String styleName;
 
-        public StackItem(UIDL tabUidl) {
+        public StackItem() {
             setElement(DOM.createDiv());
             caption = new VCaption(client);
             caption.addClickHandler(this);
@@ -375,10 +309,17 @@ public class VAccordion extends VTabsheetBase {
             return open;
         }
 
-        public void setContent(UIDL contentUidl) {
-            final ComponentConnector newPntbl = client
-                    .getPaintable(contentUidl);
-            Widget newWidget = newPntbl.getWidget();
+        /**
+         * Updates the content of the open tab of the accordion.
+         * 
+         * This method is mostly for internal use and may change in future
+         * versions.
+         * 
+         * @since 7.2
+         * @param newWidget
+         *            new content
+         */
+        public void setContent(Widget newWidget) {
             if (getChildWidget() == null) {
                 add(newWidget, content);
                 widgets.add(newWidget);
@@ -395,14 +336,19 @@ public class VAccordion extends VTabsheetBase {
             onSelectTab(this);
         }
 
-        public void updateCaption(UIDL uidl) {
+        public void updateCaption(TabState tabState) {
             // TODO need to call this because the caption does not have an owner
             caption.updateCaptionWithoutOwner(
-                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_CAPTION),
-                    uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DISABLED),
-                    uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION),
-                    uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ERROR_MESSAGE),
-                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ICON));
+                    tabState.caption,
+                    !tabState.enabled,
+                    hasAttribute(tabState.description),
+                    hasAttribute(tabState.componentError),
+                    connector.getResourceUrl(ComponentConstants.ICON_RESOURCE
+                            + tabState.key));
+        }
+
+        private boolean hasAttribute(String string) {
+            return string != null && !string.trim().isEmpty();
         }
 
         /**
@@ -450,18 +396,6 @@ public class VAccordion extends VTabsheetBase {
         clear();
     }
 
-    boolean isDynamicWidth() {
-        ComponentConnector paintable = ConnectorMap.get(client).getConnector(
-                this);
-        return paintable.isUndefinedWidth();
-    }
-
-    boolean isDynamicHeight() {
-        ComponentConnector paintable = ConnectorMap.get(client).getConnector(
-                this);
-        return paintable.isUndefinedHeight();
-    }
-
     @Override
     public Iterator<Widget> getWidgetIterator() {
         return widgets.iterator();
@@ -488,7 +422,7 @@ public class VAccordion extends VTabsheetBase {
             }
             Widget w = stackItem.getChildWidget();
             if (w != null) {
-                return ConnectorMap.get(client).getConnector(w);
+                return getConnectorForWidget(w);
             }
         }
 

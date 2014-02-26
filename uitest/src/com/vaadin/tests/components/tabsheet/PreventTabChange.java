@@ -31,7 +31,8 @@ public class PreventTabChange extends TestBase implements
     @Override
     protected void setup() {
         tabSheet = new TabSheet();
-        tabSheet.addListener(this);
+        tabSheet.setId("tabsheet");
+        tabSheet.addSelectedTabChangeListener(this);
         tab1 = new Label("Tab 1 contents");
         tab2 = new Label("Tab 2 contents");
         tab3 = new Label("Tab 3 contents");
@@ -48,8 +49,8 @@ public class PreventTabChange extends TestBase implements
 
     @Override
     public void selectedTabChange(SelectedTabChangeEvent event) {
-
         TabSheet tabsheet = event.getTabSheet();
+
         if (lastTab == tab1) {
             if (tabsheet.getSelectedTab() != tab2) {
                 tabsheet.setSelectedTab(lastTab);
@@ -63,6 +64,7 @@ public class PreventTabChange extends TestBase implements
                 tabsheet.setSelectedTab(lastTab);
             }
         }
+
         lastTab = tabsheet.getSelectedTab();
     }
 }
