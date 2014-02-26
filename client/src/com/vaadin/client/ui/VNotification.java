@@ -442,11 +442,9 @@ public class VNotification extends VOverlay {
                 .hasAttribute(UIConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
         String html = "";
         if (notification.hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON)) {
-            final String parsedUri = client
-                    .translateVaadinUri(notification
-                            .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON));
-            html += "<img src=\"" + Util.escapeAttribute(parsedUri)
-                    + "\" alt=\"\" />";
+            String iconUri = notification
+                    .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON);
+            html += client.getIcon(iconUri).getElement().getString();
         }
         if (notification
                 .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION)) {
