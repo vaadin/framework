@@ -422,13 +422,20 @@ public class VDragAndDropManager {
                                 }
                             case Event.ONMOUSEMOVE:
                             case Event.ONTOUCHMOVE:
-                                if (deferredStartRegistration != null) {
-                                    deferredStartRegistration.removeHandler();
-                                    deferredStartRegistration = null;
+                                // only start the drag if the mouse / touch has moved a minimum distance
+                                int startX = Util.getTouchOrMouseClientX(currentDrag.getCurrentGwtEvent());
+                                int startY = Util.getTouchOrMouseClientY(currentDrag.getCurrentGwtEvent());
+                                int nowX = Util.getTouchOrMouseClientX(event.getNativeEvent());
+                                int nowY = Util.getTouchOrMouseClientY(event.getNativeEvent());
+                                if (Math.abs(startX - nowX) > 3 || Math.abs(startY - nowY) > 3) {
+                                    if (deferredStartRegistration != null) {
+                                            deferredStartRegistration.removeHandler();
+                                            deferredStartRegistration = null;
+                                    }
+                                    currentDrag.setCurrentGwtEvent(event
+                                                    .getNativeEvent());
+                                    startDrag.execute();
                                 }
-                                currentDrag.setCurrentGwtEvent(event
-                                        .getNativeEvent());
-                                startDrag.execute();
                                 break;
                             default:
                                 // on any other events, clean up the
