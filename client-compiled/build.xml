@@ -60,7 +60,7 @@
     <target name="compile-module">
         <fail unless="module" message="You must give the module to compile in the 'module' parameter" />
         <property name="style" value="OBF" />
-        <property name="localWorkers" value="2" />
+        <property name="localWorkers" value="6" />
         <property name="extraParams" value="" />
 
         <ivy:resolve log="download-only" resolveid="common" conf="compile-module" />
