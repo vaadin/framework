@@ -41,7 +41,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
     public enum Browser {
-        FIREFOX(BrowserUtil.firefox(24)), CHROME(BrowserUtil.chrome(29)), SAFARI(
+        FIREFOX(BrowserUtil.firefox(24)), CHROME(BrowserUtil.chrome(33)), SAFARI(
                 BrowserUtil.safari(7)), IE8(BrowserUtil.ie(8)), IE9(BrowserUtil
                 .ie(9)), IE10(BrowserUtil.ie(10)), IE11(BrowserUtil.ie(11)), OPERA(
                 BrowserUtil.opera(17));
