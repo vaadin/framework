@@ -20,9 +20,15 @@
         <artifact type="pom" ext="pom" />
     </publications>
     <dependencies>
-        <dependency org="com.vaadin" name="vaadin-shared-deps"
-            rev="1.0.3" conf="build,ide,test->default" />
-
+        <dependency org="com.vaadin.external.flute" name="flute"
+            rev="1.3.0.gg2" conf="build,ide,test->default" />
+        <dependency org="com.vaadin.external.streamhtmlparser"
+            name="streamhtmlparser-jsilver" rev="0.0.10.vaadin1"
+            conf="build,ide,test->default" />
+        <dependency org="com.vaadin.external.google" name="guava"
+            rev="16.0.1.vaadin1" conf="build,ide,test->default" />
+        <dependency org="com.vaadin.external.google" name="android-json"
+            rev="0.0.20131108.vaadin1" conf="build,ide,test->default" />
         <dependency org="junit" name="junit" rev="4.11"
             conf="test,ide -> default" />
 
