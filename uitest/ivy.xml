@@ -83,7 +83,7 @@
         <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
             conf="build,ide -> default" />
         <dependency org="com.vaadin" name="vaadin-testbench"
-            rev="3.1.2" conf="build-provided,ide -> default" />
+            rev="3.1.3" conf="build-provided,ide -> default" />
     </dependencies>
 
 </ivy-module>
