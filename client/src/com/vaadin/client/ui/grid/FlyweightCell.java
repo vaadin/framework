@@ -20,7 +20,6 @@ import java.util.List;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.grid.FlyweightRow.CellIterator;
@@ -192,7 +191,7 @@ class FlyweightCell implements Cell {
             widget.removeFromParent();
 
             // Physical attach.
-            DOM.appendChild(getElement(), widget.getElement());
+            getElement().appendChild(widget.getElement());
 
             Escalator.setParent(widget, escalator);
         }
