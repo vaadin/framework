@@ -46,18 +46,22 @@
     </target>
 
     <target name="test-all" depends="buildorder">
-        <property name="war.file" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
-
         <parallel>
             <!-- JUnit tests, can be run without a server -->
             <subant buildpathref="build-path" target="test" />
 
             <!-- Server deployment + TestBench tests  -->
-            <ant antfile="uitest/build.xml" target="test-testbench">
-                <property name="war.file" location="${war.file}" />
-            </ant>
+            <antcall target="integration-test" />
         </parallel>
     </target>
+
+    <target name="integration-test" depends="buildorder">
+        <property name="war.file" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+
+        <ant antfile="uitest/build.xml" target="test-testbench">
+            <property name="war.file" location="${war.file}" />
+        </ant>
+     </target>
 
     <target name="official.build.checks" if="build.release">
         <condition property="java.version.matches">
