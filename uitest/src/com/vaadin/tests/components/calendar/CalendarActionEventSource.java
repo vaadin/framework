@@ -49,9 +49,8 @@ public class CalendarActionEventSource extends AbstractTestUI {
 
                 CalendarEvent event = null;
                 try {
-                    event = new BasicEvent("NAME", "TOOLTIP",
-                            new SimpleDateFormat("yyyy-MM-dd hh:mm")
-                                    .parse("2013-01-01 07:00"),
+                    event = new BasicEvent("NAME", null, new SimpleDateFormat(
+                            "yyyy-MM-dd hh:mm").parse("2013-01-01 07:00"),
                             new SimpleDateFormat("yyyy-MM-dd hh:mm")
                                     .parse("2013-01-01 11:00"));
                 } catch (ParseException e) {

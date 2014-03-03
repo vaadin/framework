@@ -13,13 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.push;
+package com.vaadin.tests.integration;
 
-public class LongPollingReconnectTest extends PushReconnectTest {
-
-    @Override
-    protected Class<?> getUIClass() {
-        return BasicPushLongPolling.class;
-    }
-
+public class ServletIntegrationDefaultPushUITest extends
+        AbstractServletIntegrationTest {
+    // Uses the test method declared in the super class
 }

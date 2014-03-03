@@ -1,0 +1,25 @@
+@mixin fonts {
+	@include fonticons;
+}
+
+@mixin fonticons {
+	@include font(FontAwesome, fontawesome-webfont);
+}
+
+@mixin font($font-family, $file-name) {
+	@font-face {
+	  font-family: '#{$font-family}';
+	  src: url('#{$file-name}.eot');
+	  src: url('#{$file-name}.eot?#iefix') format('embedded-opentype'), url('#{$file-name}.woff') format('woff'), url('#{$file-name}.ttf') format('truetype'), url('#{$file-name}.svg') format('svg');
+	  font-weight: normal;
+	  font-style: normal;
+	}
+    .#{$font-family} {
+        font-family: '#{$font-family}';
+        font-style: normal;
+        font-weight: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        display: inline-block;
+    }
+}

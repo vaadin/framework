@@ -30,6 +30,7 @@ import com.vaadin.client.VTooltip;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
+import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.VCheckBox;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
@@ -96,20 +97,16 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
             getWidget().setEnabled(false);
         }
 
-        if (getIcon() != null) {
-            if (getWidget().icon == null) {
-                getWidget().icon = new Icon(getConnection());
-                DOM.insertChild(getWidget().getElement(),
-                        getWidget().icon.getElement(), 1);
-                getWidget().icon.sinkEvents(VTooltip.TOOLTIP_EVENTS);
-                getWidget().icon.sinkEvents(Event.ONCLICK);
-            }
-            getWidget().icon.setUri(getIcon());
-        } else if (getWidget().icon != null) {
-            // detach icon
-            DOM.removeChild(getWidget().getElement(),
-                    getWidget().icon.getElement());
+        if (getWidget().icon != null) {
+            getWidget().getElement().removeChild(getWidget().icon.getElement());
             getWidget().icon = null;
+        }
+        Icon icon = getIcon();
+        if (icon != null) {
+            getWidget().icon = icon;
+            DOM.insertChild(getWidget().getElement(), icon.getElement(), 1);
+            icon.sinkEvents(VTooltip.TOOLTIP_EVENTS);
+            icon.sinkEvents(Event.ONCLICK);
         }
 
         // Set text

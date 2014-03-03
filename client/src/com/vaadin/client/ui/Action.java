@@ -17,7 +17,6 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.user.client.Command;
-import com.vaadin.client.Util;
 
 /**
  * 
@@ -43,9 +42,11 @@ public abstract class Action implements Command {
     public String getHTML() {
         final StringBuffer sb = new StringBuffer();
         sb.append("<div>");
-        if (getIconUrl() != null) {
-            sb.append("<img src=\"" + Util.escapeAttribute(getIconUrl())
-                    + "\" alt=\"icon\" />");
+        // Could store the icon in a field instead, but it doesn't really matter
+        // right now because Actions are recreated every time they are needed
+        Icon icon = owner.getClient().getIcon(getIconUrl());
+        if (icon != null) {
+            sb.append(icon.getElement().getString());
         }
         sb.append(getCaption());
         sb.append("</div>");
@@ -78,5 +79,4 @@ public abstract class Action implements Command {
         return "Action [owner=" + owner + ", iconUrl=" + iconUrl + ", caption="
                 + caption + "]";
     }
-
 }

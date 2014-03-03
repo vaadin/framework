@@ -617,7 +617,7 @@ public class JsonCodec implements Serializable {
 
             return decodedObject;
         } catch (Exception e) {
-            throw new JSONException(e);
+            throw new JSONException(e.getMessage());
         }
     }
 
@@ -765,7 +765,7 @@ public class JsonCodec implements Serializable {
             }
         } catch (Exception e) {
             // TODO: Should exceptions be handled in a different way?
-            throw new JSONException(e);
+            throw new JSONException(e.getMessage());
         }
         return new EncodeResult(encoded, diff);
     }

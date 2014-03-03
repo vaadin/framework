@@ -19,18 +19,21 @@ package com.vaadin.client.ui.orderedlayout;
 import java.util.List;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.Util;
+import com.vaadin.client.ui.FontIcon;
+import com.vaadin.client.ui.Icon;
+import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.AlignmentInfo;
@@ -39,44 +42,6 @@ import com.vaadin.shared.ui.AlignmentInfo;
  * Represents a slot which contains the actual widget in the layout.
  */
 public final class Slot extends SimplePanel {
-    /**
-     * The icon for each widget. Located in the caption of the slot.
-     */
-    private static class Icon extends UIObject {
-
-        public static final String CLASSNAME = "v-icon";
-
-        private String myUrl;
-
-        /**
-         * Constructor
-         */
-        public Icon() {
-            setElement(DOM.createImg());
-            DOM.setElementProperty(getElement(), "alt", "");
-            setStyleName(CLASSNAME);
-        }
-
-        /**
-         * Set the URL where the icon is located
-         * 
-         * @param url
-         *            A fully qualified URL
-         */
-        public void setUri(String url) {
-            if (!url.equals(myUrl)) {
-                /*
-                 * Start sinking onload events, widgets responsibility to react.
-                 * We must do this BEFORE we set src as IE fires the event
-                 * immediately if the image is found in cache (#2592).
-                 */
-                sinkEvents(Event.ONLOAD);
-
-                DOM.setElementProperty(getElement(), "src", url);
-                myUrl = url;
-            }
-        }
-    }
 
     private static final String ALIGN_CLASS_PREFIX = "v-align-";
 
@@ -123,15 +88,12 @@ public final class Slot extends SimplePanel {
     private double expandRatio = -1;
 
     /**
-     * Constructor
+     * Constructs a slot.
      * 
+     * @param layout
+     *            The layout to which this slot belongs
      * @param widget
      *            The widget to put in the slot
-     * @param layout
-     *            TODO
-     * 
-     * @param layoutManager
-     *            The layout manager used by the layout
      */
     public Slot(VAbstractOrderedLayout layout, Widget widget) {
         this.layout = layout;
@@ -165,7 +127,7 @@ public final class Slot extends SimplePanel {
     }
 
     /**
-     * Attached resize listeners to the widget, caption and spacing elements
+     * Attaches resize listeners to the widget, caption and spacing elements
      */
     private void attachListeners() {
         if (getWidget() != null && layout.getLayoutManager() != null) {
@@ -204,6 +166,8 @@ public final class Slot extends SimplePanel {
                 lm.removeElementResizeListener(getWidget().getElement(),
                         widgetResizeListener);
             }
+            // in many cases, the listener has already been removed by
+            // setSpacing(false)
             if (getSpacingElement() != null && spacingResizeListener != null) {
                 lm.removeElementResizeListener(getSpacingElement(),
                         spacingResizeListener);
@@ -352,6 +316,12 @@ public final class Slot extends SimplePanel {
              */
             getElement().getParentElement().insertBefore(spacer, getElement());
         } else if (!spacing && spacer != null) {
+            // Remove listener before spacer to avoid memory leak
+            LayoutManager lm = layout.getLayoutManager();
+            if (lm != null && spacingResizeListener != null) {
+                lm.removeElementResizeListener(spacer, spacingResizeListener);
+            }
+
             spacer.removeFromParent();
             spacer = null;
         }
@@ -437,7 +407,45 @@ public final class Slot extends SimplePanel {
      * @param captionText
      *            The text of the caption
      * @param iconUrl
-     *            The icon URL
+     *            The icon URL, must already be run trough translateVaadinUri()
+     * @param styles
+     *            The style names
+     * @param error
+     *            The error message
+     * @param showError
+     *            Should the error message be shown
+     * @param required
+     *            Is the (field) required
+     * @param enabled
+     *            Is the component enabled
+     * 
+     * @deprecated Use
+     *             {@link #setCaption(String, Icon, List, String, boolean, boolean, boolean)}
+     *             instead
+     */
+    @Deprecated
+    public void setCaption(String captionText, String iconUrl,
+            List<String> styles, String error, boolean showError,
+            boolean required, boolean enabled) {
+        Icon icon;
+        if (FontIcon.isFontIconUri(iconUrl)) {
+            icon = GWT.create(FontIcon.class);
+        } else {
+            icon = GWT.create(ImageIcon.class);
+        }
+        icon.setUri(iconUrl);
+
+        setCaption(captionText, icon, styles, error, showError, required,
+                enabled);
+    }
+
+    /**
+     * Set the caption of the slot
+     * 
+     * @param captionText
+     *            The text of the caption
+     * @param icon
+     *            The icon
      * @param styles
      *            The style names
      * @param error
@@ -449,9 +457,8 @@ public final class Slot extends SimplePanel {
      * @param enabled
      *            Is the component enabled
      */
-    public void setCaption(String captionText, String iconUrl,
-            List<String> styles, String error, boolean showError,
-            boolean required, boolean enabled) {
+    public void setCaption(String captionText, Icon icon, List<String> styles,
+            String error, boolean showError, boolean required, boolean enabled) {
 
         // TODO place for optimization: check if any of these have changed
         // since last time, and only run those changes
@@ -461,7 +468,7 @@ public final class Slot extends SimplePanel {
         final Element focusedElement = Util.getFocusedElement();
         // By default focus will not be lost
         boolean focusLost = false;
-        if (captionText != null || iconUrl != null || error != null || required) {
+        if (captionText != null || icon != null || error != null || required) {
             if (caption == null) {
                 caption = DOM.createDiv();
                 captionWrap = DOM.createDiv();
@@ -474,7 +481,8 @@ public final class Slot extends SimplePanel {
 
                 // Made changes to DOM. Focus can be lost if it was in the
                 // widget.
-                focusLost = widget.getElement().isOrHasChild(focusedElement);
+                focusLost = (focusedElement == null ? false : widget
+                        .getElement().isOrHasChild(focusedElement));
             }
         } else if (caption != null) {
             orphan(widget);
@@ -485,7 +493,8 @@ public final class Slot extends SimplePanel {
             captionWrap = null;
 
             // Made changes to DOM. Focus can be lost if it was in the widget.
-            focusLost = widget.getElement().isOrHasChild(focusedElement);
+            focusLost = (focusedElement == null ? false : widget.getElement()
+                    .isOrHasChild(focusedElement));
         }
 
         // Caption text
@@ -506,16 +515,13 @@ public final class Slot extends SimplePanel {
         }
 
         // Icon
-        if (iconUrl != null) {
-            if (icon == null) {
-                icon = new Icon();
-                caption.insertFirst(icon.getElement());
-            }
-            icon.setUri(iconUrl);
-        } else if (icon != null) {
+        if (this.icon != null) {
             icon.getElement().removeFromParent();
-            icon = null;
         }
+        if (icon != null) {
+            caption.insertFirst(icon.getElement());
+        }
+        this.icon = icon;
 
         // Required
         if (required) {
@@ -566,7 +572,7 @@ public final class Slot extends SimplePanel {
             }
 
             // Caption position
-            if (captionText != null || iconUrl != null) {
+            if (captionText != null || icon != null) {
                 setCaptionPosition(CaptionPosition.TOP);
             } else {
                 setCaptionPosition(CaptionPosition.RIGHT);

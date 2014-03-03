@@ -13,4 +13,7 @@
 	color: #f00;
 	color: hsl(33, 7%, 89%);
 	color: hsl(33, 7%, 95%);
+	color: rgb(1, 2, 3);
+	percents: -20%;
+	percents: 33.33%;
 }

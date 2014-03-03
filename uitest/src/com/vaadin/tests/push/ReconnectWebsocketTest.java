@@ -21,7 +21,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.tests.tb3.WebsocketTest;
 
-public class WebsocketReconnectTest extends PushReconnectTest {
+public class ReconnectWebsocketTest extends ReconnectTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {

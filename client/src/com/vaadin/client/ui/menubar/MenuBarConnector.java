@@ -27,7 +27,7 @@ import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.client.ui.Icon;
+import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VMenuBar;
 import com.vaadin.shared.ui.ComponentStateUtil;
@@ -81,7 +81,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
                         + Util.escapeAttribute(client
                                 .translateVaadinUri(moreItemUIDL
                                         .getStringAttribute("icon")))
-                        + "\" class=\"" + Icon.CLASSNAME + "\" alt=\"\" />");
+                        + "\" class=\"" + ImageIcon.CLASSNAME + "\" alt=\"\" />");
             }
 
             String moreItemText = moreItemUIDL.getStringAttribute("text");

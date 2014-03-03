@@ -16,6 +16,7 @@
 @import "dragwrapper/dragwrapper.scss";
 @import "embedded/embedded.scss";
 @import "escalator/escalator.scss";
+@import "fonts/fonts.scss";
 @import "formlayout/formlayout.scss";
 @import "grid/grid.scss";
 @import "gridlayout/gridlayout.scss";
@@ -123,3 +124,4 @@ $line-height: normal;
 
 // always include, don't wrap in .themename{}
 @include debug-globals;
+@include fonts;

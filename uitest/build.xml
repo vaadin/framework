@@ -54,7 +54,7 @@
     <target name="testing-widgetset" depends="dependencies,compile">
         <property name="module" value="com.vaadin.tests.widgetset.TestingWidgetSet" />
         <property name="style" value="OBF" />
-        <property name="localWorkers" value="2" />
+        <property name="localWorkers" value="6" />
         <property name="extraParams" value="" />
         <property name="module.output.dir" location="${result.dir}/VAADIN/widgetsets" />
         <property name="work.dir" location="${result.dir}/work" />

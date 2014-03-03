@@ -37,7 +37,7 @@ import com.vaadin.ui.UI;
 public class VaadinServletService extends VaadinService {
     private final VaadinServlet servlet;
 
-    private final static boolean atmosphereAvailable = checkAtmosphereSupport();
+    private boolean atmosphereAvailable = checkAtmosphereSupport();
 
     /**
      * Keeps track of whether a warning about missing push support has already
@@ -66,11 +66,13 @@ public class VaadinServletService extends VaadinService {
     private static boolean checkAtmosphereSupport() {
         try {
             String rawVersion = Version.getRawVersion();
-            if (!Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION.equals(rawVersion)) {
+            if (!Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION
+                    .equals(rawVersion)) {
                 getLogger().log(
                         Level.WARNING,
                         Constants.INVALID_ATMOSPHERE_VERSION_WARNING,
-                        new Object[] { Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION,
+                        new Object[] {
+                                Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION,
                                 rawVersion });
             }
             return true;
@@ -86,7 +88,18 @@ public class VaadinServletService extends VaadinService {
         handlers.add(0, new ServletBootstrapHandler());
         handlers.add(new ServletUIInitHandler());
         if (atmosphereAvailable) {
-            handlers.add(new PushRequestHandler(this));
+            try {
+                handlers.add(new PushRequestHandler(this));
+            } catch (ServiceException e) {
+                // Atmosphere init failed. Push won't work but we don't throw a
+                // service exception as we don't want to prevent non-push
+                // applications from working
+                getLogger()
+                        .log(Level.WARNING,
+                                "Error initializing Atmosphere. Push will not work.",
+                                e);
+                atmosphereAvailable = false;
+            }
         }
         return handlers;
     }

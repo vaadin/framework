@@ -35,6 +35,7 @@ public class ApplicationConstants implements Serializable {
 
     public static final String APP_PROTOCOL_PREFIX = "app://";
     public static final String VAADIN_PROTOCOL_PREFIX = "vaadin://";
+    public static final String FONTICON_PROTOCOL_PREFIX = "fonticon://";
     public static final String PUBLISHED_PROTOCOL_NAME = "published";
     public static final String PUBLISHED_PROTOCOL_PREFIX = PUBLISHED_PROTOCOL_NAME
             + "://";

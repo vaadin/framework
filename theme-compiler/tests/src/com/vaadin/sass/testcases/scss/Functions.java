@@ -41,9 +41,9 @@ public class Functions extends AbstractTestBase {
         parser.setDocumentHandler(handler);
         parser.parseStyleSheet(getClass().getResource(scss).getPath());
         ScssStylesheet root = handler.getStyleSheet();
-        Assert.assertEquals(3, root.getChildren().size());
-        BlockNode blockNode = (BlockNode) root.getChildren().get(2);
-        Assert.assertEquals(14, blockNode.getChildren().size());
+        Assert.assertEquals(6, root.getChildren().size());
+        BlockNode blockNode = (BlockNode) root.getChildren().get(5);
+        Assert.assertEquals(17, blockNode.getChildren().size());
     }
 
     @Test

@@ -27,7 +27,6 @@ import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
-import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.VForm;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
@@ -108,17 +107,14 @@ public class FormConnector extends AbstractComponentContainerConnector
         } else {
             getWidget().caption.setInnerText("");
         }
-        if (getIcon() != null) {
-            if (getWidget().icon == null) {
-                getWidget().icon = new Icon(client);
-                getWidget().legend.insertFirst(getWidget().icon.getElement());
-            }
-            getWidget().icon.setUri(getIcon());
+        if (getWidget().icon != null) {
+            getWidget().legend.removeChild(getWidget().icon.getElement());
+        }
+        if (getIconUri() != null) {
+            getWidget().icon = client.getIcon(getIconUri());
+            getWidget().legend.insertFirst(getWidget().icon.getElement());
+
             legendEmpty = false;
-        } else {
-            if (getWidget().icon != null) {
-                getWidget().legend.removeChild(getWidget().icon.getElement());
-            }
         }
         if (legendEmpty) {
             getWidget().addStyleDependentName("nocaption");

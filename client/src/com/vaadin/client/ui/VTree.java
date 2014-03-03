@@ -1124,23 +1124,15 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         }
 
         public void setIcon(String iconUrl, String altText) {
-            if (iconUrl != null) {
-                // Add icon if not present
-                if (icon == null) {
-                    icon = new Icon(client);
-                    Roles.getImgRole().set(icon.getElement());
-                    DOM.insertBefore(DOM.getFirstChild(nodeCaptionDiv),
-                            icon.getElement(), nodeCaptionSpan);
-                }
-                icon.setUri(iconUrl);
-                icon.getElement().setAttribute("alt", altText);
-            } else {
-                // Remove icon if present
-                if (icon != null) {
-                    DOM.removeChild(DOM.getFirstChild(nodeCaptionDiv),
-                            icon.getElement());
-                    icon = null;
-                }
+            if (icon != null) {
+                DOM.getFirstChild(nodeCaptionDiv)
+                        .removeChild(icon.getElement());
+            }
+            icon = client.getIcon(iconUrl);
+            if (icon != null) {
+                DOM.insertBefore(DOM.getFirstChild(nodeCaptionDiv),
+                        icon.getElement(), nodeCaptionSpan);
+                icon.setAlternateText(altText);
             }
         }
 

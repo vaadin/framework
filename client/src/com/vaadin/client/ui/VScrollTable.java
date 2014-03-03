@@ -6924,10 +6924,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         String s = uidl.hasAttribute("caption") ? uidl
                 .getStringAttribute("caption") : "";
         if (uidl.hasAttribute("icon")) {
-            s = "<img src=\""
-                    + Util.escapeAttribute(client.translateVaadinUri(uidl
-                            .getStringAttribute("icon")))
-                    + "\" alt=\"icon\" class=\"v-icon\">" + s;
+            Icon icon = client.getIcon(uidl.getStringAttribute("icon"));
+            s = icon.getElement().getString() + s;
         }
         return s;
     }

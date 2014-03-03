@@ -1,5 +1,8 @@
 $base-color : hsl(33, 7%, 89%);
 $app-bg-color : lighten($base-color, 6%);
+$red:1;
+$green:2;
+$blue:3;
 .main {
 	margin: abs(-2px);
 	border: ceil(10.4px);
@@ -15,4 +18,7 @@ $app-bg-color : lighten($base-color, 6%);
 	color: lighten(#800, 20%);
 	color : $base-color;
 	color : $app-bg-color;
+	color: rgb($red, $green, $blue);
+	percents: percentage(-0.2);
+	percents: percentage(0.3333);
 }

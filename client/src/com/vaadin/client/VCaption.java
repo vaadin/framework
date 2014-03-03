@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
+import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.AbstractFieldState;
@@ -106,6 +107,7 @@ public class VCaption extends HTML {
         if (null != owner) {
             AriaHelper.bindCaption(owner.getWidget(), getElement());
         }
+
     }
 
     @Override
@@ -159,25 +161,27 @@ public class VCaption extends HTML {
             showRequired = ((AbstractFieldConnector) owner).isRequired();
         }
 
+        if (icon != null) {
+            getElement().removeChild(icon.getElement());
+            icon = null;
+        }
         if (hasIcon) {
-            if (icon == null) {
-                icon = new Icon(client);
+            String uri = owner.getState().resources.get(
+                    ComponentConstants.ICON_RESOURCE).getURL();
+
+            icon = client.getIcon(uri);
+
+            if (icon instanceof ImageIcon) {
+                // onload will set appropriate size later
                 icon.setWidth("0");
                 icon.setHeight("0");
-
-                DOM.insertChild(getElement(), icon.getElement(),
-                        getInsertPosition(InsertPosition.ICON));
             }
+
+            DOM.insertChild(getElement(), icon.getElement(),
+                    getInsertPosition(InsertPosition.ICON));
+
             // Icon forces the caption to be above the component
             placedAfterComponent = false;
-
-            icon.setUri(owner.getState().resources.get(
-                    ComponentConstants.ICON_RESOURCE).getURL());
-
-        } else if (icon != null) {
-            // Remove existing
-            DOM.removeChild(getElement(), icon.getElement());
-            icon = null;
         }
 
         if (owner.getState().caption != null) {
@@ -332,24 +336,24 @@ public class VCaption extends HTML {
         }
         boolean hasIcon = iconURL != null;
 
+        if (icon != null) {
+            getElement().removeChild(icon.getElement());
+            icon = null;
+        }
         if (hasIcon) {
-            if (icon == null) {
-                icon = new Icon(client);
+            icon = client.getIcon(iconURL);
+            if (icon instanceof ImageIcon) {
+                // onload sets appropriate size later
                 icon.setWidth("0");
                 icon.setHeight("0");
-
-                DOM.insertChild(getElement(), icon.getElement(),
-                        getInsertPosition(InsertPosition.ICON));
             }
+            icon.setAlternateText(iconAltText);
+            DOM.insertChild(getElement(), icon.getElement(),
+                    getInsertPosition(InsertPosition.ICON));
+
             // Icon forces the caption to be above the component
             placedAfterComponent = false;
 
-            icon.setUri(iconURL, iconAltText);
-
-        } else if (icon != null) {
-            // Remove existing
-            DOM.removeChild(getElement(), icon.getElement());
-            icon = null;
         }
 
         if (caption != null) {

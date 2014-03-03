@@ -87,13 +87,15 @@ public class LinkConnector extends AbstractComponentConnector {
                     "none");
         }
 
-        if (getIcon() != null) {
-            if (getWidget().icon == null) {
-                getWidget().icon = new Icon(getConnection());
-                getWidget().anchor.insertBefore(getWidget().icon.getElement(),
-                        getWidget().captionElement);
-            }
-            getWidget().icon.setUri(getIcon());
+        if (getWidget().icon != null) {
+            getWidget().anchor.removeChild(getWidget().icon.getElement());
+            getWidget().icon = null;
+        }
+        Icon icon = getIcon();
+        if (icon != null) {
+            getWidget().icon = icon;
+            getWidget().anchor.insertBefore(icon.getElement(),
+                    getWidget().captionElement);
         }
     }
 

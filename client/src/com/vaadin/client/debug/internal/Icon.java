@@ -44,7 +44,9 @@ public enum Icon {
     // BAN_CIRCLE("&#xf05e;"), //
     MAXIMIZE("&#xf065;"), //
     RESET("&#xf021;"), //
-    PERSIST("&#xf02e"); //
+    PERSIST("&#xf02e"), //
+    TESTBENCH("&#xe600"), //
+    ;
 
     private String id;
 
