@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.push;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
@@ -27,13 +29,11 @@ import com.vaadin.tests.tb3.WebsocketTest;
 public class PushConfigurationTest extends WebsocketTest {
 
     @Test
-    public void testWebsocketAndStreaming() {
+    public void testWebsocketAndStreaming() throws InterruptedException {
         setDebug(true);
         openTestURL();
         // Websocket
-        int counter = getServerCounter();
-        assertGreaterOrEqual("Counter should be >= 1. Was: " + counter,
-                counter, 1);
+        verifyPushDisabled();
         new Select(getTransportSelect()).selectByVisibleText("WEBSOCKET");
         new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
         Assert.assertTrue(vaadinElement(
@@ -41,7 +41,7 @@ public class PushConfigurationTest extends WebsocketTest {
                 .getText()
                 .matches(
                         "^[\\s\\S]*fallbackTransport: streaming[\\s\\S]*transport: websocket[\\s\\S]*$"));
-        counter = getServerCounter();
+        int counter = getServerCounter();
         final int waitCounter = counter + 2;
         waitUntil(new ExpectedCondition<Boolean>() {
 
@@ -61,7 +61,7 @@ public class PushConfigurationTest extends WebsocketTest {
 
         // Streaming
         driver.get(getTestUrl());
-        Assert.assertEquals(1, getServerCounter());
+        verifyPushDisabled();
 
         new Select(getTransportSelect()).selectByVisibleText("STREAMING");
         new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
@@ -91,6 +91,18 @@ public class PushConfigurationTest extends WebsocketTest {
         Assert.assertTrue(driver.getPageSource().contains(
                 "Push connection established using streaming"));
 
+    }
+
+    /**
+     * Verifies that push is currently not enabled.
+     * 
+     * @throws InterruptedException
+     */
+    private void verifyPushDisabled() throws InterruptedException {
+        int counter = getServerCounter();
+        sleep(2000);
+        assertEquals("Server count changed without push enabled", counter,
+                getServerCounter());
     }
 
     private WebElement getPushModeSelect() {
