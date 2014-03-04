@@ -29,7 +29,10 @@ public class VerifyJreVersion extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         String jreVersion = "Using Java " + System.getProperty("java.version")
                 + " by " + System.getProperty("java.vendor");
-        addComponent(new Label(jreVersion));
+        Label jreVersionLabel = new Label(jreVersion);
+        jreVersionLabel.setId("jreVersionLabel");
+
+        addComponent(jreVersionLabel);
     }
 
     @Override
