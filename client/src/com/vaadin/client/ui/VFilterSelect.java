@@ -54,11 +54,11 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
@@ -122,10 +122,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         @Override
         public String getDisplayString() {
             final StringBuffer sb = new StringBuffer();
-            if (iconUri != null) {
-                sb.append("<img src=\"");
-                sb.append(Util.escapeAttribute(iconUri));
-                sb.append("\" alt=\"\" class=\"v-icon\" />");
+            final Icon icon = client.getIcon(iconUri);
+            if (icon != null) {
+                sb.append(icon.getElement().getString());
             }
             String content;
             if ("".equals(caption)) {
@@ -990,7 +989,13 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
     };
 
-    private final Image selectedItemIcon = new Image();
+    private class IconWidget extends Widget {
+        IconWidget(Icon icon) {
+            setElement(icon.getElement());
+        }
+    }
+
+    private IconWidget selectedItemIcon;
 
     /** For internal use only. May be removed or replaced in the future. */
     public ApplicationConnection client;
@@ -1112,21 +1117,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     public VFilterSelect() {
         tb = createTextBox();
         suggestionPopup = createSuggestionPopup();
-
-        selectedItemIcon.setStyleName("v-icon");
-        selectedItemIcon.addLoadHandler(new LoadHandler() {
-
-            @Override
-            public void onLoad(LoadEvent event) {
-                if (BrowserInfo.get().isIE8()) {
-                    // IE8 needs some help to discover it should reposition the
-                    // text field
-                    forceReflow();
-                }
-                updateRootWidth();
-                updateSelectedIconPosition();
-            }
-        });
 
         popupOpener.sinkEvents(Event.ONMOUSEDOWN);
         Roles.getButtonRole()
@@ -1413,20 +1403,36 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      *            The URI of the icon
      */
     public void setSelectedItemIcon(String iconUri) {
+
         if (iconUri == null || iconUri.length() == 0) {
-            if (selectedItemIcon.isAttached()) {
+            if (selectedItemIcon != null) {
                 panel.remove(selectedItemIcon);
-                if (BrowserInfo.get().isIE8()) {
-                    // IE8 needs some help to discover it should reposition the
-                    // text field
-                    forceReflow();
-                }
-                updateRootWidth();
+                selectedItemIcon = null;
+                afterSelectedItemIconChange();
             }
         } else {
+            if (selectedItemIcon != null) {
+                panel.remove(selectedItemIcon);
+            }
+            selectedItemIcon = new IconWidget(client.getIcon(iconUri));
+            selectedItemIcon.addDomHandler(new LoadHandler() {
+                @Override
+                public void onLoad(LoadEvent event) {
+                    afterSelectedItemIconChange();
+                }
+            }, LoadEvent.getType());
             panel.insert(selectedItemIcon, 0);
-            selectedItemIcon.setUrl(iconUri);
-            updateRootWidth();
+            afterSelectedItemIconChange();
+        }
+    }
+
+    private void afterSelectedItemIconChange() {
+        if (BrowserInfo.get().isWebkit() || BrowserInfo.get().isIE8()) {
+            // Some browsers need a nudge to reposition the text field
+            forceReflow();
+        }
+        updateRootWidth();
+        if (selectedItemIcon != null) {
             updateSelectedIconPosition();
         }
     }
@@ -1951,8 +1957,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              * locked
              */
             if (!tb.getElement().getStyle().getWidth().endsWith("px")) {
-                tb.setWidth((tb.getOffsetWidth() - selectedItemIcon
-                        .getOffsetWidth()) + "px");
+                int iconWidth = selectedItemIcon == null ? 0 : selectedItemIcon
+                        .getOffsetWidth();
+                tb.setWidth((tb.getOffsetWidth() - iconWidth) + "px");
             }
         }
     }
