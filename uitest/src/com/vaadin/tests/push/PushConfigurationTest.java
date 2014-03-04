@@ -94,12 +94,10 @@ public class PushConfigurationTest extends WebsocketTest {
     }
 
     @Test
-    public void testLongPolling() {
+    public void testLongPolling() throws InterruptedException {
         setDebug(true);
         openTestURL();
-        int counter = getServerCounter();
-        assertGreaterOrEqual("Counter should be >= 1. Was: " + counter,
-                counter, 1);
+        verifyPushDisabled();
         new Select(getTransportSelect()).selectByVisibleText("LONG_POLLING");
         new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
         Assert.assertTrue(vaadinElement(
@@ -107,7 +105,7 @@ public class PushConfigurationTest extends WebsocketTest {
                 .getText()
                 .matches(
                         "^[\\s\\S]*fallbackTransport: streaming[\\s\\S]*transport: long-polling[\\s\\S]*$"));
-        counter = getServerCounter();
+        int counter = getServerCounter();
         final int waitCounter = counter + 2;
         waitUntil(new ExpectedCondition<Boolean>() {
 
@@ -119,7 +117,7 @@ public class PushConfigurationTest extends WebsocketTest {
 
         // Use debug console to verify we used the correct transport type
         Assert.assertTrue(driver.getPageSource().contains(
-                "Push connection established using longpolling"));
+                "Push connection established using long-polling"));
         Assert.assertFalse(driver.getPageSource().contains(
                 "Push connection established using streaming"));
 
