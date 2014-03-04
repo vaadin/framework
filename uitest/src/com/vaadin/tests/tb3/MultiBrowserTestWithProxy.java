@@ -72,8 +72,23 @@ public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {
         if (proxySession != null) {
             return;
         }
-
-        createProxy(getProxyPort());
+        for (int i = 0; i < 10; i++) {
+            // Potential workaround for problem with establishing many ssh
+            // connections at the same time
+            try {
+                createProxy(getProxyPort());
+                break;
+            } catch (JSchException e) {
+                try {
+                    sleep(500);
+                } catch (InterruptedException e1) {
+                }
+                if (i == 9) {
+                    throw new RuntimeException(
+                            "All 10 attempts to connect a proxy failed", e);
+                }
+            }
+        }
     }
 
     private void createProxy(int proxyPort) throws JSchException {
