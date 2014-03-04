@@ -34,14 +34,14 @@ import com.vaadin.ui.UI;
 
 public abstract class PushLargeData extends AbstractTestUIWithLog {
 
-    // 250KB
-    static final int DEFAULT_SIZE_BYTES = 250 * 1000;
+    // 200KB
+    static final int DEFAULT_SIZE_BYTES = 200 * 1000;
 
     // Every other second
     static final int DEFAULT_DELAY_MS = 2000;
 
-    // 20 MB is enough for streaming to reconnect
-    static final int DEFAULT_DATA_TO_PUSH = 20 * 1000 * 1000;
+    // 3 MB is enough for streaming to reconnect
+    static final int DEFAULT_DATA_TO_PUSH = 3 * 1000 * 1000;
 
     static final int DEFAULT_DURATION_MS = DEFAULT_DATA_TO_PUSH
             / DEFAULT_SIZE_BYTES * DEFAULT_DELAY_MS;
