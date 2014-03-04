@@ -120,20 +120,19 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
             Enumeration<NetworkInterface> interfaces = NetworkInterface
                     .getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
-                NetworkInterface current = interfaces.nextElement();
-                if (!current.isUp() || current.isLoopback()
-                        || current.isVirtual()) {
+                NetworkInterface nwInterface = interfaces.nextElement();
+                if (!nwInterface.isUp() || nwInterface.isLoopback()
+                        || nwInterface.isVirtual()) {
                     continue;
                 }
-                Enumeration<InetAddress> addresses = current.getInetAddresses();
+                Enumeration<InetAddress> addresses = nwInterface.getInetAddresses();
                 while (addresses.hasMoreElements()) {
-                    InetAddress current_addr = addresses.nextElement();
-                    if (current_addr.isLoopbackAddress()) {
+                    InetAddress address = addresses.nextElement();
+                    if (address.isLoopbackAddress()) {
                         continue;
                     }
-                    String hostAddress = current_addr.getHostAddress();
-                    if (hostAddress.startsWith("192.168.")) {
-                        return hostAddress;
+                    if (address.isSiteLocalAddress()) {
+                        return address.getHostAddress();
                     }
                 }
             }
@@ -142,7 +141,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         }
 
         throw new RuntimeException(
-                "No compatible (192.168.*) ip address found.");
+                "No compatible (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16) ip address found.");
     }
 
     /*
