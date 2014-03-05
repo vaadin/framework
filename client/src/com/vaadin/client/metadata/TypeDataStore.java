@@ -87,7 +87,7 @@ public class TypeDataStore {
     }
 
     public static Type getReturnType(Method method) throws NoDataException {
-        Type type = get().returnTypes.get(method.getSignature());
+        Type type = get().returnTypes.get(method.getLookupKey());
         if (type == null) {
             throw new NoDataException("There is no return type for "
                     + method.getSignature());
@@ -96,7 +96,7 @@ public class TypeDataStore {
     }
 
     public static Invoker getInvoker(Method method) throws NoDataException {
-        Invoker invoker = get().invokers.get(method.getSignature());
+        Invoker invoker = get().invokers.get(method.getLookupKey());
         if (invoker == null) {
             throw new NoDataException("There is no invoker for "
                     + method.getSignature());
@@ -106,7 +106,7 @@ public class TypeDataStore {
 
     public static Invoker getConstructor(Type type) throws NoDataException {
         Invoker invoker = get().invokers.get(new Method(type, CONSTRUCTOR_NAME)
-                .getSignature());
+                .getLookupKey());
         if (invoker == null) {
             throw new NoDataException("There is no constructor for "
                     + type.getSignature());
@@ -121,29 +121,30 @@ public class TypeDataStore {
     }
 
     public static String getDelegateToWidget(Property property) {
-        return get().delegateToWidget.get(property.getSignature());
+        return get().delegateToWidget.get(property.getLookupKey());
     }
 
     public static JsArrayString getDelegateToWidgetProperites(Type type) {
-        return get().delegateToWidgetProperties.get(type.getSignature());
+        return get().delegateToWidgetProperties.get(type.getBaseTypeName());
     }
 
     public void setDelegateToWidget(Class<?> clazz, String propertyName,
             String delegateValue) {
         Type type = getType(clazz);
-        delegateToWidget.put(new Property(type, propertyName).getSignature(),
+        delegateToWidget.put(new Property(type, propertyName).getLookupKey(),
                 delegateValue);
         JsArrayString typeProperties = delegateToWidgetProperties.get(type
-                .getSignature());
+                .getBaseTypeName());
         if (typeProperties == null) {
             typeProperties = JavaScriptObject.createArray().cast();
-            delegateToWidgetProperties.put(type.getSignature(), typeProperties);
+            delegateToWidgetProperties.put(type.getBaseTypeName(),
+                    typeProperties);
         }
         typeProperties.push(propertyName);
     }
 
     public void setReturnType(Class<?> type, String methodName, Type returnType) {
-        returnTypes.put(new Method(getType(type), methodName).getSignature(),
+        returnTypes.put(new Method(getType(type), methodName).getLookupKey(),
                 returnType);
     }
 
@@ -152,12 +153,12 @@ public class TypeDataStore {
     }
 
     public void setInvoker(Class<?> type, String methodName, Invoker invoker) {
-        invokers.put(new Method(getType(type), methodName).getSignature(),
+        invokers.put(new Method(getType(type), methodName).getLookupKey(),
                 invoker);
     }
 
     public static Type[] getParamTypes(Method method) throws NoDataException {
-        Type[] types = get().paramTypes.get(method.getSignature());
+        Type[] types = get().paramTypes.get(method.getLookupKey());
         if (types == null) {
             throw new NoDataException("There are no parameter type data for "
                     + method.getSignature());
@@ -168,7 +169,7 @@ public class TypeDataStore {
     public void setParamTypes(Class<?> type, String methodName,
             Type[] paramTypes) {
         this.paramTypes.put(
-                new Method(getType(type), methodName).getSignature(),
+                new Method(getType(type), methodName).getLookupKey(),
                 paramTypes);
     }
 
@@ -178,8 +179,8 @@ public class TypeDataStore {
 
     public static ProxyHandler getProxyHandler(Type type)
             throws NoDataException {
-        ProxyHandler proxyHandler = get().proxyHandlers
-                .get(type.getSignature());
+        ProxyHandler proxyHandler = get().proxyHandlers.get(type
+                .getBaseTypeName());
         if (proxyHandler == null) {
             throw new NoDataException("No proxy handler for "
                     + type.getSignature());
@@ -188,24 +189,24 @@ public class TypeDataStore {
     }
 
     public void setProxyHandler(Class<?> type, ProxyHandler proxyHandler) {
-        proxyHandlers.put(getType(type).getSignature(), proxyHandler);
+        proxyHandlers.put(getType(type).getBaseTypeName(), proxyHandler);
     }
 
     public static boolean isDelayed(Method method) {
-        return get().delayedMethods.contains(method.getSignature());
+        return get().delayedMethods.contains(method.getLookupKey());
     }
 
     public void setDelayed(Class<?> type, String methodName) {
-        delayedMethods.add(getType(type).getMethod(methodName).getSignature());
+        delayedMethods.add(getType(type).getMethod(methodName).getLookupKey());
     }
 
     public static boolean isLastOnly(Method method) {
-        return get().lastOnlyMethods.contains(method.getSignature());
+        return get().lastOnlyMethods.contains(method.getLookupKey());
     }
 
     public void setLastOnly(Class<?> clazz, String methodName) {
         lastOnlyMethods
-                .add(getType(clazz).getMethod(methodName).getSignature());
+                .add(getType(clazz).getMethod(methodName).getLookupKey());
     }
 
     /**
@@ -259,12 +260,12 @@ public class TypeDataStore {
     }
 
     public void setSerializerFactory(Class<?> clazz, Invoker factory) {
-        serializerFactories.put(getType(clazz).getSignature(), factory);
+        serializerFactories.put(getType(clazz).getBaseTypeName(), factory);
     }
 
     public static JSONSerializer<?> findSerializer(Type type) {
         Invoker factoryCreator = get().serializerFactories.get(type
-                .getSignature());
+                .getBaseTypeName());
         if (factoryCreator == null) {
             return null;
         }

@@ -20,13 +20,10 @@ import com.vaadin.shared.annotations.DelegateToWidget;
 public class Property {
     private final Type bean;
     private final String name;
-    private final String signature;
 
     public Property(Type bean, String name) {
         this.bean = bean;
         this.name = name;
-        // Cache derived signature value
-        signature = bean.getSignature() + "." + name;
     }
 
     public Object getValue(Object bean) throws NoDataException {
@@ -63,7 +60,20 @@ public class Property {
      * @return the unique signature of this property
      */
     public String getSignature() {
-        return signature;
+        return bean.getSignature() + "." + name;
+    }
+
+    /**
+     * Gets the string that is internally used when looking up generated support
+     * code for this method. This is the same as {@link #getSignature()}, but
+     * without any type parameters.
+     * 
+     * @return the string to use for looking up generated support code
+     * 
+     * @since 7.2
+     */
+    public String getLookupKey() {
+        return bean.getBaseTypeName() + "." + name;
     }
 
     @Override

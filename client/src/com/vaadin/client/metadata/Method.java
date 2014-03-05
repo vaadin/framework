@@ -19,13 +19,10 @@ public class Method {
 
     private final Type type;
     private final String name;
-    private String signature;
 
     public Method(Type type, String name) {
         this.type = type;
         this.name = name;
-        // Cache derived signature value
-        signature = type.getSignature() + "." + name;
     }
 
     public Type getType() {
@@ -53,7 +50,20 @@ public class Method {
      * @return the unique signature of this method
      */
     public String getSignature() {
-        return signature;
+        return type.getSignature() + "." + name;
+    }
+
+    /**
+     * Gets the string that is internally used when looking up generated support
+     * code for this method. This is the same as {@link #getSignature()}, but
+     * without any type parameters.
+     * 
+     * @return the string to use for looking up generated support code
+     * 
+     * @since 7.2
+     */
+    public String getLookupKey() {
+        return type.getBaseTypeName() + "." + name;
     }
 
     @Override
