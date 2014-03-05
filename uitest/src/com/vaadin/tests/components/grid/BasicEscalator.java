@@ -33,9 +33,14 @@ import com.vaadin.ui.TextField;
 @Widgetset(TestingWidgetSet.NAME)
 public class BasicEscalator extends AbstractTestUI {
     public static final String ESCALATOR = "escalator";
+
     public static final String INSERT_ROWS_OFFSET = "iro";
     public static final String INSERT_ROWS_AMOUNT = "ira";
     public static final String INSERT_ROWS_BUTTON = "irb";
+
+    public static final String REMOVE_ROWS_OFFSET = "rro";
+    public static final String REMOVE_ROWS_AMOUNT = "rra";
+    public static final String REMOVE_ROWS_BUTTON = "rrb";
 
     private final Random random = new Random();
 
@@ -71,8 +76,10 @@ public class BasicEscalator extends AbstractTestUI {
 
         final Layout removeRowsLayout = new HorizontalLayout();
         final TextField removeRowsOffset = new TextField();
+        removeRowsOffset.setId(REMOVE_ROWS_OFFSET);
         removeRowsLayout.addComponent(removeRowsOffset);
         final TextField removeRowsAmount = new TextField();
+        removeRowsAmount.setId(REMOVE_ROWS_AMOUNT);
         removeRowsLayout.addComponent(removeRowsAmount);
         removeRowsLayout.addComponent(new Button("remove rows",
                 new Button.ClickListener() {
@@ -84,7 +91,11 @@ public class BasicEscalator extends AbstractTestUI {
                                 .getValue());
                         grid.removeRows(offset, amount);
                     }
-                }));
+                }) {
+            {
+                setId(REMOVE_ROWS_BUTTON);
+            }
+        });
         addComponent(removeRowsLayout);
 
         final Layout insertColumnsLayout = new HorizontalLayout();

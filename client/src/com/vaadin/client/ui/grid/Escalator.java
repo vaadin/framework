@@ -191,14 +191,16 @@ abstract class JsniWorkaround {
      */
     protected JavaScriptObject touchEndFunction;
 
+    protected TouchHandlerBundle touchHandlerBundle;
+
     protected JsniWorkaround(final Escalator escalator) {
         scrollListenerFunction = createScrollListenerFunction(escalator);
         mousewheelListenerFunction = createMousewheelListenerFunction(escalator);
 
-        final TouchHandlerBundle bundle = new TouchHandlerBundle(escalator);
-        touchStartFunction = bundle.getTouchStartHandler();
-        touchMoveFunction = bundle.getTouchMoveHandler();
-        touchEndFunction = bundle.getTouchEndHandler();
+        touchHandlerBundle = new TouchHandlerBundle(escalator);
+        touchStartFunction = touchHandlerBundle.getTouchStartHandler();
+        touchMoveFunction = touchHandlerBundle.getTouchMoveHandler();
+        touchEndFunction = touchHandlerBundle.getTouchEndHandler();
     }
 
     /**
@@ -431,6 +433,12 @@ public class Escalator extends Widget {
                 animationHandle = AnimationScheduler.get()
                         .requestAnimationFrame(mover, escalator.bodyElem);
                 event.getNativeEvent().preventDefault();
+
+                /*
+                 * this initializes a correct timestamp, and also renders the
+                 * first frame for added responsiveness.
+                 */
+                mover.execute(Duration.currentTimeMillis());
             }
 
             public void touchEnd(@SuppressWarnings("unused")
@@ -440,6 +448,7 @@ public class Escalator extends Widget {
                 if (touches == 0) {
                     escalator.scroller.handleFlickScroll(deltaX, deltaY,
                             lastTime);
+                    escalator.body.domSorter.reschedule();
                 }
             }
         }
@@ -1902,6 +1911,8 @@ public class Escalator extends Widget {
          * The order in which row elements are rendered visually in the browser,
          * with the help of CSS tricks. Usually has nothing to do with the DOM
          * order.
+         * 
+         * @see #sortDomElements()
          */
         private final LinkedList<Element> visualRowOrder = new LinkedList<Element>();
 
@@ -1938,6 +1949,60 @@ public class Escalator extends Widget {
         private void updateTopRowLogicalIndex(int diff) {
             setTopRowLogicalIndex(topRowLogicalIndex + diff);
         }
+
+        private class DeferredDomSorter {
+            private static final int SORT_DELAY_MILLIS = 50;
+
+            // as it happens, 3 frames = 50ms @ 60fps.
+            private static final int REQUIRED_FRAMES_PASSED = 3;
+
+            private final AnimationCallback frameCounter = new AnimationCallback() {
+                @Override
+                public void execute(double timestamp) {
+                    framesPassed++;
+                    boolean domWasSorted = sortIfConditionsMet();
+                    if (!domWasSorted) {
+                        animationHandle = AnimationScheduler.get()
+                                .requestAnimationFrame(this);
+                    }
+                }
+            };
+
+            private int framesPassed;
+            private double startTime;
+            private AnimationHandle animationHandle;
+
+            public void reschedule() {
+                resetConditions();
+                animationHandle = AnimationScheduler.get()
+                        .requestAnimationFrame(frameCounter);
+            }
+
+            private boolean sortIfConditionsMet() {
+                boolean enoughFramesHavePassed = framesPassed >= REQUIRED_FRAMES_PASSED;
+                boolean enoughTimeHasPassed = (Duration.currentTimeMillis() - startTime) >= SORT_DELAY_MILLIS;
+                boolean conditionsMet = enoughFramesHavePassed
+                        && enoughTimeHasPassed;
+
+                if (conditionsMet) {
+                    resetConditions();
+                    sortDomElements();
+                }
+
+                return conditionsMet;
+            }
+
+            private void resetConditions() {
+                if (animationHandle != null) {
+                    animationHandle.cancel();
+                    animationHandle = null;
+                }
+                startTime = Duration.currentTimeMillis();
+                framesPassed = 0;
+            }
+        }
+
+        private DeferredDomSorter domSorter = new DeferredDomSorter();
 
         public BodyRowContainer(final Element bodyElement) {
             super(bodyElement);
@@ -2086,6 +2151,15 @@ public class Escalator extends Widget {
 
             if (rowsWereMoved) {
                 fireRowVisibilityChangeEvent();
+
+                if (scroller.touchHandlerBundle.touches == 0) {
+                    /*
+                     * this will never be called on touch scrolling. That is
+                     * handled separately and explicitly by
+                     * TouchHandlerBundle.touchEnd();
+                     */
+                    domSorter.reschedule();
+                }
             }
         }
 
@@ -2187,6 +2261,7 @@ public class Escalator extends Widget {
                 }
 
                 fireRowVisibilityChangeEvent();
+                sortDomElements();
             }
             return addedRows;
         }
@@ -2733,6 +2808,9 @@ public class Escalator extends Widget {
                                 logicalTargetIndex);
                     }
                 }
+
+                fireRowVisibilityChangeEvent();
+                sortDomElements();
             }
 
             updateTopRowLogicalIndex(-removedAbove.length());
@@ -2742,8 +2820,6 @@ public class Escalator extends Widget {
              * or it won't work correctly (due to setScrollTop invocation)
              */
             scroller.recalculateScrollbarsForVirtualViewport();
-
-            fireRowVisibilityChangeEvent();
         }
 
         private void paintRemoveRowsAtMiddle(final Range removedLogicalInside,
@@ -3159,6 +3235,98 @@ public class Escalator extends Widget {
                     / getDefaultRowHeight());
 
             Profiler.leave("Escalator.BodyRowContainer.reapplyDefaultRowHeights");
+        }
+
+        /**
+         * Sorts the rows in the DOM to correspond to the visual order.
+         * 
+         * @see #visualRowOrder
+         */
+        private void sortDomElements() {
+            final String profilingName = "Escalator.BodyRowContainer.sortDomElements";
+            Profiler.enter(profilingName);
+
+            /*
+             * Focus is lost from an element if that DOM element is (or any of
+             * its parents are) removed from the document. Therefore, we sort
+             * everything around that row instead.
+             */
+            final Element activeRow = getEscalatorRowWithFocus();
+
+            if (activeRow != null) {
+                assert activeRow.getParentElement() == root : "Trying to sort around a row that doesn't exist in body";
+                assert visualRowOrder.contains(activeRow) : "Trying to sort around a row that doesn't exist in visualRowOrder.";
+            }
+
+            /*
+             * Two cases handled simultaneously:
+             * 
+             * 1) No focus on rows. We iterate visualRowOrder backwards, and
+             * take the respective element in the DOM, and place it as the first
+             * child in the body element. Then we take the next-to-last from
+             * visualRowOrder, and put that first, pushing the previous row as
+             * the second child. And so on...
+             * 
+             * 2) Focus on some row within Escalator body. Again, we iterate
+             * visualRowOrder backwards. This time, we use the focused row as a
+             * pivot: Instead of placing rows from the bottom of visualRowOrder
+             * and placing it first, we place it underneath the focused row.
+             * Once we hit the focused row, we don't move it (to not reset
+             * focus) but change sorting mode. After that, we place all rows as
+             * the first child.
+             */
+
+            /*
+             * If we have a focused row, start in the mode where we put
+             * everything underneath that row. Otherwise, all rows are placed as
+             * first child.
+             */
+            boolean insertFirst = (activeRow == null);
+
+            final ListIterator<Element> i = visualRowOrder
+                    .listIterator(visualRowOrder.size());
+            while (i.hasPrevious()) {
+                Element tr = i.previous();
+
+                if (tr == activeRow) {
+                    insertFirst = true;
+                } else if (insertFirst) {
+                    root.insertFirst(tr);
+                } else {
+                    root.insertAfter(tr, activeRow);
+                }
+            }
+
+            Profiler.leave(profilingName);
+        }
+
+        /**
+         * Get the escalator row that has focus.
+         * 
+         * @return The escalator row that contains a focused DOM element, or
+         *         <code>null</code> if focus is outside of a body row.
+         */
+        private Element getEscalatorRowWithFocus() {
+            Element activeRow = null;
+
+            final Element activeElement = Util.getFocusedElement();
+
+            if (root.isOrHasChild(activeElement)) {
+                Element e = activeElement;
+
+                while (e != null && e != root) {
+                    /*
+                     * You never know if there's several tables embedded in a
+                     * cell... We'll take the deepest one.
+                     */
+                    if (e.getTagName().equalsIgnoreCase("TR")) {
+                        activeRow = e;
+                    }
+                    e = e.getParentElement();
+                }
+            }
+
+            return activeRow;
         }
     }
 
