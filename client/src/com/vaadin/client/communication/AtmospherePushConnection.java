@@ -450,7 +450,7 @@ public class AtmospherePushConnection implements PushConnection {
             timeout: -1,
             maxReconnectOnClose: 10000000, 
             trackMessageLength: true,
-            enableProtocol: false,
+            enableProtocol: true,
             messageDelimiter: String.fromCharCode(@com.vaadin.shared.communication.PushConstants::MESSAGE_DELIMITER)
         };
     }-*/;
