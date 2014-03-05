@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
@@ -38,6 +38,12 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class LayoutManagerIE8 extends LayoutManager {
 
     private Map<Element, MeasuredSize> measuredSizes = new HashMap<Element, MeasuredSize>();
+
+    // this method is needed to test for memory leaks (see
+    // LayoutMemoryUsageIE8ExtensionConnector) but can be private
+    private int getMeasuredSizesMapSize() {
+        return measuredSizes.size();
+    }
 
     @Override
     protected void setMeasuredSize(Element element, MeasuredSize measuredSize) {
@@ -62,12 +68,18 @@ public class LayoutManagerIE8 extends LayoutManager {
     @Override
     protected void cleanMeasuredSizes() {
         Profiler.enter("LayoutManager.cleanMeasuredSizes");
-        Document document = RootPanel.get().getElement().getOwnerDocument();
+
+        // #12688: IE8 was leaking memory when adding&removing components.
+        // Uses IE specific logic to figure if an element has been removed from
+        // DOM or not. For this the parent element of the current UI is needed.
+        // For removed elements the measured size is discarded.
+        Node rootNode = getConnection().getUIConnector().getWidget()
+                .getElement().getParentNode();
 
         Iterator<Element> i = measuredSizes.keySet().iterator();
         while (i.hasNext()) {
             Element e = i.next();
-            if (e.getOwnerDocument() != document) {
+            if (!rootNode.isOrHasChild(e)) {
                 i.remove();
             }
         }
