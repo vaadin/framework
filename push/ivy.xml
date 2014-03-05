@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE ivy-module [
 <!-- Keep the version number in sync with build.xml -->
-    <!ENTITY atmosphere.runtime.version "1.0.18.vaadin2">
+    <!ENTITY atmosphere.runtime.version "1.0.18.vaadin3">
     
     <!ENTITY atmosphere.js.version "2.0.3.vaadin2">
 ]>
