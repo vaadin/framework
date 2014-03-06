@@ -1133,9 +1133,12 @@ public class Page implements Serializable {
     /**
      * Sets the page title. The page title is displayed by the browser e.g. as
      * the title of the browser window or as the title of the tab.
+     * <p>
+     * If the title is set to null, it will not left as-is. Set to empty string
+     * to clear the title.
      * 
      * @param title
-     *            the new page title to set
+     *            the page title to set
      */
     public void setTitle(String title) {
         getState(true).title = title;

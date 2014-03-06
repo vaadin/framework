@@ -13,26 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.ui;
+package com.vaadin.tests.components.page;
 
-import java.io.Serializable;
+import org.junit.Assert;
+import org.junit.Test;
 
-/**
- * The shared state of a {@link com.vaadin.server.Page Page}.
- * 
- * Note that at the moment this is not a stand-alone state class but embedded in
- * {@link UIState}. This might change in the future.
- * 
- * @since 7.1
- */
-public class PageState implements Serializable {
-    /**
-     * True if the page has browser window resize listeners.
-     */
-    public boolean hasResizeListeners = false;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
-    /**
-     * Non-null if the title is set. Null means Vaadin does not touch the title.
-     */
-    public String title = null;
+public class PageTitleTest extends MultiBrowserTest {
+
+    @Test
+    public void nullTitle() {
+        driver.get(getTestUrl());
+        Assert.assertEquals(PageTitle.class.getName(), driver.getTitle());
+    }
+
+    @Test
+    public void fooTitle() {
+        driver.get(getTestUrl() + "?title=foo");
+        Assert.assertEquals("foo", driver.getTitle());
+    }
 }

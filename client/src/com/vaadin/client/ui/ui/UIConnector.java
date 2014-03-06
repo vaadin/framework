@@ -680,8 +680,10 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
 
         if (stateChangeEvent.hasPropertyChanged("pageState.title")) {
-            com.google.gwt.user.client.Window
-                    .setTitle(getState().pageState.title);
+            String title = getState().pageState.title;
+            if (title != null) {
+                com.google.gwt.user.client.Window.setTitle(title);
+            }
         }
 
         if (stateChangeEvent.hasPropertyChanged("pushConfiguration")) {
