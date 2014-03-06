@@ -72,7 +72,7 @@ public class SelectorPath {
      *         path
      */
     public String getElementQuery() {
-        if (locator.isValidForLegacyLocator(path)) {
+        if (path.isEmpty() || locator.isValidForLegacyLocator(path)) {
             return getLegacyLocatorQuery();
         }
 
@@ -86,57 +86,60 @@ public class SelectorPath {
 
         // Generate an ElementQuery
         fragments = tmpPath.split("/");
-        String elementQueryString;
+        String elementQueryString = "";
         int index = 0;
         for (SelectorPredicate p : postFilters) {
             if (p.getIndex() > 0) {
                 index = p.getIndex();
             }
         }
-        if (index > 0) {
-            elementQueryString = ".get(" + index + ");";
-        } else {
-            elementQueryString = ".first();";
-        }
+
         for (int i = 1; i < fragments.length; ++i) {
             if (fragments[i].isEmpty()) {
-                // Recursive search has occasional empty fragments
+                // Recursive searches cause empty fragments
                 continue;
             }
 
-            // Get Element.class -name
-            String queryFragment = "";
-            String elementClass = getComponentName(fragments[i])
-                    + "Element.class";
-            for (SelectorPredicate p : SelectorPredicate
-                    .extractPredicates(fragments[i])) {
-                // Add in predicates like .caption and .id
-                queryFragment += "." + p.getName() + "(\"" + p.getValue()
-                        + "\")";
-            }
-            if (i == fragments.length - 1) {
-                // Last element in path.
-                queryFragment = "$(" + elementClass + ")" + queryFragment;
-            } else {
-                // If followed by an empty fragment search is recursive
-                boolean recursive = fragments[i + 1].isEmpty();
-                if (recursive) {
-                    queryFragment = ".in(" + elementClass + ")" + queryFragment;
-                } else {
-                    queryFragment = ".childOf(" + elementClass + ")"
-                            + queryFragment;
-                }
-            }
-            elementQueryString = queryFragment + elementQueryString;
+            // if i == 1 or previous fragment was empty, search is recursive
+            boolean recursive = (i > 1 ? fragments[i - 1].isEmpty() : false);
+
+            // if elementQueryString is not empty, join the next query with .
+            String queryFragment = (!elementQueryString.isEmpty() ? "." : "");
+            // if search is not recursive, add another $ in front of fragment
+            queryFragment += (!recursive ? "$" : "")
+                    + generateFragment(fragments[i]);
+
+            elementQueryString += queryFragment;
         }
 
-        if (!tmpPath.startsWith("//")) {
-            elementQueryString = "$" + elementQueryString;
+        if (index == 0) {
+            elementQueryString += ".first()";
+        } else {
+            elementQueryString += ".get(" + index + ");";
         }
 
         // Return full Java variable assignment and eQuery
         return generateJavaVariable(fragments[fragments.length - 1])
                 + elementQueryString;
+    }
+
+    /**
+     * Generates a recursive ElementQuery for given path fragment
+     * 
+     * @return ElementQuery java code as a String
+     */
+    private String generateFragment(String fragment) {
+        // Get Element.class -name
+        String elementClass = getComponentName(fragment) + "Element.class";
+
+        String queryFragment = "$(" + elementClass + ")";
+
+        for (SelectorPredicate p : SelectorPredicate
+                .extractPredicates(fragment)) {
+            // Add in predicates like .caption and .id
+            queryFragment += "." + p.getName() + "(\"" + p.getValue() + "\")";
+        }
+        return queryFragment;
     }
 
     /**
@@ -155,8 +158,13 @@ public class SelectorPath {
      * @return String containing Java code for element search and assignment
      */
     private String getLegacyLocatorQuery() {
-        String[] frags = path.split("/");
-        String name = getComponentName(frags[frags.length - 1]).substring(1);
+        String name;
+        if (!path.isEmpty()) {
+            String[] frags = path.split("/");
+            name = getComponentName(frags[frags.length - 1]).substring(1);
+        } else {
+            name = "root";
+        }
 
         if (legacyNames.containsKey(name)) {
             name = legacyNames.get(name);
