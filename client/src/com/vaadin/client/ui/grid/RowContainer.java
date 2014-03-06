@@ -27,6 +27,13 @@ package com.vaadin.client.ui.grid;
  * @see Escalator#getFooter()
  */
 public interface RowContainer {
+
+    /**
+     * An arbitrary pixel height of a row, before any autodetection for the row
+     * height has been made.
+     * */
+    public static final int INITIAL_DEFAULT_ROW_HEIGHT = 20;
+
     /**
      * Returns the current {@link EscalatorUpdater} used to render cells.
      * 
@@ -131,13 +138,19 @@ public interface RowContainer {
      *            the default height in pixels of the rows in this RowContainer
      * @throws IllegalArgumentException
      *             if <code>px &lt; 1</code>
+     * @see #getDefaultRowHeight()
      */
     public void setDefaultRowHeight(int px) throws IllegalArgumentException;
 
     /**
      * Returns the default height of the rows in this RowContainer.
+     * <p>
+     * This value will be equal to {@link #INITIAL_DEFAULT_ROW_HEIGHT} if the
+     * {@link Escalator} has not yet had a chance to autodetect the row height,
+     * or no explicit value has yet given via {@link #setDefaultRowHeight(int)}
      * 
      * @return the default height of the rows in this RowContainer, in pixels
+     * @see #setDefaultRowHeight(int)
      */
     public int getDefaultRowHeight();
 }

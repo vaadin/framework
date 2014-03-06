@@ -100,6 +100,13 @@ $border-color: #aaa;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	overflow:hidden;
+	
+	/* 
+	 * Because Vaadin changes the font size after the initial render, we
+	 * need to mention the font size here explicitly, otherwise automatic
+	 * row height detection gets broken.
+	 */
+	font-size: $font-size; 
 }
 
 .#{$primaryStyleName}-cell.frozen {

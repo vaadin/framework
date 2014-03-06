@@ -30,6 +30,7 @@ import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -1013,8 +1014,6 @@ public class Escalator extends Widget {
 
     private abstract class AbstractRowContainer implements RowContainer {
 
-        private static final int INITIAL_DEFAULT_ROW_HEIGHT = 20;
-
         private EscalatorUpdater updater = EscalatorUpdater.NULL;
 
         private int rows;
@@ -1046,6 +1045,8 @@ public class Escalator extends Widget {
          */
         @Deprecated
         private final Map<Element, Integer> rowTopPositionMap = new HashMap<Element, Integer>();
+
+        private boolean defaultRowHeightShouldBeAutodetected = true;
 
         private int defaultRowHeight = INITIAL_DEFAULT_ROW_HEIGHT;
 
@@ -1633,6 +1634,7 @@ public class Escalator extends Widget {
                         + px + " was given.");
             }
 
+            defaultRowHeightShouldBeAutodetected = false;
             defaultRowHeight = px;
             reapplyDefaultRowHeights();
         }
@@ -1680,6 +1682,37 @@ public class Escalator extends Widget {
 
         protected void removeRowPosition(Element tr) {
             rowTopPositionMap.remove(tr);
+        }
+
+        public void autodetectRowHeight() {
+            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+
+                @Override
+                public void execute() {
+                    if (defaultRowHeightShouldBeAutodetected && isAttached()) {
+                        final Element detectionTr = DOM.createTR();
+                        detectionTr
+                                .setClassName(getStylePrimaryName() + "-row");
+
+                        final Element cellElem = DOM
+                                .createElement(getCellElementTagName());
+                        cellElem.setClassName(getStylePrimaryName() + "-cell");
+                        cellElem.setInnerHTML("foo");
+
+                        detectionTr.appendChild(cellElem);
+                        root.appendChild(detectionTr);
+                        defaultRowHeight = Math.max(1,
+                                cellElem.getOffsetHeight());
+                        root.removeChild(detectionTr);
+
+                        if (root.hasChildNodes()) {
+                            reapplyDefaultRowHeights();
+                        }
+
+                        defaultRowHeightShouldBeAutodetected = false;
+                    }
+                }
+            });
         }
     }
 
@@ -3512,6 +3545,10 @@ public class Escalator extends Widget {
     @Override
     protected void onLoad() {
         super.onLoad();
+
+        header.autodetectRowHeight();
+        body.autodetectRowHeight();
+        footer.autodetectRowHeight();
 
         header.paintInsertRows(0, header.getRowCount());
         footer.paintInsertRows(0, footer.getRowCount());
