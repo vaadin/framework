@@ -16,10 +16,12 @@
 package com.vaadin.tests.components.orderedlayout;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.internal.Coordinates;
@@ -46,9 +48,14 @@ public class NestedLayoutCaptionHoverTest extends MultiBrowserTest {
         ((HasInputDevices) getDriver()).getMouse().mouseMove(coords);
         sleep(1000);
 
-        // Verify that there's no error notification
-        WebElement error = vaadinElement("Root/VNotification[0]");
-        assertNull("No error should be found", error);
+        String selector = "Root/VNotification[0]";
+        try {
+            // Verify that there's no error notification
+            vaadinElement(selector);
+            fail("No error notification should be found");
+        } catch (NoSuchElementException e) {
+            // Exception caught. Verify it's the right one.
+            assertTrue(e.getMessage().contains(selector));
+        }
     }
-
 }
