@@ -123,4 +123,21 @@ public interface RowContainer {
      * @return the number of rows in the current row container
      */
     public int getRowCount();
+
+    /**
+     * The default height of the rows in this RowContainer.
+     * 
+     * @param px
+     *            the default height in pixels of the rows in this RowContainer
+     * @throws IllegalArgumentException
+     *             if <code>px &lt; 1</code>
+     */
+    public void setDefaultRowHeight(int px) throws IllegalArgumentException;
+
+    /**
+     * Returns the default height of the rows in this RowContainer.
+     * 
+     * @return the default height of the rows in this RowContainer, in pixels
+     */
+    public int getDefaultRowHeight();
 }

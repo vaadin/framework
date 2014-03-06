@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.widgetset.client.grid;
 
+import com.google.gwt.user.client.Random;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.ScrollDestination;
@@ -111,6 +112,16 @@ public class TestGridConnector extends AbstractComponentConnector {
             @Override
             public void calculateColumnWidths() {
                 getWidget().calculateColumnWidths();
+            }
+
+            @Override
+            public void randomRowHeight() {
+                getWidget().getHeader().setDefaultRowHeight(
+                        Random.nextInt(20) + 20);
+                getWidget().getBody().setDefaultRowHeight(
+                        Random.nextInt(20) + 20);
+                getWidget().getFooter().setDefaultRowHeight(
+                        Random.nextInt(20) + 20);
             }
         });
     }

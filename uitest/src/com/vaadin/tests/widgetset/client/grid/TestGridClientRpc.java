@@ -43,4 +43,6 @@ public interface TestGridClientRpc extends ClientRpc {
     void setColumnWidth(int index, int px);
 
     void calculateColumnWidths();
+
+    void randomRowHeight();
 }

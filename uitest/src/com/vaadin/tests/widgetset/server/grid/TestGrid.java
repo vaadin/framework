@@ -89,4 +89,8 @@ public class TestGrid extends AbstractComponent {
     public void calculateColumnWidths() {
         rpc().calculateColumnWidths();
     }
+
+    public void randomizeDefaultRowHeight() {
+        rpc().randomRowHeight();
+    }
 }

@@ -206,6 +206,10 @@ public class VTestGrid extends Composite {
         return escalator.getHeader();
     }
 
+    public RowContainer getBody() {
+        return escalator.getBody();
+    }
+
     public RowContainer getFooter() {
         return escalator.getFooter();
     }

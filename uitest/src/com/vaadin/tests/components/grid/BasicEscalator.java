@@ -289,6 +289,14 @@ public class BasicEscalator extends AbstractTestUI {
                         grid.calculateColumnWidths();
                     }
                 }));
+
+        addComponent(new Button("Randomize row heights",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        grid.randomizeDefaultRowHeight();
+                    }
+                }));
     }
 
     @Override
