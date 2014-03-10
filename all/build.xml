@@ -35,35 +35,41 @@
     </target>
 
     <target name="javadoc" depends="copy-jars">
-        <!-- Ensure filtered webcontent files are available -->
-        <antcall target="common.filter.webcontent" />
+      <!-- Ensure filtered webcontent files are available -->
+      <antcall target="common.filter.webcontent" />
+     
+      <property name="javadoc.dir" location="${result.dir}/javadoc" />
 
-        <!-- Unpack all source files to javadoc.temp.dir -->
-        <antcontrib:foreach list="${modules.to.publish.to.maven}" target="unzip.to.javadoctemp" param="module" />
+      <antcontrib:if>
+         <isset property="nojavadoc" />
+           <then />
+           <else>
+             <!-- Unpack all source files to javadoc.temp.dir -->
+             <antcontrib:foreach list="${modules.to.publish.to.maven}" target="unzip.to.javadoctemp" param="module" />
 
-        <property name="javadoc.dir" location="${result.dir}/javadoc" />
-        <property name="title" value="Vaadin ${vaadin.version} API" />
-        <javadoc maxmemory="1024m" destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="${title}" encoding="utf-8"
-        stylesheetfile="javadoc.css">
-            <packageset dir="${javadoc.temp.dir}">
-                <!-- TODO Javadoc throws ClassCastException if this is included 
-                    (#9660) -->
-                <exclude name="com/google/gwt/uibinder/elementparsers" />
-            </packageset>
-            <doctitle>&lt;h1>${title}&lt;/h1></doctitle>
-            <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
-            <bottom>${javadoc.bottom}</bottom>
-            <link offline="true" href="http://docs.oracle.com/javase/6/docs/api/" packagelistLoc="build/javadoc/j2se-1.6.0" />
-            <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
-            <classpath refid="classpath.javadoc" />
-        </javadoc>
-
-        <!-- Create a javadoc jar -->
-        <jar file="${javadoc.jar}" compress="true">
-            <fileset dir="${javadoc.dir}" />
-            <fileset refid="common.files.for.all.jars" />
-        </jar>
-
+             <property name="javadoc.dir" location="${result.dir}/javadoc" />
+             <property name="title" value="Vaadin ${vaadin.version} API" />
+             <javadoc maxmemory="1024m" destdir="${javadoc.dir}" author="true" version="true" 
+                use="true" windowtitle="${title}" encoding="utf-8" stylesheetfile="javadoc.css">
+               <packageset dir="${javadoc.temp.dir}">
+                  <!-- TODO Javadoc throws ClassCastException if this is included 
+                      (#9660) -->
+                  <exclude name="com/google/gwt/uibinder/elementparsers" />
+               </packageset>
+               <doctitle>&lt;h1>${title}&lt;/h1></doctitle>
+               <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
+               <bottom>${javadoc.bottom}</bottom>
+               <link offline="true" href="http://docs.oracle.com/javase/6/docs/api/" packagelistLoc="build/javadoc/j2se-1.6.0" />
+               <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
+               <classpath refid="classpath.javadoc" />
+             </javadoc>
+           </else>
+      </antcontrib:if>
+      <!-- Create a javadoc jar -->
+      <jar file="${javadoc.jar}" compress="true">
+        <fileset dir="${javadoc.dir}" />
+        <fileset refid="common.files.for.all.jars" />
+      </jar>
 
     </target>
 
