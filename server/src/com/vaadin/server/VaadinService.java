@@ -1569,9 +1569,9 @@ public abstract class VaadinService implements Serializable {
             meta.put("appError", appError);
 
             JSONObject json = new JSONObject();
-            json.put("changes", Collections.EMPTY_LIST);
-            json.put("resources", Collections.EMPTY_MAP);
-            json.put("locales", Collections.EMPTY_LIST);
+            json.put("changes", new JSONObject());
+            json.put("resources", new JSONObject());
+            json.put("locales", new JSONObject());
             json.put("meta", meta);
             returnString = json.toString();
         } catch (JSONException e) {
