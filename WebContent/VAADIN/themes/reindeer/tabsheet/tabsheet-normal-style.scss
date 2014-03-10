@@ -143,8 +143,13 @@
 }
 .v-sa & .#{$primaryStyleName}-tabs .v-captiontext {
 	display: inline-block;
-	vertical-align: middle;
 }
+
+/* Align TabSheet icons differently on Chromes and Safaris #13077 */
+.v-sa & .#{$primaryStyleName}-tabs .v-icon {
+	vertical-align: top;
+}
+
 .#{$primaryStyleName}-tabs .v-icon {
 	width: 16px !important;
 	height: 16px !important;

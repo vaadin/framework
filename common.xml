@@ -152,28 +152,44 @@
     </target>
 
     <target name="javadoc.jar" depends="dependencies, filter.webcontent">
-        <fail unless="result.dir" message="No result.dir parameter given" />
+      <fail unless="result.dir" message="No result.dir parameter given" />
         <fail unless="module.name" message="No module.name parameter given" />
         <property name="src" location="{$result.dir}/../src" />
         <property name="javadoc.dir" value="${result.dir}/javadoc" />
         <property name="javadoc.jar" location="${result.dir}/lib/${module.name}-${vaadin.version}-javadoc.jar" />
 
-        <javadoc destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="${module.name}">
-            <packageset dir="${src}" excludes="${classes.exclude}" />
-            <doctitle>&lt;h1>${module.name}&lt;/h1></doctitle>
-            <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
-            <bottom>${javadoc.bottom}</bottom>
-            <link offline="true" href="http://docs.oracle.com/javase/6/docs/api/" packagelistLoc="build/javadoc/j2se-1.6.0" />
-            <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
-            <classpath refid="classpath.compile.dependencies" />
-        </javadoc>
+        <antcontrib:if>
+            <!--
+              Most straight forward way to skip javadocs is to provide
+              an empty javadoc.jar. Ivy publish won't allow leaving the file
+              out without using conf attribute. Using conf would make internal
+              dependency resolution unnecessary complicated.
+             -->
+        	<isset property="nojavadoc" />
+              <then>
+                <jar file="${javadoc.jar}" compress="true">
+                  <fileset refid="common.files.for.all.jars" />
+                </jar>
+              </then>
+            <else>
+              <javadoc destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="${module.name}">
+                <packageset dir="${src}" excludes="${classes.exclude}" />
 
-        <!-- Create a javadoc jar -->
-        <jar file="${javadoc.jar}" compress="true">
-            <fileset dir="${javadoc.dir}" />
-            <fileset refid="common.files.for.all.jars" />
-        </jar>
+                  <doctitle>&lt;h1>${module.name}&lt;/h1></doctitle>
+                  <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
+                  <bottom>${javadoc.bottom}</bottom>
+                  <link offline="true" href="http://docs.oracle.com/javase/6/docs/api/" packagelistLoc="build/javadoc/j2se-1.6.0" />
+                  <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
+                  <classpath refid="classpath.compile.dependencies" />
+              </javadoc>
 
+              <!-- Create a javadoc jar -->
+              <jar file="${javadoc.jar}" compress="true">
+                <fileset dir="${javadoc.dir}" />
+                <fileset refid="common.files.for.all.jars" />
+              </jar>
+            </else>
+        </antcontrib:if>
     </target>
 
     <target name="jar" depends="compile, pom.xml, filter.webcontent">
