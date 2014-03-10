@@ -37,12 +37,14 @@
     <target name="javadoc" depends="copy-jars">
       <!-- Ensure filtered webcontent files are available -->
       <antcall target="common.filter.webcontent" />
-     
-      <property name="javadoc.dir" location="${result.dir}/javadoc" />
 
       <antcontrib:if>
          <isset property="nojavadoc" />
-           <then />
+           <then>
+            <jar file="${javadoc.jar}" compress="true">
+              <fileset refid="common.files.for.all.jars" />
+            </jar>
+           </then>
            <else>
              <!-- Unpack all source files to javadoc.temp.dir -->
              <antcontrib:foreach list="${modules.to.publish.to.maven}" target="unzip.to.javadoctemp" param="module" />
@@ -63,14 +65,14 @@
                <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
                <classpath refid="classpath.javadoc" />
              </javadoc>
+
+             <!-- Create a javadoc jar -->
+             <jar file="${javadoc.jar}" compress="true">
+               <fileset dir="${javadoc.dir}" />
+               <fileset refid="common.files.for.all.jars" />
+             </jar>
            </else>
       </antcontrib:if>
-      <!-- Create a javadoc jar -->
-      <jar file="${javadoc.jar}" compress="true">
-        <fileset dir="${javadoc.dir}" />
-        <fileset refid="common.files.for.all.jars" />
-      </jar>
-
     </target>
 
     <target name="copy-jars">
