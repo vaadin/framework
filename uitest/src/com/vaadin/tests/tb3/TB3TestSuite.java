@@ -246,11 +246,7 @@ public class TB3TestSuite extends Suite {
         if (c.getAnnotation(ExcludeFromSuite.class) != null) {
             return false;
         }
-        if (c == Object.class) {
-            return true;
-        }
-
-        return includeInSuite(c.getSuperclass());
+        return true;
     }
 
 }
