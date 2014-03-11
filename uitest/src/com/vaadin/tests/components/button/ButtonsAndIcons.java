@@ -27,7 +27,7 @@ public class ButtonsAndIcons extends TestBase {
         b = new Button("Only text");
 
         addComponent(b);
-        b = new Button(null);
+        b = new Button((String) null);
         b.setIcon(new ThemeResource("../runo/icons/16/ok.png"));
 
         addComponent(b);
