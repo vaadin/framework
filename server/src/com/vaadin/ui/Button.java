@@ -100,6 +100,31 @@ public class Button extends AbstractComponent implements
     }
 
     /**
+     * Creates a new push button with the given icon.
+     * 
+     * @param icon
+     *            the icon
+     */
+    public Button(Resource icon) {
+        this();
+        setIcon(icon);
+    }
+
+    /**
+     * Creates a new push button with the given caption and icon.
+     * 
+     * @param caption
+     *            the caption
+     * @param icon
+     *            the icon
+     */
+    public Button(String caption, Resource icon) {
+        this();
+        setCaption(caption);
+        setIcon(icon);
+    }
+
+    /**
      * Creates a new push button with a click listener.
      * 
      * @param caption
