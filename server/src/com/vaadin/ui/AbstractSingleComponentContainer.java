@@ -123,6 +123,12 @@ public abstract class AbstractSingleComponentContainer extends
      */
     @Override
     public void setContent(Component content) {
+        // Make sure we're not adding the component inside it's own content
+        if (isOrHasAncestor(content)) {
+            throw new IllegalArgumentException(
+                    "Component cannot be added inside it's own content");
+        }
+
         Component oldContent = getContent();
         if (oldContent == content) {
             // do not set the same content twice

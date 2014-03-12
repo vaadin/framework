@@ -991,4 +991,24 @@ public abstract class AbstractComponent extends AbstractClientConnector
             actionManager.removeAction(shortcut);
         }
     }
+
+    /**
+     * Determine whether a <code>content</code> component is equal to, or the
+     * ancestor of this component.
+     * 
+     * @param content
+     *            the potential ancestor element
+     * @return <code>true</code> if the relationship holds
+     */
+    protected boolean isOrHasAncestor(Component content) {
+        if (content instanceof HasComponents) {
+            for (Component parent = this; parent != null; parent = parent
+                    .getParent()) {
+                if (parent == content) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
