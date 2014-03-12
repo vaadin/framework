@@ -212,6 +212,7 @@
            <ant antfile="${uitest.dir}/vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
          </daemons>
          <sequential>
+           <ant antfile="${uitest.dir}/vaadin-server.xml" target="wait-for-startup" />
            <ant antfile="${uitest.dir}/test.xml" target="tb2-tests" />
          </sequential>
        </parallel>
@@ -224,6 +225,7 @@
            <ant antfile="${uitest.dir}/vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
          </daemons>
          <sequential>
+           <ant antfile="${uitest.dir}/vaadin-server.xml" target="wait-for-startup" />
            <ant antfile="${uitest.dir}/tb3test.xml" target="run-all-tb3-tests" inheritall="true" />
          </sequential>
        </parallel>
