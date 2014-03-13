@@ -601,7 +601,18 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public void doInit(VaadinRequest request, int uiId) {
         if (this.uiId != -1) {
-            throw new IllegalStateException("UI id has already been defined");
+            String message = "This UI instance is already initialized (as UI id "
+                    + this.uiId
+                    + ") and can therefore not be initialized again (as UI id "
+                    + uiId + "). ";
+
+            if (getSession() != null
+                    && !getSession().equals(VaadinSession.getCurrent())) {
+                message += "Furthermore, it is already attached to another VaadinSession. ";
+            }
+            message += "Please make sure you are not accidentally reusing an old UI instance.";
+
+            throw new IllegalStateException(message);
         }
         this.uiId = uiId;
 
