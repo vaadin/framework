@@ -446,6 +446,9 @@ public abstract class VaadinService implements Serializable {
         session.accessSynchronously(new Runnable() {
             @Override
             public void run() {
+                if (!session.isClosing()) {
+                    closeSession(session);
+                }
                 ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
                 for (final UI ui : uis) {
                     ui.accessSynchronously(new Runnable() {
