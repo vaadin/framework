@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.util.Enumeration;
 
 import javax.portlet.ClientDataRequest;
+import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.portlet.ResourceRequest;
@@ -189,6 +190,23 @@ public class VaadinPortletRequest extends PortletRequestWrapper implements
      */
     public String getPortalProperty(String name) {
         return getRequest().getPortalContext().getProperty(name);
+    }
+
+    /**
+     * Reads a portlet preference from the portlet of the request.
+     * 
+     * @param name
+     *            The name of the portlet preference. Cannot be
+     *            <code>null</code>.
+     * 
+     * @return The value of the portlet preference, <code>null</code> if the
+     *         preference is not defined.
+     */
+    public String getPortletPreference(String name) {
+        PortletRequest request = getRequest();
+        PortletPreferences preferences = request.getPreferences();
+
+        return preferences.getValue(name, null);
     }
 
     @Override
