@@ -344,7 +344,7 @@ public class DateTimeService {
 
         if (formatStr.contains("EEE")) {
 
-            String dayName = getShortDay(date.getMonth());
+            String dayName = getShortDay(date.getDay());
 
             if (dayName != null) {
                 /*
