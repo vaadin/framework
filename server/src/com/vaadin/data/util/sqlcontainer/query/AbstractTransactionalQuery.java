@@ -31,7 +31,7 @@ import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
  * @author Vaadin Ltd
  * @since 6.8.9
  */
-abstract class AbstractTransactionalQuery implements Serializable {
+public abstract class AbstractTransactionalQuery implements Serializable {
 
     private JDBCConnectionPool connectionPool;
     private transient Connection activeConnection;
