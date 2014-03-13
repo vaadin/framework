@@ -3843,7 +3843,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                             "right");
                     break;
                 default:
-                    DOM.setStyleAttribute(captionContainer, "textAlign", "");
+                    DOM.setStyleAttribute(captionContainer, "textAlign", "left");
                     break;
                 }
             }
@@ -5407,17 +5407,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 } else {
                     container.setInnerText(text);
                 }
-                if (align != ALIGN_LEFT) {
-                    switch (align) {
-                    case ALIGN_CENTER:
-                        container.getStyle().setProperty("textAlign", "center");
-                        break;
-                    case ALIGN_RIGHT:
-                    default:
-                        container.getStyle().setProperty("textAlign", "right");
-                        break;
-                    }
-                }
+                setAlign(align, container);
                 setTooltip(td, description);
 
                 td.appendChild(container);
@@ -5455,6 +5445,21 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             }
 
+            private void setAlign(char align, final Element container) {
+                switch (align) {
+                case ALIGN_CENTER:
+                    container.getStyle().setProperty("textAlign", "center");
+                    break;
+                case ALIGN_LEFT:
+                    container.getStyle().setProperty("textAlign", "left");
+                    break;
+                case ALIGN_RIGHT:
+                default:
+                    container.getStyle().setProperty("textAlign", "right");
+                    break;
+                }
+            }
+
             protected void initCellWithWidget(Widget w, char align,
                     String style, boolean sorted, final TableCellElement td) {
                 final Element container = DOM.createDiv();
@@ -5471,21 +5476,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 td.setClassName(className);
                 container.setClassName(VScrollTable.this.getStylePrimaryName()
                         + "-cell-wrapper");
-                // TODO most components work with this, but not all (e.g.
-                // Select)
-                // Old comment: make widget cells respect align.
-                // text-align:center for IE, margin: auto for others
-                if (align != ALIGN_LEFT) {
-                    switch (align) {
-                    case ALIGN_CENTER:
-                        container.getStyle().setProperty("textAlign", "center");
-                        break;
-                    case ALIGN_RIGHT:
-                    default:
-                        container.getStyle().setProperty("textAlign", "right");
-                        break;
-                    }
-                }
+                setAlign(align, container);
                 td.appendChild(container);
                 getElement().appendChild(td);
                 // ensure widget not attached to another element (possible tBody
