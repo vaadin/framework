@@ -48,7 +48,6 @@
         <!-- Internally used, for now -->
         <dependency org="com.carrotsearch" name="smartsprites"
             rev="0.2.10" />
-        <override org="com.google.guava" module="guava" rev="16.0.1" />
         <!-- Use the same commons-io as the rest of the project -->
         <override org="commons-io" module="commons-io" rev="2.2" />
     </dependencies>
