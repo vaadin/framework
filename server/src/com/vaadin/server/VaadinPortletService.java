@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import static com.vaadin.shared.util.SharedUtil.trimTrailingSlashes;
+
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
@@ -80,9 +82,8 @@ public class VaadinPortletService extends VaadinService {
     }
 
     private static String getPortalProperty(VaadinRequest request,
-            String portalParameterVaadinWidgetset) {
-        return ((VaadinPortletRequest) request)
-                .getPortalProperty(portalParameterVaadinWidgetset);
+            String propertyName) {
+        return ((VaadinPortletRequest) request).getPortalProperty(propertyName);
     }
 
     @Override
@@ -139,12 +140,7 @@ public class VaadinPortletService extends VaadinService {
         String staticFileLocation = getPortalProperty(request,
                 Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH);
         if (staticFileLocation != null) {
-            // remove trailing slash if any
-            while (staticFileLocation.endsWith(".")) {
-                staticFileLocation = staticFileLocation.substring(0,
-                        staticFileLocation.length() - 1);
-            }
-            return staticFileLocation;
+            return trimTrailingSlashes(staticFileLocation);
         } else {
             // default for Liferay
             return "/html";
