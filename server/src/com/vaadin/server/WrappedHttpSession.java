@@ -85,6 +85,20 @@ public class WrappedHttpSession implements WrappedSession {
 
     @Override
     public void invalidate() {
+        if (session == null) {
+            throw new IllegalStateException(
+                    "Session is null and cannot be invalidated");
+        }
+
+        if (session.getClass().getName()
+                .equals("org.atmosphere.util.FakeHttpSession")) {
+            throw new UnsupportedOperationException(
+                    "FakeHttpSession cannot be invalidated. "
+                            + "This typically means you are using websockets together with Tomcat 7. "
+                            + "Because Tomcat 7 does not support sharing the HTTP session between standard HTTP requests and websockets, a copy of the session is used for websockets. "
+                            + "Invalidating this session does not have the desired effect. "
+                            + "To resolve this, upgrade to Tomcat 8 or use another transport mechanism than websockets.");
+        }
         session.invalidate();
     }
 
