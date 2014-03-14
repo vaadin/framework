@@ -267,8 +267,7 @@ public abstract class AbstractOrderedLayoutConnector extends
 
         if (slot.hasCaption()) {
             CaptionPosition pos = slot.getCaptionPosition();
-            getLayoutManager().addElementResizeListener(
-                    slot.getCaptionElement(), slotCaptionResizeListener);
+            slot.setCaptionResizeListener(slotCaptionResizeListener);
             if (child.isRelativeHeight()
                     && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
                 getWidget().updateCaptionOffset(slot.getCaptionElement());
