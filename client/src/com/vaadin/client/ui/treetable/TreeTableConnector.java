@@ -48,7 +48,12 @@ public class TreeTableConnector extends TableConnector {
                 .getIntAttribute(TreeTableConstants.ATTRIBUTE_HIERARCHY_COLUMN_INDEX)
                 : 0;
         int oldTotalRows = getWidget().getTotalRows();
+
         super.updateFromUIDL(uidl, client);
+        // super.updateFromUIDL set rendering to false, even though we continue
+        // rendering here. Set it back to true.
+        getWidget().rendering = true;
+
         if (getWidget().collapseRequest) {
             if (getWidget().collapsedRowKey != null
                     && getWidget().scrollBody != null) {
@@ -105,6 +110,7 @@ public class TreeTableConnector extends TableConnector {
             getWidget()
                     .handleNavigation(event.keycode, event.ctrl, event.shift);
         }
+        getWidget().rendering = false;
     }
 
     @Override

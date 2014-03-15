@@ -6693,8 +6693,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 }
                 int heightBefore = getOffsetHeight();
                 scrollBodyPanel.setHeight(bodyHeight + "px");
+
                 if (heightBefore != getOffsetHeight()) {
-                    Util.notifyParentOfSizeChange(VScrollTable.this, false);
+                    Util.notifyParentOfSizeChange(VScrollTable.this, rendering);
                 }
             }
             Scheduler.get().scheduleDeferred(new Command() {
