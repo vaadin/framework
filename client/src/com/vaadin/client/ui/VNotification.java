@@ -303,6 +303,15 @@ public class VNotification extends VOverlay {
             DOM.setStyleAttribute(el, "top", "0px");
             DOM.setStyleAttribute(el, "right", "0px");
             break;
+        case MIDDLE_LEFT:
+            center();
+            DOM.setStyleAttribute(el, "left", "0px");
+            break;
+        case MIDDLE_RIGHT:
+            center();
+            DOM.setStyleAttribute(el, "left", "");
+            DOM.setStyleAttribute(el, "right", "0px");
+            break;
         case BOTTOM_RIGHT:
             DOM.setStyleAttribute(el, "position", "absolute");
             DOM.setStyleAttribute(el, "bottom", "0px");
