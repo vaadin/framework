@@ -49,11 +49,6 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
     }
 
     @Override
-    public boolean delegateCaptionHandling() {
-        return false;
-    }
-
-    @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
