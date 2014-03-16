@@ -19,11 +19,12 @@ package com.vaadin.client.ui;
 import java.util.Date;
 
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.shared.ui.datefield.Resolution;
 
-public class VDateField extends FlowPanel implements Field {
+public class VDateField extends FlowPanel implements Field, HasEnabled {
 
     public static final String CLASSNAME = "v-datefield";
 
@@ -161,10 +162,12 @@ public class VDateField extends FlowPanel implements Field {
         this.readonly = readonly;
     }
 
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
