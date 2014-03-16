@@ -991,14 +991,14 @@ public class VWindow extends VWindowOverlay implements
                 }
                 bubble = false;
             }
+            if (type == Event.ONCLICK) {
+                activateOnClick();
+            }
         } else if (dragging || !contents.isOrHasChild(target)) {
             onDragEvent(event);
             bubble = false;
         } else if (type == Event.ONCLICK) {
-            // clicked inside window, ensure to be on top
-            if (!isActive()) {
-                bringToFront();
-            }
+            activateOnClick();
         }
 
         /*
@@ -1017,6 +1017,13 @@ public class VWindow extends VWindowOverlay implements
             // Super.onBrowserEvent takes care of Handlers added by the
             // ClickEventHandler
             super.onBrowserEvent(event);
+        }
+    }
+
+    private void activateOnClick() {
+        // clicked inside window or inside header, ensure to be on top
+        if (!isActive()) {
+            bringToFront();
         }
     }
 
