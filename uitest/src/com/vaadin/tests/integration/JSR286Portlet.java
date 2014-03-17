@@ -50,6 +50,9 @@ public class JSR286Portlet extends UI {
     Link portletEdit = new Link();
     Link portletMax = new Link();
     Link someAction = null;
+    Label userAgent = new Label();
+    Label screenWidth = new Label();
+    Label screenHeight = new Label();
     private VerticalLayout main = new VerticalLayout();
 
     @Override
@@ -68,6 +71,15 @@ public class JSR286Portlet extends UI {
         userInfo.setCaption("User info");
         userInfo.setContentMode(ContentMode.PREFORMATTED);
         main.addComponent(userInfo);
+
+        userAgent.setCaption("User Agent");
+        main.addComponent(userAgent);
+
+        screenWidth.setCaption("Screen width");
+        main.addComponent(screenWidth);
+
+        screenHeight.setCaption("Screen height");
+        main.addComponent(screenHeight);
 
         tf.setEnabled(false);
         tf.setImmediate(true);
@@ -99,6 +111,11 @@ public class JSR286Portlet extends UI {
     private void possiblyChangedModeOrState() {
         VaadinPortletRequest request = (VaadinPortletRequest) VaadinPortletService
                 .getCurrentRequest();
+
+        userAgent.setValue(getPage().getWebBrowser().getBrowserApplication());
+        screenWidth.setValue(String.valueOf(getPage().getBrowserWindowWidth()));
+        screenHeight.setValue(String
+                .valueOf(getPage().getBrowserWindowHeight()));
 
         boolean inViewMode = (request.getPortletMode() == PortletMode.VIEW);
         boolean inNormalState = (request.getWindowState() == WindowState.NORMAL);
