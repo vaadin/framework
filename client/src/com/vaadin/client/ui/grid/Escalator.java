@@ -322,7 +322,7 @@ public class Escalator extends Widget {
                     deltaY = y - lastY;
                     lastX = x;
                     lastY = y;
-                    lastTime = timestamp;
+                    lastTime = Duration.currentTimeMillis();
 
                     // snap the scroll to the major axes, at first.
                     if (snappedScrollEnabled) {
@@ -416,7 +416,6 @@ public class Escalator extends Widget {
                 animationHandle = AnimationScheduler.get()
                         .requestAnimationFrame(mover, escalator.bodyElem);
                 event.getNativeEvent().preventDefault();
-                mover.execute(Duration.currentTimeMillis());
             }
 
             public void touchEnd(@SuppressWarnings("unused")
@@ -472,6 +471,8 @@ public class Escalator extends Widget {
         private double yFric;
 
         private boolean cancelled = false;
+        private int lastLeft;
+        private int lastTop;
 
         /**
          * Creates a new animation callback to handle touch-scrolling flick with
@@ -491,7 +492,9 @@ public class Escalator extends Widget {
                     MAX_SPEED), -MAX_SPEED);
             velY = Math.max(Math.min(deltaY / (currentTimeMillis - lastTime),
                     MAX_SPEED), -MAX_SPEED);
-            prevTime = lastTime;
+
+            lastLeft = horizontalScrollbar.getScrollPos();
+            lastTop = verticalScrollbar.getScrollPos();
 
             /*
              * If we're scrolling mainly in one of the four major directions,
@@ -520,25 +523,34 @@ public class Escalator extends Widget {
                 return;
             }
 
-            final int lastLeft = tBodyScrollLeft;
-            final int lastTop = tBodyScrollTop;
+            if (prevTime == 0) {
+                prevTime = timestamp;
+                AnimationScheduler.get().requestAnimationFrame(this);
+                return;
+            }
+
+            int currentLeft = horizontalScrollbar.getScrollPos();
+            int currentTop = verticalScrollbar.getScrollPos();
 
             final double timeDiff = timestamp - prevTime;
-            setScrollLeft((int) (tBodyScrollLeft - velX * timeDiff));
+            double left = currentLeft - velX * timeDiff;
+            setScrollLeft((int) left);
             velX -= xFric * timeDiff;
 
-            setScrollTop(tBodyScrollTop - velY * timeDiff);
+            double top = currentTop - velY * timeDiff;
+            setScrollTop(top);
             velY -= yFric * timeDiff;
 
-            cancelBecauseOfEdgeOrCornerMaybe(lastLeft, lastTop);
+            cancelBecauseOfEdgeOrCornerMaybe();
 
             prevTime = timestamp;
             millisLeft -= timeDiff;
+            lastLeft = currentLeft;
+            lastTop = currentTop;
             AnimationScheduler.get().requestAnimationFrame(this);
         }
 
-        private void cancelBecauseOfEdgeOrCornerMaybe(final int lastLeft,
-                final int lastTop) {
+        private void cancelBecauseOfEdgeOrCornerMaybe() {
             if (lastLeft == horizontalScrollbar.getScrollPos()
                     && lastTop == verticalScrollbar.getScrollPos()) {
                 cancel();
