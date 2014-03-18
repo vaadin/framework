@@ -72,15 +72,6 @@ public class JSR286Portlet extends UI {
         userInfo.setContentMode(ContentMode.PREFORMATTED);
         main.addComponent(userInfo);
 
-        userAgent.setCaption("User Agent");
-        main.addComponent(userAgent);
-
-        screenWidth.setCaption("Screen width");
-        main.addComponent(screenWidth);
-
-        screenHeight.setCaption("Screen height");
-        main.addComponent(screenHeight);
-
         tf.setEnabled(false);
         tf.setImmediate(true);
         main.addComponent(tf);
@@ -100,6 +91,16 @@ public class JSR286Portlet extends UI {
         main.addComponent(upload);
 
         possiblyChangedModeOrState();
+
+        userAgent.setCaption("User Agent");
+        main.addComponent(userAgent);
+
+        screenWidth.setCaption("Screen width");
+        main.addComponent(screenWidth);
+
+        screenHeight.setCaption("Screen height");
+        main.addComponent(screenHeight);
+
         getSession().addPortletListener(new DemoPortletListener());
     }
 
