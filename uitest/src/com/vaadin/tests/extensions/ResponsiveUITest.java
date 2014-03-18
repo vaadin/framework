@@ -22,6 +22,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -43,6 +45,11 @@ public class ResponsiveUITest extends MultiBrowserTest {
     @Test
     public void testResizingSplitPanelReflowsLayout() throws Exception {
         openTestURL();
+
+        // IE sometimes has trouble waiting long enough.
+        new WebDriverWait(getDriver(), 30).until(ExpectedConditions
+                .presenceOfElementLocated(By
+                        .cssSelector(".v-csslayout-grid.first")));
 
         assertEquals("401px-600px",
                 $(".v-csslayout-grid.first").getAttribute("width-range"));
@@ -74,5 +81,29 @@ public class ResponsiveUITest extends MultiBrowserTest {
     private void moveSplitter(int xOffset) {
         new Actions(getDriver()).clickAndHold($(".v-splitpanel-hsplitter"))
                 .moveByOffset(xOffset, 0).release().build().perform();
+    }
+
+    @Test
+    public void testResizingWindowReflowsLayout() throws Exception {
+        openTestURL();
+
+        assertEquals("401px-600px",
+                $(".v-csslayout-grid.first").getAttribute("width-range"));
+        assertEquals("501px-",
+                $(".v-csslayout-grid.second").getAttribute("width-range"));
+
+        testBench().resizeViewPortTo(1224, 768);
+
+        assertEquals("601-800",
+                $(".v-csslayout-grid.first").getAttribute("width-range"));
+        assertEquals("501px-",
+                $(".v-csslayout-grid.second").getAttribute("width-range"));
+
+        testBench().resizeViewPortTo(674, 768);
+
+        assertEquals("201px-400px",
+                $(".v-csslayout-grid.first").getAttribute("width-range"));
+        assertEquals("301px-400px",
+                $(".v-csslayout-grid.second").getAttribute("width-range"));
     }
 }

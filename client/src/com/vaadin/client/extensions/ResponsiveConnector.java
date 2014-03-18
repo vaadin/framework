@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -308,30 +309,56 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
     private String currentHeightRanges;
 
     @Override
-    public void onElementResize(ElementResizeEvent e) {
-        int width = e.getLayoutManager().getOuterWidth(e.getElement());
-        int height = e.getLayoutManager().getOuterHeight(e.getElement());
+    public void onElementResize(ElementResizeEvent event) {
+        int width = event.getLayoutManager().getOuterWidth(event.getElement());
+        int height = event.getLayoutManager()
+                .getOuterHeight(event.getElement());
+
+        com.google.gwt.user.client.Element element = this.target.getWidget()
+                .getElement();
+        boolean forceRedraw = false;
 
         // Loop through breakpoints and see which one applies to this width
-        currentWidthRanges = resolveBreakpoint("width", width, e.getElement());
+        currentWidthRanges = resolveBreakpoint("width", width,
+                event.getElement());
 
         if (!"".equals(currentWidthRanges)) {
             this.target.getWidget().getElement()
                     .setAttribute("width-range", currentWidthRanges);
+            forceRedraw = true;
         } else {
-            this.target.getWidget().getElement().removeAttribute("width-range");
+            element.removeAttribute("width-range");
         }
 
         // Loop through breakpoints and see which one applies to this height
         currentHeightRanges = resolveBreakpoint("height", height,
-                e.getElement());
+                event.getElement());
 
         if (!"".equals(currentHeightRanges)) {
             this.target.getWidget().getElement()
                     .setAttribute("height-range", currentHeightRanges);
+            forceRedraw = true;
         } else {
-            this.target.getWidget().getElement()
-                    .removeAttribute("height-range");
+            element.removeAttribute("height-range");
+        }
+
+        if (forceRedraw) {
+            forceRedrawIfIE8(element);
+        }
+    }
+
+    /**
+     * Forces IE8 to reinterpret CSS rules.
+     * {@link com.vaadin.client.Util#forceIE8Redraw(com.google.gwt.dom.client.Element)}
+     * doesn't work in this case.
+     * 
+     * @param element
+     *            the element to redraw
+     */
+    private void forceRedrawIfIE8(Element element) {
+        if (BrowserInfo.get().isIE8()) {
+            element.addClassName("foo");
+            element.removeClassName("foo");
         }
     }
 
