@@ -22,7 +22,9 @@ import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
@@ -295,6 +297,29 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
                 "modified: Column0", getBodyCellByRowAndColumn(1, 1).getText());
     }
 
+    @Test
+    public void testDataFetchingWorks() throws Exception {
+        openTestURL();
+
+        scrollGridVerticallyTo(200);
+
+        /*
+         * Give time for the data to be fetched.
+         * 
+         * TODO TestBench currently doesn't know when Grid's DOM structure is
+         * stable. There are some plans regarding implementing support for this,
+         * so this test case can (should) be modified once that's implemented.
+         */
+        sleep(1000);
+
+        /*
+         * TODO this screenshot comparison could be done on the DOM level, if
+         * the DOM would be always in order. This could be amended once DOM
+         * reordering is merged into the Grid branch.
+         */
+        compareScreen("dataHasBeenLoaded");
+    }
+
     private boolean elementIsFound(By locator) {
         try {
             return driver.findElement(locator) != null;
@@ -369,5 +394,29 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
     private List<WebElement> getGridFooterRowCells() {
         return getDriver().findElements(
                 By.xpath("//div[@id='testComponent']//tfoot//td"));
+    }
+
+    private void scrollGridVerticallyTo(double px) {
+        executeScript("arguments[0].scrollTop = " + px,
+                getGridVerticalScrollbar());
+    }
+
+    private Object executeScript(String script, WebElement element) {
+        @SuppressWarnings("hiding")
+        final WebDriver driver = getDriver();
+        if (driver instanceof JavascriptExecutor) {
+            final JavascriptExecutor je = (JavascriptExecutor) driver;
+            return je.executeScript(script, element);
+        } else {
+            throw new IllegalStateException("current driver "
+                    + getDriver().getClass().getName() + " is not a "
+                    + JavascriptExecutor.class.getSimpleName());
+        }
+    }
+
+    private WebElement getGridVerticalScrollbar() {
+        return getDriver()
+                .findElement(
+                        By.xpath("//div[contains(@class, \"v-grid-scroller-vertical\")]"));
     }
 }

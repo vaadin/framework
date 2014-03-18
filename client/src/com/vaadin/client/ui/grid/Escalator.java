@@ -1969,6 +1969,8 @@ public class Escalator extends Widget {
                         logicalRowIndex);
 
                 updateTopRowLogicalIndex(-originalRowsToMove);
+
+                rowsWereMoved = true;
             }
 
             else if (viewportOffset + getDefaultRowHeight() <= 0) {
@@ -2062,6 +2064,8 @@ public class Escalator extends Widget {
                         - visualRowOrder.size();
                 setTopRowLogicalIndex(Math.min(naiveNewLogicalIndex,
                         maxLogicalIndex));
+
+                rowsWereMoved = true;
             }
 
             if (rowsWereMoved) {
