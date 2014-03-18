@@ -1635,12 +1635,30 @@ public abstract class VaadinService implements Serializable {
      *             if the current thread holds the lock for another session
      */
     public static void verifyNoOtherSessionLocked(VaadinSession session) {
-        VaadinSession otherSession = VaadinSession.getCurrent();
-        if (otherSession != null && otherSession != session
-                && otherSession.hasLock()) {
+        if (isOtherSessionLocked(session)) {
             throw new IllegalStateException(
                     "Can't access session while another session is locked by the same thread. This restriction is intended to help avoid deadlocks.");
         }
+    }
+
+    /**
+     * Checks whether there might be some {@link VaadinSession} other than the
+     * provided one for which the current thread holds a lock. This method might
+     * not detect all cases where some other session is locked, but it should
+     * cover the most typical situations.
+     * 
+     * @since 7.2
+     * @param session
+     *            the session that is expected to be locked
+     * @return <code>true</code> if another session is also locked by the
+     *         current thread; <code>false</code> if no such session was found
+     */
+    public static boolean isOtherSessionLocked(VaadinSession session) {
+        VaadinSession otherSession = VaadinSession.getCurrent();
+        if (otherSession == null || otherSession == session) {
+            return false;
+        }
+        return otherSession.hasLock();
     }
 
     /**

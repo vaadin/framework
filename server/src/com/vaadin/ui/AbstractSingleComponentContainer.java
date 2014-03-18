@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import com.vaadin.server.ComponentSizeValidator;
+import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinSession;
 
 /**
  * Abstract base class for component containers that have only one child
@@ -150,6 +152,19 @@ public abstract class AbstractSingleComponentContainer extends
     // TODO move utility method elsewhere?
     public static void removeFromParent(Component content)
             throws IllegalArgumentException {
+        // Verify the appropriate session is locked
+        UI parentUI = content.getUI();
+        if (parentUI != null) {
+            VaadinSession parentSession = parentUI.getSession();
+            if (parentSession != null && !parentSession.hasLock()) {
+                String message = "Cannot remove from parent when the session is not locked.";
+                if (VaadinService.isOtherSessionLocked(parentSession)) {
+                    message += " Furthermore, there is another locked session, indicating that the component might be about to be moved from one session to another.";
+                }
+                throw new IllegalStateException(message);
+            }
+        }
+
         HasComponents parent = content.getParent();
         if (parent instanceof ComponentContainer) {
             // If the component already has a parent, try to remove it
