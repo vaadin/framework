@@ -69,12 +69,6 @@ public class GridConnector extends AbstractComponentConnector {
     private Map<String, CustomGridColumn> columnIdToColumn = new HashMap<String, CustomGridColumn>();
 
     @Override
-    protected Grid<String[]> createWidget() {
-        // FIXME Shouldn't be needed after #12873 has been fixed.
-        return new Grid<String[]>();
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public Grid<String[]> getWidget() {
         return (Grid<String[]>) super.getWidget();
