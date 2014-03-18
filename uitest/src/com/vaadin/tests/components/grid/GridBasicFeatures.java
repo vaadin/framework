@@ -15,11 +15,13 @@
  */
 package com.vaadin.tests.components.grid;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.components.grid.ColumnGroup;
 import com.vaadin.ui.components.grid.ColumnGroupRow;
@@ -85,6 +87,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         createColumnGroupActions();
 
         createRowActions();
+
+        addHeightByRowActions();
 
         return grid;
     }
@@ -326,6 +330,41 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                                     containerPropertyId).setValue(
                                     "modified: " + containerPropertyId);
                         }
+                    }
+                }, null);
+    }
+
+   @SuppressWarnings("boxing")
+    protected void addHeightByRowActions() {
+        createCategory("Height by Rows", "Size");
+
+        createBooleanAction("HeightMode Row", "Size", false,
+                new Command<Grid, Boolean>() {
+                    @Override
+                    public void execute(Grid c, Boolean heightModeByRows,
+                            Object data) {
+                        c.setHeightMode(heightModeByRows ? HeightMode.ROW
+                                : HeightMode.CSS);
+                    }
+                }, null);
+
+        addActionForHeightByRows(1d / 3d);
+        addActionForHeightByRows(2d / 3d);
+
+        for (double i = 1; i < 5; i++) {
+            addActionForHeightByRows(i);
+            addActionForHeightByRows(i + 1d / 3d);
+            addActionForHeightByRows(i + 2d / 3d);
+        }
+    }
+
+    private void addActionForHeightByRows(final Double i) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        createClickAction(df.format(i) + " rows", "Height by Rows",
+                new Command<Grid, String>() {
+                    @Override
+                    public void execute(Grid c, String value, Object data) {
+                        c.setHeightByRows(i);
                     }
                 }, null);
     }

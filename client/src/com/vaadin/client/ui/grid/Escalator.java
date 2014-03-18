@@ -54,6 +54,8 @@ import com.vaadin.client.ui.grid.PositionFunction.TranslatePosition;
 import com.vaadin.client.ui.grid.PositionFunction.WebkitTranslate3DPosition;
 import com.vaadin.client.ui.grid.ScrollbarBundle.HorizontalScrollbarBundle;
 import com.vaadin.client.ui.grid.ScrollbarBundle.VerticalScrollbarBundle;
+import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
@@ -1762,12 +1764,14 @@ public class Escalator extends Widget {
         public void insertRows(int index, int numberOfRows) {
             super.insertRows(index, numberOfRows);
             recalculateElementSizes();
+            applyHeightByRows();
         }
 
         @Override
         public void removeRows(int index, int numberOfRows) {
             super.removeRows(index, numberOfRows);
             recalculateElementSizes();
+            applyHeightByRows();
         }
 
         @Override
@@ -3497,6 +3501,14 @@ public class Escalator extends Widget {
     /** The cached height of the escalator, in pixels. */
     private double heightOfEscalator;
 
+    /** The height of Escalator in terms of body rows. */
+    private double heightByRows = GridState.DEFAULT_HEIGHT_BY_ROWS;
+
+    /** The height of Escalator, as defined by {@link #setHeight(String)} */
+    private String heightByCss = "";
+
+    private HeightMode heightMode = HeightMode.CSS;
+
     private static native double getPreciseWidth(Element element)
     /*-{
         if (element.getBoundingClientRect) {
@@ -3531,10 +3543,23 @@ public class Escalator extends Widget {
         setElement(root);
 
         root.appendChild(verticalScrollbar.getElement());
-        root.appendChild(horizontalScrollbar.getElement());
         verticalScrollbar.setScrollbarThickness(Util.getNativeScrollbarSize());
+
+        root.appendChild(horizontalScrollbar.getElement());
         horizontalScrollbar
                 .setScrollbarThickness(Util.getNativeScrollbarSize());
+        horizontalScrollbar
+                .addVisibilityHandler(new ScrollbarBundle.VisibilityHandler() {
+                    @Override
+                    public void visibilityChanged(
+                            ScrollbarBundle.VisibilityChangeEvent event) {
+                        /*
+                         * We either lost or gained a scrollbar. In any case, we
+                         * need to change the height, if it's defined by rows.
+                         */
+                        applyHeightByRows();
+                    }
+                });
 
         tableWrapper = DOM.createDiv();
 
@@ -3692,10 +3717,6 @@ public class Escalator extends Widget {
         return columnConfiguration;
     }
 
-    /*
-     * TODO remove method once RequiresResize and the Vaadin layoutmanager
-     * listening mechanisms are implemented (https://trello.com/c/r3Kh0Kfy)
-     */
     @Override
     public void setWidth(final String width) {
         super.setWidth(width != null && !width.isEmpty() ? width
@@ -3703,12 +3724,28 @@ public class Escalator extends Widget {
         recalculateElementSizes();
     }
 
-    /*
-     * TODO remove method once RequiresResize and the Vaadin layoutmanager
-     * listening mechanisms are implemented (https://trello.com/c/r3Kh0Kfy)
+    /**
+     * {@inheritDoc}
+     * <p>
+     * If Escalator is currently not in {@link HeightMode#CSS}, the given value
+     * is remembered, and applied once the mode is applied.
+     * 
+     * @see #setHeightMode(HeightMode)
      */
     @Override
-    public void setHeight(final String height) {
+    public void setHeight(String height) {
+        /*
+         * TODO remove method once RequiresResize and the Vaadin layoutmanager
+         * listening mechanisms are implemented
+         */
+
+        heightByCss = height;
+        if (getHeightMode() == HeightMode.CSS) {
+            setHeightInternal(height);
+        }
+    }
+
+    private void setHeightInternal(final String height) {
         final int escalatorRowsBefore = body.visualRowOrder.size();
 
         super.setHeight(height != null && !height.isEmpty() ? height
@@ -4038,5 +4075,126 @@ public class Escalator extends Widget {
         header.setStylePrimaryName(style);
         body.setStylePrimaryName(style);
         footer.setStylePrimaryName(style);
+    }
+
+    /**
+     * Sets the number of rows that should be visible in Escalator's body, while
+     * {@link #getHeightMode()} is {@link HeightMode#ROW}.
+     * <p>
+     * If Escalator is currently not in {@link HeightMode#ROW}, the given value
+     * is remembered, and applied once the mode is applied.
+     * 
+     * @param rows
+     *            the number of rows that should be visible in Escalator's body
+     * @throws IllegalArgumentException
+     *             if {@code rows} is zero or less
+     * @throws IllegalArgumentException
+     *             if {@code rows} is {@link Double#isInifinite(double)
+     *             infinite}
+     * @throws IllegalArgumentException
+     *             if {@code rows} is {@link Double#isNaN(double) NaN}.
+     * @see #setHeightMode(HeightMode)
+     */
+    public void setHeightByRows(double rows) throws IllegalArgumentException {
+        if (rows <= 0) {
+            throw new IllegalArgumentException(
+                    "The number of rows must be a positive number.");
+        } else if (Double.isInfinite(rows)) {
+            throw new IllegalArgumentException(
+                    "The number of rows must be finite.");
+        } else if (Double.isNaN(rows)) {
+            throw new IllegalArgumentException("The number must not be NaN.");
+        }
+
+        heightByRows = rows;
+        applyHeightByRows();
+    }
+
+    /**
+     * Gets the amount of rows in Escalator's body that are shown, while
+     * {@link #getHeightMode()} is {@link HeightMode#ROW}.
+     * <p>
+     * By default, it is {@value #DEFAULT_HEIGHT_BY_ROWS}.
+     * 
+     * @return the amount of rows that are being shown in Escalator's body
+     * @see #setHeightByRows(double)
+     */
+    public double getHeightByRows() {
+        return heightByRows;
+    }
+
+    /**
+     * Reapplies the row-based height of the Grid, if Grid currently should
+     * define its height that way.
+     */
+    private void applyHeightByRows() {
+        if (heightMode != HeightMode.ROW) {
+            return;
+        }
+
+        double headerHeight = header.heightOfSection;
+        double footerHeight = footer.heightOfSection;
+        double bodyHeight = body.getDefaultRowHeight() * heightByRows;
+        double scrollbar = horizontalScrollbar.showsScrollHandle() ? horizontalScrollbar
+                .getScrollbarThickness() : 0;
+
+        double totalHeight = headerHeight + bodyHeight + scrollbar
+                + footerHeight;
+        setHeightInternal(totalHeight + "px");
+    }
+
+    /**
+     * Defines the mode in which the Escalator widget's height is calculated.
+     * <p>
+     * If {@link HeightMode#CSS} is given, Escalator will respect the values
+     * given via {@link #setHeight(String)}, and behave as a traditional Widget.
+     * <p>
+     * If {@link HeightMode#ROW} is given, Escalator will make sure that the
+     * {@link #getBody() body} will display as many rows as
+     * {@link #getHeightByRows()} defines. <em>Note:</em> If headers/footers are
+     * inserted or removed, the widget will resize itself to still display the
+     * required amount of rows in its body. It also takes the horizontal
+     * scrollbar into account.
+     * 
+     * @param heightMode
+     *            the mode in to which Escalator should be set
+     */
+    public void setHeightMode(HeightMode heightMode) {
+        /*
+         * This method is a workaround for the fact that Vaadin re-applies
+         * widget dimensions (height/width) on each state change event. The
+         * original design was to have setHeight an setHeightByRow be equals,
+         * and whichever was called the latest was considered in effect.
+         * 
+         * But, because of Vaadin always calling setHeight on the widget, this
+         * approach doesn't work.
+         */
+
+        if (heightMode != this.heightMode) {
+            this.heightMode = heightMode;
+
+            switch (this.heightMode) {
+            case CSS:
+                setHeight(heightByCss);
+                break;
+            case ROW:
+                setHeightByRows(heightByRows);
+                break;
+            default:
+                throw new IllegalStateException("Unimplemented feaure "
+                        + "- unknown HeightMode: " + this.heightMode);
+            }
+        }
+    }
+
+    /**
+     * Returns the current {@link HeightMode} the Escalator is in.
+     * <p>
+     * Defaults to {@link HeightMode#CSS}.
+     * 
+     * @return the current HeightMode
+     */
+    public HeightMode getHeightMode() {
+        return heightMode;
     }
 }

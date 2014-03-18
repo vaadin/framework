@@ -30,6 +30,7 @@ import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.shared.ui.grid.GridConstants;
+import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
 
@@ -1116,6 +1117,14 @@ public class Grid<T> extends Composite {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * <em>Note:</em> This method will change the widget's size in the browser
+     * only if {@link #getHeightMode()} returns {@link HeightMode#CSS}.
+     * 
+     * @see #setHeightMode(HeightMode)
+     */
     @Override
     public void setHeight(String height) {
         escalator.setHeight(height);
@@ -1315,4 +1324,82 @@ public class Grid<T> extends Composite {
         return Logger.getLogger(Grid.class.getName());
     }
 
+    /**
+     * Sets the number of rows that should be visible in Grid's body, while
+     * {@link #getHeightMode()} is {@link HeightMode#ROW}.
+     * <p>
+     * If Grid is currently not in {@link HeightMode#ROW}, the given value is
+     * remembered, and applied once the mode is applied.
+     * 
+     * @param rows
+     *            The height in terms of number of rows displayed in Grid's
+     *            body. If Grid doesn't contain enough rows, white space is
+     *            displayed instead.
+     * @throws IllegalArgumentException
+     *             if {@code rows} is zero or less
+     * @throws IllegalArgumentException
+     *             if {@code rows} is {@link Double#isInifinite(double)
+     *             infinite}
+     * @throws IllegalArgumentException
+     *             if {@code rows} is {@link Double#isNaN(double) NaN}
+     * 
+     * @see #setHeightMode(HeightMode)
+     */
+    public void setHeightByRows(double rows) throws IllegalArgumentException {
+        escalator.setHeightByRows(rows);
+    }
+
+    /**
+     * Gets the amount of rows in Grid's body that are shown, while
+     * {@link #getHeightMode()} is {@link HeightMode#ROW}.
+     * <p>
+     * By default, it is {@value Escalator#DEFAULT_HEIGHT_BY_ROWS}.
+     * 
+     * @return the amount of rows that should be shown in Grid's body, while in
+     *         {@link HeightMode#ROW}.
+     * @see #setHeightByRows(double)
+     */
+    public double getHeightByRows() {
+        return escalator.getHeightByRows();
+    }
+
+    /**
+     * Defines the mode in which the Grid widget's height is calculated.
+     * <p>
+     * If {@link HeightMode#CSS} is given, Grid will respect the values given
+     * via {@link #setHeight(String)}, and behave as a traditional Widget.
+     * <p>
+     * If {@link HeightMode#ROW} is given, Grid will make sure that the body
+     * will display as many rows as {@link #getHeightByRows()} defines.
+     * <em>Note:</em> If headers/footers are inserted or removed, the widget
+     * will resize itself to still display the required amount of rows in its
+     * body. It also takes the horizontal scrollbar into account.
+     * 
+     * @param heightMode
+     *            the mode in to which Grid should be set
+     */
+    public void setHeightMode(HeightMode heightMode) {
+        /*
+         * This method is a workaround for the fact that Vaadin re-applies
+         * widget dimensions (height/width) on each state change event. The
+         * original design was to have setHeight an setHeightByRow be equals,
+         * and whichever was called the latest was considered in effect.
+         * 
+         * But, because of Vaadin always calling setHeight on the widget, this
+         * approach doesn't work.
+         */
+
+        escalator.setHeightMode(heightMode);
+    }
+
+    /**
+     * Returns the current {@link HeightMode} the Grid is in.
+     * <p>
+     * Defaults to {@link HeightMode#CSS}.
+     * 
+     * @return the current HeightMode
+     */
+    public HeightMode getHeightMode() {
+        return escalator.getHeightMode();
+    }
 }

@@ -19,6 +19,10 @@ package com.vaadin.client.ui.grid;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 
 /**
@@ -31,6 +35,57 @@ import com.google.gwt.user.client.DOM;
  * @see HorizontalScrollbarBundle
  */
 abstract class ScrollbarBundle {
+
+    /**
+     * A means to listen to when the scrollbar handle in a
+     * {@link ScrollbarBundle} either appears or is removed.
+     */
+    public interface VisibilityHandler extends EventHandler {
+        /**
+         * This method is called whenever the scrollbar handle's visibility is
+         * changed in a {@link ScrollbarBundle}.
+         * 
+         * @param event
+         *            the {@link VisibilityChangeEvent}
+         */
+        void visibilityChanged(VisibilityChangeEvent event);
+    }
+
+    public static class VisibilityChangeEvent extends
+            GwtEvent<VisibilityHandler> {
+        public static final Type<VisibilityHandler> TYPE = new Type<ScrollbarBundle.VisibilityHandler>() {
+            @Override
+            public String toString() {
+                return "VisibilityChangeEvent";
+            }
+        };
+
+        private final boolean isScrollerVisible;
+
+        private VisibilityChangeEvent(boolean isScrollerVisible) {
+            this.isScrollerVisible = isScrollerVisible;
+        }
+
+        /**
+         * Checks whether the scroll handle is currently visible or not
+         * 
+         * @return <code>true</code> if the scroll handle is currently visible.
+         *         <code>false</code> if not.
+         */
+        public boolean isScrollerVisible() {
+            return isScrollerVisible;
+        }
+
+        @Override
+        public Type<VisibilityHandler> getAssociatedType() {
+            return TYPE;
+        }
+
+        @Override
+        protected void dispatch(VisibilityHandler handler) {
+            handler.visibilityChanged(this);
+        }
+    }
 
     /**
      * The pixel size for OSX's invisible scrollbars.
@@ -178,6 +233,12 @@ abstract class ScrollbarBundle {
     private int scrollPos = 0;
     private int maxScrollPos = 0;
 
+    private boolean scrollHandleIsVisible = false;
+
+    /** @deprecarted access via {@link #getHandlerManager()} instead. */
+    @Deprecated
+    private HandlerManager handlerManager;
+
     private ScrollbarBundle() {
         root.appendChild(scrollSizeElement);
     }
@@ -233,6 +294,7 @@ abstract class ScrollbarBundle {
         internalSetOffsetSize(px);
         forceScrollbar(showsScrollHandle());
         recalculateMaxScrollPos();
+        fireVisibilityChangeIfNeeded();
     }
 
     /**
@@ -309,6 +371,7 @@ abstract class ScrollbarBundle {
         internalSetScrollSize(px);
         forceScrollbar(showsScrollHandle());
         recalculateMaxScrollPos();
+        fireVisibilityChangeIfNeeded();
     }
 
     /**
@@ -399,5 +462,35 @@ abstract class ScrollbarBundle {
     @SuppressWarnings("unused")
     private final void updateScrollPosFromDom() {
         scrollPos = internalGetScrollPos();
+    }
+
+    protected HandlerManager getHandlerManager() {
+        if (handlerManager == null) {
+            handlerManager = new HandlerManager(this);
+        }
+        return handlerManager;
+    }
+
+    /**
+     * Adds handler for the scrollbar handle visibility.
+     * 
+     * @param handler
+     *            the {@link VisibilityHandler} to add
+     * @return {@link HandlerRegistration} used to remove the handler
+     */
+    public HandlerRegistration addVisibilityHandler(
+            final VisibilityHandler handler) {
+        return getHandlerManager().addHandler(VisibilityChangeEvent.TYPE,
+                handler);
+    }
+
+    private void fireVisibilityChangeIfNeeded() {
+        final boolean oldHandleIsVisible = scrollHandleIsVisible;
+        scrollHandleIsVisible = showsScrollHandle();
+        if (oldHandleIsVisible != scrollHandleIsVisible) {
+            final VisibilityChangeEvent event = new VisibilityChangeEvent(
+                    scrollHandleIsVisible);
+            getHandlerManager().fireEvent(event);
+        }
     }
 }

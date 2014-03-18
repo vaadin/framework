@@ -48,6 +48,7 @@ import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.ui.grid.ScrollDestination;
+import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
@@ -857,5 +858,103 @@ public class Grid extends AbstractComponent {
     public void scrollToEnd() {
         GridClientRpc clientRPC = getRpcProxy(GridClientRpc.class);
         clientRPC.scrollToEnd();
+    }
+
+    /**
+     * Sets the number of rows that should be visible in Grid's body, while
+     * {@link #getHeightMode()} is {@link HeightMode#ROW}.
+     * <p>
+     * If Grid is currently not in {@link HeightMode#ROW}, the given value is
+     * remembered, and applied once the mode is applied.
+     * 
+     * @param rows
+     *            The height in terms of number of rows displayed in Grid's
+     *            body. If Grid doesn't contain enough rows, white space is
+     *            displayed instead. If <code>null</code> is given, then Grid's
+     *            height is undefined
+     * @throws IllegalArgumentException
+     *             if {@code rows} is zero or less
+     * @throws IllegalArgumentException
+     *             if {@code rows} is {@link Double#isInifinite(double)
+     *             infinite}
+     * @throws IllegalArgumentException
+     *             if {@code rows} is {@link Double#isNaN(double) NaN}
+     */
+    public void setHeightByRows(double rows) {
+        if (rows <= 0.0d) {
+            throw new IllegalArgumentException(
+                    "More than zero rows must be shown.");
+        } else if (Double.isInfinite(rows)) {
+            throw new IllegalArgumentException(
+                    "Grid doesn't support infinite heights");
+        } else if (Double.isNaN(rows)) {
+            throw new IllegalArgumentException("NaN is not a valid row count");
+        }
+
+        getState().heightByRows = rows;
+    }
+
+    /**
+     * Gets the amount of rows in Grid's body that are shown, while
+     * {@link #getHeightMode()} is {@link HeightMode#ROW}.
+     * 
+     * @return the amount of rows that are being shown in Grid's body
+     * @see #setHeightByRows(double)
+     */
+    public double getHeightByRows() {
+        return getState(false).heightByRows;
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * <em>Note:</em> This method will change the widget's size in the browser
+     * only if {@link #getHeightMode()} returns {@link HeightMode#CSS}.
+     * 
+     * @see #setHeightMode(HeightMode)
+     */
+    @Override
+    public void setHeight(float height, Unit unit) {
+        super.setHeight(height, unit);
+    }
+
+    /**
+     * Defines the mode in which the Grid widget's height is calculated.
+     * <p>
+     * If {@link HeightMode#CSS} is given, Grid will respect the values given
+     * via a {@code setHeight}-method, and behave as a traditional Component.
+     * <p>
+     * If {@link HeightMode#ROW} is given, Grid will make sure that the body
+     * will display as many rows as {@link #getHeightByRows()} defines.
+     * <em>Note:</em> If headers/footers are inserted or removed, the widget
+     * will resize itself to still display the required amount of rows in its
+     * body. It also takes the horizontal scrollbar into account.
+     * 
+     * @param heightMode
+     *            the mode in to which Grid should be set
+     */
+    public void setHeightMode(HeightMode heightMode) {
+        /*
+         * This method is a workaround for the fact that Vaadin re-applies
+         * widget dimensions (height/width) on each state change event. The
+         * original design was to have setHeight an setHeightByRow be equals,
+         * and whichever was called the latest was considered in effect.
+         * 
+         * But, because of Vaadin always calling setHeight on the widget, this
+         * approach doesn't work.
+         */
+
+        getState().heightMode = heightMode;
+    }
+
+    /**
+     * Returns the current {@link HeightMode} the Grid is in.
+     * <p>
+     * Defaults to {@link HeightMode#CSS}.
+     * 
+     * @return the current HeightMode
+     */
+    public HeightMode getHeightMode() {
+        return getState(false).heightMode;
     }
 }

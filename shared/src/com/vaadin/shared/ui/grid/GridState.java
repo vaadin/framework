@@ -28,6 +28,14 @@ import com.vaadin.shared.AbstractComponentState;
  * @author Vaadin Ltd
  */
 public class GridState extends AbstractComponentState {
+
+    /**
+     * The default value for height-by-rows for both GWT widgets
+     * {@link com.vaadin.ui.components.grid Grid} and
+     * {@link com.vaadin.client.ui.grid.Escalator Escalator}
+     */
+    public static final double DEFAULT_HEIGHT_BY_ROWS = 10.0d;
+
     {
         // FIXME Grid currently does not support undefined size
         width = "400px";
@@ -60,5 +68,21 @@ public class GridState extends AbstractComponentState {
      * @see GridColumnState#id
      */
     public String lastFrozenColumnId = null;
+
+    /** The height of the Grid in terms of body rows. */
+    // @DelegateToWidget
+    /*
+     * Annotation doesn't work because of http://dev.vaadin.com/ticket/12900.
+     * Remove manual code from Connector once fixed
+     */
+    public double heightByRows = DEFAULT_HEIGHT_BY_ROWS;
+
+    /** The mode by which Grid defines its height. */
+    // @DelegateToWidget
+    /*
+     * Annotation doesn't work because of http://dev.vaadin.com/ticket/12900.
+     * Remove manual code from Connector once fixed
+     */
+    public HeightMode heightMode = HeightMode.CSS;
 
 }
