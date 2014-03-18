@@ -312,7 +312,7 @@ abstract class ScrollbarBundle {
      *            the length of the scrollbar in pixels
      */
     public final void setOffsetSize(double px) {
-        internalSetOffsetSize(truncate(px));
+        internalSetOffsetSize(Math.max(0, truncate(px)));
         forceScrollbar(showsScrollHandle());
         recalculateMaxScrollPos();
         fireVisibilityChangeIfNeeded();
@@ -360,7 +360,7 @@ abstract class ScrollbarBundle {
              * large numbers (as of today, 25.3.2014). This double-ranged is
              * only facilitating future virtual scrollbars.
              */
-            internalSetScrollPos(toInt32(px));
+            internalSetScrollPos(toInt32(scrollPos));
         }
     }
 
@@ -445,7 +445,7 @@ abstract class ScrollbarBundle {
      *            through
      */
     public final void setScrollSize(double px) {
-        internalSetScrollSize(toInt32(truncate(px)));
+        internalSetScrollSize(toInt32(Math.max(0, truncate(px))));
         forceScrollbar(showsScrollHandle());
         recalculateMaxScrollPos();
         fireVisibilityChangeIfNeeded();
@@ -485,7 +485,7 @@ abstract class ScrollbarBundle {
      */
     public final void setScrollbarThickness(int px) {
         isInvisibleScrollbar = (px == 0);
-        internalSetScrollbarThickness(px != 0 ? px
+        internalSetScrollbarThickness(px != 0 ? Math.max(0, px)
                 : OSX_INVISIBLE_SCROLLBAR_FAKE_SIZE_PX);
     }
 
@@ -571,7 +571,6 @@ abstract class ScrollbarBundle {
             getHandlerManager().fireEvent(event);
         }
     }
-
 
     /**
      * Converts a double into an integer by JavaScript's terms.

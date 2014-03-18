@@ -67,15 +67,18 @@ $border-color: #aaa;
 .#{$primaryStyleName}-row {
 	display: block;
 	
-	.v-ie8 & {
-		/* IE8 doesn't let table rows be longer than body only with display block. Moar hax. */
+	.v-ie8 &, .v-ie9 & {
+		/* 
+		 * Neither IE8 nor IE9 let table rows be longer than tbody, with only 
+		 * "display: block". Moar hax. 
+		 */
 		float: left;
 		clear: left;
 		
 		/* 
-		 * The inline style of margin-top from the <tbody> to offset the header's dimension is, 
-		 * for some strange reason, inherited into each contained <tr>. 
-		 * We need to cancel it: 
+		 * The inline style of margin-top from the <tbody> to offset the 
+		 * header's dimension is, for some strange reason, inherited into each
+		 * contained <tr>. We need to cancel it:
 		 */
 		margin-top: 0;
 	}
