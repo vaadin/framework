@@ -25,6 +25,10 @@ public class PopupClosingWithEsc extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
+        DateField df0 = new DateField("Minute");
+        df0.setId("minute");
+        df0.setResolution(Resolution.MINUTE);
+
         DateField df1 = new DateField("Day");
         df1.setId("day");
         df1.setResolution(Resolution.DAY);
@@ -40,7 +44,7 @@ public class PopupClosingWithEsc extends AbstractTestUI {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         layout.setSpacing(true);
-        layout.addComponents(df1, df2, df3);
+        layout.addComponents(df0, df1, df2, df3);
         setContent(layout);
     }
 

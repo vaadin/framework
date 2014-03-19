@@ -22,11 +22,25 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class PopupClosingWithEscTest extends MultiBrowserTest {
+
+    @Test
+    public void testPopupClosingFromTimeSelect() {
+        openTestURL();
+
+        openPopup("minute");
+        assertTrue(isPopupVisible());
+
+        // Send ESC to the select element to simulate user being
+        // focused on the select while hitting the ESC key.
+        WebElement select = driver.findElement(By
+                .cssSelector(".v-datefield-popup select:first-child"));
+        select.sendKeys(Keys.ESCAPE);
+        assertFalse(isPopupVisible());
+    }
 
     @Test
     public void testPopupClosingDayResolution() {
@@ -46,11 +60,15 @@ public class PopupClosingWithEscTest extends MultiBrowserTest {
     private void testPopupClosing(String dateFieldId) {
         openTestURL();
 
+        openPopup(dateFieldId);
+        assertTrue(isPopupVisible());
+        sendEscToCalendarPanel();
+        assertFalse(isPopupVisible());
+    }
+
+    private void openPopup(String dateFieldId) {
         driver.findElement(
                 vaadinLocator("PID_S" + dateFieldId + "#popupButton")).click();
-        assertTrue(isPopupVisible());
-        sendEsc();
-        assertFalse(isPopupVisible());
     }
 
     private boolean isPopupVisible() {
@@ -58,10 +76,9 @@ public class PopupClosingWithEscTest extends MultiBrowserTest {
                 .isEmpty());
     }
 
-    private void sendEsc() {
-        WebElement elem = driver.findElement(By
-                .cssSelector(".v-datefield-calendarpanel"));
-        new Actions(driver).sendKeys(elem, Keys.ESCAPE).perform();
+    private void sendEscToCalendarPanel() {
+        driver.findElement(By.cssSelector(".v-datefield-calendarpanel"))
+                .sendKeys(Keys.ESCAPE);
     }
 
 }
