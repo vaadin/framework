@@ -21,7 +21,7 @@ import static com.vaadin.tests.components.table.SelectAllRows.TABLE;
 import static com.vaadin.tests.components.table.SelectAllRows.TOTAL_NUMBER_OF_ROWS;
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -38,11 +38,19 @@ public class SelectAllRowsTest extends MultiBrowserTest {
     private final static String TABLE_ROW = "v-table-row";
 
     @Override
+    protected DesiredCapabilities getDesiredCapabilities() {
+        DesiredCapabilities cap = super.getDesiredCapabilities();
+        cap.setCapability("requireWindowFocus", true);
+        return cap;
+    }
+
+    @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // Pressing Shift modifier key does not work with TestBench and IE
-        // (#8621)
-        return Arrays.asList(Browser.FIREFOX.getDesiredCapabilities(),
-                Browser.CHROME.getDesiredCapabilities());
+        // Pressing Shift modifier key does not work with Firefox
+        ArrayList<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(
+                super.getBrowsersToTest());
+        browsers.remove(Browser.FIREFOX.getDesiredCapabilities());
+        return browsers;
     }
 
     @Test
@@ -66,15 +74,14 @@ public class SelectAllRowsTest extends MultiBrowserTest {
     private void selectAllRowsInTable() {
         clickFirstRow();
         scrollTableToBottom();
-        new Actions(getDriver()).keyDown(Keys.SHIFT).perform();
-        clickLastRow();
-        new Actions(getDriver()).keyUp(Keys.SHIFT).perform();
+        new Actions(getDriver()).keyDown(Keys.SHIFT).click(getLastRow())
+                .keyUp(Keys.SHIFT).perform();
     }
 
-    private void clickLastRow() {
+    private WebElement getLastRow() {
         List<WebElement> rows = allVisibleTableRows();
         WebElement lastRow = rows.get(rows.size() - 1);
-        lastRow.click();
+        return lastRow;
     }
 
     private void clickFirstRow() {
