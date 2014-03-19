@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.vaadin.server.UIProvider;
+import com.vaadin.ui.UI;
 
 /**
  * Marks a UI that should be retained when the user refreshed the browser
@@ -29,6 +30,10 @@ import com.vaadin.server.UIProvider;
  * UI state not captured in the URL or the URI fragment to get discarded. By
  * adding this annotation to a UI class, the framework will instead reuse the
  * current UI instance when a reload is detected.
+ * <p>
+ * Whenever a request is received that reloads a preserved UI, the UI's
+ * {@link UI#reinit(com.vaadin.server.VaadinRequest) reinit} method is invoked
+ * by the framework.
  * <p>
  * By using
  * {@link UIProvider#isPreservedOnRefresh(com.vaadin.server.UICreateEvent)}, the

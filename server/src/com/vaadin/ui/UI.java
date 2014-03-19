@@ -16,6 +16,7 @@
 
 package com.vaadin.ui;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,6 +28,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
@@ -161,7 +163,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         public void resize(int viewWidth, int viewHeight, int windowWidth,
                 int windowHeight) {
             // TODO We're not doing anything with the view dimensions
-            getPage().updateBrowserWindowSize(windowWidth, windowHeight);
+            getPage().updateBrowserWindowSize(windowWidth, windowHeight, true);
         }
 
         @Override
@@ -361,7 +363,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         if (variables.containsKey(UIConstants.LOCATION_VARIABLE)) {
             String location = (String) variables
                     .get(UIConstants.LOCATION_VARIABLE);
-            getPage().updateLocation(location);
+            getPage().updateLocation(location, true);
         }
     }
 
@@ -658,6 +660,57 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      *            the Vaadin request that caused this UI to be created
      */
     protected abstract void init(VaadinRequest request);
+
+    /**
+     * Internal reinitialization method, should not be overridden.
+     * 
+     * @since 7.2
+     * @param request
+     *            the request that caused this UI to be reloaded
+     */
+    public void doReinit(VaadinRequest request) {
+        // This is a horrible hack. We want to have the most recent location and
+        // browser window size available in reinit(), but we want to call
+        // listeners, if any, only after reinit(). So we momentarily assign the
+        // old values back before setting the new values again to ensure the
+        // events are properly fired.
+
+        Page page = getPage();
+
+        URI oldLocation = page.getLocation();
+        int oldWidth = page.getBrowserWindowWidth();
+        int oldHeight = page.getBrowserWindowHeight();
+
+        page.init(request);
+
+        reinit(request);
+
+        URI newLocation = page.getLocation();
+        int newWidth = page.getBrowserWindowWidth();
+        int newHeight = page.getBrowserWindowHeight();
+
+        page.updateLocation(oldLocation.toString(), false);
+        page.updateBrowserWindowSize(oldWidth, oldHeight, false);
+
+        page.updateLocation(newLocation.toString(), true);
+        page.updateBrowserWindowSize(newWidth, newHeight, true);
+    }
+
+    /**
+     * Reinitializes this UI after a browser refresh if the UI is set to be
+     * preserved on refresh, typically using the {@link PreserveOnRefresh}
+     * annotation. This method is intended to be overridden by subclasses if
+     * needed; the default implementation is empty.
+     * <p>
+     * The {@link VaadinRequest} can be used to get information about the
+     * request that caused this UI to be reloaded.
+     * 
+     * @since 7.2
+     * @param request
+     *            the request that caused this UI to be reloaded
+     */
+    protected void reinit(VaadinRequest request) {
+    }
 
     /**
      * Sets the thread local for the current UI. This method is used by the

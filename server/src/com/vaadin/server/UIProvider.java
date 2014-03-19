@@ -129,6 +129,11 @@ public abstract class UIProvider implements Serializable {
      * detect that the application is opened in a browser window where it has
      * previously been open. The framework attempts to discover this by checking
      * the value of window.name in the browser.
+     * <p>
+     * Whenever a preserved UI is reused, its
+     * {@link UI#reinit(com.vaadin.server.VaadinRequest) reinit} method is
+     * invoked by the framework first.
+     * 
      * 
      * @param event
      *            the UI create event with information about the UI and the

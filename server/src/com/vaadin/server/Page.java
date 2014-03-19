@@ -32,6 +32,7 @@ import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.PageState;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState;
+import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
@@ -635,6 +636,9 @@ public class Page implements Serializable {
     }
 
     public void init(VaadinRequest request) {
+        // NOTE: UI.reinit makes assumptions about the semantics of this method.
+        // It should be kept in sync if this method is changed.
+
         // Extract special parameter sent by vaadinBootstrap.js
         String location = request.getParameter("v-loc");
         String clientWidth = request.getParameter("v-cw");
@@ -676,28 +680,51 @@ public class Page implements Serializable {
     }
 
     /**
-     * Updates the internal state with the given values. Does not resize the
-     * Page or browser window.
+     * For internal use only. Updates the internal state with the given values.
+     * Does not resize the Page or browser window.
+     *
+     * @deprecated As of 7.2, use
+     *             {@link #updateBrowserWindowSize(int, int, boolean)} instead.
+     *
+     * @param width
+     *            the new browser window width
+     * @param height
+     *            the new browse window height
+     */
+    @Deprecated
+    public void updateBrowserWindowSize(int width, int height) {
+        updateBrowserWindowSize(width, height, true);
+    }
+
+    /**
+     * For internal use only. Updates the internal state with the given values.
+     * Does not resize the Page or browser window.
+     * 
+     * @since 7.2
      * 
      * @param width
-     *            The new width
+     *            the new browser window width
      * @param height
-     *            The new height
+     *            the new browser window height
+     * @param fireEvents
+     *            whether to fire {@link BrowserWindowResizeEvent} if the size
+     *            changes
      */
-    public void updateBrowserWindowSize(int width, int height) {
-        boolean fireEvent = false;
+    public void updateBrowserWindowSize(int width, int height,
+            boolean fireEvents) {
+        boolean sizeChanged = false;
 
         if (width != browserWindowWidth) {
             browserWindowWidth = width;
-            fireEvent = true;
+            sizeChanged = true;
         }
 
         if (height != browserWindowHeight) {
             browserWindowHeight = height;
-            fireEvent = true;
+            sizeChanged = true;
         }
 
-        if (fireEvent) {
+        if (fireEvents && sizeChanged) {
             fireEvent(new BrowserWindowResizeEvent(this, browserWindowWidth,
                     browserWindowHeight));
         }
@@ -917,14 +944,37 @@ public class Page implements Serializable {
     /**
      * For internal use only. Used to update the server-side location when the
      * client-side location changes.
+     * 
+     * @deprecated As of 7.2, use {@link #updateLocation(String, boolean)}
+     *             instead.
+     * 
+     * @param location
+     *            the new location URI
      */
+    @Deprecated
     public void updateLocation(String location) {
+        updateLocation(location, true);
+    }
+
+    /**
+     * For internal use only. Used to update the server-side location when the
+     * client-side location changes.
+     * 
+     * @since 7.2
+     * 
+     * @param location
+     *            the new location URI
+     * @param fireEvents
+     *            whether to fire {@link UriFragmentChangedEvent} if the URI
+     *            fragment changes
+     */
+    public void updateLocation(String location, boolean fireEvents) {
         try {
             String oldUriFragment = this.location.getFragment();
             this.location = new URI(location);
             String newUriFragment = this.location.getFragment();
-            if (newUriFragment == null ? oldUriFragment != null
-                    : !newUriFragment.equals(oldUriFragment)) {
+            if (fireEvents
+                    && !SharedUtil.equals(oldUriFragment, newUriFragment)) {
                 fireEvent(new UriFragmentChangedEvent(this, newUriFragment));
             }
         } catch (URISyntaxException e) {
