@@ -5107,7 +5107,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 }
             }
             if (relIx >= 0) {
-                return this.firstRendered + relIx;
+                return firstRendered + relIx;
             }
             return -1;
         }
@@ -6925,6 +6925,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 .getStringAttribute("caption") : "";
         if (uidl.hasAttribute("icon")) {
             Icon icon = client.getIcon(uidl.getStringAttribute("icon"));
+            icon.setAlternateText("icon");
             s = icon.getElement().getString() + s;
         }
         return s;
