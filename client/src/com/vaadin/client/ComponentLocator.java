@@ -22,11 +22,13 @@ package com.vaadin.client;
  * @since 5.4
  * @deprecated Moved to com.vaadin.client.componentlocator.ComponentLocator
  */
-public class ComponentLocator extends com.vaadin.client.componentlocator.ComponentLocator {
+public class ComponentLocator extends
+        com.vaadin.client.componentlocator.ComponentLocator {
     /**
      * Construct a ComponentLocator for the given ApplicationConnection.
      *
-     * @param client ApplicationConnection instance for the application.
+     * @param client
+     *            ApplicationConnection instance for the application.
      */
     public ComponentLocator(ApplicationConnection client) {
         super(client);

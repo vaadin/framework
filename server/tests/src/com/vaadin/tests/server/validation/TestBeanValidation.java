@@ -84,6 +84,7 @@ public class TestBeanValidation {
 
         Assert.assertEquals(2, causes.length);
     }
+
     public void testBeanValidationNotAddedTwice() {
         // See ticket #11045
         BeanFieldGroup<BeanToValidate> fieldGroup = new BeanFieldGroup<BeanToValidate>(

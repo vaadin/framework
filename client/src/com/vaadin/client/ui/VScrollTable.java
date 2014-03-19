@@ -7828,10 +7828,16 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     private static final String SUBPART_FOOTER = "footer";
     private static final String SUBPART_ROW = "row";
     private static final String SUBPART_COL = "col";
-    /** Matches header[ix] - used for extracting the index of the targeted header cell */
+    /**
+     * Matches header[ix] - used for extracting the index of the targeted header
+     * cell
+     */
     private static final RegExp SUBPART_HEADER_REGEXP = RegExp
             .compile(SUBPART_HEADER + "\\[(\\d+)\\]");
-    /** Matches footer[ix] - used for extracting the index of the targeted footer cell */
+    /**
+     * Matches footer[ix] - used for extracting the index of the targeted footer
+     * cell
+     */
     private static final RegExp SUBPART_FOOTER_REGEXP = RegExp
             .compile(SUBPART_FOOTER + "\\[(\\d+)\\]");
     /** Matches row[ix] - used for extracting the index of the targeted row */
@@ -7839,7 +7845,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             + "\\[(\\d+)]");
     /** Matches col[ix] - used for extracting the index of the targeted column */
     private static final RegExp SUBPART_ROW_COL_REGEXP = RegExp
-            .compile(SUBPART_ROW + "\\[(\\d+)\\]/" + SUBPART_COL + "\\[(\\d+)\\]");
+            .compile(SUBPART_ROW + "\\[(\\d+)\\]/" + SUBPART_COL
+                    + "\\[(\\d+)\\]");
 
     @Override
     public Element getSubPartElement(String subPart) {

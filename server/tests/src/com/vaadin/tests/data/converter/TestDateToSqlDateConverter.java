@@ -19,7 +19,7 @@ public class TestDateToSqlDateConverter extends TestCase {
     public void testValueConversion() {
         Date testDate = new Date(100, 0, 1);
         long time = testDate.getTime();
-        assertEquals(testDate, converter.convertToModel(new java.sql.Date(time),
-                java.sql.Date.class, Locale.ENGLISH));
+        assertEquals(testDate, converter.convertToModel(
+                new java.sql.Date(time), java.sql.Date.class, Locale.ENGLISH));
     }
 }

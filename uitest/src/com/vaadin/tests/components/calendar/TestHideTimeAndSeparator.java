@@ -21,7 +21,8 @@ public class TestHideTimeAndSeparator extends AbstractTestUI {
         private final String caption;
         private final boolean hideTime;
 
-        public GenericEvent(Date start, Date end, String caption, boolean hideTime) {
+        public GenericEvent(Date start, Date end, String caption,
+                boolean hideTime) {
             this.start = start;
             this.end = end;
             this.caption = caption;
@@ -60,10 +61,16 @@ public class TestHideTimeAndSeparator extends AbstractTestUI {
 
     }
 
-    CalendarEvent shortEventHidden = new GenericEvent(makeDate(2013, 1, 2, 8, 0), makeDate(2013, 1, 2, 8, 30), "Short event", true);
-    CalendarEvent longEventHidden = new GenericEvent(makeDate(2013, 1, 2, 10, 0), makeDate(2013, 1, 2, 12, 0), "Long event", true);
-    CalendarEvent shortEvent = new GenericEvent(makeDate(2013, 1, 3, 8, 0), makeDate(2013, 1, 3, 8, 30), "Short event", false);
-    CalendarEvent longEvent = new GenericEvent(makeDate(2013, 1, 3, 10, 0), makeDate(2013, 1, 3, 12, 0), "Long event", false);
+    CalendarEvent shortEventHidden = new GenericEvent(
+            makeDate(2013, 1, 2, 8, 0), makeDate(2013, 1, 2, 8, 30),
+            "Short event", true);
+    CalendarEvent longEventHidden = new GenericEvent(
+            makeDate(2013, 1, 2, 10, 0), makeDate(2013, 1, 2, 12, 0),
+            "Long event", true);
+    CalendarEvent shortEvent = new GenericEvent(makeDate(2013, 1, 3, 8, 0),
+            makeDate(2013, 1, 3, 8, 30), "Short event", false);
+    CalendarEvent longEvent = new GenericEvent(makeDate(2013, 1, 3, 10, 0),
+            makeDate(2013, 1, 3, 12, 0), "Long event", false);
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -100,6 +107,7 @@ public class TestHideTimeAndSeparator extends AbstractTestUI {
         juc.set(year, month, day, hour, minute);
         return juc.getTime();
     }
+
     private Date makeDate(int year, int month, int day) {
         java.util.Calendar juc = java.util.Calendar.getInstance();
         juc.set(year, month, day);

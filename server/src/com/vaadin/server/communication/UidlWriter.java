@@ -99,8 +99,8 @@ public class UidlWriter implements Serializable {
 
         uiConnectorTracker.setWritingResponse(true);
         try {
-            writer.write("\"" + ApplicationConstants.SERVER_SYNC_ID
-                    + "\": " + uiConnectorTracker.getCurrentSyncId() + ", ");
+            writer.write("\"" + ApplicationConstants.SERVER_SYNC_ID + "\": "
+                    + uiConnectorTracker.getCurrentSyncId() + ", ");
 
             writer.write("\"changes\" : ");
 
