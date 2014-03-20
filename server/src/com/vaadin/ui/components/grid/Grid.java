@@ -16,6 +16,7 @@
 
 package com.vaadin.ui.components.grid;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -46,9 +47,9 @@ import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.ui.grid.ScrollDestination;
-import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
@@ -86,7 +87,7 @@ public class Grid extends AbstractComponent {
      * Component hierarchy.
      * </ul>
      */
-    private final class ActiveRowHandler {
+    private final class ActiveRowHandler implements Serializable {
         /**
          * A map from itemId to the value change listener used for all of its
          * properties

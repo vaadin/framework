@@ -16,6 +16,8 @@
 
 package com.vaadin.shared.ui.grid;
 
+import java.io.Serializable;
+
 /**
  * An immutable representation of a range, marked by start and end points.
  * <p>
@@ -28,7 +30,7 @@ package com.vaadin.shared.ui.grid;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public final class Range {
+public final class Range implements Serializable {
     private final int start;
     private final int end;
 

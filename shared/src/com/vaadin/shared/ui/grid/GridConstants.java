@@ -15,6 +15,8 @@
  */
 package com.vaadin.shared.ui.grid;
 
+import java.io.Serializable;
+
 /**
  * Container class for common constants and default values used by the Grid
  * component.
@@ -22,7 +24,7 @@ package com.vaadin.shared.ui.grid;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public final class GridConstants {
+public final class GridConstants implements Serializable {
 
     /**
      * Default padding in pixels when scrolling programmatically, without an
