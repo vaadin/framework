@@ -125,7 +125,8 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                         || nwInterface.isVirtual()) {
                     continue;
                 }
-                Enumeration<InetAddress> addresses = nwInterface.getInetAddresses();
+                Enumeration<InetAddress> addresses = nwInterface
+                        .getInetAddresses();
                 while (addresses.hasMoreElements()) {
                     InetAddress address = addresses.nextElement();
                     if (address.isLoopbackAddress()) {

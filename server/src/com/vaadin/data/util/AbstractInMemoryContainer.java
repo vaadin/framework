@@ -148,8 +148,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         }
     }
 
-    private static abstract class BaseItemAddOrRemoveEvent extends
-            EventObject implements Serializable {
+    private static abstract class BaseItemAddOrRemoveEvent extends EventObject
+            implements Serializable {
         protected Object itemId;
         protected int index;
         protected int count;
@@ -188,9 +188,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * of added items.
      * </p>
      */
-    protected static class BaseItemAddEvent extends
-            BaseItemAddOrRemoveEvent implements
-            Container.Indexed.ItemAddEvent {
+    protected static class BaseItemAddEvent extends BaseItemAddOrRemoveEvent
+            implements Container.Indexed.ItemAddEvent {
 
         public BaseItemAddEvent(Container source, Object itemId, int index,
                 int count) {
@@ -212,12 +211,11 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * number of removed items.
      * </p>
      */
-    protected static class BaseItemRemoveEvent extends
-            BaseItemAddOrRemoveEvent implements
-            Container.Indexed.ItemRemoveEvent {
+    protected static class BaseItemRemoveEvent extends BaseItemAddOrRemoveEvent
+            implements Container.Indexed.ItemRemoveEvent {
 
-        public BaseItemRemoveEvent(Container source, Object itemId,
-                int index, int count) {
+        public BaseItemRemoveEvent(Container source, Object itemId, int index,
+                int count) {
             super(source, itemId, index, count);
         }
 
@@ -1003,8 +1001,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      */
     protected void fireItemsAdded(int firstPosition, ITEMIDTYPE firstItemId,
             int numberOfItems) {
-        BaseItemAddEvent addEvent = new BaseItemAddEvent(this,
-                firstItemId, firstPosition, numberOfItems);
+        BaseItemAddEvent addEvent = new BaseItemAddEvent(this, firstItemId,
+                firstPosition, numberOfItems);
         fireItemSetChange(addEvent);
     }
 

@@ -24,10 +24,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.tests.tb3.AbstractTB3Test.RunLocally;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-@RunLocally
 public class SaneErrorsTest extends MultiBrowserTest {
 
     /*

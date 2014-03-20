@@ -81,7 +81,8 @@ public class MenuBarConnector extends AbstractComponentConnector implements
                         + Util.escapeAttribute(client
                                 .translateVaadinUri(moreItemUIDL
                                         .getStringAttribute("icon")))
-                        + "\" class=\"" + ImageIcon.CLASSNAME + "\" alt=\"\" />");
+                        + "\" class=\"" + ImageIcon.CLASSNAME
+                        + "\" alt=\"\" />");
             }
 
             String moreItemText = moreItemUIDL.getStringAttribute("text");
