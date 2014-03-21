@@ -152,8 +152,8 @@ abstract class JsniWorkaround {
      * to Java code.
      * 
      * @see #createScrollListenerFunction(Escalator)
-     * @see Escalator#onScroll(double,double)
-     * @see Escalator.Scroller#onScroll(double, double)
+     * @see Escalator#onScroll()
+     * @see Escalator.Scroller#onScroll()
      */
     protected final JavaScriptObject scrollListenerFunction;
 
@@ -162,8 +162,8 @@ abstract class JsniWorkaround {
      * it on to Java code.
      * 
      * @see #createMousewheelListenerFunction(Escalator)
-     * @see Escalator#onScroll(double,double)
-     * @see Escalator.Scroller#onScroll(double, double)
+     * @see Escalator#onScroll()
+     * @see Escalator.Scroller#onScroll()
      */
     protected final JavaScriptObject mousewheelListenerFunction;
 
@@ -207,7 +207,7 @@ abstract class JsniWorkaround {
      * 
      * @param esc
      *            a reference to the current instance of {@link Escalator}
-     * @see Escalator#onScroll(double,double)
+     * @see Escalator#onScroll()
      */
     protected abstract JavaScriptObject createScrollListenerFunction(
             Escalator esc);
@@ -218,7 +218,7 @@ abstract class JsniWorkaround {
      * 
      * @param esc
      *            a reference to the current instance of {@link Escalator}
-     * @see Escalator#onScroll(double,double)
+     * @see Escalator#onScroll()
      */
     protected abstract JavaScriptObject createMousewheelListenerFunction(
             Escalator esc);
@@ -763,13 +763,6 @@ public class Escalator extends Widget {
 
         /**
          * Logical scrolling event handler for the entire widget.
-         * 
-         * @param scrollLeft
-         *            the current number of pixels that the user has scrolled
-         *            from left
-         * @param scrollTop
-         *            the current number of pixels that the user has scrolled
-         *            from the top
          */
         public void onScroll() {
             if (internalScrollEventCalls > 0) {
@@ -1074,10 +1067,10 @@ public class Escalator extends Widget {
          * Usually {@code "th"} or {@code "td"}.
          * <p>
          * <em>Note:</em> To actually <em>create</em> such an element, use
-         * {@link #createCellElement()} instead.
+         * {@link #createCellElement(int, int)} instead.
          * 
          * @return the tag name for the element to represent cells as
-         * @see #createCellElement()
+         * @see #createCellElement(int, int)
          */
         protected abstract String getCellElementTagName();
 
@@ -2302,10 +2295,10 @@ public class Escalator extends Widget {
          * Adjust the scroll position without having the scroll handler have any
          * side-effects.
          * <p>
-         * <em>Note:</em> {@link Scroller#onScroll(double, double)}
-         * <em>will</em> be triggered, but it will not do anything, with the
-         * help of {@link Escalator#internalScrollEventCalls}.
-         * 
+         * <em>Note:</em> {@link Scroller#onScroll()} <em>will</em> be
+         * triggered, but it will not do anything, with the help of {@link
+         * Escalator#internalScrollEventCalls}.
+         *
          * @param yDelta
          *            the delta of pixels to scrolls. A positive value moves the
          *            viewport downwards, while a negative value moves the
@@ -3912,14 +3905,14 @@ public class Escalator extends Widget {
     }
 
     /**
-     * A routing method for {@link Scroller#onScroll(double, double)}.
+     * A routing method for {@link Scroller#onScroll()}.
      * <p>
      * This is a workaround for GWT and JSNI unable to properly handle inner
      * classes, so instead we call the outer class' method, which calls the
      * inner class' respective method.
      * <p>
      * Ideally, this method would not exist, and
-     * {@link Scroller#onScroll(double, double)} would be called directly.
+     * {@link Scroller#onScroll()} would be called directly.
      */
     private void onScroll() {
         scroller.onScroll();
@@ -4111,10 +4104,10 @@ public class Escalator extends Widget {
     }
 
     /**
-     * Gets the amount of rows in Escalator's body that are shown, while
-     * {@link #getHeightMode()} is {@link HeightMode#ROW}.
+     * Gets the amount of rows in Escalator's body that are shown, while  {@link
+     * #getHeightMode()} is {@link HeightMode#ROW}.
      * <p>
-     * By default, it is {@value #DEFAULT_HEIGHT_BY_ROWS}.
+     * By default, it is {@value GridState#DEFAULT_HEIGHT_BY_ROWS}.
      * 
      * @return the amount of rows that are being shown in Escalator's body
      * @see #setHeightByRows(double)
@@ -4181,7 +4174,7 @@ public class Escalator extends Widget {
                 setHeightByRows(heightByRows);
                 break;
             default:
-                throw new IllegalStateException("Unimplemented feaure "
+                throw new IllegalStateException("Unimplemented feature "
                         + "- unknown HeightMode: " + this.heightMode);
             }
         }

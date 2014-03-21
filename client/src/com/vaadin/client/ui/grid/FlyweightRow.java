@@ -185,7 +185,7 @@ class FlyweightRow implements Row {
      * @return a list of {@link FlyweightCell FlyweightCells}. They are
      *         generified into {@link Cell Cells}, because Java's generics
      *         system isn't expressive enough.
-     * @see #setup(Element, int)
+     * @see #setup(Element, int, int[])
      * @see #teardown()
      */
     Iterable<Cell> getCells() {
