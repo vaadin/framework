@@ -46,6 +46,7 @@ public abstract class Action implements Command {
         // right now because Actions are recreated every time they are needed
         Icon icon = owner.getClient().getIcon(getIconUrl());
         if (icon != null) {
+            icon.setAlternateText("icon");
             sb.append(icon.getElement().getString());
         }
         sb.append(getCaption());
