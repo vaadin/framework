@@ -29,6 +29,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.GenericPortlet;
+import javax.portlet.PortalContext;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
@@ -51,61 +52,83 @@ import com.vaadin.util.CurrentInstance;
  * Portlet 2.0 base class. This replaces the servlet in servlet/portlet 1.0
  * deployments and handles various portlet requests from the browser.
  * 
- * TODO Document me!
- * 
- * @author peholmst
+ * @author Vaadin Ltd
  */
 public class VaadinPortlet extends GenericPortlet implements Constants,
         Serializable {
 
     /**
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
+     * Base class for portlet requests that need access to HTTP servlet
+     * requests.
      */
-    @Deprecated
-    public static final String RESOURCE_URL_ID = "APP";
-
-    public static class VaadinHttpAndPortletRequest extends
+    public static abstract class VaadinHttpAndPortletRequest extends
             VaadinPortletRequest {
 
+        /**
+         * Constructs a new {@link VaadinHttpAndPortletRequest}.
+         * 
+         * @since 7.2
+         * @param request
+         *            {@link PortletRequest} to be wrapped
+         * @param vaadinService
+         *            {@link VaadinPortletService} associated with this request
+         */
         public VaadinHttpAndPortletRequest(PortletRequest request,
-                HttpServletRequest originalRequest,
                 VaadinPortletService vaadinService) {
             super(request, vaadinService);
-            this.originalRequest = originalRequest;
         }
 
-        private final HttpServletRequest originalRequest;
+        private HttpServletRequest originalRequest;
+
+        /**
+         * Returns the original HTTP servlet request for this portlet request.
+         * 
+         * @since 7.2
+         * @param request
+         *            {@link PortletRequest} used to
+         * @return the original HTTP servlet request
+         */
+        protected abstract HttpServletRequest getServletRequest(
+                PortletRequest request);
+
+        private HttpServletRequest getOriginalRequest() {
+            if (originalRequest == null) {
+                PortletRequest request = getRequest();
+                originalRequest = getServletRequest(request);
+            }
+
+            return originalRequest;
+        }
 
         @Override
         public String getParameter(String name) {
             String parameter = super.getParameter(name);
             if (parameter == null) {
-                parameter = originalRequest.getParameter(name);
+                parameter = getOriginalRequest().getParameter(name);
             }
             return parameter;
         }
 
         @Override
         public String getRemoteAddr() {
-            return originalRequest.getRemoteAddr();
+            return getOriginalRequest().getRemoteAddr();
         }
 
         @Override
         public String getRemoteHost() {
-            return originalRequest.getRemoteHost();
+            return getOriginalRequest().getRemoteHost();
         }
 
         @Override
         public int getRemotePort() {
-            return originalRequest.getRemotePort();
+            return getOriginalRequest().getRemotePort();
         }
 
         @Override
         public String getHeader(String name) {
             String header = super.getHeader(name);
             if (header == null) {
-                header = originalRequest.getHeader(name);
+                header = getOriginalRequest().getHeader(name);
             }
             return header;
         }
@@ -114,7 +137,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
         public Enumeration<String> getHeaderNames() {
             Enumeration<String> headerNames = super.getHeaderNames();
             if (headerNames == null) {
-                headerNames = originalRequest.getHeaderNames();
+                headerNames = getOriginalRequest().getHeaderNames();
             }
             return headerNames;
         }
@@ -123,7 +146,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
         public Enumeration<String> getHeaders(String name) {
             Enumeration<String> headers = super.getHeaders(name);
             if (headers == null) {
-                headers = originalRequest.getHeaders(name);
+                headers = getOriginalRequest().getHeaders(name);
             }
             return headers;
         }
@@ -132,64 +155,21 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
         public Map<String, String[]> getParameterMap() {
             Map<String, String[]> parameterMap = super.getParameterMap();
             if (parameterMap == null) {
-                parameterMap = originalRequest.getParameterMap();
+                parameterMap = getOriginalRequest().getParameterMap();
             }
             return parameterMap;
         }
     }
 
-    public static class VaadinGateinRequest extends VaadinHttpAndPortletRequest {
-        public VaadinGateinRequest(PortletRequest request,
-                VaadinPortletService vaadinService) {
-            super(request, getOriginalRequest(request), vaadinService);
-        }
-
-        private static final HttpServletRequest getOriginalRequest(
-                PortletRequest request) {
-            try {
-                Method getRealReq = request.getClass().getMethod(
-                        "getRealRequest");
-                HttpServletRequestWrapper origRequest = (HttpServletRequestWrapper) getRealReq
-                        .invoke(request);
-                return origRequest;
-            } catch (Exception e) {
-                throw new IllegalStateException("GateIn request not detected",
-                        e);
-            }
-        }
-    }
-
-    // Intentionally internal, will be refactored out in 7.2.
-    static class WebSpherePortalRequest extends VaadinHttpAndPortletRequest {
-
-        public WebSpherePortalRequest(PortletRequest request,
-                VaadinPortletService vaadinService) {
-            super(request, getServletRequest(request), vaadinService);
-        }
-
-        private static HttpServletRequest getServletRequest(
-                PortletRequest request) {
-            try {
-                Class<?> portletUtils = Class
-                        .forName("com.ibm.ws.portletcontainer.portlet.PortletUtils");
-                Method getHttpServletRequest = portletUtils.getMethod(
-                        "getHttpServletRequest", PortletRequest.class);
-
-                return (HttpServletRequest) getHttpServletRequest.invoke(null,
-                        request);
-            } catch (Exception e) {
-                throw new IllegalStateException(
-                        "WebSphere Portal request not detected.");
-            }
-        }
-    }
-
+    /**
+     * Portlet request for Liferay.
+     */
     public static class VaadinLiferayRequest extends
             VaadinHttpAndPortletRequest {
 
         public VaadinLiferayRequest(PortletRequest request,
                 VaadinPortletService vaadinService) {
-            super(request, getOriginalRequest(request), vaadinService);
+            super(request, vaadinService);
         }
 
         @Override
@@ -219,7 +199,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
          * @throws Exception
          * @return return value of the invoked method
          */
-        private static Object invokeStaticLiferayMethod(String className,
+        private Object invokeStaticLiferayMethod(String className,
                 String methodName, Object argument, String parameterClassName)
                 throws Exception {
             Thread currentThread = Thread.currentThread();
@@ -251,8 +231,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
             }
         }
 
-        private static HttpServletRequest getOriginalRequest(
-                PortletRequest request) {
+        @Override
+        protected HttpServletRequest getServletRequest(PortletRequest request) {
             try {
                 // httpRequest = PortalUtil.getHttpServletRequest(request);
                 HttpServletRequest httpRequest = (HttpServletRequest) invokeStaticLiferayMethod(
@@ -272,8 +252,66 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
                         e);
             }
         }
-
     }
+
+    /**
+     * Portlet request for GateIn.
+     */
+    public static class VaadinGateInRequest extends VaadinHttpAndPortletRequest {
+        public VaadinGateInRequest(PortletRequest request,
+                VaadinPortletService vaadinService) {
+            super(request, vaadinService);
+        }
+
+        @Override
+        protected HttpServletRequest getServletRequest(PortletRequest request) {
+            try {
+                Method getRealReq = request.getClass().getMethod(
+                        "getRealRequest");
+                HttpServletRequestWrapper origRequest = (HttpServletRequestWrapper) getRealReq
+                        .invoke(request);
+                return origRequest;
+            } catch (Exception e) {
+                throw new IllegalStateException("GateIn request not detected",
+                        e);
+            }
+        }
+    }
+
+    /**
+     * Portlet request for WebSphere Portal.
+     */
+    public static class VaadinWebSpherePortalRequest extends
+            VaadinHttpAndPortletRequest {
+
+        public VaadinWebSpherePortalRequest(PortletRequest request,
+                VaadinPortletService vaadinService) {
+            super(request, vaadinService);
+        }
+
+        @Override
+        protected HttpServletRequest getServletRequest(PortletRequest request) {
+            try {
+                Class<?> portletUtils = Class
+                        .forName("com.ibm.ws.portletcontainer.portlet.PortletUtils");
+                Method getHttpServletRequest = portletUtils.getMethod(
+                        "getHttpServletRequest", PortletRequest.class);
+
+                return (HttpServletRequest) getHttpServletRequest.invoke(null,
+                        request);
+            } catch (Exception e) {
+                throw new IllegalStateException(
+                        "WebSphere Portal request not detected.");
+            }
+        }
+    }
+
+    /**
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
+     */
+    @Deprecated
+    public static final String RESOURCE_URL_ID = "APP";
 
     /**
      * This portlet parameter is used to add styles to the main element. E.g
@@ -443,50 +481,26 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
      * 
      * @param request
      *            The original PortletRequest
-     * @return A wrapped version of the PorletRequest
+     * @return A wrapped version of the PortletRequest
      */
     protected VaadinPortletRequest createVaadinRequest(PortletRequest request) {
-        if (isLiferay(request)) {
-            return new VaadinLiferayRequest(request, getService());
-        } else if (isGateIn(request)) {
-            return new VaadinGateinRequest(request, getService());
-        } else if (isWebSphere(request)) {
-            return new WebSpherePortalRequest(request, getService());
-        } else {
+        PortalContext portalContext = request.getPortalContext();
+        String portalInfo = portalContext.getPortalInfo().toLowerCase().trim();
+        VaadinPortletService service = getService();
 
-            return new VaadinPortletRequest(request, getService());
+        if (portalInfo.contains("gatein")) {
+            return new VaadinGateInRequest(request, service);
         }
-    }
 
-    /**
-     * Returns true if the portlet request is from Liferay.
-     * 
-     * @param request
-     * @return True if Liferay, false otherwise
-     */
-    private static boolean isLiferay(PortletRequest request) {
-        String portalInfo = request.getPortalContext().getPortalInfo()
-                .toLowerCase();
-        return portalInfo.contains("liferay");
-    }
+        if (portalInfo.contains("liferay")) {
+            return new VaadinLiferayRequest(request, service);
+        }
 
-    /**
-     * Returns true if the portlet request if from GateIn
-     * 
-     * @param request
-     * @return True if GateIn, false otherwise
-     */
-    private static boolean isGateIn(PortletRequest request) {
-        String portalInfo = request.getPortalContext().getPortalInfo()
-                .toLowerCase();
-        return portalInfo.contains("gatein");
-    }
+        if (portalInfo.contains("websphere portal")) {
+            return new VaadinWebSpherePortalRequest(request, service);
+        }
 
-    private static boolean isWebSphere(PortletRequest request) {
-        String portalInfo = request.getPortalContext().getPortalInfo()
-                .toLowerCase();
-
-        return portalInfo.contains("websphere portal");
+        return new VaadinPortletRequest(request, service);
     }
 
     private VaadinPortletResponse createVaadinResponse(PortletResponse response) {
