@@ -15,15 +15,8 @@
  */
 package com.vaadin.tests.integration;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized.Parameters;
-import org.openqa.selenium.remote.DesiredCapabilities;
-
-import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 import com.vaadin.tests.tb3.PrivateTB3Configuration;
+import com.vaadin.tests.tb3.TestNameSuffix;
 
 /**
  * Base class for integration tests. Integration tests use the
@@ -32,7 +25,7 @@ import com.vaadin.tests.tb3.PrivateTB3Configuration;
  * 
  * @author Vaadin Ltd
  */
-@RunWith(IntegrationTestRunner.class)
+@TestNameSuffix(property = "server-name")
 public abstract class AbstractIntegrationTest extends PrivateTB3Configuration {
     @Override
     protected String getBaseURL() {
@@ -41,13 +34,7 @@ public abstract class AbstractIntegrationTest extends PrivateTB3Configuration {
             throw new RuntimeException(
                     "Deployment url must be given as deployment.url");
         }
-
         return deploymentUrl;
-    }
-
-    @Parameters
-    public static Collection<DesiredCapabilities> getBrowsersForTest() {
-        return Collections.singleton(Browser.FIREFOX.getDesiredCapabilities());
     }
 
 }
