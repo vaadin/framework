@@ -1189,6 +1189,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         } else if (keycode == getCloseKey()) {
             // TODO fire listener, on users responsibility??
 
+            onCancel();
             return true;
         }
         return false;
@@ -1240,6 +1241,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
             return true;
 
         } else if (keycode == getCloseKey() || keycode == KeyCodes.KEY_TAB) {
+            onCancel();
 
             // TODO fire close event
 
