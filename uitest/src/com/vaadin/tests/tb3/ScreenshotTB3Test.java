@@ -61,7 +61,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
             String className = testClass.getSimpleName();
             screenshotBaseName = className + "-" + testMethod;
-        };
+        }
     };
 
     /**

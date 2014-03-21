@@ -56,12 +56,12 @@ public class RemoveListenersOnDetach {
         @Override
         public com.vaadin.ui.UI getUI() {
             return uI;
-        };
+        }
 
         @Override
         public VaadinSession getSession() {
             return application;
-        };
+        }
     };
 
     Property<String> property = new AbstractProperty<String>() {

@@ -67,7 +67,7 @@ public class TestAbsoluteLayout extends TestBase {
             }
             return instance;
         }
-    };
+    }
 
     @Override
     protected String getDescription() {

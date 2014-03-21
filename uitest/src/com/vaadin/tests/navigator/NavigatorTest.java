@@ -113,7 +113,7 @@ public class NavigatorTest extends UI {
         @Override
         public void afterViewChange(ViewChangeEvent event) {
         }
-    };
+    }
 
     class NaviButton extends Button {
         public NaviButton(final String path) {

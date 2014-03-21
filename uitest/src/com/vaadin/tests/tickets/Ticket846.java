@@ -40,7 +40,7 @@ public class Ticket846 extends LegacyApplication {
                             com.vaadin.ui.Button.ClickEvent event) {
                         mainWin.showNotification("The field is "
                                 + (tx.isValid() ? "" : "not ") + "valid");
-                    };
+                    }
                 }));
         TextField caption = new TextField("Caption",
                 new MethodProperty<String>(tx, "caption"));

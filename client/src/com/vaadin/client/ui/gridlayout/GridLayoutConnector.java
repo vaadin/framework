@@ -56,7 +56,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         @Override
         protected LayoutClickRpc getLayoutClickRPC() {
             return getRpcProxy(GridLayoutServerRpc.class);
-        };
+        }
 
     };
 

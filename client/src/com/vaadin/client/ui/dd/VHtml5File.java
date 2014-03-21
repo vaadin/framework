@@ -23,7 +23,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class VHtml5File extends JavaScriptObject {
 
     protected VHtml5File() {
-    };
+    }
 
     public native final String getName()
     /*-{

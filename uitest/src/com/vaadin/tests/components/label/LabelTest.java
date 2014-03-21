@@ -101,6 +101,6 @@ public class LabelTest extends AbstractComponentTest<Label> implements
         }
 
         log(event.getClass().getSimpleName() + ", new value: " + value);
-    };
+    }
 
 }

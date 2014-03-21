@@ -256,7 +256,7 @@ public class DevelopmentServerLauncher {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    };
+                    }
 
                 }.start();
 

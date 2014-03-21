@@ -81,4 +81,4 @@ public enum Resolution {
         }
         return resolutions;
     }
-};
+}

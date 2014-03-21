@@ -1031,7 +1031,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public enum Select {
         NONE, FIRST, LAST
-    };
+    }
 
     /** For internal use only. May be removed or replaced in the future. */
     public Select selectPopupItemWhenResponseIsReceived = Select.NONE;
@@ -1636,7 +1636,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             case KeyCodes.KEY_PAGEDOWN:
             case KeyCodes.KEY_PAGEUP:
             case KeyCodes.KEY_ESCAPE:
-                ; // NOP
+                // NOP
                 break;
             default:
                 if (textInputEnabled) {

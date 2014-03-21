@@ -84,7 +84,7 @@ public class TreeTableTest extends Tables<TreeTable> implements
         @Override
         public String toString() {
             return "Even items bold";
-        };
+        }
 
     };
 

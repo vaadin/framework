@@ -78,7 +78,7 @@ public class ConverterFactory extends TestCase {
             @Override
             public VaadinSession getSession() {
                 return appWithCustomIntegerConverter;
-            };
+            }
         };
         tf.setConverter(Integer.class);
         // The application converter always returns 42. Current application is

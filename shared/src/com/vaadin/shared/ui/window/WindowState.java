@@ -28,13 +28,13 @@ public class WindowState extends PanelState {
      */
     public enum WindowRole {
         ALERTDIALOG, DIALOG
-    };
+    }
 
     public boolean modal = false;
     public boolean resizable = true;
     public boolean resizeLazy = false;
     public boolean draggable = true;
-    public boolean centered = false;;
+    public boolean centered = false;
     public int positionX = -1;
     public int positionY = -1;
     public WindowMode windowMode = WindowMode.NORMAL;

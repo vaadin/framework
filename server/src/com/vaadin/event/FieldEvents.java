@@ -325,6 +325,6 @@ public interface FieldEvents {
         public void focus() {
             fireEvent(new FocusEvent(component));
         }
-    };
+    }
 
 }

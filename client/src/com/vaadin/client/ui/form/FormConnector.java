@@ -73,7 +73,7 @@ public class FormConnector extends AbstractComponentContainerConnector
     protected void init() {
         getLayoutManager().addElementResizeListener(
                 getWidget().errorMessage.getElement(), footerResizeListener);
-    };
+    }
 
     @Override
     public void onUnregister() {

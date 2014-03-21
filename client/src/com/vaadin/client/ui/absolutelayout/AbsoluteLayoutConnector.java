@@ -53,7 +53,7 @@ public class AbsoluteLayoutConnector extends
         @Override
         protected LayoutClickRpc getLayoutClickRPC() {
             return getRpcProxy(AbsoluteLayoutServerRpc.class);
-        };
+        }
     };
 
     private StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
@@ -163,7 +163,7 @@ public class AbsoluteLayoutConnector extends
     private void setChildWidgetPosition(ComponentConnector child) {
         getWidget().setWidgetPosition(child.getWidget(),
                 getState().connectorToCssPosition.get(child.getConnectorId()));
-    };
+    }
 
     /*
      * (non-Javadoc)

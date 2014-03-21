@@ -98,7 +98,7 @@ public class ListenerMethod implements EventListener, Serializable {
             throw e;
         }
 
-    };
+    }
 
     /* Special serialization to handle method references */
     private void readObject(java.io.ObjectInputStream in) throws IOException,
@@ -113,7 +113,7 @@ public class ListenerMethod implements EventListener, Serializable {
         } catch (SecurityException e) {
             getLogger().log(Level.SEVERE, "Internal deserialization error", e);
         }
-    };
+    }
 
     private static Method findHighestMethod(Class<?> cls, String method,
             Class<?>[] paramTypes) {

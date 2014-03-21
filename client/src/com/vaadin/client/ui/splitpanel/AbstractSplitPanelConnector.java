@@ -103,12 +103,12 @@ public abstract class AbstractSplitPanelConnector extends
             }
 
             return super.shouldFireEvent(event);
-        };
+        }
 
         @Override
         protected Element getRelativeToElement() {
             return getWidget().splitter;
-        };
+        }
 
         @Override
         protected void fireClick(NativeEvent event,

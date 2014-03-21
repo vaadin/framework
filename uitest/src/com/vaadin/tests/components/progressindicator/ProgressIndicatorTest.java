@@ -49,7 +49,7 @@ public class ProgressIndicatorTest extends AbstractFieldTest<ProgressIndicator> 
         createSetValueAction();
         createPollingIntervalAction();
         createIndeterminateToggle();
-    };
+    }
 
     private void createIndeterminateToggle() {
         createBooleanAction("Indeterminate", CATEGORY_FEATURES, false,

@@ -635,7 +635,7 @@ public class ConnectorTracker implements Serializable {
             stringDiffStates.put(key, diffStates.get(key).toString());
         }
         out.writeObject(stringDiffStates);
-    };
+    }
 
     /* Special serialization to JSONObjects which are not serializable */
     private void readObject(java.io.ObjectInputStream in) throws IOException,

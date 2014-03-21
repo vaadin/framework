@@ -109,5 +109,5 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
                         getState().immediate);
             }
         }
-    };
+    }
 }

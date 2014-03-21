@@ -94,7 +94,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
     @Override
     public boolean delegateCaptionHandling() {
         return false;
-    };
+    }
 
     @Override
     protected void init() {

@@ -82,7 +82,7 @@ public class ListSet<E> extends ArrayList<E> {
         } else {
             return false;
         }
-    };
+    }
 
     /**
      * Works as java.util.ArrayList#add(int, java.lang.Object) but returns

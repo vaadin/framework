@@ -149,7 +149,7 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
     public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
         log(event.getClass().getSimpleName() + ", new value: "
                 + getValue(event.getProperty()));
-    };
+    }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private String getValue(Property property) {

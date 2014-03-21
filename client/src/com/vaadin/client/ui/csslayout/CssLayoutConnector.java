@@ -54,7 +54,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
         @Override
         protected LayoutClickRpc getLayoutClickRPC() {
             return getRpcProxy(CssLayoutServerRpc.class);
-        };
+        }
     };
 
     private final FastStringMap<VCaption> childIdToCaption = FastStringMap

@@ -108,7 +108,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
             out.writeObject(null);
             out.writeObject(null);
         }
-    };
+    }
 
     /* Special serialization to handle method references */
     private void readObject(java.io.ObjectInputStream in) throws IOException,
@@ -142,7 +142,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         } catch (NoSuchMethodException e) {
             getLogger().log(Level.SEVERE, "Internal deserialization error", e);
         }
-    };
+    }
 
     /**
      * <p>

@@ -348,7 +348,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             return startRow.getIndex() + length - 1;
         }
 
-    };
+    }
 
     private final HashSet<SelectionRange> selectedRowRanges = new HashSet<SelectionRange>();
 

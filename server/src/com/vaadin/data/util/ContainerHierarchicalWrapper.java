@@ -95,7 +95,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             }
             return 0;
         }
-    };
+    }
 
     /**
      * Constructs a new hierarchical wrapper for an existing Container. Works

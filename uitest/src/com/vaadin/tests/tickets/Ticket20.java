@@ -76,7 +76,7 @@ public class Ticket20 extends LegacyApplication {
                             com.vaadin.ui.Button.ClickEvent event) {
                         mainWin.showNotification("The field is "
                                 + (tx.isValid() ? "" : "not ") + "valid");
-                    };
+                    }
                 }));
     }
 

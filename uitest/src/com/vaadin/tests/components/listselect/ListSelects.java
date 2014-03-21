@@ -31,7 +31,7 @@ public class ListSelects extends AbstractSelectTestCase<ListSelect> {
         super.createActions();
         createRowsAction(CATEGORY_FEATURES);
         createColsAction(CATEGORY_FEATURES);
-    };
+    }
 
     private void createRowsAction(String category) {
         LinkedHashMap<String, Integer> options = createIntegerOptions(20);

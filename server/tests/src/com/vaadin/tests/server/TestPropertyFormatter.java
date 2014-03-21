@@ -26,7 +26,7 @@ public class TestPropertyFormatter extends TestCase {
         public Object parse(String formattedValue) throws Exception {
             return getExpectedClass().newInstance();
         }
-    };
+    }
 
     @SuppressWarnings("rawtypes")
     private Class expectedClass;

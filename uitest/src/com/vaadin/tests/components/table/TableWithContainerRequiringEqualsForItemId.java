@@ -39,7 +39,7 @@ public class TableWithContainerRequiringEqualsForItemId extends TestBase {
             // instance does not stay the same
             BeanItem<MyEntity> beanItem = getItem(super.getIdByIndex(index));
             return getBeanIdResolver().getIdForBean(beanItem.getBean());
-        };
+        }
 
     }
 

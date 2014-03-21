@@ -51,7 +51,7 @@ public class ExpandingContainer extends AbstractContainer implements
             updateLabel();
         }
         return currentSize;
-    };
+    }
 
     @Override
     public void fireItemSetChange() {

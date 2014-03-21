@@ -37,7 +37,7 @@ public class DateFieldTest<T extends DateField> extends AbstractFieldTest<T> {
         createDateFormatSelectAction(CATEGORY_FEATURES);
         createSetValueAction(CATEGORY_FEATURES);
 
-    };
+    }
 
     private void createSetValueAction(String category) {
         LinkedHashMap<String, Date> options = new LinkedHashMap<String, Date>();

@@ -32,7 +32,7 @@ public class NotificationConfigurationBean implements Serializable {
      */
     public enum Role {
         ALERT, STATUS
-    };
+    }
 
     private String prefix;
     private String postfix;
