@@ -16,7 +16,6 @@
 
 package com.vaadin.tests.minitutorials.v7a2;
 
-import com.google.gwt.user.client.Element;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
@@ -50,7 +49,8 @@ public class MyPickerConnector extends AbstractComponentConnector implements
 
     @Override
     protected void init() {
-        Element button = getWidget().getWidget(1).getElement();
+        com.google.gwt.user.client.Element button = getWidget().getWidget(1)
+                .getElement();
         getLayoutManager().addElementResizeListener(button, listener);
 
         getLayoutManager().registerDependency(this, button);
@@ -58,7 +58,8 @@ public class MyPickerConnector extends AbstractComponentConnector implements
 
     @Override
     public void onUnregister() {
-        Element button = getWidget().getWidget(1).getElement();
+        com.google.gwt.user.client.Element button = getWidget().getWidget(1)
+                .getElement();
         getLayoutManager().removeElementResizeListener(button, listener);
 
         getLayoutManager().unregisterDependency(this, button);
@@ -66,7 +67,8 @@ public class MyPickerConnector extends AbstractComponentConnector implements
 
     @Override
     public void layout() {
-        Element button = getWidget().getWidget(1).getElement();
+        com.google.gwt.user.client.Element button = getWidget().getWidget(1)
+                .getElement();
         int buttonWidth = getLayoutManager().getOuterWidth(button);
         buttonWidth -= getLayoutManager().getMarginRight(button);
         getWidget().adjustButtonSpace(buttonWidth);

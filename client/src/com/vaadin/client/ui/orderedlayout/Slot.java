@@ -22,7 +22,6 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -49,13 +48,13 @@ public final class Slot extends SimplePanel {
 
     public static final String SLOT_CLASSNAME = "v-slot";
 
-    private Element spacer;
-    private Element captionWrap;
-    private Element caption;
-    private Element captionText;
+    private com.google.gwt.user.client.Element spacer;
+    private com.google.gwt.user.client.Element captionWrap;
+    private com.google.gwt.user.client.Element caption;
+    private com.google.gwt.user.client.Element captionText;
     private Icon icon;
-    private Element errorIcon;
-    private Element requiredIcon;
+    private com.google.gwt.user.client.Element errorIcon;
+    private com.google.gwt.user.client.Element requiredIcon;
 
     private ElementResizeListener captionResizeListener;
 
@@ -72,7 +71,7 @@ public final class Slot extends SimplePanel {
 
         @Override
         public void onElementResize(ElementResizeEvent e) {
-            Element caption = getCaptionElement();
+            com.google.gwt.user.client.Element caption = getCaptionElement();
             if (caption != null) {
                 Util.forceIE8Redraw(caption);
             }
@@ -332,7 +331,7 @@ public final class Slot extends SimplePanel {
      * 
      * @return
      */
-    public Element getSpacingElement() {
+    public com.google.gwt.user.client.Element getSpacingElement() {
         return spacer;
     }
 
@@ -465,7 +464,8 @@ public final class Slot extends SimplePanel {
 
         // Caption wrappers
         Widget widget = getWidget();
-        final Element focusedElement = Util.getFocusedElement();
+        final com.google.gwt.user.client.Element focusedElement = Util
+                .getFocusedElement();
         // By default focus will not be lost
         boolean focusLost = false;
         if (captionText != null || icon != null || error != null || required) {
@@ -581,7 +581,8 @@ public final class Slot extends SimplePanel {
 
         if (focusLost) {
             // Find out what element is currently focused.
-            Element currentFocus = Util.getFocusedElement();
+            com.google.gwt.user.client.Element currentFocus = Util
+                    .getFocusedElement();
             if (currentFocus != null
                     && currentFocus.equals(Document.get().getBody())) {
                 // Focus has moved to BodyElement and should be moved back to
@@ -629,7 +630,7 @@ public final class Slot extends SimplePanel {
     /**
      * Get the slots caption element
      */
-    public Element getCaptionElement() {
+    public com.google.gwt.user.client.Element getCaptionElement() {
         return caption;
     }
 
@@ -725,7 +726,7 @@ public final class Slot extends SimplePanel {
      * @see com.google.gwt.user.client.ui.SimplePanel#getContainerElement()
      */
     @Override
-    protected Element getContainerElement() {
+    protected com.google.gwt.user.client.Element getContainerElement() {
         if (captionWrap == null) {
             return getElement();
         } else {

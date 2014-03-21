@@ -18,7 +18,6 @@ package com.vaadin.client;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -37,15 +36,15 @@ public class VCaption extends HTML {
 
     private final ComponentConnector owner;
 
-    private Element errorIndicatorElement;
+    private com.google.gwt.user.client.Element errorIndicatorElement;
 
-    private Element requiredFieldIndicator;
+    private com.google.gwt.user.client.Element requiredFieldIndicator;
 
     private Icon icon;
 
     private String iconAltText = "";
 
-    private Element captionText;
+    private com.google.gwt.user.client.Element captionText;
 
     private final ApplicationConnection client;
 
@@ -412,7 +411,8 @@ public class VCaption extends HTML {
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
-        final Element target = DOM.eventGetTarget(event);
+        final com.google.gwt.user.client.Element target = DOM
+                .eventGetTarget(event);
 
         if (DOM.eventGetType(event) == Event.ONLOAD
                 && icon.getElement() == target) {
@@ -669,20 +669,22 @@ public class VCaption extends HTML {
         return tooltipInfo;
     }
 
-    protected Element getTextElement() {
+    protected com.google.gwt.user.client.Element getTextElement() {
         return captionText;
     }
 
-    public static String getCaptionOwnerPid(Element e) {
+    public static String getCaptionOwnerPid(com.google.gwt.user.client.Element e) {
         return getOwnerPid(e);
     }
 
-    private native static void setOwnerPid(Element el, String pid)
+    private native static void setOwnerPid(
+            com.google.gwt.user.client.Element el, String pid)
     /*-{
         el.vOwnerPid = pid;
     }-*/;
 
-    public native static String getOwnerPid(Element el)
+    public native static String getOwnerPid(
+            com.google.gwt.user.client.Element el)
     /*-{
         return el.vOwnerPid;
     }-*/;

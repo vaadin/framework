@@ -29,7 +29,6 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTML;
@@ -179,7 +178,7 @@ public class VPopupView extends HTML implements Iterable<Widget> {
         super.onDetach();
     }
 
-    private static native void nativeBlur(Element e)
+    private static native void nativeBlur(com.google.gwt.user.client.Element e)
     /*-{
         if(e && e.blur) {
             e.blur();
@@ -204,7 +203,7 @@ public class VPopupView extends HTML implements Iterable<Widget> {
 
         private boolean hasHadMouseOver = false;
         private boolean hideOnMouseOut = true;
-        private final Set<Element> activeChildren = new HashSet<Element>();
+        private final Set<com.google.gwt.user.client.Element> activeChildren = new HashSet<com.google.gwt.user.client.Element>();
 
         private ShortcutActionHandler shortcutActionHandler;
 
@@ -229,7 +228,8 @@ public class VPopupView extends HTML implements Iterable<Widget> {
         // to use ONMOUSEMOVE that doesn't target the popup
         @Override
         public boolean onEventPreview(Event event) {
-            Element target = DOM.eventGetTarget(event);
+            com.google.gwt.user.client.Element target = DOM
+                    .eventGetTarget(event);
             boolean eventTargetsPopup = DOM.isOrHasChild(getElement(), target);
             int type = DOM.eventGetType(event);
 
@@ -305,7 +305,7 @@ public class VPopupView extends HTML implements Iterable<Widget> {
             }
 
             // Notify children that have used the keyboard
-            for (Element e : activeChildren) {
+            for (com.google.gwt.user.client.Element e : activeChildren) {
                 try {
                     nativeBlur(e);
                 } catch (Exception ignored) {
@@ -356,7 +356,7 @@ public class VPopupView extends HTML implements Iterable<Widget> {
         }
 
         @Override
-        public Element getContainerElement() {
+        public com.google.gwt.user.client.Element getContainerElement() {
             return super.getContainerElement();
         }
 

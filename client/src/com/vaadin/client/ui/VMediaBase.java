@@ -21,7 +21,6 @@ import com.google.gwt.dom.client.MediaElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.SourceElement;
 import com.google.gwt.dom.client.Text;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 
 public abstract class VMediaBase extends Widget {
@@ -82,7 +81,8 @@ public abstract class VMediaBase extends Widget {
     }
 
     public void addSource(String sourceUrl, String sourceType) {
-        Element src = Document.get().createElement(SourceElement.TAG).cast();
+        com.google.gwt.user.client.Element src = Document.get()
+                .createElement(SourceElement.TAG).cast();
         src.setAttribute("src", sourceUrl);
         src.setAttribute("type", sourceType);
         media.appendChild(src);

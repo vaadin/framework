@@ -27,7 +27,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -130,7 +129,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /*
      * The shadow element for this overlay.
      */
-    private Element shadow;
+    private com.google.gwt.user.client.Element shadow;
 
     /*
      * The creator of this VOverlay (the widget that made the instance, not the
@@ -482,7 +481,8 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             // Animate the size
             positionAndSize.setAnimationFromCenterProgress(progress);
 
-            Element container = getElement().getParentElement().cast();
+            com.google.gwt.user.client.Element container = getElement()
+                    .getParentElement().cast();
 
             if (isShadowEnabled()) {
                 updateShadowPosition(progress, zIndex, positionAndSize);
@@ -535,8 +535,9 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     }
 
     private void updateShimPosition(PositionAndSize positionAndSize) {
-        updatePositionAndSize((Element) Element.as(getShimElement()),
-                positionAndSize);
+        updatePositionAndSize(
+                (com.google.gwt.user.client.Element) com.google.gwt.user.client.Element
+                        .as(getShimElement()), positionAndSize);
     }
 
     /**
@@ -551,7 +552,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         return info.isIE() && info.isBrowserVersionNewerOrEqual(8, 0);
     }
 
-    private void updatePositionAndSize(Element e,
+    private void updatePositionAndSize(com.google.gwt.user.client.Element e,
             PositionAndSize positionAndSize) {
         e.getStyle().setLeft(positionAndSize.getLeft(), Unit.PX);
         e.getStyle().setTop(positionAndSize.getTop(), Unit.PX);
@@ -666,7 +667,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      *         {@link ApplicationConnection} or another element if the current
      *         {@link ApplicationConnection} cannot be determined.
      */
-    public Element getOverlayContainer() {
+    public com.google.gwt.user.client.Element getOverlayContainer() {
         ApplicationConnection ac = getApplicationConnection();
         if (ac == null) {
             // could not figure out which one we belong to, styling will
@@ -688,10 +689,11 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      *            A reference to {@link ApplicationConnection}
      * @return The overlay container
      */
-    public static Element getOverlayContainer(ApplicationConnection ac) {
+    public static com.google.gwt.user.client.Element getOverlayContainer(
+            ApplicationConnection ac) {
         String id = ac.getConfiguration().getRootPanelId();
         id = id += "-overlays";
-        Element container = DOM.getElementById(id);
+        com.google.gwt.user.client.Element container = DOM.getElementById(id);
         if (container == null) {
             container = DOM.createDiv();
             container.setId(id);

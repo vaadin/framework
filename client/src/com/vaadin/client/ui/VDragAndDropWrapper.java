@@ -28,7 +28,6 @@ import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
@@ -117,7 +116,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             transferable.setDragSource(getConnector());
 
             ComponentConnector paintable = Util.findPaintable(client,
-                    (Element) event.getEventTarget().cast());
+                    (com.google.gwt.user.client.Element) event.getEventTarget()
+                            .cast());
             Widget widget = paintable.getWidget();
             transferable.setData("component", paintable);
             VDragEvent dragEvent = VDragAndDropManager.get().startDrag(
@@ -160,11 +160,11 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     /** For internal use only. May be removed or replaced in the future. */
     public ValueMap html5DataFlavors;
 
-    private Element dragStartElement;
+    private com.google.gwt.user.client.Element dragStartElement;
 
     /** For internal use only. May be removed or replaced in the future. */
     public void initDragStartMode() {
-        Element div = getElement();
+        com.google.gwt.user.client.Element div = getElement();
         if (dragStartMode == HTML5) {
             if (dragStartElement == null) {
                 dragStartElement = getDragStartElement();
@@ -182,7 +182,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         }
     }
 
-    protected Element getDragStartElement() {
+    protected com.google.gwt.user.client.Element getDragStartElement() {
         return getElement();
     }
 
@@ -548,7 +548,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         return ConnectorMap.get(client).getConnector(this);
     }
 
-    protected native void hookHtml5DragStart(Element el)
+    protected native void hookHtml5DragStart(
+            com.google.gwt.user.client.Element el)
     /*-{
         var me = this;
         el.addEventListener("dragstart",  $entry(function(ev) {
@@ -561,7 +562,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
      * 
      * @param el
      */
-    protected native void hookHtml5Events(Element el)
+    protected native void hookHtml5Events(com.google.gwt.user.client.Element el)
     /*-{
             var me = this;
 

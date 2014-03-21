@@ -23,7 +23,6 @@ import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
@@ -97,7 +96,8 @@ public abstract class AbstractSplitPanelConnector extends
 
         @Override
         protected boolean shouldFireEvent(DomEvent<?> event) {
-            Element target = event.getNativeEvent().getEventTarget().cast();
+            com.google.gwt.user.client.Element target = event.getNativeEvent()
+                    .getEventTarget().cast();
             if (!getWidget().splitter.isOrHasChild(target)) {
                 return false;
             }
@@ -106,7 +106,7 @@ public abstract class AbstractSplitPanelConnector extends
         }
 
         @Override
-        protected Element getRelativeToElement() {
+        protected com.google.gwt.user.client.Element getRelativeToElement() {
             return getWidget().splitter;
         }
 

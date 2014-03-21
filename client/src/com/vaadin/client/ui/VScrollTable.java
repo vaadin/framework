@@ -65,7 +65,6 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -488,7 +487,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     private final HashMap<Object, String> actionMap = new HashMap<Object, String>();
     private String[] visibleColOrder;
     private boolean initialContentReceived = false;
-    private Element scrollPositionElement;
+    private com.google.gwt.user.client.Element scrollPositionElement;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean enabled;
@@ -1914,7 +1913,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         super.onDetach();
         // ensure that scrollPosElement will be detached
         if (scrollPositionElement != null) {
-            final Element parent = DOM.getParent(scrollPositionElement);
+            final com.google.gwt.user.client.Element parent = DOM
+                    .getParent(scrollPositionElement);
             if (parent != null) {
                 DOM.removeChild(parent, scrollPositionElement);
             }
@@ -2504,15 +2504,15 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     public class HeaderCell extends Widget {
 
-        Element td = DOM.createTD();
+        com.google.gwt.user.client.Element td = DOM.createTD();
 
-        Element captionContainer = DOM.createDiv();
+        com.google.gwt.user.client.Element captionContainer = DOM.createDiv();
 
-        Element sortIndicator = DOM.createDiv();
+        com.google.gwt.user.client.Element sortIndicator = DOM.createDiv();
 
-        Element colResizeWidget = DOM.createDiv();
+        com.google.gwt.user.client.Element colResizeWidget = DOM.createDiv();
 
-        Element floatingCopyOfHeaderCell;
+        com.google.gwt.user.client.Element floatingCopyOfHeaderCell;
 
         private boolean sortable = false;
         private final String cid;
@@ -3214,14 +3214,15 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         HashMap<String, HeaderCell> availableCells = new HashMap<String, HeaderCell>();
 
-        Element div = DOM.createDiv();
-        Element hTableWrapper = DOM.createDiv();
-        Element hTableContainer = DOM.createDiv();
-        Element table = DOM.createTable();
-        Element headerTableBody = DOM.createTBody();
-        Element tr = DOM.createTR();
+        com.google.gwt.user.client.Element div = DOM.createDiv();
+        com.google.gwt.user.client.Element hTableWrapper = DOM.createDiv();
+        com.google.gwt.user.client.Element hTableContainer = DOM.createDiv();
+        com.google.gwt.user.client.Element table = DOM.createTable();
+        com.google.gwt.user.client.Element headerTableBody = DOM.createTBody();
+        com.google.gwt.user.client.Element tr = DOM.createTR();
 
-        private final Element columnSelector = DOM.createDiv();
+        private final com.google.gwt.user.client.Element columnSelector = DOM
+                .createDiv();
 
         private int focusedSlot = -1;
 
@@ -3529,7 +3530,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         public void moveCell(int oldIndex, int newIndex) {
             final HeaderCell hCell = getHeaderCell(oldIndex);
-            final Element cell = hCell.getElement();
+            final com.google.gwt.user.client.Element cell = hCell.getElement();
 
             visibleCells.remove(oldIndex);
             DOM.removeChild(tr, cell);
@@ -3562,13 +3563,15 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         private void focusSlot(int index) {
             removeSlotFocus();
             if (index > 0) {
-                Element child = tr.getChild(index - 1).getFirstChild().cast();
+                com.google.gwt.user.client.Element child = tr
+                        .getChild(index - 1).getFirstChild().cast();
                 child.setClassName(VScrollTable.this.getStylePrimaryName()
                         + "-resizer");
                 child.addClassName(VScrollTable.this.getStylePrimaryName()
                         + "-focus-slot-right");
             } else {
-                Element child = tr.getChild(index).getFirstChild().cast();
+                com.google.gwt.user.client.Element child = tr.getChild(index)
+                        .getFirstChild().cast();
                 child.setClassName(VScrollTable.this.getStylePrimaryName()
                         + "-resizer");
                 child.addClassName(VScrollTable.this.getStylePrimaryName()
@@ -3582,12 +3585,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 return;
             }
             if (focusedSlot == 0) {
-                Element child = tr.getChild(focusedSlot).getFirstChild().cast();
+                com.google.gwt.user.client.Element child = tr
+                        .getChild(focusedSlot).getFirstChild().cast();
                 child.setClassName(VScrollTable.this.getStylePrimaryName()
                         + "-resizer");
             } else if (focusedSlot > 0) {
-                Element child = tr.getChild(focusedSlot - 1).getFirstChild()
-                        .cast();
+                com.google.gwt.user.client.Element child = tr
+                        .getChild(focusedSlot - 1).getFirstChild().cast();
                 child.setClassName(VScrollTable.this.getStylePrimaryName()
                         + "-resizer");
             }
@@ -3775,8 +3779,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * A cell in the footer
      */
     public class FooterCell extends Widget {
-        private final Element td = DOM.createTD();
-        private final Element captionContainer = DOM.createDiv();
+        private final com.google.gwt.user.client.Element td = DOM.createTD();
+        private final com.google.gwt.user.client.Element captionContainer = DOM
+                .createDiv();
         private char align = ALIGN_LEFT;
         private int width = -1;
         private float expandRatio = 0;
@@ -4079,8 +4084,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     // value (greater of header and data
                     // cols)
 
-                    final int hw = ((Element) getElement().getLastChild())
-                            .getOffsetWidth() + getHeaderPadding();
+                    final int hw = ((com.google.gwt.user.client.Element) getElement()
+                            .getLastChild()).getOffsetWidth()
+                            + getHeaderPadding();
                     if (columnIndex < 0) {
                         columnIndex = 0;
                         for (Iterator<Widget> it = tHead.iterator(); it
@@ -4134,12 +4140,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         ArrayList<Widget> visibleCells = new ArrayList<Widget>();
         HashMap<String, FooterCell> availableCells = new HashMap<String, FooterCell>();
 
-        Element div = DOM.createDiv();
-        Element hTableWrapper = DOM.createDiv();
-        Element hTableContainer = DOM.createDiv();
-        Element table = DOM.createTable();
-        Element headerTableBody = DOM.createTBody();
-        Element tr = DOM.createTR();
+        com.google.gwt.user.client.Element div = DOM.createDiv();
+        com.google.gwt.user.client.Element hTableWrapper = DOM.createDiv();
+        com.google.gwt.user.client.Element hTableContainer = DOM.createDiv();
+        com.google.gwt.user.client.Element table = DOM.createTable();
+        com.google.gwt.user.client.Element headerTableBody = DOM.createTBody();
+        com.google.gwt.user.client.Element tr = DOM.createTR();
 
         public TableFooter() {
 
@@ -4400,7 +4406,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          */
         public void moveCell(int oldIndex, int newIndex) {
             final FooterCell hCell = getFooterCell(oldIndex);
-            final Element cell = hCell.getElement();
+            final com.google.gwt.user.client.Element cell = hCell.getElement();
 
             visibleCells.remove(oldIndex);
             DOM.removeChild(tr, cell);
@@ -4431,13 +4437,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          */
         private boolean tBodyMeasurementsDone = false;
 
-        Element preSpacer = DOM.createDiv();
-        Element postSpacer = DOM.createDiv();
+        com.google.gwt.user.client.Element preSpacer = DOM.createDiv();
+        com.google.gwt.user.client.Element postSpacer = DOM.createDiv();
 
-        Element container = DOM.createDiv();
+        com.google.gwt.user.client.Element container = DOM.createDiv();
 
         TableSectionElement tBodyElement = Document.get().createTBodyElement();
-        Element table = DOM.createTable();
+        com.google.gwt.user.client.Element table = DOM.createTable();
 
         private int firstRendered;
         private int lastRendered;
@@ -4496,7 +4502,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             if (BrowserInfo.get().requiresTouchScrollDelegate()) {
                 NodeList<Node> childNodes = container.getChildNodes();
                 for (int i = 0; i < childNodes.getLength(); i++) {
-                    Element item = (Element) childNodes.getItem(i);
+                    com.google.gwt.user.client.Element item = (com.google.gwt.user.client.Element) childNodes
+                            .getItem(i);
                     item.getStyle().setProperty("webkitTransform",
                             "translate3d(0,0,0)");
                 }
@@ -4973,7 +4980,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 for (Widget row : renderedRows) {
                     if (!(row instanceof VScrollTableGeneratedRow)) {
                         TableRowElement tr = row.getElement().cast();
-                        Element wrapperdiv = tr.getCells().getItem(columnIndex)
+                        com.google.gwt.user.client.Element wrapperdiv = tr
+                                .getCells().getItem(columnIndex)
                                 .getFirstChildElement().cast();
                         return wrapperdiv.getOffsetWidth();
                     }
@@ -5078,7 +5086,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             while (rows.hasNext()) {
                 final VScrollTableRow row = (VScrollTableRow) rows.next();
 
-                final Element td = DOM.getChild(row.getElement(), oldIndex);
+                final com.google.gwt.user.client.Element td = DOM.getChild(
+                        row.getElement(), oldIndex);
                 if (td != null) {
                     DOM.removeChild(row.getElement(), td);
 
@@ -5229,7 +5238,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
 
             protected void setCellWidth(int cellIx, int width) {
-                final Element cell = DOM.getChild(getElement(), cellIx);
+                final com.google.gwt.user.client.Element cell = DOM.getChild(
+                        getElement(), cellIx);
                 Style wrapperStyle = cell.getFirstChildElement().getStyle();
                 int wrapperWidth = width;
                 if (BrowserInfo.get().isWebkit()
@@ -5384,7 +5394,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             protected void initCellWithText(String text, char align,
                     String style, boolean textIsHTML, boolean sorted,
                     String description, final TableCellElement td) {
-                final Element container = DOM.createDiv();
+                final com.google.gwt.user.client.Element container = DOM
+                        .createDiv();
                 container.setClassName(VScrollTable.this.getStylePrimaryName()
                         + "-cell-wrapper");
 
@@ -5425,7 +5436,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             protected void updateCellStyleNames(TableCellElement td,
                     String primaryStyleName) {
-                Element container = td.getFirstChild().cast();
+                com.google.gwt.user.client.Element container = td
+                        .getFirstChild().cast();
                 container.setClassName(primaryStyleName + "-cell-wrapper");
 
                 /*
@@ -5456,7 +5468,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             protected void initCellWithWidget(Widget w, char align,
                     String style, boolean sorted, final TableCellElement td) {
-                final Element container = DOM.createDiv();
+                final com.google.gwt.user.client.Element container = DOM
+                        .createDiv();
                 String className = VScrollTable.this.getStylePrimaryName()
                         + "-cell-content";
                 if (style != null && !style.equals("")) {
@@ -5523,7 +5536,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
              *            Whether the event is sent immediately
              * @return Whether a click event was sent
              */
-            private boolean handleClickEvent(Event event, Element targetTdOrTr,
+            private boolean handleClickEvent(Event event,
+                    com.google.gwt.user.client.Element targetTdOrTr,
                     boolean immediate) {
                 if (!client.hasEventListeners(VScrollTable.this,
                         TableConstants.ITEM_CLICK_EVENT_ID)) {
@@ -5558,7 +5572,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     com.google.gwt.dom.client.Element target) {
 
                 TooltipInfo info = null;
-                final Element targetTdOrTr = getTdOrTr((Element) target.cast());
+                final com.google.gwt.user.client.Element targetTdOrTr = getTdOrTr((com.google.gwt.user.client.Element) target
+                        .cast());
                 if (targetTdOrTr != null
                         && "td".equals(targetTdOrTr.getTagName().toLowerCase())) {
                     TableCellElement td = (TableCellElement) targetTdOrTr
@@ -5573,15 +5588,16 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 return info;
             }
 
-            private Element getTdOrTr(Element target) {
-                Element thisTrElement = getElement();
+            private com.google.gwt.user.client.Element getTdOrTr(
+                    com.google.gwt.user.client.Element target) {
+                com.google.gwt.user.client.Element thisTrElement = getElement();
                 if (target == thisTrElement) {
                     // This was a on the TR element
                     return target;
                 }
 
                 // Iterate upwards until we find the TR element
-                Element element = target;
+                com.google.gwt.user.client.Element element = target;
                 while (element != null
                         && element.getParentElement().cast() != thisTrElement) {
                     element = element.getParentElement().cast();
@@ -5599,7 +5615,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 boolean touchEventHandled = false;
 
                 if (enabled && hasNativeTouchScrolling) {
-                    final Element targetTdOrTr = getEventTargetTdOrTr(event);
+                    final com.google.gwt.user.client.Element targetTdOrTr = getEventTargetTdOrTr(event);
                     final int type = event.getTypeInt();
 
                     switch (type) {
@@ -5712,7 +5728,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                 if (enabled && !touchEventHandled) {
                     final int type = event.getTypeInt();
-                    final Element targetTdOrTr = getEventTargetTdOrTr(event);
+                    final com.google.gwt.user.client.Element targetTdOrTr = getEventTargetTdOrTr(event);
                     if (type == Event.ONCONTEXTMENU) {
                         showContextMenu(event);
                         if (enabled
@@ -5832,7 +5848,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                                 // Remove IE text selection hack
                                 if (BrowserInfo.get().isIE()) {
-                                    ((Element) event.getEventTarget().cast())
+                                    ((com.google.gwt.user.client.Element) event
+                                            .getEventTarget().cast())
                                             .setPropertyJSO("onselectstart",
                                                     null);
                                 }
@@ -5974,7 +5991,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                                 // Prevent default text selection in IE
                                 if (BrowserInfo.get().isIE()) {
-                                    ((Element) event.getEventTarget().cast())
+                                    ((com.google.gwt.user.client.Element) event
+                                            .getEventTarget().cast())
                                             .setPropertyJSO(
                                                     "onselectstart",
                                                     getPreventTextSelectionIEHack());
@@ -6034,7 +6052,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
 
             protected void startRowDrag(Event event, final int type,
-                    Element targetTdOrTr) {
+                    com.google.gwt.user.client.Element targetTdOrTr) {
                 VTransferable transferable = new VTransferable();
                 transferable.setDragSource(ConnectorMap.get(client)
                         .getConnector(VScrollTable.this));
@@ -6055,17 +6073,20 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                     // Create a drag image of ALL rows
                     ev.createDragImage(
-                            (Element) scrollBody.tBodyElement.cast(), true);
+                            (com.google.gwt.user.client.Element) scrollBody.tBodyElement
+                                    .cast(), true);
 
                     // Hide rows which are not selected
-                    Element dragImage = ev.getDragImage();
+                    com.google.gwt.user.client.Element dragImage = ev
+                            .getDragImage();
                     int i = 0;
                     for (Iterator<Widget> iterator = scrollBody.iterator(); iterator
                             .hasNext();) {
                         VScrollTableRow next = (VScrollTableRow) iterator
                                 .next();
 
-                        Element child = (Element) dragImage.getChild(i++);
+                        com.google.gwt.user.client.Element child = (com.google.gwt.user.client.Element) dragImage
+                                .getChild(i++);
 
                         if (!rowKeyIsSelected(next.rowKey)) {
                             child.getStyle().setVisibility(Visibility.HIDDEN);
@@ -6090,8 +6111,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
              * @return TD or TR element that the event targets (the actual event
              *         target is this element or a child of it)
              */
-            private Element getEventTargetTdOrTr(Event event) {
-                final Element eventTarget = event.getEventTarget().cast();
+            private com.google.gwt.user.client.Element getEventTargetTdOrTr(
+                    Event event) {
+                final com.google.gwt.user.client.Element eventTarget = event
+                        .getEventTarget().cast();
                 Widget widget = Util.findWidget(eventTarget, null);
 
                 if (widget != this) {
@@ -6399,8 +6422,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         .getVisibleCellCount(); ix++) {
                     spanWidth += tHead.getHeaderCell(ix).getOffsetWidth();
                 }
-                Util.setWidthExcludingPaddingAndBorder((Element) getElement()
-                        .getChild(cellIx), spanWidth, 13, false);
+                Util.setWidthExcludingPaddingAndBorder(
+                        (com.google.gwt.user.client.Element) getElement()
+                                .getChild(cellIx), spanWidth, 13, false);
             }
         }
 
@@ -7099,15 +7123,17 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         private void updateDropDetails(VDragEvent drag) {
             dropDetails = new TableDDDetails();
-            Element elementOver = drag.getElementOver();
+            com.google.gwt.user.client.Element elementOver = drag
+                    .getElementOver();
 
             VScrollTableRow row = Util.findWidget(elementOver, getRowClass());
             if (row != null) {
                 dropDetails.overkey = row.rowKey;
-                Element tr = row.getElement();
-                Element element = elementOver;
+                com.google.gwt.user.client.Element tr = row.getElement();
+                com.google.gwt.user.client.Element element = elementOver;
                 while (element != null && element.getParentElement() != tr) {
-                    element = (Element) element.getParentElement();
+                    element = (com.google.gwt.user.client.Element) element
+                            .getParentElement();
                 }
                 int childIndex = DOM.getChildIndex(tr, element);
                 dropDetails.colkey = tHead.getHeaderCell(childIndex)
@@ -7583,7 +7609,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
              * ...and sometimes it sends blur events even though the focus
              * handler is still active. (#10464)
              */
-            Element focusedElement = Util.getIEFocusedElement();
+            com.google.gwt.user.client.Element focusedElement = Util
+                    .getIEFocusedElement();
             if (Util.getConnectorForElement(client, getParent(), focusedElement) == this
                     && focusedElement != null
                     && focusedElement != scrollBodyPanel.getFocusElement()) {
@@ -7850,14 +7877,15 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     + "\\[(\\d+)\\]");
 
     @Override
-    public Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         if (SUBPART_ROW_COL_REGEXP.test(subPart)) {
             MatchResult result = SUBPART_ROW_COL_REGEXP.exec(subPart);
             int rowIx = Integer.valueOf(result.getGroup(1));
             int colIx = Integer.valueOf(result.getGroup(2));
             VScrollTableRow row = scrollBody.getRowByRowIndex(rowIx);
             if (row != null) {
-                Element rowElement = row.getElement();
+                com.google.gwt.user.client.Element rowElement = row
+                        .getElement();
                 if (colIx < rowElement.getChildCount()) {
                     return rowElement.getChild(colIx).getFirstChild().cast();
                 }
@@ -7892,7 +7920,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     }
 
     @Override
-    public String getSubPartName(Element subElement) {
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         Widget widget = Util.findWidget(subElement, null);
         if (widget instanceof HeaderCell) {
             return SUBPART_HEADER + "[" + tHead.visibleCells.indexOf(widget)

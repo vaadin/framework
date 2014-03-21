@@ -15,8 +15,6 @@
  */
 package com.vaadin.client;
 
-import com.google.gwt.user.client.Element;
-
 /**
  * Contains size information about a rendered container and its content area.
  * 
@@ -52,7 +50,7 @@ public class RenderInformation {
      * 
      * @return true if the size has changed since last update
      */
-    public boolean updateSize(Element element) {
+    public boolean updateSize(com.google.gwt.user.client.Element element) {
         Size newSize = new Size(element.getOffsetWidth(),
                 element.getOffsetHeight());
         if (newSize.equals(renderedSize)) {

@@ -33,7 +33,6 @@ import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComputedStyle;
@@ -170,8 +169,8 @@ public class VTreeTable extends VScrollTable {
 
             protected boolean addTreeSpacer(UIDL rowUidl) {
                 if (cellShowsTreeHierarchy(getElement().getChildCount() - 1)) {
-                    Element container = (Element) getElement().getLastChild()
-                            .getFirstChild();
+                    com.google.gwt.user.client.Element container = (com.google.gwt.user.client.Element) getElement()
+                            .getLastChild().getFirstChild();
 
                     if (rowUidl.hasAttribute("icon")) {
                         // icons are in first content cell in TreeTable
@@ -262,7 +261,8 @@ public class VTreeTable extends VScrollTable {
             }
 
             private int getCellWidthFromDom(int cellIndex) {
-                final Element cell = DOM.getChild(getElement(), cellIndex);
+                final com.google.gwt.user.client.Element cell = DOM.getChild(
+                        getElement(), cellIndex);
                 String w = cell.getStyle().getProperty("width");
                 if (w == null || "".equals(w) || !w.endsWith("px")) {
                     return -1;
@@ -420,8 +420,9 @@ public class VTreeTable extends VScrollTable {
                         .getVisibleCellCount(); ix++) {
                     spanWidth += tHead.getHeaderCell(ix).getOffsetWidth();
                 }
-                Util.setWidthExcludingPaddingAndBorder((Element) getElement()
-                        .getChild(cellIx), spanWidth, 13, false);
+                Util.setWidthExcludingPaddingAndBorder(
+                        (com.google.gwt.user.client.Element) getElement()
+                                .getChild(cellIx), spanWidth, 13, false);
             }
         }
 
@@ -523,7 +524,7 @@ public class VTreeTable extends VScrollTable {
             }
 
             private void copyTRBackgroundsToTDs(VScrollTableRow row) {
-                Element tr = row.getElement();
+                com.google.gwt.user.client.Element tr = row.getElement();
                 ComputedStyle cs = new ComputedStyle(tr);
                 String backgroundAttachment = cs
                         .getProperty("backgroundAttachment");
@@ -532,7 +533,8 @@ public class VTreeTable extends VScrollTable {
                 String backgroundImage = cs.getProperty("backgroundImage");
                 String backgroundOrigin = cs.getProperty("backgroundOrigin");
                 for (int ix = 0; ix < tr.getChildCount(); ix++) {
-                    Element td = tr.getChild(ix).cast();
+                    com.google.gwt.user.client.Element td = tr.getChild(ix)
+                            .cast();
                     if (!elementHasBackground(td)) {
                         td.getStyle().setProperty("backgroundAttachment",
                                 backgroundAttachment);
@@ -548,7 +550,8 @@ public class VTreeTable extends VScrollTable {
                 }
             }
 
-            private boolean elementHasBackground(Element element) {
+            private boolean elementHasBackground(
+                    com.google.gwt.user.client.Element element) {
                 ComputedStyle cs = new ComputedStyle(element);
                 String clr = cs.getProperty("backgroundColor");
                 String img = cs.getProperty("backgroundImage");
@@ -567,9 +570,10 @@ public class VTreeTable extends VScrollTable {
             }
 
             private void restoreStyleForTDsInRow(VScrollTableRow row) {
-                Element tr = row.getElement();
+                com.google.gwt.user.client.Element tr = row.getElement();
                 for (int ix = 0; ix < tr.getChildCount(); ix++) {
-                    Element td = tr.getChild(ix).cast();
+                    com.google.gwt.user.client.Element td = tr.getChild(ix)
+                            .cast();
                     td.getStyle().clearProperty("backgroundAttachment");
                     td.getStyle().clearProperty("backgroundClip");
                     td.getStyle().clearProperty("backgroundColor");
@@ -615,8 +619,8 @@ public class VTreeTable extends VScrollTable {
         private class RowExpandAnimation extends Animation {
 
             private final List<VScrollTableRow> rows;
-            private Element cloneDiv;
-            private Element cloneTable;
+            private com.google.gwt.user.client.Element cloneDiv;
+            private com.google.gwt.user.client.Element cloneTable;
             private AnimationPreparator preparator;
 
             /**
@@ -641,7 +645,7 @@ public class VTreeTable extends VScrollTable {
             }
 
             private void cloneAndAppendRow(VScrollTableRow row) {
-                Element clonedTR = null;
+                com.google.gwt.user.client.Element clonedTR = null;
                 clonedTR = row.getElement().cloneNode(true).cast();
                 clonedTR.getStyle().setVisibility(Visibility.VISIBLE);
                 cloneTable.appendChild(clonedTR);
@@ -663,8 +667,10 @@ public class VTreeTable extends VScrollTable {
             }
 
             private void insertAnimatingDiv() {
-                Element tableBody = getElement().cast();
-                Element tableBodyParent = tableBody.getParentElement().cast();
+                com.google.gwt.user.client.Element tableBody = getElement()
+                        .cast();
+                com.google.gwt.user.client.Element tableBodyParent = tableBody
+                        .getParentElement().cast();
                 tableBodyParent.insertAfter(cloneDiv, tableBody);
             }
 
@@ -709,25 +715,27 @@ public class VTreeTable extends VScrollTable {
                     resetCellWrapperDivsDisplayProperty(row);
                     row.removeStyleName("v-table-row-animating");
                 }
-                Element tableBodyParent = (Element) getElement()
+                com.google.gwt.user.client.Element tableBodyParent = (com.google.gwt.user.client.Element) getElement()
                         .getParentElement();
                 tableBodyParent.removeChild(cloneDiv);
             }
 
             private void setCellWrapperDivsToDisplayNone(VScrollTableRow row) {
-                Element tr = row.getElement();
+                com.google.gwt.user.client.Element tr = row.getElement();
                 for (int ix = 0; ix < tr.getChildCount(); ix++) {
                     getWrapperDiv(tr, ix).getStyle().setDisplay(Display.NONE);
                 }
             }
 
-            private Element getWrapperDiv(Element tr, int tdIx) {
-                Element td = tr.getChild(tdIx).cast();
+            private com.google.gwt.user.client.Element getWrapperDiv(
+                    com.google.gwt.user.client.Element tr, int tdIx) {
+                com.google.gwt.user.client.Element td = tr.getChild(tdIx)
+                        .cast();
                 return td.getChild(0).cast();
             }
 
             private void resetCellWrapperDivsDisplayProperty(VScrollTableRow row) {
-                Element tr = row.getElement();
+                com.google.gwt.user.client.Element tr = row.getElement();
                 for (int ix = 0; ix < tr.getChildCount(); ix++) {
                     getWrapperDiv(tr, ix).getStyle().clearProperty("display");
                 }

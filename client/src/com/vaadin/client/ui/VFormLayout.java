@@ -24,7 +24,6 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -120,7 +119,7 @@ public class VFormLayout extends SimplePanel {
         }
 
         public void setMargins(MarginInfo margins) {
-            Element margin = getElement();
+            com.google.gwt.user.client.Element margin = getElement();
             setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
                     margins.hasTop());
             setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
@@ -219,11 +218,11 @@ public class VFormLayout extends SimplePanel {
 
         private final ComponentConnector owner;
 
-        private Element requiredFieldIndicator;
+        private com.google.gwt.user.client.Element requiredFieldIndicator;
 
         private Icon icon;
 
-        private Element captionText;
+        private com.google.gwt.user.client.Element captionText;
 
         /**
          * 
@@ -355,7 +354,7 @@ public class VFormLayout extends SimplePanel {
     public class ErrorFlag extends HTML {
         private static final String CLASSNAME = VFormLayout.CLASSNAME
                 + "-error-indicator";
-        Element errorIndicatorElement;
+        com.google.gwt.user.client.Element errorIndicatorElement;
 
         private ComponentConnector owner;
 

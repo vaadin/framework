@@ -20,7 +20,6 @@ import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
-import com.google.gwt.user.client.Element;
 import com.vaadin.client.ApplicationConnection;
 
 /**
@@ -72,7 +71,8 @@ public class ComponentLocator {
      * @return A String locator that identifies the target element or null if a
      *         String locator could not be created.
      */
-    public String getPathForElement(Element targetElement) {
+    public String getPathForElement(
+            com.google.gwt.user.client.Element targetElement) {
         for (LocatorStrategy strategy : locatorStrategies) {
             String path = strategy.getPathForElement(targetElement);
             if (null != path) {
@@ -94,10 +94,11 @@ public class ComponentLocator {
      * @return The DOM element identified by {@code path} or null if the element
      *         could not be located.
      */
-    public Element getElementByPath(String path) {
+    public com.google.gwt.user.client.Element getElementByPath(String path) {
         for (LocatorStrategy strategy : locatorStrategies) {
             if (strategy.validatePath(path)) {
-                Element element = strategy.getElementByPath(path);
+                com.google.gwt.user.client.Element element = strategy
+                        .getElementByPath(path);
                 if (null != element) {
                     return element;
                 }
@@ -116,13 +117,16 @@ public class ComponentLocator {
      * @return The JavaScriptArray of DOM elements identified by {@code path} or
      *         empty array if elements could not be located.
      */
-    public JsArray<Element> getElementsByPath(String path) {
-        JsArray<Element> jsElements = JavaScriptObject.createArray().cast();
+    public JsArray<com.google.gwt.user.client.Element> getElementsByPath(
+            String path) {
+        JsArray<com.google.gwt.user.client.Element> jsElements = JavaScriptObject
+                .createArray().cast();
         for (LocatorStrategy strategy : locatorStrategies) {
             if (strategy.validatePath(path)) {
-                List<Element> elements = strategy.getElementsByPath(path);
+                List<com.google.gwt.user.client.Element> elements = strategy
+                        .getElementsByPath(path);
                 if (elements.size() > 0) {
-                    for (Element e : elements) {
+                    for (com.google.gwt.user.client.Element e : elements) {
                         jsElements.push(e);
                     }
                     return jsElements;
@@ -146,15 +150,16 @@ public class ComponentLocator {
      * @return The JavaScriptArray of DOM elements identified by {@code path} or
      *         empty array if elements could not be located.
      */
-    public JsArray<Element> getElementsByPathStartingAt(String path,
-            Element root) {
-        JsArray<Element> jsElements = JavaScriptObject.createArray().cast();
+    public JsArray<com.google.gwt.user.client.Element> getElementsByPathStartingAt(
+            String path, com.google.gwt.user.client.Element root) {
+        JsArray<com.google.gwt.user.client.Element> jsElements = JavaScriptObject
+                .createArray().cast();
         for (LocatorStrategy strategy : locatorStrategies) {
             if (strategy.validatePath(path)) {
-                List<Element> elements = strategy.getElementsByPathStartingAt(
-                        path, root);
+                List<com.google.gwt.user.client.Element> elements = strategy
+                        .getElementsByPathStartingAt(path, root);
                 if (elements.size() > 0) {
-                    for (Element e : elements) {
+                    for (com.google.gwt.user.client.Element e : elements) {
                         jsElements.push(e);
                     }
                     return jsElements;
@@ -177,11 +182,12 @@ public class ComponentLocator {
      * @return The DOM element identified by {@code path} or null if the element
      *         could not be located.
      */
-    public Element getElementByPathStartingAt(String path, Element root) {
+    public com.google.gwt.user.client.Element getElementByPathStartingAt(
+            String path, com.google.gwt.user.client.Element root) {
         for (LocatorStrategy strategy : locatorStrategies) {
             if (strategy.validatePath(path)) {
-                Element element = strategy.getElementByPathStartingAt(path,
-                        root);
+                com.google.gwt.user.client.Element element = strategy
+                        .getElementByPathStartingAt(path, root);
                 if (null != element) {
                     return element;
                 }

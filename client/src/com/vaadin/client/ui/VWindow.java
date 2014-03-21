@@ -46,7 +46,6 @@ import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
@@ -91,15 +90,15 @@ public class VWindow extends VWindowOverlay implements
     public static final int Z_INDEX = 10000;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element contents;
+    public com.google.gwt.user.client.Element contents;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element header;
+    public com.google.gwt.user.client.Element header;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element footer;
+    public com.google.gwt.user.client.Element footer;
 
-    private Element resizeBox;
+    private com.google.gwt.user.client.Element resizeBox;
 
     /** For internal use only. May be removed or replaced in the future. */
     public final FocusableScrollPanel contentPanel = new FocusableScrollPanel();
@@ -121,10 +120,10 @@ public class VWindow extends VWindowOverlay implements
     private int origH;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element closeBox;
+    public com.google.gwt.user.client.Element closeBox;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element maximizeRestoreBox;
+    public com.google.gwt.user.client.Element maximizeRestoreBox;
 
     /** For internal use only. May be removed or replaced in the future. */
     public ApplicationConnection client;
@@ -152,11 +151,11 @@ public class VWindow extends VWindowOverlay implements
     /** For internal use only. May be removed or replaced in the future. */
     public boolean resizeLazy = false;
 
-    private Element modalityCurtain;
-    private Element draggingCurtain;
-    private Element resizingCurtain;
+    private com.google.gwt.user.client.Element modalityCurtain;
+    private com.google.gwt.user.client.Element draggingCurtain;
+    private com.google.gwt.user.client.Element resizingCurtain;
 
-    private Element headerText;
+    private com.google.gwt.user.client.Element headerText;
 
     private boolean closable = true;
 
@@ -164,8 +163,8 @@ public class VWindow extends VWindowOverlay implements
     private String assistivePrefix;
     private String assistivePostfix;
 
-    private Element topTabStop;
-    private Element bottomTabStop;
+    private com.google.gwt.user.client.Element topTabStop;
+    private com.google.gwt.user.client.Element bottomTabStop;
 
     private NativePreviewHandler topEventBlocker;
     private NativePreviewHandler bottomEventBlocker;
@@ -188,7 +187,7 @@ public class VWindow extends VWindowOverlay implements
     /** For internal use only. May be removed or replaced in the future. */
     public boolean immediate;
 
-    private Element wrapper;
+    private com.google.gwt.user.client.Element wrapper;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean visibilityChangesDisabled;
@@ -330,7 +329,7 @@ public class VWindow extends VWindowOverlay implements
         }
     }
 
-    protected Element getModalityCurtain() {
+    protected com.google.gwt.user.client.Element getModalityCurtain() {
         if (modalityCurtain == null) {
             modalityCurtain = DOM.createDiv();
             modalityCurtain.setClassName(CLASSNAME + "-modalitycurtain");
@@ -683,7 +682,7 @@ public class VWindow extends VWindowOverlay implements
     }
 
     private void fixIE8FocusCaptureIssue() {
-        Element e = DOM.createInputText();
+        com.google.gwt.user.client.Element e = DOM.createInputText();
         Style elemStyle = e.getStyle();
         elemStyle.setPosition(Position.ABSOLUTE);
         elemStyle.setTop(-10, Unit.PX);
@@ -773,7 +772,7 @@ public class VWindow extends VWindowOverlay implements
         }
     }
 
-    private Element getDraggingCurtain() {
+    private com.google.gwt.user.client.Element getDraggingCurtain() {
         if (draggingCurtain == null) {
             draggingCurtain = createCurtain();
             draggingCurtain.setClassName(CLASSNAME + "-draggingCurtain");
@@ -782,7 +781,7 @@ public class VWindow extends VWindowOverlay implements
         return draggingCurtain;
     }
 
-    private Element getResizingCurtain() {
+    private com.google.gwt.user.client.Element getResizingCurtain() {
         if (resizingCurtain == null) {
             resizingCurtain = createCurtain();
             resizingCurtain.setClassName(CLASSNAME + "-resizingCurtain");
@@ -791,8 +790,8 @@ public class VWindow extends VWindowOverlay implements
         return resizingCurtain;
     }
 
-    private Element createCurtain() {
-        Element curtain = DOM.createDiv();
+    private com.google.gwt.user.client.Element createCurtain() {
+        com.google.gwt.user.client.Element curtain = DOM.createDiv();
 
         DOM.setStyleAttribute(curtain, "position", "absolute");
         DOM.setStyleAttribute(curtain, "top", "0px");
@@ -930,7 +929,7 @@ public class VWindow extends VWindowOverlay implements
     }
 
     @Override
-    protected Element getContainerElement() {
+    protected com.google.gwt.user.client.Element getContainerElement() {
         // in GWT 1.5 this method is used in PopupPanel constructor
         if (contents == null) {
             return super.getContainerElement();
@@ -946,7 +945,8 @@ public class VWindow extends VWindowOverlay implements
 
         final int type = event.getTypeInt();
 
-        final Element target = DOM.eventGetTarget(event);
+        final com.google.gwt.user.client.Element target = DOM
+                .eventGetTarget(event);
 
         if (resizing || resizeBox == target) {
             onResizeEvent(event);
@@ -1255,7 +1255,8 @@ public class VWindow extends VWindowOverlay implements
                 return true;
             }
 
-            final Element target = event.getEventTarget().cast();
+            final com.google.gwt.user.client.Element target = event
+                    .getEventTarget().cast();
             if (!DOM.isOrHasChild(getTopmostWindow().getElement(), target)) {
                 // not within the modal window, but let's see if it's in the
                 // debug window
@@ -1373,7 +1374,7 @@ public class VWindow extends VWindowOverlay implements
                                 "All values in parameter description need to be non-null");
                     }
 
-                    Element element = ((ComponentConnector) connectors[index])
+                    com.google.gwt.user.client.Element element = ((ComponentConnector) connectors[index])
                             .getWidget().getElement();
                     AriaHelper.ensureHasId(element);
                     ids[index] = Id.of(element);

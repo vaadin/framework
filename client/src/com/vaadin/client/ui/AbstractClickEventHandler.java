@@ -27,7 +27,6 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
@@ -49,7 +48,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
     /**
      * The element where the last mouse down event was registered.
      */
-    private Element lastMouseDownTarget;
+    private com.google.gwt.user.client.Element lastMouseDownTarget;
 
     /**
      * Set to true by {@link #mouseUpPreviewHandler} if it gets a mouseup at the
@@ -72,8 +71,8 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
 
                 // Event's reported target not always correct if event
                 // capture is in use
-                Element elementUnderMouse = Util.getElementUnderMouse(event
-                        .getNativeEvent());
+                com.google.gwt.user.client.Element elementUnderMouse = Util
+                        .getElementUnderMouse(event.getNativeEvent());
                 if (lastMouseDownTarget != null
                         && elementUnderMouse == lastMouseDownTarget) {
                     mouseUpPreviewMatched = true;
@@ -238,7 +237,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
      * @return The Element used for calculating relative coordinates for a click
      *         or null if no relative coordinates can be calculated.
      */
-    protected Element getRelativeToElement() {
+    protected com.google.gwt.user.client.Element getRelativeToElement() {
         return connector.getWidget().getElement();
     }
 

@@ -43,7 +43,6 @@ import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -63,7 +62,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
 
     private int top;
 
-    private Element focusedElement;
+    private com.google.gwt.user.client.Element focusedElement;
 
     private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(100,
             new ScheduledCommand() {
@@ -89,7 +88,8 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         addCloseHandler(new CloseHandler<PopupPanel>() {
             @Override
             public void onClose(CloseEvent<PopupPanel> event) {
-                Element currentFocus = Util.getFocusedElement();
+                com.google.gwt.user.client.Element currentFocus = Util
+                        .getFocusedElement();
                 if (focusedElement != null
                         && (currentFocus == null
                                 || menu.getElement().isOrHasChild(currentFocus) || RootPanel
@@ -279,7 +279,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     }
 
     @Override
-    public Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         int index = Integer.parseInt(subPart.substring(6));
         // ApplicationConnection.getConsole().log(
         // "Searching element for selection index " + index);
@@ -290,7 +290,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     }
 
     @Override
-    public String getSubPartName(Element subElement) {
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         if (getElement().isOrHasChild(subElement)) {
             com.google.gwt.dom.client.Element e = subElement;
             {

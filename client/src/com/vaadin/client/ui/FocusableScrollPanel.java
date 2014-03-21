@@ -29,7 +29,6 @@ import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -99,10 +98,12 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
         if (useFakeFocusElement()) {
             if (focus) {
                 FocusImpl.getFocusImplForPanel().focus(
-                        (Element) focusElement.cast());
+                        (com.google.gwt.user.client.Element) focusElement
+                                .cast());
             } else {
                 FocusImpl.getFocusImplForPanel().blur(
-                        (Element) focusElement.cast());
+                        (com.google.gwt.user.client.Element) focusElement
+                                .cast());
             }
         } else {
             super.setFocus(focus);
@@ -192,7 +193,7 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
         });
     }
 
-    public Element getFocusElement() {
+    public com.google.gwt.user.client.Element getFocusElement() {
         if (useFakeFocusElement()) {
             return focusElement.cast();
         } else {

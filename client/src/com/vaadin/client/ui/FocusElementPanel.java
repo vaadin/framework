@@ -21,7 +21,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
@@ -68,10 +67,10 @@ public class FocusElementPanel extends SimpleFocusablePanel {
     public void setFocus(boolean focus) {
         if (focus) {
             FocusImpl.getFocusImplForPanel().focus(
-                    (Element) focusElement.cast());
+                    (com.google.gwt.user.client.Element) focusElement.cast());
         } else {
-            FocusImpl.getFocusImplForPanel()
-                    .blur((Element) focusElement.cast());
+            FocusImpl.getFocusImplForPanel().blur(
+                    (com.google.gwt.user.client.Element) focusElement.cast());
         }
     }
 
@@ -86,7 +85,7 @@ public class FocusElementPanel extends SimpleFocusablePanel {
     /**
      * @return the focus element
      */
-    public Element getFocusElement() {
+    public com.google.gwt.user.client.Element getFocusElement() {
         return focusElement.cast();
     }
 }

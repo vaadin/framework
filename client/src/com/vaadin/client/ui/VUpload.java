@@ -25,7 +25,6 @@ import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -153,7 +152,8 @@ public class VUpload extends SimplePanel {
         setStyleName(CLASSNAME);
     }
 
-    private static native void setEncoding(Element form, String encoding)
+    private static native void setEncoding(
+            com.google.gwt.user.client.Element form, String encoding)
     /*-{
       form.enctype = encoding;
       // For IE8
@@ -172,12 +172,14 @@ public class VUpload extends SimplePanel {
         setStyleName(getElement(), CLASSNAME + "-immediate", immediate);
     }
 
-    private static native void fireNativeClick(Element element)
+    private static native void fireNativeClick(
+            com.google.gwt.user.client.Element element)
     /*-{
         element.click();
     }-*/;
 
-    private static native void fireNativeBlur(Element element)
+    private static native void fireNativeBlur(
+            com.google.gwt.user.client.Element element)
     /*-{
         element.blur();
     }-*/;

@@ -43,7 +43,6 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -2032,7 +2031,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private Date rangeEnd;
 
     @Override
-    public String getSubPartName(Element subElement) {
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         if (contains(nextMonth, subElement)) {
             return SUBPART_NEXT_MONTH;
         } else if (contains(prevMonth, subElement)) {
@@ -2082,7 +2081,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * @param subElement
      * @return true if {@code w} is a parent of subElement, false otherwise.
      */
-    private boolean contains(Widget w, Element subElement) {
+    private boolean contains(Widget w,
+            com.google.gwt.user.client.Element subElement) {
         if (w == null || w.getElement() == null) {
             return false;
         }
@@ -2091,7 +2091,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     @Override
-    public Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         if (SUBPART_NEXT_MONTH.equals(subPart)) {
             return nextMonth.getElement();
         }
@@ -2136,7 +2136,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
 
         if (SUBPART_MONTH_YEAR_HEADER.equals(subPart)) {
-            return (Element) getCellFormatter().getElement(0, 2).getChild(0);
+            return (com.google.gwt.user.client.Element) getCellFormatter()
+                    .getElement(0, 2).getChild(0);
         }
         return null;
     }

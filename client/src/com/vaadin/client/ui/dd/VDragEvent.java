@@ -24,7 +24,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.user.client.Element;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
 
@@ -50,7 +49,7 @@ public class VDragEvent {
 
     private HashMap<String, Object> dropDetails = new HashMap<String, Object>();
 
-    private Element elementOver;
+    private com.google.gwt.user.client.Element elementOver;
 
     VDragEvent(VTransferable t, NativeEvent startEvent) {
         transferable = t;
@@ -94,7 +93,7 @@ public class VDragEvent {
      * 
      * @return the element in {@link VDropHandler} on which mouse cursor is on
      */
-    public Element getElementOver() {
+    public com.google.gwt.user.client.Element getElementOver() {
         if (elementOver != null) {
             return elementOver;
         } else if (currentGwtEvent != null) {
@@ -103,7 +102,7 @@ public class VDragEvent {
         return null;
     }
 
-    public void setElementOver(Element targetElement) {
+    public void setElementOver(com.google.gwt.user.client.Element targetElement) {
         elementOver = targetElement;
     }
 
@@ -122,7 +121,7 @@ public class VDragEvent {
      * 
      * @param node
      */
-    public void setDragImage(Element node) {
+    public void setDragImage(com.google.gwt.user.client.Element node) {
         setDragImage(node, DEFAULT_OFFSET, DEFAULT_OFFSET);
     }
 
@@ -151,7 +150,8 @@ public class VDragEvent {
      * @param offsetY
      *            the vertical offset of drag image from mouse cursor
      */
-    public void setDragImage(Element element, int offsetX, int offsetY) {
+    public void setDragImage(com.google.gwt.user.client.Element element,
+            int offsetX, int offsetY) {
         element.getStyle().setMarginLeft(offsetX, Unit.PX);
         element.getStyle().setMarginTop(offsetY, Unit.PX);
         VDragAndDropManager.get().setDragElement(element);
@@ -161,8 +161,9 @@ public class VDragEvent {
      * @return the current Element used as a drag image (aka drag proxy) or null
      *         if drag image is not currently set for this drag operation.
      */
-    public Element getDragImage() {
-        return (Element) VDragAndDropManager.get().getDragElement();
+    public com.google.gwt.user.client.Element getDragImage() {
+        return (com.google.gwt.user.client.Element) VDragAndDropManager.get()
+                .getDragElement();
     }
 
     /**
@@ -173,8 +174,10 @@ public class VDragEvent {
      *            if true, proxy image is aligned to start event, else next to
      *            mouse cursor
      */
-    public void createDragImage(Element element, boolean alignImageToEvent) {
-        Element cloneNode = (Element) element.cloneNode(true);
+    public void createDragImage(com.google.gwt.user.client.Element element,
+            boolean alignImageToEvent) {
+        com.google.gwt.user.client.Element cloneNode = (com.google.gwt.user.client.Element) element
+                .cloneNode(true);
         if (BrowserInfo.get().isIE()) {
             if (cloneNode.getTagName().toLowerCase().equals("tr")) {
                 TableElement table = Document.get().createTableElement();

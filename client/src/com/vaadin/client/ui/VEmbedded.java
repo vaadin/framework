@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ApplicationConnection;
@@ -37,7 +36,7 @@ public class VEmbedded extends HTML {
     public static String CLASSNAME = "v-embedded";
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element browserElement;
+    public com.google.gwt.user.client.Element browserElement;
 
     /** For internal use only. May be removed or replaced in the future. */
     public String type;

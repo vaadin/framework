@@ -16,7 +16,6 @@
 package com.vaadin.client.ui.calendar.schedule.dd;
 
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.calendar.CalendarConnector;
 import com.vaadin.client.ui.calendar.schedule.DateCell;
@@ -109,8 +108,9 @@ public class CalendarWeekDropHandler extends CalendarDropHandler {
 
         com.google.gwt.user.client.Element todayBarElement = null;
         if (calendarConnector.getWidget().getWeekGrid().hasToday()) {
-            todayBarElement = (Element) calendarConnector.getWidget()
-                    .getWeekGrid().getDateCellOfToday().getTodaybarElement();
+            todayBarElement = (com.google.gwt.user.client.Element) calendarConnector
+                    .getWidget().getWeekGrid().getDateCellOfToday()
+                    .getTodaybarElement();
         }
 
         // drops are not allowed in:

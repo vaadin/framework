@@ -17,7 +17,6 @@
 package com.vaadin.client;
 
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
@@ -62,7 +61,7 @@ public class VErrorMessage extends FlowPanel {
      * 
      * @param indicatorElement
      */
-    public void showAt(Element indicatorElement) {
+    public void showAt(com.google.gwt.user.client.Element indicatorElement) {
         VOverlay errorContainer = (VOverlay) getParent();
         if (errorContainer == null) {
             errorContainer = new VOverlay();

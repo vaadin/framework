@@ -23,7 +23,6 @@ import java.util.Set;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -292,8 +291,9 @@ public class VAccordion extends VTabsheetBase {
 
         private VCaption caption;
         private boolean open = false;
-        private Element content = DOM.createDiv();
-        private Element captionNode = DOM.createDiv();
+        private com.google.gwt.user.client.Element content = DOM.createDiv();
+        private com.google.gwt.user.client.Element captionNode = DOM
+                .createDiv();
         private String styleName;
 
         public StackItem(UIDL tabUidl) {
@@ -328,7 +328,7 @@ public class VAccordion extends VTabsheetBase {
             onSelectTab(this);
         }
 
-        public Element getContainerElement() {
+        public com.google.gwt.user.client.Element getContainerElement() {
             return content;
         }
 

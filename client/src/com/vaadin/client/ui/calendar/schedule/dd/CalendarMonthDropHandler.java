@@ -16,7 +16,6 @@
 package com.vaadin.client.ui.calendar.schedule.dd;
 
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.calendar.CalendarConnector;
 import com.vaadin.client.ui.calendar.schedule.SimpleDayCell;
@@ -37,7 +36,7 @@ public class CalendarMonthDropHandler extends CalendarDropHandler {
         super(connector);
     }
 
-    private Element currentTargetElement;
+    private com.google.gwt.user.client.Element currentTargetElement;
     private SimpleDayCell currentTargetDay;
 
     /*

@@ -30,7 +30,6 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -49,7 +48,7 @@ public class VTooltip extends VWindowOverlay {
             | Event.ONMOUSEOVER | Event.ONMOUSEOUT | Event.ONMOUSEMOVE
             | Event.ONCLICK;
     VErrorMessage em = new VErrorMessage();
-    Element description = DOM.createDiv();
+    com.google.gwt.user.client.Element description = DOM.createDiv();
 
     private boolean closing = false;
     private boolean opening = false;
@@ -324,7 +323,8 @@ public class VTooltip extends VWindowOverlay {
          *            Element used in search
          * @return true if connector and tooltip found
          */
-        private boolean resolveConnector(Element element) {
+        private boolean resolveConnector(
+                com.google.gwt.user.client.Element element) {
 
             ApplicationConnection ac = getApplicationConnection();
             ComponentConnector connector = Util.getConnectorForElement(ac,
@@ -410,8 +410,8 @@ public class VTooltip extends VWindowOverlay {
 
         private void handleShowHide(DomEvent domEvent, boolean isFocused) {
             Event event = Event.as(domEvent.getNativeEvent());
-            com.google.gwt.dom.client.Element element = Element.as(event
-                    .getEventTarget());
+            com.google.gwt.dom.client.Element element = com.google.gwt.user.client.Element
+                    .as(event.getEventTarget());
 
             // We can ignore move event if it's handled by move or over already
             if (currentElement == element && handledByFocus == true) {

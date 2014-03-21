@@ -35,7 +35,6 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
@@ -170,7 +169,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
             @Override
             public void onScroll(ScrollEvent event) {
-                Element element = getWidget().getElement();
+                com.google.gwt.user.client.Element element = getWidget()
+                        .getElement();
                 int newScrollTop = element.getScrollTop();
                 int newScrollLeft = element.getScrollLeft();
                 if (newScrollTop != lastSentScrollTop

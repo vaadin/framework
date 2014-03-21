@@ -19,7 +19,6 @@ package com.vaadin.client.ui;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.client.ApplicationConnection;
@@ -39,19 +38,23 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
     public String id;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public final Element captionNode = DOM.createDiv();
+    public final com.google.gwt.user.client.Element captionNode = DOM
+            .createDiv();
 
-    private final Element captionText = DOM.createSpan();
+    private final com.google.gwt.user.client.Element captionText = DOM
+            .createSpan();
 
     private Icon icon;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public final Element bottomDecoration = DOM.createDiv();
+    public final com.google.gwt.user.client.Element bottomDecoration = DOM
+            .createDiv();
 
     /** For internal use only. May be removed or replaced in the future. */
-    public final Element contentNode = DOM.createDiv();
+    public final com.google.gwt.user.client.Element contentNode = DOM
+            .createDiv();
 
-    private Element errorIndicatorElement;
+    private com.google.gwt.user.client.Element errorIndicatorElement;
 
     /** For internal use only. May be removed or replaced in the future. */
     public ShortcutActionHandler shortcutHandler;
@@ -124,7 +127,7 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
     }
 
     @Override
-    protected Element getContainerElement() {
+    protected com.google.gwt.user.client.Element getContainerElement() {
         return contentNode;
     }
 

@@ -57,7 +57,6 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
@@ -516,7 +515,8 @@ public class ApplicationConnection {
 
         // Ensure the overlay container is added to the dom and set as a live
         // area for assistive devices
-        Element overlayContainer = VOverlay.getOverlayContainer(this);
+        com.google.gwt.user.client.Element overlayContainer = VOverlay
+                .getOverlayContainer(this);
         Roles.getAlertRole().setAriaLiveProperty(overlayContainer,
                 LiveValue.ASSERTIVE);
         VOverlay.setOverlayContainerLabel(this,
@@ -3483,7 +3483,8 @@ public class ApplicationConnection {
      * @return Connector for focused element or null.
      */
     private ComponentConnector getActiveConnector() {
-        Element focusedElement = Util.getFocusedElement();
+        com.google.gwt.user.client.Element focusedElement = Util
+                .getFocusedElement();
         if (focusedElement == null) {
             return null;
         }

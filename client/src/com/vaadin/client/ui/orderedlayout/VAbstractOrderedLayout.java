@@ -25,7 +25,6 @@ import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
@@ -49,7 +48,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
     private Map<Widget, Slot> widgetToSlot = new HashMap<Widget, Slot>();
 
-    private Element expandWrapper;
+    private com.google.gwt.user.client.Element expandWrapper;
 
     private LayoutManager layoutManager;
 
@@ -143,7 +142,8 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * {@inheritDoc}
      */
     @Override
-    protected void insert(Widget child, Element container, int beforeIndex,
+    protected void insert(Widget child,
+            com.google.gwt.user.client.Element container, int beforeIndex,
             boolean domInsert) {
         // Validate index; adjust if the widget is already a child of this
         // panel.
@@ -221,7 +221,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
      *            The element of the widget ( Same as getWidget().getElement() )
      * @return
      */
-    public Slot getSlot(Element widgetElement) {
+    public Slot getSlot(com.google.gwt.user.client.Element widgetElement) {
         for (Map.Entry<Widget, Slot> entry : widgetToSlot.entrySet()) {
             if (entry.getKey().getElement() == widgetElement) {
                 return entry.getValue();
@@ -258,7 +258,8 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * 
      * @return The caption position
      */
-    public CaptionPosition getCaptionPositionFromElement(Element captionWrap) {
+    public CaptionPosition getCaptionPositionFromElement(
+            com.google.gwt.user.client.Element captionWrap) {
         RegExp captionPositionRegexp = RegExp.compile("v-caption-on-(\\S+)");
 
         // Get caption position from the classname
@@ -281,9 +282,10 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * @param caption
      *            The caption element
      */
-    public void updateCaptionOffset(Element caption) {
+    public void updateCaptionOffset(com.google.gwt.user.client.Element caption) {
 
-        Element captionWrap = caption.getParentElement().cast();
+        com.google.gwt.user.client.Element captionWrap = caption
+                .getParentElement().cast();
 
         Style captionWrapStyle = captionWrap.getStyle();
         captionWrapStyle.clearPaddingTop();
@@ -413,7 +415,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
         // Give each expanded child its own share
         for (Slot slot : widgetToSlot.values()) {
 
-            Element slotElement = slot.getElement();
+            com.google.gwt.user.client.Element slotElement = slot.getElement();
             slotElement.removeAttribute("aria-hidden");
 
             Style slotStyle = slotElement.getStyle();
@@ -481,7 +483,8 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
             lastExpandSize = -1;
             while (expandWrapper.getChildCount() > 0) {
-                Element el = expandWrapper.getChild(0).cast();
+                com.google.gwt.user.client.Element el = expandWrapper.getChild(
+                        0).cast();
                 getElement().appendChild(el);
                 if (vertical) {
                     el.getStyle().clearHeight();

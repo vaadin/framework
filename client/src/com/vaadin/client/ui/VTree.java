@@ -46,7 +46,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -237,14 +236,15 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         if (event.getTypeInt() == Event.ONMOUSEDOWN) {
             // Prevent default text selection in IE
             if (BrowserInfo.get().isIE()) {
-                ((Element) event.getEventTarget().cast()).setPropertyJSO(
-                        "onselectstart", applyDisableTextSelectionIEHack());
+                ((com.google.gwt.user.client.Element) event.getEventTarget()
+                        .cast()).setPropertyJSO("onselectstart",
+                        applyDisableTextSelectionIEHack());
             }
         } else if (event.getTypeInt() == Event.ONMOUSEUP) {
             // Remove IE text selection hack
             if (BrowserInfo.get().isIE()) {
-                ((Element) event.getEventTarget().cast()).setPropertyJSO(
-                        "onselectstart", null);
+                ((com.google.gwt.user.client.Element) event.getEventTarget()
+                        .cast()).setPropertyJSO("onselectstart", null);
             }
         } else if (event.getTypeInt() == Event.ONKEYUP) {
             if (selectionHasChanged) {
@@ -338,7 +338,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     }
 
-    private String findCurrentMouseOverKey(Element elementOver) {
+    private String findCurrentMouseOverKey(
+            com.google.gwt.user.client.Element elementOver) {
         TreeNode treeNode = Util.findWidget(elementOver, TreeNode.class);
         return treeNode == null ? null : treeNode.key;
     }
@@ -516,9 +517,9 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         /** For internal use only. May be removed or replaced in the future. */
         public boolean childrenLoaded;
 
-        Element nodeCaptionDiv;
+        com.google.gwt.user.client.Element nodeCaptionDiv;
 
-        protected Element nodeCaptionSpan;
+        protected com.google.gwt.user.client.Element nodeCaptionSpan;
 
         /** For internal use only. May be removed or replaced in the future. */
         public FlowPanel childNodeContainer;
@@ -691,7 +692,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             final int type = DOM.eventGetType(event);
-            final Element target = DOM.eventGetTarget(event);
+            final com.google.gwt.user.client.Element target = DOM
+                    .eventGetTarget(event);
 
             if (type == Event.ONLOAD && target == icon.getElement()) {
                 iconLoaded.trigger();
@@ -892,7 +894,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             nodeCaptionDiv = DOM.createDiv();
             DOM.setElementProperty(nodeCaptionDiv, "className", CLASSNAME
                     + "-caption");
-            Element wrapper = DOM.createDiv();
+            com.google.gwt.user.client.Element wrapper = DOM.createDiv();
             wrapper.setId(labelId);
             wrapper.setAttribute("for", treeItemId);
 
@@ -2060,7 +2062,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * .lang.String)
      */
     @Override
-    public Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         if ("fe".equals(subPart)) {
             if (BrowserInfo.get().isOpera() && focusedNode != null) {
                 return focusedNode.getElement();
@@ -2113,7 +2115,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * .gwt.user.client.Element)
      */
     @Override
-    public String getSubPartName(Element subElement) {
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         // Supported identifiers:
         //
         // n[index]/n[index]/n[index]{/expand}
@@ -2222,7 +2224,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     }
 
     @Override
-    public void bindAriaCaption(Element captionElement) {
+    public void bindAriaCaption(
+            com.google.gwt.user.client.Element captionElement) {
         AriaHelper.bindCaption(body, captionElement);
     }
 }

@@ -17,7 +17,6 @@ package com.vaadin.client.ui.absolutelayout;
 
 import java.util.List;
 
-import com.google.gwt.user.client.Element;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.DirectionalManagedLayout;
@@ -46,7 +45,8 @@ public class AbsoluteLayoutConnector extends
             this) {
 
         @Override
-        protected ComponentConnector getChildComponent(Element element) {
+        protected ComponentConnector getChildComponent(
+                com.google.gwt.user.client.Element element) {
             return getConnectorForElement(element);
         }
 
@@ -92,7 +92,8 @@ public class AbsoluteLayoutConnector extends
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
      */
-    protected ComponentConnector getConnectorForElement(Element element) {
+    protected ComponentConnector getConnectorForElement(
+            com.google.gwt.user.client.Element element) {
         return Util.getConnectorForElement(getConnection(), getWidget(),
                 element);
     }

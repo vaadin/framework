@@ -33,7 +33,6 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
@@ -569,20 +568,20 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     private static final String SUBPART_REMOVE_BUTTON = "remove";
 
     @Override
-    public Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         if (SUBPART_OPTION_SELECT.equals(subPart)) {
             return options.getElement();
         } else if (subPart.startsWith(SUBPART_OPTION_SELECT_ITEM)) {
             String idx = subPart.substring(SUBPART_OPTION_SELECT_ITEM.length());
-            return (Element) options.getElement().getChild(
-                    Integer.parseInt(idx));
+            return (com.google.gwt.user.client.Element) options.getElement()
+                    .getChild(Integer.parseInt(idx));
         } else if (SUBPART_SELECTION_SELECT.equals(subPart)) {
             return selections.getElement();
         } else if (subPart.startsWith(SUBPART_SELECTION_SELECT_ITEM)) {
             String idx = subPart.substring(SUBPART_SELECTION_SELECT_ITEM
                     .length());
-            return (Element) selections.getElement().getChild(
-                    Integer.parseInt(idx));
+            return (com.google.gwt.user.client.Element) selections.getElement()
+                    .getChild(Integer.parseInt(idx));
         } else if (optionsCaption != null
                 && SUBPART_LEFT_CAPTION.equals(subPart)) {
             return optionsCaption.getElement();
@@ -599,7 +598,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     }
 
     @Override
-    public String getSubPartName(Element subElement) {
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         if (optionsCaption != null
                 && optionsCaption.getElement().isOrHasChild(subElement)) {
             return SUBPART_LEFT_CAPTION;

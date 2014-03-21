@@ -19,7 +19,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
@@ -94,9 +93,10 @@ public class VColorPickerGrid extends AbsolutePanel implements ClickHandler,
             if (changedColor.length == changedX.length
                     && changedX.length == changedY.length) {
                 for (int c = 0; c < changedColor.length; c++) {
-                    Element element = grid.getCellFormatter().getElement(
-                            Integer.parseInt(changedX[c]),
-                            Integer.parseInt(changedY[c]));
+                    com.google.gwt.user.client.Element element = grid
+                            .getCellFormatter().getElement(
+                                    Integer.parseInt(changedX[c]),
+                                    Integer.parseInt(changedY[c]));
                     element.getStyle().setProperty("background",
                             changedColor[c]);
                 }

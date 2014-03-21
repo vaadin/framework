@@ -19,7 +19,6 @@ package com.vaadin.client.ui;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
@@ -44,7 +43,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
     public ApplicationConnection client;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element errorIndicatorElement;
+    public com.google.gwt.user.client.Element errorIndicatorElement;
 
     /** For internal use only. May be removed or replaced in the future. */
     public Icon icon;
@@ -52,7 +51,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
     public VCheckBox() {
         setStyleName(CLASSNAME);
 
-        Element el = DOM.getFirstChild(getElement());
+        com.google.gwt.user.client.Element el = DOM.getFirstChild(getElement());
         while (el != null) {
             DOM.sinkEvents(el,
                     (DOM.getEventsSunk(el) | VTooltip.TOOLTIP_EVENTS));
@@ -91,9 +90,10 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
      * 
      * @return Element of the CheckBox itself
      */
-    private Element getCheckBoxElement() {
+    private com.google.gwt.user.client.Element getCheckBoxElement() {
         // FIXME: Would love to use a better way to access the checkbox element
-        return (Element) getElement().getFirstChildElement();
+        return (com.google.gwt.user.client.Element) getElement()
+                .getFirstChildElement();
     }
 
     @Override

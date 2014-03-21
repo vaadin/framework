@@ -18,16 +18,15 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.user.client.Element;
 import com.vaadin.client.VConsole;
 
 public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
     private AnchorElement anchor = null;
 
     @Override
-    protected Element getDragStartElement() {
+    protected com.google.gwt.user.client.Element getDragStartElement() {
         VConsole.log("IE get drag start element...");
-        Element div = getElement();
+        com.google.gwt.user.client.Element div = getElement();
         if (dragStartMode == HTML5) {
             if (anchor == null) {
                 anchor = Document.get().createAnchorElement();
@@ -36,7 +35,7 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
                 div.appendChild(anchor);
             }
             VConsole.log("IE get drag start element...");
-            return (Element) anchor.cast();
+            return (com.google.gwt.user.client.Element) anchor.cast();
         } else {
             if (anchor != null) {
                 div.removeChild(anchor);
@@ -47,7 +46,8 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
     }
 
     @Override
-    protected native void hookHtml5DragStart(Element el)
+    protected native void hookHtml5DragStart(
+            com.google.gwt.user.client.Element el)
     /*-{
         var me = this;
 
@@ -57,7 +57,7 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
     }-*/;
 
     @Override
-    protected native void hookHtml5Events(Element el)
+    protected native void hookHtml5Events(com.google.gwt.user.client.Element el)
     /*-{
         var me = this;
 

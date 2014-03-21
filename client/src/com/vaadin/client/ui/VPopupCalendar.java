@@ -30,7 +30,6 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -82,7 +81,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
     private Label selectedDate;
 
-    private Element descriptionForAssisitveDevicesElement;
+    private com.google.gwt.user.client.Element descriptionForAssisitveDevicesElement;
 
     public VPopupCalendar() {
         super();
@@ -255,7 +254,8 @@ public class VPopupCalendar extends VTextualDate implements Field,
     }
 
     @Override
-    public void bindAriaCaption(Element captionElement) {
+    public void bindAriaCaption(
+            com.google.gwt.user.client.Element captionElement) {
         if (captionElement == null) {
             captionId = null;
         } else {
@@ -552,7 +552,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
     private final String CALENDAR_TOGGLE_ID = "popupButton";
 
     @Override
-    public Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         if (subPart.equals(CALENDAR_TOGGLE_ID)) {
             return calendarToggle.getElement();
         }
@@ -561,7 +561,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
     }
 
     @Override
-    public String getSubPartName(Element subElement) {
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         if (calendarToggle.getElement().isOrHasChild(subElement)) {
             return CALENDAR_TOGGLE_ID;
         }

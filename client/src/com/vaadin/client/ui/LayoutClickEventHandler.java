@@ -16,7 +16,6 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.user.client.Element;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.shared.EventId;
@@ -34,10 +33,12 @@ public abstract class LayoutClickEventHandler extends AbstractClickEventHandler 
         super(connector, clickEventIdentifier);
     }
 
-    protected abstract ComponentConnector getChildComponent(Element element);
+    protected abstract ComponentConnector getChildComponent(
+            com.google.gwt.user.client.Element element);
 
     protected ComponentConnector getChildComponent(NativeEvent event) {
-        return getChildComponent((Element) event.getEventTarget().cast());
+        return getChildComponent((com.google.gwt.user.client.Element) event
+                .getEventTarget().cast());
     }
 
     @Override

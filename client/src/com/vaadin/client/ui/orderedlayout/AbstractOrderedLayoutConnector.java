@@ -18,7 +18,6 @@ package com.vaadin.client.ui.orderedlayout;
 import java.util.List;
 
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
@@ -60,7 +59,8 @@ public abstract class AbstractOrderedLayoutConnector extends
             this) {
 
         @Override
-        protected ComponentConnector getChildComponent(Element element) {
+        protected ComponentConnector getChildComponent(
+                com.google.gwt.user.client.Element element) {
             return Util.getConnectorForElement(getConnection(), getWidget(),
                     element);
         }
@@ -98,16 +98,18 @@ public abstract class AbstractOrderedLayoutConnector extends
         public void onElementResize(ElementResizeEvent e) {
 
             // Get all needed element references
-            Element captionElement = (Element) e.getElement().cast();
+            com.google.gwt.user.client.Element captionElement = (com.google.gwt.user.client.Element) e
+                    .getElement().cast();
 
             // Caption position determines if the widget element is the first or
             // last child inside the caption wrap
             CaptionPosition pos = getWidget().getCaptionPositionFromElement(
-                    (Element) captionElement.getParentElement().cast());
+                    (com.google.gwt.user.client.Element) captionElement
+                            .getParentElement().cast());
 
             // The default is the last child
-            Element widgetElement = captionElement.getParentElement()
-                    .getLastChild().cast();
+            com.google.gwt.user.client.Element widgetElement = captionElement
+                    .getParentElement().getLastChild().cast();
 
             // ...but if caption position is bottom or right, the widget is the
             // first child
@@ -614,7 +616,8 @@ public abstract class AbstractOrderedLayoutConnector extends
         for (ComponentConnector child : getChildComponents()) {
             Widget childWidget = child.getWidget();
             Slot slot = getWidget().getSlot(childWidget);
-            Element captionElement = slot.getCaptionElement();
+            com.google.gwt.user.client.Element captionElement = slot
+                    .getCaptionElement();
             CaptionPosition captionPosition = slot.getCaptionPosition();
 
             int pixelHeight = layoutManager.getOuterHeight(childWidget

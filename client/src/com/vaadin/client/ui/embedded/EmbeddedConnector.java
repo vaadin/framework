@@ -25,7 +25,6 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
@@ -78,13 +77,13 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
             getWidget().type = uidl.getStringAttribute("type");
             if (getWidget().type.equals("image")) {
                 getWidget().addStyleName(VEmbedded.CLASSNAME + "-image");
-                Element el = null;
+                com.google.gwt.user.client.Element el = null;
                 boolean created = false;
                 NodeList<Node> nodes = getWidget().getElement().getChildNodes();
                 if (nodes != null && nodes.getLength() == 1) {
                     Node n = nodes.getItem(0);
                     if (n.getNodeType() == Node.ELEMENT_NODE) {
-                        Element e = (Element) n;
+                        com.google.gwt.user.client.Element e = (com.google.gwt.user.client.Element) n;
                         if (e.getTagName().equals("IMG")) {
                             el = e;
                         }

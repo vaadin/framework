@@ -19,7 +19,6 @@ package com.vaadin.client;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 
 /**
@@ -67,7 +66,7 @@ public class VLoadingIndicator {
         }
     };
 
-    private Element element;
+    private com.google.gwt.user.client.Element element;
 
     /**
      * Returns the delay (in ms) which must pass before the loading indicator
@@ -228,7 +227,7 @@ public class VLoadingIndicator {
      * 
      * @return The loading indicator DOM element
      */
-    public Element getElement() {
+    public com.google.gwt.user.client.Element getElement() {
         if (element == null) {
             element = DOM.createDiv();
             element.getStyle().setPosition(Position.ABSOLUTE);

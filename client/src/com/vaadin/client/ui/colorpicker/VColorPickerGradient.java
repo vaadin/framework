@@ -22,7 +22,6 @@ import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -191,7 +190,7 @@ public class VColorPickerGradient extends FocusPanel implements
     }
 
     @Override
-    public Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         if (subPart.equals(CLICKLAYER_ID)) {
             return clicklayer.getElement();
         }
@@ -200,7 +199,7 @@ public class VColorPickerGradient extends FocusPanel implements
     }
 
     @Override
-    public String getSubPartName(Element subElement) {
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         if (clicklayer.getElement().isOrHasChild(subElement)) {
             return CLICKLAYER_ID;
         }

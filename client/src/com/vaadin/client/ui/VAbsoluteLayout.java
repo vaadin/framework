@@ -19,7 +19,6 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -36,7 +35,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     private DivElement marginElement;
 
-    protected final Element canvas = DOM.createDiv();
+    protected final com.google.gwt.user.client.Element canvas = DOM.createDiv();
 
     /**
      * Default constructor

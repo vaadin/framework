@@ -26,7 +26,6 @@ import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -49,7 +48,7 @@ public class VCustomLayout extends ComplexPanel {
     public static final String CLASSNAME = "v-customlayout";
 
     /** Location-name to containing element in DOM map */
-    private final HashMap<String, Element> locationToElement = new HashMap<String, Element>();
+    private final HashMap<String, com.google.gwt.user.client.Element> locationToElement = new HashMap<String, com.google.gwt.user.client.Element>();
 
     /** Location-name to contained widget map */
     final HashMap<String, Widget> locationToWidget = new HashMap<String, Widget>();
@@ -76,7 +75,7 @@ public class VCustomLayout extends ComplexPanel {
 
     private boolean htmlInitialized = false;
 
-    private Element elementWithNativeResizeFunction;
+    private com.google.gwt.user.client.Element elementWithNativeResizeFunction;
 
     private String height = "";
 
@@ -123,7 +122,8 @@ public class VCustomLayout extends ComplexPanel {
         }
 
         // If no given location is found in the layout, and exception is throws
-        Element elem = locationToElement.get(location);
+        com.google.gwt.user.client.Element elem = locationToElement
+                .get(location);
         if (elem == null && hasTemplate()) {
             throw new IllegalArgumentException("No location " + location
                     + " found");
@@ -207,7 +207,7 @@ public class VCustomLayout extends ComplexPanel {
     }
 
     /** Collect locations from template */
-    private void scanForLocations(Element elem) {
+    private void scanForLocations(com.google.gwt.user.client.Element elem) {
 
         final String location = elem.getAttribute("location");
         if (!"".equals(location)) {
@@ -247,7 +247,8 @@ public class VCustomLayout extends ComplexPanel {
         for (int i = 0; i < nodeList.getLength(); i++) {
             com.google.gwt.dom.client.ImageElement img = (ImageElement) nodeList
                     .getItem(i);
-            DOM.sinkEvents((Element) img.cast(), Event.ONLOAD);
+            DOM.sinkEvents((com.google.gwt.user.client.Element) img.cast(),
+                    Event.ONLOAD);
         }
     }
 
@@ -389,12 +390,14 @@ public class VCustomLayout extends ComplexPanel {
         }
     }
 
-    private native void detachResizedFunction(Element element)
+    private native void detachResizedFunction(
+            com.google.gwt.user.client.Element element)
     /*-{
     	element.notifyChildrenOfSizeChange = null;
     }-*/;
 
-    private native void publishResizedFunction(Element element)
+    private native void publishResizedFunction(
+            com.google.gwt.user.client.Element element)
     /*-{
     	var self = this;
     	element.notifyChildrenOfSizeChange = $entry(function() {
@@ -419,7 +422,7 @@ public class VCustomLayout extends ComplexPanel {
      * @return true if layout function exists and was run successfully, else
      *         false.
      */
-    public native boolean iLayoutJS(Element el)
+    public native boolean iLayoutJS(com.google.gwt.user.client.Element el)
     /*-{
     	if(el && el.iLayoutJS) {
     		try {

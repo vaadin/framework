@@ -20,14 +20,14 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.VCaption;
 import com.vaadin.shared.ui.AlignmentInfo;
 
 public abstract class VLayoutSlot {
 
-    private final Element wrapper = Document.get().createDivElement().cast();
+    private final com.google.gwt.user.client.Element wrapper = Document.get()
+            .createDivElement().cast();
 
     private AlignmentInfo alignment;
     private VCaption caption;
@@ -288,7 +288,7 @@ public abstract class VLayoutSlot {
         return isVertical ? isRelativeHeight() : isRelativeWidth();
     }
 
-    public Element getWrapperElement() {
+    public com.google.gwt.user.client.Element getWrapperElement() {
         return wrapper;
     }
 

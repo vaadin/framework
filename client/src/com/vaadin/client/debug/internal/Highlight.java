@@ -21,7 +21,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
@@ -51,7 +50,7 @@ public class Highlight {
     private static final int MIN_WIDTH = 3;
     private static final int MIN_HEIGHT = 3;
 
-    static HashSet<Element> highlights;
+    static HashSet<com.google.gwt.user.client.Element> highlights;
 
     /**
      * Highlight the {@link Widget} for the given {@link ComponentConnector}.
@@ -64,7 +63,7 @@ public class Highlight {
      *            ComponentConnector
      * @return Highlight element
      */
-    static Element show(ComponentConnector connector) {
+    static com.google.gwt.user.client.Element show(ComponentConnector connector) {
         return show(connector, DEFAULT_COLOR);
     }
 
@@ -83,7 +82,7 @@ public class Highlight {
      * @return Highlight element, or <code>null</code> if the connector isn't a
      *         component
      */
-    static Element showOnly(ServerConnector connector) {
+    static com.google.gwt.user.client.Element showOnly(ServerConnector connector) {
         hideAll();
         if (connector instanceof ComponentConnector) {
             return show((ComponentConnector) connector);
@@ -106,7 +105,8 @@ public class Highlight {
      *            Color of highlight
      * @return Highlight element
      */
-    static Element show(ComponentConnector connector, String color) {
+    static com.google.gwt.user.client.Element show(
+            ComponentConnector connector, String color) {
         if (connector != null) {
             Widget w = connector.getWidget();
             return show(w, color);
@@ -125,7 +125,7 @@ public class Highlight {
      *            Widget to highlight
      * @return Highlight element
      */
-    static Element show(Widget widget) {
+    static com.google.gwt.user.client.Element show(Widget widget) {
         return show(widget, DEFAULT_COLOR);
     }
 
@@ -142,7 +142,7 @@ public class Highlight {
      *            Color of highlight
      * @return Highlight element
      */
-    static Element show(Widget widget, String color) {
+    static com.google.gwt.user.client.Element show(Widget widget, String color) {
         if (widget != null) {
             show(widget.getElement(), color);
         }
@@ -160,7 +160,8 @@ public class Highlight {
      *            Element to highlight
      * @return Highlight element
      */
-    static Element show(Element element) {
+    static com.google.gwt.user.client.Element show(
+            com.google.gwt.user.client.Element element) {
         return show(element, DEFAULT_COLOR);
     }
 
@@ -177,13 +178,14 @@ public class Highlight {
      *            Color of highlight
      * @return Highlight element
      */
-    static Element show(Element element, String color) {
+    static com.google.gwt.user.client.Element show(
+            com.google.gwt.user.client.Element element, String color) {
         if (element != null) {
             if (highlights == null) {
-                highlights = new HashSet<Element>();
+                highlights = new HashSet<com.google.gwt.user.client.Element>();
             }
 
-            Element highlight = DOM.createDiv();
+            com.google.gwt.user.client.Element highlight = DOM.createDiv();
             Style style = highlight.getStyle();
             style.setTop(element.getAbsoluteTop(), Unit.PX);
             style.setLeft(element.getAbsoluteLeft(), Unit.PX);
@@ -221,7 +223,7 @@ public class Highlight {
      * @param highlight
      *            Highlight to hide
      */
-    static void hide(Element highlight) {
+    static void hide(com.google.gwt.user.client.Element highlight) {
         if (highlight != null && highlight.getParentElement() != null) {
             highlight.getParentElement().removeChild(highlight);
             highlights.remove(highlight);
@@ -233,7 +235,7 @@ public class Highlight {
      */
     static void hideAll() {
         if (highlights != null) {
-            for (Element highlight : highlights) {
+            for (com.google.gwt.user.client.Element highlight : highlights) {
                 if (highlight.getParentElement() != null) {
                     highlight.getParentElement().removeChild(highlight);
                 }

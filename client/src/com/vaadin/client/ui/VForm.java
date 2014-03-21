@@ -20,7 +20,6 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -38,13 +37,13 @@ public class VForm extends ComplexPanel implements KeyDownHandler {
     public Widget lo;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element legend = DOM.createLegend();
+    public com.google.gwt.user.client.Element legend = DOM.createLegend();
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element caption = DOM.createSpan();
+    public com.google.gwt.user.client.Element caption = DOM.createSpan();
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element desc = DOM.createDiv();
+    public com.google.gwt.user.client.Element desc = DOM.createDiv();
 
     /** For internal use only. May be removed or replaced in the future. */
     public Icon icon;
@@ -53,13 +52,13 @@ public class VForm extends ComplexPanel implements KeyDownHandler {
     public VErrorMessage errorMessage = new VErrorMessage();
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element fieldContainer = DOM.createDiv();
+    public com.google.gwt.user.client.Element fieldContainer = DOM.createDiv();
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element footerContainer = DOM.createDiv();
+    public com.google.gwt.user.client.Element footerContainer = DOM.createDiv();
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element fieldSet = DOM.createFieldSet();
+    public com.google.gwt.user.client.Element fieldSet = DOM.createFieldSet();
 
     /** For internal use only. May be removed or replaced in the future. */
     public Widget footer;
@@ -139,7 +138,7 @@ public class VForm extends ComplexPanel implements KeyDownHandler {
 
     /** For internal use only. May be removed or replaced in the future. */
     @Override
-    public void add(Widget child, Element container) {
+    public void add(Widget child, com.google.gwt.user.client.Element container) {
         super.add(child, container);
     }
 }

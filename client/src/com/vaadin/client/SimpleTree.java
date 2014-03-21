@@ -30,7 +30,6 @@ import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -43,7 +42,8 @@ import com.google.gwt.user.client.ui.Widget;
  */
 @Deprecated
 public class SimpleTree extends ComplexPanel implements HasDoubleClickHandlers {
-    private Element children = Document.get().createDivElement().cast();
+    private com.google.gwt.user.client.Element children = Document.get()
+            .createDivElement().cast();
     private SpanElement handle = Document.get().createSpanElement();
     private SpanElement text = Document.get().createSpanElement();
 
@@ -144,7 +144,8 @@ public class SimpleTree extends ComplexPanel implements HasDoubleClickHandlers {
     }
 
     @Override
-    protected void add(Widget child, Element container) {
+    protected void add(Widget child,
+            com.google.gwt.user.client.Element container) {
         super.add(child, container);
         handle.getStyle().setDisplay(Display.INLINE_BLOCK);
         getElement().getStyle().setPaddingLeft(3, Unit.PX);

@@ -44,7 +44,6 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -113,11 +112,11 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 + "-focus";
 
         private TabCaption tabCaption;
-        Element td = getElement();
+        com.google.gwt.user.client.Element td = getElement();
         private VCloseHandler closeHandler;
 
         private boolean enabledOnServer = true;
-        private Element div;
+        private com.google.gwt.user.client.Element div;
         private TabBar tabBar;
         private boolean hiddenOnServer = false;
 
@@ -162,7 +161,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         @Override
-        protected Element getContainerElement() {
+        protected com.google.gwt.user.client.Element getContainerElement() {
             // Attach caption element to div, not td
             return div;
         }
@@ -311,7 +310,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     public static class TabCaption extends VCaption {
 
         private boolean closable = false;
-        private Element closeButton;
+        private com.google.gwt.user.client.Element closeButton;
         private Tab tab;
 
         TabCaption(Tab tab, ApplicationConnection client) {
@@ -406,7 +405,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             return width;
         }
 
-        public Element getCloseButton() {
+        public com.google.gwt.user.client.Element getCloseButton() {
             return closeButton;
         }
 
@@ -415,9 +414,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     static class TabBar extends ComplexPanel implements ClickHandler,
             VCloseHandler {
 
-        private final Element tr = DOM.createTR();
+        private final com.google.gwt.user.client.Element tr = DOM.createTR();
 
-        private final Element spacerTd = DOM.createTD();
+        private final com.google.gwt.user.client.Element spacerTd = DOM
+                .createTD();
 
         private Tab selected;
 
@@ -426,10 +426,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         TabBar(VTabsheet tabsheet) {
             this.tabsheet = tabsheet;
 
-            Element el = DOM.createTable();
+            com.google.gwt.user.client.Element el = DOM.createTable();
             Roles.getPresentationRole().set(el);
 
-            Element tbody = DOM.createTBody();
+            com.google.gwt.user.client.Element tbody = DOM.createTBody();
             DOM.appendChild(el, tbody);
             DOM.appendChild(tbody, tr);
             setStyleName(spacerTd, CLASSNAME + "-spacertd");
@@ -448,7 +448,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             getTabsheet().sendTabClosedEvent(tabIndex);
         }
 
-        protected Element getContainerElement() {
+        protected com.google.gwt.user.client.Element getContainerElement() {
             return tr;
         }
 
@@ -477,8 +477,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         @Override
         public void onClick(ClickEvent event) {
             TabCaption caption = (TabCaption) event.getSource();
-            Element targetElement = event.getNativeEvent().getEventTarget()
-                    .cast();
+            com.google.gwt.user.client.Element targetElement = event
+                    .getNativeEvent().getEventTarget().cast();
             // the tab should not be focused if the close button was clicked
             if (targetElement == caption.getCloseButton()) {
                 return;
@@ -644,7 +644,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     public static final String SCROLLER_CLASSNAME = "v-tabsheet-scroller";
 
     /** For internal use only. May be removed or replaced in the future. */
-    public final Element tabs; // tabbar and 'scroller' container
+    // tabbar and 'scroller' container
+    public final com.google.gwt.user.client.Element tabs;
     Tab focusedTab;
     /**
      * The tabindex property (position in the browser's focus cycle.) Named like
@@ -654,9 +655,12 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     private static final FocusImpl focusImpl = FocusImpl.getFocusImplForPanel();
 
-    private final Element scroller; // tab-scroller element
-    private final Element scrollerNext; // tab-scroller next button element
-    private final Element scrollerPrev; // tab-scroller prev button element
+    // tab-scroller element
+    private final com.google.gwt.user.client.Element scroller;
+    // tab-scroller next button element
+    private final com.google.gwt.user.client.Element scrollerNext;
+    // tab-scroller prev button element
+    private final com.google.gwt.user.client.Element scrollerPrev;
 
     /**
      * The index of the first visible tab (when scrolled)
@@ -667,9 +671,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     /** For internal use only. May be removed or replaced in the future. */
     public final VTabsheetPanel tp = new VTabsheetPanel();
     /** For internal use only. May be removed or replaced in the future. */
-    public final Element contentNode;
+    public final com.google.gwt.user.client.Element contentNode;
 
-    private final Element deco;
+    private final com.google.gwt.user.client.Element deco;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean waitingForResponse;
@@ -1127,8 +1131,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     }
 
     private boolean isClippedTabs() {
-        return (tb.getOffsetWidth() - DOM.getElementPropertyInt((Element) tb
-                .getContainerElement().getLastChild().cast(), "offsetWidth")) > getOffsetWidth()
+        return (tb.getOffsetWidth() - DOM.getElementPropertyInt(
+                (com.google.gwt.user.client.Element) tb.getContainerElement()
+                        .getLastChild().cast(), "offsetWidth")) > getOffsetWidth()
                 - (isScrolledTabs() ? scroller.getOffsetWidth() : 0);
     }
 

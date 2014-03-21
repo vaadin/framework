@@ -25,7 +25,6 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -289,7 +288,7 @@ public class VNotification extends VOverlay {
     }
 
     public void setPosition(com.vaadin.shared.Position position) {
-        final Element el = getElement();
+        final com.google.gwt.user.client.Element el = getElement();
         DOM.setStyleAttribute(el, "top", "");
         DOM.setStyleAttribute(el, "left", "");
         DOM.setStyleAttribute(el, "bottom", "");
@@ -346,7 +345,7 @@ public class VNotification extends VOverlay {
         }
     }
 
-    private void setOpacity(Element el, int opacity) {
+    private void setOpacity(com.google.gwt.user.client.Element el, int opacity) {
         DOM.setStyleAttribute(el, "opacity", "" + (opacity / 100.0));
         if (BrowserInfo.get().isIE()) {
             DOM.setStyleAttribute(el, "filter", "Alpha(opacity=" + opacity

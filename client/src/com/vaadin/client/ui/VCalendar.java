@@ -25,7 +25,6 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -257,7 +256,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
      * @param e
      *            The element to apply the hack on
      */
-    private native void blockSelect(Element e)
+    private native void blockSelect(com.google.gwt.user.client.Element e)
     /*-{
     	e.onselectstart = function() {
     		return false;
