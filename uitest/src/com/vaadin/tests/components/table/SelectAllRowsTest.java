@@ -39,7 +39,8 @@ public class SelectAllRowsTest extends MultiBrowserTest {
 
     @Override
     protected DesiredCapabilities getDesiredCapabilities() {
-        DesiredCapabilities cap = super.getDesiredCapabilities();
+        DesiredCapabilities cap = new DesiredCapabilities(
+                super.getDesiredCapabilities());
         cap.setCapability("requireWindowFocus", true);
         return cap;
     }
