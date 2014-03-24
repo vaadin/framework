@@ -153,19 +153,19 @@ public class MeasuredSize {
     }
 
     public int getBorderTop() {
-        return margins[0];
+        return borders[0];
     }
 
     public int getBorderRight() {
-        return margins[1];
+        return borders[1];
     }
 
     public int getBorderBottom() {
-        return margins[2];
+        return borders[2];
     }
 
     public int getBorderLeft() {
-        return margins[3];
+        return borders[3];
     }
 
     public int getPaddingTop() {
