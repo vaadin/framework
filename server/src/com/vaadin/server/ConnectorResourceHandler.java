@@ -87,6 +87,14 @@ public class ConnectorResourceHandler implements RequestHandler {
                         + connector.getConnectorId()
                         + ") did not handle connector request for " + key);
             }
+        } catch (Exception e) {
+            session.lock();
+            try {
+                session.getCommunicationManager()
+                        .handleConnectorRelatedException(connector, e);
+            } finally {
+                session.unlock();
+            }
         } finally {
             CurrentInstance.restoreInstances(oldInstances);
         }
