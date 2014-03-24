@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -86,8 +87,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
     }
 
     @Override
-    public String getPathForElement(
-            com.google.gwt.user.client.Element targetElement) {
+    public String getPathForElement(Element targetElement) {
         ComponentConnector connector = Util
                 .findPaintable(client, targetElement);
 
@@ -168,8 +168,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
              * If the widget can provide an identifier for the targetElement we
              * let it do that
              */
-            String elementLocator = ((SubPartAware) w)
-                    .getSubPartName(targetElement);
+            String elementLocator = ((SubPartAware) w).getSubPartName(DOM
+                    .asOld(targetElement));
             if (elementLocator != null) {
                 return path + LegacyLocatorStrategy.SUBPART_SEPARATOR
                         + elementLocator;
@@ -191,7 +191,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * {@inheritDoc}
      */
     @Override
-    public com.google.gwt.user.client.Element getElementByPath(String path) {
+    public Element getElementByPath(String path) {
         return getElementByPathStartingAt(path, null);
     }
 
@@ -199,8 +199,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * {@inheritDoc}
      */
     @Override
-    public com.google.gwt.user.client.Element getElementByPathStartingAt(
-            String path, com.google.gwt.user.client.Element baseElement) {
+    public Element getElementByPathStartingAt(String path, Element baseElement) {
         /*
          * Path is of type "targetWidgetPath#componentPart" or
          * "targetWidgetPath".
@@ -239,11 +238,10 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * {@inheritDoc}
      */
     @Override
-    public List<com.google.gwt.user.client.Element> getElementsByPath(
-            String path) {
+    public List<Element> getElementsByPath(String path) {
         // This type of search is not supported in LegacyLocator
-        List<com.google.gwt.user.client.Element> array = new ArrayList<com.google.gwt.user.client.Element>();
-        com.google.gwt.user.client.Element e = getElementByPath(path);
+        List<Element> array = new ArrayList<Element>();
+        Element e = getElementByPath(path);
         if (e != null) {
             array.add(e);
         }
@@ -254,12 +252,10 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * {@inheritDoc}
      */
     @Override
-    public List<com.google.gwt.user.client.Element> getElementsByPathStartingAt(
-            String path, com.google.gwt.user.client.Element root) {
+    public List<Element> getElementsByPathStartingAt(String path, Element root) {
         // This type of search is not supported in LegacyLocator
-        List<com.google.gwt.user.client.Element> array = new ArrayList<com.google.gwt.user.client.Element>();
-        com.google.gwt.user.client.Element e = getElementByPathStartingAt(path,
-                root);
+        List<Element> array = new ArrayList<Element>();
+        Element e = getElementByPathStartingAt(path, root);
         if (e != null) {
             array.add(e);
         }
@@ -298,9 +294,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * @return The widget whose root element is a parent of
      *         {@code targetElement}.
      */
-    private Widget findParentWidget(
-            com.google.gwt.user.client.Element targetElement,
-            Widget ancestorWidget) {
+    private Widget findParentWidget(Element targetElement, Widget ancestorWidget) {
         /*
          * As we cannot resolve Widgets from the element we start from the
          * widget and move downwards to the correct child widget, as long as we
@@ -329,10 +323,9 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * @return The element identified by path, relative to baseElement or null
      *         if the element could not be found.
      */
-    private com.google.gwt.user.client.Element getElementByDOMPath(
-            com.google.gwt.user.client.Element baseElement, String path) {
+    private Element getElementByDOMPath(Element baseElement, String path) {
         String parts[] = path.split(PARENTCHILD_SEPARATOR);
-        com.google.gwt.user.client.Element element = baseElement;
+        Element element = baseElement;
 
         for (int i = 0, l = parts.length; i < l; ++i) {
             String part = parts[i];
@@ -342,8 +335,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
                 if (Util.findWidget(baseElement, null) instanceof VAbstractOrderedLayout) {
                     if (element.hasChildNodes()) {
-                        com.google.gwt.user.client.Element e = element
-                                .getFirstChildElement().cast();
+                        Element e = element.getFirstChildElement().cast();
                         String cn = e.getClassName();
                         if (cn != null
                                 && (cn.equals("v-expand") || cn
@@ -388,18 +380,15 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      *            The starting point for the locator. The generated path is
      *            relative to this element.
      * @return A String locator that can be used to locate the target element
-     *         using
-     *         {@link #getElementByDOMPath(com.google.gwt.user.client.Element, String)}
-     *         or null if the locator String cannot be created.
+     *         using {@link #getElementByDOMPath(Element, String)} or null if
+     *         the locator String cannot be created.
      */
-    private String getDOMPathForElement(
-            com.google.gwt.user.client.Element element,
-            com.google.gwt.user.client.Element baseElement) {
-        com.google.gwt.user.client.Element e = element;
+    private String getDOMPathForElement(Element element, Element baseElement) {
+        Element e = element;
         String path = "";
         while (true) {
             int childIndex = -1;
-            com.google.gwt.user.client.Element siblingIterator = e;
+            Element siblingIterator = e;
             while (siblingIterator != null) {
                 childIndex++;
                 siblingIterator = siblingIterator.getPreviousSiblingElement()

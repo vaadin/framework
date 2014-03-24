@@ -18,6 +18,8 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.vaadin.client.VConsole;
 
 public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
@@ -26,7 +28,7 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
     @Override
     protected com.google.gwt.user.client.Element getDragStartElement() {
         VConsole.log("IE get drag start element...");
-        com.google.gwt.user.client.Element div = getElement();
+        Element div = getElement();
         if (dragStartMode == HTML5) {
             if (anchor == null) {
                 anchor = Document.get().createAnchorElement();
@@ -35,16 +37,17 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
                 div.appendChild(anchor);
             }
             VConsole.log("IE get drag start element...");
-            return (com.google.gwt.user.client.Element) anchor.cast();
+            return anchor.cast();
         } else {
             if (anchor != null) {
                 div.removeChild(anchor);
                 anchor = null;
             }
-            return div;
+            return DOM.asOld(div);
         }
     }
 
+    @Deprecated
     @Override
     protected native void hookHtml5DragStart(
             com.google.gwt.user.client.Element el)
@@ -56,6 +59,12 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
         }));
     }-*/;
 
+    @Override
+    protected void hookHtml5DragStart(Element el) {
+        hookHtml5DragStart(DOM.asOld(el));
+    }
+
+    @Deprecated
     @Override
     protected native void hookHtml5Events(com.google.gwt.user.client.Element el)
     /*-{
@@ -77,5 +86,10 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
             return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
         }));
     }-*/;
+
+    @Override
+    protected void hookHtml5Events(Element el) {
+        hookHtml5Events(DOM.asOld(el));
+    }
 
 }

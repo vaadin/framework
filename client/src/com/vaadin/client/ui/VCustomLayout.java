@@ -19,6 +19,7 @@ package com.vaadin.client.ui;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
@@ -48,7 +49,7 @@ public class VCustomLayout extends ComplexPanel {
     public static final String CLASSNAME = "v-customlayout";
 
     /** Location-name to containing element in DOM map */
-    private final HashMap<String, com.google.gwt.user.client.Element> locationToElement = new HashMap<String, com.google.gwt.user.client.Element>();
+    private final HashMap<String, Element> locationToElement = new HashMap<String, Element>();
 
     /** Location-name to contained widget map */
     final HashMap<String, Widget> locationToWidget = new HashMap<String, Widget>();
@@ -75,7 +76,7 @@ public class VCustomLayout extends ComplexPanel {
 
     private boolean htmlInitialized = false;
 
-    private com.google.gwt.user.client.Element elementWithNativeResizeFunction;
+    private Element elementWithNativeResizeFunction;
 
     private String height = "";
 
@@ -122,8 +123,7 @@ public class VCustomLayout extends ComplexPanel {
         }
 
         // If no given location is found in the layout, and exception is throws
-        com.google.gwt.user.client.Element elem = locationToElement
-                .get(location);
+        Element elem = locationToElement.get(location);
         if (elem == null && hasTemplate()) {
             throw new IllegalArgumentException("No location " + location
                     + " found");
@@ -207,7 +207,7 @@ public class VCustomLayout extends ComplexPanel {
     }
 
     /** Collect locations from template */
-    private void scanForLocations(com.google.gwt.user.client.Element elem) {
+    private void scanForLocations(Element elem) {
 
         final String location = elem.getAttribute("location");
         if (!"".equals(location)) {
@@ -242,13 +242,10 @@ public class VCustomLayout extends ComplexPanel {
      * parent about possible size change.
      */
     private void initImgElements() {
-        NodeList<com.google.gwt.dom.client.Element> nodeList = getElement()
-                .getElementsByTagName("IMG");
+        NodeList<Element> nodeList = getElement().getElementsByTagName("IMG");
         for (int i = 0; i < nodeList.getLength(); i++) {
-            com.google.gwt.dom.client.ImageElement img = (ImageElement) nodeList
-                    .getItem(i);
-            DOM.sinkEvents((com.google.gwt.user.client.Element) img.cast(),
-                    Event.ONLOAD);
+            ImageElement img = ImageElement.as(nodeList.getItem(i));
+            DOM.sinkEvents(img, Event.ONLOAD);
         }
     }
 
@@ -390,14 +387,12 @@ public class VCustomLayout extends ComplexPanel {
         }
     }
 
-    private native void detachResizedFunction(
-            com.google.gwt.user.client.Element element)
+    private native void detachResizedFunction(Element element)
     /*-{
     	element.notifyChildrenOfSizeChange = null;
     }-*/;
 
-    private native void publishResizedFunction(
-            com.google.gwt.user.client.Element element)
+    private native void publishResizedFunction(Element element)
     /*-{
     	var self = this;
     	element.notifyChildrenOfSizeChange = $entry(function() {

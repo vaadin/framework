@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -141,7 +142,7 @@ public class ShortcutActionHandler {
 
     private void fireAction(final Event event, final ShortcutAction a,
             ComponentConnector target) {
-        final com.google.gwt.user.client.Element et = DOM.eventGetTarget(event);
+        final Element et = DOM.eventGetTarget(event);
         if (target == null) {
             target = Util.findPaintable(client, et);
         }
@@ -192,7 +193,7 @@ public class ShortcutActionHandler {
      * <p>
      * TODO separate opera impl with generator
      */
-    private static void shakeTarget(final com.google.gwt.user.client.Element e) {
+    private static void shakeTarget(final Element e) {
         blur(e);
         if (BrowserInfo.get().isOpera()) {
             // will mess up with focus and blur event if the focus is not
@@ -209,14 +210,14 @@ public class ShortcutActionHandler {
         }
     }
 
-    private static native void blur(com.google.gwt.user.client.Element e)
+    private static native void blur(Element e)
     /*-{
         if(e.blur) {
             e.blur();
        }
     }-*/;
 
-    private static native void focus(com.google.gwt.user.client.Element e)
+    private static native void focus(Element e)
     /*-{
         if(e.blur) {
             e.focus();

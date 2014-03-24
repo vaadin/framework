@@ -16,6 +16,7 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -86,7 +87,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         this(DOM.createInputText());
     }
 
-    protected VTextField(com.google.gwt.user.client.Element node) {
+    protected VTextField(Element node) {
         super(node);
         setStyleName(CLASSNAME);
         addChangeHandler(this);
@@ -240,8 +241,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
     }
 
     /** For internal use only. May be removed or replaced in the future. */
-    public native void attachCutEventListener(
-            com.google.gwt.user.client.Element el)
+    public native void attachCutEventListener(Element el)
     /*-{
         var me = this;
         el.oncut = $entry(function() {
@@ -249,8 +249,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         });
     }-*/;
 
-    protected native void detachCutEventListener(
-            com.google.gwt.user.client.Element el)
+    protected native void detachCutEventListener(Element el)
     /*-{
         el.oncut = null;
     }-*/;
@@ -470,7 +469,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         return !"off".equals(wrap);
     }
 
-    private native void addOnInputListener(com.google.gwt.user.client.Element el)
+    private native void addOnInputListener(Element el)
     /*-{
         var self = this; 
         el.oninput = $entry(function() {
@@ -478,8 +477,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         }); 
     }-*/;
 
-    private native void removeOnInputListener(
-            com.google.gwt.user.client.Element el)
+    private native void removeOnInputListener(Element el)
     /*-{
         el.oninput = null;
     }-*/;

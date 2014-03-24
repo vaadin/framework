@@ -31,6 +31,7 @@ import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -236,15 +237,14 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         if (event.getTypeInt() == Event.ONMOUSEDOWN) {
             // Prevent default text selection in IE
             if (BrowserInfo.get().isIE()) {
-                ((com.google.gwt.user.client.Element) event.getEventTarget()
-                        .cast()).setPropertyJSO("onselectstart",
-                        applyDisableTextSelectionIEHack());
+                ((Element) event.getEventTarget().cast()).setPropertyJSO(
+                        "onselectstart", applyDisableTextSelectionIEHack());
             }
         } else if (event.getTypeInt() == Event.ONMOUSEUP) {
             // Remove IE text selection hack
             if (BrowserInfo.get().isIE()) {
-                ((com.google.gwt.user.client.Element) event.getEventTarget()
-                        .cast()).setPropertyJSO("onselectstart", null);
+                ((Element) event.getEventTarget().cast()).setPropertyJSO(
+                        "onselectstart", null);
             }
         } else if (event.getTypeInt() == Event.ONKEYUP) {
             if (selectionHasChanged) {
@@ -338,8 +338,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     }
 
-    private String findCurrentMouseOverKey(
-            com.google.gwt.user.client.Element elementOver) {
+    private String findCurrentMouseOverKey(Element elementOver) {
         TreeNode treeNode = Util.findWidget(elementOver, TreeNode.class);
         return treeNode == null ? null : treeNode.key;
     }
@@ -517,9 +516,9 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         /** For internal use only. May be removed or replaced in the future. */
         public boolean childrenLoaded;
 
-        com.google.gwt.user.client.Element nodeCaptionDiv;
+        Element nodeCaptionDiv;
 
-        protected com.google.gwt.user.client.Element nodeCaptionSpan;
+        protected Element nodeCaptionSpan;
 
         /** For internal use only. May be removed or replaced in the future. */
         public FlowPanel childNodeContainer;
@@ -692,8 +691,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             final int type = DOM.eventGetType(event);
-            final com.google.gwt.user.client.Element target = DOM
-                    .eventGetTarget(event);
+            final Element target = DOM.eventGetTarget(event);
 
             if (type == Event.ONLOAD && target == icon.getElement()) {
                 iconLoaded.trigger();
@@ -894,7 +892,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             nodeCaptionDiv = DOM.createDiv();
             DOM.setElementProperty(nodeCaptionDiv, "className", CLASSNAME
                     + "-caption");
-            com.google.gwt.user.client.Element wrapper = DOM.createDiv();
+            Element wrapper = DOM.createDiv();
             wrapper.setId(labelId);
             wrapper.setAttribute("for", treeItemId);
 
@@ -2098,7 +2096,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                 if (expandCollapse) {
                     return treeNode.getElement();
                 } else {
-                    return treeNode.nodeCaptionSpan;
+                    return DOM.asOld(treeNode.nodeCaptionSpan);
                 }
             } catch (Exception e) {
                 // Invalid locator string or node could not be found

@@ -27,6 +27,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
@@ -147,8 +148,7 @@ public class Util {
         }
     }
 
-    private static final com.google.gwt.user.client.Element escapeHtmlHelper = DOM
-            .createDiv();
+    private static final Element escapeHtmlHelper = DOM.createDiv();
 
     /**
      * Converts html entities to text.
@@ -198,13 +198,13 @@ public class Util {
      * @return
      */
     public static native com.google.gwt.user.client.Element cloneNode(
-            com.google.gwt.user.client.Element element, boolean deep)
+            Element element, boolean deep)
     /*-{
         return element.cloneNode(deep);
     }-*/;
 
-    public static int measureHorizontalPaddingAndBorder(
-            com.google.gwt.user.client.Element element, int paddingGuess) {
+    public static int measureHorizontalPaddingAndBorder(Element element,
+            int paddingGuess) {
         String originalWidth = DOM.getStyleAttribute(element, "width");
 
         int originalOffsetWidth = element.getOffsetWidth();
@@ -220,8 +220,8 @@ public class Util {
         return padding;
     }
 
-    public static int measureVerticalPaddingAndBorder(
-            com.google.gwt.user.client.Element element, int paddingGuess) {
+    public static int measureVerticalPaddingAndBorder(Element element,
+            int paddingGuess) {
         String originalHeight = DOM.getStyleAttribute(element, "height");
         int originalOffsetHeight = element.getOffsetHeight();
         int widthGuess = (originalOffsetHeight - paddingGuess);
@@ -235,8 +235,7 @@ public class Util {
         return padding;
     }
 
-    public static int measureHorizontalBorder(
-            com.google.gwt.user.client.Element element) {
+    public static int measureHorizontalBorder(Element element) {
         int borders;
 
         if (BrowserInfo.get().isIE()) {
@@ -267,8 +266,7 @@ public class Util {
         return borders;
     }
 
-    public static int measureVerticalBorder(
-            com.google.gwt.user.client.Element element) {
+    public static int measureVerticalBorder(Element element) {
         int borders;
         if (BrowserInfo.get().isIE()) {
             String width = element.getStyle().getProperty("width");
@@ -300,8 +298,7 @@ public class Util {
         return borders;
     }
 
-    public static int measureMarginLeft(
-            com.google.gwt.user.client.Element element) {
+    public static int measureMarginLeft(Element element) {
         return element.getAbsoluteLeft()
                 - element.getParentElement().getAbsoluteLeft();
     }
@@ -350,9 +347,8 @@ public class Util {
         }
     }
 
-    public static int setWidthExcludingPaddingAndBorder(
-            com.google.gwt.user.client.Element element, int requestedWidth,
-            int horizontalPaddingBorderGuess,
+    public static int setWidthExcludingPaddingAndBorder(Element element,
+            int requestedWidth, int horizontalPaddingBorderGuess,
             boolean requestedWidthIncludesPaddingBorder) {
 
         int widthGuess = requestedWidth - horizontalPaddingBorderGuess;
@@ -384,9 +380,8 @@ public class Util {
 
     }
 
-    public static int setHeightExcludingPaddingAndBorder(
-            com.google.gwt.user.client.Element element, int requestedHeight,
-            int verticalPaddingBorderGuess,
+    public static int setHeightExcludingPaddingAndBorder(Element element,
+            int requestedHeight, int verticalPaddingBorderGuess,
             boolean requestedHeightIncludesPaddingBorder) {
 
         int heightGuess = requestedHeight - verticalPaddingBorderGuess;
@@ -427,8 +422,7 @@ public class Util {
         return name.substring(name.lastIndexOf('.') + 1);
     }
 
-    public static void setFloat(com.google.gwt.user.client.Element element,
-            String value) {
+    public static void setFloat(Element element, String value) {
         if (BrowserInfo.get().isIE()) {
             DOM.setStyleAttribute(element, "styleFloat", value);
         } else {
@@ -440,7 +434,7 @@ public class Util {
 
     public static int getNativeScrollbarSize() {
         if (detectedScrollbarSize < 0) {
-            com.google.gwt.user.client.Element scroller = DOM.createDiv();
+            Element scroller = DOM.createDiv();
             scroller.getStyle().setProperty("width", "50px");
             scroller.getStyle().setProperty("height", "50px");
             scroller.getStyle().setProperty("overflow", "scroll");
@@ -463,8 +457,7 @@ public class Util {
      * @param elem
      *            with overflow auto
      */
-    public static void runWebkitOverflowAutoFix(
-            final com.google.gwt.user.client.Element elem) {
+    public static void runWebkitOverflowAutoFix(final Element elem) {
         // Add max version if fix lands sometime to Webkit
         // Starting from Opera 11.00, also a problem in Opera
         if (BrowserInfo.get().requiresOverflowAutoFix()) {
@@ -777,11 +770,10 @@ public class Util {
      *         element does not belong to a child.
      */
     public static ComponentConnector getConnectorForElement(
-            ApplicationConnection client, Widget parent,
-            com.google.gwt.user.client.Element element) {
+            ApplicationConnection client, Widget parent, Element element) {
 
-        com.google.gwt.user.client.Element browseElement = element;
-        com.google.gwt.user.client.Element rootElement = parent.getElement();
+        Element browseElement = element;
+        Element rootElement = parent.getElement();
 
         while (browseElement != null && browseElement != rootElement) {
 
@@ -799,8 +791,7 @@ public class Util {
             if (connector != null) {
                 // check that inside the rootElement
                 while (browseElement != null && browseElement != rootElement) {
-                    browseElement = (com.google.gwt.user.client.Element) browseElement
-                            .getParentElement();
+                    browseElement = browseElement.getParentElement();
                 }
                 if (browseElement != rootElement) {
                     return null;
@@ -809,8 +800,7 @@ public class Util {
                 }
             }
 
-            browseElement = (com.google.gwt.user.client.Element) browseElement
-                    .getParentElement();
+            browseElement = browseElement.getParentElement();
         }
 
         // No connector found, element is possibly inside a VOverlay
@@ -831,7 +821,7 @@ public class Util {
      * @param el
      *            the element to focus
      */
-    public static native void focus(com.google.gwt.user.client.Element el)
+    public static native void focus(Element el)
     /*-{
         try {
             el.focus();
@@ -848,8 +838,7 @@ public class Util {
      *            the element to start from
      */
     public static ComponentConnector findPaintable(
-            ApplicationConnection client,
-            com.google.gwt.user.client.Element element) {
+            ApplicationConnection client, Element element) {
         Widget widget = Util.findWidget(element, null);
         ConnectorMap vPaintableMap = ConnectorMap.get(client);
         while (widget != null && !vPaintableMap.isConnector(widget)) {
@@ -869,7 +858,7 @@ public class Util {
      *            the Widget type to seek for
      */
     @SuppressWarnings("unchecked")
-    public static <T> T findWidget(com.google.gwt.user.client.Element element,
+    public static <T> T findWidget(Element element,
             Class<? extends Widget> class1) {
         if (element != null) {
             /* First seek for the first EventListener (~Widget) from dom */
@@ -877,8 +866,7 @@ public class Util {
             while (eventListener == null && element != null) {
                 eventListener = Event.getEventListener(element);
                 if (eventListener == null) {
-                    element = (com.google.gwt.user.client.Element) element
-                            .getParentElement();
+                    element = element.getParentElement();
                 }
             }
             if (eventListener instanceof Widget) {
@@ -904,8 +892,7 @@ public class Util {
      * @param element
      *            The element that should be redrawn
      */
-    public static void forceWebkitRedraw(
-            com.google.gwt.user.client.Element element) {
+    public static void forceWebkitRedraw(Element element) {
         Style style = element.getStyle();
         String s = style.getProperty("webkitTransform");
         if (s == null || s.length() == 0) {
@@ -923,7 +910,7 @@ public class Util {
      * @param e
      *            The element to perform the hack on
      */
-    public static final void forceIE8Redraw(com.google.gwt.user.client.Element e) {
+    public static final void forceIE8Redraw(Element e) {
         if (BrowserInfo.get().isIE8()) {
             setStyleTemporarily(e, "zoom", "1");
         }
@@ -938,7 +925,7 @@ public class Util {
      * @param element
      *            The element to detach and re-attach
      */
-    public static void detachAttach(com.google.gwt.user.client.Element element) {
+    public static void detachAttach(Element element) {
         if (element == null) {
             return;
         }
@@ -958,14 +945,11 @@ public class Util {
 
     }
 
-    public static void sinkOnloadForImages(
-            com.google.gwt.user.client.Element element) {
+    public static void sinkOnloadForImages(Element element) {
         NodeList<com.google.gwt.dom.client.Element> imgElements = element
                 .getElementsByTagName("img");
         for (int i = 0; i < imgElements.getLength(); i++) {
-            DOM.sinkEvents(
-                    (com.google.gwt.user.client.Element) imgElements.getItem(i),
-                    Event.ONLOAD);
+            DOM.sinkEvents(imgElements.getItem(i), Event.ONLOAD);
         }
 
     }
@@ -976,8 +960,7 @@ public class Util {
      * @param subElement
      * @return
      */
-    public static int getChildElementIndex(
-            com.google.gwt.user.client.Element childElement) {
+    public static int getChildElementIndex(Element childElement) {
         int idx = 0;
         Node n = childElement;
         while ((n = n.getPreviousSibling()) != null) {
@@ -1057,8 +1040,7 @@ public class Util {
      * @param tempValue
      *            The temporary value
      */
-    public static void setStyleTemporarily(
-            com.google.gwt.user.client.Element element,
+    public static void setStyleTemporarily(Element element,
             final String styleProperty, String tempValue) {
         final Style style = element.getStyle();
         final String currentValue = style.getProperty(styleProperty);
@@ -1167,8 +1149,8 @@ public class Util {
          * Get target with element from point as we want the actual element, not
          * the one that sunk the event.
          */
-        final com.google.gwt.user.client.Element target = getElementFromPoint(
-                touch.getClientX(), touch.getClientY());
+        final Element target = getElementFromPoint(touch.getClientX(),
+                touch.getClientY());
 
         /*
          * Fixes infocusable form fields in Safari of iOS 5.x and some Android
@@ -1264,8 +1246,7 @@ public class Util {
      * @param elem
      *            The element to scroll into view
      */
-    public static native void scrollIntoViewVertically(
-            com.google.gwt.user.client.Element elem)
+    public static native void scrollIntoViewVertically(Element elem)
     /*-{
         var top = elem.offsetTop;
         var height = elem.offsetHeight;

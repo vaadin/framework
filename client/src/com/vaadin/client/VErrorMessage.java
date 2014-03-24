@@ -16,6 +16,7 @@
 
 package com.vaadin.client;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -60,7 +61,9 @@ public class VErrorMessage extends FlowPanel {
      * Shows this error message next to given element.
      * 
      * @param indicatorElement
+     * @deprecated As of 7.2, call and override {@link #showAt(Element)} instead
      */
+    @Deprecated
     public void showAt(com.google.gwt.user.client.Element indicatorElement) {
         VOverlay errorContainer = (VOverlay) getParent();
         if (errorContainer == null) {
@@ -79,6 +82,17 @@ public class VErrorMessage extends FlowPanel {
                                 "offsetHeight"));
         errorContainer.show();
 
+    }
+
+    /**
+     * Shows this error message next to given element.
+     * 
+     * @param indicatorElement
+     * 
+     * @since 7.2
+     */
+    public void showAt(Element indicatorElement) {
+        showAt(DOM.asOld(indicatorElement));
     }
 
     public void hide() {

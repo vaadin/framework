@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
@@ -62,7 +63,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
 
     private int top;
 
-    private com.google.gwt.user.client.Element focusedElement;
+    private Element focusedElement;
 
     private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(100,
             new ScheduledCommand() {
@@ -88,8 +89,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         addCloseHandler(new CloseHandler<PopupPanel>() {
             @Override
             public void onClose(CloseEvent<PopupPanel> event) {
-                com.google.gwt.user.client.Element currentFocus = Util
-                        .getFocusedElement();
+                Element currentFocus = Util.getFocusedElement();
                 if (focusedElement != null
                         && (currentFocus == null
                                 || menu.getElement().isOrHasChild(currentFocus) || RootPanel

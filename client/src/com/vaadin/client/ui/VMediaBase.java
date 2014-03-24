@@ -17,6 +17,7 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.MediaElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.SourceElement;
@@ -81,8 +82,7 @@ public abstract class VMediaBase extends Widget {
     }
 
     public void addSource(String sourceUrl, String sourceType) {
-        com.google.gwt.user.client.Element src = Document.get()
-                .createElement(SourceElement.TAG).cast();
+        Element src = Document.get().createElement(SourceElement.TAG);
         src.setAttribute("src", sourceUrl);
         src.setAttribute("type", sourceType);
         media.appendChild(src);

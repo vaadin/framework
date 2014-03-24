@@ -19,6 +19,7 @@ package com.vaadin.client.ui;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.TouchCancelEvent;
@@ -61,16 +62,14 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     Widget secondChild;
 
-    private final com.google.gwt.user.client.Element wrapper = DOM.createDiv();
+    private final Element wrapper = DOM.createDiv();
 
-    private final com.google.gwt.user.client.Element firstContainer = DOM
-            .createDiv();
+    private final Element firstContainer = DOM.createDiv();
 
-    private final com.google.gwt.user.client.Element secondContainer = DOM
-            .createDiv();
+    private final Element secondContainer = DOM.createDiv();
 
     /** For internal use only. May be removed or replaced in the future. */
-    public final com.google.gwt.user.client.Element splitter = DOM.createDiv();
+    public final Element splitter = DOM.createDiv();
 
     private boolean resizing;
 
@@ -91,7 +90,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
     /** For internal use only. May be removed or replaced in the future. */
     public List<String> componentStyleNames = Collections.emptyList();
 
-    private com.google.gwt.user.client.Element draggingCurtain;
+    private Element draggingCurtain;
 
     /** For internal use only. May be removed or replaced in the future. */
     public ApplicationConnection client;
@@ -114,7 +113,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     private TouchScrollHandler touchScrollHandler;
 
-    protected com.google.gwt.user.client.Element scrolledContainer;
+    protected Element scrolledContainer;
 
     protected int origScrollTop;
 
@@ -571,8 +570,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         if (locked || !isEnabled()) {
             return;
         }
-        final com.google.gwt.user.client.Element trg = event.getEventTarget()
-                .cast();
+        final Element trg = event.getEventTarget().cast();
         if (trg == splitter || trg == DOM.getChild(splitter, 0)) {
             resizing = true;
             DOM.setCapture(getElement());

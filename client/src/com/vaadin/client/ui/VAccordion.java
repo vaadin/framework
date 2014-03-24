@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -291,9 +292,8 @@ public class VAccordion extends VTabsheetBase {
 
         private VCaption caption;
         private boolean open = false;
-        private com.google.gwt.user.client.Element content = DOM.createDiv();
-        private com.google.gwt.user.client.Element captionNode = DOM
-                .createDiv();
+        private Element content = DOM.createDiv();
+        private Element captionNode = DOM.createDiv();
         private String styleName;
 
         public StackItem(UIDL tabUidl) {
@@ -329,7 +329,7 @@ public class VAccordion extends VTabsheetBase {
         }
 
         public com.google.gwt.user.client.Element getContainerElement() {
-            return content;
+            return DOM.asOld(content);
         }
 
         public Widget getChildWidget() {

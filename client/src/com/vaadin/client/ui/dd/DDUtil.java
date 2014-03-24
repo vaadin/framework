@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.dd;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.Util;
@@ -23,25 +24,22 @@ import com.vaadin.shared.ui.dd.VerticalDropLocation;
 
 public class DDUtil {
 
-    public static VerticalDropLocation getVerticalDropLocation(
-            com.google.gwt.user.client.Element element, NativeEvent event,
-            double topBottomRatio) {
+    public static VerticalDropLocation getVerticalDropLocation(Element element,
+            NativeEvent event, double topBottomRatio) {
         int offsetHeight = element.getOffsetHeight();
         return getVerticalDropLocation(element, offsetHeight, event,
                 topBottomRatio);
     }
 
-    public static VerticalDropLocation getVerticalDropLocation(
-            com.google.gwt.user.client.Element element, int offsetHeight,
-            NativeEvent event, double topBottomRatio) {
+    public static VerticalDropLocation getVerticalDropLocation(Element element,
+            int offsetHeight, NativeEvent event, double topBottomRatio) {
         int clientY = Util.getTouchOrMouseClientY(event);
         return getVerticalDropLocation(element, offsetHeight, clientY,
                 topBottomRatio);
     }
 
-    public static VerticalDropLocation getVerticalDropLocation(
-            com.google.gwt.user.client.Element element, int offsetHeight,
-            int clientY, double topBottomRatio) {
+    public static VerticalDropLocation getVerticalDropLocation(Element element,
+            int offsetHeight, int clientY, double topBottomRatio) {
 
         // Event coordinates are relative to the viewport, element absolute
         // position is relative to the document. Make element position relative
@@ -60,7 +58,7 @@ public class DDUtil {
     }
 
     public static HorizontalDropLocation getHorizontalDropLocation(
-            com.google.gwt.user.client.Element element, NativeEvent event,
+            Element element, NativeEvent event,
             double leftRightRatio) {
         int clientX = Util.getTouchOrMouseClientX(event);
 

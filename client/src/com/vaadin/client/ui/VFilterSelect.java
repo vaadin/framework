@@ -27,6 +27,7 @@ import java.util.Set;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
@@ -208,10 +209,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         /** For internal use only. May be removed or replaced in the future. */
         public final SuggestionMenu menu;
 
-        private final com.google.gwt.user.client.Element up = DOM.createDiv();
-        private final com.google.gwt.user.client.Element down = DOM.createDiv();
-        private final com.google.gwt.user.client.Element status = DOM
-                .createDiv();
+        private final Element up = DOM.createDiv();
+        private final Element down = DOM.createDiv();
+        private final Element status = DOM.createDiv();
 
         private boolean isPagingEnabled = true;
 
@@ -233,7 +233,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
             getElement().getStyle().setZIndex(Z_INDEX);
 
-            final com.google.gwt.user.client.Element root = getContainerElement();
+            final Element root = getContainerElement();
 
             up.setInnerHTML("<span>Prev</span>");
             DOM.sinkEvents(up, Event.ONCLICK);
@@ -484,8 +484,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         public void onBrowserEvent(Event event) {
             debug("VFS.SP: onBrowserEvent()");
             if (event.getTypeInt() == Event.ONCLICK) {
-                final com.google.gwt.user.client.Element target = DOM
-                        .eventGetTarget(event);
+                final Element target = DOM.eventGetTarget(event);
                 if (target == up || target == DOM.getChild(up, 0)) {
                     lazyPageScroller.scrollUp();
                 } else if (target == down || target == DOM.getChild(down, 0)) {
@@ -557,8 +556,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             offsetHeight = getOffsetHeight();
 
             final int desiredWidth = getMainWidth();
-            com.google.gwt.user.client.Element menuFirstChild = menu
-                    .getElement().getFirstChildElement().cast();
+            Element menuFirstChild = menu.getElement().getFirstChildElement();
             int naturalMenuWidth = menuFirstChild.getOffsetWidth();
 
             if (popupOuterPadding == -1) {
@@ -871,7 +869,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 return null;
             }
 
-            com.google.gwt.user.client.Element menuItemRoot = subElement;
+            Element menuItemRoot = subElement;
             while (menuItemRoot != null
                     && !menuItemRoot.getTagName().equalsIgnoreCase("td")) {
                 menuItemRoot = menuItemRoot.getParentElement().cast();
@@ -1825,8 +1823,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              */
             preventNextBlurEventInIE = false;
 
-            com.google.gwt.user.client.Element focusedElement = Util
-                    .getIEFocusedElement();
+            Element focusedElement = Util.getIEFocusedElement();
             if (getElement().isOrHasChild(focusedElement)
                     || suggestionPopup.getElement()
                             .isOrHasChild(focusedElement)) {

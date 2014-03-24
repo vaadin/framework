@@ -21,6 +21,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
@@ -89,7 +90,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
     /** Widget fields **/
     protected boolean subMenu;
     protected ArrayList<CustomMenuItem> items;
-    protected com.google.gwt.user.client.Element containerElement;
+    protected Element containerElement;
     protected VOverlay popup;
     protected VMenuBar visibleChildMenu;
     protected boolean menuVisible = false;
@@ -270,7 +271,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * Remove all the items in this menu
      */
     public void clearItems() {
-        com.google.gwt.user.client.Element e = getContainerElement();
+        Element e = getContainerElement();
         while (DOM.getChildCount(e) > 0) {
             DOM.removeChild(e, DOM.getChild(e, 0));
         }
@@ -284,7 +285,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
      */
     @Override
     public com.google.gwt.user.client.Element getContainerElement() {
-        return containerElement;
+        return DOM.asOld(containerElement);
     }
 
     /**
@@ -368,8 +369,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
             return;
         }
 
-        com.google.gwt.user.client.Element targetElement = DOM
-                .eventGetTarget(e);
+        Element targetElement = DOM.eventGetTarget(e);
         CustomMenuItem targetItem = null;
         for (int i = 0; i < items.size(); i++) {
             CustomMenuItem item = items.get(i);
@@ -1514,7 +1514,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
             return null;
         }
 
-        com.google.gwt.user.client.Element menuItemRoot = subElement;
+        Element menuItemRoot = subElement;
         while (menuItemRoot != null && menuItemRoot.getParentElement() != null
                 && menuItemRoot.getParentElement() != getElement()) {
             menuItemRoot = menuItemRoot.getParentElement().cast();
@@ -1537,7 +1537,10 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * @param element
      *            Element used in search
      * @return Menu item or null if not found
+     * @deprecated As of 7.2, call or override
+     *             {@link #getMenuItemWithElement(Element)} instead
      */
+    @Deprecated
     public CustomMenuItem getMenuItemWithElement(
             com.google.gwt.user.client.Element element) {
         for (int i = 0; i < items.size(); i++) {
@@ -1555,5 +1558,18 @@ public class VMenuBar extends SimpleFocusablePanel implements
         }
 
         return null;
+    }
+
+    /**
+     * Get menu item with given DOM element
+     * 
+     * @param element
+     *            Element used in search
+     * @return Menu item or null if not found
+     * 
+     * @since 7.2
+     */
+    public CustomMenuItem getMenuItemWithElement(Element element) {
+        return getMenuItemWithElement(DOM.asOld(element));
     }
 }

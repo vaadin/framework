@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.debug.internal;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -108,7 +109,7 @@ public class HierarchySection implements Section {
         hierarchyPanel.addListener(new SelectConnectorListener() {
             @Override
             public void select(ServerConnector connector,
-                    com.google.gwt.user.client.Element element) {
+                    Element element) {
                 printState(connector, true);
             }
         });
@@ -116,7 +117,7 @@ public class HierarchySection implements Section {
         analyzeLayoutsPanel.addListener(new SelectConnectorListener() {
             @Override
             public void select(ServerConnector connector,
-                    com.google.gwt.user.client.Element element) {
+                    Element element) {
                 printState(connector, true);
             }
         });
@@ -241,10 +242,9 @@ public class HierarchySection implements Section {
             }
             if (event.getTypeInt() == Event.ONMOUSEMOVE) {
                 Highlight.hideAll();
-                com.google.gwt.user.client.Element eventTarget = Util
-                        .getElementFromPoint(event.getNativeEvent()
-                                .getClientX(), event.getNativeEvent()
-                                .getClientY());
+                Element eventTarget = Util.getElementFromPoint(event
+                        .getNativeEvent().getClientX(), event.getNativeEvent()
+                        .getClientY());
                 if (VDebugWindow.get().getElement().isOrHasChild(eventTarget)) {
                     infoPanel.clear();
                     return;
@@ -274,10 +274,9 @@ public class HierarchySection implements Section {
                 event.consume();
                 event.getNativeEvent().stopPropagation();
                 stopFind();
-                com.google.gwt.user.client.Element eventTarget = Util
-                        .getElementFromPoint(event.getNativeEvent()
-                                .getClientX(), event.getNativeEvent()
-                                .getClientY());
+                Element eventTarget = Util.getElementFromPoint(event
+                        .getNativeEvent().getClientX(), event.getNativeEvent()
+                        .getClientY());
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
                     ComponentConnector connector = Util.getConnectorForElement(

@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
@@ -48,7 +49,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
     /**
      * The element where the last mouse down event was registered.
      */
-    private com.google.gwt.user.client.Element lastMouseDownTarget;
+    private Element lastMouseDownTarget;
 
     /**
      * Set to true by {@link #mouseUpPreviewHandler} if it gets a mouseup at the
@@ -71,8 +72,8 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
 
                 // Event's reported target not always correct if event
                 // capture is in use
-                com.google.gwt.user.client.Element elementUnderMouse = Util
-                        .getElementUnderMouse(event.getNativeEvent());
+                Element elementUnderMouse = Util.getElementUnderMouse(event
+                        .getNativeEvent());
                 if (lastMouseDownTarget != null
                         && elementUnderMouse == lastMouseDownTarget) {
                     mouseUpPreviewMatched = true;

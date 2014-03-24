@@ -22,6 +22,7 @@ import java.util.List;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
 import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.NativeEvent;
@@ -169,8 +170,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
             @Override
             public void onScroll(ScrollEvent event) {
-                com.google.gwt.user.client.Element element = getWidget()
-                        .getElement();
+                Element element = getWidget().getElement();
                 int newScrollTop = element.getScrollTop();
                 int newScrollLeft = element.getScrollLeft();
                 if (newScrollTop != lastSentScrollTop

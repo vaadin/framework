@@ -22,6 +22,7 @@ import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.LiveValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
@@ -81,7 +82,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
     private Label selectedDate;
 
-    private com.google.gwt.user.client.Element descriptionForAssisitveDevicesElement;
+    private Element descriptionForAssisitveDevicesElement;
 
     public VPopupCalendar() {
         super();

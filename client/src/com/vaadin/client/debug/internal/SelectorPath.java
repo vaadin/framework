@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.dom.client.Element;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.componentlocator.ComponentLocator;
 import com.vaadin.client.componentlocator.SelectorPredicate;
@@ -35,7 +36,7 @@ import com.vaadin.client.componentlocator.SelectorPredicate;
  */
 public class SelectorPath {
     private final String path;
-    private final com.google.gwt.user.client.Element element;
+    private final Element element;
     private final ComponentLocator locator;
     private static Map<String, Integer> counter = new HashMap<String, Integer>();
     private static Map<String, String> legacyNames = new HashMap<String, String>();
@@ -45,8 +46,7 @@ public class SelectorPath {
         legacyNames.put("ScrollTable", "Table");
     }
 
-    protected SelectorPath(ServerConnector c,
-            com.google.gwt.user.client.Element e) {
+    protected SelectorPath(ServerConnector c, Element e) {
         element = e;
         locator = new ComponentLocator(c.getConnection());
         path = locator.getPathForElement(e);
@@ -56,7 +56,7 @@ public class SelectorPath {
         return path;
     }
 
-    public com.google.gwt.user.client.Element getElement() {
+    public Element getElement() {
         return element;
     }
 

@@ -17,6 +17,8 @@ package com.vaadin.client.componentlocator;
 
 import java.util.List;
 
+import com.google.gwt.dom.client.Element;
+
 /**
  * This interface should be implemented by all locator strategies. A locator
  * strategy is responsible for generating and decoding a string that identifies
@@ -57,7 +59,7 @@ public interface LocatorStrategy {
      * @return A String locator that identifies the target element or null if a
      *         String locator could not be created.
      */
-    String getPathForElement(com.google.gwt.user.client.Element targetElement);
+    String getPathForElement(Element targetElement);
 
     /**
      * Locates an element using a String locator (path) which identifies a DOM
@@ -70,7 +72,7 @@ public interface LocatorStrategy {
      * @return The DOM element identified by {@code path} or null if the element
      *         could not be located.
      */
-    com.google.gwt.user.client.Element getElementByPath(String path);
+    Element getElementByPath(String path);
 
     /**
      * Locates an element using a String locator (path) which identifies a DOM
@@ -85,8 +87,8 @@ public interface LocatorStrategy {
      * @return The DOM element identified by {@code path} or null if the element
      *         could not be located.
      */
-    com.google.gwt.user.client.Element getElementByPathStartingAt(String path,
-            com.google.gwt.user.client.Element root);
+    Element getElementByPathStartingAt(String path,
+            Element root);
 
     /**
      * Locates all elements that match a String locator (path) which identifies
@@ -99,7 +101,7 @@ public interface LocatorStrategy {
      * @return List that contains all matched elements. Empty list if none
      *         found.
      */
-    List<com.google.gwt.user.client.Element> getElementsByPath(String path);
+    List<Element> getElementsByPath(String path);
 
     /**
      * Locates all elements that match a String locator (path) which identifies
@@ -117,6 +119,6 @@ public interface LocatorStrategy {
      *         found.
      */
 
-    List<com.google.gwt.user.client.Element> getElementsByPathStartingAt(
-            String path, com.google.gwt.user.client.Element root);
+    List<Element> getElementsByPathStartingAt(
+            String path, Element root);
 }

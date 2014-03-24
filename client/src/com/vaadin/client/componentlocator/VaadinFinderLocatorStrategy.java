@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -70,8 +71,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * {@inheritDoc}
      */
     @Override
-    public String getPathForElement(
-            com.google.gwt.user.client.Element targetElement) {
+    public String getPathForElement(Element targetElement) {
         if (targetElement == null) {
             return "";
         }
@@ -116,8 +116,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      *            Target element
      * @return Best selector string formatted with a post filter
      */
-    private String getBestSelector(List<String> selectors,
-            com.google.gwt.user.client.Element target) {
+    private String getBestSelector(List<String> selectors, Element target) {
         // The last selector gives us smallest list index for target element.
         String bestSelector = selectors.get(selectors.size() - 1);
         int min = getElementsByPath(bestSelector).indexOf(target);
@@ -215,9 +214,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * @return a list of ConnectorPath objects, in descending order towards the
      *         common root container.
      */
-    private List<ConnectorPath> getConnectorHierarchyForElement(
-            com.google.gwt.user.client.Element elem) {
-        com.google.gwt.user.client.Element e = elem;
+    private List<ConnectorPath> getConnectorHierarchyForElement(Element elem) {
+        Element e = elem;
         ComponentConnector c = Util.findPaintable(client, e);
         List<ConnectorPath> connectorHierarchy = new ArrayList<ConnectorPath>();
 
@@ -235,7 +233,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
                 }
             }
 
-            e = (com.google.gwt.user.client.Element) e.getParentElement();
+            e = e.getParentElement();
             if (e != null) {
                 c = Util.findPaintable(client, e);
                 e = c != null ? c.getWidget().getElement() : null;
@@ -276,15 +274,14 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * {@inheritDoc}
      */
     @Override
-    public List<com.google.gwt.user.client.Element> getElementsByPath(
-            String path) {
+    public List<Element> getElementsByPath(String path) {
         List<SelectorPredicate> postFilters = SelectorPredicate
                 .extractPostFilterPredicates(path);
         if (postFilters.size() > 0) {
             path = path.substring(1, path.lastIndexOf(')'));
         }
 
-        List<com.google.gwt.user.client.Element> elements = new ArrayList<com.google.gwt.user.client.Element>();
+        List<Element> elements = new ArrayList<Element>();
         if (isNotificationExpression(path)) {
 
             for (VNotification n : findNotificationsByPath(path)) {
@@ -305,8 +302,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
                 if (p.getIndex() >= elements.size()) {
                     elements.clear();
                 } else {
-                    com.google.gwt.user.client.Element e = elements.get(p
-                            .getIndex());
+                    Element e = elements.get(p.getIndex());
                     elements.clear();
                     elements.add(e);
                 }
@@ -320,8 +316,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * {@inheritDoc}
      */
     @Override
-    public com.google.gwt.user.client.Element getElementByPath(String path) {
-        List<com.google.gwt.user.client.Element> elements = getElementsByPath(path);
+    public Element getElementByPath(String path) {
+        List<Element> elements = getElementsByPath(path);
         if (elements.isEmpty()) {
             return null;
         }
@@ -332,10 +328,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * {@inheritDoc}
      */
     @Override
-    public com.google.gwt.user.client.Element getElementByPathStartingAt(
-            String path, com.google.gwt.user.client.Element root) {
-        List<com.google.gwt.user.client.Element> elements = getElementsByPathStartingAt(
-                path, root);
+    public Element getElementByPathStartingAt(String path, Element root) {
+        List<Element> elements = getElementsByPathStartingAt(path, root);
         if (elements.isEmpty()) {
             return null;
         }
@@ -347,16 +341,15 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * {@inheritDoc}
      */
     @Override
-    public List<com.google.gwt.user.client.Element> getElementsByPathStartingAt(
-            String path, com.google.gwt.user.client.Element root) {
+    public List<Element> getElementsByPathStartingAt(String path, Element root) {
         List<SelectorPredicate> postFilters = SelectorPredicate
                 .extractPostFilterPredicates(path);
         if (postFilters.size() > 0) {
             path = path.substring(1, path.lastIndexOf(')'));
         }
 
-        List<com.google.gwt.user.client.Element> elements = getElementsByPathStartingAtConnector(
-                path, Util.findPaintable(client, root));
+        List<Element> elements = getElementsByPathStartingAtConnector(path,
+                Util.findPaintable(client, root));
 
         for (SelectorPredicate p : postFilters) {
             // Post filtering supports only indexes and follows instruction
@@ -366,8 +359,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
                 if (p.getIndex() >= elements.size()) {
                     elements.clear();
                 } else {
-                    com.google.gwt.user.client.Element e = elements.get(p
-                            .getIndex());
+                    Element e = elements.get(p.getIndex());
                     elements.clear();
                     elements.add(e);
                 }
@@ -424,8 +416,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * @return the list of elements identified by path or empty list if not
      *         found.
      */
-    private List<com.google.gwt.user.client.Element> getElementsByPathStartingAtConnector(
-            String path, ComponentConnector root) {
+    private List<Element> getElementsByPathStartingAtConnector(String path,
+            ComponentConnector root) {
         String[] pathComponents = path.split(SUBPART_SEPARATOR);
         List<ComponentConnector> connectors;
         if (pathComponents[0].length() > 0) {
@@ -435,7 +427,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             connectors = Arrays.asList(root);
         }
 
-        List<com.google.gwt.user.client.Element> output = new ArrayList<com.google.gwt.user.client.Element>();
+        List<Element> output = new ArrayList<Element>();
         if (null != connectors && !connectors.isEmpty()) {
             if (pathComponents.length > 1) {
                 // We have subparts

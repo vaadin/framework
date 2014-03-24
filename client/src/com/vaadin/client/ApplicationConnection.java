@@ -38,6 +38,7 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -515,8 +516,7 @@ public class ApplicationConnection {
 
         // Ensure the overlay container is added to the dom and set as a live
         // area for assistive devices
-        com.google.gwt.user.client.Element overlayContainer = VOverlay
-                .getOverlayContainer(this);
+        Element overlayContainer = VOverlay.getOverlayContainer(this);
         Roles.getAlertRole().setAriaLiveProperty(overlayContainer,
                 LiveValue.ASSERTIVE);
         VOverlay.setOverlayContainerLabel(this,
@@ -581,16 +581,16 @@ public class ApplicationConnection {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
         });
         client.getElementByPathStartingAt = $entry(function(id, element) {
-            return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementByPathStartingAt(Ljava/lang/String;Lcom/google/gwt/user/client/Element;)(id, element);
+            return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementByPathStartingAt(Ljava/lang/String;Lcom/google/gwt/dom/client/Element;)(id, element);
         });
         client.getElementsByPath = $entry(function(id) {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementsByPath(Ljava/lang/String;)(id);
         });
         client.getElementsByPathStartingAt = $entry(function(id, element) {
-            return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementsByPathStartingAt(Ljava/lang/String;Lcom/google/gwt/user/client/Element;)(id, element);
+            return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementsByPathStartingAt(Ljava/lang/String;Lcom/google/gwt/dom/client/Element;)(id, element);
         });
         client.getPathForElement = $entry(function(element) {
-            return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
+            return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getPathForElement(Lcom/google/gwt/dom/client/Element;)(element);
         });
         client.initializing = false;
 
@@ -3483,8 +3483,7 @@ public class ApplicationConnection {
      * @return Connector for focused element or null.
      */
     private ComponentConnector getActiveConnector() {
-        com.google.gwt.user.client.Element focusedElement = Util
-                .getFocusedElement();
+        Element focusedElement = Util.getFocusedElement();
         if (focusedElement == null) {
             return null;
         }

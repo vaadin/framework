@@ -16,6 +16,7 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -52,13 +53,13 @@ public class VTabsheetPanel extends ComplexPanel {
      */
     @Override
     public void add(Widget w) {
-        com.google.gwt.user.client.Element el = createContainerElement();
+        Element el = createContainerElement();
         DOM.appendChild(getElement(), el);
         super.add(w, el);
     }
 
-    private com.google.gwt.user.client.Element createContainerElement() {
-        com.google.gwt.user.client.Element el = DOM.createDiv();
+    private Element createContainerElement() {
+        Element el = DOM.createDiv();
         DOM.setStyleAttribute(el, "position", "absolute");
         hide(el);
         touchScrollHandler.addElement(el);
@@ -85,15 +86,15 @@ public class VTabsheetPanel extends ComplexPanel {
      *             if <code>beforeIndex</code> is out of range
      */
     public void insert(Widget w, int beforeIndex) {
-        com.google.gwt.user.client.Element el = createContainerElement();
+        Element el = createContainerElement();
         DOM.insertChild(getElement(), el, beforeIndex);
         super.insert(w, el, beforeIndex, false);
     }
 
     @Override
     public boolean remove(Widget w) {
-        com.google.gwt.user.client.Element child = w.getElement();
-        com.google.gwt.user.client.Element parent = null;
+        Element child = w.getElement();
+        Element parent = null;
         if (child != null) {
             parent = DOM.getParent(child);
         }
@@ -134,13 +135,13 @@ public class VTabsheetPanel extends ComplexPanel {
         unHide(DOM.getParent(visibleWidget.getElement()));
     }
 
-    private void hide(com.google.gwt.user.client.Element e) {
+    private void hide(Element e) {
         DOM.setStyleAttribute(e, "visibility", "hidden");
         DOM.setStyleAttribute(e, "top", "-100000px");
         DOM.setStyleAttribute(e, "left", "-100000px");
     }
 
-    private void unHide(com.google.gwt.user.client.Element e) {
+    private void unHide(Element e) {
         DOM.setStyleAttribute(e, "top", "0px");
         DOM.setStyleAttribute(e, "left", "0px");
         DOM.setStyleAttribute(e, "visibility", "");
@@ -164,8 +165,7 @@ public class VTabsheetPanel extends ComplexPanel {
             width = minWidth;
         }
 
-        com.google.gwt.user.client.Element wrapperDiv = (com.google.gwt.user.client.Element) visibleWidget
-                .getElement().getParentElement();
+        Element wrapperDiv = visibleWidget.getElement().getParentElement();
 
         // width first
         getElement().getStyle().setPropertyPx("width", width);

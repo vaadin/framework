@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -72,7 +73,7 @@ import com.vaadin.client.ui.VOverlay;
 @Deprecated
 public class MenuBar extends Widget implements PopupListener {
 
-    private final com.google.gwt.user.client.Element body;
+    private final Element body;
     private final ArrayList<MenuItem> items = new ArrayList<MenuItem>();
     private MenuBar parentMenu;
     private PopupPanel popup;
@@ -97,18 +98,18 @@ public class MenuBar extends Widget implements PopupListener {
     public MenuBar(boolean vertical) {
         super();
 
-        final com.google.gwt.user.client.Element table = DOM.createTable();
+        final Element table = DOM.createTable();
         body = DOM.createTBody();
         DOM.appendChild(table, body);
 
         if (!vertical) {
-            final com.google.gwt.user.client.Element tr = DOM.createTR();
+            final Element tr = DOM.createTR();
             DOM.appendChild(body, tr);
         }
 
         this.vertical = vertical;
 
-        final com.google.gwt.user.client.Element outer = DOM.createDiv();
+        final Element outer = DOM.createDiv();
         DOM.appendChild(outer, table);
         setElement(outer);
 
@@ -123,7 +124,7 @@ public class MenuBar extends Widget implements PopupListener {
      *            the item to be added
      */
     public void addItem(MenuItem item) {
-        com.google.gwt.user.client.Element tr;
+        Element tr;
         if (vertical) {
             tr = DOM.createTR();
             DOM.appendChild(body, tr);
@@ -210,7 +211,7 @@ public class MenuBar extends Widget implements PopupListener {
      * Removes all menu items from this menu bar.
      */
     public void clearItems() {
-        final com.google.gwt.user.client.Element container = getItemContainerElement();
+        final Element container = getItemContainerElement();
         while (DOM.getChildCount(container) > 0) {
             DOM.removeChild(container, DOM.getChild(container, 0));
         }
@@ -283,7 +284,7 @@ public class MenuBar extends Widget implements PopupListener {
             return;
         }
 
-        final com.google.gwt.user.client.Element container = getItemContainerElement();
+        final Element container = getItemContainerElement();
         DOM.removeChild(container, DOM.getChild(container, idx));
         items.remove(idx);
     }
@@ -410,10 +411,9 @@ public class MenuBar extends Widget implements PopupListener {
                     // If the event target is part of the parent menu, suppress
                     // the
                     // event altogether.
-                    final com.google.gwt.user.client.Element target = DOM
-                            .eventGetTarget(event);
-                    final com.google.gwt.user.client.Element parentMenuElement = item
-                            .getParentMenu().getElement();
+                    final Element target = DOM.eventGetTarget(event);
+                    final Element parentMenuElement = item.getParentMenu()
+                            .getElement();
                     if (DOM.isOrHasChild(parentMenuElement, target)) {
                         return false;
                     }
@@ -491,7 +491,7 @@ public class MenuBar extends Widget implements PopupListener {
         }
     }
 
-    private MenuItem findItem(com.google.gwt.user.client.Element hItem) {
+    private MenuItem findItem(Element hItem) {
         for (int i = 0; i < items.size(); ++i) {
             final MenuItem item = items.get(i);
             if (DOM.isOrHasChild(item.getElement(), hItem)) {
@@ -502,7 +502,7 @@ public class MenuBar extends Widget implements PopupListener {
         return null;
     }
 
-    private com.google.gwt.user.client.Element getItemContainerElement() {
+    private Element getItemContainerElement() {
         if (vertical) {
             return body;
         } else {

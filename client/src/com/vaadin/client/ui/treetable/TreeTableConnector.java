@@ -123,9 +123,7 @@ public class TreeTableConnector extends TableConnector {
         TooltipInfo info = null;
 
         if (element != getWidget().getElement()) {
-            Object node = Util.findWidget(
-                    (com.google.gwt.user.client.Element) element,
-                    VTreeTableRow.class);
+            Object node = Util.findWidget(element, VTreeTableRow.class);
 
             if (node != null) {
                 VTreeTableRow row = (VTreeTableRow) node;

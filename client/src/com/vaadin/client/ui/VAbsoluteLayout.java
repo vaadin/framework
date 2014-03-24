@@ -17,6 +17,7 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -35,7 +36,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     private DivElement marginElement;
 
-    protected final com.google.gwt.user.client.Element canvas = DOM.createDiv();
+    protected final Element canvas = DOM.createDiv();
 
     /**
      * Default constructor

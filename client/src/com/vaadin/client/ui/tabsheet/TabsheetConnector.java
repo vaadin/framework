@@ -119,9 +119,7 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
 
         // Find a tooltip for the tab, if the element is a tab
         if (element != getWidget().getElement()) {
-            Object node = Util.findWidget(
-                    (com.google.gwt.user.client.Element) element,
-                    VTabsheet.TabCaption.class);
+            Object node = Util.findWidget(element, VTabsheet.TabCaption.class);
 
             if (node != null) {
                 VTabsheet.TabCaption caption = (VTabsheet.TabCaption) node;

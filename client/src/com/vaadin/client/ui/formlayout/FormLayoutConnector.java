@@ -114,18 +114,14 @@ public class FormLayoutConnector extends AbstractLayoutConnector {
         TooltipInfo info = null;
 
         if (element != getWidget().getElement()) {
-            Object node = Util.findWidget(
-                    (com.google.gwt.user.client.Element) element,
-                    VFormLayout.Caption.class);
+            Object node = Util.findWidget(element, VFormLayout.Caption.class);
 
             if (node != null) {
                 VFormLayout.Caption caption = (VFormLayout.Caption) node;
                 info = caption.getOwner().getTooltipInfo(element);
             } else {
 
-                node = Util.findWidget(
-                        (com.google.gwt.user.client.Element) element,
-                        VFormLayout.ErrorFlag.class);
+                node = Util.findWidget(element, VFormLayout.ErrorFlag.class);
 
                 if (node != null) {
                     VFormLayout.ErrorFlag flag = (VFormLayout.ErrorFlag) node;

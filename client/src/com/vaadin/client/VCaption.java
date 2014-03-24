@@ -17,6 +17,7 @@
 package com.vaadin.client;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
@@ -36,15 +37,15 @@ public class VCaption extends HTML {
 
     private final ComponentConnector owner;
 
-    private com.google.gwt.user.client.Element errorIndicatorElement;
+    private Element errorIndicatorElement;
 
-    private com.google.gwt.user.client.Element requiredFieldIndicator;
+    private Element requiredFieldIndicator;
 
     private Icon icon;
 
     private String iconAltText = "";
 
-    private com.google.gwt.user.client.Element captionText;
+    private Element captionText;
 
     private final ApplicationConnection client;
 
@@ -411,8 +412,7 @@ public class VCaption extends HTML {
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
-        final com.google.gwt.user.client.Element target = DOM
-                .eventGetTarget(event);
+        final Element target = DOM.eventGetTarget(event);
 
         if (DOM.eventGetType(event) == Event.ONLOAD
                 && icon.getElement() == target) {
@@ -670,21 +670,19 @@ public class VCaption extends HTML {
     }
 
     protected com.google.gwt.user.client.Element getTextElement() {
-        return captionText;
+        return DOM.asOld(captionText);
     }
 
-    public static String getCaptionOwnerPid(com.google.gwt.user.client.Element e) {
+    public static String getCaptionOwnerPid(Element e) {
         return getOwnerPid(e);
     }
 
-    private native static void setOwnerPid(
-            com.google.gwt.user.client.Element el, String pid)
+    private native static void setOwnerPid(Element el, String pid)
     /*-{
         el.vOwnerPid = pid;
     }-*/;
 
-    public native static String getOwnerPid(
-            com.google.gwt.user.client.Element el)
+    public native static String getOwnerPid(Element el)
     /*-{
         return el.vOwnerPid;
     }-*/;

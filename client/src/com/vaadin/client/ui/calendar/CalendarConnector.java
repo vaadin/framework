@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -285,8 +286,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
                              */
                             DateCell cell = (DateCell) widget;
                             int slotIndex = DOM.getChildIndex(
-                                    cell.getElement(),
-                                    (com.google.gwt.user.client.Element) ne
+                                    cell.getElement(), (Element) ne
                                             .getEventTarget().cast());
                             DateCellSlot slot = cell.getSlot(slotIndex);
                             return CalendarConnector.this.getActionsBetween(
@@ -420,8 +420,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
     @Override
     public TooltipInfo getTooltipInfo(com.google.gwt.dom.client.Element element) {
         TooltipInfo tooltipInfo = null;
-        Widget w = Util.findWidget(
-                (com.google.gwt.user.client.Element) element, null);
+        Widget w = Util.findWidget(element, null);
         if (w instanceof HasTooltipKey) {
             tooltipInfo = GWT.create(TooltipInfo.class);
             String title = tooltips.get(((HasTooltipKey) w).getTooltipKey());

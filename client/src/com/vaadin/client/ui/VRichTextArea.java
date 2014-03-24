@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -213,8 +214,7 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
      * Detects space used by components paddings and borders.
      */
     private void detectExtraSizes() {
-        com.google.gwt.user.client.Element clone = Util.cloneNode(getElement(),
-                false);
+        Element clone = Util.cloneNode(getElement(), false);
         DOM.setElementAttribute(clone, "id", "");
         DOM.setStyleAttribute(clone, "visibility", "hidden");
         DOM.setStyleAttribute(clone, "position", "absolute");

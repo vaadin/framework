@@ -16,6 +16,7 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -36,8 +37,8 @@ import com.vaadin.shared.ui.progressindicator.ProgressBarState;
  */
 public class VProgressBar extends Widget implements HasEnabled {
 
-    com.google.gwt.user.client.Element wrapper = DOM.createDiv();
-    com.google.gwt.user.client.Element indicator = DOM.createDiv();
+    Element wrapper = DOM.createDiv();
+    Element indicator = DOM.createDiv();
 
     private boolean indeterminate = false;
     private float state = 0.0f;

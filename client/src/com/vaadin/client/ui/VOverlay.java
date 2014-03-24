@@ -19,6 +19,7 @@ package com.vaadin.client.ui;
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
@@ -129,7 +130,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /*
      * The shadow element for this overlay.
      */
-    private com.google.gwt.user.client.Element shadow;
+    private Element shadow;
 
     /*
      * The creator of this VOverlay (the widget that made the instance, not the
@@ -481,8 +482,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             // Animate the size
             positionAndSize.setAnimationFromCenterProgress(progress);
 
-            com.google.gwt.user.client.Element container = getElement()
-                    .getParentElement().cast();
+            Element container = getElement().getParentElement();
 
             if (isShadowEnabled()) {
                 updateShadowPosition(progress, zIndex, positionAndSize);
@@ -535,9 +535,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     }
 
     private void updateShimPosition(PositionAndSize positionAndSize) {
-        updatePositionAndSize(
-                (com.google.gwt.user.client.Element) com.google.gwt.user.client.Element
-                        .as(getShimElement()), positionAndSize);
+        updatePositionAndSize(getShimElement(), positionAndSize);
     }
 
     /**
@@ -552,7 +550,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         return info.isIE() && info.isBrowserVersionNewerOrEqual(8, 0);
     }
 
-    private void updatePositionAndSize(com.google.gwt.user.client.Element e,
+    private void updatePositionAndSize(Element e,
             PositionAndSize positionAndSize) {
         e.getStyle().setLeft(positionAndSize.getLeft(), Unit.PX);
         e.getStyle().setTop(positionAndSize.getTop(), Unit.PX);
@@ -693,7 +691,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             ApplicationConnection ac) {
         String id = ac.getConfiguration().getRootPanelId();
         id = id += "-overlays";
-        com.google.gwt.user.client.Element container = DOM.getElementById(id);
+        Element container = DOM.getElementById(id);
         if (container == null) {
             container = DOM.createDiv();
             container.setId(id);
@@ -703,7 +701,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             container.addClassName(CLASSNAME_CONTAINER);
             RootPanel.get().getElement().appendChild(container);
         }
-        return container;
+        return DOM.asOld(container);
     }
 
     /**

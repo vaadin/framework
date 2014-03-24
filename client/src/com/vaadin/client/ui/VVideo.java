@@ -17,6 +17,7 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.VideoElement;
 import com.vaadin.client.Util;
@@ -41,8 +42,7 @@ public class VVideo extends VMediaBase {
      * 
      * @param el
      */
-    private native void updateDimensionsWhenMetadataLoaded(
-            com.google.gwt.user.client.Element el)
+    private native void updateDimensionsWhenMetadataLoaded(Element el)
     /*-{
               var self = this;
               el.addEventListener('loadedmetadata', $entry(function(e) {

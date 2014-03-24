@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.calendar.schedule.dd;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.calendar.CalendarConnector;
@@ -33,7 +34,7 @@ import com.vaadin.client.ui.dd.VDragEvent;
  */
 public class CalendarWeekDropHandler extends CalendarDropHandler {
 
-    private com.google.gwt.user.client.Element currentTargetElement;
+    private Element currentTargetElement;
     private DateCell currentTargetDay;
 
     public CalendarWeekDropHandler(CalendarConnector connector) {
@@ -99,18 +100,16 @@ public class CalendarWeekDropHandler extends CalendarDropHandler {
      *            The element to check
      * @return
      */
-    private boolean isLocationValid(
-            com.google.gwt.user.client.Element elementOver) {
-        com.google.gwt.user.client.Element weekGridElement = calendarConnector
-                .getWidget().getWeekGrid().getElement();
-        com.google.gwt.user.client.Element timeBarElement = calendarConnector
-                .getWidget().getWeekGrid().getTimeBar().getElement();
+    private boolean isLocationValid(Element elementOver) {
+        Element weekGridElement = calendarConnector.getWidget().getWeekGrid()
+                .getElement();
+        Element timeBarElement = calendarConnector.getWidget().getWeekGrid()
+                .getTimeBar().getElement();
 
-        com.google.gwt.user.client.Element todayBarElement = null;
+        Element todayBarElement = null;
         if (calendarConnector.getWidget().getWeekGrid().hasToday()) {
-            todayBarElement = (com.google.gwt.user.client.Element) calendarConnector
-                    .getWidget().getWeekGrid().getDateCellOfToday()
-                    .getTodaybarElement();
+            todayBarElement = calendarConnector.getWidget().getWeekGrid()
+                    .getDateCellOfToday().getTodaybarElement();
         }
 
         // drops are not allowed in:

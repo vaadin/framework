@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -2081,8 +2082,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * @param subElement
      * @return true if {@code w} is a parent of subElement, false otherwise.
      */
-    private boolean contains(Widget w,
-            com.google.gwt.user.client.Element subElement) {
+    private boolean contains(Widget w, Element subElement) {
         if (w == null || w.getElement() == null) {
             return false;
         }
@@ -2136,8 +2136,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
 
         if (SUBPART_MONTH_YEAR_HEADER.equals(subPart)) {
-            return (com.google.gwt.user.client.Element) getCellFormatter()
-                    .getElement(0, 2).getChild(0);
+            return DOM.asOld((Element) getCellFormatter().getElement(0, 2)
+                    .getChild(0));
         }
         return null;
     }

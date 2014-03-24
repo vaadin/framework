@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
@@ -79,17 +80,17 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     };
 
     /* DOM element for slider's base */
-    private final com.google.gwt.user.client.Element base;
+    private final Element base;
     private final int BASE_BORDER_WIDTH = 1;
 
     /* DOM element for slider's handle */
-    private final com.google.gwt.user.client.Element handle;
+    private final Element handle;
 
     /* DOM element for decrement arrow */
-    private final com.google.gwt.user.client.Element smaller;
+    private final Element smaller;
 
     /* DOM element for increment arrow */
-    private final com.google.gwt.user.client.Element bigger;
+    private final Element bigger;
 
     /* Temporary dragging/animation variables */
     private boolean dragging = false;
@@ -198,8 +199,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             return;
         }
 
-        final com.google.gwt.user.client.Element p = getElement()
-                .getParentElement().cast();
+        final Element p = getElement().getParentElement();
         if (p.getPropertyInt(domProperty) > 50) {
             if (isVertical()) {
                 setHeight();
@@ -214,8 +214,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
                 @Override
                 public void execute() {
-                    final com.google.gwt.user.client.Element p = getElement()
-                            .getParentElement().cast();
+                    final Element p = getElement().getParentElement();
                     if (p.getPropertyInt(domProperty) > (MIN_SIZE + 5)) {
                         if (isVertical()) {
                             setHeight();
@@ -266,8 +265,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         if (disabled || readonly) {
             return;
         }
-        final com.google.gwt.user.client.Element targ = DOM
-                .eventGetTarget(event);
+        final Element targ = DOM.eventGetTarget(event);
 
         if (DOM.eventGetType(event) == Event.ONMOUSEWHEEL) {
             processMouseWheelEvent(event);

@@ -22,9 +22,11 @@ import java.util.List;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -215,7 +217,7 @@ public class VGridLayout extends ComplexPanel {
     void layoutCellsVertically() {
         int verticalSpacing = getVerticalSpacing();
         LayoutManager layoutManager = LayoutManager.get(client);
-        com.google.gwt.user.client.Element element = getElement();
+        Element element = getElement();
         int paddingTop = layoutManager.getPaddingTop(element);
         int paddingBottom = layoutManager.getPaddingBottom(element);
 
@@ -256,7 +258,7 @@ public class VGridLayout extends ComplexPanel {
 
     void layoutCellsHorizontally() {
         LayoutManager layoutManager = LayoutManager.get(client);
-        com.google.gwt.user.client.Element element = getElement();
+        Element element = getElement();
         int x = layoutManager.getPaddingLeft(element);
         int paddingRight = layoutManager.getPaddingRight(element);
         int horizontalSpacing = getHorizontalSpacing();
@@ -612,8 +614,7 @@ public class VGridLayout extends ComplexPanel {
                 if (component.isRelativeWidth()) {
                     slot.getWrapperElement().getStyle().setWidth(100, Unit.PCT);
                 }
-                com.google.gwt.user.client.Element slotWrapper = slot
-                        .getWrapperElement();
+                Element slotWrapper = slot.getWrapperElement();
                 getElement().appendChild(slotWrapper);
 
                 Widget widget = component.getWidget();
@@ -665,10 +666,32 @@ public class VGridLayout extends ComplexPanel {
      *            this layout
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
+     * @deprecated As of 7.2, call or override {@link #getComponent(Element)}
+     *             instead
      */
+    @Deprecated
     public ComponentConnector getComponent(
             com.google.gwt.user.client.Element element) {
         return Util.getConnectorForElement(client, this, element);
+
+    }
+
+    /**
+     * Returns the deepest nested child component which contains "element". The
+     * child component is also returned if "element" is part of its caption.
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     * 
+     * @param element
+     *            An element that is a nested sub element of the root element in
+     *            this layout
+     * @return The Paintable which the element is a part of. Null if the element
+     *         belongs to the layout and not to a child.
+     * 
+     * @since 7.2
+     */
+    public ComponentConnector getComponent(Element element) {
+        return getComponent(DOM.asOld(element));
     }
 
     /** For internal use only. May be removed or replaced in the future. */

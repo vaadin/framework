@@ -17,6 +17,7 @@ package com.vaadin.client.ui.orderedlayout;
 
 import java.util.List;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -98,18 +99,16 @@ public abstract class AbstractOrderedLayoutConnector extends
         public void onElementResize(ElementResizeEvent e) {
 
             // Get all needed element references
-            com.google.gwt.user.client.Element captionElement = (com.google.gwt.user.client.Element) e
-                    .getElement().cast();
+            Element captionElement = e.getElement();
 
             // Caption position determines if the widget element is the first or
             // last child inside the caption wrap
             CaptionPosition pos = getWidget().getCaptionPositionFromElement(
-                    (com.google.gwt.user.client.Element) captionElement
-                            .getParentElement().cast());
+                    captionElement.getParentElement());
 
             // The default is the last child
-            com.google.gwt.user.client.Element widgetElement = captionElement
-                    .getParentElement().getLastChild().cast();
+            Element widgetElement = captionElement.getParentElement()
+                    .getLastChild().cast();
 
             // ...but if caption position is bottom or right, the widget is the
             // first child
@@ -375,8 +374,7 @@ public abstract class AbstractOrderedLayoutConnector extends
     @Override
     public TooltipInfo getTooltipInfo(com.google.gwt.dom.client.Element element) {
         if (element != getWidget().getElement()) {
-            Slot slot = Util.findWidget(
-                    (com.google.gwt.user.client.Element) element, Slot.class);
+            Slot slot = Util.findWidget(element, Slot.class);
             if (slot != null && slot.getCaptionElement() != null
                     && slot.getParent() == getWidget()
                     && slot.getCaptionElement().isOrHasChild(element)) {
@@ -616,8 +614,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         for (ComponentConnector child : getChildComponents()) {
             Widget childWidget = child.getWidget();
             Slot slot = getWidget().getSlot(childWidget);
-            com.google.gwt.user.client.Element captionElement = slot
-                    .getCaptionElement();
+            Element captionElement = slot.getCaptionElement();
             CaptionPosition captionPosition = slot.getCaptionPosition();
 
             int pixelHeight = layoutManager.getOuterHeight(childWidget

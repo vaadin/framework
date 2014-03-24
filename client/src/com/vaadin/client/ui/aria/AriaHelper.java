@@ -19,6 +19,7 @@ package com.vaadin.client.ui.aria;
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.InvalidValue;
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -37,8 +38,7 @@ public class AriaHelper {
      * @param captionElements
      *            Element with of caption to bind
      */
-    public static void bindCaption(Widget widget,
-            com.google.gwt.user.client.Element captionElement) {
+    public static void bindCaption(Widget widget, Element captionElement) {
         assert widget != null : "Valid Widget required";
 
         if (widget instanceof HandlesAriaCaption) {
@@ -47,7 +47,8 @@ public class AriaHelper {
                 ((HandlesAriaCaption) widget).bindAriaCaption(null);
             } else {
                 ensureHasId(captionElement);
-                ((HandlesAriaCaption) widget).bindAriaCaption(captionElement);
+                ((HandlesAriaCaption) widget).bindAriaCaption(DOM
+                        .asOld(captionElement));
             }
         } else if (captionElement != null) {
             // Handle the default case
@@ -102,8 +103,7 @@ public class AriaHelper {
      * @param required
      *            boolean, true when the element is required
      */
-    public static void handleInputRequired(
-            com.google.gwt.user.client.Element element, boolean required) {
+    public static void handleInputRequired(Element element, boolean required) {
         if (required) {
             Roles.getTextboxRole().setAriaRequiredProperty(element, required);
         } else {
@@ -139,8 +139,7 @@ public class AriaHelper {
      * @param invalid
      *            boolean, true when the element input has an error
      */
-    public static void handleInputInvalid(
-            com.google.gwt.user.client.Element element, boolean invalid) {
+    public static void handleInputInvalid(Element element, boolean invalid) {
         if (invalid) {
             Roles.getTextboxRole().setAriaInvalidState(element,
                     InvalidValue.TRUE);
@@ -157,7 +156,7 @@ public class AriaHelper {
      *            Element to check
      * @return String with the id of the element
      */
-    public static String ensureHasId(com.google.gwt.user.client.Element element) {
+    public static String ensureHasId(Element element) {
         assert element != null : "Valid Element required";
 
         String id = element.getId();
@@ -179,8 +178,8 @@ public class AriaHelper {
      * @param boolean assistiveOnly true when element should only be visible for
      *        assistive devices, false to make the element visible for all
      */
-    public static void setVisibleForAssistiveDevicesOnly(
-            com.google.gwt.user.client.Element element, boolean assistiveOnly) {
+    public static void setVisibleForAssistiveDevicesOnly(Element element,
+            boolean assistiveOnly) {
         if (assistiveOnly) {
             element.addClassName(ASSISTIVE_DEVICE_ONLY_STYLE);
         } else {

@@ -18,6 +18,7 @@ package com.vaadin.client.debug.internal;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -72,7 +73,7 @@ public class TestBenchSection implements Section {
         public void onMouseOver(MouseOverEvent event) {
             Highlight.hideAll();
 
-            com.google.gwt.user.client.Element element = path.getElement();
+            Element element = path.getElement();
             if (null != element) {
                 Highlight.show(element);
             }
@@ -192,8 +193,7 @@ public class TestBenchSection implements Section {
         Highlight.hideAll();
     }
 
-    private void pickSelector(ServerConnector connector,
-            com.google.gwt.user.client.Element element) {
+    private void pickSelector(ServerConnector connector, Element element) {
 
         SelectorPath p = new SelectorPath(connector, Util
                 .findPaintable(connector.getConnection(), element).getWidget()
@@ -216,10 +216,9 @@ public class TestBenchSection implements Section {
             }
             if (event.getTypeInt() == Event.ONMOUSEMOVE
                     || event.getTypeInt() == Event.ONCLICK) {
-                com.google.gwt.user.client.Element eventTarget = Util
-                        .getElementFromPoint(event.getNativeEvent()
-                                .getClientX(), event.getNativeEvent()
-                                .getClientY());
+                Element eventTarget = Util.getElementFromPoint(event
+                        .getNativeEvent().getClientX(), event.getNativeEvent()
+                        .getClientY());
                 if (VDebugWindow.get().getElement().isOrHasChild(eventTarget)) {
                     if (isFindMode() && event.getTypeInt() == Event.ONCLICK) {
                         stopFind();
@@ -259,8 +258,7 @@ public class TestBenchSection implements Section {
 
     };
 
-    private ComponentConnector findConnector(
-            com.google.gwt.user.client.Element element) {
+    private ComponentConnector findConnector(Element element) {
         for (ApplicationConnection a : ApplicationConfiguration
                 .getRunningApplications()) {
             ComponentConnector connector = Util.getConnectorForElement(a, a

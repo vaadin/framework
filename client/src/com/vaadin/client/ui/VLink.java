@@ -16,6 +16,7 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -57,14 +58,13 @@ public class VLink extends HTML implements ClickHandler {
     public int targetHeight;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public com.google.gwt.user.client.Element errorIndicatorElement;
+    public Element errorIndicatorElement;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public final com.google.gwt.user.client.Element anchor = DOM.createAnchor();
+    public final Element anchor = DOM.createAnchor();
 
     /** For internal use only. May be removed or replaced in the future. */
-    public final com.google.gwt.user.client.Element captionElement = DOM
-            .createSpan();
+    public final Element captionElement = DOM.createSpan();
 
     /** For internal use only. May be removed or replaced in the future. */
     public Icon icon;
@@ -120,8 +120,7 @@ public class VLink extends HTML implements ClickHandler {
 
     @Override
     public void onBrowserEvent(Event event) {
-        final com.google.gwt.user.client.Element target = DOM
-                .eventGetTarget(event);
+        final Element target = DOM.eventGetTarget(event);
         if (event.getTypeInt() == Event.ONLOAD) {
             Util.notifyParentOfSizeChange(this, true);
         }

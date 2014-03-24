@@ -229,7 +229,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             Style childStyle = layoutElement.getStyle();
 
             // IE8 needs some hackery to measure its content correctly
-            Util.forceIE8Redraw((com.google.gwt.user.client.Element) layoutElement);
+            Util.forceIE8Redraw(layoutElement);
 
             if (content.isRelativeHeight() && !BrowserInfo.get().isIE9()) {
                 childStyle.setPosition(Position.ABSOLUTE);

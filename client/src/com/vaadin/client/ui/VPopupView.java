@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -178,7 +179,7 @@ public class VPopupView extends HTML implements Iterable<Widget> {
         super.onDetach();
     }
 
-    private static native void nativeBlur(com.google.gwt.user.client.Element e)
+    private static native void nativeBlur(Element e)
     /*-{
         if(e && e.blur) {
             e.blur();
@@ -203,7 +204,7 @@ public class VPopupView extends HTML implements Iterable<Widget> {
 
         private boolean hasHadMouseOver = false;
         private boolean hideOnMouseOut = true;
-        private final Set<com.google.gwt.user.client.Element> activeChildren = new HashSet<com.google.gwt.user.client.Element>();
+        private final Set<Element> activeChildren = new HashSet<Element>();
 
         private ShortcutActionHandler shortcutActionHandler;
 
@@ -228,8 +229,7 @@ public class VPopupView extends HTML implements Iterable<Widget> {
         // to use ONMOUSEMOVE that doesn't target the popup
         @Override
         public boolean onEventPreview(Event event) {
-            com.google.gwt.user.client.Element target = DOM
-                    .eventGetTarget(event);
+            Element target = DOM.eventGetTarget(event);
             boolean eventTargetsPopup = DOM.isOrHasChild(getElement(), target);
             int type = DOM.eventGetType(event);
 
@@ -305,7 +305,7 @@ public class VPopupView extends HTML implements Iterable<Widget> {
             }
 
             // Notify children that have used the keyboard
-            for (com.google.gwt.user.client.Element e : activeChildren) {
+            for (Element e : activeChildren) {
                 try {
                     nativeBlur(e);
                 } catch (Exception ignored) {

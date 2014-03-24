@@ -396,9 +396,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
         TooltipInfo info = null;
 
         if (element != getWidget().getElement()) {
-            Object node = Util.findWidget(
-                    (com.google.gwt.user.client.Element) element,
-                    VScrollTableRow.class);
+            Object node = Util.findWidget(element, VScrollTableRow.class);
 
             if (node != null) {
                 VScrollTableRow row = (VScrollTableRow) node;

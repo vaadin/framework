@@ -74,9 +74,7 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
                 style.setLeft(0, Unit.PX);
                 getElement().appendChild(focusElement);
                 /* Sink from focusElemet too as focusa and blur don't bubble */
-                DOM.sinkEvents(
-                        (com.google.gwt.user.client.Element) focusElement
-                                .cast(), Event.FOCUSEVENTS);
+                DOM.sinkEvents(focusElement, Event.FOCUSEVENTS);
                 // revert to original, not focusable
                 getElement().setPropertyObject("tabIndex", null);
 
@@ -97,13 +95,9 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
     public void setFocus(boolean focus) {
         if (useFakeFocusElement()) {
             if (focus) {
-                FocusImpl.getFocusImplForPanel().focus(
-                        (com.google.gwt.user.client.Element) focusElement
-                                .cast());
+                FocusImpl.getFocusImplForPanel().focus(focusElement);
             } else {
-                FocusImpl.getFocusImplForPanel().blur(
-                        (com.google.gwt.user.client.Element) focusElement
-                                .cast());
+                FocusImpl.getFocusImplForPanel().blur(focusElement);
             }
         } else {
             super.setFocus(focus);

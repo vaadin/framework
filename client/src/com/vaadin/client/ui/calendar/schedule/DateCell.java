@@ -342,8 +342,7 @@ public class DateCell extends FocusableComplexPanel implements
     }
 
     public int getSlotBorder() {
-        return Util
-                .measureVerticalBorder((com.google.gwt.user.client.Element) slotElements[0]);
+        return Util.measureVerticalBorder(slotElements[0]);
     }
 
     private void drawDayEvents(List<DateCellGroup> groups) {
@@ -504,7 +503,7 @@ public class DateCell extends FocusableComplexPanel implements
             updatePositionFor(dayEvent, targetDay, calendarEvent);
         }
 
-        add(dayEvent, (com.google.gwt.user.client.Element) main);
+        add(dayEvent, main);
     }
 
     // date methods are not deprecated in GWT
@@ -561,8 +560,7 @@ public class DateCell extends FocusableComplexPanel implements
             }
             index++;
         }
-        this.insert(dayEvent, (com.google.gwt.user.client.Element) main, index,
-                true);
+        this.insert(dayEvent, main, index, true);
     }
 
     public void removeEvent(DateCellDayEvent dayEvent) {
@@ -784,11 +782,28 @@ public class DateCell extends FocusableComplexPanel implements
         return today != null;
     }
 
+    /**
+     * @deprecated As of 7.2, call or override
+     *             {@link #addEmphasisStyle(Element)} instead
+     */
+    @Deprecated
     public void addEmphasisStyle(com.google.gwt.user.client.Element elementOver) {
         String originalStylename = getStyleName(elementOver);
         setStyleName(elementOver, originalStylename + DRAGEMPHASISSTYLE);
     }
 
+    /**
+     * @since 7.2
+     */
+    public void addEmphasisStyle(Element elementOver) {
+        addEmphasisStyle(DOM.asOld(elementOver));
+    }
+
+    /**
+     * @deprecated As of 7.2, call or override
+     *             {@link #removeEmphasisStyle(Element)} instead
+     */
+    @Deprecated
     public void removeEmphasisStyle(
             com.google.gwt.user.client.Element elementOver) {
         String originalStylename = getStyleName(elementOver);
@@ -796,6 +811,13 @@ public class DateCell extends FocusableComplexPanel implements
                 elementOver,
                 originalStylename.substring(0, originalStylename.length()
                         - DRAGEMPHASISSTYLE.length()));
+    }
+
+    /**
+     * @since 7.2
+     */
+    public void removeEmphasisStyle(Element elementOver) {
+        removeEmphasisStyle(DOM.asOld(elementOver));
     }
 
     @Override

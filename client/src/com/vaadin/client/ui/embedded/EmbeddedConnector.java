@@ -19,6 +19,7 @@ package com.vaadin.client.ui.embedded;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
@@ -77,13 +78,13 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
             getWidget().type = uidl.getStringAttribute("type");
             if (getWidget().type.equals("image")) {
                 getWidget().addStyleName(VEmbedded.CLASSNAME + "-image");
-                com.google.gwt.user.client.Element el = null;
+                Element el = null;
                 boolean created = false;
                 NodeList<Node> nodes = getWidget().getElement().getChildNodes();
                 if (nodes != null && nodes.getLength() == 1) {
                     Node n = nodes.getItem(0);
                     if (n.getNodeType() == Node.ELEMENT_NODE) {
-                        com.google.gwt.user.client.Element e = (com.google.gwt.user.client.Element) n;
+                        Element e = (Element) n;
                         if (e.getTagName().equals("IMG")) {
                             el = e;
                         }

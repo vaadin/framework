@@ -18,11 +18,13 @@ package com.vaadin.client.ui.splitpanel;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
@@ -96,8 +98,7 @@ public abstract class AbstractSplitPanelConnector extends
 
         @Override
         protected boolean shouldFireEvent(DomEvent<?> event) {
-            com.google.gwt.user.client.Element target = event.getNativeEvent()
-                    .getEventTarget().cast();
+            Element target = event.getNativeEvent().getEventTarget().cast();
             if (!getWidget().splitter.isOrHasChild(target)) {
                 return false;
             }
@@ -107,7 +108,7 @@ public abstract class AbstractSplitPanelConnector extends
 
         @Override
         protected com.google.gwt.user.client.Element getRelativeToElement() {
-            return getWidget().splitter;
+            return DOM.asOld(getWidget().splitter);
         }
 
         @Override
