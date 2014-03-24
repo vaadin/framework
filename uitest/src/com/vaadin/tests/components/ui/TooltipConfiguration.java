@@ -32,8 +32,10 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
         closeTimeout.addValueChangeListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                getTooltipConfiguration().setCloseTimeout(
-                        (Integer) closeTimeout.getConvertedValue());
+                if (closeTimeout.getConvertedValue() != null) {
+                    getTooltipConfiguration().setCloseTimeout(
+                            (Integer) closeTimeout.getConvertedValue());
+                }
             }
         });
         maxWidth = createIntegerTextField("Max width",
@@ -41,8 +43,10 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
         maxWidth.addValueChangeListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                getTooltipConfiguration().setMaxWidth(
-                        (Integer) maxWidth.getConvertedValue());
+                if (maxWidth.getConvertedValue() != null) {
+                    getTooltipConfiguration().setMaxWidth(
+                            (Integer) maxWidth.getConvertedValue());
+                }
             }
         });
         openDelay = createIntegerTextField("Open delay",
@@ -50,8 +54,10 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
         openDelay.addValueChangeListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                getTooltipConfiguration().setOpenDelay(
-                        (Integer) openDelay.getConvertedValue());
+                if (openDelay.getConvertedValue() != null) {
+                    getTooltipConfiguration().setOpenDelay(
+                            (Integer) openDelay.getConvertedValue());
+                }
             }
         });
 
@@ -61,8 +67,11 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
                 .addValueChangeListener(new Property.ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        getTooltipConfiguration().setQuickOpenDelay(
-                                (Integer) quickOpenDelay.getConvertedValue());
+                        if (quickOpenDelay.getConvertedValue() != null) {
+                            getTooltipConfiguration().setQuickOpenDelay(
+                                    (Integer) quickOpenDelay
+                                            .getConvertedValue());
+                        }
                     }
                 });
 
@@ -72,8 +81,11 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
                 .addValueChangeListener(new Property.ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        getTooltipConfiguration().setQuickOpenTimeout(
-                                (Integer) quickOpenTimeout.getConvertedValue());
+                        if (quickOpenTimeout.getConvertedValue() != null) {
+                            getTooltipConfiguration().setQuickOpenTimeout(
+                                    (Integer) quickOpenTimeout
+                                            .getConvertedValue());
+                        }
                     }
                 });
 
@@ -91,6 +103,8 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
         tf.setConverter(Integer.class);
         tf.setImmediate(true);
         tf.setConvertedValue(initialValue);
+        // makes TB3 tests simpler - no "null" added when clearing a field
+        tf.setNullRepresentation("");
         return tf;
     }
 
