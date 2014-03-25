@@ -23,7 +23,9 @@
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-shared"
-            rev="${vaadin.version}" conf="build,test->build" />
+            rev="${vaadin.version}" conf="build,test->build" >
+            <exclude type="pom" conf="test" />
+        </dependency>
 
         <!-- Required build libs -->
         <dependency org="org.apache.commons" name="commons-jexl"

@@ -35,16 +35,24 @@
         <dependency org="com.vaadin" name="vaadin-server"
             rev="${vaadin.version}" conf="build->build">
             <exclude org="javax.servlet"></exclude>
+            <exclude type="pom" />
         </dependency>
         <dependency org="com.vaadin" name="vaadin-client"
-            rev="${vaadin.version}" conf="build->build"></dependency>
+            rev="${vaadin.version}" conf="build->build">
+            <exclude type="pom" />
+        </dependency>
         <dependency org="com.vaadin" name="vaadin-client-compiled"
-            rev="${vaadin.version}" conf="build->build"></dependency>
+            rev="${vaadin.version}" conf="build->build">
+            <exclude type="pom" />
+        </dependency>
         <dependency org="com.vaadin" name="vaadin-themes"
-            rev="${vaadin.version}" conf="build->build"></dependency>
+            rev="${vaadin.version}" conf="build->build">
+            <exclude type="pom" />
+        </dependency>
         <dependency org="com.vaadin" name="vaadin-push" rev="${vaadin.version}"
             conf="build->build">
             <exclude org="javax.servlet"></exclude>
+            <exclude type="pom" />
         </dependency>
 
         <!-- For compiling TestingWidgetSet -->
