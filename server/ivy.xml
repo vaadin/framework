@@ -45,11 +45,17 @@
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-shared"
-            rev="${vaadin.version}" conf="build,test->build" />
+            rev="${vaadin.version}" conf="build,test->build">
+            <exclude type="pom" conf="test" />
+        </dependency>
         <dependency org="com.vaadin" name="vaadin-theme-compiler"
-            rev="${vaadin.version}" conf="build,test->build" />
+            rev="${vaadin.version}" conf="build,test->build">
+            <exclude type="pom" conf="test" />
+        </dependency>
         <dependency org="com.vaadin" name="vaadin-push" rev="${vaadin.version}"
-            conf="build-provided,test->build" />
+            conf="build-provided,test->build">
+            <exclude type="pom" conf="test" />
+        </dependency>
 
         <!-- Jsoup for BootstrapHandler -->
         <dependency org="org.jsoup" name="jsoup" rev="1.6.3"

@@ -25,9 +25,13 @@
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-shared"
-            rev="${vaadin.version}" conf="build,test->build"></dependency>
+            rev="${vaadin.version}" conf="build,test->build">
+            <exclude type="pom" conf="test" />
+        </dependency>
         <dependency org="com.vaadin" name="vaadin-server"
-            rev="${vaadin.version}" conf="build,test->build"></dependency>
+            rev="${vaadin.version}" conf="build,test->build">
+            <exclude type="pom" conf="test" />
+        </dependency>
 
         <!-- gwt-user dependencies -->
         <dependency org="org.w3c.css" name="sac" rev="1.3" />
