@@ -112,20 +112,41 @@ public class SelectorPath {
             elementQueryString += queryFragment;
         }
 
-        if (index == 0) {
-            elementQueryString += ".first()";
-        } else {
-            elementQueryString += ".get(" + index + ");";
+        if (!hasId(fragments[fragments.length - 1])) {
+            if (index == 0) {
+                elementQueryString += ".first()";
+            } else {
+                elementQueryString += ".get(" + index + ")";
+            }
         }
 
         // Return full Java variable assignment and eQuery
         return generateJavaVariable(fragments[fragments.length - 1])
-                + elementQueryString;
+                + elementQueryString + ";";
+    }
+
+    /**
+     * Finds out if the given query fragment has a defined id
+     * 
+     * @param fragment
+     *            Query fragment
+     * @return true if has id
+     */
+    private boolean hasId(String fragment) {
+        for (SelectorPredicate p : SelectorPredicate
+                .extractPredicates(fragment)) {
+            if (p.getName().equals("id")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
      * Generates a recursive ElementQuery for given path fragment
      * 
+     * @param fragment
+     *            Query fragment
      * @return ElementQuery java code as a String
      */
     private String generateFragment(String fragment) {
@@ -143,10 +164,11 @@ public class SelectorPath {
     }
 
     /**
-     * @since
-     * @param frags
-     * @param i
-     * @return
+     * Returns the name of the component described by given query fragment
+     * 
+     * @param fragment
+     *            Query fragment
+     * @return Class part of fragment
      */
     protected String getComponentName(String fragment) {
         return fragment.split("\\[")[0];
