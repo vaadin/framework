@@ -89,6 +89,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      */
     private static final int BROWSER_TIMEOUT_IN_MS = 30 * 1000;
 
+    private static final int BROWSER_INIT_ATTEMPTS = 5;
+
     private DesiredCapabilities desiredCapabilities;
 
     private boolean debug = false;
@@ -138,9 +140,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
             if (localWebDriverIsUsed()) {
                 setupLocalDriver(capabilities);
             } else {
-                WebDriver dr = TestBench.createDriver(new RemoteWebDriver(
-                        new URL(getHubURL()), capabilities));
-                setDriver(dr);
+                setupRemoteDriver(capabilities);
             }
         }
 
@@ -221,6 +221,32 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      */
     protected abstract void setupLocalDriver(
             DesiredCapabilities desiredCapabilities);
+
+    /**
+     * Creates a {@link WebDriver} instance used for running the test remotely.
+     * 
+     * @since
+     * @param capabilities
+     *            the type of browser needed
+     * @throws Exception
+     */
+    private void setupRemoteDriver(DesiredCapabilities capabilities)
+            throws Exception {
+        for (int i = 1; i <= BROWSER_INIT_ATTEMPTS; i++) {
+            try {
+                WebDriver dr = TestBench.createDriver(new RemoteWebDriver(
+                        new URL(getHubURL()), capabilities));
+                setDriver(dr);
+            } catch (Exception e) {
+                System.err.println("Browser startup for " + capabilities
+                        + " failed on attempt " + i + ": " + e.getMessage());
+                if (i == BROWSER_INIT_ATTEMPTS) {
+                    throw e;
+                }
+            }
+        }
+
+    }
 
     /**
      * Opens the given test (defined by {@link #getTestUrl()}, optionally with
