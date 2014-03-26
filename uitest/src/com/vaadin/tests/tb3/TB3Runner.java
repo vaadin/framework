@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2013 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,6 +17,7 @@
 package com.vaadin.tests.tb3;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.Parameterized;
@@ -74,31 +76,30 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
         }
 
         try {
-            AbstractTB3Test testClassInstance = (AbstractTB3Test) getTestClass()
-                    .getOnlyConstructor().newInstance();
-            Collection<DesiredCapabilities> desiredCapabilites = testClassInstance
-                    .getBrowsersToTest();
-            if (testClassInstance.getClass().getAnnotation(RunLocally.class) != null) {
-                desiredCapabilites = new ArrayList<DesiredCapabilities>();
-                desiredCapabilites.add(testClassInstance.getClass()
-                        .getAnnotation(RunLocally.class).value()
-                        .getDesiredCapabilities());
-            }
+            AbstractTB3Test testClassInstance = getTestClassInstance();
+            Collection<DesiredCapabilities> desiredCapabilites = getDesiredCapabilities(testClassInstance);
 
             TestNameSuffix testNameSuffixProperty = findAnnotation(
                     testClassInstance.getClass(), TestNameSuffix.class);
-            for (DesiredCapabilities capabilities : desiredCapabilites) {
-                // Find any methods marked with @Test.
-                for (FrameworkMethod m : getTestClass().getAnnotatedMethods(
-                        Test.class)) {
-                    TB3Method method = new TB3Method(m.getMethod(),
-                            capabilities);
-                    if (testNameSuffixProperty != null) {
-                        method.setTestNameSuffix("-"
-                                + System.getProperty(testNameSuffixProperty
-                                        .property()));
+
+            for (FrameworkMethod m : getTestMethods()) {
+                if (desiredCapabilites.size() > 0) {
+                    for (DesiredCapabilities capabilities : desiredCapabilites) {
+                        TB3Method method = new TB3Method(m.getMethod(),
+                                capabilities);
+                        if (testNameSuffixProperty != null) {
+                            method.setTestNameSuffix("-"
+                                    + System.getProperty(testNameSuffixProperty
+                                            .property()));
+                        }
+                        tests.add(method);
                     }
-                    tests.add(method);
+
+                } else {
+                    // No browsers available for this test, so we need to
+                    // wrap the test method inside IgnoredTestMethod.
+                    // This will add @Ignore annotation to it.
+                    tests.add(new IgnoredTestMethod(m.getMethod()));
                 }
             }
         } catch (Exception e) {
@@ -106,6 +107,116 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
         }
 
         return tests;
+    }
+
+    private List<FrameworkMethod> getTestMethods() {
+        return getTestClass().getAnnotatedMethods(Test.class);
+    }
+
+    /*
+     * Returns a list of desired browser capabilities according to browsers
+     * defined in the test class, filtered by possible filter parameters. Use
+     * {@code @RunLocally} annotation to override all capabilities.
+     */
+    private Collection<DesiredCapabilities> getDesiredCapabilities(
+            AbstractTB3Test testClassInstance) {
+        Collection<DesiredCapabilities> desiredCapabilites = getFilteredCapabilities(testClassInstance);
+
+        if (isRunLocally(testClassInstance)) {
+            desiredCapabilites = new ArrayList<DesiredCapabilities>();
+            desiredCapabilites.add(testClassInstance.getClass()
+                    .getAnnotation(RunLocally.class).value()
+                    .getDesiredCapabilities());
+        }
+
+        return desiredCapabilites;
+    }
+
+    /*
+     * Takes the desired browser capabilities defined in the test class and
+     * returns a list of browser capabilities filtered browsers.include and
+     * browsers.exclude system properties. (if present)
+     */
+    private Collection<DesiredCapabilities> getFilteredCapabilities(
+            AbstractTB3Test testClassInstance) {
+        Collection<DesiredCapabilities> desiredCapabilites = testClassInstance
+                .getBrowsersToTest();
+
+        ArrayList<DesiredCapabilities> filteredCapabilities = new ArrayList<DesiredCapabilities>();
+
+        String include = System.getProperty("browsers.include");
+        String exclude = System.getProperty("browsers.exclude");
+
+        for (DesiredCapabilities d : desiredCapabilites) {
+            String browserName = (d.getBrowserName() + d.getVersion())
+                    .toLowerCase();
+            if (include != null) {
+                if (include.toLowerCase().contains(browserName)) {
+                    filteredCapabilities.add(d);
+                }
+            } else {
+                filteredCapabilities.add(d);
+            }
+
+            if (exclude != null) {
+                if (exclude.toLowerCase().contains(browserName)) {
+                    filteredCapabilities.remove(d);
+                }
+            }
+
+        }
+        return filteredCapabilities;
+    }
+
+    private boolean isRunLocally(AbstractTB3Test testClassInstance) {
+        return testClassInstance.getClass().getAnnotation(RunLocally.class) != null;
+    }
+
+    private AbstractTB3Test getTestClassInstance()
+            throws InstantiationException, IllegalAccessException,
+            InvocationTargetException {
+        AbstractTB3Test testClassInstance = (AbstractTB3Test) getTestClass()
+                .getOnlyConstructor().newInstance();
+        return testClassInstance;
+    }
+
+    // This is a FrameworkMethod class that will always
+    // return @Ignore and @Test annotations for the wrapped method.
+    private class IgnoredTestMethod extends FrameworkMethod {
+
+        private class IgnoreTestAnnotations {
+
+            // We use this method to easily get our hands on
+            // the Annotation instances for @Ignore and @Test
+            @Ignore
+            @Test
+            public void ignoredTest() {
+            }
+        }
+
+        public IgnoredTestMethod(Method method) {
+            super(method);
+        }
+
+        @Override
+        public Annotation[] getAnnotations() {
+            return getIgnoredTestMethod().getAnnotations();
+        }
+
+        private Method getIgnoredTestMethod() {
+            try {
+                return IgnoreTestAnnotations.class.getMethod("ignoredTest",
+                        null);
+            } catch (Exception e) {
+                return null;
+            }
+
+        }
+
+        @Override
+        public <T extends Annotation> T getAnnotation(Class<T> annotationType) {
+            return getIgnoredTestMethod().getAnnotation(annotationType);
+        }
     }
 
     /**
