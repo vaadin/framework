@@ -29,6 +29,8 @@
 
             <jvmarg value="-Dcom.vaadin.testbench.screenshot.directory=${com.vaadin.testbench.screenshot.directory}" />
             <jvmarg value="-Djava.awt.headless=true" />
+            <jvmarg value="-Dbrowsers.include=${browsers.include}" />
+            <jvmarg value="-Dbrowsers.exclude=${browsers.exclude}" />
             <test name="${junit.test.suite}" todir="${report.dir}" />
         </junit>
 
