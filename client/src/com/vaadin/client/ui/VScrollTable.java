@@ -324,13 +324,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             ArrayList<SelectionRange> ranges = new ArrayList<SelectionRange>(2);
 
             int endOfFirstRange = row.getIndex() - 1;
-            if (!(endOfFirstRange - startRow.getIndex() < 0)) {
+            if (endOfFirstRange >= startRow.getIndex()) {
                 // create range of first part unless its length is < 1
                 ranges.add(new SelectionRange(startRow, endOfFirstRange
                         - startRow.getIndex() + 1));
             }
             int startOfSecondRange = row.getIndex() + 1;
-            if (!(getEndIndex() - startOfSecondRange < 0)) {
+            if (getEndIndex() >= startOfSecondRange) {
                 // create range of second part unless its length is < 1
                 VScrollTableRow startOfRange = scrollBody
                         .getRowByRowIndex(startOfSecondRange);
@@ -860,6 +860,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // Send the selected row ranges
             client.updateVariable(paintableId, "selectedRanges",
                     ranges.toArray(new String[selectedRowRanges.size()]), false);
+            selectedRowRanges.clear();
 
             // clean selectedRowKeys so that they don't contain excess values
             for (Iterator<String> iterator = selectedRowKeys.iterator(); iterator
