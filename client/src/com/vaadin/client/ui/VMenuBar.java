@@ -1228,10 +1228,26 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * Get the key that selects a menu item. By default it is the Enter key but
      * by overriding this you can change the key to whatever you want.
      * 
+     * @deprecated use {@link #isNavigationSelectKey(int)} instead
      * @return
      */
+    @Deprecated
     protected int getNavigationSelectKey() {
         return KeyCodes.KEY_ENTER;
+    }
+
+    /**
+     * Checks whether key code selects a menu item. By default it is the Enter
+     * and Space keys but by overriding this you can change the keys to whatever
+     * you want.
+     * 
+     * @since 7.2
+     * @param keycode
+     * @return true if key selects menu item
+     */
+    protected boolean isNavigationSelectKey(int keycode) {
+        return keycode == getNavigationSelectKey()
+                || keycode == KeyCodes.KEY_SPACE;
     }
 
     /**
@@ -1432,7 +1448,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
             hideChildren();
             menuVisible = false;
 
-        } else if (keycode == getNavigationSelectKey()) {
+        } else if (isNavigationSelectKey(keycode)) {
             if (getSelected() == null) {
                 // If nothing is selected then select the first item
                 selectFirstItem();
