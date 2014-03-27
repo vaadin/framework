@@ -23,6 +23,7 @@ import com.google.gwt.core.client.JsArrayString;
 import com.vaadin.client.FastStringMap;
 import com.vaadin.client.FastStringSet;
 import com.vaadin.client.JsArrayObject;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.JSONSerializer;
 
 public class TypeDataStore {
@@ -35,6 +36,12 @@ public class TypeDataStore {
     private final FastStringMap<ProxyHandler> proxyHandlers = FastStringMap
             .create();
     private final FastStringMap<JsArrayString> delegateToWidgetProperties = FastStringMap
+            .create();
+
+    /**
+     * Maps connector class -> state property name -> hander method data
+     */
+    private final FastStringMap<FastStringMap<JsArrayObject<OnStateChangeMethod>>> onStateChangeMethods = FastStringMap
             .create();
 
     private final FastStringSet delayedMethods = FastStringSet.create();
@@ -368,4 +375,47 @@ public class TypeDataStore {
         return typeData[beanName] !== undefined ;
     }-*/;
 
+    /**
+     * Gets data for all methods annotated with {@link OnStateChange} in the
+     * given connector type.
+     * 
+     * @since 7.2
+     * @param type
+     *            the connector type
+     * @return a map of state property names to handler method data
+     */
+    public static FastStringMap<JsArrayObject<OnStateChangeMethod>> getOnStateChangeMethods(
+            Class<?> type) {
+        return get().onStateChangeMethods.get(getType(type).getSignature());
+    }
+
+    /**
+     * Adds data about a method annotated with {@link OnStateChange} for the
+     * given connector type.
+     * 
+     * @since 7.2
+     * @param clazz
+     *            the connector type
+     * @param method
+     *            the state change method data
+     */
+    public void addOnStateChangeMethod(Class<?> clazz,
+            OnStateChangeMethod method) {
+        FastStringMap<JsArrayObject<OnStateChangeMethod>> handlers = getOnStateChangeMethods(clazz);
+        if (handlers == null) {
+            handlers = FastStringMap.create();
+            onStateChangeMethods.put(getType(clazz).getSignature(), handlers);
+        }
+
+        for (String property : method.getProperties()) {
+            JsArrayObject<OnStateChangeMethod> propertyHandlers = handlers
+                    .get(property);
+            if (propertyHandlers == null) {
+                propertyHandlers = JsArrayObject.createArray().cast();
+                handlers.put(property, propertyHandlers);
+            }
+
+            propertyHandlers.add(method);
+        }
+    }
 }

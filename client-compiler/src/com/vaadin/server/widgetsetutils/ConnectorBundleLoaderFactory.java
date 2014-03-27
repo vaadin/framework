@@ -46,8 +46,10 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.InvokationHandler;
+import com.vaadin.client.metadata.OnStateChangeMethod;
 import com.vaadin.client.metadata.ProxyHandler;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.metadata.TypeDataStore;
@@ -56,6 +58,7 @@ import com.vaadin.server.widgetsetutils.metadata.ClientRpcVisitor;
 import com.vaadin.server.widgetsetutils.metadata.ConnectorBundle;
 import com.vaadin.server.widgetsetutils.metadata.ConnectorInitVisitor;
 import com.vaadin.server.widgetsetutils.metadata.GeneratedSerializer;
+import com.vaadin.server.widgetsetutils.metadata.OnStateChangeVisitor;
 import com.vaadin.server.widgetsetutils.metadata.Property;
 import com.vaadin.server.widgetsetutils.metadata.ServerRpcVisitor;
 import com.vaadin.server.widgetsetutils.metadata.StateInitVisitor;
@@ -463,6 +466,92 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writePropertyTypes(logger, w, bundle);
         writeSerializers(logger, w, bundle);
         writeDelegateToWidget(logger, w, bundle);
+        writeOnStateChangeHandlers(logger, w, bundle);
+    }
+
+    private void writeOnStateChangeHandlers(TreeLogger logger,
+            SplittingSourceWriter w, ConnectorBundle bundle)
+            throws UnableToCompleteException {
+        Map<JClassType, Set<JMethod>> needsOnStateChangeHandler = bundle
+                .getNeedsOnStateChangeHandler();
+        for (Entry<JClassType, Set<JMethod>> entry : needsOnStateChangeHandler
+                .entrySet()) {
+            JClassType connector = entry.getKey();
+
+            TreeLogger typeLogger = logger.branch(
+                    Type.DEBUG,
+                    "Generating @OnStateChange support for "
+                            + connector.getName());
+
+            // Build map to speed up error checking
+            HashMap<String, Property> stateProperties = new HashMap<String, Property>();
+            JClassType stateType = ConnectorBundle
+                    .findInheritedMethod(connector, "getState").getReturnType()
+                    .isClassOrInterface();
+            for (Property property : bundle.getProperties(stateType)) {
+                stateProperties.put(property.getName(), property);
+            }
+
+            for (JMethod method : entry.getValue()) {
+                TreeLogger methodLogger = typeLogger.branch(Type.DEBUG,
+                        "Processing method " + method.getName());
+
+                if (method.isPublic() || method.isProtected()) {
+                    methodLogger
+                            .log(Type.ERROR,
+                                    "@OnStateChange is only supported for methods with private or default visibility.");
+                    throw new UnableToCompleteException();
+                }
+
+                OnStateChange onStateChange = method
+                        .getAnnotation(OnStateChange.class);
+
+                String[] properties = onStateChange.value();
+
+                if (properties.length == 0) {
+                    methodLogger.log(Type.ERROR,
+                            "There are no properties to listen to");
+                    throw new UnableToCompleteException();
+                }
+
+                // Verify that all properties do exist
+                for (String propertyName : properties) {
+                    if (!stateProperties.containsKey(propertyName)) {
+                        methodLogger.log(Type.ERROR,
+                                "State class has no property named "
+                                        + propertyName);
+                        throw new UnableToCompleteException();
+                    }
+                }
+
+                if (method.getParameters().length != 0) {
+                    methodLogger.log(Type.ERROR,
+                            "Method should accept zero parameters");
+                    throw new UnableToCompleteException();
+                }
+
+                // new OnStateChangeMethod(Class declaringClass, String
+                // methodName, String[], properties)
+                w.print("store.addOnStateChangeMethod(%s, new %s(",
+                        getClassLiteralString(connector),
+                        OnStateChangeMethod.class.getName());
+                if (!connector.equals(method.getEnclosingType())) {
+                    w.print("%s, ",
+                            getClassLiteralString(method.getEnclosingType()));
+                }
+                w.print("\"%s\", ", method.getName());
+
+                w.print("new String[] {");
+                for (String propertyName : properties) {
+                    w.print("\"%s\", ", propertyName);
+                }
+                w.print("}");
+
+                w.println("));");
+
+                w.splitIfNeeded();
+            }
+        }
     }
 
     private void writeSuperClasses(SplittingSourceWriter w,
@@ -1109,7 +1198,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         List<TypeVisitor> visitors = Arrays.<TypeVisitor> asList(
                 new ConnectorInitVisitor(), new StateInitVisitor(),
                 new WidgetInitVisitor(), new ClientRpcVisitor(),
-                new ServerRpcVisitor());
+                new ServerRpcVisitor(), new OnStateChangeVisitor());
         for (TypeVisitor typeVisitor : visitors) {
             typeVisitor.init(oracle);
         }

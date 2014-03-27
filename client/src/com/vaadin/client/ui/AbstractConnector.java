@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +28,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.FastStringMap;
+import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
@@ -35,8 +37,10 @@ import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.metadata.NoDataException;
+import com.vaadin.client.metadata.OnStateChangeMethod;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
+import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.SharedState;
@@ -290,6 +294,37 @@ public abstract class AbstractConnector implements ServerConnector,
         }
 
         updateEnabledState(isEnabled());
+
+        FastStringMap<JsArrayObject<OnStateChangeMethod>> handlers = TypeDataStore
+                .getOnStateChangeMethods(getClass());
+        if (handlers != null) {
+            Profiler.enter("AbstractConnector.onStateChanged @OnStateChange");
+
+            HashSet<OnStateChangeMethod> invokedMethods = new HashSet<OnStateChangeMethod>();
+
+            JsArrayString propertyNames = handlers.getKeys();
+            for (int i = 0; i < propertyNames.length(); i++) {
+                String propertyName = propertyNames.get(i);
+
+                if (stateChangeEvent.hasPropertyChanged(propertyName)) {
+                    JsArrayObject<OnStateChangeMethod> propertyMethods = handlers
+                            .get(propertyName);
+
+                    for (int j = 0; j < propertyMethods.size(); j++) {
+                        OnStateChangeMethod method = propertyMethods.get(j);
+
+                        if (invokedMethods.add(method)) {
+
+                            method.invoke(stateChangeEvent);
+
+                        }
+                    }
+                }
+            }
+
+            Profiler.leave("AbstractConnector.onStateChanged @OnStateChange");
+        }
+
         Profiler.leave("AbstractConnector.onStateChanged");
     }
 

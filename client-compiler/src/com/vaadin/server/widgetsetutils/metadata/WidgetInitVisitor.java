@@ -32,10 +32,11 @@ public class WidgetInitVisitor extends TypeVisitor {
             ConnectorBundle bundle) throws UnableToCompleteException {
         if (ConnectorBundle.isConnectedComponentConnector(type)) {
             // The class in which createWidget is implemented
-            JClassType createWidgetClass = findInheritedMethod(type,
-                    "createWidget").getEnclosingType();
+            JClassType createWidgetClass = ConnectorBundle.findInheritedMethod(
+                    type, "createWidget").getEnclosingType();
 
-            JMethod getWidget = findInheritedMethod(type, "getWidget");
+            JMethod getWidget = ConnectorBundle.findInheritedMethod(type,
+                    "getWidget");
             JClassType widgetType = getWidget.getReturnType().isClass();
 
             // Needs GWT constructor if createWidget is not overridden
@@ -48,7 +49,8 @@ public class WidgetInitVisitor extends TypeVisitor {
             }
 
             // Check state properties for @DelegateToWidget
-            JMethod getState = findInheritedMethod(type, "getState");
+            JMethod getState = ConnectorBundle.findInheritedMethod(type,
+                    "getState");
             JClassType stateType = getState.getReturnType().isClass();
 
             Collection<Property> properties = bundle.getProperties(stateType);
@@ -63,8 +65,9 @@ public class WidgetInitVisitor extends TypeVisitor {
                     String methodName = DelegateToWidget.Helper
                             .getDelegateTarget(property.getName(),
                                     delegateToWidget.value());
-                    JMethod delegatedSetter = findInheritedMethod(widgetType,
-                            methodName, property.getPropertyType());
+                    JMethod delegatedSetter = ConnectorBundle
+                            .findInheritedMethod(widgetType, methodName,
+                                    property.getPropertyType());
                     if (delegatedSetter == null) {
                         logger.log(
                                 Type.ERROR,

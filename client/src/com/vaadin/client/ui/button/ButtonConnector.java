@@ -26,8 +26,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.vaadin.client.EventHelper;
 import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VButton;
@@ -56,44 +56,38 @@ public class ButtonConnector extends AbstractComponentConnector implements
         super.init();
         getWidget().addClickHandler(this);
         getWidget().client = getConnection();
-        addStateChangeHandler("errorMessage", new StateChangeHandler() {
-            @Override
-            public void onStateChanged(StateChangeEvent stateChangeEvent) {
-                if (null != getState().errorMessage) {
-                    if (getWidget().errorIndicatorElement == null) {
-                        getWidget().errorIndicatorElement = DOM.createSpan();
-                        getWidget().errorIndicatorElement
-                                .setClassName("v-errorindicator");
-                    }
-                    getWidget().wrapper.insertBefore(
-                            getWidget().errorIndicatorElement,
-                            getWidget().captionElement);
+    }
 
-                } else if (getWidget().errorIndicatorElement != null) {
-                    getWidget().wrapper
-                            .removeChild(getWidget().errorIndicatorElement);
-                    getWidget().errorIndicatorElement = null;
-                }
+    @OnStateChange("errorMessage")
+    void setErrorMessage() {
+        if (null != getState().errorMessage) {
+            if (getWidget().errorIndicatorElement == null) {
+                getWidget().errorIndicatorElement = DOM.createSpan();
+                getWidget().errorIndicatorElement
+                        .setClassName("v-errorindicator");
             }
-        });
+            getWidget().wrapper.insertBefore(getWidget().errorIndicatorElement,
+                    getWidget().captionElement);
 
-        addStateChangeHandler("resources", new StateChangeHandler() {
-            @Override
-            public void onStateChanged(StateChangeEvent stateChangeEvent) {
-                if (getWidget().icon != null) {
-                    getWidget().wrapper.removeChild(getWidget().icon
-                            .getElement());
-                    getWidget().icon = null;
-                }
-                Icon icon = getIcon();
-                if (icon != null) {
-                    getWidget().icon = icon;
-                    icon.setAlternateText(getState().iconAltText);
-                    getWidget().wrapper.insertBefore(icon.getElement(),
-                            getWidget().captionElement);
-                }
-            }
-        });
+        } else if (getWidget().errorIndicatorElement != null) {
+            getWidget().wrapper.removeChild(getWidget().errorIndicatorElement);
+            getWidget().errorIndicatorElement = null;
+        }
+    }
+
+    @OnStateChange("resources")
+    void onResourceChange() {
+        if (getWidget().icon != null) {
+            getWidget().wrapper.removeChild(getWidget().icon.getElement());
+            getWidget().icon = null;
+        }
+        Icon icon = getIcon();
+        if (icon != null) {
+            getWidget().icon = icon;
+            icon.setAlternateText(getState().iconAltText);
+            getWidget().wrapper.insertBefore(icon.getElement(),
+                    getWidget().captionElement);
+        }
     }
 
     @Override
@@ -103,22 +97,27 @@ public class ButtonConnector extends AbstractComponentConnector implements
                 focusHandlerRegistration);
         blurHandlerRegistration = EventHelper.updateBlurHandler(this,
                 blurHandlerRegistration);
+    }
 
-        if (stateChangeEvent.hasPropertyChanged("caption")
-                || stateChangeEvent.hasPropertyChanged("htmlContentAllowed")) {
-            // Set text
-            if (getState().htmlContentAllowed) {
-                getWidget().setHtml(getState().caption);
-            } else {
-                getWidget().setText(getState().caption);
-            }
+    @OnStateChange({ "caption", "htmlContentAllowed" })
+    void setCaption() {
+        String caption = getState().caption;
+        if (getState().htmlContentAllowed) {
+            getWidget().setHtml(caption);
+        } else {
+            getWidget().setText(caption);
         }
+    }
 
-        if (getWidget().icon != null
-                && stateChangeEvent.hasPropertyChanged("iconAltText")) {
+    @OnStateChange("iconAltText")
+    void setIconAltText() {
+        if (getWidget().icon != null) {
             getWidget().icon.setAlternateText(getState().iconAltText);
         }
+    }
 
+    @OnStateChange("clickShortcutKeyCode")
+    void setClickShortcut() {
         getWidget().clickShortcut = getState().clickShortcutKeyCode;
     }
 
