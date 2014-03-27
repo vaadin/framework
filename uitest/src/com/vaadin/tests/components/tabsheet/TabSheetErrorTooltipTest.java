@@ -15,14 +15,17 @@
  */
 package com.vaadin.tests.components.tabsheet;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.commands.TestBenchElementCommands;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TabSheetErrorTooltipTest extends MultiBrowserTest {
@@ -31,20 +34,37 @@ public class TabSheetErrorTooltipTest extends MultiBrowserTest {
     public void checkTooltips() throws IOException {
         openTestURL();
 
-        testBenchElement(getTab(0)).showTooltip();
-        assertNoTooltip();
+        assertTabHasNoTooltipNorError(0);
 
-        testBenchElement(getTab(1)).showTooltip();
-        assertErrorMessage("Error!");
-        assertTooltip("");
+        assertTabHasTooltipAndError(1, "", "Error!");
 
-        testBenchElement(getTab(2)).showTooltip();
-        assertErrorMessage("");
-        assertTooltip("This is a tab");
+        assertTabHasTooltipAndError(2, "This is a tab", "");
 
-        testBenchElement(getTab(3)).showTooltip();
-        assertErrorMessage("Error!");
-        assertTooltip("This tab has both an error and a description");
+        assertTabHasTooltipAndError(3,
+                "This tab has both an error and a description", "Error!");
+    }
+
+    private void assertTabHasTooltipAndError(int index, String tooltip,
+            String errorMessage) {
+        showTooltip(index);
+        assertTooltip(tooltip);
+        assertErrorMessage(errorMessage);
+    }
+
+    private void assertTabHasNoTooltipNorError(int index) {
+        showTooltip(index);
+        WebElement tooltip = getCurrentTooltip();
+
+        assertThat(tooltip.getText(), is(""));
+
+        WebElement errorMessage = getCurrentErrorMessage();
+        assertThat(errorMessage.isDisplayed(), is(false));
+
+    }
+
+    private void showTooltip(int index) {
+        TestBenchElementCommands element = testBenchElement(getTab(index));
+        element.showTooltip();
     }
 
     private WebElement getTab(int index) {
@@ -52,30 +72,21 @@ public class TabSheetErrorTooltipTest extends MultiBrowserTest {
                 + index + "]/domChild[0]");
     }
 
-    private WebElement getTooltip() {
+    private WebElement getCurrentTooltip() {
         return getDriver().findElement(
                 By.xpath("//div[@class='v-tooltip-text']"));
     }
 
-    private WebElement getErrorMessage() {
+    private WebElement getCurrentErrorMessage() {
         return getDriver().findElement(
                 By.xpath("//div[@class='v-errormessage']"));
     }
 
     private void assertTooltip(String tooltip) {
-        Assert.assertEquals(tooltip, getTooltip().getText());
+        Assert.assertEquals(tooltip, getCurrentTooltip().getText());
     }
 
     private void assertErrorMessage(String message) {
-        Assert.assertEquals(message, getErrorMessage().getText());
-    }
-
-    private void assertNoTooltip() {
-        try {
-            getTooltip();
-        } catch (NoSuchElementException e) {
-            return;
-        }
-        Assert.fail("Tooltip exists");
+        Assert.assertEquals(message, getCurrentErrorMessage().getText());
     }
 }
