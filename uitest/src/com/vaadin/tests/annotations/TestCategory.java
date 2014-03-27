@@ -13,20 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.push;
+package com.vaadin.tests.annotations;
 
-import org.junit.Assert;
-import org.junit.Test;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import com.vaadin.tests.annotations.TestCategory;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Inherited
+public @interface TestCategory {
 
-@TestCategory("push")
-public class TrackMessageSizeUITest extends MultiBrowserTest {
-    @Test
-    public void runTests() {
-        openTestURL();
-        Assert.assertEquals("1. All tests run", vaadinElementById("Log_row_0")
-                .getText());
-    }
+    String value();
+
 }

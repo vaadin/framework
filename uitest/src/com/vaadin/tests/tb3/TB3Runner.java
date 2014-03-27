@@ -35,6 +35,7 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.AbstractTB3Test.BrowserUtil;
 import com.vaadin.tests.tb3.AbstractTB3Test.RunLocally;
 
@@ -77,14 +78,20 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
 
         try {
             AbstractTB3Test testClassInstance = getTestClassInstance();
-            Collection<DesiredCapabilities> desiredCapabilites = getDesiredCapabilities(testClassInstance);
+            Collection<DesiredCapabilities> desiredCapabilities = getDesiredCapabilities(testClassInstance);
 
             TestNameSuffix testNameSuffixProperty = findAnnotation(
                     testClassInstance.getClass(), TestNameSuffix.class);
 
             for (FrameworkMethod m : getTestMethods()) {
-                if (desiredCapabilites.size() > 0) {
-                    for (DesiredCapabilities capabilities : desiredCapabilites) {
+                // No browsers available for this test, so we need to
+                // wrap the test method inside IgnoredTestMethod.
+                // This will add @Ignore annotation to it.
+                if (desiredCapabilities.size() <= 0
+                        || categoryIsExcludedOrNotExcplicitlyIncluded()) {
+                    tests.add(new IgnoredTestMethod(m.getMethod()));
+                } else {
+                    for (DesiredCapabilities capabilities : desiredCapabilities) {
                         TB3Method method = new TB3Method(m.getMethod(),
                                 capabilities);
                         if (testNameSuffixProperty != null) {
@@ -94,12 +101,6 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
                         }
                         tests.add(method);
                     }
-
-                } else {
-                    // No browsers available for this test, so we need to
-                    // wrap the test method inside IgnoredTestMethod.
-                    // This will add @Ignore annotation to it.
-                    tests.add(new IgnoredTestMethod(m.getMethod()));
                 }
             }
         } catch (Exception e) {
@@ -107,6 +108,60 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
         }
 
         return tests;
+    }
+
+    private boolean categoryIsExcludedOrNotExcplicitlyIncluded() {
+        Class<?> c = getTestClass().getJavaClass();
+
+        if (categoryIsExcluded(c)) {
+            return true;
+        }
+
+        if (explicitInclusionIsUsed()) {
+            return !categoryIsIncluded(c);
+        }
+
+        return false;
+    }
+
+    private boolean categoryIsIncluded(Class<?> c) {
+        String include = System.getProperty("categories.include");
+        if (include != null && include.trim().length() > 0) {
+            return hasCategoryFor(c, include.toLowerCase().trim());
+        }
+
+        return false;
+    }
+
+    private static boolean explicitInclusionIsUsed() {
+        String include = System.getProperty("categories.include");
+
+        return include != null && include.trim().length() > 0;
+    }
+
+    private static boolean categoryIsExcluded(Class<?> c) {
+        String exclude = System.getProperty("categories.exclude");
+        if (exclude != null && exclude.trim().length() > 0) {
+            return hasCategoryFor(c, exclude.toLowerCase().trim());
+        }
+
+        return false;
+    }
+
+    private static boolean hasCategoryFor(Class<?> c, String searchString) {
+        if (hasCategory(c)) {
+            return searchString.contains(getCategory(c).toLowerCase());
+        }
+
+        return false;
+    }
+
+    private static boolean hasCategory(Class<?> c) {
+        return c.getAnnotation(TestCategory.class) != null;
+    }
+
+    private static String getCategory(Class<?> c) {
+        return c.getAnnotation(TestCategory.class).value();
     }
 
     private List<FrameworkMethod> getTestMethods() {
@@ -150,16 +205,16 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
         for (DesiredCapabilities d : desiredCapabilites) {
             String browserName = (d.getBrowserName() + d.getVersion())
                     .toLowerCase();
-            if (include != null) {
-                if (include.toLowerCase().contains(browserName)) {
+            if (include != null && include.trim().length() > 0) {
+                if (include.trim().toLowerCase().contains(browserName)) {
                     filteredCapabilities.add(d);
                 }
             } else {
                 filteredCapabilities.add(d);
             }
 
-            if (exclude != null) {
-                if (exclude.toLowerCase().contains(browserName)) {
+            if (exclude != null && exclude.trim().length() > 0) {
+                if (exclude.trim().toLowerCase().contains(browserName)) {
                     filteredCapabilities.remove(d);
                 }
             }

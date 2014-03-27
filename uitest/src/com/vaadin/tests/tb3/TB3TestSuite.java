@@ -246,7 +246,7 @@ public class TB3TestSuite extends Suite {
         if (c.getAnnotation(ExcludeFromSuite.class) != null) {
             return false;
         }
+
         return true;
     }
-
 }

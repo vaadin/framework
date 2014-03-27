@@ -20,8 +20,10 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+@TestCategory("push")
 public class EnableDisablePushTest extends MultiBrowserTest {
     @Test
     public void testEnablePushWhenUsingPolling() throws Exception {
