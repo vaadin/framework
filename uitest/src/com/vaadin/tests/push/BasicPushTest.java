@@ -19,9 +19,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.AbstractTB3Test;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+@TestCategory("push")
 public abstract class BasicPushTest extends MultiBrowserTest {
 
     @Test

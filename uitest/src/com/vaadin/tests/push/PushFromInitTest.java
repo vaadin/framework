@@ -19,8 +19,10 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
+import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+@TestCategory("push")
 public class PushFromInitTest extends MultiBrowserTest {
     @Test
     public void testPushFromInit() {
