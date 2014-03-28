@@ -176,6 +176,8 @@ public class VWindow extends VWindowOverlay implements
     // Prevents leaving the window with the Tab key when true
     private boolean doTabStop;
 
+    private boolean hasFocus;
+
     /**
      * If centered (via UIDL), the window should stay in the centered -mode
      * until a position is received from the server, or the user moves or
@@ -1298,6 +1300,10 @@ public class VWindow extends VWindowOverlay implements
 
     @Override
     public void onKeyDown(KeyDownEvent event) {
+        if (hasFocus && event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE) {
+            event.preventDefault();
+        }
+
         if (shortcutHandler != null) {
             shortcutHandler
                     .handleKeyboardEvent(Event.as(event.getNativeEvent()));
@@ -1314,6 +1320,8 @@ public class VWindow extends VWindowOverlay implements
 
     @Override
     public void onBlur(BlurEvent event) {
+        hasFocus = false;
+
         if (client.hasEventListeners(this, EventId.BLUR)) {
             client.updateVariable(id, EventId.BLUR, "", true);
         }
@@ -1321,6 +1329,8 @@ public class VWindow extends VWindowOverlay implements
 
     @Override
     public void onFocus(FocusEvent event) {
+        hasFocus = true;
+
         if (client.hasEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(id, EventId.FOCUS, "", true);
         }
