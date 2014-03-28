@@ -679,9 +679,14 @@ public class VWindow extends VWindowOverlay implements
         }
         super.hide();
 
+        int curIndex = windowOrder.indexOf(this);
         // Remove window from windowOrder to avoid references being left
         // hanging.
-        windowOrder.remove(this);
+        windowOrder.remove(curIndex);
+        // Update the z-indices of any remaining windows
+        while (curIndex < windowOrder.size()) {
+            windowOrder.get(curIndex).setWindowOrder(curIndex++);
+        }
     }
 
     private void fixIE8FocusCaptureIssue() {
