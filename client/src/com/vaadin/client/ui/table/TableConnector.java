@@ -303,7 +303,9 @@ public class TableConnector extends AbstractHasComponentsConnector implements
         getWidget().tabIndex = getState().tabIndex;
         getWidget().setProperTabIndex();
 
-        getWidget().resizeSortedColumnForSortIndicator();
+        if (getWidget().initializedAndAttached) {
+            getWidget().resizeSortedColumnForSortIndicator();
+        }
 
         // Remember this to detect situations where overflow hack might be
         // needed during scrolling

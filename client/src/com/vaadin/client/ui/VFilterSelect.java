@@ -1148,6 +1148,32 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         popupOpener.addClickHandler(this);
 
         setStyleName(CLASSNAME);
+
+        sinkEvents(Event.ONPASTE);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.user.client.ui.Composite#onBrowserEvent(com.google.gwt
+     * .user.client.Event)
+     */
+    @Override
+    public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+
+        if (event.getTypeInt() == Event.ONPASTE) {
+            if (textInputEnabled) {
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+                    @Override
+                    public void execute() {
+                        filterOptions(currentPage);
+                    }
+                });
+            }
+        }
     }
 
     /**
