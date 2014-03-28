@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -32,6 +33,15 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
 public class LayoutTesterApplicationTest extends MultiBrowserTest {
+
+    @Override
+    protected DesiredCapabilities getDesiredCapabilities() {
+        DesiredCapabilities cap = new DesiredCapabilities(
+                super.getDesiredCapabilities());
+        cap.setCapability("nativeEvents", false);
+        return cap;
+    }
+
     Map<String, Integer> numberOfSubTests = new HashMap<String, Integer>();
     private Set<String> tableOrIconsTests = new HashSet<String>();
 

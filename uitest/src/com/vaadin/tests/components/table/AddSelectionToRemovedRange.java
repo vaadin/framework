@@ -19,7 +19,6 @@ import java.util.Set;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.tests.tb3.AbstractTB3Test.RunLocally;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
@@ -34,7 +33,6 @@ import com.vaadin.ui.VerticalLayout;
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")
-@RunLocally()
 public class AddSelectionToRemovedRange extends AbstractTestUI {
 
     @Override
