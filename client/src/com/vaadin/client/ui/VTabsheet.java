@@ -283,6 +283,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         public void focus() {
+            getTabsheet().scrollIntoView(this);
             focusImpl.focus(td);
         }
 
@@ -1296,14 +1297,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 focusedTab = tb.getTab(focusedTabIndex);
                 focusedTab.focus();
             }
-
-            if (isScrolledTabs()) {
-                // Scroll until the new focused tab is visible
-                while (!tb.getTab(focusedTabIndex).isVisible()) {
-                    scrollerIndex = tb.scrollLeft(scrollerIndex);
-                }
-                updateTabScroller();
-            }
         }
     }
 
@@ -1325,15 +1318,20 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 focusedTab = tb.getTab(focusedTabIndex);
                 focusedTab.focus();
             }
+        }
+    }
 
-            if (isClippedTabs()) {
-                // Scroll until the new active tab is completely visible
-                int newScrollerIndex = scrollerIndex;
-                while (isClipped(tb.getTab(focusedTabIndex))
-                        && newScrollerIndex != -1) {
-                    newScrollerIndex = tb.scrollRight(newScrollerIndex);
+    private void scrollIntoView(Tab tab) {
+        if (!tab.isHiddenOnServer()) {
+            if (isClipped(tab)) {
+                while (isClipped(tab) && scrollerIndex != -1) {
+                    scrollerIndex = tb.scrollRight(scrollerIndex);
                 }
-                scrollerIndex = newScrollerIndex;
+                updateTabScroller();
+            } else if (!tab.isVisible()) {
+                while (!tab.isVisible()) {
+                    scrollerIndex = tb.scrollLeft(scrollerIndex);
+                }
                 updateTabScroller();
             }
         }
