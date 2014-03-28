@@ -1090,12 +1090,18 @@ public class VCalendarPanel extends FocusableFlexTable implements
      *            The keydown/keypress event
      */
     private void handleKeyPress(DomEvent<?> event) {
+        // Special handling for events from time ListBoxes.
         if (time != null
                 && time.getElement().isOrHasChild(
                         (Node) event.getNativeEvent().getEventTarget().cast())) {
             int nativeKeyCode = event.getNativeEvent().getKeyCode();
             if (nativeKeyCode == getSelectKey()) {
-                onSubmit(); // submit happens if enter key hit down on listboxes
+                onSubmit(); // submit if enter key hit down on listboxes
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            if (nativeKeyCode == getCloseKey()) {
+                onCancel(); // cancel if ESC key hit down on listboxes
                 event.preventDefault();
                 event.stopPropagation();
             }

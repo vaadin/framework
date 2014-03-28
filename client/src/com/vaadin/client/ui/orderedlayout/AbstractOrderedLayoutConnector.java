@@ -262,6 +262,10 @@ public abstract class AbstractOrderedLayoutConnector extends
         }
         boolean enabled = child.isEnabled();
 
+        if (slot.hasCaption() && null == caption) {
+            slot.setCaptionResizeListener(null);
+        }
+
         slot.setCaption(caption, icon, styles, error, showError, required,
                 enabled);
 
