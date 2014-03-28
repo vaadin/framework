@@ -91,9 +91,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                     "Default implementation of createWidget() does not work for "
                             + Util.getSimpleName(this)
                             + ". This might be caused by explicitely using "
-                            + "super.createWidget(), using a widget type with "
-                            + "generics or some unspecified problem with the "
-                            + "widgetset compilation.", e);
+                            + "super.createWidget() or some unspecified "
+                            + "problem with the widgetset compilation.", e);
         }
     }
 
