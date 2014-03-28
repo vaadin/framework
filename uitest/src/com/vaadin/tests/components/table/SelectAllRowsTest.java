@@ -21,7 +21,6 @@ import static com.vaadin.tests.components.table.SelectAllRows.TABLE;
 import static com.vaadin.tests.components.table.SelectAllRows.TOTAL_NUMBER_OF_ROWS;
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -41,8 +40,11 @@ public class SelectAllRowsTest extends MultiBrowserTest {
     public List<DesiredCapabilities> getBrowsersToTest() {
         // Pressing Shift modifier key does not work with TestBench and IE
         // (#8621)
-        return Arrays.asList(Browser.FIREFOX.getDesiredCapabilities(),
-                Browser.CHROME.getDesiredCapabilities());
+
+        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
+        browsers.remove(Browser.FIREFOX.getDesiredCapabilities());
+
+        return browsers;
     }
 
     @Test
