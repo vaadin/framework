@@ -298,8 +298,7 @@
             <li>Shared library (<tt>vaadin-shared</tt>) for both
                 server- and client-side libraries
             </li>
-            <li>Built-in themes (<tt>vaadin-themes</tt>) and the
-                theme compiler (<tt>vaadin-theme-compiler</tt>)
+            <li>Built-in themes (<tt>vaadin-themes</tt>)
             </li>
             <li>Dependency libraries provided under the <tt>lib/</tt>
                 folder
@@ -322,8 +321,6 @@
             <tt>vaadin-client-compiled</tt>
             ,
             <tt>vaadin-shared</tt>
-            ,
-            <tt>vaadin-theme-compiler</tt>
             , and
             <tt>vaadin-themes</tt>
             from the main folder and the dependencies from the
@@ -335,6 +332,13 @@
             is necessary if you do not wish to compile the widget set by
             your own, which you need to do if you use almost any add-on
             components.)
+        </p>
+
+        <h4 id="package.updates">Updates to the Packaging</h4>
+        <p>
+            Since Vaadin 7.2.0, the old vaadin-theme-compiler has been moved into
+            a separate project and renamed to vaadin-sass-compiler. It is now included
+            along with the other 3rd party dependencies in the ZIP package.
         </p>
 
         <p>

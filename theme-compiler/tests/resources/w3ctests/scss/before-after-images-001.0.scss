@@ -1,7 +1,0 @@
-/* Source: http://test.csswg.org/suites/css2.1/20110323/html4/before-after-images-001.htm */
-
-div:before {
-  content:url(missing-image.png);
-}
-div { border:1px solid green; margin:5px; }
-

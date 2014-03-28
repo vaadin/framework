@@ -1,7 +1,0 @@
-/* Source: http://test.csswg.org/suites/css2.1/20110323/html4/inline-block-zorder-003.htm */
-
-div { height: 1em; }
-div#test span { display:inline-block; vertical-align: top; height: 1em; background: red; color: red; }
-div#after { margin-top:-1em; }
-div#after span { display: inline; vertical-align: top; background: green; color: green; border-bottom: 0.25em solid green; border-top: 0.25em solid green; }
-

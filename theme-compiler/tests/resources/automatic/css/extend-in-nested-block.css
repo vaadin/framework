@@ -1,7 +1,0 @@
-.test .error, .test .seriousError {
-	border: 1px #f00;
-	background-color: #fdd; 
-}
-.test .seriousError {
-	border-width: 3px; 
-}

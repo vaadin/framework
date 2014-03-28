@@ -1,6 +1,0 @@
-@mixin foo($a, $b...) {
-  a: $a;
-  b: $b;
-}
-
-.foo {@include foo(1, 2, 3, 4)}

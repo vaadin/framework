@@ -25,8 +25,8 @@
             rev="${vaadin.version}" conf="build" />
         <dependency org="com.vaadin" name="vaadin-client"
             rev="${vaadin.version}" conf="build" />
-        <dependency org="com.vaadin" name="vaadin-theme-compiler"
-            rev="${vaadin.version}" conf="build" />
+        <dependency org="com.vaadin" name="vaadin-sass-compiler"
+            rev="${vaadin.sass.version}" conf="build,ide->default" />
 
         <dependency org="commons-collections" name="commons-collections"
             rev="3.1" conf="build,ide -> default" />

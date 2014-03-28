@@ -1,8 +1,0 @@
-@mixin test($italic: true) {
-    @if $italic {
-      @font-face {
-      }
-    }
-}
-
-@include test;

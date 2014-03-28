@@ -1,9 +1,0 @@
-/* Source: http://www.w3.org/Style/CSS/Test/CSS3/Selectors/current/html/tests/css3-modsel-14e.html */
-
-p { background: green; color: white; }
-p:not(.t1):not(.t2) { background: red; color: yellow; }
-div { background: red; color: yellow; }
-div:not(.t1) { background: green; color: white; }
-address { background: green; color: white; }
-address:not(.t5):not(.t5) { background: red; color: yellow; }
-

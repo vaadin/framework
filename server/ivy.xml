@@ -42,13 +42,15 @@
         <dependency org="javax.validation" name="validation-api"
             rev="1.0.0.GA" conf="build-provided,ide,test -> default" />
 
+        <!-- Sass compiler -->
+        <dependency org="com.vaadin" name="vaadin-sass-compiler"
+                    rev="${vaadin.sass.version}" conf="build,ide,test->default">
+            <exclude type="pom" conf="test" />
+        </dependency>
+
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-shared"
-            rev="${vaadin.version}" conf="build,test->build">
-            <exclude type="pom" conf="test" />
-        </dependency>
-        <dependency org="com.vaadin" name="vaadin-theme-compiler"
             rev="${vaadin.version}" conf="build,test->build">
             <exclude type="pom" conf="test" />
         </dependency>

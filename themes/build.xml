@@ -82,6 +82,8 @@
             <arg value="${theme}" />
             <arg value="--theme-folder" />
             <arg value="${theme.result.dir}" />
+            <arg value="--version" />
+            <arg value="${vaadin.version}" />
             <jvmarg value="-Xss8M" />
             <jvmarg value="-XX:MaxPermSize=256M" />
             <jvmarg value="-Djava.awt.headless=true" />

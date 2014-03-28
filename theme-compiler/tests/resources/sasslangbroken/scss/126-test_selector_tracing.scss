@@ -1,6 +1,0 @@
-      @mixin mixed {
-        .mixed { color: red; }
-      }
-      .context {
-        @include mixed;
-      }

@@ -1,7 +1,0 @@
-@mixin bgcolor ($name, $color) {
-    #{$name}{
-        background-color: $color;  
-    }
-}
-
-@include bgcolor('body', white);

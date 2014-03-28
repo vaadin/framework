@@ -23,8 +23,8 @@
     <ivy:cachepath pathid="shared.deps" conf="ide" />
     <ivy:resolve log="download-only" file="uitest/ivy.xml" conf="ide" />
     <ivy:cachepath pathid="uitest.deps" conf="ide" />
-    <ivy:resolve log="download-only" file="theme-compiler/ivy.xml" conf="ide" />
-    <ivy:cachepath pathid="theme-compiler.deps" conf="ide" />
+    <ivy:resolve log="download-only" file="buildhelpers/ivy.xml" />
+    <ivy:cachepath pathid="buildhelpers.deps" />
 
     <path id="classpath">
         <path location="bin" />
@@ -36,12 +36,11 @@
         <path location="${gwt.dev.super.src}" />
         <path location="${gwt.dev.src}" />
         <path refid="client-compiler.deps" />
-        <path refid="theme-compiler.deps" />
         <path refid="server.deps" />
         <path refid="shared.deps" />
         <path refid="uitest.deps" />
         <path refid="client.deps" />
-        <path location="theme-compiler/src" />
+        <path refid="buildhelpers.deps" />
         <path location="server/src" />
         <path location="shared/src" />
         <path location="uitest/src" />
@@ -76,6 +75,8 @@
             <arg value="${theme}" />
             <arg value="--theme-folder" />
             <arg value="WebContent/VAADIN/themes" />
+            <arg value="--version" />
+            <arg value="${vaadin.version}" />
         </java>
 
     </target>

@@ -1,6 +1,0 @@
-/* Source: http://test.csswg.org/suites/css2.1/20110323/html4/anonymous-boxes-001.htm */
-
-    #parent { height: 200px; position: relative; }
-    #child { float: left; height: 50%; width: 100px; background: green; position: relative }
-    #background { position: absolute; top: 0; left: 0; width: 100px; height: 100px; background: red }
-  

@@ -1,6 +1,0 @@
-@function foo($a, $b...) {
-  @return "a: #{$a}, b: #{$b}";
-}
-
-$list: 3 4 5;
-.foo {val: foo(1, 2, $list...)}

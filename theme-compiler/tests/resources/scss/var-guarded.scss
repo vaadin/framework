@@ -1,8 +1,0 @@
-$content: "First content";
-$content: "Second content?" !default;
-$new_content: "First time reference" !default;
-
-#main {
-  content: $content;
-  new-content: $new_content;
-}

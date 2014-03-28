@@ -1,9 +1,0 @@
-.root {
-  input: focus;
-  input-focus: c;
-  a: b;
-}
-
-.root input:focus {
-  background-color: #d5e6fd;
-}

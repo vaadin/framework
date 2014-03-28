@@ -19,8 +19,13 @@
         <artifact type="pom" ext="pom" />
     </publications>
     <dependencies>
-        <dependency org="com.vaadin" name="vaadin-theme-compiler"
-            rev="${vaadin.version}" conf="compile-theme->build" />
+        <dependency org="com.vaadin" name="vaadin-sass-compiler"
+            rev="${vaadin.sass.version}" conf="compile-theme->default" />
+
+        <dependency org="com.vaadin" name="vaadin-buildhelpers"
+                    rev="${vaadin.version}" conf="compile-theme->build">
+            <exclude type="pom" conf="test" />
+        </dependency>
     </dependencies>
 
 </ivy-module>
