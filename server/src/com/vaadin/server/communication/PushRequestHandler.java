@@ -85,7 +85,7 @@ public class PushRequestHandler implements RequestHandler,
         });
 
         pushHandler = new PushHandler(service);
-        atmosphere.addAtmosphereHandler("/*", pushHandler);
+        atmosphere.addAtmosphereHandler("/*", pushHandler.handler);
         atmosphere.addInitParameter(ApplicationConfig.PROPERTY_SESSION_SUPPORT,
                 "true");
         atmosphere.addInitParameter(ApplicationConfig.MESSAGE_DELIMITER,

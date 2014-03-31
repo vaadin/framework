@@ -52,8 +52,74 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class PushHandler extends AtmosphereResourceEventListenerAdapter
-        implements AtmosphereHandler {
+public class PushHandler extends AtmosphereResourceEventListenerAdapter {
+
+    AtmosphereHandler handler = new AtmosphereHandler() {
+
+        @Override
+        public void onStateChange(AtmosphereResourceEvent event)
+                throws IOException {
+            AtmosphereResource resource = event.getResource();
+
+            String id = resource.uuid();
+            if (event.isCancelled() || event.isResumedOnTimeout()) {
+                getLogger().log(Level.FINER,
+                        "Cancelled connection for resource {0}", id);
+                disconnect(event);
+            } else if (event.isResuming()) {
+                // A connection that was suspended earlier was resumed
+                // (committed to
+                // the client.) Should only happen if the transport is JSONP or
+                // long-polling.
+                getLogger().log(Level.FINER,
+                        "Resuming request for resource {0}", id);
+            } else {
+                // A message was broadcast to this resource and should be sent
+                // to
+                // the client. We don't do any actual broadcasting, in the sense
+                // of
+                // sending to multiple recipients; any UIDL message is specific
+                // to a
+                // single client.
+                getLogger().log(Level.FINER, "Writing message to resource {0}",
+                        id);
+
+                Writer writer = resource.getResponse().getWriter();
+                writer.write(event.getMessage().toString());
+
+                switch (resource.transport()) {
+                case WEBSOCKET:
+                    break;
+                case SSE:
+                case STREAMING:
+                    writer.flush();
+                    break;
+                case JSONP:
+                case LONG_POLLING:
+                    disconnect(event);
+                    break;
+                default:
+                    getLogger().log(Level.SEVERE, "Unknown transport {0}",
+                            resource.transport());
+                }
+            }
+        }
+
+        @Override
+        public void onRequest(AtmosphereResource resource) {
+            AtmosphereRequest req = resource.getRequest();
+
+            if (req.getMethod().equalsIgnoreCase("GET")) {
+                callWithUi(resource, establishCallback);
+            } else if (req.getMethod().equalsIgnoreCase("POST")) {
+                callWithUi(resource, receiveCallback);
+            }
+        }
+
+        @Override
+        public void destroy() {
+        }
+    };
 
     /**
      * Callback interface used internally to process an event with the
@@ -318,66 +384,12 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
         }
     }
 
-    @Override
-    public void onRequest(AtmosphereResource resource) {
-        AtmosphereRequest req = resource.getRequest();
-
-        if (req.getMethod().equalsIgnoreCase("GET")) {
-            callWithUi(resource, establishCallback);
-        } else if (req.getMethod().equalsIgnoreCase("POST")) {
-            callWithUi(resource, receiveCallback);
-        }
-    }
-
     private static AtmospherePushConnection getConnectionForUI(UI ui) {
         PushConnection pushConnection = ui.getPushConnection();
         if (pushConnection instanceof AtmospherePushConnection) {
             return (AtmospherePushConnection) pushConnection;
         } else {
             return null;
-        }
-    }
-
-    @Override
-    public void onStateChange(AtmosphereResourceEvent event) throws IOException {
-        AtmosphereResource resource = event.getResource();
-
-        String id = resource.uuid();
-        if (event.isCancelled() || event.isResumedOnTimeout()) {
-            getLogger().log(Level.FINER,
-                    "Cancelled connection for resource {0}", id);
-            disconnect(event);
-        } else if (event.isResuming()) {
-            // A connection that was suspended earlier was resumed (committed to
-            // the client.) Should only happen if the transport is JSONP or
-            // long-polling.
-            getLogger().log(Level.FINER, "Resuming request for resource {0}",
-                    id);
-        } else {
-            // A message was broadcast to this resource and should be sent to
-            // the client. We don't do any actual broadcasting, in the sense of
-            // sending to multiple recipients; any UIDL message is specific to a
-            // single client.
-            getLogger().log(Level.FINER, "Writing message to resource {0}", id);
-
-            Writer writer = resource.getResponse().getWriter();
-            writer.write(event.getMessage().toString());
-
-            switch (resource.transport()) {
-            case WEBSOCKET:
-                break;
-            case SSE:
-            case STREAMING:
-                writer.flush();
-                break;
-            case JSONP:
-            case LONG_POLLING:
-                disconnect(event);
-                break;
-            default:
-                getLogger().log(Level.SEVERE, "Unknown transport {0}",
-                        resource.transport());
-            }
         }
     }
 
@@ -393,10 +405,6 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
         getLogger().log(Level.SEVERE, "Exception in push connection",
                 event.throwable());
         disconnect(event);
-    }
-
-    @Override
-    public void destroy() {
     }
 
     private void disconnect(AtmosphereResourceEvent event) {
