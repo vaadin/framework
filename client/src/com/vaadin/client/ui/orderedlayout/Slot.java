@@ -516,7 +516,7 @@ public final class Slot extends SimplePanel {
 
         // Icon
         if (this.icon != null) {
-            icon.getElement().removeFromParent();
+            this.icon.getElement().removeFromParent();
         }
         if (icon != null) {
             caption.insertFirst(icon.getElement());
