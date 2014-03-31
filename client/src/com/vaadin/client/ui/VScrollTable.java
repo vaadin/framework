@@ -1130,6 +1130,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         // cell to accomodate for the size of the sort arrow.
         HeaderCell sortedHeader = tHead.getHeaderCell(sortColumn);
         if (sortedHeader != null) {
+            // Mark header as sorted now. Any earlier marking would lead to
+            // columns with wrong sizes
+            sortedHeader.setSorted(true);
             tHead.resizeCaptionContainer(sortedHeader);
         }
         // Also recalculate the width of the captionContainer element in the
@@ -3329,11 +3332,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                 if (col.hasAttribute("sortable")) {
                     c.setSortable(true);
-                    if (cid.equals(sortColumn)) {
-                        c.setSorted(true);
-                    } else {
-                        c.setSorted(false);
-                    }
+                    c.setSorted(false);
                 } else {
                     c.setSortable(false);
                 }
