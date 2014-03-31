@@ -330,7 +330,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
      */
     public void openCalendarPanel() {
 
-        if (!open && !readonly) {
+        if (!open && !readonly && isEnabled()) {
             open = true;
 
             if (getCurrentDate() != null) {

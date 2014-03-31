@@ -56,7 +56,8 @@
 	border: 1px solid #ddd;
 }
 .v-disabled .#{$primaryStyleName}-calendarpanel-day,
-.v-disabled .#{$primaryStyleName}-calendarpanel-day-today {
+.v-disabled .#{$primaryStyleName}-calendarpanel-day-today,
+.v-disabled.#{$primaryStyleName}-popupcalendar .#{$primaryStyleName}-button {
 	cursor: default;
 }
 .#{$primaryStyleName}-calendarpanel-day-disabled,
