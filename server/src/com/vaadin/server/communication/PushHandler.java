@@ -18,7 +18,6 @@ package com.vaadin.server.communication;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +27,7 @@ import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.atmosphere.cpr.AtmosphereResourceEventListenerAdapter;
+import org.atmosphere.handler.AbstractReflectorAtmosphereHandler;
 import org.json.JSONException;
 
 import com.vaadin.server.ErrorEvent;
@@ -54,54 +54,14 @@ import com.vaadin.ui.UI;
  */
 public class PushHandler extends AtmosphereResourceEventListenerAdapter {
 
-    AtmosphereHandler handler = new AtmosphereHandler() {
+    AtmosphereHandler handler = new AbstractReflectorAtmosphereHandler() {
 
         @Override
         public void onStateChange(AtmosphereResourceEvent event)
                 throws IOException {
-            AtmosphereResource resource = event.getResource();
-
-            String id = resource.uuid();
+            super.onStateChange(event);
             if (event.isCancelled() || event.isResumedOnTimeout()) {
-                getLogger().log(Level.FINER,
-                        "Cancelled connection for resource {0}", id);
                 disconnect(event);
-            } else if (event.isResuming()) {
-                // A connection that was suspended earlier was resumed
-                // (committed to
-                // the client.) Should only happen if the transport is JSONP or
-                // long-polling.
-                getLogger().log(Level.FINER,
-                        "Resuming request for resource {0}", id);
-            } else {
-                // A message was broadcast to this resource and should be sent
-                // to
-                // the client. We don't do any actual broadcasting, in the sense
-                // of
-                // sending to multiple recipients; any UIDL message is specific
-                // to a
-                // single client.
-                getLogger().log(Level.FINER, "Writing message to resource {0}",
-                        id);
-
-                Writer writer = resource.getResponse().getWriter();
-                writer.write(event.getMessage().toString());
-
-                switch (resource.transport()) {
-                case WEBSOCKET:
-                    break;
-                case SSE:
-                case STREAMING:
-                    writer.flush();
-                    break;
-                case JSONP:
-                case LONG_POLLING:
-                    disconnect(event);
-                    break;
-                default:
-                    getLogger().log(Level.SEVERE, "Unknown transport {0}",
-                            resource.transport());
-                }
             }
         }
 
@@ -116,9 +76,6 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
             }
         }
 
-        @Override
-        public void destroy() {
-        }
     };
 
     /**
