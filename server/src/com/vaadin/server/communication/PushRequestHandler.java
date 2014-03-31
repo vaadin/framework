@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
+import org.atmosphere.cache.UUIDBroadcasterCache;
 import org.atmosphere.client.TrackMessageSizeInterceptor;
 import org.atmosphere.cpr.ApplicationConfig;
 import org.atmosphere.cpr.AtmosphereFramework;
@@ -86,6 +87,8 @@ public class PushRequestHandler implements RequestHandler,
 
         pushHandler = new PushHandler(service);
         atmosphere.addAtmosphereHandler("/*", pushHandler.handler);
+        atmosphere.addInitParameter(ApplicationConfig.BROADCASTER_CACHE,
+                UUIDBroadcasterCache.class.getName());
         atmosphere.addInitParameter(ApplicationConfig.PROPERTY_SESSION_SUPPORT,
                 "true");
         atmosphere.addInitParameter(ApplicationConfig.MESSAGE_DELIMITER,
