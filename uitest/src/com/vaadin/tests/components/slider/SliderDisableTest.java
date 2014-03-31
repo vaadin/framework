@@ -17,6 +17,7 @@ package com.vaadin.tests.components.slider;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.IOException;
@@ -33,16 +34,16 @@ public class SliderDisableTest extends MultiBrowserTest {
     public void disableSlider() throws IOException {
         openTestURL();
 
-        assertSliderHandlePositionIs(38);
+        String originalPosition = getSliderHandlePosition();
 
-        // Move slider handle from 38px to 150px
         moveSlider(112);
+        String expectedPosition = getSliderHandlePosition();
+        assertThat(expectedPosition, is(not(originalPosition)));
 
-        assertSliderHandlePositionIs(150);
-        driver.findElement(By.id("disableButton")).click();
+        hitButton("disableButton");
 
         assertSliderIsDisabled();
-        assertSliderHandlePositionIs(150);
+        assertThat(getSliderHandlePosition(), is(expectedPosition));
     }
 
     private void assertSliderIsDisabled() {
@@ -56,9 +57,9 @@ public class SliderDisableTest extends MultiBrowserTest {
         testBench().waitForVaadin();
     }
 
-    private void assertSliderHandlePositionIs(int position) {
+    private String getSliderHandlePosition() {
         WebElement handle = driver.findElement(By.className("v-slider-handle"));
 
-        assertThat(handle.getCssValue("margin-left"), is(position + "px"));
+        return handle.getCssValue("margin-left");
     }
 }
