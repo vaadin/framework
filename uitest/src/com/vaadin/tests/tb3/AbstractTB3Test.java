@@ -42,6 +42,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UIProvider;
 import com.vaadin.testbench.TestBench;
@@ -926,6 +927,13 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      */
     public Keyboard getKeyboard() {
         return ((HasInputDevices) getDriver()).getKeyboard();
+    }
+
+    public void hitButton(String id) {
+        WebDriverBackedSelenium selenium = new WebDriverBackedSelenium(driver,
+                driver.getCurrentUrl());
+
+        selenium.keyPress("id=" + id, "\\13");
     }
 
 }

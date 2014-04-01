@@ -22,11 +22,10 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
 
+import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -39,6 +38,7 @@ public class LayoutTesterApplicationTest extends MultiBrowserTest {
         DesiredCapabilities cap = new DesiredCapabilities(
                 super.getDesiredCapabilities());
         cap.setCapability("nativeEvents", false);
+
         return cap;
     }
 
@@ -86,7 +86,6 @@ public class LayoutTesterApplicationTest extends MultiBrowserTest {
         new Select(vaadinElementById("layoutSelect").findElement(
                 By.xpath("select")))
                 .selectByVisibleText(layoutClass.toString());
-        focusElementWithId("nextButton");
 
         for (String subTest : LayoutTesterApplication.layoutGetters) {
             compareScreen(subTest);
@@ -96,20 +95,10 @@ public class LayoutTesterApplicationTest extends MultiBrowserTest {
                     clickAndCompareScreen(subTest, "testButton" + i);
                 }
             }
-            getNextButton().click();
+
+            hitButton("nextButton");
         }
 
-    }
-
-    /**
-     * @param elementId
-     *            the id of the element to focus
-     */
-    private void focusElementWithId(String elementId) {
-        // This should really be in TestBench
-        ((JavascriptExecutor) getDriver())
-                .executeScript("document.getElementById('" + elementId
-                        + "').focus()");
     }
 
     /**
@@ -122,15 +111,16 @@ public class LayoutTesterApplicationTest extends MultiBrowserTest {
      */
     private void clickAndCompareScreen(String screenshotPrefix, String buttonId)
             throws Exception {
-        WebElement button = vaadinElementById(buttonId);
-        button.click();
+        hitButton(buttonId);
+
         if (needsDelayToStabilize(screenshotPrefix)) {
             // Table does some extra layout phase and TestBench does not always
             // take this into account, grabbing screenshots before the layout
             // phase is done (see #12866).
-            sleep(200);
+            sleep(350);
         }
-        compareScreen(screenshotPrefix + "-" + sanitize(button.getText()));
+        compareScreen(screenshotPrefix + "-"
+                + sanitize(driver.findElement(By.id(buttonId)).getText()));
     }
 
     private boolean needsDelayToStabilize(String screenshotPrefix) {
@@ -139,9 +129,5 @@ public class LayoutTesterApplicationTest extends MultiBrowserTest {
 
     private String sanitize(String text) {
         return text.replace("%", "pct").replaceAll("[^a-zA-Z0-9]", "-");
-    }
-
-    private WebElement getNextButton() {
-        return vaadinElementById(LayoutTesterApplication.NEXT_BUTTON_ID);
     }
 }
