@@ -174,46 +174,6 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
         }
     };
 
-    /**
-     * Callback used when a connection is closed, either deliberately or because
-     * an error occurred.
-     */
-    private final PushEventCallback disconnectCallback = new PushEventCallback() {
-        @Override
-        public void run(AtmosphereResource resource, UI ui) throws IOException {
-            PushMode pushMode = ui.getPushConfiguration().getPushMode();
-            AtmospherePushConnection pushConnection = getConnectionForUI(ui);
-
-            String id = resource.uuid();
-
-            if (pushConnection == null) {
-                getLogger()
-                        .log(Level.WARNING,
-                                "Could not find push connection to close: {0} with transport {1}",
-                                new Object[] { id, resource.transport() });
-            } else {
-                if (!pushMode.isEnabled()) {
-                    /*
-                     * The client is expected to close the connection after push
-                     * mode has been set to disabled.
-                     */
-                    getLogger().log(Level.FINER,
-                            "Connection closed for resource {0}", id);
-                } else {
-                    /*
-                     * Unexpected cancel, e.g. if the user closes the browser
-                     * tab.
-                     */
-                    getLogger()
-                            .log(Level.FINER,
-                                    "Connection unexpectedly closed for resource {0} with transport {1}",
-                                    new Object[] { id, resource.transport() });
-                }
-                ui.setPushConnection(null);
-            }
-        }
-    };
-
     private static final String LONG_PADDING;
 
     static {
@@ -426,7 +386,83 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
     }
 
     private void disconnect(AtmosphereResourceEvent event) {
-        callWithUi(event.getResource(), disconnectCallback);
+        // We don't want to use callWithUi here, as it assumes there's a client
+        // request active and does requestStart and requestEnd among other
+        // things.
+
+        AtmosphereResource resource = event.getResource();
+        VaadinServletRequest vaadinRequest = new VaadinServletRequest(
+                resource.getRequest(), service);
+        VaadinSession session = null;
+
+        try {
+            session = service.findVaadinSession(vaadinRequest);
+        } catch (ServiceException e) {
+            getLogger().log(Level.SEVERE,
+                    "Could not get session. This should never happen", e);
+            return;
+        } catch (SessionExpiredException e) {
+            getLogger()
+                    .log(Level.SEVERE,
+                            "Session expired before push was disconnected. This should never happen",
+                            e);
+            return;
+        }
+
+        UI ui = null;
+        session.lock();
+        try {
+            VaadinSession.setCurrent(session);
+            // Sets UI.currentInstance
+            ui = service.findUI(vaadinRequest);
+            if (ui == null) {
+                getLogger().log(Level.SEVERE,
+                        "Could not get UI. This should never happen");
+                return;
+            }
+
+            PushMode pushMode = ui.getPushConfiguration().getPushMode();
+            AtmospherePushConnection pushConnection = getConnectionForUI(ui);
+
+            String id = resource.uuid();
+
+            if (pushConnection == null) {
+                getLogger()
+                        .log(Level.WARNING,
+                                "Could not find push connection to close: {0} with transport {1}",
+                                new Object[] { id, resource.transport() });
+            } else {
+                if (!pushMode.isEnabled()) {
+                    /*
+                     * The client is expected to close the connection after push
+                     * mode has been set to disabled.
+                     */
+                    getLogger().log(Level.FINER,
+                            "Connection closed for resource {0}", id);
+                } else {
+                    /*
+                     * Unexpected cancel, e.g. if the user closes the browser
+                     * tab.
+                     */
+                    getLogger()
+                            .log(Level.FINER,
+                                    "Connection unexpectedly closed for resource {0} with transport {1}",
+                                    new Object[] { id, resource.transport() });
+                }
+                ui.setPushConnection(null);
+            }
+
+        } catch (final Exception e) {
+            callErrorHandler(session, e);
+        } finally {
+            try {
+                session.unlock();
+            } catch (Exception e) {
+                getLogger().log(Level.WARNING, "Error while unlocking session",
+                        e);
+                // can't call ErrorHandler, we (hopefully) don't have a lock
+            }
+        }
     }
 
     /**

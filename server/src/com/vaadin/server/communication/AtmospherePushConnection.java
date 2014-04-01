@@ -203,6 +203,15 @@ public class AtmospherePushConnection implements PushConnection {
     public void disconnect() {
         assert isConnected();
 
+        if (resource.isResumed()) {
+            // Calling disconnect may end up invoking it again via
+            // resource.resume and PushHandler.onResume. Bail out here if
+            // the resource is already resumed; this is a bit hacky and should
+            // be implemented in a better way in 7.2.
+            resource = null;
+            return;
+        }
+
         if (outgoingMessage != null) {
             // Wait for the last message to be sent before closing the
             // connection (assumes that futures are completed in order)
