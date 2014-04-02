@@ -114,7 +114,7 @@
 	<property name="server.report.dir" location="${report.dir}/integration-test-tb3/${server-name}" />
          <!-- The junit task does not create the report dir... -->
         <mkdir dir="${server.report.dir}" />
-          
+
         <junit showoutput="no" printsummary="no" fork="yes">
             <formatter type="xml" />
             <classpath refid="classpath.tb3" />
@@ -123,6 +123,7 @@
             <jvmarg value="-Ddeployment.url=${deployment.url}" />
             <jvmarg value="-Dserver-name=${server-name}" />
             <jvmarg value="-Djava.awt.headless=true" />
+            <jvmarg value="-Ddemo.war=${demo.war}" />
             <test name="${junit.test.suite}" todir="${server.report.dir}" />
         </junit>
     </target>
@@ -343,6 +344,20 @@
         </antcall>
     </target>
 
+    <target name="integration-test-websphereportal8">
+      <concat>##teamcity[testStarted name='websphereportal8' flowId='websphereportal8']</concat>
+      <antcall target="run-tb3-test" inheritall="true">
+            <param name="junit.test.suite" value="com.vaadin.tests.integration.WebSpherePortalIntegrationTest" />
+            <param name="server-name" value="websphereportal8" />
+
+            <!-- Fill out dummy values for params required by run-tb3-test target -->
+            <param name="test.integration.server" value="" />
+            <param name="test.integration.user" value="" />
+            <param name="test.integration.antfile" value="" />
+        </antcall>
+        <concat>##teamcity[testFinished name='websphereportal8' flowId='websphereportal8']"</concat>
+    </target>
+
     <target name="integration-test-weblogic10">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="600" />
@@ -375,7 +390,7 @@
         <antcall target="integration-test-test-GAE" />
     </target>
 
-    <!-- Upload demo, clean error screenshots and test deployment on all 
+    <!-- Upload demo, clean error screenshots and test deployment on all
         servers -->
     <target name="integration-test-all" unless="tests.integration.skip">
         <property name="passphrase" value="${passphrase}" />
@@ -387,7 +402,7 @@
         <parallel>
             <antcontrib:trycatch property="tried">
                 <try>
-                    <!-- Still running GAE test from the old server which 
+                    <!-- Still running GAE test from the old server which
                     requires its own lock -->
 
                     <echo message="Getting lock" />
@@ -439,6 +454,7 @@
             <antcall target="integration-test-tomcat8" />
             <antcall target="integration-test-tomcat7apacheproxy" />
             <antcall target="integration-test-websphere8" />
+            <antcall target="integration-test-websphereportal8" />
         </parallel>
 
     </target>
@@ -468,11 +484,11 @@
             </fileset>
         </scp>
 
-        <!-- trycatch probably not needed any more as it just fails with 
+        <!-- trycatch probably not needed any more as it just fails with
             the original message and doesn't do anything in the finally block -->
         <antcontrib:trycatch property="error_message">
             <try>
-                <!-- timeout in one hour (remote end should timeout in 55 
+                <!-- timeout in one hour (remote end should timeout in 55
                     minutes) -->
                 <sshexec host="${target-host}" outputproperty="lock-output" timeout="3600000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="chmod +x *.sh; ant -f deploy.xml get-lock" />
                 <antcall target="echo-prefix">
@@ -515,7 +531,7 @@
                     </antcontrib:else>
                 </antcontrib:if>
 
-                <!-- Run theme tests in all browsers if there's a property 
+                <!-- Run theme tests in all browsers if there's a property
                     with the test files -->
                 <antcontrib:if>
                     <isset property="testfiles-theme" />
@@ -565,7 +581,7 @@
     <target name="teamcity-escape">
         <property name="returnTo" value="return" />
 
-        <!-- Should also perform other escaping (\u0085, \u2028 and \u2029) 
+        <!-- Should also perform other escaping (\u0085, \u2028 and \u2029)
             - see http://confluence.jetbrains.net/display/TCD65/Build+Script+Interaction+with+TeamCity -->
         <!-- Immutable properties -> needs to create a new one every time -->
         <antcontrib:propertyregex property="details-escaped1" input="${message}" regexp="['|\[\]]" replace="|\0" global="true" defaultValue="${message}" />
