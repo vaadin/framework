@@ -109,7 +109,9 @@ public class PushRequestHandler implements RequestHandler,
                     ApplicationConfig.WEBSOCKET_MAXTEXTSIZE, bufferSize);
             atmosphere.addInitParameter(
                     ApplicationConfig.WEBSOCKET_MAXBINARYSIZE, bufferSize);
-
+            atmosphere.addInitParameter(
+                    ApplicationConfig.PROPERTY_ALLOW_SESSION_TIMEOUT_REMOVAL,
+                    "false");
             // Disable Atmosphere's message about commercial support
             atmosphere.addInitParameter(
                     "org.atmosphere.cpr.showSupportMessage", "false");
