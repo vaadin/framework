@@ -122,6 +122,10 @@ public abstract class AbstractTestUI extends UI {
             enablePush(Transport.STREAMING);
         } else if ("long-polling".equals(transport)) {
             enablePush(Transport.LONG_POLLING);
+        } else if (transport != null) {
+            throw new IllegalArgumentException("Unknown transport value '"
+                    + transport
+                    + "'. Supported are xhr,websocket,streaming,long-polling");
         }
     }
 
