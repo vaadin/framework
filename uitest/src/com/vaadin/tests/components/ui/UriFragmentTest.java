@@ -1,68 +1,75 @@
 package com.vaadin.tests.components.ui;
 
-import com.vaadin.server.Page;
-import com.vaadin.server.Page.UriFragmentChangedEvent;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Label;
+import static org.junit.Assert.assertEquals;
 
-public class UriFragmentTest extends AbstractTestUI {
+import org.junit.Test;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
-    private final Label fragmentLabel = new Label();
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
-    @Override
-    protected void setup(VaadinRequest request) {
-        addComponent(fragmentLabel);
-        updateLabel();
-        getPage().addListener(new Page.UriFragmentChangedListener() {
+public class UriFragmentTest extends MultiBrowserTest {
+
+    @Test
+    public void testUriFragment() throws Exception {
+        driver.get(getTestUrl() + "#urifragment");
+        assertFragment("urifragment");
+        navigateToTest();
+        assertFragment("test");
+        ((JavascriptExecutor) driver).executeScript("history.back()");
+
+        assertFragment("urifragment");
+        ((JavascriptExecutor) driver).executeScript("history.forward()");
+        assertFragment("test");
+
+        // Open other URL in between to ensure the page is loaded again
+        // (testbench doesn't like opening a URI that only changes the fragment)
+        driver.get(getBaseURL() + "/statictestfiles/");
+        driver.get(getTestUrl());
+
+        // Empty initial fragment
+        assertEquals("No URI fragment set", getFragmentLabelValue());
+
+        navigateToNull();
+        // Still no # after setting to null
+        assertEquals("No URI fragment set", getFragmentLabelValue());
+        navigateToEmptyFragment();
+        // Empty # is added when setting to ""
+        assertEquals("Current URI fragment:", getFragmentLabelValue());
+        navigateToTest();
+        assertFragment("test");
+        navigateToNull(); // Setting to null when there is a fragment actually
+                          // sets it to #
+        assertEquals("Current URI fragment:", getFragmentLabelValue());
+    }
+
+    private void assertFragment(String fragment) {
+        final String expectedText = "Current URI fragment: " + fragment;
+        waitUntil(new ExpectedCondition<Boolean>() {
+
             @Override
-            public void uriFragmentChanged(UriFragmentChangedEvent event) {
-                updateLabel();
+            public Boolean apply(WebDriver input) {
+                return expectedText.equals(getFragmentLabelValue());
             }
         });
-        addComponent(new Button("Navigate to #test",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        getPage().setUriFragment("test");
-                    }
-                }));
 
-        addComponent(new Button("Navigate to #", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getPage().setUriFragment("");
-            }
-        }));
-
-        addComponent(new Button("setUriFragment(null)",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        getPage().setUriFragment(null);
-                    }
-                }));
     }
 
-    private void updateLabel() {
-        String fragment = getPage().getUriFragment();
-        if (fragment == null) {
-            fragmentLabel.setValue("No URI fragment set");
-        } else {
-            fragmentLabel.setValue("Current URI fragment: " + fragment);
-        }
+    private void navigateToEmptyFragment() {
+        hitButton("empty");
     }
 
-    @Override
-    public String getTestDescription() {
-        return "URI fragment status should be known when the page is loaded and retained while navigating to different fragments or using the back and forward buttons.";
+    private void navigateToNull() {
+        hitButton("null");
     }
 
-    @Override
-    protected Integer getTicketNumber() {
-        return Integer.valueOf(8048);
+    private void navigateToTest() {
+        hitButton("test");
+    }
+
+    private String getFragmentLabelValue() {
+        return vaadinElementById("fragmentLabel").getText();
     }
 
 }
