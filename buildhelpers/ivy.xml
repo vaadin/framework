@@ -28,7 +28,8 @@
 
     </publications>
     <dependencies>
-        <dependency org="commons-io" name="commons-io" rev="2.2" />
+        <!-- client-compiler, server and uitest also use commons-io -->
+        <dependency org="commons-io" name="commons-io" rev="${commons-io.version}" />
         <dependency org="commons-cli" name="commons-cli" rev="1.2" />
         <dependency org="com.vaadin" name="vaadin-sass-compiler"
                     rev="${vaadin.sass.version}" />

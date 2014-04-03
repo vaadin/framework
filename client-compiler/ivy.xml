@@ -53,7 +53,7 @@
             rev="1.1" conf="build,ide -> default" />
         <dependency org="commons-codec" name="commons-codec"
             rev="1.8" conf="build,ide -> default" />
-        <dependency org="commons-io" name="commons-io" rev="2.4"
+        <dependency org="commons-io" name="commons-io" rev="${commons-io.version}"
             conf="build,ide -> default" />
         <dependency org="org.apache.commons" name="commons-lang3"
             rev="3.1" conf="build,ide -> default" />

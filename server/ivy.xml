@@ -74,7 +74,7 @@
             conf="test,ide-> default" transitive="true" />
         <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
             conf="test,ide -> default" />
-        <dependency org="commons-io" name="commons-io" rev="2.2"
+        <dependency org="commons-io" name="commons-io" rev="${commons-io.version}"
             conf="test->default" />
         <dependency org="commons-lang" name="commons-lang"
             rev="2.6" conf="test,ide->default" />
