@@ -47,9 +47,6 @@
                     rev="${vaadin.sass.version}" conf="build,ide,test->default">
             <exclude type="pom" conf="test" />
         </dependency>
-        <!-- remove cssparser override once sass-compiler is updated -->
-        <override org="net.sourceforge.cssparser" module="cssparser"
-                  rev="0.9.11" />
 
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
@@ -91,6 +88,9 @@
         <!-- <dependency org="postgresql" name="postgresql" rev="9.1-901.jdbc3" 
             conf="test,ide->default" /> -->
 
+        <!-- remove cssparser override once sass-compiler is updated -->
+        <override org="net.sourceforge.cssparser" module="cssparser"
+                  rev="0.9.11" />
     </dependencies>
 
 </ivy-module>
