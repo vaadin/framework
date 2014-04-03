@@ -21,6 +21,9 @@
     <dependencies>
         <dependency org="com.vaadin" name="vaadin-sass-compiler"
             rev="${vaadin.sass.version}" conf="compile-theme->default" />
+        <!-- remove cssparser override once sass-compiler is updated -->
+        <override org="net.sourceforge.cssparser" module="cssparser"
+                  rev="0.9.11" />
 
         <dependency org="com.vaadin" name="vaadin-buildhelpers"
                     rev="${vaadin.version}" conf="compile-theme->build">
