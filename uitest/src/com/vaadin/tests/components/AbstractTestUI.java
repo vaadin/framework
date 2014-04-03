@@ -136,6 +136,23 @@ public abstract class AbstractTestUI extends UI {
                 PushConfigurationState.FALLBACK_TRANSPORT_PARAM, "none");
     }
 
+    /**
+     * This method is inherited from the super class, but it should generally
+     * not be used. If you want to just add components to your test, use e.g.
+     * {@link #addComponent(Component)} instead to add the component to the
+     * layout used by this UI. If you don't want to use the top-level layout
+     * used by this class, you instead inherit directly from UI.
+     * 
+     * @deprecated Use {@link #addComponent(Component)} or inherit from UI
+     *             instead.
+     */
+    @Override
+    @Deprecated
+    public void setContent(Component content) {
+        // Overridden just to deprecate
+        super.setContent(content);
+    }
+
     private VerticalLayout layout;
 
     protected VerticalLayout getLayout() {
