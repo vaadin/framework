@@ -150,9 +150,11 @@
 
         <!-- Checks for Size Violations. -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
+        <!--
         <module name="LineLength">
             <property name="severity" value="warning" />
         </module>
+        -->
         <module name="MethodLength">
             <property name="severity" value="warning" />
         </module>
@@ -166,7 +168,9 @@
         <module name="EmptyForIteratorPad" />
         <module name="GenericWhitespace" />
         <module name="MethodParamPad" />
-        <module name="NoWhitespaceAfter" />
+        <module name="NoWhitespaceAfter">
+            <property name="tokens" value="BNOT,DEC,DOT,INC,LNOT,UNARY_MINUS,UNARY_PLUS,TYPECAST"/>
+        </module>
         <module name="NoWhitespaceBefore" />
         <module name="OperatorWrap" />
         <module name="ParenPad" />
@@ -188,9 +192,11 @@
         <!-- Modifier Checks -->
         <!-- See http://checkstyle.sf.net/config_modifiers.html -->
         <module name="ModifierOrder" />
+        <!--
         <module name="RedundantModifier">
             <property name="severity" value="warning" />
         </module>
+        -->
 
 
         <!-- Checks for blocks. You know, those {}'s -->
@@ -211,11 +217,13 @@
         </module>
         <module name="EmptyStatement" />
         <module name="EqualsHashCode" />
+        <!--
         <module name="HiddenField">
             <property name="ignoreConstructorParameter" value="true" />
             <property name="ignoreSetter" value="true" />
             <property name="ignoreAbstractMethods" value="true" />
         </module>
+        -->
         <module name="IllegalInstantiation" />
         <module name="InnerAssignment" />
         <module name="MagicNumber">
