@@ -62,6 +62,25 @@ import com.vaadin.ui.ConnectorTracker;
  */
 public class JsonCodec implements Serializable {
 
+    /* Immutable Encode Result representing null */
+    private static final EncodeResult ENCODE_RESULT_NULL = new EncodeResult(
+            JSONObject.NULL);
+
+    /* Immutable empty JSONArray */
+    private static final JSONArray EMPTY_JSON_ARRAY = new JSONArray() {
+        @Override
+        public JSONArray put(Object value) {
+            throw new UnsupportedOperationException(
+                    "Immutable empty JSONArray.");
+        };
+
+        @Override
+        public JSONArray put(int index, Object value) {
+            throw new UnsupportedOperationException(
+                    "Immutable empty JSONArray.");
+        };
+    };
+
     public static interface BeanProperty extends Serializable {
         public Object getValue(Object bean) throws Exception;
 
@@ -635,7 +654,7 @@ public class JsonCodec implements Serializable {
         }
 
         if (null == value) {
-            return encodeNull();
+            return ENCODE_RESULT_NULL;
         }
 
         if (value instanceof String[]) {
@@ -680,7 +699,7 @@ public class JsonCodec implements Serializable {
             if (value instanceof Component
                     && !(LegacyCommunicationManager
                             .isComponentVisibleToClient((Component) value))) {
-                return encodeNull();
+                return ENCODE_RESULT_NULL;
             }
             return new EncodeResult(connector.getConnectorId());
         } else if (value instanceof Enum) {
@@ -699,10 +718,6 @@ public class JsonCodec implements Serializable {
         } else {
             throw new JSONException("Can not encode " + valueType);
         }
-    }
-
-    private static EncodeResult encodeNull() {
-        return new EncodeResult(JSONObject.NULL);
     }
 
     public static Collection<BeanProperty> getProperties(Class<?> type)
@@ -781,14 +796,17 @@ public class JsonCodec implements Serializable {
         if (fieldValue == JSONObject.NULL) {
             fieldValue = null;
         }
-        if (referenceValue == JSONObject.NULL) {
-            referenceValue = null;
-        }
 
         if (fieldValue == referenceValue) {
             return true;
         } else if (fieldValue == null || referenceValue == null) {
             return false;
+        } else if (fieldValue instanceof Integer
+                && referenceValue instanceof Integer) {
+            return ((Integer) fieldValue).equals(referenceValue);
+        } else if (fieldValue instanceof Boolean
+                && referenceValue instanceof Boolean) {
+            return ((Boolean) fieldValue).equals(referenceValue);
         } else {
             return fieldValue.toString().equals(referenceValue.toString());
         }
@@ -849,7 +867,7 @@ public class JsonCodec implements Serializable {
         if (map.isEmpty()) {
             // Client -> server encodes empty map as an empty array because of
             // #8906. Do the same for server -> client to maintain symmetry.
-            return new JSONArray();
+            return EMPTY_JSON_ARRAY;
         }
 
         if (keyType == String.class) {
