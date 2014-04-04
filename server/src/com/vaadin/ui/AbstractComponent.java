@@ -825,7 +825,27 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setSizeUndefined() {
+        setWidthUndefined();
+        setHeightUndefined();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.server.Sizeable#setWidthUndefined()
+     */
+    @Override
+    public void setWidthUndefined() {
         setWidth(-1, Unit.PIXELS);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.server.Sizeable#setHeightUndefined()
+     */
+    @Override
+    public void setHeightUndefined() {
         setHeight(-1, Unit.PIXELS);
     }
 
