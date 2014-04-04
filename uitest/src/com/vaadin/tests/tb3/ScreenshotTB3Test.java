@@ -107,7 +107,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
         for (File referenceFile : referenceFiles) {
             if (testBench(driver).compareScreen(referenceFile)) {
                 // There might be failure files because of retries in TestBench.
-                deleteFailureFiles(referenceFile);
+                deleteFailureFiles(getErrorFileFromReference(referenceFile));
                 break;
             } else {
                 failedReferenceFiles.add(referenceFile);
