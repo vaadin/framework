@@ -27,7 +27,7 @@ import com.vaadin.client.communication.StateChangeEvent;
  * Marks a method in Connector classes that should be used to handle changes to
  * specific properties in the connector's shared state.
  * <p>
- * The annotated method will by called whenever at least one of the named state
+ * The annotated method will be called whenever at least one of the named state
  * properties have changed. If multiple listened properties are changed by the
  * same {@link StateChangeEvent}, the method will only be called once.
  * <p>
