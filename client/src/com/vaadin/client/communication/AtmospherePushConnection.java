@@ -444,7 +444,7 @@ public class AtmospherePushConnection implements PushConnection {
         return {
             transport: 'websocket',
             maxStreamingLength: 1000000,
-            fallbackTransport: 'streaming',
+            fallbackTransport: 'long-polling',
             contentType: 'application/json; charset=UTF-8',
             reconnectInterval: 5000,
             timeout: -1,

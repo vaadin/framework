@@ -76,7 +76,7 @@ public class UIState extends TabIndexState {
             parameters
                     .put(TRANSPORT_PARAM, Transport.WEBSOCKET.getIdentifier());
             parameters.put(FALLBACK_TRANSPORT_PARAM,
-                    Transport.STREAMING.getIdentifier());
+                    Transport.LONG_POLLING.getIdentifier());
         }
     }
 
