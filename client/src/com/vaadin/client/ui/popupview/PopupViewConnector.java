@@ -102,11 +102,9 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
     public void onConnectorHierarchyChange(
             ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
         // Render the popup if visible and show it.
-        if (!getChildren().isEmpty()) {
+        if (!getChildComponents().isEmpty()) {
             getWidget().preparePopup(getWidget().popup);
-            getWidget().popup
-                    .setPopupConnector((ComponentConnector) getChildren()
-                            .get(0));
+            getWidget().popup.setPopupConnector(getChildComponents().get(0));
             if (ComponentStateUtil.hasStyles(getState())) {
                 final StringBuffer styleBuf = new StringBuffer();
                 final String primaryName = getWidget().popup
