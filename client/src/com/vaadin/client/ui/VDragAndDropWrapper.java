@@ -82,6 +82,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             @Override
             public void onMouseDown(MouseDownEvent event) {
                 if (getConnector().isEnabled()
+                        && event.getNativeEvent().getButton() == Event.BUTTON_LEFT
                         && startDrag(event.getNativeEvent())) {
                     event.preventDefault(); // prevent text selection
                 }
