@@ -35,13 +35,12 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasValue;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ContainerResizedListener;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 
 public class VSlider extends SimpleFocusablePanel implements Field,
-        ContainerResizedListener, HasValue<Double> {
+        HasValue<Double> {
 
     public static final String CLASSNAME = "v-slider";
 
@@ -432,7 +431,6 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         }
     }
 
-    @Override
     public void iLayout() {
         if (isVertical()) {
             setHeight();

@@ -21,6 +21,8 @@ import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.VSlider;
+import com.vaadin.client.ui.layout.ElementResizeEvent;
+import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.slider.SliderServerRpc;
 import com.vaadin.shared.ui.slider.SliderState;
@@ -33,11 +35,29 @@ public class SliderConnector extends AbstractFieldConnector implements
     protected SliderServerRpc rpc = RpcProxy
             .create(SliderServerRpc.class, this);
 
+    private final ElementResizeListener resizeListener = new ElementResizeListener() {
+
+        @Override
+        public void onElementResize(ElementResizeEvent e) {
+            getWidget().iLayout();
+        }
+    };
+
     @Override
     public void init() {
         super.init();
         getWidget().setConnection(getConnection());
         getWidget().addValueChangeHandler(this);
+
+        getLayoutManager().addElementResizeListener(getWidget().getElement(),
+                resizeListener);
+    }
+
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+        getLayoutManager().removeElementResizeListener(
+                getWidget().getElement(), resizeListener);
     }
 
     @Override
