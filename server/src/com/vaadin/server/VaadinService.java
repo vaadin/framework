@@ -53,6 +53,7 @@ import org.json.JSONObject;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.VaadinSession.FutureAccess;
+import com.vaadin.server.VaadinSession.State;
 import com.vaadin.server.communication.FileUploadHandler;
 import com.vaadin.server.communication.HeartbeatHandler;
 import com.vaadin.server.communication.PublishedFileHandler;
@@ -446,7 +447,10 @@ public abstract class VaadinService implements Serializable {
         session.accessSynchronously(new Runnable() {
             @Override
             public void run() {
-                if (!session.isClosing()) {
+                if (session.getState() == State.CLOSED) {
+                    return;
+                }
+                if (session.getState() == State.OPEN) {
                     closeSession(session);
                 }
                 ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
@@ -472,6 +476,8 @@ public abstract class VaadinService implements Serializable {
                 // destroy listeners
                 eventRouter.fireEvent(new SessionDestroyEvent(
                         VaadinService.this, session), session.getErrorHandler());
+
+                session.setState(State.CLOSED);
             }
         });
     }
@@ -1127,7 +1133,7 @@ public abstract class VaadinService implements Serializable {
             closeInactiveUIs(session);
             removeClosedUIs(session);
         } else {
-            if (!session.isClosing()) {
+            if (session.getState() == State.OPEN) {
                 closeSession(session);
                 if (session.getSession() != null) {
                     getLogger().log(Level.FINE, "Closing inactive session {0}",
@@ -1279,7 +1285,7 @@ public abstract class VaadinService implements Serializable {
      * @return true if the session is active, false if it could be closed.
      */
     private boolean isSessionActive(VaadinSession session) {
-        if (session.isClosing() || session.getSession() == null) {
+        if (session.getState() != State.OPEN || session.getSession() == null) {
             return false;
         } else {
             long now = System.currentTimeMillis();

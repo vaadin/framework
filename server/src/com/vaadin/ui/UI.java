@@ -53,6 +53,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.server.VaadinSession.State;
 import com.vaadin.server.communication.PushConnection;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
@@ -1162,7 +1163,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     public void close() {
         closing = true;
 
-        boolean sessionExpired = (session == null || session.isClosing());
+        boolean sessionExpired = (session == null || session.getState() != State.OPEN);
         getRpcProxy(UIClientRpc.class).uiClosed(sessionExpired);
         if (getPushConnection() != null) {
             // Push the Rpc to the client. The connection will be closed when
