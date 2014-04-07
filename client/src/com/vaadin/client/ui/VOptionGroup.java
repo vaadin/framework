@@ -57,7 +57,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
     private final Map<CheckBox, String> optionsToKeys;
 
-    private final List<Boolean> optionsEnabled;
+    private final Map<CheckBox, Boolean> optionsEnabled;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean sendFocusEvents = false;
@@ -94,7 +94,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
         super(CLASSNAME);
         panel = (Panel) optionsContainer;
         optionsToKeys = new HashMap<CheckBox, String>();
-        optionsEnabled = new ArrayList<Boolean>();
+        optionsEnabled = new HashMap<CheckBox, Boolean>();
 
         wasMultiselect = isMultiselect();
     }
@@ -176,7 +176,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
                     .getBooleanAttribute(OptionGroupConstants.ATTRIBUTE_OPTION_DISABLED);
             boolean enabled = optionEnabled && !isReadonly() && isEnabled();
             op.setEnabled(enabled);
-            optionsEnabled.add(optionEnabled);
+            optionsEnabled.put(op, optionEnabled);
 
             setStyleName(op.getElement(),
                     ApplicationConnection.DISABLED_CLASSNAME,
@@ -239,19 +239,26 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
     @Override
     protected void updateEnabledState() {
-        int i = 0;
         boolean optionGroupEnabled = isEnabled() && !isReadonly();
         // sets options enabled according to the widget's enabled,
         // readonly and each options own enabled
         for (Widget w : panel) {
             if (w instanceof HasEnabled) {
-                ((HasEnabled) w).setEnabled(optionsEnabled.get(i)
-                        && optionGroupEnabled);
-                setStyleName(w.getElement(),
-                        ApplicationConnection.DISABLED_CLASSNAME,
-                        !(optionsEnabled.get(i) && isEnabled()));
+                HasEnabled hasEnabled = (HasEnabled) w;
+                Boolean isOptionEnabled = optionsEnabled.get(w);
+                if (isOptionEnabled == null) {
+                    hasEnabled.setEnabled(optionGroupEnabled);
+                    setStyleName(w.getElement(),
+                            ApplicationConnection.DISABLED_CLASSNAME,
+                            !isEnabled());
+                } else {
+                    hasEnabled
+                            .setEnabled(isOptionEnabled && optionGroupEnabled);
+                    setStyleName(w.getElement(),
+                            ApplicationConnection.DISABLED_CLASSNAME,
+                            !(isOptionEnabled && isEnabled()));
+                }
             }
-            i++;
         }
     }
 
