@@ -32,7 +32,7 @@ import com.vaadin.ui.UI;
  * current UI instance when a reload is detected.
  * <p>
  * Whenever a request is received that reloads a preserved UI, the UI's
- * {@link UI#reinit(com.vaadin.server.VaadinRequest) reinit} method is invoked
+ * {@link UI#refresh(com.vaadin.server.VaadinRequest) refresh} method is invoked
  * by the framework.
  * <p>
  * By using

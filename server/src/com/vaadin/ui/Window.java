@@ -41,7 +41,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
-import com.vaadin.shared.ui.window.WindowState.WindowRole;
+import com.vaadin.shared.ui.window.WindowRole;
 import com.vaadin.util.ReflectTools;
 
 /**

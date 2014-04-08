@@ -27,10 +27,10 @@ import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
 
-public class UIInitReinitTest {
+public class UIInitRefreshTest {
 
     private boolean initCalled;
-    private boolean reinitCalled;
+    private boolean refreshCalled;
     private boolean fragmentChangeCalled;
     private boolean browserWindowResizeCalled;
 
@@ -52,8 +52,8 @@ public class UIInitReinitTest {
         }
 
         @Override
-        protected void reinit(VaadinRequest request) {
-            reinitCalled = true;
+        protected void refresh(VaadinRequest request) {
+            refreshCalled = true;
 
             Assert.assertEquals("bar", getPage().getUriFragment());
             Assert.assertEquals(200, getPage().getBrowserWindowWidth());
@@ -79,7 +79,7 @@ public class UIInitReinitTest {
 
     @Before
     public void setUp() {
-        initCalled = reinitCalled = fragmentChangeCalled = browserWindowResizeCalled = false;
+        initCalled = refreshCalled = fragmentChangeCalled = browserWindowResizeCalled = false;
     }
 
     @Test
@@ -107,9 +107,9 @@ public class UIInitReinitTest {
         Assert.assertFalse(fragmentChangeCalled);
         Assert.assertFalse(browserWindowResizeCalled);
 
-        ui.doReinit(reinitRequest);
+        ui.doRefresh(reinitRequest);
 
-        Assert.assertTrue(reinitCalled);
+        Assert.assertTrue(refreshCalled);
         Assert.assertTrue(fragmentChangeCalled);
         Assert.assertTrue(browserWindowResizeCalled);
     }

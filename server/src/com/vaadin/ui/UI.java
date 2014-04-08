@@ -668,10 +668,10 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * @param request
      *            the request that caused this UI to be reloaded
      */
-    public void doReinit(VaadinRequest request) {
+    public void doRefresh(VaadinRequest request) {
         // This is a horrible hack. We want to have the most recent location and
-        // browser window size available in reinit(), but we want to call
-        // listeners, if any, only after reinit(). So we momentarily assign the
+        // browser window size available in refresh(), but we want to call
+        // listeners, if any, only after refresh(). So we momentarily assign the
         // old values back before setting the new values again to ensure the
         // events are properly fired.
 
@@ -683,7 +683,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
         page.init(request);
 
-        reinit(request);
+        refresh(request);
 
         URI newLocation = page.getLocation();
         int newWidth = page.getBrowserWindowWidth();
@@ -709,7 +709,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * @param request
      *            the request that caused this UI to be reloaded
      */
-    protected void reinit(VaadinRequest request) {
+    protected void refresh(VaadinRequest request) {
     }
 
     /**
