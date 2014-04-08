@@ -17,139 +17,71 @@ package com.vaadin.tests.push;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Assert;
-import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 
-import com.vaadin.tests.tb3.WebsocketTest;
+import com.vaadin.tests.annotations.TestCategory;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class PushConfigurationTest extends WebsocketTest {
+@TestCategory("push")
+abstract class PushConfigurationTest extends MultiBrowserTest {
 
-    @Test
-    public void testWebsocketAndStreaming() throws InterruptedException {
-        setDebug(true);
+    @Override
+    public void setup() throws Exception {
+        super.setup();
+
         openTestURL();
-        // Websocket
-        verifyPushDisabled();
-        new Select(getTransportSelect()).selectByVisibleText("WEBSOCKET");
-        new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
-        Assert.assertTrue(vaadinElement(
-                "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[5]/VLabel[0]/domChild[0]")
-                .getText()
-                .matches(
-                        "^[\\s\\S]*fallbackTransport: streaming[\\s\\S]*transport: websocket[\\s\\S]*$"));
-        int counter = getServerCounter();
-        final int waitCounter = counter + 2;
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return (getServerCounter() >= waitCounter);
-            }
-        });
-
-        // Use debug console to verify we used the correct transport type
-        Assert.assertTrue(driver.getPageSource().contains(
-                "Push connection established using websocket"));
-        Assert.assertFalse(driver.getPageSource().contains(
-                "Push connection established using streaming"));
-
-        new Select(getPushModeSelect()).selectByVisibleText("DISABLED");
-
-        // Streaming
-        driver.get(getTestUrl());
-        verifyPushDisabled();
-
-        new Select(getTransportSelect()).selectByVisibleText("STREAMING");
-        new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
-        Assert.assertTrue(vaadinElement(
-                "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[5]/VLabel[0]/domChild[0]")
-                .getText()
-                .matches(
-                        "^[\\s\\S]*fallbackTransport: streaming[\\s\\S]*transport: streaming[\\s\\S]*$"));
-
-        counter = getServerCounter();
-        for (int second = 0;; second++) {
-            if (second >= 5) {
-                Assert.fail("timeout");
-            }
-            if (getServerCounter() >= (counter + 2)) {
-                break;
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
-        }
-
-        // Use debug console to verify we used the correct transport type
-        Assert.assertFalse(driver.getPageSource().contains(
-                "Push connection established using websocket"));
-        Assert.assertTrue(driver.getPageSource().contains(
-                "Push connection established using streaming"));
-
+        disablePush();
     }
 
-    @Test
-    public void testLongPolling() throws InterruptedException {
-        setDebug(true);
-        openTestURL();
-        verifyPushDisabled();
-        new Select(getTransportSelect()).selectByVisibleText("LONG_POLLING");
-        new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
-        Assert.assertTrue(vaadinElement(
-                "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[5]/VLabel[0]/domChild[0]")
-                .getText()
-                .matches(
-                        "^[\\s\\S]*fallbackTransport: streaming[\\s\\S]*transport: long-polling[\\s\\S]*$"));
-        int counter = getServerCounter();
-        final int waitCounter = counter + 2;
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return (getServerCounter() >= waitCounter);
-            }
-        });
-
-        // Use debug console to verify we used the correct transport type
-        Assert.assertTrue(driver.getPageSource().contains(
-                "Push connection established using long-polling"));
-        Assert.assertFalse(driver.getPageSource().contains(
-                "Push connection established using streaming"));
-
-        new Select(getPushModeSelect()).selectByVisibleText("DISABLED");
-
+    @Override
+    protected String getDeploymentPath() {
+        return "/run/" + PushConfiguration.class.getCanonicalName()
+                + "?restartApplication&debug";
     }
 
-    /**
-     * Verifies that push is currently not enabled.
-     * 
-     * @throws InterruptedException
-     */
-    private void verifyPushDisabled() throws InterruptedException {
+    protected String getStatusText() {
+        WebElement statusLabel = vaadinElementById("status");
+
+        return statusLabel.getText();
+    }
+
+    protected void disablePush() throws InterruptedException {
+        new Select(getPushModeSelect()).selectByVisibleText("DISABLED");
+
         int counter = getServerCounter();
         sleep(2000);
         assertEquals("Server count changed without push enabled", counter,
                 getServerCounter());
     }
 
-    private WebElement getPushModeSelect() {
+    protected WebElement getPushModeSelect() {
         return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[0]/VNativeSelect[0]/domChild[0]");
     }
 
-    private WebElement getTransportSelect() {
+    protected WebElement getTransportSelect() {
         return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[0]/VVerticalLayout[0]/Slot[1]/VNativeSelect[0]/domChild[0]");
     }
 
-    private int getServerCounter() {
+    protected int getServerCounter() {
         return Integer.parseInt(getServerCounterElement().getText());
     }
 
-    private WebElement getServerCounterElement() {
+    protected WebElement getServerCounterElement() {
         return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[5]/VLabel[0]");
+    }
+
+    protected void waitForServerCounterToUpdate() {
+        int counter = getServerCounter();
+        final int waitCounter = counter + 2;
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                return (getServerCounter() >= waitCounter);
+            }
+        });
     }
 }
