@@ -21,10 +21,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -32,7 +28,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -43,7 +38,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ConnectorMap;
-import com.vaadin.client.Util;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.richtextarea.VRichTextToolbar;
 
@@ -73,7 +67,8 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public RichTextArea rta;
 
-    private VRichTextToolbar formatter;
+    /** For internal use only. May be removed or replaced in the future. */
+    public VRichTextToolbar formatter;
 
     /** For internal use only. May be removed or replaced in the future. */
     public HTML html = new HTML();
@@ -81,9 +76,6 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
     private final FlowPanel fp = new FlowPanel();
 
     private boolean enabled = true;
-
-    private int extraHorizontalPixels = -1;
-    private int extraVerticalPixels = -1;
 
     /** For internal use only. May be removed or replaced in the future. */
     public int maxLength = -1;
@@ -193,92 +185,17 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
         return readOnly;
     }
 
-    /**
-     * @return space used by components paddings and borders
-     */
-    private int getExtraHorizontalPixels() {
-        if (extraHorizontalPixels < 0) {
-            detectExtraSizes();
-        }
-        return extraHorizontalPixels;
-    }
-
-    /**
-     * @return space used by components paddings and borders
-     */
-    private int getExtraVerticalPixels() {
-        if (extraVerticalPixels < 0) {
-            detectExtraSizes();
-        }
-        return extraVerticalPixels;
-    }
-
-    /**
-     * Detects space used by components paddings and borders.
-     */
-    private void detectExtraSizes() {
-        Element clone = Util.cloneNode(getElement(), false);
-        DOM.setElementAttribute(clone, "id", "");
-        clone.getStyle().setVisibility(Visibility.HIDDEN);
-        clone.getStyle().setPosition(Position.ABSOLUTE);
-        // due FF3 bug set size to 10px and later subtract it from extra pixels
-        clone.getStyle().setWidth(10, Unit.PX);
-        clone.getStyle().setHeight(10, Unit.PX);
-        DOM.appendChild(DOM.getParent(getElement()), clone);
-        extraHorizontalPixels = DOM.getElementPropertyInt(clone, "offsetWidth") - 10;
-        extraVerticalPixels = DOM.getElementPropertyInt(clone, "offsetHeight") - 10;
-
-        DOM.removeChild(DOM.getParent(getElement()), clone);
-    }
-
     @Override
     public void setHeight(String height) {
-        if (height.endsWith("px")) {
-            float h = Float
-                    .parseFloat(height.substring(0, height.length() - 2));
-            h -= getExtraVerticalPixels();
-            if (h < 0) {
-                h = 0;
-            }
-
-            super.setHeight(h + "px");
-        } else {
-            super.setHeight(height);
-        }
-
+        super.setHeight(height);
         if (height == null || height.equals("")) {
             rta.setHeight("");
-        } else {
-            /*
-             * The formatter height will be initially calculated wrong so we
-             * delay the height setting so the DOM has had time to stabilize.
-             */
-            Scheduler.get().scheduleDeferred(new Command() {
-                @Override
-                public void execute() {
-                    int editorHeight = getOffsetHeight()
-                            - getExtraVerticalPixels()
-                            - formatter.getOffsetHeight();
-                    if (editorHeight < 0) {
-                        editorHeight = 0;
-                    }
-                    rta.setHeight(editorHeight + "px");
-                }
-            });
         }
     }
 
     @Override
     public void setWidth(String width) {
-        if (width.endsWith("px")) {
-            float w = Float.parseFloat(width.substring(0, width.length() - 2));
-            w -= getExtraHorizontalPixels();
-            if (w < 0) {
-                w = 0;
-            }
-
-            super.setWidth(w + "px");
-        } else if (width.equals("")) {
+        if (width.equals("")) {
             /*
              * IE cannot calculate the width of the 100% iframe correctly if
              * there is no width specified for the parent. In this case we would
