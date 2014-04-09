@@ -504,6 +504,18 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         return (VUI) super.getWidget();
     }
 
+    @Override
+    protected ComponentConnector getContent() {
+        ComponentConnector connector = super.getContent();
+        // VWindow (WindowConnector is its connector)is also a child component
+        // but it's never a content widget
+        if (connector instanceof WindowConnector) {
+            return null;
+        } else {
+            return connector;
+        }
+    }
+
     protected void onChildSizeChange() {
         ComponentConnector child = getContent();
         if (child == null) {
