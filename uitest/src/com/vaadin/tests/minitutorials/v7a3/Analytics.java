@@ -18,13 +18,13 @@ package com.vaadin.tests.minitutorials.v7a3;
 
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.server.AbstractJavaScriptExtension;
-import com.vaadin.server.ClientConnector;
 import com.vaadin.ui.UI;
 
 @JavaScript("analytics_connector.js")
 public class Analytics extends AbstractJavaScriptExtension {
 
-    public Analytics(String account) {
+    public Analytics(UI ui, String account) {
+        extend(ui);
         pushCommand("_setAccount", account);
     }
 
@@ -36,14 +36,5 @@ public class Analytics extends AbstractJavaScriptExtension {
         // Cast to Object to use Object[] commandAndArguments as the first
         // varargs argument instead of as the full varargs argument array.
         callFunction("pushCommand", (Object) commandAndArguments);
-    }
-
-    protected void extend(UI uI) {
-        super.extend(uI);
-    }
-
-    @Override
-    protected Class<? extends ClientConnector> getSupportedParentType() {
-        return UI.class;
     }
 }

@@ -28,7 +28,7 @@ public class CapsLockWarningUI extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         PasswordField field = new PasswordField("Enter your password");
-        new CapsLockWarning().extend(field);
+        CapsLockWarning.warnFor(field);
 
         addComponent(field);
     }

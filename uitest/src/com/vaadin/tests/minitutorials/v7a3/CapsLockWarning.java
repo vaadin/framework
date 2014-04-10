@@ -20,7 +20,12 @@ import com.vaadin.server.AbstractExtension;
 import com.vaadin.ui.PasswordField;
 
 public class CapsLockWarning extends AbstractExtension {
-    public void extend(PasswordField field) {
-        super.extend(field);
+    protected CapsLockWarning(PasswordField field) {
+        // Non-public constructor to discourage direct instantiation
+        extend(field);
+    }
+
+    public static CapsLockWarning warnFor(PasswordField field) {
+        return new CapsLockWarning(field);
     }
 }

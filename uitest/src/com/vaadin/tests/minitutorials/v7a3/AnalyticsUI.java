@@ -25,8 +25,7 @@ public class AnalyticsUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        final Analytics analytics = new Analytics("UA-33036133-12");
-        analytics.extend(this);
+        final Analytics analytics = new Analytics(this, "UA-33036133-12");
 
         setContent(new Button("Track pageview", new Button.ClickListener() {
             @Override
