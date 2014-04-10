@@ -16,8 +16,8 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
@@ -165,8 +165,7 @@ public class VTabsheetPanel extends ComplexPanel {
             width = minWidth;
         }
 
-        Element wrapperDiv = (Element) visibleWidget.getElement()
-                .getParentElement();
+        Element wrapperDiv = visibleWidget.getElement().getParentElement();
 
         // width first
         getElement().getStyle().setPropertyPx("width", width);

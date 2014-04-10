@@ -16,10 +16,10 @@
 
 package com.vaadin.client;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 
 /**
@@ -228,14 +228,14 @@ public class VLoadingIndicator {
      * 
      * @return The loading indicator DOM element
      */
-    public Element getElement() {
+    public com.google.gwt.user.client.Element getElement() {
         if (element == null) {
             element = DOM.createDiv();
             element.getStyle().setPosition(Position.ABSOLUTE);
             getConnection().getUIConnector().getWidget().getElement()
                     .appendChild(element);
         }
-        return element;
+        return DOM.asOld(element);
     }
 
 }

@@ -22,13 +22,14 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
@@ -81,6 +82,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             @Override
             public void onMouseDown(MouseDownEvent event) {
                 if (getConnector().isEnabled()
+                        && event.getNativeEvent().getButton() == Event.BUTTON_LEFT
                         && startDrag(event.getNativeEvent())) {
                     event.preventDefault(); // prevent text selection
                 }
@@ -117,7 +119,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             transferable.setDragSource(getConnector());
 
             ComponentConnector paintable = Util.findPaintable(client,
-                    (Element) event.getEventTarget().cast());
+                    Element.as(event.getEventTarget()));
             Widget widget = paintable.getWidget();
             transferable.setData("component", paintable);
             VDragEvent dragEvent = VDragAndDropManager.get().startDrag(
@@ -182,7 +184,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         }
     }
 
-    protected Element getDragStartElement() {
+    protected com.google.gwt.user.client.Element getDragStartElement() {
         return getElement();
     }
 
@@ -548,7 +550,13 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         return ConnectorMap.get(client).getConnector(this);
     }
 
-    protected native void hookHtml5DragStart(Element el)
+    /**
+     * @deprecated As of 7.2, call or override
+     *             {@link #hookHtml5DragStart(Element)} instead
+     */
+    @Deprecated
+    protected native void hookHtml5DragStart(
+            com.google.gwt.user.client.Element el)
     /*-{
         var me = this;
         el.addEventListener("dragstart",  $entry(function(ev) {
@@ -557,11 +565,21 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     }-*/;
 
     /**
+     * @since 7.2
+     */
+    protected void hookHtml5DragStart(Element el) {
+        hookHtml5DragStart(DOM.asOld(el));
+    }
+
+    /**
      * Prototype code, memory leak risk.
      * 
      * @param el
+     * @deprecated As of 7.2, call or override {@link #hookHtml5Events(Element)}
+     *             instead
      */
-    protected native void hookHtml5Events(Element el)
+    @Deprecated
+    protected native void hookHtml5Events(com.google.gwt.user.client.Element el)
     /*-{
             var me = this;
 
@@ -581,6 +599,17 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
     }-*/;
+
+    /**
+     * Prototype code, memory leak risk.
+     * 
+     * @param el
+     * 
+     * @since 7.2
+     */
+    protected void hookHtml5Events(Element el) {
+        hookHtml5Events(DOM.asOld(el));
+    }
 
     public boolean updateDropDetails(VDragEvent drag) {
         VerticalDropLocation oldVL = verticalDropLocation;

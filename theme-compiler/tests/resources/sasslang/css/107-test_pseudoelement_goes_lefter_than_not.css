@@ -1,3 +1,0 @@
-.foo::bar, .baz:not(.bang)::bar {
-  a: b;
-}

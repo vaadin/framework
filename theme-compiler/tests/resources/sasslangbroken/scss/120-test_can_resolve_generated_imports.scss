@@ -1,7 +1,0 @@
-
-      $pear-color: green;
-      @import "fruits/apple"; @import "fruits/orange"; @import "fruits/pear";
-      .apple { @include apple; }
-      .orange { @include orange; }
-      .pear { @include pear; }
-    

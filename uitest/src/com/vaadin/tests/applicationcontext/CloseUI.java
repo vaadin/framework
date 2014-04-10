@@ -78,7 +78,7 @@ public class CloseUI extends AbstractTestUI {
                             @Override
                             protected void runSafely() {
                                 close();
-                            };
+                            }
                         }.start();
                     }
                 }));

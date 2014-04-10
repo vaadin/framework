@@ -24,7 +24,7 @@ public class HorizontalSortableCssLayoutWithWrappers extends Window {
         @Override
         protected String getCss(Component c) {
             return "float:left; width:60px;height:60px;background: yellow;padding:2px;";
-        };
+        }
     };
 
     class WrappedLabel extends DragAndDropWrapper {

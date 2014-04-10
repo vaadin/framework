@@ -3,6 +3,10 @@
 
     <dirname property="tb3test.dir" file="${ant.file.tb3test}" />
     <property name="report.dir" location="${tb3test.dir}/result/reports-tb3" />
+    <property name="browsers.include" value="" />
+    <property name="browsers.exclude" value="" />
+    <property name="categories.include" value="" />
+    <property name="categories.exclude" value="" />
 
     <ivy:resolve file="${tb3test.dir}/ivy.xml" conf="build, build-provided" />
     <ivy:cachepath pathid="classpath.tb3.lib" conf="build, build-provided" />
@@ -29,6 +33,10 @@
 
             <jvmarg value="-Dcom.vaadin.testbench.screenshot.directory=${com.vaadin.testbench.screenshot.directory}" />
             <jvmarg value="-Djava.awt.headless=true" />
+            <jvmarg value="-Dbrowsers.include=${browsers.include}" />
+            <jvmarg value="-Dbrowsers.exclude=${browsers.exclude}" />
+            <jvmarg value="-Dcategories.include=${categories.include}" />
+            <jvmarg value="-Dcategories.exclude=${categories.exclude}" />
             <test name="${junit.test.suite}" todir="${report.dir}" />
         </junit>
 

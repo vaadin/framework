@@ -44,4 +44,13 @@ public class SharedUtil implements Serializable {
         return o1.equals(o2);
     }
 
+    /**
+     * Trims trailing slashes (if any) from a string.
+     * @param value The string value to be trimmed. Cannot be null.
+     * @return String value without trailing slashes.
+     */
+    public static String trimTrailingSlashes(String value) {
+        return value.replaceAll("/*$", "");
+    }
+
 }

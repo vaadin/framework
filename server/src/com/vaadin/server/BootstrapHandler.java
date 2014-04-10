@@ -286,7 +286,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
          * Enable Chrome Frame in all versions of IE if installed.
          */
         head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
-                .attr("content", "IE=10;chrome=1");
+                .attr("content", "IE=11;chrome=1");
 
         String title = response.getUIProvider().getPageTitle(
                 new UICreateEvent(context.getRequest(), context.getUIClass()));

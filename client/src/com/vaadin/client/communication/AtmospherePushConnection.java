@@ -444,13 +444,13 @@ public class AtmospherePushConnection implements PushConnection {
         return {
             transport: 'websocket',
             maxStreamingLength: 1000000,
-            fallbackTransport: 'streaming',
+            fallbackTransport: 'long-polling',
             contentType: 'application/json; charset=UTF-8',
             reconnectInterval: 5000,
             timeout: -1,
             maxReconnectOnClose: 10000000, 
             trackMessageLength: true,
-            enableProtocol: false,
+            enableProtocol: true,
             messageDelimiter: String.fromCharCode(@com.vaadin.shared.communication.PushConstants::MESSAGE_DELIMITER)
         };
     }-*/;

@@ -31,6 +31,7 @@ import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -46,7 +47,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -2060,7 +2060,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * .lang.String)
      */
     @Override
-    public Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         if ("fe".equals(subPart)) {
             if (BrowserInfo.get().isOpera() && focusedNode != null) {
                 return focusedNode.getElement();
@@ -2096,7 +2096,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                 if (expandCollapse) {
                     return treeNode.getElement();
                 } else {
-                    return treeNode.nodeCaptionSpan;
+                    return DOM.asOld(treeNode.nodeCaptionSpan);
                 }
             } catch (Exception e) {
                 // Invalid locator string or node could not be found
@@ -2113,7 +2113,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * .gwt.user.client.Element)
      */
     @Override
-    public String getSubPartName(Element subElement) {
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         // Supported identifiers:
         //
         // n[index]/n[index]/n[index]{/expand}
@@ -2222,7 +2222,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     }
 
     @Override
-    public void bindAriaCaption(Element captionElement) {
+    public void bindAriaCaption(
+            com.google.gwt.user.client.Element captionElement) {
         AriaHelper.bindCaption(body, captionElement);
     }
 }

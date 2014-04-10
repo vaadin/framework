@@ -17,9 +17,9 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.VideoElement;
-import com.google.gwt.user.client.Element;
 import com.vaadin.client.Util;
 
 public class VVideo extends VMediaBase {

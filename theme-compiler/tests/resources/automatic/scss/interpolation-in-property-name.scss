@@ -1,9 +1,0 @@
-$side: top;
-$radius: 10px;
-
-.rounded-#{$side} {
-  border-#{$side}-radius: $radius;
-  -moz-border-radius-#{$side}: $radius;
-  #{$side}-radius: $radius;
-  no-interpolation: no-interpolation;
-}

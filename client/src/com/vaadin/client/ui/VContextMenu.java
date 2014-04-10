@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
@@ -43,7 +44,6 @@ import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -279,7 +279,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     }
 
     @Override
-    public Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         int index = Integer.parseInt(subPart.substring(6));
         // ApplicationConnection.getConsole().log(
         // "Searching element for selection index " + index);
@@ -290,7 +290,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     }
 
     @Override
-    public String getSubPartName(Element subElement) {
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         if (getElement().isOrHasChild(subElement)) {
             com.google.gwt.dom.client.Element e = subElement;
             {

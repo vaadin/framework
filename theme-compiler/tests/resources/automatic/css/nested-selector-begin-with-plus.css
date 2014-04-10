@@ -1,9 +1,0 @@
-.v-panel {
-	display: block;
-	max-width: 84em;
-	margin: auto;
-}
-		
-.v-panel + .abc {
-	margin-top: 1em;
-}

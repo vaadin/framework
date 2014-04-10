@@ -122,7 +122,7 @@ public class MethodPropertyDescriptor<BT> implements
         } catch (NoSuchMethodException e) {
             getLogger().log(Level.SEVERE, "Internal deserialization error", e);
         }
-    };
+    }
 
     @Override
     public String getName() {

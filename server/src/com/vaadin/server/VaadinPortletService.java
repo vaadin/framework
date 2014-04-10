@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import static com.vaadin.shared.util.SharedUtil.trimTrailingSlashes;
+
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
@@ -79,10 +81,44 @@ public class VaadinPortletService extends VaadinService {
         return portlet;
     }
 
-    private static String getPortalProperty(VaadinRequest request,
-            String portalParameterVaadinWidgetset) {
-        return ((VaadinPortletRequest) request)
-                .getPortalProperty(portalParameterVaadinWidgetset);
+    private String getPortalProperty(VaadinRequest request, String propertyName) {
+        return ((VaadinPortletRequest) request).getPortalProperty(propertyName);
+    }
+
+    private String getParameter(VaadinRequest request, String name,
+            String defaultValue) {
+        VaadinPortletRequest portletRequest = (VaadinPortletRequest) request;
+
+        String preference = portletRequest.getPortletPreference(name);
+        if (preference != null) {
+            return preference;
+        }
+
+        String appOrSystemProperty = getAppOrSystemProperty(name, null);
+        if (appOrSystemProperty != null) {
+            return appOrSystemProperty;
+        }
+
+        String portalProperty = portletRequest.getPortalProperty(name);
+        if (portalProperty != null) {
+
+            // For backwards compatibility - automatically map old portal
+            // default widget set to default widget set
+            if (name.equals(Constants.PORTAL_PARAMETER_VAADIN_WIDGETSET)) {
+                return mapDefaultWidgetset(portalProperty);
+            }
+
+            return portalProperty;
+        }
+
+        return defaultValue;
+    }
+
+    private String getAppOrSystemProperty(String name, String defaultValue) {
+        DeploymentConfiguration deploymentConfiguration = getDeploymentConfiguration();
+
+        return deploymentConfiguration.getApplicationOrSystemProperty(name,
+                defaultValue);
     }
 
     @Override
@@ -93,22 +129,17 @@ public class VaadinPortletService extends VaadinService {
                         VaadinPortlet.PARAMETER_WIDGETSET, null);
 
         if (widgetset == null) {
-            // If no widgetset defined for the application, check the
-            // portal property
-            widgetset = getPortalProperty(request,
-                    VaadinPortlet.PORTAL_PARAMETER_VAADIN_WIDGETSET);
-            if ("com.vaadin.portal.gwt.PortalDefaultWidgetSet"
-                    .equals(widgetset)) {
-                // For backwards compatibility - automatically map old portal
-                // default widget set to default widget set
-                widgetset = VaadinPortlet.DEFAULT_WIDGETSET;
-
-            }
+            widgetset = getParameter(request,
+                    Constants.PORTAL_PARAMETER_VAADIN_WIDGETSET,
+                    Constants.DEFAULT_WIDGETSET);
         }
 
-        if (widgetset == null) {
-            // If no widgetset defined for the portal, use the default
-            widgetset = VaadinPortlet.DEFAULT_WIDGETSET;
+        return widgetset;
+    }
+
+    private String mapDefaultWidgetset(String widgetset) {
+        if ("com.vaadin.portal.gwt.PortalDefaultWidgetSet".equals(widgetset)) {
+            return Constants.DEFAULT_WIDGETSET;
         }
 
         return widgetset;
@@ -116,17 +147,8 @@ public class VaadinPortletService extends VaadinService {
 
     @Override
     public String getConfiguredTheme(VaadinRequest request) {
-
-        // is the default theme defined by the portal?
-        String themeName = getPortalProperty(request,
-                Constants.PORTAL_PARAMETER_VAADIN_THEME);
-
-        if (themeName == null) {
-            // no, using the default theme defined by Vaadin
-            themeName = VaadinPortlet.DEFAULT_THEME_NAME;
-        }
-
-        return themeName;
+        return getParameter(request, Constants.PORTAL_PARAMETER_VAADIN_THEME,
+                Constants.DEFAULT_THEME_NAME);
     }
 
     @Override
@@ -136,29 +158,25 @@ public class VaadinPortletService extends VaadinService {
 
     @Override
     public String getStaticFileLocation(VaadinRequest request) {
-        String staticFileLocation = getPortalProperty(request,
-                Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH);
-        if (staticFileLocation != null) {
-            // remove trailing slash if any
-            while (staticFileLocation.endsWith(".")) {
-                staticFileLocation = staticFileLocation.substring(0,
-                        staticFileLocation.length() - 1);
-            }
-            return staticFileLocation;
-        } else {
-            // default for Liferay
-            return "/html";
-        }
+        // /html is default for Liferay
+        String staticFileLocation = getParameter(request,
+                Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH, "/html");
+
+        return trimTrailingSlashes(staticFileLocation);
+    }
+
+    private PortletContext getPortletContext() {
+        return getPortlet().getPortletContext();
     }
 
     @Override
     public String getMimeType(String resourceName) {
-        return getPortlet().getPortletContext().getMimeType(resourceName);
+        return getPortletContext().getMimeType(resourceName);
     }
 
     @Override
     public File getBaseDirectory() {
-        PortletContext context = getPortlet().getPortletContext();
+        PortletContext context = getPortletContext();
         String resultPath = context.getRealPath("/");
         if (resultPath != null) {
             return new File(resultPath);

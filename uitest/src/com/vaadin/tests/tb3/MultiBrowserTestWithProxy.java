@@ -24,7 +24,9 @@ import org.junit.Before;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.vaadin.tests.annotations.TestCategory;
 
+@TestCategory("push")
 public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {
 
     private static AtomicInteger availablePort = new AtomicInteger(2000);

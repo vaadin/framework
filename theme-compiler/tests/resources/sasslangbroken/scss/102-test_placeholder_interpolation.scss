@@ -1,4 +1,0 @@
-$foo: foo;
-
-%#{$foo} {color: blue}
-.bar {@extend %foo}

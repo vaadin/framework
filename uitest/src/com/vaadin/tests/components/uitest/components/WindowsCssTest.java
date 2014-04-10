@@ -110,7 +110,7 @@ public class WindowsCssTest extends VerticalLayout {
     @Override
     public void addStyleName(String style) {
         styleName = style;
-    };
+    }
 
     @Override
     public void removeStyleName(String style) {

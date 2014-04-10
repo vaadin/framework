@@ -27,6 +27,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
@@ -35,7 +36,6 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
@@ -75,7 +75,8 @@ public class Util {
      * @param y
      * @return the element at given coordinates
      */
-    public static native Element getElementFromPoint(int clientX, int clientY)
+    public static native com.google.gwt.user.client.Element getElementFromPoint(
+            int clientX, int clientY)
     /*-{
         var el = $wnd.document.elementFromPoint(clientX, clientY);
         // Call elementFromPoint two times to make sure IE8 also returns something sensible if the application is running in an iframe 
@@ -196,7 +197,8 @@ public class Util {
      *            clone child tree also
      * @return
      */
-    public static native Element cloneNode(Element element, boolean deep)
+    public static native com.google.gwt.user.client.Element cloneNode(
+            Element element, boolean deep)
     /*-{
         return element.cloneNode(deep);
     }-*/;
@@ -789,7 +791,7 @@ public class Util {
             if (connector != null) {
                 // check that inside the rootElement
                 while (browseElement != null && browseElement != rootElement) {
-                    browseElement = (Element) browseElement.getParentElement();
+                    browseElement = browseElement.getParentElement();
                 }
                 if (browseElement != rootElement) {
                     return null;
@@ -798,7 +800,7 @@ public class Util {
                 }
             }
 
-            browseElement = (Element) browseElement.getParentElement();
+            browseElement = browseElement.getParentElement();
         }
 
         // No connector found, element is possibly inside a VOverlay
@@ -864,7 +866,7 @@ public class Util {
             while (eventListener == null && element != null) {
                 eventListener = Event.getEventListener(element);
                 if (eventListener == null) {
-                    element = (Element) element.getParentElement();
+                    element = element.getParentElement();
                 }
             }
             if (eventListener instanceof Widget) {
@@ -947,7 +949,7 @@ public class Util {
         NodeList<com.google.gwt.dom.client.Element> imgElements = element
                 .getElementsByTagName("img");
         for (int i = 0; i < imgElements.getLength(); i++) {
-            DOM.sinkEvents((Element) imgElements.getItem(i), Event.ONLOAD);
+            DOM.sinkEvents(imgElements.getItem(i), Event.ONLOAD);
         }
 
     }
@@ -1074,7 +1076,8 @@ public class Util {
      *            the mouse event to get coordinates from
      * @return the element at the coordinates of the event
      */
-    public static Element getElementUnderMouse(NativeEvent event) {
+    public static com.google.gwt.user.client.Element getElementUnderMouse(
+            NativeEvent event) {
         int pageX = getTouchOrMouseClientX(event);
         int pageY = getTouchOrMouseClientY(event);
 
@@ -1181,7 +1184,7 @@ public class Util {
      * 
      * @return The active element or null if no active element could be found.
      */
-    public native static Element getFocusedElement()
+    public native static com.google.gwt.user.client.Element getFocusedElement()
     /*-{
        if ($wnd.document.activeElement) {
            return $wnd.document.activeElement;
@@ -1197,7 +1200,7 @@ public class Util {
      * @deprecated Use #getFocusedElement instead
      */
     @Deprecated
-    public static Element getIEFocusedElement() {
+    public static com.google.gwt.user.client.Element getIEFocusedElement() {
         return getFocusedElement();
     }
 

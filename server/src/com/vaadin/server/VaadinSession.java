@@ -167,6 +167,33 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
+     * The lifecycle state of a VaadinSession.
+     * 
+     * @since 7.2
+     */
+    public enum State {
+        /**
+         * The session is active and accepting client requests.
+         */
+        OPEN,
+        /**
+         * The {@link VaadinSession#close() close} method has been called; the
+         * session will be closed as soon as the current request ends.
+         */
+        CLOSING,
+        /**
+         * The session is closed; all the {@link UI}s have been removed and
+         * {@link SessionDestroyListener}s have been called.
+         */
+        CLOSED;
+
+        private boolean isValidChange(State newState) {
+            return (this == OPEN && newState == CLOSING)
+                    || (this == CLOSING && newState == CLOSED);
+        }
+    }
+
+    /**
      * The name of the parameter that is by default used in e.g. web.xml to
      * define the name of the default {@link UI} class.
      */
@@ -215,6 +242,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     protected WebBrowser browser = new WebBrowser();
 
+    private DragAndDropService dragAndDropService;
+
     private LegacyCommunicationManager communicationManager;
 
     private long cumulativeRequestDuration = 0;
@@ -223,7 +252,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     private long lastRequestTimestamp = System.currentTimeMillis();
 
-    private boolean closing = false;
+    private State state = State.OPEN;
 
     private transient WrappedSession session;
 
@@ -277,24 +306,20 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         } else if (VaadinService.getCurrentRequest() != null
                 && getCurrent() == this) {
             assert hasLock();
-            /*
-             * Ignore if the session is being moved to a different backing
-             * session or if GAEVaadinServlet is doing its normal cleanup.
-             */
+            // Ignore if the session is being moved to a different backing
+            // session or if GAEVaadinServlet is doing its normal cleanup.
             if (getAttribute(VaadinService.PRESERVE_UNBOUND_SESSION_ATTRIBUTE) == Boolean.TRUE) {
                 return;
             }
 
             // There is still a request in progress for this session. The
             // session will be destroyed after the response has been written.
-            if (!isClosing()) {
+            if (getState() == State.OPEN) {
                 close();
             }
         } else {
-            /*
-             * We are not in a request related to this session so we can
-             * immediately destroy it
-             */
+            // We are not in a request related to this session so we can destroy
+            // it as soon as we acquire the lock.
             service.fireSessionDestroy(this);
         }
         session = null;
@@ -393,6 +418,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public LegacyCommunicationManager getCommunicationManager() {
         assert hasLock();
         return communicationManager;
+    }
+
+    public DragAndDropService getDragAndDropService() {
+        if (dragAndDropService == null) {
+            dragAndDropService = new DragAndDropService(this);
+        }
+        return dragAndDropService;
     }
 
     /**
@@ -1217,19 +1249,52 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     public void close() {
         assert hasLock();
-        closing = true;
+        state = State.CLOSING;
     }
 
     /**
-     * Returns whether this session is marked to be closed.
+     * Returns whether this session is marked to be closed. Note that this
+     * method also returns true if the session is actually already closed.
      * 
      * @see #close()
      * 
+     * @deprecated As of 7.2, use
+     *             <code>{@link #getState() getState() != State.OPEN}</code>
+     *             instead.
+     * 
      * @return true if this session is marked to be closed, false otherwise
      */
+    @Deprecated
     public boolean isClosing() {
         assert hasLock();
-        return closing;
+        return state == State.CLOSING || state == State.CLOSED;
+    }
+
+    /**
+     * Returns the lifecycle state of this session.
+     * 
+     * @since 7.2
+     * @return the current state
+     */
+    public State getState() {
+        assert hasLock();
+        return state;
+    }
+
+    /**
+     * Sets the lifecycle state of this session. The allowed transitions are
+     * OPEN to CLOSING and CLOSING to CLOSED.
+     * 
+     * @since 7.2
+     * @param state
+     *            the new state
+     */
+    protected void setState(State state) {
+        assert hasLock();
+        assert this.state.isValidChange(state) : "Invalid session state change "
+                + this.state + "->" + state;
+
+        this.state = state;
     }
 
     private static final Logger getLogger() {

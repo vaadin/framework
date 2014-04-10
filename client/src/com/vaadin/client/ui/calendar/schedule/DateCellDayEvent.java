@@ -70,8 +70,8 @@ public class DateCellDayEvent extends FocusableHTML implements
     private int startXrelative;
     private boolean disabled;
     private final WeekGrid weekGrid;
-    private com.google.gwt.user.client.Element topResizeBar;
-    private com.google.gwt.user.client.Element bottomResizeBar;
+    private Element topResizeBar;
+    private Element bottomResizeBar;
     private Element clickTarget;
     private final Integer eventIndex;
     private int slotHeight;

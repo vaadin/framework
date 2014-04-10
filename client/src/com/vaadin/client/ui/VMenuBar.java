@@ -21,6 +21,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
@@ -35,7 +36,6 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasHTML;
@@ -284,8 +284,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * @return
      */
     @Override
-    public Element getContainerElement() {
-        return containerElement;
+    public com.google.gwt.user.client.Element getContainerElement() {
+        return DOM.asOld(containerElement);
     }
 
     /**
@@ -1228,10 +1228,26 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * Get the key that selects a menu item. By default it is the Enter key but
      * by overriding this you can change the key to whatever you want.
      * 
+     * @deprecated use {@link #isNavigationSelectKey(int)} instead
      * @return
      */
+    @Deprecated
     protected int getNavigationSelectKey() {
         return KeyCodes.KEY_ENTER;
+    }
+
+    /**
+     * Checks whether key code selects a menu item. By default it is the Enter
+     * and Space keys but by overriding this you can change the keys to whatever
+     * you want.
+     * 
+     * @since 7.2
+     * @param keycode
+     * @return true if key selects menu item
+     */
+    protected boolean isNavigationSelectKey(int keycode) {
+        return keycode == getNavigationSelectKey()
+                || keycode == KeyCodes.KEY_SPACE;
     }
 
     /**
@@ -1432,7 +1448,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
             hideChildren();
             menuVisible = false;
 
-        } else if (keycode == getNavigationSelectKey()) {
+        } else if (isNavigationSelectKey(keycode)) {
             if (getSelected() == null) {
                 // If nothing is selected then select the first item
                 selectFirstItem();
@@ -1500,7 +1516,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
     private final String SUBPART_PREFIX = "item";
 
     @Override
-    public Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         int index = Integer
                 .parseInt(subPart.substring(SUBPART_PREFIX.length()));
         CustomMenuItem item = getItems().get(index);
@@ -1509,7 +1525,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
     }
 
     @Override
-    public String getSubPartName(Element subElement) {
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         if (!getElement().isOrHasChild(subElement)) {
             return null;
         }
@@ -1537,8 +1553,12 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * @param element
      *            Element used in search
      * @return Menu item or null if not found
+     * @deprecated As of 7.2, call or override
+     *             {@link #getMenuItemWithElement(Element)} instead
      */
-    public CustomMenuItem getMenuItemWithElement(Element element) {
+    @Deprecated
+    public CustomMenuItem getMenuItemWithElement(
+            com.google.gwt.user.client.Element element) {
         for (int i = 0; i < items.size(); i++) {
             CustomMenuItem item = items.get(i);
             if (DOM.isOrHasChild(item.getElement(), element)) {
@@ -1554,5 +1574,18 @@ public class VMenuBar extends SimpleFocusablePanel implements
         }
 
         return null;
+    }
+
+    /**
+     * Get menu item with given DOM element
+     * 
+     * @param element
+     *            Element used in search
+     * @return Menu item or null if not found
+     * 
+     * @since 7.2
+     */
+    public CustomMenuItem getMenuItemWithElement(Element element) {
+        return getMenuItemWithElement(DOM.asOld(element));
     }
 }

@@ -19,13 +19,13 @@ package com.vaadin.client.ui.embedded;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;

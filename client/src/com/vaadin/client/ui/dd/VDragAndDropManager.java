@@ -144,13 +144,11 @@ public class VDragAndDropManager {
                                 }
 
                                 if (currentDropHandler != null) {
-                                    currentDrag
-                                            .setElementOver((com.google.gwt.user.client.Element) targetElement);
+                                    currentDrag.setElementOver(targetElement);
                                     currentDropHandler.dragEnter(currentDrag);
                                 }
                             } else if (findDragTarget != null) {
-                                currentDrag
-                                        .setElementOver((com.google.gwt.user.client.Element) targetElement);
+                                currentDrag.setElementOver(targetElement);
                                 currentDropHandler.dragOver(currentDrag);
                             }
                             // prevent text selection on IE
@@ -162,8 +160,7 @@ public class VDragAndDropManager {
                             // ApplicationConnection.getConsole().log(
                             // "Target just modified on "
                             // + event.getType());
-                            currentDrag
-                                    .setElementOver((com.google.gwt.user.client.Element) targetElement);
+                            currentDrag.setElementOver(targetElement);
                             break;
                         }
 
@@ -191,8 +188,7 @@ public class VDragAndDropManager {
                     // ApplicationConnection.getConsole().log(
                     // "DropHandler now"
                     // + currentDropHandler.getPaintable());
-                    currentDrag
-                            .setElementOver((com.google.gwt.user.client.Element) targetElement);
+                    currentDrag.setElementOver(targetElement);
                     target.dragEnter(currentDrag);
                 } else if (target == null && currentDropHandler != null) {
                     // ApplicationConnection.getConsole().log("Invalid state!?");
@@ -223,8 +219,7 @@ public class VDragAndDropManager {
             case Event.ONMOUSEMOVE:
             case Event.ONTOUCHMOVE:
                 if (currentDropHandler != null) {
-                    currentDrag
-                            .setElementOver((com.google.gwt.user.client.Element) targetElement);
+                    currentDrag.setElementOver(targetElement);
                     currentDropHandler.dragOver(currentDrag);
                 }
                 nativeEvent.preventDefault();
@@ -473,8 +468,7 @@ public class VDragAndDropManager {
      */
     private VDropHandler findDragTarget(Element element) {
         try {
-            Widget w = Util.findWidget(
-                    (com.google.gwt.user.client.Element) element, null);
+            Widget w = Util.findWidget(element, null);
             if (w == null) {
                 return null;
             }

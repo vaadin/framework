@@ -15,8 +15,8 @@
  */
 package com.vaadin.client.ui.calendar.schedule.dd;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.calendar.CalendarConnector;
 import com.vaadin.client.ui.calendar.schedule.SimpleDayCell;
@@ -101,10 +101,9 @@ public class CalendarMonthDropHandler extends CalendarDropHandler {
      *            The element to check
      * @return
      */
-    private boolean isLocationValid(
-            com.google.gwt.user.client.Element elementOver) {
-        com.google.gwt.user.client.Element monthGridElement = calendarConnector
-                .getWidget().getMonthGrid().getElement();
+    private boolean isLocationValid(Element elementOver) {
+        Element monthGridElement = calendarConnector.getWidget().getMonthGrid()
+                .getElement();
 
         // drops are not allowed in:
         // - weekday header

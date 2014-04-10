@@ -96,8 +96,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         for (int i = 0; i < captions.length; i++) {
             component = getTestTabsheet();
             component.setCaption(captions[i]);
-            component.setComponentError(new UserError(
-                    "component error, user error"));
+            component.setComponentError(new UserError(""));
             vlo.addComponent(component);
         }
         baseLayout.addComponent(vlo);

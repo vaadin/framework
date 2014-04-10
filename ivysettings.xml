@@ -39,8 +39,6 @@
             resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-client-compiled"
             resolver="build-temp" />
-        <module organisation="com.vaadin" name="vaadin-theme-compiler"
-            resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-themes"
             resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-push"

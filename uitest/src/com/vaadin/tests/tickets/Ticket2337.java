@@ -32,7 +32,6 @@ public class Ticket2337 extends LegacyApplication {
             @Override
             public void buttonClick(ClickEvent event) {
                 gl.removeAllComponents();
-                ;
 
             }
 

@@ -16,10 +16,10 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
@@ -93,7 +93,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
      */
     private Element getCheckBoxElement() {
         // FIXME: Would love to use a better way to access the checkbox element
-        return (Element) getElement().getFirstChildElement();
+        return getElement().getFirstChildElement();
     }
 
     @Override

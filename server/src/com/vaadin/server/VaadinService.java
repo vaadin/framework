@@ -53,6 +53,7 @@ import org.json.JSONObject;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.VaadinSession.FutureAccess;
+import com.vaadin.server.VaadinSession.State;
 import com.vaadin.server.communication.FileUploadHandler;
 import com.vaadin.server.communication.HeartbeatHandler;
 import com.vaadin.server.communication.PublishedFileHandler;
@@ -446,6 +447,12 @@ public abstract class VaadinService implements Serializable {
         session.accessSynchronously(new Runnable() {
             @Override
             public void run() {
+                if (session.getState() == State.CLOSED) {
+                    return;
+                }
+                if (session.getState() == State.OPEN) {
+                    closeSession(session);
+                }
                 ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
                 for (final UI ui : uis) {
                     ui.accessSynchronously(new Runnable() {
@@ -469,6 +476,8 @@ public abstract class VaadinService implements Serializable {
                 // destroy listeners
                 eventRouter.fireEvent(new SessionDestroyEvent(
                         VaadinService.this, session), session.getErrorHandler());
+
+                session.setState(State.CLOSED);
             }
         });
     }
@@ -1124,7 +1133,7 @@ public abstract class VaadinService implements Serializable {
             closeInactiveUIs(session);
             removeClosedUIs(session);
         } else {
-            if (!session.isClosing()) {
+            if (session.getState() == State.OPEN) {
                 closeSession(session);
                 if (session.getSession() != null) {
                     getLogger().log(Level.FINE, "Closing inactive session {0}",
@@ -1276,7 +1285,7 @@ public abstract class VaadinService implements Serializable {
      * @return true if the session is active, false if it could be closed.
      */
     private boolean isSessionActive(VaadinSession session) {
-        if (session.isClosing() || session.getSession() == null) {
+        if (session.getState() != State.OPEN || session.getSession() == null) {
             return false;
         } else {
             long now = System.currentTimeMillis();
@@ -1632,12 +1641,30 @@ public abstract class VaadinService implements Serializable {
      *             if the current thread holds the lock for another session
      */
     public static void verifyNoOtherSessionLocked(VaadinSession session) {
-        VaadinSession otherSession = VaadinSession.getCurrent();
-        if (otherSession != null && otherSession != session
-                && otherSession.hasLock()) {
+        if (isOtherSessionLocked(session)) {
             throw new IllegalStateException(
                     "Can't access session while another session is locked by the same thread. This restriction is intended to help avoid deadlocks.");
         }
+    }
+
+    /**
+     * Checks whether there might be some {@link VaadinSession} other than the
+     * provided one for which the current thread holds a lock. This method might
+     * not detect all cases where some other session is locked, but it should
+     * cover the most typical situations.
+     * 
+     * @since 7.2
+     * @param session
+     *            the session that is expected to be locked
+     * @return <code>true</code> if another session is also locked by the
+     *         current thread; <code>false</code> if no such session was found
+     */
+    public static boolean isOtherSessionLocked(VaadinSession session) {
+        VaadinSession otherSession = VaadinSession.getCurrent();
+        if (otherSession == null || otherSession == session) {
+            return false;
+        }
+        return otherSession.hasLock();
     }
 
     /**

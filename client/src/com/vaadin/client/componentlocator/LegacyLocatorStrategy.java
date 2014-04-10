@@ -20,9 +20,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -168,8 +168,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
              * If the widget can provide an identifier for the targetElement we
              * let it do that
              */
-            String elementLocator = ((SubPartAware) w)
-                    .getSubPartName(targetElement);
+            String elementLocator = ((SubPartAware) w).getSubPartName(DOM
+                    .asOld(targetElement));
             if (elementLocator != null) {
                 return path + LegacyLocatorStrategy.SUBPART_SEPARATOR
                         + elementLocator;
@@ -380,9 +380,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      *            The starting point for the locator. The generated path is
      *            relative to this element.
      * @return A String locator that can be used to locate the target element
-     *         using
-     *         {@link #getElementByDOMPath(com.google.gwt.user.client.Element, String)}
-     *         or null if the locator String cannot be created.
+     *         using {@link #getElementByDOMPath(Element, String)} or null if
+     *         the locator String cannot be created.
      */
     private String getDOMPathForElement(Element element, Element baseElement) {
         Element e = element;

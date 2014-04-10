@@ -17,36 +17,62 @@ package com.vaadin.client.ui.tabsheet;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.TooltipInfo;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VTabsheet;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.tabsheet.TabsheetState;
+import com.vaadin.shared.ui.tabsheet.TabsheetClientRpc;
 import com.vaadin.ui.TabSheet;
 
 @Connect(TabSheet.class)
 public class TabsheetConnector extends TabsheetBaseConnector implements
         SimpleManagedLayout, MayScrollChildren {
 
-    // Can't use "style" as it's already in use
+    public TabsheetConnector() {
+        registerRpc(TabsheetClientRpc.class, new TabsheetClientRpc() {
+            @Override
+            public void revertToSharedStateSelection() {
+                for (int i = 0; i < getState().tabs.size(); ++i) {
+                    final String key = getState().tabs.get(i).key;
+                    final boolean selected = key.equals(getState().selected);
+                    if (selected) {
+                        getWidget().selectTab(i);
+                        break;
+                    }
+                }
+                renderContent();
+            }
+        });
+    }
+
     @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+    protected void init() {
+        super.init();
+        getWidget().setConnector(this);
+    }
 
-        if (isRealUpdate(uidl)) {
-            // Handle stylename changes before generics (might affect size
-            // calculations)
-            getWidget().handleStyleNames(uidl, getState());
-        }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.client.ui.AbstractComponentConnector#onStateChanged(com.vaadin
+     * .client.communication.StateChangeEvent)
+     */
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
 
-        super.updateFromUIDL(uidl, client);
-        if (!isRealUpdate(uidl)) {
-            return;
+        getWidget().handleStyleNames(getState());
+
+        if (getState().tabsVisible) {
+            getWidget().showTabs();
+        } else {
+            getWidget().hideTabs();
         }
 
         // tabs; push or not
@@ -73,11 +99,6 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
     @Override
     public VTabsheet getWidget() {
         return (VTabsheet) super.getWidget();
-    }
-
-    @Override
-    public TabsheetState getState() {
-        return (TabsheetState) super.getState();
     }
 
     @Override
@@ -119,9 +140,7 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
 
         // Find a tooltip for the tab, if the element is a tab
         if (element != getWidget().getElement()) {
-            Object node = Util.findWidget(
-                    (com.google.gwt.user.client.Element) element,
-                    VTabsheet.TabCaption.class);
+            Object node = Util.findWidget(element, VTabsheet.TabCaption.class);
 
             if (node != null) {
                 VTabsheet.TabCaption caption = (VTabsheet.TabCaption) node;
@@ -149,7 +168,20 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
 
     @Override
     public void onConnectorHierarchyChange(
-            ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
-        // TODO Move code from updateFromUIDL to this method
+            ConnectorHierarchyChangeEvent connector) {
+        renderContent();
     }
+
+    /**
+     * (Re-)render the content of the active tab.
+     */
+    protected void renderContent() {
+        ComponentConnector contentConnector = getChildComponents().get(0);
+        if (null != contentConnector) {
+            getWidget().renderContent(contentConnector.getWidget());
+        } else {
+            getWidget().renderContent(null);
+        }
+    }
+
 }

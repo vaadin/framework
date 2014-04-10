@@ -227,6 +227,9 @@ public class FileUploadHandler implements RequestHandler {
     /* Same as in apache commons file upload library that was previously used. */
     private static final int MAX_UPLOAD_BUFFER_SIZE = 4 * 1024;
 
+    /* Minimum interval which will be used for streaming progress events. */
+    public static final int DEFAULT_STREAMING_PROGRESS_EVENT_INTERVAL_MS = 500;
+
     @Override
     public boolean handleRequest(VaadinSession session, VaadinRequest request,
             VaadinResponse response) throws IOException {
@@ -268,8 +271,7 @@ public class FileUploadHandler implements RequestHandler {
                 return true;
             }
 
-            source = session.getCommunicationManager().getConnector(uI,
-                    connectorId);
+            source = uI.getConnectorTracker().getConnector(connectorId);
         } finally {
             session.unlock();
         }
@@ -550,26 +552,35 @@ public class FileUploadHandler implements RequestHandler {
             }
 
             final byte buffer[] = new byte[MAX_UPLOAD_BUFFER_SIZE];
+            long lastStreamingEvent = 0;
             int bytesReadToBuffer = 0;
-            while ((bytesReadToBuffer = in.read(buffer)) > 0) {
-                out.write(buffer, 0, bytesReadToBuffer);
-                totalBytes += bytesReadToBuffer;
+            do {
+                bytesReadToBuffer = in.read(buffer);
+                if (bytesReadToBuffer > 0) {
+                    out.write(buffer, 0, bytesReadToBuffer);
+                    totalBytes += bytesReadToBuffer;
+                }
                 if (listenProgress) {
-                    // update progress if listener set and contentLength
-                    // received
-                    session.lock();
-                    try {
-                        StreamingProgressEventImpl progressEvent = new StreamingProgressEventImpl(
-                                filename, type, contentLength, totalBytes);
-                        streamVariable.onProgress(progressEvent);
-                    } finally {
-                        session.unlock();
+                    long now = System.currentTimeMillis();
+                    // to avoid excessive session locking and event storms,
+                    // events are sent in intervals, or at the end of the file.
+                    if (lastStreamingEvent + getProgressEventInterval() <= now
+                            || bytesReadToBuffer <= 0) {
+                        lastStreamingEvent = now;
+                        session.lock();
+                        try {
+                            StreamingProgressEventImpl progressEvent = new StreamingProgressEventImpl(
+                                    filename, type, contentLength, totalBytes);
+                            streamVariable.onProgress(progressEvent);
+                        } finally {
+                            session.unlock();
+                        }
                     }
                 }
                 if (streamVariable.isInterrupted()) {
                     throw new UploadInterruptedException();
                 }
-            }
+            } while (bytesReadToBuffer > 0);
 
             // upload successful
             out.close();
@@ -610,6 +621,17 @@ public class FileUploadHandler implements RequestHandler {
             }
         }
         return startedEvent.isDisposed();
+    }
+
+    /**
+     * To prevent event storming, streaming progress events are sent in this
+     * interval rather than every time the buffer is filled. This fixes #13155.
+     * To adjust this value override the method, and register your own handler
+     * in VaadinService.createRequestHandlers(). The default is 500ms, and
+     * setting it to 0 effectively restores the old behavior.
+     */
+    protected int getProgressEventInterval() {
+        return DEFAULT_STREAMING_PROGRESS_EVENT_INTERVAL_MS;
     }
 
     static void tryToCloseStream(OutputStream out) {

@@ -200,7 +200,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
         super.addTestComponent(c);
         getLayout().setExpandRatio(c, 1);
 
-    };
+    }
 
     /**
      * Construct the component that is to be tested. This method uses a no-arg

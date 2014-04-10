@@ -225,4 +225,58 @@ public class BeanFieldGroup<T> extends FieldGroup {
         }
         return beanValidationImplementationAvailable;
     }
+
+    /**
+     * Convenience method to bind Fields from a given "field container" to a
+     * given bean with buffering disabled.
+     * <p>
+     * The returned {@link BeanFieldGroup} can be used for further
+     * configuration.
+     * 
+     * @see #bindFieldsBuffered(Object, Object)
+     * @see #bindMemberFields(Object)
+     * @since 7.2
+     * @param bean
+     *            the bean to be bound
+     * @param objectWithMemberFields
+     *            the class that contains {@link Field}s for bean properties
+     * @return the bean field group used to make binding
+     */
+    public static <T> BeanFieldGroup<T> bindFieldsUnbuffered(T bean,
+            Object objectWithMemberFields) {
+        return createAndBindFields(bean, objectWithMemberFields, false);
+    }
+
+    /**
+     * Convenience method to bind Fields from a given "field container" to a
+     * given bean with buffering enabled.
+     * <p>
+     * The returned {@link BeanFieldGroup} can be used for further
+     * configuration.
+     * 
+     * @see #bindFieldsUnbuffered(Object, Object)
+     * @see #bindMemberFields(Object)
+     * @since 7.2
+     * @param bean
+     *            the bean to be bound
+     * @param objectWithMemberFields
+     *            the class that contains {@link Field}s for bean properties
+     * @return the bean field group used to make binding
+     */
+    public static <T> BeanFieldGroup<T> bindFieldsBuffered(T bean,
+            Object objectWithMemberFields) {
+        return createAndBindFields(bean, objectWithMemberFields, true);
+    }
+
+    private static <T> BeanFieldGroup<T> createAndBindFields(T bean,
+            Object objectWithMemberFields, boolean buffered) {
+        @SuppressWarnings("unchecked")
+        BeanFieldGroup<T> beanFieldGroup = new BeanFieldGroup<T>(
+                (Class<T>) bean.getClass());
+        beanFieldGroup.setItemDataSource(bean);
+        beanFieldGroup.setBuffered(buffered);
+        beanFieldGroup.bindMemberFields(objectWithMemberFields);
+        return beanFieldGroup;
+    }
+
 }

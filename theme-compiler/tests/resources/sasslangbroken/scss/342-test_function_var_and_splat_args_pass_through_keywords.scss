@@ -1,9 +1,0 @@
-@function foo($a...) {
-  @return bar($a...);
-}
-
-@function bar($b, $c, $a) {
-  @return "a: #{$a}, b: #{$b}, c: #{$c}";
-}
-
-.foo {val: foo(1, $c: 2, $a: 3)}

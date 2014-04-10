@@ -303,7 +303,9 @@ public class TableConnector extends AbstractHasComponentsConnector implements
         getWidget().tabIndex = getState().tabIndex;
         getWidget().setProperTabIndex();
 
-        getWidget().resizeSortedColumnForSortIndicator();
+        if (getWidget().initializedAndAttached) {
+            getWidget().resizeSortedColumnForSortIndicator();
+        }
 
         // Remember this to detect situations where overflow hack might be
         // needed during scrolling
@@ -396,9 +398,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
         TooltipInfo info = null;
 
         if (element != getWidget().getElement()) {
-            Object node = Util.findWidget(
-                    (com.google.gwt.user.client.Element) element,
-                    VScrollTableRow.class);
+            Object node = Util.findWidget(element, VScrollTableRow.class);
 
             if (node != null) {
                 VScrollTableRow row = (VScrollTableRow) node;

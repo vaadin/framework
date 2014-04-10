@@ -122,6 +122,10 @@ public abstract class AbstractTestUI extends UI {
             enablePush(Transport.STREAMING);
         } else if ("long-polling".equals(transport)) {
             enablePush(Transport.LONG_POLLING);
+        } else if (transport != null) {
+            throw new IllegalArgumentException("Unknown transport value '"
+                    + transport
+                    + "'. Supported are xhr,websocket,streaming,long-polling");
         }
     }
 
@@ -134,6 +138,23 @@ public abstract class AbstractTestUI extends UI {
         // Ensure no fallback is used
         getPushConfiguration().setParameter(
                 PushConfigurationState.FALLBACK_TRANSPORT_PARAM, "none");
+    }
+
+    /**
+     * This method is inherited from the super class, but it should generally
+     * not be used. If you want to just add components to your test, use e.g.
+     * {@link #addComponent(Component)} instead to add the component to the
+     * layout used by this UI. If you don't want to use the top-level layout
+     * used by this class, you instead inherit directly from UI.
+     * 
+     * @deprecated Use {@link #addComponent(Component)} or inherit from UI
+     *             instead.
+     */
+    @Override
+    @Deprecated
+    public void setContent(Component content) {
+        // Overridden just to deprecate
+        super.setContent(content);
     }
 
     private VerticalLayout layout;

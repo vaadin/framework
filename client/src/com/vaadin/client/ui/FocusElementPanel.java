@@ -21,7 +21,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
@@ -47,9 +46,7 @@ public class FocusElementPanel extends SimpleFocusablePanel {
             style.setLeft(0, Unit.PX);
             getElement().appendChild(focusElement);
             /* Sink from focusElement too as focus and blur don't bubble */
-            DOM.sinkEvents(
-                    (com.google.gwt.user.client.Element) focusElement.cast(),
-                    Event.FOCUSEVENTS);
+            DOM.sinkEvents(focusElement, Event.FOCUSEVENTS);
             // revert to original, not focusable
             getElement().setPropertyObject("tabIndex", null);
         } else {
@@ -67,11 +64,9 @@ public class FocusElementPanel extends SimpleFocusablePanel {
     @Override
     public void setFocus(boolean focus) {
         if (focus) {
-            FocusImpl.getFocusImplForPanel().focus(
-                    (Element) focusElement.cast());
+            FocusImpl.getFocusImplForPanel().focus(focusElement);
         } else {
-            FocusImpl.getFocusImplForPanel()
-                    .blur((Element) focusElement.cast());
+            FocusImpl.getFocusImplForPanel().blur(focusElement);
         }
     }
 
@@ -86,7 +81,7 @@ public class FocusElementPanel extends SimpleFocusablePanel {
     /**
      * @return the focus element
      */
-    public Element getFocusElement() {
+    public com.google.gwt.user.client.Element getFocusElement() {
         return focusElement.cast();
     }
 }

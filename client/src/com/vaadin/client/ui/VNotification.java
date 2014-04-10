@@ -23,9 +23,9 @@ import java.util.Iterator;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -301,6 +301,15 @@ public class VNotification extends VOverlay {
             break;
         case TOP_RIGHT:
             DOM.setStyleAttribute(el, "top", "0px");
+            DOM.setStyleAttribute(el, "right", "0px");
+            break;
+        case MIDDLE_LEFT:
+            center();
+            DOM.setStyleAttribute(el, "left", "0px");
+            break;
+        case MIDDLE_RIGHT:
+            center();
+            DOM.setStyleAttribute(el, "left", "");
             DOM.setStyleAttribute(el, "right", "0px");
             break;
         case BOTTOM_RIGHT:

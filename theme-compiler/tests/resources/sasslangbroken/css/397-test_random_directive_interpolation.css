@@ -1,8 +1,0 @@
-@foo url(http://sass-lang.com/),
-     domain("sass-lang.com"),
-     "foobarbaz",
-     foobarbaz {
-  .foo {
-    a: b;
-  }
-}

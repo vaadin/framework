@@ -22,6 +22,11 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
@@ -116,6 +121,7 @@ public class AtmospherePushConnection implements PushConnection {
     private UI ui;
     private AtmosphereResource resource;
     private FragmentedMessage incomingMessage;
+    private Future<Object> outgoingMessage;
 
     public AtmospherePushConnection(UI ui) {
         this.ui = ui;
@@ -163,7 +169,8 @@ public class AtmospherePushConnection implements PushConnection {
     void sendMessage(String message) {
         assert (isConnected());
         // "Broadcast" the changes to the single client only
-        getResource().getBroadcaster().broadcast(message, getResource());
+        outgoingMessage = getResource().getBroadcaster().broadcast(message,
+                getResource());
     }
 
     /**
@@ -253,8 +260,29 @@ public class AtmospherePushConnection implements PushConnection {
     @Override
     public void disconnect() {
         assert isConnected();
-        resource.resume();
+        if (outgoingMessage != null) {
+            // Wait for the last message to be sent before closing the
+            // connection (assumes that futures are completed in order)
+            try {
+                outgoingMessage.get(1000, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException e) {
+                getLogger()
+                        .log(Level.INFO,
+                                "Timeout waiting for messages to be sent to client before disconnect");
+            } catch (Exception e) {
+                getLogger()
+                        .log(Level.INFO,
+                                "Error waiting for messages to be sent to client before disconnect");
+            }
+            outgoingMessage = null;
+        }
+
         resource = null;
         state = State.DISCONNECTED;
     }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(AtmospherePushConnection.class.getName());
+    }
+
 }

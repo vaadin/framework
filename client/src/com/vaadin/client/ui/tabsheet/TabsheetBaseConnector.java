@@ -19,31 +19,41 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.VTabsheetBase;
-import com.vaadin.shared.ui.tabsheet.TabsheetBaseConstants;
+import com.vaadin.shared.ui.tabsheet.TabState;
+import com.vaadin.shared.ui.tabsheet.TabsheetState;
 
 public abstract class TabsheetBaseConnector extends
-        AbstractComponentContainerConnector implements Paintable {
+        AbstractComponentContainerConnector {
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ui.AbstractConnector#init()
+     */
     @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidget().client = client;
+    protected void init() {
+        super.init();
 
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
+        getWidget().setClient(getConnection());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.client.ui.AbstractComponentConnector#onStateChanged(com.vaadin
+     * .client.communication.StateChangeEvent)
+     */
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
 
         // Update member references
-        getWidget().id = uidl.getId();
-        getWidget().disabled = !isEnabled();
-
-        // Render content
-        final UIDL tabs = uidl.getChildUIDL(0);
+        getWidget().setEnabled(isEnabled());
 
         // Widgets in the TabSheet before update
         ArrayList<Widget> oldWidgets = new ArrayList<Widget>();
@@ -53,26 +63,22 @@ public abstract class TabsheetBaseConnector extends
         }
 
         // Clear previous values
-        getWidget().tabKeys.clear();
-        getWidget().disabledTabKeys.clear();
+        getWidget().clearTabKeys();
 
         int index = 0;
-        for (final Iterator<Object> it = tabs.getChildIterator(); it.hasNext();) {
-            final UIDL tab = (UIDL) it.next();
-            final String key = tab.getStringAttribute("key");
-            final boolean selected = tab.getBooleanAttribute("selected");
-            final boolean hidden = tab.getBooleanAttribute("hidden");
+        for (TabState tab : getState().tabs) {
+            final String key = tab.key;
+            final boolean selected = key.equals(getState().selected);
 
-            if (tab.getBooleanAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DISABLED)) {
-                getWidget().disabledTabKeys.add(key);
-            }
-
-            getWidget().tabKeys.add(key);
+            getWidget().addTabKey(key, !tab.enabled && tab.visible);
 
             if (selected) {
-                getWidget().activeTabIndex = index;
+                getWidget().setActiveTabIndex(index);
             }
-            getWidget().renderTab(tab, index, selected, hidden);
+            getWidget().renderTab(tab, index);
+            if (selected) {
+                getWidget().selectTab(index);
+            }
             index++;
         }
 
@@ -102,6 +108,11 @@ public abstract class TabsheetBaseConnector extends
     @Override
     public VTabsheetBase getWidget() {
         return (VTabsheetBase) super.getWidget();
+    }
+
+    @Override
+    public TabsheetState getState() {
+        return (TabsheetState) super.getState();
     }
 
 }

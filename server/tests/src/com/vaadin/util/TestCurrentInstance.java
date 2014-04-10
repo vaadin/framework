@@ -70,7 +70,7 @@ public class TestCurrentInstance {
                 Assert.assertEquals(TestCurrentInstance.this,
                         CurrentInstance.get(TestCurrentInstance.class));
                 threadFailed.set(false);
-            };
+            }
         };
         t.start();
         CurrentInstance.set(TestCurrentInstance.class, null);
@@ -103,7 +103,7 @@ public class TestCurrentInstance {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            };
+            }
         };
         t.start();
 

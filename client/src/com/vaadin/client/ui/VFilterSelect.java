@@ -27,6 +27,7 @@ import java.util.Set;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
@@ -47,18 +48,17 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
@@ -122,10 +122,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         @Override
         public String getDisplayString() {
             final StringBuffer sb = new StringBuffer();
-            if (iconUri != null) {
-                sb.append("<img src=\"");
-                sb.append(Util.escapeAttribute(iconUri));
-                sb.append("\" alt=\"\" class=\"v-icon\" />");
+            final Icon icon = client.getIcon(iconUri);
+            if (icon != null) {
+                sb.append(icon.getElement().getString());
             }
             String content;
             if ("".equals(caption)) {
@@ -556,8 +555,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             offsetHeight = getOffsetHeight();
 
             final int desiredWidth = getMainWidth();
-            Element menuFirstChild = menu.getElement().getFirstChildElement()
-                    .cast();
+            Element menuFirstChild = menu.getElement().getFirstChildElement();
             int naturalMenuWidth = menuFirstChild.getOffsetWidth();
 
             if (popupOuterPadding == -1) {
@@ -853,7 +851,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         private static final String SUBPART_PREFIX = "item";
 
         @Override
-        public Element getSubPartElement(String subPart) {
+        public com.google.gwt.user.client.Element getSubPartElement(
+                String subPart) {
             int index = Integer.parseInt(subPart.substring(SUBPART_PREFIX
                     .length()));
 
@@ -863,7 +862,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
 
         @Override
-        public String getSubPartName(Element subElement) {
+        public String getSubPartName(
+                com.google.gwt.user.client.Element subElement) {
             if (!getElement().isOrHasChild(subElement)) {
                 return null;
             }
@@ -989,7 +989,13 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
     };
 
-    private final Image selectedItemIcon = new Image();
+    private class IconWidget extends Widget {
+        IconWidget(Icon icon) {
+            setElement(icon.getElement());
+        }
+    }
+
+    private IconWidget selectedItemIcon;
 
     /** For internal use only. May be removed or replaced in the future. */
     public ApplicationConnection client;
@@ -1031,7 +1037,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public enum Select {
         NONE, FIRST, LAST
-    };
+    }
 
     /** For internal use only. May be removed or replaced in the future. */
     public Select selectPopupItemWhenResponseIsReceived = Select.NONE;
@@ -1112,21 +1118,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         tb = createTextBox();
         suggestionPopup = createSuggestionPopup();
 
-        selectedItemIcon.setStyleName("v-icon");
-        selectedItemIcon.addLoadHandler(new LoadHandler() {
-
-            @Override
-            public void onLoad(LoadEvent event) {
-                if (BrowserInfo.get().isIE8()) {
-                    // IE8 needs some help to discover it should reposition the
-                    // text field
-                    forceReflow();
-                }
-                updateRootWidth();
-                updateSelectedIconPosition();
-            }
-        });
-
         popupOpener.sinkEvents(Event.ONMOUSEDOWN);
         Roles.getButtonRole()
                 .setAriaHiddenState(popupOpener.getElement(), true);
@@ -1147,6 +1138,32 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         popupOpener.addClickHandler(this);
 
         setStyleName(CLASSNAME);
+
+        sinkEvents(Event.ONPASTE);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.user.client.ui.Composite#onBrowserEvent(com.google.gwt
+     * .user.client.Event)
+     */
+    @Override
+    public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+
+        if (event.getTypeInt() == Event.ONPASTE) {
+            if (textInputEnabled) {
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+                    @Override
+                    public void execute() {
+                        filterOptions(currentPage);
+                    }
+                });
+            }
+        }
     }
 
     /**
@@ -1386,20 +1403,36 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      *            The URI of the icon
      */
     public void setSelectedItemIcon(String iconUri) {
+
         if (iconUri == null || iconUri.length() == 0) {
-            if (selectedItemIcon.isAttached()) {
+            if (selectedItemIcon != null) {
                 panel.remove(selectedItemIcon);
-                if (BrowserInfo.get().isIE8()) {
-                    // IE8 needs some help to discover it should reposition the
-                    // text field
-                    forceReflow();
-                }
-                updateRootWidth();
+                selectedItemIcon = null;
+                afterSelectedItemIconChange();
             }
         } else {
+            if (selectedItemIcon != null) {
+                panel.remove(selectedItemIcon);
+            }
+            selectedItemIcon = new IconWidget(client.getIcon(iconUri));
+            selectedItemIcon.addDomHandler(new LoadHandler() {
+                @Override
+                public void onLoad(LoadEvent event) {
+                    afterSelectedItemIconChange();
+                }
+            }, LoadEvent.getType());
             panel.insert(selectedItemIcon, 0);
-            selectedItemIcon.setUrl(iconUri);
-            updateRootWidth();
+            afterSelectedItemIconChange();
+        }
+    }
+
+    private void afterSelectedItemIconChange() {
+        if (BrowserInfo.get().isWebkit() || BrowserInfo.get().isIE8()) {
+            // Some browsers need a nudge to reposition the text field
+            forceReflow();
+        }
+        updateRootWidth();
+        if (selectedItemIcon != null) {
             updateSelectedIconPosition();
         }
     }
@@ -1636,7 +1669,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             case KeyCodes.KEY_PAGEDOWN:
             case KeyCodes.KEY_PAGEUP:
             case KeyCodes.KEY_ESCAPE:
-                ; // NOP
+                // NOP
                 break;
             default:
                 if (textInputEnabled) {
@@ -1924,8 +1957,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              * locked
              */
             if (!tb.getElement().getStyle().getWidth().endsWith("px")) {
-                tb.setWidth((tb.getOffsetWidth() - selectedItemIcon
-                        .getOffsetWidth()) + "px");
+                int iconWidth = selectedItemIcon == null ? 0 : selectedItemIcon
+                        .getOffsetWidth();
+                tb.setWidth((tb.getOffsetWidth() - iconWidth) + "px");
             }
         }
     }
@@ -1983,7 +2017,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     }
 
     @Override
-    public Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         if ("textbox".equals(subPart)) {
             return tb.getElement();
         } else if ("button".equals(subPart)) {
@@ -1995,7 +2029,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     }
 
     @Override
-    public String getSubPartName(Element subElement) {
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         if (tb.getElement().isOrHasChild(subElement)) {
             return "textbox";
         } else if (popupOpener.getElement().isOrHasChild(subElement)) {
@@ -2017,7 +2051,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     }
 
     @Override
-    public void bindAriaCaption(Element captionElement) {
+    public void bindAriaCaption(
+            com.google.gwt.user.client.Element captionElement) {
         AriaHelper.bindCaption(tb, captionElement);
     }
 }

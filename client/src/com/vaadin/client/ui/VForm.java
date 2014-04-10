@@ -16,11 +16,11 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -135,11 +135,5 @@ public class VForm extends ComplexPanel implements KeyDownHandler {
             super.add(newLayoutWidget, fieldContainer);
         }
         lo = newLayoutWidget;
-    }
-
-    /** For internal use only. May be removed or replaced in the future. */
-    @Override
-    public void add(Widget child, Element container) {
-        super.add(child, container);
     }
 }

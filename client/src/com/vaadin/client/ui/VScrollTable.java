@@ -30,6 +30,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
@@ -65,7 +66,6 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -326,13 +326,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             ArrayList<SelectionRange> ranges = new ArrayList<SelectionRange>(2);
 
             int endOfFirstRange = row.getIndex() - 1;
-            if (!(endOfFirstRange - startRow.getIndex() < 0)) {
+            if (endOfFirstRange >= startRow.getIndex()) {
                 // create range of first part unless its length is < 1
                 ranges.add(new SelectionRange(startRow, endOfFirstRange
                         - startRow.getIndex() + 1));
             }
             int startOfSecondRange = row.getIndex() + 1;
-            if (!(getEndIndex() - startOfSecondRange < 0)) {
+            if (getEndIndex() >= startOfSecondRange) {
                 // create range of second part unless its length is < 1
                 VScrollTableRow startOfRange = scrollBody
                         .getRowByRowIndex(startOfSecondRange);
@@ -348,7 +348,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             return startRow.getIndex() + length - 1;
         }
 
-    };
+    }
 
     private final HashSet<SelectionRange> selectedRowRanges = new HashSet<SelectionRange>();
 
@@ -862,6 +862,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // Send the selected row ranges
             client.updateVariable(paintableId, "selectedRanges",
                     ranges.toArray(new String[selectedRowRanges.size()]), false);
+            selectedRowRanges.clear();
 
             // clean selectedRowKeys so that they don't contain excess values
             for (Iterator<String> iterator = selectedRowKeys.iterator(); iterator
@@ -5558,7 +5559,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     com.google.gwt.dom.client.Element target) {
 
                 TooltipInfo info = null;
-                final Element targetTdOrTr = getTdOrTr((Element) target.cast());
+                final Element targetTdOrTr = getTdOrTr(target);
                 if (targetTdOrTr != null
                         && "td".equals(targetTdOrTr.getTagName().toLowerCase())) {
                     TableCellElement td = (TableCellElement) targetTdOrTr
@@ -5583,8 +5584,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 // Iterate upwards until we find the TR element
                 Element element = target;
                 while (element != null
-                        && element.getParentElement().cast() != thisTrElement) {
-                    element = element.getParentElement().cast();
+                        && element.getParentElement() != thisTrElement) {
+                    element = element.getParentElement();
                 }
                 return element;
             }
@@ -6054,8 +6055,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         && rowKeyIsSelected(rowKey)) {
 
                     // Create a drag image of ALL rows
-                    ev.createDragImage(
-                            (Element) scrollBody.tBodyElement.cast(), true);
+                    ev.createDragImage(scrollBody.tBodyElement, true);
 
                     // Hide rows which are not selected
                     Element dragImage = ev.getDragImage();
@@ -7107,7 +7107,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 Element tr = row.getElement();
                 Element element = elementOver;
                 while (element != null && element.getParentElement() != tr) {
-                    element = (Element) element.getParentElement();
+                    element = element.getParentElement();
                 }
                 int childIndex = DOM.getChildIndex(tr, element);
                 dropDetails.colkey = tHead.getHeaderCell(childIndex)
@@ -7850,7 +7850,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     + "\\[(\\d+)\\]");
 
     @Override
-    public Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         if (SUBPART_ROW_COL_REGEXP.test(subPart)) {
             MatchResult result = SUBPART_ROW_COL_REGEXP.exec(subPart);
             int rowIx = Integer.valueOf(result.getGroup(1));
@@ -7892,7 +7892,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     }
 
     @Override
-    public String getSubPartName(Element subElement) {
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         Widget widget = Util.findWidget(subElement, null);
         if (widget instanceof HeaderCell) {
             return SUBPART_HEADER + "[" + tHead.visibleCells.indexOf(widget)

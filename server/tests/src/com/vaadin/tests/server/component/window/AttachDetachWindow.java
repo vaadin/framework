@@ -31,7 +31,7 @@ public class AttachDetachWindow {
     private class TestWindow extends Window implements TestContainer {
         boolean windowAttachCalled = false;
         boolean windowDetachCalled = false;
-        private TestContent testContent = new TestContent();;
+        private TestContent testContent = new TestContent();
 
         TestWindow() {
             setContent(testContent);
@@ -110,7 +110,7 @@ public class AttachDetachWindow {
     private class TestUI extends UI implements TestContainer {
         boolean rootAttachCalled = false;
         boolean rootDetachCalled = false;
-        private TestContent testContent = new TestContent();;
+        private TestContent testContent = new TestContent();
 
         public TestUI() {
             setContent(testContent);

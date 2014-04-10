@@ -17,7 +17,6 @@ package com.vaadin.client.ui.gridlayout;
 
 import java.util.Map.Entry;
 
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
@@ -49,14 +48,15 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
             this) {
 
         @Override
-        protected ComponentConnector getChildComponent(Element element) {
+        protected ComponentConnector getChildComponent(
+                com.google.gwt.user.client.Element element) {
             return getWidget().getComponent(element);
         }
 
         @Override
         protected LayoutClickRpc getLayoutClickRPC() {
             return getRpcProxy(GridLayoutServerRpc.class);
-        };
+        }
 
     };
 

@@ -15,19 +15,17 @@
  */
 package com.vaadin.client.ui.accordion;
 
-import java.util.Iterator;
-
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VAccordion;
 import com.vaadin.client.ui.VAccordion.StackItem;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.client.ui.tabsheet.TabsheetBaseConnector;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.accordion.AccordionState;
 import com.vaadin.ui.Accordion;
 
 @Connect(Accordion.class)
@@ -35,35 +33,32 @@ public class AccordionConnector extends TabsheetBaseConnector implements
         SimpleManagedLayout, MayScrollChildren {
 
     @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidget().selectedUIDLItemIndex = -1;
-        super.updateFromUIDL(uidl, client);
+    protected void init() {
+        super.init();
+        getWidget().setConnector(this);
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
         /*
          * Render content after all tabs have been created and we know how large
          * the content area is
          */
-        if (getWidget().selectedUIDLItemIndex >= 0) {
+        if (getWidget().selectedItemIndex >= 0) {
             StackItem selectedItem = getWidget().getStackItem(
-                    getWidget().selectedUIDLItemIndex);
-            UIDL selectedTabUIDL = getWidget().lazyUpdateMap
-                    .remove(selectedItem);
-            getWidget().open(getWidget().selectedUIDLItemIndex);
+                    getWidget().selectedItemIndex);
 
-            selectedItem.setContent(selectedTabUIDL);
-        } else if (isRealUpdate(uidl) && getWidget().getOpenStackItem() != null) {
+            getWidget().open(getWidget().selectedItemIndex);
+
+            ComponentConnector contentConnector = getChildComponents().get(0);
+            if (contentConnector != null) {
+                selectedItem.setContent(contentConnector.getWidget());
+            }
+        } else if (getWidget().getOpenStackItem() != null) {
             getWidget().close(getWidget().getOpenStackItem());
         }
-
-        // finally render possible hidden tabs
-        if (getWidget().lazyUpdateMap.size() > 0) {
-            for (Iterator iterator = getWidget().lazyUpdateMap.keySet()
-                    .iterator(); iterator.hasNext();) {
-                StackItem item = (StackItem) iterator.next();
-                item.setContent(getWidget().lazyUpdateMap.get(item));
-            }
-            getWidget().lazyUpdateMap.clear();
-        }
-
     }
 
     @Override
@@ -123,14 +118,24 @@ public class AccordionConnector extends TabsheetBaseConnector implements
             openTab.setHeight(spaceForOpenItem);
         } else {
             openTab.setHeightFromWidget();
-
         }
-
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ConnectorHierarchyChangeEvent.
+     * ConnectorHierarchyChangeHandler
+     * #onConnectorHierarchyChange(com.vaadin.client
+     * .ConnectorHierarchyChangeEvent)
+     */
     @Override
     public void onConnectorHierarchyChange(
             ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
-        // TODO Move code from updateFromUIDL to this method
+    }
+
+    @Override
+    public AccordionState getState() {
+        return (AccordionState) super.getState();
     }
 }

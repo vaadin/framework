@@ -37,9 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;

@@ -19,12 +19,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
 
@@ -94,17 +95,29 @@ public class VDragEvent {
      * 
      * @return the element in {@link VDropHandler} on which mouse cursor is on
      */
-    public Element getElementOver() {
+    public com.google.gwt.user.client.Element getElementOver() {
         if (elementOver != null) {
-            return elementOver;
+            return DOM.asOld(elementOver);
         } else if (currentGwtEvent != null) {
             return currentGwtEvent.getEventTarget().cast();
         }
         return null;
     }
 
-    public void setElementOver(Element targetElement) {
+    /**
+     * @deprecated As of 7.2, call or override {@link #setElementOver(Element)}
+     *             instead
+     */
+    @Deprecated
+    public void setElementOver(com.google.gwt.user.client.Element targetElement) {
         elementOver = targetElement;
+    }
+
+    /**
+     * @since 7.2
+     */
+    public void setElementOver(Element targetElement) {
+        setElementOver(DOM.asOld(targetElement));
     }
 
     /**
@@ -121,9 +134,33 @@ public class VDragEvent {
      * to HTML5 DataTransfer
      * 
      * @param node
+     * @deprecated As of 7.2, call or override {@link #setDragImage(Element)}
+     *             instead
+     */
+    @Deprecated
+    public void setDragImage(com.google.gwt.user.client.Element node) {
+        setDragImage(node, DEFAULT_OFFSET, DEFAULT_OFFSET);
+    }
+
+    /**
+     * Sets the drag image used for current drag and drop operation. Drag image
+     * is displayed next to mouse cursor during drag and drop.
+     * <p>
+     * The element to be used as drag image will automatically get CSS style
+     * name "v-drag-element".
+     * 
+     * TODO decide if this method should be here or in {@link VTransferable} (in
+     * HTML5 it is in DataTransfer) or {@link VDragAndDropManager}
+     * 
+     * TODO should be possible to override behavior. Like to proxy the element
+     * to HTML5 DataTransfer
+     * 
+     * @param node
+     * 
+     * @since 7.2
      */
     public void setDragImage(Element node) {
-        setDragImage(node, DEFAULT_OFFSET, DEFAULT_OFFSET);
+        setDragImage(DOM.asOld(node));
     }
 
     /**
@@ -150,19 +187,44 @@ public class VDragEvent {
      *            the horizontal offset of drag image from mouse cursor
      * @param offsetY
      *            the vertical offset of drag image from mouse cursor
+     * @deprecated As of 7.2, call or override
+     *             {@link #setDragImage(Element,int,int)} instead
      */
-    public void setDragImage(Element element, int offsetX, int offsetY) {
+    @Deprecated
+    public void setDragImage(com.google.gwt.user.client.Element element,
+            int offsetX, int offsetY) {
         element.getStyle().setMarginLeft(offsetX, Unit.PX);
         element.getStyle().setMarginTop(offsetY, Unit.PX);
         VDragAndDropManager.get().setDragElement(element);
+
+    }
+
+    /**
+     * Sets the drag image used for current drag and drop operation. Drag image
+     * is displayed next to mouse cursor during drag and drop.
+     * <p>
+     * The element to be used as drag image will automatically get CSS style
+     * name "v-drag-element".
+     * 
+     * @param element
+     *            the dom element to be positioned next to mouse cursor
+     * @param offsetX
+     *            the horizontal offset of drag image from mouse cursor
+     * @param offsetY
+     *            the vertical offset of drag image from mouse cursor
+     * 
+     * @since 7.2
+     */
+    public void setDragImage(Element element, int offsetX, int offsetY) {
+        setDragImage(DOM.asOld(element), offsetX, offsetY);
     }
 
     /**
      * @return the current Element used as a drag image (aka drag proxy) or null
      *         if drag image is not currently set for this drag operation.
      */
-    public Element getDragImage() {
-        return (Element) VDragAndDropManager.get().getDragElement();
+    public com.google.gwt.user.client.Element getDragImage() {
+        return DOM.asOld(VDragAndDropManager.get().getDragElement());
     }
 
     /**
@@ -172,8 +234,12 @@ public class VDragEvent {
      * @param alignImageToEvent
      *            if true, proxy image is aligned to start event, else next to
      *            mouse cursor
+     * @deprecated As of 7.2, call or override
+     *             {@link #createDragImage(Element,boolean)} instead
      */
-    public void createDragImage(Element element, boolean alignImageToEvent) {
+    @Deprecated
+    public void createDragImage(com.google.gwt.user.client.Element element,
+            boolean alignImageToEvent) {
         Element cloneNode = (Element) element.cloneNode(true);
         if (BrowserInfo.get().isIE()) {
             if (cloneNode.getTagName().toLowerCase().equals("tr")) {
@@ -196,6 +262,19 @@ public class VDragEvent {
             setDragImage(cloneNode);
         }
 
+    }
+
+    /**
+     * Automatically tries to create a proxy image from given element.
+     * 
+     * @param element
+     * @param alignImageToEvent
+     *            if true, proxy image is aligned to start event, else next to
+     *            mouse cursor
+     * @since 7.2
+     */
+    public void createDragImage(Element element, boolean alignImageToEvent) {
+        createDragImage(DOM.asOld(element), alignImageToEvent);
     }
 
 }

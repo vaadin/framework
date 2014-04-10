@@ -18,6 +18,7 @@ package com.vaadin.client.ui.orderedlayout;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
@@ -25,7 +26,6 @@ import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
@@ -141,9 +141,14 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
     /**
      * {@inheritDoc}
+     * 
+     * @deprecated As of 7.2, use or override
+     *             {@link #insert(Widget, Element, int, boolean)} instead.
      */
     @Override
-    protected void insert(Widget child, Element container, int beforeIndex,
+    @Deprecated
+    protected void insert(Widget child,
+            com.google.gwt.user.client.Element container, int beforeIndex,
             boolean domInsert) {
         // Validate index; adjust if the widget is already a child of this
         // panel.
@@ -156,7 +161,8 @@ public class VAbstractOrderedLayout extends FlowPanel {
         getChildren().insert(child, beforeIndex);
 
         // Physical attach.
-        container = expandWrapper != null ? expandWrapper : getElement();
+        container = expandWrapper != null ? DOM.asOld(expandWrapper)
+                : getElement();
         if (domInsert) {
             if (spacing) {
                 if (beforeIndex != 0) {
@@ -181,6 +187,17 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
         // Adopt.
         adopt(child);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 7.2
+     */
+    @Override
+    protected void insert(Widget child, Element container, int beforeIndex,
+            boolean domInsert) {
+        insert(child, DOM.asOld(container), beforeIndex, domInsert);
     }
 
     /**
@@ -220,14 +237,30 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * @param widgetElement
      *            The element of the widget ( Same as getWidget().getElement() )
      * @return
+     * @deprecated As of 7.2, call or override {@link #getSlot(Element)} instead
      */
-    public Slot getSlot(Element widgetElement) {
+    @Deprecated
+    public Slot getSlot(com.google.gwt.user.client.Element widgetElement) {
         for (Map.Entry<Widget, Slot> entry : widgetToSlot.entrySet()) {
             if (entry.getKey().getElement() == widgetElement) {
                 return entry.getValue();
             }
         }
         return null;
+    }
+
+    /**
+     * Gets a slot based on the widget element. If no slot is found then null is
+     * returned.
+     * 
+     * @param widgetElement
+     *            The element of the widget ( Same as getWidget().getElement() )
+     * @return
+     * 
+     * @since 7.2
+     */
+    public Slot getSlot(Element widgetElement) {
+        return getSlot(DOM.asOld(widgetElement));
     }
 
     /**
@@ -257,8 +290,12 @@ public class VAbstractOrderedLayout extends FlowPanel {
      *            The wrapping element
      * 
      * @return The caption position
+     * @deprecated As of 7.2, call or override
+     *             {@link #getCaptionPositionFromElement(Element)} instead
      */
-    public CaptionPosition getCaptionPositionFromElement(Element captionWrap) {
+    @Deprecated
+    public CaptionPosition getCaptionPositionFromElement(
+            com.google.gwt.user.client.Element captionWrap) {
         RegExp captionPositionRegexp = RegExp.compile("v-caption-on-(\\S+)");
 
         // Get caption position from the classname
@@ -274,16 +311,34 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
+     * Deducts the caption position by examining the wrapping element.
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     * 
+     * @param captionWrap
+     *            The wrapping element
+     * 
+     * @return The caption position
+     * @since 7.2
+     */
+    public CaptionPosition getCaptionPositionFromElement(Element captionWrap) {
+        return getCaptionPositionFromElement(DOM.asOld(captionWrap));
+    }
+
+    /**
      * Update the offset off the caption relative to the slot
      * <p>
      * For internal use only. May be removed or replaced in the future.
      * 
      * @param caption
      *            The caption element
+     * @deprecated As of 7.2, call or override
+     *             {@link #updateCaptionOffset(Element)} instead
      */
-    public void updateCaptionOffset(Element caption) {
+    @Deprecated
+    public void updateCaptionOffset(com.google.gwt.user.client.Element caption) {
 
-        Element captionWrap = caption.getParentElement().cast();
+        Element captionWrap = caption.getParentElement();
 
         Style captionWrapStyle = captionWrap.getStyle();
         captionWrapStyle.clearPaddingTop();
@@ -338,6 +393,19 @@ public class VAbstractOrderedLayout extends FlowPanel {
                 }
             }
         }
+    }
+
+    /**
+     * Update the offset off the caption relative to the slot
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     * 
+     * @param caption
+     *            The caption element
+     * @since 7.2
+     */
+    public void updateCaptionOffset(Element caption) {
+        updateCaptionOffset(DOM.asOld(caption));
     }
 
     /**

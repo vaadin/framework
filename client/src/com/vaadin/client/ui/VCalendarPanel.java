@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -43,7 +44,6 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -1090,12 +1090,18 @@ public class VCalendarPanel extends FocusableFlexTable implements
      *            The keydown/keypress event
      */
     private void handleKeyPress(DomEvent<?> event) {
+        // Special handling for events from time ListBoxes.
         if (time != null
                 && time.getElement().isOrHasChild(
                         (Node) event.getNativeEvent().getEventTarget().cast())) {
             int nativeKeyCode = event.getNativeEvent().getKeyCode();
             if (nativeKeyCode == getSelectKey()) {
-                onSubmit(); // submit happens if enter key hit down on listboxes
+                onSubmit(); // submit if enter key hit down on listboxes
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            if (nativeKeyCode == getCloseKey()) {
+                onCancel(); // cancel if ESC key hit down on listboxes
                 event.preventDefault();
                 event.stopPropagation();
             }
@@ -1189,6 +1195,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         } else if (keycode == getCloseKey()) {
             // TODO fire listener, on users responsibility??
 
+            onCancel();
             return true;
         }
         return false;
@@ -1240,6 +1247,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
             return true;
 
         } else if (keycode == getCloseKey() || keycode == KeyCodes.KEY_TAB) {
+            onCancel();
 
             // TODO fire close event
 
@@ -2030,7 +2038,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private Date rangeEnd;
 
     @Override
-    public String getSubPartName(Element subElement) {
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         if (contains(nextMonth, subElement)) {
             return SUBPART_NEXT_MONTH;
         } else if (contains(prevMonth, subElement)) {
@@ -2089,7 +2097,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     @Override
-    public Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         if (SUBPART_NEXT_MONTH.equals(subPart)) {
             return nextMonth.getElement();
         }
@@ -2134,7 +2142,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
 
         if (SUBPART_MONTH_YEAR_HEADER.equals(subPart)) {
-            return (Element) getCellFormatter().getElement(0, 2).getChild(0);
+            return DOM.asOld((Element) getCellFormatter().getElement(0, 2)
+                    .getChild(0));
         }
         return null;
     }

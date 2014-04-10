@@ -1,4 +1,0 @@
-@mixin test ($p1) {
-	color: $p1;
-}
-@include test(foo, bar);

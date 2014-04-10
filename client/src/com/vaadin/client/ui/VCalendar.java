@@ -22,10 +22,10 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;

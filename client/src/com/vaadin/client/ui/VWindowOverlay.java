@@ -16,8 +16,8 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.vaadin.client.ApplicationConnection;
 
@@ -38,13 +38,13 @@ public class VWindowOverlay extends VOverlay {
      *         {@link ApplicationConnection} cannot be determined.
      */
     @Override
-    public Element getOverlayContainer() {
+    public com.google.gwt.user.client.Element getOverlayContainer() {
         ApplicationConnection ac = getApplicationConnection();
         if (ac == null) {
             return super.getOverlayContainer();
         } else {
             Element overlayContainer = getOverlayContainer(ac);
-            return overlayContainer;
+            return DOM.asOld(overlayContainer);
         }
     }
 
@@ -58,7 +58,8 @@ public class VWindowOverlay extends VOverlay {
      *            A reference to {@link ApplicationConnection}
      * @return The overlay container
      */
-    public static Element getOverlayContainer(ApplicationConnection ac) {
+    public static com.google.gwt.user.client.Element getOverlayContainer(
+            ApplicationConnection ac) {
         String id = ac.getConfiguration().getRootPanelId();
         id = id += "-window-overlays";
         Element container = DOM.getElementById(id);
@@ -72,6 +73,6 @@ public class VWindowOverlay extends VOverlay {
             RootPanel.get().getElement().appendChild(container);
         }
 
-        return container;
+        return DOM.asOld(container);
     }
 }

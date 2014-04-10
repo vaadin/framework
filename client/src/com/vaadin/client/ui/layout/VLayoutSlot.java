@@ -16,18 +16,18 @@
 package com.vaadin.client.ui.layout;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.VCaption;
 import com.vaadin.shared.ui.AlignmentInfo;
 
 public abstract class VLayoutSlot {
 
-    private final Element wrapper = Document.get().createDivElement().cast();
+    private final Element wrapper = Document.get().createDivElement();
 
     private AlignmentInfo alignment;
     private VCaption caption;
@@ -288,8 +288,8 @@ public abstract class VLayoutSlot {
         return isVertical ? isRelativeHeight() : isRelativeWidth();
     }
 
-    public Element getWrapperElement() {
-        return wrapper;
+    public com.google.gwt.user.client.Element getWrapperElement() {
+        return DOM.asOld(wrapper);
     }
 
     public void setExpandRatio(double expandRatio) {

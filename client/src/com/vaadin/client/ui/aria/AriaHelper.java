@@ -19,8 +19,8 @@ package com.vaadin.client.ui.aria;
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.InvalidValue;
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -47,7 +47,8 @@ public class AriaHelper {
                 ((HandlesAriaCaption) widget).bindAriaCaption(null);
             } else {
                 ensureHasId(captionElement);
-                ((HandlesAriaCaption) widget).bindAriaCaption(captionElement);
+                ((HandlesAriaCaption) widget).bindAriaCaption(DOM
+                        .asOld(captionElement));
             }
         } else if (captionElement != null) {
             // Handle the default case

@@ -1,6 +1,0 @@
-a {
-	color: #660000;
-	&:hover {color: #000000;}
-	&:visited {color:#660066;}
-	&:active {color: #ffffff;}
-}

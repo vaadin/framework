@@ -197,7 +197,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
         if (element != getWidget().getElement()) {
 
             VMenuBar.CustomMenuItem item = getWidget().getMenuItemWithElement(
-                    (com.google.gwt.user.client.Element) element);
+                    element);
             if (item != null) {
                 info = item.getTooltip();
             }

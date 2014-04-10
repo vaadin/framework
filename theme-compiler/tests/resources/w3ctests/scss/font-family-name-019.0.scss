@@ -1,9 +1,0 @@
-/* Source: http://test.csswg.org/suites/css2.1/20110323/html4/font-family-name-019.htm */
-
-            body { font-size: 36px; }
-            span#verify { font-family: CSSTest Verify; }
-            div#test { font-family: CSSTest Fallback; }
-            p {
-                font-family: CSSTest Unknown;
-            }
-        

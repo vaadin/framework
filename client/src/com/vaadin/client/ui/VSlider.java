@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
@@ -28,20 +29,18 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasValue;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ContainerResizedListener;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 
 public class VSlider extends SimpleFocusablePanel implements Field,
-        ContainerResizedListener, HasValue<Double> {
+        HasValue<Double> {
 
     public static final String CLASSNAME = "v-slider";
 
@@ -199,7 +198,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             return;
         }
 
-        final Element p = getElement().getParentElement().cast();
+        final Element p = getElement().getParentElement();
         if (p.getPropertyInt(domProperty) > 50) {
             if (isVertical()) {
                 setHeight();
@@ -214,7 +213,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
                 @Override
                 public void execute() {
-                    final Element p = getElement().getParentElement().cast();
+                    final Element p = getElement().getParentElement();
                     if (p.getPropertyInt(domProperty) > (MIN_SIZE + 5)) {
                         if (isVertical()) {
                             setHeight();
@@ -432,7 +431,6 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         }
     }
 
-    @Override
     public void iLayout() {
         if (isVertical()) {
             setHeight();

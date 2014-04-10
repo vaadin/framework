@@ -1,8 +1,0 @@
-.base-0  { color: green; }
-.base-1  { display: block; }
-.base-2  { border: 1px solid blue; }
-.added {
-  @for $i from 0 to 3 {
-    @extend .base-#{$i};
-  }
-}

@@ -50,7 +50,7 @@ public class EnableDisablePush extends AbstractTestUI {
             } catch (UIDetachedException e) {
             }
         }
-    };
+    }
 
     @Override
     protected void setup(VaadinRequest request) {

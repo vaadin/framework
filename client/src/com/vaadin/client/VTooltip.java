@@ -18,6 +18,7 @@ package com.vaadin.client;
 import com.google.gwt.aria.client.LiveValue;
 import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -30,7 +31,6 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -410,15 +410,14 @@ public class VTooltip extends VWindowOverlay {
 
         private void handleShowHide(DomEvent domEvent, boolean isFocused) {
             Event event = Event.as(domEvent.getNativeEvent());
-            com.google.gwt.dom.client.Element element = Element.as(event
-                    .getEventTarget());
+            Element element = Element.as(event.getEventTarget());
 
             // We can ignore move event if it's handled by move or over already
             if (currentElement == element && handledByFocus == true) {
                 return;
             }
 
-            boolean connectorAndTooltipFound = resolveConnector((com.google.gwt.user.client.Element) element);
+            boolean connectorAndTooltipFound = resolveConnector(element);
             if (!connectorAndTooltipFound) {
                 if (isShowing()) {
                     handleHideEvent();

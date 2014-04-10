@@ -266,12 +266,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
      */
     private void reinitUI(UI ui, VaadinRequest request) {
         UI.setCurrent(ui);
-
-        // Fire fragment change if the fragment has changed
-        String location = request.getParameter("v-loc");
-        if (location != null) {
-            ui.getPage().updateLocation(location);
-        }
+        ui.doReinit(request);
     }
 
     /**

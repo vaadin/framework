@@ -16,7 +16,6 @@
 package com.vaadin.client.ui.csslayout;
 
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
@@ -46,7 +45,8 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
             this) {
 
         @Override
-        protected ComponentConnector getChildComponent(Element element) {
+        protected ComponentConnector getChildComponent(
+                com.google.gwt.user.client.Element element) {
             return Util.getConnectorForElement(getConnection(), getWidget(),
                     element);
         }
@@ -54,7 +54,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
         @Override
         protected LayoutClickRpc getLayoutClickRPC() {
             return getRpcProxy(CssLayoutServerRpc.class);
-        };
+        }
     };
 
     private final FastStringMap<VCaption> childIdToCaption = FastStringMap

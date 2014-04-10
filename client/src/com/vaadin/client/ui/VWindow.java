@@ -28,6 +28,7 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
@@ -46,7 +47,6 @@ import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
@@ -175,6 +175,8 @@ public class VWindow extends VWindowOverlay implements
 
     // Prevents leaving the window with the Tab key when true
     private boolean doTabStop;
+
+    private boolean hasFocus;
 
     /**
      * If centered (via UIDL), the window should stay in the centered -mode
@@ -330,12 +332,12 @@ public class VWindow extends VWindowOverlay implements
         }
     }
 
-    protected Element getModalityCurtain() {
+    protected com.google.gwt.user.client.Element getModalityCurtain() {
         if (modalityCurtain == null) {
             modalityCurtain = DOM.createDiv();
             modalityCurtain.setClassName(CLASSNAME + "-modalitycurtain");
         }
-        return modalityCurtain;
+        return DOM.asOld(modalityCurtain);
     }
 
     protected void constructDOM() {
@@ -677,9 +679,14 @@ public class VWindow extends VWindowOverlay implements
         }
         super.hide();
 
+        int curIndex = windowOrder.indexOf(this);
         // Remove window from windowOrder to avoid references being left
         // hanging.
-        windowOrder.remove(this);
+        windowOrder.remove(curIndex);
+        // Update the z-indices of any remaining windows
+        while (curIndex < windowOrder.size()) {
+            windowOrder.get(curIndex).setWindowOrder(curIndex++);
+        }
     }
 
     private void fixIE8FocusCaptureIssue() {
@@ -930,12 +937,12 @@ public class VWindow extends VWindowOverlay implements
     }
 
     @Override
-    protected Element getContainerElement() {
+    protected com.google.gwt.user.client.Element getContainerElement() {
         // in GWT 1.5 this method is used in PopupPanel constructor
         if (contents == null) {
             return super.getContainerElement();
         }
-        return contents;
+        return DOM.asOld(contents);
     }
 
     private Event headerDragPending;
@@ -984,14 +991,14 @@ public class VWindow extends VWindowOverlay implements
                 }
                 bubble = false;
             }
+            if (type == Event.ONCLICK) {
+                activateOnClick();
+            }
         } else if (dragging || !contents.isOrHasChild(target)) {
             onDragEvent(event);
             bubble = false;
         } else if (type == Event.ONCLICK) {
-            // clicked inside window, ensure to be on top
-            if (!isActive()) {
-                bringToFront();
-            }
+            activateOnClick();
         }
 
         /*
@@ -1010,6 +1017,13 @@ public class VWindow extends VWindowOverlay implements
             // Super.onBrowserEvent takes care of Handlers added by the
             // ClickEventHandler
             super.onBrowserEvent(event);
+        }
+    }
+
+    private void activateOnClick() {
+        // clicked inside window or inside header, ensure to be on top
+        if (!isActive()) {
+            bringToFront();
         }
     }
 
@@ -1298,6 +1312,10 @@ public class VWindow extends VWindowOverlay implements
 
     @Override
     public void onKeyDown(KeyDownEvent event) {
+        if (hasFocus && event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE) {
+            event.preventDefault();
+        }
+
         if (shortcutHandler != null) {
             shortcutHandler
                     .handleKeyboardEvent(Event.as(event.getNativeEvent()));
@@ -1314,6 +1332,8 @@ public class VWindow extends VWindowOverlay implements
 
     @Override
     public void onBlur(BlurEvent event) {
+        hasFocus = false;
+
         if (client.hasEventListeners(this, EventId.BLUR)) {
             client.updateVariable(id, EventId.BLUR, "", true);
         }
@@ -1321,6 +1341,8 @@ public class VWindow extends VWindowOverlay implements
 
     @Override
     public void onFocus(FocusEvent event) {
+        hasFocus = true;
+
         if (client.hasEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(id, EventId.FOCUS, "", true);
         }

@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.DragAndDropService;
 import com.vaadin.server.GlobalResourceHandler;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.StreamVariable;
@@ -271,8 +272,16 @@ public class ConnectorTracker implements Serializable {
         // Ignore connectors that have been unregistered but not yet cleaned up
         if (unregisteredConnectors.contains(connector)) {
             return null;
+        } else if (connector != null) {
+            return connector;
+        } else {
+            DragAndDropService service = uI.getSession()
+                    .getDragAndDropService();
+            if (connectorId.equals(service.getConnectorId())) {
+                return service;
+            }
         }
-        return connector;
+        return null;
     }
 
     /**
@@ -635,7 +644,7 @@ public class ConnectorTracker implements Serializable {
             stringDiffStates.put(key, diffStates.get(key).toString());
         }
         out.writeObject(stringDiffStates);
-    };
+    }
 
     /* Special serialization to JSONObjects which are not serializable */
     private void readObject(java.io.ObjectInputStream in) throws IOException,

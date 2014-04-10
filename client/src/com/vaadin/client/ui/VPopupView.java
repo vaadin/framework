@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -29,7 +30,6 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTML;
@@ -356,7 +356,7 @@ public class VPopupView extends HTML implements Iterable<Widget> {
         }
 
         @Override
-        public Element getContainerElement() {
+        public com.google.gwt.user.client.Element getContainerElement() {
             return super.getContainerElement();
         }
 

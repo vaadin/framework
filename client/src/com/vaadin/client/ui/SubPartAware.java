@@ -15,7 +15,6 @@
  */
 package com.vaadin.client.ui;
 
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.componentlocator.ComponentLocator;
 
@@ -36,7 +35,7 @@ public interface SubPartAware {
      * @return The element identified by subPart or null if the element could
      *         not be found.
      */
-    Element getSubPartElement(String subPart);
+    com.google.gwt.user.client.Element getSubPartElement(String subPart);
 
     /**
      * Provides an identifier that identifies the element within the component.
@@ -57,6 +56,6 @@ public interface SubPartAware {
      * @return An identifier that uniquely identifies {@code subElement} or null
      *         if no identifier could be provided.
      */
-    String getSubPartName(Element subElement);
+    String getSubPartName(com.google.gwt.user.client.Element subElement);
 
 }

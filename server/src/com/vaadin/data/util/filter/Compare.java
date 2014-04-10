@@ -37,7 +37,7 @@ public abstract class Compare implements Filter {
 
     public enum Operation {
         EQUAL, GREATER, LESS, GREATER_OR_EQUAL, LESS_OR_EQUAL
-    };
+    }
 
     private final Object propertyId;
     private final Operation operation;

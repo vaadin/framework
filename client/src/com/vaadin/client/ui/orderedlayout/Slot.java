@@ -21,8 +21,8 @@ import java.util.List;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -332,8 +332,8 @@ public final class Slot extends SimplePanel {
      * 
      * @return
      */
-    public Element getSpacingElement() {
-        return spacer;
+    public com.google.gwt.user.client.Element getSpacingElement() {
+        return DOM.asOld(spacer);
     }
 
     /**
@@ -516,7 +516,7 @@ public final class Slot extends SimplePanel {
 
         // Icon
         if (this.icon != null) {
-            icon.getElement().removeFromParent();
+            this.icon.getElement().removeFromParent();
         }
         if (icon != null) {
             caption.insertFirst(icon.getElement());
@@ -629,8 +629,8 @@ public final class Slot extends SimplePanel {
     /**
      * Get the slots caption element
      */
-    public Element getCaptionElement() {
-        return caption;
+    public com.google.gwt.user.client.Element getCaptionElement() {
+        return DOM.asOld(caption);
     }
 
     private boolean relativeWidth = false;
@@ -725,11 +725,11 @@ public final class Slot extends SimplePanel {
      * @see com.google.gwt.user.client.ui.SimplePanel#getContainerElement()
      */
     @Override
-    protected Element getContainerElement() {
+    protected com.google.gwt.user.client.Element getContainerElement() {
         if (captionWrap == null) {
             return getElement();
         } else {
-            return captionWrap;
+            return DOM.asOld(captionWrap);
         }
     }
 

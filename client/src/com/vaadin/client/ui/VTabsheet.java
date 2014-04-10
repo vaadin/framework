@@ -25,6 +25,7 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.dom.client.TableCellElement;
@@ -42,9 +43,10 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -53,21 +55,23 @@ import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.TooltipInfo;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
+import com.vaadin.client.VTooltip;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.EventId;
+import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.ComponentStateUtil;
-import com.vaadin.shared.ui.tabsheet.TabsheetBaseConstants;
-import com.vaadin.shared.ui.tabsheet.TabsheetConstants;
+import com.vaadin.shared.ui.tabsheet.TabState;
+import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
+import com.vaadin.shared.ui.tabsheet.TabsheetState;
 
 public class VTabsheet extends VTabsheetBase implements Focusable,
-        FocusHandler, BlurHandler, KeyDownHandler {
+        FocusHandler, BlurHandler, KeyDownHandler, SubPartAware {
 
     private static class VCloseEvent {
         private Tab tab;
@@ -140,8 +144,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
             DOM.appendChild(td, div);
 
-            tabCaption = new TabCaption(this, getTabsheet()
-                    .getApplicationConnection());
+            tabCaption = new TabCaption(this);
             add(tabCaption);
 
             Roles.getTabRole().setAriaLabelledbyProperty(getElement(),
@@ -162,9 +165,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         @Override
-        protected Element getContainerElement() {
+        protected com.google.gwt.user.client.Element getContainerElement() {
             // Attach caption element to div, not td
-            return div;
+            return DOM.asOld(div);
         }
 
         public boolean isEnabledOnServer() {
@@ -228,12 +231,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             return tabBar.getTabsheet();
         }
 
-        public void updateFromUIDL(UIDL tabUidl) {
-            tabCaption.updateCaption(tabUidl);
-
+        private void updateFromState(TabState tabState) {
+            tabCaption.update(tabState);
             // Apply the styleName set for the tab
-            String newStyleName = tabUidl
-                    .getStringAttribute(TabsheetConstants.TAB_STYLE_NAME);
+            String newStyleName = tabState.styleName;
             // Find the nth td element
             if (newStyleName != null && !newStyleName.isEmpty()) {
                 if (!newStyleName.equals(styleName)) {
@@ -253,7 +254,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 styleName = null;
             }
 
-            String newId = tabUidl.getStringAttribute("id");
+            String newId = tabState.id;
             if (newId != null && !newId.isEmpty()) {
                 td.setId(newId);
                 id = newId;
@@ -283,6 +284,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         public void focus() {
+            getTabsheet().scrollIntoView(this);
             focusImpl.focus(td);
         }
 
@@ -314,36 +316,43 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         private Element closeButton;
         private Tab tab;
 
-        TabCaption(Tab tab, ApplicationConnection client) {
-            super(client);
+        TabCaption(Tab tab) {
+            super(tab.getTabsheet().connector.getConnection());
             this.tab = tab;
 
             AriaHelper.ensureHasId(getElement());
         }
 
-        public boolean updateCaption(UIDL uidl) {
-            if (uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION)
-                    || uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ERROR_MESSAGE)) {
-                setTooltipInfo(new TooltipInfo(
-                        uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION),
-                        uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ERROR_MESSAGE)));
+        private boolean update(TabState tabState) {
+            if (tabState.description != null
+                    || tabState.componentError != null) {
+                setTooltipInfo(new TooltipInfo(tabState.description,
+                        tabState.componentError));
             } else {
                 setTooltipInfo(null);
             }
 
             // TODO need to call this instead of super because the caption does
             // not have an owner
-            boolean ret = updateCaptionWithoutOwner(
-                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_CAPTION),
-                    uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DISABLED),
-                    uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION),
-                    uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ERROR_MESSAGE),
-                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ICON),
-                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ICON_ALT));
+            String captionString = tabState.caption.isEmpty() ? null
+                    : tabState.caption;
+            boolean ret = updateCaptionWithoutOwner(captionString,
+                    !tabState.enabled,
+                    hasAttribute(tabState.description),
+                    hasAttribute(tabState.componentError),
+                    tab.getTabsheet().connector
+                            .getResourceUrl(ComponentConstants.ICON_RESOURCE
+                                    + tabState.key),
+                    tabState.iconAltText
+            );
 
-            setClosable(uidl.hasAttribute("closable"));
+            setClosable(tabState.closable);
 
             return ret;
+        }
+
+        private boolean hasAttribute(String string) {
+            return string != null && !string.trim().isEmpty();
         }
 
         private VTabsheet getTabsheet() {
@@ -406,8 +415,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             return width;
         }
 
-        public Element getCloseButton() {
-            return closeButton;
+        public com.google.gwt.user.client.Element getCloseButton() {
+            return DOM.asOld(closeButton);
         }
 
     }
@@ -448,8 +457,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             getTabsheet().sendTabClosedEvent(tabIndex);
         }
 
-        protected Element getContainerElement() {
-            return tr;
+        protected com.google.gwt.user.client.Element getContainerElement() {
+            return DOM.asOld(tr);
         }
 
         public int getTabCount() {
@@ -636,15 +645,25 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             currentFirst.recalculateCaptionWidth();
             return nextVisible;
         }
+
+        private void recalculateCaptionWidths() {
+            for (int i = 0; i < getTabCount(); ++i) {
+                getTab(i).recalculateCaptionWidth();
+            }
+        }
     }
 
-    public static final String CLASSNAME = "v-tabsheet";
+    // TODO using the CLASSNAME directly makes primaryStyleName for TabSheet of
+    // very limited use - all use of style names should be refactored in the
+    // future
+    public static final String CLASSNAME = TabsheetState.PRIMARY_STYLE_NAME;
 
-    public static final String TABS_CLASSNAME = "v-tabsheet-tabcontainer";
-    public static final String SCROLLER_CLASSNAME = "v-tabsheet-scroller";
+    public static final String TABS_CLASSNAME = CLASSNAME + "-tabcontainer";
+    public static final String SCROLLER_CLASSNAME = CLASSNAME + "-scroller";
 
     /** For internal use only. May be removed or replaced in the future. */
-    public final Element tabs; // tabbar and 'scroller' container
+    // tabbar and 'scroller' container
+    public final Element tabs;
     Tab focusedTab;
     /**
      * The tabindex property (position in the browser's focus cycle.) Named like
@@ -654,9 +673,12 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     private static final FocusImpl focusImpl = FocusImpl.getFocusImplForPanel();
 
-    private final Element scroller; // tab-scroller element
-    private final Element scrollerNext; // tab-scroller next button element
-    private final Element scrollerPrev; // tab-scroller prev button element
+    // tab-scroller element
+    private final Element scroller;
+    // tab-scroller next button element
+    private final Element scrollerNext;
+    // tab-scroller prev button element
+    private final Element scrollerPrev;
 
     /**
      * The index of the first visible tab (when scrolled)
@@ -665,7 +687,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     final TabBar tb = new TabBar(this);
     /** For internal use only. May be removed or replaced in the future. */
-    public final VTabsheetPanel tp = new VTabsheetPanel();
+    protected final VTabsheetPanel tabPanel = new VTabsheetPanel();
     /** For internal use only. May be removed or replaced in the future. */
     public final Element contentNode;
 
@@ -676,12 +698,16 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     private String currentStyle;
 
+    /** For internal use only. May be removed or replaced in the future. */
+    private int focusedTabIndex = 0;
+
     /**
      * @return Whether the tab could be selected or not.
      */
     private boolean canSelectTab(final int tabIndex) {
         Tab tab = tb.getTab(tabIndex);
-        if (client == null || disabled || waitingForResponse) {
+        if (getApplicationConnection() == null || disabled
+                || waitingForResponse) {
             return false;
         }
         if (!tab.isEnabledOnServer() || tab.isHiddenOnServer()) {
@@ -708,20 +734,54 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             addStyleDependentName("loading");
             // Hide the current contents so a loading indicator can be shown
             // instead
-            Widget currentlyDisplayedWidget = tp.getWidget(tp
-                    .getVisibleWidget());
-            currentlyDisplayedWidget.getElement().getParentElement().getStyle()
-                    .setVisibility(Visibility.HIDDEN);
-            client.updateVariable(id, "selected", tabKeys.get(tabIndex)
-                    .toString(), true);
+            getCurrentlyDisplayedWidget().getElement().getParentElement()
+                    .getStyle().setVisibility(Visibility.HIDDEN);
+
+            getRpcProxy().setSelected(tabKeys.get(tabIndex).toString());
+
             waitingForResponse = true;
 
             tb.getTab(tabIndex).focus(); // move keyboard focus to active tab
         }
     }
 
+    /**
+     * Returns the currently displayed widget in the tab panel.
+     * 
+     * @since 7.2
+     * @return currently displayed content widget
+     */
+    public Widget getCurrentlyDisplayedWidget() {
+        return tabPanel.getWidget(tabPanel.getVisibleWidget());
+    }
+
+    /**
+     * Returns the client to server RPC proxy for the tabsheet.
+     * 
+     * @since 7.2
+     * @return RPC proxy
+     */
+    protected TabsheetServerRpc getRpcProxy() {
+        return connector.getRpcProxy(TabsheetServerRpc.class);
+    }
+
+    /**
+     * For internal use only.
+     * 
+     * Avoid using this method directly and use appropriate superclass methods
+     * where applicable.
+     * 
+     * @deprecated since 7.2 - use more specific methods instead (getRpcProxy(),
+     *             getConnectorForWidget(Widget) etc.)
+     * @return ApplicationConnection
+     */
+    @Deprecated
     public ApplicationConnection getApplicationConnection() {
         return client;
+    }
+
+    private VTooltip getVTooltip() {
+        return getApplicationConnection().getVTooltip();
     }
 
     public void tabSizeMightHaveChanged(Tab tab) {
@@ -734,19 +794,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     }
 
     void sendTabClosedEvent(int tabIndex) {
-        client.updateVariable(id, "close", tabKeys.get(tabIndex), true);
-    }
-
-    boolean isDynamicWidth() {
-        ComponentConnector paintable = ConnectorMap.get(client).getConnector(
-                this);
-        return paintable.isUndefinedWidth();
-    }
-
-    boolean isDynamicHeight() {
-        ComponentConnector paintable = ConnectorMap.get(client).getConnector(
-                this);
-        return paintable.isUndefinedHeight();
+        getRpcProxy().closeTab(tabKeys.get(tabIndex));
     }
 
     public VTabsheet() {
@@ -780,7 +828,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         DOM.appendChild(getElement(), tabs);
 
         // Tabs
-        tp.setStyleName(CLASSNAME + "-tabsheetpanel");
+        tabPanel.setStyleName(CLASSNAME + "-tabsheetpanel");
         contentNode = DOM.createDiv();
         Roles.getTabpanelRole().set(contentNode);
 
@@ -796,7 +844,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         DOM.appendChild(scroller, scrollerNext);
 
         DOM.appendChild(getElement(), contentNode);
-        add(tp, contentNode);
+        add(tabPanel, contentNode);
         DOM.appendChild(getElement(), deco);
 
         DOM.appendChild(tabs, scroller);
@@ -846,7 +894,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     }
 
     /** For internal use only. May be removed or replaced in the future. */
-    public void handleStyleNames(UIDL uidl, AbstractComponentState state) {
+    public void handleStyleNames(AbstractComponentState state) {
         // Add proper stylenames for all elements (easier to prevent unwanted
         // style inheritance)
         if (ComponentStateUtil.hasStyles(state)) {
@@ -877,14 +925,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                     + "-content");
             DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
         }
-
-        if (uidl.hasAttribute("hidetabs")) {
-            tb.setVisible(false);
-            addStyleName(CLASSNAME + "-hidetabs");
-        } else {
-            tb.setVisible(true);
-            removeStyleName(CLASSNAME + "-hidetabs");
-        }
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -901,16 +941,16 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         int tabsWidth = tb.getOffsetWidth() - spacerWidth + spacerMinWidth;
 
         // Find content width
-        Style style = tp.getElement().getStyle();
+        Style style = tabPanel.getElement().getStyle();
         String overflow = style.getProperty("overflow");
         style.setProperty("overflow", "hidden");
         style.setPropertyPx("width", tabsWidth);
 
-        boolean hasTabs = tp.getWidgetCount() > 0;
+        boolean hasTabs = tabPanel.getWidgetCount() > 0;
 
         Style wrapperstyle = null;
         if (hasTabs) {
-            wrapperstyle = tp.getWidget(tp.getVisibleWidget()).getElement()
+            wrapperstyle = getCurrentlyDisplayedWidget().getElement()
                     .getParentElement().getStyle();
             wrapperstyle.setPropertyPx("width", tabsWidth);
         }
@@ -918,7 +958,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         int contentWidth = 0;
         if (hasTabs) {
-            contentWidth = tp.getWidget(tp.getVisibleWidget()).getOffsetWidth();
+            contentWidth = getCurrentlyDisplayedWidget().getOffsetWidth();
         }
         style.setProperty("overflow", overflow);
 
@@ -941,26 +981,22 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     }
 
     @Override
-    public void renderTab(final UIDL tabUidl, int index, boolean selected,
-            boolean hidden) {
+    public void renderTab(final TabState tabState, int index) {
         Tab tab = tb.getTab(index);
         if (tab == null) {
             tab = tb.addTab();
         }
-        if (selected) {
-            tb.selectTab(index);
-            renderContent(tabUidl.getChildUIDL(0));
-        }
-        tab.updateFromUIDL(tabUidl);
+
+        tab.updateFromState(tabState);
         tab.setEnabledOnServer((!disabledTabKeys.contains(tabKeys.get(index))));
-        tab.setHiddenOnServer(hidden);
+        tab.setHiddenOnServer(!tabState.visible);
 
         if (scrolledOutOfView(index)) {
             // Should not set tabs visible if they are scrolled out of view
-            hidden = true;
+            tabState.visible = false;
         }
         // Set the current visibility of the tab (in the browser)
-        tab.setVisible(!hidden);
+        tab.setVisible(tabState.visible);
 
         /*
          * Force the width of the caption container so the content will not wrap
@@ -980,23 +1016,29 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
     }
 
-    private void renderContent(final UIDL contentUIDL) {
-        final ComponentConnector content = client.getPaintable(contentUIDL);
-        Widget newWidget = content.getWidget();
+    /**
+     * Renders the widget content for a tab sheet.
+     * 
+     * @param newWidget
+     */
+    public void renderContent(Widget newWidget) {
+        assert tabPanel.getWidgetCount() <= 1;
 
-        assert tp.getWidgetCount() <= 1;
-
-        if (tp.getWidgetCount() == 0) {
-            tp.add(newWidget);
-        } else if (tp.getWidget(0) != newWidget) {
-            tp.remove(0);
-            tp.add(newWidget);
+        if (null == newWidget) {
+            newWidget = new SimplePanel();
         }
 
-        assert tp.getWidgetCount() <= 1;
+        if (tabPanel.getWidgetCount() == 0) {
+            tabPanel.add(newWidget);
+        } else if (tabPanel.getWidget(0) != newWidget) {
+            tabPanel.remove(0);
+            tabPanel.add(newWidget);
+        }
+
+        assert tabPanel.getWidgetCount() <= 1;
 
         // There's never any other index than 0, but maintaining API for now
-        tp.showWidget(0);
+        tabPanel.showWidget(0);
 
         VTabsheet.this.iLayout();
         updateOpenTabSize();
@@ -1053,7 +1095,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
              */
             minWidth = tb.getOffsetWidth() - getContentAreaBorderWidth();
         }
-        tp.fixVisibleTabSize(width, height, minWidth);
+        tabPanel.fixVisibleTabSize(width, height, minWidth);
 
     }
 
@@ -1062,9 +1104,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
      */
     private void updateTabScroller() {
         if (!isDynamicWidth()) {
-            ComponentConnector paintable = ConnectorMap.get(client)
-                    .getConnector(this);
-            DOM.setStyleAttribute(tabs, "width", paintable.getState().width);
+            DOM.setStyleAttribute(tabs, "width", "100%");
         }
 
         // Make sure scrollerIndex is valid
@@ -1146,13 +1186,13 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         while (i > 0) {
             tb.removeTab(--i);
         }
-        tp.clear();
+        tabPanel.clear();
 
     }
 
     @Override
     public Iterator<Widget> getWidgetIterator() {
-        return tp.iterator();
+        return tabPanel.iterator();
     }
 
     private int borderW = -1;
@@ -1172,9 +1212,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     @Override
     public ComponentConnector getTab(int index) {
-        if (tp.getWidgetCount() > index) {
-            Widget widget = tp.getWidget(index);
-            return ConnectorMap.get(client).getConnector(widget);
+        if (tabPanel.getWidgetCount() > index) {
+            Widget widget = tabPanel.getWidget(index);
+            return getConnectorForWidget(widget);
         }
         return null;
     }
@@ -1187,14 +1227,19 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     }
 
     @Override
+    public void selectTab(int index) {
+        tb.selectTab(index);
+    }
+
+    @Override
     public void onBlur(BlurEvent event) {
-        getApplicationConnection().getVTooltip().hideTooltip();
+        getVTooltip().hideTooltip();
 
         if (focusedTab != null && focusedTab == event.getSource()) {
             focusedTab.removeAssistiveDescription();
             focusedTab = null;
-            if (client.hasEventListeners(this, EventId.BLUR)) {
-                client.updateVariable(id, EventId.BLUR, "", true);
+            if (connector.hasEventListener(EventId.BLUR)) {
+                connector.getRpcProxy(FocusAndBlurServerRpc.class).blur();
             }
         }
     }
@@ -1203,15 +1248,13 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     public void onFocus(FocusEvent event) {
         if (focusedTab == null && event.getSource() instanceof Tab) {
             focusedTab = (Tab) event.getSource();
-            if (client.hasEventListeners(this, EventId.FOCUS)) {
-                client.updateVariable(id, EventId.FOCUS, "", true);
+            if (connector.hasEventListener(EventId.FOCUS)) {
+                connector.getRpcProxy(FocusAndBlurServerRpc.class).focus();
             }
 
             if (focusedTab.hasTooltip()) {
-                focusedTab.setAssistiveDescription(getApplicationConnection()
-                        .getVTooltip().getUniqueId());
-                getApplicationConnection().getVTooltip().showAssistive(
-                        focusedTab.getTooltipInfo());
+                focusedTab.setAssistiveDescription(getVTooltip().getUniqueId());
+                getVTooltip().showAssistive(focusedTab.getTooltipInfo());
             }
         }
     }
@@ -1294,14 +1337,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 focusedTab = tb.getTab(focusedTabIndex);
                 focusedTab.focus();
             }
-
-            if (isScrolledTabs()) {
-                // Scroll until the new focused tab is visible
-                while (!tb.getTab(focusedTabIndex).isVisible()) {
-                    scrollerIndex = tb.scrollLeft(scrollerIndex);
-                }
-                updateTabScroller();
-            }
         }
     }
 
@@ -1323,17 +1358,88 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 focusedTab = tb.getTab(focusedTabIndex);
                 focusedTab.focus();
             }
+        }
+    }
 
-            if (isClippedTabs()) {
-                // Scroll until the new active tab is completely visible
-                int newScrollerIndex = scrollerIndex;
-                while (isClipped(tb.getTab(focusedTabIndex))
-                        && newScrollerIndex != -1) {
-                    newScrollerIndex = tb.scrollRight(newScrollerIndex);
+    private void scrollIntoView(Tab tab) {
+        if (!tab.isHiddenOnServer()) {
+            if (isClipped(tab)) {
+                while (isClipped(tab) && scrollerIndex != -1) {
+                    scrollerIndex = tb.scrollRight(scrollerIndex);
                 }
-                scrollerIndex = newScrollerIndex;
+                updateTabScroller();
+            } else if (!tab.isVisible()) {
+                while (!tab.isVisible()) {
+                    scrollerIndex = tb.scrollLeft(scrollerIndex);
+                }
                 updateTabScroller();
             }
         }
+    }
+
+    /**
+     * Makes tab bar visible.
+     * 
+     * @since 7.2
+     */
+    public void showTabs() {
+        tb.setVisible(true);
+        removeStyleName(CLASSNAME + "-hidetabs");
+        tb.recalculateCaptionWidths();
+    }
+
+    /**
+     * Makes tab bar invisible.
+     * 
+     * @since 7.2
+     */
+    public void hideTabs() {
+        tb.setVisible(false);
+        addStyleName(CLASSNAME + "-hidetabs");
+    }
+
+    /** Matches tab[ix] - used for extracting the index of the targeted tab */
+    private static final RegExp SUBPART_TAB_REGEXP = RegExp
+            .compile("tab\\[(\\d+)](.*)");
+
+    @Override
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+        if ("tabpanel".equals(subPart)) {
+            return DOM.asOld(tabPanel.getElement().getFirstChildElement());
+        } else if (SUBPART_TAB_REGEXP.test(subPart)) {
+            MatchResult result = SUBPART_TAB_REGEXP.exec(subPart);
+            int tabIx = Integer.valueOf(result.getGroup(1));
+            Tab tab = tb.getTab(tabIx);
+            if (tab != null) {
+                if ("/close".equals(result.getGroup(2))) {
+                    if (tab.isClosable()) {
+                        return tab.tabCaption.getCloseButton();
+                    }
+                } else {
+                    return tab.tabCaption.getElement();
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+        if (tabPanel.getElement().equals(subElement.getParentElement())
+                || tabPanel.getElement().equals(subElement)) {
+            return "tabpanel";
+        } else {
+            for (int i = 0; i < tb.getTabCount(); ++i) {
+                Tab tab = tb.getTab(i);
+                if (tab.isClosable()
+                        && tab.tabCaption.getCloseButton().isOrHasChild(
+                                subElement)) {
+                    return "tab[" + i + "]/close";
+                } else if (tab.getElement().isOrHasChild(subElement)) {
+                    return "tab[" + i + "]";
+                }
+            }
+        }
+        return null;
     }
 }

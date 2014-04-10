@@ -285,9 +285,7 @@ public class UidlWriter implements Serializable {
                         + new JSONArray(styleDependencies).toString());
             }
 
-            if (manager.getDragAndDropService() != null) {
-                manager.getDragAndDropService().printJSONResponse(writer);
-            }
+            session.getDragAndDropService().printJSONResponse(writer);
 
             for (ClientConnector connector : dirtyVisibleConnectors) {
                 uiConnectorTracker.markClientSideInitialized(connector);

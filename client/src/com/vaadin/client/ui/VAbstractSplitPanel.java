@@ -19,6 +19,7 @@ package com.vaadin.client.ui;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.TouchCancelEvent;
@@ -32,7 +33,6 @@ import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;

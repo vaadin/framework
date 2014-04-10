@@ -1,6 +1,0 @@
-.bar, .bar .foo {
-  a: b;
-}
-.bar .foo {
-  c: d;
-}

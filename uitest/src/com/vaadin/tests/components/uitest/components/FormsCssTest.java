@@ -41,6 +41,6 @@ public class FormsCssTest extends HorizontalLayout {
     public void addComponent(com.vaadin.ui.Component c) {
         parent.registerComponent(c);
         super.addComponent(c);
-    };
+    }
 
 }

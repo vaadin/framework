@@ -15,8 +15,8 @@
  */
 package com.vaadin.client.ui.dd;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.Util;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
@@ -58,7 +58,8 @@ public class DDUtil {
     }
 
     public static HorizontalDropLocation getHorizontalDropLocation(
-            Element element, NativeEvent event, double leftRightRatio) {
+            Element element, NativeEvent event,
+            double leftRightRatio) {
         int clientX = Util.getTouchOrMouseClientX(event);
 
         // Event coordinates are relative to the viewport, element absolute

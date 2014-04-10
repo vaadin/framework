@@ -794,7 +794,7 @@ public class Navigator implements Serializable {
             @Override
             public View getView(String viewName) {
                 return view;
-            };
+            }
 
             @Override
             public String getViewName(String navigationState) {

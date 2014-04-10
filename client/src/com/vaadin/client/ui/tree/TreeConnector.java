@@ -332,9 +332,7 @@ public class TreeConnector extends AbstractComponentConnector implements
 
         // Try to find a tooltip for a node
         if (element != getWidget().getElement()) {
-            Object node = Util.findWidget(
-                    (com.google.gwt.user.client.Element) element,
-                    TreeNode.class);
+            Object node = Util.findWidget(element, TreeNode.class);
 
             if (node != null) {
                 TreeNode tnode = (TreeNode) node;

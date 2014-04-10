@@ -45,7 +45,7 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
         @Override
         public String toString() {
             return "Root green, second level red";
-        };
+        }
 
     };
 
@@ -76,7 +76,7 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
         @Override
         public String toString() {
             return "Even items bold";
-        };
+        }
 
     };
 

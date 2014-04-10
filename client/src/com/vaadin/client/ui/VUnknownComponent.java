@@ -22,7 +22,7 @@ import com.vaadin.client.SimpleTree;
 
 public class VUnknownComponent extends Composite {
 
-    com.google.gwt.user.client.ui.Label caption = new com.google.gwt.user.client.ui.Label();;
+    com.google.gwt.user.client.ui.Label caption = new com.google.gwt.user.client.ui.Label();
     SimpleTree uidlTree;
     protected VerticalPanel panel;
 

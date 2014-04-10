@@ -199,14 +199,16 @@ public class ServerRpcHandler implements Serializable {
                 .getCommunicationManager();
 
         try {
+            ConnectorTracker connectorTracker = uI.getConnectorTracker();
+
             Set<Connector> enabledConnectors = new HashSet<Connector>();
 
             List<MethodInvocation> invocations = parseInvocations(
                     uI.getConnectorTracker(), invocationsData,
                     lastSyncIdSeenByClient);
             for (MethodInvocation invocation : invocations) {
-                final ClientConnector connector = manager.getConnector(uI,
-                        invocation.getConnectorId());
+                final ClientConnector connector = connectorTracker
+                        .getConnector(invocation.getConnectorId());
 
                 if (connector != null && connector.isConnectorEnabled()) {
                     enabledConnectors.add(connector);
@@ -216,8 +218,8 @@ public class ServerRpcHandler implements Serializable {
             for (int i = 0; i < invocations.size(); i++) {
                 MethodInvocation invocation = invocations.get(i);
 
-                final ClientConnector connector = manager.getConnector(uI,
-                        invocation.getConnectorId());
+                final ClientConnector connector = connectorTracker
+                        .getConnector(invocation.getConnectorId());
                 if (connector == null) {
                     getLogger()
                             .log(Level.WARNING,

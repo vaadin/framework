@@ -22,10 +22,11 @@ import java.util.List;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -665,9 +666,32 @@ public class VGridLayout extends ComplexPanel {
      *            this layout
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
+     * @deprecated As of 7.2, call or override {@link #getComponent(Element)}
+     *             instead
+     */
+    @Deprecated
+    public ComponentConnector getComponent(
+            com.google.gwt.user.client.Element element) {
+        return Util.getConnectorForElement(client, this, element);
+
+    }
+
+    /**
+     * Returns the deepest nested child component which contains "element". The
+     * child component is also returned if "element" is part of its caption.
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     * 
+     * @param element
+     *            An element that is a nested sub element of the root element in
+     *            this layout
+     * @return The Paintable which the element is a part of. Null if the element
+     *         belongs to the layout and not to a child.
+     * 
+     * @since 7.2
      */
     public ComponentConnector getComponent(Element element) {
-        return Util.getConnectorForElement(client, this, element);
+        return getComponent(DOM.asOld(element));
     }
 
     /** For internal use only. May be removed or replaced in the future. */

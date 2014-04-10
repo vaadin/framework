@@ -75,6 +75,15 @@ public class LayoutManager {
     }
 
     /**
+     * Returns the application connection for this layout manager.
+     * 
+     * @return connection
+     */
+    protected ApplicationConnection getConnection() {
+        return connection;
+    }
+
+    /**
      * Gets the layout manager associated with the given
      * {@link ApplicationConnection}.
      * 

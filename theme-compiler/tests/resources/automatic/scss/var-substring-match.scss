@@ -1,8 +1,0 @@
-@mixin mx($f: 10px) {
-  .foo {
-    font: {
-      size: $f;
-    }
-  }
-}
-@include mx;

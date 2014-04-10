@@ -20,7 +20,8 @@ import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.vaadin.client.ApplicationConnection;
 
 /**
@@ -71,8 +72,12 @@ public class ComponentLocator {
      *            The element to generate a path for.
      * @return A String locator that identifies the target element or null if a
      *         String locator could not be created.
+     * @deprecated As of 7.2, call and override
+     *             {@link #getPathForElement(Element)} instead
      */
-    public String getPathForElement(Element targetElement) {
+    @Deprecated
+    public String getPathForElement(
+            com.google.gwt.user.client.Element targetElement) {
         for (LocatorStrategy strategy : locatorStrategies) {
             String path = strategy.getPathForElement(targetElement);
             if (null != path) {
@@ -80,6 +85,28 @@ public class ComponentLocator {
             }
         }
         return null;
+    }
+
+    /**
+     * Generates a String locator which uniquely identifies the target element.
+     * The {@link #getElementByPath(String)} method can be used for the inverse
+     * operation, i.e. locating an element based on the return value from this
+     * method.
+     * <p>
+     * Note that getElementByPath(getPathForElement(element)) == element is not
+     * always true as #getPathForElement(Element) can return a path to another
+     * element if the widget determines an action on the other element will give
+     * the same result as the action on the target element.
+     * </p>
+     * 
+     * @since 7.2
+     * @param targetElement
+     *            The element to generate a path for.
+     * @return A String locator that identifies the target element or null if a
+     *         String locator could not be created.
+     */
+    public String getPathForElement(Element targetElement) {
+        return getPathForElement(DOM.asOld(targetElement));
     }
 
     /**
@@ -94,12 +121,12 @@ public class ComponentLocator {
      * @return The DOM element identified by {@code path} or null if the element
      *         could not be located.
      */
-    public Element getElementByPath(String path) {
+    public com.google.gwt.user.client.Element getElementByPath(String path) {
         for (LocatorStrategy strategy : locatorStrategies) {
             if (strategy.validatePath(path)) {
                 Element element = strategy.getElementByPath(path);
                 if (null != element) {
-                    return element;
+                    return DOM.asOld(element);
                 }
             }
         }
@@ -170,6 +197,8 @@ public class ComponentLocator {
      * 
      * @see #getElementByPath(String)
      * 
+     * @since 7.2
+     * 
      * @param path
      *            The path of the element to be found
      * @param root
@@ -177,13 +206,14 @@ public class ComponentLocator {
      * @return The DOM element identified by {@code path} or null if the element
      *         could not be located.
      */
-    public Element getElementByPathStartingAt(String path, Element root) {
+    public com.google.gwt.user.client.Element getElementByPathStartingAt(
+            String path, Element root) {
         for (LocatorStrategy strategy : locatorStrategies) {
             if (strategy.validatePath(path)) {
                 Element element = strategy.getElementByPathStartingAt(path,
                         root);
                 if (null != element) {
-                    return element;
+                    return DOM.asOld(element);
                 }
             }
         }

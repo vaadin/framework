@@ -24,11 +24,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -420,7 +420,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
     @Override
     public TooltipInfo getTooltipInfo(com.google.gwt.dom.client.Element element) {
         TooltipInfo tooltipInfo = null;
-        Widget w = Util.findWidget((Element) element, null);
+        Widget w = Util.findWidget(element, null);
         if (w instanceof HasTooltipKey) {
             tooltipInfo = GWT.create(TooltipInfo.class);
             String title = tooltips.get(((HasTooltipKey) w).getTooltipKey());

@@ -61,7 +61,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
             String className = testClass.getSimpleName();
             screenshotBaseName = className + "-" + testMethod;
-        };
+        }
     };
 
     /**
@@ -101,22 +101,21 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
         File mainReference = getScreenshotReferenceFile(identifier);
 
-        List<File> alternativeFiles = findReferenceAlternatives(mainReference);
-        List<File> failedReferenceAlternatives = new ArrayList<File>();
+        List<File> referenceFiles = findReferenceAndAlternatives(mainReference);
+        List<File> failedReferenceFiles = new ArrayList<File>();
 
-        for (File file : alternativeFiles) {
-            if (testBench(driver).compareScreen(file)) {
+        for (File referenceFile : referenceFiles) {
+            if (testBench(driver).compareScreen(referenceFile)) {
+                // There might be failure files because of retries in TestBench.
+                deleteFailureFiles(referenceFile);
                 break;
             } else {
-                failedReferenceAlternatives.add(file);
+                failedReferenceFiles.add(referenceFile);
             }
         }
 
         File referenceToKeep = null;
-        if (failedReferenceAlternatives.size() != alternativeFiles.size()) {
-            // Matched one comparison but not all, remove all error images +
-            // HTML files
-        } else {
+        if (failedReferenceFiles.size() == referenceFiles.size()) {
             // Ensure we use the correct browser version (e.g. if running IE11
             // and only an IE 10 reference was available, then mainReference
             // will be for IE 10, not 11)
@@ -143,16 +142,20 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
         // Remove all PNG/HTML files we no longer need (failed alternative
         // references or all error files (PNG/HTML) if comparison succeeded)
-        for (File failedAlternative : failedReferenceAlternatives) {
+        for (File failedAlternative : failedReferenceFiles) {
             File failurePng = getErrorFileFromReference(failedAlternative);
             if (failedAlternative != referenceToKeep) {
                 // Delete png + HTML
-                File failureHtml = htmlFromPng(failurePng);
-
-                failurePng.delete();
-                failureHtml.delete();
+                deleteFailureFiles(failurePng);
             }
         }
+    }
+
+    private void deleteFailureFiles(File failurePng) {
+        File failureHtml = htmlFromPng(failurePng);
+
+        failurePng.delete();
+        failureHtml.delete();
     }
 
     /**
@@ -189,7 +192,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      * @return all references which should be considered when comparing with the
      *         given files, including the given reference
      */
-    private List<File> findReferenceAlternatives(File reference) {
+    private List<File> findReferenceAndAlternatives(File reference) {
         List<File> files = new ArrayList<File>();
         files.add(reference);
 

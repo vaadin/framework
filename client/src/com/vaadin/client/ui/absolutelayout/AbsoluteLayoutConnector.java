@@ -17,7 +17,8 @@ package com.vaadin.client.ui.absolutelayout;
 
 import java.util.List;
 
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.DirectionalManagedLayout;
@@ -46,14 +47,15 @@ public class AbsoluteLayoutConnector extends
             this) {
 
         @Override
-        protected ComponentConnector getChildComponent(Element element) {
+        protected ComponentConnector getChildComponent(
+                com.google.gwt.user.client.Element element) {
             return getConnectorForElement(element);
         }
 
         @Override
         protected LayoutClickRpc getLayoutClickRPC() {
             return getRpcProxy(AbsoluteLayoutServerRpc.class);
-        };
+        }
     };
 
     private StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
@@ -91,10 +93,30 @@ public class AbsoluteLayoutConnector extends
      *            this layout
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
+     * @deprecated As of 7.2, call or override
+     *             {@link #getConnectorForElement(Element)} instead
      */
-    protected ComponentConnector getConnectorForElement(Element element) {
+    @Deprecated
+    protected ComponentConnector getConnectorForElement(
+            com.google.gwt.user.client.Element element) {
         return Util.getConnectorForElement(getConnection(), getWidget(),
                 element);
+    }
+
+    /**
+     * Returns the deepest nested child component which contains "element". The
+     * child component is also returned if "element" is part of its caption.
+     * 
+     * @param element
+     *            An element that is a nested sub element of the root element in
+     *            this layout
+     * @return The Paintable which the element is a part of. Null if the element
+     *         belongs to the layout and not to a child.
+     * 
+     * @since 7.2
+     */
+    protected ComponentConnector getConnectorForElement(Element element) {
+        return getConnectorForElement(DOM.asOld(element));
     }
 
     /*
@@ -163,7 +185,7 @@ public class AbsoluteLayoutConnector extends
     private void setChildWidgetPosition(ComponentConnector child) {
         getWidget().setWidgetPosition(child.getWidget(),
                 getState().connectorToCssPosition.get(child.getConnectorId()));
-    };
+    }
 
     /*
      * (non-Javadoc)

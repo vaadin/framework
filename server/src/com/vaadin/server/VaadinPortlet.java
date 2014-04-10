@@ -159,6 +159,31 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
         }
     }
 
+    // Intentionally internal, will be refactored out in 7.2.
+    static class WebSpherePortalRequest extends VaadinHttpAndPortletRequest {
+
+        public WebSpherePortalRequest(PortletRequest request,
+                VaadinPortletService vaadinService) {
+            super(request, getServletRequest(request), vaadinService);
+        }
+
+        private static HttpServletRequest getServletRequest(
+                PortletRequest request) {
+            try {
+                Class<?> portletUtils = Class
+                        .forName("com.ibm.ws.portletcontainer.portlet.PortletUtils");
+                Method getHttpServletRequest = portletUtils.getMethod(
+                        "getHttpServletRequest", PortletRequest.class);
+
+                return (HttpServletRequest) getHttpServletRequest.invoke(null,
+                        request);
+            } catch (Exception e) {
+                throw new IllegalStateException(
+                        "WebSphere Portal request not detected.");
+            }
+        }
+    }
+
     public static class VaadinLiferayRequest extends
             VaadinHttpAndPortletRequest {
 
@@ -425,7 +450,10 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
             return new VaadinLiferayRequest(request, getService());
         } else if (isGateIn(request)) {
             return new VaadinGateinRequest(request, getService());
+        } else if (isWebSphere(request)) {
+            return new WebSpherePortalRequest(request, getService());
         } else {
+
             return new VaadinPortletRequest(request, getService());
         }
     }
@@ -452,6 +480,13 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
         String portalInfo = request.getPortalContext().getPortalInfo()
                 .toLowerCase();
         return portalInfo.contains("gatein");
+    }
+
+    private static boolean isWebSphere(PortletRequest request) {
+        String portalInfo = request.getPortalContext().getPortalInfo()
+                .toLowerCase();
+
+        return portalInfo.contains("websphere portal");
     }
 
     private VaadinPortletResponse createVaadinResponse(PortletResponse response) {

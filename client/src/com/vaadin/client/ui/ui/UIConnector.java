@@ -22,6 +22,7 @@ import java.util.List;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
 import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.NativeEvent;
@@ -35,7 +36,6 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
@@ -502,6 +502,18 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     @Override
     public VUI getWidget() {
         return (VUI) super.getWidget();
+    }
+
+    @Override
+    protected ComponentConnector getContent() {
+        ComponentConnector connector = super.getContent();
+        // VWindow (WindowConnector is its connector)is also a child component
+        // but it's never a content widget
+        if (connector instanceof WindowConnector) {
+            return null;
+        } else {
+            return connector;
+        }
     }
 
     protected void onChildSizeChange() {

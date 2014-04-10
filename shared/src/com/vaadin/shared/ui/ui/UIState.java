@@ -63,7 +63,7 @@ public class UIState extends TabIndexState {
                     null, Role.STATUS));
             setup.put("assistive", new NotificationConfigurationBean("Note: ",
                     null, Role.STATUS));
-        };
+        }
     }
 
     public static class PushConfigurationState implements Serializable {
@@ -76,7 +76,7 @@ public class UIState extends TabIndexState {
             parameters
                     .put(TRANSPORT_PARAM, Transport.WEBSOCKET.getIdentifier());
             parameters.put(FALLBACK_TRANSPORT_PARAM,
-                    Transport.STREAMING.getIdentifier());
+                    Transport.LONG_POLLING.getIdentifier());
         }
     }
 

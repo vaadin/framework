@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.debug.internal;
 
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.Element;
 import com.vaadin.client.ServerConnector;
 
 /**
@@ -33,5 +33,6 @@ public interface SelectConnectorListener {
      * @param element
      *            selected element of the connector or null if unknown
      */
-    public void select(ServerConnector connector, Element element);
+    public void select(ServerConnector connector,
+            Element element);
 }

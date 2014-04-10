@@ -1,7 +1,0 @@
-$domain: "sass-lang.com";
-@foo url(http://#{$domain}/),
-     #{domain($domain)},
-     "foo#{'ba' + 'r'}baz",
-     foo#{'ba' + 'r'}baz {
-  .foo {a: b}
-}

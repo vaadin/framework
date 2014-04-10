@@ -146,4 +146,23 @@ public class VaadinSessionTest {
         mockService.cleanupSession(session);
         Assert.assertTrue(detachCalled.get());
     }
+
+    @Test
+    public void testValueUnbound() {
+        MockVaadinSession vaadinSession = new MockVaadinSession(mockService);
+
+        vaadinSession.valueUnbound(EasyMock
+                .createMock(HttpSessionBindingEvent.class));
+        org.junit.Assert.assertEquals(
+                "'valueUnbound' method doesn't call 'close' for the session",
+                1, vaadinSession.getCloseCount());
+
+        vaadinSession.valueUnbound(EasyMock
+                .createMock(HttpSessionBindingEvent.class));
+
+        org.junit.Assert.assertEquals(
+                "'valueUnbound' method may not call 'close' "
+                        + "method for closing session", 1,
+                vaadinSession.getCloseCount());
+    }
 }

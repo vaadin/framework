@@ -17,8 +17,8 @@
 package com.vaadin.client;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -669,8 +669,8 @@ public class VCaption extends HTML {
         return tooltipInfo;
     }
 
-    protected Element getTextElement() {
-        return captionText;
+    protected com.google.gwt.user.client.Element getTextElement() {
+        return DOM.asOld(captionText);
     }
 
     public static String getCaptionOwnerPid(Element e) {

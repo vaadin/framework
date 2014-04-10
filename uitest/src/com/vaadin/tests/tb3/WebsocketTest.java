@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 
 /**
@@ -33,6 +34,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
  * 
  * @author Vaadin Ltd
  */
+@TestCategory("push")
 public abstract class WebsocketTest extends PrivateTB3Configuration {
     private static List<DesiredCapabilities> websocketBrowsers = new ArrayList<DesiredCapabilities>();
     static {

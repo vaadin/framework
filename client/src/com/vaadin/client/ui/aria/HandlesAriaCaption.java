@@ -16,8 +16,6 @@
 
 package com.vaadin.client.ui.aria;
 
-import com.google.gwt.user.client.Element;
-
 /**
  * Some Widgets need to handle the caption handling for WAI-ARIA themselfs, as
  * for example the required ids need to be set in a specific way. In such a
@@ -35,5 +33,5 @@ public interface HandlesAriaCaption {
      * @param captionElement
      *            Element of the caption
      */
-    void bindAriaCaption(Element captionElement);
+    void bindAriaCaption(com.google.gwt.user.client.Element captionElement);
 }

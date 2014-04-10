@@ -225,10 +225,16 @@ public class VButton extends FocusWidget implements ClickHandler {
                 DOM.eventPreventDefault(event);
             }
             break;
+        case Event.ONMOUSEOVER:
+            if (isCapturing && isTargetInsideButton(event)) {
+                // This means a mousedown happened on the button and a mouseup
+                // has not happened yet
+                setHovering(true);
+                addStyleName(CLASSNAME_PRESSED);
+            }
+            break;
         case Event.ONMOUSEOUT:
-            Element to = event.getRelatedTarget();
-            if (getElement().isOrHasChild(DOM.eventGetTarget(event))
-                    && (to == null || !getElement().isOrHasChild(to))) {
+            if (isTargetInsideButton(event)) {
                 if (clickPending
                         && Math.abs(mousedownX - event.getClientX()) < MOVE_THRESHOLD
                         && Math.abs(mousedownY - event.getClientY()) < MOVE_THRESHOLD) {
@@ -236,8 +242,6 @@ public class VButton extends FocusWidget implements ClickHandler {
                     break;
                 }
                 clickPending = false;
-                if (isCapturing) {
-                }
                 setHovering(false);
                 removeStyleName(CLASSNAME_PRESSED);
             }
@@ -288,6 +292,15 @@ public class VButton extends FocusWidget implements ClickHandler {
                 break;
             }
         }
+    }
+
+    /**
+     * Check if the event occurred over an element which is part of this button
+     */
+    private boolean isTargetInsideButton(Event event) {
+        Element to = event.getRelatedTarget();
+        return getElement().isOrHasChild(DOM.eventGetTarget(event))
+                && (to == null || !getElement().isOrHasChild(to));
     }
 
     final void setHovering(boolean hovering) {

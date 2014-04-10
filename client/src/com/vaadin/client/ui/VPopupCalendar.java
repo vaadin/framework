@@ -22,6 +22,7 @@ import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.LiveValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
@@ -30,7 +31,6 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -255,7 +255,8 @@ public class VPopupCalendar extends VTextualDate implements Field,
     }
 
     @Override
-    public void bindAriaCaption(Element captionElement) {
+    public void bindAriaCaption(
+            com.google.gwt.user.client.Element captionElement) {
         if (captionElement == null) {
             captionId = null;
         } else {
@@ -329,7 +330,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
      */
     public void openCalendarPanel() {
 
-        if (!open && !readonly) {
+        if (!open && !readonly && isEnabled()) {
             open = true;
 
             if (getCurrentDate() != null) {
@@ -458,13 +459,8 @@ public class VPopupCalendar extends VTextualDate implements Field,
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
 
-        if (enabled) {
-            Roles.getButtonRole().setAriaDisabledState(
-                    calendarToggle.getElement(), true);
-        } else {
-            Roles.getButtonRole().setAriaDisabledState(
-                    calendarToggle.getElement(), false);
-        }
+        Roles.getButtonRole().setAriaDisabledState(calendarToggle.getElement(),
+                !enabled);
     }
 
     /**
@@ -552,7 +548,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
     private final String CALENDAR_TOGGLE_ID = "popupButton";
 
     @Override
-    public Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         if (subPart.equals(CALENDAR_TOGGLE_ID)) {
             return calendarToggle.getElement();
         }
@@ -561,7 +557,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
     }
 
     @Override
-    public String getSubPartName(Element subElement) {
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         if (calendarToggle.getElement().isOrHasChild(subElement)) {
             return CALENDAR_TOGGLE_ID;
         }

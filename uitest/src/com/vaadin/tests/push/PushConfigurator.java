@@ -101,6 +101,7 @@ public class PushConfigurator extends VerticalLayout {
 
         paramValue.setDefaultComponentAlignment(Alignment.BOTTOM_RIGHT);
         paramValue.addComponents(parameter, value, set);
+        status.setId("status");
         vl.addComponents(pushMode, transport, fallbackTransport, paramValue,
                 new Label("<hr/>", ContentMode.HTML), status);
         addComponent(vl);

@@ -142,16 +142,25 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
             pkgName = pkg.getName();
         } else {
             final String className = systemPropertyBaseClass.getName();
-            pkgName = new String(className.toCharArray(), 0,
-                    className.lastIndexOf('.'));
+            int index = className.lastIndexOf('.');
+            if (index >= 0) {
+                pkgName = className.substring(0, index);
+            } else {
+                pkgName = null;
+            }
         }
-        val = System.getProperty(pkgName + "." + parameterName);
+        if (pkgName == null) {
+            pkgName = "";
+        } else {
+            pkgName += '.';
+        }
+        val = System.getProperty(pkgName + parameterName);
         if (val != null) {
             return val;
         }
 
         // Try lowercased system properties
-        val = System.getProperty(pkgName + "." + parameterName.toLowerCase());
+        val = System.getProperty(pkgName + parameterName.toLowerCase());
         return val;
     }
 

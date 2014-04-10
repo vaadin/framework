@@ -15,10 +15,29 @@
  */
 package com.vaadin.shared.ui.tabsheet;
 
+import java.util.ArrayList;
+
 import com.vaadin.shared.AbstractComponentState;
 
 public class TabsheetState extends AbstractComponentState {
+    public static final String PRIMARY_STYLE_NAME = "v-tabsheet";
+
     {
-        primaryStyleName = "v-tabsheet";
+        primaryStyleName = PRIMARY_STYLE_NAME;
     }
+
+    /**
+     * Index of the component when switching focus - not related to Tabsheet
+     * tabs.
+     */
+    public int tabIndex;
+
+    public ArrayList<TabState> tabs = new ArrayList<TabState>();
+
+    /** true to show the tab bar, false to only show the contained component */
+    public boolean tabsVisible = true;
+
+    /** the key of the currently selected tab */
+    public String selected;
+
 }

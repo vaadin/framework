@@ -1184,5 +1184,5 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         }
         return super.getListeners(eventType);
-    };
+    }
 }

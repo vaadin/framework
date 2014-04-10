@@ -122,22 +122,6 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
         }
     }
 
-    @Test
-    public void testMultipleQuickReconnects() throws Exception {
-        setDebug(true);
-        openTestURL();
-        startTimer();
-        waitUntilServerCounterChanges();
-        for (int i = 0; i < 50; i++) {
-            disconnectProxy();
-            Thread.sleep(100);
-            connectProxy();
-            Thread.sleep(100);
-        }
-        waitUntilServerCounterChanges();
-        waitUntilServerCounterChanges();
-    }
-
     private int getClientCounter() {
         return BasicPushTest.getClientCounter(this);
     }

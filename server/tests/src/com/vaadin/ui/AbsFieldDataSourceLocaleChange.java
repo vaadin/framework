@@ -37,7 +37,6 @@ public class AbsFieldDataSourceLocaleChange {
     public void localeChangesOnAttach() {
         TextField tf = new TextField();
 
-        ;
         tf.setConverter(new StringToIntegerConverter() {
             @Override
             protected NumberFormat getFormat(Locale locale) {

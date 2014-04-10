@@ -69,6 +69,7 @@ public class ConnectorBundle {
     private final Map<JClassType, Set<JMethod>> needsInvoker = new HashMap<JClassType, Set<JMethod>>();
     private final Map<JClassType, Set<JMethod>> needsParamTypes = new HashMap<JClassType, Set<JMethod>>();
     private final Map<JClassType, Set<JMethod>> needsDelayedInfo = new HashMap<JClassType, Set<JMethod>>();
+    private final Map<JClassType, Set<JMethod>> needsOnStateChange = new HashMap<JClassType, Set<JMethod>>();
 
     private final Set<Property> needsProperty = new HashSet<Property>();
     private final Set<Property> needsDelegateToWidget = new HashSet<Property>();
@@ -199,7 +200,7 @@ public class ConnectorBundle {
             JType type = iterator.next();
             iterator.remove();
 
-            if (hasSserializeSupport(type)) {
+            if (hasSerializeSupport(type)) {
                 continue;
             }
 
@@ -516,7 +517,7 @@ public class ConnectorBundle {
     }
 
     public void setNeedsSerialize(JType type) {
-        if (!hasSserializeSupport(type)) {
+        if (!hasSerializeSupport(type)) {
             needsSerializeSupport.add(type);
         }
     }
@@ -557,12 +558,12 @@ public class ConnectorBundle {
         return false;
     }
 
-    private boolean hasSserializeSupport(JType type) {
+    private boolean hasSerializeSupport(JType type) {
         if (hasSerializeSupport.contains(type)) {
             return true;
         } else {
             return previousBundle != null
-                    && previousBundle.hasSserializeSupport(type);
+                    && previousBundle.hasSerializeSupport(type);
         }
     }
 
@@ -585,4 +586,45 @@ public class ConnectorBundle {
         return Collections.unmodifiableSet(needsDelegateToWidget);
     }
 
+    public void setNeedsOnStateChangeHandler(JClassType type, JMethod method) {
+        if (!isNeedsOnStateChangeHandler(type, method)) {
+            addMapping(needsOnStateChange, type, method);
+        }
+    }
+
+    private boolean isNeedsOnStateChangeHandler(JClassType type, JMethod method) {
+        if (hasMapping(needsOnStateChange, type, method)) {
+            return true;
+        } else {
+            return previousBundle != null
+                    && previousBundle.isNeedsOnStateChangeHandler(type, method);
+        }
+    }
+
+    public Map<JClassType, Set<JMethod>> getNeedsOnStateChangeHandler() {
+        return Collections.unmodifiableMap(needsOnStateChange);
+    }
+
+    public static JMethod findInheritedMethod(JClassType type,
+            String methodName, JType... params) {
+
+        JClassType currentType = type;
+        while (currentType != null) {
+            JMethod method = currentType.findMethod(methodName, params);
+            if (method != null) {
+                return method;
+            }
+            currentType = currentType.getSuperclass();
+        }
+
+        JClassType[] interfaces = type.getImplementedInterfaces();
+        for (JClassType iface : interfaces) {
+            JMethod method = iface.findMethod(methodName, params);
+            if (method != null) {
+                return method;
+            }
+        }
+
+        return null;
+    }
 }

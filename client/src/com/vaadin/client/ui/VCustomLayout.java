@@ -19,6 +19,7 @@ package com.vaadin.client.ui;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
@@ -26,7 +27,6 @@ import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -242,12 +242,10 @@ public class VCustomLayout extends ComplexPanel {
      * parent about possible size change.
      */
     private void initImgElements() {
-        NodeList<com.google.gwt.dom.client.Element> nodeList = getElement()
-                .getElementsByTagName("IMG");
+        NodeList<Element> nodeList = getElement().getElementsByTagName("IMG");
         for (int i = 0; i < nodeList.getLength(); i++) {
-            com.google.gwt.dom.client.ImageElement img = (ImageElement) nodeList
-                    .getItem(i);
-            DOM.sinkEvents((Element) img.cast(), Event.ONLOAD);
+            ImageElement img = ImageElement.as(nodeList.getItem(i));
+            DOM.sinkEvents(img, Event.ONLOAD);
         }
     }
 
@@ -419,7 +417,7 @@ public class VCustomLayout extends ComplexPanel {
      * @return true if layout function exists and was run successfully, else
      *         false.
      */
-    public native boolean iLayoutJS(Element el)
+    public native boolean iLayoutJS(com.google.gwt.user.client.Element el)
     /*-{
     	if(el && el.iLayoutJS) {
     		try {
