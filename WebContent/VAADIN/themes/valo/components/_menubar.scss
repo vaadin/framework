@@ -1,0 +1,222 @@
+@mixin v-valo-menubar ($primary-stylename: v-menubar) {
+  
+  $copy: $v-button-hover-style-enabled;
+  $v-button-hover-style-enabled: false;
+
+  .#{$primary-stylename} {
+    @include v-valo-button-common-properties;
+    @include v-valo-button-style;
+    padding: 0;
+    text-align: left;
+  }
+
+  $v-button-hover-style-enabled: $copy;
+
+  .#{$primary-stylename}:active:after {
+    background: transparent;
+  }
+
+  .#{$primary-stylename} > .#{$primary-stylename}-menuitem {
+    @include v-valo-menubar-menuitem-style;
+  }
+
+  .#{$primary-stylename} > .#{$primary-stylename}-menuitem-checked {
+    @include v-valo-menubar-menuitem-checked-style;
+  }
+
+  .v-disabled > .#{$primary-stylename}-menuitem:before {
+    display: none;
+  }
+
+  .#{$primary-stylename} > .#{$primary-stylename}-menuitem-selected {
+    @include v-valo-gradient($color: v-valo-selection-color());
+    box-shadow: v-valo-button-box-shadow($background-color: v-valo-selection-color());
+    text-shadow: v-valo-button-text-shadow($background-color: v-valo-selection-color());
+    color: v-valo-font-color(v-valo-selection-color());
+    $bc: v-valo-button-border-color($background-color: v-valo-selection-color());
+    border-color: $bc;
+
+    + .#{$primary-stylename}-menuitem {
+      border-color: $bc;
+    }
+
+    &:hover:before {
+      background: none;
+    }
+  }
+
+  .#{$primary-stylename} .#{$primary-stylename}-submenu-indicator {
+    display: none;
+  }
+
+  .#{$primary-stylename}-popup {
+    @include v-valo-menubar-popup-style($primary-stylename);
+    //margin-top: -$v-selection-overlay-padding-vertical !important;
+    //margin-left: $v-selection-overlay-padding-horizontal !important;
+  }
+
+}
+
+
+
+
+@mixin v-valo-menubar-menuitem-style {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  @include v-valo-button-size($v-unit-size, $v-border-radius);
+  height: $v-unit-size - $v-button-border-width*2;
+  border-left: $v-button-border-width solid;
+  border-color: inherit;
+  vertical-align: top;
+  line-height: $v-unit-size - $v-button-border-width*2 - 1px;
+  @include user-select(none);;
+
+  $br: $v-button-border-radius - $v-button-border-width;
+  &:first-child {
+    border-left: none;
+    border-radius: $br 0 0 $br;
+  }
+
+  &:last-child {
+    border-radius: 0 $br $br 0;
+  }
+
+  &:first-child:last-child {
+    border-radius: $br;
+  }
+
+  &:before {
+    content: "";
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  @if $v-button-hover-style-enabled {
+    &:hover:before {
+      @include v-valo-button-hover-style;
+      border: none;
+    }
+  }
+
+  &:active:before {
+    @include v-valo-button-active-style;
+  }
+
+  $margin-width: ceil($v-unit-size/2.4/5);
+  .v-icon {
+    margin: 0 $margin-width 0 #{-$margin-width};
+  }
+
+  &[class*="-icon-only"] .v-icon {
+    margin: 0 #{-$margin-width};
+  }
+}
+
+
+
+
+
+@mixin v-valo-menubar-popup-style ($primary-stylename: v-menubar, $context: $v-app-background-color) {
+
+  $copy: $v-app-background-color;
+  $v-app-background-color: $context;
+
+  @include v-valo-selection-overlay-style;
+
+  margin: ceil($v-unit-size/8) 0 0 1px !important;
+
+  .#{$primary-stylename}-submenu {
+    outline: none;
+  }
+
+  .#{$primary-stylename}-menuitem {
+    display: block;
+    @include v-valo-selection-item-style;
+    padding-left: $v-selection-item-height + round($v-selection-item-padding-horizontal/2); // Make room for checkable icon
+    padding-right: $v-unit-size;
+    position: relative;
+  }
+
+  .#{$primary-stylename}-submenu-indicator {
+    display: none;
+
+    + .#{$primary-stylename}-menuitem-caption:after {
+      position: absolute;
+      right: $v-selection-item-padding-horizontal;
+      @include v-valo-menubar-submenu-indicator-style;
+    }
+  }
+
+  .#{$primary-stylename}-menuitem-selected {
+    @include v-valo-selection-item-selected-style;
+  }
+
+  .#{$primary-stylename}-separator {
+    display: block;
+    margin: $v-selection-overlay-padding-vertical 0;
+    height: 0;
+    overflow: hidden;
+    border-bottom: 1px solid darken(v-valo-overlay-background-color(), 5%);
+  }
+
+  [class*="checked"] .#{$primary-stylename}-menuitem-caption:before {
+    @include v-valo-menubar-checked-icon-style;
+    position: absolute;
+    left: $v-selection-item-padding-horizontal;
+  }
+
+  [class*="unchecked"] .#{$primary-stylename}-menuitem-caption:before {
+    content: "";
+  }
+
+  [class*="disabled"] {
+    cursor: default;
+    @include opacity($v-disabled-opacity);
+  }
+
+  $v-app-background-color: $copy;
+}
+
+
+
+@mixin v-valo-menubar-submenu-indicator-style {
+  font-family: FontAwesome;
+  content: "\f054";
+  line-height: $v-selection-item-height + 2px;
+}
+
+@mixin v-valo-menubar-checked-icon-style {
+  content: "\f00c";
+  font-family: FontAwesome;
+}
+
+
+@mixin v-valo-menubar-menuitem-checked-style ($background-color: scale-color($v-app-background-color, $lightness: -5%, $saturation: -5%)) {
+  @include v-valo-gradient($color: $background-color, $depth: $v-gradient-depth/4, $direction: to top);
+
+  @if color-luminance($background-color) < color-luminance($v-app-background-color) {
+    $border-color: v-valo-button-border-color($background-color: $background-color);
+    border-color: $border-color;
+
+    + [class*="menuitem"] {
+      @if length($border-color) > 1 {
+        $border-color: nth($border-color, 2);
+      }
+      border-left-color: $border-color;
+    }
+  }
+
+  color: v-valo-font-color($background-color, 0.9);
+  text-shadow: v-valo-button-text-shadow($background-color: $background-color);
+}
+
+@mixin v-valo-menubar-menuitem-checked ($background-color, $primary-stylename: v-menubar) {
+  .#{$primary-stylename}-menuitem-checked {
+    @include v-valo-menubar-menuitem-checked-style($background-color: $background-color);
+  }
+}

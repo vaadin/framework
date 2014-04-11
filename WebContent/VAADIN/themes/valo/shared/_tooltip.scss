@@ -1,0 +1,67 @@
+// @category Tooltip
+
+$v-tooltip-background-color: rgba(if(is-dark-color($v-app-background-color), scale-color($v-app-background-color, $lightness: 80%), scale-color($v-app-background-color, $lightness: -80%)), .75) !default;
+$v-tooltip-font-color: v-valo-font-color(opacify($v-tooltip-background-color, 1), 1) !default;
+$v-tooltip-font-size: max(12px, round($v-font-size * 0.86)) !default;
+$v-tooltip-box-shadow: 0 2px 12px rgba(#000, .2) !default;
+$v-tooltip-padding-vertical: round($v-unit-size/8) !default;
+$v-tooltip-padding-horizontal: round($v-unit-size/4) !default;
+$v-tooltip-error-message-background-color: #fff !default;
+$v-tooltip-error-message-font-color: $v-error-indicator-color !default;
+$v-tooltip-border-radius: $v-border-radius - 1px !default;
+
+
+@mixin v-valo-tooltip {
+  .v-tooltip {
+    @include v-valo-tooltip-style;
+
+    div[style*="width"] {
+      width: auto !important;
+    }
+
+    .v-errormessage {
+      background-color: opacify($v-tooltip-error-message-background-color, 1);
+      background-color: $v-tooltip-error-message-background-color;
+      color: $v-tooltip-error-message-font-color;
+      margin: -$v-tooltip-padding-vertical #{-$v-tooltip-padding-horizontal};
+      padding: $v-tooltip-padding-vertical $v-tooltip-padding-horizontal;
+      max-height: 10em;
+      overflow: auto;
+      font-weight: $v-font-weight + 100;
+    }
+
+    .v-tooltip-text {
+      max-height: 10em;
+      overflow: auto;
+      margin-top: $v-tooltip-padding-vertical * 2;
+    }
+
+    .v-errormessage[aria-hidden="true"] + .v-tooltip-text {
+      margin-top: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      color: inherit;
+    }
+  }
+}
+
+
+@mixin v-valo-tooltip-style {
+  background-color: opacify($v-tooltip-background-color, 1);  // For IE8
+  background-color: $v-tooltip-background-color;
+  box-shadow: $v-tooltip-box-shadow;
+  color: $v-tooltip-font-color;
+  padding: $v-tooltip-padding-vertical $v-tooltip-padding-horizontal;
+  border-radius: $v-tooltip-border-radius;
+  max-width: 35em;
+  overflow: hidden !important;
+  font-size: $v-tooltip-font-size;
+
+  @if $v-animations-enabled {
+    //@include v-valo-anim-fade-in;
+  }
+}

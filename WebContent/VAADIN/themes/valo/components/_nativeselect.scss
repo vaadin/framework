@@ -1,0 +1,36 @@
+@mixin v-valo-nativeselect ($primary-stylename: v-select) {
+  .#{$primary-stylename} select {
+    @include v-valo-nativeselect-select-style;
+  }
+
+  .#{$primary-stylename}-select {
+    display: block;
+
+    + .v-textfield {
+      width: auto !important;
+      margin-top: round($v-unit-size/4);
+
+      + .v-nativebutton {
+        margin-top: round($v-unit-size/4);
+        margin-left: round($v-unit-size/4);
+      }
+    }
+  }
+}
+
+
+
+@mixin v-valo-nativeselect-select-style {
+  $_border-color: darken($v-app-background-color, $v-bevel-depth);
+  @if is-dark-color($v-app-background-color) {
+    $_border-color: lighten($v-app-background-color, $v-bevel-depth);
+  }
+  border: $v-border-width solid $_border-color;
+  background-color: v-valo-textfield-background-color($v-app-background-color);
+
+  &:focus {
+    outline: none;
+    //@include v-valo-button-focus-style;
+    box-shadow: v-valo-focus-box-shadow();
+  }
+}

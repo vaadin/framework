@@ -1,0 +1,41 @@
+@mixin v-valo-optiongroup ($primary-stylename: v-optiongroup) {
+  
+  .v-radiobutton {
+    :root & > input {
+      &:checked ~ label:after {
+        $size: ceil($v-unit-size/6);
+        $offset: round($v-unit-size/6);
+        width: $size;
+        height: $size;
+        top: $offset;
+        left: $offset;
+        background: v-valo-selection-color($v-button-background-color);
+      }
+
+      & ~ label:before,
+      & ~ label:after {
+        border-radius: 50%;
+        content: "";
+      }
+    }
+  }
+  
+  .v-select-optiongroup {
+  
+    .v-radiobutton,
+    .v-checkbox {
+      display: block;
+      margin: round($v-unit-size/4) $v-font-size 0 0;
+      
+      &:first-child {
+        margin-top: round($v-unit-size/6);
+      }
+    }
+
+    &.v-has-width label {
+      white-space: normal;
+    }
+  
+  }
+  
+}

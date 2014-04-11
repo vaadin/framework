@@ -1,0 +1,31 @@
+@mixin v-valo-gradient($color, $style: $v-gradient-style, $depth: $v-gradient-depth, $fallback: null, $direction: to bottom) {
+  @if $color {
+    @if $depth <= 0 {
+      background: $fallback or $color;
+    } @else {
+      $color-stops: v-valo-gradient-color-stops($color, $style, $depth);
+      @include linear-gradient($direction, $color-stops, $fallback: $fallback or $color);
+    }
+  }
+}
+
+@function v-valo-gradient-color-stops($color, $style: $v-gradient-style, $depth: $v-gradient-depth) {
+  @if $depth > 0 {
+    
+    @if $style == linear or $style == linear-reverse {
+      $start: blend-overlay(transparentize(#fff, 1-$depth/100%), $color);
+      $end: blend-overlay(transparentize(#000, max(0, 1-$depth/100%)), $color);
+      $end: blend-multiply(transparentize(#000, max(0, 1-$depth/200%)), $end);
+      
+      @if $style == linear {
+        @return $start 2%, $end 98%;
+      } @else {
+        @return $end 2%, $start 98%;
+      }
+    
+    }
+
+  }
+
+  @return $color 0%, $color 100%;
+}

@@ -1,0 +1,361 @@
+@import "loading-indicator";
+@import "contextmenu";
+@import "overlay";
+@import "notification";
+@import "tooltip";
+
+
+// Include global styles only once
+$v-valo-global-included: false !default;
+@mixin v-valo-global {
+  @if $v-valo-global-included == false {
+
+    // Core widget styles come before any other component (and are always included),
+    // so that it has the least specificity
+    @include v-valo-widget;
+
+    .v-generated-body {
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+    
+    .v-app {
+      height: 100%;
+      // Cancel tap highlight from all elements inside the app
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
+    
+    .v-ui {
+      position: relative;
+    }
+    
+    // Prevent margin collapse
+    .v-ui.v-ui-embedded {
+      margin-top: -1px;
+      border-top: 1px solid transparent;
+    }
+    
+    .v-ui:focus {
+      outline: none;
+    }
+    
+    .v-overlay-container {
+      width: 0;
+      height: 0;
+    }
+    
+    // Removes clear button from input fields introduced by IE10
+    input::-ms-clear {
+      display: none;
+    }
+    
+    .v-drag-element {
+      z-index: 60000;
+      // Override any other position properties
+      position: absolute !important;
+      cursor: default;
+    }
+    
+    .v-clip {
+      overflow: hidden;
+    }
+    
+    .v-scrollable {
+      overflow: auto;
+      // Fix extra whitespace in IE
+      line-height: 0;
+    }
+    
+    .v-ios.v-webkit .v-scrollable {
+      -webkit-overflow-scrolling: touch; 
+    }
+    
+    // Disable native scrolling on iOS 5 due to issue #8792
+    .v-ios5.v-webkit .v-scrollable {
+      -webkit-overflow-scrolling: none;
+    }
+    
+    .v-assistive-device-only {
+      position: absolute;
+      top: -2000px;
+      left: -2000px;
+      width: 10px;
+      overflow: hidden;
+    }
+    
+    .v-icon,
+    .v-errorindicator,
+    .v-required-field-indicator {
+      display: inline-block;
+      line-height: inherit;
+    }
+
+    .v-caption,
+    .v-captiontext {
+      display: inline-block;
+      line-height: $v-line-height;
+    }
+
+    // Component global styles should also be included here
+    @include v-valo-orderedlayout-global;
+    @include v-valo-gridlayout-global;
+    @include v-valo-calendar-global;
+    @include v-valo-colorpicker-global;
+    @include v-valo-table-global;
+    @include v-valo-tabsheet-global;
+
+    $v-valo-global-included: true;
+  }
+}
+
+
+
+$v-valo-shared-pathPrefix: null;
+  
+@if $v-relative-paths == false {
+  $v-valo-shared-pathPrefix: "../valo/shared/";
+}
+
+
+@mixin v-valo-app-style {
+  font: $v-font-weight #{$v-font-size}/#{$v-line-height} $v-font-family;
+  color: $v-font-color;
+  background-color: $v-app-background-color;
+  cursor: default;
+  
+  // Default to Helvetica Neue on Macs instead of Helvetica, which has a slightly different baseline
+  @if $v-font-family == sans-serif {
+    .v-mac & {
+        font-family: "Helvetica Neue", sans-serif;
+    }
+  }
+}
+
+
+@mixin v-valo-common {
+
+  //@if & != null {
+  //  &,
+  //  &.v-app-loading {
+  //    @include v-valo-app-style;
+  //  }
+  //} @else {
+    &.v-app,
+    &.v-app-loading {
+      @include v-valo-app-style;
+    }
+  //}
+
+  //&.v-overlay-container {
+  //  position: absolute;
+  //  top: 0;
+  //}
+
+  .v-app-loading {
+    width: 100%;
+    height: 100%;
+    background: $v-app-background-color;
+
+    $_size: 28px + round($v-unit-size/2);
+
+    &:before {
+      content: "";
+      position: fixed;
+      z-index: 100;
+      top: 45%;
+      left: 50%;
+      width: 28px;
+      height: 28px;
+      padding: round($v-unit-size/4);
+      margin-top: round($_size/-2);
+      margin-left: round($_size/-2);
+      background: #fff url($v-valo-shared-pathPrefix + "img/spinner.gif") no-repeat 50%;
+      border-radius: $v-border-radius;
+    }
+
+    @if $v-app-loading-text != "" {
+      &:after {
+        position: fixed;
+        z-index: 100;
+        top: 45%;
+        padding-top: $_size;
+        text-align: center;
+        left: 0;
+        right: 0;
+        content: $v-app-loading-text;
+      }
+    }
+  }
+  
+  @include v-valo-loading-bar;
+
+
+  // Fallback spinner for browsers without CSS animations
+  .v-ie8 &,
+  .v-ie9 & {
+    .v-loading-indicator,
+    .v-loading-indicator-delay,
+    .v-loading-indicator-wait {
+      width: 28px !important;
+      height: 28px;
+      padding: round($v-unit-size/4);
+      background: #fff url($v-valo-shared-pathPrefix + "img/spinner.gif") no-repeat 50%;
+      border-radius: $v-border-radius;
+      top: round($v-unit-size/4);
+      right: round($v-unit-size/4);
+      left: auto;
+      filter: alpha(opacity=50);
+
+      &[style*="none"] {
+        display: none !important;
+      }
+    }
+
+    .v-loading-indicator-wait {
+      filter: alpha(opacity=100);
+    }
+  }
+  
+  .v-scrollable:focus {
+    outline: none;
+  }
+  
+  //.v-captiontext,
+  //.v-errorindicator,
+  //.v-required-field-indicator,
+  img.v-icon {
+    vertical-align: middle;
+  }
+  
+  .v-caption {
+    @include v-valo-caption-style;
+  }
+
+  .v-caption-on-left .v-caption,
+  .v-caption-on-right .v-caption {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .v-icon + .v-captiontext,
+  .v-icon + span {
+    margin-left: round($v-unit-size/5);
+
+    &:empty {
+      margin-left: 0;
+    }
+  }
+  
+  .v-errorindicator {
+    @include v-valo-error-indicator-style;
+  }
+
+  .v-required-field-indicator {
+    color: $v-required-field-indicator-color;
+    padding: 0 .2em;
+  }
+
+  select {
+    font: inherit;
+    font-weight: 400;
+    line-height: inherit;
+    color: inherit;
+    padding: round($v-unit-size/8);
+    margin: 0;
+    border-radius: $v-border-radius;
+
+    @include v-valo-nativeselect-select-style;
+  }
+
+  button {
+    font: inherit;
+    font-weight: 400;
+    line-height: inherit;
+  }
+
+  .v-disabled {
+    cursor: default !important;
+  }
+
+  @include v-valo-drag-element;
+
+  @include v-valo-tooltip;
+
+  @include v-valo-contextmenu;
+
+}
+
+
+
+
+@mixin v-valo-caption-style {
+  font-size: $v-caption-font-size;
+  font-weight: $v-caption-font-weight;
+  padding-bottom: .3em;
+  @if $v-border-radius > 0 {
+    padding-left: round($v-border-radius/4);
+  }
+}
+
+
+
+@mixin v-valo-error-indicator-style {
+  color: $v-error-indicator-color;
+  font-weight: 600;
+  width: ceil($v-unit-size/2);
+  text-align: center;
+
+  &:before {
+    @include v-valo-error-indicator-icon-style;
+  }
+}
+
+@mixin v-valo-error-indicator-icon-style {
+  content: "!";
+}
+
+
+
+// Make the BODY element scrollable instead of the .v-ui element. Scrolling the BODY works better on touch screens.
+// NOTE: breaks percentage sized overlay elements
+// @mixin v-valo-natural-page-scrolling
+// @usage
+// // Call without any parent selector somewhere in your theme
+// =v-valo-natural-page-scrolling;
+@mixin v-valo-natural-page-scrolling {
+  
+  html {
+    height: auto;
+  }
+  
+  .v-generated-body {
+    height: auto;
+    overflow: auto;
+  }
+  
+  .v-app,
+  .v-ui.v-scrollable {
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  
+  // Reposition loading indicator so that it doens't scroll with the page
+  .v-loading-indicator {
+    position: fixed !important;
+  }
+
+  .v-overlay-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  // Reposition notifications so that they don't scroll with the page
+  .v-Notification {
+    position: fixed !important;
+  }
+  
+}

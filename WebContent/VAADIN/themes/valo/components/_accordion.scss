@@ -1,0 +1,75 @@
+$v-accordion-content-shadow-style: join(inset, $v-shadow-style) !default;
+$v-accordion-content-shadow-depth: $v-shadow-depth/2 !default;
+
+
+@mixin v-valo-accordion ($primary-stylename: v-accordion) {
+  .#{$primary-stylename} {
+    @include v-valo-panel-style;
+    @include v-valo-gradient($color: $v-app-background-color, $depth: $v-gradient-depth/2);
+    overflow: hidden;
+  }
+
+  .#{$primary-stylename}-item {
+    position: relative;
+    overflow: hidden;
+
+    @if $v-border-radius > 0 {
+      $_br: $v-border-radius - $v-border-width;
+      &:first-child {
+        border-radius: $_br $_br 0 0;
+      }
+      &:last-child {
+        border-radius: 0 0 $_br $_br;
+      }
+    }
+  }
+
+  .#{$primary-stylename}-item-caption .v-caption {
+    @include v-valo-panel-caption-style;
+    display: block;
+    background: transparent;
+    border-bottom-color: v-valo-panel-border-color($background-color: v-valo-panel-background-color());
+    cursor: pointer;
+    @include user-select(none);;
+
+    &:hover:before,
+    &:active:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    @if $v-hover-styles-enabled {
+      &:hover:before {
+        @include v-valo-button-hover-style;
+        border: none;
+      }
+    }
+
+    &:active:before {
+      @include v-valo-button-active-style;
+    }
+  }
+
+  .#{$primary-stylename}-item:last-child:not(.#{$primary-stylename}-item-open) .v-caption {
+    border-bottom: none;
+  }
+
+  .#{$primary-stylename}-item-content {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    right: 0;
+    box-shadow: v-valo-shadow($shadow-style: $v-accordion-content-shadow-style, $shadow-depth: $v-accordion-content-shadow-depth);
+    background-color: v-valo-panel-background-color();
+    @include box-sizing(border-box);
+    @include v-valo-panel-adjust-content-margins;
+  }
+
+  .#{$primary-stylename}-item-open + .#{$primary-stylename}-item {
+    border-top: $v-panel-border-width solid v-valo-panel-border-color($background-color: v-valo-panel-background-color());
+  }
+}

@@ -1,0 +1,147 @@
+$v-slider-track-size: round($v-unit-size/8) !default;
+$v-slider-track-border-radius: null !default;
+$v-slider-handle-width: round($v-unit-size/1.8) !default;
+$v-slider-handle-height: round($v-unit-size/1.8) !default;
+$v-slider-handle-border-radius: ceil($v-slider-handle-width/2) !default;
+
+
+@mixin v-valo-slider ($primary-stylename: v-slider) {
+
+  // Round to an even number
+  $v-slider-track-size: $v-slider-track-size + $v-slider-track-size%2;
+  $v-slider-handle-width: $v-slider-handle-width + $v-slider-handle-width%2;
+  $v-slider-handle-height: $v-slider-handle-height + $v-slider-handle-height%2;
+
+  .#{$primary-stylename} {
+    position: relative;
+
+    &:focus {
+      outline: none;
+
+      .#{$primary-stylename}-handle:after {
+        opacity: 1;
+
+        .v-ie8 & {
+          visibility: visible;
+        }
+      }
+    }
+
+    &.v-disabled {
+      @include opacity($v-disabled-opacity);
+    }
+  }
+
+  .#{$primary-stylename}-base {
+    @include v-valo-progressbar-track-style;
+    min-width: $v-unit-size * 2;
+    height: $v-slider-track-size;
+    margin: round(($v-unit-size - $v-slider-track-size)/2) round($v-slider-handle-width/2);
+    white-space: nowrap;
+    overflow: hidden;
+    border-radius: $v-slider-track-border-radius;
+
+    &:after {
+      @include v-valo-progressbar-indicator-style;
+      min-width: 0;
+      content: "";
+      display: inline-block;
+      //position: relative;
+      margin-left: -100%;
+      width: 100%;
+      vertical-align: top;
+
+      .v-ie8 & {
+        left: round(-$v-slider-handle-width/2);
+      }
+    }
+  }
+
+  .#{$primary-stylename}-handle {
+    margin-top: round(($v-unit-size - $v-slider-track-size)/-2);
+    width: .1px; // Firefox needs a non-zero value
+    display: inline-block;
+    vertical-align: top;
+
+    &:before {
+      @include v-valo-button-style;
+    }
+
+    &:after {
+      @include v-valo-button-focus-style;
+      opacity: 0;
+      @if $v-animations-enabled {
+        @include transition(opacity 200ms);
+      }
+
+      .v-ie8 & {
+        visibility: hidden;
+      }
+    }
+
+    &:before,
+    &:after {
+      content: "";
+      @include box-sizing(border-box);
+      padding: 0;
+      width: $v-slider-handle-width;
+      height: $v-slider-handle-height;
+      border-radius: $v-slider-handle-border-radius;
+      position: absolute;
+      z-index: 1;
+      margin-top: round(($v-unit-size - $v-slider-handle-height)/2);
+      margin-left: round($v-slider-handle-width/-2);
+    }
+  }
+
+  .#{$primary-stylename}-feedback {
+    @include v-valo-tooltip-style;
+  }
+
+
+
+  // Vertical
+
+
+
+  .#{$primary-stylename}-vertical {
+    padding: round($v-slider-handle-width/2) 0;
+    height: $v-unit-size * 2; // Effectively min-height
+
+    .#{$primary-stylename}-base {
+      @include v-valo-gradient($color: scale-color($v-app-background-color, $lightness: min($v-bevel-depth/-2, -5%), $saturation: $v-bevel-depth/-2), $style: linear-reverse, $direction: to right);
+      min-width: 0;
+      width: $v-slider-track-size;
+      height: 100% !important;
+      min-height: $v-unit-size * 2;
+      margin: 0 round(($v-unit-size - $v-slider-track-size)/2);
+
+      &:after {
+        margin-left: 0;
+        @include v-valo-gradient($color: v-valo-selection-color(), $direction: to right);
+
+        .v-ie8 & {
+          top: round($v-slider-handle-width/2) - 2px;
+          left: 0;
+          height: 130%;
+        }
+      }
+    }
+
+    .#{$primary-stylename}-handle {
+      width: 0;
+      height: .1px;
+      width: $v-unit-size;
+      display: block;
+
+      &:before,
+      &:after {
+        width: $v-slider-handle-height;
+        height: $v-slider-handle-width;
+        margin-top: round($v-slider-handle-width/-2);
+        margin-left: round(($v-slider-handle-height - $v-slider-track-size)/-2);
+      }
+    }
+  }
+
+}

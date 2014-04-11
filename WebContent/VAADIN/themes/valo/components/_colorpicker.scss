@@ -1,0 +1,200 @@
+@mixin v-valo-colorpicker-global ($primary-stylename: v-colorpicker) {
+  $v-valo-colorpicker-pathPrefix: null;
+  @if $v-relative-paths == false {
+    $v-valo-colorpicker-pathPrefix: "../valo/components/img/colorpicker/";
+  }
+
+  .#{$primary-stylename}-popup.v-window {
+    min-width: 220px !important;
+  }
+  
+  .#{$primary-stylename}-gradient-clicklayer {
+    @include opacity(0);
+  }
+  
+  .rgb-gradient .#{$primary-stylename}-gradient-background {
+    background: url(#{$v-valo-colorpicker-pathPrefix}gradient2.png);
+  }
+  
+  .hsv-gradient .#{$primary-stylename}-gradient-foreground {
+    background: url(#{$v-valo-colorpicker-pathPrefix}gradient.png);
+  }
+  
+  .#{$primary-stylename}-gradient-lowerbox {
+    border-right: 1px solid rgba(122,122,122,.5);
+    border-top: 1px solid rgba(122,122,122,.5);
+  }
+  
+  .#{$primary-stylename}-gradient-higherbox {
+    border-left: 1px solid rgba(122,122,122,.5);
+    border-bottom: 1px solid rgba(122,122,122,.5);
+  }
+
+  .#{$primary-stylename}-popup .v-slider.v-slider-red:before {
+    background-color: red;
+  }
+  
+  .#{$primary-stylename}-popup .v-slider.v-slider-green:before {
+    background-color: green;
+  }
+  
+  .#{$primary-stylename}-popup .v-slider.v-slider-blue:before {
+    background-color: blue;
+  }
+
+  .#{$primary-stylename}-popup .v-slider.hue-slider:before {
+    background: url(#{$v-valo-colorpicker-pathPrefix}slider_hue_bg.png);
+  }
+
+  .#{$primary-stylename}-popup .v-textfield-dark {
+    color: #fff;
+  }
+  
+  .#{$primary-stylename}-popup .v-textfield-light {
+    color: #000;
+  }
+  
+  // TODO magic numbers
+  .#{$primary-stylename}-grid {
+    height: 319px;
+  }
+  
+  .#{$primary-stylename}-popup .colorselect td {
+    line-height: 15px;
+  }
+}
+
+
+
+
+
+
+@mixin v-valo-colorpicker ($primary-stylename: v-colorpicker) {
+
+  .#{$primary-stylename}-popup.v-window {
+    min-width: 220px !important;
+  }
+
+  .#{$primary-stylename}-popup {
+    .v-tabsheet-tabs {
+      padding: 0 round($v-unit-size/4);
+    }
+
+    [class$="sliders"] {
+      padding: round($v-unit-size/3);
+
+      .v-widget {
+        width: 100% !important;
+        vertical-align: middle;
+      }
+
+      .v-has-caption {
+        white-space: nowrap;
+        padding-left: $v-font-size * 3;
+      }
+
+      .v-caption {
+        display: inline-block;
+        margin-left: $v-font-size * -3;
+        width: $v-font-size * 3;
+      }
+
+      // Saturation caption needs more space
+      .v-slot-hue-slider + .v-slot {
+        .v-has-caption {
+          padding-left: $v-font-size * 5;
+        }
+
+        .v-caption {
+          margin-left: $v-font-size * -5;
+          width: $v-font-size * 5;
+        }
+      }
+    }
+
+    .v-slider-red .v-slider-base:after {
+      background: red;
+      border: none;
+      box-shadow: none;
+    }
+
+    .v-slider-green .v-slider-base:after {
+      background: green;
+      border: none;
+      box-shadow: none;
+    }
+
+    .v-slider-blue .v-slider-base:after {
+      background: blue;
+      border: none;
+      box-shadow: none;
+    }
+
+    .v-margin-bottom {
+      padding-bottom: 0;
+    }
+
+    .resize-button {
+      width: 100% !important;
+      height: auto !important;
+      text-align: center;
+      outline: none;
+
+      &:before {
+        font-family: FontAwesome;
+        content: "\F141";
+      }
+    }
+
+    .resize-button-caption {
+      display: none;
+    }
+
+    .v-horizontallayout {
+      height: auto !important;
+      padding: round($v-unit-size/4) 0;
+      background-color: $v-app-background-color;
+      border-top: $v-border-width solid scale-color($v-app-background-color, $lightness: -5%);
+
+      .v-expand {
+        overflow: visible;
+      }
+
+      .v-button {
+        width: 80% !important;
+      }
+    }
+  }
+
+  .#{$primary-stylename}-preview {
+    width: auto !important;
+    height: auto !important;
+    padding: round($v-unit-size/4);
+  }
+
+  .#{$primary-stylename}-preview-textfield {
+    height: auto !important;
+    text-align: center;
+    border: none;
+  }
+
+  .#{$primary-stylename} {
+    width: auto !important;
+  }
+
+  .#{$primary-stylename}-button-color {
+    position: absolute;
+    top: round($v-unit-size/6);
+    right: round($v-unit-size/6);
+    bottom: round($v-unit-size/6);
+    left: round($v-unit-size/6);
+    border-radius: $v-border-radius - 1px;
+    border: 1px solid hsla(0, 0%, 0%, .5);
+    max-width: $v-unit-size - round($v-unit-size/3) - 2px;
+
+    + .v-button-caption:not(:empty) {
+      margin-left: round($v-unit-size/2);
+    }
+  }
+
+}

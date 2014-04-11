@@ -1,0 +1,156 @@
+// Common styles for components
+// About 40KB of CSS output
+
+@mixin v-valo-common-stylenames {
+
+	$v-scaling-factor--small: 0.8 !default;
+	$v-scaling-factor--large: 1.2 !default;
+
+	$v-unit-size--small: ceil($v-unit-size * $v-scaling-factor--small);
+	$v-unit-size--large: ceil($v-unit-size * $v-scaling-factor--large);
+
+	$v-font-size--small: ceil($v-font-size * $v-scaling-factor--small);
+	$v-font-size--large: ceil($v-font-size * $v-scaling-factor--large);
+
+
+	.v-button-primary {
+	  @include v-valo-button-style($background-color: v-valo-selection-color());
+	  padding: 0 round($v-unit-size/1.4);
+	  font-weight: bold;
+	}
+
+	.v-button-friendly {
+	  @include v-valo-button-style($background-color: #2c9720);
+	}
+
+	.v-button-danger {
+	  @include v-valo-button-style($background-color: $v-error-indicator-color);
+	}
+
+	.v-button-borderless {
+	  @include v-valo-button-borderless-style;
+	}
+
+	.v-button-link {
+	  @include v-valo-button-borderless-style;
+	  @include v-valo-link-style;
+	}
+
+	.v-button-small {
+	  @include v-valo-button-style($unit-size: $v-unit-size--small);
+	  font-size: $v-font-size--small;
+	}
+
+	.v-button-large {
+	  @include v-valo-button-style($unit-size: $v-unit-size--large);
+	  font-size: $v-font-size--large;
+	}
+
+	.v-button-icon-align-right {
+		@include v-valo-button-icon-align-right-style;
+	}
+
+	.v-tabsheet-centered-tabs {
+	  @include v-valo-tabsheet-centered-tabs;
+	}
+
+	.v-tabsheet-equal-width-tabs {
+	  @include v-valo-tabsheet-equal-width-tabs($flex: false);
+	}
+
+	.v-tabsheet-icons-on-top {
+	  @include v-valo-tabsheet-icons-on-top;
+	}
+
+	.v-panel-borderless {
+	  @include v-valo-panel-borderless-style;
+	}
+
+	.v-formlayout.light {
+	  @include v-valo-formlayout-light-style;
+	}
+
+	.v-textfield-borderless,
+	.v-textarea-borderless {
+	  @include v-valo-textfield-borderless-style;
+	}
+
+	.v-textfield-small {
+	  @include v-valo-textfield-style($unit-size: $v-unit-size--small);
+	  font-size: $v-font-size--small;
+	}
+
+	.v-textfield-large {
+	  @include v-valo-textfield-style($unit-size: $v-unit-size--large);
+	  font-size: $v-font-size--large;
+	}
+
+	@include v-valo-textfield-inline-icon($stylename: inline-icon);
+
+	.v-textarea-small {
+	  @include v-valo-textarea-style($unit-size: $v-unit-size--small);
+	  font-size: $v-font-size--small;
+	}
+
+	.v-textarea-large {
+	  @include v-valo-textarea-style($unit-size: $v-unit-size--large);
+	  font-size: $v-font-size--large;
+	}
+
+	.v-filterselect-small {
+	  @include v-valo-combobox-style($unit-size: $v-unit-size--small);
+	  font-size: $v-font-size--small;
+	}
+
+	.v-filterselect-large {
+	  @include v-valo-combobox-style($unit-size: $v-unit-size--large);
+	  font-size: $v-font-size--large;
+	}
+
+	.v-datefield-small {
+	  @include v-valo-datefield-style($unit-size: $v-unit-size--small);
+	}
+
+	.v-datefield-large {
+	  @include v-valo-datefield-style($unit-size: $v-unit-size--large);
+	}
+
+	.v-checkbox-small {
+	  @include v-valo-checkbox-style($unit-size: $v-unit-size--small);
+	}
+
+	.v-checkbox-large {
+	  @include v-valo-checkbox-style($unit-size: $v-unit-size--large);
+	}
+
+	.v-label-spinner {
+	  @include v-valo-spinner;
+	}
+
+	.v-panel-well {
+	  @include v-valo-panel-well-style;
+	}
+
+	.v-panel-borderless {
+	  @include v-valo-panel-borderless-style;
+	}
+
+	.v-csslayout-well {
+	  @include v-valo-panel-well-style;
+	  @include v-valo-panel-adjust-content-margins;
+	}
+
+	.v-csslayout-card {
+	  @include v-valo-panel-style;
+	  @include v-valo-panel-adjust-content-margins;
+	}
+
+	@include v-valo-splitpanel-small($stylename: small);
+
+	@include v-valo-component-group;
+
+	.wrapping {
+    @include v-valo-horizontallayout--wrapping;
+  }
+
+}

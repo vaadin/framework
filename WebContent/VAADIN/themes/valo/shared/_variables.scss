@@ -1,0 +1,140 @@
+// @category  Common
+
+// Color functions are used to calculate default font color
+@import "../util/color";
+
+
+// List of components to include in the theme compilation. The list can be modified to make 
+// the compiled theme smaller by removing unused components from the list.
+// @variable v-included-components
+// @usage
+// // Remove the Calendar component styles from the output
+// $v-included-components: remove($v-included-components, calendar);
+$v-included-components: 
+    absolutelayout,
+    accordion,
+    button,
+    calendar,
+    checkbox,
+    colorpicker,
+    combobox,
+    csslayout,
+    customcomponent,
+    customlayout,
+    datefield,
+    dragwrapper,
+    form,
+    formlayout,
+    grid,
+    gridlayout,
+    label,
+    link,
+    loginform,
+    menubar,
+    nativebutton,
+    nativeselect,
+    optiongroup,
+    orderedlayout,
+    panel,
+    popupview,
+    progressindicator,
+    slider,
+    splitpanel,
+    table,
+    tabsheet,
+    textfield,
+    textarea,
+    richtextarea,
+    tree,
+    treetable,
+    twincolselect,
+    upload,
+    window !default;
+
+
+// Checks if a given component is included in the compilation. Used by the collection mixins that 
+// include all components, like v-valo-components and v-valo-components.
+// @mixin v-is-included
+// @param     $component-name {String} the name of the component to check
+// @param     $is-included {list} (Optional) the list of components which is checked
+// @return    {Boolean} true if the component is included in the compilation, false if not
+@function v-is-included ($component-name, $is-included: $v-included-components) {
+  @return contains($is-included, $component-name);
+}
+
+
+// A static text that is shown while the application JavaScript is loaded and started
+// @variable    v-app-loading-text
+// @default     ""
+$v-app-loading-text: "" !default;
+
+
+// Base line height used for all widgets
+// @variable     v-line-height
+// @default     1.55 !default
+$v-line-height: 1.55 !default;
+
+
+$v-app-background-color:        hsl(210, 0%, 98%)               !default;
+
+$v-font-size:                   16px                            !default; // Should be specified in pixels
+$v-font-weight:                 300                             !default; // Must be specified as a numeric value (i.e. not 'normal' or 'bold')
+$v-font-color:                  v-valo-font-color($v-app-background-color) !default;
+$v-font-family:                 "Open Sans", sans-serif         !default;
+
+$v-caption-font-size:           round($v-font-size * 0.9)       !default; // Should be a pixel value
+$v-caption-font-weight:         max(400, $v-font-weight)        !default;
+
+$v-unit-size:                   round(2.3 * $v-font-size)       !default; // Must be specified in pixels (suitable range 18-50)
+
+$v-layout-margin-top:           round($v-unit-size)             !default;
+$v-layout-margin-right:         round($v-unit-size)             !default;
+$v-layout-margin-bottom:        round($v-unit-size)             !default;
+$v-layout-margin-left:          round($v-unit-size)             !default;
+
+$v-layout-spacing-vertical:     round($v-unit-size/3)           !default;
+$v-layout-spacing-horizontal:   round($v-unit-size/3)           !default;
+
+$v-border-width:                1px                             !default; // Must be specified in pixels
+$v-border-radius:               4px                             !default; // Must be specified in pixels
+
+$v-gradient-style:              linear                          !default;
+$v-gradient-depth:              8%                              !default;
+
+$v-bevel-style:                 inset 0 1px 0 hilite, inset 0 -1px 0 shade !default;
+$v-bevel-depth:                 25%                             !default;
+
+$v-shadow-style:                0 2px 3px shade                 !default;
+$v-shadow-depth:                5%                              !default;
+
+$v-focus-style:                 0 0 0 2px focus-color           !default;
+$v-focus-color:                 null                            !default;
+
+$v-animations-enabled:          true                            !default;
+$v-hover-styles-enabled:        true                            !default;
+
+$v-disabled-opacity:            0.7                             !default;
+
+$v-selection-color:             null                            !default;
+
+$v-default-field-width:         $v-unit-size * 5                !default;
+
+$v-error-indicator-color:       #ed473b                         !default;
+$v-required-field-indicator-color: $v-error-indicator-color     !default;
+
+
+
+
+$v-valo-include-common-stylenames: true                         !default;
+
+
+
+
+// A flag to note whether relative URL paths are relative to the currently parsed SCSS file or to the compilation root file.
+// The Vaadin compiler parses URL paths differently than the regular Sass compiler (i.e. Vaadin modifies relative url paths).
+// This boolean is used to flag which compiler is used, so that paths are correct for different resources.
+// false == Ruby, true == Vaadin
+// @private
+// @variable  v-relative-paths
+// @default   false
+$v-relative-paths: false !default;

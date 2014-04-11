@@ -1,0 +1,105 @@
+@mixin v-valo-checkbox ($primary-stylename: v-checkbox) {
+  
+  .#{$primary-stylename},
+  .v-radiobutton {
+    @include v-valo-checkbox-style;   
+  }
+  
+}
+
+
+@mixin v-valo-checkbox-icon-style {
+  content: "\f00c";
+  font-family: FontAwesome;
+}
+
+
+@mixin v-valo-checkbox-style ($background-color: $v-button-background-color, $unit-size: $v-unit-size) {
+  $background-color: $background-color or $v-app-background-color;
+  
+  position: relative;
+  line-height: round($unit-size/2);
+  white-space: nowrap;
+
+  &.v-has-width label {
+    white-space: normal;
+  }
+
+  :root & {
+    padding-left: round($unit-size/1.5);
+
+    label {
+      @include v-valo-tappable;
+    }
+  }
+  
+  :root & > input {
+    position: absolute;
+    clip: rect(0,0,0,0);
+    left: .2em;
+    top: .2em;
+    z-index: 0;
+    margin: 0;
+
+    &:focus ~ label:before {
+      @include v-valo-button-focus-style($background-color: $background-color, $border-fallback: null);
+      box-shadow: v-valo-button-box-shadow($background-color), v-valo-focus-box-shadow();
+    }
+
+    & ~ label:before,
+    & ~ label:after {
+      content: "";
+      display: inline-block;
+      @include box-sizing(border-box);
+      width: round($unit-size/2);
+      height: round($unit-size/2);
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: min(round($unit-size/6), $v-border-radius);
+      font-size: round($v-font-size * 0.8 * ($unit-size/$v-unit-size));
+      text-align: center;
+    }
+    
+    & ~ label:before {
+      @include v-valo-button-style($background-color: $background-color, $unit-size: $unit-size);
+      padding: 0;
+      height: round($unit-size/2);
+    }
+
+    & ~ label:after {
+      @include v-valo-checkbox-icon-style;
+      color: transparent;
+      @if $v-animations-enabled {
+        @include transition(color 100ms);
+      }
+    }
+    
+    &:active ~ label:after {
+      @include v-valo-button-active-style($background-color: $background-color);
+    }
+    
+    &:checked ~ label:after {
+      color: v-valo-selection-color($context: $background-color);
+    }
+
+    &[disabled] {
+      ~ label:before,
+      ~ label:after {
+        @include opacity($v-disabled-opacity);
+      }
+
+      &:active ~ label:after {
+        background: transparent;
+      }
+    }
+
+  }
+    
+  & > .v-icon,
+  & > label .v-icon  {
+    margin: 0 round($unit-size/6) 0 round($unit-size/12);
+    min-width: 1em;
+  }
+
+}

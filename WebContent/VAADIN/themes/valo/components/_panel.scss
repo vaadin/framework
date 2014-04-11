@@ -1,0 +1,119 @@
+$v-panel-shadow-style: $v-shadow-style !default;
+$v-panel-border-width: $v-border-width !default;
+$v-panel-border-radius: $v-border-radius !default;
+
+$v-panel-caption-background-color: null !default;
+$v-panel-caption-gradient-depth: $v-gradient-depth/4 !default;
+$v-panel-caption-bevel-style: first($v-bevel-style) !default;
+$v-panel-caption-bevel-depth: $v-bevel-depth !default;
+
+
+
+@mixin v-valo-panel ($primary-stylename: v-panel) {
+
+  .#{$primary-stylename} {
+    @include v-valo-panel-style;
+  }
+
+  .#{$primary-stylename}-caption {
+    @include v-valo-panel-caption-style;
+  }
+
+  .#{$primary-stylename}-content {
+    @include box-sizing(border-box);
+    width: 100%;
+    height: 100%;
+    @include v-valo-panel-adjust-content-margins;
+  }
+
+}
+
+
+
+@function v-valo-panel-background-color ($context: $v-app-background-color) {
+  $bg-color: lighten($context, 5%);
+  @return $bg-color;
+}
+
+
+@function v-valo-panel-caption-background-color ($background-color) {
+  @return $background-color or $v-app-background-color;
+}
+
+
+@function v-valo-panel-border-color ($background-color: $v-app-background-color) {
+  $border-color: if(color-luminance($background-color) < color-luminance($v-app-background-color), $background-color, $v-app-background-color);
+  $border-color: blend-darken($border-color, scale-color($border-color, $lightness: max(-30%, -$v-bevel-depth/2)));
+  $border-color: scale-color($border-color, $saturation: -$v-bevel-depth/2);
+  @return $border-color;
+}
+
+
+@mixin v-valo-panel-style {
+  background: v-valo-panel-background-color();
+  border-radius: $v-panel-border-radius;
+  border: $v-panel-border-width solid v-valo-panel-border-color(v-valo-panel-background-color());
+  box-shadow: v-valo-shadow($shadow-style: $v-panel-shadow-style);
+}
+
+
+@mixin v-valo-panel-caption-style ($background-color: $v-panel-caption-background-color) {
+  @include box-sizing(border-box);
+  padding: 0 round($v-unit-size/3);
+  line-height: $v-unit-size;
+  $_bg: v-valo-panel-caption-background-color($background-color);
+  $_border-color: scale-color($_bg, $lightness: -$v-panel-caption-bevel-depth/2, $saturation: -$v-panel-caption-bevel-depth/2);
+  border-bottom: $v-panel-border-width solid $_border-color;
+  border-bottom-color: rgba($_border-color, .8);
+  @include v-valo-gradient($color: $_bg, $depth: $v-panel-caption-gradient-depth);
+  color: v-valo-font-color($_bg);
+  font-weight: $v-caption-font-weight;
+  font-size: $v-caption-font-size;
+  box-shadow: v-valo-bevel($_bg, $bevel-style: $v-panel-caption-bevel-style, $bevel-depth: $v-panel-caption-bevel-depth, $gradient-depth: $v-panel-caption-gradient-depth);
+}
+
+
+@mixin v-valo-panel-well-style {
+  $_bg: scale-color(adjust-color($v-app-background-color, $lightness: -2%), $saturation: -1.5%);
+  background: $_bg;
+  box-shadow: v-valo-shadow($shadow-style: (0 1px 0 0 hilite, join(inset, $v-panel-shadow-style)));
+  border-radius: $v-border-radius;
+  border: $v-border-width solid v-valo-panel-border-color(v-valo-panel-background-color());
+
+  .v-panel-caption {
+    background: transparent;
+    box-shadow: none;
+  }
+}
+
+
+@mixin v-valo-panel-borderless-style {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+
+  .v-panel-caption {
+    background: transparent;
+    box-shadow: none;
+  }
+}
+
+
+@mixin v-valo-panel-adjust-content-margins {
+  > .v-margin-top {
+    padding-top: round($v-unit-size/3);
+  }
+
+  > .v-margin-right {
+    padding-right: round($v-unit-size/3);
+  }
+
+  > .v-margin-bottom {
+    padding-bottom: round($v-unit-size/3);
+  }
+
+  > .v-margin-left {
+    padding-left: round($v-unit-size/3);
+  }
+}
+

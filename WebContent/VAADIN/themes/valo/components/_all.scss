@@ -1,0 +1,212 @@
+@import "absolutelayout";
+@import "accordion";
+@import "button";
+@import "calendar";
+@import "checkbox";
+@import "colorpicker";
+@import "combobox";
+@import "csslayout";
+@import "customcomponent";
+@import "customlayout";
+@import "datefield";
+@import "dragwrapper";
+@import "form";
+@import "formlayout";
+@import "grid";
+@import "gridlayout";
+@import "label";
+@import "link";
+@import "loginform";
+@import "menubar";
+@import "nativebutton";
+@import "nativeselect";
+@import "optiongroup";
+@import "orderedlayout";
+@import "panel";
+@import "popupview";
+@import "progressbar";
+@import "richtextarea";
+@import "slider";
+@import "splitpanel";
+@import "table";
+@import "tabsheet";
+@import "textfield";
+@import "textarea";
+@import "tree";
+@import "treetable";
+@import "twincolselect";
+@import "upload";
+@import "widget";
+@import "window";
+@import "dragwrapper";
+
+
+@mixin v-valo-components {
+  
+  @if v-is-included(absolutelayout) {
+    @include v-valo-absolutelayout;
+  }
+  
+  @if v-is-included(orderedlayout) {
+    @include v-valo-orderedlayout;
+  }
+    
+  @if v-is-included(button) {
+    @include v-valo-button;
+  }
+  
+  @if v-is-included(checkbox) or v-is-included(optiongroup) {
+    @include v-valo-checkbox;
+  }
+  
+  @if v-is-included(combobox) {
+    @include v-valo-combobox;
+  }
+  
+  @if v-is-included(csslayout) {
+    @include v-valo-csslayout;
+  }
+  
+  @if v-is-included(customcomponent) {
+    @include v-valo-customcomponent;
+  }
+  
+  @if v-is-included(customlayout) {
+    @include v-valo-customlayout;
+  }
+  
+  @if v-is-included(form) {
+    @include v-valo-form;
+  }
+  
+  @if v-is-included(formlayout) {
+    @include v-valo-formlayout;
+  }
+  
+  @if v-is-included(grid) {
+    @include v-valo-grid(v-escalator);
+  }
+  
+  @if v-is-included(textfield) {
+    @include v-valo-textfield;
+  }
+  
+  @if v-is-included(textarea) {
+    @include v-valo-textarea;
+  }
+  
+  @if v-is-included(datefield) {
+    @include v-valo-datefield;
+    @include v-valo-inline-datefield;
+  }
+  
+  @if v-is-included(orderedlayout) {
+    @include v-valo-orderedlayout;
+  }
+  
+  @if v-is-included(gridlayout) {
+    @include v-valo-gridlayout;
+  }
+  
+  @if v-is-included(menubar) {
+    @include v-valo-menubar;
+  }
+  
+  @if v-is-included(optiongroup) {
+    @include v-valo-optiongroup;
+  }
+  
+  @if v-is-included(link) {
+    @include v-valo-link;
+  }
+  
+  @if v-is-included(window) {
+    @include v-valo-window;
+  }
+  
+  @if v-is-included(tree) {
+    @include v-valo-tree;
+  }
+  
+  @if v-is-included(table) or v-is-included(treetable) {
+    @include v-valo-table;
+  }
+  
+  @if v-is-included(treetable) {
+    @include v-valo-treetable;
+  }
+  
+  @if v-is-included(splitpanel) {
+    @include v-valo-splitpanel;
+  }
+  
+  @if v-is-included(progressbar) or v-is-included(progressindicator) {
+    @include v-valo-progressbar;
+    @include v-valo-progressbar(v-progressindicator);
+  }
+  
+  @if v-is-included(slider) {
+    @include v-valo-slider;
+  }
+  
+  @if v-is-included(tabsheet) {
+    @include v-valo-tabsheet;
+  }
+  
+  @if v-is-included(colorpicker) {
+    @include v-valo-colorpicker;
+  }
+  
+  @if v-is-included(panel) {
+    @include v-valo-panel;
+  }
+  
+  @if v-is-included(accordion) {
+    @include v-valo-accordion;
+  }
+  
+  @if v-is-included(twincolselect) {
+    @include v-valo-twincolselect;
+  }
+  
+  @if v-is-included(nativeselect) {
+    @include v-valo-nativeselect;
+  }
+  
+  @if v-is-included(calendar) {
+    @include v-valo-calendar;
+  }
+  
+  @if v-is-included(label) {
+    @include v-valo-label;
+  }
+  
+  @if v-is-included(dragwrapper) {
+    @include v-valo-dragwrapper;
+  }
+  
+  @if v-is-included(loginform) {
+    @include v-valo-loginform;
+  }
+  
+  @if v-is-included(nativebutton) {
+    @include v-valo-nativebutton;
+  }
+  
+  @if v-is-included(nativeselect) {
+    @include v-valo-nativeselect;
+  }
+  
+  @if v-is-included(popupview) {
+    @include v-valo-popupview;
+  }
+  
+  @if v-is-included(richtextarea) {
+    @include v-valo-richtextarea;
+  }
+  
+  @if v-is-included(upload) {
+    @include v-valo-upload;
+  }
+  
+}

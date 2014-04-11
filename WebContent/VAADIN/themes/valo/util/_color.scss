@@ -1,0 +1,111 @@
+@import "blend-modes";
+
+// Returns the luminance of a color (0-255)
+// (perceived brightness, rather than absolute mathematical lightness value)
+//
+// "The luminance calculation is a weighted average of the color channels that approximates 
+// how humans perceive brightness, while lightness is just an average of the largest and 
+// smallest channels without regard to perception."
+//
+// Source for equation: http://en.wikipedia.org/wiki/Luminance_(relative)
+@function color-luminance ($color) {
+  @return 0.2126 * red($color) + 0.7152 * green($color) + 0.0722 * blue($color);
+}
+
+
+@function luminance-diff($color1, $color2) {
+  @return abs(color-luminance($color1) - color-luminance($color2));
+}
+
+@function saturation-diff($color1, $color2) {
+  @return abs(saturation($color1) - saturation($color2));
+}
+
+@function hue-diff($color1, $color2) {
+  @return abs(hue($color1) - hue($color2));
+}
+
+
+// Arbitrary luminance threshold after which colors should be adjusted either darker or lighter
+$v-luminance-threshold: 150 !default;
+
+
+
+@function black($opacity: 1) {
+  @return transparentize(#000, 1 - $opacity);
+}
+
+@function white($opacity: 1) {
+  @return transparentize(#fff, 1 - $opacity);
+}
+
+
+
+@function is-dark-color($bg-color) {
+  $luminance: color-luminance($bg-color);
+  @if $luminance < $v-luminance-threshold or (saturation($bg-color) > 80% and ($luminance < $v-luminance-threshold + 20)) {
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+// Returns a text color with enough contrast for the given background color
+//
+@function v-valo-font-color ($bg-color, $contrast: 0.8) {
+  @if $bg-color {
+    @if is-dark-color($bg-color) {
+      @return scale_color($bg-color, $lightness: min(100%, 100% * $contrast), $saturation: max(-100%, -50% * $contrast));
+    } @else {
+      @return scale_color($bg-color, $lightness: max(-100%, -100% * $contrast * 0.9), $saturation: max(-100%, -50% * $contrast));
+    }
+  }
+  @return null;
+}
+
+
+@function v-valo-header-color ($bg-color, $contrast: 1) {
+  $font-color: v-valo-font-color($bg-color);
+  @if is-dark-color($bg-color) {
+    @return lighten($font-color, 30% * $contrast);
+  } @else {
+    @return darken($font-color, 20% * $contrast);
+  }
+}
+
+
+
+
+@function v-valo-focus-color ($color: null, $context: null) {
+  $context: $context or $v-app-background-color;
+
+  $fallback: $context;
+  @if is-dark-color($fallback) {
+    $fallback: scale-color($fallback, $lightness: 40%, $saturation: 80%);
+  } @else {
+    $fallback: scale-color($fallback, $lightness: -50%, $saturation: 80%);
+  }
+
+  $focus-color: $color or $v-focus-color or $fallback;
+  //@if luminance-diff($context, $focus-color) < 30 or (luminance-diff($context, $focus-color) < 10 and saturation-diff($context, $focus-color) < 20%) {
+  //  $focus-color: #fff;
+  //}
+  @return $focus-color;
+}
+
+
+
+@function v-valo-focus-box-shadow ($color: null, $focus-style: $v-focus-style) {
+  $focus-color: v-valo-focus-color($color: $color);
+  @return replace($focus-style, focus-color, transparentize($focus-color, .5));
+}
+
+
+
+@function v-valo-selection-color ($color: null, $context: null) {
+  $selection-color: $color or $v-selection-color or v-valo-focus-color($color: $color, $context: $context);
+  //@if luminance-diff($context, $selection-color) < 30 or (luminance-diff($context, $selection-color) < 10 and saturation-diff($context, $selection-color) < 20%) {
+  //  $selection-color: #fff;
+  //}
+  @return $selection-color;
+}

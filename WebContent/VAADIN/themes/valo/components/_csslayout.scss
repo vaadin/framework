@@ -1,0 +1,52 @@
+@mixin v-valo-csslayout ($primary-stylename: v-csslayout){
+
+}
+
+
+@mixin v-valo-component-group ($primary-stylename: v-csslayout) {
+  .#{$primary-stylename}-v-component-group {
+    white-space: nowrap;
+    position: relative;
+
+    @if $v-border-radius > 0 {
+      .v-widget ~ .v-widget:not(:last-child) {
+        border-radius: 0;
+      }
+
+      .v-widget:last-child {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      .v-widget:first-child,
+      .v-caption:first-child + .v-widget {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+
+    // Assume most components have borders. 
+    // This is just a best-guess, will need fine-tuning if border-widths vary from widget-to-widget
+    .v-widget {
+      vertical-align: middle;
+      
+      @if $v-border-width > 0 {
+        margin-left: -$v-border-width;
+      } @else {
+        margin-left: round($v-font-size/8);
+      }
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      // Focused component should be on top
+      &:focus,
+      [class*="focus"] {
+        position: relative;
+        z-index: 1;
+      }
+    }
+
+  }
+}

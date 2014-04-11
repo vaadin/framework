@@ -1,0 +1,177 @@
+$v-splitpanel-splitter-size: round($v-unit-size/5) !default;
+
+
+@mixin v-valo-splitpanel($primary-stylename : v-splitpanel) {
+
+  // Disable splitter shadow (should most likely be a variable)
+  $copy: $v-shadow-depth;
+  $v-shadow-depth: 0%;
+
+  // Round to even number
+  $v-splitpanel-splitter-size: $v-splitpanel-splitter-size + $v-splitpanel-splitter-size%2;
+
+  .#{$primary-stylename}-vertical,
+  .#{$primary-stylename}-horizontal {
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .#{$primary-stylename}-hsplitter {
+    width: $v-splitpanel-splitter-size;
+  }
+
+  .#{$primary-stylename}-hsplitter div,
+  .#{$primary-stylename}-vsplitter div {
+    @include v-valo-button-style;
+    @include box-sizing(border-box);
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    cursor: s-resize;
+    cursor: row-resize;
+
+    &:before {
+      content: "";
+      width: $v-unit-size;
+      height: 0;
+      border: 1px solid;
+      $color: $v-button-background-color or $v-app-background-color;
+      $shade: max($v-bevel-depth, 10%);
+      $border-color1: scale-color($color, $lightness: -$shade, $saturation: -$shade/2);
+      $border-color2: scale-color($color, $lightness: -$shade/2, $saturation: -$shade/4);
+      border-color: $border-color1 $border-color2 $border-color2 $border-color1;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: round(-$v-unit-size/2);
+      margin-top: -1px;
+    }
+  }
+
+  .#{$primary-stylename}-vsplitter {
+    height: $v-splitpanel-splitter-size;
+  }
+
+  .#{$primary-stylename}-hsplitter div {
+    cursor: e-resize;
+    cursor: col-resize;
+    $color: $v-button-background-color or $v-app-background-color;
+    @include v-valo-gradient($color: $color, $direction: to right);
+
+    &:before {
+      width: 0;
+      height: $v-unit-size;
+      margin-left: -1px;
+      margin-top: round(-$v-unit-size/2);
+    }
+  }
+
+  .v-disabled [class$="splitter"] div {
+    cursor: default;
+
+    &:before {
+      display: none;
+    }
+  }
+
+  // Allow undefined/auto height for horizontal split
+
+  .#{$primary-stylename}-horizontal {
+    .#{$primary-stylename}-second-container {
+      position: static !important;
+      display: inline-block;
+      margin-left: $v-splitpanel-splitter-size; /* Match to the width of the splitter element */
+      vertical-align: top;
+    }
+
+    .#{$primary-stylename}-first-container {
+      display: inline-block;
+      vertical-align: top;
+    }
+  }
+
+  $v-shadow-depth: $copy;
+
+}
+
+
+
+
+
+
+@mixin v-valo-splitpanel-small ($primary-stylename: v-splitpanel, $stylename: small) {
+  .#{$primary-stylename}-vsplitter-#{$stylename},
+  .#{$primary-stylename}-hsplitter-#{$stylename} {
+    div {
+      @include opacity(0);
+      @include transition(opacity 200ms);
+    }
+
+    &:hover div {
+      @include opacity(1);
+    }
+  }
+
+  .#{$primary-stylename}-vsplitter-#{$stylename} {
+    div {
+      left: 40%;
+      right: 40%;
+      height: $v-splitpanel-splitter-size + 1px;
+      top: round($v-splitpanel-splitter-size/-2);
+
+      &:before {
+        width: 50%;
+        left: 25%;
+        margin-left: 0;
+      }
+    }
+
+    &:before {
+      content: "";
+      position: absolute;
+      height: 1px;
+      left: 0;
+      right: 0;
+      background: darken($v-app-background-color, max($v-bevel-depth/2, 10%));
+    }
+  }
+
+  .#{$primary-stylename}-hsplitter-#{$stylename} {
+    div {
+      top: 40%;
+      bottom: 40%;
+      width: $v-splitpanel-splitter-size + 1px;
+      left: round($v-splitpanel-splitter-size/-2);
+
+      &:before {
+        height: 50%;
+        top: 25%;
+        margin-top: 0;
+      }
+    }
+
+    &:before {
+      content: "";
+      position: absolute;
+      width: 1px;
+      top: 0;
+      bottom: 0;
+      background: darken($v-app-background-color, max($v-bevel-depth/2, 10%));
+    }
+  }
+
+  .#{$primary-stylename}-vertical .#{$primary-stylename}-second-container-#{$stylename} {
+    margin-top: 1px;
+    position: static !important;
+  }
+
+  .#{$primary-stylename}-horizontal .#{$primary-stylename}-second-container-#{$stylename} {
+    margin-left: 1px;
+  }
+}

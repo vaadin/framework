@@ -1,0 +1,46 @@
+$v-link-font-color: null !default;
+$v-link-text-decoration: underline !default;
+$v-link-cursor: pointer !default;
+
+
+@mixin v-valo-link ($primary-stylename: v-link) {
+  .#{$primary-stylename} {
+    @include v-valo-link-style;
+
+    a {
+      cursor: inherit;
+      color: inherit;
+      text-decoration: inherit;
+      @if $v-animations-enabled {
+        @include transition(inherit);
+      }
+    }
+
+    .v-icon {
+      cursor: inherit;
+    }
+  }
+}
+
+
+@mixin v-valo-link-style {
+  cursor: $v-link-cursor;
+  color: v-valo-link-font-color();
+  text-decoration: $v-link-text-decoration;
+  font-weight: inherit;
+
+  @if $v-animations-enabled {
+    @include transition(color 140ms);
+  }
+
+  &:hover {
+    color: lighten(v-valo-link-font-color(), 10%);
+  }
+}
+
+
+
+@function v-valo-link-font-color ($color: null, $context: null) {
+  $link-color: $color or $v-link-font-color or v-valo-focus-color($color: $color, $context: $context);
+  @return $link-color;
+}

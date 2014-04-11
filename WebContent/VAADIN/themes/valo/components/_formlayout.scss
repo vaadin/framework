@@ -1,0 +1,147 @@
+@mixin v-valo-formlayout ($primary-stylename: v-formlayout) {
+  
+  @include v-valo-formlayout-spacing;
+  @include v-valo-formlayout-margins;
+
+  .#{$primary-stylename} > table {
+    border-spacing: 0;
+  }
+
+  .#{$primary-stylename}-error-indicator {
+    width: round($v-unit-size/2);
+  }
+
+  .#{$primary-stylename}-captioncell {
+    vertical-align: top;
+    line-height: $v-unit-size - 1px;
+
+    .v-caption {
+      padding-bottom: 0;
+    }
+  }
+
+  .#{$primary-stylename}-contentcell {
+    .v-checkbox {
+      font-weight: $v-font-weight + 100;
+    }
+  }
+
+}
+
+
+@mixin v-valo-formlayout-margins ($primary-stylename: v-formlayout, $all: null, $top: $v-layout-margin-top, $right: $v-layout-margin-right, $bottom: $v-layout-margin-bottom, $left: $v-layout-margin-left) {
+  @if $all != null {
+    $top: $all;
+    $right: $all;
+    $bottom: $all;
+    $left: $all;
+  }
+
+  .#{$primary-stylename}-margin-top > tbody > .#{$primary-stylename}-firstrow {
+    > .#{$primary-stylename}-captioncell, 
+    > .#{$primary-stylename}-contentcell,
+    > .#{$primary-stylename}-errorcell {
+      padding-top: $top;
+    }
+  }
+
+  .#{$primary-stylename}-margin-bottom > tbody > .#{$primary-stylename}-lastrow {
+    > .#{$primary-stylename}-captioncell,
+    > .#{$primary-stylename}-contentcell,
+    > .#{$primary-stylename}-errorcell {
+      padding-bottom: $bottom;
+    }
+  }
+
+  .#{$primary-stylename}-margin-left > tbody > .#{$primary-stylename}-row > .#{$primary-stylename}-captioncell {
+    padding-left: $left;
+  }
+
+  .#{$primary-stylename}-margin-right > tbody > .#{$primary-stylename}-row > .#{$primary-stylename}-contentcell {
+    padding-right: $right;
+  }
+}
+
+
+@mixin v-valo-formlayout-spacing ($primary-stylename: v-formlayout, $vertical: $v-layout-spacing-vertical) {
+  .#{$primary-stylename}-spacing > tbody > .#{$primary-stylename}-row {
+    > .#{$primary-stylename}-captioncell, 
+    > .#{$primary-stylename}-contentcell,
+    > .#{$primary-stylename}-errorcell {
+      padding-top: $vertical;
+    }
+  }
+}
+
+
+
+
+
+@mixin v-valo-formlayout-light-style ($primary-stylename: v-formlayout, $row-height: $v-unit-size) {
+  > table > tbody > .#{$primary-stylename}-row {
+    > .#{$primary-stylename}-captioncell, 
+    > .#{$primary-stylename}-contentcell,
+    > .#{$primary-stylename}-errorcell {
+      padding-top: 0;
+      height: $row-height; // Effectively min-height
+    }
+  }
+
+  > table > tbody > .#{$primary-stylename}-row td {
+    border-bottom: $v-border-width solid darken($v-app-background-color, 5%);
+  }
+
+  > table > tbody > .#{$primary-stylename}-lastrow td {
+    border-bottom: none;
+  }
+
+  > table > tbody > .#{$primary-stylename}-row > .#{$primary-stylename}-captioncell {
+    @include opacity(.7);
+    text-align: right;
+    padding-left: ceil($v-unit-size/3);
+    line-height: $row-height;
+  }
+
+  .v-textfield,
+  .v-textarea,
+  .v-filterselect,
+  .v-datefield,
+  .v-filterselect-input,
+  .v-datefield-textfield {
+    width: 100%;
+  }
+
+  .v-textfield,
+  .v-textarea,
+  .v-filterselect-input,
+  .v-datefield-textfield {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    @include v-valo-textfield-size($row-height, 0);
+  }
+
+  .v-textarea {
+    height: auto;
+  }
+
+  .v-filterselect-button,
+  .v-datefield-button {
+    border: none;
+
+    &:active:after {
+      display: none;
+    }
+  }
+
+  .v-datefield-button {
+    right: 0;
+    left: auto;
+  }
+
+  .v-checkbox {
+    margin-left: ceil($v-unit-size/6);
+  }
+}
+

@@ -1,0 +1,404 @@
+$v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
+
+
+@mixin v-valo-datefield ($primary-stylename: v-datefield) {
+
+  .#{$primary-stylename} {
+    position: relative;
+    width: $v-default-field-width;
+    height: $v-unit-size;
+    @include v-valo-datefield-style($primary-stylename: $primary-stylename);
+  }
+
+  // Different widths for different resolutions
+  .#{$primary-stylename}-full {
+    width: round($v-font-size * 15);
+  }
+  
+  .#{$primary-stylename}-day {
+    width: $v-default-field-width;
+  }
+  
+  .#{$primary-stylename}-month {
+    width: round($v-font-size * 7.5);
+  }
+  
+  .#{$primary-stylename}-year {
+    width: round($v-font-size * 6.5);
+  }
+
+  .v-datefield-popup {
+    @include v-valo-datefield-popup-style;
+  }
+
+  @include v-valo-datefield-calendarpanel-style;
+
+}
+
+
+@mixin v-valo-inline-datefield ($primary-stylename: v-inline-datefield) {
+  @include v-valo-datefield-calendarpanel-style(#{$primary-stylename}-calendarpanel);
+}
+
+
+
+
+
+@mixin v-valo-datefield-style ($bevel-style: $v-textfield-bevel-style, $bevel-depth: $v-textfield-bevel-depth, 
+                              $unit-size: $v-textfield-unit-size, $border-radius: $v-textfield-border-radius,
+                              $background-color: $v-textfield-background-color, $primary-stylename: v-datefield) {
+
+  $background-color: $background-color or v-valo-textfield-background-color($v-app-background-color);
+  $bevel-style: $bevel-style or $v-bevel-style;
+  $bevel-depth: $bevel-depth or $v-bevel-depth;
+  $unit-size: $unit-size or $v-unit-size;
+  $border-radius: $border-radius or $v-border-radius;
+
+  .#{$primary-stylename}-textfield {
+    @include box-sizing(border-box);
+    @include v-valo-textfield-style($bevel-style: $bevel-style, $bevel-depth: $bevel-depth, 
+                                    $unit-size: $unit-size, $border-radius: $border-radius,
+                                    $background-color: $background-color) ;
+    padding-left: $unit-size * 1.2;
+    width: 100%;
+    height: 100%;
+  }
+  
+  &.#{$primary-stylename}-prompt > .#{$primary-stylename}-textfield {
+    @include v-valo-textfield-prompt-style(v-valo-textfield-background-color($background-color));
+  }
+
+  .#{$primary-stylename}-button {
+    @include v-valo-datefield-button-style($unit-size: $unit-size, $bevel-style: $bevel-style, $bevel-depth: $bevel-depth,
+                                           $background-color: $background-color);
+  }
+
+  &.v-disabled {
+    @include opacity($v-textfield-disabled-opacity);
+
+    .#{$primary-stylename}-button {
+      cursor: default;
+      pointer-events: none;
+      &:active:after {
+        display: none;
+      }
+    }
+  }
+
+  &.v-readonly {
+    .#{$primary-stylename}-textfield {
+      @include v-valo-textfield-readonly-style;
+    }
+
+    .#{$primary-stylename}-button {
+      cursor: default;
+      pointer-events: none;
+      &:active:after {
+        display: none;
+      }
+    }
+  }
+}
+
+
+
+
+@mixin v-valo-datefield-button-style ($unit-size: $v-unit-size, $bevel-style: $v-bevel-style, $bevel-depth: $v-bevel-depth,
+                                      $background-color: $v-textfield-background-color) {
+  @include v-valo-tappable;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  position: absolute;
+  top: $v-textfield-border-width;
+  bottom: $v-textfield-border-width;
+  left: $v-textfield-border-width;
+  width: $unit-size;
+  line-height: $unit-size - ($v-textfield-border-width*2);
+  text-align: center;
+  cursor: pointer;
+  font: inherit;
+  border-right: $v-textfield-border-width solid blend-darken(black($bevel-depth/200%), $background-color);
+  outline: none;
+  margin: 0;
+
+  @if $v-border-radius > 0 {
+    $br: max(0, $v-border-radius - $v-textfield-border-width);
+    border-radius: $br 0 0 $br;
+  }
+  
+  &:before {
+    @include v-valo-datefield-button-icon-style($background-color);
+    color: mix($background-color, v-valo-font-color($background-color));
+    @if $v-animations-enabled {
+      @include transition(color 140ms);
+    }
+  }
+
+  @if $v-combobox-hover-style-enabled {
+    &:hover:before {
+      color: v-valo-font-color($background-color);
+    }
+  }
+
+  &:active:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    @include v-valo-button-active-style($background-color);
+  }
+}
+
+
+
+
+@mixin v-valo-datefield-button-icon-style ($background-color) {
+  font-family: FontAwesome;
+  content: "\f073";
+  color: v-valo-font-color($background-color);
+}
+
+
+
+
+@mixin v-valo-datefield-popup-style ($context: $v-app-background-color) {
+  $copy: $v-app-background-color;
+  $v-app-background-color: $context;
+
+  @include v-valo-overlay-style;
+
+  @include user-select(none);
+
+   margin-top: ceil($v-unit-size/8) !important;
+   cursor: default;
+  width: auto;
+
+   table {
+     border-collapse: collapse;
+    border-spacing: 0;
+  }
+   
+  td {
+    padding: round($v-unit-size/20);
+  }
+
+  @include v-valo-datefield-calendarpanel-style;
+
+  $v-app-background-color: $copy;
+}
+
+
+@mixin v-valo-datefield-calendarpanel-style ($primary-stylename: v-datefield-calendarpanel) {
+  .#{$primary-stylename} {
+    font-size: $v-font-size;
+    text-align: center;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .#{$primary-stylename}-day {
+    @include v-valo-datefield-calendarpanel-day-style;
+    display: inline-block;
+    @include box-sizing(border-box);
+    cursor: pointer;
+    &:hover {
+      @include v-valo-datefield-calendarpanel-day-hover-style;
+    }
+  }
+    
+  .#{$primary-stylename}-day-offmonth {
+    @include v-valo-datefield-calendarpanel-day-offmonth-style;
+  }
+
+  .#{$primary-stylename}-day-today {
+    @include v-valo-datefield-calendarpanel-day-today-style;
+  }
+  
+  .#{$primary-stylename}-day.#{$primary-stylename}-day-selected,
+  .#{$primary-stylename}-day.#{$primary-stylename}-day-selected:hover {
+    @include v-valo-datefield-calendarpanel-day-selected-style
+  }
+  
+  .#{$primary-stylename}-day.#{$primary-stylename}-day-focused {
+    @include v-valo-datefield-calendarpanel-day-focused-style;
+  }
+
+
+
+  .#{$primary-stylename}-weekdays {
+    height: round($v-unit-size * 0.7);
+    color: mix(v-valo-font-color($v-app-background-color), rgba($v-app-background-color, .7));
+    
+    strong {
+      font: inherit;
+      font-size: ceil($v-font-size * 0.86);
+    }
+  }
+
+
+  .#{$primary-stylename}-header {
+    white-space: nowrap;
+  }
+
+  td[class$="year"],
+  td[class$="month"] {
+    //width: round($v-unit-size * 0.5);
+
+    button {
+      @include appearance(none);
+      border: none;
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      color: transparent;
+      width: round($v-unit-size * 0.5);
+      height: round($v-unit-size * 0.67);
+      outline: none;
+      position: relative;
+
+      &:before {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        color: mix($v-app-background-color, v-valo-font-color($v-app-background-color));
+        font-size: round($v-font-size * 1.3);
+        line-height: round($v-font-size * 1.5);
+
+        @if $v-animations-enabled {
+          @include transition(color 200ms);
+        }
+      }
+
+      &:hover {
+        @include opacity(1);
+        &:before {
+          color: v-valo-link-font-color();
+        }
+      }
+    }
+  }
+  
+  .v-button-prevyear:before {
+    @include v-valo-datefield-calendarpanel-prevyear-icon-style;
+  }
+  
+  .v-button-prevmonth:before {
+    @include v-valo-datefield-calendarpanel-prevmonth-icon-style;
+  }
+  
+  .v-button-nextyear:before {
+    @include v-valo-datefield-calendarpanel-nextyear-icon-style;
+  }
+  
+  .v-button-nextmonth:before {
+    @include v-valo-datefield-calendarpanel-nextmonth-icon-style;
+  }
+  
+  td.#{$primary-stylename}-month {
+    width: round($v-unit-size * 3.5);
+    @include v-valo-datefield-calendarpanel-month-style;
+  }
+  
+  .v-datefield-year td.v-datefield-calendarpanel-month {
+    width: round($v-unit-size * 2);
+  }
+
+  .v-datefield-calendarpanel-weeknumber,
+  .v-datefield-calendarpanel-weekdays.v-datefield-calendarpanel-weeknumbers td:first-child {
+    width: round($v-unit-size * 0.7);
+    color: mix(v-valo-font-color($v-app-background-color), rgba($v-app-background-color, .7));
+    font-size: ceil($v-font-size * 0.86);
+    display: inline-block;
+    text-align: left;
+  }
+
+  td.v-datefield-calendarpanel-time {
+    width: 100%;
+    font-size: ceil($v-font-size * 0.86);
+    
+    .v-label {
+      display: inline-block;
+      margin: 0 0.1em;
+      font-weight: 400;
+    }
+  }
+
+}
+
+
+
+
+@mixin v-valo-datefield-calendarpanel-day-style {
+  width: round($v-unit-size * 0.8);
+  height: round($v-unit-size * 0.7);
+  line-height: round($v-unit-size * 0.7);
+  text-align: center;
+  font-size: ceil($v-font-size * 0.86);
+  background: $v-app-background-color;
+  @if $v-border-radius > 0 {
+    border-radius: ceil($v-border-radius/2);
+  }
+  @if $v-animations-enabled {
+    @include transition(color 200ms);
+  }
+}
+
+@mixin v-valo-datefield-calendarpanel-day-hover-style {
+  color: v-valo-selection-color();
+}
+
+@mixin v-valo-datefield-calendarpanel-day-offmonth-style {
+  color: mix(v-valo-font-color($v-app-background-color), $v-app-background-color);
+  background: transparent;
+}
+
+@mixin v-valo-datefield-calendarpanel-day-today-style {
+  color: v-valo-selection-color();
+  background: blend-overlay(v-valo-selection-color(), $v-app-background-color);
+  font-weight: $v-font-weight + 100;
+}
+
+@mixin v-valo-datefield-calendarpanel-day-selected-style {
+  color: v-valo-font-color(v-valo-selection-color());
+  @include v-valo-gradient(v-valo-selection-color());
+  font-weight: $v-font-weight + 100;
+}
+
+@mixin v-valo-datefield-calendarpanel-day-focused-style {
+  box-shadow: v-valo-focus-box-shadow();
+  position: relative; // Show above other cells
+}
+
+
+@mixin v-valo-datefield-calendarpanel-nextmonth-icon-style {
+  font-family: FontAwesome;
+  content: "\f105";
+}
+
+@mixin v-valo-datefield-calendarpanel-prevmonth-icon-style {
+  font-family: FontAwesome;
+  content: "\f104";
+}
+
+@mixin v-valo-datefield-calendarpanel-nextyear-icon-style {
+  font-family: FontAwesome;
+  content: "\f101";
+}
+
+@mixin v-valo-datefield-calendarpanel-prevyear-icon-style {
+  font-family: FontAwesome;
+  content: "\f100";
+}
+
+@mixin v-valo-datefield-calendarpanel-month-style {
+  color: v-valo-selection-color();
+}

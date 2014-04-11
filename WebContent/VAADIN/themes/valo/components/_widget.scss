@@ -1,0 +1,26 @@
+// 
+// @mixin v-valo-widget-style
+@mixin v-valo-widget-style {
+  // Baseline expectations for all Vaadin widgets
+  @include box-sizing(border-box);
+  display: inline-block;
+
+  // Reset, since ordered layout uses text-align for horizotal alignment inside slots and 
+  // white-space: nowrap; for horizontal layout orientation
+  text-align: left;
+  white-space: normal;
+  
+  // This is needed to overcome issues with line-boxes (i.e. block elements 
+  // with inline elements as children, whose height is less than the parent's line-height)
+  // See: http://stackoverflow.com/questions/3003051/why-does-the-html5-doctype-mess-with-my-padding
+  // In order to avoid specifying font-size: 0; for all component containers, we need to avoid adding 
+  // vertical-align: top/middle/bottom to any component by default, which will mess up the spacing.
+  line-height: $v-line-height;
+}
+
+
+@mixin v-valo-widget {
+  .v-widget {
+    @include v-valo-widget-style;
+  }
+}

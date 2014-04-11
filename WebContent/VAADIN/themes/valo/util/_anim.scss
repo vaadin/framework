@@ -1,0 +1,63 @@
+@include keyframes(v-valo-anim-fade-in) {
+  0% {
+    opacity: 0;
+  }
+}
+
+
+@include keyframes(v-valo-anim-fade-out) {
+  100% {
+    opacity: 0;
+  }
+}
+
+
+@include keyframes(v-valo-anim-slide-down) {
+  0% {
+    @include transform( translateY(-100%) );
+  }
+}
+
+@include keyframes(v-valo-anim-slide-up) {
+  0% {
+    @include transform( translateY(100%) );
+  }
+}
+
+@include keyframes(v-valo-anim-slide-left) {
+  0% {
+    @include transform( translateX(100%) );
+  }
+}
+
+@include keyframes(v-valo-anim-slide-right) {
+  0% {
+    @include transform( translateX(-100%) );
+  }
+}
+
+
+
+@mixin v-valo-anim-fade-in ($duration: 120ms, $delay: null){
+  @include animation(v-valo-anim-fade-in $duration $delay);
+}
+
+@mixin v-valo-anim-fade-out ($duration: 120ms, $delay: null){
+  @include animation(v-valo-anim-fade-out $duration $delay);
+}
+
+@mixin v-valo-anim-slide-down ($duration: 260ms, $delay: null){
+  @include animation(v-valo-anim-slide-down $duration $delay);
+}
+
+@mixin v-valo-anim-slide-up ($duration: 260ms, $delay: null){
+  @include animation(v-valo-anim-slide-up $duration $delay);
+}
+
+@mixin v-valo-anim-slide-left ($duration: 260ms, $delay: null){
+  @include animation(v-valo-anim-slide-left $duration $delay);
+}
+
+@mixin v-valo-anim-slide-right ($duration: 260ms, $delay: null){
+  @include animation(v-valo-anim-slide-right $duration $delay);
+}

@@ -1,0 +1,335 @@
+$v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
+
+
+
+
+@mixin v-valo-tabsheet-global ($primary-stylename: v-tabsheet) {
+  .#{$primary-stylename}-hidetabs > .#{$primary-stylename}-tabcontainer,
+  .#{$primary-stylename}-spacertd,
+  .#{$primary-stylename}-deco,
+  .v-disabled .#{$primary-stylename}-scroller,
+  .#{$primary-stylename} .v-disabled .#{$primary-stylename}-caption-close {
+    display: none;
+  }
+  
+  .#{$primary-stylename}-content {
+    position: relative;
+  }
+  
+}
+
+
+
+
+
+@mixin v-valo-tabsheet ($primary-stylename: v-tabsheet) {
+
+  $_scale: if( is-dark-color($v-app-background-color) , max(5%, $v-bevel-depth/2), min(-5%, -$v-bevel-depth/2) );
+  $border-color: scale-color($v-app-background-color, $lightness: $_scale);
+
+  .#{$primary-stylename} {
+    &:not(.v-has-width) {
+      width: auto !important;
+    }
+  }
+
+  .#{$primary-stylename}-spacertd {
+    display: none !important;
+  }
+
+  .#{$primary-stylename}-tabcontainer {
+    position: relative;
+    line-height: $v-unit-size;
+    @include user-select(none);;
+
+    table,
+    tbody,
+    tr {
+      display: inline-block;
+      border-spacing: 0;
+      border-collapse: collapse;
+      vertical-align: top;
+    }
+
+    td {
+      display: inline-block;
+      padding: 0;
+    }
+
+    &:before {
+      content: "";
+      position: absolute;
+      height: $v-border-width;
+      background: $border-color;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  .#{$primary-stylename}-tabs {
+    height: $v-unit-size;
+    position: relative;
+    white-space: nowrap;
+    @include box-sizing(border-box);
+
+    .v-caption {
+      height: $v-unit-size;
+      margin-left: round($v-unit-size/2);
+      padding: 0 round($v-unit-size/10);
+      @include box-sizing(border-box);
+      cursor: pointer;
+      text-align: center;
+      line-height: $v-unit-size;
+      font-size: $v-font-size;
+      font-weight: $v-font-weight;
+      width: auto !important;
+
+      @if $v-animations-enabled {
+        @include transition(border-bottom 200ms, color 200ms);
+      }
+
+      .v-icon {
+        cursor: inherit;
+      }
+
+      .v-icon + .v-captiontext {
+        margin-left: round($v-unit-size/4);
+      }
+
+      &:hover {
+        color: v-valo-selection-color();
+      }
+
+      &.v-disabled {
+        @include opacity($v-disabled-opacity);
+        cursor: default;
+        color: inherit !important;
+        border-bottom: none;
+      }
+    }
+
+    td:first-child .v-caption,
+    [aria-hidden="true"] + td .v-caption {
+      margin-left: 0;
+    }
+  }
+
+  .#{$primary-stylename}-tabitemcell:focus {
+    outline: none;
+
+    .v-caption {
+      color: v-valo-selection-color();
+      border-bottom: $v-border-width solid v-valo-selection-color();
+    }
+  }
+
+  .#{$primary-stylename}-tabitem-selected .v-caption.v-caption {
+    border-bottom: $v-border-width*2 solid v-valo-selection-color();
+    color: v-valo-selection-color();
+  }
+
+  .#{$primary-stylename}-caption-close {
+    display: inline-block;
+    font-size: 1.2em;
+    line-height: 1;
+    vertical-align: middle;
+    padding: round($v-font-size/8) round($v-font-size/4);
+    margin: round($v-font-size/-8) round($v-font-size/-4) round($v-font-size/-8) round($v-font-size/4);
+    border-radius: round($v-border-radius/2);
+
+    &:hover {
+      background: v-valo-selection-color();
+      color: v-valo-font-color(v-valo-selection-color());
+    }
+
+    &:active {
+      background: darken(v-valo-selection-color(), 5%);
+      color: v-valo-font-color(v-valo-selection-color());
+    }
+  }
+
+  .#{$primary-stylename}-scroller {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding-left: round($v-unit-size/2);
+    @include linear-gradient(to left, $v-app-background-color 70%, rgba($v-app-background-color, 0) 100%, $fallback: transparent);
+    pointer-events: none;
+    line-height: $v-unit-size;
+
+    &:after {
+      content: "";
+      height: $v-border-width;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: block;
+      @include linear-gradient(to left, $border-color 70%, rgba($border-color, 0) 100%, $fallback: transparent);
+    }
+
+    .v-ie8 &,
+    .v-ie9 & {
+      background-color: $v-app-background-color;
+
+      &:after {
+        background-color: $border-color;
+      }
+    }
+
+    button {
+      @include appearance(none);
+      border: none;
+      background: transparent;
+      font: inherit;
+      color: inherit;
+      height: $v-unit-size;
+      line-height: $v-unit-size;
+      margin: 0;
+      padding: 0 round($v-unit-size/4);
+      outline: none;
+      cursor: pointer;
+      pointer-events: auto;
+      @include opacity(.5);
+
+      &:hover {
+        @include opacity(1);
+        color: v-valo-selection-color();
+      }
+
+      &:active {
+        @include opacity(.7);
+        color: v-valo-selection-color();
+      }
+
+      &::-moz-focus-inner {
+        padding: 0;
+        border: 0
+      }
+    }
+
+    [class*="Next"] {
+      padding-left: round($v-unit-size/8);
+      &:before {
+        @include v-valo-tabsheet-scroller-next-icon-style;
+      }
+    }
+
+    [class*="Prev"] {
+      padding-right: round($v-unit-size/8);
+      &:before {
+        @include v-valo-tabsheet-scroller-prev-icon-style;
+      }
+    }
+
+    [class*="disabled"] {
+      cursor: default;
+      color: inherit !important;
+      @include opacity(.1, true);
+    }
+  }
+
+
+  @if $v-tabsheet-content-animation-enabled {
+    .#{$primary-stylename}-tabsheetpanel > .v-scrollable > .v-widget {
+      @include v-valo-anim-fade-in(300ms);
+    }
+  }
+
+}
+
+
+
+
+
+@mixin v-valo-tabsheet-centered-tabs ($primary-stylename: v-tabsheet) {
+  .#{$primary-stylename}-tabcontainer {
+    text-align: center;
+  }
+}
+
+@mixin v-valo-tabsheet-equal-width-tabs ($primary-stylename: v-tabsheet, $flex: false) {
+  .#{$primary-stylename}-tabcontainer {
+    table,
+    tbody,
+    tr {
+      width: 100%;
+    }
+
+    tr {
+      display: table;
+      @if $flex == false {
+        table-layout: fixed;
+      }
+    }
+
+    td {
+      display: table-cell;
+      //width: 100% !important;
+    }
+
+    .v-caption {
+      margin: 0;
+      display: block;
+    }
+  }
+}
+
+@mixin v-valo-tabsheet-icons-on-top ($primary-stylename: v-tabsheet) {
+  .#{$primary-stylename}-tabs {
+    height: $v-unit-size * 2;
+
+    .v-caption {
+      height: $v-unit-size * 2;
+      padding-top: $v-unit-size;
+    }
+
+    .v-icon {
+      display: block;
+      font-size: $v-font-size * 2;
+      $_offset: round($v-unit-size/4);
+      margin: -($v-unit-size - $_offset) auto #{-$_offset};
+      min-height: $v-unit-size;
+
+      + .v-captiontext.v-captiontext {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .#{$primary-stylename}-scroller {
+    line-height: $v-unit-size*2;
+
+    button[class] {
+      padding: 0 round($v-unit-size/4);
+      display: block;
+    }
+  }
+}
+
+@mixin v-valo-tabsheet-only-selected-closable ($primary-stylename: v-tabsheet) {
+  .#{$primary-stylename}-caption-close {
+    visibility: hidden;
+  }
+
+  .#{$primary-stylename}-tabitem-selected .#{$primary-stylename}-caption-close {
+    visibility: visible;
+  }
+}
+
+@mixin v-valo-tabsheet-padded-tabbar ($primary-stylename: v-tabsheet) {
+  .#{$primary-stylename}-tabs {
+    padding: 0 round($v-unit-size/4);
+  }
+}
+
+@mixin v-valo-tabsheet-scroller-prev-icon-style {
+  font-family: FontAwesome;
+  content: "\f053";
+}
+
+@mixin v-valo-tabsheet-scroller-next-icon-style {
+  font-family: FontAwesome;
+  content: "\f054";
+}

@@ -1,0 +1,45 @@
+// Align element vertically inside
+@mixin vertical-align-guide ($to-align: (), $align: middle, $pseudo-element: after) {
+  &:#{$pseudo-element} {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 100%;
+    vertical-align: middle;
+  }
+  
+  @if length($to-align) > 0 {
+    @each $selector in $to-align {
+      & > #{unquote($selector)} {
+        vertical-align: $align;
+      }
+    }
+  }
+}
+
+
+// Calculates the (approximated) square root for a given number
+@function sqrt($number) {
+  $guess: rand();
+  $root: 4; // Academic guess, a.k.a random number
+  @for $i from 1 through 10 {
+    $root: $root - ($root*$root - $number) / (2 * $root);
+  }
+  @return $root;
+}
+
+
+
+
+@mixin v-valo-round {
+  border-radius: 50%;
+}
+
+
+
+
+@mixin v-valo-tappable {
+  @include user-select(none);
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+}

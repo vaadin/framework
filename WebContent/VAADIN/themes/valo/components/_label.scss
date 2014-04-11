@@ -1,0 +1,120 @@
+$v-font-weight--header:   $v-font-weight - 100 !default;
+$v-line-height--header:   1.1             !default;
+$v-font-family--header:   null            !default;
+
+$v-font-size--h1:         2.4em           !default;
+$v-font-size--h2:         1.6em           !default;
+$v-font-size--h3:         1.2em           !default;
+$v-font-size--large:      1.2em           !default;
+$v-font-size--small:      0.87em          !default;
+
+$v-font-family--h1:       $v-font-family--header   !default;
+$v-font-family--h2:       $v-font-family--header   !default;
+$v-font-family--h3:       $v-font-family--header   !default;
+
+$v-letter-spacing--h1:    -0.03em         !default;
+$v-letter-spacing--h2:    -0.02em         !default;
+$v-letter-spacing--h3:    0               !default;
+$v-letter-spacing--h4:    0.05em          !default;
+
+
+@mixin v-valo-label ($primary-stylename: v-label) {
+
+  .#{$primary-stylename}-undef-w {
+    white-space: nowrap;
+  }
+  
+  h1, .h1,
+  h2, .h2,
+  h3, .h3 {
+    line-height: $v-line-height--header;
+    font-weight: $v-font-weight--header;
+    color: v-valo-header-color($v-app-background-color);
+  }
+  
+  h1, .h1 {
+    font-size: $v-font-size--h1;
+    margin-top: 1.4em;
+    margin-bottom: 1em;
+    font-family: $v-font-family--h1;
+    letter-spacing: $v-letter-spacing--h1;
+  }
+  
+  h2, .h2 {
+    font-size: $v-font-size--h2;
+    font-family: $v-font-family--h2;
+    margin-top: 1.6em;
+    margin-bottom: 0.77em;
+    letter-spacing: $v-letter-spacing--h2;
+  }
+  
+  h3, .h3 {
+    font-size: $v-font-size--h3;
+    font-family: $v-font-family--h3;
+    margin-top: 1.8em;
+    margin-bottom: 0.77em;
+    letter-spacing: $v-letter-spacing--h3;
+  }
+  
+  h4, .h4 {
+    line-height: $v-line-height--header;
+    font-weight: $v-font-weight + 200;
+    font-size: $v-font-size--small;
+    color: v-valo-header-color($v-app-background-color, $contrast: 0.12);
+    text-transform: uppercase;
+    letter-spacing: $v-letter-spacing--h4;
+    margin-top: 2.4em;
+    margin-bottom: 0.8em;
+  }
+
+  .v-csslayout {
+   > h1,
+   > h2,
+   > h3,
+   > h4
+   > .h1,
+   > .h2,
+   > .h3
+   > .h4 {
+      &:first-child {
+        margin-top: $v-font-size;
+      }
+    }
+  }
+
+  .v-verticallayout > .v-slot:first-child,
+  .v-verticallayout > div > .v-slot:first-child {
+    h1, .h1,
+    h2, .h2,
+    h3, .h3
+    h4, .h4 {
+      margin-top: $v-font-size;
+    }
+  }
+  
+  h1, .h1,
+  h2, .h2,
+  h3, .h3,
+  h4, .h4 {
+    &.no-margin {
+      margin: 0 !important;
+    }
+  }
+  
+  .#{$primary-stylename}-large {
+    font-size: $v-font-size--large;
+  }
+  
+  .#{$primary-stylename}-small {
+    font-size: $v-font-size--small;
+  }
+  
+  .#{$primary-stylename}-bold {
+    font-weight: $v-font-weight + 200;
+  }
+  
+  .#{$primary-stylename}-light {
+    font-weight: $v-font-weight - 100;
+  }
+  
+}

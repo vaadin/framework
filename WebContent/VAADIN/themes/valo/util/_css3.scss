@@ -1,0 +1,28 @@
+@mixin opacity ($o, $important: false) {
+  $imp: "";
+  
+  @if $important {
+    $imp: "!important";
+  }
+  
+  opacity: $o #{unquote($imp)};
+  
+  @if $o < 1 {
+    filter: alpha(opacity=$o*100) #{unquote($imp)};
+  } @else {
+    filter: none #{unquote($imp)};
+  }
+}
+
+
+@mixin border-radius ($br) {
+  -webkit-border-radius: $br;
+  border-radius: $br;
+}
+
+
+@mixin width-breakpoint ($point) {
+  @media (max-width: $point) {
+    @content;
+  }
+}
