@@ -46,6 +46,12 @@
                     @version@</a></li>
             <li><a href="#enhancements">Enhancements in Vaadin
                     @version-minor@</a></li>
+            <li><a href="#incompatible">Incompatible changes in
+                @version-minor@</a></li>
+            <li><a href="#behavioraltering">Behavior altering
+                changes in @version-minor@</a></li>
+            <li><a href="#knownissues">Known issues in
+                @version-minor@</a></li>
             <li><a href="#limitations">Limitations in
                     @version-minor@</a></li>
             <li><a href="#vaadin">Vaadin Installation</a></li>
@@ -76,44 +82,44 @@
                 href="http://vaadin.com/download/release/@version-minor@/@version-minor@.0/release-notes.html">Release
                 Notes for Vaadin @version-minor@.0</a>.
         </p>
-        
+
         <!-- ================================================================ -->
 		<h3 id="security-fixes">Security fixes in Vaadin Framework 7.1.11</h3>
-		
+
 		<p>
-		  Vaadin 7.1.11 fixes two security issues discovered during internal review. 
+		  Vaadin 7.1.11 fixes two security issues discovered during internal review.
 		</p>
 		<p><b>Escaping of OptionGroup item icon URLs</b></p>
 		<p>
-			The issue affects OptionGroup with item icons. Proper escaping of the 
-			src-attribute on the client side was not ensured when using icons for 
+			The issue affects OptionGroup with item icons. Proper escaping of the
+			src-attribute on the client side was not ensured when using icons for
 			OptionGroup items. This could potentially, in certain situations, allow
-			a malicious user to inject content, such as javascript, in order to 
+			a malicious user to inject content, such as javascript, in order to
 			perform a cross-site scripting (XSS) attack.
 		</p>
 		<p>
 			In order for an application to be vulnerable, user provided input must
-			be used to form a URL used to display an icon for an OptionGroup item, 
+			be used to form a URL used to display an icon for an OptionGroup item,
 			when showing that Option Group to other users.<br/>
 			The vulnerability has been classified as moderate, due to it's limited
-			application. 
+			application.
 		</p>
 		<p><b>Escaping of URLs in Util.getAbsoluteUrl()</b></p>
 		<p>
 			The client side Util.getAbsoluteUrl() did not ensure proper escaping
 			of the given URL. This could potentially, in certain situations, allow
-			a malicious user to inject content, such as javascript, in order to 
+			a malicious user to inject content, such as javascript, in order to
 			perform a cross-site scripting (XSS) attack.
 		</p>
 		<p>
 			The method is used internally by the framework in such a manner that it
 			is unlikely this attack vector can be utilized in practice. However,
-			third party components, or future use of the method, could make an 
+			third party components, or future use of the method, could make an
 			attack viable.<br/>
 			The vulnerability has been classified as moderate, due to it's limited
-			application. 
+			application.
 		</p>
-        
+
         <h3 id="changelog">Change log for Vaadin @version@</h3>
 
         <p>This release includes the following closed issues:</p>
@@ -181,6 +187,48 @@
                 href="http://vaadin.com/download/release/7.0/7.0.0/release-notes.html">Release
                 Notes for Vaadin 7.0.0</a>.
         </p>
+
+        <h3 id="incompatible">Incompatible changes</h3>
+        <ul>
+            <li>It is assumed that the UI will no longer be used after Page.setLocation
+                is called. Do not use this to start downloads.</li>
+            <li>The portlet requests class VaadinGateinRequest is now called
+                VaadinGateInRequest</li>
+            <li>The JSON library has been changed from org.json to the json implementation
+                from the Android SDK. They are 99% compatible.</li>
+            <li>StringToNumberConverter has been removed in favor of more specific
+                converters such as StringToBigDecimalConverter.</li>
+            <li>(internal) Atmosphere has been updated from version 1.x to 2.x. These
+                are not 100% compatible.</li>
+            <li>(internal) There is no longer support for "multiple variable bursts"
+                in the UIDL communication.</li>
+        </ul>
+        <h3 id="behavioraltering">Behavior altering changes</h3>
+        <ul>
+            <li>Default push fallback is now long-polling</li>
+            <li>VerticalLayout and HorizontalLayout.replaceComponent now applies old
+                component parameters (e.g. expand ratio) to the new component. This is
+                now consistent between all layouts in the framework, where relevant
+                properties are applied to the replacement.</li>
+            <li>All GWT permutations are collapsed when using DefaultWidgetSet. To use
+                separate permutations, inherit Vaadin instead of DefaultWidgetSet and
+                add the needed entry-point.</li>
+            <li>Requests to "/context;jsessionid=xyz" are redirected to
+                "/context/;jsessionid=xyz" which is against specifications but based
+                on how jsessionid is used</li>
+            <li>Adding a ValueChangeListener to a component will make it immediate</li>
+            <li>ComboBox is immediate by default</li>
+        </ul>
+
+        <h3 id="knownissues">Known issues</h3>
+        <ul>
+            <li>Not all features are implemented for devices using pointer events.</li>
+            <li>Push reconnecting does not work in all situations when</li>
+                <ul>
+                    <li>using Firefox and streaming</li>
+                    <li>using IE8-11 and long-polling</li>
+                </ul>
+        </ul>
 
         <h3 id="limitations">Limitations</h3>
         <ul>
