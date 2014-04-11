@@ -2,7 +2,7 @@
 
 IGNORE=7.0
 FROM=7.1
-TO=master
+TO=7.2
 
 IGNORE_HEAD=origin/$IGNORE
 FROM_HEAD=origin/$FROM
