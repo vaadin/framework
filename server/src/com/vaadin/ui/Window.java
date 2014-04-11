@@ -18,9 +18,6 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -1020,12 +1017,12 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @param connectors
      *            with the components to use as description
      */
-    public void setAssistiveDescription(Connector... connectors) {
-        if (connectors == null) {
+    public void setAssistiveDescription(Component... components) {
+        if (components == null) {
             throw new IllegalArgumentException(
                     "Parameter connectors must be non-null");
         } else {
-            getState().contentDescription = connectors;
+            getState().contentDescription = components;
         }
     }
 
@@ -1036,9 +1033,17 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @return list of previously set components
      */
-    public List<Connector> getAssistiveDescription() {
-        return Collections.unmodifiableList(Arrays
-                .asList(getState().contentDescription));
+    public Component[] getAssistiveDescription() {
+        Connector[] contentDescription = getState().contentDescription;
+        if (contentDescription == null) {
+            return null;
+        }
+
+        Component[] target = new Component[contentDescription.length];
+        System.arraycopy(contentDescription, 0, target, 0,
+                contentDescription.length);
+
+        return target;
     }
 
     /**
