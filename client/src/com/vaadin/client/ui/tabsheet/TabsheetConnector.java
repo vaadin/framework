@@ -176,7 +176,11 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
      * (Re-)render the content of the active tab.
      */
     protected void renderContent() {
-        ComponentConnector contentConnector = getChildComponents().get(0);
+        ComponentConnector contentConnector = null;
+        if (!getChildComponents().isEmpty()) {
+            contentConnector = getChildComponents().get(0);
+        }
+
         if (null != contentConnector) {
             getWidget().renderContent(contentConnector.getWidget());
         } else {

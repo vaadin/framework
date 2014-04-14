@@ -46,7 +46,7 @@ public class TabSheetIcons extends TestBase {
 
         for (Component c : tab) {
             tabsheet.addTab(c);
-            tabsheet.getTab(c).setIconAltText(
+            tabsheet.getTab(c).setIconAlternateText(
                     "iconalt" + tabsheet.getComponentCount());
         }
 

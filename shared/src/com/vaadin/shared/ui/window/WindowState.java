@@ -23,13 +23,6 @@ public class WindowState extends PanelState {
         primaryStyleName = "v-window";
     }
 
-    /**
-     * Available WAI-ARIA roles for a window.
-     */
-    public enum WindowRole {
-        ALERTDIALOG, DIALOG
-    }
-
     public boolean modal = false;
     public boolean resizable = true;
     public boolean resizeLazy = false;

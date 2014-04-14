@@ -13,27 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.shared.ui.ui;
 
-package com.vaadin.tests.components.ui;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.vaadin.testbench.By;
-import com.vaadin.tests.tb3.MultiBrowserTest;
-
-public class UIReinitTest extends MultiBrowserTest {
-
-    @Test
-    public void testUIReinit() {
-        openTestURL();
-        Assert.assertFalse(reinitLabelExists());
-        // Reload the page; UI.reinit should be invoked
-        openTestURL();
-        Assert.assertTrue(reinitLabelExists());
-    }
-
-    private boolean reinitLabelExists() {
-        return !getDriver().findElements(By.id(UIReinit.REINIT_ID)).isEmpty();
-    }
+/**
+ * Available WAI-ARIA roles for a notification.
+ *
+ * @since 7.2
+ */
+public enum NotificationRole {
+    ALERT, STATUS
 }

@@ -22,7 +22,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 
 @PreserveOnRefresh
-public class UIReinit extends AbstractTestUI {
+public class UIRefresh extends AbstractTestUI {
 
     public static final String REINIT_ID = "reinit";
 
@@ -31,7 +31,7 @@ public class UIReinit extends AbstractTestUI {
     }
 
     @Override
-    protected void reinit(VaadinRequest request) {
+    protected void refresh(VaadinRequest request) {
         Label l = new Label("Reinit!");
         l.setId(REINIT_ID);
         addComponent(l);

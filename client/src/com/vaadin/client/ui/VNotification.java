@@ -38,9 +38,9 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.Position;
-import com.vaadin.shared.ui.ui.NotificationConfigurationBean;
-import com.vaadin.shared.ui.ui.NotificationConfigurationBean.Role;
 import com.vaadin.shared.ui.ui.UIConstants;
+import com.vaadin.shared.ui.ui.UIState.NotificationTypeConfiguration;
+import com.vaadin.shared.ui.ui.NotificationRole;
 
 public class VNotification extends VOverlay {
 
@@ -161,20 +161,20 @@ public class VNotification extends VOverlay {
     }
 
     public void show(Widget widget, Position position, String style) {
-        NotificationConfigurationBean styleSetup = getUiState(style);
+        NotificationTypeConfiguration styleSetup = getUiState(style);
         setWaiAriaRole(styleSetup);
 
         FlowPanel panel = new FlowPanel();
-        if (styleSetup.hasAssistivePrefix()) {
-            panel.add(new Label(styleSetup.getAssistivePrefix()));
+        if (hasPrefix(styleSetup)) {
+            panel.add(new Label(styleSetup.prefix));
             AriaHelper.setVisibleForAssistiveDevicesOnly(panel.getElement(),
                     true);
         }
 
         panel.add(widget);
 
-        if (styleSetup.hasAssistivePostfix()) {
-            panel.add(new Label(styleSetup.getAssistivePostfix()));
+        if (hasPostfix(styleSetup)) {
+            panel.add(new Label(styleSetup.postfix));
             AriaHelper.setVisibleForAssistiveDevicesOnly(panel.getElement(),
                     true);
         }
@@ -182,8 +182,16 @@ public class VNotification extends VOverlay {
         show(position, style);
     }
 
+    private boolean hasPostfix(NotificationTypeConfiguration styleSetup) {
+        return styleSetup != null && styleSetup.postfix != null && !styleSetup.postfix.isEmpty();
+    }
+
+    private boolean hasPrefix(NotificationTypeConfiguration styleSetup) {
+        return styleSetup != null && styleSetup.prefix != null && !styleSetup.prefix.isEmpty();
+    }
+
     public void show(String html, Position position, String style) {
-        NotificationConfigurationBean styleSetup = getUiState(style);
+        NotificationTypeConfiguration styleSetup = getUiState(style);
         String assistiveDeviceOnlyStyle = AriaHelper.ASSISTIVE_DEVICE_ONLY_STYLE;
 
         setWaiAriaRole(styleSetup);
@@ -191,32 +199,31 @@ public class VNotification extends VOverlay {
         String type = "";
         String usage = "";
 
-        if (styleSetup != null && styleSetup.hasAssistivePrefix()) {
+        if (hasPrefix(styleSetup)) {
             type = "<span class='" + assistiveDeviceOnlyStyle + "'>"
-                    + styleSetup.getAssistivePrefix() + "</span>";
+                    + styleSetup.prefix + "</span>";
         }
 
-        if (styleSetup != null && styleSetup.hasAssistivePostfix()) {
+        if (hasPostfix(styleSetup)) {
             usage = "<span class='" + assistiveDeviceOnlyStyle + "'>"
-                    + styleSetup.getAssistivePostfix() + "</span>";
+                    + styleSetup.postfix + "</span>";
         }
 
         setWidget(new HTML(type + html + usage));
         show(position, style);
     }
 
-    private NotificationConfigurationBean getUiState(String style) {
-        NotificationConfigurationBean styleSetup = getApplicationConnection()
-                .getUIConnector().getState().notificationConfiguration.setup
+    private NotificationTypeConfiguration getUiState(String style) {
+        return getApplicationConnection()
+                .getUIConnector().getState().notificationConfigurations
                 .get(style);
-        return styleSetup;
     }
 
-    private void setWaiAriaRole(NotificationConfigurationBean styleSetup) {
+    private void setWaiAriaRole(NotificationTypeConfiguration styleSetup) {
         Roles.getAlertRole().set(getElement());
 
-        if (styleSetup != null && styleSetup.getAssistiveRole() != null) {
-            if (Role.STATUS == styleSetup.getAssistiveRole()) {
+        if (styleSetup != null && styleSetup.notificationRole != null) {
+            if (NotificationRole.STATUS == styleSetup.notificationRole) {
                 Roles.getStatusRole().set(getElement());
             }
         }

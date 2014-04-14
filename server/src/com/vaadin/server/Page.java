@@ -636,7 +636,7 @@ public class Page implements Serializable {
     }
 
     public void init(VaadinRequest request) {
-        // NOTE: UI.reinit makes assumptions about the semantics of this method.
+        // NOTE: UI.refresh makes assumptions about the semantics of this method.
         // It should be kept in sync if this method is changed.
 
         // Extract special parameter sent by vaadinBootstrap.js
