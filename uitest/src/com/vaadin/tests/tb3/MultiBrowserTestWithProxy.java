@@ -19,7 +19,6 @@ import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.After;
-import org.junit.Before;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -38,8 +37,9 @@ public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {
             System.getProperty("sshkey.file"), sshDir + "id_rsa",
             sshDir + "id_dsa", sshDir + "id_rsa2" };
 
-    @Before
-    public void setupInitialProxy() throws JSchException {
+    @Override
+    public void setup() throws Exception {
+        super.setup();
         connectProxy();
     }
 
