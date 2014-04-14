@@ -68,7 +68,7 @@ public class TransactionalPropertyWrapper<T> extends AbstractProperty<T>
      * Removes the ValueChangeListener from wrapped Property that was added by
      * TransactionalPropertyWrapper.
      * 
-     * @since 7.1.14
+     * @since 7.1.15
      */
     public void detachFromProperty() {
         if (wrappedProperty instanceof ValueChangeNotifier) {
