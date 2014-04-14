@@ -316,12 +316,18 @@ public class FieldGroup implements Serializable {
                     "The given field is not part of this FieldBinder");
         }
 
+        TransactionalPropertyWrapper<?> wrapper = null;
         Property fieldDataSource = field.getPropertyDataSource();
         if (fieldDataSource instanceof TransactionalPropertyWrapper) {
-            fieldDataSource = ((TransactionalPropertyWrapper) fieldDataSource)
+            wrapper = (TransactionalPropertyWrapper<?>) fieldDataSource;
+            fieldDataSource = ((TransactionalPropertyWrapper<?>) fieldDataSource)
                     .getWrappedProperty();
+
         }
         if (fieldDataSource == getItemProperty(propertyId)) {
+            if (null != wrapper) {
+                wrapper.detachFromProperty();
+            }
             field.setPropertyDataSource(null);
         }
         fieldToPropertyId.remove(field);
