@@ -1014,8 +1014,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * window. Text contained in these components will be read by assistive
      * devices when it is opened.
      * 
-     * @param connectors
-     *            with the components to use as description
+     * @param components
+     *            the components to use as description
      */
     public void setAssistiveDescription(Component... components) {
         if (components == null) {
@@ -1031,7 +1031,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * contained in these components will be read by assistive devices when the
      * window is opened.
      * 
-     * @return list of previously set components
+     * @return array of previously set components
      */
     public Component[] getAssistiveDescription() {
         Connector[] contentDescription = getState().contentDescription;
