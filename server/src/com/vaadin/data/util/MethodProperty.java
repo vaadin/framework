@@ -19,6 +19,7 @@ package com.vaadin.data.util;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -85,6 +86,10 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      */
     private transient Class<? extends T> type;
 
+    private static final Object[] DEFAULT_GET_ARGS = new Object[0];
+
+    private static final Object[] DEFAULT_SET_ARGS = new Object[1];
+
     /* Special serialization to handle method references */
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
@@ -120,8 +125,9 @@ public class MethodProperty<T> extends AbstractProperty<T> {
             Class<T> class1 = (Class<T>) SerializerHelper.readClass(in);
             type = class1;
             instance = in.readObject();
-            setArgs = (Object[]) in.readObject();
-            getArgs = (Object[]) in.readObject();
+            Object[] setArgs = (Object[]) in.readObject();
+            Object[] getArgs = (Object[]) in.readObject();
+            setArguments(getArgs, setArgs, setArgumentIndex);
             String name = (String) in.readObject();
             Class<?>[] paramTypes = SerializerHelper.readClassArray(in);
             if (name != null) {
@@ -219,7 +225,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
             type = (Class<T>) returnType;
         }
 
-        setArguments(new Object[] {}, new Object[] { null }, 0);
+        setArguments(DEFAULT_GET_ARGS, DEFAULT_SET_ARGS, 0);
         this.instance = instance;
     }
 
@@ -627,13 +633,15 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      */
     public void setArguments(Object[] getArgs, Object[] setArgs,
             int setArgumentIndex) {
-        this.getArgs = new Object[getArgs.length];
-        for (int i = 0; i < getArgs.length; i++) {
-            this.getArgs[i] = getArgs[i];
+        if (getArgs.length == 0) {
+            this.getArgs = DEFAULT_GET_ARGS;
+        } else {
+            this.getArgs = Arrays.copyOf(getArgs, getArgs.length);
         }
-        this.setArgs = new Object[setArgs.length];
-        for (int i = 0; i < setArgs.length; i++) {
-            this.setArgs[i] = setArgs[i];
+        if (Arrays.equals(setArgs, DEFAULT_SET_ARGS)) {
+            this.setArgs = DEFAULT_SET_ARGS;
+        } else {
+            this.setArgs = Arrays.copyOf(setArgs, setArgs.length);
         }
         this.setArgumentIndex = setArgumentIndex;
     }

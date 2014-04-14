@@ -277,6 +277,7 @@ public class VAccordion extends VTabsheetBase {
         public void replaceWidget(Widget newWidget) {
             if (getWidgetCount() > 1) {
                 Widget oldWidget = getWidget(1);
+                remove(oldWidget);
                 widgets.remove(oldWidget);
             }
             add(newWidget, content);
