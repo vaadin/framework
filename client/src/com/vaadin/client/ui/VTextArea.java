@@ -17,6 +17,7 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.WhiteSpace;
 import com.google.gwt.dom.client.TextAreaElement;
@@ -30,6 +31,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
+import com.vaadin.client.ui.dd.VDragCloneAware;
 
 /**
  * This class represents a multiline textfield (textarea).
@@ -40,7 +42,7 @@ import com.vaadin.client.Util;
  * @author Vaadin Ltd.
  * 
  */
-public class VTextArea extends VTextField {
+public class VTextArea extends VTextField implements VDragCloneAware {
     public static final String CLASSNAME = "v-textarea";
     private boolean wordwrap = true;
     private MaxLengthHandler maxLengthHandler = new MaxLengthHandler();
@@ -294,4 +296,14 @@ public class VTextArea extends VTextField {
         // class instead of directly each other.
     }
 
+    @Override
+    public void initDragImageCopy(Element element) {
+        // Fix for #13557 - drag image doesn't show original text area text.
+        // It happens because "value" property is not copied into the cloned
+        // element
+        String value = getElement().getPropertyString("value");
+        if (value != null) {
+            element.setPropertyString("value", value);
+        }
+    }
 }
