@@ -29,12 +29,26 @@ import org.junit.Test;
  */
 public class VaadinServiceTest {
 
+    private class TestSessionDestroyListener implements SessionDestroyListener {
+
+        int callCount = 0;
+
+        @Override
+        public void sessionDestroy(SessionDestroyEvent event) {
+            callCount++;
+        }
+    }
+
     @Test
     public void testFireSessionDestroy() throws ServletException {
         ServletConfig servletConfig = new MockServletConfig();
         VaadinServlet servlet = new VaadinServlet();
         servlet.init(servletConfig);
         VaadinService service = servlet.getService();
+
+        TestSessionDestroyListener listener = new TestSessionDestroyListener();
+
+        service.addSessionDestroyListener(listener);
 
         MockVaadinSession vaadinSession = new MockVaadinSession(service);
         service.fireSessionDestroy(vaadinSession);
@@ -45,9 +59,11 @@ public class VaadinServiceTest {
         vaadinSession.valueUnbound(EasyMock
                 .createMock(HttpSessionBindingEvent.class));
 
-        org.junit.Assert.assertEquals(
-                "'fireSessionDestroy' method may not call 'close' "
-                        + "method for closing session", 1,
+        Assert.assertEquals("'fireSessionDestroy' method may not call 'close' "
+                + "method for closing session", 1,
                 vaadinSession.getCloseCount());
+
+        Assert.assertEquals("SessionDestroyListeners not called exactly once",
+                1, listener.callCount);
     }
 }

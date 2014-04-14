@@ -103,22 +103,30 @@ public class ComboBox extends AbstractSelect implements
     private boolean textInputAllowed = true;
 
     public ComboBox() {
-        setNewItemsAllowed(false);
+        initDefaults();
     }
 
     public ComboBox(String caption, Collection<?> options) {
         super(caption, options);
-        setNewItemsAllowed(false);
+        initDefaults();
     }
 
     public ComboBox(String caption, Container dataSource) {
         super(caption, dataSource);
-        setNewItemsAllowed(false);
+        initDefaults();
     }
 
     public ComboBox(String caption) {
         super(caption);
+        initDefaults();
+    }
+
+    /**
+     * Initialize the ComboBox with default settings
+     */
+    private void initDefaults() {
         setNewItemsAllowed(false);
+        setImmediate(true);
     }
 
     /**
