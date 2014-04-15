@@ -134,66 +134,24 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Server push (Use the <b>@Push</b> annotation to
-                enable push for a UI)
-            </li>
-            <li>Server polling using <b>UI</b>.<tt>setPollInterval()</tt></li>
-            <li>Enhanced debug window</li>
-            <li>Internet Explorer 10 support</li>
-            <li>Sass compiler improvements: arithmetics, @content</li>
-            <li>Dynamic CSS injection</li>
-            <li>Support for SCSS/CSS files in all add-ons (Use <tt>Vaadin-Stylesheet</tt>
-                in the manifest)
-            </li>
-            <li><b>Calendar</b> is included in the core framework</li>
-            <li><b>ProgressBar</b> provides progress indication
-                without polling (separated from <b>ProgressIndicator</b>)</li>
-            <li>Tooltip and loading indicator delays configurable
-                on server side</li>
-            <li>The range of a <b>DateField</b> can be limited
-            </li>
-            <li><b>Window</b> has maximize/restore controls</li>
-            <li><b>UI</b> and <b>VaadinSession</b> provide <tt>access()</tt>
-                to access the UI and session while holding the needed
-                lock</li>
-            <li>A new <b>@VaadinServletConfiguration</b> annotation
-                for configuring servlet parameters
-            </li>
-            <li>WAI-ARIA support for form fields, <b>Button</b>,
-                and <b>Tree</b></li>
-            <li>The behavior of <b>Property</b>.toString() can be
-                toggled using the <tt>legacyPropertyToString</tt> init
-                parameter
-            </li>
-            <li>Default alignment can be set for layout components</li>
-            <li><b>FieldGroup</b> supports SQL date fields and date
-                field creation</li>
-            <li><b>Converter</b>.<tt>convertToModel</tt>/<tt>convertFromModel</tt>
-                now gets an additional parameter describing the target
-                type</li>
-            <li>The browser page can be reloaded programmatically
-                using <tt>Page.reload()</tt>
-            </li>
-            <li>The <b>VaadinServlet</b>/<b>VaadinPortlet</b> and <b>VaadinService</b>
-                classes have been refactored
-            </li>
-            <li>Several locking related fixes</li>
-            <li>Client compiler dependencies are packaged as a
-                separate jar</li>
-            <li>DefaultWidgetSet is even more optimized (using
-                compiler parameter <tt>-XenableClosureCompiler</tt>)
-            </li>
-            <li>Java <tt>assert</tt> statements have been added to
-                critical code sections. Start JVM with <tt>-ea</tt> to
-                use.
-            </li>
-            <li><b>StateChangeEvent</b>.<tt>isInitialState()</tt>
-                indicates if event is the first for a connector</li>
-            <li><b>ClientConnector</b>.<tt>isAttached()</tt>
-                indicates if connector is attached</li>
-            <li><b>Container.Filterable</b> now contains a <tt>getContainerFilters()</tt>
-                method</li>
-            <li><b>TableQuery</b> now supports schemas and catalogs</li>
+            <li>Internet Explorer 11 support</li>
+            <li>Window Phone 8.1 support</li>
+            <li>Long polling support through Atmosphere 2</li>
+            <li>Font icon support</li>
+            <li>Tomcat 8 support</li>
+            <li>Wildfly 8 support</li>
+            <li>Websocket support for Tomcat 8, Glassfish 4, Jetty 9.1, Wildfly 8</li>
+            <li>TestBench 4 support</li>
+            <li>GWT 2.6 compatibility</li>
+            <li>Widget set size reduction</li>
+            <li>Widget set compilation speed improvement by collapsing all permutations</li>
+            <li>New built-in converters: StringToBigDecimal, StringToLong</li>
+            <li>New built-in support for Date in communication</li>
+            <li>WAI-ARIA improvements: Window, Notification, TabSheet</li>
+            <li>Sass compiler is a separate project</li>
+            <li>Support for @OnStateChange for easier state handling</li>
+            <li>Reload events for UIs with @PreserveOnRefresh</li>
+            <li>Responsive layouts</li>
         </ul>
 
         <p>Tools have been updated for Vaadin @version-minor@ with
@@ -620,12 +578,12 @@
         </p>
 
         <ul>
-            <li>Mozilla Firefox 18-24</li>
-            <li>Mozilla Firefox 17 ESR</li>
-            <li>Internet Explorer 8-10</li>
-            <li>Safari 6</li>
-            <li>Opera 12,16</li>
-            <li>Google Chrome 23-29</li>
+            <li>Mozilla Firefox 18-28</li>
+            <li>Mozilla Firefox 17 ESR, 24 ESR</li>
+            <li>Internet Explorer 8-11</li>
+            <li>Safari 6-7</li>
+            <li>Opera 12, 16-20</li>
+            <li>Google Chrome 23-34</li>
         </ul>
 
         <p>
