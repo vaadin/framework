@@ -57,7 +57,9 @@
 
         <!-- For compiling TestingWidgetSet -->
         <dependency org="com.vaadin" name="vaadin-client-compiler"
-            rev="${vaadin.version}" conf="build-provided-> build"></dependency>
+            rev="${vaadin.version}" conf="build-provided-> build">
+            <exclude type="pom" />
+        </dependency>
 
         <!-- Servlet 3.0 API -->
         <dependency org="javax.servlet" name="javax.servlet-api"
