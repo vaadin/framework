@@ -134,102 +134,77 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Server push (Use the <b>@Push</b> annotation to
-                enable push for a UI)
-            </li>
-            <li>Server polling using <b>UI</b>.<tt>setPollInterval()</tt></li>
-            <li>Enhanced debug window</li>
-            <li>Internet Explorer 10 support</li>
-            <li>Sass compiler improvements: arithmetics, @content</li>
-            <li>Dynamic CSS injection</li>
-            <li>Support for SCSS/CSS files in all add-ons (Use <tt>Vaadin-Stylesheet</tt>
-                in the manifest)
-            </li>
-            <li><b>Calendar</b> is included in the core framework</li>
-            <li><b>ProgressBar</b> provides progress indication
-                without polling (separated from <b>ProgressIndicator</b>)</li>
-            <li>Tooltip and loading indicator delays configurable
-                on server side</li>
-            <li>The range of a <b>DateField</b> can be limited
-            </li>
-            <li><b>Window</b> has maximize/restore controls</li>
-            <li><b>UI</b> and <b>VaadinSession</b> provide <tt>access()</tt>
-                to access the UI and session while holding the needed
-                lock</li>
-            <li>A new <b>@VaadinServletConfiguration</b> annotation
-                for configuring servlet parameters
-            </li>
-            <li>WAI-ARIA support for form fields, <b>Button</b>,
-                and <b>Tree</b></li>
-            <li>The behavior of <b>Property</b>.toString() can be
-                toggled using the <tt>legacyPropertyToString</tt> init
-                parameter
-            </li>
-            <li>Default alignment can be set for layout components</li>
-            <li><b>FieldGroup</b> supports SQL date fields and date
-                field creation</li>
-            <li><b>Converter</b>.<tt>convertToModel</tt>/<tt>convertFromModel</tt>
-                now gets an additional parameter describing the target
-                type</li>
-            <li>The browser page can be reloaded programmatically
-                using <tt>Page.reload()</tt>
-            </li>
-            <li>The <b>VaadinServlet</b>/<b>VaadinPortlet</b> and <b>VaadinService</b>
-                classes have been refactored
-            </li>
-            <li>Several locking related fixes</li>
-            <li>Client compiler dependencies are packaged as a
-                separate jar</li>
-            <li>DefaultWidgetSet is even more optimized (using
-                compiler parameter <tt>-XenableClosureCompiler</tt>)
-            </li>
-            <li>Java <tt>assert</tt> statements have been added to
-                critical code sections. Start JVM with <tt>-ea</tt> to
-                use.
-            </li>
-            <li><b>StateChangeEvent</b>.<tt>isInitialState()</tt>
-                indicates if event is the first for a connector</li>
-            <li><b>ClientConnector</b>.<tt>isAttached()</tt>
-                indicates if connector is attached</li>
-            <li><b>Container.Filterable</b> now contains a <tt>getContainerFilters()</tt>
-                method</li>
-            <li><b>TableQuery</b> now supports schemas and catalogs</li>
+            <li>Valo theme &ndash; <a href="#valo">see the separate section</a> 
+            about the features of the new theme and how to use it</li>
         </ul>
 
-        <p>Tools have been updated for Vaadin @version-minor@ with
+        <!-- <p>Tools have been updated for Vaadin @version-minor@ with
             the following changes:</p>
 
         <ul>
-            <li>Maven
-                <ul>
-                    <li>Theme compilation support using <tt>vaadin:update-theme</tt>
-                        and <tt>vaadin:compile-theme</tt></li>
-                </ul>
-            </li>
-            <li>Eclipse
-                <ul>
-                    <li>Theme compilation support using the
-                        provided button</li>
-                    <li>New projects are by default generated using
-                        Servlet 3.0 API</li>
-                    <li>Additional GWT compiler parameters can be
-                        specified</li>
-                </ul>
-            </li>
-        </ul>
+            <li>-</li>
+        </ul>-->
 
         <p>
             For enchancements introduced in Vaadin 7, see the <a
                 href="http://vaadin.com/download/release/7.0/7.0.0/release-notes.html">Release
                 Notes for Vaadin 7.0.0</a>.
         </p>
+        
+        <h2 id="valo">Valo theme</h2>
+        
+        <p>Valo is a brand new built-in theme for Vaadin. It leverages 
+        the <a href="http://www.sass-lang.com">Sass CSS preprocessor</a> heavily, 
+        providing a variety of ways to customize the look and feel of your theme. 
+        Read the introductory blog post describing the features for the
+        <a href="https://vaadin.com/blog/-/blogs/7-series">Vaadin 7.x series</a>.</p>
+        
+        <h4>Using Valo</h4>
+        
+        <p>The Java-based Sass compiler bundled with this Vaadin release 
+        does not support all the features that Valo requires at the moment. 
+        The compiler in the release version of Vaadin 7.3 will support Valo, 
+        but for this alpha release, you need to use the original Ruby-based 
+        compiler (or any other Sass 3.2 compatible Sass compiler). See 
+        instructions below.</p>
+        
+        <ul>
+          <li>Install the command-line version of the Sass compiler by following 
+          the instructions in <a href="http://sass-lang.com/install">http://sass-lang.com/install</a></li>
+          <li>Unpack the <code>VAADIN/themes/valo</code> folder from 
+          <code>vaadin-themes-7.3.0.alpha1.jar</code> and place it under your 
+          project's <code>VAADIN/themes</code> folder</li>
+          <li>In your project's custom theme, import Valo and do any modifications 
+          you wish using the Sass API in Valo (i.e., variables, mixins, and functions), 
+          and then include the main valo mixin<br>
+            <br>Example (in <code>my-theme-name.scss</code>):<br>
+            <pre>// Any variables you wish to override should be done before importing Valo
+
+// Modify the base color of the theme
+$v-app-background-color: hsl(200, 50%, 50%);
+
+@import "../valo/valo";
+
+.my-theme-name {
+  @include valo;
+}
+</pre>
+          </li>
+          <li>From the command-line, navigate to your project's 
+          <code>VAADIN/themes/my-theme-name</code> folder and use the following command 
+          to compile the theme:<br><br>
+          <code>$ sass styles.scss styles.css</code></li>
+        </ul>
 
         <h3 id="limitations">Limitations</h3>
         <ul>
-            <li>It is currently not possible to specify <tt>font-size</tt>
+            <li><p>It is currently not possible to specify <tt>font-size</tt>
                 as <tt>em</tt> or <tt>%</tt>, or layout component sizes
                 with <tt>em</tt> (<a
-                href="http://dev.vaadin.com/ticket/10634">#10634</a>)
+                href="http://dev.vaadin.com/ticket/10634">#10634</a>).</p><p>This 
+                does not apply to Valo, but using em sizes to size layouts is discouraged, 
+                because it results in fractional component sizes in many cases, which 
+                might cause unwanted 1px gaps between components.</p>
             </li>
             <li>Push is currently not supported in portals (See <a
                 href="http://dev.vaadin.com/ticket/11493">#11493</a>)
