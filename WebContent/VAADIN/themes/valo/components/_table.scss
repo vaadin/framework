@@ -312,7 +312,6 @@ $v-table-background-color: null !default;
     @include transition-delay(100ms);
   }
 
-  /* row in column selector */
   .v-on,
   .v-off {
     &:before {

@@ -42,10 +42,10 @@
 
   // If the shadow-list only contains one shadow
   // (we can't use the recursive replace function because that will mess up the list delimeters)
-  @if last($shadow-list) == hilite {
-    @return replace($shadow-list, hilite, $hilite);
-  } @else if last($shadow-list) == shade {
-    @return replace($shadow-list, shade, $shade);
+  @if last($shadow-list) == v-hilite {
+    @return replace($shadow-list, v-hilite, $hilite);
+  } @else if last($shadow-list) == v-shade {
+    @return replace($shadow-list, v-shade, $shade);
   }
   
   // If there are multiple shadows in a list, recurse and separate lists with a comma

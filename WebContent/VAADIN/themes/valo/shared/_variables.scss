@@ -98,16 +98,16 @@ $v-layout-spacing-horizontal:   round($v-unit-size/3)           !default;
 $v-border-width:                1px                             !default; // Must be specified in pixels
 $v-border-radius:               4px                             !default; // Must be specified in pixels
 
-$v-gradient-style:              linear                          !default;
+$v-gradient-style:              v-linear                        !default;
 $v-gradient-depth:              8%                              !default;
 
-$v-bevel-style:                 inset 0 1px 0 hilite, inset 0 -1px 0 shade !default;
+$v-bevel-style:                 inset 0 1px 0 v-hilite, inset 0 -1px 0 v-shade !default;
 $v-bevel-depth:                 25%                             !default;
 
-$v-shadow-style:                0 2px 3px shade                 !default;
+$v-shadow-style:                0 2px 3px v-shade               !default;
 $v-shadow-depth:                5%                              !default;
 
-$v-focus-style:                 0 0 0 2px focus-color           !default;
+$v-focus-style:                 0 0 0 2px v-focus-color         !default;
 $v-focus-color:                 null                            !default;
 
 $v-animations-enabled:          true                            !default;

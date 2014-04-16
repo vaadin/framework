@@ -117,7 +117,7 @@ $v-button-disabled-opacity: $v-disabled-opacity !default;
   $border-color: if(color-luminance($background-color) < color-luminance($v-app-background-color), $background-color, $v-app-background-color);
   $border-color: blend-darken($border-color, scale-color($border-color, $lightness: max(-50%, -$bevel-depth/2)));
   $border-color: scale-color($border-color, $saturation: -$bevel-depth/2);
-  @if contains($bevel-style, shade, true) {
+  @if contains($bevel-style, v-shade, true) {
     $border-color: $border-color $border-color blend-multiply(transparentize(#000, max(0.8, 1-$bevel-depth/200%)), $border-color);
   }
 

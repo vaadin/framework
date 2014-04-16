@@ -12,12 +12,12 @@
 @function v-valo-gradient-color-stops($color, $style: $v-gradient-style, $depth: $v-gradient-depth) {
   @if $depth > 0 {
     
-    @if $style == linear or $style == linear-reverse {
+    @if $style == v-linear or $style == v-linear-reverse {
       $start: blend-overlay(transparentize(#fff, 1-$depth/100%), $color);
       $end: blend-overlay(transparentize(#000, max(0, 1-$depth/100%)), $color);
       $end: blend-multiply(transparentize(#000, max(0, 1-$depth/200%)), $end);
       
-      @if $style == linear {
+      @if $style == v-linear {
         @return $start 2%, $end 98%;
       } @else {
         @return $end 2%, $start 98%;

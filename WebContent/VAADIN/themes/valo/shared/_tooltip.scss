@@ -28,6 +28,11 @@ $v-tooltip-border-radius: $v-border-radius - 1px !default;
       max-height: 10em;
       overflow: auto;
       font-weight: $v-font-weight + 100;
+
+      h2:only-child {
+        font: inherit;
+        line-height: inherit;
+      }
     }
 
     .v-tooltip-text {

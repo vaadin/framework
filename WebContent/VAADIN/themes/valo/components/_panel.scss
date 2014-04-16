@@ -76,7 +76,7 @@ $v-panel-caption-bevel-depth: $v-bevel-depth !default;
 @mixin v-valo-panel-well-style {
   $_bg: scale-color(adjust-color($v-app-background-color, $lightness: -2%), $saturation: -1.5%);
   background: $_bg;
-  box-shadow: v-valo-shadow($shadow-style: (0 1px 0 0 hilite, join(inset, $v-panel-shadow-style)));
+  box-shadow: v-valo-shadow($shadow-style: (0 1px 0 0 v-hilite, join(inset, $v-panel-shadow-style)));
   border-radius: $v-border-radius;
   border: $v-border-width solid v-valo-panel-border-color(v-valo-panel-background-color());
 
