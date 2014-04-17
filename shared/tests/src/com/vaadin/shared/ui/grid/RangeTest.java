@@ -315,4 +315,92 @@ public class RangeTest {
         assertEquals(r1, combined1);
     }
 
+    @Test
+    public void expand_basic() {
+        Range r1 = Range.between(5, 10);
+        Range r2 = r1.expand(2, 3);
+
+        assertEquals(Range.between(3, 13), r2);
+    }
+
+    @Test
+    public void expand_negativeLegal() {
+        Range r1 = Range.between(5, 10);
+
+        Range r2 = r1.expand(-2, -2);
+        assertEquals(Range.between(7, 8), r2);
+
+        Range r3 = r1.expand(-3, -2);
+        assertEquals(Range.between(8, 8), r3);
+
+        Range r4 = r1.expand(3, -8);
+        assertEquals(Range.between(2, 2), r4);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void expand_negativeIllegal1() {
+        Range r1 = Range.between(5, 10);
+
+        // Should throw because the start would contract beyond the end
+        r1.expand(-3, -3);
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void expand_negativeIllegal2() {
+        Range r1 = Range.between(5, 10);
+
+        // Should throw because the end would contract beyond the start
+        r1.expand(3, -9);
+    }
+
+    @Test
+    public void restrictTo_fullyInside() {
+        Range r1 = Range.between(5, 10);
+        Range r2 = Range.between(4, 11);
+
+        Range r3 = r1.restrictTo(r2);
+        assertTrue(r1 == r3);
+    }
+
+    @Test
+    public void restrictTo_fullyOutside() {
+        Range r1 = Range.between(4, 11);
+        Range r2 = Range.between(5, 10);
+
+        Range r3 = r1.restrictTo(r2);
+        assertTrue(r2 == r3);
+    }
+
+    public void restrictTo_notInterstecting() {
+        Range r1 = Range.between(5, 10);
+        Range r2 = Range.between(15, 20);
+
+        Range r3 = r1.restrictTo(r2);
+        assertTrue("Non-intersecting ranges should produce an empty result",
+                r3.isEmpty());
+
+        Range r4 = r2.restrictTo(r1);
+        assertTrue("Non-intersecting ranges should produce an empty result",
+                r4.isEmpty());
+    }
+
+    public void restrictTo_startOutside() {
+        Range r1 = Range.between(5, 10);
+        Range r2 = Range.between(7, 15);
+
+        Range r3 = r1.restrictTo(r2);
+
+        assertEquals(Range.between(7, 10), r3);
+    }
+
+    public void restrictTo_endOutside() {
+        Range r1 = Range.between(5, 10);
+        Range r2 = Range.between(4, 7);
+
+        Range r3 = r1.restrictTo(r2);
+
+        assertEquals(Range.between(5, 7), r3);
+    }
+
 }

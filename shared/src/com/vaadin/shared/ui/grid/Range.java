@@ -377,4 +377,55 @@ public final class Range implements Serializable {
         return Range.between(Math.min(getStart(), other.getStart()),
                 Math.max(getEnd(), other.getEnd()));
     }
+
+    /**
+     * Creates a range that is expanded the given amounts in both ends.
+     * 
+     * @param startDelta
+     *            the amount to expand by in the beginning of the range
+     * @param endDelta
+     *            the amount to expand by in the end of the range
+     * 
+     * @return an expanded range
+     * 
+     * @throws IllegalArgumentException
+     *             if the new range would have <code>start &gt; end</code>
+     */
+    public Range expand(int startDelta, int endDelta)
+            throws IllegalArgumentException {
+        return Range.between(getStart() - startDelta, getEnd() + endDelta);
+    }
+
+    /**
+     * Limits this range to be within the bounds of the provided range.
+     * <p>
+     * This is basically an optimized way of calculating
+     * <code>{@link #partitionWith(Range)}[1]</code> without the overhead of
+     * defining the parts that do not overlap.
+     * <p>
+     * If the two ranges do not intersect, an empty range is returned. There are
+     * no guarantees about the position of that range.
+     * 
+     * @param bounds
+     *            the bounds that the returned range should be limited to
+     * @return a bounded range
+     */
+    public Range restrictTo(Range bounds) {
+        boolean startWithin = getStart() >= bounds.getStart();
+        boolean endWithin = getEnd() <= bounds.getEnd();
+
+        if (startWithin) {
+            if (endWithin) {
+                return this;
+            } else {
+                return Range.between(getStart(), bounds.getEnd());
+            }
+        } else {
+            if (endWithin) {
+                return Range.between(bounds.getStart(), getEnd());
+            } else {
+                return bounds;
+            }
+        }
+    }
 }
