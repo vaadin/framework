@@ -77,7 +77,8 @@ public class MetadataWriter implements Serializable {
         // sessionExpiredURL after timer expires.
         if (messages != null && messages.getSessionExpiredMessage() == null
                 && messages.getSessionExpiredCaption() == null
-                && messages.isSessionExpiredNotificationEnabled()) {
+                && messages.isSessionExpiredNotificationEnabled()
+                && ui.getSession().getSession() != null) {
             int newTimeoutInterval = ui.getSession().getSession()
                     .getMaxInactiveInterval();
             if (repaintAll || (timeoutInterval != newTimeoutInterval)) {
