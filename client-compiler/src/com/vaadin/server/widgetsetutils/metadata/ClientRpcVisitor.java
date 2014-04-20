@@ -29,6 +29,7 @@ public class ClientRpcVisitor extends TypeVisitor {
     @Override
     public void visitClientRpc(TreeLogger logger, JClassType type,
             ConnectorBundle bundle) throws UnableToCompleteException {
+        checkGenericType(logger, type);
         Set<? extends JClassType> hierarchy = type
                 .getFlattenedSupertypeHierarchy();
         for (JClassType subType : hierarchy) {
@@ -44,6 +45,17 @@ public class ClientRpcVisitor extends TypeVisitor {
                     bundle.setNeedsSerialize(paramType);
                 }
             }
+        }
+    }
+
+    public static void checkGenericType(TreeLogger logger, JClassType type)
+            throws UnableToCompleteException {
+        if (type.isGenericType() != null) {
+            logger.log(Type.ERROR,
+                    "Type " + type.getParameterizedQualifiedSourceName()
+                            + "is parameterizied generic. RPC proxy "
+                            + "for parameterizied types is not supported.");
+            throw new UnableToCompleteException();
         }
     }
 
