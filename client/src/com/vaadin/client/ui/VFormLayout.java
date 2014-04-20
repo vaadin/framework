@@ -53,8 +53,8 @@ public class VFormLayout extends SimplePanel {
 
     public VFormLayout() {
         super();
-        setStyleName(StyleConstants.UI_LAYOUT);
-        addStyleName(CLASSNAME);
+        setStyleName(CLASSNAME);
+        addStyleName(StyleConstants.UI_LAYOUT);
         table = new VFormLayoutTable();
         setWidget(table);
     }
