@@ -4707,7 +4707,15 @@ public class Table extends AbstractSelect implements Action.Container,
             if (refreshingPreviouslyEnabled) {
                 enableContentRefreshing(true);
             }
-
+            if (propertyId.length > 0 && ascending.length > 0) {
+                // The first propertyId is the primary sorting criterion,
+                // therefore the sort indicator should be there
+                sortAscending = ascending[0];
+                sortContainerPropertyId = propertyId[0];
+            } else {
+                sortAscending = true;
+                sortContainerPropertyId = null;
+            }
         } else if (c != null) {
             throw new UnsupportedOperationException(
                     "Underlying Data does not allow sorting");
