@@ -17,6 +17,7 @@ package com.vaadin.tests.components.ui;
 
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -26,6 +27,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TimeoutRedirectResetsOnActivityTest extends MultiBrowserTest {
     @Test
+    @Ignore("The test modifies the system messages, which are global and the changes will affect other tests")
     public void verifyRedirectWorks() throws Exception {
         setDebug(true);
         openTestURL();
