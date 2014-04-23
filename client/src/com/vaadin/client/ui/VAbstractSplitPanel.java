@@ -511,6 +511,10 @@ public class VAbstractSplitPanel extends ComplexPanel {
         firstChild = w;
     }
 
+    public Widget getFirstWidget() {
+        return firstChild;
+    }
+
     /** For internal use only. May be removed or replaced in the future. */
     public void setSecondWidget(Widget w) {
         if (secondChild == w) {
@@ -523,6 +527,10 @@ public class VAbstractSplitPanel extends ComplexPanel {
             super.add(w, secondContainer);
         }
         secondChild = w;
+    }
+
+    public Widget getSecondWidget() {
+        return secondChild;
     }
 
     @Override

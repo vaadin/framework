@@ -161,6 +161,35 @@ public abstract class AbstractSplitPanelConnector extends
         getLayoutManager().setNeedsLayout(this);
 
         getWidget().makeScrollable();
+
+        handleSingleComponentMove();
+    }
+
+    /**
+     * Handles the case when there is only one child component and that
+     * component is moved between first <-> second. This does not trigger a
+     * hierarchy change event as the list of children contains the same
+     * component in both cases.
+     */
+    private void handleSingleComponentMove() {
+        if (getChildComponents().size() == 1) {
+            Widget stateFirstChild = null;
+            Widget stateSecondChild = null;
+            if (getState().firstChild != null) {
+                stateFirstChild = ((ComponentConnector) getState().firstChild)
+                        .getWidget();
+            }
+            if (getState().secondChild != null) {
+                stateSecondChild = ((ComponentConnector) getState().secondChild)
+                        .getWidget();
+            }
+
+            if (stateFirstChild == getWidget().getSecondWidget()
+                    || stateSecondChild == getWidget().getFirstWidget()) {
+                handleHierarchyChange();
+            }
+        }
+
     }
 
     @Override
@@ -212,6 +241,10 @@ public abstract class AbstractSplitPanelConnector extends
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+        handleHierarchyChange();
+    }
+
+    private void handleHierarchyChange() {
         /*
          * When the connector gets detached, the state isn't updated but there's
          * still a hierarchy change -> verify that the child from the state is
