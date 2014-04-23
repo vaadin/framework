@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui.window;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
@@ -256,6 +258,12 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
     @Override
     public void postLayout() {
         VWindow window = getWidget();
+
+        if (!window.isAttached()) {
+            Logger.getLogger(WindowConnector.class.getName()).warning(
+                    "Called postLayout to detached Window.");
+            return;
+        }
         if (window.centered && getState().windowMode != WindowMode.MAXIMIZED) {
             window.center();
         }
