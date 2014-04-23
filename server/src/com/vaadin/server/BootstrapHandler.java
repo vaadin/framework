@@ -156,10 +156,6 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
     public boolean synchronizedHandleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
         try {
-            // Update WebBrowser here only to make WebBrowser information
-            // available in init for LegacyApplications
-            session.getBrowser().updateRequestDetails(request);
-
             List<UIProvider> uiProviders = session.getUIProviders();
 
             UIClassSelectionEvent classSelectionEvent = new UIClassSelectionEvent(

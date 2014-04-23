@@ -68,7 +68,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         try {
             assert UI.getCurrent() == null;
 
-            // Set browser information from the request
+            // Update browser information from the request
             session.getBrowser().updateRequestDetails(request);
 
             UI uI = getBrowserDetailsUI(request, session);

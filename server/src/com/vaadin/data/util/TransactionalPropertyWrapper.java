@@ -48,18 +48,32 @@ public class TransactionalPropertyWrapper<T> extends AbstractProperty<T>
     private boolean inTransaction = false;
     private boolean valueChangePending;
     private T valueBeforeTransaction;
+    private final ValueChangeListener listener = new ValueChangeListener() {
+
+        @Override
+        public void valueChange(ValueChangeEvent event) {
+            fireValueChange();
+        }
+    };
 
     public TransactionalPropertyWrapper(Property<T> wrappedProperty) {
         this.wrappedProperty = wrappedProperty;
         if (wrappedProperty instanceof ValueChangeNotifier) {
             ((ValueChangeNotifier) wrappedProperty)
-                    .addListener(new ValueChangeListener() {
+                    .addValueChangeListener(listener);
+        }
+    }
 
-                        @Override
-                        public void valueChange(ValueChangeEvent event) {
-                            fireValueChange();
-                        }
-                    });
+    /**
+     * Removes the ValueChangeListener from wrapped Property that was added by
+     * TransactionalPropertyWrapper.
+     * 
+     * @since 7.1.15
+     */
+    public void detachFromProperty() {
+        if (wrappedProperty instanceof ValueChangeNotifier) {
+            ((ValueChangeNotifier) wrappedProperty)
+                    .removeValueChangeListener(listener);
         }
     }
 

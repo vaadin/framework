@@ -267,7 +267,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                 // we have focus in field, prompting can't be set on, instead
                 // just clear the input if the value has changed from something
                 // else to null
-                if (getWidget().selectedOptionKey != null) {
+                if (getWidget().selectedOptionKey != null
+                        || (getWidget().allowNewItem && !getWidget().tb
+                                .getValue().isEmpty())) {
                     getWidget().tb.setValue("");
                 }
             }
