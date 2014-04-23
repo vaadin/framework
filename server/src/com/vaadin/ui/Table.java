@@ -2775,22 +2775,8 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     private boolean typeIsCompatible(Class<?> a, Class<?> b) {
         // TODO Implement this check properly
-        // Map<Class<?>, Class<?>> typemap = new HashMap<Class<?>, Class<?>>();
-        // typemap.put(byte.class, Byte.class);
-        // typemap.put(short.class, Short.class);
-        // typemap.put(int.class, Integer.class);
-        // typemap.put(long.class, Long.class);
-        // typemap.put(float.class, Float.class);
-        // typemap.put(double.class, Double.class);
-        // typemap.put(char.class, Character.class);
-        // typemap.put(boolean.class, Boolean.class);
-        // if (typemap.containsKey(a)) {
-        // a = typemap.get(a);
-        // }
-        // if (typemap.containsKey(b)) {
-        // b = typemap.get(b);
-        // }
-        // return a.isAssignableFrom(b);
+        // Basically we need to do a a.isAssignableFrom(b)
+        // with special considerations for primitive types.
         return true;
     }
 
