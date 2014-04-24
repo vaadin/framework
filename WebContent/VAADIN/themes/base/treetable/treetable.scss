@@ -26,7 +26,6 @@
 
 .#{$primaryStyleName} .v-table-row .v-table-cell-content,
 .#{$primaryStyleName} .v-table-row-odd .v-table-cell-content {
-    position: relative;
     z-index: 10;
 }
 
