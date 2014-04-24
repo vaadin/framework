@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -67,13 +66,12 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector,
         this.color = color;
 
         field = new TextField();
-        field.setReadOnly(true);
         field.setImmediate(true);
         field.setSizeFull();
         field.setStyleName("v-colorpicker-preview-textfield");
         field.setData(this);
         field.addValueChangeListener(this);
-        field.addValidator(new RegexpValidator("#[0-9a-fA-F]{6}", true, ""));
+
         addComponent(field);
 
         setColor(color);
@@ -85,7 +83,6 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector,
 
         // Unregister listener
         field.removeValueChangeListener(this);
-        field.setReadOnly(false);
 
         String colorCSS = color.getCSS();
         field.setValue(colorCSS);
@@ -97,7 +94,6 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector,
         }
 
         // Re-register listener
-        field.setReadOnly(true);
         field.addValueChangeListener(this);
 
         // Set the text color
@@ -130,21 +126,63 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector,
     @Override
     public void valueChange(ValueChangeEvent event) {
         String value = (String) event.getProperty().getValue();
+        try {
+            if (value != null) {
+                /*
+                 * Description of supported formats see
+                 * http://www.w3schools.com/cssref/css_colors_legal.asp
+                 */
+                if (value.length() == 7 && value.startsWith("#")) {
+                    // CSS color format (e.g. #000000)
+                    int red = Integer.parseInt(value.substring(1, 3), 16);
+                    int green = Integer.parseInt(value.substring(3, 5), 16);
+                    int blue = Integer.parseInt(value.substring(5, 7), 16);
+                    color = new Color(red, green, blue);
 
-        if (!field.isValid()) {
+                } else if (value.startsWith("rgb")) {
+                    // RGB color format rgb/rgba(255,255,255,0.1)
+                    String[] colors = value.substring(value.indexOf("(") + 1,
+                            value.length() - 1).split(",");
+
+                    int red = Integer.parseInt(colors[0]);
+                    int green = Integer.parseInt(colors[1]);
+                    int blue = Integer.parseInt(colors[2]);
+                    if (colors.length > 3) {
+                        int alpha = (int) (Double.parseDouble(colors[3]) * 255d);
+                        color = new Color(red, green, blue, alpha);
+                    } else {
+                        color = new Color(red, green, blue);
+                    }
+
+                } else if (value.startsWith("hsl")) {
+                    // HSL color format hsl/hsla(100,50%,50%,1.0)
+                    String[] colors = value.substring(value.indexOf("(") + 1,
+                            value.length() - 1).split(",");
+
+                    int hue = Integer.parseInt(colors[0]);
+                    int saturation = Integer.parseInt(colors[1]
+                            .replace("%", ""));
+                    int lightness = Integer
+                            .parseInt(colors[2].replace("%", ""));
+                    int rgb = Color.HSLtoRGB(hue, saturation, lightness);
+
+                    if (colors.length > 3) {
+                        int alpha = (int) (Double.parseDouble(colors[3]) * 255d);
+                        color = new Color(rgb);
+                        color.setAlpha(alpha);
+                    } else {
+                        color = new Color(rgb);
+                    }
+                }
+
+                oldValue = value;
+                fireEvent(new ColorChangeEvent((Component) field.getData(),
+                        color));
+            }
+
+        } catch (NumberFormatException nfe) {
+            // Revert value
             field.setValue(oldValue);
-            return;
-        } else {
-            oldValue = value;
-        }
-
-        if (value != null && value.length() == 7) {
-            int red = Integer.parseInt(value.substring(1, 3), 16);
-            int green = Integer.parseInt(value.substring(3, 5), 16);
-            int blue = Integer.parseInt(value.substring(5, 7), 16);
-            color = new Color(red, green, blue);
-
-            fireEvent(new ColorChangeEvent((Component) field.getData(), color));
         }
     }
 
