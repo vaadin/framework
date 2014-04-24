@@ -131,7 +131,7 @@ public abstract class UIProvider implements Serializable {
      * the value of window.name in the browser.
      * <p>
      * Whenever a preserved UI is reused, its
-     * {@link UI#reinit(com.vaadin.server.VaadinRequest) reinit} method is
+     * {@link UI#refresh(com.vaadin.server.VaadinRequest) refresh} method is
      * invoked by the framework first.
      * 
      * 

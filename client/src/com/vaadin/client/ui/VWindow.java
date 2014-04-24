@@ -67,7 +67,7 @@ import com.vaadin.client.ui.window.WindowMoveHandler;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.window.WindowMode;
-import com.vaadin.shared.ui.window.WindowState.WindowRole;
+import com.vaadin.shared.ui.window.WindowRole;
 
 /**
  * "Sub window" component.

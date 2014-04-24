@@ -222,7 +222,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
     @Override
     public boolean removeAllItems() {
         int origSize = size();
-        IDTYPE firstItem = getFirstVisibleItem();
 
         internalRemoveAllItems();
 
@@ -235,7 +234,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         // fire event only if the visible view changed, regardless of whether
         // filtered out items were removed or not
         if (origSize != 0) {
-            fireItemsRemoved(0, firstItem, origSize);
+            fireItemSetChange();
         }
 
         return true;
@@ -680,8 +679,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
     protected void addAll(Collection<? extends BEANTYPE> collection)
             throws IllegalStateException, IllegalArgumentException {
         boolean modified = false;
-        int origSize = size();
-
         for (BEANTYPE bean : collection) {
             // TODO skipping invalid beans - should not allow them in javadoc?
             if (bean == null
@@ -702,20 +699,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         if (modified) {
             // Filter the contents when all items have been added
             if (isFiltered()) {
-                doFilterContainer(!getFilters().isEmpty());
-            }
-            if (visibleNewItemsWasAdded(origSize)) {
-                // fire event about added items
-                int firstPosition = origSize;
-                IDTYPE firstItemId = getVisibleItemIds().get(firstPosition);
-                int affectedItems = size() - origSize;
-                fireItemsAdded(firstPosition, firstItemId, affectedItems);
+                filterAll();
+            } else {
+                fireItemSetChange();
             }
         }
-    }
-
-    private boolean visibleNewItemsWasAdded(int origSize) {
-        return size() > origSize;
     }
 
     /**

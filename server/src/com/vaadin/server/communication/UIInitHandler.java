@@ -266,7 +266,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
      */
     private void reinitUI(UI ui, VaadinRequest request) {
         UI.setCurrent(ui);
-        ui.doReinit(request);
+        ui.doRefresh(request);
     }
 
     /**

@@ -2,7 +2,7 @@ package com.vaadin.tests.components.notification;
 
 import com.vaadin.data.Item;
 import com.vaadin.server.Page;
-import com.vaadin.shared.ui.ui.NotificationConfigurationBean.Role;
+import com.vaadin.shared.ui.ui.NotificationRole;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -11,8 +11,10 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.NotificationConfiguration;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 
 public class NotificationsWaiAria extends TestBase {
 
@@ -36,9 +38,9 @@ public class NotificationsWaiAria extends TestBase {
                 " - closes automatically after 10 seconds");
         addComponent(postfix);
 
-        role = new NativeSelect("Role");
-        role.addItem(Role.ALERT);
-        role.addItem(Role.STATUS);
+        role = new NativeSelect("NotificationRole");
+        role.addItem(NotificationRole.ALERT);
+        role.addItem(NotificationRole.STATUS);
         role.setValue(role.getItemIds().iterator().next());
         addComponent(role);
 
@@ -96,9 +98,12 @@ public class NotificationsWaiAria extends TestBase {
 
             Notification n = new Notification(tf.getValue(), typeValue);
             n.setHtmlContentAllowed(true);
-            n.setAssistivePrefixForType(typeValue, prefix.getValue());
-            n.setAssistivePostfixForType(typeValue, postfix.getValue());
-            n.setAssistiveRoleForType(typeValue, (Role) role.getValue());
+            NotificationConfiguration notificationConf = UI.getCurrent()
+                    .getNotificationConfiguration();
+            notificationConf.setAssistivePrefix(typeValue, prefix.getValue());
+            notificationConf.setAssistivePostfix(typeValue, postfix.getValue());
+            notificationConf
+                    .setAssistiveRole(typeValue, (NotificationRole) role.getValue());
 
             n.show(Page.getCurrent());
         }

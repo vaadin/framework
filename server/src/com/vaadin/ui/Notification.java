@@ -21,7 +21,6 @@ import java.io.Serializable;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.Position;
-import com.vaadin.shared.ui.ui.NotificationConfigurationBean.Role;
 
 /**
  * A notification message, used to display temporary messages to the user - for
@@ -64,7 +63,27 @@ import com.vaadin.shared.ui.ui.NotificationConfigurationBean.Role;
  */
 public class Notification implements Serializable {
     public enum Type {
-        HUMANIZED_MESSAGE, WARNING_MESSAGE, ERROR_MESSAGE, TRAY_NOTIFICATION, ASSISTIVE_NOTIFICATION;
+        HUMANIZED_MESSAGE("humanized"), WARNING_MESSAGE("warning"), ERROR_MESSAGE(
+                "error"), TRAY_NOTIFICATION("tray"),
+        /**
+         * @since 7.2
+         */
+        ASSISTIVE_NOTIFICATION("assistive");
+
+        private String style;
+
+        Type(String style) {
+            this.style = style;
+        }
+
+        /**
+         * @since 7.2
+         *
+         * @return the style name for this notification type.
+         */
+        public String getStyle() {
+            return style;
+        }
     }
 
     @Deprecated
@@ -187,42 +206,26 @@ public class Notification implements Serializable {
     }
 
     private void setType(Type type) {
+        styleName = type.getStyle();
         switch (type) {
         case WARNING_MESSAGE:
             delayMsec = 1500;
-            styleName = "warning";
-            setNavigationConfiguration("Warning: ", "", Role.ALERT);
             break;
         case ERROR_MESSAGE:
             delayMsec = -1;
-            styleName = "error";
-            setNavigationConfiguration("Error: ", " - close with ESC",
-                    Role.ALERT);
             break;
         case TRAY_NOTIFICATION:
             delayMsec = 3000;
             position = Position.BOTTOM_RIGHT;
-            styleName = "tray";
-            setNavigationConfiguration("Info: ", "", Role.STATUS);
             break;
         case ASSISTIVE_NOTIFICATION:
             delayMsec = 3000;
             position = Position.ASSISTIVE;
-            styleName = "assistive";
-            setNavigationConfiguration("Note: ", "", Role.ALERT);
             break;
         case HUMANIZED_MESSAGE:
         default:
-            styleName = "humanized";
-            setNavigationConfiguration("Info: ", "", Role.ALERT);
             break;
         }
-    }
-
-    private void setNavigationConfiguration(String prefix, String postfix,
-            Role ariaRole) {
-        UI.getCurrent().getNotificationConfiguration()
-                .setStyleConfiguration(styleName, prefix, postfix, ariaRole);
     }
 
     /**
@@ -337,132 +340,6 @@ public class Notification implements Serializable {
      */
     public String getStyleName() {
         return styleName;
-    }
-
-    /**
-     * Sets the accessibility prefix for a notification type.
-     * 
-     * This prefix is read to assistive device users before the content of the
-     * notification, but not visible on the page.
-     * 
-     * @param type
-     *            Type of the notification
-     * @param prefix
-     *            String that is placed before the notification content
-     */
-    public void setAssistivePrefixForType(Type type, String prefix) {
-        UI.getCurrent().getNotificationConfiguration()
-                .setAssistivePrefixForStyle(getStyle(type), prefix);
-    }
-
-    /**
-     * Gets the accessibility prefix for a notification type.
-     * 
-     * This prefix is read to assistive device users before the content of the
-     * notification, but not visible on the page.
-     * 
-     * @param type
-     *            Type of the notification
-     * @return The accessibility prefix for the provided notification type
-     */
-    public String getAssistivePrefixForType(Type type) {
-        return UI.getCurrent().getNotificationConfiguration()
-                .getAssistivePrefixForStyle(getStyle(type));
-    }
-
-    /**
-     * Sets the accessibility postfix for a notification type.
-     * 
-     * This postfix is read to assistive device users after the content of the
-     * notification, but not visible on the page.
-     * 
-     * @param type
-     *            Type of the notification
-     * @param postfix
-     *            String that is placed after the notification content
-     */
-    public void setAssistivePostfixForType(Type type, String postfix) {
-        UI.getCurrent().getNotificationConfiguration()
-                .setAssistivePostfixForStyle(getStyle(type), postfix);
-    }
-
-    /**
-     * Gets the accessibility postfix for a notification type.
-     * 
-     * This postfix is read to assistive device users after the content of the
-     * notification, but not visible on the page.
-     * 
-     * @param type
-     *            Type of the notification
-     * @return The accessibility postfix for the provided notification type
-     */
-    public String getAssistivePostfixForType(Type type) {
-        return UI.getCurrent().getNotificationConfiguration()
-                .getAssistivePostfixForStyle(getStyle(type));
-    }
-
-    /**
-     * Sets the WAI-ARIA role for a notification type.
-     * 
-     * This role defines how an assistive device handles a notification.
-     * Available roles are alert and status (@see <a
-     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
-     * Model</a>).
-     * 
-     * The default role is alert.
-     * 
-     * @param type
-     *            Type of the notification
-     * @param role
-     *            Role to set for the notification type
-     */
-    public void setAssistiveRoleForType(Type type, Role role) {
-        UI.getCurrent().getNotificationConfiguration()
-                .setAssistiveRoleForStyle(getStyle(type), role);
-    }
-
-    /**
-     * Gets the WAI-ARIA role for a notification type.
-     * 
-     * This role defines how an assistive device handles a notification.
-     * Available roles are alert and status (@see <a
-     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
-     * Model</a>)
-     * 
-     * The default role is alert.
-     * 
-     * @param type
-     *            Type of the notification
-     * @return Role to set for the notification type
-     */
-    public Role getAssistiveRoleForType(Type type) {
-        return UI.getCurrent().getNotificationConfiguration()
-                .getAssistiveRoleForStyle(getStyle(type));
-    }
-
-    private String getStyle(Type type) {
-        String style = "";
-
-        switch (type) {
-        case WARNING_MESSAGE:
-            style = "warning";
-            break;
-        case ERROR_MESSAGE:
-            style = "error";
-            break;
-        case TRAY_NOTIFICATION:
-            style = "tray";
-            break;
-        case ASSISTIVE_NOTIFICATION:
-            style = "assistive";
-            break;
-        case HUMANIZED_MESSAGE:
-        default:
-            style = "humanized";
-            break;
-        }
-
-        return style;
     }
 
     /**

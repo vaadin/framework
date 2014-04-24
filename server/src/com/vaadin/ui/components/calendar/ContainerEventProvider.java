@@ -224,8 +224,8 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
             }
             if (styleNameProperty != null
                     && item.getItemPropertyIds().contains(styleNameProperty)) {
-                basicEvent.setDescription(String.valueOf(item.getItemProperty(
-                        descriptionProperty).getValue()));
+                basicEvent.setStyleName(String.valueOf(item.getItemProperty(
+                        styleNameProperty).getValue()));
             }
             event = basicEvent;
         }

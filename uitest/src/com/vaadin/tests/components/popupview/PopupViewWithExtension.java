@@ -13,37 +13,43 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.tests.components.popupview;
 
-package com.vaadin.tests.components.ui;
-
-import com.vaadin.annotations.PreserveOnRefresh;
+import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.PopupView;
 
-@PreserveOnRefresh
-public class UIReinit extends AbstractTestUI {
-
-    public static final String REINIT_ID = "reinit";
+/**
+ * Test UI for popup view with extension: extension is a part of getChildren()
+ * collection but is not inside the getChildComponents() collection. Popup view
+ * should use getChildComponents() to avoid exception when extension is returned
+ * by getChildren().
+ * 
+ * @since 7.2
+ * @author Vaadin Ltd
+ */
+public class PopupViewWithExtension extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
+        Label label = new Label("label");
+        PopupView view = new PopupView("small", label);
+
+        Responsive.makeResponsive(view);
+
+        addComponent(view);
     }
 
     @Override
-    protected void reinit(VaadinRequest request) {
-        Label l = new Label("Reinit!");
-        l.setId(REINIT_ID);
-        addComponent(l);
-    }
-
-    @Override
-    public String getTestDescription() {
-        return "UI reinit after refresh";
+    protected String getTestDescription() {
+        return "PopupView should use getChildComponents() in the connector, not getChildren()";
     }
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(12191);
+        return 13503;
     }
+
 }

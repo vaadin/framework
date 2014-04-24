@@ -23,17 +23,50 @@ import java.util.Map;
 
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.TabIndexState;
-import com.vaadin.shared.ui.ui.NotificationConfigurationBean.Role;
 
 public class UIState extends TabIndexState {
     public TooltipConfigurationState tooltipConfiguration = new TooltipConfigurationState();
     public LoadingIndicatorConfigurationState loadingIndicatorConfiguration = new LoadingIndicatorConfigurationState();
-    public NotificationConfigurationState notificationConfiguration = new NotificationConfigurationState();
     public int pollInterval = -1;
 
     // Informing users of assistive devices, that the content of this container
     // is announced automatically and does not need to be navigated into
     public String overlayContainerLabel = "This content is announced automatically and does not need to be navigated into.";
+    public Map<String, NotificationTypeConfiguration> notificationConfigurations = new HashMap<String, NotificationTypeConfiguration>();
+    {
+        notificationConfigurations.put("error",
+                new NotificationTypeConfiguration("Error: ",
+                        " - close with ESC-key", NotificationRole.ALERT));
+        notificationConfigurations.put("warning",
+                new NotificationTypeConfiguration("Warning: ", null,
+                        NotificationRole.ALERT));
+        notificationConfigurations.put("humanized",
+                new NotificationTypeConfiguration("Info: ", null,
+                        NotificationRole.ALERT));
+        notificationConfigurations.put("tray",
+                new NotificationTypeConfiguration("Status: ", null,
+                        NotificationRole.STATUS));
+        notificationConfigurations.put("assistive",
+                new NotificationTypeConfiguration("Note: ", null,
+                        NotificationRole.STATUS));
+    }
+    /**
+     * State related to the Page class.
+     */
+    public PageState pageState = new PageState();
+    /**
+     * State related to the LocaleService class.
+     */
+    public LocaleServiceState localeServiceState = new LocaleServiceState();
+    /**
+     * Configuration for the push channel
+     */
+    public PushConfigurationState pushConfiguration = new PushConfigurationState();
+    {
+        primaryStyleName = "v-ui";
+        // Default is 1 for legacy reasons
+        tabIndex = 1;
+    }
 
     public static class LoadingIndicatorConfigurationState implements
             Serializable {
@@ -50,19 +83,19 @@ public class UIState extends TabIndexState {
         public int maxWidth = 500;
     }
 
-    public static class NotificationConfigurationState implements Serializable {
-        public Map<String, NotificationConfigurationBean> setup = new HashMap<String, NotificationConfigurationBean>();
-        {
-            setup.put("error", new NotificationConfigurationBean("Error: ",
-                    " - close with ESC-key", Role.ALERT));
-            setup.put("warning", new NotificationConfigurationBean("Warning: ",
-                    null, Role.ALERT));
-            setup.put("humanized", new NotificationConfigurationBean("Info: ",
-                    null, Role.ALERT));
-            setup.put("tray", new NotificationConfigurationBean("Status: ",
-                    null, Role.STATUS));
-            setup.put("assistive", new NotificationConfigurationBean("Note: ",
-                    null, Role.STATUS));
+    public static class NotificationTypeConfiguration implements Serializable {
+        public String prefix;
+        public String postfix;
+        public NotificationRole notificationRole = NotificationRole.ALERT;
+
+        public NotificationTypeConfiguration() {
+        }
+
+        public NotificationTypeConfiguration(String prefix, String postfix,
+                NotificationRole role) {
+            this.prefix = prefix;
+            this.postfix = postfix;
+            this.notificationRole = role;
         }
     }
 
@@ -78,26 +111,6 @@ public class UIState extends TabIndexState {
             parameters.put(FALLBACK_TRANSPORT_PARAM,
                     Transport.LONG_POLLING.getIdentifier());
         }
-    }
-
-    /**
-     * State related to the Page class.
-     */
-    public PageState pageState = new PageState();
-    /**
-     * State related to the LocaleService class.
-     */
-    public LocaleServiceState localeServiceState = new LocaleServiceState();
-
-    /**
-     * Configuration for the push channel
-     */
-    public PushConfigurationState pushConfiguration = new PushConfigurationState();
-
-    {
-        primaryStyleName = "v-ui";
-        // Default is 1 for legacy reasons
-        tabIndex = 1;
     }
 
     public static class LocaleServiceState implements Serializable {

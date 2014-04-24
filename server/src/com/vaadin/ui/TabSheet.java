@@ -292,34 +292,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * @return the created {@link Tab}
      */
     public Tab addTab(Component c, String caption, Resource icon) {
-        return addTab(c, caption, icon, "", components.size());
-    }
-
-    /**
-     * Adds a new tab into TabSheet.
-     * 
-     * The first tab added to a tab sheet is automatically selected and a tab
-     * selection event is fired.
-     * 
-     * If the component is already present in the tab sheet, changes its caption
-     * and icon and icon alternate text and returns the corresponding (old) tab,
-     * preserving other tab metadata.
-     * 
-     * @param c
-     *            the component to be added onto tab - should not be null.
-     * @param caption
-     *            the caption to be set for the component and used rendered in
-     *            tab bar
-     * @param icon
-     *            the icon to be set for the component and used rendered in tab
-     *            bar
-     * @param iconAltText
-     *            the alternate text for the icon
-     * @return the created {@link Tab}
-     */
-    public Tab addTab(Component c, String caption, Resource icon,
-            String iconAltText) {
-        return addTab(c, caption, icon, iconAltText, components.size());
+        return addTab(c, caption, icon, components.size());
     }
 
     /**
@@ -344,43 +317,13 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      *            the position at where the the tab should be added.
      * @return the created {@link Tab}
      */
-    public Tab addTab(Component c, String caption, Resource icon, int position) {
-        return addTab(c, caption, icon, "", position);
-    }
-
-    /**
-     * Adds a new tab into TabSheet.
-     * 
-     * The first tab added to a tab sheet is automatically selected and a tab
-     * selection event is fired.
-     * 
-     * If the component is already present in the tab sheet, changes its caption
-     * and icon and icon alternate text and returns the corresponding (old) tab,
-     * preserving other tab metadata like the position.
-     * 
-     * @param tabComponent
-     *            the component to be added onto tab - should not be null.
-     * @param caption
-     *            the caption to be set for the component and used rendered in
-     *            tab bar
-     * @param icon
-     *            the icon to be set for the component and used rendered in tab
-     *            bar
-     * @param iconAltText
-     *            the alternate text for the icon
-     * @param position
-     *            the position at where the the tab should be added.
-     * @return the created {@link Tab}
-     */
-    public Tab addTab(Component tabComponent, String caption, Resource icon,
-            String iconAltText, int position) {
-
+    public Tab addTab(Component tabComponent, String caption, Resource icon, int position) {
         if (tabComponent == null) {
             return null;
         } else if (tabs.containsKey(tabComponent)) {
             Tab tab = tabs.get(tabComponent);
             tab.setCaption(caption);
-            tab.setIcon(icon, iconAltText);
+            tab.setIcon(icon);
             return tab;
         } else {
             components.add(position, tabComponent);
@@ -461,11 +404,11 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                 Tab tab = ((TabSheet) source).getTab(c);
                 caption = tab.getCaption();
                 icon = tab.getIcon();
-                iconAltText = tab.getIconAltText();
+                iconAltText = tab.getIconAlternateText();
             }
             source.removeComponent(c);
-            addTab(c, caption, icon, iconAltText);
-
+            Tab tab = addTab(c, caption, icon);
+            tab.setIconAlternateText(iconAltText);
         }
     }
 
@@ -968,16 +911,20 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         /**
          * Gets the icon alt text for the tab.
+         *
+         * @since 7.2
          */
-        public String getIconAltText();
+        public String getIconAlternateText();
 
         /**
          * Sets the icon alt text for the tab.
-         * 
+         *
+         * @since 7.2
+         *
          * @param iconAltText
          *            the icon to set
          */
-        public void setIconAltText(String iconAltText);
+        public void setIconAlternateText(String iconAltText);
 
         /**
          * Gets the description for the tab. The description can be used to
@@ -1135,12 +1082,12 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         }
 
         @Override
-        public String getIconAltText() {
+        public String getIconAlternateText() {
             return tabState.iconAltText;
         }
 
         @Override
-        public void setIconAltText(String iconAltText) {
+        public void setIconAlternateText(String iconAltText) {
             tabState.iconAltText = iconAltText;
             markAsDirty();
         }
@@ -1428,7 +1375,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      */
     private static void copyTabMetadata(Tab from, Tab to) {
         to.setCaption(from.getCaption());
-        to.setIcon(from.getIcon(), from.getIconAltText());
+        to.setIcon(from.getIcon(), from.getIconAlternateText());
         to.setDescription(from.getDescription());
         to.setVisible(from.isVisible());
         to.setEnabled(from.isEnabled());

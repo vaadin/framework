@@ -2647,6 +2647,10 @@ public class Table extends AbstractSelect implements Action.Container,
      * new container contains properties that are not meant to be shown you
      * should use {@link Table#setContainerDataSource(Container, Collection)}
      * instead, especially if the table is editable.
+     * <p>
+     * Keeps propertyValueConverters if the corresponding id exists in the new
+     * data source and is of a compatible type.
+     * </p>
      * 
      * @param newDataSource
      *            the new data source.
@@ -2681,9 +2685,14 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Sets the container data source and the columns that will be visible.
      * Columns are shown in the collection's iteration order.
+     * <p>
+     * Keeps propertyValueConverters if the corresponding id exists in the new
+     * data source and is of a compatible type.
+     * </p>
      * 
      * @see Table#setContainerDataSource(Container)
      * @see Table#setVisibleColumns(Object[])
+     * @see Table#setConverter(Object, Converter<String, ?>)
      * 
      * @param newDataSource
      *            the new data source.
@@ -2700,6 +2709,26 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         if (visibleIds == null) {
             visibleIds = new ArrayList<Object>();
+        }
+
+        // Retain propertyValueConverters if their corresponding ids are
+        // properties of the new
+        // data source and are of a compatible type
+        if (propertyValueConverters != null) {
+            Collection<?> newPropertyIds = newDataSource
+                    .getContainerPropertyIds();
+            LinkedList<Object> retainableValueConverters = new LinkedList<Object>();
+            for (Object propertyId : newPropertyIds) {
+                Converter<String, ?> converter = getConverter(propertyId);
+                if (converter != null) {
+                    if (typeIsCompatible(converter.getModelType(),
+                            newDataSource.getType(propertyId))) {
+                        retainableValueConverters.add(propertyId);
+                    }
+                }
+            }
+            propertyValueConverters.keySet().retainAll(
+                    retainableValueConverters);
         }
 
         // Assures that the data source is ordered by making unordered
@@ -2735,6 +2764,20 @@ public class Table extends AbstractSelect implements Action.Container,
         resetPageBuffer();
 
         enableContentRefreshing(true);
+    }
+
+    /**
+     * Checks if class b can be safely assigned to class a.
+     * 
+     * @param a
+     * @param b
+     * @return
+     */
+    private boolean typeIsCompatible(Class<?> a, Class<?> b) {
+        // TODO Implement this check properly
+        // Basically we need to do a a.isAssignableFrom(b)
+        // with special considerations for primitive types.
+        return true;
     }
 
     /**
@@ -4229,6 +4272,8 @@ public class Table extends AbstractSelect implements Action.Container,
         columnIcons.remove(propertyId);
         columnHeaders.remove(propertyId);
         columnFooters.remove(propertyId);
+        // If a propertyValueConverter was defined for the property, remove it.
+        propertyValueConverters.remove(propertyId);
 
         return super.removeContainerProperty(propertyId);
     }
@@ -5844,16 +5889,13 @@ public class Table extends AbstractSelect implements Action.Container,
             throw new IllegalArgumentException("PropertyId " + propertyId
                     + " must be in the container");
         }
-        // FIXME: This check should be here but primitive types like Boolean
-        // formatter for boolean property must be handled
 
-        // if (!converter.getSourceType().isAssignableFrom(getType(propertyId)))
-        // {
-        // throw new IllegalArgumentException("Property type ("
-        // + getType(propertyId)
-        // + ") must match converter source type ("
-        // + converter.getSourceType() + ")");
-        // }
+        if (!typeIsCompatible(converter.getModelType(), getType(propertyId))) {
+            throw new IllegalArgumentException("Property type ("
+                    + getType(propertyId)
+                    + ") must match converter source type ("
+                    + converter.getModelType() + ")");
+        }
         propertyValueConverters.put(propertyId,
                 (Converter<String, Object>) converter);
         refreshRowCache();

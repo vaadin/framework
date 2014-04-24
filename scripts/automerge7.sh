@@ -1,7 +1,7 @@
 #!/bin/bash
 
 IGNORE=7.0
-FROM=7.1
+FROM=7.2
 TO=master
 
 IGNORE_HEAD=origin/$IGNORE
