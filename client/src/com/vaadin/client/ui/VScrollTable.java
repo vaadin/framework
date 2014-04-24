@@ -4271,7 +4271,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                 }
                 if (col.hasAttribute("width")) {
-                    if (scrollBody == null) {
+                    if (scrollBody == null || isNewBody) {
                         // Already updated by setColWidth called from
                         // TableHeads.updateCellsFromUIDL in case of a server
                         // side resize
