@@ -1924,6 +1924,20 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * For internal use only. May be removed or replaced in the future.
      */
     public void updateRootWidth() {
+        updateRootWidth(false);
+    }
+
+    /**
+     * Calculates the width of the select if the select has undefined width.
+     * Should be called when the width changes or when the icon changes.
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     * 
+     * @param forceUpdate
+     *            a flag that forces a recalculation even if one would not
+     *            normally be done
+     */
+    public void updateRootWidth(boolean forceUpdate) {
         ComponentConnector paintable = ConnectorMap.get(client).getConnector(
                 this);
         if (paintable.isUndefinedWidth()) {
@@ -1936,7 +1950,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              * wide.
              */
             int w = Util.getRequiredWidth(this);
-            if ((!initDone || currentPage + 1 < 0)
+            if ((forceUpdate || !initDone || currentPage + 1 < 0)
                     && suggestionPopupMinWidth > w) {
                 /*
                  * We want to compensate for the paddings just to preserve the
