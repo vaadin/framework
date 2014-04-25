@@ -63,7 +63,7 @@ public class AccordionConnector extends TabsheetBaseConnector implements
             }
             getWidget().lazyUpdateMap.clear();
         }
-
+        getLayoutManager().setNeedsVerticalLayout(this);
     }
 
     @Override
