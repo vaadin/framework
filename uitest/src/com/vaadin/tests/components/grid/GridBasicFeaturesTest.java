@@ -184,58 +184,43 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
     public void testInitialColumnWidths() throws Exception {
         openTestURL();
 
-        // Default borders and margins implemented by escalator
-        int cellBorder = 1 + 1;
-        int cellMargin = 2 + 2;
-
         WebElement cell = getBodyCellByRowAndColumn(1, 1);
-        assertEquals((100 - cellBorder - cellMargin) + "px",
-                cell.getCssValue("width"));
+        assertEquals(100, cell.getSize().getWidth());
 
         cell = getBodyCellByRowAndColumn(1, 2);
-        assertEquals((150 - cellBorder - cellMargin) + "px",
-                cell.getCssValue("width"));
+        assertEquals(150, cell.getSize().getWidth());
 
         cell = getBodyCellByRowAndColumn(1, 3);
-        assertEquals((200 - cellBorder - cellMargin) + "px",
-                cell.getCssValue("width"));
+        assertEquals(200, cell.getSize().getWidth());
     }
 
     @Test
     public void testColumnWidths() throws Exception {
         openTestURL();
 
-        // Default borders and margins implemented by escalator
-        int cellBorder = 1 + 1;
-        int cellMargin = 2 + 2;
-
         // Default column width is 100px
         WebElement cell = getBodyCellByRowAndColumn(1, 1);
-        assertEquals((100 - cellBorder - cellMargin) + "px",
-                cell.getCssValue("width"));
+        assertEquals(100, cell.getSize().getWidth());
 
         // Set first column to be 200px wide
         selectMenuPath("Component", "Columns", "Column0", "Column0 Width",
                 "200px");
 
         cell = getBodyCellByRowAndColumn(1, 1);
-        assertEquals((200 - cellBorder - cellMargin) + "px",
-                cell.getCssValue("width"));
+        assertEquals(200, cell.getSize().getWidth());
 
         // Set second column to be 150px wide
         selectMenuPath("Component", "Columns", "Column1", "Column1 Width",
                 "150px");
         cell = getBodyCellByRowAndColumn(1, 2);
-        assertEquals((150 - cellBorder - cellMargin) + "px",
-                cell.getCssValue("width"));
+        assertEquals(150, cell.getSize().getWidth());
 
         // Set first column to be auto sized (defaults to 100px currently)
         selectMenuPath("Component", "Columns", "Column0", "Column0 Width",
                 "Auto");
 
         cell = getBodyCellByRowAndColumn(1, 1);
-        assertEquals((100 - cellBorder - cellMargin) + "px",
-                cell.getCssValue("width"));
+        assertEquals(100, cell.getSize().getWidth());
     }
 
     @Test
@@ -295,29 +280,6 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
                 "Modify first row (getContainerProperty)");
         assertEquals("(Second) modification with getItemProperty failed",
                 "modified: Column0", getBodyCellByRowAndColumn(1, 1).getText());
-    }
-
-    @Test
-    public void testDataFetchingWorks() throws Exception {
-        openTestURL();
-
-        scrollGridVerticallyTo(200);
-
-        /*
-         * Give time for the data to be fetched.
-         * 
-         * TODO TestBench currently doesn't know when Grid's DOM structure is
-         * stable. There are some plans regarding implementing support for this,
-         * so this test case can (should) be modified once that's implemented.
-         */
-        sleep(1000);
-
-        /*
-         * TODO this screenshot comparison could be done on the DOM level, if
-         * the DOM would be always in order. This could be amended once DOM
-         * reordering is merged into the Grid branch.
-         */
-        compareScreen("dataHasBeenLoaded");
     }
 
     private boolean elementIsFound(By locator) {
