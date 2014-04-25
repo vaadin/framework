@@ -1950,7 +1950,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              * wide.
              */
             int w = Util.getRequiredWidth(this);
-            if ((forceUpdate || !initDone || currentPage + 1 < 0)
+
+            if (forceUpdate || (!initDone || currentPage + 1 < 0)
                     && suggestionPopupMinWidth > w) {
                 /*
                  * We want to compensate for the paddings just to preserve the

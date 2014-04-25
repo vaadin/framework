@@ -18,9 +18,9 @@ package com.vaadin.tests.components.ui;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -36,11 +36,10 @@ public class ComboboxStyleChangeWidthTest extends MultiBrowserTest {
     public void testWidthRetained() {
         openTestURL();
 
-        WebElement comboBox = driver
-                .findElement(By.className("v-filterselect"));
+        ComboBoxElement comboBox = $(ComboBoxElement.class).first();
         String oldStyle = comboBox.getAttribute("style");
 
-        WebElement button = driver.findElement(By.className("v-button"));
+        ButtonElement button = $(ButtonElement.class).first();
         button.click();
         String newStyle = comboBox.getAttribute("style");
 
