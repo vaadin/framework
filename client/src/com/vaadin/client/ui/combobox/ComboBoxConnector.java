@@ -22,6 +22,7 @@ import java.util.List;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VFilterSelect;
@@ -40,6 +41,10 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     // oldSuggestionTextMatchTheOldSelection is used to detect when it's safe to
     // update textbox text by a changed item caption.
     private boolean oldSuggestionTextMatchTheOldSelection;
+
+    // Need to recompute the width of the combobox when styles change, see
+    // #13444
+    private boolean stylesChanged;
 
     /*
      * (non-Javadoc)
@@ -226,6 +231,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             getWidget().addStyleDependentName("focus");
         }
 
+        // width has been recalculated above, clear style change flag
+        stylesChanged = false;
+
         getWidget().initDone = true;
     }
 
@@ -316,4 +324,13 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         getWidget().enabled = widgetEnabled;
         getWidget().tb.setEnabled(widgetEnabled);
     }
+
+    @Override
+    public void onStateChanged(StateChangeEvent event) {
+        super.onStateChanged(event);
+        if (event.hasPropertyChanged("styles")) {
+            stylesChanged = true;
+        }
+    }
+
 }
