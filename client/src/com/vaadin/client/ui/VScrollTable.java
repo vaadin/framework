@@ -7101,7 +7101,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             dropDetails = new TableDDDetails();
             Element elementOver = drag.getElementOver();
 
-            VScrollTableRow row = Util.findWidget(elementOver, getRowClass());
+            Class<? extends Widget> clazz = getRowClass();
+            VScrollTableRow row = null;
+            if (clazz != null) {
+                row = Util.findWidget(elementOver, clazz);
+            }
             if (row != null) {
                 dropDetails.overkey = row.rowKey;
                 Element tr = row.getElement();
@@ -7127,7 +7131,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         private Class<? extends Widget> getRowClass() {
             // get the row type this way to make dd work in derived
             // implementations
-            return scrollBody.iterator().next().getClass();
+            Iterator<Widget> iterator = scrollBody.iterator();
+            if (iterator.hasNext()) {
+                return iterator.next().getClass();
+            } else {
+                return null;
+            }
         }
 
         @Override
