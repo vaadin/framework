@@ -18,6 +18,8 @@ package com.vaadin.event.dd;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.shared.MouseEventDetails;
+
 /**
  * A HashMap backed implementation of {@link TargetDetails} for terminal
  * implementation and for extension.
@@ -39,6 +41,14 @@ public class TargetDetailsImpl implements TargetDetails {
             DropTarget dropTarget) {
         this(rawDropData);
         this.dropTarget = dropTarget;
+    }
+
+    /**
+     * @return details about the actual event that caused the event details.
+     *         Practically mouse move or mouse up.
+     */
+    public MouseEventDetails getMouseEvent() {
+        return MouseEventDetails.deSerialize((String) getData("mouseEvent"));
     }
 
     @Override
