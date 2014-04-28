@@ -3,6 +3,7 @@ package com.vaadin.tests.widgetset.client.grid;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Composite;
 import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.ColumnConfiguration;
@@ -81,8 +82,10 @@ public class VTestGrid extends Composite {
                 public void renderCell(final Cell cell) {
                     final Integer columnName = columns.get(cell.getColumn());
                     final Integer rowName = rows.get(cell.getRow());
-                    final String cellInfo = columnName + "," + rowName + " ("
-                            + i + ")";
+                    String cellInfo = columnName + "," + rowName;
+                    if (shouldRenderPretty()) {
+                        cellInfo += " (" + i + ")";
+                    }
 
                     if (cell.getColumn() > 0) {
                         cell.getElement().setInnerText("Cell: " + cellInfo);
@@ -95,21 +98,27 @@ public class VTestGrid extends Composite {
                         cell.setColSpan(3);
                     }
 
-                    final double c = i * .1;
-                    final int r = (int) ((Math.cos(c) + 1) * 128);
-                    final int g = (int) ((Math.cos(c / Math.PI) + 1) * 128);
-                    final int b = (int) ((Math.cos(c / (Math.PI * 2)) + 1) * 128);
-                    cell.getElement()
-                            .getStyle()
-                            .setBackgroundColor(
-                                    "rgb(" + r + "," + g + "," + b + ")");
-                    if ((r * .8 + g * 1.3 + b * .9) / 3 < 127) {
-                        cell.getElement().getStyle().setColor("white");
-                    } else {
-                        cell.getElement().getStyle().clearColor();
+                    if (shouldRenderPretty()) {
+                        final double c = i * .1;
+                        final int r = (int) ((Math.cos(c) + 1) * 128);
+                        final int g = (int) ((Math.cos(c / Math.PI) + 1) * 128);
+                        final int b = (int) ((Math.cos(c / (Math.PI * 2)) + 1) * 128);
+                        cell.getElement()
+                                .getStyle()
+                                .setBackgroundColor(
+                                        "rgb(" + r + "," + g + "," + b + ")");
+                        if ((r * .8 + g * 1.3 + b * .9) / 3 < 127) {
+                            cell.getElement().getStyle().setColor("white");
+                        } else {
+                            cell.getElement().getStyle().clearColor();
+                        }
                     }
 
                     i++;
+                }
+
+                private boolean shouldRenderPretty() {
+                    return Location.getQueryString().contains("pretty");
                 }
 
                 @Override
