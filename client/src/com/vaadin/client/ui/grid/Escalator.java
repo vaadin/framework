@@ -313,7 +313,15 @@ public class Escalator extends Widget {
             private CustomTouchEvent latestTouchMoveEvent;
             private AnimationCallback mover = new AnimationCallback() {
                 @Override
-                public void execute(double timestamp) {
+                public void execute(double doNotUseThisTimestamp) {
+                    /*
+                     * We can't use the timestamp parameter here, since it is
+                     * not in any predetermined format; TouchEnd does not
+                     * provide a compatible timestamp, and we need to be able to
+                     * get a comparable timestamp to determine whether to
+                     * trigger a flick scroll or not.
+                     */
+
                     if (touches != 1) {
                         return;
                     }
@@ -324,6 +332,11 @@ public class Escalator extends Widget {
                     deltaY = y - lastY;
                     lastX = x;
                     lastY = y;
+
+                    /*
+                     * Instead of using the provided arbitrary timestamp, let's
+                     * use a known-format and reproducible timestamp.
+                     */
                     lastTime = Duration.currentTimeMillis();
 
                     // snap the scroll to the major axes, at first.
@@ -519,12 +532,20 @@ public class Escalator extends Widget {
         }
 
         @Override
-        public void execute(final double timestamp) {
+        public void execute(final double doNotUseThisTimestamp) {
+            /*
+             * We cannot use the timestamp provided to this method since it is
+             * of a format that cannot be determined at will. Therefore, we need
+             * a timestamp format that we can handle, so our calculations are
+             * correct.
+             */
+
             if (millisLeft <= 0 || cancelled) {
                 scroller.currentFlickScroller = null;
                 return;
             }
 
+            final double timestamp = Duration.currentTimeMillis();
             if (prevTime == 0) {
                 prevTime = timestamp;
                 AnimationScheduler.get().requestAnimationFrame(this);
