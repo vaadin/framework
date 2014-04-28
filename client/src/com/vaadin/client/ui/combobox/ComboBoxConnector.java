@@ -121,6 +121,10 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         boolean suggestionsChanged = !getWidget().initDone
                 || !newSuggestions.equals(getWidget().currentSuggestions);
 
+        // An ItemSetChangeEvent on server side clears the current suggestion
+        // popup. Popup needs to be repopulated with suggestions from UIDL.
+        boolean popupOpenAndCleared = false;
+
         oldSuggestionTextMatchTheOldSelection = false;
 
         if (suggestionsChanged) {
@@ -141,6 +145,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                  * menu might not necessary exist in select at all anymore.
                  */
                 getWidget().suggestionPopup.menu.clearItems();
+                popupOpenAndCleared = getWidget().suggestionPopup.isAttached();
 
             }
 
@@ -159,9 +164,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             }
         }
 
-        if (getWidget().waitingForFilteringResponse
-                && getWidget().lastFilter.toLowerCase().equals(
-                        uidl.getStringVariable("filter"))) {
+        if ((getWidget().waitingForFilteringResponse && getWidget().lastFilter
+                .toLowerCase().equals(uidl.getStringVariable("filter")))
+                || popupOpenAndCleared) {
             getWidget().suggestionPopup.showSuggestions(
                     getWidget().currentSuggestions, getWidget().currentPage,
                     getWidget().totalMatches);
