@@ -204,11 +204,20 @@ public class GridConnector extends AbstractComponentConnector {
     private void addColumnFromStateChangeEvent(int columnIndex) {
         GridColumnState state = getState().columns.get(columnIndex);
         CustomGridColumn column = new CustomGridColumn(columnIndex);
-        updateColumnFromState(column, state);
-
         columnIdToColumn.put(state.id, column);
 
+        // Adds a column to grid, and registers Grid with the column.
         getWidget().addColumn(column, columnIndex);
+
+        /*
+         * Have to update state _after_ the column has been added to the grid as
+         * then, and only then, the column will call the grid which in turn will
+         * call the escalator's refreshRow methods on header/footer/body and
+         * visually refresh the row. If this is done in the reverse order the
+         * first column state update will be lost as no grid instance is
+         * present.
+         */
+        updateColumnFromState(column, state);
     }
 
     /**
