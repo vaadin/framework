@@ -57,7 +57,7 @@
 
 
 // The main theme mixin
-@mixin v-valo {
+@mixin valo {
   @include valo-common;
   @include valo-components;
   @include valo-notification;
