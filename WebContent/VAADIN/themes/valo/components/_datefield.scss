@@ -1,13 +1,13 @@
 $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
 
 
-@mixin v-valo-datefield ($primary-stylename: v-datefield) {
+@mixin valo-datefield ($primary-stylename: v-datefield) {
 
   .#{$primary-stylename} {
     position: relative;
     width: $v-default-field-width;
     height: $v-unit-size;
-    @include v-valo-datefield-style($primary-stylename: $primary-stylename);
+    @include valo-datefield-style($primary-stylename: $primary-stylename);
   }
 
   // Different widths for different resolutions
@@ -28,27 +28,27 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
   }
 
   .v-datefield-popup {
-    @include v-valo-datefield-popup-style;
+    @include valo-datefield-popup-style;
   }
 
-  @include v-valo-datefield-calendarpanel-style;
+  @include valo-datefield-calendarpanel-style;
 
 }
 
 
-@mixin v-valo-inline-datefield ($primary-stylename: v-inline-datefield) {
-  @include v-valo-datefield-calendarpanel-style(#{$primary-stylename}-calendarpanel);
+@mixin valo-inline-datefield ($primary-stylename: v-inline-datefield) {
+  @include valo-datefield-calendarpanel-style(#{$primary-stylename}-calendarpanel);
 }
 
 
 
 
 
-@mixin v-valo-datefield-style ($bevel-style: $v-textfield-bevel-style, $bevel-depth: $v-textfield-bevel-depth, 
+@mixin valo-datefield-style ($bevel-style: $v-textfield-bevel-style, $bevel-depth: $v-textfield-bevel-depth, 
                               $unit-size: $v-textfield-unit-size, $border-radius: $v-textfield-border-radius,
                               $background-color: $v-textfield-background-color, $primary-stylename: v-datefield) {
 
-  $background-color: $background-color or v-valo-textfield-background-color($v-app-background-color);
+  $background-color: $background-color or valo-textfield-background-color($v-app-background-color);
   $bevel-style: $bevel-style or $v-bevel-style;
   $bevel-depth: $bevel-depth or $v-bevel-depth;
   $unit-size: $unit-size or $v-unit-size;
@@ -56,7 +56,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
 
   .#{$primary-stylename}-textfield {
     @include box-sizing(border-box);
-    @include v-valo-textfield-style($bevel-style: $bevel-style, $bevel-depth: $bevel-depth, 
+    @include valo-textfield-style($bevel-style: $bevel-style, $bevel-depth: $bevel-depth, 
                                     $unit-size: $unit-size, $border-radius: $border-radius,
                                     $background-color: $background-color) ;
     padding-left: $unit-size * 1.2;
@@ -65,11 +65,11 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
   }
   
   &.#{$primary-stylename}-prompt > .#{$primary-stylename}-textfield {
-    @include v-valo-textfield-prompt-style(v-valo-textfield-background-color($background-color));
+    @include valo-textfield-prompt-style(valo-textfield-background-color($background-color));
   }
 
   .#{$primary-stylename}-button {
-    @include v-valo-datefield-button-style($unit-size: $unit-size, $bevel-style: $bevel-style, $bevel-depth: $bevel-depth,
+    @include valo-datefield-button-style($unit-size: $unit-size, $bevel-style: $bevel-style, $bevel-depth: $bevel-depth,
                                            $background-color: $background-color);
   }
 
@@ -87,7 +87,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
 
   &.v-readonly {
     .#{$primary-stylename}-textfield {
-      @include v-valo-textfield-readonly-style;
+      @include valo-textfield-readonly-style;
     }
 
     .#{$primary-stylename}-button {
@@ -103,9 +103,9 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
 
 
 
-@mixin v-valo-datefield-button-style ($unit-size: $v-unit-size, $bevel-style: $v-bevel-style, $bevel-depth: $v-bevel-depth,
+@mixin valo-datefield-button-style ($unit-size: $v-unit-size, $bevel-style: $v-bevel-style, $bevel-depth: $v-bevel-depth,
                                       $background-color: $v-textfield-background-color) {
-  @include v-valo-tappable;
+  @include valo-tappable;
   -webkit-appearance: none;
   background: transparent;
   border: none;
@@ -129,8 +129,8 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
   }
   
   &:before {
-    @include v-valo-datefield-button-icon-style($background-color);
-    color: mix($background-color, v-valo-font-color($background-color));
+    @include valo-datefield-button-icon-style($background-color);
+    color: mix($background-color, valo-font-color($background-color));
     @if $v-animations-enabled {
       @include transition(color 140ms);
     }
@@ -138,7 +138,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
 
   @if $v-combobox-hover-style-enabled {
     &:hover:before {
-      color: v-valo-font-color($background-color);
+      color: valo-font-color($background-color);
     }
   }
 
@@ -149,27 +149,27 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
     right: 0;
     bottom: 0;
     left: 0;
-    @include v-valo-button-active-style($background-color);
+    @include valo-button-active-style($background-color);
   }
 }
 
 
 
 
-@mixin v-valo-datefield-button-icon-style ($background-color) {
+@mixin valo-datefield-button-icon-style ($background-color) {
   font-family: FontAwesome;
   content: "\f073";
-  color: v-valo-font-color($background-color);
+  color: valo-font-color($background-color);
 }
 
 
 
 
-@mixin v-valo-datefield-popup-style ($context: $v-app-background-color) {
+@mixin valo-datefield-popup-style ($context: $v-app-background-color) {
   $copy: $v-app-background-color;
   $v-app-background-color: $context;
 
-  @include v-valo-overlay-style;
+  @include valo-overlay-style;
 
   @include user-select(none);
 
@@ -186,13 +186,13 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
     padding: round($v-unit-size/20);
   }
 
-  @include v-valo-datefield-calendarpanel-style;
+  @include valo-datefield-calendarpanel-style;
 
   $v-app-background-color: $copy;
 }
 
 
-@mixin v-valo-datefield-calendarpanel-style ($primary-stylename: v-datefield-calendarpanel) {
+@mixin valo-datefield-calendarpanel-style ($primary-stylename: v-datefield-calendarpanel) {
   .#{$primary-stylename} {
     font-size: $v-font-size;
     text-align: center;
@@ -203,37 +203,37 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
   }
 
   .#{$primary-stylename}-day {
-    @include v-valo-datefield-calendarpanel-day-style;
+    @include valo-datefield-calendarpanel-day-style;
     display: inline-block;
     @include box-sizing(border-box);
     cursor: pointer;
     &:hover {
-      @include v-valo-datefield-calendarpanel-day-hover-style;
+      @include valo-datefield-calendarpanel-day-hover-style;
     }
   }
     
   .#{$primary-stylename}-day-offmonth {
-    @include v-valo-datefield-calendarpanel-day-offmonth-style;
+    @include valo-datefield-calendarpanel-day-offmonth-style;
   }
 
   .#{$primary-stylename}-day-today {
-    @include v-valo-datefield-calendarpanel-day-today-style;
+    @include valo-datefield-calendarpanel-day-today-style;
   }
   
   .#{$primary-stylename}-day.#{$primary-stylename}-day-selected,
   .#{$primary-stylename}-day.#{$primary-stylename}-day-selected:hover {
-    @include v-valo-datefield-calendarpanel-day-selected-style
+    @include valo-datefield-calendarpanel-day-selected-style
   }
   
   .#{$primary-stylename}-day.#{$primary-stylename}-day-focused {
-    @include v-valo-datefield-calendarpanel-day-focused-style;
+    @include valo-datefield-calendarpanel-day-focused-style;
   }
 
 
 
   .#{$primary-stylename}-weekdays {
     height: round($v-unit-size * 0.7);
-    color: mix(v-valo-font-color($v-app-background-color), rgba($v-app-background-color, .7));
+    color: mix(valo-font-color($v-app-background-color), rgba($v-app-background-color, .7));
     
     strong {
       font: inherit;
@@ -269,7 +269,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
         right: 0;
         bottom: 0;
         left: 0;
-        color: mix($v-app-background-color, v-valo-font-color($v-app-background-color));
+        color: mix($v-app-background-color, valo-font-color($v-app-background-color));
         font-size: round($v-font-size * 1.3);
         line-height: round($v-font-size * 1.5);
 
@@ -281,31 +281,31 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
       &:hover {
         @include opacity(1);
         &:before {
-          color: v-valo-link-font-color();
+          color: valo-link-font-color();
         }
       }
     }
   }
   
   .v-button-prevyear:before {
-    @include v-valo-datefield-calendarpanel-prevyear-icon-style;
+    @include valo-datefield-calendarpanel-prevyear-icon-style;
   }
   
   .v-button-prevmonth:before {
-    @include v-valo-datefield-calendarpanel-prevmonth-icon-style;
+    @include valo-datefield-calendarpanel-prevmonth-icon-style;
   }
   
   .v-button-nextyear:before {
-    @include v-valo-datefield-calendarpanel-nextyear-icon-style;
+    @include valo-datefield-calendarpanel-nextyear-icon-style;
   }
   
   .v-button-nextmonth:before {
-    @include v-valo-datefield-calendarpanel-nextmonth-icon-style;
+    @include valo-datefield-calendarpanel-nextmonth-icon-style;
   }
   
   td.#{$primary-stylename}-month {
     width: round($v-unit-size * 3.5);
-    @include v-valo-datefield-calendarpanel-month-style;
+    @include valo-datefield-calendarpanel-month-style;
   }
   
   .v-datefield-year td.v-datefield-calendarpanel-month {
@@ -315,7 +315,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
   .v-datefield-calendarpanel-weeknumber,
   .v-datefield-calendarpanel-weekdays.v-datefield-calendarpanel-weeknumbers td:first-child {
     width: round($v-unit-size * 0.7);
-    color: mix(v-valo-font-color($v-app-background-color), rgba($v-app-background-color, .7));
+    color: mix(valo-font-color($v-app-background-color), rgba($v-app-background-color, .7));
     font-size: ceil($v-font-size * 0.86);
     display: inline-block;
     text-align: left;
@@ -337,7 +337,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
 
 
 
-@mixin v-valo-datefield-calendarpanel-day-style {
+@mixin valo-datefield-calendarpanel-day-style {
   width: round($v-unit-size * 0.8);
   height: round($v-unit-size * 0.7);
   line-height: round($v-unit-size * 0.7);
@@ -352,53 +352,53 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
   }
 }
 
-@mixin v-valo-datefield-calendarpanel-day-hover-style {
-  color: v-valo-selection-color();
+@mixin valo-datefield-calendarpanel-day-hover-style {
+  color: valo-selection-color();
 }
 
-@mixin v-valo-datefield-calendarpanel-day-offmonth-style {
-  color: mix(v-valo-font-color($v-app-background-color), $v-app-background-color);
+@mixin valo-datefield-calendarpanel-day-offmonth-style {
+  color: mix(valo-font-color($v-app-background-color), $v-app-background-color);
   background: transparent;
 }
 
-@mixin v-valo-datefield-calendarpanel-day-today-style {
-  color: v-valo-selection-color();
-  background: blend-overlay(v-valo-selection-color(), $v-app-background-color);
+@mixin valo-datefield-calendarpanel-day-today-style {
+  color: valo-selection-color();
+  background: blend-overlay(valo-selection-color(), $v-app-background-color);
   font-weight: $v-font-weight + 100;
 }
 
-@mixin v-valo-datefield-calendarpanel-day-selected-style {
-  color: v-valo-font-color(v-valo-selection-color());
-  @include v-valo-gradient(v-valo-selection-color());
+@mixin valo-datefield-calendarpanel-day-selected-style {
+  color: valo-font-color(valo-selection-color());
+  @include valo-gradient(valo-selection-color());
   font-weight: $v-font-weight + 100;
 }
 
-@mixin v-valo-datefield-calendarpanel-day-focused-style {
-  box-shadow: v-valo-focus-box-shadow();
+@mixin valo-datefield-calendarpanel-day-focused-style {
+  box-shadow: valo-focus-box-shadow();
   position: relative; // Show above other cells
 }
 
 
-@mixin v-valo-datefield-calendarpanel-nextmonth-icon-style {
+@mixin valo-datefield-calendarpanel-nextmonth-icon-style {
   font-family: FontAwesome;
   content: "\f105";
 }
 
-@mixin v-valo-datefield-calendarpanel-prevmonth-icon-style {
+@mixin valo-datefield-calendarpanel-prevmonth-icon-style {
   font-family: FontAwesome;
   content: "\f104";
 }
 
-@mixin v-valo-datefield-calendarpanel-nextyear-icon-style {
+@mixin valo-datefield-calendarpanel-nextyear-icon-style {
   font-family: FontAwesome;
   content: "\f101";
 }
 
-@mixin v-valo-datefield-calendarpanel-prevyear-icon-style {
+@mixin valo-datefield-calendarpanel-prevyear-icon-style {
   font-family: FontAwesome;
   content: "\f100";
 }
 
-@mixin v-valo-datefield-calendarpanel-month-style {
-  color: v-valo-selection-color();
+@mixin valo-datefield-calendarpanel-month-style {
+  color: valo-selection-color();
 }

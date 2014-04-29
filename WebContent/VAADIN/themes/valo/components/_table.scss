@@ -11,7 +11,7 @@ $v-table-background-color: null !default;
 
 
 
-@mixin v-valo-table-global ($primary-stylename: v-table) {
+@mixin valo-table-global ($primary-stylename: v-table) {
 
   .#{$primary-stylename}-header table,
   .#{$primary-stylename}-footer table,
@@ -52,7 +52,7 @@ $v-table-background-color: null !default;
 
 
 
-@function v-valo-table-background-color($context: $v-app-background-color) {
+@function valo-table-background-color($context: $v-app-background-color) {
   @if is-dark-color($context) {
     @return darken($context, 2%);
   }
@@ -60,9 +60,9 @@ $v-table-background-color: null !default;
 }
 
 
-@mixin v-valo-table ($primary-stylename: v-table) {
+@mixin valo-table ($primary-stylename: v-table) {
 
-  $background-color: $v-table-background-color or v-valo-table-background-color();
+  $background-color: $v-table-background-color or valo-table-background-color();
   $border-color: $v-table-border-color or darken($v-app-background-color, max(5%, $v-bevel-depth/3));
 
   .#{$primary-stylename} {
@@ -81,10 +81,10 @@ $v-table-background-color: null !default;
   .#{$primary-stylename}-footer-wrap,
   .#{$primary-stylename}-header-drag {
     border: $v-table-border-width solid $border-color;
-    @include v-valo-gradient($v-app-background-color);
+    @include valo-gradient($v-app-background-color);
     white-space: nowrap;
     font-size: $v-table-header-font-size;
-    text-shadow: v-valo-button-text-shadow($v-app-background-color, $v-bevel-depth);
+    text-shadow: valo-button-text-shadow($v-app-background-color, $v-bevel-depth);
   }
 
   .#{$primary-stylename}-header-wrap {
@@ -185,15 +185,15 @@ $v-table-background-color: null !default;
   }
 
   .#{$primary-stylename} [class*="-row"].v-selected {
-    $selected-border-color: darken(v-valo-selection-color(), 8%);
+    $selected-border-color: darken(valo-selection-color(), 8%);
 
-    @include v-valo-gradient(v-valo-selection-color());
+    @include valo-gradient(valo-selection-color());
     background-origin: border-box;
-    color: v-valo-font-color(v-valo-selection-color(), 0.9);
-    text-shadow: v-valo-button-text-shadow(v-valo-selection-color(), $v-bevel-depth);
+    color: valo-font-color(valo-selection-color(), 0.9);
+    text-shadow: valo-button-text-shadow(valo-selection-color(), $v-bevel-depth);
 
     + .v-selected {
-      $gradient-end: first(last(v-valo-gradient-color-stops(v-valo-selection-color())));
+      $gradient-end: first(last(valo-gradient-color-stops(valo-selection-color())));
       background: $gradient-end;
 
       td {
@@ -233,17 +233,17 @@ $v-table-background-color: null !default;
   }
 
   .#{$primary-stylename}-header-cell-asc .#{$primary-stylename}-sort-indicator:before {
-    @include v-valo-table-sort-asc-icon-style;
+    @include valo-table-sort-asc-icon-style;
   }
 
   .#{$primary-stylename}-header-cell-desc .#{$primary-stylename}-sort-indicator:before {
-    @include v-valo-table-sort-desc-icon-style;
+    @include valo-table-sort-desc-icon-style;
   }
 
 
   .#{$primary-stylename}-focus {
     $outline-width: max($v-table-border-width, 1px);
-    outline: $outline-width solid v-valo-focus-color();
+    outline: $outline-width solid valo-focus-color();
     outline-offset: -$outline-width;
   }
 
@@ -261,18 +261,18 @@ $v-table-background-color: null !default;
   }
 
   .#{$primary-stylename}-focus-slot-right {
-    border-right: 2px solid rgba(v-valo-focus-color(), .5);
+    border-right: 2px solid rgba(valo-focus-color(), .5);
   }
 
   .#{$primary-stylename}-focus-slot-left {
-    border-left: 2px solid rgba(v-valo-focus-color(), .5);
+    border-left: 2px solid rgba(valo-focus-color(), .5);
     left: 0;
     right: auto;
     margin-left: 0 !important;
   }
 
   .#{$primary-stylename}-column-selector {
-    @include v-valo-button-style;
+    @include valo-button-style;
     position: absolute;
     z-index: 2;
     top: round($v-unit-size/-4);
@@ -300,10 +300,10 @@ $v-table-background-color: null !default;
       border-radius: inherit;
     }
     &:active:after {
-      @include v-valo-button-active-style;
+      @include valo-button-active-style;
     }
     &:before {
-      @include v-valo-table-column-selector-icon-style;
+      @include valo-table-column-selector-icon-style;
     }
   }
 
@@ -315,7 +315,7 @@ $v-table-background-color: null !default;
   .v-on,
   .v-off {
     &:before {
-      @include v-valo-table-column-visible-icon-style;
+      @include valo-table-column-visible-icon-style;
       font-size: 0.9em;
       margin-right: round($v-unit-size/6);
     }
@@ -337,7 +337,7 @@ $v-table-background-color: null !default;
 
     tr {
       display: block;
-      @include v-valo-drag-element-style;
+      @include valo-drag-element-style;
 
       &[style*="hidden"] {
 
@@ -369,14 +369,14 @@ $v-table-background-color: null !default;
   // Drag'n'drop styles
 
   .#{$primary-stylename}-drag .#{$primary-stylename}-body {
-    box-shadow: 0 0 0 2px rgba(v-valo-focus-color(), .5);
+    box-shadow: 0 0 0 2px rgba(valo-focus-color(), .5);
 
-    @if color-luminance(v-valo-focus-color()) + 50 < color-luminance($background-color) {
-      border-color: v-valo-focus-color();
+    @if color-luminance(valo-focus-color()) + 50 < color-luminance($background-color) {
+      border-color: valo-focus-color();
     }
 
     .v-ie8 & {
-      border-color: v-valo-focus-color();
+      border-color: valo-focus-color();
     }
 
     .#{$primary-stylename}-focus {
@@ -391,7 +391,7 @@ $v-table-background-color: null !default;
     height: $v-table-row-height + $v-table-border-width;
     left: 0;
     right: 0;
-    background: v-valo-focus-color();
+    background: valo-focus-color();
     @include opacity(.2);
   }
 
@@ -403,10 +403,10 @@ $v-table-background-color: null !default;
     height: 2px;
     left: 0;
     right: 0;
-    background: v-valo-focus-color();
+    background: valo-focus-color();
     font-size: $v-font-size * 2;
     line-height: 2px;
-    color: v-valo-focus-color();
+    color: valo-focus-color();
     text-indent: round($v-font-size/-4);
     text-shadow: 0 0 1px $background-color, 0 0 1px $background-color;
   }
@@ -430,22 +430,22 @@ $v-table-background-color: null !default;
 
 
 
-@mixin v-valo-table-sort-asc-icon-style {
+@mixin valo-table-sort-asc-icon-style {
   content: '\f0dd';
   font-family: FontAwesome;
 }
 
-@mixin v-valo-table-sort-desc-icon-style {
+@mixin valo-table-sort-desc-icon-style {
   content: '\f0de';
   font-family: FontAwesome;
 }
 
-@mixin v-valo-table-column-selector-icon-style {
+@mixin valo-table-column-selector-icon-style {
   font-family: FontAwesome;
   content: "\f013";
 }
 
-@mixin v-valo-table-column-visible-icon-style {
+@mixin valo-table-column-visible-icon-style {
   content: "\f00c";
   font-family: FontAwesome;
 }
@@ -453,7 +453,7 @@ $v-table-background-color: null !default;
 
 
 
-@mixin v-valo-table-no-stripes ($primary-stylename: v-table) {
+@mixin valo-table-no-stripes ($primary-stylename: v-table) {
   .#{$primary-stylename}-row,
   .#{$primary-stylename}-row-odd {
     background: transparent;
@@ -463,7 +463,7 @@ $v-table-background-color: null !default;
 
 
 
-@mixin v-valo-table-no-vertical-lines ($primary-stylename: v-table) {
+@mixin valo-table-no-vertical-lines ($primary-stylename: v-table) {
   .#{$primary-stylename}-cell-content,
   [class*="row"].v-selected .#{$primary-stylename}-cell-content {
     border-left-color: transparent;
@@ -471,7 +471,7 @@ $v-table-background-color: null !default;
   }
 }
 
-@mixin v-valo-table-no-horizontal-lines ($primary-stylename: v-table) {
+@mixin valo-table-no-horizontal-lines ($primary-stylename: v-table) {
   .#{$primary-stylename}-cell-content,
   [class*="row"].v-selected .#{$primary-stylename}-cell-content {
     border-top-color: transparent;
@@ -479,13 +479,13 @@ $v-table-background-color: null !default;
   }
 }
 
-@mixin v-valo-table-no-header ($primary-stylename: v-table) {
+@mixin valo-table-no-header ($primary-stylename: v-table) {
   .#{$primary-stylename}-header-wrap {
     display: none;
   }
 }
 
-@mixin v-valo-table-borderless ($primary-stylename: v-table) {
+@mixin valo-table-borderless ($primary-stylename: v-table) {
   .#{$primary-stylename}-header-wrap,
   .#{$primary-stylename}-footer-wrap,
   .#{$primary-stylename}-header-drag,

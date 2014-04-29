@@ -18,7 +18,7 @@ $v-letter-spacing--h3:    0               !default;
 $v-letter-spacing--h4:    0.05em          !default;
 
 
-@mixin v-valo-label ($primary-stylename: v-label) {
+@mixin valo-label ($primary-stylename: v-label) {
 
   .#{$primary-stylename}-undef-w {
     white-space: nowrap;
@@ -29,7 +29,7 @@ $v-letter-spacing--h4:    0.05em          !default;
   h3, .h3 {
     line-height: $v-line-height--header;
     font-weight: $v-font-weight--header;
-    color: v-valo-header-color($v-app-background-color);
+    color: valo-header-color($v-app-background-color);
   }
   
   h1, .h1 {
@@ -60,7 +60,7 @@ $v-letter-spacing--h4:    0.05em          !default;
     line-height: $v-line-height--header;
     font-weight: $v-font-weight + 200;
     font-size: $v-font-size--small;
-    color: v-valo-header-color($v-app-background-color, $contrast: 0.12);
+    color: valo-header-color($v-app-background-color, $contrast: 0.12);
     text-transform: uppercase;
     letter-spacing: $v-letter-spacing--h4;
     margin-top: 2.4em;

@@ -6,19 +6,19 @@
 @import "lora/lora";
 
 
-@mixin v-valo-fonts {
-  $v-valo-fonts-pathPrefix: null;
+@mixin valo-fonts {
+  $valo-fonts-pathPrefix: null;
   @if $v-relative-paths == false {
-    $v-valo-fonts-pathPrefix: "../valo/fonts/";
+    $valo-fonts-pathPrefix: "../valo/fonts/";
   }
 
   // Font Awesome
-  @include v-valo-icon-font(FontAwesome, #{$v-valo-fonts-pathPrefix}font-awesome/fontawesome-webfont);
+  @include valo-icon-font(FontAwesome, #{$valo-fonts-pathPrefix}font-awesome/fontawesome-webfont);
 }
 
 
 
-@mixin v-valo-icon-font($font-family, $file-name) {
+@mixin valo-icon-font($font-family, $file-name) {
   @include font-face($font-family, $file-name);
 
   .#{$font-family} {
@@ -38,4 +38,4 @@
 
 // Include directly to avoid trapping inside a parent selector
 // TODO move inside the theme main mixin once we can use Sass 3.3 (@at-root)
-@include v-valo-fonts;
+@include valo-fonts;

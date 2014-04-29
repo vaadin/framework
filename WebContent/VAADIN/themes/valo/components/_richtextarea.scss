@@ -1,4 +1,4 @@
-@mixin v-valo-richtextarea ($primary-stylename: v-richtextarea) {
+@mixin valo-richtextarea ($primary-stylename: v-richtextarea) {
   .#{$primary-stylename} .gwt-ToggleButton,
   .#{$primary-stylename} .gwt-PushButton {
     display: inline-block;

@@ -14,8 +14,8 @@
 }
 
 
-@mixin v-valo-spinner ($size: 24px, $thickness: 4px, $color: null, $speed: 500ms) {
-  $color: $color or v-valo-focus-color();
+@mixin valo-spinner ($size: 24px, $thickness: 4px, $color: null, $speed: 500ms) {
+  $color: $color or valo-focus-color();
   // Make size divisible by 2, so that the rotation won't jiggle
   $size: $size + $size%2;
   height: $size !important;
@@ -65,10 +65,10 @@
 }
 
 
-$v-loading-indicator-color: v-valo-focus-color() !default;
+$v-loading-indicator-color: valo-focus-color() !default;
 $v-loading-indicator-bar-height: ceil($v-unit-size/7) !default;
 
-@mixin v-valo-loading-bar {
+@mixin valo-loading-bar {
   
   .v-loading-indicator {
     position: fixed !important;

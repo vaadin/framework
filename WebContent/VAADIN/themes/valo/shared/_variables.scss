@@ -53,7 +53,7 @@ $v-included-components:
 
 
 // Checks if a given component is included in the compilation. Used by the collection mixins that 
-// include all components, like v-valo-components and v-valo-components.
+// include all components, like valo-components and valo-components.
 // @mixin v-is-included
 // @param     $component-name {String} the name of the component to check
 // @param     $is-included {list} (Optional) the list of components which is checked
@@ -79,7 +79,7 @@ $v-app-background-color:        hsl(210, 0%, 98%)               !default;
 
 $v-font-size:                   16px                            !default; // Should be specified in pixels
 $v-font-weight:                 300                             !default; // Must be specified as a numeric value (i.e. not 'normal' or 'bold')
-$v-font-color:                  v-valo-font-color($v-app-background-color) !default;
+$v-font-color:                  valo-font-color($v-app-background-color) !default;
 $v-font-family:                 "Open Sans", sans-serif         !default;
 
 $v-caption-font-size:           round($v-font-size * 0.9)       !default; // Should be a pixel value
@@ -125,7 +125,7 @@ $v-required-field-indicator-color: $v-error-indicator-color     !default;
 
 
 
-$v-valo-include-common-stylenames: true                         !default;
+$valo-include-common-stylenames: true                         !default;
 
 
 

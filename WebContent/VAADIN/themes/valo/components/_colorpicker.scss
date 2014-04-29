@@ -1,7 +1,7 @@
-@mixin v-valo-colorpicker-global ($primary-stylename: v-colorpicker) {
-  $v-valo-colorpicker-pathPrefix: null;
+@mixin valo-colorpicker-global ($primary-stylename: v-colorpicker) {
+  $valo-colorpicker-pathPrefix: null;
   @if $v-relative-paths == false {
-    $v-valo-colorpicker-pathPrefix: "../valo/components/img/colorpicker/";
+    $valo-colorpicker-pathPrefix: "../valo/components/img/colorpicker/";
   }
 
   .#{$primary-stylename}-popup.v-window {
@@ -13,11 +13,11 @@
   }
   
   .rgb-gradient .#{$primary-stylename}-gradient-background {
-    background: url(#{$v-valo-colorpicker-pathPrefix}gradient2.png);
+    background: url(#{$valo-colorpicker-pathPrefix}gradient2.png);
   }
   
   .hsv-gradient .#{$primary-stylename}-gradient-foreground {
-    background: url(#{$v-valo-colorpicker-pathPrefix}gradient.png);
+    background: url(#{$valo-colorpicker-pathPrefix}gradient.png);
   }
   
   .#{$primary-stylename}-gradient-lowerbox {
@@ -43,7 +43,7 @@
   }
 
   .#{$primary-stylename}-popup .v-slider.hue-slider:before {
-    background: url(#{$v-valo-colorpicker-pathPrefix}slider_hue_bg.png);
+    background: url(#{$valo-colorpicker-pathPrefix}slider_hue_bg.png);
   }
 
   .#{$primary-stylename}-popup .v-textfield-dark {
@@ -69,7 +69,7 @@
 
 
 
-@mixin v-valo-colorpicker ($primary-stylename: v-colorpicker) {
+@mixin valo-colorpicker ($primary-stylename: v-colorpicker) {
 
   .#{$primary-stylename}-popup.v-window {
     min-width: 220px !important;

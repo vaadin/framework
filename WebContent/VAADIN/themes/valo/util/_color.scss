@@ -52,7 +52,7 @@ $v-luminance-threshold: 150 !default;
 
 // Returns a text color with enough contrast for the given background color
 //
-@function v-valo-font-color ($bg-color, $contrast: 0.8) {
+@function valo-font-color ($bg-color, $contrast: 0.8) {
   @if $bg-color {
     @if is-dark-color($bg-color) {
       @return scale_color($bg-color, $lightness: min(100%, 100% * $contrast), $saturation: max(-100%, -50% * $contrast));
@@ -64,8 +64,8 @@ $v-luminance-threshold: 150 !default;
 }
 
 
-@function v-valo-header-color ($bg-color, $contrast: 1) {
-  $font-color: v-valo-font-color($bg-color);
+@function valo-header-color ($bg-color, $contrast: 1) {
+  $font-color: valo-font-color($bg-color);
   @if is-dark-color($bg-color) {
     @return lighten($font-color, 30% * $contrast);
   } @else {
@@ -76,7 +76,7 @@ $v-luminance-threshold: 150 !default;
 
 
 
-@function v-valo-focus-color ($color: null, $context: null) {
+@function valo-focus-color ($color: null, $context: null) {
   $context: $context or $v-app-background-color;
 
   $fallback: $context;
@@ -95,15 +95,15 @@ $v-luminance-threshold: 150 !default;
 
 
 
-@function v-valo-focus-box-shadow ($color: null, $focus-style: $v-focus-style) {
-  $focus-color: v-valo-focus-color($color: $color);
+@function valo-focus-box-shadow ($color: null, $focus-style: $v-focus-style) {
+  $focus-color: valo-focus-color($color: $color);
   @return replace($focus-style, v-focus-color, transparentize($focus-color, .5));
 }
 
 
 
-@function v-valo-selection-color ($color: null, $context: null) {
-  $selection-color: $color or $v-selection-color or v-valo-focus-color($color: $color, $context: $context);
+@function valo-selection-color ($color: null, $context: null) {
+  $selection-color: $color or $v-selection-color or valo-focus-color($color: $color, $context: $context);
   //@if luminance-diff($context, $selection-color) < 30 or (luminance-diff($context, $selection-color) < 10 and saturation-diff($context, $selection-color) < 20%) {
   //  $selection-color: #fff;
   //}

@@ -1,10 +1,10 @@
-@mixin v-valo-twincolselect ($primary-stylename: v-select-twincol) {
+@mixin valo-twincolselect ($primary-stylename: v-select-twincol) {
   
   .#{$primary-stylename} {
     white-space: normal;
     
     select {
-      @include v-valo-nativeselect-select-style;
+      @include valo-nativeselect-select-style;
     }
 
     &:not(.v-has-width) {
@@ -24,7 +24,7 @@
 
   .#{$primary-stylename}-caption-left,
   .#{$primary-stylename}-caption-right {
-    @include v-valo-caption-style;
+    @include valo-caption-style;
   }
   
   .#{$primary-stylename}-buttons {
@@ -35,7 +35,7 @@
     min-width: 3.5em;
 
     .v-button {
-      @include v-valo-widget-style;
+      @include valo-widget-style;
       position: absolute;
       left: round($v-unit-size/4);
       right: round($v-unit-size/4);
@@ -67,11 +67,11 @@
     }
 
     .v-button-wrap:before {
-      @include v-valo-twincolselect-remove-icon-style;
+      @include valo-twincolselect-remove-icon-style;
     }
 
     .v-button:first-child .v-button-wrap:before {
-      @include v-valo-twincolselect-add-icon-style;
+      @include valo-twincolselect-add-icon-style;
     }
   }
   
@@ -79,12 +79,12 @@
 
 
 
-@mixin v-valo-twincolselect-add-icon-style {
+@mixin valo-twincolselect-add-icon-style {
   font-family: FontAwesome;
   content: "\f054";
 }
 
-@mixin v-valo-twincolselect-remove-icon-style {
+@mixin valo-twincolselect-remove-icon-style {
   font-family: FontAwesome;
   content: "\f053";
 }

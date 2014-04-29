@@ -12,7 +12,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 
 
-@function v-valo-textfield-background-color ($context) {
+@function valo-textfield-background-color ($context) {
   $bg-color: lighten($context, 8%);
   @if is-dark-color($context) {
     $bg-color: darken($context, 4%);
@@ -24,13 +24,13 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 
 
-@function v-valo-textfield-box-shadow ($bevel-style: $v-textfield-bevel-style, $bevel-depth: $v-textfield-bevel-depth,
+@function valo-textfield-box-shadow ($bevel-style: $v-textfield-bevel-style, $bevel-depth: $v-textfield-bevel-depth,
                                        $shadow-style: $v-textfield-shadow-style, $shadow-depth: $v-textfield-shadow-depth) {
   @if $bevel-depth == 0 and $shadow-depth == 0 {
     @return null;
   }
-  $_bevel: v-valo-replace-hilite-and-shade($bevel-style, white($bevel-depth/500%), black($bevel-depth/500%));
-  $_shadow: v-valo-shadow($shadow-style: $shadow-style, $shadow-depth: $shadow-depth);
+  $_bevel: valo-replace-hilite-and-shade($bevel-style, white($bevel-depth/500%), black($bevel-depth/500%));
+  $_shadow: valo-shadow($shadow-style: $shadow-style, $shadow-depth: $shadow-depth);
 
   @if $_bevel and $_shadow {
     @return $_bevel, $_shadow;
@@ -47,7 +47,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 
 
-@mixin v-valo-textfield-size ($unit-size: $v-unit-size, $border-radius: $v-textfield-border-radius) {
+@mixin valo-textfield-size ($unit-size: $v-unit-size, $border-radius: $v-textfield-border-radius) {
   height: $unit-size;
   $padding-width: ceil($unit-size/6);
   @if $border-radius {
@@ -58,9 +58,9 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 
 
-@function v-valo-textfield-border-color ($bevel-style: $v-bevel-style, $bevel-depth: $v-bevel-depth,
+@function valo-textfield-border-color ($bevel-style: $v-bevel-style, $bevel-depth: $v-bevel-depth,
                                          $background-color: $v-textfield-background-color) {
-  $background-color: $background-color or v-valo-textfield-background-color($v-app-background-color);
+  $background-color: $background-color or valo-textfield-background-color($v-app-background-color);
   $border-color: if(color-luminance($background-color) < color-luminance($v-app-background-color), $background-color, $v-app-background-color);
   $border-color: blend-darken($border-color, scale-color($border-color, $lightness: max(-50%, -$bevel-depth/2)));
   $border-color: scale-color($border-color, $saturation: -$bevel-depth/2);
@@ -70,12 +70,12 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 
 
-@mixin v-valo-textfield-style ($bevel-style: $v-textfield-bevel-style, $bevel-depth: $v-textfield-bevel-depth, 
+@mixin valo-textfield-style ($bevel-style: $v-textfield-bevel-style, $bevel-depth: $v-textfield-bevel-depth, 
                                $shadow-style: $v-textfield-shadow-style, $shadow-depth: $v-textfield-shadow-depth,
                                $unit-size: $v-textfield-unit-size, $border-radius: $v-textfield-border-radius,
                                $background-color: $v-textfield-background-color) {
 
-  $background-color: $background-color or v-valo-textfield-background-color($v-app-background-color);
+  $background-color: $background-color or valo-textfield-background-color($v-app-background-color);
   $unit-size: $unit-size or $v-unit-size;
   
   @include appearance(none);
@@ -83,12 +83,12 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
   font: inherit;
   font-size: if($v-textfield-font-size != $v-font-size, $v-textfield-font-size, null);
   font-weight: $v-textfield-font-weight;
-  @include v-valo-textfield-size($unit-size, $border-radius);
+  @include valo-textfield-size($unit-size, $border-radius);
   border-radius: $border-radius;
-  border: $v-textfield-border-width solid v-valo-textfield-border-color($bevel-style, $bevel-depth, $background-color);
+  border: $v-textfield-border-width solid valo-textfield-border-color($bevel-style, $bevel-depth, $background-color);
   background: $background-color;
-  color: v-valo-font-color($background-color);
-  box-shadow: v-valo-textfield-box-shadow($bevel-style: $bevel-style, $bevel-depth: $bevel-depth, $shadow-style: $shadow-style, $shadow-depth: $shadow-depth);
+  color: valo-font-color($background-color);
+  box-shadow: valo-textfield-box-shadow($bevel-style: $bevel-style, $bevel-depth: $bevel-depth, $shadow-style: $shadow-style, $shadow-depth: $shadow-depth);
 
   @if $v-animations-enabled {
     @include transition(box-shadow 180ms, border 180ms);
@@ -99,20 +99,20 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
   }
 
   &:focus {
-    @include v-valo-textfield-focus-style($bevel-style: $bevel-style, $bevel-depth: $bevel-depth, $shadow-style: $shadow-style, $shadow-depth: $shadow-depth);
+    @include valo-textfield-focus-style($bevel-style: $bevel-style, $bevel-depth: $bevel-depth, $shadow-style: $shadow-style, $shadow-depth: $shadow-depth);
   }
   
   // TODO allow parent selector to be used in interpolation
   &.v-textfield-prompt,
   &.v-textarea-prompt {
-    @include v-valo-textfield-prompt-style($background-color);
+    @include valo-textfield-prompt-style($background-color);
   }
 
 }
 
 
-@mixin v-valo-textfield-prompt-style ($background-color) {
-  $font-color: v-valo-font-color($background-color);
+@mixin valo-textfield-prompt-style ($background-color) {
+  $font-color: valo-font-color($background-color);
   $font-color: mix($background-color, $font-color);
   @if is-dark-color($background-color) and saturation($background-color) > 50% {
     $font-color: scale-color($font-color, $lightness: 20%);
@@ -122,49 +122,49 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 }
 
 
-@mixin v-valo-textfield-focus-style ($bevel-style: $v-textfield-bevel-style, $bevel-depth: $v-textfield-bevel-depth, 
+@mixin valo-textfield-focus-style ($bevel-style: $v-textfield-bevel-style, $bevel-depth: $v-textfield-bevel-depth, 
                                      $shadow-style: $v-textfield-shadow-style, $shadow-depth: $v-textfield-shadow-depth) {
   outline: none;
   @if $v-animations-enabled {
     @include transition(none);
   } 
   
-  $focus-color: v-valo-focus-color();
+  $focus-color: valo-focus-color();
   
   @if color-luminance($focus-color) + 50 < color-luminance($v-app-background-color) {
     border-color: $focus-color;
   }
   
-  box-shadow: v-valo-textfield-box-shadow($bevel-style: $bevel-style, $bevel-depth: $bevel-depth, $shadow-style: $shadow-style, $shadow-depth: $shadow-depth), 
-              v-valo-focus-box-shadow($color: $focus-color);
+  box-shadow: valo-textfield-box-shadow($bevel-style: $bevel-style, $bevel-depth: $bevel-depth, $shadow-style: $shadow-style, $shadow-depth: $shadow-depth), 
+              valo-focus-box-shadow($color: $focus-color);
 }
 
 
-@mixin v-valo-textfield-readonly-style {
+@mixin valo-textfield-readonly-style {
   background: transparent;
   box-shadow: none;
   &:focus {
-    box-shadow: v-valo-focus-box-shadow();
+    box-shadow: valo-focus-box-shadow();
   }
 }
 
 
-@mixin v-valo-textfield ($primary-stylename: v-textfield) {
+@mixin valo-textfield ($primary-stylename: v-textfield) {
   
   .#{$primary-stylename} {
-    @include v-valo-textfield-style;
+    @include valo-textfield-style;
     width: $v-default-field-width;
   }
   
   .#{$primary-stylename}-readonly {
-    @include v-valo-textfield-readonly-style;
+    @include valo-textfield-readonly-style;
   }
   
 }
 
 
 
-@mixin v-valo-textfield-borderless-style ($background-color: transparent) {
+@mixin valo-textfield-borderless-style ($background-color: transparent) {
   border: none;
   border-radius: 0;
   background: $background-color;
@@ -177,7 +177,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 
 
-@mixin v-valo-textfield-inline-icon($primary-stylename: v-textfield, $stylename: inline-icon, $unit-size: $v-unit-size, $font-size: $v-textfield-font-size, $image-icon-size: 16px) {
+@mixin valo-textfield-inline-icon($primary-stylename: v-textfield, $stylename: inline-icon, $unit-size: $v-unit-size, $font-size: $v-textfield-font-size, $image-icon-size: 16px) {
   .v-slot-#{$stylename} {
     position: relative;
   }
@@ -186,7 +186,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
     padding: 0;
 
     .v-captiontext {
-      @include v-valo-caption-style;
+      @include valo-caption-style;
       margin: 0;
     }
 

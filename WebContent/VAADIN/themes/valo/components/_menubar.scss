@@ -1,11 +1,11 @@
-@mixin v-valo-menubar ($primary-stylename: v-menubar) {
+@mixin valo-menubar ($primary-stylename: v-menubar) {
   
   $copy: $v-button-hover-style-enabled;
   $v-button-hover-style-enabled: false;
 
   .#{$primary-stylename} {
-    @include v-valo-button-common-properties;
-    @include v-valo-button-style;
+    @include valo-button-common-properties;
+    @include valo-button-style;
     padding: 0;
     text-align: left;
   }
@@ -17,11 +17,11 @@
   }
 
   .#{$primary-stylename} > .#{$primary-stylename}-menuitem {
-    @include v-valo-menubar-menuitem-style;
+    @include valo-menubar-menuitem-style;
   }
 
   .#{$primary-stylename} > .#{$primary-stylename}-menuitem-checked {
-    @include v-valo-menubar-menuitem-checked-style;
+    @include valo-menubar-menuitem-checked-style;
   }
 
   .v-disabled > .#{$primary-stylename}-menuitem:before {
@@ -29,11 +29,11 @@
   }
 
   .#{$primary-stylename} > .#{$primary-stylename}-menuitem-selected {
-    @include v-valo-gradient($color: v-valo-selection-color());
-    box-shadow: v-valo-button-box-shadow($background-color: v-valo-selection-color());
-    text-shadow: v-valo-button-text-shadow($background-color: v-valo-selection-color());
-    color: v-valo-font-color(v-valo-selection-color());
-    $bc: v-valo-button-border-color($background-color: v-valo-selection-color());
+    @include valo-gradient($color: valo-selection-color());
+    box-shadow: valo-button-box-shadow($background-color: valo-selection-color());
+    text-shadow: valo-button-text-shadow($background-color: valo-selection-color());
+    color: valo-font-color(valo-selection-color());
+    $bc: valo-button-border-color($background-color: valo-selection-color());
     border-color: $bc;
 
     + .#{$primary-stylename}-menuitem {
@@ -50,7 +50,7 @@
   }
 
   .#{$primary-stylename}-popup {
-    @include v-valo-menubar-popup-style($primary-stylename);
+    @include valo-menubar-popup-style($primary-stylename);
     //margin-top: -$v-selection-overlay-padding-vertical !important;
     //margin-left: $v-selection-overlay-padding-horizontal !important;
   }
@@ -60,11 +60,11 @@
 
 
 
-@mixin v-valo-menubar-menuitem-style {
+@mixin valo-menubar-menuitem-style {
   position: relative;
   z-index: 1;
   display: inline-block;
-  @include v-valo-button-size($v-unit-size, $v-border-radius);
+  @include valo-button-size($v-unit-size, $v-border-radius);
   height: $v-unit-size - $v-button-border-width*2;
   border-left: $v-button-border-width solid;
   border-color: inherit;
@@ -98,13 +98,13 @@
 
   @if $v-button-hover-style-enabled {
     &:hover:before {
-      @include v-valo-button-hover-style;
+      @include valo-button-hover-style;
       border: none;
     }
   }
 
   &:active:before {
-    @include v-valo-button-active-style;
+    @include valo-button-active-style;
   }
 
   $margin-width: ceil($v-unit-size/2.4/5);
@@ -121,12 +121,12 @@
 
 
 
-@mixin v-valo-menubar-popup-style ($primary-stylename: v-menubar, $context: $v-app-background-color) {
+@mixin valo-menubar-popup-style ($primary-stylename: v-menubar, $context: $v-app-background-color) {
 
   $copy: $v-app-background-color;
   $v-app-background-color: $context;
 
-  @include v-valo-selection-overlay-style;
+  @include valo-selection-overlay-style;
 
   margin: ceil($v-unit-size/8) 0 0 1px !important;
 
@@ -136,7 +136,7 @@
 
   .#{$primary-stylename}-menuitem {
     display: block;
-    @include v-valo-selection-item-style;
+    @include valo-selection-item-style;
     padding-left: $v-selection-item-height + round($v-selection-item-padding-horizontal/2); // Make room for checkable icon
     padding-right: $v-unit-size;
     position: relative;
@@ -148,12 +148,12 @@
     + .#{$primary-stylename}-menuitem-caption:after {
       position: absolute;
       right: $v-selection-item-padding-horizontal;
-      @include v-valo-menubar-submenu-indicator-style;
+      @include valo-menubar-submenu-indicator-style;
     }
   }
 
   .#{$primary-stylename}-menuitem-selected {
-    @include v-valo-selection-item-selected-style;
+    @include valo-selection-item-selected-style;
   }
 
   .#{$primary-stylename}-separator {
@@ -161,11 +161,11 @@
     margin: $v-selection-overlay-padding-vertical 0;
     height: 0;
     overflow: hidden;
-    border-bottom: 1px solid darken(v-valo-overlay-background-color(), 5%);
+    border-bottom: 1px solid darken(valo-overlay-background-color(), 5%);
   }
 
   [class*="checked"] .#{$primary-stylename}-menuitem-caption:before {
-    @include v-valo-menubar-checked-icon-style;
+    @include valo-menubar-checked-icon-style;
     position: absolute;
     left: $v-selection-item-padding-horizontal;
   }
@@ -184,23 +184,23 @@
 
 
 
-@mixin v-valo-menubar-submenu-indicator-style {
+@mixin valo-menubar-submenu-indicator-style {
   font-family: FontAwesome;
   content: "\f054";
   line-height: $v-selection-item-height + 2px;
 }
 
-@mixin v-valo-menubar-checked-icon-style {
+@mixin valo-menubar-checked-icon-style {
   content: "\f00c";
   font-family: FontAwesome;
 }
 
 
-@mixin v-valo-menubar-menuitem-checked-style ($background-color: scale-color($v-app-background-color, $lightness: -5%, $saturation: -5%)) {
-  @include v-valo-gradient($color: $background-color, $depth: $v-gradient-depth/4, $direction: to top);
+@mixin valo-menubar-menuitem-checked-style ($background-color: scale-color($v-app-background-color, $lightness: -5%, $saturation: -5%)) {
+  @include valo-gradient($color: $background-color, $depth: $v-gradient-depth/4, $direction: to top);
 
   @if color-luminance($background-color) < color-luminance($v-app-background-color) {
-    $border-color: v-valo-button-border-color($background-color: $background-color);
+    $border-color: valo-button-border-color($background-color: $background-color);
     border-color: $border-color;
 
     + [class*="menuitem"] {
@@ -211,12 +211,12 @@
     }
   }
 
-  color: v-valo-font-color($background-color, 0.9);
-  text-shadow: v-valo-button-text-shadow($background-color: $background-color);
+  color: valo-font-color($background-color, 0.9);
+  text-shadow: valo-button-text-shadow($background-color: $background-color);
 }
 
-@mixin v-valo-menubar-menuitem-checked ($background-color, $primary-stylename: v-menubar) {
+@mixin valo-menubar-menuitem-checked ($background-color, $primary-stylename: v-menubar) {
   .#{$primary-stylename}-menuitem-checked {
-    @include v-valo-menubar-menuitem-checked-style($background-color: $background-color);
+    @include valo-menubar-menuitem-checked-style($background-color: $background-color);
   }
 }

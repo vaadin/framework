@@ -4,7 +4,7 @@ $v-tree-expand-animation-enabled: false !default;
 
 
 @if $v-tree-expand-animation-enabled {
-  @include keyframes(v-valo-tree-node-open) {
+  @include keyframes(valo-tree-node-open) {
     0% {
       max-height: 0;
     }
@@ -13,7 +13,7 @@ $v-tree-expand-animation-enabled: false !default;
     }
   }
 
-  @include keyframes(v-valo-tree-node-close) {
+  @include keyframes(valo-tree-node-close) {
     0% {
       max-height: $v-tree-row-height * 10;
     }
@@ -24,7 +24,7 @@ $v-tree-expand-animation-enabled: false !default;
 }
 
 
-@mixin v-valo-tree ($primary-stylename: v-tree) {
+@mixin valo-tree ($primary-stylename: v-tree) {
   
   .#{$primary-stylename} {
     position: relative;
@@ -52,7 +52,7 @@ $v-tree-expand-animation-enabled: false !default;
         margin-left: -1.9em;
         //background: red;
         vertical-align: top;
-        @include v-valo-tree-collapsed-icon-style;
+        @include valo-tree-collapsed-icon-style;
         text-align: center;
       }
     }
@@ -75,7 +75,7 @@ $v-tree-expand-animation-enabled: false !default;
       z-index: 2;
 
       &:before {
-        @include v-valo-tree-collapsed-icon-style;
+        @include valo-tree-collapsed-icon-style;
         display: inline-block;
         width: .5em;
         text-align: center;
@@ -137,16 +137,16 @@ $v-tree-expand-animation-enabled: false !default;
   }
   
   .#{$primary-stylename}-node-expanded > .#{$primary-stylename}-node-caption > div:before {
-    @include v-valo-tree-expanded-icon-style;
+    @include valo-tree-expanded-icon-style;
 
     @if $v-tree-animations-enabled {
       @include transform(rotate(90deg));
-      @include v-valo-tree-collapsed-icon-style;
+      @include valo-tree-collapsed-icon-style;
     }
   }
 
   .v-ie8 & .#{$primary-stylename}-node-expanded:before {
-    @include v-valo-tree-expanded-icon-style(true);
+    @include valo-tree-expanded-icon-style(true);
   }
 
 
@@ -155,19 +155,19 @@ $v-tree-expand-animation-enabled: false !default;
     // This a v-tree-node-caption element
     &:after {
       opacity: 1;
-      border: 1px solid v-valo-focus-color();
+      border: 1px solid valo-focus-color();
     }
   }
   
   
   
   .#{$primary-stylename}-node-selected {
-    color: v-valo-font-color(v-valo-selection-color(), 0.9);
-    text-shadow: v-valo-button-text-shadow(v-valo-selection-color(), $v-bevel-depth);
+    color: valo-font-color(valo-selection-color(), 0.9);
+    text-shadow: valo-button-text-shadow(valo-selection-color(), $v-bevel-depth);
 
     &:after {
       opacity: 1;
-      @include v-valo-gradient(v-valo-selection-color());
+      @include valo-gradient(valo-selection-color());
       border: none;
 
       .v-ie8 & {
@@ -176,7 +176,7 @@ $v-tree-expand-animation-enabled: false !default;
     }
 
     .v-ie8 & {
-      @include v-valo-gradient(v-valo-selection-color());
+      @include valo-gradient(valo-selection-color());
     }
   }
   
@@ -190,12 +190,12 @@ $v-tree-expand-animation-enabled: false !default;
 
   @if $v-tree-expand-animation-enabled {
     .#{$primary-stylename}-node-children[style*="display: none"] {
-      @include animation(v-valo-tree-node-close 400ms ease-out forwards);
+      @include animation(valo-tree-node-close 400ms ease-out forwards);
       display: block !important;
     }
 
     .#{$primary-stylename}-node-expanded > .#{$primary-stylename}-node-children {
-      @include animation(v-valo-tree-node-open 400ms ease-in);
+      @include animation(valo-tree-node-open 400ms ease-in);
     }
   }
 
@@ -210,21 +210,21 @@ $v-tree-expand-animation-enabled: false !default;
     position: absolute;
     height: 2px;
     width: 100%;
-    background: v-valo-focus-color();
+    background: valo-focus-color();
     font-size: $v-font-size * 2;
     line-height: 2px;
-    color: v-valo-focus-color();
+    color: valo-focus-color();
     text-indent: round($v-font-size/-4);
     text-shadow: 0 0 1px $v-app-background-color, 0 0 1px $v-app-background-color;
   }
 
   .#{$primary-stylename}-node-caption-drag-center {
-    box-shadow: 0 0 0 2px v-valo-focus-color();
+    box-shadow: 0 0 0 2px valo-focus-color();
     position: relative;
     border-radius: $v-border-radius;
 
     .v-ie8 & {
-      outline: 2px solid v-valo-focus-color();
+      outline: 2px solid valo-focus-color();
     }
   }
 
@@ -240,12 +240,12 @@ $v-tree-expand-animation-enabled: false !default;
 }
 
 
-@mixin v-valo-tree-collapsed-icon-style {
+@mixin valo-tree-collapsed-icon-style {
   content: "\f0da";
   font-family: FontAwesome;
 }
 
-@mixin v-valo-tree-expanded-icon-style ($force: false) {
+@mixin valo-tree-expanded-icon-style ($force: false) {
   @if $v-tree-animations-enabled == false or $force {
     content: "\f0d7";
     font-family: FontAwesome;

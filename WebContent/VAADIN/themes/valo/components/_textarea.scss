@@ -1,25 +1,25 @@
-@mixin v-valo-textarea ($primary-stylename: v-textarea) {
+@mixin valo-textarea ($primary-stylename: v-textarea) {
   
   .#{$primary-stylename} {
-    @include v-valo-textarea-style;
+    @include valo-textarea-style;
     width: $v-default-field-width;
   }
 
   .#{$primary-stylename}-readonly {
-    @include v-valo-textfield-readonly-style;
+    @include valo-textfield-readonly-style;
   }
 
 }
 
 
-@mixin v-valo-textarea-style ($bevel-style: $v-textfield-bevel-style, $bevel-depth: $v-textfield-bevel-depth, 
+@mixin valo-textarea-style ($bevel-style: $v-textfield-bevel-style, $bevel-depth: $v-textfield-bevel-depth, 
                               $shadow-style: $v-textfield-shadow-style, $shadow-depth: $v-textfield-shadow-depth,
                               $unit-size: $v-textfield-unit-size, $border-radius: $v-textfield-border-radius,
                               $background-color: $v-textfield-background-color) {
 
   $unit-size: $unit-size or $v-unit-size;
 
-  @include v-valo-textfield-style($bevel-style: $bevel-style, $bevel-depth: $bevel-depth, 
+  @include valo-textfield-style($bevel-style: $bevel-style, $bevel-depth: $bevel-depth, 
                                   $shadow-style: $shadow-style, $shadow-depth: $shadow-depth,
                                   $unit-size: $unit-size, $border-radius: $border-radius, 
                                   $background-color: $background-color);

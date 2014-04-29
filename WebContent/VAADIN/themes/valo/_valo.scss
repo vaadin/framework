@@ -53,16 +53,16 @@
 
 
 // Include global styles directly, without a theme name prefix (this is done only once)
-@include v-valo-global;
+@include valo-global;
 
 
 // The main theme mixin
 @mixin v-valo {
-  @include v-valo-common;
-  @include v-valo-components;
-  @include v-valo-notification;
+  @include valo-common;
+  @include valo-components;
+  @include valo-notification;
 
-  @if $v-valo-include-common-stylenames {
-  	@include v-valo-common-stylenames;
+  @if $valo-include-common-stylenames {
+  	@include valo-common-stylenames;
   }
 }

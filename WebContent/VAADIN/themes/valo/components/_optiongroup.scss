@@ -1,4 +1,4 @@
-@mixin v-valo-optiongroup ($primary-stylename: v-optiongroup) {
+@mixin valo-optiongroup ($primary-stylename: v-optiongroup) {
   
   .v-radiobutton {
     :root & > input {
@@ -9,7 +9,7 @@
         height: $size;
         top: $offset;
         left: $offset;
-        background: v-valo-selection-color($v-button-background-color);
+        background: valo-selection-color($v-button-background-color);
       }
 
       & ~ label:before,

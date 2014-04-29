@@ -5,7 +5,7 @@ $v-slider-handle-height: round($v-unit-size/1.8) !default;
 $v-slider-handle-border-radius: ceil($v-slider-handle-width/2) !default;
 
 
-@mixin v-valo-slider ($primary-stylename: v-slider) {
+@mixin valo-slider ($primary-stylename: v-slider) {
 
   // Round to an even number
   $v-slider-track-size: $v-slider-track-size + $v-slider-track-size%2;
@@ -33,7 +33,7 @@ $v-slider-handle-border-radius: ceil($v-slider-handle-width/2) !default;
   }
 
   .#{$primary-stylename}-base {
-    @include v-valo-progressbar-track-style;
+    @include valo-progressbar-track-style;
     min-width: $v-unit-size * 2;
     height: $v-slider-track-size;
     margin: round(($v-unit-size - $v-slider-track-size)/2) round($v-slider-handle-width/2);
@@ -42,7 +42,7 @@ $v-slider-handle-border-radius: ceil($v-slider-handle-width/2) !default;
     border-radius: $v-slider-track-border-radius;
 
     &:after {
-      @include v-valo-progressbar-indicator-style;
+      @include valo-progressbar-indicator-style;
       min-width: 0;
       content: "";
       display: inline-block;
@@ -64,11 +64,11 @@ $v-slider-handle-border-radius: ceil($v-slider-handle-width/2) !default;
     vertical-align: top;
 
     &:before {
-      @include v-valo-button-style;
+      @include valo-button-style;
     }
 
     &:after {
-      @include v-valo-button-focus-style;
+      @include valo-button-focus-style;
       opacity: 0;
       @if $v-animations-enabled {
         @include transition(opacity 200ms);
@@ -95,7 +95,7 @@ $v-slider-handle-border-radius: ceil($v-slider-handle-width/2) !default;
   }
 
   .#{$primary-stylename}-feedback {
-    @include v-valo-tooltip-style;
+    @include valo-tooltip-style;
   }
 
 
@@ -109,7 +109,7 @@ $v-slider-handle-border-radius: ceil($v-slider-handle-width/2) !default;
     height: $v-unit-size * 2; // Effectively min-height
 
     .#{$primary-stylename}-base {
-      @include v-valo-gradient($color: scale-color($v-app-background-color, $lightness: min($v-bevel-depth/-2, -5%), $saturation: $v-bevel-depth/-2), $style: linear-reverse, $direction: to right);
+      @include valo-gradient($color: scale-color($v-app-background-color, $lightness: min($v-bevel-depth/-2, -5%), $saturation: $v-bevel-depth/-2), $style: linear-reverse, $direction: to right);
       min-width: 0;
       width: $v-slider-track-size;
       height: 100% !important;
@@ -118,7 +118,7 @@ $v-slider-handle-border-radius: ceil($v-slider-handle-width/2) !default;
 
       &:after {
         margin-left: 0;
-        @include v-valo-gradient($color: v-valo-selection-color(), $direction: to right);
+        @include valo-gradient($color: valo-selection-color(), $direction: to right);
 
         .v-ie8 & {
           top: round($v-slider-handle-width/2) - 2px;

@@ -1,5 +1,5 @@
-@mixin v-valo-upload ($primary-stylename: v-upload) {
+@mixin valo-upload ($primary-stylename: v-upload) {
   .#{$primary-stylename} .v-button {
-    @include v-valo-widget-style;
+    @include valo-widget-style;
   }
 }

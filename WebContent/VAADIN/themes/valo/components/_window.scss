@@ -5,17 +5,17 @@ $v-window-animations-enabled: $v-animations-enabled !default;
 
 
 @if $v-window-animations-enabled {
-  @include keyframes(v-valo-modal-window-indication) {
+  @include keyframes(valo-modal-window-indication) {
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
 }
 
 
-@mixin v-valo-window ($primary-stylename: v-window) {
+@mixin valo-window ($primary-stylename: v-window) {
 
   .#{$primary-stylename} {
-    @include v-valo-overlay-style;
+    @include valo-overlay-style;
 
     @if $v-window-animations-enabled and $v-window-open-animation {
       @include animation($v-window-open-animation);
@@ -25,7 +25,7 @@ $v-window-animations-enabled: $v-animations-enabled !default;
       @if $v-window-shadow-style == none {
         box-shadow: none;
       } @else {
-        box-shadow: v-valo-shadow($shadow-style: $v-window-shadow-style);
+        box-shadow: valo-shadow($shadow-style: $v-window-shadow-style);
       }
     }
     border-radius: $v-window-border-radius;
@@ -76,7 +76,7 @@ $v-window-animations-enabled: $v-animations-enabled !default;
       right: 0;
       left: 0;
       height: 1px;
-      $_bg: v-valo-overlay-background-color();
+      $_bg: valo-overlay-background-color();
       background: adjust-color($_bg, $lightness: if(is-dark-color($_bg), 3%, -5%), $saturation: -10%);
     }
   }
@@ -90,7 +90,7 @@ $v-window-animations-enabled: $v-animations-enabled !default;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: blend-normal(rgba(v-valo-font-color(v-valo-overlay-background-color()), .7), v-valo-overlay-background-color());
+    color: blend-normal(rgba(valo-font-color(valo-overlay-background-color()), .7), valo-overlay-background-color());
   }
   
   .#{$primary-stylename}-closebox,
@@ -118,7 +118,7 @@ $v-window-animations-enabled: $v-animations-enabled !default;
     
     &:hover {
       @include opacity(1);
-      color: v-valo-selection-color();
+      color: valo-selection-color();
     }
     
     &:active {
@@ -127,7 +127,7 @@ $v-window-animations-enabled: $v-animations-enabled !default;
   }
   
   .#{$primary-stylename}-closebox {
-    @include v-valo-window-close-icon-style;
+    @include valo-window-close-icon-style;
   }
   
   .#{$primary-stylename}-maximizebox,
@@ -141,11 +141,11 @@ $v-window-animations-enabled: $v-animations-enabled !default;
   }
 
   .#{$primary-stylename}-maximizebox {
-    @include v-valo-window-maximize-icon-style;
+    @include valo-window-maximize-icon-style;
   }
   
   .#{$primary-stylename}-restorebox {
-    @include v-valo-window-restore-icon-style;
+    @include valo-window-restore-icon-style;
   }
   
   .v-window > .popupContent,
@@ -161,10 +161,10 @@ $v-window-animations-enabled: $v-animations-enabled !default;
     margin-top: 0 !important;
 
     > .v-scrollable {
-      @include v-valo-panel-adjust-content-margins;
+      @include valo-panel-adjust-content-margins;
 
       > .v-formlayout {
-        @include v-valo-formlayout-margins($all: round($v-unit-size/3));
+        @include valo-formlayout-margins($all: round($v-unit-size/3));
       }
 
       position: relative;
@@ -179,7 +179,7 @@ $v-window-animations-enabled: $v-animations-enabled !default;
         z-index: 2;
         top: 0;
         height: 1px;
-        background: v-valo-overlay-background-color();
+        background: valo-overlay-background-color();
         left: 0;
         right: 0;
       }
@@ -252,20 +252,20 @@ $v-window-animations-enabled: $v-animations-enabled !default;
 }
 
 
-@mixin v-valo-window-close-icon-style {
+@mixin valo-window-close-icon-style {
   &:before {
     // times cross
     content: "\00d7";
   }
 }
 
-@mixin v-valo-window-maximize-icon-style {
+@mixin valo-window-maximize-icon-style {
   &:before {
     content: "+";
   }
 }
 
-@mixin v-valo-window-restore-icon-style {
+@mixin valo-window-restore-icon-style {
   &:before {
     // en-dash
     content: "\2013";

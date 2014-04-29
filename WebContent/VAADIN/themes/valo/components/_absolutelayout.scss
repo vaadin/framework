@@ -1,4 +1,4 @@
-@mixin v-valo-absolutelayout ($primary-stylename: v-absolutelayout) {
+@mixin valo-absolutelayout ($primary-stylename: v-absolutelayout) {
   
   .#{$primary-stylename}-wrapper {
     position: absolute;

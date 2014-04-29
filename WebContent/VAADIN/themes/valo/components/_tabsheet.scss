@@ -3,7 +3,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 
 
-@mixin v-valo-tabsheet-global ($primary-stylename: v-tabsheet) {
+@mixin valo-tabsheet-global ($primary-stylename: v-tabsheet) {
   .#{$primary-stylename}-hidetabs > .#{$primary-stylename}-tabcontainer,
   .#{$primary-stylename}-spacertd,
   .#{$primary-stylename}-deco,
@@ -22,7 +22,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 
 
-@mixin v-valo-tabsheet ($primary-stylename: v-tabsheet) {
+@mixin valo-tabsheet ($primary-stylename: v-tabsheet) {
 
   $_scale: if( is-dark-color($v-app-background-color) , max(5%, $v-bevel-depth/2), min(-5%, -$v-bevel-depth/2) );
   $border-color: scale-color($v-app-background-color, $lightness: $_scale);
@@ -98,7 +98,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
       }
 
       &:hover {
-        color: v-valo-selection-color();
+        color: valo-selection-color();
       }
 
       &.v-disabled {
@@ -119,14 +119,14 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     outline: none;
 
     .v-caption {
-      color: v-valo-selection-color();
-      border-bottom: $v-border-width solid v-valo-selection-color();
+      color: valo-selection-color();
+      border-bottom: $v-border-width solid valo-selection-color();
     }
   }
 
   .#{$primary-stylename}-tabitem-selected .v-caption.v-caption {
-    border-bottom: $v-border-width*2 solid v-valo-selection-color();
-    color: v-valo-selection-color();
+    border-bottom: $v-border-width*2 solid valo-selection-color();
+    color: valo-selection-color();
   }
 
   .#{$primary-stylename}-caption-close {
@@ -139,13 +139,13 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     border-radius: round($v-border-radius/2);
 
     &:hover {
-      background: v-valo-selection-color();
-      color: v-valo-font-color(v-valo-selection-color());
+      background: valo-selection-color();
+      color: valo-font-color(valo-selection-color());
     }
 
     &:active {
-      background: darken(v-valo-selection-color(), 5%);
-      color: v-valo-font-color(v-valo-selection-color());
+      background: darken(valo-selection-color(), 5%);
+      color: valo-font-color(valo-selection-color());
     }
   }
 
@@ -195,12 +195,12 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
       &:hover {
         @include opacity(1);
-        color: v-valo-selection-color();
+        color: valo-selection-color();
       }
 
       &:active {
         @include opacity(.7);
-        color: v-valo-selection-color();
+        color: valo-selection-color();
       }
 
       &::-moz-focus-inner {
@@ -212,14 +212,14 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     [class*="Next"] {
       padding-left: round($v-unit-size/8);
       &:before {
-        @include v-valo-tabsheet-scroller-next-icon-style;
+        @include valo-tabsheet-scroller-next-icon-style;
       }
     }
 
     [class*="Prev"] {
       padding-right: round($v-unit-size/8);
       &:before {
-        @include v-valo-tabsheet-scroller-prev-icon-style;
+        @include valo-tabsheet-scroller-prev-icon-style;
       }
     }
 
@@ -233,7 +233,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
   @if $v-tabsheet-content-animation-enabled {
     .#{$primary-stylename}-tabsheetpanel > .v-scrollable > .v-widget {
-      @include v-valo-anim-fade-in(300ms);
+      @include valo-anim-fade-in(300ms);
     }
   }
 
@@ -243,13 +243,13 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 
 
-@mixin v-valo-tabsheet-centered-tabs ($primary-stylename: v-tabsheet) {
+@mixin valo-tabsheet-centered-tabs ($primary-stylename: v-tabsheet) {
   .#{$primary-stylename}-tabcontainer {
     text-align: center;
   }
 }
 
-@mixin v-valo-tabsheet-equal-width-tabs ($primary-stylename: v-tabsheet, $flex: false) {
+@mixin valo-tabsheet-equal-width-tabs ($primary-stylename: v-tabsheet, $flex: false) {
   .#{$primary-stylename}-tabcontainer {
     table,
     tbody,
@@ -276,7 +276,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
   }
 }
 
-@mixin v-valo-tabsheet-icons-on-top ($primary-stylename: v-tabsheet) {
+@mixin valo-tabsheet-icons-on-top ($primary-stylename: v-tabsheet) {
   .#{$primary-stylename}-tabs {
     height: $v-unit-size * 2;
 
@@ -308,7 +308,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
   }
 }
 
-@mixin v-valo-tabsheet-only-selected-closable ($primary-stylename: v-tabsheet) {
+@mixin valo-tabsheet-only-selected-closable ($primary-stylename: v-tabsheet) {
   .#{$primary-stylename}-caption-close {
     visibility: hidden;
   }
@@ -318,18 +318,18 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
   }
 }
 
-@mixin v-valo-tabsheet-padded-tabbar ($primary-stylename: v-tabsheet) {
+@mixin valo-tabsheet-padded-tabbar ($primary-stylename: v-tabsheet) {
   .#{$primary-stylename}-tabs {
     padding: 0 round($v-unit-size/4);
   }
 }
 
-@mixin v-valo-tabsheet-scroller-prev-icon-style {
+@mixin valo-tabsheet-scroller-prev-icon-style {
   font-family: FontAwesome;
   content: "\f053";
 }
 
-@mixin v-valo-tabsheet-scroller-next-icon-style {
+@mixin valo-tabsheet-scroller-next-icon-style {
   font-family: FontAwesome;
   content: "\f054";
 }

@@ -1,4 +1,4 @@
-@mixin v-valo-gridlayout-global ($primary-stylename: v-gridlayout) {
+@mixin valo-gridlayout-global ($primary-stylename: v-gridlayout) {
   .#{$primary-stylename} {
     position: relative;
     line-height: 0;
@@ -21,7 +21,7 @@
 }
 
 
-@mixin v-valo-gridlayout($primary-stylename : v-gridlayout) {
+@mixin valo-gridlayout($primary-stylename : v-gridlayout) {
 
   .#{$primary-stylename}-margin-top {
     padding-top: $v-layout-margin-top;

@@ -1,4 +1,4 @@
-@mixin v-valo-notification {
+@mixin valo-notification {
 
 
 
@@ -32,20 +32,20 @@
   // Can't match to "top: 0", since that would target "margin-top: 0" also, which all GWT PopupPanels have always
   @if $v-animations-enabled {
     .v-Notification[style*=" top: 0"] {
-      @include v-valo-anim-slide-down(600ms);
+      @include valo-anim-slide-down(600ms);
     }
 
     .v-Notification[style*="bottom: 0"] {
-      @include v-valo-anim-slide-up(600ms);
+      @include valo-anim-slide-up(600ms);
     }
 
     .v-Notification[style*="right: 0"] {
-      @include v-valo-anim-slide-left(600ms);
+      @include valo-anim-slide-left(600ms);
     }
 
     // Can't match to "left: 0", since that would target "margin-left: 0" also, which all GWT PopupPanels have always
     .v-Notification[style*=" left: 0"]:not(.v-Notification-system) {
-      @include v-valo-anim-slide-right(600ms);
+      @include valo-anim-slide-right(600ms);
     }
   }
 
@@ -91,10 +91,10 @@
       margin-left: round($v-font-size);
     }
 
-    @include v-valo-notification-style;
+    @include valo-notification-style;
 
     @if $v-animations-enabled {
-      @include v-valo-anim-fade-in;
+      @include valo-anim-fade-in;
     }
 
   }
@@ -109,7 +109,7 @@
     margin: 0 !important;
     border-radius: 0;
     
-    @include v-valo-notification-system-style;
+    @include valo-notification-system-style;
   }
 
   // Needs a more specific selector to override positional margins
@@ -132,19 +132,19 @@
       display: block;
       margin: .5em 0 0;
     }
-    @include v-valo-notification-tray-style;
+    @include valo-notification-tray-style;
   }
   
   .v-Notification.warning {
-    @include v-valo-notification-warning-style;
+    @include valo-notification-warning-style;
   }
   
   .v-Notification.error {
-    @include v-valo-notification-error-style;
+    @include valo-notification-error-style;
   }
 
   .v-Notification.closable {
-    @include v-valo-notification-closable-style;
+    @include valo-notification-closable-style;
 
     &.error,
     &.system {
@@ -172,7 +172,7 @@
 
 
 
-@mixin v-valo-notification-closable-style {
+@mixin valo-notification-closable-style {
   padding-right: $v-unit-size + round($v-unit-size/1.7);
   overflow: hidden !important; // Override GWT PopupPanel
   cursor: pointer;
@@ -225,8 +225,8 @@
 
 
 
-@mixin v-valo-notification-style {
-  background: v-valo-overlay-background-color();
+@mixin valo-notification-style {
+  background: valo-overlay-background-color();
   box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.15);
   padding: round($v-unit-size/2) round($v-unit-size/1.7);
 
@@ -236,7 +236,7 @@
   }
   
   h1 {
-    color: v-valo-focus-color();
+    color: valo-focus-color();
     font-size: round($v-font-size * 1.2);
     line-height: 1;
   }
@@ -245,7 +245,7 @@
   }
 }
 
-@mixin v-valo-notification-system-style {
+@mixin valo-notification-system-style {
   background-color: #444;
   font-weight: $v-font-weight + 100;
   line-height: round($v-font-size * 1.4);
@@ -268,9 +268,9 @@
 }
 
 
-@mixin v-valo-notification-tray-style {}
+@mixin valo-notification-tray-style {}
 
-@mixin v-valo-notification-warning-style {
+@mixin valo-notification-warning-style {
   background: #FFF3D2;
 
   h1 {
@@ -282,16 +282,16 @@
   }
 }
 
-@mixin v-valo-notification-error-style {
+@mixin valo-notification-error-style {
   background: $v-error-indicator-color;
   font-weight: $v-font-weight + 100;
   box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.25);
 
   h1 {
-    color: v-valo-font-color($v-error-indicator-color, 1);
+    color: valo-font-color($v-error-indicator-color, 1);
   }
 
   p {
-    color: v-valo-font-color($v-error-indicator-color, .8);
+    color: valo-font-color($v-error-indicator-color, .8);
   }
 }

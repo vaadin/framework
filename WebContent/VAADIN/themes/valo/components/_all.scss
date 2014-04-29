@@ -41,172 +41,172 @@
 @import "dragwrapper";
 
 
-@mixin v-valo-components {
+@mixin valo-components {
   
   @if v-is-included(absolutelayout) {
-    @include v-valo-absolutelayout;
+    @include valo-absolutelayout;
   }
   
   @if v-is-included(orderedlayout) {
-    @include v-valo-orderedlayout;
+    @include valo-orderedlayout;
   }
     
   @if v-is-included(button) {
-    @include v-valo-button;
+    @include valo-button;
   }
   
   @if v-is-included(checkbox) or v-is-included(optiongroup) {
-    @include v-valo-checkbox;
+    @include valo-checkbox;
   }
   
   @if v-is-included(combobox) {
-    @include v-valo-combobox;
+    @include valo-combobox;
   }
   
   @if v-is-included(csslayout) {
-    @include v-valo-csslayout;
+    @include valo-csslayout;
   }
   
   @if v-is-included(customcomponent) {
-    @include v-valo-customcomponent;
+    @include valo-customcomponent;
   }
   
   @if v-is-included(customlayout) {
-    @include v-valo-customlayout;
+    @include valo-customlayout;
   }
   
   @if v-is-included(form) {
-    @include v-valo-form;
+    @include valo-form;
   }
   
   @if v-is-included(formlayout) {
-    @include v-valo-formlayout;
+    @include valo-formlayout;
   }
   
   @if v-is-included(grid) {
-    @include v-valo-grid(v-escalator);
+    @include valo-grid(v-escalator);
   }
   
   @if v-is-included(textfield) {
-    @include v-valo-textfield;
+    @include valo-textfield;
   }
   
   @if v-is-included(textarea) {
-    @include v-valo-textarea;
+    @include valo-textarea;
   }
   
   @if v-is-included(datefield) {
-    @include v-valo-datefield;
-    @include v-valo-inline-datefield;
+    @include valo-datefield;
+    @include valo-inline-datefield;
   }
   
   @if v-is-included(orderedlayout) {
-    @include v-valo-orderedlayout;
+    @include valo-orderedlayout;
   }
   
   @if v-is-included(gridlayout) {
-    @include v-valo-gridlayout;
+    @include valo-gridlayout;
   }
   
   @if v-is-included(menubar) {
-    @include v-valo-menubar;
+    @include valo-menubar;
   }
   
   @if v-is-included(optiongroup) {
-    @include v-valo-optiongroup;
+    @include valo-optiongroup;
   }
   
   @if v-is-included(link) {
-    @include v-valo-link;
+    @include valo-link;
   }
   
   @if v-is-included(window) {
-    @include v-valo-window;
+    @include valo-window;
   }
   
   @if v-is-included(tree) {
-    @include v-valo-tree;
+    @include valo-tree;
   }
   
   @if v-is-included(table) or v-is-included(treetable) {
-    @include v-valo-table;
+    @include valo-table;
   }
   
   @if v-is-included(treetable) {
-    @include v-valo-treetable;
+    @include valo-treetable;
   }
   
   @if v-is-included(splitpanel) {
-    @include v-valo-splitpanel;
+    @include valo-splitpanel;
   }
   
   @if v-is-included(progressbar) or v-is-included(progressindicator) {
-    @include v-valo-progressbar;
-    @include v-valo-progressbar(v-progressindicator);
+    @include valo-progressbar;
+    @include valo-progressbar(v-progressindicator);
   }
   
   @if v-is-included(slider) {
-    @include v-valo-slider;
+    @include valo-slider;
   }
   
   @if v-is-included(tabsheet) {
-    @include v-valo-tabsheet;
+    @include valo-tabsheet;
   }
   
   @if v-is-included(colorpicker) {
-    @include v-valo-colorpicker;
+    @include valo-colorpicker;
   }
   
   @if v-is-included(panel) {
-    @include v-valo-panel;
+    @include valo-panel;
   }
   
   @if v-is-included(accordion) {
-    @include v-valo-accordion;
+    @include valo-accordion;
   }
   
   @if v-is-included(twincolselect) {
-    @include v-valo-twincolselect;
+    @include valo-twincolselect;
   }
   
   @if v-is-included(nativeselect) {
-    @include v-valo-nativeselect;
+    @include valo-nativeselect;
   }
   
   @if v-is-included(calendar) {
-    @include v-valo-calendar;
+    @include valo-calendar;
   }
   
   @if v-is-included(label) {
-    @include v-valo-label;
+    @include valo-label;
   }
   
   @if v-is-included(dragwrapper) {
-    @include v-valo-dragwrapper;
+    @include valo-dragwrapper;
   }
   
   @if v-is-included(loginform) {
-    @include v-valo-loginform;
+    @include valo-loginform;
   }
   
   @if v-is-included(nativebutton) {
-    @include v-valo-nativebutton;
+    @include valo-nativebutton;
   }
   
   @if v-is-included(nativeselect) {
-    @include v-valo-nativeselect;
+    @include valo-nativeselect;
   }
   
   @if v-is-included(popupview) {
-    @include v-valo-popupview;
+    @include valo-popupview;
   }
   
   @if v-is-included(richtextarea) {
-    @include v-valo-richtextarea;
+    @include valo-richtextarea;
   }
   
   @if v-is-included(upload) {
-    @include v-valo-upload;
+    @include valo-upload;
   }
   
 }

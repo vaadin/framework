@@ -1,7 +1,7 @@
 $v-splitpanel-splitter-size: round($v-unit-size/5) !default;
 
 
-@mixin v-valo-splitpanel($primary-stylename : v-splitpanel) {
+@mixin valo-splitpanel($primary-stylename : v-splitpanel) {
 
   // Disable splitter shadow (should most likely be a variable)
   $copy: $v-shadow-depth;
@@ -22,7 +22,7 @@ $v-splitpanel-splitter-size: round($v-unit-size/5) !default;
 
   .#{$primary-stylename}-hsplitter div,
   .#{$primary-stylename}-vsplitter div {
-    @include v-valo-button-style;
+    @include valo-button-style;
     @include box-sizing(border-box);
     height: auto;
     padding: 0;
@@ -62,7 +62,7 @@ $v-splitpanel-splitter-size: round($v-unit-size/5) !default;
     cursor: e-resize;
     cursor: col-resize;
     $color: $v-button-background-color or $v-app-background-color;
-    @include v-valo-gradient($color: $color, $direction: to right);
+    @include valo-gradient($color: $color, $direction: to right);
 
     &:before {
       width: 0;
@@ -105,7 +105,7 @@ $v-splitpanel-splitter-size: round($v-unit-size/5) !default;
 
 
 
-@mixin v-valo-splitpanel-small ($primary-stylename: v-splitpanel, $stylename: small) {
+@mixin valo-splitpanel-small ($primary-stylename: v-splitpanel, $stylename: small) {
   .#{$primary-stylename}-vsplitter-#{$stylename},
   .#{$primary-stylename}-hsplitter-#{$stylename} {
     div {

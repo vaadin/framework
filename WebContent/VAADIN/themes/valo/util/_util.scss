@@ -31,14 +31,14 @@
 
 
 
-@mixin v-valo-round {
+@mixin valo-round {
   border-radius: 50%;
 }
 
 
 
 
-@mixin v-valo-tappable {
+@mixin valo-tappable {
   @include user-select(none);
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-touch-callout: none;

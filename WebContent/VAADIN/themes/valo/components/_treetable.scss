@@ -1,4 +1,4 @@
-@mixin v-valo-treetable ($primary-stylename: v-treetable) {
+@mixin valo-treetable ($primary-stylename: v-treetable) {
   .v-table-cell-wrapper {
     //position: relative;
   }
@@ -18,10 +18,10 @@
   }
 
   .#{$primary-stylename}-node-closed:before {
-    @include v-valo-tree-collapsed-icon-style;
+    @include valo-tree-collapsed-icon-style;
   }
 
   .#{$primary-stylename}-node-open:before {
-    @include v-valo-tree-expanded-icon-style($force: true);
+    @include valo-tree-expanded-icon-style($force: true);
   }
 }

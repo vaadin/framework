@@ -1,6 +1,6 @@
-@mixin v-valo-nativeselect ($primary-stylename: v-select) {
+@mixin valo-nativeselect ($primary-stylename: v-select) {
   .#{$primary-stylename} select {
-    @include v-valo-nativeselect-select-style;
+    @include valo-nativeselect-select-style;
   }
 
   .#{$primary-stylename}-select {
@@ -20,17 +20,17 @@
 
 
 
-@mixin v-valo-nativeselect-select-style {
+@mixin valo-nativeselect-select-style {
   $_border-color: darken($v-app-background-color, $v-bevel-depth);
   @if is-dark-color($v-app-background-color) {
     $_border-color: lighten($v-app-background-color, $v-bevel-depth);
   }
   border: $v-border-width solid $_border-color;
-  background-color: v-valo-textfield-background-color($v-app-background-color);
+  background-color: valo-textfield-background-color($v-app-background-color);
 
   &:focus {
     outline: none;
-    //@include v-valo-button-focus-style;
-    box-shadow: v-valo-focus-box-shadow();
+    //@include valo-button-focus-style;
+    box-shadow: valo-focus-box-shadow();
   }
 }

@@ -1,4 +1,4 @@
-@mixin v-valo-orderedlayout-global {
+@mixin valo-orderedlayout-global {
 
   div.v-layout.v-horizontal.v-widget {
     white-space: nowrap;
@@ -145,7 +145,7 @@
 
 
 
-@mixin v-valo-orderedlayout {
+@mixin valo-orderedlayout {
   
   .v-margin-top {
     padding-top: $v-layout-margin-top;
@@ -171,7 +171,7 @@
 }
 
 
-@mixin v-valo-horizontallayout--wrapping {
+@mixin valo-horizontallayout--wrapping {
     white-space: normal !important;
     
     & > .v-spacing + .v-slot,

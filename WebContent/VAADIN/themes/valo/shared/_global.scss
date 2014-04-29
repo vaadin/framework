@@ -6,13 +6,13 @@
 
 
 // Include global styles only once
-$v-valo-global-included: false !default;
-@mixin v-valo-global {
-  @if $v-valo-global-included == false {
+$valo-global-included: false !default;
+@mixin valo-global {
+  @if $valo-global-included == false {
 
     // Core widget styles come before any other component (and are always included),
     // so that it has the least specificity
-    @include v-valo-widget;
+    @include valo-widget;
 
     .v-generated-body {
       overflow: hidden;
@@ -99,27 +99,27 @@ $v-valo-global-included: false !default;
     }
 
     // Component global styles should also be included here
-    @include v-valo-orderedlayout-global;
-    @include v-valo-gridlayout-global;
-    @include v-valo-calendar-global;
-    @include v-valo-colorpicker-global;
-    @include v-valo-table-global;
-    @include v-valo-tabsheet-global;
+    @include valo-orderedlayout-global;
+    @include valo-gridlayout-global;
+    @include valo-calendar-global;
+    @include valo-colorpicker-global;
+    @include valo-table-global;
+    @include valo-tabsheet-global;
 
-    $v-valo-global-included: true;
+    $valo-global-included: true;
   }
 }
 
 
 
-$v-valo-shared-pathPrefix: null;
+$valo-shared-pathPrefix: null;
   
 @if $v-relative-paths == false {
-  $v-valo-shared-pathPrefix: "../valo/shared/";
+  $valo-shared-pathPrefix: "../valo/shared/";
 }
 
 
-@mixin v-valo-app-style {
+@mixin valo-app-style {
   font: $v-font-weight #{$v-font-size}/#{$v-line-height} $v-font-family;
   color: $v-font-color;
   background-color: $v-app-background-color;
@@ -134,17 +134,17 @@ $v-valo-shared-pathPrefix: null;
 }
 
 
-@mixin v-valo-common {
+@mixin valo-common {
 
   //@if & != null {
   //  &,
   //  &.v-app-loading {
-  //    @include v-valo-app-style;
+  //    @include valo-app-style;
   //  }
   //} @else {
     &.v-app,
     &.v-app-loading {
-      @include v-valo-app-style;
+      @include valo-app-style;
     }
   //}
 
@@ -171,7 +171,7 @@ $v-valo-shared-pathPrefix: null;
       padding: round($v-unit-size/4);
       margin-top: round($_size/-2);
       margin-left: round($_size/-2);
-      background: #fff url($v-valo-shared-pathPrefix + "img/spinner.gif") no-repeat 50%;
+      background: #fff url($valo-shared-pathPrefix + "img/spinner.gif") no-repeat 50%;
       border-radius: $v-border-radius;
     }
 
@@ -189,7 +189,7 @@ $v-valo-shared-pathPrefix: null;
     }
   }
   
-  @include v-valo-loading-bar;
+  @include valo-loading-bar;
 
 
   // Fallback spinner for browsers without CSS animations
@@ -201,7 +201,7 @@ $v-valo-shared-pathPrefix: null;
       width: 28px !important;
       height: 28px;
       padding: round($v-unit-size/4);
-      background: #fff url($v-valo-shared-pathPrefix + "img/spinner.gif") no-repeat 50%;
+      background: #fff url($valo-shared-pathPrefix + "img/spinner.gif") no-repeat 50%;
       border-radius: $v-border-radius;
       top: round($v-unit-size/4);
       right: round($v-unit-size/4);
@@ -230,7 +230,7 @@ $v-valo-shared-pathPrefix: null;
   }
   
   .v-caption {
-    @include v-valo-caption-style;
+    @include valo-caption-style;
   }
 
   .v-caption-on-left .v-caption,
@@ -249,7 +249,7 @@ $v-valo-shared-pathPrefix: null;
   }
   
   .v-errorindicator {
-    @include v-valo-error-indicator-style;
+    @include valo-error-indicator-style;
   }
 
   .v-required-field-indicator {
@@ -266,7 +266,7 @@ $v-valo-shared-pathPrefix: null;
     margin: 0;
     border-radius: $v-border-radius;
 
-    @include v-valo-nativeselect-select-style;
+    @include valo-nativeselect-select-style;
   }
 
   button {
@@ -279,18 +279,18 @@ $v-valo-shared-pathPrefix: null;
     cursor: default !important;
   }
 
-  @include v-valo-drag-element;
+  @include valo-drag-element;
 
-  @include v-valo-tooltip;
+  @include valo-tooltip;
 
-  @include v-valo-contextmenu;
+  @include valo-contextmenu;
 
 }
 
 
 
 
-@mixin v-valo-caption-style {
+@mixin valo-caption-style {
   font-size: $v-caption-font-size;
   font-weight: $v-caption-font-weight;
   padding-bottom: .3em;
@@ -301,18 +301,18 @@ $v-valo-shared-pathPrefix: null;
 
 
 
-@mixin v-valo-error-indicator-style {
+@mixin valo-error-indicator-style {
   color: $v-error-indicator-color;
   font-weight: 600;
   width: ceil($v-unit-size/2);
   text-align: center;
 
   &:before {
-    @include v-valo-error-indicator-icon-style;
+    @include valo-error-indicator-icon-style;
   }
 }
 
-@mixin v-valo-error-indicator-icon-style {
+@mixin valo-error-indicator-icon-style {
   content: "!";
 }
 
@@ -320,11 +320,11 @@ $v-valo-shared-pathPrefix: null;
 
 // Make the BODY element scrollable instead of the .v-ui element. Scrolling the BODY works better on touch screens.
 // NOTE: breaks percentage sized overlay elements
-// @mixin v-valo-natural-page-scrolling
+// @mixin valo-natural-page-scrolling
 // @usage
 // // Call without any parent selector somewhere in your theme
-// =v-valo-natural-page-scrolling;
-@mixin v-valo-natural-page-scrolling {
+// =valo-natural-page-scrolling;
+@mixin valo-natural-page-scrolling {
   
   html {
     height: auto;
