@@ -1,5 +1,5 @@
 @mixin valo-menubar ($primary-stylename: v-menubar) {
-  
+
   $copy: $v-button-hover-style-enabled;
   $v-button-hover-style-enabled: false;
 
@@ -94,6 +94,7 @@
     right: 0;
     bottom: 0;
     left: 0;
+    border-radius: inherit;
   }
 
   @if $v-button-hover-style-enabled {
