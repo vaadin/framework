@@ -6,7 +6,6 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
   .#{$primary-stylename} {
     position: relative;
     width: $v-default-field-width;
-    height: $v-unit-size;
     @include valo-datefield-style($primary-stylename: $primary-stylename);
   }
 
@@ -14,15 +13,15 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
   .#{$primary-stylename}-full {
     width: round($v-font-size * 15);
   }
-  
+
   .#{$primary-stylename}-day {
     width: $v-default-field-width;
   }
-  
+
   .#{$primary-stylename}-month {
     width: round($v-font-size * 7.5);
   }
-  
+
   .#{$primary-stylename}-year {
     width: round($v-font-size * 6.5);
   }
@@ -44,7 +43,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
 
 
 
-@mixin valo-datefield-style ($bevel-style: $v-textfield-bevel-style, $bevel-depth: $v-textfield-bevel-depth, 
+@mixin valo-datefield-style ($bevel-style: $v-textfield-bevel-style, $bevel-depth: $v-textfield-bevel-depth,
                               $unit-size: $v-textfield-unit-size, $border-radius: $v-textfield-border-radius,
                               $background-color: $v-textfield-background-color, $primary-stylename: v-datefield) {
 
@@ -54,16 +53,18 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
   $unit-size: $unit-size or $v-unit-size;
   $border-radius: $border-radius or $v-border-radius;
 
+  height: $unit-size;
+
   .#{$primary-stylename}-textfield {
     @include box-sizing(border-box);
-    @include valo-textfield-style($bevel-style: $bevel-style, $bevel-depth: $bevel-depth, 
+    @include valo-textfield-style($bevel-style: $bevel-style, $bevel-depth: $bevel-depth,
                                     $unit-size: $unit-size, $border-radius: $border-radius,
                                     $background-color: $background-color) ;
     padding-left: $unit-size * 1.2;
     width: 100%;
     height: 100%;
   }
-  
+
   &.#{$primary-stylename}-prompt > .#{$primary-stylename}-textfield {
     @include valo-textfield-prompt-style(valo-textfield-background-color($background-color));
   }
@@ -127,7 +128,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
     $br: max(0, $v-border-radius - $v-textfield-border-width);
     border-radius: $br 0 0 $br;
   }
-  
+
   &:before {
     @include valo-datefield-button-icon-style($background-color);
     color: mix($background-color, valo-font-color($background-color));
@@ -181,7 +182,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
      border-collapse: collapse;
     border-spacing: 0;
   }
-   
+
   td {
     padding: round($v-unit-size/20);
   }
@@ -211,7 +212,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
       @include valo-datefield-calendarpanel-day-hover-style;
     }
   }
-    
+
   .#{$primary-stylename}-day-offmonth {
     @include valo-datefield-calendarpanel-day-offmonth-style;
   }
@@ -219,12 +220,12 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
   .#{$primary-stylename}-day-today {
     @include valo-datefield-calendarpanel-day-today-style;
   }
-  
+
   .#{$primary-stylename}-day.#{$primary-stylename}-day-selected,
   .#{$primary-stylename}-day.#{$primary-stylename}-day-selected:hover {
     @include valo-datefield-calendarpanel-day-selected-style
   }
-  
+
   .#{$primary-stylename}-day.#{$primary-stylename}-day-focused {
     @include valo-datefield-calendarpanel-day-focused-style;
   }
@@ -234,7 +235,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
   .#{$primary-stylename}-weekdays {
     height: round($v-unit-size * 0.7);
     color: mix(valo-font-color($v-app-background-color), rgba($v-app-background-color, .7));
-    
+
     strong {
       font: inherit;
       font-size: ceil($v-font-size * 0.86);
@@ -286,28 +287,28 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
       }
     }
   }
-  
+
   .v-button-prevyear:before {
     @include valo-datefield-calendarpanel-prevyear-icon-style;
   }
-  
+
   .v-button-prevmonth:before {
     @include valo-datefield-calendarpanel-prevmonth-icon-style;
   }
-  
+
   .v-button-nextyear:before {
     @include valo-datefield-calendarpanel-nextyear-icon-style;
   }
-  
+
   .v-button-nextmonth:before {
     @include valo-datefield-calendarpanel-nextmonth-icon-style;
   }
-  
+
   td.#{$primary-stylename}-month {
     width: round($v-unit-size * 3.5);
     @include valo-datefield-calendarpanel-month-style;
   }
-  
+
   .v-datefield-year td.v-datefield-calendarpanel-month {
     width: round($v-unit-size * 2);
   }
@@ -324,7 +325,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
   td.v-datefield-calendarpanel-time {
     width: 100%;
     font-size: ceil($v-font-size * 0.86);
-    
+
     .v-label {
       display: inline-block;
       margin: 0 0.1em;
