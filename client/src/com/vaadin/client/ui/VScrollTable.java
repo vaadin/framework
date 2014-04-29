@@ -1081,18 +1081,17 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         selected = true;
                         keyboardSelectionOverRowFetchInProgress = true;
                     }
+                    if (selected) {
+                        if (focusedRow == null
+                                || !selectedRowKeys.contains(focusedRow
+                                        .getKey())) {
+                            // The focus is no longer on a selected row,
+                            // move focus to first selected row
+                            setRowFocus(row);
+                        }
+                    }
                     if (selected != row.isSelected()) {
                         row.toggleSelection();
-
-                        if (selected) {
-                            if (focusedRow == null
-                                    || !selectedRowKeys.contains(focusedRow
-                                            .getKey())) {
-                                // The focus is no longer on a selected row,
-                                // move focus to first selected row
-                                setRowFocus(row);
-                            }
-                        }
 
                         if (!isSingleSelectMode() && !selected) {
                             // Update selection range in case a row is
@@ -1101,6 +1100,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         }
                     }
                 }
+
             }
         }
         unSyncedselectionsBeforeRowFetch = null;
@@ -5301,17 +5301,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
              */
             public boolean isInViewPort() {
                 int absoluteTop = getAbsoluteTop();
-                int scrollPosition = scrollBodyPanel.getAbsoluteTop()
-                        + scrollBodyPanel.getScrollPosition();
-                if (absoluteTop < scrollPosition) {
-                    return false;
-                }
-                int maxVisible = scrollPosition
-                        + scrollBodyPanel.getOffsetHeight() - getOffsetHeight();
-                if (absoluteTop > maxVisible) {
-                    return false;
-                }
-                return true;
+                int absoluteBottom = absoluteTop + getOffsetHeight();
+                int viewPortTop = scrollBodyPanel.getAbsoluteTop();
+                int viewPortBottom = viewPortTop
+                        + scrollBodyPanel.getOffsetHeight();
+                return absoluteBottom > viewPortTop
+                        && absoluteTop < viewPortBottom;
             }
 
             /**
