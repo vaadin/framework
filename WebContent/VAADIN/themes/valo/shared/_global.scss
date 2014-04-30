@@ -272,7 +272,7 @@ $valo-shared-pathPrefix: null;
   button {
     font: inherit;
     font-weight: 400;
-    line-height: inherit;
+    line-height: $v-line-height;
   }
 
   .v-disabled {
