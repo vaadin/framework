@@ -51,15 +51,26 @@ public class GridConnector extends AbstractComponentConnector {
      */
     private class CustomGridColumn extends GridColumn<String, String[]> {
 
-        private final int columnIndex;
+        private final String id;
 
-        public CustomGridColumn(int columnIndex) {
-            this.columnIndex = columnIndex;
+        public CustomGridColumn(String id) {
+            this.id = id;
         }
 
         @Override
         public String getValue(String[] obj) {
-            return obj[columnIndex];
+            return obj[resolveCurrentIndexFromState()];
+        }
+
+        private int resolveCurrentIndexFromState() {
+            List<GridColumnState> columns = getState().columns;
+            int numColumns = columns.size();
+            for (int index = 0; index < numColumns; index++) {
+                if (columns.get(index).id.equals(id)) {
+                    return index;
+                }
+            }
+            return -1;
         }
     }
 
@@ -203,7 +214,7 @@ public class GridConnector extends AbstractComponentConnector {
      */
     private void addColumnFromStateChangeEvent(int columnIndex) {
         GridColumnState state = getState().columns.get(columnIndex);
-        CustomGridColumn column = new CustomGridColumn(columnIndex);
+        CustomGridColumn column = new CustomGridColumn(state.id);
         columnIdToColumn.put(state.id, column);
 
         // Adds a column to grid, and registers Grid with the column.

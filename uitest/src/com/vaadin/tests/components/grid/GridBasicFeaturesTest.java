@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -164,6 +166,25 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         // Column 1 should now be the first cell
         cells = getGridHeaderRowCells();
         assertEquals("Column1", cells.get(0).getText());
+    }
+
+    @Test
+    public void testDataLoadingAfterRowRemoval() throws Exception {
+        openTestURL();
+
+        // Remove columns 2,3,4
+        selectMenuPath("Component", "Columns", "Column2", "Remove");
+        selectMenuPath("Component", "Columns", "Column3", "Remove");
+        selectMenuPath("Component", "Columns", "Column4", "Remove");
+
+        // Scroll so new data is lazy loaded
+        scrollGridVerticallyTo(1000);
+
+        // Let lazy loading do its job
+        sleep(1000);
+
+        // Check that row is loaded
+        assertThat(getBodyCellByRowAndColumn(11, 1).getText(), not("..."));
     }
 
     @Test
