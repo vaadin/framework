@@ -1167,7 +1167,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         @Override
         public void execute() {
             if (firstvisible > 0) {
-                firstRowInViewPort = firstvisible;
+                // http://dev.vaadin.com/ticket/12879 anybody have good idea?
+                // firstRowInViewPort = firstvisible;
+                firstvisible = firstRowInViewPort;
                 if (firstvisibleOnLastPage > -1) {
                     scrollBodyPanel
                             .setScrollPosition(measureRowHeightOffset(firstvisibleOnLastPage));
