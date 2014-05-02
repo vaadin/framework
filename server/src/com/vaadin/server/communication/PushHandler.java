@@ -186,46 +186,6 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
         }
     };
 
-    /**
-     * Callback used when a connection is closed, either deliberately or because
-     * an error occurred.
-     */
-    private final PushEventCallback disconnectCallback = new PushEventCallback() {
-        @Override
-        public void run(AtmosphereResource resource, UI ui) throws IOException {
-            PushMode pushMode = ui.getPushConfiguration().getPushMode();
-            AtmospherePushConnection connection = getConnectionForUI(ui);
-
-            String id = resource.uuid();
-
-            if (connection == null) {
-                getLogger()
-                        .log(Level.WARNING,
-                                "Could not find push connection to close: {0} with transport {1}",
-                                new Object[] { id, resource.transport() });
-            } else {
-                if (!pushMode.isEnabled()) {
-                    /*
-                     * The client is expected to close the connection after push
-                     * mode has been set to disabled.
-                     */
-                    getLogger().log(Level.FINER,
-                            "Connection closed for resource {0}", id);
-                } else {
-                    /*
-                     * Unexpected cancel, e.g. if the user closes the browser
-                     * tab.
-                     */
-                    getLogger()
-                            .log(Level.FINER,
-                                    "Connection unexpectedly closed for resource {0} with transport {1}",
-                                    new Object[] { id, resource.transport() });
-                }
-                connection.disconnect();
-            }
-        }
-    };
-
     private VaadinServletService service;
 
     public PushHandler(VaadinServletService service) {
@@ -428,7 +388,12 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
                                     "Connection unexpectedly closed for resource {0} with transport {1}",
                                     new Object[] { id, resource.transport() });
                 }
-                ui.setPushConnection(null);
+                if (pushConnection.isConnected()) {
+                    // disconnect() assumes the push connection is connected but
+                    // this method can currently be called more than once during
+                    // disconnect, depending on the situation
+                    pushConnection.disconnect();
+                }
             }
 
         } catch (final Exception e) {
