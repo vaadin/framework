@@ -23,22 +23,50 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Label;
 
 public class TimeoutRedirectResetsOnActivity extends AbstractTestUI {
 
+    private int maxActiveInterval = 15;
+    private int timeoutOverhead = 15;
+
     @Override
     protected void setup(VaadinRequest request) {
-        setupTimout(request);
+        setupTimeout(request);
 
-        addComponent(new Button("clicky", new Button.ClickListener() {
+        Label startedLabel = new Label();
+        startedLabel.setValue(String.valueOf(System.currentTimeMillis()));
+        startedLabel.setId("startedTime");
+
+        Label originalLabel = new Label();
+        originalLabel.setId("originalExpireTime");
+        originalLabel.setValue(String.valueOf(getExpireTime()));
+
+        final Label expiresLabel = new Label();
+        expiresLabel.setId("actualExpireTime");
+
+        Button button = new Button("Reset", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                // NOOP
+                expiresLabel.setValue(String.valueOf(getExpireTime()));
             }
-        }));
+
+        });
+        button.setId("reset");
+
+        addComponent(button);
+
+        addComponent(startedLabel);
+        addComponent(originalLabel);
+        addComponent(expiresLabel);
     }
 
-    private void setupTimout(VaadinRequest request) {
+    private long getExpireTime() {
+        return System.currentTimeMillis()
+                + (maxActiveInterval + timeoutOverhead) * 1000;
+    }
+
+    private void setupTimeout(VaadinRequest request) {
         request.getService().setSystemMessagesProvider(
                 new SystemMessagesProvider() {
                     @Override
@@ -57,7 +85,7 @@ public class TimeoutRedirectResetsOnActivity extends AbstractTestUI {
          * implementation details in
          * com.vaadin.server.communication.MetadataWriter
          */
-        getSession().getSession().setMaxInactiveInterval(10);
+        getSession().getSession().setMaxInactiveInterval(maxActiveInterval);
     }
 
     @Override
