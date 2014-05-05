@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,7 +22,7 @@ import com.google.gwt.dom.client.Element;
  * initialization/configuration. Method {@link #initDragImageCopy(Element)}
  * allows to change/correct drag image element when element is dragged via DnD.
  * 
- * @since 7.3
+ * @since 7.2
  * @author Vaadin Ltd
  */
 public interface VDragCloneAware {
