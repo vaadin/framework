@@ -139,6 +139,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
          */
         @Override
         public void onClick(ClickEvent event) {
+            if (!isEnabled() || isReadonly()) {
+                return;
+            }
+
             Date newDate = ((Day) event.getSource()).getDate();
             if (!isDateInsideRange(newDate, Resolution.DAY)) {
                 return;
@@ -174,10 +178,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private Timer mouseTimer;
 
     private Date value;
-
-    private boolean enabled = true;
-
-    private boolean readonly = false;
 
     private DateTimeService dateTimeService;
 
@@ -350,11 +350,11 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     private boolean isReadonly() {
-        return readonly;
+        return parent.isReadonly();
     }
 
     private boolean isEnabled() {
-        return enabled;
+        return parent.isEnabled();
     }
 
     @Override
