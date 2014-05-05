@@ -216,6 +216,12 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
 
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        text.setEnabled(enabled);
+    }
+
     protected void setPrompting(boolean prompting) {
         this.prompting = prompting;
         if (prompting) {

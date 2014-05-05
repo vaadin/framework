@@ -59,6 +59,7 @@ public class AccordionConnector extends TabsheetBaseConnector implements
         } else if (getWidget().getOpenStackItem() != null) {
             getWidget().close(getWidget().getOpenStackItem());
         }
+        getLayoutManager().setNeedsVerticalLayout(this);
     }
 
     @Override

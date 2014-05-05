@@ -35,7 +35,6 @@ public class DisabledParentLayout extends AbstractTestUI {
         content.setMargin(true);
 
         final VerticalLayout pane = new VerticalLayout();
-        pane.setEnabled(false);
         pane.addComponent(new DateField());
 
         content.addComponent(pane);
@@ -44,7 +43,7 @@ public class DisabledParentLayout extends AbstractTestUI {
         button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                pane.setEnabled(true);
+                pane.setEnabled(!pane.isEnabled());
             }
         });
         content.addComponent(button);

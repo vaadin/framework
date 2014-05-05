@@ -19,6 +19,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -39,6 +40,7 @@ public class TimeoutRedirectResetsOnActivityTest extends MultiBrowserTest {
     private static int i = 0;
 
     @Test
+    @Ignore("The test modifies the system messages, which are global and the changes will affect other tests")
     public void verifyRedirectWorks() throws Exception {
         setDebug(true);
         openTestURL();

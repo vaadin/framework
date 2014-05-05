@@ -21,11 +21,14 @@ import java.util.Map;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
 
@@ -241,6 +244,7 @@ public class VDragEvent {
     public void createDragImage(com.google.gwt.user.client.Element element,
             boolean alignImageToEvent) {
         Element cloneNode = (Element) element.cloneNode(true);
+        syncContent(element, cloneNode);
         if (BrowserInfo.get().isIE()) {
             if (cloneNode.getTagName().toLowerCase().equals("tr")) {
                 TableElement table = Document.get().createTableElement();
@@ -275,6 +279,33 @@ public class VDragEvent {
      */
     public void createDragImage(Element element, boolean alignImageToEvent) {
         createDragImage(DOM.asOld(element), alignImageToEvent);
+    }
+
+    /**
+     * Do additional content sync between <code>original</code> element and its
+     * <code>copy</code> if needed.
+     * 
+     * @since 7.3
+     * @param original
+     *            original element
+     * @param copy
+     *            copy of original element
+     */
+    protected void syncContent(Element original, Element copy) {
+        for (int i = 0; i < original.getChildCount(); i++) {
+            Node child = original.getChild(i);
+            if (child instanceof Element) {
+                syncContent((Element) child, (Element) copy.getChild(i));
+            }
+        }
+        doSyncContent(original, copy);
+    }
+
+    private void doSyncContent(Element original, Element copy) {
+        EventListener eventListener = Event.getEventListener(original);
+        if (eventListener instanceof VDragCloneAware) {
+            ((VDragCloneAware) eventListener).initDragImageCopy(copy);
+        }
     }
 
 }

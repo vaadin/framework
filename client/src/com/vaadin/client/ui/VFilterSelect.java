@@ -453,7 +453,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
             public void scrollUp() {
                 debug("VFS.SP.LPS: scrollUp()");
-                if (currentPage + pagesToScroll > 0) {
+                if (pageLength > 0 && currentPage + pagesToScroll > 0) {
                     pagesToScroll--;
                     cancel();
                     schedule(200);
@@ -462,8 +462,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
             public void scrollDown() {
                 debug("VFS.SP.LPS: scrollDown()");
-                if (totalMatches > (currentPage + pagesToScroll + 1)
-                        * pageLength) {
+                if (pageLength > 0
+                        && totalMatches > (currentPage + pagesToScroll + 1)
+                                * pageLength) {
                     pagesToScroll++;
                     cancel();
                     schedule(200);
@@ -1217,7 +1218,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      *         last page
      */
     public boolean hasNextPage() {
-        if (totalMatches > (currentPage + 1) * pageLength) {
+        if (pageLength > 0 && totalMatches > (currentPage + 1) * pageLength) {
             return true;
         } else {
             return false;

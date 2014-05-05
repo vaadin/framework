@@ -459,6 +459,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
 
+        calendarToggle.setEnabled(enabled);
         Roles.getButtonRole().setAriaDisabledState(calendarToggle.getElement(),
                 !enabled);
     }

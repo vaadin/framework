@@ -210,4 +210,18 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
     public void layoutHorizontally() {
         getWidget().updateWidth();
     }
+
+    @Override
+    protected void updateWidgetSize(String newWidth, String newHeight) {
+        // Prevent the element from momentarily shrinking to zero size
+        // when the size is set to undefined by a state change but before
+        // it is recomputed in the layout phase. This may affect scroll
+        // position in some cases; see #13386.
+        if (!isUndefinedHeight()) {
+            getWidget().setHeight(newHeight);
+        }
+        if (!isUndefinedWidth()) {
+            getWidget().setWidth(newWidth);
+        }
+    }
 }

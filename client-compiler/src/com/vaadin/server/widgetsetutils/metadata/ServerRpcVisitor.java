@@ -28,6 +28,7 @@ public class ServerRpcVisitor extends TypeVisitor {
     @Override
     public void visitServerRpc(TreeLogger logger, JClassType type,
             ConnectorBundle bundle) throws UnableToCompleteException {
+        ClientRpcVisitor.checkGenericType(logger, type);
         bundle.setNeedsProxySupport(type);
 
         Set<? extends JClassType> superTypes = type

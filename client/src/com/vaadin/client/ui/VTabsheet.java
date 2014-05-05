@@ -324,8 +324,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         private boolean update(TabState tabState) {
-            if (tabState.description != null
-                    || tabState.componentError != null) {
+            if (tabState.description != null || tabState.componentError != null) {
                 setTooltipInfo(new TooltipInfo(tabState.description,
                         tabState.componentError));
             } else {
@@ -337,14 +336,11 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             String captionString = tabState.caption.isEmpty() ? null
                     : tabState.caption;
             boolean ret = updateCaptionWithoutOwner(captionString,
-                    !tabState.enabled,
-                    hasAttribute(tabState.description),
+                    !tabState.enabled, hasAttribute(tabState.description),
                     hasAttribute(tabState.componentError),
                     tab.getTabsheet().connector
                             .getResourceUrl(ComponentConstants.ICON_RESOURCE
-                                    + tabState.key),
-                    tabState.iconAltText
-            );
+                                    + tabState.key), tabState.iconAltText);
 
             setClosable(tabState.closable);
 
@@ -916,7 +912,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 DOM.setElementProperty(tabs, "className", tabsClass);
                 DOM.setElementProperty(contentNode, "className", contentClass);
                 DOM.setElementProperty(deco, "className", decoClass);
-                borderW = -1;
             }
         } else {
             tb.setStyleName(CLASSNAME + "-tabs");
@@ -1209,14 +1204,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         return tabPanel.iterator();
     }
 
-    private int borderW = -1;
-
     /** For internal use only. May be removed or replaced in the future. */
     public int getContentAreaBorderWidth() {
-        if (borderW < 0) {
-            borderW = Util.measureHorizontalBorder(contentNode);
-        }
-        return borderW;
+        return Util.measureHorizontalBorder(contentNode);
     }
 
     @Override

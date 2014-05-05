@@ -110,7 +110,14 @@ public class PublishedFileHandler implements RequestHandler {
             return true;
         }
 
-        // TODO Check and set cache headers
+        // Set caching for the published file
+        String cacheControl = "public, max-age=0, must-revalidate";
+        int resourceCacheTime = request.getService()
+                .getDeploymentConfiguration().getResourceCacheTime();
+        if (resourceCacheTime > 0) {
+            cacheControl = "max-age=" + String.valueOf(resourceCacheTime);
+        }
+        response.setHeader("Cache-Control", cacheControl);
 
         OutputStream out = null;
         try {

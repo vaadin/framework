@@ -20,8 +20,15 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.concurrent.locks.ReentrantLock;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+
+import com.vaadin.shared.ui.ui.UIConstants;
+import com.vaadin.ui.UI;
 
 public class VaadinPortletServiceTests {
 
@@ -187,5 +194,29 @@ public class VaadinPortletServiceTests {
 
         assertThat(widgetset,
                 is("com.vaadin.portal.gwt.PortalDefaultWidgetSet"));
+    }
+
+    @Test
+    public void findUIDoesntThrowNPE() {
+        try {
+            ReentrantLock mockLock = Mockito.mock(ReentrantLock.class);
+            when(mockLock.isHeldByCurrentThread()).thenReturn(true);
+
+            WrappedSession emptyWrappedSession = Mockito
+                    .mock(WrappedSession.class);
+            when(emptyWrappedSession.getAttribute("null.lock")).thenReturn(
+                    mockLock);
+            VaadinRequest requestWithUIIDSet = Mockito
+                    .mock(VaadinRequest.class);
+            when(requestWithUIIDSet.getParameter(UIConstants.UI_ID_PARAMETER))
+                    .thenReturn("1");
+            when(requestWithUIIDSet.getWrappedSession()).thenReturn(
+                    emptyWrappedSession);
+
+            UI ui = sut.findUI(requestWithUIIDSet);
+            Assert.assertNull("Unset session did not return null", ui);
+        } catch (NullPointerException e) {
+            Assert.fail("findUI threw a NullPointerException");
+        }
     }
 }
