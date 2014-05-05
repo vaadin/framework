@@ -46,6 +46,12 @@
                     @version@</a></li>
             <li><a href="#enhancements">Enhancements in Vaadin
                     @version-minor@</a></li>
+            <li><a href="#incompatible">Incompatible changes in
+                @version-minor@</a></li>
+            <li><a href="#behavioraltering">Behavior altering
+                changes in @version-minor@</a></li>
+            <li><a href="#knownissues">Known issues in
+                @version-minor@</a></li>
             <li><a href="#limitations">Limitations in
                     @version-minor@</a></li>
             <li><a href="#vaadin">Vaadin Installation</a></li>
@@ -76,44 +82,44 @@
                 href="http://vaadin.com/download/release/@version-minor@/@version-minor@.0/release-notes.html">Release
                 Notes for Vaadin @version-minor@.0</a>.
         </p>
-        
+
         <!-- ================================================================ -->
 		<h3 id="security-fixes">Security fixes in Vaadin Framework 7.1.11</h3>
-		
+
 		<p>
-		  Vaadin 7.1.11 fixes two security issues discovered during internal review. 
+		  Vaadin 7.1.11 fixes two security issues discovered during internal review.
 		</p>
 		<p><b>Escaping of OptionGroup item icon URLs</b></p>
 		<p>
-			The issue affects OptionGroup with item icons. Proper escaping of the 
-			src-attribute on the client side was not ensured when using icons for 
+			The issue affects OptionGroup with item icons. Proper escaping of the
+			src-attribute on the client side was not ensured when using icons for
 			OptionGroup items. This could potentially, in certain situations, allow
-			a malicious user to inject content, such as javascript, in order to 
+			a malicious user to inject content, such as javascript, in order to
 			perform a cross-site scripting (XSS) attack.
 		</p>
 		<p>
 			In order for an application to be vulnerable, user provided input must
-			be used to form a URL used to display an icon for an OptionGroup item, 
+			be used to form a URL used to display an icon for an OptionGroup item,
 			when showing that Option Group to other users.<br/>
 			The vulnerability has been classified as moderate, due to it's limited
-			application. 
+			application.
 		</p>
 		<p><b>Escaping of URLs in Util.getAbsoluteUrl()</b></p>
 		<p>
 			The client side Util.getAbsoluteUrl() did not ensure proper escaping
 			of the given URL. This could potentially, in certain situations, allow
-			a malicious user to inject content, such as javascript, in order to 
+			a malicious user to inject content, such as javascript, in order to
 			perform a cross-site scripting (XSS) attack.
 		</p>
 		<p>
 			The method is used internally by the framework in such a manner that it
 			is unlikely this attack vector can be utilized in practice. However,
-			third party components, or future use of the method, could make an 
+			third party components, or future use of the method, could make an
 			attack viable.<br/>
 			The vulnerability has been classified as moderate, due to it's limited
-			application. 
+			application.
 		</p>
-        
+
         <h3 id="changelog">Change log for Vaadin @version@</h3>
 
         <p>This release includes the following closed issues:</p>
@@ -134,66 +140,24 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Server push (Use the <b>@Push</b> annotation to
-                enable push for a UI)
-            </li>
-            <li>Server polling using <b>UI</b>.<tt>setPollInterval()</tt></li>
-            <li>Enhanced debug window</li>
-            <li>Internet Explorer 10 support</li>
-            <li>Sass compiler improvements: arithmetics, @content</li>
-            <li>Dynamic CSS injection</li>
-            <li>Support for SCSS/CSS files in all add-ons (Use <tt>Vaadin-Stylesheet</tt>
-                in the manifest)
-            </li>
-            <li><b>Calendar</b> is included in the core framework</li>
-            <li><b>ProgressBar</b> provides progress indication
-                without polling (separated from <b>ProgressIndicator</b>)</li>
-            <li>Tooltip and loading indicator delays configurable
-                on server side</li>
-            <li>The range of a <b>DateField</b> can be limited
-            </li>
-            <li><b>Window</b> has maximize/restore controls</li>
-            <li><b>UI</b> and <b>VaadinSession</b> provide <tt>access()</tt>
-                to access the UI and session while holding the needed
-                lock</li>
-            <li>A new <b>@VaadinServletConfiguration</b> annotation
-                for configuring servlet parameters
-            </li>
-            <li>WAI-ARIA support for form fields, <b>Button</b>,
-                and <b>Tree</b></li>
-            <li>The behavior of <b>Property</b>.toString() can be
-                toggled using the <tt>legacyPropertyToString</tt> init
-                parameter
-            </li>
-            <li>Default alignment can be set for layout components</li>
-            <li><b>FieldGroup</b> supports SQL date fields and date
-                field creation</li>
-            <li><b>Converter</b>.<tt>convertToModel</tt>/<tt>convertFromModel</tt>
-                now gets an additional parameter describing the target
-                type</li>
-            <li>The browser page can be reloaded programmatically
-                using <tt>Page.reload()</tt>
-            </li>
-            <li>The <b>VaadinServlet</b>/<b>VaadinPortlet</b> and <b>VaadinService</b>
-                classes have been refactored
-            </li>
-            <li>Several locking related fixes</li>
-            <li>Client compiler dependencies are packaged as a
-                separate jar</li>
-            <li>DefaultWidgetSet is even more optimized (using
-                compiler parameter <tt>-XenableClosureCompiler</tt>)
-            </li>
-            <li>Java <tt>assert</tt> statements have been added to
-                critical code sections. Start JVM with <tt>-ea</tt> to
-                use.
-            </li>
-            <li><b>StateChangeEvent</b>.<tt>isInitialState()</tt>
-                indicates if event is the first for a connector</li>
-            <li><b>ClientConnector</b>.<tt>isAttached()</tt>
-                indicates if connector is attached</li>
-            <li><b>Container.Filterable</b> now contains a <tt>getContainerFilters()</tt>
-                method</li>
-            <li><b>TableQuery</b> now supports schemas and catalogs</li>
+            <li>Internet Explorer 11 support</li>
+            <li>Window Phone 8.1 support</li>
+            <li>Long polling support through Atmosphere 2</li>
+            <li>Font icon support</li>
+            <li>Tomcat 8 support</li>
+            <li>Wildfly 8 support</li>
+            <li>Websocket support for Tomcat 8, Glassfish 4, Jetty 9.1, Wildfly 8</li>
+            <li>TestBench 4 support</li>
+            <li>GWT 2.6 compatibility</li>
+            <li>Widget set size reduction</li>
+            <li>Widget set compilation speed improvement by collapsing all permutations</li>
+            <li>New built-in converters: StringToBigDecimal, StringToLong</li>
+            <li>New built-in support for Date in communication</li>
+            <li>WAI-ARIA improvements: Window, Notification, TabSheet</li>
+            <li>Sass compiler is a separate project</li>
+            <li>Support for @OnStateChange for easier state handling</li>
+            <li>Reload events for UIs with @PreserveOnRefresh</li>
+            <li>Responsive layouts</li>
         </ul>
 
         <p>Tools have been updated for Vaadin @version-minor@ with
@@ -223,6 +187,48 @@
                 href="http://vaadin.com/download/release/7.0/7.0.0/release-notes.html">Release
                 Notes for Vaadin 7.0.0</a>.
         </p>
+
+        <h3 id="incompatible">Incompatible changes</h3>
+        <ul>
+            <li>It is assumed that the UI will no longer be used after Page.setLocation
+                is called. Do not use this to start downloads.</li>
+            <li>The portlet requests class VaadinGateinRequest is now called
+                VaadinGateInRequest</li>
+            <li>The JSON library has been changed from org.json to the json implementation
+                from the Android SDK. They are 99% compatible.</li>
+            <li>StringToNumberConverter has been removed in favor of more specific
+                converters such as StringToBigDecimalConverter.</li>
+            <li>(internal) Atmosphere has been updated from version 1.x to 2.x. These
+                are not 100% compatible.</li>
+            <li>(internal) There is no longer support for "multiple variable bursts"
+                in the UIDL communication.</li>
+        </ul>
+        <h3 id="behavioraltering">Behavior altering changes</h3>
+        <ul>
+            <li>Default push fallback is now long-polling</li>
+            <li>VerticalLayout and HorizontalLayout.replaceComponent now applies old
+                component parameters (e.g. expand ratio) to the new component. This is
+                now consistent between all layouts in the framework, where relevant
+                properties are applied to the replacement.</li>
+            <li>All GWT permutations are collapsed when using DefaultWidgetSet. To use
+                separate permutations, inherit Vaadin instead of DefaultWidgetSet and
+                add the needed entry-point.</li>
+            <li>Requests to "/context;jsessionid=xyz" are redirected to
+                "/context/;jsessionid=xyz" which is against specifications but based
+                on how jsessionid is used</li>
+            <li>Adding a ValueChangeListener to a component will make it immediate</li>
+            <li>ComboBox is immediate by default</li>
+        </ul>
+
+        <h3 id="knownissues">Known issues</h3>
+        <ul>
+            <li>Not all features are implemented for devices using pointer events.</li>
+            <li>Push reconnecting does not work in all situations when</li>
+                <ul>
+                    <li>using Firefox and streaming</li>
+                    <li>using IE8-11 and long-polling</li>
+                </ul>
+        </ul>
 
         <h3 id="limitations">Limitations</h3>
         <ul>
@@ -609,6 +615,7 @@
             <li>Liferay Portal 5.2-6</li>
             <li>GateIn Portal 3</li>
             <li>eXo Platform 3</li>
+            <li>IBM WebSphere Portal 8</li>
         </ul>
 
         <p>
@@ -620,12 +627,12 @@
         </p>
 
         <ul>
-            <li>Mozilla Firefox 18-24</li>
-            <li>Mozilla Firefox 17 ESR</li>
-            <li>Internet Explorer 8-10</li>
-            <li>Safari 6</li>
-            <li>Opera 12,16</li>
-            <li>Google Chrome 23-29</li>
+            <li>Mozilla Firefox 18-28</li>
+            <li>Mozilla Firefox 17 ESR, 24 ESR</li>
+            <li>Internet Explorer 8-11</li>
+            <li>Safari 6-7</li>
+            <li>Opera 12, 16-20</li>
+            <li>Google Chrome 23-34</li>
         </ul>
 
         <p>

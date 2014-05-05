@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,7 +31,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -340,10 +339,7 @@ public class VDragAndDropManager {
                             .addNativePreviewHandler(defaultDragAndDropEventHandler);
                     if (dragElement != null
                             && dragElement.getParentElement() == null) {
-                        // deferred attaching drag image is on going, we can
-                        // hurry with it now
-                        lazyAttachDragElement.cancel();
-                        lazyAttachDragElement.run();
+                        attachDragElement();
                     }
                 }
                 // just capture something to prevent text selection in IE
@@ -364,6 +360,13 @@ public class VDragAndDropManager {
             // only really start drag event on mousemove
             deferredStartRegistration = Event
                     .addNativePreviewHandler(new NativePreviewHandler() {
+
+                        private int startX = Util
+                                .getTouchOrMouseClientX(currentDrag
+                                        .getCurrentGwtEvent());
+                        private int startY = Util
+                                .getTouchOrMouseClientY(currentDrag
+                                        .getCurrentGwtEvent());
 
                         @Override
                         public void onPreviewNativeEvent(
@@ -417,13 +420,23 @@ public class VDragAndDropManager {
                                 }
                             case Event.ONMOUSEMOVE:
                             case Event.ONTOUCHMOVE:
-                                if (deferredStartRegistration != null) {
-                                    deferredStartRegistration.removeHandler();
-                                    deferredStartRegistration = null;
+                                int currentX = Util
+                                        .getTouchOrMouseClientX(event
+                                                .getNativeEvent());
+                                int currentY = Util
+                                        .getTouchOrMouseClientY(event
+                                                .getNativeEvent());
+                                if (Math.abs(startX - currentX) > 3
+                                        || Math.abs(startY - currentY) > 3) {
+                                    if (deferredStartRegistration != null) {
+                                        deferredStartRegistration
+                                                .removeHandler();
+                                        deferredStartRegistration = null;
+                                    }
+                                    currentDrag.setCurrentGwtEvent(event
+                                            .getNativeEvent());
+                                    startDrag.execute();
                                 }
-                                currentDrag.setCurrentGwtEvent(event
-                                        .getNativeEvent());
-                                startDrag.execute();
                                 break;
                             default:
                                 // on any other events, clean up the
@@ -712,16 +725,7 @@ public class VDragAndDropManager {
             updateDragImagePosition();
 
             if (isStarted) {
-                lazyAttachDragElement.run();
-            } else {
-                /*
-                 * To make our default dnd handler as compatible as possible, we
-                 * need to defer the appearance of dragElement. Otherwise events
-                 * that are derived from sequences of other events might not
-                 * fire as domchanged will fire between them or mouse up might
-                 * happen on dragElement.
-                 */
-                lazyAttachDragElement.schedule(300);
+                attachDragElement();
             }
         }
     }
@@ -730,24 +734,20 @@ public class VDragAndDropManager {
         return dragElement;
     }
 
-    private final Timer lazyAttachDragElement = new Timer() {
-
-        @Override
-        public void run() {
-            if (dragElement != null && dragElement.getParentElement() == null) {
-                ApplicationConnection connection = getCurrentDragApplicationConnection();
-                Element dragImageParent;
-                if (connection == null) {
-                    VConsole.error("Could not determine ApplicationConnection for current drag operation. The drag image will likely look broken");
-                    dragImageParent = RootPanel.getBodyElement();
-                } else {
-                    dragImageParent = VOverlay.getOverlayContainer(connection);
-                }
-                dragImageParent.appendChild(dragElement);
+    public void attachDragElement() {
+        if (dragElement != null && dragElement.getParentElement() == null) {
+            ApplicationConnection connection = getCurrentDragApplicationConnection();
+            Element dragImageParent;
+            if (connection == null) {
+                VConsole.error("Could not determine ApplicationConnection for current drag operation. The drag image will likely look broken");
+                dragImageParent = RootPanel.getBodyElement();
+            } else {
+                dragImageParent = VOverlay.getOverlayContainer(connection);
             }
-
+            dragImageParent.appendChild(dragElement);
         }
-    };
+
+    }
 
     private Command deferredCommand;
 

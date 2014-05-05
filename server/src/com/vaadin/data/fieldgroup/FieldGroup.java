@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -312,12 +312,18 @@ public class FieldGroup implements Serializable {
                     "The given field is not part of this FieldBinder");
         }
 
+        TransactionalPropertyWrapper<?> wrapper = null;
         Property fieldDataSource = field.getPropertyDataSource();
         if (fieldDataSource instanceof TransactionalPropertyWrapper) {
-            fieldDataSource = ((TransactionalPropertyWrapper) fieldDataSource)
+            wrapper = (TransactionalPropertyWrapper<?>) fieldDataSource;
+            fieldDataSource = ((TransactionalPropertyWrapper<?>) fieldDataSource)
                     .getWrappedProperty();
+
         }
         if (fieldDataSource == getItemProperty(propertyId)) {
+            if (null != wrapper) {
+                wrapper.detachFromProperty();
+            }
             field.setPropertyDataSource(null);
         }
         fieldToPropertyId.remove(field);

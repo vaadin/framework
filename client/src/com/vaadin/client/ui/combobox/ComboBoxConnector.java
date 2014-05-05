@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -272,7 +272,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                 // we have focus in field, prompting can't be set on, instead
                 // just clear the input if the value has changed from something
                 // else to null
-                if (getWidget().selectedOptionKey != null) {
+                if (getWidget().selectedOptionKey != null
+                        || (getWidget().allowNewItem && !getWidget().tb
+                                .getValue().isEmpty())) {
                     getWidget().tb.setValue("");
                 }
             }
