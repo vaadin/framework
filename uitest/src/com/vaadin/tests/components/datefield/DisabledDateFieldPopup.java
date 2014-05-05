@@ -19,11 +19,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.DateField;
 
-/**
- * 
- * @since 7.1
- * @author Vaadin Ltd
- */
 public class DisabledDateFieldPopup extends AbstractTestUI {
 
     @Override
