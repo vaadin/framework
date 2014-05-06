@@ -287,6 +287,12 @@ public class AtmospherePushConnection implements PushConnection {
             outgoingMessage = null;
         }
 
+        try {
+            resource.close();
+        } catch (IOException e) {
+            getLogger()
+                    .log(Level.INFO, "Error when closing push connection", e);
+        }
         resource = null;
         state = State.DISCONNECTED;
     }
