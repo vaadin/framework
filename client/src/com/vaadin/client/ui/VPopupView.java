@@ -102,8 +102,7 @@ public class VPopupView extends HTML implements Iterable<Widget> {
             }
         });
 
-        // TODO: Enable animations once GWT fix has been merged
-        popup.setAnimationEnabled(false);
+        popup.setAnimationEnabled(true);
 
         popup.setAutoHideOnHistoryEventsEnabled(false);
     }
