@@ -20,63 +20,63 @@ $valo-global-included: false !default;
       padding: 0;
       border: 0;
     }
-    
+
     .v-app {
       height: 100%;
       // Cancel tap highlight from all elements inside the app
       -webkit-tap-highlight-color: rgba(0,0,0,0);
     }
-    
+
     .v-ui {
       position: relative;
     }
-    
+
     // Prevent margin collapse
     .v-ui.v-ui-embedded {
       margin-top: -1px;
       border-top: 1px solid transparent;
     }
-    
+
     .v-ui:focus {
       outline: none;
     }
-    
+
     .v-overlay-container {
       width: 0;
       height: 0;
     }
-    
+
     // Removes clear button from input fields introduced by IE10
     input::-ms-clear {
       display: none;
     }
-    
+
     .v-drag-element {
       z-index: 60000;
       // Override any other position properties
       position: absolute !important;
       cursor: default;
     }
-    
+
     .v-clip {
       overflow: hidden;
     }
-    
+
     .v-scrollable {
       overflow: auto;
       // Fix extra whitespace in IE
       line-height: 0;
     }
-    
+
     .v-ios.v-webkit .v-scrollable {
-      -webkit-overflow-scrolling: touch; 
+      -webkit-overflow-scrolling: touch;
     }
-    
+
     // Disable native scrolling on iOS 5 due to issue #8792
     .v-ios5.v-webkit .v-scrollable {
       -webkit-overflow-scrolling: none;
     }
-    
+
     .v-assistive-device-only {
       position: absolute;
       top: -2000px;
@@ -84,7 +84,7 @@ $valo-global-included: false !default;
       width: 10px;
       overflow: hidden;
     }
-    
+
     .v-icon,
     .v-errorindicator,
     .v-required-field-indicator {
@@ -113,7 +113,7 @@ $valo-global-included: false !default;
 
 
 $valo-shared-pathPrefix: null;
-  
+
 @if $v-relative-paths == false {
   $valo-shared-pathPrefix: "../valo/shared/";
 }
@@ -124,7 +124,7 @@ $valo-shared-pathPrefix: null;
   color: $v-font-color;
   background-color: $v-app-background-color;
   cursor: default;
-  
+
   // Default to Helvetica Neue on Macs instead of Helvetica, which has a slightly different baseline
   @if $v-font-family == sans-serif {
     .v-mac & {
@@ -188,7 +188,7 @@ $valo-shared-pathPrefix: null;
       }
     }
   }
-  
+
   @include valo-loading-bar;
 
 
@@ -217,18 +217,18 @@ $valo-shared-pathPrefix: null;
       filter: alpha(opacity=100);
     }
   }
-  
+
   .v-scrollable:focus {
     outline: none;
   }
-  
+
   //.v-captiontext,
   //.v-errorindicator,
   //.v-required-field-indicator,
   img.v-icon {
     vertical-align: middle;
   }
-  
+
   .v-caption {
     @include valo-caption-style;
   }
@@ -247,7 +247,7 @@ $valo-shared-pathPrefix: null;
       margin-left: 0;
     }
   }
-  
+
   .v-errorindicator {
     @include valo-error-indicator-style;
   }
@@ -273,6 +273,10 @@ $valo-shared-pathPrefix: null;
     font: inherit;
     font-weight: 400;
     line-height: $v-line-height;
+  }
+
+  a {
+    @include valo-link-style;
   }
 
   .v-disabled {
@@ -325,23 +329,23 @@ $valo-shared-pathPrefix: null;
 // // Call without any parent selector somewhere in your theme
 // =valo-natural-page-scrolling;
 @mixin valo-natural-page-scrolling {
-  
+
   html {
     height: auto;
   }
-  
+
   .v-generated-body {
     height: auto;
     overflow: auto;
   }
-  
+
   .v-app,
   .v-ui.v-scrollable {
     width: auto !important;
     height: auto !important;
     overflow: visible !important;
   }
-  
+
   // Reposition loading indicator so that it doens't scroll with the page
   .v-loading-indicator {
     position: fixed !important;
@@ -352,10 +356,10 @@ $valo-shared-pathPrefix: null;
     top: 0;
     left: 0;
   }
-  
+
   // Reposition notifications so that they don't scroll with the page
   .v-Notification {
     position: fixed !important;
   }
-  
+
 }
