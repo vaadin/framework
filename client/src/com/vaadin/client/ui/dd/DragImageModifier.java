@@ -18,14 +18,14 @@ package com.vaadin.client.ui.dd;
 import com.google.gwt.dom.client.Element;
 
 /**
- * Widget could implement this interface if drag image requires additional
- * initialization/configuration. Method {@link #initDragImageCopy(Element)}
- * allows to change/correct drag image element when element is dragged via DnD.
+ * Interface implemented by widgets if the drag image used for drag'n'drop
+ * requires additional initialization/configuration. The method
+ * {@link #modifyDragImage(Element)} is called for each element in the automatically generated drag image.
  * 
  * @since 7.2
  * @author Vaadin Ltd
  */
-public interface VDragCloneAware {
+public interface DragImageModifier {
 
     /**
      * This method is called for cloned <code>element</code> which corresponds
@@ -35,5 +35,5 @@ public interface VDragCloneAware {
      * @param element
      *            cloned element of drag image
      */
-    void initDragImageCopy(Element element);
+    void modifyDragImage(Element element);
 }

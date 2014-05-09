@@ -303,8 +303,8 @@ public class VDragEvent {
 
     private void doSyncContent(Element original, Element copy) {
         EventListener eventListener = Event.getEventListener(original);
-        if (eventListener instanceof VDragCloneAware) {
-            ((VDragCloneAware) eventListener).initDragImageCopy(copy);
+        if (eventListener instanceof DragImageModifier) {
+            ((DragImageModifier) eventListener).modifyDragImage(copy);
         }
     }
 
