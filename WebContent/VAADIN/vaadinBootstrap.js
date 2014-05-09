@@ -231,13 +231,16 @@
 		loadTheme: loadTheme,
 		registerWidgetset: function(widgetset, callback) {
 			log("Widgetset registered", widgetset);
-			widgetsets[widgetset].callback = callback;
-			for(var i = 0; i < widgetsets[widgetset].pendingApps.length; i++) {
-				var appId = widgetsets[widgetset].pendingApps[i];
-				log("Starting from register widgetset", appId);
-				callback(appId);
+			var ws = widgetsets[widgetset];
+			if (ws && ws.pendingApps) {
+				ws.callback = callback;
+				for(var i = 0; i < ws.pendingApps.length; i++) {
+					var appId = ws.pendingApps[i];
+					log("Starting from register widgetset", appId);
+					callback(appId);
+				}
+				ws.pendingApps = null;
 			}
-			widgetsets[widgetset].pendingApps = null;
 		},
 		getBrowserDetailsParameters: function(parentElementId) {
 			// Screen height and width
