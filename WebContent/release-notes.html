@@ -41,7 +41,6 @@
         <ul>
             <li><a href="#overview">Overview of Vaadin
                     @version@ Release</a></li>
-			<li><a href="#security-fixes">Security fixes</a></li>
             <li><a href="#changelog">Change log for Vaadin
                     @version@</a></li>
             <li><a href="#enhancements">Enhancements in Vaadin
@@ -70,56 +69,13 @@
         <h2 id="overview">Overview of Vaadin @version@ Release</h2>
 
         <p>
-            Vaadin @version@ is a maintenance release that includes a
-            number of important bug fixes, as listed in the <a
+            Vaadin @version@ is a minor release that includes a
+            number of new features and bug fixes, as listed in the <a
+                href="#enhancements">list of enhancements</a> and <a
                 href="#changelog">change log</a> below.
         </p>
 
-        <p>
-            For a list of enhancements in the last feature release, see
-            <a href="#enhancements">Enhancements in Vaadin
-                @version-minor@</a> and the <a
-                href="http://vaadin.com/download/release/@version-minor@/@version-minor@.0/release-notes.html">Release
-                Notes for Vaadin @version-minor@.0</a>.
-        </p>
-
         <!-- ================================================================ -->
-		<h3 id="security-fixes">Security fixes in Vaadin Framework 7.1.11</h3>
-
-		<p>
-		  Vaadin 7.1.11 fixes two security issues discovered during internal review.
-		</p>
-		<p><b>Escaping of OptionGroup item icon URLs</b></p>
-		<p>
-			The issue affects OptionGroup with item icons. Proper escaping of the
-			src-attribute on the client side was not ensured when using icons for
-			OptionGroup items. This could potentially, in certain situations, allow
-			a malicious user to inject content, such as javascript, in order to
-			perform a cross-site scripting (XSS) attack.
-		</p>
-		<p>
-			In order for an application to be vulnerable, user provided input must
-			be used to form a URL used to display an icon for an OptionGroup item,
-			when showing that Option Group to other users.<br/>
-			The vulnerability has been classified as moderate, due to it's limited
-			application.
-		</p>
-		<p><b>Escaping of URLs in Util.getAbsoluteUrl()</b></p>
-		<p>
-			The client side Util.getAbsoluteUrl() did not ensure proper escaping
-			of the given URL. This could potentially, in certain situations, allow
-			a malicious user to inject content, such as javascript, in order to
-			perform a cross-site scripting (XSS) attack.
-		</p>
-		<p>
-			The method is used internally by the framework in such a manner that it
-			is unlikely this attack vector can be utilized in practice. However,
-			third party components, or future use of the method, could make an
-			attack viable.<br/>
-			The vulnerability has been classified as moderate, due to it's limited
-			application.
-		</p>
-
         <h3 id="changelog">Change log for Vaadin @version@</h3>
 
         <p>This release includes the following closed issues:</p>
@@ -130,7 +86,7 @@
         <p>
             You can also view the <a
                 href="http://dev.vaadin.com/query?status=closed&resolution=fixed&milestone=Vaadin+@version@&order=id">list
-                of the closed issues</a> at the Vaadin developer's site. .
+                of the closed issues</a> at the Vaadin developer's site.
         </p>
 
         <h2 id="enhancements">Enhancements in Vaadin
@@ -160,28 +116,6 @@
             <li>Responsive layouts</li>
         </ul>
 
-        <p>Tools have been updated for Vaadin @version-minor@ with
-            the following changes:</p>
-
-        <ul>
-            <li>Maven
-                <ul>
-                    <li>Theme compilation support using <tt>vaadin:update-theme</tt>
-                        and <tt>vaadin:compile-theme</tt></li>
-                </ul>
-            </li>
-            <li>Eclipse
-                <ul>
-                    <li>Theme compilation support using the
-                        provided button</li>
-                    <li>New projects are by default generated using
-                        Servlet 3.0 API</li>
-                    <li>Additional GWT compiler parameters can be
-                        specified</li>
-                </ul>
-            </li>
-        </ul>
-
         <p>
             For enchancements introduced in Vaadin 7, see the <a
                 href="http://vaadin.com/download/release/7.0/7.0.0/release-notes.html">Release
@@ -198,9 +132,7 @@
                 from the Android SDK. They are 99% compatible.</li>
             <li>StringToNumberConverter has been removed in favor of more specific
                 converters such as StringToBigDecimalConverter.</li>
-            <li>(internal) Atmosphere has been updated from version 1.x to 2.x. These
-                are not 100% compatible.</li>
-            <li>(internal) There is no longer support for "multiple variable bursts"
+            <li>There is no longer support for "multiple variable bursts"
                 in the UIDL communication.</li>
         </ul>
         <h3 id="behavioraltering">Behavior altering changes</h3>
@@ -222,12 +154,8 @@
 
         <h3 id="knownissues">Known issues</h3>
         <ul>
-            <li>Not all features are implemented for devices using pointer events.</li>
-            <li>Push reconnecting does not work in all situations when</li>
-                <ul>
-                    <li>using Firefox and streaming</li>
-                    <li>using IE8-11 and long-polling</li>
-                </ul>
+            <li>Reconnecting a dropped push connection sometimes fails when using
+                Firefox and streaming.</li>
         </ul>
 
         <h3 id="limitations">Limitations</h3>
@@ -241,17 +169,13 @@
                 href="http://dev.vaadin.com/ticket/11493">#11493</a>)
             </li>
             <li>HTTP session can not be invalidated while using
-                push (<a href="http://dev.vaadin.com/ticket/11721">#11721</a>)
+                push over websockets on Tomcat 7 (<a href="http://dev.vaadin.com/ticket/11721">#11721</a>)
             </li>
-            <li>Cookies are not available while using push (<a
+            <li>Cookies are not available while using websockets (<a
                 href="http://dev.vaadin.com/ticket/11808">#11808</a>)
             </li>
-            <li>Not all proxies are compatible with websockets. If
-                you are using push with an incompatible proxy you might
-                have to force the transport mode to streaming. Some
-                proxies have problems with streaming also - you need to
-                ensure that the proxy does not buffer responses for HTTP
-                streaming to work.</li>
+            <li>Not all proxies are compatible with websockets or streaming.
+                Use long polling to avoid these problems.</li>
         </ul>
 
         <h2 id="vaadin">Vaadin Installation</h2>
@@ -278,8 +202,7 @@
 
             <li>If using Eclipse, use the Vaadin Plugin for
                 Eclipse, which automatically downloads the Vaadin
-                libraries. To use this prerelease version, the plugin
-                should be installed from the experimental update site (<tt>http://vaadin.com/eclipse/experimental</tt>).
+                libraries.
             </li>
         </ul>
 
@@ -416,30 +339,7 @@
             directory of the web application that uses validation.
         </p>
 
-        <h2 id="upgrading">Upgrading to Vaadin @version-minor@</h2>
-
-        <h3>Upgrading the Eclipse Plugin</h3>
-
-        <p>
-            Vaadin 7 requires that you use a compatible version of the
-            Vaadin Plugin for Eclipse. The stable version of the plugin
-            is available from the
-            <tt>http://vaadin.com/eclipse</tt>
-            update site. Please see the <a
-                href="https://vaadin.com/book/vaadin7/-/page/getting-started.eclipse.html#getting-started.eclipse.update">section
-                about updating the plugin</a> in the Book of Vaadin and the
-            <a href="http://vaadin.com/eclipse">installation
-                instructions at the download site</a> for more details.
-        </p>
-
-        <p>
-            You can also use the <i>experimental</i> Vaadin Plugin for
-            Eclipse. Its update site is
-            <tt>http://vaadin.com/eclipse/experimental</tt>
-            .
-        </p>
-
-        <h3>General Upgrading Instructions</h3>
+        <h2 id="upgrading">Upgrading from Vaadin 7.1 to Vaadin @version-minor@</h2>
 
         <p>When upgrading from an earlier Vaadin version, you must:
         </p>
@@ -449,11 +349,8 @@
                 version. Binary compatibility is only guaranteed for
                 maintenance releases of Vaadin.</li>
 
-            <li>Recompile any add-ons you have created using the
-                new Vaadin</li>
-
             <li>Unless using the precompiled widget set, recompile
-                your widget set using the new Vaadin version</li>
+                your widget set using the new Vaadin version.</li>
         </ul>
 
         <p>Remember also to refresh the project in your IDE to
@@ -492,12 +389,9 @@
             the contents of the <tt>vaadin-client-compiled</tt> and <tt>vaadin-themes</tt>
             must be extracted to the <tt>ROOT/html/VAADIN</tt> directory
             in the Liferay installation. If your portal uses custom
-            widgets, install the latest version of <a
-                href="http://vaadin.com/directory#addon/vaadin-control-panel-for-liferay">Vaadin
-                Control Panel for Liferay</a> for easy widget set
-            compilation - when it is available - the add-on is not
-            compatible with Vaadin @version@ at the time of this Vaadin
-            release. <!-- TODO: Remove note when done --></t>
+            widgets, you can use <a
+                href="http://vaadin.com/directory#addon/liferay-control-panel-plugin-for-vaadin:vaadin">
+                    Liferay Control Panel for Vaadin</a> for easy widget set compilation.</t>
         </p>
 
         <h2 id="gae">
@@ -623,11 +517,11 @@
         </p>
 
         <p>
-            Vaadin supports the following <b>desktop browsers</b>:
+            Vaadin @version@ supports the following <b>desktop browsers</b>:
         </p>
 
         <ul>
-            <li>Mozilla Firefox 18-28</li>
+            <li>Mozilla Firefox 18-29</li>
             <li>Mozilla Firefox 17 ESR, 24 ESR</li>
             <li>Internet Explorer 8-11</li>
             <li>Safari 6-7</li>
@@ -643,6 +537,7 @@
         <ul>
             <li>iOS 5-7</li>
             <li>Android 2.3-4</li>
+            <li>Windows Phone 8</li>
         </ul>
 
         <p>Vaadin SQL Container supports the following databases:</p>
@@ -674,9 +569,10 @@
             <li><a href="http://vaadin.com/directory">vaadin.com/directory
                     - Add-ons for Vaadin</a></li>
 
-            <li><a href="http://vaadin.com/pro-account">vaadin.com/pro-account
-                    - Commercial support and tools for Vaadin
-                    development </a></li>
+            <li><a href="http://vaadin.com/pro-tools">vaadin.com/pro-tools
+                    - Commercial tools for Vaadin development</a></li>
+            <li><a href="http://vaadin.com/support">vaadin.com/support
+                    - Commercial support for Vaadin development </a></li>
             <li><a href="http://vaadin.com/services">vaadin.com/services
                     - Expert services for Vaadin</a></li>
             <li><a href="http://vaadin.com/company">vaadin.com/company
