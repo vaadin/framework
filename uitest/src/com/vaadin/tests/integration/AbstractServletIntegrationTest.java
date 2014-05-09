@@ -18,7 +18,8 @@ package com.vaadin.tests.integration;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
+
+import com.vaadin.testbench.elements.TableElement;
 
 /**
  * Base class for servlet integration tests. Automatically prepends "/demo" to
@@ -33,28 +34,10 @@ public abstract class AbstractServletIntegrationTest extends
     public void runTest() throws IOException, AssertionError {
         openTestURL();
         compareScreen("initial");
-
-        WebElement cell = vaadinElement(getTableCell(getTable(), 0, 1));
-        testBenchElement(cell).click(51, 13);
-
+        $(TableElement.class).first().getCell(0, 1).click();
         compareScreen("finland");
     }
 
-    private String getTableCell(String tableLocator, int row, int col) {
-        return tableLocator
-                + "/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild["
-                + row + "]/domChild[" + col + "]/domChild[0]";
-    }
-
-    protected String getTable() {
-        return "/VVerticalLayout[0]/ChildComponentContainer[0]/VScrollTable[0]";
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.tests.tb3.AbstractTB3Test#getDeploymentPath()
-     */
     @Override
     protected String getDeploymentPath() {
         return "/demo" + super.getDeploymentPath();
