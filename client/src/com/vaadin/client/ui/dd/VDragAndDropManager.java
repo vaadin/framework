@@ -374,11 +374,10 @@ public class VDragAndDropManager {
                             int typeInt = event.getTypeInt();
                             if (typeInt == -1
                                     && event.getNativeEvent().getType()
-                                            .contains("MSPointer")) {
+                                            .toLowerCase().contains("pointer")) {
                                 /*
-                                 * Ignore MSPointer events, until they are
-                                 * properly used (might improve usability on
-                                 * touch devices).
+                                 * Ignore PointerEvents since IE10 and IE11 send
+                                 * also MouseEvents for backwards compatibility.
                                  */
                                 return;
                             }
