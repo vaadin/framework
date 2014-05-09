@@ -10,7 +10,6 @@
 	background: #eee;
 	border-left: 1px solid #ddd;
 	border-right: 1px solid #eee;
-	
 }
 .#{$primaryStyleName}-handle {
 	background: #aaa;
@@ -18,6 +17,8 @@
 	height: 12px;
 	margin-top: -5px;
 	font-size: 0;
+	-ms-touch-action: none;
+	touch-action: none;
 }
 
 .#{$primaryStyleName}-vertical {

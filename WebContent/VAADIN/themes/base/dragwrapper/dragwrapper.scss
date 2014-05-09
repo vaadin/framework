@@ -6,6 +6,8 @@
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
 	position: relative;
+	-ms-touch-action: none;
+	touch-action: none;
 }
 [draggable=true] {
 	-khtml-user-drag: element;
