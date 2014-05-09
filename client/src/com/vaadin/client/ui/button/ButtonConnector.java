@@ -66,8 +66,7 @@ public class ButtonConnector extends AbstractComponentConnector implements
                 getWidget().errorIndicatorElement
                         .setClassName("v-errorindicator");
             }
-            getWidget().wrapper.insertBefore(getWidget().errorIndicatorElement,
-                    getWidget().captionElement);
+            getWidget().wrapper.insertFirst(getWidget().errorIndicatorElement);
 
         } else if (getWidget().errorIndicatorElement != null) {
             getWidget().wrapper.removeChild(getWidget().errorIndicatorElement);

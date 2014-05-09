@@ -340,7 +340,7 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     protected void onClose(AtmosphereResponse response) {
-        VConsole.log("Push connection closed, awaiting reconnection");
+        VConsole.log("Push connection closed");
         state = State.CONNECT_PENDING;
     }
 
