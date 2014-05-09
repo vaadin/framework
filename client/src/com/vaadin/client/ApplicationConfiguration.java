@@ -222,6 +222,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private boolean browserDetailsSent = false;
     private boolean widgetsetVersionSent = false;
+    private static boolean moduleLoaded = false;
 
     static// TODO consider to make this hashmap per application
     LinkedList<Command> callbacks = new LinkedList<Command>();
@@ -596,6 +597,13 @@ public class ApplicationConfiguration implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
+
+        // Don't run twice if the module has been inherited several times.
+        if (moduleLoaded) {
+            return;
+        }
+        moduleLoaded = true;
+
         Profiler.initialize();
         Profiler.enter("ApplicationConfiguration.onModuleLoad");
 
