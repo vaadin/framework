@@ -32,12 +32,14 @@
 
     <property name="filtered.webcontent.dir" location="${vaadin.basedir}/result/filteredWebContent" />
     <property name="release-notes-tickets-file" location="${vaadin.basedir}/result/release-notes-tickets.html" />
+    <property name="release-notes-authors-file" location="${vaadin.basedir}/result/release-notes-authors.html" />
 
-    <target name="filter.webcontent" unless="webcontent.filtered" depends="fetch-release-notes-tickets">
+    <target name="filter.webcontent" unless="webcontent.filtered" depends="fetch-release-notes-tickets,fetch-release-notes-authors">
         <property name="webcontent.filtered" value="true" />
         <!-- Running without build.release-notes will cause an error, which 
             is ignored -->
         <loadfile property="release-notes-tickets" srcFile="${release-notes-tickets-file}" failonerror="false" />
+        <loadfile property="release-notes-authors" srcFile="${release-notes-authors-file}" failonerror="false" />
 
         <delete dir="${filtered.webcontent.dir}" />
         <copy todir="${filtered.webcontent.dir}">
@@ -68,16 +70,27 @@
                 <replacetokens begintoken="@" endtoken="@">
                     <token key="release-notes-tickets" value="${release-notes-tickets}" />
                 </replacetokens>
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="release-notes-authors" value="${release-notes-authors}" />
+                </replacetokens>
             </filterchain>
         </copy>
     </target>
 
-    <target name="fetch-release-notes-tickets" unless="built.release-notes" if="build.release-notes">
+    <target name="fetch-release-notes-tickets" unless="built.release-notes-tickets" if="build.release-notes">
         <mkdir dir="${vaadin.basedir}/result" />
         <subant buildpath="${vaadin.basedir}/buildhelpers" target="fetch-release-notes-tickets" antfile="build.xml" inheritall="true">
             <property name="output" location="${release-notes-tickets-file}" />
         </subant>
-        <property name="built.release-notes" value="1" />
+        <property name="built.release-notes-tickets" value="1" />
+    </target>
+
+    <target name="fetch-release-notes-authors" unless="built.release-notes-authors" if="build.release-notes">
+        <mkdir dir="${vaadin.basedir}/result" />
+        <subant buildpath="${vaadin.basedir}/buildhelpers" target="fetch-release-notes-authors" antfile="build.xml" inheritall="true">
+            <property name="output" location="${release-notes-authors-file}" />
+        </subant>
+        <property name="built.release-notes-authors" value="1" />
     </target>
 
     <fileset dir="${filtered.webcontent.dir}" id="common.files.for.all.jars">
