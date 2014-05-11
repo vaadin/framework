@@ -257,6 +257,11 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             public void sendDate(Date date) {
                 rpc.sendDate(date);
             }
+
+            @Override
+            public void log(String message) {
+                // Do nothing, used only in the other direction
+            }
         });
     }
 
@@ -271,13 +276,80 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
     }
 
     @Override
-    public ComplexTestBean getState() {
-        return (ComplexTestBean) super.getState();
+    public SerializerTestState getState() {
+        return (SerializerTestState) super.getState();
     }
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        // TODO do something clever
+        rpc.log("state.booleanValue: " + getState().booleanValue);
+        rpc.log("state.booleanObjectValue: " + getState().booleanObjectValue);
+        rpc.log("state.booleanArray: " + getState().booleanArray);
+
+        rpc.log("state.byteValue: " + getState().byteValue);
+        rpc.log("state.byteObjectValue: " + getState().byteObjectValue);
+        rpc.log("state.byteArray: " + getState().byteArray);
+
+        rpc.log("state.charValue: " + getState().charValue);
+        rpc.log("state.charObjectValue: " + getState().charObjectValue);
+        rpc.log("state.charArray: " + String.valueOf(getState().charArray));
+
+        rpc.log("state.intValue: " + getState().intValue);
+        rpc.log("state.intObjectValue: " + getState().intObjectValue);
+        rpc.log("state.intArray: " + getState().intArray);
+
+        rpc.log("state.longValue: " + getState().longValue);
+        rpc.log("state.longObjectValue: " + getState().longObjectValue);
+        rpc.log("state.longArray: " + getState().longArray);
+
+        rpc.log("state.floatValue: " + getState().floatValue);
+        rpc.log("state.floatObjectValue: " + getState().floatObjectValue);
+        rpc.log("state.floatArray: " + getState().floatArray);
+
+        rpc.log("state.doubleValue: " + getState().doubleValue);
+        rpc.log("state.doubleObjectValue: " + getState().doubleObjectValue);
+        rpc.log("state.doubleArray: " + getState().doubleArray);
+
+        /*
+         * TODO public double doubleValue; public Double DoubleValue; public
+         * double[] doubleArray; ;
+         * 
+         * public String string;
+         * 
+         * public String nullString;
+         * 
+         * public Connector connector;
+         * 
+         * public ComplexTestBean complexTestBean; public SimpleTestBean
+         * simpleTestBean; public SimpleTestBean[] simpleTestBeanArray; public
+         * int[][] nestedIntArray; public SimpleTestBean[][] nestedBeanArray;
+         * 
+         * public List<Integer> intList; public List<Connector> connectorList;
+         * public List<SimpleTestBean> simpleTestBeanList;
+         * 
+         * public List<int[]> primitiveArrayList; public List<Integer[]>
+         * objectArrayList; public List<SimpleTestBean[]> beanArrayList;
+         * 
+         * public List<Integer>[] objectListArray; public List<SimpleTestBean>[]
+         * beanListArray;
+         * 
+         * public Set<Integer> intSet; public Set<Connector> connectorSet;
+         * public Set<SimpleTestBean> beanSet;
+         * 
+         * public Map<String, SimpleTestBean> stringMap; public Map<Connector,
+         * SimpleTestBean> connectorMap; public Map<Integer, Connector> intMap;
+         * public Map<SimpleTestBean, SimpleTestBean> beanMap;
+         * 
+         * public Map<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>>
+         * generics;
+         * 
+         * public ContentMode contentMode; public ContentMode[] array; public
+         * List<ContentMode> list;
+         * 
+         * public SimpleTestBean bean;
+         * 
+         * public Date date1; public Date date2;
+         */
     }
 
     @Override
