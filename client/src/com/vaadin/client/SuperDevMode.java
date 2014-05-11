@@ -246,10 +246,9 @@ public class SuperDevMode {
             // in super dev mode, as a result of the recompile, the enabled
             // check will fail...
             if (!isSuperDevModeEnabledInModule()) {
-                showError("SuperDevMode is not enabled for this module/widgetset.<br/>"
-                        + "Ensure that your module definition (.gwt.xml) contains <br/>"
-                        + "&lt;add-linker name=&quot;xsiframe&quot;/&gt;<br/>"
-                        + "&lt;set-configuration-property name=&quot;devModeRedirectEnabled&quot; value=&quot;true&quot; /&gt;<br/>");
+                showError("SuperDevMode is disabled for this module/widgetset.<br/>"
+                        + "Ensure that your module definition (.gwt.xml) does not contain <br/>"
+                        + "&lt;set-configuration-property name=&quot;devModeRedirectEnabled&quot; value=&quot;false&quot; /&gt;<br/>");
                 return false;
             }
             return SuperDevMode.recompileIfNeeded(superDevModeParameter);
