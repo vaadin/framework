@@ -277,6 +277,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     /**
      * Updates the DOM size of this connector's {@link #getWidget() widget}.
      * 
+     * @since 7.1.15
      * @param newWidth
      *            The new width as a CSS string. Cannot be null.
      * @param newHeight

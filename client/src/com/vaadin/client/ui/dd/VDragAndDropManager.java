@@ -733,7 +733,7 @@ public class VDragAndDropManager {
         return dragElement;
     }
 
-    public void attachDragElement() {
+    private void attachDragElement() {
         if (dragElement != null && dragElement.getParentElement() == null) {
             ApplicationConnection connection = getCurrentDragApplicationConnection();
             Element dragImageParent;

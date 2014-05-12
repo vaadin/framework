@@ -285,13 +285,13 @@ public class VDragEvent {
      * Do additional content sync between <code>original</code> element and its
      * <code>copy</code> if needed.
      * 
-     * @since 7.3
+     * @since 7.2
      * @param original
      *            original element
      * @param copy
      *            copy of original element
      */
-    protected void syncContent(Element original, Element copy) {
+    private void syncContent(Element original, Element copy) {
         for (int i = 0; i < original.getChildCount(); i++) {
             Node child = original.getChild(i);
             if (child instanceof Element) {
