@@ -439,3 +439,37 @@ img {
 	margin: 0em 2em .8em 2em;
 	float: right;
 	}
+	
+span.fv {
+	padding: 2px 10px;
+	margin-right: 5px;
+	color: rgb(71,174,67);
+	font-weight: bold;
+}
+td.fv {
+	background-color: rgb(206,247,205);
+	text-align: center;
+	border-radius: 3px;
+	font-size: 12px;
+	line-height: 1;
+	font-weight: bold;
+}
+td.bfp {
+	text-align: center;
+	color: rgb(37,114,146);
+	border-radius: 3px;
+
+	padding: 2px 10px;
+	margin-right: 5px;
+	background-color: rgb(216,245,255);
+	font-size: 12px;
+	line-height: 1;
+	font-weight: bold;
+}
+.ticket {
+	text-align: right;
+	padding-left: 5px;
+}
+.pad {
+	padding-left: 5px;
+}

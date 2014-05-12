@@ -189,6 +189,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 if (isNative) {
                     outdent();
                     println("}-*/;");
+                    // To support fields of type long (#13692)
+                    println("@com.google.gwt.core.client.UnsafeNativeLong");
                     println("private native void %s(%s) /*-{", newMethod, args);
                 } else {
                     println("%s();", newMethod);
@@ -313,6 +315,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
 
             // Separate method for loading native JS stuff (e.g. callbacks)
             String loadNativeJsMethodName = "loadNativeJs";
+            // To support fields of type long (#13692)
+            w.println("@com.google.gwt.core.client.UnsafeNativeLong");
             w.println("private native void %s(%s store) /*-{",
                     loadNativeJsMethodName, TypeDataStore.class.getName());
             w.indent();

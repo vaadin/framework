@@ -81,4 +81,6 @@ public interface SerializerTestRpc extends ServerRpc, ClientRpc {
     public void sendBeanSubclass(SimpleTestBean bean);
 
     public void sendDate(Date date);
+
+    public void log(String string);
 }

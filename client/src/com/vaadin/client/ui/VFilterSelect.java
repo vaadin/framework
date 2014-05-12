@@ -1416,6 +1416,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 panel.remove(selectedItemIcon);
             }
             selectedItemIcon = new IconWidget(client.getIcon(iconUri));
+            // Older IE versions don't scale icon correctly if DOM
+            // contains height and width attributes.
+            selectedItemIcon.getElement().removeAttribute("height");
+            selectedItemIcon.getElement().removeAttribute("width");
             selectedItemIcon.addDomHandler(new LoadHandler() {
                 @Override
                 public void onLoad(LoadEvent event) {

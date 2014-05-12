@@ -83,6 +83,8 @@
 
         <dependency org="junit" name="junit" rev="4.11"
             conf="build,ide -> default" />
+        <dependency org="org.hamcrest" name="hamcrest-all" rev="1.3"
+            conf="build,ide->default" />
         <dependency org="com.jcraft" name="jsch" rev="0.1.50"
             conf="ide, build->default" />
         <dependency org="commons-codec" name="commons-codec"

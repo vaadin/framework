@@ -18,8 +18,8 @@ package com.vaadin.tests.widgetset.server;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.communication.ClientRpc;
-import com.vaadin.tests.widgetset.client.ComplexTestBean;
 import com.vaadin.tests.widgetset.client.SerializerTestRpc;
+import com.vaadin.tests.widgetset.client.SerializerTestState;
 
 public class SerializerTestExtension extends AbstractExtension {
 
@@ -29,8 +29,8 @@ public class SerializerTestExtension extends AbstractExtension {
     }
 
     @Override
-    public ComplexTestBean getState() {
-        return (ComplexTestBean) super.getState();
+    public SerializerTestState getState() {
+        return (SerializerTestState) super.getState();
     }
 
     public void registerRpc(SerializerTestRpc rpc) {

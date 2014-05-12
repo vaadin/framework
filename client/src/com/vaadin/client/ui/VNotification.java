@@ -38,9 +38,9 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.Position;
+import com.vaadin.shared.ui.ui.NotificationRole;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState.NotificationTypeConfiguration;
-import com.vaadin.shared.ui.ui.NotificationRole;
 
 public class VNotification extends VOverlay {
 
@@ -183,11 +183,13 @@ public class VNotification extends VOverlay {
     }
 
     private boolean hasPostfix(NotificationTypeConfiguration styleSetup) {
-        return styleSetup != null && styleSetup.postfix != null && !styleSetup.postfix.isEmpty();
+        return styleSetup != null && styleSetup.postfix != null
+                && !styleSetup.postfix.isEmpty();
     }
 
     private boolean hasPrefix(NotificationTypeConfiguration styleSetup) {
-        return styleSetup != null && styleSetup.prefix != null && !styleSetup.prefix.isEmpty();
+        return styleSetup != null && styleSetup.prefix != null
+                && !styleSetup.prefix.isEmpty();
     }
 
     public void show(String html, Position position, String style) {
@@ -214,8 +216,12 @@ public class VNotification extends VOverlay {
     }
 
     private NotificationTypeConfiguration getUiState(String style) {
-        return getApplicationConnection()
-                .getUIConnector().getState().notificationConfigurations
+        if (getApplicationConnection() == null
+                || getApplicationConnection().getUIConnector() == null) {
+            return null;
+        }
+
+        return getApplicationConnection().getUIConnector().getState().notificationConfigurations
                 .get(style);
     }
 

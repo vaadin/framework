@@ -17,6 +17,7 @@ package com.vaadin.buildhelpers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -24,16 +25,33 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 
 public class FetchReleaseNotesTickets {
-    private static final String queryURL = "http://dev.vaadin.com/query?status=closed&amp;milestone=Vaadin+@version@&amp;resolution=fixed&amp;format=tab&amp;order=id";
-    private static final String ticketTemplate = "  <li><a href=\"http://dev.vaadin.com/ticket/@ticket@\">#@ticket@</a>: @description@</li>";
+    private static final String queryURL = "http://dev.vaadin.com/query?status=closed&amp;@milestone@&amp;resolution=fixed&amp;col=id&amp;col=summary&amp;col=owner&amp;col=type&amp;col=priority&amp;col=component&amp;col=version&amp;col=bfptime&col=fv&amp;format=tab&amp;order=id";
+    private static final String ticketTemplate = "<tr>"
+            + "@badge@" //
+            + "<td class=\"ticket\"><a href=\"http://dev.vaadin.com/ticket/@ticket@\">#@ticket@</a></td>" //
+            + "<td>@description@</td>" //
+            + "</tr>"; //
 
     public static void main(String[] args) throws IOException {
-        String version = System.getProperty("vaadin.version");
-        if (version == null || version.equals("")) {
+        String versions = System.getProperty("vaadin.version");
+        if (versions == null || versions.equals("")) {
             usage();
         }
+        String milestone = "";
+        for (String version : versions.split(" ")) {
+            if (!milestone.equals("")) {
+                milestone += "&amp;";
+            }
+            milestone += "milestone=Vaadin+" + version;
+        }
 
-        URL url = new URL(queryURL.replace("@version@", version));
+        printMilestone(milestone);
+    }
+
+    private static void printMilestone(String milestone)
+            throws MalformedURLException, IOException {
+
+        URL url = new URL(queryURL.replace("@milestone@", milestone));
         URLConnection connection = url.openConnection();
         InputStream urlStream = connection.getInputStream();
 
@@ -52,8 +70,16 @@ public class FetchReleaseNotesTickets {
                 summary = summary.substring(1, summary.length() - 1);
                 summary = summary.replace("\"\"", "\"");
             }
+            String badge = "<td></td>";
+            if (fields.length >= 8 && !fields[7].equals("")) {
+                badge = "<td class=\"bfp\"><span class=\"bfp\">Priority</span></td>";
+            } else if (fields.length >= 9 && fields[8].equalsIgnoreCase("true")) {
+                badge = "<td class=\"fv\"><span class=\"fv\">Vote</span></td>";
+            }
+
             System.out.println(ticketTemplate.replace("@ticket@", fields[0])
-                    .replace("@description@", summary));
+                    .replace("@description@", summary)
+                    .replace("@badge@", badge));
         }
         urlStream.close();
     }
