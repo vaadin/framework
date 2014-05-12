@@ -215,7 +215,7 @@ $v-tree-expand-animation-enabled: false !default;
     line-height: 2px;
     color: valo-focus-color();
     text-indent: round($v-font-size/-4);
-    text-shadow: 0 0 1px $v-app-background-color, 0 0 1px $v-app-background-color;
+    text-shadow: 0 0 1px $v-background-color, 0 0 1px $v-background-color;
   }
 
   .#{$primary-stylename}-node-caption-drag-center {

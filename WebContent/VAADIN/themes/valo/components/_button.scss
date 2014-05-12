@@ -113,8 +113,8 @@ $v-button-disabled-opacity: $v-disabled-opacity !default;
 @function valo-button-border-color ($bevel-style: $v-bevel-style, $bevel-depth: $v-bevel-depth,
                                       $background-color: $v-button-background-color) {
 
-  $background-color: $background-color or $v-app-background-color;
-  $border-color: if(color-luminance($background-color) < color-luminance($v-app-background-color), $background-color, $v-app-background-color);
+  $background-color: $background-color or $v-background-color;
+  $border-color: if(color-luminance($background-color) < color-luminance($v-background-color), $background-color, $v-background-color);
   $border-color: blend-darken($border-color, scale-color($border-color, $lightness: max(-50%, -$bevel-depth/2)));
   $border-color: scale-color($border-color, $saturation: -$bevel-depth/2);
   @if contains($bevel-style, v-shade, true) {
@@ -133,7 +133,7 @@ $v-button-disabled-opacity: $v-disabled-opacity !default;
                             $background-color: $v-button-background-color) {
 
   // Set up variable defaults
-  $background-color: $background-color or $v-app-background-color;
+  $background-color: $background-color or $v-background-color;
   $gradient-style: $gradient-style or $v-gradient-style;
   $gradient-depth: $gradient-depth or $v-gradient-depth;
   $bevel-style: $bevel-style or $v-bevel-style;
@@ -173,7 +173,7 @@ $v-button-disabled-opacity: $v-disabled-opacity !default;
 }
 
 
-@mixin valo-button-focus-style ($background-color: $v-app-background-color, $border-fallback: inherit) {
+@mixin valo-button-focus-style ($background-color: $v-background-color, $border-fallback: inherit) {
   $focus-color: valo-focus-color();
   
   @if color-luminance($focus-color) + 50 < color-luminance($background-color) {
@@ -191,8 +191,8 @@ $v-button-disabled-opacity: $v-disabled-opacity !default;
 
 
 
-@mixin valo-button-active-style ($background-color: $v-app-background-color) {
-  $bg: scale-color($background-color, $lightness: -50%, $saturation: saturation($v-app-background-color));
+@mixin valo-button-active-style ($background-color: $v-background-color) {
+  $bg: scale-color($background-color, $lightness: -50%, $saturation: saturation($v-background-color));
   background-color: rgba($bg, .1);
   
   .v-ie8 & {
@@ -203,7 +203,7 @@ $v-button-disabled-opacity: $v-disabled-opacity !default;
 
 
 
-@mixin valo-button-hover-style ($background-color: $v-app-background-color) {
+@mixin valo-button-hover-style ($background-color: $v-background-color) {
   $bg: lighten($background-color, 15%);
   background-color: rgba($bg, .1);
   border: inherit;

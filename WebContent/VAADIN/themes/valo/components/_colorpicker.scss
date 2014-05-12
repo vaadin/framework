@@ -153,8 +153,8 @@
     .v-horizontallayout {
       height: auto !important;
       padding: round($v-unit-size/4) 0;
-      background-color: $v-app-background-color;
-      border-top: $v-border-width solid scale-color($v-app-background-color, $lightness: -5%);
+      background-color: $v-background-color;
+      border-top: $v-border-width solid scale-color($v-background-color, $lightness: -5%);
 
       .v-expand {
         overflow: visible;

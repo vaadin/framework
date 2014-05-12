@@ -32,7 +32,7 @@ $v-combobox-hover-style-enabled: $v-hover-styles-enabled !default;
                               $unit-size: $v-textfield-unit-size, $border-radius: $v-textfield-border-radius,
                               $background-color: $v-textfield-background-color, $primary-stylename: v-filterselect) {
 
-  $background-color: $background-color or valo-textfield-background-color($v-app-background-color);
+  $background-color: $background-color or valo-textfield-background-color($v-background-color);
   $bevel-style: $bevel-style or $v-bevel-style;
   $bevel-depth: $bevel-depth or $v-bevel-depth;
   $unit-size: $unit-size or $v-unit-size;
@@ -213,7 +213,7 @@ $v-combobox-hover-style-enabled: $v-hover-styles-enabled !default;
   .v-filterselect-status {
     position: absolute;
     right: $v-border-radius;
-    $bg: $background-color or $v-app-background-color;
+    $bg: $background-color or $v-background-color;
     $bg: scale-color($bg, $lightness: -15%);
     background: transparentize($bg, .1);
     color: valo-font-color($bg);
@@ -250,7 +250,7 @@ $v-combobox-hover-style-enabled: $v-hover-styles-enabled !default;
     font-family: FontAwesome;
     @include transform( scale(.8) );
 
-    $bg: $background-color or $v-app-background-color;
+    $bg: $background-color or $v-background-color;
     color: valo-font-color($bg);
     
     &:hover {

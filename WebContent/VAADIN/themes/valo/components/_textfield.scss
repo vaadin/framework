@@ -60,8 +60,8 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 @function valo-textfield-border-color ($bevel-style: $v-bevel-style, $bevel-depth: $v-bevel-depth,
                                          $background-color: $v-textfield-background-color) {
-  $background-color: $background-color or valo-textfield-background-color($v-app-background-color);
-  $border-color: if(color-luminance($background-color) < color-luminance($v-app-background-color), $background-color, $v-app-background-color);
+  $background-color: $background-color or valo-textfield-background-color($v-background-color);
+  $border-color: if(color-luminance($background-color) < color-luminance($v-background-color), $background-color, $v-background-color);
   $border-color: blend-darken($border-color, scale-color($border-color, $lightness: max(-50%, -$bevel-depth/2)));
   $border-color: scale-color($border-color, $saturation: -$bevel-depth/2);
   @return $border-color;
@@ -75,7 +75,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
                                $unit-size: $v-textfield-unit-size, $border-radius: $v-textfield-border-radius,
                                $background-color: $v-textfield-background-color) {
 
-  $background-color: $background-color or valo-textfield-background-color($v-app-background-color);
+  $background-color: $background-color or valo-textfield-background-color($v-background-color);
   $unit-size: $unit-size or $v-unit-size;
   
   @include appearance(none);
@@ -131,7 +131,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
   
   $focus-color: valo-focus-color();
   
-  @if color-luminance($focus-color) + 50 < color-luminance($v-app-background-color) {
+  @if color-luminance($focus-color) + 50 < color-luminance($v-background-color) {
     border-color: $focus-color;
   }
   

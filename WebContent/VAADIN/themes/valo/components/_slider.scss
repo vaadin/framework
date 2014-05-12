@@ -109,7 +109,7 @@ $v-slider-handle-border-radius: ceil($v-slider-handle-width/2) !default;
     height: $v-unit-size * 2; // Effectively min-height
 
     .#{$primary-stylename}-base {
-      @include valo-gradient($color: scale-color($v-app-background-color, $lightness: min($v-bevel-depth/-2, -5%), $saturation: $v-bevel-depth/-2), $style: linear-reverse, $direction: to right);
+      @include valo-gradient($color: scale-color($v-background-color, $lightness: min($v-bevel-depth/-2, -5%), $saturation: $v-bevel-depth/-2), $style: linear-reverse, $direction: to right);
       min-width: 0;
       width: $v-slider-track-size;
       height: 100% !important;

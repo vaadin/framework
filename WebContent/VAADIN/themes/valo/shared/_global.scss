@@ -5,6 +5,9 @@
 @import "tooltip";
 
 
+$v-app-background-color: $v-background-color !default;
+
+
 // Include global styles only once
 $valo-global-included: false !default;
 @mixin valo-global {

@@ -215,7 +215,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
     text-align: right;
     margin: 0 round($v-unit-size/8);
     white-space: nowrap;
-    border-top: 1px solid darken($v-app-background-color, 3%);
+    border-top: 1px solid darken($v-background-color, 3%);
     cursor: pointer;
 
     &:hover {
@@ -224,7 +224,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
   }
 
   .#{$primary-stylename}-month-day-today {
-    background: blend-normal(rgba(valo-focus-color(), .05), $v-app-background-color);
+    background: blend-normal(rgba(valo-focus-color(), .05), $v-background-color);
 
     .#{$primary-stylename}-day-number {
       font-weight: $v-font-weight + 100;
@@ -237,7 +237,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
   }
 
   .#{$primary-stylename}-month-day-selected {
-    background-color: blend-normal(rgba(valo-selection-color(), .1), $v-app-background-color);
+    background-color: blend-normal(rgba(valo-selection-color(), .1), $v-background-color);
   }
 
   .#{$primary-stylename}-month-day-dragemphasis {
@@ -264,7 +264,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
 
   .#{$primary-stylename}-weekly-longevents {
     margin-left: $_times-column-width; // Seems to be a fixed number
-    border-bottom: round($v-unit-size/12) solid darken($v-app-background-color, 10%);
+    border-bottom: round($v-unit-size/12) solid darken($v-background-color, 10%);
 
     .#{$primary-stylename}-event-all-day {
       height: round($v-font-size * 0.85 * 1.6);
@@ -311,7 +311,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
     }
   }
 
-  $valo-calendar-time-divider-color: darken($v-app-background-color, 5%);
+  $valo-calendar-time-divider-color: darken($v-background-color, 5%);
 
   .#{$primary-stylename} .v-datecellslot,
   .#{$primary-stylename} .v-datecellslot-even {
@@ -483,7 +483,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
   .#{$primary-stylename}-week-wrapper .#{$primary-stylename}-event-content {
     margin-top: -1px;
     border-radius: $v-border-radius + 1px;
-    border: 1px solid $v-app-background-color;
+    border: 1px solid $v-background-color;
     padding-top: 3px;
     margin-right: round($v-unit-size/8);
     //margin-left: round($v-unit-size/8);
@@ -499,7 +499,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
 
   @for $i from 1 through length($v-calendar-event-colors) {
     $color: nth($v-calendar-event-colors, $i);
-    $bg: blend-normal(rgba($color, .2), $v-app-background-color);
+    $bg: blend-normal(rgba($color, .2), $v-background-color);
 
     // First color is considered the default color (and stylename 'color1' will equal to that)
     $stylename: if($i == 1, '', '[class*="color#{$i}"]');

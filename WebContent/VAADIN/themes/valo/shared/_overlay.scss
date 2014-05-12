@@ -18,7 +18,7 @@ $v-selection-item-padding-horizontal: ceil($v-unit-size/4) !default;
 $v-selection-item-font-weight: max(400, $v-font-weight);
 
 
-@function valo-overlay-background-color ($context: $v-app-background-color) {
+@function valo-overlay-background-color ($context: $v-background-color) {
   @if is-dark-color($context) {
     @return darken($context, 2%);
   }

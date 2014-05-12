@@ -122,10 +122,10 @@
 
 
 
-@mixin valo-menubar-popup-style ($primary-stylename: v-menubar, $context: $v-app-background-color) {
+@mixin valo-menubar-popup-style ($primary-stylename: v-menubar, $context: $v-background-color) {
 
-  $copy: $v-app-background-color;
-  $v-app-background-color: $context;
+  $copy: $v-background-color;
+  $v-background-color: $context;
 
   @include valo-selection-overlay-style;
 
@@ -180,7 +180,7 @@
     @include opacity($v-disabled-opacity);
   }
 
-  $v-app-background-color: $copy;
+  $v-background-color: $copy;
 }
 
 
@@ -197,10 +197,10 @@
 }
 
 
-@mixin valo-menubar-menuitem-checked-style ($background-color: scale-color($v-app-background-color, $lightness: -5%, $saturation: -5%)) {
+@mixin valo-menubar-menuitem-checked-style ($background-color: scale-color($v-background-color, $lightness: -5%, $saturation: -5%)) {
   @include valo-gradient($color: $background-color, $depth: $v-gradient-depth/4, $direction: to top);
 
-  @if color-luminance($background-color) < color-luminance($v-app-background-color) {
+  @if color-luminance($background-color) < color-luminance($v-background-color) {
     $border-color: valo-button-border-color($background-color: $background-color);
     border-color: $border-color;
 

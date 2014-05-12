@@ -5,7 +5,7 @@ $v-accordion-content-shadow-depth: $v-shadow-depth/2 !default;
 @mixin valo-accordion ($primary-stylename: v-accordion) {
   .#{$primary-stylename} {
     @include valo-panel-style;
-    @include valo-gradient($color: $v-app-background-color, $depth: $v-gradient-depth/2);
+    @include valo-gradient($color: $v-background-color, $depth: $v-gradient-depth/2);
     overflow: hidden;
   }
 

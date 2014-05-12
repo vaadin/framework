@@ -77,7 +77,7 @@ $v-luminance-threshold: 150 !default;
 
 
 @function valo-focus-color ($color: null, $context: null) {
-  $context: $context or $v-app-background-color;
+  $context: $context or $v-background-color;
 
   $fallback: $context;
   @if is-dark-color($fallback) {

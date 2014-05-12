@@ -47,7 +47,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
                               $unit-size: $v-textfield-unit-size, $border-radius: $v-textfield-border-radius,
                               $background-color: $v-textfield-background-color, $primary-stylename: v-datefield) {
 
-  $background-color: $background-color or valo-textfield-background-color($v-app-background-color);
+  $background-color: $background-color or valo-textfield-background-color($v-background-color);
   $bevel-style: $bevel-style or $v-bevel-style;
   $bevel-depth: $bevel-depth or $v-bevel-depth;
   $unit-size: $unit-size or $v-unit-size;
@@ -166,9 +166,9 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
 
 
 
-@mixin valo-datefield-popup-style ($context: $v-app-background-color) {
-  $copy: $v-app-background-color;
-  $v-app-background-color: $context;
+@mixin valo-datefield-popup-style ($context: $v-background-color) {
+  $copy: $v-background-color;
+  $v-background-color: $context;
 
   @include valo-overlay-style;
 
@@ -189,7 +189,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
 
   @include valo-datefield-calendarpanel-style;
 
-  $v-app-background-color: $copy;
+  $v-background-color: $copy;
 }
 
 
@@ -234,7 +234,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
 
   .#{$primary-stylename}-weekdays {
     height: round($v-unit-size * 0.7);
-    color: mix(valo-font-color($v-app-background-color), rgba($v-app-background-color, .7));
+    color: mix(valo-font-color($v-background-color), rgba($v-background-color, .7));
 
     strong {
       font: inherit;
@@ -270,7 +270,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
         right: 0;
         bottom: 0;
         left: 0;
-        color: mix($v-app-background-color, valo-font-color($v-app-background-color));
+        color: mix($v-background-color, valo-font-color($v-background-color));
         font-size: round($v-font-size * 1.3);
         line-height: round($v-font-size * 1.5);
 
@@ -316,7 +316,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
   .v-datefield-calendarpanel-weeknumber,
   .v-datefield-calendarpanel-weekdays.v-datefield-calendarpanel-weeknumbers td:first-child {
     width: round($v-unit-size * 0.7);
-    color: mix(valo-font-color($v-app-background-color), rgba($v-app-background-color, .7));
+    color: mix(valo-font-color($v-background-color), rgba($v-background-color, .7));
     font-size: ceil($v-font-size * 0.86);
     display: inline-block;
     text-align: left;
@@ -344,7 +344,7 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
   line-height: round($v-unit-size * 0.7);
   text-align: center;
   font-size: ceil($v-font-size * 0.86);
-  background: $v-app-background-color;
+  background: $v-background-color;
   @if $v-border-radius > 0 {
     border-radius: ceil($v-border-radius/2);
   }
@@ -358,13 +358,13 @@ $v-datefield-hover-style-enabled: $v-hover-styles-enabled !default;
 }
 
 @mixin valo-datefield-calendarpanel-day-offmonth-style {
-  color: mix(valo-font-color($v-app-background-color), $v-app-background-color);
+  color: mix(valo-font-color($v-background-color), $v-background-color);
   background: transparent;
 }
 
 @mixin valo-datefield-calendarpanel-day-today-style {
   color: valo-selection-color();
-  background: blend-overlay(valo-selection-color(), $v-app-background-color);
+  background: blend-overlay(valo-selection-color(), $v-background-color);
   font-weight: $v-font-weight + 100;
 }
 

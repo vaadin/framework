@@ -41,7 +41,7 @@ $v-splitpanel-splitter-size: round($v-unit-size/5) !default;
       width: $v-unit-size;
       height: 0;
       border: 1px solid;
-      $color: $v-button-background-color or $v-app-background-color;
+      $color: $v-button-background-color or $v-background-color;
       $shade: max($v-bevel-depth, 10%);
       $border-color1: scale-color($color, $lightness: -$shade, $saturation: -$shade/2);
       $border-color2: scale-color($color, $lightness: -$shade/2, $saturation: -$shade/4);
@@ -61,7 +61,7 @@ $v-splitpanel-splitter-size: round($v-unit-size/5) !default;
   .#{$primary-stylename}-hsplitter div {
     cursor: e-resize;
     cursor: col-resize;
-    $color: $v-button-background-color or $v-app-background-color;
+    $color: $v-button-background-color or $v-background-color;
     @include valo-gradient($color: $color, $direction: to right);
 
     &:before {
@@ -138,7 +138,7 @@ $v-splitpanel-splitter-size: round($v-unit-size/5) !default;
       height: 1px;
       left: 0;
       right: 0;
-      background: darken($v-app-background-color, max($v-bevel-depth/2, 10%));
+      background: darken($v-background-color, max($v-bevel-depth/2, 10%));
     }
   }
 
@@ -162,7 +162,7 @@ $v-splitpanel-splitter-size: round($v-unit-size/5) !default;
       width: 1px;
       top: 0;
       bottom: 0;
-      background: darken($v-app-background-color, max($v-bevel-depth/2, 10%));
+      background: darken($v-background-color, max($v-bevel-depth/2, 10%));
     }
   }
 

@@ -30,19 +30,19 @@ $v-panel-caption-bevel-depth: $v-bevel-depth !default;
 
 
 
-@function valo-panel-background-color ($context: $v-app-background-color) {
+@function valo-panel-background-color ($context: $v-background-color) {
   $bg-color: lighten($context, 5%);
   @return $bg-color;
 }
 
 
 @function valo-panel-caption-background-color ($background-color) {
-  @return $background-color or $v-app-background-color;
+  @return $background-color or $v-background-color;
 }
 
 
-@function valo-panel-border-color ($background-color: $v-app-background-color) {
-  $border-color: if(color-luminance($background-color) < color-luminance($v-app-background-color), $background-color, $v-app-background-color);
+@function valo-panel-border-color ($background-color: $v-background-color) {
+  $border-color: if(color-luminance($background-color) < color-luminance($v-background-color), $background-color, $v-background-color);
   $border-color: blend-darken($border-color, scale-color($border-color, $lightness: max(-30%, -$v-bevel-depth/2)));
   $border-color: scale-color($border-color, $saturation: -$v-bevel-depth/2);
   @return $border-color;
@@ -74,7 +74,7 @@ $v-panel-caption-bevel-depth: $v-bevel-depth !default;
 
 
 @mixin valo-panel-well-style {
-  $_bg: scale-color(adjust-color($v-app-background-color, $lightness: -2%), $saturation: -1.5%);
+  $_bg: scale-color(adjust-color($v-background-color, $lightness: -2%), $saturation: -1.5%);
   background: $_bg;
   box-shadow: valo-shadow($shadow-style: (0 1px 0 0 v-hilite, join(inset, $v-panel-shadow-style)));
   border-radius: $v-border-radius;

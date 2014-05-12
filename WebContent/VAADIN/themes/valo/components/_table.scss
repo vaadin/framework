@@ -52,7 +52,7 @@ $v-table-background-color: null !default;
 
 
 
-@function valo-table-background-color($context: $v-app-background-color) {
+@function valo-table-background-color($context: $v-background-color) {
   @if is-dark-color($context) {
     @return darken($context, 2%);
   }
@@ -63,12 +63,12 @@ $v-table-background-color: null !default;
 @mixin valo-table ($primary-stylename: v-table) {
 
   $background-color: $v-table-background-color or valo-table-background-color();
-  $border-color: $v-table-border-color or darken($v-app-background-color, max(5%, $v-bevel-depth/3));
+  $border-color: $v-table-border-color or darken($v-background-color, max(5%, $v-bevel-depth/3));
 
   .#{$primary-stylename} {
     // For scroll position indicator
     position: relative;
-    background: $v-app-background-color;
+    background: $v-background-color;
   }
 
   .v-table-header table, 
@@ -81,10 +81,10 @@ $v-table-background-color: null !default;
   .#{$primary-stylename}-footer-wrap,
   .#{$primary-stylename}-header-drag {
     border: $v-table-border-width solid $border-color;
-    @include valo-gradient($v-app-background-color);
+    @include valo-gradient($v-background-color);
     white-space: nowrap;
     font-size: $v-table-header-font-size;
-    text-shadow: valo-button-text-shadow($v-app-background-color, $v-bevel-depth);
+    text-shadow: valo-button-text-shadow($v-background-color, $v-bevel-depth);
   }
 
   .#{$primary-stylename}-header-wrap {

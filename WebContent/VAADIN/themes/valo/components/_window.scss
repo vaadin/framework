@@ -46,7 +46,7 @@ $v-window-animations-enabled: $v-animations-enabled !default;
     right: 0;
     bottom: 0;
     left: 0;
-    background: $v-app-background-color;
+    background: $v-background-color;
     @include opacity(.3);
   }
 
@@ -227,7 +227,7 @@ $v-window-animations-enabled: $v-animations-enabled !default;
 
   .#{$primary-stylename}-bottom-toolbar {
     padding: round($v-unit-size/5) round($v-unit-size/3);
-    background: $v-app-background-color;
+    background: $v-background-color;
 
     .v-expand {
       overflow: visible;

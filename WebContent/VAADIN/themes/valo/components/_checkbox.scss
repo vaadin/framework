@@ -15,7 +15,7 @@
 
 
 @mixin valo-checkbox-style ($background-color: $v-button-background-color, $unit-size: $v-unit-size) {
-  $background-color: $background-color or $v-app-background-color;
+  $background-color: $background-color or $v-background-color;
   
   position: relative;
   line-height: round($unit-size/2);

@@ -75,11 +75,11 @@ $v-app-loading-text: "" !default;
 $v-line-height: 1.55 !default;
 
 
-$v-app-background-color:        hsl(210, 0%, 98%)               !default;
+$v-background-color:        hsl(210, 0%, 98%)               !default;
 
 $v-font-size:                   16px                            !default; // Should be specified in pixels
 $v-font-weight:                 300                             !default; // Must be specified as a numeric value (i.e. not 'normal' or 'bold')
-$v-font-color:                  valo-font-color($v-app-background-color) !default;
+$v-font-color:                  valo-font-color($v-background-color) !default;
 $v-font-family:                 "Open Sans", sans-serif         !default;
 
 $v-caption-font-size:           round($v-font-size * 0.9)       !default; // Should be a pixel value

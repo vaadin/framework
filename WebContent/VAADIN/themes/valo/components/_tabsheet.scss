@@ -24,8 +24,8 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 @mixin valo-tabsheet ($primary-stylename: v-tabsheet) {
 
-  $_scale: if( is-dark-color($v-app-background-color) , max(5%, $v-bevel-depth/2), min(-5%, -$v-bevel-depth/2) );
-  $border-color: scale-color($v-app-background-color, $lightness: $_scale);
+  $_scale: if( is-dark-color($v-background-color) , max(5%, $v-bevel-depth/2), min(-5%, -$v-bevel-depth/2) );
+  $border-color: scale-color($v-background-color, $lightness: $_scale);
 
   .#{$primary-stylename} {
     &:not(.v-has-width) {
@@ -154,7 +154,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     right: 0;
     top: 0;
     padding-left: round($v-unit-size/2);
-    @include linear-gradient(to left, $v-app-background-color 70%, rgba($v-app-background-color, 0) 100%, $fallback: transparent);
+    @include linear-gradient(to left, $v-background-color 70%, rgba($v-background-color, 0) 100%, $fallback: transparent);
     pointer-events: none;
     line-height: $v-unit-size;
 
@@ -171,7 +171,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
     .v-ie8 &,
     .v-ie9 & {
-      background-color: $v-app-background-color;
+      background-color: $v-background-color;
 
       &:after {
         background-color: $border-color;

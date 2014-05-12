@@ -88,7 +88,7 @@
   }
 
   > table > tbody > .#{$primary-stylename}-row td {
-    border-bottom: $v-border-width solid darken($v-app-background-color, 5%);
+    border-bottom: $v-border-width solid darken($v-background-color, 5%);
   }
 
   > table > tbody > .#{$primary-stylename}-lastrow td {
