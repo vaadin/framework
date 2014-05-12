@@ -988,10 +988,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         if (scrolledOutOfView(index)) {
             // Should not set tabs visible if they are scrolled out of view
-            tabState.visible = false;
+            tab.setVisible(false);
+        } else {
+            tab.setVisible(tabState.visible);
         }
-        // Set the current visibility of the tab (in the browser)
-        tab.setVisible(tabState.visible);
 
         /*
          * Force the width of the caption container so the content will not wrap
@@ -1041,8 +1041,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     }
 
     /**
-     * Recalculates the sizes of tab captions, causing the tabs to be
-     * rendered the correct size.
+     * Recalculates the sizes of tab captions, causing the tabs to be rendered
+     * the correct size.
      */
     private void updateTabCaptionSizes() {
         for (int tabIx = 0; tabIx < tb.getTabCount(); tabIx++) {
