@@ -26,6 +26,7 @@ public class SpacingLeakTest extends MultiBrowserTest {
     public void testSpacingLeak() throws Exception {
         setDebug(true);
         openTestURL();
+        openDebugLogTab();
         getDriver().findElement(By.id("addbutton")).click();
         getDriver().findElement(By.xpath("//button[@title = 'Clear log']"))
                 .click();

@@ -26,6 +26,7 @@ public class CaptionLeakTest extends MultiBrowserTest {
     public void testCaptionLeak() throws Exception {
         setDebug(true);
         openTestURL();
+        openDebugLogTab();
 
         // this should be present
         // 3 general non-connector elements, none accumulated on click
@@ -54,6 +55,7 @@ public class CaptionLeakTest extends MultiBrowserTest {
     public void testNoCaptionLeak() throws Exception {
         setDebug(true);
         openTestURL();
+        openDebugLogTab();
 
         getDriver().findElement(By.xpath("//button[@title = 'Clear log']"))
                 .click();

@@ -962,4 +962,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         selenium.keyPress("id=" + id, "\\13");
     }
 
+    protected void openDebugLogTab() {
+        findElement(By.xpath("//button[@title='Debug message log']")).click();
+    }
+
 }
