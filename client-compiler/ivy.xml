@@ -45,7 +45,11 @@
         <dependency org="ant" name="ant-launcher" rev="1.6.5"
             conf="build,ide -> default" />
 
-        <dependency org="org.eclipse.jetty" name="jetty-distribution"
+        <dependency org="org.eclipse.jetty" name="jetty-annotations"
+            rev="8.1.12.v20130726" conf="build,ide -> default">
+            <exclude org="org.eclipse.jetty.orbit"></exclude>
+        </dependency>
+        <dependency org="org.eclipse.jetty" name="jetty-servlets"
             rev="8.1.12.v20130726" conf="build,ide -> default">
             <exclude org="org.eclipse.jetty.orbit"></exclude>
         </dependency>
