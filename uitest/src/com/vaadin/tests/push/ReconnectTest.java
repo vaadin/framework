@@ -32,6 +32,8 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
         setDebug(true);
         openTestURL();
+        openDebugLogTab();
+
         startTimer();
         waitUntilServerCounterChanges();
 

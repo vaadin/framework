@@ -970,4 +970,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         }
     }
 
+    protected void openDebugLogTab() {
+        findElement(By.xpath("//button[@title='Debug message log']")).click();
+    }
+
 }
