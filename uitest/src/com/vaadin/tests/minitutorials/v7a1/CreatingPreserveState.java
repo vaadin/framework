@@ -19,6 +19,7 @@ package com.vaadin.tests.minitutorials.v7a1;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
@@ -34,10 +35,20 @@ import com.vaadin.ui.UI;
 public class CreatingPreserveState extends UI {
     private static int instanceCounter = 0;
 
+    private final CssLayout content = new CssLayout();
+
     @Override
     public void init(VaadinRequest request) {
         TextField tf = new TextField("Instance #" + (++instanceCounter));
         tf.setImmediate(true);
-        setContent(new CssLayout(tf));
+
+        content.addComponent(tf);
+        setContent(content);
+    }
+
+    @Override
+    protected void refresh(VaadinRequest request) {
+        content.addComponent(new Label("UI was refreshed @"
+                + System.currentTimeMillis()));
     }
 }
