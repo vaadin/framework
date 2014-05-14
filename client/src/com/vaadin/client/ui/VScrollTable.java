@@ -2702,7 +2702,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         public void setUndefinedWidth() {
             definedWidth = false;
-            setWidth(-1, false);
+            if (!isResizing) {
+                setWidth(-1, false);
+            }
         }
 
         /**
@@ -3358,7 +3360,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     c.setAlign(ALIGN_LEFT);
 
                 }
-                if (col.hasAttribute("width")) {
+                if (col.hasAttribute("width") && !c.isResizing) {
                     // Make sure to accomodate for the sort indicator if
                     // necessary.
                     int width = col.getIntAttribute("width");
@@ -6637,6 +6639,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             int checksum = 0;
             while (headCells.hasNext()) {
                 hCell = (HeaderCell) headCells.next();
+                if (hCell.isResizing) {
+                    continue;
+                }
                 if (!hCell.isDefinedWidth()) {
                     int w = hCell.getNaturalColumnWidth(colIndex);
                     int newSpace;
