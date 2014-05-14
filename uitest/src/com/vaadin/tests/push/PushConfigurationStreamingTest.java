@@ -38,6 +38,8 @@ public class PushConfigurationStreamingTest extends PushConfigurationTest {
 
     @Test
     public void testStreaming() throws InterruptedException {
+        openDebugLogTab();
+
         new Select(getTransportSelect()).selectByVisibleText("STREAMING");
         new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
 

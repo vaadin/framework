@@ -32,7 +32,9 @@ public class CtrlShiftMultiselectTest extends MultiBrowserTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         List<DesiredCapabilities> browsers = super.getBrowsersToTest();
+        // Shift + click doesn't select all rows correctly on these browsers
         browsers.remove(Browser.FIREFOX.getDesiredCapabilities());
+        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
 
         return browsers;
     }

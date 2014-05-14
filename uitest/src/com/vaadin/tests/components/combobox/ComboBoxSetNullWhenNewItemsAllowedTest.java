@@ -20,9 +20,11 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.commands.TestBenchElementCommands;
+import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -35,21 +37,18 @@ public class ComboBoxSetNullWhenNewItemsAllowedTest extends MultiBrowserTest {
             throws InterruptedException {
         setDebug(true);
         openTestURL();
-        Thread.sleep(1000);
 
-        WebElement element = findElement();
+        WebElement element = $(ComboBoxElement.class).first().findElement(
+                By.vaadin("#textbox"));
         ((TestBenchElementCommands) element).click(8, 7);
         element.clear();
         element.sendKeys("New value");
         assertEquals("New value", element.getAttribute("value"));
-        element.sendKeys(Keys.RETURN);
+        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+            new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+        } else {
+            element.sendKeys(Keys.RETURN);
+        }
         assertEquals("", element.getAttribute("value"));
     }
-
-    private WebElement findElement() {
-        return getDriver()
-                .findElement(
-                        By.vaadin("runcomvaadintestscomponentscomboboxComboBoxSetNullWhenNewItemsAllowed::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VFilterSelect[0]#textbox"));
-    }
-
 }

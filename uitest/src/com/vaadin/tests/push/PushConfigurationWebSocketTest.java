@@ -33,6 +33,7 @@ public class PushConfigurationWebSocketTest extends PushConfigurationTest {
         List<DesiredCapabilities> browsers = super.getBrowsersToTest();
         browsers.remove(Browser.IE8.getDesiredCapabilities());
         browsers.remove(Browser.IE9.getDesiredCapabilities());
+        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
 
         return browsers;
     }

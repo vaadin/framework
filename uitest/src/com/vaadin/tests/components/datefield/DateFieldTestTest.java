@@ -19,10 +19,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateFieldTestTest extends MultiBrowserTest {
@@ -44,12 +44,8 @@ public class DateFieldTestTest extends MultiBrowserTest {
     }
 
     private void assertNoErrorNotification() {
-        try {
-            getDriver().findElement(
-                    By.xpath("//div[contains(@class, 'v-Notification') ]"));
-            Assert.fail("Error notification shown!");
-        } catch (NoSuchElementException e) {
-            // As expected
+        if (isElementPresent(NotificationElement.class)) {
+            Assert.fail("Notification was present");
         }
     }
 

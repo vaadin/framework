@@ -956,10 +956,14 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     public void hitButton(String id) {
-        WebDriverBackedSelenium selenium = new WebDriverBackedSelenium(driver,
-                driver.getCurrentUrl());
+        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+            driver.findElement(By.id(id)).click();
+        } else {
+            WebDriverBackedSelenium selenium = new WebDriverBackedSelenium(
+                    driver, driver.getCurrentUrl());
 
-        selenium.keyPress("id=" + id, "\\13");
+            selenium.keyPress("id=" + id, "\\13");
+        }
     }
 
     protected void openDebugLogTab() {

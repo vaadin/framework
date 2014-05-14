@@ -18,15 +18,27 @@ package com.vaadin.tests.components.tabsheet;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TabSheetFocusedTabTest extends MultiBrowserTest {
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
+        // PhantomJS doesn't send Focus / Blur events when clicking or
+        // navigating with keyboard
+        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
+        return browsers;
+    }
 
     @Override
     protected Class<?> getUIClass() {
@@ -41,7 +53,7 @@ public class TabSheetFocusedTabTest extends MultiBrowserTest {
 
         assertTrue(isFocused(getTab(1)));
 
-        new Actions(getDriver()).sendKeys(Keys.RIGHT).perform();
+        new Actions(getDriver()).sendKeys(Keys.ARROW_RIGHT).perform();
 
         assertFalse(isFocused(getTab(1)));
         assertTrue(isFocused(getTab(3)));
@@ -65,6 +77,7 @@ public class TabSheetFocusedTabTest extends MultiBrowserTest {
     }
 
     private boolean isFocused(WebElement tab) {
+
         return tab.getAttribute("class").contains("v-tabsheet-tabitem-focus");
     }
 

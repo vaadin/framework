@@ -21,11 +21,6 @@ import org.junit.Test;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- * 
- * @since
- * @author Vaadin Ltd
- */
 public class FontIconsTest extends MultiBrowserTest {
 
     @Test
