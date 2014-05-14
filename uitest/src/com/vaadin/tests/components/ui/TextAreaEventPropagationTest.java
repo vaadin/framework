@@ -18,11 +18,13 @@ package com.vaadin.tests.components.ui;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.elements.TextAreaElement;
+import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -35,7 +37,7 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
     @Test
     public void testTextAreaEnterEventPropagation() throws InterruptedException {
         openTestURL();
-        WebElement textArea = vaadinElement("//TextArea[0]");
+        WebElement textArea = $(TextAreaElement.class).first();
         Actions builder = new Actions(driver);
         builder.click(textArea);
         builder.sendKeys(textArea, "first line asdf");
@@ -43,11 +45,11 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
         builder.sendKeys(textArea, "second line jkl;");
         builder.perform();
 
-        WebElement enterLabel = driver.findElement(By.id("gwt-uid-8"));
-        String text = enterLabel.getText();
+        String text = $(LabelElement.class).caption("Enter Label").first()
+                .getText();
         assertEquals(TextAreaEventPropagation.NO_BUTTON_PRESSED, text);
 
-        WebElement textField = vaadinElement("//TextField[0]");
+        WebElement textField = $(TextFieldElement.class).first();
         Actions builder2 = new Actions(driver);
         builder2.click(textField);
 
@@ -56,7 +58,7 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
 
         builder2.perform();
 
-        text = enterLabel.getText();
+        text = $(LabelElement.class).caption("Enter Label").first().getText();
 
         assertEquals(TextAreaEventPropagation.BUTTON_PRESSED, text);
 
@@ -66,7 +68,7 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
     public void testTextAreaEscapeEventPropagation()
             throws InterruptedException {
         openTestURL();
-        WebElement textArea = vaadinElement("//TextArea[0]");
+        WebElement textArea = $(TextAreaElement.class).first();
         Actions builder = new Actions(driver);
         builder.click(textArea);
         builder.sendKeys(textArea, "first line asdf");
@@ -75,11 +77,10 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
         builder.sendKeys(Keys.ESCAPE);
         builder.perform();
 
-        WebElement enterLabel = driver.findElement(By.id("gwt-uid-8"));
-        String text = enterLabel.getText();
+        String text = $(LabelElement.class).caption("Enter Label").first()
+                .getText();
         assertEquals(TextAreaEventPropagation.NO_BUTTON_PRESSED, text);
-        WebElement escapeLabel = driver.findElement(By.id("gwt-uid-10"));
-        text = escapeLabel.getText();
+        text = $(LabelElement.class).caption("Escape Label").first().getText();
         assertEquals(TextAreaEventPropagation.BUTTON_PRESSED, text);
 
     }
@@ -88,7 +89,7 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
     public void testTextFieldEscapeEventPropagation()
             throws InterruptedException {
         openTestURL();
-        WebElement textArea = vaadinElement("//TextArea[0]");
+        WebElement textArea = $(TextAreaElement.class).first();
         Actions builder = new Actions(driver);
         builder.click(textArea);
         builder.sendKeys(textArea, "first line asdf");
@@ -96,12 +97,11 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
         builder.sendKeys(textArea, "second line jkl;");
         builder.perform();
 
-        WebElement enterLabel = driver.findElement(By.id("gwt-uid-8"));
-        String text = enterLabel.getText();
+        String text = $(LabelElement.class).caption("Enter Label").first()
+                .getText();
         assertEquals(TextAreaEventPropagation.NO_BUTTON_PRESSED, text);
-        WebElement escapeLabel = driver.findElement(By.id("gwt-uid-10"));
 
-        WebElement textField = vaadinElement("//TextField[0]");
+        WebElement textField = $(TextFieldElement.class).first();
         Actions builder2 = new Actions(driver);
         builder2.click(textField);
 
@@ -111,13 +111,10 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
 
         builder2.perform();
 
-        text = enterLabel.getText();
+        text = $(LabelElement.class).caption("Enter Label").first().getText();
         assertEquals(TextAreaEventPropagation.BUTTON_PRESSED, text);
-
-        text = escapeLabel.getText();
-
+        text = $(LabelElement.class).caption("Escape Label").first().getText();
         assertEquals(TextAreaEventPropagation.BUTTON_PRESSED, text);
 
     }
-
 }

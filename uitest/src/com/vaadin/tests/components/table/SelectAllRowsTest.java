@@ -47,10 +47,11 @@ public class SelectAllRowsTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // Pressing Shift modifier key does not work with Firefox
+        // Pressing Shift modifier key does not work with Firefox and PhantomJS
         ArrayList<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(
                 super.getBrowsersToTest());
         browsers.remove(Browser.FIREFOX.getDesiredCapabilities());
+        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
         return browsers;
     }
 

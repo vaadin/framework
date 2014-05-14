@@ -48,10 +48,10 @@ public class TextAreaEventPropagation extends AbstractTestUIWithLog {
         FormLayout form = new FormLayout();
         TextArea textArea = new TextArea("Text input");
         TextField textField = new TextField("Text field input");
-        enterButtonPressed = new Label("Enter Label");
-        enterButtonPressed.setCaption(NO_BUTTON_PRESSED);
-        escapeButtonPressed = new Label("Escape Label");
-        escapeButtonPressed.setCaption(NO_BUTTON_PRESSED);
+        enterButtonPressed = new Label(NO_BUTTON_PRESSED);
+        enterButtonPressed.setCaption("Enter Label");
+        escapeButtonPressed = new Label(NO_BUTTON_PRESSED);
+        escapeButtonPressed.setCaption("Escape Label");
 
         Button enterButton = new Button("Enter");
         enterButton.setClickShortcut(KeyCode.ENTER);
@@ -60,7 +60,7 @@ public class TextAreaEventPropagation extends AbstractTestUIWithLog {
             @Override
             public void buttonClick(ClickEvent event) {
 
-                enterButtonPressed.setCaption(BUTTON_PRESSED);
+                enterButtonPressed.setValue(BUTTON_PRESSED);
             }
         });
 
@@ -71,7 +71,7 @@ public class TextAreaEventPropagation extends AbstractTestUIWithLog {
             @Override
             public void buttonClick(ClickEvent event) {
 
-                escapeButtonPressed.setCaption(BUTTON_PRESSED);
+                escapeButtonPressed.setValue(BUTTON_PRESSED);
             }
         });
 

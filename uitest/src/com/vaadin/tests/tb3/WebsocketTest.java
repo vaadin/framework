@@ -41,6 +41,7 @@ public abstract class WebsocketTest extends PrivateTB3Configuration {
         websocketBrowsers.addAll(MultiBrowserTest.getAllBrowsers());
         websocketBrowsers.remove(Browser.IE8.getDesiredCapabilities());
         websocketBrowsers.remove(Browser.IE9.getDesiredCapabilities());
+        websocketBrowsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
     }
 
     /**

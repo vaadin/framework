@@ -57,11 +57,6 @@ import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 
-/**
- * 
- * @since
- * @author Vaadin Ltd
- */
 public class FontIcons extends AbstractTestUI {
 
     @Override
@@ -105,7 +100,7 @@ public class FontIcons extends AbstractTestUI {
         Notification n = new Notification("Hey there!");
         n.setIcon(icon);
         n.setPosition(Position.BOTTOM_CENTER);
-        n.setDelayMsec(-1);
+        n.setDelayMsec(300000);
         n.show(Page.getCurrent());
 
         // grid of compoents

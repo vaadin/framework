@@ -17,9 +17,8 @@ package com.vaadin.tests.components.table;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class EmptyTableTest extends MultiBrowserTest {
@@ -33,12 +32,9 @@ public class EmptyTableTest extends MultiBrowserTest {
     }
 
     private void ensureNoErrors() {
-        try {
-            getDriver().findElement(By.className("v-Notification"));
-        } catch (NoSuchElementException e) {
-            return;
+        if (isElementPresent(NotificationElement.class)) {
+            Assert.fail("Error notification was shown!");
         }
-        Assert.fail("Error notification was shown!");
     }
 
 }
