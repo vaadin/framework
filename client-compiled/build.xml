@@ -85,7 +85,8 @@
             <arg value="-localWorkers" />
             <arg value="${localWorkers}" />
             <arg value="-strict" />
-            <arg value="-XenableClosureCompiler" />
+            <!-- Disabled for now as it breaks code, e.g. ButtonWithShortcutNotRendered -->
+            <!-- <arg value="-XenableClosureCompiler" />-->
             <arg line="${extraParams}" />
             <arg value="${module}" />
 
