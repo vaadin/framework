@@ -126,9 +126,13 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         } else {
             capabilities = getDesiredCapabilities();
 
-            WebDriver dr = TestBench.createDriver(new RemoteWebDriver(new URL(
-                    getHubURL()), capabilities));
-            setDriver(dr);
+            if (System.getProperty("useLocalWebDriver") != null) {
+                setupLocalDriver(capabilities);
+            } else {
+                WebDriver dr = TestBench.createDriver(new RemoteWebDriver(
+                        new URL(getHubURL()), capabilities));
+                setDriver(dr);
+            }
         }
 
         int w = SCREENSHOT_WIDTH;

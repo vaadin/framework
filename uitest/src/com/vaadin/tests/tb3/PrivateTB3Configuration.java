@@ -25,11 +25,11 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
 
@@ -185,6 +185,8 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
             driver = new ChromeDriver();
         } else if (BrowserUtil.isSafari(desiredCapabilities)) {
             driver = new SafariDriver();
+        } else if (BrowserUtil.isPhantomJS(desiredCapabilities)) {
+            driver = new PhantomJSDriver();
         } else {
             throw new RuntimeException(
                     "Not implemented support for running locally on "
