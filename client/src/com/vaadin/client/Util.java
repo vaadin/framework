@@ -627,16 +627,48 @@ public class Util {
         return reqHeight;
     }
 
-    public static native int getRequiredWidthBoundingClientRect(
-            com.google.gwt.dom.client.Element element)
-    /*-{
-        if (element.getBoundingClientRect) {
-          var rect = element.getBoundingClientRect();
-          return Math.ceil(rect.right - rect.left);
+    /**
+     * Gets the border-box width for the given element, i.e. element width +
+     * border + padding.
+     * 
+     * @param element
+     *            The element to check
+     * @return The border-box width for the element
+     */
+    public static double getPreciseRequiredWidth(
+            com.google.gwt.dom.client.Element element) {
+        double reqWidth;
+        if (browserUsesPreciseSizeByComputedStyle()) {
+            reqWidth = getPreciseWidthByComputedStyle(element);
         } else {
-          return element.offsetWidth;
+            reqWidth = getPreciseBoundingClientRectWidth(element);
         }
-    }-*/;
+        return reqWidth;
+    }
+
+    /**
+     * Gets the border-box height for the given element, i.e. element height +
+     * border + padding.
+     * 
+     * @param element
+     *            The element to check
+     * @return The border-box height for the element
+     */
+    public static double getPreciseRequiredHeight(
+            com.google.gwt.dom.client.Element element) {
+        double reqHeight;
+        if (browserUsesPreciseSizeByComputedStyle()) {
+            reqHeight = getPreciseHeightByComputedStyle(element);
+        } else {
+            reqHeight = getPreciseBoundingClientRectHeight(element);
+        }
+        return reqHeight;
+    }
+
+    public static int getRequiredWidthBoundingClientRect(
+            com.google.gwt.dom.client.Element element) {
+        return (int) Math.ceil(getPreciseBoundingClientRectWidth(element));
+    }
 
     public static native int getRequiredHeightComputedStyle(
             com.google.gwt.dom.client.Element element)
@@ -678,18 +710,10 @@ public class Util {
          return Math.ceil(width+border+padding);
      }-*/;
 
-    public static native int getRequiredHeightBoundingClientRect(
-            com.google.gwt.dom.client.Element element)
-    /*-{
-        var height;
-        if (element.getBoundingClientRect != null) {
-          var rect = element.getBoundingClientRect();
-          height = Math.ceil(rect.bottom - rect.top);
-        } else {
-          height = element.offsetHeight;
-        }
-        return height;
-    }-*/;
+    public static int getRequiredHeightBoundingClientRect(
+            com.google.gwt.dom.client.Element element) {
+        return (int) Math.ceil(getPreciseBoundingClientRectHeight(element));
+    }
 
     public static int getRequiredWidth(Widget widget) {
         return getRequiredWidth(widget.getElement());
@@ -697,6 +721,128 @@ public class Util {
 
     public static int getRequiredHeight(Widget widget) {
         return getRequiredHeight(widget.getElement());
+    }
+
+    /**
+     * Rounds pixel size up or down depending on the browser.
+     * <p>
+     * <li>
+     * IE9, IE10 - rounds always down to closest integer
+     * <li>
+     * Others - rounds half up to closest integer (1.49 -> 1.0, 1.5 -> 2.0)
+     * 
+     * @param preciseSize
+     *            Decimal number to round.
+     * @return Rounded integer
+     */
+    public static int roundPreciseSize(double preciseSize) {
+        boolean roundAlwaysDown = BrowserInfo.get().isIE9()
+                || BrowserInfo.get().isIE10();
+        if (roundAlwaysDown) {
+            return (int) preciseSize;
+        } else {
+            // round to closest integer
+            return (int) Math.round(preciseSize);
+        }
+    }
+
+    /**
+     * Returns getBoundingClientRect.width, if supported. Otherwise return
+     * offsetWidth. Includes the padding, scrollbar, and the border. Excludes
+     * the margin.
+     * 
+     * @param elem
+     *            Target element to measure
+     */
+    private static native double getPreciseBoundingClientRectWidth(Element elem)
+    /*-{
+         try {
+             if (elem.getBoundingClientRect) {
+                 return elem.getBoundingClientRect().width;
+             } else {
+                 return (elem.offsetWidth) || 0;
+             }
+         } catch (e) {
+             // JS exception is thrown if the elem is not attached to the document.
+             return 0;
+         }
+     }-*/;
+
+    /**
+     * Returns getBoundingClientRect.height, if supported. Otherwise return
+     * offsetHeight. Includes the padding, scrollbar, and the border. Excludes
+     * the margin.
+     * 
+     * @param elem
+     *            Target element to measure
+     */
+    private static native double getPreciseBoundingClientRectHeight(Element elem)
+    /*-{
+         try {
+             if (elem.getBoundingClientRect) {
+                 return elem.getBoundingClientRect().height;
+             } else {
+                 return (elem.offsetHeight) || 0;
+             }
+         } catch (e) {
+             // JS exception is thrown if the elem is not attached to the document.
+             return 0;
+         }
+     }-*/;
+
+    /**
+     * Parse computed styles to get precise width for the given element.
+     * Excludes the margin. Fallback to offsetWidth if computed styles is not
+     * defined, or if width can't be read or it's not fractional.
+     * 
+     * @param elem
+     *            Target element to measure
+     */
+    private static native double getPreciseWidthByComputedStyle(
+            com.google.gwt.dom.client.Element elem)
+    /*-{
+        var cs = elem.ownerDocument.defaultView.getComputedStyle(elem);
+        var size = cs && cs.getPropertyValue('width') || '';
+        if (size && size.indexOf('.') > -1) {
+            size = parseFloat(size)
+                        + parseInt(cs.getPropertyValue('padding-left'))
+                        + parseInt(cs.getPropertyValue('padding-right'))
+                        + parseInt(cs.getPropertyValue('border-left-width'))
+                        + parseInt(cs.getPropertyValue('border-right-width'));
+        } else {
+            size = elem.offsetWidth;
+        }
+        return size;
+     }-*/;
+
+    /**
+     * Parse computed styles to get precise height for the given element.
+     * Excludes the margin. Fallback to offsetHeight if computed styles is not
+     * defined, or if height can't be read or it's not fractional.
+     * 
+     * @param elem
+     *            Target element to measure
+     */
+    private static native double getPreciseHeightByComputedStyle(
+            com.google.gwt.dom.client.Element elem)
+    /*-{
+        var cs = elem.ownerDocument.defaultView.getComputedStyle(elem);
+        var size = cs && cs.getPropertyValue('height') || '';
+        if (size && size.indexOf('.') > -1) {
+            size = parseFloat(size)
+                        + parseInt(cs.getPropertyValue('padding-top'))
+                        + parseInt(cs.getPropertyValue('padding-bottom'))
+                        + parseInt(cs.getPropertyValue('border-top-width'))
+                        + parseInt(cs.getPropertyValue('border-bottom-width'));
+        } else {
+            size = elem.offsetHeight;
+        }
+        return size;
+     }-*/;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    private static boolean browserUsesPreciseSizeByComputedStyle() {
+        return BrowserInfo.get().isIE9();
     }
 
     /**

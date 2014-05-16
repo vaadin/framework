@@ -551,8 +551,10 @@ public abstract class AbstractOrderedLayoutConnector extends
 
     /**
      * Does the layout need to expand?
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
      */
-    private boolean needsExpand() {
+    public boolean needsExpand() {
         return needsExpand;
     }
 

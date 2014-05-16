@@ -36,6 +36,7 @@ import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.client.ui.layout.LayoutDependencyTree;
+import com.vaadin.client.ui.orderedlayout.AbstractOrderedLayoutConnector;
 
 public class LayoutManager {
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";
@@ -720,6 +721,16 @@ public class LayoutManager {
         Profiler.enter("LayoutManager.measureConnector");
         Element element = connector.getWidget().getElement();
         MeasuredSize measuredSize = getMeasuredSize(connector);
+        if (isBrowserOptimizedMeasuringNeeded()
+                && isWrappedInsideExpandBlock(connector)) {
+            // this fixes zoom/sub-pixel issues with ie9+ and Chrome
+            // (#13359)
+            // Update measuring logic to round up and/or down depending on
+            // browser.
+            measuredSize.setMeasurer(new MeasuredSize.RoundingMeasurer());
+        } else {
+            measuredSize.setMeasurer(null);// resets to default measurer
+        }
         MeasureResult measureResult = measuredAndUpdate(element, measuredSize);
 
         if (measureResult.isChanged()) {
@@ -727,6 +738,23 @@ public class LayoutManager {
                     measureResult.isHeightChanged());
         }
         Profiler.leave("LayoutManager.measureConnector");
+    }
+
+    /**
+     * Return true if browser may need some optimized width and height measuring
+     * for MeasuredSize.
+     * <p>
+     * Usually optimization is needed to avoid unnecessary scroll bars appearing
+     * in layouts caused by sub-pixel rounding. And to avoid LayoutManager
+     * doLayout() going into a loop trying to fit content with fractional size
+     * (percentages) inside a parent element and stopping only after safety
+     * iteration limit exceeds, also caused by sub-pixel rounding.
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     */
+    private static boolean isBrowserOptimizedMeasuringNeeded() {
+        return BrowserInfo.get().isChrome()
+                || (BrowserInfo.get().isIE() && !BrowserInfo.get().isIE8());
     }
 
     private void onConnectorChange(ComponentConnector connector,
@@ -808,6 +836,26 @@ public class LayoutManager {
 
     private static boolean isManagedLayout(ComponentConnector connector) {
         return connector instanceof ManagedLayout;
+    }
+
+    /**
+     * Is the given connector wrapped inside a 'expanding' content. Detected by
+     * checking if the connector's parent is AbstractOrderedLayoutConnector that
+     * expands. 'Expand' means that some layout slots may expand its content
+     * width or height to some percentage fraction.
+     * 
+     * @param connector
+     *            The connector to check
+     * @return True if connector is wrapped inside a
+     *         AbstractOrderedLayoutConnector that expands
+     */
+    private static boolean isWrappedInsideExpandBlock(
+            ComponentConnector connector) {
+        ServerConnector parent = connector.getParent();
+        if (parent instanceof AbstractOrderedLayoutConnector) {
+            return ((AbstractOrderedLayoutConnector) parent).needsExpand();
+        }
+        return false;
     }
 
     public void forceLayout() {
