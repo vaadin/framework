@@ -1,7 +1,6 @@
 package com.vaadin.data.util.sqlcontainer;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 public class UtilTest {

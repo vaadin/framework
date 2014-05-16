@@ -1,8 +1,7 @@
 package com.vaadin.data.util.sqlcontainer.filters;
 
-import junit.framework.Assert;
-
 import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Item;

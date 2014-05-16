@@ -24,9 +24,8 @@ import java.util.Properties;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import junit.framework.Assert;
-
 import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.annotations.VaadinServletConfiguration;

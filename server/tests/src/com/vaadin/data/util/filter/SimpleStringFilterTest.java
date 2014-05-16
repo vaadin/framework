@@ -1,6 +1,6 @@
 package com.vaadin.data.util.filter;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 public class SimpleStringFilterTest extends
         AbstractFilterTest<SimpleStringFilter> {

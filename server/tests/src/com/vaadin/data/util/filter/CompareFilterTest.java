@@ -3,7 +3,7 @@ package com.vaadin.data.util.filter;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;

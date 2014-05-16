@@ -1,6 +1,6 @@
 package com.vaadin.data.util.filter;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
