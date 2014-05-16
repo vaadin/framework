@@ -1463,8 +1463,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         int iconHeight = Util.getRequiredHeight(selectedItemIcon);
         int marginTop = (availableHeight - iconHeight) / 2;
-        DOM.setStyleAttribute(selectedItemIcon.getElement(), "marginTop",
-                marginTop + "px");
+        selectedItemIcon.getElement().getStyle()
+                .setMarginTop(marginTop, Unit.PX);
     }
 
     private static Set<Integer> navigationKeyCodes = new HashSet<Integer>();

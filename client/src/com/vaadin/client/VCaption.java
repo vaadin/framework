@@ -18,6 +18,7 @@ package com.vaadin.client;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
@@ -585,19 +586,19 @@ public class VCaption extends HTML {
     }
 
     public void setAlignment(String alignment) {
-        DOM.setStyleAttribute(getElement(), "textAlign", alignment);
+        getElement().getStyle().setProperty("textAlign", alignment);
     }
 
     public void setMaxWidth(int maxWidth) {
         this.maxWidth = maxWidth;
-        DOM.setStyleAttribute(getElement(), "width", maxWidth + "px");
+        getElement().getStyle().setWidth(maxWidth, Unit.PX);
 
         if (icon != null) {
-            DOM.setStyleAttribute(icon.getElement(), "width", "");
+            icon.getElement().getStyle().clearWidth();
         }
 
         if (captionText != null) {
-            DOM.setStyleAttribute(captionText, "width", "");
+            captionText.getStyle().clearWidth();
         }
 
         int requiredWidth = getRequiredWidth();
@@ -628,8 +629,8 @@ public class VCaption extends HTML {
                 if (availableWidth > iconRequiredWidth) {
                     availableWidth -= iconRequiredWidth;
                 } else {
-                    DOM.setStyleAttribute(icon.getElement(), "width",
-                            availableWidth + "px");
+                    icon.getElement().getStyle()
+                            .setWidth(availableWidth, Unit.PX);
                     availableWidth = 0;
                 }
             }
@@ -639,8 +640,7 @@ public class VCaption extends HTML {
                     availableWidth -= captionWidth;
 
                 } else {
-                    DOM.setStyleAttribute(captionText, "width", availableWidth
-                            + "px");
+                    captionText.getStyle().setWidth(availableWidth, Unit.PX);
                     availableWidth = 0;
                 }
 

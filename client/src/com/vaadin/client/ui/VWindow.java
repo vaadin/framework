@@ -31,8 +31,10 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -328,7 +330,7 @@ public class VWindow extends VWindowOverlay implements
     protected void setZIndex(int zIndex) {
         super.setZIndex(zIndex);
         if (vaadinModality) {
-            DOM.setStyleAttribute(getModalityCurtain(), "zIndex", "" + zIndex);
+            getModalityCurtain().getStyle().setZIndex(zIndex);
         }
     }
 
@@ -622,9 +624,9 @@ public class VWindow extends VWindowOverlay implements
 
         this.closable = closable;
         if (closable) {
-            DOM.setStyleAttribute(closeBox, "display", "");
+            closeBox.getStyle().clearDisplay();
         } else {
-            DOM.setStyleAttribute(closeBox, "display", "none");
+            closeBox.getStyle().setDisplay(Display.NONE);
         }
 
     }
@@ -725,8 +727,8 @@ public class VWindow extends VWindowOverlay implements
     }
 
     private void showModalityCurtain() {
-        DOM.setStyleAttribute(getModalityCurtain(), "zIndex",
-                "" + (windowOrder.indexOf(this) + Z_INDEX));
+        getModalityCurtain().getStyle().setZIndex(
+                windowOrder.indexOf(this) + Z_INDEX);
 
         if (isShowing()) {
             getOverlayContainer().insertBefore(getModalityCurtain(),
@@ -801,12 +803,12 @@ public class VWindow extends VWindowOverlay implements
     private Element createCurtain() {
         Element curtain = DOM.createDiv();
 
-        DOM.setStyleAttribute(curtain, "position", "absolute");
-        DOM.setStyleAttribute(curtain, "top", "0px");
-        DOM.setStyleAttribute(curtain, "left", "0px");
-        DOM.setStyleAttribute(curtain, "width", "100%");
-        DOM.setStyleAttribute(curtain, "height", "100%");
-        DOM.setStyleAttribute(curtain, "zIndex", "" + VOverlay.Z_INDEX);
+        curtain.getStyle().setPosition(Position.ABSOLUTE);
+        curtain.getStyle().setTop(0, Unit.PX);
+        curtain.getStyle().setLeft(0, Unit.PX);
+        curtain.getStyle().setWidth(100, Unit.PCT);
+        curtain.getStyle().setHeight(100, Unit.PCT);
+        curtain.getStyle().setZIndex(VOverlay.Z_INDEX);
 
         return curtain;
     }
@@ -1041,7 +1043,7 @@ public class VWindow extends VWindowOverlay implements
                 }
                 showResizingCurtain();
                 if (BrowserInfo.get().isIE()) {
-                    DOM.setStyleAttribute(resizeBox, "visibility", "hidden");
+                    resizeBox.getStyle().setVisibility(Visibility.HIDDEN);
                 }
                 resizing = true;
                 startX = Util.getTouchOrMouseClientX(event);
@@ -1059,7 +1061,7 @@ public class VWindow extends VWindowOverlay implements
             case Event.ONLOSECAPTURE:
                 hideResizingCurtain();
                 if (BrowserInfo.get().isIE()) {
-                    DOM.setStyleAttribute(resizeBox, "visibility", "");
+                    resizeBox.getStyle().clearVisibility();
                 }
                 resizing = false;
                 break;

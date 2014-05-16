@@ -19,6 +19,7 @@ import com.google.gwt.aria.client.LiveValue;
 import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -120,11 +121,11 @@ public class VTooltip extends VWindowOverlay {
         }
         if (info.getTitle() != null && !"".equals(info.getTitle())) {
             DOM.setInnerHTML(description, info.getTitle());
-            DOM.setStyleAttribute(description, "display", "");
+            description.getStyle().clearDisplay();
             hasContent = true;
         } else {
             DOM.setInnerHTML(description, "");
-            DOM.setStyleAttribute(description, "display", "none");
+            description.getStyle().setDisplay(Display.NONE);
         }
         if (hasContent) {
             // Issue #8454: With IE7 the tooltips size is calculated based on

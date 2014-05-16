@@ -16,7 +16,7 @@
 package com.vaadin.client.ui.tabsheet;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.TooltipInfo;
@@ -77,11 +77,11 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
 
         // tabs; push or not
         if (!isUndefinedWidth()) {
-            DOM.setStyleAttribute(getWidget().tabs, "overflow", "hidden");
+            getWidget().tabs.getStyle().setOverflow(Overflow.HIDDEN);
         } else {
             getWidget().showAllTabs();
-            DOM.setStyleAttribute(getWidget().tabs, "width", "");
-            DOM.setStyleAttribute(getWidget().tabs, "overflow", "visible");
+            getWidget().tabs.getStyle().clearWidth();
+            getWidget().tabs.getStyle().setOverflow(Overflow.VISIBLE);
             getWidget().updateDynamicWidth();
         }
 

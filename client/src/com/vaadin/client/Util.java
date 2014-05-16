@@ -33,6 +33,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -212,10 +213,10 @@ public class Util {
         if (widthGuess < 1) {
             widthGuess = 1;
         }
-        DOM.setStyleAttribute(element, "width", widthGuess + "px");
+        element.getStyle().setWidth(widthGuess, Unit.PX);
         int padding = element.getOffsetWidth() - widthGuess;
 
-        DOM.setStyleAttribute(element, "width", originalWidth);
+        element.getStyle().setProperty("width", originalWidth);
 
         return padding;
     }
@@ -228,10 +229,10 @@ public class Util {
         if (widthGuess < 1) {
             widthGuess = 1;
         }
-        DOM.setStyleAttribute(element, "height", widthGuess + "px");
+        element.getStyle().setHeight(widthGuess, Unit.PX);
         int padding = element.getOffsetHeight() - widthGuess;
 
-        DOM.setStyleAttribute(element, "height", originalHeight);
+        element.getStyle().setProperty("height", originalHeight);
         return padding;
     }
 
@@ -323,11 +324,11 @@ public class Util {
     }
 
     private static void setWidth(Widget widget, String width) {
-        DOM.setStyleAttribute(widget.getElement(), "width", width);
+        widget.getElement().getStyle().setProperty("width", width);
     }
 
     private static void setHeight(Widget widget, String height) {
-        DOM.setStyleAttribute(widget.getElement(), "height", height);
+        widget.getElement().getStyle().setProperty("height", height);
     }
 
     public static int setWidthExcludingPaddingAndBorder(Widget widget,
@@ -356,7 +357,7 @@ public class Util {
             widthGuess = 0;
         }
 
-        DOM.setStyleAttribute(element, "width", widthGuess + "px");
+        element.getStyle().setWidth(widthGuess, Unit.PX);
         int captionOffsetWidth = DOM.getElementPropertyInt(element,
                 "offsetWidth");
 
@@ -372,7 +373,7 @@ public class Util {
                 // Cannot set negative width even if we would want to
                 w = 0;
             }
-            DOM.setStyleAttribute(element, "width", w + "px");
+            element.getStyle().setWidth(w, Unit.PX);
 
         }
 
@@ -389,7 +390,7 @@ public class Util {
             heightGuess = 0;
         }
 
-        DOM.setStyleAttribute(element, "height", heightGuess + "px");
+        element.getStyle().setHeight(heightGuess, Unit.PX);
         int captionOffsetHeight = DOM.getElementPropertyInt(element,
                 "offsetHeight");
 
@@ -405,7 +406,7 @@ public class Util {
                 // Cannot set negative height even if we would want to
                 h = 0;
             }
-            DOM.setStyleAttribute(element, "height", h + "px");
+            element.getStyle().setHeight(h, Unit.PX);
 
         }
 
@@ -424,9 +425,9 @@ public class Util {
 
     public static void setFloat(Element element, String value) {
         if (BrowserInfo.get().isIE()) {
-            DOM.setStyleAttribute(element, "styleFloat", value);
+            element.getStyle().setProperty("styleFloat", value);
         } else {
-            DOM.setStyleAttribute(element, "cssFloat", value);
+            element.getStyle().setProperty("cssFloat", value);
         }
     }
 
