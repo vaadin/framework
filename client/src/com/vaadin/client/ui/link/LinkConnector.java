@@ -16,6 +16,7 @@
 
 package com.vaadin.client.ui.link;
 
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.DOM;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -83,8 +84,8 @@ public class LinkConnector extends AbstractComponentConnector {
             DOM.insertChild(getWidget().getElement(),
                     getWidget().errorIndicatorElement, 0);
         } else if (getWidget().errorIndicatorElement != null) {
-            DOM.setStyleAttribute(getWidget().errorIndicatorElement, "display",
-                    "none");
+            getWidget().errorIndicatorElement.getStyle().setDisplay(
+                    Display.NONE);
         }
 
         if (getWidget().icon != null) {

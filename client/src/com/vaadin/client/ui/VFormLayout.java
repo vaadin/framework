@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -331,10 +332,10 @@ public class VFormLayout extends SimplePanel {
             if (BrowserInfo.get().isIE()) {
                 if (isEmpty) {
                     setHeight("0px");
-                    DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+                    getElement().getStyle().setOverflow(Overflow.HIDDEN);
                 } else {
                     setHeight("");
-                    DOM.setStyleAttribute(getElement(), "overflow", "");
+                    getElement().getStyle().clearOverflow();
                 }
 
             }
