@@ -72,13 +72,13 @@ public class JsonCodec implements Serializable {
         public JSONArray put(Object value) {
             throw new UnsupportedOperationException(
                     "Immutable empty JSONArray.");
-        };
+        }
 
         @Override
         public JSONArray put(int index, Object value) {
             throw new UnsupportedOperationException(
                     "Immutable empty JSONArray.");
-        };
+        }
     };
 
     public static interface BeanProperty extends Serializable {
