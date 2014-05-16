@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TabsheetScrollingTest extends MultiBrowserTest {
@@ -38,19 +39,11 @@ public class TabsheetScrollingTest extends MultiBrowserTest {
     }
 
     private WebElement getTab(int index) {
-        return getDriver().findElement(
-                By.vaadin("/VVerticalLayout[0]/Slot[1]"
-                        + "/VVerticalLayout[0]/Slot[0]/VTabsheet[0]"
-                        + "/domChild[0]/domChild[0]/domChild[0]"
-                        + "/domChild[0]/domChild[" + index + "]"));
-
+        return getDriver().findElement(By.vaadin("//TabSheet#tab[1]"));
     }
 
     private String getHideButtonText() {
-        WebElement buttonCaption = getDriver().findElement(
-                By.vaadin("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]"
-                        + "/Slot[0]/VTabsheet[0]/VTabsheetPanel[0]"
-                        + "/VButton[0]/domChild[0]/domChild[0]"));
+        ButtonElement buttonCaption = $(ButtonElement.class).first();
         return buttonCaption.getText();
     }
 

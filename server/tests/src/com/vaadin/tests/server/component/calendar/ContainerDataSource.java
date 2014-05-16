@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,6 +25,7 @@ import org.junit.Test;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Calendar;
@@ -325,6 +326,37 @@ public class ContainerDataSource extends TestCase {
 
         // Ensure no events
         assertEquals(0, calendar.getEvents(start, end).size());
+    }
+
+    @Test
+    public void testStyleNamePropertyRetrieved() {
+        IndexedContainer ic = (IndexedContainer) createTestIndexedContainer();
+        ic.addContainerProperty("testStyleName", String.class, "");
+        for (int i = 0; i < 10; i++) {
+            Item item = ic.getItem(ic.getIdByIndex(i));
+            @SuppressWarnings("unchecked")
+            Property<String> itemProperty = item
+                    .getItemProperty("testStyleName");
+            itemProperty.setValue("testStyle");
+        }
+
+        ContainerEventProvider provider = new ContainerEventProvider(ic);
+        provider.setCaptionProperty("testCaption");
+        provider.setDescriptionProperty("testDescription");
+        provider.setStartDateProperty("testStartDate");
+        provider.setEndDateProperty("testEndDate");
+        provider.setStyleNameProperty("testStyleName");
+
+        calendar.setEventProvider(provider);
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        Date now = cal.getTime();
+        cal.add(java.util.Calendar.DAY_OF_MONTH, 20);
+        Date then = cal.getTime();
+        List<CalendarEvent> events = calendar.getEventProvider().getEvents(now,
+                then);
+        for (CalendarEvent ce : events) {
+            assertEquals("testStyle", ce.getStyleName());
+        }
     }
 
     private static Indexed createTestBeanItemContainer() {

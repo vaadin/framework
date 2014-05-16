@@ -25,6 +25,7 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
@@ -44,9 +45,8 @@ import com.vaadin.testbench.TestBench;
 public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
     private static final String PORT_PROPERTY = "com.vaadin.testbench.deployment.port";
-    private final Properties properties = new Properties();
-
-    public PrivateTB3Configuration() {
+    private static final Properties properties = new Properties();
+    static {
         File file = new File("work", "eclipse-run-selected-test.properties");
         if (file.exists()) {
             try {
@@ -57,7 +57,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         }
     }
 
-    private String getProperty(String name) {
+    private static String getProperty(String name) {
         String property = properties.getProperty(name);
         if (property == null) {
             property = System.getProperty(name);
@@ -86,6 +86,15 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         if (getClass().getAnnotation(RunLocally.class) != null) {
             return "localhost";
         }
+        return getConfiguredDeploymentHostname();
+    }
+
+    /**
+     * Gets the hostname that tests are configured to use.
+     * 
+     * @return the host name configuration value
+     */
+    public static String getConfiguredDeploymentHostname() {
         String hostName = getProperty(HOSTNAME_PROPERTY);
 
         if (hostName == null || "".equals(hostName)) {
@@ -97,6 +106,15 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     @Override
     protected int getDeploymentPort() {
+        return getConfiguredDeploymentPort();
+    }
+
+    /**
+     * Gets the port that tests are configured to use.
+     * 
+     * @return the port configuration value
+     */
+    public static int getConfiguredDeploymentPort() {
         String portString = getProperty(PORT_PROPERTY);
 
         int port = 8888;
@@ -115,7 +133,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
      * @throws RuntimeException
      *             if there was an error or no IP was found
      */
-    private String findAutoHostname() {
+    private static String findAutoHostname() {
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface
                     .getNetworkInterfaces();

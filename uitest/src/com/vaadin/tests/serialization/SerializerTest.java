@@ -1,5 +1,5 @@
 /* 
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,6 +38,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.widgetset.client.ComplexTestBean;
 import com.vaadin.tests.widgetset.client.SerializerTestRpc;
+import com.vaadin.tests.widgetset.client.SerializerTestState;
 import com.vaadin.tests.widgetset.client.SimpleTestBean;
 import com.vaadin.tests.widgetset.server.SerializerTestExtension;
 
@@ -58,44 +59,110 @@ public class SerializerTest extends AbstractTestUI {
 
         SerializerTestRpc rpc = testExtension
                 .getRpcProxy(SerializerTestRpc.class);
+        SerializerTestState state = testExtension.getState();
+
         rpc.sendBeanSubclass(new SimpleTestBean() {
             @Override
             public int getValue() {
                 return 42;
             }
         });
+        state.simpleTestBean = new SimpleTestBean() {
+            @Override
+            public int getValue() {
+                return 42;
+            }
+        };
+
         rpc.sendBoolean(true, Boolean.FALSE, new boolean[] { true, true, false,
                 true, false, false });
+        state.booleanValue = true;
+        state.booleanObjectValue = Boolean.FALSE;
+        state.booleanArray = new boolean[] { true, true, false, true, false,
+                false };
+
         rpc.sendByte((byte) 5, Byte.valueOf((byte) -12), new byte[] { 3, 1, 2 });
+        state.byteValue = (byte) 5;
+        state.byteObjectValue = Byte.valueOf((byte) -12);
+        state.byteArray = new byte[] { 3, 1, 2 };
+
         rpc.sendChar('\u222b', Character.valueOf('å'), "aBcD".toCharArray());
+        state.charValue = '\u222b';
+        state.charObjectValue = Character.valueOf('å');
+        state.charArray = "aBcD".toCharArray();
+
         rpc.sendInt(Integer.MAX_VALUE, Integer.valueOf(0), new int[] { 5, 7 });
+        state.intValue = Integer.MAX_VALUE;
+        state.intObjectValue = Integer.valueOf(0);
+        state.intArray = new int[] { 5, 7 };
+
         rpc.sendLong(577431841358l, Long.valueOf(0), new long[] {
                 -57841235865l, 57 });
+        state.longValue = 577431841358l;
+        state.longObjectValue = Long.valueOf(0);
+        state.longArray = new long[] { -57841235865l, 57 };
+
         rpc.sendFloat(3.14159f, Float.valueOf(Math.nextUp(1)), new float[] {
                 57, 0, -12 });
+        state.floatValue = 3.14159f;
+        state.floatObjectValue = Float.valueOf(Math.nextUp(1));
+        state.floatArray = new float[] { 57, 0, -12 };
+
         rpc.sendDouble(Math.PI, Double.valueOf(-Math.E), new double[] {
                 Double.MAX_VALUE, Double.MIN_VALUE });
+        state.doubleValue = Math.PI;
+        state.doubleValue = Double.valueOf(-Math.E);
+        state.doubleArray = new double[] { Double.MAX_VALUE, Double.MIN_VALUE };
+
         rpc.sendString("This is a tesing string ‡");
+        state.string = "This is a tesing string ‡";
+
         rpc.sendConnector(this);
+        state.connector = this;
+
         rpc.sendBean(
                 new ComplexTestBean(new SimpleTestBean(0),
                         new SimpleTestBean(1), Arrays.asList(
                                 new SimpleTestBean(3), new SimpleTestBean(4)),
                         5), new SimpleTestBean(6),
                 new SimpleTestBean[] { new SimpleTestBean(7) });
+        state.complexTestBean = new ComplexTestBean(new SimpleTestBean(0),
+                new SimpleTestBean(1), Arrays.asList(new SimpleTestBean(3),
+                        new SimpleTestBean(4)), 5);
+        state.simpleTestBean = new SimpleTestBean(6);
+        state.simpleTestBeanArray = new SimpleTestBean[] { new SimpleTestBean(7) };
+
         rpc.sendNull("Not null", null);
+        state.nullString = null;
+
         rpc.sendNestedArray(new int[][] { { 5 }, { 7 } },
                 new SimpleTestBean[][] { { new SimpleTestBean(4),
                         new SimpleTestBean(2) } });
+        state.nestedIntArray = new int[][] { { 5 }, { 7 } };
+        state.nestedBeanArray = new SimpleTestBean[][] { {
+                new SimpleTestBean(4), new SimpleTestBean(2) } };
+
         rpc.sendList(Arrays.asList(5, 8, -234), Arrays.<Connector> asList(this,
                 testExtension), Arrays.asList(new SimpleTestBean(234),
                 new SimpleTestBean(-568)));
+        state.intList = Arrays.asList(5, 8, -234);
+        state.connectorList = Arrays.<Connector> asList(this, testExtension);
+        state.simpleTestBeanList = Arrays.asList(new SimpleTestBean(234),
+                new SimpleTestBean(-568));
+
         rpc.sendArrayList(
                 Arrays.asList(new int[] { 1, 2 }, new int[] { 3, 4 }),
                 Arrays.asList(new Integer[] { 5, 6 }, new Integer[] { 7, 8 }),
                 Collections
                         .singletonList(new SimpleTestBean[] { new SimpleTestBean(
                                 7) }));
+        state.primitiveArrayList = Arrays.asList(new int[] { 1, 2 }, new int[] {
+                3, 4 });
+        state.objectArrayList = Arrays.asList(new Integer[] { 5, 6 },
+                new Integer[] { 7, 8 });
+        state.beanArrayList = Collections
+                .singletonList(new SimpleTestBean[] { new SimpleTestBean(7) });
+
         // Disabled because of #8861
         // rpc.sendListArray(
         // new List[] { Arrays.asList(1, 2), Arrays.asList(3, 4) },
@@ -103,6 +170,11 @@ public class SerializerTest extends AbstractTestUI {
         rpc.sendSet(new HashSet<Integer>(Arrays.asList(4, 7, 12)), Collections
                 .singleton((Connector) this), new HashSet<SimpleTestBean>(
                 Arrays.asList(new SimpleTestBean(1), new SimpleTestBean(2))));
+        state.intSet = new HashSet<Integer>(Arrays.asList(4, 7, 12));
+        state.connectorSet = Collections.singleton((Connector) this);
+
+        state.beanSet = new HashSet<SimpleTestBean>(Arrays.asList(
+                new SimpleTestBean(1), new SimpleTestBean(2)));
 
         rpc.sendMap(new HashMap<String, SimpleTestBean>() {
             {
@@ -125,6 +197,31 @@ public class SerializerTest extends AbstractTestUI {
                 put(new SimpleTestBean(-4), new SimpleTestBean(4));
             }
         });
+        state.stringMap = new HashMap<String, SimpleTestBean>() {
+            {
+                put("1", new SimpleTestBean(1));
+                put("2", new SimpleTestBean(2));
+            }
+        };
+        state.connectorMap = new HashMap<Connector, SimpleTestBean>() {
+            {
+                put(testExtension, new SimpleTestBean(3));
+                put(getUI(), new SimpleTestBean(4));
+            }
+        };
+        state.intMap = new HashMap<Integer, Connector>() {
+            {
+                put(5, testExtension);
+                put(10, getUI());
+            }
+        };
+        state.beanMap = new HashMap<SimpleTestBean, SimpleTestBean>() {
+            {
+                put(new SimpleTestBean(5), new SimpleTestBean(-5));
+                put(new SimpleTestBean(-4), new SimpleTestBean(4));
+            }
+        };
+
         rpc.sendWrappedGenerics(new HashMap<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>>() {
             {
                 put(Collections.singleton(new SimpleTestBean(42)),
@@ -136,13 +233,32 @@ public class SerializerTest extends AbstractTestUI {
                         });
             }
         });
+        state.generics = new HashMap<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>>() {
+            {
+                put(Collections.singleton(new SimpleTestBean(42)),
+                        new HashMap<Integer, List<SimpleTestBean>>() {
+                            {
+                                put(1, Arrays.asList(new SimpleTestBean(1),
+                                        new SimpleTestBean(3)));
+                            }
+                        });
+            }
+        };
 
         rpc.sendEnum(ContentMode.TEXT, new ContentMode[] {
                 ContentMode.PREFORMATTED, ContentMode.XML },
                 Arrays.asList(ContentMode.HTML, ContentMode.RAW));
 
+        state.contentMode = ContentMode.TEXT;
+        state.array = new ContentMode[] { ContentMode.PREFORMATTED,
+                ContentMode.XML };
+        state.list = Arrays.asList(ContentMode.HTML, ContentMode.RAW);
+
         rpc.sendDate(new Date(1));
         rpc.sendDate(new Date(2013 - 1900, 5 - 1, 31, 11, 12, 13));
+        state.date1 = new Date(1);
+        state.date2 = new Date(2013 - 1900, 5 - 1, 31, 11, 12, 13);
+
         testExtension.registerRpc(new SerializerTestRpc() {
             @Override
             public void sendBoolean(boolean value, Boolean boxedValue,
@@ -329,6 +445,12 @@ public class SerializerTest extends AbstractTestUI {
                         new Locale("en", "fi"));
                 format.setTimeZone(TimeZone.getTimeZone("UTC"));
                 log.log("sendDate: " + format.format(date));
+            }
+
+            @Override
+            public void log(String string) {
+                log.log(string);
+
             }
 
         });

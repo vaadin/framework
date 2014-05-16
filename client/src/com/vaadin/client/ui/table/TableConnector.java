@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -303,9 +303,13 @@ public class TableConnector extends AbstractHasComponentsConnector implements
         getWidget().tabIndex = getState().tabIndex;
         getWidget().setProperTabIndex();
 
-        if (getWidget().initializedAndAttached) {
-            getWidget().resizeSortedColumnForSortIndicator();
-        }
+        Scheduler.get().scheduleFinally(new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                getWidget().resizeSortedColumnForSortIndicator();
+            }
+        });
 
         // Remember this to detect situations where overflow hack might be
         // needed during scrolling

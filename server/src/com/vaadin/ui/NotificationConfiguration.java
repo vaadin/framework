@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,112 +21,99 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 
-import com.vaadin.shared.ui.ui.NotificationConfigurationBean;
-import com.vaadin.shared.ui.ui.NotificationConfigurationBean.Role;
-import com.vaadin.shared.ui.ui.UIState.NotificationConfigurationState;
+import com.vaadin.shared.ui.ui.NotificationRole;
+import com.vaadin.shared.ui.ui.UIState.NotificationTypeConfiguration;
+import com.vaadin.ui.Notification.Type;
 
 /**
  * Provides methods for configuring the notification.
- * 
+ *
  * @author Vaadin Ltd
- * @since 7.1
+ * @since 7.2
  */
 public interface NotificationConfiguration extends Serializable {
-    public void setStyleConfiguration(String style, String prefix,
-            String postfix, Role ariaRole);
-
     /**
-     * Returns the complete configuration object for the given notification
-     * style.
-     * 
-     * @param style
-     *            String of the notification style to return
-     * @return The notification configuration object
-     */
-    public NotificationConfigurationBean getStyleConfiguration(String style);
-
-    /**
-     * Sets the accessibility prefix for the given notification style.
-     * 
-     * This prefix is read to assistive device users in front of the content of
-     * the notification, but not visible on the page.
-     * 
-     * @param style
-     *            String of the notification style
+     * Sets the accessibility prefix for a notification type.
+     * <p>
+     * This prefix is read to assistive device users before the content of the
+     * notification, but not visible on the page.
+     *
+     * @param type
+     *            type of the notification
      * @param prefix
-     *            String that is placed before the notification content
+     *            string that is placed before the notification content
      */
-    public void setAssistivePrefixForStyle(String style, String prefix);
+    public void setAssistivePrefix(Type type, String prefix);
 
     /**
-     * Returns the accessibility prefix for the given notification style.
-     * 
-     * This prefix is read to assistive device users in front of the content of
-     * the notification, but not visible on the page.
-     * 
-     * @param style
-     *            String of the notification style
-     * @return The prefix of the provided notification style
+     * Gets the accessibility prefix for a notification type.
+     * <p>
+     * This prefix is read to assistive device users before the content of the
+     * notification, but not visible on the page.
+     *
+     * @param type
+     *            type of the notification
+     * @return The accessibility prefix for the provided notification type
      */
-    public String getAssistivePrefixForStyle(String style);
+    public String getAssistivePrefix(Type type);
 
     /**
-     * Sets the accessibility postfix for the given notification style.
-     * 
+     * Sets the accessibility postfix for a notification type.
+     * <p>
      * This postfix is read to assistive device users after the content of the
      * notification, but not visible on the page.
-     * 
-     * @param style
-     *            String of the notification style
+     *
+     * @param type
+     *            type of the notification
      * @param postfix
-     *            String that is placed after the notification content
+     *            string that is placed after the notification content
      */
-    public void setAssistivePostfixForStyle(String style, String postfix);
+    public void setAssistivePostfix(Type type, String postfix);
 
     /**
-     * Returns the accessibility postfix for the given notification style.
-     * 
+     * Gets the accessibility postfix for a notification type.
+     * <p>
      * This postfix is read to assistive device users after the content of the
      * notification, but not visible on the page.
-     * 
-     * @param style
-     *            String of the notification style
-     * @return The postfix of the provided notification style
+     *
+     * @param type
+     *            type of the notification
+     * @return The accessibility postfix for the provided notification type
      */
-    public String getAssistivePostfixForStyle(String style);
+    public String getAssistivePostfix(Type type);
 
     /**
-     * Sets the WAI-ARIA role for a notification style.
-     * 
+     * Sets the WAI-ARIA role for a notification type.
+     * <p>
      * This role defines how an assistive device handles a notification.
-     * Available roles are alert, alertdialog and status (@see <a
+     * Available roles are alert and status (@see <a
+     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * Model</a>).
+     *
+     * The default role is alert.
+     *
+     * @param type
+     *            type of the notification
+     * @param role
+     *            role to set for the notification type
+     */
+    public void setAssistiveRole(Type type, NotificationRole role);
+
+    /**
+     * Gets the WAI-ARIA role for a notification type.
+     * <p>
+     * This role defines how an assistive device handles a notification.
+     * Available roles are alert and status (@see <a
      * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
      * Model</a>)
-     * 
+     * <p>
      * The default role is alert.
-     * 
-     * @param style
-     *            String of the notification style
-     * @param role
-     *            Role to set for the notification type
+     *
+     * @param type
+     *            type of the notification
+     * @return role to set for the notification type
      */
-    public void setAssistiveRoleForStyle(String style, Role role);
-
-    /**
-     * Returns the WAI-ARIA role for a notification style.
-     * 
-     * This role defines how an assistive device handles a notification.
-     * Available roles are alert, alertdialog and status (@see <a
-     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
-     * Model</a> )
-     * 
-     * The default role is alert.
-     * 
-     * @param style
-     *            String of the notification style
-     * @return The current Role for the notification type
-     */
-    public Role getAssistiveRoleForStyle(String style);
+    public NotificationRole getAssistiveRole(Type type);
 }
 
 class NotificationConfigurationImpl implements NotificationConfiguration {
@@ -137,133 +124,62 @@ class NotificationConfigurationImpl implements NotificationConfiguration {
         this.ui = ui;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.ui.NotificationConfiguration#setStyleConfiguration(java.lang
-     * .String, java.lang.String, java.lang.String,
-     * com.vaadin.ui.NotificationConfiguration.Role)
-     */
     @Override
-    public void setStyleConfiguration(String style, String prefix,
-            String postfix, Role ariaRole) {
-        getState().setup.put(style, new NotificationConfigurationBean(prefix,
-                postfix, ariaRole));
+    public void setAssistivePrefix(Type type, String prefix) {
+        getConfigurationBean(type).prefix = prefix;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.ui.NotificationConfiguration#getStyleConfiguration(java.lang
-     * .String)
-     */
     @Override
-    public NotificationConfigurationBean getStyleConfiguration(String style) {
-        return getState(false).setup.get(style);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.ui.NotificationConfiguration#setStylePrefix(java.lang.String,
-     * java.lang.String)
-     */
-    @Override
-    public void setAssistivePrefixForStyle(String style, String prefix) {
-        getConfigurationBean(style).setAssistivePrefix(prefix);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.ui.NotificationConfiguration#getStylePrefix(java.lang.String)
-     */
-    @Override
-    public String getAssistivePrefixForStyle(String style) {
-        NotificationConfigurationBean styleSetup = getState().setup.get(style);
+    public String getAssistivePrefix(Type type) {
+        NotificationTypeConfiguration styleSetup = getTypeConf(type);
         if (styleSetup != null) {
-            return styleSetup.getAssistivePrefix();
+            return styleSetup.prefix;
         }
 
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.ui.NotificationConfiguration#setStylePostfix(com.vaadin.ui
-     * .Notification.Type, java.lang.String)
-     */
     @Override
-    public void setAssistivePostfixForStyle(String style, String postfix) {
-        getConfigurationBean(style).setAssistivePostfix(postfix);
+    public void setAssistivePostfix(Type type, String postfix) {
+        getConfigurationBean(type).postfix = postfix;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.ui.NotificationConfiguration#getStylePostfix(com.vaadin.ui
-     * .Notification.Type)
-     */
     @Override
-    public String getAssistivePostfixForStyle(String style) {
-        NotificationConfigurationBean styleSetup = getState().setup.get(style);
+    public String getAssistivePostfix(Type type) {
+        NotificationTypeConfiguration styleSetup = getTypeConf(type);
         if (styleSetup != null) {
-            return styleSetup.getAssistivePostfix();
+            return styleSetup.postfix;
         }
 
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.NotificationConfiguration#setStyleRole(com.vaadin.ui.
-     * Notification.Type, com.vaadin.ui.NotificationConfiguration.Role)
-     */
     @Override
-    public void setAssistiveRoleForStyle(String style, Role role) {
-        getConfigurationBean(style).setAssistiveRole(role);
+    public void setAssistiveRole(Type type, NotificationRole role) {
+        getConfigurationBean(type).notificationRole = role;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.NotificationConfiguration#getStyleRole(com.vaadin.ui.
-     * Notification.Type)
-     */
     @Override
-    public Role getAssistiveRoleForStyle(String style) {
-        NotificationConfigurationBean styleSetup = getState().setup.get(style);
+    public NotificationRole getAssistiveRole(Type type) {
+        NotificationTypeConfiguration styleSetup = getTypeConf(type);
         if (styleSetup != null) {
-            return styleSetup.getAssistiveRole();
+            return styleSetup.notificationRole;
         }
 
         return null;
     }
 
-    private NotificationConfigurationBean getConfigurationBean(String style) {
-        NotificationConfigurationBean styleSetup = getState().setup.get(style);
+    private NotificationTypeConfiguration getConfigurationBean(Type type) {
+        NotificationTypeConfiguration styleSetup = getTypeConf(type);
         if (styleSetup == null) {
-            styleSetup = new NotificationConfigurationBean();
-            getState().setup.put(style, styleSetup);
+            styleSetup = new NotificationTypeConfiguration();
+            ui.getState().notificationConfigurations.put(type.getStyle(), styleSetup);
         }
 
         return styleSetup;
     }
 
-    private NotificationConfigurationState getState() {
-        return ui.getState().notificationConfiguration;
+    private NotificationTypeConfiguration getTypeConf(Type type) {
+        return ui.getState().notificationConfigurations.get(type.getStyle());
     }
-
-    private NotificationConfigurationState getState(boolean markAsDirty) {
-        return ui.getState(markAsDirty).notificationConfiguration;
-    }
-
 }

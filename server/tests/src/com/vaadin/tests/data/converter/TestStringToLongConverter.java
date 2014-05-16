@@ -51,7 +51,7 @@ public class TestStringToLongConverter extends TestCase {
                 String.class, Locale.ENGLISH);
         Assert.assertEquals("9,223,372,036,854,775,807", str);
         str = reverseConverter.convertToModel(Long.MIN_VALUE, String.class,
-                null);
+                Locale.ENGLISH);
         Assert.assertEquals("-9,223,372,036,854,775,808", str);
     }
 

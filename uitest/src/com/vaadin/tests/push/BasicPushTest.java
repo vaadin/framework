@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.push;
 
-import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.AbstractTB3Test;
@@ -26,49 +27,28 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 @TestCategory("push")
 public abstract class BasicPushTest extends MultiBrowserTest {
 
+    @Override
+    public void setup() throws Exception {
+        super.setup();
+    }
+
     @Test
     public void testPush() throws InterruptedException {
         openTestURL();
 
-        // Test client initiated push
-        Assert.assertEquals(0, getClientCounter());
         getIncrementButton().click();
-        Assert.assertEquals("Client counter not incremented by button click",
-                1, getClientCounter());
+        testBench().disableWaitForVaadin();
+
+        waitUntilClientCounterChanges(1);
+
         getIncrementButton().click();
         getIncrementButton().click();
         getIncrementButton().click();
-        Assert.assertEquals("Four clicks should have incremented counter to 4",
-                4, getClientCounter());
+        waitUntilClientCounterChanges(4);
 
         // Test server initiated push
         getServerCounterStartButton().click();
-        try {
-            Assert.assertEquals(0, getServerCounter());
-            sleep(3000);
-            int serverCounter = getServerCounter();
-            if (serverCounter < 1) {
-                // No push has happened
-                Assert.fail("No push has occured within 3s");
-            }
-            sleep(3000);
-            if (getServerCounter() <= serverCounter) {
-                // No push has happened
-                Assert.fail("Only one push took place within 6s");
-
-            }
-        } finally {
-            // Avoid triggering push assertions
-            getServerCounterStopButton().click();
-        }
-    }
-
-    private int getServerCounter() {
-        return getServerCounter(this);
-    }
-
-    private int getClientCounter() {
-        return getClientCounter(this);
+        waitUntilServerCounterChanges();
     }
 
     public static int getClientCounter(AbstractTB3Test t) {
@@ -79,10 +59,6 @@ public abstract class BasicPushTest extends MultiBrowserTest {
 
     private WebElement getIncrementButton() {
         return getIncrementButton(this);
-    }
-
-    private WebElement getServerCounterStopButton() {
-        return getServerCounterStopButton(this);
     }
 
     private WebElement getServerCounterStartButton() {
@@ -105,6 +81,27 @@ public abstract class BasicPushTest extends MultiBrowserTest {
 
     public static WebElement getIncrementButton(AbstractTB3Test t) {
         return t.vaadinElementById(BasicPush.INCREMENT_BUTTON_ID);
+    }
+
+    private void waitUntilClientCounterChanges(final int expectedValue) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                return BasicPushTest.getClientCounter(BasicPushTest.this) == expectedValue;
+            }
+        }, 10);
+    }
+
+    private void waitUntilServerCounterChanges() {
+        final int counter = BasicPushTest.getServerCounter(this);
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                return BasicPushTest.getServerCounter(BasicPushTest.this) > counter;
+            }
+        }, 10);
     }
 
 }

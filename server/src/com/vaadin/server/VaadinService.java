@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -750,6 +750,9 @@ public abstract class VaadinService implements Serializable {
 
         session.storeInSession(this, request.getWrappedSession());
 
+        // Initial WebBrowser data comes from the request
+        session.getBrowser().updateRequestDetails(request);
+
         // Initial locale comes from the request
         Locale locale = request.getLocale();
         session.setLocale(locale);
@@ -982,7 +985,7 @@ public abstract class VaadinService implements Serializable {
         // Get UI id from the request
         String uiIdString = request.getParameter(UIConstants.UI_ID_PARAMETER);
         UI ui = null;
-        if (uiIdString != null) {
+        if (uiIdString != null && session != null) {
             int uiId = Integer.parseInt(uiIdString);
             ui = session.getUIById(uiId);
         }

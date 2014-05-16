@@ -108,29 +108,29 @@
 					// No special url defined, use the same URL that loaded this page (without the fragment)
 					url = window.location.href.replace(/#.*/,'');
 				}
-				url += ((/\?/).test(url) ? "&" : "?") + "v-browserDetails=1";
+				// Timestamp to avoid caching
+				url += ((/\?/).test(url) ? "&" : "?") + "v-" + (new Date()).getTime();		
+				
+				var params = "v-browserDetails=1";
 				var rootId = getConfig("v-rootId");
 				if (rootId !== undefined) {
-					url += "&v-rootId=" + rootId;
+					params += "&v-rootId=" + rootId;
 				}
 
 				// Tell the UI what theme it is configured to use
 				var theme = getConfig('theme');
 				if (theme !== undefined) {
-					url += '&theme=' + encodeURIComponent(theme);
+					params += '&theme=' + encodeURIComponent(theme);
 				}
 				
-				url += "&v-appId=" + appId;
+				params += "&v-appId=" + appId;
 				
 				var extraParams = getConfig('extraParams')
 				if (extraParams !== undefined) {
-					url += extraParams;
+					params += extraParams;
 				}
 				
-				url += '&' + vaadin.getBrowserDetailsParameters(appId); 
-				
-				// Timestamp to avoid caching
-				url += '&v-' + (new Date()).getTime();
+				params += '&' + vaadin.getBrowserDetailsParameters(appId); 
 				
 				var r;
 				try {
@@ -168,7 +168,9 @@
 						}
 					}  
 				};
-				r.send(null);
+				// send parameters as POST data
+				r.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				r.send(params);
 				
 				log('sending request to ', url);
 			};			
@@ -239,8 +241,8 @@
 		},
 		getBrowserDetailsParameters: function(parentElementId) {
 			// Screen height and width
-			var url = 'v-sh=' + window.screen.height;
-			url += '&v-sw=' + window.screen.width;
+			var params = 'v-sh=' + window.screen.height;
+			params += '&v-sw=' + window.screen.width;
 			
 			// Window height and width
 			var cw = 0;
@@ -254,12 +256,12 @@
 				cw = document.documentElement.clientWidth;
 				ch = document.documentElement.clientHeight;
 			}
-			url += '&v-cw=' + cw + '&v-ch=' + ch;
+			params += '&v-cw=' + cw + '&v-ch=' + ch;
 			
 
 			var d = new Date();
 			
-			url += '&v-curdate=' + d.getTime();
+			params += '&v-curdate=' + d.getTime();
 			
 			var tzo1 = d.getTimezoneOffset(); // current offset
 			var dstDiff = 0;
@@ -276,29 +278,29 @@
 			}
 
 			// Time zone offset
-			url += '&v-tzo=' + tzo1;
+			params += '&v-tzo=' + tzo1;
 			
 			// DST difference
-			url += '&v-dstd=' + dstDiff;
+			params += '&v-dstd=' + dstDiff;
 			
 			// Raw time zone offset
-			url += '&v-rtzo=' + rtzo;
+			params += '&v-rtzo=' + rtzo;
 			
 			// DST in effect?
-			url += '&v-dston=' + (tzo1 != rtzo);
+			params += '&v-dston=' + (tzo1 != rtzo);
 			
 			var pe = document.getElementById(parentElementId);
 			if (pe) {
-				url += '&v-vw=' + pe.offsetWidth;
-				url += '&v-vh=' + pe.offsetHeight;
+				params += '&v-vw=' + pe.offsetWidth;
+				params += '&v-vh=' + pe.offsetHeight;
 			}
 			
 			// Location
-			url += '&v-loc=' + encodeURIComponent(location.href);
+			params += '&v-loc=' + encodeURIComponent(location.href);
 
 			// Window name
 			if (window.name) {
-				url += '&v-wn=' + encodeURIComponent(window.name);
+				params += '&v-wn=' + encodeURIComponent(window.name);
 			}
 			
 			// Detect touch device support
@@ -313,10 +315,10 @@
 			}
 
 			if (supportsTouch) {
-				url += "&v-td=1";
+				params += "&v-td=1";
 			}
    	        
-	        return url;
+	        return params;
 		}
 	};
 	

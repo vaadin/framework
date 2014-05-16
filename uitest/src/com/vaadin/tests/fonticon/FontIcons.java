@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -57,11 +57,6 @@ import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 
-/**
- * 
- * @since
- * @author Vaadin Ltd
- */
 public class FontIcons extends AbstractTestUI {
 
     @Override
@@ -105,7 +100,7 @@ public class FontIcons extends AbstractTestUI {
         Notification n = new Notification("Hey there!");
         n.setIcon(icon);
         n.setPosition(Position.BOTTOM_CENTER);
-        n.setDelayMsec(-1);
+        n.setDelayMsec(300000);
         n.show(Page.getCurrent());
 
         // grid of compoents

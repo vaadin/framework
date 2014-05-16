@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -246,10 +246,9 @@ public class SuperDevMode {
             // in super dev mode, as a result of the recompile, the enabled
             // check will fail...
             if (!isSuperDevModeEnabledInModule()) {
-                showError("SuperDevMode is not enabled for this module/widgetset.<br/>"
-                        + "Ensure that your module definition (.gwt.xml) contains <br/>"
-                        + "&lt;add-linker name=&quot;xsiframe&quot;/&gt;<br/>"
-                        + "&lt;set-configuration-property name=&quot;devModeRedirectEnabled&quot; value=&quot;true&quot; /&gt;<br/>");
+                showError("SuperDevMode is disabled for this module/widgetset.<br/>"
+                        + "Ensure that your module definition (.gwt.xml) does not contain <br/>"
+                        + "&lt;set-configuration-property name=&quot;devModeRedirectEnabled&quot; value=&quot;false&quot; /&gt;<br/>");
                 return false;
             }
             return SuperDevMode.recompileIfNeeded(superDevModeParameter);

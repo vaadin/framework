@@ -45,10 +45,15 @@
         <dependency org="ant" name="ant-launcher" rev="1.6.5"
             conf="build,ide -> default" />
 
-        <dependency org="org.eclipse.jetty" name="jetty-server"
+        <dependency org="org.eclipse.jetty" name="jetty-annotations"
             rev="8.1.12.v20130726" conf="build,ide -> default">
             <exclude org="org.eclipse.jetty.orbit"></exclude>
         </dependency>
+        <dependency org="org.eclipse.jetty" name="jetty-servlets"
+            rev="8.1.12.v20130726" conf="build,ide -> default">
+            <exclude org="org.eclipse.jetty.orbit"></exclude>
+        </dependency>
+
         <dependency org="org.eclipse.jetty" name="jetty-util"
             rev="8.1.12.v20130726" conf="build,ide -> default" />
 
@@ -56,8 +61,8 @@
             rev="1.1" conf="build,ide -> default" />
         <dependency org="commons-codec" name="commons-codec"
             rev="1.8" conf="build,ide -> default" />
-        <dependency org="commons-io" name="commons-io" rev="${commons-io.version}"
-            conf="build,ide -> default" />
+        <dependency org="commons-io" name="commons-io"
+            rev="${commons-io.version}" conf="build,ide -> default" />
         <dependency org="org.apache.commons" name="commons-lang3"
             rev="3.1" conf="build,ide -> default" />
         <dependency org="org.apache.james" name="apache-mime4j"

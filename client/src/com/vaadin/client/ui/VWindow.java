@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -67,7 +67,7 @@ import com.vaadin.client.ui.window.WindowMoveHandler;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.window.WindowMode;
-import com.vaadin.shared.ui.window.WindowState.WindowRole;
+import com.vaadin.shared.ui.window.WindowRole;
 
 /**
  * "Sub window" component.

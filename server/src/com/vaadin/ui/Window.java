@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,9 +18,6 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -41,7 +38,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
-import com.vaadin.shared.ui.window.WindowState.WindowRole;
+import com.vaadin.shared.ui.window.WindowRole;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -1017,15 +1014,15 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * window. Text contained in these components will be read by assistive
      * devices when it is opened.
      * 
-     * @param connectors
-     *            with the components to use as description
+     * @param components
+     *            the components to use as description
      */
-    public void setAssistiveDescription(Connector... connectors) {
-        if (connectors == null) {
+    public void setAssistiveDescription(Component... components) {
+        if (components == null) {
             throw new IllegalArgumentException(
                     "Parameter connectors must be non-null");
         } else {
-            getState().contentDescription = connectors;
+            getState().contentDescription = components;
         }
     }
 
@@ -1034,11 +1031,19 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * contained in these components will be read by assistive devices when the
      * window is opened.
      * 
-     * @return list of previously set components
+     * @return array of previously set components
      */
-    public List<Connector> getAssistiveDescription() {
-        return Collections.unmodifiableList(Arrays
-                .asList(getState().contentDescription));
+    public Component[] getAssistiveDescription() {
+        Connector[] contentDescription = getState().contentDescription;
+        if (contentDescription == null) {
+            return null;
+        }
+
+        Component[] target = new Component[contentDescription.length];
+        System.arraycopy(contentDescription, 0, target, 0,
+                contentDescription.length);
+
+        return target;
     }
 
     /**

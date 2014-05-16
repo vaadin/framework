@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -226,7 +226,6 @@ public class IndexedContainer extends
     @Override
     public boolean removeAllItems() {
         int origSize = size();
-        Object firstItem = getFirstVisibleItem();
 
         internalRemoveAllItems();
 
@@ -236,7 +235,7 @@ public class IndexedContainer extends
         // filtered out items were removed or not
         if (origSize != 0) {
             // Sends a change event
-            fireItemsRemoved(0, firstItem, origSize);
+            fireItemSetChange();
         }
 
         return true;
@@ -621,7 +620,8 @@ public class IndexedContainer extends
     @Override
     protected void fireItemAdded(int position, Object itemId, Item item) {
         if (position >= 0) {
-            super.fireItemAdded(position, itemId, item);
+            fireItemSetChange(new IndexedContainer.ItemSetChangeEvent(this,
+                    position));
         }
     }
 
@@ -1211,5 +1211,4 @@ public class IndexedContainer extends
     public Collection<Filter> getContainerFilters() {
         return super.getContainerFilters();
     }
-
 }

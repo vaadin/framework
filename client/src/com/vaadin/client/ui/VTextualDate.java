@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -214,6 +214,12 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                     .removeAriaReadonlyProperty(text.getElement());
         }
 
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        text.setEnabled(enabled);
     }
 
     protected void setPrompting(boolean prompting) {

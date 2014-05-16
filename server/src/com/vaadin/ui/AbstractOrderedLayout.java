@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -213,8 +213,12 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         if (oldLocation == -1) {
             addComponent(newComponent);
         } else if (newLocation == -1) {
+            Alignment alignment = getComponentAlignment(oldComponent);
+            float expandRatio = getExpandRatio(oldComponent);
+
             removeComponent(oldComponent);
             addComponent(newComponent, oldLocation);
+            applyLayoutSettings(newComponent, alignment, expandRatio);
         } else {
             // Both old and new are in the layout
             if (oldLocation > newLocation) {
@@ -442,6 +446,12 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     @Override
     public void setDefaultComponentAlignment(Alignment defaultAlignment) {
         defaultComponentAlignment = defaultAlignment;
+    }
+
+    private void applyLayoutSettings(Component target, Alignment alignment,
+            float expandRatio) {
+        setComponentAlignment(target, alignment);
+        setExpandRatio(target, expandRatio);
     }
 
 }

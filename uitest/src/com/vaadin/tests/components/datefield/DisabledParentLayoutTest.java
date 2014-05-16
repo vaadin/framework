@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,17 +35,41 @@ public class DisabledParentLayoutTest extends MultiBrowserTest {
         WebElement button = driver.findElement(By.className("v-button"));
         button.click();
 
+        WebElement textField = driver.findElement(By
+                .className("v-datefield-textfield"));
+        textField.click();
+
+        Assert.assertFalse(
+                "Date input text field shoud be disabled for disabled DateField",
+                textField.isEnabled());
+
         WebElement dataFieldButton = driver.findElement(By
                 .className("v-datefield-button"));
         dataFieldButton.click();
 
-        WebElement popup = driver
-                .findElement(By.className("v-datefield-popup"));
+        Assert.assertFalse(
+                "Disabled date popup is opened after click to its button",
+                isElementPresent(By.className("v-datefield-popup")));
 
+        button.click();
+
+        Assert.assertTrue(
+                "Date input text field shoud be enabled for enabled DateField",
+                textField.isEnabled());
+
+        textField.click();
+        String text = "text";
+        textField.sendKeys(text);
+
+        Assert.assertEquals("Unexpected text in date text field", text,
+                textField.getAttribute("value"));
+
+        dataFieldButton.click();
         Assert.assertFalse("Unexpected disabled element found",
                 isElementPresent(By.className("v-disabled")));
 
-        Assert.assertNotNull(
-                "Date popup is not opened after click to its button", popup);
+        Assert.assertTrue("Date popup is not opened after click to its button",
+                isElementPresent(By.className("v-datefield-popup")));
     }
+
 }

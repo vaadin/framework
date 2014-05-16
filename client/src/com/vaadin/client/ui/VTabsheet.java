@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -92,7 +92,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Representation of a single "tab" shown in the TabBar
-     * 
+     *
      */
     public static class Tab extends SimplePanel implements HasFocusHandlers,
             HasBlurHandlers, HasKeyDownHandlers {
@@ -194,7 +194,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         /**
          * Toggles the style names for the Tab
-         * 
+         *
          * @param selected
          *            true if the Tab is selected
          * @param first
@@ -324,8 +324,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         private boolean update(TabState tabState) {
-            if (tabState.description != null
-                    || tabState.componentError != null) {
+            if (tabState.description != null || tabState.componentError != null) {
                 setTooltipInfo(new TooltipInfo(tabState.description,
                         tabState.componentError));
             } else {
@@ -337,14 +336,11 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             String captionString = tabState.caption.isEmpty() ? null
                     : tabState.caption;
             boolean ret = updateCaptionWithoutOwner(captionString,
-                    !tabState.enabled,
-                    hasAttribute(tabState.description),
+                    !tabState.enabled, hasAttribute(tabState.description),
                     hasAttribute(tabState.componentError),
                     tab.getTabsheet().connector
                             .getResourceUrl(ComponentConstants.ICON_RESOURCE
-                                    + tabState.key),
-                    tabState.iconAltText
-            );
+                                    + tabState.key), tabState.iconAltText);
 
             setClosable(tabState.closable);
 
@@ -581,7 +577,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         /**
          * Returns the index of the first visible tab
-         * 
+         *
          * @return
          */
         private int getFirstVisibleTab() {
@@ -590,7 +586,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         /**
          * Find the next visible tab. Returns -1 if none is found.
-         * 
+         *
          * @param i
          * @return
          */
@@ -609,7 +605,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         /**
          * Find the previous visible tab. Returns -1 if none is found.
-         * 
+         *
          * @param i
          * @return
          */
@@ -721,7 +717,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Load the content of a tab of the provided index.
-     * 
+     *
      * @param index
      *            of the tab to load
      */
@@ -747,7 +743,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Returns the currently displayed widget in the tab panel.
-     * 
+     *
      * @since 7.2
      * @return currently displayed content widget
      */
@@ -757,7 +753,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Returns the client to server RPC proxy for the tabsheet.
-     * 
+     *
      * @since 7.2
      * @return RPC proxy
      */
@@ -767,10 +763,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * For internal use only.
-     * 
+     *
      * Avoid using this method directly and use appropriate superclass methods
      * where applicable.
-     * 
+     *
      * @deprecated since 7.2 - use more specific methods instead (getRpcProxy(),
      *             getConnectorForWidget(Widget) etc.)
      * @return ApplicationConnection
@@ -885,7 +881,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     /**
      * Checks if the tab with the selected index has been scrolled out of the
      * view (on the left side).
-     * 
+     *
      * @param index
      * @return
      */
@@ -916,7 +912,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 DOM.setElementProperty(tabs, "className", tabsClass);
                 DOM.setElementProperty(contentNode, "className", contentClass);
                 DOM.setElementProperty(deco, "className", decoClass);
-                borderW = -1;
             }
         } else {
             tb.setStyleName(CLASSNAME + "-tabs");
@@ -993,10 +988,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         if (scrolledOutOfView(index)) {
             // Should not set tabs visible if they are scrolled out of view
-            tabState.visible = false;
+            tab.setVisible(false);
+        } else {
+            tab.setVisible(tabState.visible);
         }
-        // Set the current visibility of the tab (in the browser)
-        tab.setVisible(tabState.visible);
 
         /*
          * Force the width of the caption container so the content will not wrap
@@ -1018,7 +1013,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Renders the widget content for a tab sheet.
-     * 
+     *
      * @param newWidget
      */
     public void renderContent(Widget newWidget) {
@@ -1045,6 +1040,16 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         VTabsheet.this.removeStyleDependentName("loading");
     }
 
+    /**
+     * Recalculates the sizes of tab captions, causing the tabs to be rendered
+     * the correct size.
+     */
+    private void updateTabCaptionSizes() {
+        for (int tabIx = 0; tabIx < tb.getTabCount(); tabIx++) {
+            tb.getTab(tabIx).recalculateCaptionWidth();
+        }
+    }
+
     /** For internal use only. May be removed or replaced in the future. */
     public void updateContentNodeHeight() {
         if (!isDynamicHeight()) {
@@ -1062,8 +1067,12 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
     }
 
+    /**
+     * Run internal layouting.
+     */
     public void iLayout() {
         updateTabScroller();
+        updateTabCaptionSizes();
     }
 
     /**
@@ -1195,14 +1204,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         return tabPanel.iterator();
     }
 
-    private int borderW = -1;
-
     /** For internal use only. May be removed or replaced in the future. */
     public int getContentAreaBorderWidth() {
-        if (borderW < 0) {
-            borderW = Util.measureHorizontalBorder(contentNode);
-        }
-        return borderW;
+        return Util.measureHorizontalBorder(contentNode);
     }
 
     @Override
@@ -1379,7 +1383,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Makes tab bar visible.
-     * 
+     *
      * @since 7.2
      */
     public void showTabs() {
@@ -1390,7 +1394,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Makes tab bar invisible.
-     * 
+     *
      * @since 7.2
      */
     public void hideTabs() {

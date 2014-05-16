@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JsArrayString;
@@ -827,6 +828,12 @@ public class LayoutManager {
     /**
      * Marks that a ManagedLayout should be layouted in the next layout phase
      * even if none of the elements managed by the layout have been resized.
+     * <p>
+     * This method should not be invoked during a layout phase since it only
+     * controls what will happen in the beginning of the next phase. If you want
+     * to explicitly cause some layout to be considered in an ongoing layout
+     * phase, you should use {@link #setNeedsMeasure(ComponentConnector)}
+     * instead.
      * 
      * @param layout
      *            the managed layout that should be layouted
@@ -840,14 +847,25 @@ public class LayoutManager {
      * Marks that a ManagedLayout should be layouted horizontally in the next
      * layout phase even if none of the elements managed by the layout have been
      * resized horizontally.
-     * 
+     * <p>
      * For SimpleManagedLayout which is always layouted in both directions, this
      * has the same effect as {@link #setNeedsLayout(ManagedLayout)}.
+     * <p>
+     * This method should not be invoked during a layout phase since it only
+     * controls what will happen in the beginning of the next phase. If you want
+     * to explicitly cause some layout to be considered in an ongoing layout
+     * phase, you should use {@link #setNeedsMeasure(ComponentConnector)}
+     * instead.
      * 
      * @param layout
      *            the managed layout that should be layouted
      */
     public final void setNeedsHorizontalLayout(ManagedLayout layout) {
+        if (isLayoutRunning()) {
+            getLogger()
+                    .warning(
+                            "setNeedsHorizontalLayout should not be run while a layout phase is in progress.");
+        }
         needsHorizontalLayout.add(layout.getConnectorId());
     }
 
@@ -855,14 +873,25 @@ public class LayoutManager {
      * Marks that a ManagedLayout should be layouted vertically in the next
      * layout phase even if none of the elements managed by the layout have been
      * resized vertically.
-     * 
+     * <p>
      * For SimpleManagedLayout which is always layouted in both directions, this
      * has the same effect as {@link #setNeedsLayout(ManagedLayout)}.
+     * <p>
+     * This method should not be invoked during a layout phase since it only
+     * controls what will happen in the beginning of the next phase. If you want
+     * to explicitly cause some layout to be considered in an ongoing layout
+     * phase, you should use {@link #setNeedsMeasure(ComponentConnector)}
+     * instead.
      * 
      * @param layout
      *            the managed layout that should be layouted
      */
     public final void setNeedsVerticalLayout(ManagedLayout layout) {
+        if (isLayoutRunning()) {
+            getLogger()
+                    .warning(
+                            "setNeedsVerticalLayout should not be run while a layout phase is in progress.");
+        }
         needsVerticalLayout.add(layout.getConnectorId());
     }
 
@@ -1607,6 +1636,10 @@ public class LayoutManager {
      * Clean measured sizes which are no longer needed. Only for IE8.
      */
     protected void cleanMeasuredSizes() {
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(LayoutManager.class.getName());
     }
 
 }

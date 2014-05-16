@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -45,17 +45,25 @@ public class FieldProperty extends Property {
     @Override
     public void writeSetterBody(TreeLogger logger, SourceWriter w,
             String beanVariable, String valueVariable) {
+        // Don't try to unbox Longs in javascript, as it's not supported.
+        // (#13692)
+        boolean shouldUnbox = !"long".equals(field.getType()
+                .getSimpleSourceName());
         w.println("%s.@%s::%s = %s;", beanVariable, getBeanType()
-                .getQualifiedSourceName(), getName(), unboxValue(valueVariable));
+                .getQualifiedSourceName(), getName(),
+                shouldUnbox ? unboxValue(valueVariable) : valueVariable);
     }
 
     @Override
     public void writeGetterBody(TreeLogger logger, SourceWriter w,
             String beanVariable) {
+        // Longs are not unboxed, as it's not supported. (#13692)
+        boolean shouldBox = !"long".equals(field.getType()
+                .getSimpleSourceName());
         String value = String.format("%s.@%s::%s", beanVariable, getBeanType()
                 .getQualifiedSourceName(), getName());
         w.print("return ");
-        w.print(boxValue(value));
+        w.print(shouldBox ? boxValue(value) : value);
         w.println(";");
     }
 

@@ -99,13 +99,22 @@ public class TestUtils {
             "YE", "ZAMBIA", "ZM", "ZIMBABWE", "ZW" };
 
     /**
-     * Injects css into the current window. Can be used to keep tests css in
-     * source files.
+     * Crossbrowser hack to dynamically add css current window. Can be used to
+     * keep tests css in source files.
      * 
      * @param cssString
      */
     public static void injectCSS(UI w, String cssString) {
-        w.getPage().getStyles().add(cssString);
+        String script = "if ('\\v'=='v') /* ie only */ {\n"
+                + "        document.createStyleSheet().cssText = '"
+                + cssString
+                + "';\n"
+                + "    } else {var tag = document.createElement('style'); tag.type = 'text/css';"
+                + " document.getElementsByTagName('head')[0].appendChild(tag);tag[ (typeof "
+                + "document.body.style.WebkitAppearance=='string') /* webkit only */ ? 'innerText' "
+                + ": 'innerHTML'] = '" + cssString + "';}";
+
+        w.getPage().getJavaScript().execute(script);
     }
 
     public static void installPerformanceReporting(TextArea targetTextArea) {

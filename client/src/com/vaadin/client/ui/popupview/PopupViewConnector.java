@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -97,11 +97,9 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
     public void onConnectorHierarchyChange(
             ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
         // Render the popup if visible and show it.
-        if (!getChildren().isEmpty()) {
+        if (!getChildComponents().isEmpty()) {
             getWidget().preparePopup(getWidget().popup);
-            getWidget().popup
-                    .setPopupConnector((ComponentConnector) getChildren()
-                            .get(0));
+            getWidget().popup.setPopupConnector(getChildComponents().get(0));
             if (ComponentStateUtil.hasStyles(getState())) {
                 final StringBuffer styleBuf = new StringBuffer();
                 final String primaryName = getWidget().popup

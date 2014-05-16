@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -156,10 +156,6 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
     public boolean synchronizedHandleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
         try {
-            // Update WebBrowser here only to make WebBrowser information
-            // available in init for LegacyApplications
-            session.getBrowser().updateRequestDetails(request);
-
             List<UIProvider> uiProviders = session.getUIProviders();
 
             UIClassSelectionEvent classSelectionEvent = new UIClassSelectionEvent(

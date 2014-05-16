@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -77,7 +77,8 @@ public class MetadataWriter implements Serializable {
         // sessionExpiredURL after timer expires.
         if (messages != null && messages.getSessionExpiredMessage() == null
                 && messages.getSessionExpiredCaption() == null
-                && messages.isSessionExpiredNotificationEnabled()) {
+                && messages.isSessionExpiredNotificationEnabled()
+                && ui.getSession().getSession() != null) {
             int newTimeoutInterval = ui.getSession().getSession()
                     .getMaxInactiveInterval();
             if (repaintAll || (timeoutInterval != newTimeoutInterval)) {

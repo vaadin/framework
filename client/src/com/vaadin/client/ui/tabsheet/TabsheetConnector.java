@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -176,7 +176,11 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
      * (Re-)render the content of the active tab.
      */
     protected void renderContent() {
-        ComponentConnector contentConnector = getChildComponents().get(0);
+        ComponentConnector contentConnector = null;
+        if (!getChildComponents().isEmpty()) {
+            contentConnector = getChildComponents().get(0);
+        }
+
         if (null != contentConnector) {
             getWidget().renderContent(contentConnector.getWidget());
         } else {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ import java.util.List;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VFilterSelect;
@@ -40,6 +41,10 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     // oldSuggestionTextMatchTheOldSelection is used to detect when it's safe to
     // update textbox text by a changed item caption.
     private boolean oldSuggestionTextMatchTheOldSelection;
+
+    // Need to recompute the width of the combobox when styles change, see
+    // #13444
+    private boolean stylesChanged;
 
     /*
      * (non-Javadoc)
@@ -121,6 +126,10 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         boolean suggestionsChanged = !getWidget().initDone
                 || !newSuggestions.equals(getWidget().currentSuggestions);
 
+        // An ItemSetChangeEvent on server side clears the current suggestion
+        // popup. Popup needs to be repopulated with suggestions from UIDL.
+        boolean popupOpenAndCleared = false;
+
         oldSuggestionTextMatchTheOldSelection = false;
 
         if (suggestionsChanged) {
@@ -141,6 +150,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                  * menu might not necessary exist in select at all anymore.
                  */
                 getWidget().suggestionPopup.menu.clearItems();
+                popupOpenAndCleared = getWidget().suggestionPopup.isAttached();
 
             }
 
@@ -159,9 +169,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             }
         }
 
-        if (getWidget().waitingForFilteringResponse
-                && getWidget().lastFilter.toLowerCase().equals(
-                        uidl.getStringVariable("filter"))) {
+        if ((getWidget().waitingForFilteringResponse && getWidget().lastFilter
+                .toLowerCase().equals(uidl.getStringVariable("filter")))
+                || popupOpenAndCleared) {
             getWidget().suggestionPopup.showSuggestions(
                     getWidget().currentSuggestions, getWidget().currentPage,
                     getWidget().totalMatches);
@@ -202,8 +212,11 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
         getWidget().popupOpenerClicked = false;
 
-        if (!getWidget().initDone) {
-            getWidget().updateRootWidth();
+        // styles have changed or this is our first time - either way we
+        // need to recalculate the root width.
+        if (!getWidget().initDone || stylesChanged) {
+            boolean forceUpdate = true;
+            getWidget().updateRootWidth(forceUpdate);
         }
 
         // Focus dependent style names are lost during the update, so we add
@@ -211,6 +224,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         if (getWidget().focused) {
             getWidget().addStyleDependentName("focus");
         }
+
+        // width has been recalculated above, clear style change flag
+        stylesChanged = false;
 
         getWidget().initDone = true;
     }
@@ -267,7 +283,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                 // we have focus in field, prompting can't be set on, instead
                 // just clear the input if the value has changed from something
                 // else to null
-                if (getWidget().selectedOptionKey != null) {
+                if (getWidget().selectedOptionKey != null
+                        || (getWidget().allowNewItem && !getWidget().tb
+                                .getValue().isEmpty())) {
                     getWidget().tb.setValue("");
                 }
             }
@@ -300,4 +318,13 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         getWidget().enabled = widgetEnabled;
         getWidget().tb.setEnabled(widgetEnabled);
     }
+
+    @Override
+    public void onStateChanged(StateChangeEvent event) {
+        super.onStateChanged(event);
+        if (event.hasPropertyChanged("styles")) {
+            stylesChanged = true;
+        }
+    }
+
 }

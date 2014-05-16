@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -47,10 +47,11 @@ public class SelectAllRowsTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // Pressing Shift modifier key does not work with Firefox
+        // Pressing Shift modifier key does not work with Firefox and PhantomJS
         ArrayList<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(
                 super.getBrowsersToTest());
         browsers.remove(Browser.FIREFOX.getDesiredCapabilities());
+        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
         return browsers;
     }
 

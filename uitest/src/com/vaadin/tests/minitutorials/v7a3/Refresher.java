@@ -29,13 +29,14 @@ public class Refresher extends AbstractExtension {
 
     }
 
-    public Refresher() {
+    public Refresher(UI ui) {
         registerRpc(new RefresherRpc() {
             @Override
             public void refresh() {
                 fireEvent(new RefreshEvent(Refresher.this));
             }
         });
+        extend(ui);
     }
 
     @Override
@@ -66,9 +67,5 @@ public class Refresher extends AbstractExtension {
     public void removeRefreshListener(RefreshListener listener) {
         super.removeListener(RefreshEvent.class, listener,
                 RefreshListener.METHOD);
-    }
-
-    public void extend(UI target) {
-        super.extend(target);
     }
 }

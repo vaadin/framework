@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -43,6 +43,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaptionWrapper;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.popupview.VisibilityChangeEvent;
 import com.vaadin.client.ui.popupview.VisibilityChangeHandler;
@@ -102,7 +103,8 @@ public class VPopupView extends HTML implements Iterable<Widget> {
             }
         });
 
-        popup.setAnimationEnabled(true);
+        // TODO: Enable animations once GWT fix has been merged
+        popup.setAnimationEnabled(false);
 
         popup.setAutoHideOnHistoryEventsEnabled(false);
     }
@@ -192,7 +194,8 @@ public class VPopupView extends HTML implements Iterable<Widget> {
      * (other than it being a VOverlay) is to be considered private and
      * potentially subject to change.
      */
-    public class CustomPopup extends VOverlay {
+    public class CustomPopup extends VOverlay implements
+            StateChangeEvent.StateChangeHandler {
 
         private ComponentConnector popupComponentConnector = null;
 
@@ -332,7 +335,9 @@ public class VPopupView extends HTML implements Iterable<Widget> {
 
         @Override
         public boolean remove(Widget w) {
-
+            if (popupComponentConnector != null) {
+                popupComponentConnector.removeStateChangeHandler(this);
+            }
             popupComponentConnector = null;
             popupComponentWidget = null;
             captionWrapper = null;
@@ -343,10 +348,15 @@ public class VPopupView extends HTML implements Iterable<Widget> {
         public void setPopupConnector(ComponentConnector newPopupComponent) {
 
             if (newPopupComponent != popupComponentConnector) {
+                if (popupComponentConnector != null) {
+                    popupComponentConnector.removeStateChangeHandler(this);
+                }
                 Widget newWidget = newPopupComponent.getWidget();
                 setWidget(newWidget);
                 popupComponentWidget = newWidget;
                 popupComponentConnector = newPopupComponent;
+                popupComponentConnector.addStateChangeHandler("height", this);
+                popupComponentConnector.addStateChangeHandler("width", this);
             }
 
         }
@@ -358,6 +368,11 @@ public class VPopupView extends HTML implements Iterable<Widget> {
         @Override
         public com.google.gwt.user.client.Element getContainerElement() {
             return super.getContainerElement();
+        }
+
+        @Override
+        public void onStateChanged(StateChangeEvent stateChangeEvent) {
+            positionOrSizeUpdated();
         }
 
     }// class CustomPopup
