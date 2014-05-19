@@ -17,6 +17,7 @@
 package com.vaadin.ui.components.grid;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -51,7 +52,14 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.Component;
+import com.vaadin.ui.components.grid.selection.MultiSelectionModel;
+import com.vaadin.ui.components.grid.selection.NoSelectionModel;
+import com.vaadin.ui.components.grid.selection.SelectionChangeEvent;
+import com.vaadin.ui.components.grid.selection.SelectionChangeListener;
+import com.vaadin.ui.components.grid.selection.SelectionChangeNotifier;
+import com.vaadin.ui.components.grid.selection.SelectionModel;
+import com.vaadin.ui.components.grid.selection.SingleSelectionModel;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Data grid component
@@ -71,7 +79,7 @@ import com.vaadin.ui.Component;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class Grid extends AbstractComponent {
+public class Grid extends AbstractComponent implements SelectionChangeNotifier {
 
     /**
      * A helper class that handles the client-side Escalator logic relating to
@@ -350,6 +358,47 @@ public class Grid extends AbstractComponent {
     }
 
     /**
+     * Selection modes representing built-in {@link SelectionModel
+     * SelectionModels} that come bundled with {@link Grid}.
+     * <p>
+     * Passing one of these enums into
+     * {@link Grid#setSelectionMode(SelectionMode)} is equivalent to calling
+     * {@link Grid#setSelectionModel(SelectionModel)} with one of the built-in
+     * implementations of {@link SelectionModel}.
+     * 
+     * @see Grid#setSelectionMode(SelectionMode)
+     * @see Grid#setSelectionModel(SelectionModel)
+     */
+    public enum SelectionMode {
+        /** A SelectionMode that maps to {@link SingleSelectionModel} */
+        SINGLE {
+            @Override
+            protected SelectionModel createModel() {
+                return new SingleSelectionModel();
+            }
+
+        },
+
+        /** A SelectionMode that maps to {@link MultiSelectionModel} */
+        MULTI {
+            @Override
+            protected SelectionModel createModel() {
+                return new MultiSelectionModel();
+            }
+        },
+
+        /** A SelectionMode that maps to {@link NoSelectionModel} */
+        NONE {
+            @Override
+            protected SelectionModel createModel() {
+                return new NoSelectionModel();
+            }
+        };
+
+        protected abstract SelectionModel createModel();
+    }
+
+    /**
      * The data source attached to the grid
      */
     private Container.Indexed datasource;
@@ -459,13 +508,24 @@ public class Grid extends AbstractComponent {
     private final ActiveRowHandler activeRowHandler = new ActiveRowHandler();
 
     /**
+     * The selection model that is currently in use. Never <code>null</code>
+     * after the constructor has been run.
+     */
+    private SelectionModel selectionModel;
+
+    private static final Method SELECTION_CHANGE_METHOD = ReflectTools
+            .findMethod(SelectionChangeListener.class, "selectionChange",
+                    SelectionChangeEvent.class);
+
+    /**
      * Creates a new Grid using the given datasource.
      * 
      * @param datasource
      *            the data source for the grid
      */
     public Grid(Container.Indexed datasource) {
-        setContainerDatasource(datasource);
+        setContainerDataSource(datasource);
+        setSelectionMode(SelectionMode.MULTI);
 
         registerRpc(new GridServerRpc() {
             @Override
@@ -484,7 +544,7 @@ public class Grid extends AbstractComponent {
      * @throws IllegalArgumentException
      *             if the data source is null
      */
-    public void setContainerDatasource(Container.Indexed container) {
+    public void setContainerDataSource(Container.Indexed container) {
         if (container == null) {
             throw new IllegalArgumentException(
                     "Cannot set the datasource to null");
@@ -511,6 +571,14 @@ public class Grid extends AbstractComponent {
         datasource = container;
         datasourceExtension = new RpcDataProviderExtension(container);
         datasourceExtension.extend(this);
+
+        /*
+         * selectionModel == null when the invocation comes from the
+         * constructor.
+         */
+        if (selectionModel != null) {
+            selectionModel.reset();
+        }
 
         // Listen to changes in properties and remove columns if needed
         if (datasource instanceof PropertySetChangeNotifier) {
@@ -957,5 +1025,255 @@ public class Grid extends AbstractComponent {
      */
     public HeightMode getHeightMode() {
         return getState(false).heightMode;
+    }
+
+    /* Selection related methods: */
+
+    /**
+     * Takes a new {@link SelectionModel} into use.
+     * <p>
+     * The SelectionModel that is previously in use will have all its items
+     * deselected.
+     * <p>
+     * If the given SelectionModel is already in use, this method does nothing.
+     * 
+     * @param selectionModel
+     *            the new SelectionModel to use
+     * @throws IllegalArgumentException
+     *             if {@code selectionModel} is <code>null</code>
+     */
+    public void setSelectionModel(SelectionModel selectionModel)
+            throws IllegalArgumentException {
+        if (selectionModel == null) {
+            throw new IllegalArgumentException(
+                    "Selection model may not be null");
+        }
+
+        if (this.selectionModel != selectionModel) {
+            // this.selectionModel is null on init
+            if (this.selectionModel != null) {
+                this.selectionModel.reset();
+                this.selectionModel.setGrid(null);
+            }
+
+            this.selectionModel = selectionModel;
+            this.selectionModel.setGrid(this);
+            this.selectionModel.reset();
+        }
+    }
+
+    /**
+     * Returns the currently used {@link SelectionModel}.
+     * 
+     * @return the currently used SelectionModel
+     */
+    public SelectionModel getSelectionModel() {
+        return selectionModel;
+    }
+
+    /**
+     * Changes the Grid's selection mode.
+     * <p>
+     * Grid supports three selection modes: multiselect, single select and no
+     * selection, and this is a conveniency method for choosing between one of
+     * them.
+     * <P>
+     * Technically, this method is a shortcut that can be used instead of
+     * calling {@code setSelectionModel} with a specific SelectionModel
+     * instance. Grid comes with three built-in SelectionModel classes, and the
+     * {@link SelectionMode} enum represents each of them.
+     * <p>
+     * Essentially, the two following method calls are equivalent:
+     * <p>
+     * <code><pre>
+     * grid.setSelectionMode(SelectionMode.MULTI);
+     * grid.setSelectionModel(new MultiSelectionMode());
+     * </pre></code>
+     * 
+     * 
+     * @param selectionMode
+     *            the selection mode to switch to
+     * @return The {@link SelectionModel} instance that was taken into use
+     * @throws IllegalArgumentException
+     *             if {@code selectionMode} is <code>null</code>
+     * @see SelectionModel
+     */
+    public SelectionModel setSelectionMode(final SelectionMode selectionMode)
+            throws IllegalArgumentException {
+        if (selectionMode == null) {
+            throw new IllegalArgumentException("selection mode may not be null");
+        }
+        final SelectionModel newSelectionModel = selectionMode.createModel();
+        setSelectionModel(newSelectionModel);
+        return newSelectionModel;
+    }
+
+    /**
+     * Checks whether an item is selected or not.
+     * 
+     * @param itemId
+     *            the item id to check for
+     * @return <code>true</code> iff the item is selected
+     */
+    // keep this javadoc in sync with SelectionModel.isSelected
+    public boolean isSelected(Object itemId) {
+        return selectionModel.isSelected(itemId);
+    }
+
+    /**
+     * Returns a collection of all the currently selected itemIds.
+     * <p>
+     * This method is a shorthand that is forwarded to the object that is
+     * returned by {@link #getSelectionModel()}.
+     * 
+     * @return a collection of all the currently selected itemIds
+     */
+    // keep this javadoc in sync with SelectionModel.getSelectedRows
+    public Collection<Object> getSelectedRows() {
+        return getSelectionModel().getSelectedRows();
+    }
+
+    /**
+     * Gets the item id of the currently selected item.
+     * <p>
+     * This method is a shorthand that is forwarded to the object that is
+     * returned by {@link #getSelectionModel()}. Only
+     * {@link SelectionModel.Single} is supported.
+     * 
+     * @return the item id of the currently selected item, or <code>null</code>
+     *         if nothing is selected
+     * @throws IllegalStateException
+     *             if the object that is returned by
+     *             {@link #getSelectionModel()} is not an instance of
+     *             {@link SelectionModel.Single}
+     */
+    // keep this javadoc in sync with SelectionModel.Single.getSelectedRow
+    public Object getSelectedRow() throws IllegalStateException {
+        if (selectionModel instanceof SelectionModel.Single) {
+            return ((SelectionModel.Single) selectionModel).getSelectedRow();
+        } else {
+            throw new IllegalStateException(Grid.class.getSimpleName()
+                    + " does not support the 'getSelectedRow' shortcut method "
+                    + "unless the selection model implements "
+                    + SelectionModel.Single.class.getName()
+                    + ". The current one does not ("
+                    + selectionModel.getClass().getName() + ")");
+        }
+    }
+
+    /**
+     * Marks an item as selected.
+     * <p>
+     * This method is a shorthand that is forwarded to the object that is
+     * returned by {@link #getSelectionModel()}. Only
+     * {@link SelectionModel.Single} or {@link SelectionModel.Multi} are
+     * supported.
+     * 
+     * 
+     * @param itemIds
+     *            the itemId to mark as selected
+     * @return <code>true</code> if the selection state changed.
+     *         <code>false</code> if the itemId already was selected
+     * @throws IllegalArgumentException
+     *             if the {@code itemId} doesn't exist in the currently active
+     *             Container
+     * @throws IllegalStateException
+     *             if the selection was illegal. One such reason might be that
+     *             the implementation already had an item selected, and that
+     *             needs to be explicitly deselected before re-selecting
+     *             something
+     * @throws IllegalStateException
+     *             if the object that is returned by
+     *             {@link #getSelectionModel()} does not implement
+     *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
+     */
+    // keep this javadoc in sync with SelectionModel.Single.select
+    public boolean select(Object itemId) throws IllegalArgumentException,
+            IllegalStateException {
+        if (selectionModel instanceof SelectionModel.Single) {
+            return ((SelectionModel.Single) selectionModel).select(itemId);
+        } else if (selectionModel instanceof SelectionModel.Multi) {
+            return ((SelectionModel.Multi) selectionModel).select(itemId);
+        } else {
+            throw new IllegalStateException(Grid.class.getSimpleName()
+                    + " does not support the 'select' shortcut method "
+                    + "unless the selection model implements "
+                    + SelectionModel.Single.class.getName() + " or "
+                    + SelectionModel.Multi.class.getName()
+                    + ". The current one does not ("
+                    + selectionModel.getClass().getName() + ").");
+        }
+    }
+
+    /**
+     * Marks an item as deselected.
+     * <p>
+     * This method is a shorthand that is forwarded to the object that is
+     * returned by {@link #getSelectionModel()}. Only
+     * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
+     * supported.
+     * 
+     * @param itemId
+     *            the itemId to remove from being selected
+     * @return <code>true</code> if the selection state changed.
+     *         <code>false</code> if the itemId already was selected
+     * @throws IllegalArgumentException
+     *             if the {@code itemId} doesn't exist in the currently active
+     *             Container
+     * @throws IllegalStateException
+     *             if the deselection was illegal. One such reason might be that
+     *             the implementation already had an item selected, and that
+     *             needs to be explicitly deselected before re-selecting
+     *             something
+     * @throws IllegalStateException
+     *             if the object that is returned by
+     *             {@link #getSelectionModel()} does not implement
+     *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
+     */
+    // keep this javadoc in sync with SelectionModel.Single.deselect
+    public boolean deselect(Object itemId) throws IllegalStateException {
+        if (selectionModel instanceof SelectionModel.Single) {
+            return ((SelectionModel.Single) selectionModel).deselect(itemId);
+        } else if (selectionModel instanceof SelectionModel.Multi) {
+            return ((SelectionModel.Multi) selectionModel).deselect(itemId);
+        } else {
+            throw new IllegalStateException(Grid.class.getSimpleName()
+                    + " does not support the 'deselect' shortcut method "
+                    + "unless the selection model implements "
+                    + SelectionModel.Single.class.getName() + " or "
+                    + SelectionModel.Multi.class.getName()
+                    + ". The current one does not ("
+                    + selectionModel.getClass().getName() + ").");
+        }
+    }
+
+    /**
+     * Fires a selection change event.
+     * <p>
+     * <strong>Note:</strong> This is not a method that should be called by
+     * application logic. This method is publicly accessible only so that
+     * {@link SelectionModel SelectionModels} would be able to inform Grid of
+     * these events.
+     * 
+     * @param addedSelections
+     *            the selections that were added by this event
+     * @param removedSelections
+     *            the selections that were removed by this event
+     */
+    public void fireSelectionChangeEvent(Collection<Object> oldSelection,
+            Collection<Object> newSelection) {
+        fireEvent(new SelectionChangeEvent(this, oldSelection, newSelection));
+    }
+
+    @Override
+    public void addSelectionChangeListener(SelectionChangeListener listener) {
+        addListener(SelectionChangeEvent.class, listener,
+                SELECTION_CHANGE_METHOD);
+    }
+
+    @Override
+    public void removeSelectionChangeListener(SelectionChangeListener listener) {
+        removeListener(SelectionChangeEvent.class, listener,
+                SELECTION_CHANGE_METHOD);
     }
 }
