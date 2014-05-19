@@ -79,6 +79,25 @@ public final class Slot extends SimplePanel {
         }
     };
 
+    /*
+     * This listener is only used to force the LayoutManager to measure the
+     * caption size. #13741
+     */
+    private static final ElementResizeListener CAPTION_DUMMY_LISTENER = new ElementResizeListener() {
+        @Override
+        public void onElementResize(ElementResizeEvent e) {
+            // Do nothing
+            // We must include a listener for the element so
+            // that it gets measured during layout.
+
+            // TODO Alter the way in which LayoutManager
+            // determines which elements should be measured.
+            // There should be an easier way to do add items
+            // to LayoutManager.measuredNonConnectorElements
+            // (#13792)
+        }
+    };
+
     // Caption is placed after component unless there is some part which
     // moves it above.
     private CaptionPosition captionPosition = CaptionPosition.RIGHT;
@@ -471,6 +490,8 @@ public final class Slot extends SimplePanel {
         if (captionText != null || icon != null || error != null || required) {
             if (caption == null) {
                 caption = DOM.createDiv();
+                layout.getLayoutManager().addElementResizeListener(caption,
+                        CAPTION_DUMMY_LISTENER);
                 captionWrap = DOM.createDiv();
                 captionWrap.addClassName(StyleConstants.UI_WIDGET);
                 captionWrap.addClassName("v-has-caption");
@@ -489,6 +510,8 @@ public final class Slot extends SimplePanel {
             getElement().appendChild(widget.getElement());
             adopt(widget);
             captionWrap.removeFromParent();
+            layout.getLayoutManager().removeElementResizeListener(caption,
+                    CAPTION_DUMMY_LISTENER);
             caption = null;
             captionWrap = null;
 
