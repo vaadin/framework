@@ -553,7 +553,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     private Navigator navigator;
 
-    private transient PushConnection pushConnection = null;
+    private PushConnection pushConnection = null;
 
     private LocaleService localeService = new LocaleService(this,
             getState(false).localeServiceState);
@@ -1626,5 +1626,4 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     public String getEmbedId() {
         return embedId;
     }
-
 }
