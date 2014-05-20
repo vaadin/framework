@@ -16,7 +16,6 @@
 package com.vaadin.client.ui.grid.renderers;
 
 import com.vaadin.client.ui.grid.Cell;
-import com.vaadin.client.ui.grid.Renderer;
 
 /**
  * Renderer that renders text into a cell.
@@ -24,10 +23,10 @@ import com.vaadin.client.ui.grid.Renderer;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class TextRenderer implements Renderer<String> {
+public class TextRenderer extends AbstractRenderer<String> {
 
     @Override
-    public void renderCell(Cell cell, String text) {
+    public void render(Cell cell, String text) {
         cell.getElement().setInnerText(text);
     }
 }

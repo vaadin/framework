@@ -15,27 +15,37 @@
  */
 package com.vaadin.client.ui.grid.renderers;
 
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import java.util.Collection;
+
+import com.google.gwt.dom.client.NativeEvent;
 import com.vaadin.client.ui.grid.Cell;
+import com.vaadin.client.ui.grid.CellInfo;
+import com.vaadin.client.ui.grid.Renderer;
 
 /**
- * Renders a string as HTML into a cell.
- * <p>
- * The html string is rendered as is without any escaping. It is up to the
- * developer to ensure that the html string honors the {@link SafeHtml}
- * contract. For more information see
- * {@link SafeHtmlUtils#fromSafeConstant(String)}.
+ * Abstract base class for renderers.
  * 
- * @since 7.4
  * @author Vaadin Ltd
- * @see SafeHtmlUtils#fromSafeConstant(String)
  */
-public class HtmlRenderer extends AbstractRenderer<String> {
+public abstract class AbstractRenderer<T> implements Renderer<T> {
 
     @Override
-    public void render(Cell cell, String htmlString) {
-        cell.getElement().setInnerSafeHtml(
-                SafeHtmlUtils.fromSafeConstant(htmlString));
+    public void init(Cell cell) {
+        // Implement if needed
+    }
+
+    @Override
+    public Collection<String> getConsumedEvents() {
+        return null;
+    }
+
+    @Override
+    public void onBrowserEvent(CellInfo cell, NativeEvent event) {
+        // Implement if needed
+    }
+
+    @Override
+    public boolean onActivate() {
+        return false;
     }
 }

@@ -25,7 +25,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasVisibility;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
@@ -144,20 +143,7 @@ public class Grid<T> extends Composite {
         /**
          * Renderer for rendering a value into the cell
          */
-        private Renderer<C> bodyRenderer = new Renderer<C>() {
-
-            @Override
-            public void renderCell(Cell cell, C value) {
-                if (value instanceof Widget) {
-                    cell.setWidget((Widget) value);
-                } else if (value instanceof String) {
-                    cell.getElement().setInnerText(value.toString());
-                } else {
-                    throw new IllegalArgumentException(
-                            "Cell value cannot be converted into a String. Please use a custom renderer to convert the value.");
-                }
-            }
-        };
+        private Renderer<? super C> bodyRenderer;
 
         /**
          * Renderer for rendering the header cell value into the cell
@@ -170,19 +156,12 @@ public class Grid<T> extends Composite {
         private Renderer<String> footerRenderer = new TextRenderer();
 
         /**
-         * Constructs a new column.
-         */
-        public AbstractGridColumn() {
-
-        }
-
-        /**
          * Constructs a new column with a custom renderer.
          * 
          * @param renderer
          *            The renderer to use for rendering the cells
          */
-        public AbstractGridColumn(Renderer<C> renderer) {
+        public AbstractGridColumn(Renderer<? super C> renderer) {
             if (renderer == null) {
                 throw new IllegalArgumentException("Renderer cannot be null.");
             }
@@ -399,7 +378,7 @@ public class Grid<T> extends Composite {
          * 
          * @return The renderer to render the cell content with
          */
-        public Renderer<C> getRenderer() {
+        public Renderer<? super C> getRenderer() {
             return bodyRenderer;
         }
 
@@ -546,8 +525,8 @@ public class Grid<T> extends Composite {
                     GridColumn<?, T> column = getColumnFromVisibleIndex(cell
                             .getColumn());
                     if (column != null) {
-                        getRenderer(column).renderCell(cell,
-                                getColumnValue(column));
+                        getRenderer(column)
+                                .render(cell, getColumnValue(column));
                     }
                 }
 
@@ -579,7 +558,7 @@ public class Grid<T> extends Composite {
                     Element cellElement = cell.getElement();
 
                     if (group != null) {
-                        getGroupRenderer(group).renderCell(cell,
+                        getGroupRenderer(group).render(cell,
                                 getGroupValue(group));
                         cell.setColSpan(group.getColumns().size());
                     } else {
@@ -692,7 +671,7 @@ public class Grid<T> extends Composite {
                             .getColumn());
                     if (column != null) {
                         Object value = column.getValue(rowData);
-                        column.getRenderer().renderCell(cell, value);
+                        column.getRenderer().render(cell, value);
                     }
                 }
             }

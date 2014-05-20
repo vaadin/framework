@@ -20,7 +20,6 @@ import java.util.Date;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.TimeZone;
 import com.vaadin.client.ui.grid.Cell;
-import com.vaadin.client.ui.grid.Renderer;
 
 /**
  * A renderer for rendering dates into cells
@@ -28,7 +27,7 @@ import com.vaadin.client.ui.grid.Renderer;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class DateRenderer implements Renderer<Date> {
+public class DateRenderer extends AbstractRenderer<Date> {
 
     private DateTimeFormat format = DateTimeFormat.getShortDateTimeFormat();
 
@@ -36,7 +35,7 @@ public class DateRenderer implements Renderer<Date> {
             .getTimezoneOffset());
 
     @Override
-    public void renderCell(Cell cell, Date date) {
+    public void render(Cell cell, Date date) {
         String dateStr = format.format(date, timeZone);
         cell.getElement().setInnerText(dateStr);
     }

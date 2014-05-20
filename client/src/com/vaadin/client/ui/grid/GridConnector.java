@@ -26,6 +26,7 @@ import java.util.Set;
 
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.ColumnGroupRowState;
 import com.vaadin.shared.ui.grid.ColumnGroupState;
@@ -54,6 +55,7 @@ public class GridConnector extends AbstractComponentConnector {
         private final String id;
 
         public CustomGridColumn(String id) {
+            super(new TextRenderer());
             this.id = id;
         }
 
