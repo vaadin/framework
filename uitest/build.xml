@@ -17,7 +17,7 @@
     </path>
 
     <target name="dependencies">
-        <!-- This is copied from common.xml to be able to add server.test.source 
+        <!-- This is copied from common.xml to be able to add server.test.source
             to the source path -->
 
         <ivy:resolve log="download-only" resolveid="common" conf="build, build-provided" />
@@ -161,7 +161,7 @@
             <sequential>
                 <!-- Server tests -->
 
-                <!-- Sleep before running integration tests so testbench 2 
+                <!-- Sleep before running integration tests so testbench 2
                         tests have time to compile and start -->
                 <sleep minutes="4" />
                 <ant antfile="${uitest.dir}/integration_tests.xml" target="integration-test-all" inheritall="false" inheritrefs="false">
@@ -192,7 +192,7 @@
     </target>
 
     <target name="test-server" depends="clean-testbench-errors">
-       <property name="war.file" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+       <property name="war.file" location="${vaadin.basedir}/result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
        <parallel>
          <daemons>
            <ant antfile="${uitest.dir}/vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
@@ -206,7 +206,7 @@
     </target>
 
     <target name="test-tb2" depends="clean-testbench-errors">
-       <property name="war.file" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+       <property name="war.file" location="${vaadin.basedir}/result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
        <parallel>
          <daemons>
            <ant antfile="${uitest.dir}/vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
@@ -219,7 +219,7 @@
     </target>
 
     <target name="test-tb3" depends="clean-testbench-errors">
-       <property name="war.file" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+       <property name="war.file" location="${vaadin.basedir}/result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
        <parallel>
          <daemons>
            <ant antfile="${uitest.dir}/vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
