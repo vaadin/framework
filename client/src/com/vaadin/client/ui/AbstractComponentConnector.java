@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -217,11 +217,24 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     }
 
+    /**
+     * Updates the component size based on the shared state, invoking the
+     * {@link LayoutManager layout manager} if necessary.
+     */
     protected void updateComponentSize() {
         updateComponentSize(getState().width == null ? "" : getState().width,
                 getState().height == null ? "" : getState().height);
     }
 
+    /**
+     * Updates the component size, invoking the {@link LayoutManager layout
+     * manager} if necessary.
+     * 
+     * @param newWidth
+     *            The new width as a CSS string. Cannot be null.
+     * @param newHeight
+     *            The new height as a CSS string. Cannot be null.
+     */
     protected void updateComponentSize(String newWidth, String newHeight) {
         Profiler.enter("AbstractComponentConnector.updateComponentSize");
 
@@ -255,11 +268,24 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         Profiler.leave("AbstractComponentConnector.updateComponentSize update styleNames");
 
         Profiler.enter("AbstractComponentConnector.updateComponentSize update DOM");
-        widget.setHeight(newHeight);
-        widget.setWidth(newWidth);
+        updateWidgetSize(newWidth, newHeight);
         Profiler.leave("AbstractComponentConnector.updateComponentSize update DOM");
 
         Profiler.leave("AbstractComponentConnector.updateComponentSize");
+    }
+
+    /**
+     * Updates the DOM size of this connector's {@link #getWidget() widget}.
+     * 
+     * @since 7.1.15
+     * @param newWidth
+     *            The new width as a CSS string. Cannot be null.
+     * @param newHeight
+     *            The new height as a CSS string. Cannot be null.
+     */
+    protected void updateWidgetSize(String newWidth, String newHeight) {
+        getWidget().setWidth(newWidth);
+        getWidget().setHeight(newHeight);
     }
 
     @Override

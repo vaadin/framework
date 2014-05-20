@@ -30,8 +30,7 @@ public class RefresherTestUI extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Refresher refresher = new Refresher();
-        refresher.extend(this);
+        final Refresher refresher = new Refresher(this);
         refresher.setInterval(1000);
         refresher.addRefreshListener(new RefreshListener() {
             @Override

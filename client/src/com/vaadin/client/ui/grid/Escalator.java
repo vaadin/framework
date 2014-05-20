@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -228,7 +228,7 @@ abstract class JsniWorkaround {
  * A low-level table-like widget that features a scrolling virtual viewport and
  * lazily generated rows.
  * 
- * @since 7.2
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class Escalator extends Widget {

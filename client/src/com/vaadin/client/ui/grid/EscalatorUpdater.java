@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,6 @@
 
 package com.vaadin.client.ui.grid;
 
-
 /**
  * A functional interface that allows client code to define how a certain row in
  * Escalator will be displayed. The contents of an escalator's header, body and
@@ -25,7 +24,7 @@ package com.vaadin.client.ui.grid;
  * The updater is responsible for internally handling all remote communication,
  * should the displayed data need to be fetched remotely.
  * 
- * @since 7.2
+ * @since 7.4
  * @author Vaadin Ltd
  * @see RowContainer#setEscalatorUpdater(EscalatorUpdater)
  * @see Escalator#getHeader()

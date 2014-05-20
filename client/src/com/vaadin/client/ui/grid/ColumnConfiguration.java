@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ package com.vaadin.client.ui.grid;
 /**
  * A representation of the columns in an instance of {@link Escalator}.
  * 
- * @since 7.2
+ * @since 7.4
  * @author Vaadin Ltd
  * @see Escalator#getColumnConfiguration()
  */

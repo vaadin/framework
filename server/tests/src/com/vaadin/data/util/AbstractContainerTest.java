@@ -3,8 +3,9 @@ package com.vaadin.data.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.junit.Assert;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filterable;

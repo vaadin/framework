@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,6 +33,7 @@ public class PushConfigurationWebSocketTest extends PushConfigurationTest {
         List<DesiredCapabilities> browsers = super.getBrowsersToTest();
         browsers.remove(Browser.IE8.getDesiredCapabilities());
         browsers.remove(Browser.IE9.getDesiredCapabilities());
+        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
 
         return browsers;
     }

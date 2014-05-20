@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -68,7 +68,7 @@ import com.vaadin.ui.Component;
  * <h3>Auxiliary headers and footers</h3> TODO To be revised when column
  * grouping is implemented.
  * 
- * @since 7.2
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class Grid extends AbstractComponent {

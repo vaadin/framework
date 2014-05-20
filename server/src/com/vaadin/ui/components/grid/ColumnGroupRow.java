@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,7 +30,7 @@ import com.vaadin.shared.ui.grid.ColumnGroupState;
  * A column group row represents an auxiliary header or footer row added to the
  * grid. A column group row includes column groups that group columns together.
  * 
- * @since 7.2
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class ColumnGroupRow implements Serializable {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,7 +28,7 @@ public class CapsLockWarningUI extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         PasswordField field = new PasswordField("Enter your password");
-        new CapsLockWarning().extend(field);
+        CapsLockWarning.warnFor(field);
 
         addComponent(field);
     }

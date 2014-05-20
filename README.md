@@ -1,3 +1,16 @@
+Vaadin
+======
+*[Vaadin](https://vaadin.com) is a Java framework for building modern web applications that look great, perform well and make you and your users happy.*
+
+For instructions about _using_ Vaadin to develop applications, please refer to
+https://vaadin.com/learn
+
+To contribute, first refer to https://vaadin.com/wiki/-/wiki/Main/Contributing+Code
+for general instructions and requirements for contributing code to the Vaadin framework.
+
+Instructions on how to set up a working environment for developing the Vaadin
+framework follow below.
+
 Cloning the project repositories
 ======
 
@@ -6,7 +19,7 @@ Vaadin 7 consists of three separate repositories
 * https://github.com/vaadin/gwt.git
 * https://github.com/vaadin/gwt-tools.git
 
-Start by cloning these repositories into the same folder:
+Start by cloning these repositories **into the same folder**:
 <pre><code>git clone https://github.com/vaadin/vaadin.git
 git clone https://github.com/vaadin/gwt.git
 git clone https://github.com/vaadin/gwt-tools.git</code></pre>
@@ -21,7 +34,7 @@ Assuming you have cloned the repositories as described in “Cloning the project
 
 Start Eclipse
 -------------
-Start Eclipse and use the root checkout folder (the one containing the *vaadin*, *gwt* and *gwt-tools* folders) as the workspace folder
+Start Eclipse and **use the root checkout folder** (the one containing the *vaadin*, *gwt* and *gwt-tools* folders) **as the workspace folder**
 
 Install IvyDE
 ---------
@@ -31,7 +44,7 @@ You'll need the Apache Ivy plug-in for Eclipse to build the project later on, in
 1. Enter `http://www.apache.org/dist/ant/ivyde/updatesite` in the "Work with:" text field
 1. Select and install all items
 
-If you have installed IvyDE via the Eclipse Marketplace previously, make sure that you also have *Apache Ivy Ant Targets* installed, which is not included in that IvyDE installation:
+If you have installed IvyDE via the Eclipse Marketplace previously, **make sure** that you also have *Apache Ivy Ant Tasks* installed, which is not included in that IvyDE installation:
 
 1. Go to *Help* -> *Install New Software...*
 1. Click the hyperlink in the "What is already installed?" sentence near the bottom right-hand corner
@@ -51,7 +64,7 @@ Set up the Workspace and define required variables for projects
 1. Go to *Java* -> *Build Path* -> *Classpath Variables*
 1. Add two new variables
   1. GWT_TOOLS referring to the gwt-tools folder containing the dependency jars
-  1. JDK_HOME referring to your jdk installation directory 
+  1. JDK_HOME referring to your jdk installation directory
      ![GWT_TOOLS](http://f.cl.ly/items/1k2Z1n2v0p0y3l0X0D1G/ClasspathVars.png "Defining GWT_TOOLS")
 1. Go to Java -> Compiler
   1. Check that the compliance level has been set to 1.6
@@ -88,14 +101,14 @@ Note that the first compilation takes a while to finish as Ivy downloads depende
 
 Compiling the Default Widget Set and Themes
 --------
-Compile the default widget set by executing the default target in build/ide.xml in the vaadin project. 
+Compile the default widget set by executing the default target in build/ide.xml in the vaadin project.
 In Eclipse this is done by opening build/ide.xml, right clicking on it and choosing *Run As* -> *Ant Build*.
 ![CompileWidgetSet](http://cl.ly/image/1R43162b282e/build.png "Compiling the Widget Set")
 
 Running a UI test
 ------
-The *vaadin* project includes an embedded Jetty which is used for running the UI tests. 
-It is a standard Java application: *com.vaadin.launcher.DevelopmentServerLauncher*. 
+The *vaadin* project includes an embedded Jetty which is used for running the UI tests.
+It is a standard Java application: *com.vaadin.launcher.DevelopmentServerLauncher*.
 Launch it in debug mode in Eclipse by right clicking on it and selecting *Debug As* -> *Java Application*.
 
 This launches a Jetty on port 8888 which allows you to run any UI class in the project by opening http://localhost:8888/run/&lt;UI class name&gt;?restartApplication in your browser, e.g. [http://localhost:8888/run/com.vaadin.tests.components.label.LabelModes?restartApplication](http://localhost:8888/run/com.vaadin.tests.components.label.LabelModes?restartApplication) (Add ?restartApplication to ensure).
@@ -108,11 +121,11 @@ The JUnit tests for the projects can be run using
 Running this in the *gwt* directory will run the GWT JUnit tests.
 Running it in the *vaadin* directory will run the Vaadin JUnit tests.
 
-Running the Vaadin TestBench tests currently requires access to a correctly configured TestBench 2 cluster, only available inside Vaadin.
+Note that the included Vaadin TestBench (browser) tests currently requires access to a TestBench cluster, which is currently only available internally at Vaadin Ltd.
 
 Building a package
 =====
-The distribution files can be built in a few steps. First build the *gwt* project by running 
+The distribution files can be built in a few steps. First build the *gwt* project by running
 <pre><code>ant</code></pre>
 in the *gwt* directory. The elemental package needs to be built separately:
 <pre><code>ant elemental</code></pre>
@@ -123,4 +136,3 @@ Move to the *vaadin* project directory and unpack the previously built gwt jars
 Then build the *vaadin* project by running
 <pre><code>ant</code></pre>
 in the *vaadin* directory.
-

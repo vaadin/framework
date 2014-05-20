@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,7 +39,7 @@ import com.vaadin.shared.ui.grid.ScrollDestination;
  * Connects the client side {@link Grid} widget with the server side
  * {@link com.vaadin.ui.components.grid.Grid} component.
  * 
- * @since 7.2
+ * @since 7.4
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.components.grid.Grid.class)

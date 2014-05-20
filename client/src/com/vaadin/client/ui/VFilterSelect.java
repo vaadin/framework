@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -453,7 +453,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
             public void scrollUp() {
                 debug("VFS.SP.LPS: scrollUp()");
-                if (currentPage + pagesToScroll > 0) {
+                if (pageLength > 0 && currentPage + pagesToScroll > 0) {
                     pagesToScroll--;
                     cancel();
                     schedule(200);
@@ -462,8 +462,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
             public void scrollDown() {
                 debug("VFS.SP.LPS: scrollDown()");
-                if (totalMatches > (currentPage + pagesToScroll + 1)
-                        * pageLength) {
+                if (pageLength > 0
+                        && totalMatches > (currentPage + pagesToScroll + 1)
+                                * pageLength) {
                     pagesToScroll++;
                     cancel();
                     schedule(200);
@@ -1217,7 +1218,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      *         last page
      */
     public boolean hasNextPage() {
-        if (totalMatches > (currentPage + 1) * pageLength) {
+        if (pageLength > 0 && totalMatches > (currentPage + 1) * pageLength) {
             return true;
         } else {
             return false;
@@ -1415,6 +1416,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 panel.remove(selectedItemIcon);
             }
             selectedItemIcon = new IconWidget(client.getIcon(iconUri));
+            // Older IE versions don't scale icon correctly if DOM
+            // contains height and width attributes.
+            selectedItemIcon.getElement().removeAttribute("height");
+            selectedItemIcon.getElement().removeAttribute("width");
             selectedItemIcon.addDomHandler(new LoadHandler() {
                 @Override
                 public void onLoad(LoadEvent event) {
@@ -1919,6 +1924,20 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * For internal use only. May be removed or replaced in the future.
      */
     public void updateRootWidth() {
+        updateRootWidth(false);
+    }
+
+    /**
+     * Calculates the width of the select if the select has undefined width.
+     * Should be called when the width changes or when the icon changes.
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     * 
+     * @param forceUpdate
+     *            a flag that forces a recalculation even if one would not
+     *            normally be done
+     */
+    public void updateRootWidth(boolean forceUpdate) {
         ComponentConnector paintable = ConnectorMap.get(client).getConnector(
                 this);
         if (paintable.isUndefinedWidth()) {
@@ -1931,7 +1950,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              * wide.
              */
             int w = Util.getRequiredWidth(this);
-            if ((!initDone || currentPage + 1 < 0)
+
+            if (forceUpdate || (!initDone || currentPage + 1 < 0)
                     && suggestionPopupMinWidth > w) {
                 /*
                  * We want to compensate for the paddings just to preserve the

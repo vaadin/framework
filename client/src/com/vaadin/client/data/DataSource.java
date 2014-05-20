@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,7 @@ package com.vaadin.client.data;
  * items (e.g. rows) of a specified type. The data source is a lazy view into a
  * larger data set.
  * 
- * @since 7.2
+ * @since 7.4
  * @author Vaadin Ltd
  * @param <T>
  *            the row type

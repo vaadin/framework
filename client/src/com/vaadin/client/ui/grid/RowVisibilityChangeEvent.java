@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,7 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * Event fired when the range of visible rows changes e.g. because of scrolling.
  * 
- * @since 7.2
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class RowVisibilityChangeEvent extends

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -48,7 +48,12 @@ public class TreeTableConnector extends TableConnector {
                 .getIntAttribute(TreeTableConstants.ATTRIBUTE_HIERARCHY_COLUMN_INDEX)
                 : 0;
         int oldTotalRows = getWidget().getTotalRows();
+
         super.updateFromUIDL(uidl, client);
+        // super.updateFromUIDL set rendering to false, even though we continue
+        // rendering here. Set it back to true.
+        getWidget().rendering = true;
+
         if (getWidget().collapseRequest) {
             if (getWidget().collapsedRowKey != null
                     && getWidget().scrollBody != null) {
@@ -105,6 +110,7 @@ public class TreeTableConnector extends TableConnector {
             getWidget()
                     .handleNavigation(event.keycode, event.ctrl, event.shift);
         }
+        getWidget().rendering = false;
     }
 
     @Override

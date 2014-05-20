@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -66,6 +66,7 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
         // Uncomment once we have the capability to run on Safari 6
         // allBrowsers.add(SAFARI);
         allBrowsers.add(Browser.CHROME.getDesiredCapabilities());
+        allBrowsers.add(Browser.PHANTOMJS.getDesiredCapabilities());
         // Re-enable this when it is possible to run on a modern Opera version
         // allBrowsers.add(Browser.OPERA.getDesiredCapabilities());
     }

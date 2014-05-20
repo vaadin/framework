@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,8 @@
  * the License.
  */
 package com.vaadin.client.ui.window;
+
+import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -256,6 +258,12 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
     @Override
     public void postLayout() {
         VWindow window = getWidget();
+
+        if (!window.isAttached()) {
+            Logger.getLogger(WindowConnector.class.getName()).warning(
+                    "Called postLayout to detached Window.");
+            return;
+        }
         if (window.centered && getState().windowMode != WindowMode.MAXIMIZED) {
             window.center();
         }

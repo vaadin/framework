@@ -1,5 +1,5 @@
 /* 
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,8 +18,8 @@ package com.vaadin.tests.widgetset.server;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.communication.ClientRpc;
-import com.vaadin.tests.widgetset.client.ComplexTestBean;
 import com.vaadin.tests.widgetset.client.SerializerTestRpc;
+import com.vaadin.tests.widgetset.client.SerializerTestState;
 
 public class SerializerTestExtension extends AbstractExtension {
 
@@ -29,8 +29,8 @@ public class SerializerTestExtension extends AbstractExtension {
     }
 
     @Override
-    public ComplexTestBean getState() {
-        return (ComplexTestBean) super.getState();
+    public SerializerTestState getState() {
+        return (SerializerTestState) super.getState();
     }
 
     public void registerRpc(SerializerTestRpc rpc) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -31,11 +32,15 @@ public class PushErrorHandlingTest extends MultiBrowserTest {
         setPush(true);
         openTestURL();
         vaadinElementById("npeButton").click();
+        int idx = 1;
+        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+            // PhantomJS sends an extra event when page gets loaded.
+            // This results as an extra error label.
+            ++idx;
+        }
         Assert.assertEquals(
                 "An error! Unable to invoke method click in com.vaadin.shared.ui.button.ButtonServerRpc",
-                vaadinElement(
-                        "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[2]/VLabel[0]")
-                        .getText());
+                $(LabelElement.class).get(idx).getText());
 
         WebElement table = vaadinElementById("testtable");
         WebElement row = table.findElement(By

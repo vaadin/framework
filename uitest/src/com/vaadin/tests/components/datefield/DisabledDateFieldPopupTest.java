@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,38 +15,44 @@
  */
 package com.vaadin.tests.components.datefield;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- * 
- * @since 7.1
- * @author Vaadin Ltd
- */
 public class DisabledDateFieldPopupTest extends MultiBrowserTest {
 
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>();
+        for (DesiredCapabilities browser : super.getBrowsersToTest()) {
+            if (BrowserUtil.isIE(browser)) {
+                browsers.add(browser);
+            }
+        }
+        return browsers;
+    }
+
     @Test
-    public void testPopup() {
+    public void testPopup() throws IOException {
         openTestURL();
 
         WebElement button = driver.findElement(By
                 .className("v-datefield-button"));
-        button.click();
+        new Actions(driver).moveToElement(button).click()
+                .sendKeys(Keys.ARROW_DOWN).perform();
 
         Assert.assertFalse(
-                "Calendar popup should not be opened for disabled date field on mouse click",
+                "Calendar popup should not be opened for disabled date field",
                 isElementPresent(By.className("v-datefield-popup")));
-
-        button.sendKeys(Keys.ARROW_DOWN);
-
-        Assert.assertFalse("Calendar popup should not be opened for "
-                + "disabled date fild on down key",
-                isElementPresent(By.className("v-datefield-popup")));
-
     }
 }

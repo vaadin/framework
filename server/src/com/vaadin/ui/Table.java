@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -2954,15 +2954,23 @@ public class Table extends AbstractSelect implements Action.Container,
             // (row caches emptied by other event)
             if (!containerChangeToBeRendered) {
                 Integer value = (Integer) variables.get("reqfirstrow");
+                int tableSize = size();
                 if (value != null) {
                     reqFirstRowToPaint = value.intValue();
+                    // Sanity check
+                    if (reqFirstRowToPaint < 0) {
+                        reqFirstRowToPaint = -1;
+                    }
+                    if (reqFirstRowToPaint >= tableSize) {
+                        reqFirstRowToPaint = tableSize - 1;
+                    }
                 }
                 value = (Integer) variables.get("reqrows");
                 if (value != null) {
                     reqRowsToPaint = value.intValue();
                     // sanity check
-                    if (reqFirstRowToPaint + reqRowsToPaint > size()) {
-                        reqRowsToPaint = size() - reqFirstRowToPaint;
+                    if (reqFirstRowToPaint + reqRowsToPaint > tableSize) {
+                        reqRowsToPaint = tableSize - reqFirstRowToPaint;
                     }
                 }
             }
@@ -4751,7 +4759,15 @@ public class Table extends AbstractSelect implements Action.Container,
             if (refreshingPreviouslyEnabled) {
                 enableContentRefreshing(true);
             }
-
+            if (propertyId.length > 0 && ascending.length > 0) {
+                // The first propertyId is the primary sorting criterion,
+                // therefore the sort indicator should be there
+                sortAscending = ascending[0];
+                sortContainerPropertyId = propertyId[0];
+            } else {
+                sortAscending = true;
+                sortContainerPropertyId = null;
+            }
         } else if (c != null) {
             throw new UnsupportedOperationException(
                     "Underlying Data does not allow sorting");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ import java.util.Iterator;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -138,6 +139,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
          */
         @Override
         public void onClick(ClickEvent event) {
+            if (!isEnabled() || isReadonly()) {
+                return;
+            }
+
             Date newDate = ((Day) event.getSource()).getDate();
             if (!isDateInsideRange(newDate, Resolution.DAY)) {
                 return;
@@ -173,10 +178,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private Timer mouseTimer;
 
     private Date value;
-
-    private boolean enabled = true;
-
-    private boolean readonly = false;
 
     private DateTimeService dateTimeService;
 
@@ -349,11 +350,11 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     private boolean isReadonly() {
-        return readonly;
+        return parent.isReadonly();
     }
 
     private boolean isEnabled() {
-        return enabled;
+        return parent.isEnabled();
     }
 
     @Override
@@ -1498,11 +1499,12 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     @Override
     public void onMouseDown(MouseDownEvent event) {
-        // Allow user to click-n-hold for fast-forward or fast-rewind.
+        // Click-n-hold the left mouse button for fast-forward or fast-rewind.
         // Timer is first used for a 500ms delay after mousedown. After that has
         // elapsed, another timer is triggered to go off every 150ms. Both
         // timers are cancelled on mouseup or mouseout.
-        if (event.getSource() instanceof VEventButton) {
+        if (event.getNativeButton() == NativeEvent.BUTTON_LEFT
+                && event.getSource() instanceof VEventButton) {
             final VEventButton sender = (VEventButton) event.getSource();
             processClickEvent(sender);
             mouseTimer = new Timer() {

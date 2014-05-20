@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,6 +29,7 @@ public class ClientRpcVisitor extends TypeVisitor {
     @Override
     public void visitClientRpc(TreeLogger logger, JClassType type,
             ConnectorBundle bundle) throws UnableToCompleteException {
+        checkGenericType(logger, type);
         Set<? extends JClassType> hierarchy = type
                 .getFlattenedSupertypeHierarchy();
         for (JClassType subType : hierarchy) {
@@ -44,6 +45,17 @@ public class ClientRpcVisitor extends TypeVisitor {
                     bundle.setNeedsSerialize(paramType);
                 }
             }
+        }
+    }
+
+    public static void checkGenericType(TreeLogger logger, JClassType type)
+            throws UnableToCompleteException {
+        if (type.isGenericType() != null) {
+            logger.log(Type.ERROR,
+                    "Type " + type.getParameterizedQualifiedSourceName()
+                            + "is parameterizied generic. RPC proxy "
+                            + "for parameterizied types is not supported.");
+            throw new UnableToCompleteException();
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.HasOneWidget;
  * A Cell instance will be provided to the {@link EscalatorUpdater} responsible
  * for rendering the cells in a certain {@link RowContainer}.
  * 
- * @since 7.2
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface Cell extends HasOneWidget {

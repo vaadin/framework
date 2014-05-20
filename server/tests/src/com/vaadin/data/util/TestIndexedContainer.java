@@ -2,7 +2,7 @@ package com.vaadin.data.util;
 
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;

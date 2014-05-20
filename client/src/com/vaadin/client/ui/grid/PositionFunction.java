@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,7 +22,7 @@ import com.google.gwt.dom.client.Style.Unit;
 /**
  * A functional interface that can be used for positioning elements in the DOM.
  * 
- * @since 7.2
+ * @since 7.4
  * @author Vaadin Ltd
  */
 interface PositionFunction {

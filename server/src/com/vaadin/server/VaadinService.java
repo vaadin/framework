@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -749,6 +749,9 @@ public abstract class VaadinService implements Serializable {
         VaadinSession.setCurrent(session);
 
         session.storeInSession(this, request.getWrappedSession());
+
+        // Initial WebBrowser data comes from the request
+        session.getBrowser().updateRequestDetails(request);
 
         // Initial locale comes from the request
         Locale locale = request.getLocale();

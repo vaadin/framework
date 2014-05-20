@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -52,14 +52,22 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
     /**
      * This is the total limit of actual JUnit test instances run in parallel
      */
-    private static final int MAX_CONCURRENT_TESTS = 50;
+    private static final int MAX_CONCURRENT_TESTS;
 
     /**
      * This is static so it is shared by all tests running concurrently on the
      * same machine and thus can limit the number of threads in use.
      */
-    private static final ExecutorService service = Executors
-            .newFixedThreadPool(MAX_CONCURRENT_TESTS);
+    private static final ExecutorService service;
+
+    static {
+        if (System.getProperty("useLocalWebDriver") != null) {
+            MAX_CONCURRENT_TESTS = 10;
+        } else {
+            MAX_CONCURRENT_TESTS = 50;
+        }
+        service = Executors.newFixedThreadPool(MAX_CONCURRENT_TESTS);
+    }
 
     public TB3Runner(Class<?> klass) throws InitializationError {
         super(klass);

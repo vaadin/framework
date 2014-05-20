@@ -90,6 +90,8 @@
     <module name="Header">
         <property name="headerFile" value="${checkstyle.header.file}" />
         <property name="fileExtensions" value="java" />
+        <!-- ignore empty lines that may or may not have trailing white-space -->
+        <property name="ignoreLines" value="3, 7, 9"/>
     </module>
 
     <module name="TreeWalker">

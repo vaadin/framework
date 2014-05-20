@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -126,9 +126,13 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         } else {
             capabilities = getDesiredCapabilities();
 
-            WebDriver dr = TestBench.createDriver(new RemoteWebDriver(new URL(
-                    getHubURL()), capabilities));
-            setDriver(dr);
+            if (System.getProperty("useLocalWebDriver") != null) {
+                setupLocalDriver(capabilities);
+            } else {
+                WebDriver dr = TestBench.createDriver(new RemoteWebDriver(
+                        new URL(getHubURL()), capabilities));
+                setDriver(dr);
+            }
         }
 
         int w = SCREENSHOT_WIDTH;
@@ -956,10 +960,18 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     public void hitButton(String id) {
-        WebDriverBackedSelenium selenium = new WebDriverBackedSelenium(driver,
-                driver.getCurrentUrl());
+        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+            driver.findElement(By.id(id)).click();
+        } else {
+            WebDriverBackedSelenium selenium = new WebDriverBackedSelenium(
+                    driver, driver.getCurrentUrl());
 
-        selenium.keyPress("id=" + id, "\\13");
+            selenium.keyPress("id=" + id, "\\13");
+        }
+    }
+
+    protected void openDebugLogTab() {
+        findElement(By.xpath("//button[@title='Debug message log']")).click();
     }
 
 }
