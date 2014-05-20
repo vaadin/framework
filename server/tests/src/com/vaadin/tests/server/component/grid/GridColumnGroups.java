@@ -35,11 +35,6 @@ import com.vaadin.ui.components.grid.ColumnGroup;
 import com.vaadin.ui.components.grid.ColumnGroupRow;
 import com.vaadin.ui.components.grid.Grid;
 
-/**
- * 
- * @since
- * @author Vaadin Ltd
- */
 public class GridColumnGroups {
 
     private Grid grid;

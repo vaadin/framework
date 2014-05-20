@@ -30,13 +30,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- * 
- * @since
- * @author Vaadin Ltd
- */
+@TestCategory("grid")
 public class GridBasicFeaturesTest extends MultiBrowserTest {
 
     @Test

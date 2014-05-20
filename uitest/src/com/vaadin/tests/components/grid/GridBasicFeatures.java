@@ -31,7 +31,7 @@ import com.vaadin.ui.components.grid.GridColumn;
 /**
  * Tests the basic features like columns, footers and headers
  * 
- * @since 7.2
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class GridBasicFeatures extends AbstractComponentTest<Grid> {
@@ -334,7 +334,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 }, null);
     }
 
-   @SuppressWarnings("boxing")
+    @SuppressWarnings("boxing")
     protected void addHeightByRowActions() {
         createCategory("Height by Rows", "Size");
 

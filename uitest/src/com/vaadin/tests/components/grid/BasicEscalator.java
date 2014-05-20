@@ -30,10 +30,6 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 
-/**
- * @since 7.2
- * @author Vaadin Ltd
- */
 @Widgetset(TestingWidgetSet.NAME)
 public class BasicEscalator extends AbstractTestUI {
     public static final String ESCALATOR = "escalator";

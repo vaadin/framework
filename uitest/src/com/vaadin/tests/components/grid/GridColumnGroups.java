@@ -27,11 +27,6 @@ import com.vaadin.ui.components.grid.ColumnGroupRow;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.GridColumn;
 
-/**
- * 
- * @since
- * @author Vaadin Ltd
- */
 public class GridColumnGroups extends AbstractTestUI {
 
     private final int COLUMNS = 4;

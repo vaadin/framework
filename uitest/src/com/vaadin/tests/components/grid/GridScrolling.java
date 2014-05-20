@@ -27,9 +27,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.Grid;
 
-/**
- * 
- */
 @SuppressWarnings("serial")
 public class GridScrolling extends AbstractTestUI {
 
