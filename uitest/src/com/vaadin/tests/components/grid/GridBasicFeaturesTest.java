@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,6 @@ import java.util.List;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -269,13 +268,13 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
 
         final By newRow = By.xpath("//td[text()='newcell: 0']");
 
-        assertTrue("Unexpected initial state", !elementIsFound(newRow));
+        assertTrue("Unexpected initial state", !isElementPresent(newRow));
 
         selectMenuPath("Component", "Body rows", "Add first row");
-        assertTrue("Add row failed", elementIsFound(newRow));
+        assertTrue("Add row failed", isElementPresent(newRow));
 
         selectMenuPath("Component", "Body rows", "Remove first row");
-        assertTrue("Remove row failed", !elementIsFound(newRow));
+        assertTrue("Remove row failed", !isElementPresent(newRow));
     }
 
     /**
@@ -298,14 +297,6 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
                 "Modify first row (getContainerProperty)");
         assertEquals("(Second) modification with getItemProperty failed",
                 "modified: Column0", getBodyCellByRowAndColumn(1, 1).getText());
-    }
-
-    private boolean elementIsFound(By locator) {
-        try {
-            return driver.findElement(locator) != null;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
     }
 
     private void assertPrimaryStylename(String stylename) {
@@ -348,32 +339,27 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     private WebElement getVerticalScroller() {
-        return getDriver().findElement(
-                By.xpath("//div[@id='testComponent']/div[1]"));
+        return getGridElement().findElement(By.xpath("./div[1]"));
     }
 
     private WebElement getHorizontalScroller() {
-        return getDriver().findElement(
-                By.xpath("//div[@id='testComponent']/div[2]"));
+        return getGridElement().findElement(By.xpath("./div[2]"));
     }
 
     private WebElement getTableWrapper() {
-        return getDriver().findElement(
-                By.xpath("//div[@id='testComponent']/div[3]"));
+        return getGridElement().findElement(By.xpath("./div[3]"));
     }
 
-    private WebElement getGridElement() {
-        return getDriver().findElement(By.id("testComponent"));
+    private GridElement getGridElement() {
+        return $(GridElement.class).id("testComponent");
     }
 
     private List<WebElement> getGridHeaderRowCells() {
-        return getDriver().findElements(
-                By.xpath("//div[@id='testComponent']//thead//th"));
+        return getGridElement().findElements(By.xpath(".//thead//th"));
     }
 
     private List<WebElement> getGridFooterRowCells() {
-        return getDriver().findElements(
-                By.xpath("//div[@id='testComponent']//tfoot//td"));
+        return getGridElement().findElements(By.xpath(".//tfoot//td"));
     }
 
     private void scrollGridVerticallyTo(double px) {
