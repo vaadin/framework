@@ -207,8 +207,17 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
         getWidget().popupOpenerClicked = false;
 
+        /*
+         * if styles have changed or this is our first time we need to
+         * recalculate the root width.
+         */
         if (!getWidget().initDone) {
-            getWidget().updateRootWidth();
+            // no need to force update since we have no existing width
+            getWidget().updateRootWidth(false);
+        } else if (stylesChanged) {
+            // we have previously calculated a width, we must force an update
+            // due to changed styles
+            getWidget().updateRootWidth(true);
         }
 
         // Focus dependent style names are lost during the update, so we add
