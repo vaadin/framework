@@ -50,7 +50,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.vaadin.client.Paintable#updateFromUIDL(com.vaadin.client.UIDL,
      * com.vaadin.client.ApplicationConnection)
      */
@@ -200,11 +200,17 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
         getWidget().popupOpenerClicked = false;
 
-        // styles have changed or this is our first time - either way we
-        // need to recalculate the root width.
-        if (!getWidget().initDone || stylesChanged) {
-            boolean forceUpdate = true;
-            getWidget().updateRootWidth(forceUpdate);
+        /*
+         * if styles have changed or this is our first time we need to
+         * recalculate the root width.
+         */
+        if (!getWidget().initDone) {
+            // no need to force update since we have no existing width
+            getWidget().updateRootWidth(false);
+        } else if (stylesChanged) {
+            // we have previously calculated a width, we must force an update
+            // due to changed styles
+            getWidget().updateRootWidth(true);
         }
 
         // Focus dependent style names are lost during the update, so we add
