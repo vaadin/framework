@@ -275,7 +275,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              * correctly. This issue manifests when a Combobox is placed in
              * another popupView which also needs to calculate the absoluteTop()
              * to position itself. #9768
-             *
+             * 
              * After deferring the showSuggestions method, a problem with
              * navigating in the combo box occurs. Because of that the method
              * navigateItemAfterPageChange in ComboBoxConnector class, which
@@ -445,7 +445,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                          * because otherwise the waiting flag will be reset in
                          * the first response and the second response will be
                          * ignored, causing an empty popup...
-                         * 
+                         *
                          * As long as the scrolling delay is suitable
                          * double/triple clicks will work by scrolling two or
                          * three pages at a time and this should not be a
@@ -480,7 +480,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
          * .user.client.Event)
@@ -540,7 +540,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.user.client.ui.PopupPanel$PositionCallback#setPosition
          * (int, int)
@@ -633,7 +633,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.event.logical.shared.CloseHandler#onClose(com.google
          * .gwt.event.logical.shared.CloseEvent)
@@ -978,7 +978,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
          * .user.client.Event)
@@ -1151,7 +1151,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.user.client.ui.Composite#onBrowserEvent(com.google.gwt
      * .user.client.Event)
@@ -1478,7 +1478,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
@@ -1801,7 +1801,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
@@ -1845,7 +1845,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
      * .dom.client.BlurEvent)
@@ -1885,6 +1885,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             // much of the TAB handling takes place here
             if (tabPressedWhenPopupOpen) {
                 tabPressedWhenPopupOpen = false;
+                waitingForFilteringResponse = false;
                 suggestionPopup.menu.doSelectedItemAction();
                 suggestionPopup.hide();
             } else if ((!suggestionPopup.isAttached() && waitingForFilteringResponse)
@@ -1909,7 +1910,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.Focusable#focus()
      */
 
