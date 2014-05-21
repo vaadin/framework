@@ -67,7 +67,7 @@
 			// "v-app-loading" we have only received the HTML 
 			// but not yet started the widget set
 			// (UIConnector removes the v-app-loading div).
-			if (className && className.contains("v-app-loading")) {
+			if (className && className.indexOf("v-app-loading") != -1) {
 				return false;
 			}
 		}
