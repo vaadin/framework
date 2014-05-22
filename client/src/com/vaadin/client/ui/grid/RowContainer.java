@@ -16,6 +16,8 @@
 
 package com.vaadin.client.ui.grid;
 
+import com.google.gwt.dom.client.Element;
+
 /**
  * A representation of the rows in each of the sections (header, body and
  * footer) in an {@link Escalator}.
@@ -153,4 +155,18 @@ public interface RowContainer {
      * @see #setDefaultRowHeight(int)
      */
     public int getDefaultRowHeight();
+
+    /**
+     * Returns the cell object which contains information about the cell the
+     * element is in.
+     * 
+     * @param element
+     *            The element to get the cell for. If element is not present in
+     *            row container then <code>null</code> is returned.
+     * 
+     * @return the cell of the element, or <code>null</code> if element is not
+     *         present in the {@link RowContainer}.
+     */
+    public Cell getCell(Element element);
+
 }

@@ -16,17 +16,24 @@
 package com.vaadin.client.ui.grid;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasVisibility;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
+import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -817,6 +824,33 @@ public class Grid<T> extends Composite {
                         .findIndexOfColumn() < index) {
             refreshFrozenColumns();
         }
+
+        // Sink all renderer events
+        Set<String> events = new HashSet<String>();
+        events.addAll(getConsumedEventsForRenderer(column.getHeaderRenderer()));
+        events.addAll(getConsumedEventsForRenderer(column.getRenderer()));
+        events.addAll(getConsumedEventsForRenderer(column.getFooterRenderer()));
+
+        sinkEvents(events);
+    }
+
+    private void sinkEvents(Collection<String> events) {
+        assert events != null;
+
+        int eventsToSink = 0;
+        for (String typeName : events) {
+            int typeInt = Event.getTypeInt(typeName);
+            if (typeInt < 0) {
+                // Type not recognized by typeInt
+                sinkBitlessEvent(typeName);
+            } else {
+                eventsToSink |= typeInt;
+            }
+        }
+
+        if (eventsToSink > 0) {
+            sinkEvents(eventsToSink);
+        }
     }
 
     private int findVisibleColumnIndex(GridColumn<?, T> column) {
@@ -1381,5 +1415,74 @@ public class Grid<T> extends Composite {
      */
     public HeightMode getHeightMode() {
         return escalator.getHeightMode();
+    }
+
+    /**
+     * Returns the events that the {@link Grid} listens for. This includes all
+     * events for columns and renderers.
+     * <p>
+     * 
+     * @See {@link BrowserEvents} for available events.
+     * 
+     * @return events consumed by the Grid.
+     */
+    protected Set<String> getConsumedEvents() {
+        Set<String> events = new HashSet<String>();
+        for (GridColumn<?, T> column : columns) {
+            events.addAll(getConsumedEventsForRenderer(column
+                    .getHeaderRenderer()));
+            events.addAll(getConsumedEventsForRenderer(column.getRenderer()));
+            events.addAll(getConsumedEventsForRenderer(column
+                    .getFooterRenderer()));
+        }
+        return events;
+    }
+
+    private Set<String> getConsumedEventsForRenderer(Renderer<?> renderer) {
+        Set<String> events = new HashSet<String>();
+        if (renderer instanceof ComplexRenderer) {
+            Collection<String> consumedEvents = ((ComplexRenderer<?>) renderer)
+                    .getConsumedEvents();
+            if (consumedEvents != null) {
+                events.addAll(consumedEvents);
+            }
+        }
+        return events;
+    }
+
+    @Override
+    public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+        EventTarget target = event.getEventTarget();
+        if (Element.is(target)) {
+            Element e = Element.as(target);
+
+            /*
+             * FIXME This is an ugly way to resolve if the event comes from the
+             * header, footer or body. But it is currently the only way since
+             * RowContainer doesn't provide the root element or a method to
+             * check if the element is inside the row container externally.
+             */
+            Cell cell = escalator.getHeader().getCell(e);
+            Renderer renderer = null;
+            if (cell == null) {
+                cell = escalator.getBody().getCell(e);
+                if (cell == null) {
+                    cell = escalator.getFooter().getCell(e);
+                    if (cell != null) {
+                        renderer = columns.get(cell.getColumn())
+                                .getFooterRenderer();
+                    }
+                } else {
+                    renderer = columns.get(cell.getColumn()).getRenderer();
+                }
+            } else {
+                renderer = columns.get(cell.getColumn()).getHeaderRenderer();
+            }
+
+            if (renderer instanceof ComplexRenderer) {
+                ((ComplexRenderer) renderer).onBrowserEvent(cell, event);
+            }
+        }
     }
 }

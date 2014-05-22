@@ -1750,6 +1750,47 @@ public class Escalator extends Widget {
                 }
             });
         }
+
+        @Override
+        public Cell getCell(Element element) {
+            if (element == null) {
+                throw new IllegalArgumentException("Element cannot be null");
+            }
+
+            /*
+             * Ensure that element is not root nor the direct descendant of root
+             * (a row) and ensure the element is inside the dom hierarchy of the
+             * root element. If not, return.
+             */
+            if (root == element || element.getParentElement() == root
+                    || !root.isOrHasChild(element)) {
+                return null;
+            }
+
+            /*
+             * Ensure element is the cell element by iterating up the DOM
+             * hierarchy until reaching cell element.
+             */
+            while (element.getParentElement().getParentElement() != root) {
+                element = element.getParentElement();
+            }
+
+            // Find dom column
+            int domColumnIndex = -1;
+            for (Element e = element; e != null; e = e
+                    .getPreviousSiblingElement()) {
+                domColumnIndex++;
+            }
+
+            // Find dom row
+            int domRowIndex = -1;
+            for (Element e = element.getParentElement(); e != null; e = e
+                    .getPreviousSiblingElement()) {
+                domRowIndex++;
+            }
+
+            return new Cell(domRowIndex, domColumnIndex, element);
+        }
     }
 
     private abstract class AbstractStaticRowContainer extends
@@ -2898,9 +2939,9 @@ public class Escalator extends Widget {
             }
         }
 
-        private int getLogicalRowIndex(final Element element) {
-            assert element.getParentNode() == root : "The given element isn't a row element in the body";
-            int internalIndex = visualRowOrder.indexOf(element);
+        private int getLogicalRowIndex(final Element tr) {
+            assert tr.getParentNode() == root : "The given element isn't a row element in the body";
+            int internalIndex = visualRowOrder.indexOf(tr);
             return getTopRowLogicalIndex() + internalIndex;
         }
 
@@ -3327,6 +3368,19 @@ public class Escalator extends Widget {
             }
 
             return activeRow;
+        }
+
+        @Override
+        public Cell getCell(Element element) {
+            Cell cell = super.getCell(element);
+            if (cell == null) {
+                return null;
+            }
+
+            // Convert DOM coordinates to logical coordinates for rows
+            Element rowElement = cell.getElement().getParentElement();
+            return new Cell(getLogicalRowIndex(rowElement), cell.getColumn(),
+                    cell.getElement());
         }
     }
 
