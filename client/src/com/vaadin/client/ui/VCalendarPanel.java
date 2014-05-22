@@ -813,14 +813,12 @@ public class VCalendarPanel extends FocusableFlexTable implements
             buildCalendarBody();
         }
 
-        if (isTimeSelectorNeeded() && time == null) {
+        if (isTimeSelectorNeeded()) {
             time = new VTime();
             setWidget(2, 0, time);
             getFlexCellFormatter().setColSpan(2, 0, 5);
             getFlexCellFormatter().setStyleName(2, 0,
                     parent.getStylePrimaryName() + "-calendarpanel-time");
-        } else if (isTimeSelectorNeeded()) {
-            time.updateTimes();
         } else if (time != null) {
             remove(time);
         }
