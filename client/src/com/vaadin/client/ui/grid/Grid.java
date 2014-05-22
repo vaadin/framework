@@ -38,6 +38,7 @@ import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
+import com.vaadin.client.ui.grid.selection.MultiSelectionRenderer;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
@@ -78,6 +79,92 @@ import com.vaadin.shared.util.SharedUtil;
  */
 public class Grid<T> extends Composite implements SubPartAware {
 
+    private class SelectionColumn extends GridColumn<Boolean, T> {
+        private boolean initDone = false;
+
+        public SelectionColumn(final Renderer<Boolean> selectColumnRenderer) {
+            super(selectColumnRenderer);
+
+            setHeaderRenderer(new Renderer<String>() {
+                @Override
+                public void render(FlyweightCell cell, String data) {
+                    if (cell.getRow() == escalator.getHeader().getRowCount() - 1) {
+                        selectColumnRenderer.render(cell, Boolean.FALSE);
+                    }
+                }
+            });
+        }
+
+        public void initDone() {
+            initDone = true;
+        }
+
+        @Override
+        public void setFooterCaption(String caption) {
+            if (initDone) {
+                throw new UnsupportedOperationException(
+                        "The selection column is read only");
+            } else {
+                super.setFooterCaption(caption);
+            }
+        }
+
+        @Override
+        public void setFooterRenderer(Renderer<String> renderer) {
+            if (initDone) {
+                throw new UnsupportedOperationException(
+                        "The selection column is read only");
+            } else {
+                super.setFooterRenderer(renderer);
+            }
+        }
+
+        @Override
+        public void setHeaderCaption(String caption) {
+            if (initDone) {
+                throw new UnsupportedOperationException(
+                        "The selection column is read only");
+            } else {
+                super.setHeaderCaption(caption);
+            }
+        }
+
+        @Override
+        public void setHeaderRenderer(Renderer<String> renderer) {
+            if (initDone) {
+                throw new UnsupportedOperationException(
+                        "The selection column is read only");
+            } else {
+                super.setHeaderRenderer(renderer);
+            }
+        }
+
+        @Override
+        public void setVisible(boolean visible) {
+            if (initDone) {
+                throw new UnsupportedOperationException(
+                        "The selection column is read only");
+            } else {
+                super.setVisible(visible);
+            }
+        }
+
+        @Override
+        public void setWidth(int pixels) {
+            if (initDone) {
+                throw new UnsupportedOperationException(
+                        "The selection column is read only");
+            } else {
+                super.setWidth(pixels);
+            }
+        }
+
+        @Override
+        public Boolean getValue(T row) {
+            return Boolean.valueOf(isSelected(row));
+        }
+    }
+
     /**
      * Escalator used internally by grid to render the rows
      */
@@ -113,6 +200,10 @@ public class Grid<T> extends Composite implements SubPartAware {
      * The last column frozen counter from the left
      */
     private GridColumn<?, T> lastFrozenColumn;
+
+    private Renderer<Boolean> selectColumnRenderer = null;
+
+    private SelectionColumn selectionColumn;
 
     /**
      * Base class for grid columns internally used by the Grid. The user should
@@ -215,10 +306,12 @@ public class Grid<T> extends Composite implements SubPartAware {
 
             this.grid = grid;
 
-            setVisible(this.visible);
-            setWidth(this.width);
-            setHeaderCaption(this.header);
-            setFooterCaption(this.footer);
+            if (grid != null) {
+                setVisible(this.visible);
+                setWidth(this.width);
+                setHeaderCaption(this.header);
+                setFooterCaption(this.footer);
+            }
         }
 
         /**
@@ -796,8 +889,7 @@ public class Grid<T> extends Composite implements SubPartAware {
      *            the column to add
      */
     public void addColumn(GridColumn<?, T> column) {
-        ColumnConfiguration conf = escalator.getColumnConfiguration();
-        addColumn(column, conf.getColumnCount());
+        addColumn(column, getColumnCount());
     }
 
     /**
@@ -807,9 +899,24 @@ public class Grid<T> extends Composite implements SubPartAware {
      *            the index where the column should be inserted into
      * @param column
      *            the column to add
+     * @throws IllegalStateException
+     *             if Grid's current selection model renders a selection column,
+     *             and {@code index} is 0.
      */
     public void addColumn(GridColumn<?, T> column, int index) {
+        if (column == selectionColumn) {
+            throw new IllegalArgumentException("The selection column many "
+                    + "not be added manually");
+        } else if (selectionColumn != null && index == 0) {
+            throw new IllegalStateException("A column cannot be inserted "
+                    + "before the selection column");
+        }
 
+        addColumnSkipSelectionColumnCheck(column, index);
+    }
+
+    private void addColumnSkipSelectionColumnCheck(GridColumn<?, T> column,
+            int index) {
         // Register column with grid
         columns.add(index, column);
 
@@ -889,7 +996,15 @@ public class Grid<T> extends Composite implements SubPartAware {
      *            the column to remove
      */
     public void removeColumn(GridColumn<?, T> column) {
+        if (column != null && column.equals(selectionColumn)) {
+            throw new IllegalArgumentException(
+                    "The selection column may not be removed manually.");
+        }
 
+        removeColumnSkipSelectionColumnCheck(column);
+    }
+
+    private void removeColumnSkipSelectionColumnCheck(GridColumn<?, T> column) {
         int columnIndex = columns.indexOf(column);
         int visibleIndex = findVisibleColumnIndex(column);
         columns.remove(columnIndex);
@@ -1558,5 +1673,46 @@ public class Grid<T> extends Composite implements SubPartAware {
             }
         }
         return null;
+    }
+
+    private void setSelectColumnRenderer(
+            final Renderer<Boolean> selectColumnRenderer) {
+        if (this.selectColumnRenderer == selectColumnRenderer) {
+            return;
+        }
+
+        if (this.selectColumnRenderer != null) {
+            removeColumnSkipSelectionColumnCheck(selectionColumn);
+        }
+
+        this.selectColumnRenderer = selectColumnRenderer;
+
+        if (selectColumnRenderer != null) {
+            selectionColumn = new SelectionColumn(selectColumnRenderer);
+
+            // FIXME: this needs to be done elsewhere, requires design...
+            selectionColumn.setWidth(25);
+            addColumnSkipSelectionColumnCheck(selectionColumn, 0);
+            selectionColumn.initDone();
+        } else {
+            selectionColumn = null;
+        }
+    }
+
+    /* TODO remove before final */
+    public void setSelectionCheckboxes(boolean set) {
+        if (set) {
+            setSelectColumnRenderer(new MultiSelectionRenderer());
+        } else {
+            setSelectColumnRenderer(null);
+        }
+    }
+
+    /*
+     * This is the same client-side Grid "isSelected" method as in the selection
+     * model design.
+     */
+    private boolean isSelected(T row) {
+        return false;
     }
 }

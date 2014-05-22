@@ -147,6 +147,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     protected void createColumnActions() {
         createCategory("Columns", null);
 
+        createBooleanAction("Selection controls", "Columns", false,
+                new Command<Grid, Boolean>() {
+                    @Override
+                    public void execute(Grid grid, Boolean value, Object data) {
+                        grid.setSelectionCheckboxes(value);
+                    }
+                });
+
         for (int c = 0; c < COLUMNS; c++) {
             createCategory(getColumnProperty(c), "Columns");
 

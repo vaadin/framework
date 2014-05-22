@@ -925,4 +925,9 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
         removeListener(SelectionChangeEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
     }
+
+    /** FIXME remove once selection mode communcation is done. only for testing. */
+    public void setSelectionCheckboxes(boolean value) {
+        getState().selectionCheckboxes = value;
+    }
 }

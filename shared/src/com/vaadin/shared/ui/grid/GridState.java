@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.annotations.DelegateToWidget;
 
 /**
  * The shared state for the {@link com.vaadin.ui.components.grid.Grid} component
@@ -84,5 +85,9 @@ public class GridState extends AbstractComponentState {
      * Remove manual code from Connector once fixed
      */
     public HeightMode heightMode = HeightMode.CSS;
+
+    /** FIXME remove once selection mode communcation is done. only for testing. */
+    @DelegateToWidget
+    public boolean selectionCheckboxes;
 
 }
