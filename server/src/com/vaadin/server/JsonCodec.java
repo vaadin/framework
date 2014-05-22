@@ -27,7 +27,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -435,21 +434,6 @@ public class JsonCodec implements Serializable {
         return new UidlValue(decodedValue);
     }
 
-    private static boolean transportTypesCompatible(
-            String encodedTransportType, String transportType) {
-        if (encodedTransportType == null) {
-            return false;
-        }
-        if (encodedTransportType.equals(transportType)) {
-            return true;
-        }
-        if (encodedTransportType.equals(JsonConstants.VTYPE_NULL)) {
-            return true;
-        }
-
-        return false;
-    }
-
     private static Map<Object, Object> decodeMap(Type targetType,
             boolean restrictToInternalTypes, Object jsonMap,
             ConnectorTracker connectorTracker) throws JSONException {
@@ -588,7 +572,8 @@ public class JsonCodec implements Serializable {
     private static Object[] decodeObjectArray(Type targetType,
             JSONArray jsonArray, ConnectorTracker connectorTracker)
             throws JSONException {
-        List list = decodeList(List.class, true, jsonArray, connectorTracker);
+        List<Object> list = decodeList(List.class, true, jsonArray,
+                connectorTracker);
         return list.toArray(new Object[list.size()]);
     }
 
@@ -644,80 +629,59 @@ public class JsonCodec implements Serializable {
             Type valueType, ConnectorTracker connectorTracker)
             throws JSONException {
 
-        if (valueType == null) {
-            throw new IllegalArgumentException("type must be defined");
-        }
-
-        if (valueType instanceof WildcardType) {
-            throw new IllegalStateException(
-                    "Can not serialize type with wildcard: " + valueType);
-        }
-
         if (null == value) {
             return ENCODE_RESULT_NULL;
         }
 
-        if (value instanceof String[]) {
-            String[] array = (String[]) value;
-            JSONArray jsonArray = new JSONArray();
-            for (int i = 0; i < array.length; ++i) {
-                jsonArray.put(array[i]);
-            }
-            return new EncodeResult(jsonArray);
-        } else if (value instanceof String) {
-            return new EncodeResult(value);
-        } else if (value instanceof Boolean) {
-            return new EncodeResult(value);
-        } else if (value instanceof Number) {
-            return new EncodeResult(value);
-        } else if (value instanceof Character) {
-            // Character is not a Number
-            return new EncodeResult(value);
+        // Storing a single reference and only returning the EncodeResult at the
+        // end the method is much shorter in bytecode which allows inlining
+        Object toReturn;
+
+        if (value instanceof String || value instanceof Boolean
+                || value instanceof Number || value instanceof Character
+                || value instanceof JSONArray || value instanceof JSONObject) {
+            // all JSON compatible types are returned as is.
+            toReturn = value;
+        } else if (value instanceof String[]) {
+            toReturn = toJsonArray((String[]) value);
         } else if (value instanceof Collection) {
-            Collection<?> collection = (Collection<?>) value;
-            JSONArray jsonArray = encodeCollection(valueType, collection,
+            toReturn = encodeCollection(valueType, (Collection<?>) value,
                     connectorTracker);
-            return new EncodeResult(jsonArray);
-        } else if (valueType instanceof Class<?>
-                && ((Class<?>) valueType).isArray()) {
-            JSONArray jsonArray = encodeArrayContents(
-                    ((Class<?>) valueType).getComponentType(), value,
-                    connectorTracker);
-            return new EncodeResult(jsonArray);
-        } else if (valueType instanceof GenericArrayType) {
-            Type componentType = ((GenericArrayType) valueType)
-                    .getGenericComponentType();
-            JSONArray jsonArray = encodeArrayContents(componentType, value,
-                    connectorTracker);
-            return new EncodeResult(jsonArray);
         } else if (value instanceof Map) {
-            Object jsonMap = encodeMap(valueType, (Map<?, ?>) value,
-                    connectorTracker);
-            return new EncodeResult(jsonMap);
+            toReturn = encodeMap(valueType, (Map<?, ?>) value, connectorTracker);
         } else if (value instanceof Connector) {
-            Connector connector = (Connector) value;
             if (value instanceof Component
                     && !(LegacyCommunicationManager
                             .isComponentVisibleToClient((Component) value))) {
+                // an encoded null is cached, return it directly.
                 return ENCODE_RESULT_NULL;
             }
-            return new EncodeResult(connector.getConnectorId());
+            // Connectors are simply serialized as ID.
+            toReturn = ((Connector) value).getConnectorId();
         } else if (value instanceof Enum) {
-            return encodeEnum((Enum<?>) value, connectorTracker);
-        } else if (value instanceof JSONArray || value instanceof JSONObject) {
-            return new EncodeResult(value);
+            toReturn = ((Enum<?>) value).name();
         } else if (customSerializers.containsKey(value.getClass())) {
-            JSONSerializer serializer = customSerializers.get(value.getClass());
-            return new EncodeResult(serializer.serialize(value,
-                    connectorTracker));
+            toReturn = serializeJson(value, connectorTracker);
+        } else if (valueType instanceof GenericArrayType) {
+            toReturn = encodeArrayContents(
+                    ((GenericArrayType) valueType).getGenericComponentType(),
+                    value, connectorTracker);
         } else if (valueType instanceof Class<?>) {
-            // Any object that we do not know how to encode we encode by looping
-            // through fields
-            return encodeObject(value, (Class<?>) valueType,
-                    (JSONObject) diffState, connectorTracker);
+            if (((Class<?>) valueType).isArray()) {
+                toReturn = encodeArrayContents(
+                        ((Class<?>) valueType).getComponentType(), value,
+                        connectorTracker);
+            } else {
+                // encodeObject returns an EncodeResult with a diff, thus it
+                // needs to return it directly rather than assigning it to
+                // toReturn.
+                return encodeObject(value, (Class<?>) valueType,
+                        (JSONObject) diffState, connectorTracker);
+            }
         } else {
-            throw new JSONException("Can not encode " + valueType);
+            throw new JSONException("Can not encode type " + valueType);
         }
+        return new EncodeResult(toReturn);
     }
 
     public static Collection<BeanProperty> getProperties(Class<?> type)
@@ -737,6 +701,9 @@ public class JsonCodec implements Serializable {
         return properties;
     }
 
+    /*
+     * Loops through the fields of value and encodes them.
+     */
     private static EncodeResult encodeObject(Object value, Class<?> valueType,
             JSONObject referenceValue, ConnectorTracker connectorTracker)
             throws JSONException {
@@ -812,11 +779,6 @@ public class JsonCodec implements Serializable {
         }
     }
 
-    private static EncodeResult encodeEnum(Enum<?> e,
-            ConnectorTracker connectorTracker) throws JSONException {
-        return new EncodeResult(e.name());
-    }
-
     private static JSONArray encodeArrayContents(Type componentType,
             Object array, ConnectorTracker connectorTracker)
             throws JSONException {
@@ -830,7 +792,7 @@ public class JsonCodec implements Serializable {
     }
 
     private static JSONArray encodeCollection(Type targetType,
-            Collection collection, ConnectorTracker connectorTracker)
+            Collection<?> collection, ConnectorTracker connectorTracker)
             throws JSONException {
         JSONArray jsonArray = new JSONArray();
         for (Object o : collection) {
@@ -898,6 +860,9 @@ public class JsonCodec implements Serializable {
         return new JSONArray(Arrays.asList(keys, values));
     }
 
+    /*
+     * Encodes a connector map. Invisible connectors are skipped.
+     */
     private static JSONObject encodeConnectorMap(Type valueType, Map<?, ?> map,
             ConnectorTracker connectorTracker) throws JSONException {
         JSONObject jsonMap = new JSONObject();
@@ -929,21 +894,27 @@ public class JsonCodec implements Serializable {
         return jsonMap;
     }
 
-    /**
-     * Gets the transport type for the given class. Returns null if no transport
-     * type can be found.
-     * 
-     * @param valueType
-     *            The type that should be transported
-     * @return
-     * @throws JSONException
+    /*
+     * These methods looks good to inline, but are on a cold path of the
+     * otherwise hot encode method, which needed to be shorted to allow inlining
+     * of the hot part.
      */
     private static String getInternalTransportType(Type valueType) {
         return typeToTransportType.get(getClassForType(valueType));
     }
 
-    private static String getCustomTransportType(Class<?> targetType) {
-        return targetType.getName();
+    private static Object serializeJson(Object value,
+            ConnectorTracker connectorTracker) {
+        JSONSerializer serializer = customSerializers.get(value.getClass());
+        return serializer.serialize(value, connectorTracker);
+    }
+
+    private static JSONArray toJsonArray(String[] array) {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < array.length; ++i) {
+            jsonArray.put(array[i]);
+        }
+        return jsonArray;
     }
 
 }
