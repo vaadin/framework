@@ -97,4 +97,6 @@ public class SerializerTestState extends AbstractComponentState {
     public Date date1;
     public Date date2;
 
+    public BeanWithAbstractSuperclass beanWithAbstractSuperclass;
+
 }

@@ -253,9 +253,9 @@ public class ConnectorBundle {
                 needsSuperClass = needsSuperClass.getSuperclass();
             }
 
-            for (Property property : getProperties(typeAsClass)) {
-                setNeedsGwtConstructor(property.getBeanType());
+            setNeedsGwtConstructor(typeAsClass);
 
+            for (Property property : getProperties(typeAsClass)) {
                 setNeedsProperty(property);
 
                 JType propertyType = property.getPropertyType();
