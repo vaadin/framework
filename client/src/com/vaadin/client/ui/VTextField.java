@@ -389,9 +389,8 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
                 client.updateVariable(paintableId, EventId.BLUR, "", false);
             }
 
-            String newText = getText();
-            if (!prompting && newText != null
-                    && !newText.equals(valueBeforeEdit)) {
+            String newText = prompting ? "" : getText();
+            if (newText != null && !newText.equals(valueBeforeEdit)) {
                 sendValueChange = immediate;
                 client.updateVariable(paintableId, "text", newText, false);
                 valueBeforeEdit = newText;
