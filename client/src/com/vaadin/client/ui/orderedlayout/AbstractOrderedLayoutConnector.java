@@ -205,6 +205,13 @@ public abstract class AbstractOrderedLayoutConnector extends
     private boolean hasChildrenWithRelativeHeight = false;
 
     /**
+     * Keep track of whether any child has relative width. Used to determine
+     * whether measurements are needed to make relative child widths work
+     * together with undefined container width.
+     */
+    private boolean hasChildrenWithRelativeWidth = false;
+
+    /**
      * Keep track of whether any child is middle aligned. Used to determine if
      * measurements are needed to make middle aligned children work.
      */
@@ -423,6 +430,8 @@ public abstract class AbstractOrderedLayoutConnector extends
         processedResponseId = lastResponseId;
 
         hasChildrenWithRelativeHeight = false;
+        hasChildrenWithRelativeWidth = false;
+
         hasChildrenWithMiddleAlignment = false;
 
         needsExpand = getWidget().vertical ? !isUndefinedHeight()
@@ -475,6 +484,9 @@ public abstract class AbstractOrderedLayoutConnector extends
 
             if (child.isRelativeHeight()) {
                 hasChildrenWithRelativeHeight = true;
+            }
+            if (child.isRelativeWidth()) {
+                hasChildrenWithRelativeWidth = true;
             }
         }
 
@@ -575,7 +587,7 @@ public abstract class AbstractOrderedLayoutConnector extends
             if (slot.hasCaption()) {
                 slot.setCaptionResizeListener(slotCaptionResizeListener);
             }
-        } else if ((child.isRelativeHeight() || child.isRelativeWidth())
+        } else if ((hasChildrenWithRelativeHeight || hasChildrenWithRelativeWidth)
                 && slot.hasCaption()) {
             /*
              * If the slot has caption, we need to listen for its size changes
