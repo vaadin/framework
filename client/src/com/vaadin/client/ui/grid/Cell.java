@@ -13,63 +13,70 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.client.ui.grid;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.HasOneWidget;
 
 /**
- * A representation of a single cell.
- * <p>
- * A Cell instance will be provided to the {@link EscalatorUpdater} responsible
- * for rendering the cells in a certain {@link RowContainer}.
+ * Describes a cell
  * 
- * @since 7.4
+ * TODO The description is still very vague since the content and naming of this
+ * class is still under debate and the API is not final. Improve the description
+ * when API has been finalized.
+ * 
  * @author Vaadin Ltd
  */
-public interface Cell extends HasOneWidget {
+public class Cell {
+
+    private final int row;
+
+    private final int column;
+
+    private final Element element;
 
     /**
-     * Gets the index of the row this cell is in.
+     * Constructs a new {@link Cell}
      * 
-     * @return the index of the row this cell is in
+     * @param row
+     *            The index of the row
+     * @param column
+     *            The index of the column
+     * @param element
+     *            The cell element
      */
-    public int getRow();
+    public Cell(int row, int column, Element element) {
+        super();
+        this.row = row;
+        this.column = column;
+        this.element = element;
+    }
 
     /**
-     * Gets the index of the column this cell is in.
+     * Returns the index of the row the cell resides on
      * 
-     * @return the index of the column this cell is in
+     * @return the row index
+     * 
      */
-    public int getColumn();
+    public int getRow() {
+        return row;
+    }
 
     /**
-     * Gets the root element for this cell. The {@link EscalatorUpdater} may
-     * update the class names of the element, add inline styles and freely
-     * modify the contents.
-     * <p>
-     * Avoid modifying the dimensions, positioning or colspan of the cell
-     * element.
+     * Returns the index of the column the cell resides on
      * 
-     * @return The root element for this cell. Never <code>null</code>.
+     * @return the column index
      */
-    public Element getElement();
+    public int getColumn() {
+        return column;
+    }
 
     /**
-     * Sets the column span of the cell.
-     * <p>
-     * This will overwrite any possible "colspan" attribute in the current
-     * element (i.e. the object returned by {@link #getElement()}). This will
-     * also handle internal bookkeeping, skip the rendering of any affected
-     * adjacent cells, and make sure that the current cell's dimensions are
-     * handled correctly.
+     * Returns the element of the cell
      * 
-     * @param numberOfCells
-     *            the number of cells to span to the right, or <code>1</code> to
-     *            unset any column spans
-     * @throws IllegalArgumentException
-     *             if <code>numberOfCells &lt; 1</code>
+     * @return the element
      */
-    public void setColSpan(int numberOfCells) throws IllegalArgumentException;
+    public Element getElement() {
+        return element;
+    }
+
 }

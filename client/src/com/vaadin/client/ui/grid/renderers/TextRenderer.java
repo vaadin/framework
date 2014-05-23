@@ -15,7 +15,8 @@
  */
 package com.vaadin.client.ui.grid.renderers;
 
-import com.vaadin.client.ui.grid.Cell;
+import com.vaadin.client.ui.grid.FlyweightCell;
+import com.vaadin.client.ui.grid.Renderer;
 
 /**
  * Renderer that renders text into a cell.
@@ -23,10 +24,10 @@ import com.vaadin.client.ui.grid.Cell;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class TextRenderer extends AbstractRenderer<String> {
+public class TextRenderer implements Renderer<String> {
 
     @Override
-    public void render(Cell cell, String text) {
+    public void render(FlyweightCell cell, String text) {
         cell.getElement().setInnerText(text);
     }
 }

@@ -16,7 +16,8 @@
 package com.vaadin.client.ui.grid.renderers;
 
 import com.google.gwt.i18n.client.NumberFormat;
-import com.vaadin.client.ui.grid.Cell;
+import com.vaadin.client.ui.grid.FlyweightCell;
+import com.vaadin.client.ui.grid.Renderer;
 
 /**
  * Renders a number into a cell using a specific {@link NumberFormat}. By
@@ -28,7 +29,7 @@ import com.vaadin.client.ui.grid.Cell;
  * @param <T>
  *            The number type to render.
  */
-public class NumberRenderer<T extends Number> extends AbstractRenderer<T> {
+public class NumberRenderer<T extends Number> implements Renderer<T> {
 
     private NumberFormat format = NumberFormat.getDecimalFormat();
 
@@ -57,7 +58,7 @@ public class NumberRenderer<T extends Number> extends AbstractRenderer<T> {
     }
 
     @Override
-    public void render(Cell cell, Number number) {
+    public void render(FlyweightCell cell, Number number) {
         cell.getElement().setInnerText(format.format(number));
     }
 }

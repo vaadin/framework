@@ -35,7 +35,7 @@ import com.google.gwt.dom.client.Node;
  */
 class FlyweightRow implements Row {
 
-    static class CellIterator implements Iterator<Cell> {
+    static class CellIterator implements Iterator<FlyweightCell> {
         /** A defensive copy of the cells in the current row. */
         private final ArrayList<FlyweightCell> cells;
         private int cursor = 0;
@@ -188,11 +188,11 @@ class FlyweightRow implements Row {
      * @see #setup(Element, int, int[])
      * @see #teardown()
      */
-    Iterable<Cell> getCells() {
+    Iterable<FlyweightCell> getCells() {
         assertSetup();
-        return new Iterable<Cell>() {
+        return new Iterable<FlyweightCell>() {
             @Override
-            public Iterator<Cell> iterator() {
+            public Iterator<FlyweightCell> iterator() {
                 return new CellIterator(cells);
             }
         };

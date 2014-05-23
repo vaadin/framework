@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Composite;
-import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.ColumnConfiguration;
 import com.vaadin.client.ui.grid.Escalator;
 import com.vaadin.client.ui.grid.EscalatorUpdater;
+import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Row;
 import com.vaadin.client.ui.grid.RowContainer;
 import com.vaadin.shared.ui.grid.ScrollDestination;
@@ -43,8 +43,8 @@ public class VTestGrid extends Composite {
             return new EscalatorUpdater() {
                 @Override
                 public void updateCells(final Row row,
-                        final Iterable<Cell> cellsToUpdate) {
-                    for (final Cell cell : cellsToUpdate) {
+                        final Iterable<FlyweightCell> cellsToUpdate) {
+                    for (final FlyweightCell cell : cellsToUpdate) {
                         if (cell.getColumn() % 3 == 0) {
                             cell.setColSpan(2);
                         }
@@ -61,8 +61,8 @@ public class VTestGrid extends Composite {
             return new EscalatorUpdater() {
                 @Override
                 public void updateCells(final Row row,
-                        final Iterable<Cell> cellsToUpdate) {
-                    for (final Cell cell : cellsToUpdate) {
+                        final Iterable<FlyweightCell> cellsToUpdate) {
+                    for (final FlyweightCell cell : cellsToUpdate) {
                         if (cell.getColumn() % 3 == 1) {
                             cell.setColSpan(2);
                         }
@@ -79,7 +79,7 @@ public class VTestGrid extends Composite {
             return new EscalatorUpdater() {
                 private int i = 0;
 
-                public void renderCell(final Cell cell) {
+                public void renderCell(final FlyweightCell cell) {
                     final Integer columnName = columns.get(cell.getColumn());
                     final Integer rowName = rows.get(cell.getRow());
                     String cellInfo = columnName + "," + rowName;
@@ -123,8 +123,8 @@ public class VTestGrid extends Composite {
 
                 @Override
                 public void updateCells(final Row row,
-                        final Iterable<Cell> cellsToUpdate) {
-                    for (final Cell cell : cellsToUpdate) {
+                        final Iterable<FlyweightCell> cellsToUpdate) {
+                    for (final FlyweightCell cell : cellsToUpdate) {
                         renderCell(cell);
                     }
                 }

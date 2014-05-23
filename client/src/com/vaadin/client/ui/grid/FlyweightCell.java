@@ -25,18 +25,19 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.grid.FlyweightRow.CellIterator;
 
 /**
- * An internal implementation of the {@link Cell} interface.
+ * A {@link FlyweightCell} represents a cell in the {@link Grid} or
+ * {@link Escalator} at a certain point in time.
+ * 
  * <p>
- * These instances are populated into a {@link FlyweightRow} instance, and
- * intended to be reused when rendering cells in an escalator.
+ * Since the {@link FlyweightCell} follows the <code>Flyweight</code>-pattern
+ * any instance of this object is subject to change without the user knowing it
+ * and so should not be stored anywhere outside of the method providing these
+ * instances.
  * 
  * @since 7.4
  * @author Vaadin Ltd
- * @see FlyweightRow#getCells()
- * @see FlyweightRow#addCells(int, int)
- * @see FlyweightRow#removeCells(int, int)
  */
-class FlyweightCell implements Cell {
+public class FlyweightCell {
     static final String COLSPAN_ATTR = "colSpan";
 
     private final int column;
@@ -53,19 +54,26 @@ class FlyweightCell implements Cell {
         this.escalator = escalator;
     }
 
-    @Override
+    /**
+     * Returns the row index of the cell
+     */
     public int getRow() {
         assertSetup();
         return row.getRow();
     }
 
-    @Override
+    /**
+     * Returns the column index of the cell
+     */
     public int getColumn() {
         assertSetup();
         return column;
     }
 
-    @Override
+    /**
+     * Returns the element of the cell. Can be either a <code>TD</code> element
+     * or a <code>TH</code> element.
+     */
     public Element getElement() {
         return (Element) row.getElement().getChild(column);
     }
@@ -109,7 +117,6 @@ class FlyweightCell implements Cell {
                 + "inappropriately.";
     }
 
-    @Override
     public void setColSpan(final int numberOfCells) {
         /*-
          * This will default to 1 if unset, as per DOM specifications:
@@ -157,12 +164,18 @@ class FlyweightCell implements Cell {
         }
     }
 
-    @Override
+    /**
+     * @deprecated Will be removed in further refactorings
+     */
+    @Deprecated
     public Widget getWidget() {
         return Escalator.getWidgetFromCell(getElement());
     }
 
-    @Override
+    /**
+     * @deprecated Will be removed in further refactorings
+     */
+    @Deprecated
     public void setWidget(Widget widget) {
 
         Widget oldWidget = getWidget();
@@ -197,7 +210,10 @@ class FlyweightCell implements Cell {
         }
     }
 
-    @Override
+    /**
+     * @deprecated Will be removed in further refactorings
+     */
+    @Deprecated
     public void setWidget(IsWidget w) {
         setWidget(Widget.asWidgetOrNull(w));
     }

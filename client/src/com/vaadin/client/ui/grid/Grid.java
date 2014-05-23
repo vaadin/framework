@@ -510,7 +510,7 @@ public class Grid<T> extends Composite {
         public abstract Renderer<String> getGroupRenderer(ColumnGroup<T> group);
 
         @Override
-        public void updateCells(Row row, Iterable<Cell> cellsToUpdate) {
+        public void updateCells(Row row, Iterable<FlyweightCell> cellsToUpdate) {
 
             int rowIndex;
             if (inverted) {
@@ -521,7 +521,7 @@ public class Grid<T> extends Composite {
 
             if (firstRowIsVisible() && rowIndex == 0) {
                 // column headers
-                for (Cell cell : cellsToUpdate) {
+                for (FlyweightCell cell : cellsToUpdate) {
                     GridColumn<?, T> column = getColumnFromVisibleIndex(cell
                             .getColumn());
                     if (column != null) {
@@ -551,7 +551,7 @@ public class Grid<T> extends Composite {
 
                 assert groupRow != null;
 
-                for (Cell cell : cellsToUpdate) {
+                for (FlyweightCell cell : cellsToUpdate) {
                     GridColumn<?, T> column = getColumnFromVisibleIndex(cell
                             .getColumn());
                     ColumnGroup<T> group = getGroupForColumn(groupRow, column);
@@ -653,7 +653,8 @@ public class Grid<T> extends Composite {
         return new EscalatorUpdater() {
 
             @Override
-            public void updateCells(Row row, Iterable<Cell> cellsToUpdate) {
+            public void updateCells(Row row,
+                    Iterable<FlyweightCell> cellsToUpdate) {
                 int rowIndex = row.getRow();
                 if (dataSource == null) {
                     setCellsLoading(cellsToUpdate);
@@ -666,7 +667,7 @@ public class Grid<T> extends Composite {
                     return;
                 }
 
-                for (Cell cell : cellsToUpdate) {
+                for (FlyweightCell cell : cellsToUpdate) {
                     GridColumn column = getColumnFromVisibleIndex(cell
                             .getColumn());
                     if (column != null) {
@@ -676,8 +677,8 @@ public class Grid<T> extends Composite {
                 }
             }
 
-            private void setCellsLoading(Iterable<Cell> cellsToUpdate) {
-                for (Cell cell : cellsToUpdate) {
+            private void setCellsLoading(Iterable<FlyweightCell> cellsToUpdate) {
+                for (FlyweightCell cell : cellsToUpdate) {
                     cell.getElement().setInnerText("...");
                 }
             }
