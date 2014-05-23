@@ -41,6 +41,9 @@ public class TooltipInWindow extends AbstractTestUI {
         TextField tf = new TextField("TextField with a tooltip");
         tf.setDescription("My tooltip");
         tf.setId(id);
+        getTooltipConfiguration().setOpenDelay(0);
+        getTooltipConfiguration().setQuickOpenDelay(0);
+        getTooltipConfiguration().setCloseTimeout(1000);
         return tf;
     }
 
