@@ -15,83 +15,73 @@
  */
 package com.vaadin.tests.components.ui;
 
-import static org.junit.Assert.assertEquals;
+import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.TextAreaElement;
-import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- * Tests that the TextArea widget correctly stops ENTER events from propagating.
- * 
- * @author Vaadin Ltd
- */
-public class TextAreaEventPropagationTest extends MultiBrowserTest {
-
+public class TextAreaEventPropagationModifierKeysTest extends MultiBrowserTest {
     @Test
-    public void textAreaEnterEventPropagation() throws InterruptedException {
-        openTestURL();
-        WebElement textArea = $(TextAreaElement.class).first();
-        Actions builder = new Actions(driver);
-        builder.click(textArea);
-        builder.sendKeys(textArea, "first line asdf");
-        builder.sendKeys(Keys.ENTER);
-        builder.sendKeys(textArea, "second line jkl;");
-        builder.perform();
-
-        // Should not have triggered shortcut
-        assertEquals(" ", getLogRow(0));
-    }
-
-    @Test
-    public void testTextAreaEscapeEventPropagation()
+    public void textAreaShiftEnterEventPropagation()
             throws InterruptedException {
         openTestURL();
+
         WebElement textArea = $(TextAreaElement.class).first();
         Actions builder = new Actions(driver);
         builder.click(textArea);
         builder.sendKeys(textArea, "first line asdf");
-        builder.sendKeys(Keys.ESCAPE);
+        builder.keyDown(Keys.SHIFT);
+        builder.sendKeys(Keys.ENTER);
+        builder.keyUp(Keys.SHIFT);
         builder.sendKeys(textArea, "second line jkl;");
         builder.perform();
 
-        assertEquals("1. Escape button pressed", getLogRow(0));
+        // Should have triggered shortcut
+        Assert.assertEquals("1. Shift-Enter button pressed", getLogRow(0));
     }
 
     @Test
-    public void testTextFieldEscapeEventPropagation() {
+    public void textAreaCtrlEnterEventPropagation() throws InterruptedException {
         openTestURL();
-        WebElement textField = $(TextFieldElement.class).first();
-        Actions builder2 = new Actions(driver);
-        builder2.click(textField);
 
-        builder2.sendKeys("third line");
-        builder2.sendKeys(Keys.ENTER);
-        builder2.sendKeys(Keys.ESCAPE);
+        WebElement textArea = $(TextAreaElement.class).first();
+        Actions builder = new Actions(driver);
+        builder.click(textArea);
+        builder.sendKeys(textArea, "first line asdf");
+        builder.keyDown(Keys.CONTROL);
+        builder.sendKeys(Keys.ENTER);
+        builder.keyUp(Keys.CONTROL);
+        builder.sendKeys(textArea, "second line jkl;");
+        builder.perform();
 
-        builder2.perform();
-
-        assertEquals("1. Enter button pressed", getLogRow(1));
-        assertEquals("2. Escape button pressed", getLogRow(0));
+        // Should have triggered shortcut
+        Assert.assertEquals("1. Ctrl-Enter button pressed", getLogRow(0));
     }
 
-    @Test
-    public void testTextFieldEnterEventPropagation() {
-        openTestURL();
-        WebElement textField = $(TextFieldElement.class).first();
-        Actions builder2 = new Actions(driver);
-        builder2.click(textField);
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
+        // Can't handle ctrl
+        browsers.remove(Browser.IE8.getDesiredCapabilities());
+        browsers.remove(Browser.FIREFOX.getDesiredCapabilities());
 
-        builder2.sendKeys("third line");
-        builder2.sendKeys(Keys.ENTER);
+        // Can't handle shift or ctrl
+        browsers.remove(Browser.IE9.getDesiredCapabilities());
+        browsers.remove(Browser.IE10.getDesiredCapabilities());
+        browsers.remove(Browser.IE11.getDesiredCapabilities());
+        return browsers;
 
-        builder2.perform();
+    }
 
-        assertEquals("1. Enter button pressed", getLogRow(0));
+    @Override
+    protected Class<?> getUIClass() {
+        return TextAreaEventPropagation.class;
     }
 }

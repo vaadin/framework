@@ -262,10 +262,13 @@ public class VTextArea extends VTextField implements DragImageModifier {
 
         @Override
         public void onKeyDown(KeyDownEvent event) {
-            // Fix for #12424 - if the key being pressed is enter, we stop
-            // propagation of the KeyDownEvents. This prevents shortcuts that
-            // are bound to the enter key from being processed.
-            if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+            // Fix for #12424/13811 - if the key being pressed is enter, we stop
+            // propagation of the KeyDownEvents if there were no modifier keys
+            // also pressed. This prevents shortcuts that are bound to only the
+            // enter key from being processed but allows usage of e.g.
+            // shift-enter or ctrl-enter.
+            if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER
+                    && !event.isAnyModifierKeyDown()) {
                 event.stopPropagation();
             }
         }
