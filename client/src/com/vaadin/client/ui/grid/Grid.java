@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -41,7 +41,14 @@ import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
+import com.vaadin.client.ui.grid.selection.HasSelectionChangeHandlers;
 import com.vaadin.client.ui.grid.selection.MultiSelectionRenderer;
+import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
+import com.vaadin.client.ui.grid.selection.SelectionChangeHandler;
+import com.vaadin.client.ui.grid.selection.SelectionModel;
+import com.vaadin.client.ui.grid.selection.SelectionModelMulti;
+import com.vaadin.client.ui.grid.selection.SelectionModelNone;
+import com.vaadin.client.ui.grid.selection.SelectionModelSingle;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
@@ -51,7 +58,7 @@ import com.vaadin.shared.util.SharedUtil;
 /**
  * A data grid view that supports columns and lazy loading of data rows from a
  * data source.
- * 
+ *
  * <h3>Columns</h3>
  * <p>
  * The {@link GridColumn} class defines the renderer used to render a cell in
@@ -65,22 +72,23 @@ import com.vaadin.shared.util.SharedUtil;
  * specific column index using {@link Grid#getColumn(int)}.
  * </p>
  * <p>
- * 
+ *
  * TODO Explain about headers/footers once the multiple header/footer api has
  * been implemented
- * 
+ *
  * <h3>Data sources</h3>
  * <p>
  * TODO Explain about what a data source is and how it should be implemented.
  * </p>
- * 
+ *
  * @param <T>
  *            The row type of the grid. The row type is the POJO type from where
  *            the data is retrieved into the column cells.
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class Grid<T> extends Composite implements SubPartAware {
+public class Grid<T> extends Composite implements
+        HasSelectionChangeHandlers<T>, SubPartAware {
 
     private class SelectionColumn extends GridColumn<Boolean, T> {
         private boolean initDone = false;
@@ -210,12 +218,58 @@ public class Grid<T> extends Composite implements SubPartAware {
     private SelectionColumn selectionColumn;
 
     /**
+     * Current selection model.
+     */
+    private SelectionModel<T> selectionModel;
+
+    /**
+     * Enumeration for easy setting of selection mode.
+     */
+    public enum SelectionMode {
+
+        /**
+         * Shortcut for {@link SelectionModelSingle}.
+         */
+        SINGLE {
+
+            @Override
+            protected <T> SelectionModel<T> createModel() {
+                return new SelectionModelSingle<T>();
+            }
+        },
+
+        /**
+         * Shortcut for {@link SelectionModelMulti}.
+         */
+        MULTI {
+
+            @Override
+            protected <T> SelectionModel<T> createModel() {
+                return new SelectionModelMulti<T>();
+            }
+        },
+
+        /**
+         * Shortcut for {@link SelectionModelNone}.
+         */
+        NONE {
+
+            @Override
+            protected <T> SelectionModel<T> createModel() {
+                return new SelectionModelNone<T>();
+            }
+        };
+
+        protected abstract <T> SelectionModel<T> createModel();
+    }
+
+    /**
      * Base class for grid columns internally used by the Grid. The user should
      * use {@link GridColumn} when creating new columns.
-     * 
+     *
      * @param <C>
      *            the column type
-     * 
+     *
      * @param <T>
      *            the row type
      */
@@ -263,7 +317,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Constructs a new column with a custom renderer.
-         * 
+         *
          * @param renderer
          *            The renderer to use for rendering the cells
          */
@@ -271,13 +325,13 @@ public class Grid<T> extends Composite implements SubPartAware {
             if (renderer == null) {
                 throw new IllegalArgumentException("Renderer cannot be null.");
             }
-            this.bodyRenderer = renderer;
+            bodyRenderer = renderer;
         }
 
         /**
          * Constructs a new column with custom renderers for rows, header and
          * footer cells.
-         * 
+         *
          * @param bodyRenderer
          *            The renderer to use for rendering body cells
          * @param headerRenderer
@@ -298,7 +352,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Internally used by the grid to set itself
-         * 
+         *
          * @param grid
          */
         private void setGrid(Grid<T> grid) {
@@ -311,17 +365,17 @@ public class Grid<T> extends Composite implements SubPartAware {
             this.grid = grid;
 
             if (grid != null) {
-                setVisible(this.visible);
-                setWidth(this.width);
-                setHeaderCaption(this.header);
-                setFooterCaption(this.footer);
+                setVisible(visible);
+                setWidth(width);
+                setHeaderCaption(header);
+                setFooterCaption(footer);
             }
         }
 
         /**
          * Gets text in the header of the column. By default the header caption
          * is empty.
-         * 
+         *
          * @return the text displayed in the column caption
          */
         public String getHeaderCaption() {
@@ -330,7 +384,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Returns the renderer used for rendering the header cells
-         * 
+         *
          * @return a renderer that renders header cells
          */
         public Renderer<String> getHeaderRenderer() {
@@ -339,7 +393,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Sets the renderer that renders header cells. Should not be null.
-         * 
+         *
          * @param renderer
          *            The renderer to use for rendering header cells.
          */
@@ -355,7 +409,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Returns the renderer used for rendering the footer cells
-         * 
+         *
          * @return a renderer that renders footer cells
          */
         public Renderer<String> getFooterRenderer() {
@@ -364,7 +418,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Sets the renderer that renders footer cells. Should not be null.
-         * 
+         *
          * @param renderer
          *            The renderer to use for rendering footer cells.
          */
@@ -380,7 +434,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Sets the text in the header of the column.
-         * 
+         *
          * @param caption
          *            the text displayed in the column header
          */
@@ -399,7 +453,7 @@ public class Grid<T> extends Composite implements SubPartAware {
         /**
          * Gets text in the footer of the column. By default the footer caption
          * is empty.
-         * 
+         *
          * @return The text displayed in the footer of the column
          */
         public String getFooterCaption() {
@@ -408,7 +462,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Sets text in the footer of the column.
-         * 
+         *
          * @param caption
          *            the text displayed in the footer of the column
          */
@@ -426,7 +480,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Is the column visible. By default all columns are visible.
-         * 
+         *
          * @return <code>true</code> if the column is visible
          */
         @Override
@@ -436,7 +490,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Sets a column as visible in the grid.
-         * 
+         *
          * @param visible
          *            <code>true</code> if the column should be displayed in the
          *            grid
@@ -471,10 +525,10 @@ public class Grid<T> extends Composite implements SubPartAware {
          * <p>
          * To support other types you will need to pass a custom renderer to the
          * column via the column constructor.
-         * 
+         *
          * @param row
          *            The row object that provides the cell content.
-         * 
+         *
          * @return The cell content
          */
         public abstract C getValue(T row);
@@ -483,7 +537,7 @@ public class Grid<T> extends Composite implements SubPartAware {
          * The renderer to render the cell width. By default renders the data as
          * a String or adds the widget into the cell if the column type is of
          * widget type.
-         * 
+         *
          * @return The renderer to render the cell content with
          */
         public Renderer<? super C> getRenderer() {
@@ -492,7 +546,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Finds the index of this column instance
-         * 
+         *
          */
         private int findIndexOfColumn() {
             return grid.findVisibleColumnIndex((GridColumn<?, T>) this);
@@ -501,12 +555,12 @@ public class Grid<T> extends Composite implements SubPartAware {
         /**
          * Sets the pixel width of the column. Use a negative value for the grid
          * to autosize column based on content and available space
-         * 
+         *
          * @param pixels
          *            the width in pixels or negative for auto sizing
          */
         public void setWidth(int pixels) {
-            this.width = pixels;
+            width = pixels;
 
             if (grid != null && isVisible()) {
                 int index = findIndexOfColumn();
@@ -518,12 +572,12 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Returns the pixel width of the column
-         * 
+         *
          * @return pixel width of the column
          */
         public int getWidth() {
             if (grid == null) {
-                return this.width;
+                return width;
             } else {
                 int index = findIndexOfColumn();
                 ColumnConfiguration conf = grid.escalator
@@ -551,7 +605,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Constructs an updater for updating a header / footer
-         * 
+         *
          * @param rows
          *            The row container
          * @param inverted
@@ -564,17 +618,17 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Gets the header/footer caption value
-         * 
+         *
          * @param column
          *            The column to get the value for.
-         * 
+         *
          * @return The value that should be rendered for the column caption
          */
         public abstract String getColumnValue(GridColumn<?, T> column);
 
         /**
          * Gets the group caption value
-         * 
+         *
          * @param group
          *            The group for with the caption value should be returned
          * @return The value that should be rendered for the column caption
@@ -583,34 +637,34 @@ public class Grid<T> extends Composite implements SubPartAware {
 
         /**
          * Is the row visible in the header/footer
-         * 
+         *
          * @param row
          *            the row to check
-         * 
+         *
          * @return <code>true</code> if the row should be visible
          */
         public abstract boolean isRowVisible(ColumnGroupRow<T> row);
 
         /**
          * Should the first row be visible
-         * 
+         *
          * @return <code>true</code> if the first row should be visible
          */
         public abstract boolean firstRowIsVisible();
 
         /**
          * The renderer that renders the cell
-         * 
+         *
          * @param column
          *            The column for which the cell should be rendered
-         * 
+         *
          * @return renderer used for rendering
          */
         public abstract Renderer<String> getRenderer(GridColumn<?, T> column);
 
         /**
          * The renderer that renders the cell for column groups
-         * 
+         *
          * @param group
          *            The group that should be rendered
          * @return renderer used for rendering
@@ -710,6 +764,8 @@ public class Grid<T> extends Composite implements SubPartAware {
         refreshHeader();
         refreshFooter();
 
+        selectionModel = SelectionMode.SINGLE.createModel();
+
         escalator
                 .addRowVisibilityChangeHandler(new RowVisibilityChangeHandler() {
                     @Override
@@ -735,7 +791,7 @@ public class Grid<T> extends Composite implements SubPartAware {
     /**
      * Creates the header updater that updates the escalator header rows from
      * the column and column group rows.
-     * 
+     *
      * @return the updater that updates the data in the escalator.
      */
     private EscalatorUpdater createHeaderUpdater() {
@@ -779,9 +835,9 @@ public class Grid<T> extends Composite implements SubPartAware {
             @Override
             public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
                 for (FlyweightCell cell : cellsToAttach) {
-                    Renderer renderer = findRenderer(cell);
+                    Renderer<?> renderer = findRenderer(cell);
                     if (renderer instanceof ComplexRenderer) {
-                        ((ComplexRenderer) renderer).init(cell);
+                        ((ComplexRenderer<?>) renderer).init(cell);
                     }
                 }
             }
@@ -790,9 +846,9 @@ public class Grid<T> extends Composite implements SubPartAware {
             public void postAttach(Row row,
                     Iterable<FlyweightCell> attachedCells) {
                 for (FlyweightCell cell : attachedCells) {
-                    Renderer renderer = findRenderer(cell);
+                    Renderer<?> renderer = findRenderer(cell);
                     if (renderer instanceof WidgetRenderer) {
-                        WidgetRenderer widgetRenderer = (WidgetRenderer) renderer;
+                        WidgetRenderer<?, ?> widgetRenderer = (WidgetRenderer<?, ?>) renderer;
 
                         Widget widget = widgetRenderer.createWidget();
                         assert widget != null : "WidgetRenderer.createWidget() returned null. It should return a widget.";
@@ -817,7 +873,7 @@ public class Grid<T> extends Composite implements SubPartAware {
                 }
 
                 for (FlyweightCell cell : cellsToUpdate) {
-                    GridColumn column = getColumnFromVisibleIndex(cell
+                    GridColumn<?, T> column = getColumnFromVisibleIndex(cell
                             .getColumn());
                     assert column != null : "Column was not found from cell ("
                             + cell.getColumn() + "," + cell.getRow() + ")";
@@ -862,7 +918,7 @@ public class Grid<T> extends Composite implements SubPartAware {
     /**
      * Creates the footer updater that updates the escalator footer rows from
      * the column and column group rows.
-     * 
+     *
      * @return the updater that updates the data in the escalator.
      */
     private EscalatorUpdater createFooterUpdater() {
@@ -902,7 +958,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Refreshes header or footer rows on demand
-     * 
+     *
      * @param rows
      *            The row container
      * @param firstRowIsVisible
@@ -954,7 +1010,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Adds a column as the last column in the grid.
-     * 
+     *
      * @param column
      *            the column to add
      */
@@ -964,7 +1020,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Inserts a column into a specific position in the grid.
-     * 
+     *
      * @param index
      *            the index where the column should be inserted into
      * @param column
@@ -1068,7 +1124,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Removes a column from the grid.
-     * 
+     *
      * @param column
      *            the column to remove
      */
@@ -1103,7 +1159,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Returns the amount of columns in the grid.
-     * 
+     *
      * @return The number of columns in the grid
      */
     public int getColumnCount() {
@@ -1112,7 +1168,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Returns a list of columns in the grid.
-     * 
+     *
      * @return A unmodifiable list of the columns in the grid
      */
     public List<GridColumn<?, T>> getColumns() {
@@ -1122,7 +1178,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Returns a column by its index in the grid.
-     * 
+     *
      * @param index
      *            the index of the column
      * @return The column in the given index
@@ -1139,30 +1195,30 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Set the column headers visible.
-     * 
+     *
      * <p>
      * A column header is a single cell header on top of each column reserved
      * for a specific header for that column. The column header can be set by
      * {@link GridColumn#setHeaderCaption(String)} and column headers cannot be
      * merged with other column headers.
      * </p>
-     * 
+     *
      * <p>
      * All column headers occupy the first header row of the grid. If you do not
      * wish to show the column headers in the grid you should hide the row by
      * setting visibility of the header row to <code>false</code>.
      * </p>
-     * 
+     *
      * <p>
      * If you want to merge the column headers into groups you can use
      * {@link ColumnGroupRow}s to group columns together and give them a common
      * header. See {@link #addColumnGroupRow()} for details.
      * </p>
-     * 
+     *
      * <p>
      * The header row is by default visible.
      * </p>
-     * 
+     *
      * @param visible
      *            <code>true</code> if header rows should be visible
      */
@@ -1176,7 +1232,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Are the column headers visible
-     * 
+     *
      * @return <code>true</code> if they are visible
      */
     public boolean isColumnHeadersVisible() {
@@ -1185,30 +1241,30 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Set the column footers visible.
-     * 
+     *
      * <p>
      * A column footer is a single cell footer below of each column reserved for
      * a specific footer for that column. The column footer can be set by
      * {@link GridColumn#setFooterCaption(String)} and column footers cannot be
      * merged with other column footers.
      * </p>
-     * 
+     *
      * <p>
      * All column footers occupy the first footer row of the grid. If you do not
      * wish to show the column footers in the grid you should hide the row by
      * setting visibility of the footer row to <code>false</code>.
      * </p>
-     * 
+     *
      * <p>
      * If you want to merge the column footers into groups you can use
      * {@link ColumnGroupRow}s to group columns together and give them a common
      * footer. See {@link #addColumnGroupRow()} for details.
      * </p>
-     * 
+     *
      * <p>
      * The footer row is by default hidden.
      * </p>
-     * 
+     *
      * @param visible
      *            <code>true</code> if the footer row should be visible
      */
@@ -1216,15 +1272,15 @@ public class Grid<T> extends Composite implements SubPartAware {
         if (visible == isColumnFootersVisible()) {
             return;
         }
-        this.columnFootersVisible = visible;
+        columnFootersVisible = visible;
         refreshFooter();
     }
 
     /**
      * Are the column footers visible
-     * 
+     *
      * @return <code>true</code> if they are visible
-     * 
+     *
      */
     public boolean isColumnFootersVisible() {
         return columnFootersVisible;
@@ -1232,15 +1288,15 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Adds a new column group row to the grid.
-     * 
+     *
      * <p>
      * Column group rows are rendered in the header and footer of the grid.
      * Column group rows are made up of column groups which groups together
      * columns for adding a common auxiliary header or footer for the columns.
      * </p>
-     * 
+     *
      * Example usage:
-     * 
+     *
      * <pre>
      * // Add a new column group row to the grid
      * ColumnGroupRow row = grid.addColumnGroupRow();
@@ -1254,7 +1310,7 @@ public class Grid<T> extends Composite implements SubPartAware {
      * // Set a common footer for &quot;Column1&quot; and &quot;Column2&quot;
      * column12.setFooter(&quot;Column 1&amp;2&quot;);
      * </pre>
-     * 
+     *
      * @return a column group row instance you can use to add column groups
      */
     public ColumnGroupRow<T> addColumnGroupRow() {
@@ -1267,10 +1323,10 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Adds a new column group row to the grid at a specific index.
-     * 
+     *
      * @see #addColumnGroupRow() {@link Grid#addColumnGroupRow()} for example
      *      usage
-     * 
+     *
      * @param rowIndex
      *            the index where the column group row should be added
      * @return a column group row instance you can use to add column groups
@@ -1285,7 +1341,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Removes a column group row
-     * 
+     *
      * @param row
      *            The row to remove
      */
@@ -1297,9 +1353,9 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Get the column group rows
-     * 
+     *
      * @return a unmodifiable list of column group rows
-     * 
+     *
      */
     public List<ColumnGroupRow<T>> getColumnGroupRows() {
         return Collections.unmodifiableList(new ArrayList<ColumnGroupRow<T>>(
@@ -1308,7 +1364,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Returns the column group for a row and column
-     * 
+     *
      * @param row
      *            The row of the column
      * @param column
@@ -1332,7 +1388,7 @@ public class Grid<T> extends Composite implements SubPartAware {
      * <p>
      * <em>Note:</em> This method will change the widget's size in the browser
      * only if {@link #getHeightMode()} returns {@link HeightMode#CSS}.
-     * 
+     *
      * @see #setHeightMode(HeightMode)
      */
     @Override
@@ -1347,7 +1403,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Sets the data source used by this grid.
-     * 
+     *
      * @param dataSource
      *            the data source to use, not null
      * @throws IllegalArgumentException
@@ -1358,6 +1414,8 @@ public class Grid<T> extends Composite implements SubPartAware {
         if (dataSource == null) {
             throw new IllegalArgumentException("dataSource can't be null.");
         }
+
+        selectionModel.reset();
 
         if (this.dataSource != null) {
             this.dataSource.setDataChangeHandler(null);
@@ -1390,6 +1448,7 @@ public class Grid<T> extends Composite implements SubPartAware {
         if (estimatedSize > 0) {
             escalator.getBody().insertRows(0, estimatedSize);
         }
+
     }
 
     /**
@@ -1397,7 +1456,7 @@ public class Grid<T> extends Composite implements SubPartAware {
      * <p>
      * All columns up to and including the given column will be frozen in place
      * when the grid is scrolled sideways.
-     * 
+     *
      * @param lastFrozenColumn
      *            the rightmost column to freeze, or <code>null</code> to not
      *            have any columns frozen
@@ -1430,7 +1489,7 @@ public class Grid<T> extends Composite implements SubPartAware {
      * <em>Note:</em> Most usually, this method returns the very value set with
      * {@link #setLastFrozenColumn(GridColumn)}. This value, however, can be
      * reset to <code>null</code> if the column is removed from this grid.
-     * 
+     *
      * @return the rightmost frozen column in the grid, or <code>null</code> if
      *         no columns are frozen.
      */
@@ -1450,7 +1509,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Scrolls to a certain row, using {@link ScrollDestination#ANY}.
-     * 
+     *
      * @param rowIndex
      *            zero-based index of the row to scroll to.
      * @throws IllegalArgumentException
@@ -1464,7 +1523,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Scrolls to a certain row, using user-specified scroll destination.
-     * 
+     *
      * @param rowIndex
      *            zero-based index of the row to scroll to.
      * @param destination
@@ -1483,7 +1542,7 @@ public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Scrolls to a certain row using only user-specified parameters.
-     * 
+     *
      * @param rowIndex
      *            zero-based index of the row to scroll to.
      * @param destination
@@ -1540,7 +1599,7 @@ public class Grid<T> extends Composite implements SubPartAware {
      * <p>
      * If Grid is currently not in {@link HeightMode#ROW}, the given value is
      * remembered, and applied once the mode is applied.
-     * 
+     *
      * @param rows
      *            The height in terms of number of rows displayed in Grid's
      *            body. If Grid doesn't contain enough rows, white space is
@@ -1552,7 +1611,7 @@ public class Grid<T> extends Composite implements SubPartAware {
      *             infinite}
      * @throws IllegalArgumentException
      *             if {@code rows} is {@link Double#isNaN(double) NaN}
-     * 
+     *
      * @see #setHeightMode(HeightMode)
      */
     public void setHeightByRows(double rows) throws IllegalArgumentException {
@@ -1564,7 +1623,7 @@ public class Grid<T> extends Composite implements SubPartAware {
      * {@link #getHeightMode()} is {@link HeightMode#ROW}.
      * <p>
      * By default, it is {@value Escalator#DEFAULT_HEIGHT_BY_ROWS}.
-     * 
+     *
      * @return the amount of rows that should be shown in Grid's body, while in
      *         {@link HeightMode#ROW}.
      * @see #setHeightByRows(double)
@@ -1584,7 +1643,7 @@ public class Grid<T> extends Composite implements SubPartAware {
      * <em>Note:</em> If headers/footers are inserted or removed, the widget
      * will resize itself to still display the required amount of rows in its
      * body. It also takes the horizontal scrollbar into account.
-     * 
+     *
      * @param heightMode
      *            the mode in to which Grid should be set
      */
@@ -1606,7 +1665,7 @@ public class Grid<T> extends Composite implements SubPartAware {
      * Returns the current {@link HeightMode} the Grid is in.
      * <p>
      * Defaults to {@link HeightMode#CSS}.
-     * 
+     *
      * @return the current HeightMode
      */
     public HeightMode getHeightMode() {
@@ -1767,17 +1826,9 @@ public class Grid<T> extends Composite implements SubPartAware {
         }
     }
 
-    /*
-     * This is the same client-side Grid "isSelected" method as in the selection
-     * model design.
-     */
-    private boolean isSelected(T row) {
-        return false;
-    }
-
     /**
      * Accesses the package private method Widget#setParent()
-     * 
+     *
      * @param widget
      *            The widget to access
      * @param parent
@@ -1787,4 +1838,144 @@ public class Grid<T> extends Composite implements SubPartAware {
     /*-{
         widget.@com.google.gwt.user.client.ui.Widget::setParent(Lcom/google/gwt/user/client/ui/Widget;)(parent);
     }-*/;
+
+    /**
+     * Sets the current selection model.
+     *
+     * @param selectionModel
+     *            a selection model implementation.
+     * @throws IllegalArgumentException
+     *             if selection model argument is null
+     */
+    public void setSelectionModel(SelectionModel<T> selectionModel) {
+
+        if (selectionModel == null) {
+            throw new IllegalArgumentException("Selection model can't be null");
+        }
+
+        this.selectionModel = selectionModel;
+
+    }
+
+    /**
+     * Gets a reference to the current selection model.
+     *
+     * @return the currently used SelectionModel instance.
+     */
+    public SelectionModel<T> getSelectionModel() {
+        return selectionModel;
+    }
+
+    /**
+     * Sets current selection mode.
+     * <p>
+     * This is a shorthand method for {@link Grid#setSelectionModel}.
+     *
+     * @param mode
+     *            a selection mode value
+     * @see {@link SelectionMode}.
+     */
+    public void setSelectionMode(SelectionMode mode) {
+        SelectionModel<T> model = mode.createModel();
+        setSelectionModel(model);
+    }
+
+    /**
+     * Test if a row is selected.
+     *
+     * @param row
+     *            a row object
+     * @return true, if the current selection model considers the provided row
+     *         object selected.
+     */
+    public boolean isSelected(T row) {
+        return selectionModel.isSelected(row);
+    }
+
+    /**
+     * Select a row using the current selection model.
+     * <p>
+     * Only selection models implementing {@link SelectionModel.Single} and
+     * {@link SelectionModel.Multi} are supported; for anything else, an
+     * exception will be thrown.
+     *
+     * @param row
+     *            a row object
+     * @return <code>true</code> iff the current selection changed
+     * @throws IllegalStateException
+     *             if the current selection model is not an instance of
+     *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
+     */
+    @SuppressWarnings("unchecked")
+    public boolean select(T row) {
+        if (selectionModel instanceof SelectionModel.Single<?>) {
+            return ((SelectionModel.Single<T>) selectionModel).select(row);
+        } else if (selectionModel instanceof SelectionModel.Multi<?>) {
+            return ((SelectionModel.Multi<T>) selectionModel).select(row);
+        } else {
+            throw new IllegalStateException("Unsupported selection model");
+        }
+    }
+
+    /**
+     * Deselect a row using the current selection model.
+     * <p>
+     * Only selection models implementing {@link SelectionModel.Single} and
+     * {@link SelectionModel.Multi} are supported; for anything else, an
+     * exception will be thrown.
+     *
+     * @param row
+     *            a row object
+     * @return <code>true</code> iff the current selection changed
+     * @throws IllegalStateException
+     *             if the current selection model is not an instance of
+     *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
+     */
+    @SuppressWarnings("unchecked")
+    public boolean deselect(T row) {
+        if (selectionModel instanceof SelectionModel.Single<?>) {
+            return ((SelectionModel.Single<T>) selectionModel).deselect(row);
+        } else if (selectionModel instanceof SelectionModel.Multi<?>) {
+            return ((SelectionModel.Multi<T>) selectionModel).deselect(row);
+        } else {
+            throw new IllegalStateException("Unsupported selection model");
+        }
+    }
+
+    /**
+     * Gets last selected row from the current SelectionModel.
+     * <p>
+     * Only selection models implementing {@link SelectionModel.Single} are
+     * valid for this method; for anything else, use the
+     * {@link Grid#getSelectedRows()} method.
+     *
+     * @return a selected row reference, or null, if no row is selected
+     * @throws IllegalStateException
+     *             if the current selection model is not an instance of
+     *             {@link SelectionModel.Single}
+     */
+    public T getSelectedRow() {
+        if (selectionModel instanceof SelectionModel.Single<?>) {
+            return ((SelectionModel.Single<T>) selectionModel).getSelectedRow();
+        } else {
+            throw new IllegalStateException(
+                    "Unsupported selection model; can not get single selected row");
+        }
+    }
+
+    /**
+     * Gets currently selected rows from the current selection model.
+     *
+     * @return a non-null collection containing all currently selected rows.
+     */
+    public Collection<T> getSelectedRows() {
+        return selectionModel.getSelectedRows();
+    }
+
+    @Override
+    public HandlerRegistration addSelectionChangeHandler(
+            final SelectionChangeHandler handler) {
+        return addHandler(handler, SelectionChangeEvent.getType());
+    }
+
 }
