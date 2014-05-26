@@ -248,15 +248,49 @@ public class VaadinPortletService extends VaadinService {
         return type;
     }
 
+    /**
+     * Gets the currently processed portlet request. The current portlet request
+     * is automatically defined when the request is started. The current portlet
+     * request can not be used in e.g. background threads because of the way
+     * server implementations reuse request instances.
+     * 
+     * @return the current portlet request instance if available, otherwise
+     *         <code>null</code>
+     * 
+     */
     public static PortletRequest getCurrentPortletRequest() {
-        VaadinRequest currentRequest = VaadinService.getCurrentRequest();
-        if (currentRequest instanceof VaadinPortletRequest) {
-            return ((VaadinPortletRequest) currentRequest).getPortletRequest();
+        VaadinPortletRequest currentRequest = getCurrentRequest();
+        if (currentRequest != null) {
+            return currentRequest.getPortletRequest();
         } else {
             return null;
         }
     }
 
+    /**
+     * Gets the currently processed Vaadin portlet request. The current request
+     * is automatically defined when the request is started. The current request
+     * can not be used in e.g. background threads because of the way server
+     * implementations reuse request instances.
+     * 
+     * @return the current Vaadin portlet request instance if available,
+     *         otherwise <code>null</code>
+     * 
+     */
+    public static VaadinPortletRequest getCurrentRequest() {
+        return (VaadinPortletRequest) VaadinService.getCurrentRequest();
+    }
+
+    /**
+     * Gets the currently processed Vaadin portlet response. The current
+     * response is automatically defined when the request is started. The
+     * current response can not be used in e.g. background threads because of
+     * the way server implementations reuse response instances.
+     * 
+     * @return the current Vaadin portlet response instance if available,
+     *         otherwise <code>null</code>
+     * 
+     */
     public static VaadinPortletResponse getCurrentResponse() {
         return (VaadinPortletResponse) VaadinService.getCurrentResponse();
     }

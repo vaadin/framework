@@ -17,6 +17,9 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -60,7 +63,7 @@ public class VTabsheetPanel extends ComplexPanel {
 
     private Element createContainerElement() {
         Element el = DOM.createDiv();
-        DOM.setStyleAttribute(el, "position", "absolute");
+        el.getStyle().setPosition(Position.ABSOLUTE);
         hide(el);
         touchScrollHandler.addElement(el);
         return el;
@@ -136,15 +139,15 @@ public class VTabsheetPanel extends ComplexPanel {
     }
 
     private void hide(Element e) {
-        DOM.setStyleAttribute(e, "visibility", "hidden");
-        DOM.setStyleAttribute(e, "top", "-100000px");
-        DOM.setStyleAttribute(e, "left", "-100000px");
+        e.getStyle().setVisibility(Visibility.HIDDEN);
+        e.getStyle().setTop(-100000, Unit.PX);
+        e.getStyle().setLeft(-100000, Unit.PX);
     }
 
     private void unHide(Element e) {
-        DOM.setStyleAttribute(e, "top", "0px");
-        DOM.setStyleAttribute(e, "left", "0px");
-        DOM.setStyleAttribute(e, "visibility", "");
+        e.getStyle().setTop(0, Unit.PX);
+        e.getStyle().setLeft(0, Unit.PX);
+        e.getStyle().clearVisibility();
     }
 
     public void fixVisibleTabSize(int width, int height, int minWidth) {

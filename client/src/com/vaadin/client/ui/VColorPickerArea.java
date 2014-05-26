@@ -166,7 +166,7 @@ public class VColorPickerArea extends Widget implements ClickHandler, HasHTML,
     public void refreshColor() {
         if (color != null) {
             // Set the color
-            DOM.setStyleAttribute(area.getElement(), "background", color);
+            area.getElement().getStyle().setProperty("background", color);
         }
     }
 

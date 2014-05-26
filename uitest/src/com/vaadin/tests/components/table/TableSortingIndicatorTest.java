@@ -17,9 +17,9 @@ package com.vaadin.tests.components.table;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -36,30 +36,35 @@ public class TableSortingIndicatorTest extends MultiBrowserTest {
     public void testTableSortingIndicatorIsVisibleAfterServersideSort() {
         openTestURL();
 
+        ButtonElement button = $(ButtonElement.class).caption("Sort").first();
+        TableElement table = $(TableElement.class).first();
+
         Assert.assertFalse("Descending indicator was prematurely visible",
-                isElementPresent(By.className(TABLE_HEADER_DESC_INDICATOR)));
+                getHeaderClasses(table).contains(TABLE_HEADER_DESC_INDICATOR));
         Assert.assertFalse("Ascending indicator was prematurely visible",
-                isElementPresent(By.className(TABLE_HEADER_ASC_INDICATOR)));
-        WebElement button = driver.findElement(By
-                .vaadin("//Button[caption=\"Sort\"]"));
+                getHeaderClasses(table).contains(TABLE_HEADER_ASC_INDICATOR));
+
         button.click();
         Assert.assertTrue("Indicator did not become visible",
-                isElementPresent(By.className(TABLE_HEADER_DESC_INDICATOR)));
-
+                getHeaderClasses(table).contains(TABLE_HEADER_DESC_INDICATOR));
         Assert.assertFalse("Ascending sort indicator was wrongly visible",
-                isElementPresent(By.className(TABLE_HEADER_ASC_INDICATOR)));
-        WebElement manualSort = driver.findElement(By
-                .className(TABLE_HEADER_DESC_INDICATOR));
-        manualSort.click();
+                getHeaderClasses(table).contains(TABLE_HEADER_ASC_INDICATOR));
+
+        table.getHeaderCell(0).click();
         Assert.assertFalse("Table sort indicator didn't change",
-                isElementPresent(By.className(TABLE_HEADER_DESC_INDICATOR)));
+                getHeaderClasses(table).contains(TABLE_HEADER_DESC_INDICATOR));
         Assert.assertTrue("Ascending sort indicator didn't become visible",
-                isElementPresent(By.className(TABLE_HEADER_ASC_INDICATOR)));
+                getHeaderClasses(table).contains(TABLE_HEADER_ASC_INDICATOR));
+
         button.click();
         Assert.assertTrue(
                 "Descending sort indicator didn't appear on the second serverside sort.",
-                isElementPresent(By.className(TABLE_HEADER_DESC_INDICATOR)));
+                getHeaderClasses(table).contains(TABLE_HEADER_DESC_INDICATOR));
         Assert.assertFalse("Ascending sort indicator didn't disappear",
-                isElementPresent(By.className(TABLE_HEADER_ASC_INDICATOR)));
+                getHeaderClasses(table).contains(TABLE_HEADER_ASC_INDICATOR));
+    }
+
+    private String getHeaderClasses(TableElement table) {
+        return table.getHeaderCell(0).getAttribute("class");
     }
 }

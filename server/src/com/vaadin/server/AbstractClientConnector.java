@@ -348,13 +348,16 @@ public abstract class AbstractClientConnector implements ClientConnector,
         @Override
         public Iterator<ClientConnector> iterator() {
             CombinedIterator<ClientConnector> iterator = new CombinedIterator<ClientConnector>();
-            iterator.addIterator(connector.getExtensions().iterator());
 
             if (connector instanceof HasComponents) {
                 HasComponents hasComponents = (HasComponents) connector;
                 iterator.addIterator(hasComponents.iterator());
             }
 
+            Collection<Extension> extensions = connector.getExtensions();
+            if (extensions.size() > 0) {
+                iterator.addIterator(extensions.iterator());
+            }
             return iterator;
         }
     }

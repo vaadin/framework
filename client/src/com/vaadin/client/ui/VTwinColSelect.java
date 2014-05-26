@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
@@ -32,7 +33,6 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
@@ -393,7 +393,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     /** For internal use only. May be removed or replaced in the future. */
     public void setInternalWidths() {
-        DOM.setStyleAttribute(getElement(), "position", "relative");
+        getElement().getStyle().setPosition(Position.RELATIVE);
         int bordersAndPaddings = Util.measureHorizontalPaddingAndBorder(
                 buttons.getElement(), 0);
 
