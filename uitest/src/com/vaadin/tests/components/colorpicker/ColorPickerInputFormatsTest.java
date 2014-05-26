@@ -87,7 +87,7 @@ public class ColorPickerInputFormatsTest extends MultiBrowserTest {
         field.sendKeys(value);
 
         // Submit
-        field.sendKeys(Keys.ENTER);
+        field.sendKeys(Keys.RETURN);
     }
 
     private String getColorpickerValue() {
