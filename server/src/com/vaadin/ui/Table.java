@@ -2957,12 +2957,19 @@ public class Table extends AbstractSelect implements Action.Container,
                 if (value != null) {
                     reqFirstRowToPaint = value.intValue();
                 }
+
                 value = (Integer) variables.get("reqrows");
                 if (value != null) {
                     reqRowsToPaint = value.intValue();
+                    int size = size();
                     // sanity check
-                    if (reqFirstRowToPaint + reqRowsToPaint > size()) {
-                        reqRowsToPaint = size() - reqFirstRowToPaint;
+
+                    if (reqFirstRowToPaint >= size) {
+                        reqFirstRowToPaint = size;
+                    }
+
+                    if (reqFirstRowToPaint + reqRowsToPaint > size) {
+                        reqRowsToPaint = size - reqFirstRowToPaint;
                     }
                 }
             }
