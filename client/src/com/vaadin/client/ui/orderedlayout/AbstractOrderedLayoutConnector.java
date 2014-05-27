@@ -17,8 +17,6 @@ package com.vaadin.client.ui.orderedlayout;
 
 import java.util.List;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Widget;
@@ -507,15 +505,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         updateLayoutHeight();
         if (needsExpand()) {
             getWidget().updateExpandedSizes();
-            // updateExpandedSizes causes fixed size components to temporarily
-            // lose their size. updateExpandCompensation must be delayed until
-            // the browser has a chance to measure them.
-            Scheduler.get().scheduleFinally(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    getWidget().updateExpandCompensation();
-                }
-            });
+            getWidget().updateExpandCompensation();
         } else {
             getWidget().clearExpand();
         }
