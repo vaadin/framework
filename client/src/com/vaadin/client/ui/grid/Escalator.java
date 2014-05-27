@@ -4551,4 +4551,23 @@ public class Escalator extends Widget {
     public HeightMode getHeightMode() {
         return heightMode;
     }
+
+    /**
+     * Returns the {@link RowContainer} which contains the element.
+     * 
+     * @param element
+     *            the element to check for
+     * @return the container the element is in or <code>null</code> if element
+     *         is not present in any container.
+     */
+    public RowContainer findRowContainer(Element element) {
+        if (getHeader().getElement().isOrHasChild(element)) {
+            return getHeader();
+        } else if (getBody().getElement().isOrHasChild(element)) {
+            return getBody();
+        } else if (getFooter().getElement().isOrHasChild(element)) {
+            return getFooter();
+        }
+        return null;
+    }
 }

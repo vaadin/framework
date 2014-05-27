@@ -1591,32 +1591,14 @@ public class Grid<T> extends Composite implements SubPartAware {
         EventTarget target = event.getEventTarget();
         if (Element.is(target)) {
             Element e = Element.as(target);
-
-            /*
-             * FIXME This is an ugly way to resolve if the event comes from the
-             * header, footer or body. But it is currently the only way since
-             * RowContainer doesn't provide the root element or a method to
-             * check if the element is inside the row container externally.
-             */
-            Cell cell = escalator.getHeader().getCell(e);
-            Renderer renderer = null;
-            if (cell == null) {
-                cell = escalator.getBody().getCell(e);
-                if (cell == null) {
-                    cell = escalator.getFooter().getCell(e);
-                    if (cell != null) {
-                        renderer = columns.get(cell.getColumn())
-                                .getFooterRenderer();
-                    }
-                } else {
-                    renderer = columns.get(cell.getColumn()).getRenderer();
+            RowContainer container = escalator.findRowContainer(e);
+            if (container != null) {
+                Cell cell = container.getCell(e);
+                Renderer<?> renderer = columns.get(cell.getColumn())
+                        .getRenderer();
+                if (renderer instanceof ComplexRenderer) {
+                    ((ComplexRenderer<?>) renderer).onBrowserEvent(cell, event);
                 }
-            } else {
-                renderer = columns.get(cell.getColumn()).getHeaderRenderer();
-            }
-
-            if (renderer instanceof ComplexRenderer) {
-                ((ComplexRenderer) renderer).onBrowserEvent(cell, event);
             }
         }
     }
