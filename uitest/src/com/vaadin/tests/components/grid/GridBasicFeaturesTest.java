@@ -20,6 +20,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -29,6 +30,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -40,7 +42,7 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         openTestURL();
 
         // Column headers should be visible
-        List<WebElement> cells = getGridHeaderRowCells();
+        List<TestBenchElement> cells = getGridHeaderRowCells();
         assertEquals(10, cells.size());
         assertEquals("Column0", cells.get(0).getText());
         assertEquals("Column1", cells.get(1).getText());
@@ -52,7 +54,7 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         openTestURL();
 
         // footer row should by default be hidden
-        List<WebElement> cells = getGridFooterRowCells();
+        List<TestBenchElement> cells = getGridFooterRowCells();
         assertEquals(0, cells.size());
 
         // Open footer row
@@ -73,7 +75,7 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         // Hide column headers for this test
         selectMenuPath("Component", "Headers", "Visible");
 
-        List<WebElement> cells = getGridHeaderRowCells();
+        List<TestBenchElement> cells = getGridHeaderRowCells();
 
         // header row should be empty
         assertEquals(0, cells.size());
@@ -108,7 +110,7 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         selectMenuPath("Component", "Column groups", "Column group row 1",
                 "Group Column 0 & 1");
 
-        List<WebElement> cells = getGridFooterRowCells();
+        List<TestBenchElement> cells = getGridFooterRowCells();
         assertEquals("Column 0 & 1", cells.get(0).getText());
     }
 
@@ -137,7 +139,7 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         openTestURL();
 
         // Column 0 should be visible
-        List<WebElement> cells = getGridHeaderRowCells();
+        List<TestBenchElement> cells = getGridHeaderRowCells();
         assertEquals("Column0", cells.get(0).getText());
 
         // Hide column 0
@@ -153,7 +155,7 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         openTestURL();
 
         // Column 0 should be visible
-        List<WebElement> cells = getGridHeaderRowCells();
+        List<TestBenchElement> cells = getGridHeaderRowCells();
         assertEquals("Column0", cells.get(0).getText());
 
         // Hide column 0
@@ -180,7 +182,7 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         sleep(1000);
 
         // Check that row is loaded
-        assertThat(getBodyCellByRowAndColumn(11, 1).getText(), not("..."));
+        assertThat(getBodyCellByRowAndColumn(11, 0).getText(), not("..."));
     }
 
     @Test
@@ -190,10 +192,10 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         // Freeze column 2
         selectMenuPath("Component", "Columns", "Column2", "Freeze");
 
-        WebElement cell = getBodyCellByRowAndColumn(1, 1);
+        WebElement cell = getBodyCellByRowAndColumn(0, 0);
         assertTrue(cell.getAttribute("class").contains("frozen"));
 
-        cell = getBodyCellByRowAndColumn(1, 2);
+        cell = getBodyCellByRowAndColumn(0, 1);
         assertTrue(cell.getAttribute("class").contains("frozen"));
     }
 
@@ -201,13 +203,13 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
     public void testInitialColumnWidths() throws Exception {
         openTestURL();
 
-        WebElement cell = getBodyCellByRowAndColumn(1, 1);
+        WebElement cell = getBodyCellByRowAndColumn(0, 0);
         assertEquals(100, cell.getSize().getWidth());
 
-        cell = getBodyCellByRowAndColumn(1, 2);
+        cell = getBodyCellByRowAndColumn(0, 1);
         assertEquals(150, cell.getSize().getWidth());
 
-        cell = getBodyCellByRowAndColumn(1, 3);
+        cell = getBodyCellByRowAndColumn(0, 2);
         assertEquals(200, cell.getSize().getWidth());
     }
 
@@ -216,27 +218,27 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         openTestURL();
 
         // Default column width is 100px
-        WebElement cell = getBodyCellByRowAndColumn(1, 1);
+        WebElement cell = getBodyCellByRowAndColumn(0, 0);
         assertEquals(100, cell.getSize().getWidth());
 
         // Set first column to be 200px wide
         selectMenuPath("Component", "Columns", "Column0", "Column0 Width",
                 "200px");
 
-        cell = getBodyCellByRowAndColumn(1, 1);
+        cell = getBodyCellByRowAndColumn(0, 0);
         assertEquals(200, cell.getSize().getWidth());
 
         // Set second column to be 150px wide
         selectMenuPath("Component", "Columns", "Column1", "Column1 Width",
                 "150px");
-        cell = getBodyCellByRowAndColumn(1, 2);
+        cell = getBodyCellByRowAndColumn(0, 1);
         assertEquals(150, cell.getSize().getWidth());
 
         // Set first column to be auto sized (defaults to 100px currently)
         selectMenuPath("Component", "Columns", "Column0", "Column0 Width",
                 "Auto");
 
-        cell = getBodyCellByRowAndColumn(1, 1);
+        cell = getBodyCellByRowAndColumn(0, 0);
         assertEquals(100, cell.getSize().getWidth());
     }
 
@@ -286,17 +288,17 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         openTestURL();
 
         assertEquals("Unexpected cell initial state", "(0, 0)",
-                getBodyCellByRowAndColumn(1, 1).getText());
+                getBodyCellByRowAndColumn(0, 0).getText());
 
         selectMenuPath("Component", "Body rows",
                 "Modify first row (getItemProperty)");
         assertEquals("(First) modification with getItemProperty failed",
-                "modified: 0", getBodyCellByRowAndColumn(1, 1).getText());
+                "modified: 0", getBodyCellByRowAndColumn(0, 0).getText());
 
         selectMenuPath("Component", "Body rows",
                 "Modify first row (getContainerProperty)");
         assertEquals("(Second) modification with getItemProperty failed",
-                "modified: Column0", getBodyCellByRowAndColumn(1, 1).getText());
+                "modified: Column0", getBodyCellByRowAndColumn(0, 0).getText());
     }
 
     private void assertPrimaryStylename(String stylename) {
@@ -316,9 +318,7 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     private WebElement getBodyCellByRowAndColumn(int row, int column) {
-        return getDriver().findElement(
-                By.xpath("//div[@id='testComponent']//tbody/tr[" + row
-                        + "]/td[" + column + "]"));
+        return getGridElement().getCell(row, column);
     }
 
     private void selectSubMenu(String menuCaption) {
@@ -354,12 +354,20 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         return $(GridElement.class).id("testComponent");
     }
 
-    private List<WebElement> getGridHeaderRowCells() {
-        return getGridElement().findElements(By.xpath(".//thead//th"));
+    private List<TestBenchElement> getGridHeaderRowCells() {
+        List<TestBenchElement> headerCells = new ArrayList<TestBenchElement>();
+        for (int i = 0; i < getGridElement().getHeaderCount(); ++i) {
+            headerCells.addAll(getGridElement().getHeaderCells(i));
+        }
+        return headerCells;
     }
 
-    private List<WebElement> getGridFooterRowCells() {
-        return getGridElement().findElements(By.xpath(".//tfoot//td"));
+    private List<TestBenchElement> getGridFooterRowCells() {
+        List<TestBenchElement> footerCells = new ArrayList<TestBenchElement>();
+        for (int i = 0; i < getGridElement().getFooterCount(); ++i) {
+            footerCells.addAll(getGridElement().getFooterCells(i));
+        }
+        return footerCells;
     }
 
     private void scrollGridVerticallyTo(double px) {
