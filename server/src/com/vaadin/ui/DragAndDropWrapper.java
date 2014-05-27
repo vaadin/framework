@@ -180,10 +180,17 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
          * the wrapper will no longer work.
          */
         HTML5,
+
+        /**
+         * Uses the component defined in
+         * {@link #setDragImageComponent(Component)} as the drag image.
+         */
+        COMPONENT_OTHER,
     }
 
     private final Map<String, Object> html5DataFlavors = new LinkedHashMap<String, Object>();
     private DragStartMode dragStartMode = DragStartMode.NONE;
+    private Component dragImageComponent = null;
 
     private Set<String> sentIds = new HashSet<String>();
 
@@ -227,6 +234,19 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute(DragAndDropWrapperConstants.DRAG_START_MODE,
                 dragStartMode.ordinal());
+
+        if (dragStartMode.equals(DragStartMode.COMPONENT_OTHER)) {
+            if (dragImageComponent != null) {
+                target.addAttribute(
+                        DragAndDropWrapperConstants.DRAG_START_COMPONENT_ATTRIBUTE,
+                        dragImageComponent.getConnectorId());
+            } else {
+                throw new IllegalArgumentException(
+                        "DragStartMode.COMPONENT_OTHER set but no component "
+                                + "was defined. Please set a component using DragAnd"
+                                + "DropWrapper.setDragStartComponent(Component).");
+            }
+        }
         if (getDropHandler() != null) {
             getDropHandler().getAcceptCriterion().paint(target);
         }
@@ -298,6 +318,27 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     public DragStartMode getDragStartMode() {
         return dragStartMode;
+    }
+
+    /**
+     * Sets the component that will be used as the drag image. Only used when
+     * wrapper is set to {@link DragStartMode#COMPONENT_OTHER}
+     * 
+     * @param dragImageComponent
+     */
+    public void setDragImageComponent(Component dragImageComponent) {
+        this.dragImageComponent = dragImageComponent;
+        markAsDirty();
+    }
+
+    /**
+     * Gets the component that will be used as the drag image. Only used when
+     * wrapper is set to {@link DragStartMode#COMPONENT_OTHER}
+     * 
+     * @return <code>null</code> if no component is set.
+     */
+    public Component getDragImageComponent() {
+        return dragImageComponent;
     }
 
     final class ProxyReceiver implements StreamVariable {
