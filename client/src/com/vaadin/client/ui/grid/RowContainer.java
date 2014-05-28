@@ -169,4 +169,26 @@ public interface RowContainer {
      */
     public Cell getCell(Element element);
 
+    /**
+     * Gets the row element with given logical index. For lazy loaded containers
+     * such as Escalators BodyRowContainer visibility should be checked before
+     * calling this function. See {@link Escalator#getVisibleRowRange()}.
+     * 
+     * @param index
+     *            the logical index of the element to retrieve
+     * @return the element at position {@code index}
+     * @throws IndexOutOfBoundsException
+     *             if {@code index} is not valid within container
+     * @throws IllegalStateException
+     *             if {@code index} is currently not available in the DOM
+     */
+    public Element getRowElement(int index) throws IndexOutOfBoundsException,
+            IllegalStateException;
+
+    /**
+     * Returns the root element of RowContainer
+     * 
+     * @return RowContainer root element
+     */
+    public Element getElement();
 }

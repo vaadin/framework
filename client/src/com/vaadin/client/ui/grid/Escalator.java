@@ -1090,6 +1090,11 @@ public class Escalator extends Widget {
             root = rowContainerElement;
         }
 
+        @Override
+        public Element getElement() {
+            return root;
+        }
+
         /**
          * Gets the tag name of an element to represent a cell in a row.
          * <p>
@@ -1375,6 +1380,11 @@ public class Escalator extends Widget {
             return cellElem;
         }
 
+        @Override
+        public Element getRowElement(int index) {
+            return getTrByVisualIndex(index);
+        }
+
         /**
          * Gets the child element that is visually at a certain index
          * 
@@ -1384,7 +1394,7 @@ public class Escalator extends Widget {
          * @throws IndexOutOfBoundsException
          *             if {@code index} is not valid within {@link #root}
          */
-        abstract protected Element getTrByVisualIndex(int index)
+        protected abstract Element getTrByVisualIndex(int index)
                 throws IndexOutOfBoundsException;
 
         protected void paintRemoveColumns(final int offset,
@@ -3041,6 +3051,22 @@ public class Escalator extends Widget {
             }
         }
 
+        @Override
+        public Element getRowElement(int index) {
+            if (index < 0 || index >= getRowCount()) {
+                throw new IndexOutOfBoundsException("No such logical index: "
+                        + index);
+            }
+            int visualIndex = index
+                    - getLogicalRowIndex(visualRowOrder.getFirst());
+            if (visualIndex >= 0 && visualIndex < visualRowOrder.size()) {
+                return super.getRowElement(visualIndex);
+            } else {
+                throw new IllegalStateException("Row with logical index "
+                        + index + " is currently not available in the DOM");
+            }
+        }
+
         private void setBodyScrollPosition(final double scrollLeft,
                 final double scrollTop) {
             tBodyScrollLeft = scrollLeft;
@@ -4215,12 +4241,22 @@ public class Escalator extends Widget {
                     .getLast()) + 1;
 
             int visibleRowCount = visibleRangeEnd - visibleRangeStart;
-
             fireEvent(new RowVisibilityChangeEvent(visibleRangeStart,
                     visibleRowCount));
         } else {
             fireEvent(new RowVisibilityChangeEvent(0, 0));
         }
+    }
+
+    /**
+     * Gets the range of currently visible rows
+     * 
+     * @return range of visible rows
+     */
+    public Range getVisibleRowRange() {
+        return Range.between(
+                body.getLogicalRowIndex(body.visualRowOrder.getFirst()),
+                body.getLogicalRowIndex(body.visualRowOrder.getLast()) + 1);
     }
 
     /**

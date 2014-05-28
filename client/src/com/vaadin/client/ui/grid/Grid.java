@@ -16,11 +16,13 @@
 package com.vaadin.client.ui.grid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.shared.GWT;
@@ -28,15 +30,18 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasVisibility;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
+import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
 
@@ -72,7 +77,7 @@ import com.vaadin.shared.util.SharedUtil;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class Grid<T> extends Composite {
+public class Grid<T> extends Composite implements SubPartAware {
 
     /**
      * Escalator used internally by grid to render the rows
@@ -1484,5 +1489,96 @@ public class Grid<T> extends Composite {
                 ((ComplexRenderer) renderer).onBrowserEvent(cell, event);
             }
         }
+    }
+
+    @Override
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+        // Parse SubPart string to type and indices
+        String[] splitArgs = subPart.split("\\[");
+
+        String type = splitArgs[0];
+        int[] indices = new int[splitArgs.length - 1];
+        for (int i = 0; i < indices.length; ++i) {
+            String tmp = splitArgs[i + 1];
+            indices[i] = Integer.parseInt(tmp.substring(0, tmp.length() - 1));
+        }
+
+        // Get correct RowContainer for type from Escalator
+        RowContainer container = null;
+        if (type.equalsIgnoreCase("header")) {
+            container = escalator.getHeader();
+        } else if (type.equalsIgnoreCase("cell")) {
+            // If wanted row is not visible, we need to scroll there.
+            Range visibleRowRange = escalator.getVisibleRowRange();
+            if (!visibleRowRange.contains(indices[0])) {
+                try {
+                    scrollToRow(indices[0]);
+                } catch (IllegalArgumentException e) {
+                    getLogger().log(Level.SEVERE, e.getMessage());
+                }
+                // Scrolling causes a lazy loading event. No element can
+                // currently be retrieved.
+                return null;
+            }
+            container = escalator.getBody();
+        } else if (type.equalsIgnoreCase("footer")) {
+            container = escalator.getFooter();
+        }
+
+        if (null != container) {
+            if (indices.length == 0) {
+                // No indexing. Just return the wanted container element
+                return DOM.asOld(container.getElement());
+            } else {
+                try {
+                    return DOM.asOld(getSubPart(container, indices));
+                } catch (Exception e) {
+                    getLogger().log(Level.SEVERE, e.getMessage());
+                }
+            }
+        }
+        return null;
+    }
+
+    private Element getSubPart(RowContainer container, int[] indices) {
+        // Scroll wanted column to view if able
+        if (indices.length > 1
+                && escalator.getColumnConfiguration().getFrozenColumnCount() <= indices[1]) {
+            escalator.scrollToColumn(indices[1], ScrollDestination.ANY, 0);
+        }
+
+        Element targetElement = container.getRowElement(indices[0]);
+        for (int i = 1; i < indices.length && targetElement != null; ++i) {
+            targetElement = (Element) targetElement.getChild(indices[i]);
+        }
+        return targetElement;
+    }
+
+    @Override
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+        // Containers and matching SubPart types
+        List<RowContainer> containers = Arrays.asList(escalator.getHeader(),
+                escalator.getBody(), escalator.getFooter());
+        List<String> containerType = Arrays.asList("header", "cell", "footer");
+
+        for (int i = 0; i < containers.size(); ++i) {
+            RowContainer container = containers.get(i);
+            boolean containerRow = (subElement.getTagName().equalsIgnoreCase(
+                    "tr") && subElement.getParentElement() == container
+                    .getElement());
+            if (containerRow) {
+                // Wanted SubPart is row that is a child of containers root
+                // To get indices, we use a cell that is a child of this row
+                subElement = DOM.asOld(subElement.getFirstChildElement());
+            }
+
+            Cell cell = container.getCell(subElement);
+            if (cell != null) {
+                // Skip the column index if subElement was a child of root
+                return containerType.get(i) + "[" + cell.getRow()
+                        + (containerRow ? "]" : "][" + cell.getColumn() + "]");
+            }
+        }
+        return null;
     }
 }
