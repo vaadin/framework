@@ -19,6 +19,7 @@ import com.google.gwt.aria.client.LiveValue;
 import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -116,8 +117,10 @@ public class VTooltip extends VWindowOverlay {
         }
         if (info.getTitle() != null && !"".equals(info.getTitle())) {
             description.setInnerHTML(info.getTitle());
+            description.getStyle().clearDisplay();
         } else {
             description.setInnerHTML("");
+            description.getStyle().setDisplay(Display.NONE);
         }
         currentTooltipInfo = info;
     }
