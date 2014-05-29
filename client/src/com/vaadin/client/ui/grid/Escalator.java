@@ -406,7 +406,7 @@ public class Escalator extends Widget {
             }-*/;
 
             public void touchStart(final CustomTouchEvent event) {
-                touches++;
+                touches = event.getNativeEvent().getTouches().length();
                 if (touches != 1) {
                     return;
                 }
@@ -441,9 +441,8 @@ public class Escalator extends Widget {
                 mover.execute(Duration.currentTimeMillis());
             }
 
-            public void touchEnd(@SuppressWarnings("unused")
-            final CustomTouchEvent event) {
-                touches--;
+            public void touchEnd(final CustomTouchEvent event) {
+                touches = event.getNativeEvent().getTouches().length();
 
                 if (touches == 0) {
                     escalator.scroller.handleFlickScroll(deltaX, deltaY,

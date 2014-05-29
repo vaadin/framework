@@ -89,6 +89,7 @@ public class Grid<T> extends Composite implements SubPartAware {
                 @Override
                 public void render(FlyweightCell cell, String data) {
                     if (cell.getRow() == escalator.getHeader().getRowCount() - 1) {
+                        // TODO: header "select all / select none" logic
                         selectColumnRenderer.render(cell, Boolean.FALSE);
                     }
                 }
@@ -1721,7 +1722,7 @@ public class Grid<T> extends Composite implements SubPartAware {
     /* TODO remove before final */
     public void setSelectionCheckboxes(boolean set) {
         if (set) {
-            setSelectColumnRenderer(new MultiSelectionRenderer());
+            setSelectColumnRenderer(new MultiSelectionRenderer(this));
         } else {
             setSelectColumnRenderer(null);
         }
