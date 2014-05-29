@@ -26,7 +26,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -1420,27 +1419,6 @@ public class Grid<T> extends Composite implements SubPartAware {
      */
     public HeightMode getHeightMode() {
         return escalator.getHeightMode();
-    }
-
-    /**
-     * Returns the events that the {@link Grid} listens for. This includes all
-     * events for columns and renderers.
-     * <p>
-     * 
-     * @See {@link BrowserEvents} for available events.
-     * 
-     * @return events consumed by the Grid.
-     */
-    protected Set<String> getConsumedEvents() {
-        Set<String> events = new HashSet<String>();
-        for (GridColumn<?, T> column : columns) {
-            events.addAll(getConsumedEventsForRenderer(column
-                    .getHeaderRenderer()));
-            events.addAll(getConsumedEventsForRenderer(column.getRenderer()));
-            events.addAll(getConsumedEventsForRenderer(column
-                    .getFooterRenderer()));
-        }
-        return events;
     }
 
     private Set<String> getConsumedEventsForRenderer(Renderer<?> renderer) {
