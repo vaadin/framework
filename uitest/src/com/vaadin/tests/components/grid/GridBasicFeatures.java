@@ -18,6 +18,7 @@ package com.vaadin.tests.components.grid;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
@@ -48,7 +49,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     protected Grid constructComponent() {
 
         // Build data source
-        ds = new IndexedContainer();
+        ds = new IndexedContainer() {
+            @Override
+            public List<Object> getItemIds(int startIndex, int numberOfIds) {
+                log("Requested items " + startIndex + " - "
+                        + (startIndex + numberOfIds));
+                return super.getItemIds(startIndex, numberOfIds);
+            }
+        };
 
         for (int col = 0; col < COLUMNS; col++) {
             ds.addContainerProperty(getColumnProperty(col), String.class, "");

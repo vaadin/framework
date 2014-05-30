@@ -19,6 +19,7 @@ package com.vaadin.client.data;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.Profiler;
@@ -40,7 +41,13 @@ import com.vaadin.shared.ui.grid.Range;
  */
 public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
-    private boolean requestPending = false;
+    /**
+     * Records the start of the previously requested range. This is used when
+     * tracking request timings to distinguish between explicit responses and
+     * arbitrary updates pushed from the server.
+     */
+    private int lastRequestStart = -1;
+    private double pendingRequestTime;
 
     private boolean coverageCheckPending = false;
 
@@ -52,7 +59,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     private DataChangeHandler dataChangeHandler;
 
-    private int estimatedSize;
+    private Range estimatedAvailableRange = Range.between(0, 0);
+
+    private CacheStrategy cacheStrategy = new CacheStrategy.DefaultCacheStrategy();
 
     private final ScheduledCommand coverageChecker = new ScheduledCommand() {
         @Override
@@ -70,7 +79,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      */
     protected void setEstimatedSize(int estimatedSize) {
         // TODO update dataChangeHandler if size changes
-        this.estimatedSize = estimatedSize;
+        estimatedAvailableRange = Range.withLength(0, estimatedSize);
     }
 
     private void ensureCoverageCheck() {
@@ -92,14 +101,16 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     }
 
     private void checkCacheCoverage() {
-        if (requestPending) {
-            // Anyone clearing requestPending should run this method again
+        if (lastRequestStart != -1) {
+            // Anyone clearing lastRequestStart should run this method again
             return;
         }
 
         Profiler.enter("AbstractRemoteDataSource.checkCacheCoverage");
 
-        if (!requestedAvailability.intersects(cached) || cached.isEmpty()) {
+        Range minCacheRange = getMinCacheRange();
+
+        if (!minCacheRange.intersects(cached) || cached.isEmpty()) {
             /*
              * Simple case: no overlap between cached data and needed data.
              * Clear the cache and request new data
@@ -107,22 +118,24 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             rowCache.clear();
             cached = Range.between(0, 0);
 
-            handleMissingRows(requestedAvailability);
+            handleMissingRows(getMaxCacheRange());
         } else {
             discardStaleCacheEntries();
 
             // Might need more rows -> request them
-            Range[] availabilityPartition = requestedAvailability
-                    .partitionWith(cached);
-            handleMissingRows(availabilityPartition[0]);
-            handleMissingRows(availabilityPartition[2]);
+            if (!minCacheRange.isSubsetOf(cached)) {
+                Range[] missingCachePartition = getMaxCacheRange()
+                        .partitionWith(cached);
+                handleMissingRows(missingCachePartition[0]);
+                handleMissingRows(missingCachePartition[2]);
+            }
         }
 
         Profiler.leave("AbstractRemoteDataSource.checkCacheCoverage");
     }
 
     private void discardStaleCacheEntries() {
-        Range[] cacheParition = cached.partitionWith(requestedAvailability);
+        Range[] cacheParition = cached.partitionWith(getMaxCacheRange());
         dropFromCache(cacheParition[0]);
         cached = cacheParition[1];
         dropFromCache(cacheParition[2]);
@@ -138,7 +151,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         if (range.isEmpty()) {
             return;
         }
-        requestPending = true;
+        lastRequestStart = range.getStart();
+        pendingRequestTime = Duration.currentTimeMillis();
         requestRows(range.getStart(), range.length());
     }
 
@@ -156,7 +170,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     @Override
     public int getEstimatedSize() {
-        return estimatedSize;
+        return estimatedAvailableRange.length();
     }
 
     @Override
@@ -183,13 +197,21 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      *            a list of rows, starting from <code>firstRowIndex</code>
      */
     protected void setRowData(int firstRowIndex, List<T> rowData) {
-        requestPending = false;
 
         Profiler.enter("AbstractRemoteDataSource.setRowData");
 
         Range received = Range.withLength(firstRowIndex, rowData.size());
 
-        Range[] partition = received.partitionWith(requestedAvailability);
+        if (firstRowIndex == lastRequestStart) {
+            // Provide timing information if we know when we asked for this data
+            cacheStrategy.onDataArrive(Duration.currentTimeMillis()
+                    - pendingRequestTime, received.length());
+        }
+        lastRequestStart = -1;
+
+        Range maxCacheRange = getMaxCacheRange();
+
+        Range[] partition = received.partitionWith(maxCacheRange);
 
         Range newUsefulData = partition[1];
         if (!newUsefulData.isEmpty()) {
@@ -268,7 +290,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                     .length());
             cached = remainsBefore.combineWith(transposedRemainsAfter);
         }
-        estimatedSize -= count;
+        setEstimatedSize(getEstimatedSize() - count);
         dataChangeHandler.dataRemoved(firstRowIndex, count);
         checkCacheCoverage();
 
@@ -314,7 +336,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             }
         }
 
-        estimatedSize += count;
+        setEstimatedSize(getEstimatedSize() + count);
         dataChangeHandler.dataAdded(firstRowIndex, count);
         checkCacheCoverage();
 
@@ -328,5 +350,45 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      */
     public Range getCachedRange() {
         return cached;
+    }
+
+    /**
+     * Sets the cache strategy that is used to determine how much data is
+     * fetched and cached.
+     * <p>
+     * The new strategy is immediately used to evaluate whether currently cached
+     * rows should be discarded or new rows should be fetched.
+     * 
+     * @param cacheStrategy
+     *            a cache strategy implementation, not <code>null</code>
+     */
+    public void setCacheStrategy(CacheStrategy cacheStrategy) {
+        if (cacheStrategy == null) {
+            throw new IllegalArgumentException();
+        }
+
+        if (this.cacheStrategy != cacheStrategy) {
+            this.cacheStrategy = cacheStrategy;
+
+            checkCacheCoverage();
+        }
+    }
+
+    private Range getMinCacheRange() {
+        Range minCacheRange = cacheStrategy.getMinCacheRange(
+                requestedAvailability, cached, estimatedAvailableRange);
+
+        assert minCacheRange.isSubsetOf(estimatedAvailableRange);
+
+        return minCacheRange;
+    }
+
+    private Range getMaxCacheRange() {
+        Range maxCacheRange = cacheStrategy.getMaxCacheRange(
+                requestedAvailability, cached, estimatedAvailableRange);
+
+        assert maxCacheRange.isSubsetOf(estimatedAvailableRange);
+
+        return maxCacheRange;
     }
 }
