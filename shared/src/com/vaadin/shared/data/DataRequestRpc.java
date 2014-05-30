@@ -33,6 +33,11 @@ public interface DataRequestRpc extends ServerRpc {
      *            the index of the first requested row
      * @param numberOfRows
      *            the number of requested rows
+     * @param firstCachedRowIndex
+     *            the index of the first cached row
+     * @param cacheSize
+     *            the number of cached rows
      */
-    public void requestRows(int firstRowIndex, int numberOfRows);
+    public void requestRows(int firstRowIndex, int numberOfRows,
+            int firstCachedRowIndex, int cacheSize);
 }

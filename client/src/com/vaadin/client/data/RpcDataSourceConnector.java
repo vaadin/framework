@@ -25,6 +25,7 @@ import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataProviderState;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.Range;
 
 /**
  * Connects a Vaadin server-side container data source to a Grid. This is
@@ -41,8 +42,10 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
     private final AbstractRemoteDataSource<String[]> dataSource = new AbstractRemoteDataSource<String[]>() {
         @Override
         protected void requestRows(int firstRowIndex, int numberOfRows) {
+            Range cached = getCachedRange();
+
             getRpcProxy(DataRequestRpc.class).requestRows(firstRowIndex,
-                    numberOfRows);
+                    numberOfRows, cached.getStart(), cached.length());
         }
     };
 

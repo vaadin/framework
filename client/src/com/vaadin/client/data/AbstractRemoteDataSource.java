@@ -320,4 +320,13 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         Profiler.leave("AbstractRemoteDataSource.insertRowData");
     }
+
+    /**
+     * Gets the current range of cached rows
+     * 
+     * @return the range of currently cached rows
+     */
+    public Range getCachedRange() {
+        return cached;
+    }
 }

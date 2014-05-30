@@ -16,16 +16,32 @@
 
 package com.vaadin.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import com.vaadin.data.Container.Indexed;
+import com.vaadin.data.Container.Indexed.ItemAddEvent;
+import com.vaadin.data.Container.Indexed.ItemRemoveEvent;
+import com.vaadin.data.Container.ItemSetChangeEvent;
+import com.vaadin.data.Container.ItemSetChangeListener;
+import com.vaadin.data.Container.ItemSetChangeNotifier;
+import com.vaadin.data.Container.PropertySetChangeListener;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.Property.ValueChangeNotifier;
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.server.ClientConnector;
 import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataProviderState;
 import com.vaadin.shared.data.DataRequestRpc;
+import com.vaadin.shared.ui.grid.Range;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.components.grid.Grid;
 
 /**
@@ -40,7 +56,295 @@ import com.vaadin.ui.components.grid.Grid;
  */
 public class RpcDataProviderExtension extends AbstractExtension {
 
+    /**
+     * A helper class that handles the client-side Escalator logic relating to
+     * making sure that whatever is currently visible to the user, is properly
+     * initialized and otherwise handled on the server side (as far as
+     * required).
+     * <p>
+     * This bookeeping includes, but is not limited to:
+     * <ul>
+     * <li>listening to the currently visible {@link Property Properties'} value
+     * changes on the server side and sending those back to the client; and
+     * <li>attaching and detaching {@link Component Components} from the Vaadin
+     * Component hierarchy.
+     * </ul>
+     */
+    private class ActiveRowHandler implements Serializable {
+        /**
+         * A map from itemId to the value change listener used for all of its
+         * properties
+         */
+        private final Map<Object, GridValueChangeListener> valueChangeListeners = new HashMap<Object, GridValueChangeListener>();
+
+        /**
+         * The currently active range. Practically, it's the range of row
+         * indices being cached currently.
+         */
+        private Range activeRange = Range.withLength(0, 0);
+
+        /**
+         * A hook for making sure that appropriate data is "active". All other
+         * rows should be "inactive".
+         * <p>
+         * "Active" can mean different things in different contexts. For
+         * example, only the Properties in the active range need
+         * ValueChangeListeners. Also, whenever a row with a Component becomes
+         * active, it needs to be attached (and conversely, when inactive, it
+         * needs to be detached).
+         * 
+         * @param firstActiveRow
+         *            the first active row
+         * @param activeRowCount
+         *            the number of active rows
+         */
+        public void setActiveRows(int firstActiveRow, int activeRowCount) {
+
+            final Range newActiveRange = Range.withLength(firstActiveRow,
+                    activeRowCount);
+
+            // TODO [[Components]] attach and detach components
+
+            /*-
+             *  Example
+             * 
+             *  New Range:       [3, 4, 5, 6, 7]
+             *  Old Range: [1, 2, 3, 4, 5]
+             *  Result:    [1, 2][3, 4, 5]      []
+             */
+            final Range[] depractionPartition = activeRange
+                    .partitionWith(newActiveRange);
+            removeValueChangeListeners(depractionPartition[0]);
+            removeValueChangeListeners(depractionPartition[2]);
+
+            /*-
+             *  Example
+             *  
+             *  Old Range: [1, 2, 3, 4, 5]
+             *  New Range:       [3, 4, 5, 6, 7]
+             *  Result:    []    [3, 4, 5][6, 7]
+             */
+            final Range[] activationPartition = newActiveRange
+                    .partitionWith(activeRange);
+            addValueChangeListeners(activationPartition[0]);
+            addValueChangeListeners(activationPartition[2]);
+
+            activeRange = newActiveRange;
+        }
+
+        private void addValueChangeListeners(Range range) {
+            for (int i = range.getStart(); i < range.getEnd(); i++) {
+
+                final Object itemId = container.getIdByIndex(i);
+                final Item item = container.getItem(itemId);
+
+                if (valueChangeListeners.containsKey(itemId)) {
+                    /*
+                     * This might occur when items are removed from above the
+                     * viewport, the escalator scrolls up to compensate, but the
+                     * same items remain in the view: It looks as if one row was
+                     * scrolled, when in fact the whole viewport was shifted up.
+                     */
+                    continue;
+                }
+
+                GridValueChangeListener listener = new GridValueChangeListener(
+                        itemId);
+                valueChangeListeners.put(itemId, listener);
+
+                for (final Object propertyId : item.getItemPropertyIds()) {
+                    final Property<?> property = item
+                            .getItemProperty(propertyId);
+                    if (property instanceof ValueChangeNotifier) {
+                        ((ValueChangeNotifier) property)
+                                .addValueChangeListener(listener);
+                    }
+                }
+            }
+        }
+
+        private void removeValueChangeListeners(Range range) {
+            for (int i = range.getStart(); i < range.getEnd(); i++) {
+                final Object itemId = container.getIdByIndex(i);
+                final Item item = container.getItem(itemId);
+                final GridValueChangeListener listener = valueChangeListeners
+                        .remove(itemId);
+
+                if (listener != null) {
+                    for (final Object propertyId : item.getItemPropertyIds()) {
+                        final Property<?> property = item
+                                .getItemProperty(propertyId);
+                        if (property instanceof ValueChangeNotifier) {
+                            ((ValueChangeNotifier) property)
+                                    .removeValueChangeListener(listener);
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Manages removed properties in active rows.
+         * 
+         * @param removedPropertyIds
+         *            the property ids that have been removed from the container
+         */
+        public void propertiesRemoved(Collection<Object> removedPropertyIds) {
+            /*
+             * no-op, for now.
+             * 
+             * The Container should be responsible for cleaning out any
+             * ValueChangeListeners from removed Properties. Components will
+             * benefit from this, however.
+             */
+        }
+
+        /**
+         * Manages added properties in active rows.
+         * 
+         * @param addedPropertyIds
+         *            the property ids that have been added to the container
+         */
+        public void propertiesAdded(Collection<Object> addedPropertyIds) {
+            for (int i = activeRange.getStart(); i < activeRange.getEnd(); i++) {
+                final Object itemId = container.getIdByIndex(i);
+                final Item item = container.getItem(itemId);
+                final GridValueChangeListener listener = valueChangeListeners
+                        .get(itemId);
+                assert (listener != null) : "a listener should've been pre-made by addValueChangeListeners";
+
+                for (final Object propertyId : addedPropertyIds) {
+                    final Property<?> property = item
+                            .getItemProperty(propertyId);
+                    if (property instanceof ValueChangeNotifier) {
+                        ((ValueChangeNotifier) property)
+                                .addValueChangeListener(listener);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Handles the insertion of rows.
+         * <p>
+         * This method's responsibilities are to:
+         * <ul>
+         * <li>shift the internal bookkeeping by <code>count</code> if the
+         * insertion happens above currently active range
+         * <li>ignore rows inserted below the currently active range
+         * <li>shift (and deactivate) rows pushed out of view
+         * <li>activate rows that are inserted in the current viewport
+         * </ul>
+         * 
+         * @param firstIndex
+         *            the index of the first inserted rows
+         * @param count
+         *            the number of rows inserted at <code>firstIndex</code>
+         */
+        public void insertRows(int firstIndex, int count) {
+            if (firstIndex < activeRange.getStart()) {
+                activeRange = activeRange.offsetBy(count);
+            } else if (firstIndex < activeRange.getEnd()) {
+                final Range deprecatedRange = Range.withLength(
+                        activeRange.getEnd(), count);
+                removeValueChangeListeners(deprecatedRange);
+
+                final Range freshRange = Range.between(firstIndex, count);
+                addValueChangeListeners(freshRange);
+            } else {
+                // out of view, noop
+            }
+        }
+
+        /**
+         * Removes a single item by its id.
+         * 
+         * @param itemId
+         *            the id of the removed id. <em>Note:</em> this item does
+         *            not exist anymore in the datasource
+         */
+        public void removeItemId(Object itemId) {
+            final GridValueChangeListener removedListener = valueChangeListeners
+                    .remove(itemId);
+            if (removedListener != null) {
+                /*
+                 * We removed an item from somewhere in the visible range, so we
+                 * make the active range shorter. The empty hole will be filled
+                 * by the client-side code when it asks for more information.
+                 */
+                activeRange = Range.withLength(activeRange.getStart(),
+                        activeRange.length() - 1);
+            }
+        }
+    }
+
+    /**
+     * A class to listen to changes in property values in the Container added
+     * with {@link Grid#setContainerDatasource(Container.Indexed)}, and notifies
+     * the data source to update the client-side representation of the modified
+     * item.
+     * <p>
+     * One instance of this class can (and should) be reused for all the
+     * properties in an item, since this class will inform that the entire row
+     * needs to be re-evaluated (in contrast to a property-based change
+     * management)
+     * <p>
+     * Since there's no Container-wide possibility to listen to any kind of
+     * value changes, an instance of this class needs to be attached to each and
+     * every Item's Property in the container.
+     * 
+     * @see Grid#addValueChangeListener(Container, Object, Object)
+     * @see Grid#valueChangeListeners
+     */
+    private class GridValueChangeListener implements ValueChangeListener {
+        private final Object itemId;
+
+        public GridValueChangeListener(Object itemId) {
+            /*
+             * Using an assert instead of an exception throw, just to optimize
+             * prematurely
+             */
+            assert itemId != null : "null itemId not accepted";
+            this.itemId = itemId;
+        }
+
+        @Override
+        public void valueChange(ValueChangeEvent event) {
+            updateRowData(container.indexOfId(itemId));
+        }
+    }
+
     private final Indexed container;
+
+    private final ActiveRowHandler activeRowHandler = new ActiveRowHandler();
+
+    private final ItemSetChangeListener itemListener = new ItemSetChangeListener() {
+        @Override
+        public void containerItemSetChange(ItemSetChangeEvent event) {
+
+            if (event instanceof ItemAddEvent) {
+                ItemAddEvent addEvent = (ItemAddEvent) event;
+                int firstIndex = addEvent.getFirstIndex();
+                int count = addEvent.getAddedItemsCount();
+                insertRowData(firstIndex, count);
+            }
+
+            else if (event instanceof ItemRemoveEvent) {
+                ItemRemoveEvent removeEvent = (ItemRemoveEvent) event;
+                int firstIndex = removeEvent.getFirstIndex();
+                int count = removeEvent.getRemovedItemsCount();
+                removeRowData(firstIndex, count, removeEvent.getFirstItemId());
+            }
+
+            else {
+                // TODO no diff info available, redraw everything
+                throw new UnsupportedOperationException("bare "
+                        + "ItemSetChangeEvents are currently "
+                        + "not supported, use a container that "
+                        + "uses AddItemEvents and RemoveItemEvents.");
+            }
+        }
+    };
 
     /**
      * Creates a new data provider using the given container.
@@ -51,16 +355,31 @@ public class RpcDataProviderExtension extends AbstractExtension {
     public RpcDataProviderExtension(Indexed container) {
         this.container = container;
 
-        // TODO support for reacting to events from the container added later
-
         registerRpc(new DataRequestRpc() {
             @Override
-            public void requestRows(int firstRow, int numberOfRows) {
+            public void requestRows(int firstRow, int numberOfRows,
+                    int firstCachedRowIndex, int cacheSize) {
                 pushRows(firstRow, numberOfRows);
+
+                Range active = Range.withLength(firstRow, numberOfRows);
+                if (cacheSize != 0) {
+                    Range cached = Range.withLength(firstCachedRowIndex,
+                            cacheSize);
+                    active = active.combineWith(cached);
+                }
+
+                activeRowHandler.setActiveRows(active.getStart(),
+                        active.length());
             }
         });
 
         getState().containerSize = container.size();
+
+        if (container instanceof ItemSetChangeNotifier) {
+            ((ItemSetChangeNotifier) container)
+                    .addItemSetChangeListener(itemListener);
+        }
+
     }
 
     private void pushRows(int firstRow, int numberOfRows) {
@@ -110,9 +429,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * @param count
      *            the number of rows inserted at <code>index</code>
      */
-    public void insertRowData(int index, int count) {
+    private void insertRowData(int index, int count) {
         getState().containerSize += count;
         getRpcProxy(DataProviderRpc.class).insertRowData(index, count);
+
+        activeRowHandler.insertRows(index, count);
     }
 
     /**
@@ -122,10 +443,26 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *            the index of the first row removed
      * @param count
      *            the number of rows removed
+     * @param firstItemId
+     *            the item id of the first removed item
      */
-    public void removeRowData(int firstIndex, int count) {
+    private void removeRowData(int firstIndex, int count, Object firstItemId) {
         getState().containerSize -= count;
         getRpcProxy(DataProviderRpc.class).removeRowData(firstIndex, count);
+
+        /*
+         * Unfortunately, there's no sane way of getting the rest of the removed
+         * itemIds unless we cache a mapping between index and itemId.
+         * 
+         * Fortunately, the only time _currently_ an event with more than one
+         * removed item seems to be when calling
+         * AbstractInMemoryContainer.removeAllElements(). Otherwise, it's only
+         * removing one item at a time.
+         * 
+         * We _could_ have a backup of all the itemIds, and compare to that one,
+         * but we really really don't want to go there.
+         */
+        activeRowHandler.removeItemId(firstItemId);
     }
 
     /**
@@ -144,5 +481,54 @@ public class RpcDataProviderExtension extends AbstractExtension {
         String[] row = getRowData(container.getContainerPropertyIds(), itemId);
         getRpcProxy(DataProviderRpc.class).setRowData(index,
                 Collections.singletonList(row));
+    }
+
+    @Override
+    public void setParent(ClientConnector parent) {
+        super.setParent(parent);
+        if (parent == null) {
+            // We're detached, release various listeners
+
+            activeRowHandler
+                    .removeValueChangeListeners(activeRowHandler.activeRange);
+
+            if (container instanceof ItemSetChangeNotifier) {
+                ((ItemSetChangeNotifier) container)
+                        .removeItemSetChangeListener(itemListener);
+            }
+
+        }
+    }
+
+    /**
+     * Informs this data provider that some of the properties have been removed
+     * from the container.
+     * <p>
+     * Please note that we could add our own {@link PropertySetChangeListener}
+     * to the container, but then we'd need to implement the same bookeeping for
+     * finding what's added and removed that Grid already does in its own
+     * listener.
+     * 
+     * @param removedColumns
+     *            a list of property ids for the removed columns
+     */
+    public void propertiesRemoved(List<Object> removedColumns) {
+        activeRowHandler.propertiesRemoved(removedColumns);
+    }
+
+    /**
+     * Informs this data provider that some of the properties have been added to
+     * the container.
+     * <p>
+     * Please note that we could add our own {@link PropertySetChangeListener}
+     * to the container, but then we'd need to implement the same bookeeping for
+     * finding what's added and removed that Grid already does in its own
+     * listener.
+     * 
+     * @param addedPropertyIds
+     *            a list of property ids for the added columns
+     */
+    public void propertiesAdded(HashSet<Object> addedPropertyIds) {
+        activeRowHandler.propertiesAdded(addedPropertyIds);
     }
 }
