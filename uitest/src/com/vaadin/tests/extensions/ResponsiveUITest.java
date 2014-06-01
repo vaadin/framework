@@ -76,6 +76,9 @@ public class ResponsiveUITest extends MultiBrowserTest {
         assertEquals("-200px",
                 $(".v-csslayout-grid.first").getAttribute("width-range"));
 
+        moveSplitter(-100);
+        assertEquals("0-100px",
+                $(".v-csslayout-grid.second").getAttribute("width-range"));
     }
 
     private void moveSplitter(int xOffset) {
