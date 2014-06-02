@@ -1,0 +1,133 @@
+@import "default";
+// @import "flat";
+// @import "flat-dark";
+// @import "facebook";
+// @import "metro";
+// @import "dark";
+// @import "blueprint";
+
+
+@include valo-natural-page-scrolling;
+
+.tests-valo {
+  @include valo;
+
+  .valo-menu .v-checkbox {
+    margin: round($v-unit-size/2);
+    font-weight: 400;
+  }
+
+  .view {
+    min-height: 600px;
+  }
+
+  $color1: hsl(220, 5%, 38%);
+  $color2: #5d73c0;
+  $color3: #3dbc1a;
+  $color4: #d2f4f3;
+  $color5: #fe902a;
+  $colors: $color1, $color2, $color3, $color4, $color5;
+
+  .v-textfield-color1 {
+    @include valo-textfield-style($background-color: $color1);
+  }
+
+  .v-textfield-color2 {
+    @include valo-textfield-style($background-color: $color3);
+  }
+
+  .v-textfield-color3 {
+    @include valo-textfield-style($background-color: $color4);
+  }
+
+
+  .v-textarea-color1 {
+    @include valo-textarea-style($background-color: $color1);
+  }
+
+  .v-textarea-color2 {
+    @include valo-textarea-style($background-color: $color3);
+  }
+
+  .v-textarea-color3 {
+    @include valo-textarea-style($background-color: $color4);
+  }
+
+
+  .v-datefield-color1 {
+    @include valo-datefield-style($background-color: $color1);
+  }
+
+  .v-datefield-color2 {
+    @include valo-datefield-style($background-color: $color3);
+  }
+
+  .v-datefield-color3 {
+    @include valo-datefield-style($background-color: $color4);
+  }
+
+
+  .v-filterselect-color1 {
+    @include valo-combobox-style($background-color: $color1);
+  }
+
+  .v-filterselect-color2 {
+    @include valo-combobox-style($background-color: $color3);
+  }
+
+  .v-filterselect-color3 {
+    @include valo-combobox-style($background-color: $color4);
+  }
+
+
+  $copy: $v-selection-color;
+  $v-selection-color: white;
+  .v-checkbox-color1 {
+    @include valo-checkbox-style($background-color: $color1);
+  }
+
+  .v-checkbox-color2 {
+    @include valo-checkbox-style($background-color: $color2);
+  }
+  $v-selection-color: $copy;
+
+
+  .v-slider-color1 {
+    @include valo-slider-handle-style($background-color: $color1);
+  }
+
+  .v-slider-color2 {
+    @include valo-slider-track-style($background-color: $color3);
+  }
+
+  .v-slider-color3 {
+    @include valo-slider-indicator-style($background-color: #dcdc1e);
+  }
+
+  .v-slider-no-indicator {
+    @include valo-slider-no-indicator;
+  }
+
+
+  .v-panel-caption-color1 {
+    @include valo-panel-caption-style($background-color: $color1);
+  }
+
+  .v-panel-caption-color2 {
+    @include valo-panel-caption-style($background-color: $color3);
+  }
+
+  .v-panel-caption-color3 {
+    @include valo-panel-caption-style($background-color: $color5);
+  }
+
+  // Show splitpanel borders
+  .v-splitpanel-vertical,
+  .v-splitpanel-horizontal {
+    outline: 1px dotted rgba(gray, .2);
+  }
+
+  .v-slider-ticks {
+    @include valo-slider-ticks($tick-count: 5);
+  }
+}
