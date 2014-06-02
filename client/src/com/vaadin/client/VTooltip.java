@@ -234,8 +234,10 @@ public class VTooltip extends VWindowOverlay {
             // already about to close
             return;
         }
-        closeTimer.schedule(getCloseTimeout());
-        closing = true;
+        if (isActuallyVisible()) {
+            closeTimer.schedule(getCloseTimeout());
+            closing = true;
+        }
     }
 
     @Override
@@ -348,8 +350,6 @@ public class VTooltip extends VWindowOverlay {
         /**
          * Handle hide event
          * 
-         * @param event
-         *            Event causing hide
          */
         private void handleHideEvent() {
             hideTooltip();
