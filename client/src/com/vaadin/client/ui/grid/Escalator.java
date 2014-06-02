@@ -1160,8 +1160,60 @@ public class Escalator extends Widget {
             }
         }
 
+        /**
+         * Removes those row elements from the DOM that correspond to the given
+         * range of logical indices. This may be fewer than {@code numberOfRows}
+         * , even zero, if not all the removed rows are actually visible.
+         * <p>
+         * The implementation must call {@link #paintRemoveRow(Element, int)}
+         * for each row that is removed from the DOM.
+         * 
+         * @param index
+         *            the logical index of the first removed row
+         * @param numberOfRows
+         *            number of logical rows to remove
+         */
         protected abstract void paintRemoveRows(final int index,
                 final int numberOfRows);
+
+        /**
+         * Removes a row element from the DOM, invoking
+         * {@link #getEscalatorUpdater()}
+         * {@link EscalatorUpdater#preDetach(Row, Iterable) preDetach} and
+         * {@link EscalatorUpdater#postDetach(Row, Iterable) postDetach} before
+         * and after removing the row, respectively.
+         * <p>
+         * This method must be called for each removed DOM row by any
+         * {@link #paintRemoveRows(int, int)} implementation.
+         * 
+         * @param tr
+         *            the row element to remove.
+         */
+        protected void paintRemoveRow(final Element tr,
+                final int logicalRowIndex) {
+
+            flyweightRow.setup(tr, logicalRowIndex,
+                    columnConfiguration.getCalculatedColumnWidths());
+
+            getEscalatorUpdater().preDetach(flyweightRow,
+                    flyweightRow.getCells());
+
+            for (int c = 0; c < tr.getChildCount(); c++) {
+                // TODO this should be WidgetRenderer's responsibility
+                detachPossibleWidgetFromCell((Element) tr.getChild(c).cast());
+            }
+            tr.removeFromParent();
+
+            getEscalatorUpdater().postDetach(flyweightRow,
+                    flyweightRow.getCells());
+
+            /*
+             * the "assert" guarantees that this code is run only during
+             * development/debugging.
+             */
+            assert flyweightRow.teardown();
+
+        }
 
         private void assertArgumentsAreValidAndWithinRange(final int index,
                 final int numberOfRows) throws IllegalArgumentException,
@@ -1253,8 +1305,6 @@ public class Escalator extends Widget {
                 final Element tr = DOM.createTR();
                 addedRows.add(tr);
                 tr.addClassName(getStylePrimaryName() + "-row");
-                referenceRow = insertAfterReferenceAndUpdateIt(root, tr,
-                        referenceRow);
 
                 for (int col = 0; col < columnConfiguration.getColumnCount(); col++) {
                     final int colWidth = columnConfiguration
@@ -1270,13 +1320,52 @@ public class Escalator extends Widget {
                     }
                 }
 
-                refreshRow(tr, row);
+                referenceRow = paintInsertRow(referenceRow, tr, row);
             }
             reapplyRowWidths();
 
             recalculateSectionHeight();
 
             return addedRows;
+        }
+
+        /**
+         * Inserts a single row into the DOM, invoking
+         * {@link #getEscalatorUpdater()}
+         * {@link EscalatorUpdater#preAttach(Row, Iterable) preAttach} and
+         * {@link EscalatorUpdater#postAttach(Row, Iterable) postAttach} before
+         * and after inserting the row, respectively. The row should have its
+         * cells already inserted.
+         * 
+         * @param referenceRow
+         *            the row after which to insert or null if insert as first
+         * @param tr
+         *            the row to be inserted
+         * @param logicalRowIndex
+         *            the logical index of the inserted row
+         * @return the inserted row to be used as the new reference
+         */
+        protected Node paintInsertRow(Node referenceRow, final Element tr,
+                int logicalRowIndex) {
+            flyweightRow.setup(tr, logicalRowIndex,
+                    columnConfiguration.getCalculatedColumnWidths());
+
+            getEscalatorUpdater().preAttach(flyweightRow,
+                    flyweightRow.getCells());
+
+            referenceRow = insertAfterReferenceAndUpdateIt(root, tr,
+                    referenceRow);
+
+            getEscalatorUpdater().postAttach(flyweightRow,
+                    flyweightRow.getCells());
+            updater.update(flyweightRow, flyweightRow.getCells());
+
+            /*
+             * the "assert" guarantees that this code is run only during
+             * development/debugging.
+             */
+            assert flyweightRow.teardown();
+            return referenceRow;
         }
 
         private Node insertAfterReferenceAndUpdateIt(final Element parent,
@@ -1813,11 +1902,7 @@ public class Escalator extends Widget {
         protected void paintRemoveRows(final int index, final int numberOfRows) {
             for (int i = index; i < index + numberOfRows; i++) {
                 final Element tr = (Element) root.getChild(index);
-                for (int c = 0; c < tr.getChildCount(); c++) {
-                    detachPossibleWidgetFromCell((Element) tr.getChild(c)
-                            .cast());
-                }
-                tr.removeFromParent();
+                paintRemoveRow(tr, index);
             }
             recalculateSectionHeight();
         }
@@ -2632,11 +2717,8 @@ public class Escalator extends Widget {
                     for (int i = 0; i < escalatorRowsToRemove; i++) {
                         final Element tr = visualRowOrder
                                 .remove(removedVisualInside.getStart());
-                        for (int c = 0; c < tr.getChildCount(); c++) {
-                            detachPossibleWidgetFromCell((Element) tr.getChild(
-                                    c).cast());
-                        }
-                        tr.removeFromParent();
+
+                        paintRemoveRow(tr, index);
                         removeRowPosition(tr);
                     }
                     escalatorRowCount -= escalatorRowsToRemove;
