@@ -43,6 +43,7 @@ public class FlyweightCell {
     private final int column;
     private final FlyweightRow row;
 
+    private Element element = null;
     private CellIterator currentIterator = null;
 
     private final Escalator escalator;
@@ -75,16 +76,36 @@ public class FlyweightCell {
      * or a <code>TH</code> element.
      */
     public Element getElement() {
-        return (Element) row.getElement().getChild(column);
+        return element;
     }
 
-    void setup(final CellIterator cellIterator) {
-        currentIterator = cellIterator;
+    /**
+     * Sets the DOM element for this FlyweightCell, either a <code>TD</code> or
+     * a <code>TH</code>. This method should only be called when
+     * {@code getElement() == null}. It is the caller's responsibility to
+     * actually insert the given element to the document when needed.
+     * 
+     * @param element
+     *            the element corresponding to this FlyweightCell
+     */
+    void setElement(Element element) {
+        assert element != null;
+        // When asserts are enabled, teardown() resets the element to null
+        // so this won't fire simply due to cell reuse
+        assert this.element == null : "Cell element can only be set once";
+        this.element = element;
+    }
 
-        final Element e = getElement();
-        e.setPropertyInt(COLSPAN_ATTR, 1);
-        e.getStyle().setWidth(row.getColumnWidth(column), Unit.PX);
-        e.getStyle().clearDisplay();
+    void setup(final CellIterator iterator) {
+        currentIterator = iterator;
+
+        if (iterator.areCellsInitialized()) {
+            final Element e = (Element) row.getElement().getChild(column);
+            e.setPropertyInt(COLSPAN_ATTR, 1);
+            e.getStyle().setWidth(row.getColumnWidth(column), Unit.PX);
+            e.getStyle().clearDisplay();
+            setElement(e);
+        }
     }
 
     /**
@@ -103,6 +124,7 @@ public class FlyweightCell {
      */
     boolean teardown() {
         currentIterator = null;
+        element = null;
         return true;
     }
 

@@ -17,9 +17,9 @@
 package com.vaadin.client.ui.grid;
 
 /**
- * A functional interface that allows client code to define how a certain row in
- * Escalator will be displayed. The contents of an escalator's header, body and
- * footer are rendered by their respective updaters.
+ * An interface that allows client code to define how a certain row in Escalator
+ * will be displayed. The contents of an escalator's header, body and footer are
+ * rendered by their respective updaters.
  * <p>
  * The updater is responsible for internally handling all remote communication,
  * should the displayed data need to be fetched remotely.

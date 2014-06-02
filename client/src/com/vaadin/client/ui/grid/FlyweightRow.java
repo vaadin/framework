@@ -38,11 +38,42 @@ class FlyweightRow implements Row {
     static class CellIterator implements Iterator<FlyweightCell> {
         /** A defensive copy of the cells in the current row. */
         private final ArrayList<FlyweightCell> cells;
+        private final boolean initialized;
         private int cursor = 0;
         private int skipNext = 0;
 
-        public CellIterator(final Collection<FlyweightCell> cells) {
+        /**
+         * Creates a new iterator of initialized flyweight cells. A cell is
+         * initialized if it has a corresponding
+         * {@link FlyweightCell#getElement() DOM element} attached to the row
+         * element.
+         * 
+         * @param cells
+         *            the collection of cells to iterate
+         */
+        public static CellIterator initialized(
+                final Collection<FlyweightCell> cells) {
+            return new CellIterator(cells, true);
+        }
+
+        /**
+         * Creates a new iterator of uninitialized flyweight cells. A cell is
+         * uninitialized if it does not have a corresponding
+         * {@link FlyweightCell#getElement() DOM element} attached to the row
+         * element.
+         * 
+         * @param cells
+         *            the collection of cells to iterate
+         */
+        public static CellIterator uninitialized(
+                final Collection<FlyweightCell> cells) {
+            return new CellIterator(cells, false);
+        }
+
+        private CellIterator(final Collection<FlyweightCell> cells,
+                final boolean initialized) {
             this.cells = new ArrayList<FlyweightCell>(cells);
+            this.initialized = initialized;
         }
 
         @Override
@@ -96,6 +127,10 @@ class FlyweightRow implements Row {
             final int from = Math.min(cursor, cells.size());
             final int to = Math.min(cursor + n, cells.size());
             return cells.subList(from, to);
+        }
+
+        public boolean areCellsInitialized() {
+            return initialized;
         }
     }
 
@@ -180,11 +215,10 @@ class FlyweightRow implements Row {
     }
 
     /**
-     * Get flyweight cells for the client code to render.
+     * Returns flyweight cells for the client code to render.
      * 
-     * @return a list of {@link FlyweightCell FlyweightCells}. They are
-     *         generified into {@link Cell Cells}, because Java's generics
-     *         system isn't expressive enough.
+     * @return an iterable of flyweight cells
+     * 
      * @see #setup(Element, int, int[])
      * @see #teardown()
      */
@@ -193,7 +227,35 @@ class FlyweightRow implements Row {
         return new Iterable<FlyweightCell>() {
             @Override
             public Iterator<FlyweightCell> iterator() {
-                return new CellIterator(cells);
+                return CellIterator.initialized(cells);
+            }
+        };
+    }
+
+    /**
+     * Returns a subsequence of uninitialized flyweight cells. Uninitialized
+     * cells do not have {@link FlyweightCell#getElement() elements} associated.
+     * Note that FlyweightRow does not keep track of whether cells in actuality
+     * have corresponding DOM elements or not; it is the caller's responsibility
+     * to invoke this method with correct parameters.
+     * <p>
+     * Precondition: the range [offset, offset + numberOfCells) must be valid
+     * 
+     * @param offset
+     *            the index of the first cell to return
+     * @param numberOfCells
+     *            the number of cells to return
+     * @return an iterable of flyweight cells
+     */
+    Iterable<FlyweightCell> getUninitializedCells(final int offset,
+            final int numberOfCells) {
+        assertSetup();
+        assert offset >= 0 && offset + numberOfCells <= cells.size() : "Invalid range of cells";
+        return new Iterable<FlyweightCell>() {
+            @Override
+            public Iterator<FlyweightCell> iterator() {
+                return CellIterator.uninitialized(cells.subList(offset, offset
+                        + numberOfCells));
             }
         };
     }

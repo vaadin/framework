@@ -1550,24 +1550,8 @@ public class Escalator extends Widget {
             final NodeList<Node> childNodes = root.getChildNodes();
 
             for (int row = 0; row < childNodes.getLength(); row++) {
-                final int rowHeight = getDefaultRowHeight();
                 final Element tr = getTrByVisualIndex(row);
-
-                Node referenceCell;
-                if (offset != 0) {
-                    referenceCell = tr.getChild(offset - 1);
-                } else {
-                    referenceCell = null;
-                }
-
-                for (int col = offset; col < offset + numberOfColumns; col++) {
-                    final int colWidth = columnConfiguration
-                            .getColumnWidthActual(col);
-                    final Element cellElem = createCellElement(rowHeight,
-                            colWidth);
-                    referenceCell = insertAfterReferenceAndUpdateIt(tr,
-                            cellElem, referenceCell);
-                }
+                paintInsertCells(tr, row, offset, numberOfColumns);
             }
             reapplyRowWidths();
 
@@ -1602,6 +1586,63 @@ public class Escalator extends Widget {
                     && getColumnConfiguration().getColumnCount() > 1) {
                 refreshRows(0, getRowCount());
             }
+        }
+
+        /**
+         * Inserts new cell elements into a single row element, invoking
+         * {@link #getEscalatorUpdater()}
+         * {@link EscalatorUpdater#preAttach(Row, Iterable) preAttach} and
+         * {@link EscalatorUpdater#postAttach(Row, Iterable) postAttach} before
+         * and after inserting the cells, respectively.
+         * <p>
+         * Precondition: The row must be already attached to the DOM and the
+         * FlyweightCell instances corresponding to the new columns added to
+         * {@code flyweightRow}.
+         *
+         * @param tr
+         *            the row in which to insert the cells
+         * @param logicalRowIndex
+         *            the index of the row
+         * @param offset
+         *            the index of the first cell
+         * @param numberOfCells
+         *            the number of cells to insert
+         */
+        private void paintInsertCells(final Element tr, int logicalRowIndex,
+                final int offset, final int numberOfCells) {
+
+            assert Document.get().isOrHasChild(tr) : "The row must be attached to the document";
+
+            flyweightRow.setup(tr, logicalRowIndex,
+                    columnConfiguration.getCalculatedColumnWidths());
+
+            Iterable<FlyweightCell> cells = flyweightRow.getUninitializedCells(
+                    offset, numberOfCells);
+
+            final int rowHeight = getDefaultRowHeight();
+            for (FlyweightCell cell : cells) {
+                final int colWidth = columnConfiguration
+                        .getColumnWidthActual(cell.getColumn());
+                final Element cellElem = createCellElement(rowHeight, colWidth);
+                cell.setElement(cellElem);
+            }
+
+            getEscalatorUpdater().preAttach(flyweightRow, cells);
+
+            Node referenceCell;
+            if (offset != 0) {
+                referenceCell = tr.getChild(offset - 1);
+            } else {
+                referenceCell = null;
+            }
+            for (FlyweightCell cell : cells) {
+                referenceCell = insertAfterReferenceAndUpdateIt(tr,
+                        cell.getElement(), referenceCell);
+            }
+
+            getEscalatorUpdater().postAttach(flyweightRow, cells);
+
+            assert flyweightRow.teardown();
         }
 
         public void setColumnFrozen(int column, boolean frozen) {
