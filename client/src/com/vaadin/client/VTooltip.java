@@ -153,14 +153,60 @@ public class VTooltip extends VWindowOverlay {
                         offsetWidth = getOffsetWidth();
                         offsetHeight = getOffsetHeight();
                     }
+                    int x = getFinalX(offsetWidth);
+                    int y = getFinalY(offsetHeight);
 
-                    int x = tooltipEventMouseX + 10 + Window.getScrollLeft();
-                    int y = tooltipEventMouseY + 10 + Window.getScrollTop();
+                    setPopupPosition(x, y);
+                    sinkEvents(Event.ONMOUSEOVER | Event.ONMOUSEOUT);
+                }
 
+                /**
+                 * Return the final X-coordinate of the tooltip based on cursor
+                 * position, size of the tooltip, size of the page and necessary
+                 * margins.
+                 * 
+                 * @param offsetWidth
+                 * @return The final X-coordinate
+                 */
+                private int getFinalX(int offsetWidth) {
+                    int x = 0;
+                    int widthNeeded = 10 + MARGIN + offsetWidth;
+                    int roomLeft = tooltipEventMouseX;
+                    int roomRight = Window.getClientWidth() - roomLeft;
+                    if (roomRight > widthNeeded) {
+                        x = tooltipEventMouseX + 10 + Window.getScrollLeft();
+                    } else {
+                        x = tooltipEventMouseX + Window.getScrollLeft() - 10
+                                - offsetWidth;
+                    }
                     if (x + offsetWidth + MARGIN - Window.getScrollLeft() > Window
                             .getClientWidth()) {
                         x = Window.getClientWidth() - offsetWidth - MARGIN
                                 + Window.getScrollLeft();
+                    }
+                    return x;
+                }
+
+                /**
+                 * Return the final Y-coordinate of the tooltip based on cursor
+                 * position, size of the tooltip, size of the page and necessary
+                 * margins.
+                 * 
+                 * @param offsetHeight
+                 * @return The final y-coordinate
+                 * 
+                 */
+                private int getFinalY(int offsetHeight) {
+                    int y = 0;
+                    int heightNeeded = 10 + MARGIN + offsetHeight;
+                    int roomAbove = tooltipEventMouseY;
+                    int roomBelow = Window.getClientHeight() - roomAbove;
+
+                    if (roomBelow > heightNeeded) {
+                        y = tooltipEventMouseY + 10 + Window.getScrollTop();
+                    } else {
+                        y = tooltipEventMouseY + Window.getScrollTop() - 10
+                                - offsetHeight;
                     }
 
                     if (y + offsetHeight + MARGIN - Window.getScrollTop() > Window
@@ -173,8 +219,7 @@ public class VTooltip extends VWindowOverlay {
                             y = Window.getScrollTop();
                         }
                     }
-                    setPopupPosition(x, y);
-                    sinkEvents(Event.ONMOUSEOVER | Event.ONMOUSEOUT);
+                    return y;
                 }
             });
         } else {
