@@ -1352,7 +1352,7 @@ public class Escalator extends Widget {
         void refreshRow(final Node tr, final int logicalRowIndex) {
             flyweightRow.setup((Element) tr, logicalRowIndex,
                     columnConfiguration.getCalculatedColumnWidths());
-            updater.updateCells(flyweightRow, flyweightRow.getCells());
+            updater.update(flyweightRow, flyweightRow.getCells());
 
             /*
              * the "assert" guarantees that this code is run only during

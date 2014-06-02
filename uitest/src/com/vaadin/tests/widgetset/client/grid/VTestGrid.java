@@ -15,6 +15,26 @@ import com.vaadin.shared.ui.grid.ScrollDestination;
 
 public class VTestGrid extends Composite {
 
+    private static abstract class TestEscalatorUpdater implements
+            EscalatorUpdater {
+
+        @Override
+        public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
+        }
+
+        @Override
+        public void postAttach(Row row, Iterable<FlyweightCell> attachedCells) {
+        }
+
+        @Override
+        public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
+        }
+
+        @Override
+        public void postDetach(Row row, Iterable<FlyweightCell> detachedCells) {
+        }
+    }
+
     private static class Data {
         private int columnCounter = 0;
         private int rowCounter = 0;
@@ -40,9 +60,9 @@ public class VTestGrid extends Composite {
         }
 
         public EscalatorUpdater createHeaderUpdater() {
-            return new EscalatorUpdater() {
+            return new TestEscalatorUpdater() {
                 @Override
-                public void updateCells(final Row row,
+                public void update(final Row row,
                         final Iterable<FlyweightCell> cellsToUpdate) {
                     for (final FlyweightCell cell : cellsToUpdate) {
                         if (cell.getColumn() % 3 == 0) {
@@ -58,9 +78,9 @@ public class VTestGrid extends Composite {
         }
 
         public EscalatorUpdater createFooterUpdater() {
-            return new EscalatorUpdater() {
+            return new TestEscalatorUpdater() {
                 @Override
-                public void updateCells(final Row row,
+                public void update(final Row row,
                         final Iterable<FlyweightCell> cellsToUpdate) {
                     for (final FlyweightCell cell : cellsToUpdate) {
                         if (cell.getColumn() % 3 == 1) {
@@ -76,7 +96,7 @@ public class VTestGrid extends Composite {
         }
 
         public EscalatorUpdater createBodyUpdater() {
-            return new EscalatorUpdater() {
+            return new TestEscalatorUpdater() {
                 private int i = 0;
 
                 public void renderCell(final FlyweightCell cell) {
@@ -122,7 +142,7 @@ public class VTestGrid extends Composite {
                 }
 
                 @Override
-                public void updateCells(final Row row,
+                public void update(final Row row,
                         final Iterable<FlyweightCell> cellsToUpdate) {
                     for (final FlyweightCell cell : cellsToUpdate) {
                         renderCell(cell);

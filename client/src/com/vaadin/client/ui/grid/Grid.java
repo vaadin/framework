@@ -614,7 +614,7 @@ public class Grid<T> extends Composite implements SubPartAware {
         public abstract Renderer<String> getGroupRenderer(ColumnGroup<T> group);
 
         @Override
-        public void updateCells(Row row, Iterable<FlyweightCell> cellsToUpdate) {
+        public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
 
             int rowIndex;
             if (inverted) {
@@ -672,6 +672,22 @@ public class Grid<T> extends Composite implements SubPartAware {
                     }
                 }
             }
+        }
+
+        @Override
+        public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
+        }
+
+        @Override
+        public void postAttach(Row row, Iterable<FlyweightCell> attachedCells) {
+        }
+
+        @Override
+        public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
+        }
+
+        @Override
+        public void postDetach(Row row, Iterable<FlyweightCell> detachedCells) {
         }
     }
 
@@ -757,8 +773,7 @@ public class Grid<T> extends Composite implements SubPartAware {
         return new EscalatorUpdater() {
 
             @Override
-            public void updateCells(Row row,
-                    Iterable<FlyweightCell> cellsToUpdate) {
+            public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
                 int rowIndex = row.getRow();
                 if (dataSource == null) {
                     setCellsLoading(cellsToUpdate);
@@ -785,6 +800,28 @@ public class Grid<T> extends Composite implements SubPartAware {
                 for (FlyweightCell cell : cellsToUpdate) {
                     cell.getElement().setInnerText("...");
                 }
+            }
+
+            @Override
+            public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
+                // NOOP for now
+            }
+
+            @Override
+            public void postAttach(Row row,
+                    Iterable<FlyweightCell> attachedCells) {
+                // NOOP for now
+            }
+
+            @Override
+            public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
+                // NOOP for now
+            }
+
+            @Override
+            public void postDetach(Row row,
+                    Iterable<FlyweightCell> detachedCells) {
+                // NOOP for now
             }
         };
     }

@@ -32,11 +32,39 @@ package com.vaadin.client.ui.grid;
  * @see Escalator#getFooter()
  */
 public interface EscalatorUpdater {
-    /** An {@link EscalatorUpdater} that doesn't render anything. */
+
+    /**
+     * An {@link EscalatorUpdater} that doesn't render anything.
+     */
     public static final EscalatorUpdater NULL = new EscalatorUpdater() {
         @Override
-        public void updateCells(final Row row,
+        public void update(final Row row,
                 final Iterable<FlyweightCell> cellsToUpdate) {
+            // NOOP
+        }
+
+        @Override
+        public void preAttach(final Row row,
+                final Iterable<FlyweightCell> cellsToAttach) {
+            // NOOP
+
+        }
+
+        @Override
+        public void postAttach(final Row row,
+                final Iterable<FlyweightCell> attachedCells) {
+            // NOOP
+        }
+
+        @Override
+        public void preDetach(final Row row,
+                final Iterable<FlyweightCell> cellsToDetach) {
+            // NOOP
+        }
+
+        @Override
+        public void postDetach(final Row row,
+                final Iterable<FlyweightCell> detachedCells) {
             // NOOP
         }
     };
@@ -54,12 +82,70 @@ public interface EscalatorUpdater {
      * data in a cell.
      * 
      * @param row
-     *            information about the row to update. <em>Note:</em> You should
-     *            not store nor reuse this reference
+     *            Information about the row that is being updated.
+     *            <em>Note:</em> You should not store nor reuse this reference.
      * @param cellsToUpdate
-     *            a collection of cells which need to be updated. <em>Note:</em>
-     *            You should neither store nor reuse the reference to the list,
-     *            nor to the individual cells
+     *            A collection of cells which need to be updated. <em>Note:</em>
+     *            You should neither store nor reuse the reference to the
+     *            iterable, nor to the individual cells.
      */
-    public void updateCells(Row row, Iterable<FlyweightCell> cellsToUpdate);
+    public void update(Row row, Iterable<FlyweightCell> cellsToUpdate);
+
+    /**
+     * Called before attaching new cells to the escalator.
+     * 
+     * @param row
+     *            Information about the row to which the cells will be added.
+     *            <em>Note:</em> You should not store nor reuse this reference.
+     * @param cellsToAttach
+     *            A collection of cells that are about to be attached.
+     *            <em>Note:</em> You should neither store nor reuse the
+     *            reference to the iterable, nor to the individual cells.
+     * 
+     */
+    public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach);
+
+    /**
+     * Called after attaching new cells to the escalator.
+     * 
+     * @param row
+     *            Information about the row to which the cells were added.
+     *            <em>Note:</em> You should not store nor reuse this reference.
+     * @param attachedCells
+     *            A collection of cells that were attached. <em>Note:</em> You
+     *            should neither store nor reuse the reference to the iterable,
+     *            nor to the individual cells.
+     * 
+     */
+    public void postAttach(Row row, Iterable<FlyweightCell> attachedCells);
+
+    /**
+     * Called before detaching cells from the escalator.
+     * 
+     * @param row
+     *            Information about the row from which the cells will be
+     *            removed. <em>Note:</em> You should not store nor reuse this
+     *            reference.
+     * @param cellsToAttach
+     *            A collection of cells that are about to be detached.
+     *            <em>Note:</em> You should neither store nor reuse the
+     *            reference to the iterable, nor to the individual cells.
+     * 
+     */
+    public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach);
+
+    /**
+     * Called after detaching cells from the escalator.
+     * 
+     * @param row
+     *            Information about the row from which the cells were removed.
+     *            <em>Note:</em> You should not store nor reuse this reference.
+     * @param attachedCells
+     *            A collection of cells that were detached. <em>Note:</em> You
+     *            should neither store nor reuse the reference to the iterable,
+     *            nor to the individual cells.
+     * 
+     */
+    public void postDetach(Row row, Iterable<FlyweightCell> detachedCells);
+
 }
