@@ -1,15 +1,12 @@
-$v-splitpanel-splitter-size: round($v-unit-size/5) !default;
-
-
 @mixin valo-splitpanel($primary-stylename : v-splitpanel) {
+  // No need for parent selector
+  @include valo-splitpanel-style($primary-stylename: $primary-stylename);
+}
 
-  // Disable splitter shadow (should most likely be a variable)
-  $copy: $v-shadow-depth;
-  $v-shadow-depth: 0%;
 
-  // Round to even number
-  $v-splitpanel-splitter-size: $v-splitpanel-splitter-size + $v-splitpanel-splitter-size%2;
 
+
+@mixin valo-splitpanel-global ($primary-stylename : v-splitpanel) {
   .#{$primary-stylename}-vertical,
   .#{$primary-stylename}-horizontal {
     overflow: hidden;
@@ -17,58 +14,47 @@ $v-splitpanel-splitter-size: round($v-unit-size/5) !default;
   }
 
   .#{$primary-stylename}-hsplitter {
-    width: $v-splitpanel-splitter-size;
+    z-index: 100;
+    cursor: e-resize;
+    cursor: col-resize;
+  }
+
+  .#{$primary-stylename}-vsplitter {
+    z-index: 100;
+    cursor: s-resize;
+    cursor: row-resize;
+  }
+
+  // Element which acts as the active dragging area
+  .#{$primary-stylename}-hsplitter,
+  .#{$primary-stylename}-vsplitter {
+    &:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    div {
+      width: inherit;
+      height: inherit;
+      overflow: hidden;
+      position: relative;
+    }
   }
 
   .#{$primary-stylename}-hsplitter div,
   .#{$primary-stylename}-vsplitter div {
-    @include valo-button-style;
-    @include box-sizing(border-box);
-    height: auto;
-    padding: 0;
-    border-radius: 0;
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    cursor: s-resize;
-    cursor: row-resize;
-
     &:before {
+      @include box-sizing(border-box);
       content: "";
-      width: $v-unit-size;
-      height: 0;
-      border: 1px solid;
-      $color: $v-button-background-color or $v-background-color;
-      $shade: max($v-bevel-depth, 10%);
-      $border-color1: scale-color($color, $lightness: -$shade, $saturation: -$shade/2);
-      $border-color2: scale-color($color, $lightness: -$shade/2, $saturation: -$shade/4);
-      border-color: $border-color1 $border-color2 $border-color2 $border-color1;
       position: absolute;
-      top: 50%;
-      left: 50%;
-      margin-left: round(-$v-unit-size/2);
-      margin-top: -1px;
-    }
-  }
-
-  .#{$primary-stylename}-vsplitter {
-    height: $v-splitpanel-splitter-size;
-  }
-
-  .#{$primary-stylename}-hsplitter div {
-    cursor: e-resize;
-    cursor: col-resize;
-    $color: $v-button-background-color or $v-background-color;
-    @include valo-gradient($color: $color, $direction: to right);
-
-    &:before {
-      width: 0;
-      height: $v-unit-size;
-      margin-left: -1px;
-      margin-top: round(-$v-unit-size/2);
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
     }
   }
 
@@ -86,7 +72,6 @@ $v-splitpanel-splitter-size: round($v-unit-size/5) !default;
     .#{$primary-stylename}-second-container {
       position: static !important;
       display: inline-block;
-      margin-left: $v-splitpanel-splitter-size; /* Match to the width of the splitter element */
       vertical-align: top;
     }
 
@@ -95,83 +80,138 @@ $v-splitpanel-splitter-size: round($v-unit-size/5) !default;
       vertical-align: top;
     }
   }
-
-  $v-shadow-depth: $copy;
-
 }
 
 
 
 
+@mixin valo-splitpanel-style(
+    $primary-stylename : v-splitpanel,
+    $splitter-size: max(1px, first-number($v-border)),
+    $splitter-active-size: round($v-unit-size/3),
+    $splitter-handle-visible: false,
+    $splitter-shadow: none,
+    $orientation: vertical horizontal
+  ) {
 
-
-@mixin valo-splitpanel-small ($primary-stylename: v-splitpanel, $stylename: small) {
-  .#{$primary-stylename}-vsplitter-#{$stylename},
-  .#{$primary-stylename}-hsplitter-#{$stylename} {
-    div {
-      @include opacity(0);
-      @include transition(opacity 200ms);
-    }
-
-    &:hover div {
-      @include opacity(1);
+  @if contains($orientation, horizontal) {
+    .#{$primary-stylename}-hsplitter {
+      width: $splitter-size;
     }
   }
 
-  .#{$primary-stylename}-vsplitter-#{$stylename} {
-    div {
-      left: 40%;
-      right: 40%;
-      height: $v-splitpanel-splitter-size + 1px;
-      top: round($v-splitpanel-splitter-size/-2);
+  @if contains($orientation, vertical) {
+    .#{$primary-stylename}-vsplitter {
+      height: $splitter-size;
+    }
+  }
 
+  $offset: round(($splitter-active-size - $splitter-size)/-2);
+
+  @if contains($orientation, horizontal) {
+    .#{$primary-stylename}-hsplitter:after {
+      left: $offset;
+      right: $offset;
+    }
+  }
+
+  @if contains($orientation, vertical) {
+    .#{$primary-stylename}-vsplitter:after {
+      top: $offset;
+      bottom: $offset;
+    }
+  }
+
+  @if contains($orientation, horizontal) or contains($orientation, vertical) {
+    .#{$primary-stylename}-hsplitter div,
+    .#{$primary-stylename}-vsplitter div {
       &:before {
-        width: 50%;
-        left: 25%;
-        margin-left: 0;
+        @include valo-button-style($shadow: $splitter-shadow);
+        height: auto;
+        padding: 0;
+        border-radius: 0;
+      }
+    }
+  }
+
+  @if contains($orientation, horizontal) {
+    .#{$primary-stylename}-hsplitter div {
+      &:before {
+        $color: $v-background-color;
+        @include valo-gradient($color: $color, $direction: to right);
+      }
+    }
+  }
+
+  @if $splitter-handle-visible {
+    .#{$primary-stylename}-vsplitter div,
+    .#{$primary-stylename}-hsplitter div {
+      &:after {
+        @include valo-splitpanel-splitter-handle-style;
       }
     }
 
-    &:before {
-      content: "";
-      position: absolute;
-      height: 1px;
+    @if contains($orientation, horizontal) {
+      .#{$primary-stylename}-hsplitter div {
+        &:after {
+          @include valo-splitpanel-splitter-handle-style($horizontal: true, $include-common: false);
+        }
+      }
+    }
+  }
+
+  @if contains($orientation, horizontal) {
+    &.#{$primary-stylename}-horizontal {
+      .#{$primary-stylename}-second-container {
+        margin-left: $splitter-size;
+      }
+    }
+  }
+}
+
+
+
+/*
+@mixin valo-splitpanel-style ($splitter-size: ) {
+  > div > .v-splitpanel-hsplitter {
+    width: ;
+
+    div:after {
+      @include valo-splitpanel-splitter-handle-style($horizontal: true);
+    }
+
+    &:after {
       left: 0;
       right: 0;
-      background: darken($v-background-color, max($v-bevel-depth/2, 10%));
     }
   }
+  .v-splitpanel-horizontal .v-splitpanel-second-container
+}
+*/
 
-  .#{$primary-stylename}-hsplitter-#{$stylename} {
-    div {
-      top: 40%;
-      bottom: 40%;
-      width: $v-splitpanel-splitter-size + 1px;
-      left: round($v-splitpanel-splitter-size/-2);
 
-      &:before {
-        height: 50%;
-        top: 25%;
-        margin-top: 0;
-      }
-    }
 
-    &:before {
-      content: "";
-      position: absolute;
-      width: 1px;
-      top: 0;
-      bottom: 0;
-      background: darken($v-background-color, max($v-bevel-depth/2, 10%));
-    }
+@mixin valo-splitpanel-splitter-handle-style ($horizontal: false, $include-common: true) {
+  @if $include-common {
+    content: "";
+    border: valo-border($strength: 0.6);
+    $border-color: first-color(valo-border($strength: 1.2));
+    border-top-color: $border-color;
+    border-left-color: $border-color;
+    position: absolute;
+    top: 50%;
+    left: 50%;
   }
 
-  .#{$primary-stylename}-vertical .#{$primary-stylename}-second-container-#{$stylename} {
-    margin-top: 1px;
-    position: static !important;
-  }
-
-  .#{$primary-stylename}-horizontal .#{$primary-stylename}-second-container-#{$stylename} {
-    margin-left: 1px;
+  @if $horizontal {
+    width: 0;
+    height: $v-unit-size;
+    margin-left: first-number($v-border)*-1;
+    margin-top: round(-$v-unit-size/2);
+  } @else {
+    width: $v-unit-size;
+    height: 0;
+    margin-left: round(-$v-unit-size/2);
+    margin-top: first-number($v-border)*-1;
   }
 }

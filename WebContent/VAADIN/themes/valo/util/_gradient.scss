@@ -1,31 +1,46 @@
-@mixin valo-gradient($color, $style: $v-gradient-style, $depth: $v-gradient-depth, $fallback: null, $direction: to bottom) {
+@mixin valo-gradient($color: $v-background-color, $gradient: $v-gradient, $fallback: null, $direction: to bottom) {
   @if $color {
-    @if $depth <= 0 {
-      background: $fallback or $color;
-    } @else {
-      $color-stops: valo-gradient-color-stops($color, $style, $depth);
+    @if $gradient {
+      $color-stops: valo-gradient-color-stops($color, $gradient);
       @include linear-gradient($direction, $color-stops, $fallback: $fallback or $color);
+    } @else {
+      background: $fallback or $color;
     }
   }
 }
 
-@function valo-gradient-color-stops($color, $style: $v-gradient-style, $depth: $v-gradient-depth) {
-  @if $depth > 0 {
-    
+@function valo-gradient-color-stops($color, $gradient: $v-gradient) {
+  $style: valo-gradient-style($gradient);
+  $opacity: valo-gradient-opacity($gradient);
+
+  @if $style != none and $opacity > 0 {
     @if $style == v-linear or $style == v-linear-reverse {
-      $start: blend-overlay(transparentize(#fff, 1-$depth/100%), $color);
-      $end: blend-overlay(transparentize(#000, max(0, 1-$depth/100%)), $color);
-      $end: blend-multiply(transparentize(#000, max(0, 1-$depth/200%)), $end);
-      
+      $start: blend-overlay(rgba(#fff, $opacity/100%), $color);
+      $end: blend-overlay(rgba(#000, max(0, $opacity/100%)), $color);
+      $end: blend-multiply(rgba(#000, max(0, $opacity/200%)), $end);
+
       @if $style == v-linear {
         @return $start 2%, $end 98%;
       } @else {
         @return $end 2%, $start 98%;
       }
-    
     }
-
   }
 
   @return $color 0%, $color 100%;
+}
+
+
+@function valo-gradient-style($gradient: $v-gradient) {
+  @if type-of($gradient) != list {
+    @return none;
+  }
+  @return first-string($gradient);
+}
+
+@function valo-gradient-opacity($gradient: $v-gradient) {
+  @if type-of($gradient) != list {
+    @return 0%;
+  }
+  @return first-number($gradient);
 }

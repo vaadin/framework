@@ -56,7 +56,10 @@
 @mixin valo {
   @include valo-common;
   @include valo-components;
-  @include valo-notification;
+
+  @if v-is-included(notification) {
+    @include valo-notification;
+  }
 
   @if $valo-include-common-stylenames {
   	@include valo-common-stylenames;

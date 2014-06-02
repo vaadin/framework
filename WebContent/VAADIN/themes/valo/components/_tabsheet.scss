@@ -11,11 +11,11 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
   .#{$primary-stylename} .v-disabled .#{$primary-stylename}-caption-close {
     display: none;
   }
-  
+
   .#{$primary-stylename}-content {
     position: relative;
   }
-  
+
 }
 
 
@@ -40,7 +40,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
   .#{$primary-stylename}-tabcontainer {
     position: relative;
     line-height: $v-unit-size;
-    @include user-select(none);;
+    @include user-select(none);
 
     table,
     tbody,
@@ -59,7 +59,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     &:before {
       content: "";
       position: absolute;
-      height: $v-border-width;
+      height: max(1px, first-number($v-border));
       background: $border-color;
       bottom: 0;
       left: 0;
@@ -83,6 +83,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
       line-height: $v-unit-size;
       font-size: $v-font-size;
       font-weight: $v-font-weight;
+      color: valo-font-color($v-app-background-color, 0.6);
       width: auto !important;
 
       @if $v-animations-enabled {
@@ -98,7 +99,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
       }
 
       &:hover {
-        color: valo-selection-color();
+        color: $v-selection-color;
       }
 
       &.v-disabled {
@@ -119,14 +120,14 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     outline: none;
 
     .v-caption {
-      color: valo-selection-color();
-      border-bottom: $v-border-width solid valo-selection-color();
+      color: $v-selection-color;
+      border-bottom: max(1px, first-number($v-border)) solid $v-selection-color;
     }
   }
 
   .#{$primary-stylename}-tabitem-selected .v-caption.v-caption {
-    border-bottom: $v-border-width*2 solid valo-selection-color();
-    color: valo-selection-color();
+    border-bottom: max(1px, first-number($v-border))*2 solid $v-selection-color;
+    color: $v-selection-color;
   }
 
   .#{$primary-stylename}-caption-close {
@@ -139,13 +140,13 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     border-radius: round($v-border-radius/2);
 
     &:hover {
-      background: valo-selection-color();
-      color: valo-font-color(valo-selection-color());
+      background: $v-selection-color;
+      color: valo-font-color($v-selection-color);
     }
 
     &:active {
-      background: darken(valo-selection-color(), 5%);
-      color: valo-font-color(valo-selection-color());
+      background: darken($v-selection-color, 5%);
+      color: valo-font-color($v-selection-color);
     }
   }
 
@@ -160,7 +161,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
     &:after {
       content: "";
-      height: $v-border-width;
+      height: first-number($v-border);
       position: absolute;
       bottom: 0;
       left: 0;
@@ -195,12 +196,12 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
       &:hover {
         @include opacity(1);
-        color: valo-selection-color();
+        color: $v-selection-color;
       }
 
       &:active {
         @include opacity(.7);
-        color: valo-selection-color();
+        color: $v-selection-color;
       }
 
       &::-moz-focus-inner {
@@ -226,7 +227,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     [class*="disabled"] {
       cursor: default;
       color: inherit !important;
-      @include opacity(.1, true);
+      @include opacity(.1 !important);
     }
   }
 
@@ -309,17 +310,17 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 }
 
 @mixin valo-tabsheet-only-selected-closable ($primary-stylename: v-tabsheet) {
-  .#{$primary-stylename}-caption-close {
+  > .#{$primary-stylename}-tabcontainer .#{$primary-stylename}-caption-close {
     visibility: hidden;
   }
 
-  .#{$primary-stylename}-tabitem-selected .#{$primary-stylename}-caption-close {
+  > .#{$primary-stylename}-tabcontainer .#{$primary-stylename}-tabitem-selected .#{$primary-stylename}-caption-close {
     visibility: visible;
   }
 }
 
 @mixin valo-tabsheet-padded-tabbar ($primary-stylename: v-tabsheet) {
-  .#{$primary-stylename}-tabs {
+  > .#{$primary-stylename}-tabcontainer .#{$primary-stylename}-tabs {
     padding: 0 round($v-unit-size/4);
   }
 }

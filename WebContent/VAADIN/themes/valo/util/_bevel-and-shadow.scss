@@ -1,63 +1,230 @@
-@function valo-bevel ($color, $bevel-style: $v-bevel-style, $bevel-depth: $v-bevel-depth, 
-                        $gradient-style: $v-gradient-style, $gradient-depth: $v-gradient-depth) {
-  
-  @if $bevel-depth == 0% or $bevel-style == none {
-    @return null;
+@function valo-border($border: $v-border, $color: $v-background-color, $context: null, $strength: 1) {
+  @if type-of($border) != list {
+    @return $border;
   }
-  
-  $color-stops: valo-gradient-color-stops($color, $gradient-style, $gradient-depth);
 
-  $top-color: first(first($color-stops));
-  $bottom-color: first(last($color-stops));
+  @if $context {
+    @if color-luminance($color) > color-luminance($context) {
+      $color: $context;
+    }
+  }
 
-  $top-color: blend-lighten(adjust-color($top-color, $lightness: $bevel-depth/4, $saturation: -$bevel-depth), scale-color($top-color, $lightness: $bevel-depth/4));
-  $bottom-color: blend-darken(rgba(scale-color($bottom-color, $lightness: max(-30%, -$bevel-depth/3), $saturation: -$bevel-depth), $bevel-depth/100%), $bottom-color);
-  
-  @return valo-replace-hilite-and-shade($bevel-style, $top-color, $bottom-color);
+  $ret: null;
+  @each $part in $border {
+    @if $part == v-tint or $part == v-shade or $part == v-tone {
+      $part: $part 1;
+    }
+    @if type-of($part) == list {
+      $adjust-type: first-string($part);
+      $adjust-amount: first-number($part);
+
+      $tint: blend-screen(white($v-bevel-depth/100%*$adjust-amount*$strength), $color);
+      $shade: blend-linearburn(black($v-bevel-depth/100%*$adjust-amount*$strength), $color);
+
+      @if $adjust-type == v-tone {
+        @if is-dark-color($color) {
+          $color: $tint;
+        } @else {
+          $color: $shade;
+        }
+      } @else if $adjust-type == v-tint {
+        $color: $tint;
+      } @else if $adjust-type == v-shade {
+        $color: $shade;
+      }
+
+      $ret: $ret $color;
+    } @else {
+      $ret: $ret $part;
+    }
+  }
+  @return $ret;
+}
+
+
+@mixin valo-border-with-gradient($border: $v-border, $color: $v-background-color, $gradient: $v-gradient) {
+  border: valo-border($border, $color);
+
+  // Adjust border-colors for gradient
+  @if $gradient {
+    $color-stops: valo-gradient-color-stops($color, $gradient);
+    $top: first(first($color-stops));
+    $bottom: first(last($color-stops));
+    border-top-color: first-color(valo-border($border, $top));
+    border-bottom-color: first-color(valo-border($border, $bottom));
+  }
 }
 
 
 
-@function valo-shadow ($shadow-style: null, $shadow-depth: null) {
-  $shadow-style: $shadow-style or $v-shadow-style;
-  $shadow-depth: $shadow-depth or $v-shadow-depth;
 
-  @if $shadow-depth == 0% or $shadow-style == none {
-    @return null;
-  }
+@function valo-bevel-and-shadow ($bevel: null, $bevel-depth: $v-bevel-depth, $shadow: null, $shadow-opacity: $v-shadow-opacity, $background-color: $v-background-color, $gradient: null, $include-focus: false) {
+  $box-shadow: null;
 
-  @return valo-replace-hilite-and-shade($shadow-style, rgba(#fff, $shadow-depth/100%), rgba(#000, $shadow-depth/100%));
-}
-
-
-
-@function valo-replace-hilite-and-shade($shadow-list, $hilite, $shade) {
-  @if $shadow-list == none {
-    @return null;
-  }
-
-  @if type-of(last($shadow-list)) == color {
-    @return $shadow-list;
-  }
-
-  // If the shadow-list only contains one shadow
-  // (we can't use the recursive replace function because that will mess up the list delimeters)
-  @if last($shadow-list) == v-hilite {
-    @return replace($shadow-list, v-hilite, $hilite);
-  } @else if last($shadow-list) == v-shade {
-    @return replace($shadow-list, v-shade, $shade);
-  }
-  
-  // If there are multiple shadows in a list, recurse and separate lists with a comma
-  $new: null;
-  @each $part in $shadow-list {
-    @if type-of($part) == list and length($part) > 0 {
-      $part: valo-replace-hilite-and-shade($part, $hilite, $shade);
-      @if $part {
-        $new: $new, $part;
+  @if $bevel {
+    @if list-of-lists($bevel) {
+      @each $b in $bevel {
+        $this: valo-bevel-and-shadow($bevel: $b, $shadow: null, $background-color: $background-color, $gradient: $gradient);
+        @if $this {
+          @if length($box-shadow) > 0 {
+            $box-shadow: $box-shadow, $this;
+          } @else {
+            $box-shadow: $this;
+          }
+        }
+      }
+    } @else if $bevel and $bevel != none {
+      $this: valo-replace-tones($bevel, $background-color, $gradient);
+      @if $this {
+        @if length($box-shadow) > 0 {
+          $box-shadow: $box-shadow, $this;
+        } @else {
+          $box-shadow: $this;
+        }
       }
     }
   }
 
-  @return $new;
+  @if $shadow {
+    @if list-of-lists($shadow) {
+      @each $s in $shadow {
+        $this: valo-bevel-and-shadow($bevel: null, $shadow: $s, $background-color: null, $gradient: null);
+        @if $this {
+          @if length($box-shadow) > 0 {
+            $box-shadow: $box-shadow, $this;
+          } @else {
+            $box-shadow: $this;
+          }
+        }
+      }
+    } @else {
+      $this: valo-replace-shadow($shadow);
+      @if $this {
+        @if length($box-shadow) > 0 {
+          $box-shadow: $box-shadow, $this;
+        } @else {
+          $box-shadow: $this;
+        }
+      }
+    }
+  }
+
+  @if $include-focus and type-of($v-focus-style) == list {
+    $box-shadow: $v-focus-style, $box-shadow;
+  }
+
+  @return $box-shadow;
+}
+
+
+
+@function valo-replace-tones($list, $tint-color, $gradient: null, $shade-color: null) {
+  $shade-color: $shade-color or $tint-color;
+  $ret: ();
+
+  @each $part in $list {
+    @if $part == v-tint or $part == v-shade or $part == v-tone {
+      $part: $part 1;
+    }
+    @if type-of($part) == list {
+      $adjust-type: first-string($part);
+      $adjust-amount: first-number($part);
+
+      $top-color: $tint-color;
+      $bottom-color: $shade-color;
+
+      @if $gradient {
+        $color-stops: valo-gradient-color-stops($tint-color, $gradient);
+        $top-color: first(first($color-stops));
+        $bottom-color: first(last($color-stops));
+      }
+
+      $tint: blend-lighten(adjust-color($top-color, $lightness: $v-bevel-depth/4*$adjust-amount, $saturation: -$v-bevel-depth/2), scale-color($top-color, $lightness: $v-bevel-depth/4*$adjust-amount));
+      $shade: blend-darken(rgba(scale-color($bottom-color, $lightness: max(-30%, -$v-bevel-depth/3*$adjust-amount), $saturation: -$v-bevel-depth/2), $v-bevel-depth/100%), $bottom-color);
+
+      $color: null;
+      @if $adjust-type == v-tone {
+        @if is-dark-color($tint-color) {
+          $color: $tint;
+        } @else {
+          $color: $shade;
+        }
+      } @else if $adjust-type == v-tint {
+        $color: $tint;
+      } @else if $adjust-type == v-shade {
+        $color: $shade;
+      }
+
+      $ret: join($ret, $color);
+
+    } @else {
+      $ret: join($ret, $part);
+    }
+  }
+  
+  @return $ret;
+}
+
+
+@function valo-replace-shadow ($shadow) {
+  $ret: ();
+  @each $part in $shadow {
+    @if $part == v-tint or $part == v-shade {
+      $part: $part 1;
+    }
+    @if type-of($part) == list {
+      $adjust-type: first-string($part);
+      $adjust-amount: first-number($part);
+
+      $tint: rgba(#fff, $v-shadow-opacity/100% * $adjust-amount);
+      $shade: rgba(#000, $v-shadow-opacity/100% * $adjust-amount);
+
+      $color: null;
+      @if $adjust-type == v-tint {
+        $color: $tint;
+      } @else if $adjust-type == v-shade {
+        $color: $shade;
+      }
+
+      $ret: join($ret, $color);
+
+    } @else {
+      $ret: join($ret, $part);
+    }
+  }
+  @return $ret;
+}
+
+
+@function valo-text-shadow($font-color: $v-font-color, $background-color: $v-background-color, $bevel: $v-bevel, $offset: 1px) {
+  @if type-of($bevel) != list or $v-bevel-depth == 0 {
+    @return null;
+  }
+
+  $needle: null;
+  @if color-luminance($font-color) < color-luminance($background-color) {
+    // Text darker than bg, light shadow. Look for tint
+    $needle: v-tint;
+  } @else {
+    // Text lighter than bg, dark shadow. Look for shade
+    $needle: v-shade;
+  }
+
+  // Use the first match from the bevel list
+  @while list-of-lists($bevel) {
+    $bevel: first($bevel);
+  }
+
+  // Remove possible 'inset'
+  $bevel: remove($bevel, inset);
+
+  $color: $background-color;
+  @each $b in $bevel {
+    @if type-of($b) == list {
+      $strength: first-number($b);
+      $color: if($needle==v-tint, rgba(#fff, $v-shadow-opacity/100%*$strength), rgba(#000, $v-shadow-opacity/100%*$strength));
+    }
+  }
+
+  @return 0 if($needle==v-tint, $offset, $offset*-1) 0 $color;
 }

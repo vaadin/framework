@@ -43,6 +43,14 @@
 
 
 
+
+
+$v-loading-indicator-color: valo-focus-color() !default;
+$v-loading-indicator-bar-height: ceil($v-unit-size/10) !default;
+$v-loading-indicator-bar-height--wait: ceil($v-unit-size/6) !default;
+
+
+
 @include keyframes(v-progress-start) {
   0% { width: 0%; }
   100% { width: 50%; }
@@ -54,8 +62,9 @@
 }
 
 @include keyframes(v-progress-wait) {
-  0% { width: 90%; }
-  100% { width: 96%; }
+  0% { width: 90%; height: $v-loading-indicator-bar-height; }
+  3% { width: 91%; height: $v-loading-indicator-bar-height--wait; }
+  100% { width: 96%; height: $v-loading-indicator-bar-height--wait; }
 }
 
 @include keyframes(v-progress-wait-pulse) {
@@ -65,11 +74,9 @@
 }
 
 
-$v-loading-indicator-color: valo-focus-color() !default;
-$v-loading-indicator-bar-height: ceil($v-unit-size/7) !default;
 
 @mixin valo-loading-bar {
-  
+
   .v-loading-indicator {
     position: fixed !important;
     z-index: 99999;
@@ -82,11 +89,11 @@ $v-loading-indicator-bar-height: ceil($v-unit-size/7) !default;
     background-color: $v-loading-indicator-color;
     //@include linear-gradient(to right, rgba($v-loading-indicator-color,0) 0%, $v-loading-indicator-color 100%);
     pointer-events: none;
-    
+
     @include transition(none);
     @include animation(v-progress-start 1000ms 200ms both);
     //@include animation-fill-mode(forwards);
-    
+
     &[style*="none"] {
       // Chrome skips the transitions because it thinks the element is display: none;
       display: block !important;
@@ -96,7 +103,7 @@ $v-loading-indicator-bar-height: ceil($v-unit-size/7) !default;
       @include transition(opacity 500ms 300ms, width 300ms);
     }
   }
-  
+
   .v-loading-indicator-delay {
     width: 90%;
     .v-ff & {
@@ -104,7 +111,7 @@ $v-loading-indicator-bar-height: ceil($v-unit-size/7) !default;
     }
     @include animation(v-progress-delay 3.8s forwards);
   }
-  
+
   .v-loading-indicator-wait {
     width: 96%;
     .v-ff & {
@@ -112,5 +119,5 @@ $v-loading-indicator-bar-height: ceil($v-unit-size/7) !default;
     }
     @include animation(v-progress-wait 5s forwards, v-progress-wait-pulse 1s 4s infinite backwards);
   }
-  
+
 }

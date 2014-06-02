@@ -4,13 +4,13 @@
 @import "../util/color";
 
 
-// List of components to include in the theme compilation. The list can be modified to make 
+// List of components to include in the theme compilation. The list can be modified to make
 // the compiled theme smaller by removing unused components from the list.
 // @variable v-included-components
 // @usage
 // // Remove the Calendar component styles from the output
 // $v-included-components: remove($v-included-components, calendar);
-$v-included-components: 
+$v-included-components:
     absolutelayout,
     accordion,
     button,
@@ -29,15 +29,15 @@ $v-included-components:
     gridlayout,
     label,
     link,
-    loginform,
     menubar,
     nativebutton,
     nativeselect,
+    notification,
     optiongroup,
     orderedlayout,
     panel,
     popupview,
-    progressindicator,
+    progressbar,
     slider,
     splitpanel,
     table,
@@ -52,7 +52,7 @@ $v-included-components:
     window !default;
 
 
-// Checks if a given component is included in the compilation. Used by the collection mixins that 
+// Checks if a given component is included in the compilation. Used by the collection mixins that
 // include all components, like valo-components and valo-components.
 // @mixin v-is-included
 // @param     $component-name {String} the name of the component to check
@@ -66,66 +66,67 @@ $v-included-components:
 // A static text that is shown while the application JavaScript is loaded and started
 // @variable    v-app-loading-text
 // @default     ""
-$v-app-loading-text: "" !default;
+$v-app-loading-text               : ""                                          !default;
 
 
 // Base line height used for all widgets
 // @variable     v-line-height
 // @default     1.55 !default
-$v-line-height: 1.55 !default;
+$v-line-height                    : 1.55                                        !default;
 
 
-$v-background-color:        hsl(210, 0%, 98%)               !default;
+$v-background-color               : hsl(210, 0%, 98%)                           !default;
+$v-app-background-color           : $v-background-color                         !default;
 
-$v-font-size:                   16px                            !default; // Should be specified in pixels
-$v-font-weight:                 300                             !default; // Must be specified as a numeric value (i.e. not 'normal' or 'bold')
-$v-font-color:                  valo-font-color($v-background-color) !default;
-$v-font-family:                 "Open Sans", sans-serif         !default;
+$v-font-size                      : 16px                                        !default; // Should be specified in pixels
+$v-font-weight                    : 300                                         !default; // Must be specified as a numeric value (i.e. not 'normal' or 'bold')
+$v-font-color                     : valo-font-color($v-app-background-color)    !default;
+$v-font-family                    : "Open Sans", sans-serif                     !default;
 
-$v-caption-font-size:           round($v-font-size * 0.9)       !default; // Should be a pixel value
-$v-caption-font-weight:         max(400, $v-font-weight)        !default;
+$v-caption-font-size              : round($v-font-size * 0.9)                   !default; // Should be a pixel value
+$v-caption-font-weight            : max(400, $v-font-weight)                    !default;
 
-$v-unit-size:                   round(2.3 * $v-font-size)       !default; // Must be specified in pixels (suitable range 18-50)
+$v-unit-size                      : round(2.3 * $v-font-size)                   !default; // Must be specified in pixels (suitable range 18-50)
 
-$v-layout-margin-top:           round($v-unit-size)             !default;
-$v-layout-margin-right:         round($v-unit-size)             !default;
-$v-layout-margin-bottom:        round($v-unit-size)             !default;
-$v-layout-margin-left:          round($v-unit-size)             !default;
+$v-layout-margin-top              : round($v-unit-size)                         !default;
+$v-layout-margin-right            : round($v-unit-size)                         !default;
+$v-layout-margin-bottom           : round($v-unit-size)                         !default;
+$v-layout-margin-left             : round($v-unit-size)                         !default;
 
-$v-layout-spacing-vertical:     round($v-unit-size/3)           !default;
-$v-layout-spacing-horizontal:   round($v-unit-size/3)           !default;
+$v-layout-spacing-vertical        : round($v-unit-size/3)                       !default;
+$v-layout-spacing-horizontal      : round($v-unit-size/3)                       !default;
 
-$v-border-width:                1px                             !default; // Must be specified in pixels
-$v-border-radius:               4px                             !default; // Must be specified in pixels
+$v-border                         : 1px solid (v-shade 0.7)                     !default; // Size must be specified in pixels
+$v-border-radius                  : 4px                                         !default; // Must be specified in pixels
 
-$v-gradient-style:              v-linear                        !default;
-$v-gradient-depth:              8%                              !default;
+$v-gradient                       : v-linear 8%                                 !default;
 
-$v-bevel-style:                 inset 0 1px 0 v-hilite, inset 0 -1px 0 v-shade !default;
-$v-bevel-depth:                 25%                             !default;
+$v-bevel                          : inset 0 1px 0 v-tint, inset 0 -1px 0 v-shade !default;
+$v-bevel-depth                    : 25%                                         !default;
 
-$v-shadow-style:                0 2px 3px v-shade               !default;
-$v-shadow-depth:                5%                              !default;
+$v-shadow                         : 0 2px 3px v-shade                           !default;
+$v-shadow-opacity                 : 5%                                          !default;
 
-$v-focus-style:                 0 0 0 2px v-focus-color         !default;
-$v-focus-color:                 null                            !default;
+$v-focus-color                    : null                                        !default;
+$v-focus-style                    : 0 0 0 2px rgba(valo-focus-color(), .5)      !default;
+$v-focus-color                    : valo-focus-color()                          !default;
 
-$v-animations-enabled:          true                            !default;
-$v-hover-styles-enabled:        true                            !default;
+$v-animations-enabled             : true                                        !default;
+$v-hover-styles-enabled           : true                                        !default;
 
-$v-disabled-opacity:            0.7                             !default;
+$v-disabled-opacity               : 0.5                                         !default;
 
-$v-selection-color:             null                            !default;
+$v-selection-color                : valo-focus-color()                          !default;
 
-$v-default-field-width:         $v-unit-size * 5                !default;
+$v-default-field-width            : $v-unit-size * 5                            !default;
 
-$v-error-indicator-color:       #ed473b                         !default;
-$v-required-field-indicator-color: $v-error-indicator-color     !default;
-
-
+$v-error-indicator-color          : #ed473b                                     !default;
+$v-required-field-indicator-color : $v-error-indicator-color                    !default;
 
 
-$valo-include-common-stylenames: true                         !default;
+
+
+$valo-include-common-stylenames   : true                                        !default;
 
 
 

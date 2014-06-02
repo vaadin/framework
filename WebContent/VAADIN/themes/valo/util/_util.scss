@@ -1,5 +1,5 @@
 // Align element vertically inside
-@mixin vertical-align-guide ($to-align: (), $align: middle, $pseudo-element: after) {
+@mixin valo-vertical-align-guide ($to-align: (), $align: middle, $pseudo-element: after) {
   &:#{$pseudo-element} {
     content: "";
     display: inline-block;
@@ -7,7 +7,7 @@
     height: 100%;
     vertical-align: middle;
   }
-  
+
   @if length($to-align) > 0 {
     @each $selector in $to-align {
       & > #{unquote($selector)} {
@@ -18,28 +18,10 @@
 }
 
 
-// Calculates the (approximated) square root for a given number
-@function sqrt($number) {
-  $guess: rand();
-  $root: 4; // Academic guess, a.k.a random number
-  @for $i from 1 through 10 {
-    $root: $root - ($root*$root - $number) / (2 * $root);
-  }
-  @return $root;
-}
-
-
-
-
-@mixin valo-round {
-  border-radius: 50%;
-}
-
-
-
 
 @mixin valo-tappable {
   @include user-select(none);
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-touch-callout: none;
+  cursor: pointer;
 }

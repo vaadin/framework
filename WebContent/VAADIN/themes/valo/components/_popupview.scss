@@ -1,3 +1,9 @@
 @mixin valo-popupview ($primary-stylename: v-popupview) {
-  
+  .#{$primary-stylename}-popup {
+    @include valo-overlay-style;
+
+    .popupContent {
+      @include valo-panel-adjust-content-margins;
+    }
+  }
 }

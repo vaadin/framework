@@ -1,10 +1,10 @@
 @mixin valo-checkbox ($primary-stylename: v-checkbox) {
-  
+
   .#{$primary-stylename},
   .v-radiobutton {
-    @include valo-checkbox-style;   
+    @include valo-checkbox-style;
   }
-  
+
 }
 
 
@@ -14,11 +14,13 @@
 }
 
 
-@mixin valo-checkbox-style ($background-color: $v-button-background-color, $unit-size: $v-unit-size) {
-  $background-color: $background-color or $v-background-color;
-  
+@mixin valo-checkbox-style ($background-color: $v-background-color, $size: $v-unit-size, $selection-color: $v-selection-color) {
+
+  // So that we can use the same 'unit-size' for all component sizes
+  $size: $size/2;
+
   position: relative;
-  line-height: round($unit-size/2);
+  line-height: round($size);
   white-space: nowrap;
 
   &.v-has-width label {
@@ -26,13 +28,13 @@
   }
 
   :root & {
-    padding-left: round($unit-size/1.5);
+    padding-left: round($size*1.33);
 
     label {
       @include valo-tappable;
     }
   }
-  
+
   :root & > input {
     position: absolute;
     clip: rect(0,0,0,0);
@@ -42,8 +44,8 @@
     margin: 0;
 
     &:focus ~ label:before {
-      @include valo-button-focus-style($background-color: $background-color, $border-fallback: null);
-      box-shadow: valo-button-box-shadow($background-color), valo-focus-box-shadow();
+      @include valo-button-focus-style($background-color: $background-color, $border-fallback: null, $include-box-shadow: false);
+      box-shadow: valo-bevel-and-shadow($background-color: $background-color, $bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient, $include-focus: true);
     }
 
     & ~ label:before,
@@ -51,20 +53,20 @@
       content: "";
       display: inline-block;
       @include box-sizing(border-box);
-      width: round($unit-size/2);
-      height: round($unit-size/2);
+      width: round($size);
+      height: round($size);
       position: absolute;
       top: 0;
       left: 0;
-      border-radius: min(round($unit-size/6), $v-border-radius);
-      font-size: round($v-font-size * 0.8 * ($unit-size/$v-unit-size));
+      border-radius: min(round($size/3), $v-border-radius);
+      font-size: round($v-font-size * 0.8 * ($size*2/$v-unit-size));
       text-align: center;
     }
-    
+
     & ~ label:before {
-      @include valo-button-style($background-color: $background-color, $unit-size: $unit-size);
+      @include valo-button-style($background-color: $background-color, $unit-size: $size, $border-radius: min(round($size/3), $v-border-radius));
       padding: 0;
-      height: round($unit-size/2);
+      height: round($size);
     }
 
     & ~ label:after {
@@ -74,16 +76,22 @@
         @include transition(color 100ms);
       }
     }
-    
+
     &:active ~ label:after {
       @include valo-button-active-style($background-color: $background-color);
     }
-    
+
     &:checked ~ label:after {
-      color: valo-selection-color($context: $background-color);
+      color: $selection-color;
     }
 
     &[disabled] {
+      ~ label,
+      ~ label .v-icon,
+      ~ .v-icon {
+        cursor: default;
+      }
+
       ~ label:before,
       ~ label:after {
         @include opacity($v-disabled-opacity);
@@ -95,11 +103,12 @@
     }
 
   }
-    
+
   & > .v-icon,
   & > label .v-icon  {
-    margin: 0 round($unit-size/6) 0 round($unit-size/12);
+    margin: 0 round($size/3) 0 round($size/6);
     min-width: 1em;
+    cursor: pointer;
   }
 
 }

@@ -1,11 +1,13 @@
-$v-accordion-content-shadow-style: join(inset, $v-shadow-style) !default;
-$v-accordion-content-shadow-depth: $v-shadow-depth/2 !default;
+$v-accordion-content-shadow: join(inset, $v-shadow) !default;
+$v-accordion-content-shadow-opacity: $v-shadow-opacity/2 !default;
 
 
 @mixin valo-accordion ($primary-stylename: v-accordion) {
   .#{$primary-stylename} {
     @include valo-panel-style;
-    @include valo-gradient($color: $v-background-color, $depth: $v-gradient-depth/2);
+    $grad-style: valo-gradient-style($v-gradient);
+    $grad-opacity: valo-gradient-opacity($v-gradient);
+    @include valo-gradient($color: $v-background-color, $gradient: ($grad-style $grad-opacity/2));
     overflow: hidden;
   }
 
@@ -14,9 +16,13 @@ $v-accordion-content-shadow-depth: $v-shadow-depth/2 !default;
     overflow: hidden;
 
     @if $v-border-radius > 0 {
-      $_br: $v-border-radius - $v-border-width;
+      $_br: $v-border-radius - first-number($v-border);
       &:first-child {
         border-radius: $_br $_br 0 0;
+
+        .#{$primary-stylename}-item-caption {
+          border-radius: inherit;
+        }
       }
       &:last-child {
         border-radius: 0 0 $_br $_br;
@@ -26,9 +32,10 @@ $v-accordion-content-shadow-depth: $v-shadow-depth/2 !default;
 
   .#{$primary-stylename}-item-caption .v-caption {
     @include valo-panel-caption-style;
+    border-radius: inherit;
     display: block;
     background: transparent;
-    border-bottom-color: valo-panel-border-color($background-color: valo-panel-background-color());
+    border-bottom-color: first-color(valo-border($color: $v-panel-background-color));
     cursor: pointer;
     @include user-select(none);;
 
@@ -63,13 +70,13 @@ $v-accordion-content-shadow-depth: $v-shadow-depth/2 !default;
     width: 100%;
     bottom: 0;
     right: 0;
-    box-shadow: valo-shadow($shadow-style: $v-accordion-content-shadow-style, $shadow-depth: $v-accordion-content-shadow-depth);
-    background-color: valo-panel-background-color();
+    box-shadow: valo-bevel-and-shadow($shadow: $v-accordion-content-shadow, $shadow-opacity: $v-accordion-content-shadow-opacity);
+    background-color: $v-panel-background-color;
     @include box-sizing(border-box);
     @include valo-panel-adjust-content-margins;
   }
 
   .#{$primary-stylename}-item-open + .#{$primary-stylename}-item {
-    border-top: $v-panel-border-width solid valo-panel-border-color($background-color: valo-panel-background-color());
+    border-top: valo-border($color: $v-panel-background-color, $strength: 0.7);
   }
 }

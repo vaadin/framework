@@ -1,14 +1,10 @@
 @mixin valo-twincolselect ($primary-stylename: v-select-twincol) {
-  
+
   .#{$primary-stylename} {
     white-space: normal;
-    
+
     select {
       @include valo-nativeselect-select-style;
-    }
-
-    &:not(.v-has-width) {
-      width: auto !important;
     }
 
     .v-textfield,
@@ -26,7 +22,7 @@
   .#{$primary-stylename}-caption-right {
     @include valo-caption-style;
   }
-  
+
   .#{$primary-stylename}-buttons {
     white-space: nowrap;
     display: inline-block;
@@ -39,7 +35,7 @@
       position: absolute;
       left: round($v-unit-size/4);
       right: round($v-unit-size/4);
-      top: $v-unit-size - $v-button-border-width;
+      top: $v-unit-size - first-number($v-border);
       padding: 0;
       text-align: center;
 
@@ -56,13 +52,13 @@
       z-index: 1;
     }
 
-    @if $v-button-border-radius > 0 {
+    @if $v-border-radius > 0 {
       .v-button:first-child {
-        border-radius: $v-button-border-radius $v-button-border-radius 0 0;
+        border-radius: $v-border-radius $v-border-radius 0 0;
       }
 
       .v-button:last-child {
-        border-radius: 0 0 $v-button-border-radius $v-button-border-radius;
+        border-radius: 0 0 $v-border-radius $v-border-radius;
       }
     }
 
@@ -74,7 +70,7 @@
       @include valo-twincolselect-add-icon-style;
     }
   }
-  
+
 }
 
 

@@ -1,5 +1,5 @@
 @mixin valo-textarea ($primary-stylename: v-textarea) {
-  
+
   .#{$primary-stylename} {
     @include valo-textarea-style;
     width: $v-default-field-width;
@@ -9,21 +9,45 @@
     @include valo-textfield-readonly-style;
   }
 
+  .#{$primary-stylename}-error {
+    @include valo-textfield-error-style;
+  }
+
 }
 
 
-@mixin valo-textarea-style ($bevel-style: $v-textfield-bevel-style, $bevel-depth: $v-textfield-bevel-depth, 
-                              $shadow-style: $v-textfield-shadow-style, $shadow-depth: $v-textfield-shadow-depth,
-                              $unit-size: $v-textfield-unit-size, $border-radius: $v-textfield-border-radius,
-                              $background-color: $v-textfield-background-color) {
+@mixin valo-textarea-style (
+    $unit-size        : $v-unit-size,
+    $padding          : round($v-unit-size/6), // Computed by default
 
-  $unit-size: $unit-size or $v-unit-size;
+    $font-color       : null, // Computed by default
+    $font-weight      : max(400, $v-font-weight), // Inherited by default
+    $font-size        : null, // Inherited by default
 
-  @include valo-textfield-style($bevel-style: $bevel-style, $bevel-depth: $bevel-depth, 
-                                  $shadow-style: $shadow-style, $shadow-depth: $shadow-depth,
-                                  $unit-size: $unit-size, $border-radius: $border-radius, 
-                                  $background-color: $background-color);
-  display: block; // Fixes extra white-space under the textarea element
+    $background-color : $v-textfield-background-color,
+    $border           : $v-textfield-border,
+    $border-radius    : $v-textfield-border-radius,
+
+    $bevel            : $v-textfield-bevel,
+    $shadow           : $v-textfield-shadow,
+
+    $states           : (normal, focus, disabled)
+  ) {
+
+  @include valo-textfield-style($unit-size: $unit-size, $padding: $padding,
+                                $font-color: $font-color,
+                                $font-weight: $font-weight, // Inherited by default
+                                $font-size: $font-size, // Inherited by default
+
+                                $background-color: $background-color,
+                                $border: $border,
+                                $border-radius: $border-radius,
+
+                                $bevel: $bevel,
+                                $shadow: $shadow,
+
+                                $states: $states);
+  //display: block; // Fixes extra white-space under the textarea element
   height: auto;
   resize: none;
 }

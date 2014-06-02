@@ -5,12 +5,12 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
   .#{$primary-stylename}-month-day-scrollable {
     overflow-y: scroll;
   }
-  
+
   .#{$primary-stylename}-week-wrapper {
     position: relative;
     overflow: hidden;
   }
-  
+
   .#{$primary-stylename}-current-time {
     position: absolute;
     left: 0;
@@ -19,7 +19,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
     background: red;
     z-index: 2;
   }
-  
+
   .#{$primary-stylename}-event-resizetop,
   .#{$primary-stylename}-event-resizebottom {
     position: absolute;
@@ -28,7 +28,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
     width: 100%;
     z-index: 1;
   }
-  
+
   .#{$primary-stylename}-event-resizetop {
     cursor: row-resize;
     top: 0;
@@ -38,8 +38,8 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
     cursor: row-resize;
     bottom: 0;
   }
-  
-  
+
+
   // What a truckload of magic numbers!
   // TODO Try to find out what these actually do, and how to make them dissappear
 
@@ -51,50 +51,50 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
   .#{$primary-stylename}-week-numbers {
     //border-right: 1px solid;
   }
-  
+
   .#{$primary-stylename}-month-sizedheight .#{$primary-stylename}-month-day {
     height: 100px;
   }
-  
+
   .#{$primary-stylename}-month-sizedwidth .#{$primary-stylename}-month-day {
     width: 100px;
   }
-  
+
   .#{$primary-stylename}-header-month-Hsized .#{$primary-stylename}-header-day {
     width: 101px;
   }
-  
+
   .#{$primary-stylename}-header-month-Hsized td:first-child {
     padding-left: 21px;
   }
-  
+
   .#{$primary-stylename}-header-day-Hsized {
     width: 200px;
   }
-  
+
   .#{$primary-stylename}-week-numbers-Vsized .#{$primary-stylename}-week-number {
     height: 100px;
     line-height: 100px;
   }
-  
+
   .#{$primary-stylename}-week-wrapper-Vsized {
     height: 400px;
     overflow-x: hidden !important;
   }
-  
+
   .#{$primary-stylename}-times-Vsized .#{$primary-stylename}-time {
     height: 38px;
   }
-  
+
   .#{$primary-stylename}-times-Hsized .#{$primary-stylename}-time {
     width: 42px;
   }
-  
+
   .#{$primary-stylename}-day-times-Vsized .v-datecellslot,
   .#{$primary-stylename}-day-times-Vsized .v-datecellslot-even {
     height: 18px;
   }
-  
+
   .#{$primary-stylename}-day-times-Hsized,
   .#{$primary-stylename}-day-times-Hsized .v-datecellslot,
   .#{$primary-stylename}-day-times-Hsized .v-datecellslot-even {
@@ -237,7 +237,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
   }
 
   .#{$primary-stylename}-month-day-selected {
-    background-color: blend-normal(rgba(valo-selection-color(), .1), $v-background-color);
+    background-color: blend-normal(rgba($v-selection-color, .1), $v-background-color);
   }
 
   .#{$primary-stylename}-month-day-dragemphasis {
@@ -347,7 +347,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
 
   .#{$primary-stylename} .v-daterange {
     position: relative;
-    
+
     &:before {
       content: "";
       position: absolute;
@@ -355,7 +355,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
       right: 0;
       bottom: -1px;
       left: 0;
-      background: valo-selection-color();
+      background: $v-selection-color;
       @include opacity(.5);
       @if $v-border-radius > 0 {
         border-radius: $v-border-radius $v-border-radius 0 0;
@@ -483,7 +483,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
   .#{$primary-stylename}-week-wrapper .#{$primary-stylename}-event-content {
     margin-top: -1px;
     border-radius: $v-border-radius + 1px;
-    border: 1px solid $v-background-color;
+    border: 1px solid $v-app-background-color;
     padding-top: 3px;
     margin-right: round($v-unit-size/8);
     //margin-left: round($v-unit-size/8);

@@ -1,13 +1,23 @@
+@function valo-overlay-background-color ($context: $v-background-color) {
+  @if is-dark-color($context) {
+    @return darken($context, 3%);
+  }
+  @return lighten($context, 2%);
+}
+
+
+$v-overlay-background-color: valo-overlay-background-color() !default;
 $v-overlay-border-radius: $v-border-radius !default;
-$v-overlay-border-width: $v-border-width !default;
+$v-overlay-border-width: first-number($v-border) !default;
 $v-overlay-open-animation: valo-overlay-open 200ms !default;
 
 $v-overlay-padding: round($v-unit-size/9) !default;
 $v-overlay-padding-vertical: $v-overlay-padding !default;
 $v-overlay-padding-horizontal: $v-overlay-padding !default;
 
-$v-overlay-shadow-style: 0 2px 4px 0 v-shade, 0 3px 5px 0 v-shade !default;
+$v-overlay-shadow: 0 2px 4px 0 v-shade, 0 3px 5px 0 v-shade, 0 0 0 $v-overlay-border-width (v-shade 2-color-luminance($v-background-color)/255) !default;
 
+$v-selection-overlay-background-color: $v-overlay-background-color !default;
 $v-selection-overlay-padding: $v-overlay-padding !default;
 $v-selection-overlay-padding-vertical: $v-selection-overlay-padding !default;
 $v-selection-overlay-padding-horizontal: $v-selection-overlay-padding !default;
@@ -16,14 +26,7 @@ $v-selection-item-border-radius: $v-border-radius - 1px !default;
 $v-selection-item-height: ceil($v-unit-size/1.4) !default;
 $v-selection-item-padding-horizontal: ceil($v-unit-size/4) !default;
 $v-selection-item-font-weight: max(400, $v-font-weight);
-
-
-@function valo-overlay-background-color ($context: $v-background-color) {
-  @if is-dark-color($context) {
-    @return darken($context, 2%);
-  }
-  @return lighten($context, 2%);
-}
+$v-selection-item-selection-color: $v-selection-color !default;
 
 
 
@@ -35,17 +38,21 @@ $v-selection-item-font-weight: max(400, $v-font-weight);
     $shadow-offset-x: nth($shadow, 1);
     $shadow-offset-y: nth($shadow, 2);
     $shadow-blur: nth($shadow, 3);
+    $shadow-spread: 0;
+    @if length($shadow) > 4 {
+      $shadow-spread: nth($shadow, 4);
+    }
     $shadow-color: last($shadow);
-    $shadow-color-opacity: opacity($shadow-color);
+    $shadow-color-opacity: round(opacity($shadow-color) * 100);
     $shadow-color: opacify($shadow-color, 1);
 
     position: absolute;
-    top: $shadow-offset-y - $shadow-blur;
-    right: -$shadow-offset-x + $shadow-blur;
-    bottom: -$shadow-offset-y + $shadow-blur;
-    left: $shadow-offset-x - $shadow-blur;
+    top: $shadow-offset-y - $shadow-blur - $shadow-spread;
+    right: -$shadow-offset-x + $shadow-blur - $shadow-spread;
+    bottom: -$shadow-offset-y + $shadow-blur - $shadow-spread;
+    left: $shadow-offset-x - $shadow-blur - $shadow-spread;
     background: $shadow-color;
-    filter: progid:DXImageTransform.Microsoft.blur(pixelradius=#{strip-units($shadow-blur)}, makeShadow=true, ShadowOpacity=#{$shadow-color-opacity});
+    filter: alpha(opacity=#{$shadow-color-opacity}) progid:DXImageTransform.Microsoft.blur(pixelradius=#{strip-units($shadow-blur)}, makeShadow=true);
   }
 }
 
@@ -63,7 +70,7 @@ $v-selection-item-font-weight: max(400, $v-font-weight);
     display: block;
 
     // Border simulation
-    .center {
+    /*.center {
       position: absolute;
       top: -$v-overlay-border-width;
       right: -$v-overlay-border-width;
@@ -71,11 +78,11 @@ $v-selection-item-font-weight: max(400, $v-font-weight);
       left: -$v-overlay-border-width;
       background: darken(valo-overlay-background-color(), $v-bevel-depth);
       filter: alpha(opacity=round($v-bevel-depth/1%));
-    }
+    }*/
 
     // Up to 8 shadows are supported
     $elements: top, top-left, top-right, left, right, bottom, bottom-left, bottom-right;
-    $shadows: valo-shadow($shadow-style: $v-overlay-shadow-style);
+    $shadows: valo-bevel-and-shadow($shadow: $v-overlay-shadow);
 
     @if type-of(last($shadows)) == color {
       @include valo-ie8-shadow($shadows);
@@ -83,7 +90,7 @@ $v-selection-item-font-weight: max(400, $v-font-weight);
       @for $i from 1 through min(length($elements), length($shadows)) {
         $shadow: nth($shadows, $i);
         @if length($shadow) == 2 {
-          $shadow: last($shadow); // Workaround for a weird issue when sometimes a shadow is appended to a null list
+          $shadow: flatten-list($shadow); // Workaround for a weird issue when sometimes a shadow is appended to a null list
         }
         @if length($shadow) > 3 {
           @include valo-ie8-shadow($shadow: $shadow, $element: nth($elements, $i));
@@ -98,27 +105,25 @@ $v-selection-item-font-weight: max(400, $v-font-weight);
 
 
 
-@function valo-overlay-box-shadow ($bg: null) {
-  $bg: $bg or valo-overlay-background-color();
-  @return valo-shadow($shadow-style: (0 0 0 $v-overlay-border-width rgba(darken($bg, $v-bevel-depth), $v-bevel-depth/100%), $v-overlay-shadow-style));
-}
 
 
-
-@mixin valo-overlay-style ($background-color: null, $open-animation: $v-overlay-open-animation) {
+@mixin valo-overlay-style (
+    $background-color: $v-overlay-background-color,
+    $shadow: $v-overlay-shadow,
+    $open-animation: $v-overlay-open-animation
+  ) {
   padding: $v-overlay-padding-vertical $v-overlay-padding-horizontal;
   border-radius: $v-overlay-border-radius;
-  
-  $bg: $background-color or valo-overlay-background-color();
-  background: $bg;
-  color: valo-font-color($bg);
 
-  box-shadow:  valo-overlay-box-shadow($bg);
+  background-color: $background-color;
+  color: valo-font-color($background-color);
+
+  box-shadow:  valo-bevel-and-shadow($bevel: null, $shadow: $shadow);
 
   @if $v-animations-enabled and $v-overlay-open-animation {
     @include animation($open-animation);
   }
-    
+
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
   -ms-backface-visibility: hidden;
@@ -141,7 +146,7 @@ $v-selection-item-font-weight: max(400, $v-font-weight);
 
 
 
-@mixin valo-selection-overlay-style ($background-color: null, $open-animation: $v-overlay-open-animation) {
+@mixin valo-selection-overlay-style ($background-color: $v-selection-overlay-background-color, $open-animation: $v-overlay-open-animation) {
   @include valo-overlay-style($background-color: $background-color, $open-animation: $open-animation);
   padding: $v-selection-overlay-padding-vertical $v-selection-overlay-padding-horizontal;
 }
@@ -167,7 +172,7 @@ $v-selection-item-font-weight: max(400, $v-font-weight);
     right: 0;
     bottom: 0;
     left: 0;
-    background: scale-color(valo-selection-color(), $lightness: -30%, $saturation: 50%);
+    background: scale-color($v-selection-item-selection-color, $lightness: -30%, $saturation: 50%);
     @include opacity(.15);
     pointer-events: none;
     border-radius: inherit;
@@ -183,10 +188,9 @@ $v-selection-item-font-weight: max(400, $v-font-weight);
 
 
 
-@mixin valo-selection-item-selected-style ($parent-background-color: null) {
-  $selection-color: valo-selection-color($parent-background-color);
-  @include valo-gradient($selection-color);
-  color: valo-font-color($selection-color, 0.9);
+@mixin valo-selection-item-selected-style {
+  @include valo-gradient($v-selection-item-selection-color);
+  color: valo-font-color($v-selection-item-selection-color, 0.9);
 }
 
 
@@ -202,8 +206,9 @@ $v-selection-item-font-weight: max(400, $v-font-weight);
   }
 }
 
-@mixin valo-drag-element-style {
-  background: #fff;
+@mixin valo-drag-element-style ($background-color: $v-app-background-color) {
+  background: $background-color;
+  color: valo-font-color($background-color);
   box-shadow: 0 2px 10px rgba(#000, .2);
   border-radius: $v-border-radius;
   overflow: hidden;

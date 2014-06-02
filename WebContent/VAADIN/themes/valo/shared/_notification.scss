@@ -1,3 +1,6 @@
+$v-notification-title-color: $v-focus-color !default;
+
+
 @mixin valo-notification {
 
 
@@ -44,7 +47,7 @@
     }
 
     // Can't match to "left: 0", since that would target "margin-left: 0" also, which all GWT PopupPanels have always
-    .v-Notification[style*=" left: 0"]:not(.v-Notification-system) {
+    .v-Notification[style*=" left: 0"]:not(.v-Notification-system):not(.bar) {
       @include valo-anim-slide-right(600ms);
     }
   }
@@ -59,12 +62,12 @@
     border-radius: $v-border-radius;
     text-align: center;
     position: fixed !important;
-    
+
     -webkit-backface-visibility: hidden;
     -moz-backface-visibility: hidden;
     -ms-backface-visibility: hidden;
     backface-visibility: hidden;
-    
+
     h1 {
       margin: 0;
       display: inline-block;
@@ -74,7 +77,7 @@
       white-space: nowrap;
       letter-spacing: 0;
     }
-    
+
     p {
       margin: 0;
       display: inline-block;
@@ -82,11 +85,11 @@
       max-width: 30em;
       text-align: left;
     }
-    
+
     h1 ~ p {
       margin-left: round($v-font-size * 1.5);
     }
-    
+
     .v-icon + h1 {
       margin-left: round($v-font-size);
     }
@@ -103,12 +106,7 @@
   // System notification
 
   .v-Notification-system {
-    left: 0 !important;
-    right: 0;
-    max-width: 100%;
-    margin: 0 !important;
-    border-radius: 0;
-    
+    @include valo-notification-bar-style;
     @include valo-notification-system-style;
   }
 
@@ -116,7 +114,7 @@
   .v-Notification-system.v-Notification-system {
     margin: 0 !important;
   }
-  
+
 
 
 
@@ -125,22 +123,26 @@
   .v-Notification.tray {
     text-align: left;
     h1 {
-      //display: block;      
+      //display: block;
     }
-    
+
     h1 + p {
       display: block;
       margin: .5em 0 0;
     }
     @include valo-notification-tray-style;
   }
-  
+
   .v-Notification.warning {
     @include valo-notification-warning-style;
   }
-  
+
   .v-Notification.error {
     @include valo-notification-error-style;
+  }
+
+  .v-Notification.bar {
+    @include valo-notification-bar-style;
   }
 
   .v-Notification.closable {
@@ -177,18 +179,6 @@
   overflow: hidden !important; // Override GWT PopupPanel
   cursor: pointer;
 
-  //&:before {
-  //  content: "";
-  //  position: absolute;
-  //  top: 0;
-  //  right: 0;
-  //  bottom: 0;
-  //  width: $v-unit-size;
-  //  cursor: pointer;
-  //  background: #000;
-  //  @include opacity(.15);
-  //}
-
   &:after {
     content: "\00d7";
     font-size: 1.5em;
@@ -203,7 +193,7 @@
     color: #000;
     @include opacity(.5);
     text-align: center;
-    border: $v-border-width solid #000;
+    border: first-number($v-border) solid #000;
     border-color: rgba(0,0,0,.3);
     border-radius: 50%;
     @include transition(opacity 200ms);
@@ -232,11 +222,11 @@
 
   // Make thigns easier to read
   &[style*="opacity: 0.9;"] {
-    @include opacity(1, true);
+    @include opacity(1 !important);
   }
-  
+
   h1 {
-    color: valo-focus-color();
+    color: $v-notification-title-color;
     font-size: round($v-font-size * 1.2);
     line-height: 1;
   }
@@ -245,11 +235,24 @@
   }
 }
 
+@mixin valo-notification-bar-style {
+  left: 0 !important;
+  right: 0;
+  max-width: 100%;
+  margin: 0 !important;
+  border-radius: 0;
+  box-shadow: 0 0 20px 0 rgba(0,0,0,0.25);
+  padding: round($v-unit-size/3) round($v-unit-size/2.5);
+
+  p {
+    max-width: 50em;
+  }
+}
+
 @mixin valo-notification-system-style {
   background-color: #444;
   font-weight: $v-font-weight + 100;
   line-height: round($v-font-size * 1.4);
-  box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.25);
 
   h1 {
     color: #fff;
@@ -258,7 +261,6 @@
 
   p {
     color: #e6e6e6;
-    max-width: 50em;
   }
 
   // No need to underline the "click here" text, let's imply that the whole banner is clickable
