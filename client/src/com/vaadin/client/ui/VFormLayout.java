@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -53,8 +54,8 @@ public class VFormLayout extends SimplePanel {
 
     public VFormLayout() {
         super();
-        setStyleName(StyleConstants.UI_LAYOUT);
-        addStyleName(CLASSNAME);
+        setStyleName(CLASSNAME);
+        addStyleName(StyleConstants.UI_LAYOUT);
         table = new VFormLayoutTable();
         setWidget(table);
     }
@@ -331,10 +332,10 @@ public class VFormLayout extends SimplePanel {
             if (BrowserInfo.get().isIE()) {
                 if (isEmpty) {
                     setHeight("0px");
-                    DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+                    getElement().getStyle().setOverflow(Overflow.HIDDEN);
                 } else {
                     setHeight("");
-                    DOM.setStyleAttribute(getElement(), "overflow", "");
+                    getElement().getStyle().clearOverflow();
                 }
 
             }

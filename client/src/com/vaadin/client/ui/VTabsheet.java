@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,6 +27,9 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableElement;
@@ -324,8 +327,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         private boolean update(TabState tabState) {
-            if (tabState.description != null
-                    || tabState.componentError != null) {
+            if (tabState.description != null || tabState.componentError != null) {
                 setTooltipInfo(new TooltipInfo(tabState.description,
                         tabState.componentError));
             } else {
@@ -337,14 +339,11 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             String captionString = tabState.caption.isEmpty() ? null
                     : tabState.caption;
             boolean ret = updateCaptionWithoutOwner(captionString,
-                    !tabState.enabled,
-                    hasAttribute(tabState.description),
+                    !tabState.enabled, hasAttribute(tabState.description),
                     hasAttribute(tabState.componentError),
                     tab.getTabsheet().connector
                             .getResourceUrl(ComponentConstants.ICON_RESOURCE
-                                    + tabState.key),
-                    tabState.iconAltText
-            );
+                                    + tabState.key), tabState.iconAltText);
 
             setClosable(tabState.closable);
 
@@ -804,7 +803,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         addHandler(this, BlurEvent.getType());
 
         // Tab scrolling
-        DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+        getElement().getStyle().setOverflow(Overflow.HIDDEN);
         tabs = DOM.createDiv();
         DOM.setElementProperty(tabs, "className", TABS_CLASSNAME);
         Roles.getTablistRole().set(tabs);
@@ -916,7 +915,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 DOM.setElementProperty(tabs, "className", tabsClass);
                 DOM.setElementProperty(contentNode, "className", contentClass);
                 DOM.setElementProperty(deco, "className", decoClass);
-                borderW = -1;
             }
         } else {
             tb.setStyleName(CLASSNAME + "-tabs");
@@ -993,10 +991,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         if (scrolledOutOfView(index)) {
             // Should not set tabs visible if they are scrolled out of view
-            tabState.visible = false;
+            tab.setVisible(false);
+        } else {
+            tab.setVisible(tabState.visible);
         }
-        // Set the current visibility of the tab (in the browser)
-        tab.setVisible(tabState.visible);
 
         /*
          * Force the width of the caption container so the content will not wrap
@@ -1045,6 +1043,16 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         VTabsheet.this.removeStyleDependentName("loading");
     }
 
+    /**
+     * Recalculates the sizes of tab captions, causing the tabs to be rendered
+     * the correct size.
+     */
+    private void updateTabCaptionSizes() {
+        for (int tabIx = 0; tabIx < tb.getTabCount(); tabIx++) {
+            tb.getTab(tabIx).recalculateCaptionWidth();
+        }
+    }
+
     /** For internal use only. May be removed or replaced in the future. */
     public void updateContentNodeHeight() {
         if (!isDynamicHeight()) {
@@ -1056,14 +1064,18 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             }
 
             // Set proper values for content element
-            DOM.setStyleAttribute(contentNode, "height", contentHeight + "px");
+            contentNode.getStyle().setHeight(contentHeight, Unit.PX);
         } else {
-            DOM.setStyleAttribute(contentNode, "height", "");
+            contentNode.getStyle().clearHeight();
         }
     }
 
+    /**
+     * Run internal layouting.
+     */
     public void iLayout() {
         updateTabScroller();
+        updateTabCaptionSizes();
     }
 
     /**
@@ -1104,7 +1116,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
      */
     private void updateTabScroller() {
         if (!isDynamicWidth()) {
-            DOM.setStyleAttribute(tabs, "width", "100%");
+            tabs.getStyle().setWidth(100, Unit.PCT);
         }
 
         // Make sure scrollerIndex is valid
@@ -1118,7 +1130,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         boolean scrolled = isScrolledTabs();
         boolean clipped = isClippedTabs();
         if (tb.getTabCount() > 0 && tb.isVisible() && (scrolled || clipped)) {
-            DOM.setStyleAttribute(scroller, "display", "");
+            scroller.getStyle().clearDisplay();
             DOM.setElementProperty(scrollerPrev, "className",
                     SCROLLER_CLASSNAME + (scrolled ? "Prev" : "Prev-disabled"));
             DOM.setElementProperty(scrollerNext, "className",
@@ -1131,7 +1143,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                     : -1);
 
         } else {
-            DOM.setStyleAttribute(scroller, "display", "none");
+            scroller.getStyle().setDisplay(Display.NONE);
         }
 
         if (BrowserInfo.get().isSafari()) {
@@ -1195,14 +1207,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         return tabPanel.iterator();
     }
 
-    private int borderW = -1;
-
     /** For internal use only. May be removed or replaced in the future. */
     public int getContentAreaBorderWidth() {
-        if (borderW < 0) {
-            borderW = Util.measureHorizontalBorder(contentNode);
-        }
-        return borderW;
+        return Util.measureHorizontalBorder(contentNode);
     }
 
     @Override

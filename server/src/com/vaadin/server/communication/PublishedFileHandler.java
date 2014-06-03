@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -110,7 +110,14 @@ public class PublishedFileHandler implements RequestHandler {
             return true;
         }
 
-        // TODO Check and set cache headers
+        // Set caching for the published file
+        String cacheControl = "public, max-age=0, must-revalidate";
+        int resourceCacheTime = request.getService()
+                .getDeploymentConfiguration().getResourceCacheTime();
+        if (resourceCacheTime > 0) {
+            cacheControl = "max-age=" + String.valueOf(resourceCacheTime);
+        }
+        response.setHeader("Cache-Control", cacheControl);
 
         OutputStream out = null;
         try {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,6 +25,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
+import com.vaadin.client.ApplicationConnection.ConnectionStatusEvent;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 
@@ -36,7 +37,6 @@ import com.vaadin.shared.ui.ui.UIConstants;
  */
 public class Heartbeat {
 
-    private int interval = -1;
     private Timer timer = new Timer() {
         @Override
         public void run() {
@@ -45,6 +45,8 @@ public class Heartbeat {
     };
 
     private ApplicationConnection connection;
+    private String uri;
+    private int interval = -1;
 
     private static Logger getLogger() {
         return Logger.getLogger(Heartbeat.class.getName());
@@ -56,11 +58,16 @@ public class Heartbeat {
      * @param connection
      *            the connection
      */
-    public void init(ApplicationConnection connection) {
-        this.connection = connection;
-        interval = connection.getConfiguration().getHeartbeatInterval();
-        setInterval(interval);
-        schedule();
+    public void init(ApplicationConnection applicationConnection) {
+        connection = applicationConnection;
+
+        setInterval(connection.getConfiguration().getHeartbeatInterval());
+
+        uri = ApplicationConnection.addGetParameters(connection
+                .translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
+                        + ApplicationConstants.HEARTBEAT_PATH + '/'),
+                UIConstants.UI_ID_PARAMETER + "="
+                        + connection.getConfiguration().getUIId());
 
         connection.addHandler(
                 ApplicationConnection.ApplicationStoppedEvent.TYPE,
@@ -70,22 +77,15 @@ public class Heartbeat {
                     public void onApplicationStopped(
                             ApplicationStoppedEvent event) {
                         setInterval(-1);
-                        schedule();
                     }
                 });
-
     }
 
     /**
      * Sends a heartbeat to the server
      */
     public void send() {
-        final String uri = ApplicationConnection.addGetParameters(
-                getConnection().translateVaadinUri(
-                        ApplicationConstants.APP_PROTOCOL_PREFIX
-                                + ApplicationConstants.HEARTBEAT_PATH + '/'),
-                UIConstants.UI_ID_PARAMETER + "="
-                        + getConnection().getConfiguration().getUIId());
+        timer.cancel();
 
         final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
 
@@ -94,24 +94,41 @@ public class Heartbeat {
             @Override
             public void onResponseReceived(Request request, Response response) {
                 int status = response.getStatusCode();
+
+                // Notify network observers about response status
+                connection.fireEvent(new ConnectionStatusEvent(status));
+
                 if (status == Response.SC_OK) {
-                    // TODO Permit retry in some error situations
                     getLogger().fine("Heartbeat response OK");
-                    schedule();
+                } else if (status == 0) {
+                    getLogger().warning(
+                            "Failed sending heartbeat, server is unreachable, retrying in "
+                                    + interval + "secs.");
+                } else if (status >= 500) {
+                    getLogger().warning(
+                            "Failed sending heartbeat, see server logs, retrying in "
+                                    + interval + "secs.");
                 } else if (status == Response.SC_GONE) {
-                    // FIXME This should really do something else like send an
-                    // event
-                    getConnection().showSessionExpiredError(null);
+                    connection.showSessionExpiredError(null);
+                    // If session is expired break the loop
+                    return;
                 } else {
                     getLogger().warning(
                             "Failed sending heartbeat to server. Error code: "
                                     + status);
                 }
+
+                // Don't break the loop
+                schedule();
             }
 
             @Override
             public void onError(Request request, Throwable exception) {
-                getLogger().severe("Exception sending heartbeat: " + exception);
+                getLogger().severe("Exception sending heartbeat: " + exception.getMessage());
+                // Notify network observers about response status
+                connection.fireEvent(new ConnectionStatusEvent(0));
+                // Don't break the loop
+                schedule();
             }
         };
 
@@ -134,38 +151,38 @@ public class Heartbeat {
     }
 
     /**
-     * sets the interval at which heartbeat requests are sent
-     * 
-     * @param interval
-     *            the new interval
-     */
-    public void setInterval(int interval) {
-        this.interval = interval;
-    }
-
-    /**
      * Updates the schedule of the heartbeat to match the set interval. A
      * negative interval disables the heartbeat.
      */
     public void schedule() {
-        if (getInterval() > 0) {
+        if (interval > 0) {
             getLogger()
                     .fine("Scheduling heartbeat in " + interval + " seconds");
             timer.schedule(interval * 1000);
         } else {
-            if (timer != null) {
-                getLogger().fine("Disabling heartbeat");
-                timer.cancel();
-            }
+            getLogger().fine("Disabling heartbeat");
+            timer.cancel();
         }
-
     }
 
     /**
      * @return the application connection
      */
+    @Deprecated
     protected ApplicationConnection getConnection() {
         return connection;
     }
 
+    /**
+     * Changes the heartbeatInterval in runtime and applies it.
+     * 
+     * @param heartbeatInterval
+     *            new interval in seconds.
+     */
+    public void setInterval(int heartbeatInterval) {
+        getLogger().info(
+                "Setting hearbeat interval to " + heartbeatInterval + "sec.");
+        interval = heartbeatInterval;
+        schedule();
+    }
 }

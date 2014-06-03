@@ -1,5 +1,5 @@
 /* 
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,8 +25,7 @@ public class AnalyticsUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        final Analytics analytics = new Analytics("UA-33036133-12");
-        analytics.extend(this);
+        final Analytics analytics = new Analytics(this, "UA-33036133-12");
 
         setContent(new Button("Track pageview", new Button.ClickListener() {
             @Override

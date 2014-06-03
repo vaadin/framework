@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -166,7 +166,7 @@ public class VColorPickerArea extends Widget implements ClickHandler, HasHTML,
     public void refreshColor() {
         if (color != null) {
             // Set the color
-            DOM.setStyleAttribute(area.getElement(), "background", color);
+            area.getElement().getStyle().setProperty("background", color);
         }
     }
 

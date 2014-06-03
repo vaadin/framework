@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -132,10 +132,19 @@ public abstract class AbstractClientConnector implements ClientConnector,
     /* Documentation copied from interface */
     @Override
     public void markAsDirty() {
-        assert getSession() == null || getSession().hasLock() : "Session must be locked when markAsDirty() is called";
+        assert getSession() == null || getSession().hasLock() : buildLockAssertMessage("markAsDirty()");
         UI uI = getUI();
         if (uI != null) {
             uI.getConnectorTracker().markDirty(this);
+        }
+    }
+
+    private String buildLockAssertMessage(String method) {
+        if (VaadinService.isOtherSessionLocked(getSession())) {
+            return "The session of this connecor is not locked, but there is another session that is locked. "
+                    + "This might be caused by accidentally using a connector that belongs to another session.";
+        } else {
+            return "Session must be locked when " + method + " is called";
         }
     }
 
@@ -217,7 +226,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * @see #getState()
      */
     protected SharedState getState(boolean markAsDirty) {
-        assert getSession() == null || getSession().hasLock() : "Session must be locked when getState() is called";
+        assert getSession() == null || getSession().hasLock() : buildLockAssertMessage("getState()");
 
         if (null == sharedState) {
             sharedState = createState();
@@ -339,13 +348,16 @@ public abstract class AbstractClientConnector implements ClientConnector,
         @Override
         public Iterator<ClientConnector> iterator() {
             CombinedIterator<ClientConnector> iterator = new CombinedIterator<ClientConnector>();
-            iterator.addIterator(connector.getExtensions().iterator());
 
             if (connector instanceof HasComponents) {
                 HasComponents hasComponents = (HasComponents) connector;
                 iterator.addIterator(hasComponents.iterator());
             }
 
+            Collection<Extension> extensions = connector.getExtensions();
+            if (extensions.size() > 0) {
+                iterator.addIterator(extensions.iterator());
+            }
             return iterator;
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,10 +19,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateFieldTestTest extends MultiBrowserTest {
@@ -44,12 +44,8 @@ public class DateFieldTestTest extends MultiBrowserTest {
     }
 
     private void assertNoErrorNotification() {
-        try {
-            getDriver().findElement(
-                    By.xpath("//div[contains(@class, 'v-Notification') ]"));
-            Assert.fail("Error notification shown!");
-        } catch (NoSuchElementException e) {
-            // As expected
+        if (isElementPresent(NotificationElement.class)) {
+            Assert.fail("Notification was present");
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -126,9 +126,13 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         } else {
             capabilities = getDesiredCapabilities();
 
-            WebDriver dr = TestBench.createDriver(new RemoteWebDriver(new URL(
-                    getHubURL()), capabilities));
-            setDriver(dr);
+            if (System.getProperty("useLocalWebDriver") != null) {
+                setupLocalDriver(capabilities);
+            } else {
+                WebDriver dr = TestBench.createDriver(new RemoteWebDriver(
+                        new URL(getHubURL()), capabilities));
+                setDriver(dr);
+            }
         }
 
         int w = SCREENSHOT_WIDTH;
@@ -765,6 +769,21 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         }
 
         /**
+         * Gets the capabilities for PhantomJS of the given version
+         * 
+         * @param version
+         *            the major version
+         * @return an object describing the capabilities required for running a
+         *         test on the given PhantomJS version
+         */
+        public static DesiredCapabilities phantomJS(int version) {
+            DesiredCapabilities c = DesiredCapabilities.phantomjs();
+            c.setPlatform(Platform.XP);
+            c.setVersion("" + version);
+            return c;
+        }
+
+        /**
          * Checks if the given capabilities refer to Internet Explorer 8
          * 
          * @param capabilities
@@ -821,6 +840,15 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         }
 
         /**
+         * @param capabilities
+         *            The capabilities to check
+         * @return true if the capabilities refer to PhantomJS, false otherwise
+         */
+        public static boolean isPhantomJS(DesiredCapabilities capabilities) {
+            return BrowserType.PHANTOMJS.equals(capabilities.getBrowserName());
+        }
+
+        /**
          * Returns a human readable identifier of the given browser. Used for
          * test naming and screenshots
          * 
@@ -839,6 +867,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
                 return "Safari";
             } else if (isOpera(capabilities)) {
                 return "Opera";
+            } else if (isPhantomJS(capabilities)) {
+                return "PhantomJS";
             }
 
             return capabilities.getBrowserName();
@@ -930,10 +960,18 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     public void hitButton(String id) {
-        WebDriverBackedSelenium selenium = new WebDriverBackedSelenium(driver,
-                driver.getCurrentUrl());
+        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+            driver.findElement(By.id(id)).click();
+        } else {
+            WebDriverBackedSelenium selenium = new WebDriverBackedSelenium(
+                    driver, driver.getCurrentUrl());
 
-        selenium.keyPress("id=" + id, "\\13");
+            selenium.keyPress("id=" + id, "\\13");
+        }
+    }
+
+    protected void openDebugLogTab() {
+        findElement(By.xpath("//button[@title='Debug message log']")).click();
     }
 
 }

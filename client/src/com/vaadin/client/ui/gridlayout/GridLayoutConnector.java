@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -209,5 +209,19 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
     @Override
     public void layoutHorizontally() {
         getWidget().updateWidth();
+    }
+
+    @Override
+    protected void updateWidgetSize(String newWidth, String newHeight) {
+        // Prevent the element from momentarily shrinking to zero size
+        // when the size is set to undefined by a state change but before
+        // it is recomputed in the layout phase. This may affect scroll
+        // position in some cases; see #13386.
+        if (!isUndefinedHeight()) {
+            getWidget().setHeight(newHeight);
+        }
+        if (!isUndefinedWidth()) {
+            getWidget().setWidth(newWidth);
+        }
     }
 }

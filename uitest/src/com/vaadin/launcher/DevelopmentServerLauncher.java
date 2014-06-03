@@ -1,5 +1,5 @@
 /* 
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,15 +17,20 @@
 package com.vaadin.launcher;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -43,6 +48,8 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.ssl.SslSocketConnector;
+import org.eclipse.jetty.util.Scanner;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import com.vaadin.launcher.util.BrowserLauncher;
@@ -70,6 +77,7 @@ public class DevelopmentServerLauncher {
 
         assertAssertionsEnabled();
 
+        //
         // Pass-through of arguments for Jetty
         final Map<String, String> serverArgs = parseArguments(args);
         if (!serverArgs.containsKey("shutdownPort")) {
@@ -160,19 +168,18 @@ public class DevelopmentServerLauncher {
         if (serverArgs.containsKey("withssl")) {
             final SslSocketConnector sslConnector = new SslSocketConnector();
             sslConnector.setPort(8444);
-            sslConnector.setTruststore(KEYSTORE);
-            sslConnector.setTrustPassword("password");
-            sslConnector.setKeystore(KEYSTORE);
-            sslConnector.setKeyPassword("password");
-            sslConnector.setPassword("password");
+            SslContextFactory sslFact = sslConnector.getSslContextFactory();
+            sslFact.setTrustStore(KEYSTORE);
+            sslFact.setTrustStorePassword("password");
+            sslFact.setKeyStorePath(KEYSTORE);
+            sslFact.setKeyManagerPassword("password");
+            sslFact.setKeyStorePassword("password");
             server.setConnectors(new Connector[] { connector, sslConnector });
         } else {
             server.setConnectors(new Connector[] { connector });
         }
 
         final WebAppContext webappcontext = new WebAppContext();
-        String path = DevelopmentServerLauncher.class.getPackage().getName()
-                .replace(".", File.separator);
         webappcontext.setContextPath(serverArgs.get("context"));
         webappcontext.setWar(serverArgs.get("webroot"));
         server.setHandler(webappcontext);
@@ -195,6 +202,73 @@ public class DevelopmentServerLauncher {
                 System.out.println("Enabling cache for: " + p);
                 webappcontext.addFilter(CacheFilter.class, p,
                         EnumSet.of(DispatcherType.REQUEST));
+            }
+        }
+
+        // --autoreload=all --autoreload=WebContent/classes,other/path
+        // --scaninterval=1
+        // Configure Jetty to auto-reload when a any class is compiled in
+        // any folder included in the list of folders passed as arguments
+        // or in the entire classpath if the keyworkd all is passed.
+        if (serverArgs.containsKey("autoreload")) {
+            int interval = 1;
+            if (serverArgs.containsKey("scaninterval")) {
+                interval = Integer.parseInt(serverArgs.get("scaninterval"));
+            }
+
+            List<File> classFolders = new ArrayList<File>();
+            String[] paths = serverArgs.get("autoreload").split(",");
+            if (paths.length == 1 && "all".equals(paths[0])) {
+                ClassLoader cl = server.getClass().getClassLoader();
+                for (URL u : ((URLClassLoader) cl).getURLs()) {
+                    File f = new File(u.getPath());
+                    if (f.isDirectory()) {
+                        classFolders.add(f);
+                    }
+                }
+            } else {
+                for (String p : paths) {
+                    File f = new File(p);
+                    if (f.isDirectory()) {
+                        classFolders.add(f);
+                    }
+                }
+            }
+            if (!classFolders.isEmpty()) {
+                System.out
+                        .println("Enabling context auto-reload.\n Scan interval: "
+                                + interval + " secs.\n Scanned folders: ");
+                for (File f : classFolders) {
+                    System.out.println("  " + f.getAbsolutePath());
+                    webappcontext.setExtraClasspath(f.getAbsolutePath());
+                }
+                System.out.println("");
+
+                Scanner scanner = new Scanner();
+                scanner.setScanInterval(interval);
+
+                scanner.setRecursive(true);
+                scanner.addListener(new Scanner.BulkListener() {
+                    @Override
+                    public void filesChanged(List<String> filenames)
+                            throws Exception {
+                        webappcontext.stop();
+                        server.stop();
+                        webappcontext.start();
+                        server.start();
+                    }
+                });
+                scanner.setReportExistingFilesOnStartup(false);
+                scanner.setFilenameFilter(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File folder, String name) {
+                        return name.endsWith(".class");
+                    }
+                });
+
+                scanner.setScanDirs(classFolders);
+                scanner.start();
+                server.getContainer().addBean(scanner);
             }
         }
 
@@ -380,7 +454,6 @@ public class DevelopmentServerLauncher {
         public void destroy() {
             // TODO Auto-generated method stub
         }
-
     }
 
     private static void dumpThreadStacks() {
@@ -395,7 +468,6 @@ public class DevelopmentServerLauncher {
             }
             System.out.println();
         }
-
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,6 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HTML;
 
 /**
@@ -80,8 +79,7 @@ public class VColorPicker extends VButton implements ClickHandler {
             }
 
             // Set the color
-            DOM.setStyleAttribute(colorIcon.getElement(), "background", color);
-
+            colorIcon.getElement().getStyle().setProperty("background", color);
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,8 @@
 
 package com.vaadin.server.communication;
 
+import java.io.Serializable;
+
 import com.vaadin.ui.UI;
 
 /**
@@ -30,7 +32,7 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public interface PushConnection {
+public interface PushConnection extends Serializable {
 
     /**
      * Pushes pending state changes and client RPC calls to the client. Can be

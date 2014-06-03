@@ -3,8 +3,7 @@ package com.vaadin.ui;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

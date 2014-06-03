@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.checkbox;
 
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -30,7 +31,6 @@ import com.vaadin.client.VTooltip;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
-import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.VCheckBox;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
@@ -82,12 +82,11 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
                 DOM.sinkEvents(getWidget().errorIndicatorElement,
                         VTooltip.TOOLTIP_EVENTS | Event.ONCLICK);
             } else {
-                DOM.setStyleAttribute(getWidget().errorIndicatorElement,
-                        "display", "");
+                getWidget().errorIndicatorElement.getStyle().clearDisplay();
             }
         } else if (getWidget().errorIndicatorElement != null) {
-            DOM.setStyleAttribute(getWidget().errorIndicatorElement, "display",
-                    "none");
+            getWidget().errorIndicatorElement.getStyle().setDisplay(
+                    Display.NONE);
 
             getWidget().setAriaInvalid(false);
         }

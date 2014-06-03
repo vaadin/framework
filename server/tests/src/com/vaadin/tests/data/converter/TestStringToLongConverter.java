@@ -2,8 +2,9 @@ package com.vaadin.tests.data.converter;
 
 import java.util.Locale;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.junit.Assert;
 
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ReverseConverter;
@@ -51,7 +52,7 @@ public class TestStringToLongConverter extends TestCase {
                 String.class, Locale.ENGLISH);
         Assert.assertEquals("9,223,372,036,854,775,807", str);
         str = reverseConverter.convertToModel(Long.MIN_VALUE, String.class,
-                null);
+                Locale.ENGLISH);
         Assert.assertEquals("-9,223,372,036,854,775,808", str);
     }
 

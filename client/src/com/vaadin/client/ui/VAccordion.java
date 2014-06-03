@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -160,12 +162,11 @@ public class VAccordion extends VTabsheetBase {
         public void setHeight(int height) {
             if (height == -1) {
                 super.setHeight("");
-                DOM.setStyleAttribute(content, "height", "0px");
+                content.getStyle().setHeight(0, Unit.PX);
             } else {
                 super.setHeight((height + getCaptionHeight()) + "px");
-                DOM.setStyleAttribute(content, "height", height + "px");
-                DOM.setStyleAttribute(content, "top", getCaptionHeight() + "px");
-
+                content.getStyle().setHeight(height, Unit.PX);
+                content.getStyle().setTop(getCaptionHeight(), Unit.PX);
             }
         }
 
@@ -286,20 +287,20 @@ public class VAccordion extends VTabsheetBase {
 
         public void open() {
             open = true;
-            DOM.setStyleAttribute(content, "top", getCaptionHeight() + "px");
-            DOM.setStyleAttribute(content, "left", "0px");
-            DOM.setStyleAttribute(content, "visibility", "");
+            content.getStyle().setTop(getCaptionHeight(), Unit.PX);
+            content.getStyle().setLeft(0, Unit.PX);
+            content.getStyle().clearVisibility();
             addStyleDependentName("open");
         }
 
         public void hide() {
-            DOM.setStyleAttribute(content, "visibility", "hidden");
+            content.getStyle().setVisibility(Visibility.HIDDEN);
         }
 
         public void close() {
-            DOM.setStyleAttribute(content, "visibility", "hidden");
-            DOM.setStyleAttribute(content, "top", "-100000px");
-            DOM.setStyleAttribute(content, "left", "-100000px");
+            content.getStyle().setVisibility(Visibility.HIDDEN);
+            content.getStyle().setTop(-100000, Unit.PX);
+            content.getStyle().setLeft(-100000, Unit.PX);
             removeStyleDependentName("open");
             setHeight(-1);
             setWidth("");

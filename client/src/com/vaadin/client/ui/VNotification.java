@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,6 +24,7 @@ import java.util.Iterator;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -38,9 +39,9 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.Position;
-import com.vaadin.shared.ui.ui.NotificationConfigurationBean;
-import com.vaadin.shared.ui.ui.NotificationConfigurationBean.Role;
+import com.vaadin.shared.ui.ui.NotificationRole;
 import com.vaadin.shared.ui.ui.UIConstants;
+import com.vaadin.shared.ui.ui.UIState.NotificationTypeConfiguration;
 
 public class VNotification extends VOverlay {
 
@@ -90,7 +91,7 @@ public class VNotification extends VOverlay {
     public VNotification() {
         setStyleName(STYLENAME);
         sinkEvents(Event.ONCLICK);
-        DOM.setStyleAttribute(getElement(), "zIndex", "" + Z_INDEX_BASE);
+        getElement().getStyle().setZIndex(Z_INDEX_BASE);
     }
 
     /**
@@ -161,20 +162,20 @@ public class VNotification extends VOverlay {
     }
 
     public void show(Widget widget, Position position, String style) {
-        NotificationConfigurationBean styleSetup = getUiState(style);
+        NotificationTypeConfiguration styleSetup = getUiState(style);
         setWaiAriaRole(styleSetup);
 
         FlowPanel panel = new FlowPanel();
-        if (styleSetup.hasAssistivePrefix()) {
-            panel.add(new Label(styleSetup.getAssistivePrefix()));
+        if (hasPrefix(styleSetup)) {
+            panel.add(new Label(styleSetup.prefix));
             AriaHelper.setVisibleForAssistiveDevicesOnly(panel.getElement(),
                     true);
         }
 
         panel.add(widget);
 
-        if (styleSetup.hasAssistivePostfix()) {
-            panel.add(new Label(styleSetup.getAssistivePostfix()));
+        if (hasPostfix(styleSetup)) {
+            panel.add(new Label(styleSetup.postfix));
             AriaHelper.setVisibleForAssistiveDevicesOnly(panel.getElement(),
                     true);
         }
@@ -182,8 +183,18 @@ public class VNotification extends VOverlay {
         show(position, style);
     }
 
+    private boolean hasPostfix(NotificationTypeConfiguration styleSetup) {
+        return styleSetup != null && styleSetup.postfix != null
+                && !styleSetup.postfix.isEmpty();
+    }
+
+    private boolean hasPrefix(NotificationTypeConfiguration styleSetup) {
+        return styleSetup != null && styleSetup.prefix != null
+                && !styleSetup.prefix.isEmpty();
+    }
+
     public void show(String html, Position position, String style) {
-        NotificationConfigurationBean styleSetup = getUiState(style);
+        NotificationTypeConfiguration styleSetup = getUiState(style);
         String assistiveDeviceOnlyStyle = AriaHelper.ASSISTIVE_DEVICE_ONLY_STYLE;
 
         setWaiAriaRole(styleSetup);
@@ -191,32 +202,35 @@ public class VNotification extends VOverlay {
         String type = "";
         String usage = "";
 
-        if (styleSetup != null && styleSetup.hasAssistivePrefix()) {
+        if (hasPrefix(styleSetup)) {
             type = "<span class='" + assistiveDeviceOnlyStyle + "'>"
-                    + styleSetup.getAssistivePrefix() + "</span>";
+                    + styleSetup.prefix + "</span>";
         }
 
-        if (styleSetup != null && styleSetup.hasAssistivePostfix()) {
+        if (hasPostfix(styleSetup)) {
             usage = "<span class='" + assistiveDeviceOnlyStyle + "'>"
-                    + styleSetup.getAssistivePostfix() + "</span>";
+                    + styleSetup.postfix + "</span>";
         }
 
         setWidget(new HTML(type + html + usage));
         show(position, style);
     }
 
-    private NotificationConfigurationBean getUiState(String style) {
-        NotificationConfigurationBean styleSetup = getApplicationConnection()
-                .getUIConnector().getState().notificationConfiguration.setup
+    private NotificationTypeConfiguration getUiState(String style) {
+        if (getApplicationConnection() == null
+                || getApplicationConnection().getUIConnector() == null) {
+            return null;
+        }
+
+        return getApplicationConnection().getUIConnector().getState().notificationConfigurations
                 .get(style);
-        return styleSetup;
     }
 
-    private void setWaiAriaRole(NotificationConfigurationBean styleSetup) {
+    private void setWaiAriaRole(NotificationTypeConfiguration styleSetup) {
         Roles.getAlertRole().set(getElement());
 
-        if (styleSetup != null && styleSetup.getAssistiveRole() != null) {
-            if (Role.STATUS == styleSetup.getAssistiveRole()) {
+        if (styleSetup != null && styleSetup.notificationRole != null) {
+            if (NotificationRole.STATUS == styleSetup.notificationRole) {
                 Roles.getStatusRole().set(getElement());
             }
         }
@@ -290,49 +304,52 @@ public class VNotification extends VOverlay {
 
     public void setPosition(com.vaadin.shared.Position position) {
         final Element el = getElement();
-        DOM.setStyleAttribute(el, "top", "");
-        DOM.setStyleAttribute(el, "left", "");
-        DOM.setStyleAttribute(el, "bottom", "");
-        DOM.setStyleAttribute(el, "right", "");
+        el.getStyle().clearTop();
+        el.getStyle().clearLeft();
+        el.getStyle().clearBottom();
+        el.getStyle().clearRight();
         switch (position) {
         case TOP_LEFT:
-            DOM.setStyleAttribute(el, "top", "0px");
-            DOM.setStyleAttribute(el, "left", "0px");
+            el.getStyle().setTop(0, Unit.PX);
+            el.getStyle().setLeft(0, Unit.PX);
             break;
         case TOP_RIGHT:
-            DOM.setStyleAttribute(el, "top", "0px");
-            DOM.setStyleAttribute(el, "right", "0px");
+            el.getStyle().setTop(0, Unit.PX);
+            el.getStyle().setRight(0, Unit.PX);
             break;
         case MIDDLE_LEFT:
             center();
-            DOM.setStyleAttribute(el, "left", "0px");
+            el.getStyle().setLeft(0, Unit.PX);
             break;
         case MIDDLE_RIGHT:
             center();
-            DOM.setStyleAttribute(el, "left", "");
-            DOM.setStyleAttribute(el, "right", "0px");
+            el.getStyle().clearLeft();
+            el.getStyle().setRight(0, Unit.PX);
             break;
         case BOTTOM_RIGHT:
-            DOM.setStyleAttribute(el, "position", "absolute");
-            DOM.setStyleAttribute(el, "bottom", "0px");
-            DOM.setStyleAttribute(el, "right", "0px");
+            // Avoiding strings would be ugly since another Position is imported
+            // TODO this is most likely redundant
+            el.getStyle().setProperty("position", "absolute");
+
+            el.getStyle().setBottom(0, Unit.PX);
+            el.getStyle().setRight(0, Unit.PX);
             break;
         case BOTTOM_LEFT:
-            DOM.setStyleAttribute(el, "bottom", "0px");
-            DOM.setStyleAttribute(el, "left", "0px");
+            el.getStyle().setBottom(0, Unit.PX);
+            el.getStyle().setLeft(0, Unit.PX);
             break;
         case TOP_CENTER:
             center();
-            DOM.setStyleAttribute(el, "top", "0px");
+            el.getStyle().setTop(0, Unit.PX);
             break;
         case BOTTOM_CENTER:
             center();
-            DOM.setStyleAttribute(el, "top", "");
-            DOM.setStyleAttribute(el, "bottom", "0px");
+            el.getStyle().clearTop();
+            el.getStyle().setBottom(0, Unit.PX);
             break;
         case ASSISTIVE:
-            DOM.setStyleAttribute(el, "top", "-2000px");
-            DOM.setStyleAttribute(el, "left", "-2000px");
+            el.getStyle().setTop(-2000, Unit.PX);
+            el.getStyle().setLeft(-2000, Unit.PX);
             break;
         default:
         case MIDDLE_CENTER:
@@ -356,10 +373,10 @@ public class VNotification extends VOverlay {
     }
 
     private void setOpacity(Element el, int opacity) {
-        DOM.setStyleAttribute(el, "opacity", "" + (opacity / 100.0));
+        el.getStyle().setOpacity(opacity / 100.0);
         if (BrowserInfo.get().isIE()) {
-            DOM.setStyleAttribute(el, "filter", "Alpha(opacity=" + opacity
-                    + ")");
+            el.getStyle().setProperty("filter",
+                    "Alpha(opacity=" + opacity + ")");
         }
     }
 

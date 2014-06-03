@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -391,5 +391,63 @@ public class Color implements Serializable {
         }
 
         return 0xff000000 | (red << 16) | (green << 8) | (blue << 0);
+    }
+
+    /**
+     * <p>
+     * Converts HSL's hue, saturation and lightness into an RGB value.
+     * 
+     * @param hue
+     *            the hue of the color. The unit of the value is degrees and
+     *            should be between 0-360.
+     * @param saturation
+     *            the saturation of the color. The unit of the value is
+     *            percentages and should be between 0-100;
+     * @param lightness
+     *            the lightness of the color. The unit of the value is
+     *            percentages and should be between 0-100;
+     * 
+     * @return the RGB value of corresponding color
+     */
+    public static int HSLtoRGB(int hue, int saturation, int lightness) {
+        int red = 0;
+        int green = 0;
+        int blue = 0;
+
+        float hueRatio = hue / 360f;
+        float saturationRatio = saturation / 100f;
+        float lightnessRatio = lightness / 100f;
+
+        if (saturationRatio == 0) {
+            red = green = blue = (int) (lightnessRatio * 255.0f + 0.5f);
+        } else {
+            float p = lightnessRatio < 0.5f ? lightnessRatio
+                    * (1f + saturationRatio) : lightnessRatio + saturationRatio
+                    - lightnessRatio * saturationRatio;
+            float q = 2 * lightnessRatio - p;
+
+            red = hslComponentToRgbComponent(p, q, hueRatio + (1f / 3f));
+            green = hslComponentToRgbComponent(p, q, hueRatio);
+            blue = hslComponentToRgbComponent(p, q, hueRatio - (1f / 3f));
+        }
+        return 0xff000000 | (red << 16) | (green << 8) | (blue << 0);
+    }
+
+    private static int hslComponentToRgbComponent(float p, float q, float ratio) {
+        if (ratio < 0) {
+            ratio += 1;
+        } else if (ratio > 1) {
+            ratio -= 1;
+        }
+
+        if (6 * ratio < 1f) {
+            return (int) ((q + (p - q) * 6f * ratio) * 255f + 0.5f);
+        } else if (2f * ratio < 1f) {
+            return (int) (p * 255f + 0.5f);
+        } else if (3f * ratio < 2f) {
+            return (int) ((q + (p - q) * ((2f / 3f) - ratio) * 6f) * 255f + 0.5f);
+        }
+
+        return (int) (q * 255f + 0.5f);
     }
 }

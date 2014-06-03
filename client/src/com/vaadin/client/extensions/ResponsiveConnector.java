@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -100,13 +100,13 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
      * @return The selectors in a comma delimited string.
      */
     protected String constructSelectorsForTarget() {
-        String primaryStyle = this.target.getState().primaryStyleName;
+        String primaryStyle = target.getState().primaryStyleName;
         StringBuilder selectors = new StringBuilder();
         selectors.append(".").append(primaryStyle);
 
-        if (this.target.getState().styles != null
-                && this.target.getState().styles.size() > 0) {
-            for (String style : this.target.getState().styles) {
+        if (target.getState().styles != null
+                && target.getState().styles.size() > 0) {
+            for (String style : target.getState().styles) {
                 selectors.append(",.").append(style);
                 selectors.append(",.").append(primaryStyle).append(".")
                         .append(style);
@@ -118,8 +118,8 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
         }
 
         // Allow the ID to be used as the selector as well for ranges
-        if (this.target.getState().id != null) {
-            selectors.append(",#").append(this.target.getState().id);
+        if (target.getState().id != null) {
+            selectors.append(",#").append(target.getState().id);
         }
         return selectors.toString();
     }
@@ -128,7 +128,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
     public void onUnregister() {
         super.onUnregister();
         LayoutManager.get(getConnection()).removeElementResizeListener(
-                this.target.getWidget().getElement(), this);
+                target.getWidget().getElement(), this);
     }
 
     /**
@@ -314,7 +314,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
         int height = event.getLayoutManager()
                 .getOuterHeight(event.getElement());
 
-        com.google.gwt.user.client.Element element = this.target.getWidget()
+        com.google.gwt.user.client.Element element = target.getWidget()
                 .getElement();
         boolean forceRedraw = false;
 
@@ -323,7 +323,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
                 event.getElement());
 
         if (!"".equals(currentWidthRanges)) {
-            this.target.getWidget().getElement()
+            target.getWidget().getElement()
                     .setAttribute("width-range", currentWidthRanges);
             forceRedraw = true;
         } else {
@@ -335,7 +335,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
                 event.getElement());
 
         if (!"".equals(currentHeightRanges)) {
-            this.target.getWidget().getElement()
+            target.getWidget().getElement()
                     .setAttribute("height-range", currentHeightRanges);
             forceRedraw = true;
         } else {
@@ -383,15 +383,15 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
             var min = parseInt(bp[1]);
             var max = parseInt(bp[2]);
 
-            if(min && max) {
+            if(!isNaN(min) && !isNaN(max)) {
                 if(min <= size && size <= max) {
                     ranges += " " + bp[1] + "-" + bp[2];
                 }
-            } else if (min) {
+            } else if (!isNaN(min)) {
                 if(min <= size) {
                     ranges += " " + bp[1] + "-";
                 }
-            } else if (max) {
+            } else if (!isNaN(max)) {
                 if (size <= max) {
                     ranges += " -" + bp[2];
                 }

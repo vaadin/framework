@@ -2,7 +2,7 @@ package com.vaadin.tests.util;
 
 import java.util.Iterator;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 public class TestUtil {
     public static void assertArrays(Object[] actualObjects,

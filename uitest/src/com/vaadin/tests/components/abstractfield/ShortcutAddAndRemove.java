@@ -1,25 +1,22 @@
 package com.vaadin.tests.components.abstractfield;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.tests.components.TestBase;
-import com.vaadin.tests.util.Log;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
 
-public class ShortcutAddAndRemove extends TestBase {
+public class ShortcutAddAndRemove extends AbstractTestUIWithLog {
 
-    private Log log;
-    private TextArea textArea;
+    private TextField textField;
 
     @Override
-    protected void setup() {
-        log = new Log(4);
-
+    protected void setup(VaadinRequest request) {
         final Button logButton = new Button("Log a row (enter shortcut)");
         logButton.setClickShortcut(KeyCode.ENTER);
-        logButton.addListener(new ClickListener() {
+        logButton.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 log.log("Log button was clicked");
@@ -27,7 +24,7 @@ public class ShortcutAddAndRemove extends TestBase {
         });
 
         final Button removeShortcut = new Button("Remove shortcut");
-        removeShortcut.addListener(new ClickListener() {
+        removeShortcut.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 logButton.removeClickShortcut();
@@ -35,7 +32,7 @@ public class ShortcutAddAndRemove extends TestBase {
             }
         });
         final Button addShortcut = new Button("Add shortcut");
-        addShortcut.addListener(new ClickListener() {
+        addShortcut.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 logButton.setClickShortcut(KeyCode.ENTER);
@@ -44,17 +41,17 @@ public class ShortcutAddAndRemove extends TestBase {
         });
         addComponent(log);
         addComponent(logButton);
-        textArea = new TextArea("Enter key does not break lines ...");
-        textArea.setRows(5);
-        textArea.setColumns(20);
-        addComponent(textArea);
+        textField = new TextField("Enter key is a shortcut...");
+        textField.setWidth("20em");
+        addComponent(textField);
         addComponent(removeShortcut);
         addComponent(addShortcut);
 
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
+        // TODO Auto-generated method stub
         return null;
     }
 

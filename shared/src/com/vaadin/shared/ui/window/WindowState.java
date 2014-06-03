@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,13 +21,6 @@ import com.vaadin.shared.ui.panel.PanelState;
 public class WindowState extends PanelState {
     {
         primaryStyleName = "v-window";
-    }
-
-    /**
-     * Available WAI-ARIA roles for a window.
-     */
-    public enum WindowRole {
-        ALERTDIALOG, DIALOG
     }
 
     public boolean modal = false;

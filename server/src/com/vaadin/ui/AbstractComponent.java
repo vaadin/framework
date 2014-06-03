@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -825,7 +825,27 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setSizeUndefined() {
+        setWidthUndefined();
+        setHeightUndefined();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.server.Sizeable#setWidthUndefined()
+     */
+    @Override
+    public void setWidthUndefined() {
         setWidth(-1, Unit.PIXELS);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.server.Sizeable#setHeightUndefined()
+     */
+    @Override
+    public void setHeightUndefined() {
         setHeight(-1, Unit.PIXELS);
     }
 
@@ -970,5 +990,25 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (actionManager != null) {
             actionManager.removeAction(shortcut);
         }
+    }
+
+    /**
+     * Determine whether a <code>content</code> component is equal to, or the
+     * ancestor of this component.
+     * 
+     * @param content
+     *            the potential ancestor element
+     * @return <code>true</code> if the relationship holds
+     */
+    protected boolean isOrHasAncestor(Component content) {
+        if (content instanceof HasComponents) {
+            for (Component parent = this; parent != null; parent = parent
+                    .getParent()) {
+                if (parent == content) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

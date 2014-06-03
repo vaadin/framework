@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,8 @@ package com.vaadin.client.ui.orderedlayout;
 
 import java.util.List;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Widget;
@@ -201,6 +203,13 @@ public abstract class AbstractOrderedLayoutConnector extends
      * together with undefined container height.
      */
     private boolean hasChildrenWithRelativeHeight = false;
+
+    /**
+     * Keep track of whether any child has relative width. Used to determine
+     * whether measurements are needed to make relative child widths work
+     * together with undefined container width.
+     */
+    private boolean hasChildrenWithRelativeWidth = false;
 
     /**
      * Keep track of whether any child is middle aligned. Used to determine if
@@ -421,6 +430,8 @@ public abstract class AbstractOrderedLayoutConnector extends
         processedResponseId = lastResponseId;
 
         hasChildrenWithRelativeHeight = false;
+        hasChildrenWithRelativeWidth = false;
+
         hasChildrenWithMiddleAlignment = false;
 
         needsExpand = getWidget().vertical ? !isUndefinedHeight()
@@ -474,6 +485,9 @@ public abstract class AbstractOrderedLayoutConnector extends
             if (child.isRelativeHeight()) {
                 hasChildrenWithRelativeHeight = true;
             }
+            if (child.isRelativeWidth()) {
+                hasChildrenWithRelativeWidth = true;
+            }
         }
 
         if (needsFixedHeight()) {
@@ -493,7 +507,15 @@ public abstract class AbstractOrderedLayoutConnector extends
         updateLayoutHeight();
         if (needsExpand()) {
             getWidget().updateExpandedSizes();
-            getWidget().updateExpandCompensation();
+            // updateExpandedSizes causes fixed size components to temporarily
+            // lose their size. updateExpandCompensation must be delayed until
+            // the browser has a chance to measure them.
+            Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    getWidget().updateExpandCompensation();
+                }
+            });
         } else {
             getWidget().clearExpand();
         }
@@ -565,7 +587,7 @@ public abstract class AbstractOrderedLayoutConnector extends
             if (slot.hasCaption()) {
                 slot.setCaptionResizeListener(slotCaptionResizeListener);
             }
-        } else if ((child.isRelativeHeight() || child.isRelativeWidth())
+        } else if ((hasChildrenWithRelativeHeight || hasChildrenWithRelativeWidth)
                 && slot.hasCaption()) {
             /*
              * If the slot has caption, we need to listen for its size changes

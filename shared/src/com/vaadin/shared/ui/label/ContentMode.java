@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,7 +27,7 @@ public enum ContentMode {
     TEXT,
 
     /**
-     * Content mode, where the label contains pre formatted text. In this mode
+     * Content mode, where the label contains preformatted text. In this mode
      * newlines are preserved when rendered on the screen.
      */
     PREFORMATTED,
@@ -39,18 +39,18 @@ public enum ContentMode {
 
     /**
      * Content mode, where the label contains well-formed or well-balanced XML.
-     * This is handled in the same way as {@link #XHTML}.
+     * This is handled in the same way as {@link #HTML}.
      * 
-     * @deprecated Use {@link #XHTML} instead
+     * @deprecated Use {@link #HTML} instead
      */
     @Deprecated
     XML,
 
     /**
      * Legacy content mode, where the label contains RAW output. This is handled
-     * in exactly the same way as {@link #XHTML}.
+     * in exactly the same way as {@link #HTML}.
      * 
-     * @deprecated Use {@link #XHTML} instead
+     * @deprecated Use {@link #HTML} instead
      */
     @Deprecated
     RAW;

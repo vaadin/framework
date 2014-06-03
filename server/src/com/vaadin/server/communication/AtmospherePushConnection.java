@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@
 package com.vaadin.server.communication;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.StringReader;
@@ -117,11 +118,11 @@ public class AtmospherePushConnection implements PushConnection {
         CONNECTED;
     }
 
-    private State state = State.DISCONNECTED;
     private UI ui;
-    private AtmosphereResource resource;
-    private FragmentedMessage incomingMessage;
-    private Future<Object> outgoingMessage;
+    private transient State state = State.DISCONNECTED;
+    private transient AtmosphereResource resource;
+    private transient FragmentedMessage incomingMessage;
+    private transient Future<Object> outgoingMessage;
 
     public AtmospherePushConnection(UI ui) {
         this.ui = ui;
@@ -209,6 +210,7 @@ public class AtmospherePushConnection implements PushConnection {
 
     @Override
     public boolean isConnected() {
+        assert state != null;
         assert (state == State.CONNECTED) ^ (resource == null);
         return state == State.CONNECTED;
     }
@@ -287,12 +289,35 @@ public class AtmospherePushConnection implements PushConnection {
             outgoingMessage = null;
         }
 
+        try {
+            resource.close();
+        } catch (IOException e) {
+            getLogger()
+                    .log(Level.INFO, "Error when closing push connection", e);
+        }
         resource = null;
+        state = State.DISCONNECTED;
+    }
+
+    /**
+     * Returns the state of this connection.
+     */
+    protected State getState() {
+        return state;
+    }
+
+    /**
+     * Reinitializes this PushConnection after deserialization. The connection
+     * is initially in disconnected state; the client will handle the
+     * reconnecting.
+     */
+    private void readObject(ObjectInputStream stream) throws IOException,
+            ClassNotFoundException {
+        stream.defaultReadObject();
         state = State.DISCONNECTED;
     }
 
     private static Logger getLogger() {
         return Logger.getLogger(AtmospherePushConnection.class.getName());
     }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,6 +26,7 @@ public class CaptionLeakTest extends MultiBrowserTest {
     public void testCaptionLeak() throws Exception {
         setDebug(true);
         openTestURL();
+        openDebugLogTab();
 
         // this should be present
         // 3 general non-connector elements, none accumulated on click
@@ -54,6 +55,7 @@ public class CaptionLeakTest extends MultiBrowserTest {
     public void testNoCaptionLeak() throws Exception {
         setDebug(true);
         openTestURL();
+        openDebugLogTab();
 
         getDriver().findElement(By.xpath("//button[@title = 'Clear log']"))
                 .click();

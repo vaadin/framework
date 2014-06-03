@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -636,7 +636,7 @@ public class Page implements Serializable {
     }
 
     public void init(VaadinRequest request) {
-        // NOTE: UI.reinit makes assumptions about the semantics of this method.
+        // NOTE: UI.refresh makes assumptions about the semantics of this method.
         // It should be kept in sync if this method is changed.
 
         // Extract special parameter sent by vaadinBootstrap.js

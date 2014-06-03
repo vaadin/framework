@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,8 +24,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.HasInputDevices;
+import org.openqa.selenium.interactions.Mouse;
+import org.openqa.selenium.interactions.internal.Coordinates;
+import org.openqa.selenium.internal.Locatable;
 
-import com.vaadin.testbench.commands.TestBenchElementCommands;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TabSheetErrorTooltipTest extends MultiBrowserTest {
@@ -63,8 +66,10 @@ public class TabSheetErrorTooltipTest extends MultiBrowserTest {
     }
 
     private void showTooltip(int index) {
-        TestBenchElementCommands element = testBenchElement(getTab(index));
-        element.showTooltip();
+        Coordinates elementCoordinates = ((Locatable) getTab(index))
+                .getCoordinates();
+        Mouse mouse = ((HasInputDevices) getDriver()).getMouse();
+        mouse.mouseMove(elementCoordinates);
     }
 
     private WebElement getTab(int index) {

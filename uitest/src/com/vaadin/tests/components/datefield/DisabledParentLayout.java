@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,7 +35,6 @@ public class DisabledParentLayout extends AbstractTestUI {
         content.setMargin(true);
 
         final VerticalLayout pane = new VerticalLayout();
-        pane.setEnabled(false);
         pane.addComponent(new DateField());
 
         content.addComponent(pane);
@@ -44,7 +43,7 @@ public class DisabledParentLayout extends AbstractTestUI {
         button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                pane.setEnabled(true);
+                pane.setEnabled(!pane.isEnabled());
             }
         });
         content.addComponent(button);

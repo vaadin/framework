@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,115 +15,103 @@
  */
 package com.vaadin.tests.push;
 
-import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
+import com.jcraft.jsch.JSchException;
 import com.vaadin.tests.tb3.MultiBrowserTestWithProxy;
 
 public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
-    @Test
-    public void testShortDisconnect() throws Exception {
+    @Override
+    public void setup() throws Exception {
+        super.setup();
+
         setDebug(true);
         openTestURL();
+        openDebugLogTab();
+
         startTimer();
         waitUntilServerCounterChanges();
-        disconnectProxy();
-        Thread.sleep(1000);
-        connectProxy();
-        waitUntilServerCounterChanges();
+
+        testBench().disableWaitForVaadin();
     }
 
     @Test
-    public void testUserActionWhileDisconnectedWithDelay() throws Exception {
-        setDebug(true);
-        openTestURL();
-        startTimer();
-        waitUntilServerCounterChanges();
+    public void messageIsQueuedOnDisconnect() throws JSchException {
         disconnectProxy();
-        Assert.assertEquals(0, getClientCounter());
+
+        clickButtonAndWaitForTwoReconnectAttempts();
+
+        connectAndVerifyConnectionEstablished();
+        waitUntilClientCounterChanges(1);
+    }
+
+    @Test
+    public void messageIsNotSentBeforeConnectionIsEstablished()
+            throws JSchException, InterruptedException {
+        disconnectProxy();
+
+        waitForNextReconnectionAttempt();
+        clickButtonAndWaitForTwoReconnectAttempts();
+
+        connectAndVerifyConnectionEstablished();
+        waitUntilClientCounterChanges(1);
+    }
+
+    private void clickButtonAndWaitForTwoReconnectAttempts() {
+        clickClientButton();
+
+        // Reconnection attempt is where pending messages can
+        // falsely be sent to server.
+        waitForNextReconnectionAttempt();
+
+        // Waiting for the second reconnection attempt makes sure that the
+        // first attempt has been completed or aborted.
+        waitForNextReconnectionAttempt();
+    }
+
+    private void clickClientButton() {
         getIncrementClientCounterButton().click();
-        // No change while disconnected
-        Assert.assertEquals(0, getClientCounter());
-        // Firefox sends extra onopen calls after a while, which breaks
-        // everything
-        Thread.sleep(10000);
-        connectProxy();
-        waitUntilServerCounterChanges();
-        // The change should have appeared when reconnected
-        Assert.assertEquals(1, getClientCounter());
     }
 
-    @Test
-    public void testUserActionWhileDisconnected() throws Exception {
-        setDebug(true);
-        openTestURL();
-        startTimer();
-        waitUntilServerCounterChanges();
-        disconnectProxy();
-        Assert.assertEquals(0, getClientCounter());
-        getIncrementClientCounterButton().click();
-        // No change while disconnected
-        Assert.assertEquals(0, getClientCounter());
-        Thread.sleep(1000);
-        connectProxy();
-        waitUntilServerCounterChanges();
-        // The change should have appeared when reconnected
-        Assert.assertEquals(1, getClientCounter());
-
-        // IE has problems with another reconnect
-        disconnectProxy();
-        getIncrementClientCounterButton().click();
-        Assert.assertEquals(1, getClientCounter());
-        Thread.sleep(1000);
-        connectProxy();
-        waitUntilServerCounterChanges();
-        Assert.assertEquals(2, getClientCounter());
+    private void waitForNextReconnectionAttempt() {
+        clearDebugMessages();
+        waitForDebugMessage("Reopening push connection");
     }
 
-    @Test
-    public void testLongDisconnect() throws Exception {
-        setDebug(true);
-        openTestURL();
-        startTimer();
-        waitUntilServerCounterChanges();
-        disconnectProxy();
-        Thread.sleep(12000);
+    private void clearDebugMessages() {
+        driver.findElement(
+                By.xpath("//button[@class='v-debugwindow-button' and @title='Clear log']"))
+                .click();
+    }
+
+    private boolean hasDebugMessage(String message) {
+        return getDebugMessage(message) != null;
+    }
+
+    private WebElement getDebugMessage(String message) {
+        return driver.findElement(By.xpath(String.format(
+                "//span[@class='v-debugwindow-message' and text()='%s']",
+                message)));
+    }
+
+    private void waitForDebugMessage(final String expectedMessage) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                return hasDebugMessage(expectedMessage);
+            }
+        }, 30);
+    }
+
+    private void connectAndVerifyConnectionEstablished() throws JSchException {
         connectProxy();
         waitUntilServerCounterChanges();
-    }
-
-    @Test
-    public void testReallyLongDisconnect() throws Exception {
-        setDebug(true);
-        openTestURL();
-        startTimer();
-        waitUntilServerCounterChanges();
-        disconnectProxy();
-        Thread.sleep(120000);
-        connectProxy();
-        waitUntilServerCounterChanges();
-    }
-
-    @Test
-    public void testMultipleDisconnects() throws Exception {
-        setDebug(true);
-        openTestURL();
-        startTimer();
-        waitUntilServerCounterChanges();
-        for (int i = 0; i < 5; i++) {
-            disconnectProxy();
-            Thread.sleep(1000);
-            connectProxy();
-            waitUntilServerCounterChanges();
-        }
-    }
-
-    private int getClientCounter() {
-        return BasicPushTest.getClientCounter(this);
     }
 
     private WebElement getIncrementClientCounterButton() {
@@ -139,6 +127,16 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
                 return BasicPushTest.getServerCounter(ReconnectTest.this) > counter;
             }
         }, 30);
+    }
+
+    private void waitUntilClientCounterChanges(final int expectedValue) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                return BasicPushTest.getClientCounter(ReconnectTest.this) == expectedValue;
+            }
+        }, 5);
     }
 
     private void startTimer() {

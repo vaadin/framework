@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -196,15 +196,10 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      */
     @Override
     public void addComponent(Component c) {
-        if (c instanceof ComponentContainer) {
-            // Make sure we're not adding the component inside it's own content
-            for (Component parent = this; parent != null; parent = parent
-                    .getParent()) {
-                if (parent == c) {
-                    throw new IllegalArgumentException(
-                            "Component cannot be added inside it's own content");
-                }
-            }
+        // Make sure we're not adding the component inside it's own content
+        if (isOrHasAncestor(c)) {
+            throw new IllegalArgumentException(
+                    "Component cannot be added inside it's own content");
         }
 
         if (c.getParent() != null) {

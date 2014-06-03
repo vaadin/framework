@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -239,4 +239,32 @@ public class VaadinPortletRequest extends PortletRequestWrapper implements
         return null;
     }
 
+    /**
+     * Gets the currently processed portlet request. The current portlet request
+     * is automatically defined when the request is started. The current portlet
+     * request can not be used in e.g. background threads because of the way
+     * server implementations reuse request instances.
+     * 
+     * @return the current portlet request instance if available, otherwise
+     *         <code>null</code>
+     * 
+     */
+    public static PortletRequest getCurrentPortletRequest() {
+        return VaadinPortletService.getCurrentPortletRequest();
+
+    }
+
+    /**
+     * Gets the currently processed Vaadin portlet request. The current request
+     * is automatically defined when the request is started. The current request
+     * can not be used in e.g. background threads because of the way server
+     * implementations reuse request instances.
+     * 
+     * @return the current Vaadin portlet request instance if available,
+     *         otherwise <code>null</code>
+     * 
+     */
+    public static VaadinPortletRequest getCurrent() {
+        return VaadinPortletService.getCurrentRequest();
+    }
 }

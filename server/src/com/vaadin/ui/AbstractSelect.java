@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -904,7 +904,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      *             if the underlying container don't support adding items with
      *             identifiers
      */
-    public void addItems(Collection<Object> itemIds)
+    public void addItems(Collection<?> itemIds)
             throws UnsupportedOperationException {
         addItems(itemIds.toArray());
     }

@@ -17,7 +17,7 @@
 
     <!-- Keep the version number in sync with ivy.xml, server/src/com/vaadin/server/Constants.java -->
     <property name="atmosphere.runtime.version" value="2.1.2.vaadin2" />
-    <property name="jquery.version" value="2.0.3" />
+    <property name="jquery.js" location="lib/jquery/jquery-1.11.0.js" />
 
     <path id="classpath.compile.custom" />
 
@@ -42,11 +42,10 @@
         <unzip src="${temp.dir}/jquery.war" dest="${jquery.unpack}">
             <patternset>
                 <include name="**/jquery.atmosphere.js" />
-                <include name="**/jquery-${jquery.version}.js" />
             </patternset>
             <mapper type="flatten" />
         </unzip>
-        <loadfile srcfile="${jquery.unpack}/jquery-${jquery.version}.js" property="jquery.js.contents" />
+        <loadfile srcfile="${jquery.js}" property="jquery.js.contents" />
         <loadfile srcfile="${jquery.unpack}/jquery.atmosphere.js" property="jquery.atmosphere.js.contents" />
 
         <loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/vaadinPush.js.tpl" property="vaadinPush.js.contents">

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -76,6 +76,9 @@ public class ResponsiveUITest extends MultiBrowserTest {
         assertEquals("-200px",
                 $(".v-csslayout-grid.first").getAttribute("width-range"));
 
+        moveSplitter(-100);
+        assertEquals("0-100px",
+                $(".v-csslayout-grid.second").getAttribute("width-range"));
     }
 
     private void moveSplitter(int xOffset) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,9 @@ import java.util.Map.Entry;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -216,11 +219,11 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
     private void detectExtraSizes() {
         Element clone = Util.cloneNode(getElement(), false);
         DOM.setElementAttribute(clone, "id", "");
-        DOM.setStyleAttribute(clone, "visibility", "hidden");
-        DOM.setStyleAttribute(clone, "position", "absolute");
+        clone.getStyle().setVisibility(Visibility.HIDDEN);
+        clone.getStyle().setPosition(Position.ABSOLUTE);
         // due FF3 bug set size to 10px and later subtract it from extra pixels
-        DOM.setStyleAttribute(clone, "width", "10px");
-        DOM.setStyleAttribute(clone, "height", "10px");
+        clone.getStyle().setWidth(10, Unit.PX);
+        clone.getStyle().setHeight(10, Unit.PX);
         DOM.appendChild(DOM.getParent(getElement()), clone);
         extraHorizontalPixels = DOM.getElementPropertyInt(clone, "offsetWidth") - 10;
         extraVerticalPixels = DOM.getElementPropertyInt(clone, "offsetHeight") - 10;

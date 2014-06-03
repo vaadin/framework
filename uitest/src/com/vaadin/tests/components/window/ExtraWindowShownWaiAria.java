@@ -2,7 +2,7 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.window.WindowState.WindowRole;
+import com.vaadin.shared.ui.window.WindowRole;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

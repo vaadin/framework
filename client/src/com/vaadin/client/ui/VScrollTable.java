@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,6 +38,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.dom.client.TableCellElement;
@@ -1081,18 +1082,17 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         selected = true;
                         keyboardSelectionOverRowFetchInProgress = true;
                     }
+                    if (selected) {
+                        if (focusedRow == null
+                                || !selectedRowKeys.contains(focusedRow
+                                        .getKey())) {
+                            // The focus is no longer on a selected row,
+                            // move focus to first selected row
+                            setRowFocus(row);
+                        }
+                    }
                     if (selected != row.isSelected()) {
                         row.toggleSelection();
-
-                        if (selected) {
-                            if (focusedRow == null
-                                    || !selectedRowKeys.contains(focusedRow
-                                            .getKey())) {
-                                // The focus is no longer on a selected row,
-                                // move focus to first selected row
-                                setRowFocus(row);
-                            }
-                        }
 
                         if (!isSingleSelectMode() && !selected) {
                             // Update selection range in case a row is
@@ -1101,6 +1101,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         }
                     }
                 }
+
             }
         }
         unSyncedselectionsBeforeRowFetch = null;
@@ -1132,6 +1133,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         // cell to accomodate for the size of the sort arrow.
         HeaderCell sortedHeader = tHead.getHeaderCell(sortColumn);
         if (sortedHeader != null) {
+            // Mark header as sorted now. Any earlier marking would lead to
+            // columns with wrong sizes
+            sortedHeader.setSorted(true);
             tHead.resizeCaptionContainer(sortedHeader);
         }
         // Also recalculate the width of the captionContainer element in the
@@ -2301,7 +2305,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     /** For internal use only. May be removed or replaced in the future. */
     public void hideScrollPositionAnnotation() {
         if (scrollPositionElement != null) {
-            DOM.setStyleAttribute(scrollPositionElement, "display", "none");
+            scrollPositionElement.getStyle().setDisplay(Display.NONE);
         }
     }
 
@@ -2658,11 +2662,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
             if (width == -1) {
                 // go to default mode, clip content if necessary
-                DOM.setStyleAttribute(captionContainer, "overflow", "");
+                captionContainer.getStyle().clearOverflow();
             }
             width = w;
             if (w == -1) {
-                DOM.setStyleAttribute(captionContainer, "width", "");
+                captionContainer.getStyle().clearWidth();
                 setWidth("");
             } else {
                 tHead.resizeCaptionContainer(this);
@@ -2699,7 +2703,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         public void setUndefinedWidth() {
             definedWidth = false;
-            setWidth(-1, false);
+            if (!isResizing) {
+                setWidth(-1, false);
+            }
         }
 
         /**
@@ -2831,7 +2837,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
             floatingCopyOfHeaderCell.setClassName(sb.toString().trim());
             // otherwise might wrap or be cut if narrow column
-            DOM.setStyleAttribute(floatingCopyOfHeaderCell, "width", "auto");
+            floatingCopyOfHeaderCell.getStyle().setProperty("width", "auto");
             updateFloatingCopysPosition(DOM.getAbsoluteLeft(td),
                     DOM.getAbsoluteTop(td));
             DOM.appendChild(VOverlay.getOverlayContainer(client),
@@ -2841,10 +2847,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         private void updateFloatingCopysPosition(int x, int y) {
             x -= DOM.getElementPropertyInt(floatingCopyOfHeaderCell,
                     "offsetWidth") / 2;
-            DOM.setStyleAttribute(floatingCopyOfHeaderCell, "left", x + "px");
+            floatingCopyOfHeaderCell.getStyle().setLeft(x, Unit.PX);
             if (y > 0) {
-                DOM.setStyleAttribute(floatingCopyOfHeaderCell, "top", (y + 7)
-                        + "px");
+                floatingCopyOfHeaderCell.getStyle().setTop(y + 7, Unit.PX);
             }
         }
 
@@ -3231,8 +3236,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 table.setPropertyInt("cellSpacing", 0);
             }
 
-            DOM.setStyleAttribute(hTableWrapper, "overflow", "hidden");
-            DOM.setStyleAttribute(columnSelector, "display", "none");
+            hTableWrapper.getStyle().setOverflow(Overflow.HIDDEN);
+            columnSelector.getStyle().setDisplay(Display.NONE);
 
             DOM.appendChild(table, headerTableBody);
             DOM.appendChild(headerTableBody, tr);
@@ -3344,11 +3349,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                 if (col.hasAttribute("sortable")) {
                     c.setSortable(true);
-                    if (cid.equals(sortColumn)) {
-                        c.setSorted(true);
-                    } else {
-                        c.setSorted(false);
-                    }
+                    c.setSorted(false);
                 } else {
                     c.setSortable(false);
                 }
@@ -3359,7 +3360,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     c.setAlign(ALIGN_LEFT);
 
                 }
-                if (col.hasAttribute("width")) {
+                if (col.hasAttribute("width") && !c.isResizing) {
                     // Make sure to accomodate for the sort indicator if
                     // necessary.
                     int width = col.getIntAttribute("width");
@@ -3791,7 +3792,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             setText(headerText);
 
             // ensure no clipping initially (problem on column additions)
-            DOM.setStyleAttribute(captionContainer, "overflow", "visible");
+            captionContainer.getStyle().setOverflow(Overflow.VISIBLE);
 
             DOM.sinkEvents(captionContainer, Event.MOUSEEVENTS);
 
@@ -3835,15 +3836,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             if (align != c) {
                 switch (c) {
                 case ALIGN_CENTER:
-                    DOM.setStyleAttribute(captionContainer, "textAlign",
-                            "center");
+                    captionContainer.getStyle().setTextAlign(TextAlign.CENTER);
                     break;
                 case ALIGN_RIGHT:
-                    DOM.setStyleAttribute(captionContainer, "textAlign",
-                            "right");
+                    captionContainer.getStyle().setTextAlign(TextAlign.RIGHT);
                     break;
                 default:
-                    DOM.setStyleAttribute(captionContainer, "textAlign", "");
+                    captionContainer.getStyle().setTextAlign(TextAlign.LEFT);
                     break;
                 }
             }
@@ -3881,11 +3880,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
             if (width == -1) {
                 // go to default mode, clip content if necessary
-                DOM.setStyleAttribute(captionContainer, "overflow", "");
+                captionContainer.getStyle().clearOverflow();
             }
             width = w;
             if (w == -1) {
-                DOM.setStyleAttribute(captionContainer, "width", "");
+                captionContainer.getStyle().clearWidth();
                 setWidth("");
             } else {
                 /*
@@ -4144,7 +4143,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         public TableFooter() {
 
-            DOM.setStyleAttribute(hTableWrapper, "overflow", "hidden");
+            hTableWrapper.getStyle().setOverflow(Overflow.HIDDEN);
 
             DOM.appendChild(table, headerTableBody);
             DOM.appendChild(headerTableBody, tr);
@@ -4271,7 +4270,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                 }
                 if (col.hasAttribute("width")) {
-                    if (scrollBody == null) {
+                    if (scrollBody == null || isNewBody) {
                         // Already updated by setColWidth called from
                         // TableHeads.updateCellsFromUIDL in case of a server
                         // side resize
@@ -4369,15 +4368,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * Disable browser measurement of the table width
          */
         public void disableBrowserIntelligence() {
-            DOM.setStyleAttribute(hTableContainer, "width", WRAPPER_WIDTH
-                    + "px");
+            hTableContainer.getStyle().setWidth(WRAPPER_WIDTH, Unit.PX);
         }
 
         /**
          * Enable browser measurement of the table width
          */
         public void enableBrowserIntelligence() {
-            DOM.setStyleAttribute(hTableContainer, "width", "");
+            hTableContainer.getStyle().clearWidth();
         }
 
         /**
@@ -4880,8 +4878,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          */
         private void setContainerHeight() {
             fixSpacers();
-            DOM.setStyleAttribute(container, "height",
-                    measureRowHeightOffset(totalRows) + "px");
+            container.getStyle().setHeight(measureRowHeightOffset(totalRows),
+                    Unit.PX);
         }
 
         private void fixSpacers() {
@@ -5302,17 +5300,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
              */
             public boolean isInViewPort() {
                 int absoluteTop = getAbsoluteTop();
-                int scrollPosition = scrollBodyPanel.getAbsoluteTop()
-                        + scrollBodyPanel.getScrollPosition();
-                if (absoluteTop < scrollPosition) {
-                    return false;
-                }
-                int maxVisible = scrollPosition
-                        + scrollBodyPanel.getOffsetHeight() - getOffsetHeight();
-                if (absoluteTop > maxVisible) {
-                    return false;
-                }
-                return true;
+                int absoluteBottom = absoluteTop + getOffsetHeight();
+                int viewPortTop = scrollBodyPanel.getAbsoluteTop();
+                int viewPortBottom = viewPortTop
+                        + scrollBodyPanel.getOffsetHeight();
+                return absoluteBottom > viewPortTop
+                        && absoluteTop < viewPortBottom;
             }
 
             /**
@@ -5407,17 +5400,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 } else {
                     container.setInnerText(text);
                 }
-                if (align != ALIGN_LEFT) {
-                    switch (align) {
-                    case ALIGN_CENTER:
-                        container.getStyle().setProperty("textAlign", "center");
-                        break;
-                    case ALIGN_RIGHT:
-                    default:
-                        container.getStyle().setProperty("textAlign", "right");
-                        break;
-                    }
-                }
+                setAlign(align, container);
                 setTooltip(td, description);
 
                 td.appendChild(container);
@@ -5455,6 +5438,21 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             }
 
+            private void setAlign(char align, final Element container) {
+                switch (align) {
+                case ALIGN_CENTER:
+                    container.getStyle().setProperty("textAlign", "center");
+                    break;
+                case ALIGN_LEFT:
+                    container.getStyle().setProperty("textAlign", "left");
+                    break;
+                case ALIGN_RIGHT:
+                default:
+                    container.getStyle().setProperty("textAlign", "right");
+                    break;
+                }
+            }
+
             protected void initCellWithWidget(Widget w, char align,
                     String style, boolean sorted, final TableCellElement td) {
                 final Element container = DOM.createDiv();
@@ -5471,21 +5469,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 td.setClassName(className);
                 container.setClassName(VScrollTable.this.getStylePrimaryName()
                         + "-cell-wrapper");
-                // TODO most components work with this, but not all (e.g.
-                // Select)
-                // Old comment: make widget cells respect align.
-                // text-align:center for IE, margin: auto for others
-                if (align != ALIGN_LEFT) {
-                    switch (align) {
-                    case ALIGN_CENTER:
-                        container.getStyle().setProperty("textAlign", "center");
-                        break;
-                    case ALIGN_RIGHT:
-                    default:
-                        container.getStyle().setProperty("textAlign", "right");
-                        break;
-                    }
-                }
+                setAlign(align, container);
                 td.appendChild(container);
                 getElement().appendChild(td);
                 // ensure widget not attached to another element (possible tBody
@@ -6652,6 +6636,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             int checksum = 0;
             while (headCells.hasNext()) {
                 hCell = (HeaderCell) headCells.next();
+                if (hCell.isResizing) {
+                    continue;
+                }
                 if (!hCell.isDefinedWidth()) {
                     int w = hCell.getNaturalColumnWidth(colIndex);
                     int newSpace;
@@ -6721,8 +6708,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 }
                 int heightBefore = getOffsetHeight();
                 scrollBodyPanel.setHeight(bodyHeight + "px");
+
                 if (heightBefore != getOffsetHeight()) {
-                    Util.notifyParentOfSizeChange(VScrollTable.this, false);
+                    Util.notifyParentOfSizeChange(VScrollTable.this, rendering);
                 }
             }
             Scheduler.get().scheduleDeferred(new Command() {
@@ -6830,14 +6818,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     private int getContentAreaBorderHeight() {
         if (contentAreaBorderHeight < 0) {
 
-            DOM.setStyleAttribute(scrollBodyPanel.getElement(), "overflow",
-                    "hidden");
+            scrollBodyPanel.getElement().getStyle()
+                    .setOverflow(Overflow.HIDDEN);
             int oh = scrollBodyPanel.getOffsetHeight();
             int ch = scrollBodyPanel.getElement()
                     .getPropertyInt("clientHeight");
             contentAreaBorderHeight = oh - ch;
-            DOM.setStyleAttribute(scrollBodyPanel.getElement(), "overflow",
-                    "auto");
+            scrollBodyPanel.getElement().getStyle().setOverflow(Overflow.AUTO);
         }
         return contentAreaBorderHeight;
     }
@@ -7101,7 +7088,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             dropDetails = new TableDDDetails();
             Element elementOver = drag.getElementOver();
 
-            VScrollTableRow row = Util.findWidget(elementOver, getRowClass());
+            Class<? extends Widget> clazz = getRowClass();
+            VScrollTableRow row = null;
+            if (clazz != null) {
+                row = Util.findWidget(elementOver, clazz);
+            }
             if (row != null) {
                 dropDetails.overkey = row.rowKey;
                 Element tr = row.getElement();
@@ -7127,7 +7118,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         private Class<? extends Widget> getRowClass() {
             // get the row type this way to make dd work in derived
             // implementations
-            return scrollBody.iterator().next().getClass();
+            Iterator<Widget> iterator = scrollBody.iterator();
+            if (iterator.hasNext()) {
+                return iterator.next().getClass();
+            } else {
+                return null;
+            }
         }
 
         @Override

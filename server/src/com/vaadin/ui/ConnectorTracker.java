@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -209,15 +209,6 @@ public class ConnectorTracker implements Serializable {
         }
     }
 
-    private void removeFromGlobalResourceHandler(ClientConnector connector) {
-        GlobalResourceHandler globalResourceHandler = uI.getSession()
-                .getGlobalResourceHandler(false);
-        // Nothing to do if there is no handler
-        if (globalResourceHandler != null) {
-            globalResourceHandler.unregisterConnector(connector);
-        }
-    }
-
     /**
      * Checks whether the given connector has already been initialized in the
      * browser. The given connector should be registered with this connector
@@ -289,17 +280,9 @@ public class ConnectorTracker implements Serializable {
      * to the application. This should only be called by the framework.
      */
     public void cleanConnectorMap() {
-        // Remove connectors that have been unregistered
-        for (ClientConnector connector : unregisteredConnectors) {
-            ClientConnector removedConnector = connectorIdToConnector
-                    .remove(connector.getConnectorId());
-            assert removedConnector == connector;
-
-            removeFromGlobalResourceHandler(connector);
-            uninitializedConnectors.remove(connector);
-            diffStates.remove(connector);
+        if (!unregisteredConnectors.isEmpty()) {
+            removeUnregisteredConnectors();
         }
-        unregisteredConnectors.clear();
 
         // Do this expensive check only with assertions enabled
         assert isHierarchyComplete() : "The connector hierarchy is corrupted. "
@@ -309,12 +292,14 @@ public class ConnectorTracker implements Serializable {
 
         // remove detached components from paintableIdMap so they
         // can be GC'ed
-        Iterator<String> iterator = connectorIdToConnector.keySet().iterator();
-
+        Iterator<ClientConnector> iterator = connectorIdToConnector.values()
+                .iterator();
+        GlobalResourceHandler globalResourceHandler = uI.getSession()
+                .getGlobalResourceHandler(false);
         while (iterator.hasNext()) {
-            String connectorId = iterator.next();
-            ClientConnector connector = connectorIdToConnector.get(connectorId);
-            if (getUIForConnector(connector) != uI) {
+            ClientConnector connector = iterator.next();
+            assert connector != null;
+            if (connector.getUI() != uI) {
                 // If connector is no longer part of this uI,
                 // remove it from the map. If it is re-attached to the
                 // application at some point it will be re-added through
@@ -328,7 +313,9 @@ public class ConnectorTracker implements Serializable {
                                 "cleanConnectorMap unregistered connector {0}. This should have been done when the connector was detached.",
                                 getConnectorAndParentInfo(connector));
 
-                removeFromGlobalResourceHandler(connector);
+                if (globalResourceHandler != null) {
+                    globalResourceHandler.unregisterConnector(connector);
+                }
                 uninitializedConnectors.remove(connector);
                 diffStates.remove(connector);
                 iterator.remove();
@@ -347,6 +334,24 @@ public class ConnectorTracker implements Serializable {
         }
 
         cleanStreamVariables();
+    }
+
+    private void removeUnregisteredConnectors() {
+        GlobalResourceHandler globalResourceHandler = uI.getSession()
+                .getGlobalResourceHandler(false);
+
+        for (ClientConnector connector : unregisteredConnectors) {
+            ClientConnector removedConnector = connectorIdToConnector
+                    .remove(connector.getConnectorId());
+            assert removedConnector == connector;
+
+            if (globalResourceHandler != null) {
+                globalResourceHandler.unregisterConnector(connector);
+            }
+            uninitializedConnectors.remove(connector);
+            diffStates.remove(connector);
+        }
+        unregisteredConnectors.clear();
     }
 
     private boolean isHierarchyComplete() {
@@ -390,25 +395,6 @@ public class ConnectorTracker implements Serializable {
         }
 
         return noErrors;
-    }
-
-    /**
-     * Finds the uI that the connector is attached to.
-     * 
-     * @param connector
-     *            The connector to lookup
-     * @return The uI the connector is attached to or null if it is not attached
-     *         to any uI.
-     */
-    private UI getUIForConnector(ClientConnector connector) {
-        if (connector == null) {
-            return null;
-        }
-        if (connector instanceof Component) {
-            return ((Component) connector).getUI();
-        }
-
-        return getUIForConnector(connector.getParent());
     }
 
     /**
@@ -727,11 +713,12 @@ public class ConnectorTracker implements Serializable {
      */
     private void cleanStreamVariables() {
         if (pidToNameToStreamVariable != null) {
+            ConnectorTracker connectorTracker = uI.getConnectorTracker();
             Iterator<String> iterator = pidToNameToStreamVariable.keySet()
                     .iterator();
             while (iterator.hasNext()) {
                 String connectorId = iterator.next();
-                if (uI.getConnectorTracker().getConnector(connectorId) == null) {
+                if (connectorTracker.getConnector(connectorId) == null) {
                     // Owner is no longer attached to the session
                     Map<String, StreamVariable> removed = pidToNameToStreamVariable
                             .get(connectorId);

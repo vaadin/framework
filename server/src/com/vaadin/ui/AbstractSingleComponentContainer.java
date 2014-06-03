@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -123,6 +123,12 @@ public abstract class AbstractSingleComponentContainer extends
      */
     @Override
     public void setContent(Component content) {
+        // Make sure we're not adding the component inside it's own content
+        if (isOrHasAncestor(content)) {
+            throw new IllegalArgumentException(
+                    "Component cannot be added inside it's own content");
+        }
+
         Component oldContent = getContent();
         if (oldContent == content) {
             // do not set the same content twice

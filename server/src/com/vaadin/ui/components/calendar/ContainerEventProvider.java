@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -224,8 +224,8 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
             }
             if (styleNameProperty != null
                     && item.getItemPropertyIds().contains(styleNameProperty)) {
-                basicEvent.setDescription(String.valueOf(item.getItemProperty(
-                        descriptionProperty).getValue()));
+                basicEvent.setStyleName(String.valueOf(item.getItemProperty(
+                        styleNameProperty).getValue()));
             }
             event = basicEvent;
         }

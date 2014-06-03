@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,8 @@ import java.util.List;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.TouchCancelEvent;
 import com.google.gwt.event.dom.client.TouchCancelHandler;
 import com.google.gwt.event.dom.client.TouchEndEvent;
@@ -181,16 +183,16 @@ public class VAbstractSplitPanel extends ComplexPanel {
     protected void constructDom() {
         DOM.appendChild(splitter, DOM.createDiv()); // for styling
         DOM.appendChild(getElement(), wrapper);
-        DOM.setStyleAttribute(wrapper, "position", "relative");
-        DOM.setStyleAttribute(wrapper, "width", "100%");
-        DOM.setStyleAttribute(wrapper, "height", "100%");
+        wrapper.getStyle().setPosition(Position.RELATIVE);
+        wrapper.getStyle().setWidth(100, Unit.PCT);
+        wrapper.getStyle().setHeight(100, Unit.PCT);
 
         DOM.appendChild(wrapper, firstContainer);
         DOM.appendChild(wrapper, splitter);
         DOM.appendChild(wrapper, secondContainer);
 
-        DOM.setStyleAttribute(splitter, "position", "absolute");
-        DOM.setStyleAttribute(secondContainer, "position", "absolute");
+        splitter.getStyle().setPosition(Position.ABSOLUTE);
+        secondContainer.getStyle().setPosition(Position.ABSOLUTE);
 
         setStylenames();
     }
@@ -198,16 +200,16 @@ public class VAbstractSplitPanel extends ComplexPanel {
     private void setOrientation(Orientation orientation) {
         this.orientation = orientation;
         if (orientation == Orientation.HORIZONTAL) {
-            DOM.setStyleAttribute(splitter, "height", "100%");
-            DOM.setStyleAttribute(splitter, "top", "0");
-            DOM.setStyleAttribute(firstContainer, "height", "100%");
-            DOM.setStyleAttribute(secondContainer, "top", "0");
-            DOM.setStyleAttribute(secondContainer, "height", "100%");
+            splitter.getStyle().setHeight(100, Unit.PCT);
+            splitter.getStyle().setTop(0, Unit.PX);
+            firstContainer.getStyle().setHeight(100, Unit.PCT);
+            secondContainer.getStyle().setTop(0, Unit.PX);
+            secondContainer.getStyle().setHeight(100, Unit.PCT);
         } else {
-            DOM.setStyleAttribute(splitter, "width", "100%");
-            DOM.setStyleAttribute(splitter, "left", "0");
-            DOM.setStyleAttribute(firstContainer, "width", "100%");
-            DOM.setStyleAttribute(secondContainer, "width", "100%");
+            splitter.getStyle().setWidth(100, Unit.PCT);
+            splitter.getStyle().setLeft(0, Unit.PX);
+            firstContainer.getStyle().setWidth(100, Unit.PCT);
+            secondContainer.getStyle().setWidth(100, Unit.PCT);
         }
     }
 
@@ -237,11 +239,11 @@ public class VAbstractSplitPanel extends ComplexPanel {
     public void setPositionReversed(boolean reversed) {
         if (positionReversed != reversed) {
             if (orientation == Orientation.HORIZONTAL) {
-                DOM.setStyleAttribute(splitter, "right", "");
-                DOM.setStyleAttribute(splitter, "left", "");
+                splitter.getStyle().clearRight();
+                splitter.getStyle().clearLeft();
             } else if (orientation == Orientation.VERTICAL) {
-                DOM.setStyleAttribute(splitter, "top", "");
-                DOM.setStyleAttribute(splitter, "bottom", "");
+                splitter.getStyle().clearTop();
+                splitter.getStyle().clearBottom();
             }
 
             positionReversed = reversed;
@@ -411,15 +413,14 @@ public class VAbstractSplitPanel extends ComplexPanel {
                 return;
             }
 
-            DOM.setStyleAttribute(firstContainer, "width", pixelPosition + "px");
+            firstContainer.getStyle().setWidth(pixelPosition, Unit.PX);
             int secondContainerWidth = (wholeSize - pixelPosition - getSplitterSize());
             if (secondContainerWidth < 0) {
                 secondContainerWidth = 0;
             }
-            DOM.setStyleAttribute(secondContainer, "width",
-                    secondContainerWidth + "px");
-            DOM.setStyleAttribute(secondContainer, "left",
-                    (pixelPosition + getSplitterSize()) + "px");
+            secondContainer.getStyle().setWidth(secondContainerWidth, Unit.PX);
+            secondContainer.getStyle().setLeft(
+                    pixelPosition + getSplitterSize(), Unit.PX);
 
             LayoutManager layoutManager = LayoutManager.get(client);
             ConnectorMap connectorMap = ConnectorMap.get(client);
@@ -460,16 +461,15 @@ public class VAbstractSplitPanel extends ComplexPanel {
                 return;
             }
 
-            DOM.setStyleAttribute(firstContainer, "height", pixelPosition
-                    + "px");
+            firstContainer.getStyle().setHeight(pixelPosition, Unit.PX);
             int secondContainerHeight = (wholeSize - pixelPosition - getSplitterSize());
             if (secondContainerHeight < 0) {
                 secondContainerHeight = 0;
             }
-            DOM.setStyleAttribute(secondContainer, "height",
-                    secondContainerHeight + "px");
-            DOM.setStyleAttribute(secondContainer, "top",
-                    (pixelPosition + getSplitterSize()) + "px");
+            secondContainer.getStyle()
+                    .setHeight(secondContainerHeight, Unit.PX);
+            secondContainer.getStyle().setTop(
+                    pixelPosition + getSplitterSize(), Unit.PX);
 
             layoutManager = LayoutManager.get(client);
             connectorMap = ConnectorMap.get(client);
@@ -716,13 +716,12 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
         if (draggingCurtain == null) {
             draggingCurtain = DOM.createDiv();
-            DOM.setStyleAttribute(draggingCurtain, "position", "absolute");
-            DOM.setStyleAttribute(draggingCurtain, "top", "0px");
-            DOM.setStyleAttribute(draggingCurtain, "left", "0px");
-            DOM.setStyleAttribute(draggingCurtain, "width", "100%");
-            DOM.setStyleAttribute(draggingCurtain, "height", "100%");
-            DOM.setStyleAttribute(draggingCurtain, "zIndex", ""
-                    + VOverlay.Z_INDEX);
+            draggingCurtain.getStyle().setPosition(Position.ABSOLUTE);
+            draggingCurtain.getStyle().setTop(0, Unit.PX);
+            draggingCurtain.getStyle().setLeft(0, Unit.PX);
+            draggingCurtain.getStyle().setWidth(100, Unit.PCT);
+            draggingCurtain.getStyle().setHeight(100, Unit.PCT);
+            draggingCurtain.getStyle().setZIndex(VOverlay.Z_INDEX);
 
             DOM.appendChild(wrapper, draggingCurtain);
         }

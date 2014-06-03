@@ -1,6 +1,6 @@
-/* 
- * Copyright 2000-2013 Vaadin Ltd.
- * 
+/*
+ * Copyright 2000-2014 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -43,6 +43,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -120,7 +121,7 @@ import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
  * 
  * Entry point classes (widgetsets) define <code>onModuleLoad()</code>.
  */
-public class ApplicationConnection {
+public class ApplicationConnection implements HasHandlers {
 
     /**
      * Helper used to return two values when updating the connector hierarchy.
@@ -340,6 +341,42 @@ public class ApplicationConnection {
             return connection;
         }
 
+    }
+
+    /**
+     * Event triggered when a XHR request has finished with the status code of
+     * the response.
+     * 
+     * Useful for handlers observing network failures like online/off-line
+     * monitors.
+     */
+    public static class ConnectionStatusEvent extends
+            GwtEvent<ConnectionStatusEvent.ConnectionStatusHandler> {
+        private int status;
+
+        public static interface ConnectionStatusHandler extends EventHandler {
+            public void onConnectionStatusChange(ConnectionStatusEvent event);
+        }
+
+        public ConnectionStatusEvent(int status) {
+            this.status = status;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        public final static Type<ConnectionStatusHandler> TYPE = new Type<ConnectionStatusHandler>();
+
+        @Override
+        public Type<ConnectionStatusHandler> getAssociatedType() {
+            return TYPE;
+        }
+
+        @Override
+        protected void dispatch(ConnectionStatusHandler handler) {
+            handler.onConnectionStatusChange(this);
+        }
     }
 
     public static class ResponseHandlingStartedEvent extends
@@ -836,6 +873,8 @@ public class ApplicationConnection {
                                 - requestStartTime.getTime()) + "ms");
 
                 int statusCode = response.getStatusCode();
+                // Notify network observers about response status
+                fireEvent(new ConnectionStatusEvent(statusCode));
 
                 switch (statusCode) {
                 case 0:
@@ -933,6 +972,7 @@ public class ApplicationConnection {
             } catch (RequestException e) {
                 VConsole.error(e);
                 endRequest();
+                fireEvent(new ConnectionStatusEvent(0));
             }
         }
     }
@@ -1084,10 +1124,13 @@ public class ApplicationConnection {
                     handleWhenCSSLoaded(jsonText, json);
                 }
             }).schedule(50);
-            VConsole.log("Assuming CSS loading is not complete, "
-                    + "postponing render phase. "
-                    + "(.v-loading-indicator height == 0)");
-            cssWaits++;
+
+            // Show this message just once
+            if (cssWaits++ == 0) {
+                VConsole.log("Assuming CSS loading is not complete, "
+                        + "postponing render phase. "
+                        + "(.v-loading-indicator height == 0)");
+            }
         } else {
             cssLoaded = true;
             handleReceivedJSONMessage(new Date(), jsonText, json);
@@ -3465,6 +3508,11 @@ public class ApplicationConnection {
         return eventBus.addHandler(type, handler);
     }
 
+    @Override
+    public void fireEvent(GwtEvent<?> event) {
+        eventBus.fireEvent(event);
+    }
+
     /**
      * Calls {@link ComponentConnector#flush()} on the active connector. Does
      * nothing if there is no active (focused) connector.
@@ -3559,4 +3607,10 @@ public class ApplicationConnection {
         return Logger.getLogger(ApplicationConnection.class.getName());
     }
 
+    /**
+     * Returns the hearbeat instance.
+     */
+    public Heartbeat getHeartbeat() {
+        return heartbeat;
+    }
 }

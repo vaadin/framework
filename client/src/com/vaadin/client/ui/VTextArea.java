@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,12 +17,15 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.WhiteSpace;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.Command;
@@ -30,6 +33,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
+import com.vaadin.client.ui.dd.DragImageModifier;
 
 /**
  * This class represents a multiline textfield (textarea).
@@ -40,15 +44,22 @@ import com.vaadin.client.Util;
  * @author Vaadin Ltd.
  * 
  */
-public class VTextArea extends VTextField {
+public class VTextArea extends VTextField implements DragImageModifier {
+
     public static final String CLASSNAME = "v-textarea";
     private boolean wordwrap = true;
     private MaxLengthHandler maxLengthHandler = new MaxLengthHandler();
     private boolean browserSupportsMaxLengthAttribute = browserSupportsMaxLengthAttribute();
+    private EnterDownHandler enterDownHandler = new EnterDownHandler();
 
     public VTextArea() {
         super(DOM.createTextArea());
         setStyleName(CLASSNAME);
+
+        // KeyDownHandler is needed for correct text input on all
+        // browsers, not just those that don't support a max length attribute
+        addKeyDownHandler(enterDownHandler);
+
         if (!browserSupportsMaxLengthAttribute) {
             addKeyUpHandler(maxLengthHandler);
             addChangeHandler(maxLengthHandler);
@@ -247,6 +258,23 @@ public class VTextArea extends VTextField {
         }
     }
 
+    private class EnterDownHandler implements KeyDownHandler {
+
+        @Override
+        public void onKeyDown(KeyDownEvent event) {
+            // Fix for #12424/13811 - if the key being pressed is enter, we stop
+            // propagation of the KeyDownEvents if there were no modifier keys
+            // also pressed. This prevents shortcuts that are bound to only the
+            // enter key from being processed but allows usage of e.g.
+            // shift-enter or ctrl-enter.
+            if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER
+                    && !event.isAnyModifierKeyDown()) {
+                event.stopPropagation();
+            }
+        }
+
+    }
+
     @Override
     public int getCursorPos() {
         // This is needed so that TextBoxImplIE6 is used to return the correct
@@ -292,6 +320,17 @@ public class VTextArea extends VTextField {
         // Overridden to avoid submitting TextArea value on enter in IE. This is
         // another reason why widgets should inherit a common abstract
         // class instead of directly each other.
+        // This method is overridden only for IE and Firefox.
     }
 
+    @Override
+    public void modifyDragImage(Element element) {
+        // Fix for #13557 - drag image doesn't show original text area text.
+        // It happens because "value" property is not copied into the cloned
+        // element
+        String value = getElement().getPropertyString("value");
+        if (value != null) {
+            element.setPropertyString("value", value);
+        }
+    }
 }

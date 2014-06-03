@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -131,7 +131,7 @@ public abstract class UIProvider implements Serializable {
      * the value of window.name in the browser.
      * <p>
      * Whenever a preserved UI is reused, its
-     * {@link UI#reinit(com.vaadin.server.VaadinRequest) reinit} method is
+     * {@link UI#refresh(com.vaadin.server.VaadinRequest) refresh} method is
      * invoked by the framework first.
      * 
      * 

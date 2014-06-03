@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -81,6 +81,12 @@ public interface Sizeable extends Serializable {
     @Deprecated
     public static final Unit UNITS_PERCENTAGE = Unit.PERCENTAGE;
 
+    /**
+     * @deprecated As of 7.3, use instead {@link #setSizeUndefined()},
+     *             {@link #setHeightUndefined()} and
+     *             {@link #setWidthUndefined()}
+     */
+    @Deprecated
     public static final float SIZE_UNDEFINED = -1;
 
     public enum Unit {
@@ -252,5 +258,19 @@ public interface Sizeable extends Serializable {
      * Clears any size settings.
      */
     public void setSizeUndefined();
+
+    /**
+     * Clears any defined width
+     * 
+     * @since 7.3
+     */
+    public void setWidthUndefined();
+
+    /**
+     * Clears any defined height
+     * 
+     * @since 7.3
+     */
+    public void setHeightUndefined();
 
 }

@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
- * 
+ * Copyright 2000-2014 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -80,7 +80,7 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 
 /**
  * Client side implementation of the Select component.
- * 
+ *
  * TODO needs major refactoring (to be extensible etc)
  */
 @SuppressWarnings("deprecation")
@@ -100,7 +100,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Constructor
-         * 
+         *
          * @param uidl
          *            The UIDL recieved from the server
          */
@@ -149,7 +149,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Get the option key which represents the item on the server side.
-         * 
+         *
          * @return The key of the item
          */
         public String getOptionKey() {
@@ -158,7 +158,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Get the URI of the icon. Used when constructing the displayed option.
-         * 
+         *
          * @return
          */
         public String getIconUri() {
@@ -252,7 +252,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Shows the popup where the user can see the filtered options
-         * 
+         *
          * @param currentSuggestions
          *            The filtered suggestions
          * @param currentPage
@@ -275,6 +275,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              * correctly. This issue manifests when a Combobox is placed in
              * another popupView which also needs to calculate the absoluteTop()
              * to position itself. #9768
+             * 
+             * After deferring the showSuggestions method, a problem with
+             * navigating in the combo box occurs. Because of that the method
+             * navigateItemAfterPageChange in ComboBoxConnector class, which
+             * navigates to the exact item after page was changed also was
+             * marked as deferred. #11333
              */
             final SuggestionPopup popup = this;
             Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -332,7 +338,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Should the next page button be visible to the user?
-         * 
+         *
          * @param active
          */
         private void setNextButtonActive(boolean active) {
@@ -352,7 +358,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Should the previous page button be visible to the user
-         * 
+         *
          * @param active
          */
         private void setPrevButtonActive(boolean active) {
@@ -439,7 +445,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                          * because otherwise the waiting flag will be reset in
                          * the first response and the second response will be
                          * ignored, causing an empty popup...
-                         * 
+                         *
                          * As long as the scrolling delay is suitable
                          * double/triple clicks will work by scrolling two or
                          * three pages at a time and this should not be a
@@ -453,7 +459,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
             public void scrollUp() {
                 debug("VFS.SP.LPS: scrollUp()");
-                if (currentPage + pagesToScroll > 0) {
+                if (pageLength > 0 && currentPage + pagesToScroll > 0) {
                     pagesToScroll--;
                     cancel();
                     schedule(200);
@@ -462,8 +468,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
             public void scrollDown() {
                 debug("VFS.SP.LPS: scrollDown()");
-                if (totalMatches > (currentPage + pagesToScroll + 1)
-                        * pageLength) {
+                if (pageLength > 0
+                        && totalMatches > (currentPage + pagesToScroll + 1)
+                                * pageLength) {
                     pagesToScroll++;
                     cancel();
                     schedule(200);
@@ -473,7 +480,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
          * .user.client.Event)
@@ -510,7 +517,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * amount of items are visible at a time and a scrollbar or buttons are
          * visible to change page. If paging is turned of then all options are
          * rendered into the popup menu.
-         * 
+         *
          * @param paging
          *            Should the paging be turned on?
          */
@@ -533,7 +540,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.user.client.ui.PopupPanel$PositionCallback#setPosition
          * (int, int)
@@ -615,7 +622,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Was the popup just closed?
-         * 
+         *
          * @return true if popup was just closed
          */
         public boolean isJustClosed() {
@@ -626,7 +633,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.event.logical.shared.CloseHandler#onClose(com.google
          * .gwt.event.logical.shared.CloseEvent)
@@ -644,7 +651,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Updates style names in suggestion popup to help theme building.
-         * 
+         *
          * @param uidl
          *            UIDL for the whole combo box
          * @param componentState
@@ -724,7 +731,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Sets the suggestions rendered in the menu
-         * 
+         *
          * @param suggestions
          *            The suggestions to be rendered in the menu
          */
@@ -919,7 +926,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     /**
      * TextBox variant used as input element for filter selects, which prevents
      * selecting text when disabled.
-     * 
+     *
      * @since 7.1.5
      */
     public class FilterSelectTextBox extends TextBox {
@@ -971,7 +978,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
          * .user.client.Event)
@@ -1144,7 +1151,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.user.client.ui.Composite#onBrowserEvent(com.google.gwt
      * .user.client.Event)
@@ -1171,7 +1178,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * It is invoked during the Constructor and should only be overridden if a
      * custom TextBox shall be used. The overriding method cannot use any
      * instance variables.
-     * 
+     *
      * @since 7.1.5
      * @return TextBox instance used by this VFilterSelect
      */
@@ -1184,7 +1191,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * instance. It is invoked during the Constructor and should only be
      * overridden if a custom SuggestionPopup shall be used. The overriding
      * method cannot use any instance variables.
-     * 
+     *
      * @since 7.1.5
      * @return SuggestionPopup instance used by this VFilterSelect
      */
@@ -1212,12 +1219,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /**
      * Does the Select have more pages?
-     * 
+     *
      * @return true if a next page exists, else false if the current page is the
      *         last page
      */
     public boolean hasNextPage() {
-        if (totalMatches > (currentPage + 1) * pageLength) {
+        if (pageLength > 0 && totalMatches > (currentPage + 1) * pageLength) {
             return true;
         } else {
             return false;
@@ -1227,7 +1234,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     /**
      * Filters the options at a certain page. Uses the text box input as a
      * filter
-     * 
+     *
      * @param page
      *            The page which items are to be filtered
      */
@@ -1237,7 +1244,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /**
      * Filters the options at certain page using the given filter
-     * 
+     *
      * @param page
      *            The page to filter
      * @param filter
@@ -1249,7 +1256,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /**
      * Filters the options at certain page using the given filter
-     * 
+     *
      * @param page
      *            The page to filter
      * @param filter
@@ -1314,7 +1321,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /**
      * Sets the text in the text box.
-     * 
+     *
      * @param text
      *            the text to set in the text box
      */
@@ -1343,7 +1350,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * shown in the text box if nothing has been entered.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param text
      *            The text the text box should contain.
      */
@@ -1358,7 +1365,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /**
      * Triggered when a suggestion is selected
-     * 
+     *
      * @param suggestion
      *            The suggestion that just got selected.
      */
@@ -1398,7 +1405,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     /**
      * Sets the icon URI of the selected item. The icon is shown on the left
      * side of the item caption text. Set the URI to null to remove the icon.
-     * 
+     *
      * @param iconUri
      *            The URI of the icon
      */
@@ -1415,6 +1422,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 panel.remove(selectedItemIcon);
             }
             selectedItemIcon = new IconWidget(client.getIcon(iconUri));
+            // Older IE versions don't scale icon correctly if DOM
+            // contains height and width attributes.
+            selectedItemIcon.getElement().removeAttribute("height");
+            selectedItemIcon.getElement().removeAttribute("width");
             selectedItemIcon.addDomHandler(new LoadHandler() {
                 @Override
                 public void onLoad(LoadEvent event) {
@@ -1452,8 +1463,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         int iconHeight = Util.getRequiredHeight(selectedItemIcon);
         int marginTop = (availableHeight - iconHeight) / 2;
-        DOM.setStyleAttribute(selectedItemIcon.getElement(), "marginTop",
-                marginTop + "px");
+        selectedItemIcon.getElement().getStyle()
+                .setMarginTop(marginTop, Unit.PX);
     }
 
     private static Set<Integer> navigationKeyCodes = new HashSet<Integer>();
@@ -1467,7 +1478,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
@@ -1520,7 +1531,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /**
      * Triggered when a key is pressed in the text box
-     * 
+     *
      * @param event
      *            The KeyDownEvent
      */
@@ -1565,7 +1576,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /**
      * Triggered when a key was pressed in the suggestion popup.
-     * 
+     *
      * @param event
      *            The KeyDownEvent of the key
      */
@@ -1647,7 +1658,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /**
      * Triggered when a key was depressed
-     * 
+     *
      * @param event
      *            The KeyUpEvent of the key depressed
      */
@@ -1790,7 +1801,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
@@ -1834,7 +1845,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
      * .dom.client.BlurEvent)
@@ -1874,6 +1885,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             // much of the TAB handling takes place here
             if (tabPressedWhenPopupOpen) {
                 tabPressedWhenPopupOpen = false;
+                waitingForFilteringResponse = false;
                 suggestionPopup.menu.doSelectedItemAction();
                 suggestionPopup.hide();
             } else if ((!suggestionPopup.isAttached() && waitingForFilteringResponse)
@@ -1898,7 +1910,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.Focusable#focus()
      */
 
@@ -1919,6 +1931,20 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * For internal use only. May be removed or replaced in the future.
      */
     public void updateRootWidth() {
+        updateRootWidth(false);
+    }
+
+    /**
+     * Calculates the width of the select if the select has undefined width.
+     * Should be called when the width changes or when the icon changes.
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     * 
+     * @param forceUpdate
+     *            a flag that forces a recalculation even if one would not
+     *            normally be done
+     */
+    public void updateRootWidth(boolean forceUpdate) {
         ComponentConnector paintable = ConnectorMap.get(client).getConnector(
                 this);
         if (paintable.isUndefinedWidth()) {
@@ -1931,7 +1957,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              * wide.
              */
             int w = Util.getRequiredWidth(this);
-            if ((!initDone || currentPage + 1 < 0)
+
+            if (forceUpdate || (!initDone || currentPage + 1 < 0)
                     && suggestionPopupMinWidth > w) {
                 /*
                  * We want to compensate for the paddings just to preserve the
@@ -1967,7 +1994,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     /**
      * Get the width of the select in pixels where the text area and icon has
      * been included.
-     * 
+     *
      * @return The width in pixels
      */
     private int getMainWidth() {
@@ -1984,7 +2011,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /**
      * Handles special behavior of the mouse down event
-     * 
+     *
      * @param event
      */
     private void handleMouseDownEvent(Event event) {
