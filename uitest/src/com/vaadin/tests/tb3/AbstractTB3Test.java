@@ -51,6 +51,8 @@ import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 import com.vaadin.ui.UI;
 
+import static com.vaadin.tests.tb3.TB3Runner.localWebDriverIsUsed;
+
 /**
  * Base class for TestBench 3+ tests. All TB3+ tests in the project should
  * extend this class.
@@ -126,7 +128,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         } else {
             capabilities = getDesiredCapabilities();
 
-            if (System.getProperty("useLocalWebDriver") != null) {
+            if (localWebDriverIsUsed()) {
                 setupLocalDriver(capabilities);
             } else {
                 WebDriver dr = TestBench.createDriver(new RemoteWebDriver(
