@@ -1197,10 +1197,6 @@ public class Escalator extends Widget {
             getEscalatorUpdater().preDetach(flyweightRow,
                     flyweightRow.getCells());
 
-            for (int c = 0; c < tr.getChildCount(); c++) {
-                // TODO this should be WidgetRenderer's responsibility
-                detachPossibleWidgetFromCell((Element) tr.getChild(c).cast());
-            }
             tr.removeFromParent();
 
             getEscalatorUpdater().postDetach(flyweightRow,
@@ -1503,7 +1499,6 @@ public class Escalator extends Widget {
 
                 for (FlyweightCell cell : cells) {
                     Element cellElement = cell.getElement();
-                    detachPossibleWidgetFromCell(cellElement);
                     cellElement.removeFromParent();
                 }
 
@@ -1552,18 +1547,6 @@ public class Escalator extends Widget {
             if (getRowCount() > 0
                     && getColumnConfiguration().getColumnCount() > 0) {
                 refreshRows(0, getRowCount());
-            }
-        }
-
-        void detachPossibleWidgetFromCell(Node cellNode) {
-            // Detach possible widget
-            Widget widget = getWidgetFromCell(cellNode);
-            if (widget != null) {
-                // Orphan.
-                setParent(widget, null);
-
-                // Physical detach.
-                cellNode.removeChild(widget.getElement());
             }
         }
 
@@ -1620,7 +1603,7 @@ public class Escalator extends Widget {
          * Precondition: The row must be already attached to the DOM and the
          * FlyweightCell instances corresponding to the new columns added to
          * {@code flyweightRow}.
-         *
+         * 
          * @param tr
          *            the row in which to insert the cells
          * @param logicalRowIndex
@@ -3340,10 +3323,6 @@ public class Escalator extends Widget {
                         .listIterator(visualRowOrder.size());
                 for (int i = 0; i < -neededEscalatorRowsDiff; i++) {
                     final Element last = iter.previous();
-                    for (int c = 0; c < last.getChildCount(); c++) {
-                        detachPossibleWidgetFromCell((Element) last.getChild(c)
-                                .cast());
-                    }
                     last.removeFromParent();
                     iter.remove();
                 }
@@ -4403,19 +4382,6 @@ public class Escalator extends Widget {
                 body.getLogicalRowIndex(body.visualRowOrder.getFirst()),
                 body.getLogicalRowIndex(body.visualRowOrder.getLast()) + 1);
     }
-
-    /**
-     * Accesses the package private method Widget#setParent()
-     * 
-     * @param widget
-     *            The widget to access
-     * @param parent
-     *            The parent to set
-     */
-    static native final void setParent(Widget widget, Widget parent)
-    /*-{
-        widget.@com.google.gwt.user.client.ui.Widget::setParent(Lcom/google/gwt/user/client/ui/Widget;)(parent);
-    }-*/;
 
     /**
      * Returns the widget from a cell node or <code>null</code> if there is no

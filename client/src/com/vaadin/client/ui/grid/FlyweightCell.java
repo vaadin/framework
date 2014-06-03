@@ -20,8 +20,6 @@ import java.util.List;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.grid.FlyweightRow.CellIterator;
 
 /**
@@ -185,59 +183,4 @@ public class FlyweightCell {
             }
         }
     }
-
-    /**
-     * @deprecated Will be removed in further refactorings
-     */
-    @Deprecated
-    public Widget getWidget() {
-        return Escalator.getWidgetFromCell(getElement());
-    }
-
-    /**
-     * @deprecated Will be removed in further refactorings
-     */
-    @Deprecated
-    public void setWidget(Widget widget) {
-
-        Widget oldWidget = getWidget();
-
-        // Validate
-        if (oldWidget == widget) {
-            return;
-        }
-
-        // Detach old child.
-        if (oldWidget != null) {
-            // Orphan.
-            Escalator.setParent(oldWidget, null);
-
-            // Physical detach.
-            getElement().removeChild(oldWidget.getElement());
-        }
-
-        // Remove any previous text nodes from previous
-        // setInnerText/setInnerHTML
-        getElement().removeAllChildren();
-
-        // Attach new child.
-        if (widget != null) {
-            // Detach new child from old parent.
-            widget.removeFromParent();
-
-            // Physical attach.
-            getElement().appendChild(widget.getElement());
-
-            Escalator.setParent(widget, escalator);
-        }
-    }
-
-    /**
-     * @deprecated Will be removed in further refactorings
-     */
-    @Deprecated
-    public void setWidget(IsWidget w) {
-        setWidget(Widget.asWidgetOrNull(w));
-    }
-
 }

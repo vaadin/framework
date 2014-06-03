@@ -33,11 +33,14 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasVisibility;
+import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.Util;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
+import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
 import com.vaadin.client.ui.grid.selection.MultiSelectionRenderer;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -774,49 +777,68 @@ public class Grid<T> extends Composite implements SubPartAware {
         return new EscalatorUpdater() {
 
             @Override
+            public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
+                // NOP
+            }
+
+            @Override
+            public void postAttach(Row row,
+                    Iterable<FlyweightCell> attachedCells) {
+                for (FlyweightCell cell : attachedCells) {
+                    Renderer renderer = findRenderer(cell);
+                    if (renderer instanceof WidgetRenderer) {
+                        WidgetRenderer widgetRenderer = (WidgetRenderer) renderer;
+
+                        Widget widget = widgetRenderer.createWidget();
+                        assert widget != null : "WidgetRenderer.createWidget() returned null. It should return a widget.";
+                        assert widget.getParent() == null : "WidgetRenderer.createWidget() returned a widget which already is attached.";
+                        assert cell.getElement().getChildCount() == 0 : "Cell content should be empty when adding Widget";
+
+                        // Physical attach
+                        cell.getElement().appendChild(widget.getElement());
+
+                        // Logical attach
+                        setParent(widget, Grid.this);
+                    }
+                }
+            }
+
+            @Override
             public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
                 int rowIndex = row.getRow();
-                if (dataSource == null) {
-                    setCellsLoading(cellsToUpdate);
-                    return;
-                }
-
                 T rowData = dataSource.getRow(rowIndex);
                 if (rowData == null) {
-                    setCellsLoading(cellsToUpdate);
                     return;
                 }
 
                 for (FlyweightCell cell : cellsToUpdate) {
                     GridColumn column = getColumnFromVisibleIndex(cell
                             .getColumn());
-                    if (column != null) {
-                        Object value = column.getValue(rowData);
-                        column.getRenderer().render(cell, value);
-                    }
+                    assert column != null : "Column was not found from cell ("
+                            + cell.getColumn() + "," + cell.getRow() + ")";
+                    Object value = column.getValue(rowData);
+                    Renderer renderer = findRenderer(cell);
+                    renderer.render(cell, value);
                 }
-            }
-
-            private void setCellsLoading(Iterable<FlyweightCell> cellsToUpdate) {
-                for (FlyweightCell cell : cellsToUpdate) {
-                    cell.getElement().setInnerText("...");
-                }
-            }
-
-            @Override
-            public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
-                // NOOP for now
-            }
-
-            @Override
-            public void postAttach(Row row,
-                    Iterable<FlyweightCell> attachedCells) {
-                // NOOP for now
             }
 
             @Override
             public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
-                // NOOP for now
+                for (FlyweightCell cell : cellsToDetach) {
+                    Renderer renderer = findRenderer(cell);
+                    if (renderer instanceof WidgetRenderer) {
+                        Widget w = Util.findWidget(cell.getElement()
+                                .getFirstChildElement(), Widget.class);
+                        if (w != null) {
+
+                            // Logical detach
+                            setParent(w, null);
+
+                            // Physical detach
+                            cell.getElement().removeChild(w.getElement());
+                        }
+                    }
+                }
             }
 
             @Override
@@ -1025,6 +1047,13 @@ public class Grid<T> extends Composite implements SubPartAware {
             }
         }
         return null;
+    }
+
+    private Renderer findRenderer(FlyweightCell cell) {
+        GridColumn column = getColumnFromVisibleIndex(cell.getColumn());
+        assert column != null : "Could not find column at index:"
+                + cell.getColumn();
+        return column.getRenderer();
     }
 
     /**
@@ -1735,4 +1764,17 @@ public class Grid<T> extends Composite implements SubPartAware {
     private boolean isSelected(T row) {
         return false;
     }
+
+    /**
+     * Accesses the package private method Widget#setParent()
+     * 
+     * @param widget
+     *            The widget to access
+     * @param parent
+     *            The parent to set
+     */
+    private static native final void setParent(Widget widget, Widget parent)
+    /*-{
+        widget.@com.google.gwt.user.client.ui.Widget::setParent(Lcom/google/gwt/user/client/ui/Widget;)(parent);
+    }-*/;
 }
