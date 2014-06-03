@@ -208,58 +208,55 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
             } else if(rule.type == 1 || !rule.type) {
                 // Regular selector rule
 
-                // IE parses CSS like .class[attr="val"] into [attr="val"].class so we need to check for both
-
-                // Pattern for matching [width-range] selectors
-                var widths = IE? /\[width-range~?=["|'](.*)-(.*)["|']\]([\.|#]\S+)/i : /([\.|#]\S+)\[width-range~?=["|'](.*)-(.*)["|']\]/i;
-
-                // Patter for matching [height-range] selectors
-                var heights = IE? /\[height-range~?=["|'](.*)-(.*)["|']\]([\.|#]\S+)/i : /([\.|#]\S+)\[height-range~?=["|'](.*)-(.*)["|']\]/i;
+                // Helper function
+                var pushToCache = function(ranges, selector, min, max) {
+                    // Avoid adding duplicates
+                    var duplicate = false;
+                    for(var l = 0, len3 = ranges.length; l < len3; l++) {
+                        var bp = ranges[l];
+                        if (selector == bp[0] && min == bp[1] && max == bp[2]) {
+                            duplicate = true;
+                            break;
+                        }
+                    }
+                    if (!duplicate) {
+                        ranges.push([selector, min, max]);
+                    }
+                };
 
                 // Array of all of the separate selectors in this ruleset
                 var haystack = rule.selectorText.split(",");
 
+                // IE parses CSS like .class[attr="val"] into [attr="val"].class so we need to check for both
+                var selectorRegEx = IE ? /\[.*\]([\.|#]\S+)/ : /([\.|#]\S+?)\[.*\]/;
+
                 // Loop all the selectors in this ruleset
                 for(var k = 0, len2 = haystack.length; k < len2; k++) {
-                    var result;
+                    
+                    // Split the haystack into parts.
+                    var widthRange = haystack[k].match(/\[width-range.*?\]/);
+                    var heightRange = haystack[k].match(/\[height-range.*?\]/);
+                    var selector = haystack[k].match(selectorRegEx);
 
-                    // Check for width-range matches
-                    if(result = haystack[k].match(widths)) {
-                        var selector = IE? result[3] : result[1]
-                        var min = IE? result[1] : result[2];
-                        var max = IE? result[2] : result[3];
-
-                        // Avoid adding duplicates
-                        var duplicate = false;
-                        for(var l = 0, len3 = widthRanges.length; l < len3; l++) {
-                            var bp = widthRanges[l];
-                            if(selector == bp[0] && min == bp[1] && max == bp[2]) {
-                                duplicate = true;
-                                break;
-                            }
+                    if (selector != null) {
+                        selector = selector[1];
+                        
+                        // Check for width-ranges.
+                        if (widthRange != null) {
+                            var minMax = widthRange[0].match(/\[width-range~?=["|'](.*?)-(.*?)["|']\]/i);
+                            var min = minMax[1];
+                            var max = minMax[2];
+                            
+                            pushToCache(widthRanges, selector, min, max);
                         }
-                        if(!duplicate) {
-                            widthRanges.push([selector, min, max]);
-                        }
-                    }
 
-                    // Check for height-range matches
-                    if(result = haystack[k].match(heights)) {
-                        var selector = IE? result[3] : result[1]
-                        var min = IE? result[1] : result[2];
-                        var max = IE? result[2] : result[3];
-
-                        // Avoid adding duplicates
-                        var duplicate = false;
-                        for(var l = 0, len3 = heightRanges.length; l < len3; l++) {
-                            var bp = heightRanges[l];
-                            if(selector == bp[0] && min == bp[1] && max == bp[2]) {
-                                duplicate = true;
-                                break;
-                            }
-                        }
-                        if(!duplicate) {
-                            heightRanges.push([selector, min, max]);
+                        // Check for height-ranges.
+                        if (heightRange != null) {
+                            var minMax = heightRange[0].match(/\[height-range~?=["|'](.*?)-(.*?)["|']\]/i);
+                            var min = minMax[1];
+                            var max = minMax[2];
+    
+                            pushToCache(heightRanges, selector, min, max);
                         }
                     }
                 }
