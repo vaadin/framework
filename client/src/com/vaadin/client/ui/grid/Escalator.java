@@ -1492,13 +1492,36 @@ public class Escalator extends Widget {
             final NodeList<Node> childNodes = root.getChildNodes();
             for (int visualRowIndex = 0; visualRowIndex < childNodes
                     .getLength(); visualRowIndex++) {
-                final Node tr = childNodes.getItem(visualRowIndex);
+                final Element tr = getTrByVisualIndex(visualRowIndex);
 
-                for (int column = 0; column < numberOfColumns; column++) {
-                    Element cellElement = tr.getChild(offset).cast();
+                flyweightRow.setup(tr, visualRowIndex,
+                        columnConfiguration.getCalculatedColumnWidths());
+
+                Iterable<FlyweightCell> cells = flyweightRow.getCells(offset,
+                        numberOfColumns);
+
+                getEscalatorUpdater().preDetach(flyweightRow, cells);
+
+                for (FlyweightCell cell : cells) {
+                    Element cellElement = cell.getElement();
                     detachPossibleWidgetFromCell(cellElement);
                     cellElement.removeFromParent();
                 }
+
+                /**
+                 * We need a new iterable that does not try to reset the cell
+                 * elements from the tr as they're not attached anymore. Instead
+                 * the cells simply retain the now-unattached elements that were
+                 * assigned on the above iteration.
+                 * 
+                 * TODO a cleaner solution, eg. an iterable that only associates
+                 * the elements once
+                 */
+                cells = flyweightRow
+                        .getUnattachedCells(offset, numberOfColumns);
+                getEscalatorUpdater().postDetach(flyweightRow, cells);
+
+                assert flyweightRow.teardown();
             }
             reapplyRowWidths();
 
@@ -1616,7 +1639,7 @@ public class Escalator extends Widget {
             flyweightRow.setup(tr, logicalRowIndex,
                     columnConfiguration.getCalculatedColumnWidths());
 
-            Iterable<FlyweightCell> cells = flyweightRow.getUninitializedCells(
+            Iterable<FlyweightCell> cells = flyweightRow.getUnattachedCells(
                     offset, numberOfCells);
 
             final int rowHeight = getDefaultRowHeight();

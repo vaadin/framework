@@ -99,7 +99,7 @@ public class FlyweightCell {
     void setup(final CellIterator iterator) {
         currentIterator = iterator;
 
-        if (iterator.areCellsInitialized()) {
+        if (iterator.areCellsAttached()) {
             final Element e = (Element) row.getElement().getChild(column);
             e.setPropertyInt(COLSPAN_ATTR, 1);
             e.getStyle().setWidth(row.getColumnWidth(column), Unit.PX);

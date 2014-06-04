@@ -38,42 +38,41 @@ class FlyweightRow implements Row {
     static class CellIterator implements Iterator<FlyweightCell> {
         /** A defensive copy of the cells in the current row. */
         private final ArrayList<FlyweightCell> cells;
-        private final boolean initialized;
+        private final boolean cellsAttached;
         private int cursor = 0;
         private int skipNext = 0;
 
         /**
-         * Creates a new iterator of initialized flyweight cells. A cell is
-         * initialized if it has a corresponding
-         * {@link FlyweightCell#getElement() DOM element} attached to the row
-         * element.
+         * Creates a new iterator of attached flyweight cells. A cell is
+         * attached if it has a corresponding {@link FlyweightCell#getElement()
+         * DOM element} attached to the row element.
          * 
          * @param cells
          *            the collection of cells to iterate
          */
-        public static CellIterator initialized(
+        public static CellIterator attached(
                 final Collection<FlyweightCell> cells) {
             return new CellIterator(cells, true);
         }
 
         /**
-         * Creates a new iterator of uninitialized flyweight cells. A cell is
-         * uninitialized if it does not have a corresponding
+         * Creates a new iterator of unattached flyweight cells. A cell is
+         * unattached if it does not have a corresponding
          * {@link FlyweightCell#getElement() DOM element} attached to the row
          * element.
          * 
          * @param cells
          *            the collection of cells to iterate
          */
-        public static CellIterator uninitialized(
+        public static CellIterator unattached(
                 final Collection<FlyweightCell> cells) {
             return new CellIterator(cells, false);
         }
 
         private CellIterator(final Collection<FlyweightCell> cells,
-                final boolean initialized) {
+                final boolean attached) {
             this.cells = new ArrayList<FlyweightCell>(cells);
-            this.initialized = initialized;
+            cellsAttached = attached;
         }
 
         @Override
@@ -129,8 +128,8 @@ class FlyweightRow implements Row {
             return cells.subList(from, to);
         }
 
-        public boolean areCellsInitialized() {
-            return initialized;
+        public boolean areCellsAttached() {
+            return cellsAttached;
         }
     }
 
@@ -215,7 +214,11 @@ class FlyweightRow implements Row {
     }
 
     /**
-     * Returns flyweight cells for the client code to render.
+     * Returns flyweight cells for the client code to render. The cells get
+     * their associated {@link FlyweightCell#getElement() elements} from the row
+     * element.
+     * <p>
+     * Precondition: each cell has a corresponding element in the row
      * 
      * @return an iterable of flyweight cells
      * 
@@ -223,21 +226,39 @@ class FlyweightRow implements Row {
      * @see #teardown()
      */
     Iterable<FlyweightCell> getCells() {
+        return getCells(0, cells.size());
+    }
+
+    /**
+     * Returns a subrange of flyweight cells for the client code to render. The
+     * cells get their associated {@link FlyweightCell#getElement() elements}
+     * from the row element.
+     * <p>
+     * Precondition: each cell has a corresponding element in the row
+     * 
+     * @param offset
+     *            the index of the first cell to return
+     * @param numberOfCells
+     *            the number of cells to return
+     * @return an iterable of flyweight cells
+     */
+    Iterable<FlyweightCell> getCells(final int offset, final int numberOfCells) {
         assertSetup();
         return new Iterable<FlyweightCell>() {
             @Override
             public Iterator<FlyweightCell> iterator() {
-                return CellIterator.initialized(cells);
+                return CellIterator.attached(cells.subList(offset, offset
+                        + numberOfCells));
             }
         };
     }
 
     /**
-     * Returns a subsequence of uninitialized flyweight cells. Uninitialized
-     * cells do not have {@link FlyweightCell#getElement() elements} associated.
-     * Note that FlyweightRow does not keep track of whether cells in actuality
-     * have corresponding DOM elements or not; it is the caller's responsibility
-     * to invoke this method with correct parameters.
+     * Returns a subrange of unattached flyweight cells. Unattached cells do
+     * not have {@link FlyweightCell#getElement() elements} associated. Note
+     * that FlyweightRow does not keep track of whether cells in actuality have
+     * corresponding DOM elements or not; it is the caller's responsibility to
+     * invoke this method with correct parameters.
      * <p>
      * Precondition: the range [offset, offset + numberOfCells) must be valid
      * 
@@ -247,14 +268,14 @@ class FlyweightRow implements Row {
      *            the number of cells to return
      * @return an iterable of flyweight cells
      */
-    Iterable<FlyweightCell> getUninitializedCells(final int offset,
+    Iterable<FlyweightCell> getUnattachedCells(final int offset,
             final int numberOfCells) {
         assertSetup();
         assert offset >= 0 && offset + numberOfCells <= cells.size() : "Invalid range of cells";
         return new Iterable<FlyweightCell>() {
             @Override
             public Iterator<FlyweightCell> iterator() {
-                return CellIterator.uninitialized(cells.subList(offset, offset
+                return CellIterator.unattached(cells.subList(offset, offset
                         + numberOfCells));
             }
         };
