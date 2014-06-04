@@ -140,7 +140,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         createRowActions();
 
-        addHeightByRowActions();
+        addHeightActions();
 
         return grid;
     }
@@ -429,7 +429,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     }
 
     @SuppressWarnings("boxing")
-    protected void addHeightByRowActions() {
+    protected void addHeightActions() {
         createCategory("Height by Rows", "Size");
 
         createBooleanAction("HeightMode Row", "Size", false,
@@ -450,6 +450,22 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             addActionForHeightByRows(i + 1d / 3d);
             addActionForHeightByRows(i + 2d / 3d);
         }
+
+        Command<Grid, String> sizeCommand = new Command<Grid, String>() {
+            @Override
+            public void execute(Grid grid, String height, Object data) {
+                grid.setHeight(height);
+            }
+        };
+
+        createCategory("Height", "Size");
+        // header 20px + scrollbar 16px = 36px baseline
+        createClickAction("86px (no drag scroll select)", "Height",
+                sizeCommand, "86px");
+        createClickAction("96px (drag scroll select limit)", "Height",
+                sizeCommand, "96px");
+        createClickAction("106px (drag scroll select enabled)", "Height",
+                sizeCommand, "106px");
     }
 
     private void addActionForHeightByRows(final Double i) {

@@ -1959,6 +1959,25 @@ public class Grid<T> extends Composite implements
                 ScrollDestination.END);
     }
 
+    /**
+     * Sets the vertical scroll offset.
+     * 
+     * @param px
+     *            the number of pixels this grid should be scrolled down
+     */
+    public void setScrollTop(double px) {
+        escalator.setScrollTop(px);
+    }
+
+    /**
+     * Gets the vertical scroll offset
+     * 
+     * @return the number of pixels this grid is scrolled down
+     */
+    public double getScrollTop() {
+        return escalator.getScrollTop();
+    }
+
     private static final Logger getLogger() {
         return Logger.getLogger(Grid.class.getName());
     }

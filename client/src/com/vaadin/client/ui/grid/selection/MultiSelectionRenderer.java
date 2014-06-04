@@ -18,12 +18,14 @@ package com.vaadin.client.ui.grid.selection;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableElement;
-import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -38,63 +40,67 @@ import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 /* This class will probably not survive the final merge of all selection functionality. */
 public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
 
+    /** The size of the autoscroll area, both top and bottom. */
+    private static final int SCROLL_AREA_GRADIENT_PX = 100;
+
+    /** The maximum number of pixels per second to autoscroll. */
+    private static final int SCROLL_TOP_SPEED_PX_SEC = 500;
+
+    /**
+     * The minimum area where the grid doesn't scroll while the pointer is
+     * pressed.
+     */
+    private static final int MIN_NO_AUTOSCROLL_AREA_PX = 50;
+
+    /**
+     * This class's main objective is to listen when to stop autoscrolling, and
+     * make sure everything stops accordingly.
+     */
     private class TouchEventHandler implements NativePreviewHandler {
         @Override
         public void onPreviewNativeEvent(final NativePreviewEvent event) {
             switch (event.getTypeInt()) {
-            case Event.ONTOUCHSTART:
+            case Event.ONTOUCHSTART: {
+                if (event.getNativeEvent().getTouches().length() == 1) {
+                    /*
+                     * Something has dropped a touchend/touchcancel and the
+                     * scroller is most probably running amok. Let's cancel it
+                     * and pretend that everything's going as expected
+                     * 
+                     * Because this is a preview, this code is run before the
+                     * event handler in MultiSelectionRenderer.onBrowserEvent.
+                     * Therefore, we can simply kill everything and let that
+                     * method restart things as they should.
+                     */
+                    autoScrollHandler.stop();
+
+                    /*
+                     * Related TODO: investigate why iOS seems to ignore a
+                     * touchend/touchcancel when frames are dropped, and/or if
+                     * something can be done about that.
+                     */
+                }
+                break;
+            }
+
             case Event.ONTOUCHMOVE:
+                event.cancel();
+                break;
+
             case Event.ONTOUCHEND:
             case Event.ONTOUCHCANCEL:
+                /*
+                 * Remember: targetElement is always where touchstart started,
+                 * not where the finger is pointing currently.
+                 */
                 final Element targetElement = Element.as(event.getNativeEvent()
                         .getEventTarget());
                 if (isInFirstColumn(targetElement)) {
-                    dispatchTouchEvent(event);
+                    removeNativeHandler();
                     event.cancel();
                 }
                 break;
             }
-        }
-
-        private void dispatchTouchEvent(final NativePreviewEvent event) {
-            final NativeEvent nativeEvent = event.getNativeEvent();
-
-            final int currentRow;
-            if (event.getTypeInt() == Event.ONTOUCHSTART
-                    || event.getTypeInt() == Event.ONTOUCHMOVE) {
-                final Element touchCurrentElement = findTouchCurrentElement(nativeEvent);
-                currentRow = getLogicalRowIndex(touchCurrentElement);
-            } else {
-                currentRow = -1;
-            }
-
-            switch (event.getTypeInt()) {
-            case Event.ONTOUCHSTART:
-                selectionHandler.onSelectionStart(currentRow);
-                break;
-            case Event.ONTOUCHMOVE:
-                selectionHandler.onSelectionMove(currentRow);
-                break;
-            case Event.ONTOUCHEND:
-                selectionHandler.onSelectionEnd();
-                removeNativeHandler();
-                break;
-            case Event.ONTOUCHCANCEL:
-                selectionHandler.onSelectionEnd();
-                removeNativeHandler();
-                break;
-            default:
-                throw new UnsupportedOperationException(
-                        "Internal error: unexpected event type slipped through into our logic: "
-                                + event);
-            }
-            event.cancel();
-        }
-
-        private Element findTouchCurrentElement(final NativeEvent nativeEvent) {
-            final Touch touch = nativeEvent.getTouches().get(0);
-            return Util.getElementFromPoint(touch.getClientX(),
-                    touch.getClientY());
         }
 
         private boolean isInFirstColumn(final Element element) {
@@ -123,45 +129,314 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         }
     }
 
-    private class SelectionHandler {
-        /** The row index that is currently/last being manipulated. */
-        private int currentRow = -1;
+    /**
+     * This class's responsibility is to
+     * <ul>
+     * <li>scroll the table while a pointer is kept in a scrolling zone and
+     * <li>select rows whenever a pointer is "activated" on a selection cell
+     * </ul>
+     * <p>
+     * <em>Techical note:</em> This class is an AnimationCallback because we
+     * need a timer: when the finger is kept in place while the grid scrolls, we
+     * still need to be able to make new selections. So, instead of relying on
+     * events (which won't be fired, since the pointer isn't necessarily
+     * moving), we do this check on each frame while the pointer is "active"
+     * (mouse is pressed, finger is on screen).
+     */
+    private class AutoScrollerAndSelector implements AnimationCallback {
 
         /**
-         * The selection mode that we are currently painting.
-         * <ul>
-         * <li><code>true</code> == selection painting
-         * <li><code>false</code> == deselection painting
-         * </ul>
-         * This value's meaning is undefined while {@link #selectionInProgress}
-         * is <code>false</code>.
+         * If the acceleration gradient area is smaller than this, autoscrolling
+         * will be disabled (it becomes too quick to accelerate to be usable).
          */
-        private boolean selectionPaint = false;
+        private static final int GRADIENT_MIN_THRESHOLD_PX = 10;
 
-        /** Whether we are painting currently or not. */
-        private boolean paintingInProgress = false;
+        /**
+         * The lowest y-coordinate on the {@link Event#getClientY() client} from
+         * where we need to start scrolling towards the top.
+         */
+        private final int topBound;
 
-        public void onSelectionStart(final int logicalRowIndex) {
-            paintingInProgress = true;
-            currentRow = logicalRowIndex;
-            selectionPaint = !isSelected(currentRow);
-            setSelected(currentRow, selectionPaint);
+        /**
+         * The highest y-coordinate on the {@link Event#getClientY() client}
+         * from where we need to scrolling towards the bottom.
+         */
+        private final int bottomBound;
+
+        /**
+         * <code>true</code> if the pointer is selecting, <code>false</code> if
+         * the pointer is deselecting.
+         */
+        private final boolean selectionPaint;
+
+        /**
+         * The area where the selection acceleration takes place. If &lt;
+         * {@link #GRADIENT_MIN_THRESHOLD_PX}, autoscrolling is disabled
+         */
+        private final int gradientArea;
+
+        /**
+         * The number of pixels per seconds we currently are scrolling (negative
+         * is towards the top, positive is towards the bottom).
+         */
+        private double scrollSpeed = 0;
+
+        private double prevTimestamp = 0;
+
+        /**
+         * This field stores fractions of pixels to scroll, to make sure that
+         * we're able to scroll less than one px per frame.
+         */
+        private double pixelsToScroll = 0.0d;
+
+        /** Should this animator be running. */
+        private boolean running = false;
+
+        /** The handle in which this instance is running. */
+        private AnimationHandle handle;
+
+        /** The pointer's pageX coordinate. */
+        private int pageX;
+
+        /** The pointer's pageY coordinate. */
+        private int pageY;
+
+        /** The logical index of the row that was most recently modified. */
+        private int logicalRow = -1;
+
+        public AutoScrollerAndSelector(final int topBound,
+                final int bottomBound, final int gradientArea,
+                final boolean selectionPaint) {
+            this.topBound = topBound;
+            this.bottomBound = bottomBound;
+            this.gradientArea = gradientArea;
+            this.selectionPaint = selectionPaint;
         }
 
-        public void onSelectionMove(final int logicalRowIndex) {
-            if (!paintingInProgress || logicalRowIndex == currentRow) {
-                return;
+        @Override
+        public void execute(final double timestamp) {
+            final double timeDiff = timestamp - prevTimestamp;
+            prevTimestamp = timestamp;
+
+            pixelsToScroll += scrollSpeed * (timeDiff / 1000.0d);
+            final int intPixelsToScroll = (int) pixelsToScroll;
+            pixelsToScroll -= intPixelsToScroll;
+
+            if (intPixelsToScroll != 0) {
+                grid.setScrollTop(grid.getScrollTop() + intPixelsToScroll);
             }
 
-            assert currentRow != -1 : "currentRow was uninitialized.";
+            @SuppressWarnings("hiding")
+            int logicalRow = getLogicalRowIndex(Util.getElementFromPoint(pageX,
+                    pageY));
+            if (logicalRow != -1 && logicalRow != this.logicalRow) {
+                this.logicalRow = logicalRow;
+                setSelected(logicalRow, selectionPaint);
+            }
 
-            currentRow = logicalRowIndex;
-            setSelected(currentRow, selectionPaint);
+            reschedule();
         }
 
-        public void onSelectionEnd() {
-            currentRow = -1;
-            paintingInProgress = false;
+        private void updateScrollSpeed(final int pointerPageY) {
+
+            final double ratio;
+            if (pointerPageY < topBound) {
+                final double distance = pointerPageY - topBound;
+                ratio = Math.max(-1, distance / gradientArea);
+            }
+
+            else if (pointerPageY > bottomBound) {
+                final double distance = pointerPageY - bottomBound;
+                ratio = Math.min(1, distance / gradientArea);
+            }
+
+            else {
+                ratio = 0;
+            }
+
+            scrollSpeed = ratio * SCROLL_TOP_SPEED_PX_SEC;
+        }
+
+        public void start(int logicalRowIndex) {
+            running = true;
+            setSelected(logicalRowIndex, selectionPaint);
+            logicalRow = logicalRowIndex;
+            reschedule();
+        }
+
+        public void stop() {
+            running = false;
+
+            if (handle != null) {
+                handle.cancel();
+                handle = null;
+            }
+        }
+
+        private void reschedule() {
+            if (running && gradientArea >= GRADIENT_MIN_THRESHOLD_PX) {
+                handle = AnimationScheduler.get().requestAnimationFrame(this,
+                        grid.getElement());
+            }
+        }
+
+        @SuppressWarnings("hiding")
+        public void updatePointerCoords(int pageX, int pageY) {
+            updateScrollSpeed(pageY);
+            this.pageX = pageX;
+            this.pageY = pageY;
+        }
+    }
+
+    /**
+     * This class makes sure that pointer movemenets are registered and
+     * delegated to the autoscroller so that it can:
+     * <ul>
+     * <li>modify the speed in which we autoscroll.
+     * <li>"paint" a new row with the selection.
+     * </ul>
+     * Essentially, when a pointer is pressed on the selection column, a native
+     * preview handler is registered (so that selection gestures can happen
+     * outside of the selection column). The handler itself makes sure that it's
+     * detached when the pointer is "lifted".
+     */
+    private class AutoScrollHandler {
+        private AutoScrollerAndSelector autoScroller;
+
+        /** The registration info for {@link #scrollPreviewHandler} */
+        private HandlerRegistration handlerRegistration;
+
+        private final NativePreviewHandler scrollPreviewHandler = new NativePreviewHandler() {
+            @Override
+            public void onPreviewNativeEvent(final NativePreviewEvent event) {
+                if (autoScroller == null) {
+                    stop();
+                    return;
+                }
+
+                final NativeEvent nativeEvent = event.getNativeEvent();
+                int pageY = 0;
+                int pageX = 0;
+                switch (event.getTypeInt()) {
+                case Event.ONMOUSEMOVE:
+                case Event.ONTOUCHMOVE:
+                    pageY = Util.getTouchOrMouseClientY(nativeEvent);
+                    pageX = Util.getTouchOrMouseClientX(nativeEvent);
+                    autoScroller.updatePointerCoords(pageX, pageY);
+                    break;
+                case Event.ONMOUSEUP:
+                case Event.ONTOUCHEND:
+                case Event.ONTOUCHCANCEL:
+                    stop();
+                    break;
+                }
+            }
+        };
+
+        /**
+         * The top bound, as calculated from the {@link Event#getClientY()
+         * client} coordinates.
+         */
+        private int topBound = -1;
+
+        /**
+         * The bottom bound, as calculated from the {@link Event#getClientY()
+         * client} coordinates.
+         */
+        private int bottomBound = -1;
+
+        /** The size of the autoscroll acceleration area. */
+        private int gradientArea;
+
+        public void start(int logicalRowIndex) {
+            /*
+             * bounds are updated whenever the autoscroll cycle starts, to make
+             * sure that the widget hasn't changed in size, moved around, or
+             * whatnot.
+             */
+            updateScrollBounds();
+
+            assert handlerRegistration == null : "handlerRegistration was not null";
+            assert autoScroller == null : "autoScroller was not null";
+            handlerRegistration = Event
+                    .addNativePreviewHandler(scrollPreviewHandler);
+
+            autoScroller = new AutoScrollerAndSelector(topBound, bottomBound,
+                    gradientArea, !isSelected(logicalRowIndex));
+            autoScroller.start(logicalRowIndex);
+        }
+
+        private void updateScrollBounds() {
+            final Element root = Element.as(grid.getElement());
+            final Element tableWrapper = Element.as(root.getChild(2));
+            final TableElement table = TableElement.as(tableWrapper
+                    .getFirstChildElement());
+            final Element thead = table.getTHead();
+            final Element tfoot = table.getTFoot();
+
+            /*
+             * GWT _does_ have an "Element.getAbsoluteTop()" that takes both the
+             * client top and scroll compensation into account, but they're
+             * calculated wrong for our purposes, so this does something
+             * similar, but only suitable for us.
+             * 
+             * Also, this should be a bit faster, since the scroll compensation
+             * is calculated only once and used in two places.
+             */
+
+            final int topBorder = getClientTop(root) + thead.getOffsetHeight();
+            final int bottomBorder = getClientTop(tfoot);
+
+            final int scrollCompensation = getScrollCompensation();
+            topBound = scrollCompensation + topBorder + SCROLL_AREA_GRADIENT_PX;
+            bottomBound = scrollCompensation + bottomBorder
+                    - SCROLL_AREA_GRADIENT_PX;
+            gradientArea = SCROLL_AREA_GRADIENT_PX;
+
+            // modify bounds if they're too tightly packed
+            if (bottomBound - topBound < MIN_NO_AUTOSCROLL_AREA_PX) {
+                int adjustment = MIN_NO_AUTOSCROLL_AREA_PX
+                        - (bottomBound - topBound);
+                topBound -= adjustment / 2;
+                bottomBound += adjustment / 2;
+                gradientArea -= adjustment / 2;
+            }
+        }
+
+        /** Get the "top" of an element in relation to "client" coordinates. */
+        private int getClientTop(final Element e) {
+            Element cursor = e;
+            int top = 0;
+            while (cursor != null) {
+                top += cursor.getOffsetTop();
+                cursor = cursor.getOffsetParent();
+            }
+            return top;
+        }
+
+        private int getScrollCompensation() {
+            Element cursor = grid.getElement();
+            int scroll = 0;
+            while (cursor != null) {
+                scroll -= cursor.getScrollTop();
+                cursor = cursor.getParentElement();
+            }
+
+            return scroll;
+        }
+
+        public void stop() {
+            if (handlerRegistration != null) {
+                handlerRegistration.removeHandler();
+                handlerRegistration = null;
+            }
+
+            if (autoScroller != null) {
+                autoScroller.stop();
+                autoScroller = null;
+            }
+
+            removeNativeHandler();
         }
     }
 
@@ -170,7 +445,7 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
     private final Grid<T> grid;
     private HandlerRegistration nativePreviewHandlerRegistration;
 
-    private final SelectionHandler selectionHandler = new SelectionHandler();
+    private final AutoScrollHandler autoScrollHandler = new AutoScrollHandler();
 
     public MultiSelectionRenderer(final Grid<T> grid) {
         this.grid = grid;
@@ -194,33 +469,28 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
     @Override
     public Collection<String> getConsumedEvents() {
         final HashSet<String> events = new HashSet<String>();
+
+        /*
+         * this column's first interest is only to attach a NativePreventHandler
+         * that does all the magic. These events are the beginning of that
+         * cycle.
+         */
         events.add(BrowserEvents.MOUSEDOWN);
-        events.add(BrowserEvents.MOUSEUP);
-        events.add(BrowserEvents.MOUSEMOVE);
         events.add(BrowserEvents.TOUCHSTART);
+
         return events;
     }
 
     @Override
     public void onBrowserEvent(final Cell cell, final NativeEvent event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (BrowserEvents.TOUCHSTART.equals(event.getType())) {
+        if (BrowserEvents.TOUCHSTART.equals(event.getType())
+                || BrowserEvents.MOUSEDOWN.equals(event.getType())) {
             injectNativeHandler();
-            selectionHandler.onSelectionStart(cell.getRow());
-            return;
-        }
-
-        final Element target = Element.as(event.getEventTarget());
-        final int logicalIndex = getLogicalRowIndex(target);
-
-        if (BrowserEvents.MOUSEDOWN.equals(event.getType())) {
-            selectionHandler.onSelectionStart(logicalIndex);
-        } else if (BrowserEvents.MOUSEMOVE.equals(event.getType())) {
-            selectionHandler.onSelectionMove(logicalIndex);
-        } else if (BrowserEvents.MOUSEUP.equals(event.getType())) {
-            selectionHandler.onSelectionEnd();
+            int logicalRowIndex = getLogicalRowIndex(Element.as(event
+                    .getEventTarget()));
+            autoScrollHandler.start(logicalRowIndex);
+            event.preventDefault();
+            event.stopPropagation();
         } else {
             throw new IllegalStateException("received unexpected event: "
                     + event.getType());
