@@ -23,7 +23,7 @@ import com.vaadin.ui.components.grid.Grid;
 /**
  * The server-side interface that controls Grid's selection state.
  * 
- * @since 7.4.0
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface SelectionModel extends Serializable {

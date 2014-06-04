@@ -27,7 +27,7 @@ import com.vaadin.ui.components.grid.Grid;
  * An event that specifies what in a selection has changed, and where the
  * selection took place.
  * 
- * @since 7.4.0
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class SelectionChangeEvent extends EventObject {

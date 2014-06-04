@@ -23,7 +23,7 @@ import com.vaadin.ui.components.grid.Grid;
 /**
  * A default implementation for a {@link SelectionModel.None}
  * 
- * @since 7.4.0
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class NoSelectionModel implements SelectionModel.None {

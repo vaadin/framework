@@ -21,7 +21,7 @@ import java.util.Collections;
 /**
  * A default implementation of a {@link SelectionModel.Single}
  * 
- * @since 7.4.0
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class SingleSelectionModel extends AbstractSelectionModel implements

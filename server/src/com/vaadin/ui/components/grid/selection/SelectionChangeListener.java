@@ -21,7 +21,7 @@ import java.io.Serializable;
  * The listener interface for receiving {@link SelectionChangeEvent
  * SelectionChangeEvents}.
  * 
- * @since 7.4.0
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface SelectionChangeListener extends Serializable {
