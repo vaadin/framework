@@ -44,7 +44,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.vaadin.client.Paintable#updateFromUIDL(com.vaadin.client.UIDL,
      * com.vaadin.client.ApplicationConnection)
      */
@@ -206,7 +206,11 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
         getWidget().popupOpenerClicked = false;
 
+        /*
+         * if this is our first time we need to recalculate the root width.
+         */
         if (!getWidget().initDone) {
+
             getWidget().updateRootWidth();
         }
 
