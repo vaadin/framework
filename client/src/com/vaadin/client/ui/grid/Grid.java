@@ -778,7 +778,12 @@ public class Grid<T> extends Composite implements SubPartAware {
 
             @Override
             public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
-                // NOP
+                for (FlyweightCell cell : cellsToAttach) {
+                    Renderer renderer = findRenderer(cell);
+                    if (renderer instanceof ComplexRenderer) {
+                        ((ComplexRenderer) renderer).init(cell);
+                    }
+                }
             }
 
             @Override
@@ -844,7 +849,12 @@ public class Grid<T> extends Composite implements SubPartAware {
             @Override
             public void postDetach(Row row,
                     Iterable<FlyweightCell> detachedCells) {
-                // NOOP for now
+                for (FlyweightCell cell : detachedCells) {
+                    Renderer renderer = findRenderer(cell);
+                    if (renderer instanceof ComplexRenderer) {
+                        ((ComplexRenderer) renderer).destroy(cell);
+                    }
+                }
             }
         };
     }
