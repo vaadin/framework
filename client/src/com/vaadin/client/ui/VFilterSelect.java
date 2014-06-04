@@ -30,6 +30,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -212,6 +213,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         private final Element down = DOM.createDiv();
         private final Element status = DOM.createDiv();
 
+        private int desiredHeight = -1;
+
         private boolean isPagingEnabled = true;
 
         private long lastAutoClosed;
@@ -228,6 +231,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             debug("VFS.SP: constructor()");
             setOwner(VFilterSelect.this);
             menu = new SuggestionMenu();
+            menu.getElement().getStyle().setOverflowY(Overflow.AUTO);
             setWidget(menu);
 
             getElement().getStyle().setZIndex(Z_INDEX);
@@ -550,16 +554,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         public void setPosition(int offsetWidth, int offsetHeight) {
             debug("VFS.SP: setPosition()");
 
-            int top = -1;
-            int left = -1;
+            int top = getPopupTop();
+            int left = getPopupLeft();
 
-            // reset menu size and retrieve its "natural" size
-            menu.setHeight("");
-            if (currentPage > 0) {
-                // fix height to avoid height change when getting to last page
-                menu.fixHeightTo(pageLength);
+            if (desiredHeight < 0) {
+                desiredHeight = offsetHeight;
             }
-            offsetHeight = getOffsetHeight();
 
             final int desiredWidth = getMainWidth();
             Element menuFirstChild = menu.getElement().getFirstChildElement();
@@ -585,16 +585,20 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 getContainerElement().getStyle().setWidth(rootWidth, Unit.PX);
             }
 
-            if (offsetHeight + getPopupTop() > Window.getClientHeight()
-                    + Window.getScrollTop()) {
+            final int spaceAvailableBelow = Window.getClientHeight()
+                    - (top - Window.getScrollTop());
+            final int spaceAvailableAbove = top - Window.getScrollTop()
+                    - VFilterSelect.this.getOffsetHeight();
+            if (spaceAvailableBelow < desiredHeight
+                    && spaceAvailableBelow < spaceAvailableAbove) {
                 // popup on top of input instead
-                top = getPopupTop() - offsetHeight
-                        - VFilterSelect.this.getOffsetHeight();
+                top -= desiredHeight + VFilterSelect.this.getOffsetHeight();
+                offsetHeight = desiredHeight;
                 if (top < 0) {
+                    offsetHeight += top;
                     top = 0;
                 }
             } else {
-                top = getPopupTop();
                 /*
                  * Take popup top margin into account. getPopupTop() returns the
                  * top value including the margin but the value we give must not
@@ -602,6 +606,19 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                  */
                 int topMargin = (top - topPosition);
                 top -= topMargin;
+                offsetHeight = Math.min(desiredHeight, spaceAvailableBelow);
+            }
+
+            /*
+             * Resize popup and menu if calculated height doesn't match the
+             * actual height
+             */
+            if (getOffsetHeight() != offsetHeight) {
+                int menuHeight = offsetHeight - up.getOffsetHeight()
+                        - down.getOffsetHeight() - status.getOffsetHeight();
+                menu.setHeight(menuHeight + "px");
+                getContainerElement().getStyle().setHeight(offsetHeight,
+                        Unit.PX);
             }
 
             // fetch real width (mac FF bugs here due GWT popups overflow:auto )
@@ -614,8 +631,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 if (left < 0) {
                     left = 0;
                 }
-            } else {
-                left = getPopupLeft();
             }
             setPopupPosition(left, top);
         }
