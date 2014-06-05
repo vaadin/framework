@@ -16,6 +16,7 @@
 package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
+import junit.framework.Assert;
 
 import org.junit.Test;
 import org.openqa.selenium.Alert;
@@ -38,13 +39,29 @@ import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
  */
 public class GridClientRenderers extends MultiBrowserTest {
 
+    private int latency = 0;
+
     @Override
     protected Class<?> getUIClass() {
         return GridClientColumnRenderers.class;
     }
 
+    @Override
+    protected String getDeploymentPath() {
+        if (latency > 0) {
+            return super.getDeploymentPath() + "?latency=" + latency;
+        }
+        return super.getDeploymentPath();
+    }
+
     @ServerClass("com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers.GridController")
     public static class MyClientGridElement extends GridElement {
+    }
+
+    @Override
+    public void setup() throws Exception {
+        latency = 0; // reset
+        super.setup();
     }
 
     @Test
@@ -88,7 +105,60 @@ public class GridClientRenderers extends MultiBrowserTest {
         assertEquals(alert.getText(), "Click");
     }
 
+    @Test
+    public void rowsWithDataHasStyleName() throws Exception {
+
+        // Simulate network latency with 1000ms
+        latency = 1000;
+
+        openTestURL();
+
+        TestBenchElement row = getGrid().getRow(1);
+        String className = row.getAttribute("class");
+        Assert.assertFalse(className.contains("v-grid-row-has-data"));
+
+        // Wait for data to arrive
+        sleep(3000);
+
+        row = getGrid().getRow(1);
+        className = row.getAttribute("class");
+        Assert.assertTrue(className.contains("v-grid-row-has-data"));
+    }
+
+    @Test
+    public void complexRendererSetVisibleContent() throws Exception {
+
+        // Simulate network latency with 1000ms
+        latency = 1000;
+
+        openTestURL();
+
+        addColumn(Renderers.CPLX_RENDERER);
+
+        // Fetch data
+        getGrid().scrollToRow(50);
+
+        // Cell should be red (setContentVisible set cell red)
+        String backgroundColor = getGrid().getCell(1, 1).getCssValue(
+                "backgroundColor");
+        assertEquals("rgba(255, 0, 0, 1)", backgroundColor);
+
+        // Wait for data to arrive
+        sleep(3000);
+
+        // Cell should no longer be red
+        backgroundColor = getGrid().getCell(1, 1)
+                .getCssValue("backgroundColor");
+        assertEquals("rgba(255, 255, 255, 1)", backgroundColor);
+    }
+
     private GridElement getGrid() {
         return $(MyClientGridElement.class).first();
+    }
+
+    private void addColumn(Renderers renderer) {
+        // Add widget renderer column
+        $(NativeSelectElement.class).first().selectByText(renderer.toString());
+        $(NativeButtonElement.class).caption("Add").first().click();
     }
 }

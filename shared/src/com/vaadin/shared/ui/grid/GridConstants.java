@@ -31,5 +31,4 @@ public final class GridConstants implements Serializable {
      * explicitly defined padding value.
      */
     public static final int DEFAULT_PADDING = 0;
-
 }

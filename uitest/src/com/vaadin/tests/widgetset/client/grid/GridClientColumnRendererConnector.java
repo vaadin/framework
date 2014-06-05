@@ -21,15 +21,20 @@ import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.vaadin.client.data.DataChangeHandler;
+import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.GridColumn;
 import com.vaadin.client.ui.grid.Renderer;
 import com.vaadin.client.ui.grid.datasources.ListDataSource;
+import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.DateRenderer;
 import com.vaadin.client.ui.grid.renderers.HtmlRenderer;
 import com.vaadin.client.ui.grid.renderers.NumberRenderer;
@@ -43,7 +48,57 @@ public class GridClientColumnRendererConnector extends
         AbstractComponentConnector {
 
     public static enum Renderers {
-        TEXT_RENDERER, WIDGET_RENDERER, HTML_RENDERER, NUMBER_RENDERER, DATE_RENDERER;
+        TEXT_RENDERER, WIDGET_RENDERER, HTML_RENDERER, NUMBER_RENDERER, DATE_RENDERER, CPLX_RENDERER;
+    }
+
+    /**
+     * Datasource for simulating network latency
+     */
+    private class DelayedDataSource implements DataSource<String> {
+
+        private DataSource<String> ds;
+        private int firstRowIndex;
+        private int numberOfRows;
+        private DataChangeHandler dataChangeHandler;
+        private int latency;
+
+        public DelayedDataSource(DataSource<String> ds, int latency) {
+            this.ds = ds;
+            this.latency = latency;
+        }
+
+        @Override
+        public void ensureAvailability(final int firstRowIndex,
+                final int numberOfRows) {
+            new Timer() {
+
+                @Override
+                public void run() {
+                    DelayedDataSource.this.firstRowIndex = firstRowIndex;
+                    DelayedDataSource.this.numberOfRows = numberOfRows;
+                    dataChangeHandler.dataUpdated(firstRowIndex, numberOfRows);
+                }
+            }.schedule(latency);
+        }
+
+        @Override
+        public String getRow(int rowIndex) {
+            if (rowIndex >= firstRowIndex
+                    && rowIndex <= firstRowIndex + numberOfRows) {
+                return ds.getRow(rowIndex);
+            }
+            return null;
+        }
+
+        @Override
+        public int getEstimatedSize() {
+            return ds.getEstimatedSize();
+        }
+
+        @Override
+        public void setDataChangeHandler(DataChangeHandler dataChangeHandler) {
+            this.dataChangeHandler = dataChangeHandler;
+        }
     }
 
     @Override
@@ -58,7 +113,13 @@ public class GridClientColumnRendererConnector extends
         }
 
         // Provide data as data source
-        grid.setDataSource(new ListDataSource<String>(columnData));
+        if (Location.getParameter("latency") != null) {
+            grid.setDataSource(new DelayedDataSource(
+                    new ListDataSource<String>(columnData), Integer
+                            .parseInt(Location.getParameter("latency"))));
+        } else {
+            grid.setDataSource(new ListDataSource<String>(columnData));
+        }
 
         // Add a column to display the data in
         grid.addColumn(createColumnWithRenderer(Renderers.TEXT_RENDERER));
@@ -140,6 +201,27 @@ public class GridClientColumnRendererConnector extends
 
         case DATE_RENDERER:
             return new DateRenderer();
+
+        case CPLX_RENDERER:
+            return new ComplexRenderer<String>() {
+
+                @Override
+                public void render(FlyweightCell cell, String data) {
+                    cell.getElement().setInnerHTML("<span>" + data + "</span>");
+                    cell.getElement().getStyle().clearBackgroundColor();
+                }
+
+                @Override
+                public void setContentVisible(FlyweightCell cell,
+                        boolean hasData) {
+
+                    // Visualize content visible property
+                    cell.getElement().getStyle()
+                            .setBackgroundColor(hasData ? "green" : "red");
+
+                    super.setContentVisible(cell, hasData);
+                }
+            };
 
         default:
             return new TextRenderer();

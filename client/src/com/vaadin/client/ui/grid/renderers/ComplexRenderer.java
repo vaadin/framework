@@ -17,7 +17,10 @@ package com.vaadin.client.ui.grid.renderers;
 
 import java.util.Collection;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Renderer;
@@ -96,18 +99,33 @@ public abstract class ComplexRenderer<T> implements Renderer<T> {
     }
 
     /**
-     * Hides content by setting visibility: hidden to all elements inside the
-     * cell. Text nodes are left as is for now - renderers that add such to the
-     * root element need to implement explicit support hiding them
+     * Used by Grid to toggle whether to show actual data or just an empty
+     * placeholder while data is loading. This method is invoked whenever a cell
+     * changes between data being available and data missing.
+     * <p>
+     * Default implementation hides content by setting visibility: hidden to all
+     * elements inside the cell. Text nodes are left as is - renderers that add
+     * such to the root element need to implement explicit support hiding them.
      * 
      * @param cell
      *            The cell
-     * @param visible
-     *            Is the cell content be visible
-     * @return <code>true</code> if the content should be set visible
+     * @param hasData
+     *            Has the cell content been loaded from the data source
+     * 
      */
-    public boolean setContentVisible(FlyweightCell cell, boolean visible) {
-        return false;
+    public void setContentVisible(FlyweightCell cell, boolean hasData) {
+        Element cellElement = cell.getElement();
+        for (int n = 0; n < cellElement.getChildCount(); n++) {
+            Node node = cellElement.getChild(n);
+            if (Element.is(node)) {
+                Element e = Element.as(node);
+                if (hasData) {
+                    e.getStyle().clearVisibility();
+                } else {
+                    e.getStyle().setVisibility(Visibility.HIDDEN);
+                }
+            }
+        }
     }
 
     /**
