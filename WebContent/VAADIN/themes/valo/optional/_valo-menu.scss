@@ -1,0 +1,105 @@
+$valo-menu-background-color: null !default;
+
+@mixin valo-menu {
+
+  $bg-lightness: if(color-luminance($v-app-background-color) < 10, 10%, -60%);
+  $bg: $valo-menu-background-color or scale-color($v-app-background-color, $lightness: $bg-lightness);
+
+  .v-slot-valo-menu {
+    position: fixed;
+  }
+
+  .valo-menu {
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    padding-bottom: $v-unit-size;
+    @include linear-gradient(to left, (scale-color($bg, $lightness: valo-gradient-opacity()*-1) 0%, $bg round($v-unit-size/4)), $fallback: $bg);
+    color: valo-font-color($bg);
+    font-size: round($v-font-size * 0.9);
+    line-height: round($v-unit-size * 0.8);
+    border-right: valo-border($color: $bg);
+
+    .valo-menu-title,
+    .valo-menu-subtitle,
+    .valo-menu-item {
+      display: block;
+      line-height: inherit;
+    }
+
+    .valo-menu-title {
+      line-height: 1.2;
+      @include valo-gradient($color: $v-selection-color);
+      $font-color: valo-font-color($v-selection-color, 1);
+      color: $font-color;
+      text-shadow: valo-text-shadow($font-color: $font-color, $background-color: $v-selection-color);
+      padding: round($v-unit-size/3) round($v-unit-size/2);
+      font-size: 0.9em;
+      border-bottom: valo-border($color: $v-selection-color);
+      box-shadow: valo-bevel-and-shadow($shadow: $v-shadow);
+
+      .v-menubar {
+        background: transparent;
+        border-color: first-color(valo-border($color: $v-selection-color));
+        color: inherit;
+        box-shadow: none;
+        text-shadow: inherit;
+      }
+
+      .v-menubar-menuitem {
+        background: transparent;
+        box-shadow: valo-bevel-and-shadow($bevel: $v-bevel, $background-color: $v-selection-color, $gradient: $v-gradient);
+        text-shadow: inherit;
+        font-size: $v-font-size;
+        border-color: inherit;
+      }
+    }
+
+    .valo-menu-subtitle {
+      color: valo-font-color($bg, 0.5);
+      margin: round($v-unit-size/5) 0 round($v-unit-size/5) round($v-unit-size/2);
+      border-bottom: valo-border($color: $bg, $strength: 0.5);
+      position: relative;
+
+      .badge {
+        position: absolute;
+        right: round($v-unit-size/2);
+        color: mix(valo-font-color($bg),$v-selection-color);
+      }
+    }
+
+    .valo-menu-item {
+      outline: none;
+      font-weight: $v-font-weight + 100;
+      padding: 0 round($v-unit-size) 0 round($v-unit-size/2);
+      cursor: pointer;
+      position: relative;
+
+      &:before {
+        content: "";
+        $diff: color-luminance($bg) - color-luminance($v-selection-color);
+        @if abs($diff) < 30 {
+          background: lighten($v-selection-color, 10%);
+        } @else {
+          background: $v-selection-color;
+        }
+        position: absolute;
+        left: 0;
+        height: 100%;
+        width: 0;
+        border-radius: 0 $v-border-radius $v-border-radius 0;
+        @include transition(width 300ms);
+      }
+
+      &:hover,
+      &.selected {
+        color: valo-font-color($bg, 1);
+      }
+
+      &.selected:before {
+        width: round($v-unit-size/8);
+      }
+    }
+  }
+
+}

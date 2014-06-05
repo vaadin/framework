@@ -1,30 +1,6 @@
-// @category  Button
-
-// Values default to global values (evaluated when the mixins are called)
-$v-button-background-color: null !default;
-$v-button-bevel-style: null !default;
-$v-button-bevel-depth: null !default;
-$v-button-gradient-style: null !default;
-$v-button-gradient-depth: null !default;
-$v-button-shadow-style: null !default;
-$v-button-shadow-depth: null !default;
-$v-button-border-radius: $v-border-radius !default;
-$v-button-unit-size: null !default;
-
-$v-button-font-weight: max(400, $v-font-weight + 100) !default;
-$v-button-cursor: pointer !default;
-$v-button-hover-style-enabled: $v-hover-styles-enabled !default;
-$v-button-border-width: $v-border-width !default;
-$v-button-disabled-opacity: $v-disabled-opacity !default;
-
-
-
-// The main mixin for Valo buttons
-// @mixin     valo-button
-// @param     $primary-stylename {String} the primary stylename to use for the output. Defaults to <code>v-button</code>
 @mixin valo-button ($primary-stylename: v-button) {
   .#{$primary-stylename} {
-    @include valo-button-common-properties;
+    @include valo-button-static-style;
     @include valo-button-style;
   }
 }
@@ -33,44 +9,177 @@ $v-button-disabled-opacity: $v-disabled-opacity !default;
 
 
 
-@mixin valo-button-common-properties {
-  @include valo-tappable;
-  cursor: $v-button-cursor;
-  font-weight: $v-button-font-weight;
-  position: relative;
-  text-align: center;
-  white-space: nowrap;
-
-  // Generated element for :hover, :focus and :active styles
-  &:after {
-    content: "";
-    position: absolute;
-    top: -$v-button-border-width;
-    right: -$v-button-border-width;
-    bottom: -$v-button-border-width;
-    left: -$v-button-border-width;
-    border-radius: inherit;
-    border: inherit;
-    border-width: 0;
-    @if $v-animations-enabled {
-      @include transition(box-shadow 180ms, border 180ms);
+@mixin valo-button-static-style ($states: (normal, hover, focus, active, disabled), $vertical-centering: true) {
+  @if contains($states, normal) {
+    position: relative;
+    text-align: center;
+    white-space: nowrap;
+    outline: none;
+    @include valo-tappable;
+    @if $vertical-centering {
+      @include valo-button-vertical-centering;
     }
   }
 
-  &.v-disabled {
-    @include opacity($v-button-disabled-opacity);
-    
+  @if contains($states, hover) or contains($states, focus) or contains($states, active) {
+    // Generated element for :hover, :focus and :active styles
     &:after {
-      display: none;
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border-radius: inherit;
+      @if $v-animations-enabled {
+        @include transition(box-shadow 180ms, border 180ms);
+      }
     }
   }
 
-  @include valo-button-vertical-centering;
+  @if contains($states, focus) {
+    &:focus:after {
+      @if $v-animations-enabled {
+        @include transition(none);
+      }
+    }
+  }
+
+  @if contains($states, disabled) {
+    &.v-disabled {
+      @include opacity($v-disabled-opacity);
+
+      &:after {
+        display: none;
+      }
+    }
+  }
 }
+
+
+
+
+
+@mixin valo-button-style (
+  $unit-size        : $v-unit-size,
+  $padding          : null, // Computed by default
+
+  $font-color       : null, // Computed by default
+  $font-weight      : $v-font-weight + 100,
+  $font-size        : null, // Inherited by default
+  $cursor           : null,
+
+  $background-color : $v-background-color,
+  $border           : $v-border,
+  $border-radius    : $v-border-radius,
+
+  $gradient         : $v-gradient,
+  $bevel            : $v-bevel,
+  $shadow           : $v-shadow,
+
+  $states           : (normal, hover, focus, active, disabled)
+) {
+
+  @if contains($states, focus) or contains($states, active) {
+    $border-width: first-number($border);
+    &:after {
+      border: inherit;
+      top: -$border-width;
+      right: -$border-width;
+      bottom: -$border-width;
+      left: -$border-width;
+    }
+  }
+
+  @if contains($states, normal) {
+    @if $unit-size {
+      height: $unit-size;
+      padding: if(type-of($padding) == number, $padding, (0 round($unit-size/2.4) + round($border-radius/3)));
+    }
+
+    $_font-color: $font-color or valo-font-color($background-color, 0.9);
+    color: $_font-color;
+    font-weight: $font-weight;
+    font-size: $font-size;
+    cursor: $cursor;
+
+    border-radius: $border-radius;
+
+    @if type-of($background-color) == color {
+      @include valo-border-with-gradient($border: $border, $color: darker-of($background-color, $v-background-color), $gradient: $gradient);
+      @include valo-gradient($background-color, $gradient);
+      box-shadow: valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient);
+    }
+
+    @if $bevel and type-of($_font-color) == color and type-of($background-color) == color {
+      text-shadow: valo-text-shadow($_font-color, $background-color, $bevel);
+    }
+
+    @if $bevel == none and $shadow == none {
+      box-shadow: none;
+    }
+  }
+
+  @if $background-color {
+    @if contains($states, hover) {
+      &:hover:after {
+        @include valo-button-hover-style($background-color);
+      }
+    }
+
+    @if contains($states, focus) {
+      &:focus:after {
+        @include valo-button-focus-style($background-color);
+      }
+    }
+
+    @if contains($states, active) {
+      &:active:after {
+        @include valo-button-active-style($background-color);
+      }
+    }
+  }
+}
+
+
+
+
+@mixin valo-button-hover-style ($background-color: $v-background-color) {
+  $bg: darken($background-color, 25%);
+  @if is-dark-color($background-color) {
+    $bg: lighten($background-color, 15%);
+  }
+  background-color: rgba($bg, .1);
+}
+
+
+
+@mixin valo-button-focus-style ($background-color: $v-background-color, $border-fallback: inherit, $include-box-shadow: true) {
+  $focus-color: valo-focus-color();
+
+  @if color-luminance($focus-color) + 50 < color-luminance($background-color) {
+    border-color: $focus-color;
+  } @else if $border-fallback != none {
+    border: $border-fallback or valo-border($color: $background-color);
+  }
+
+  @include valo-focus-style($include-box-shadow: $include-box-shadow);
+}
+
+
+
+@mixin valo-button-active-style ($background-color: $v-background-color) {
+  $bg: scale-color($background-color, $lightness: -50%, $saturation: saturation($background-color));
+  background-color: rgba($bg, .2);
+}
+
+
+
+
 
 @mixin valo-button-vertical-centering {
   // Vertical centering of icon and caption, independent of the height of the button
-  @include vertical-align-guide($to-align: div, $pseudo-element: before);
+  @include valo-vertical-align-guide($to-align: div, $pseudo-element: before);
 
   // WebKit handles line-heights and vertical-alignments somewhat differently, so we need to adjust
   .v-sa &:before {
@@ -79,142 +188,12 @@ $v-button-disabled-opacity: $v-disabled-opacity !default;
 
   // Firefox needs a bit of adjusting as well
   .v-ff &:before {
-    height: 105%;
+    height: 107%;
   }
 
   // ...and so does IE. Who knew?
   .v-ie &:before {
     margin-top: 4px;
-  }
-}
-
-
-
-
-
-@mixin valo-button-size ($unit-size, $border-radius) {
-  height: $unit-size;
-  
-  $padding-width: ceil($unit-size/2.4);
-  $padding-width: $padding-width + ceil($border-radius/3);
-  padding: 0 $padding-width;
-
-  .v-icon {
-    margin: 0 ceil($padding-width/-5);
-  }
-
-  .v-icon + span:not(:empty) {
-    margin-left: ceil($padding-width/1.5);
-  }
-}
-
-
-
-@function valo-button-border-color ($bevel-style: $v-bevel-style, $bevel-depth: $v-bevel-depth,
-                                      $background-color: $v-button-background-color) {
-
-  $background-color: $background-color or $v-app-background-color;
-  $border-color: if(color-luminance($background-color) < color-luminance($v-app-background-color), $background-color, $v-app-background-color);
-  $border-color: blend-darken($border-color, scale-color($border-color, $lightness: max(-50%, -$bevel-depth/2)));
-  $border-color: scale-color($border-color, $saturation: -$bevel-depth/2);
-  @if contains($bevel-style, v-shade, true) {
-    $border-color: $border-color $border-color blend-multiply(transparentize(#000, max(0.8, 1-$bevel-depth/200%)), $border-color);
-  }
-
-  @return $border-color;
-}
-
-
-
-
-@mixin valo-button-style ($gradient-style: $v-button-gradient-style, $gradient-depth: $v-button-gradient-depth, 
-                            $bevel-style: $v-button-bevel-style, $bevel-depth: $v-button-bevel-depth, 
-                            $unit-size: $v-button-unit-size, $border-radius: $v-button-border-radius,
-                            $background-color: $v-button-background-color) {
-
-  // Set up variable defaults
-  $background-color: $background-color or $v-app-background-color;
-  $gradient-style: $gradient-style or $v-gradient-style;
-  $gradient-depth: $gradient-depth or $v-gradient-depth;
-  $bevel-style: $bevel-style or $v-bevel-style;
-  $bevel-depth: $bevel-depth or $v-bevel-depth;
-  $unit-size: $unit-size or $v-unit-size;
-  
-  @include valo-button-size($unit-size, $border-radius);
-
-  border-radius: $border-radius;
-  border: $v-button-border-width solid;
-  border-color: valo-button-border-color($bevel-style, $bevel-depth, $background-color);
-
-  @include valo-gradient($background-color, $gradient-style, $gradient-depth);
-  color: valo-font-color($background-color, 0.9);
-
-  box-shadow: valo-button-box-shadow($background-color, $bevel-style, $bevel-depth, $gradient-style, $gradient-depth);
-  text-shadow: valo-button-text-shadow($background-color, $bevel-depth);
-  
-  @if $v-button-hover-style-enabled {
-    &:hover:after {
-      @include valo-button-hover-style($background-color: $background-color);
-    }
-  }
-
-  &:focus {
-    outline: none;
-    &:after {
-      @include valo-button-focus-style($background-color: $background-color);
-    }
-  }
-
-  &:active:after,
-  &.v-pressed:after {
-    @include valo-button-active-style($background-color: $background-color);
-  }
-  
-}
-
-
-@mixin valo-button-focus-style ($background-color: $v-app-background-color, $border-fallback: inherit) {
-  $focus-color: valo-focus-color();
-  
-  @if color-luminance($focus-color) + 50 < color-luminance($background-color) {
-    border: $v-button-border-width solid $focus-color;
-  } @else {
-    border: $border-fallback or valo-button-border-color($background-color: $background-color);
-  }
-
-  box-shadow: valo-focus-box-shadow($color: $focus-color);
-
-  @if $v-animations-enabled {
-    @include transition(none);
-  }
-}
-
-
-
-@mixin valo-button-active-style ($background-color: $v-app-background-color) {
-  $bg: scale-color($background-color, $lightness: -50%, $saturation: saturation($v-app-background-color));
-  background-color: rgba($bg, .1);
-  
-  .v-ie8 & {
-    background-color: $bg;
-    filter: alpha(opacity=10);
-  }
-}
-
-
-
-@mixin valo-button-hover-style ($background-color: $v-app-background-color) {
-  $bg: lighten($background-color, 15%);
-  background-color: rgba($bg, .1);
-  border: inherit;
-  
-  @if $v-animations-enabled {
-    @include transition(none);
-  }
-  
-  .v-ie8 & {
-    background-color: $bg;
-    filter: alpha(opacity=20);
   }
 }
 
@@ -243,20 +222,4 @@ $v-button-disabled-opacity: $v-disabled-opacity !default;
       margin-left: 0;
     }
   }
-}
-
-
-
-@function valo-button-box-shadow($background-color, $bevel-style: $v-bevel-style, $bevel-depth: $v-bevel-depth, $gradient-style: $v-gradient-style, $gradient-depth: $v-gradient-depth) {
-  @return valo-bevel($background-color, $bevel-style, $bevel-depth, $gradient-style, $gradient-depth), valo-shadow();
-}
-
-
-
-@function valo-button-text-shadow($background-color, $bevel-depth: $v-bevel-depth) {
-  @if is-dark-color($background-color) {
-    @return 0 -1px 0 transparentize(darken($background-color, $bevel-depth), 1-($bevel-depth/100%));
-  } @else {
-    @return 0 1px 0 transparentize(lighten($background-color, $bevel-depth), 1-($bevel-depth/100%));
-  } 
 }

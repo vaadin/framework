@@ -2,9 +2,9 @@ package com.vaadin.tests.server.component.abstractfield;
 
 import java.util.Locale;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.util.MethodProperty;

@@ -1,0 +1,26 @@
+$v-app-loading-text: "Metro Valo";
+
+$v-font-family: "Source Sans Pro", sans-serif;
+$v-app-background-color: #fff;
+$v-background-color: #eee;
+$v-focus-color: #0072C6;
+$v-focus-style: 0 0 0 1px $v-focus-color;
+$valo-menu-background-color: darken($v-focus-color, 10%);
+$v-border: 0 solid v-shade;
+$v-border-radius: 0px;
+$v-bevel: false;
+$v-gradient: false;
+$v-shadow: false;
+$v-textfield-bevel: false;
+$v-textfield-shadow: false;
+$v-textfield-border: 1px solid v-shade;
+$v-link-text-decoration: none;
+$v-overlay-shadow: 0 0 0 2px #000;
+$v-overlay-border-width: 2px; // For IE8
+$v-window-shadow: $v-overlay-shadow;
+$v-selection-overlay-background-color: #fff;
+$v-selection-overlay-padding-horizontal: 0;
+$v-selection-overlay-padding-vertical: 6px;
+$v-panel-border: 2px solid v-shade;
+
+@import "../valo/valo";

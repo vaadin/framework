@@ -3,9 +3,8 @@ package com.vaadin.data.util.sqlcontainer.connection;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import junit.framework.Assert;
-
 import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

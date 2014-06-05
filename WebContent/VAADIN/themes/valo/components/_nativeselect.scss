@@ -21,16 +21,11 @@
 
 
 @mixin valo-nativeselect-select-style {
-  $_border-color: darken($v-app-background-color, $v-bevel-depth);
-  @if is-dark-color($v-app-background-color) {
-    $_border-color: lighten($v-app-background-color, $v-bevel-depth);
-  }
-  border: $v-border-width solid $_border-color;
-  background-color: valo-textfield-background-color($v-app-background-color);
+  border: valo-border();
+  @include valo-gradient;
 
   &:focus {
     outline: none;
-    //@include valo-button-focus-style;
-    box-shadow: valo-focus-box-shadow();
+    @include valo-focus-style($include-box-shadow: true);
   }
 }

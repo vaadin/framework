@@ -4,8 +4,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.RpcProxy;
-import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
@@ -42,12 +42,9 @@ public class MyComponentConnector extends AbstractComponentConnector {
         return (MyComponentState) super.getState();
     }
 
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-
-        final String text = getState().text;
-        getWidget().setText(text);
+    @OnStateChange("text")
+    void updateText() {
+        getWidget().setText(getState().text);
     }
 
     @Override

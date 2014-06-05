@@ -17,6 +17,7 @@
 package com.vaadin.server.communication;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.StringReader;
@@ -117,11 +118,11 @@ public class AtmospherePushConnection implements PushConnection {
         CONNECTED;
     }
 
-    private State state = State.DISCONNECTED;
     private UI ui;
-    private AtmosphereResource resource;
-    private FragmentedMessage incomingMessage;
-    private Future<Object> outgoingMessage;
+    private transient State state = State.DISCONNECTED;
+    private transient AtmosphereResource resource;
+    private transient FragmentedMessage incomingMessage;
+    private transient Future<Object> outgoingMessage;
 
     public AtmospherePushConnection(UI ui) {
         this.ui = ui;
@@ -209,6 +210,7 @@ public class AtmospherePushConnection implements PushConnection {
 
     @Override
     public boolean isConnected() {
+        assert state != null;
         assert (state == State.CONNECTED) ^ (resource == null);
         return state == State.CONNECTED;
     }
@@ -297,8 +299,25 @@ public class AtmospherePushConnection implements PushConnection {
         state = State.DISCONNECTED;
     }
 
+    /**
+     * Returns the state of this connection.
+     */
+    protected State getState() {
+        return state;
+    }
+
+    /**
+     * Reinitializes this PushConnection after deserialization. The connection
+     * is initially in disconnected state; the client will handle the
+     * reconnecting.
+     */
+    private void readObject(ObjectInputStream stream) throws IOException,
+            ClassNotFoundException {
+        stream.defaultReadObject();
+        state = State.DISCONNECTED;
+    }
+
     private static Logger getLogger() {
         return Logger.getLogger(AtmospherePushConnection.class.getName());
     }
-
 }

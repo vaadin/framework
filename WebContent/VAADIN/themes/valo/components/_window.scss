@@ -1,5 +1,6 @@
+$v-window-background-color: $v-panel-background-color !default;
 $v-window-border-radius: null !default;
-$v-window-shadow-style: 0 4px 12px 6px rgba(0,0,0, $v-shadow-depth/100%), $v-overlay-shadow-style !default;
+$v-window-shadow: 0 4px 12px 6px rgba(0,0,0, $v-shadow-opacity/100%), $v-overlay-shadow !default;
 $v-window-open-animation: null !default;
 $v-window-animations-enabled: $v-animations-enabled !default;
 
@@ -15,20 +16,21 @@ $v-window-animations-enabled: $v-animations-enabled !default;
 @mixin valo-window ($primary-stylename: v-window) {
 
   .#{$primary-stylename} {
-    @include valo-overlay-style;
+    @include valo-overlay-style($background-color: $v-window-background-color);
 
     @if $v-window-animations-enabled and $v-window-open-animation {
       @include animation($v-window-open-animation);
     }
 
-    @if $v-window-shadow-style {
-      @if $v-window-shadow-style == none {
+    @if $v-window-shadow {
+      @if $v-window-shadow == none {
         box-shadow: none;
-      } @else {
-        box-shadow: valo-shadow($shadow-style: $v-window-shadow-style);
+      } @else if $v-window-shadow != $v-overlay-shadow {
+        box-shadow: valo-bevel-and-shadow($shadow: $v-window-shadow);
       }
     }
     border-radius: $v-window-border-radius;
+    //border: first-number($v-border) solid valo-panel-border-color();
     padding: 0;
     min-width: 4*$v-unit-size !important;
     min-height: $v-unit-size !important;
@@ -47,17 +49,19 @@ $v-window-animations-enabled: $v-animations-enabled !default;
     bottom: 0;
     left: 0;
     background: $v-app-background-color;
-    @include opacity(.3);
+    @include opacity(.5);
   }
 
   .#{$primary-stylename}-draggingCurtain {
     position: fixed !important;
   }
-  
+
   .#{$primary-stylename}-resizingCurtain + .v-window,
   .#{$primary-stylename}-draggingCurtain + .v-window {
     @include transition(none);
   }
+
+  $scroll-divider-width: max(1px, first-number($v-border));
 
   .#{$primary-stylename}-outerheader {
     position: absolute;
@@ -65,24 +69,23 @@ $v-window-animations-enabled: $v-animations-enabled !default;
     top: 0;
     left: 0;
     right: 0;
-    //height: $v-unit-size - 1px;
     // Raise above the window content, if that is ever promoted to a layer
     @include transform(translatez(0));
 
     &:after {
       content: "";
       position: absolute;
-      bottom: -1px;
+      bottom: -$scroll-divider-width;
       right: 0;
       left: 0;
-      height: 1px;
-      $_bg: valo-overlay-background-color();
-      background: adjust-color($_bg, $lightness: if(is-dark-color($_bg), 3%, -5%), $saturation: -10%);
+      height: $scroll-divider-width;
+      $_bg: $v-window-background-color;
+      background: first-color(valo-border($strength: 0.5));
     }
   }
 
   .#{$primary-stylename}-header {
-    @include user-select(none);;
+    @include user-select(none);
     cursor: move;
     line-height: $v-unit-size - 1px;
     padding-left: round($v-unit-size/3);
@@ -90,9 +93,9 @@ $v-window-animations-enabled: $v-animations-enabled !default;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: blend-normal(rgba(valo-font-color(valo-overlay-background-color()), .7), valo-overlay-background-color());
+    color: blend-normal(rgba(valo-font-color($v-window-background-color), .7), $v-window-background-color);
   }
-  
+
   .#{$primary-stylename}-closebox,
   .#{$primary-stylename}-maximizebox,
   .#{$primary-stylename}-restorebox {
@@ -111,25 +114,25 @@ $v-window-animations-enabled: $v-animations-enabled !default;
     @if $v-animations-enabled {
       @include transition(all 140ms);
     }
-    
+
     &:focus {
       outline: none;
     }
-    
+
     &:hover {
       @include opacity(1);
-      color: valo-selection-color();
+      color: $v-selection-color;
     }
-    
+
     &:active {
       color: inherit;
     }
   }
-  
+
   .#{$primary-stylename}-closebox {
     @include valo-window-close-icon-style;
   }
-  
+
   .#{$primary-stylename}-maximizebox,
   .#{$primary-stylename}-restorebox {
     right: $v-unit-size;
@@ -143,18 +146,18 @@ $v-window-animations-enabled: $v-animations-enabled !default;
   .#{$primary-stylename}-maximizebox {
     @include valo-window-maximize-icon-style;
   }
-  
+
   .#{$primary-stylename}-restorebox {
     @include valo-window-restore-icon-style;
   }
-  
+
   .v-window > .popupContent,
   .#{$primary-stylename}-wrap,
   .#{$primary-stylename}-contents,
   .#{$primary-stylename}-contents > .v-scrollable {
     height: 100%;
   }
-  
+
   .#{$primary-stylename}-contents {
     @include box-sizing(border-box);
     border-radius: $v-border-radius;
@@ -178,10 +181,18 @@ $v-window-animations-enabled: $v-animations-enabled !default;
         position: absolute;
         z-index: 2;
         top: 0;
-        height: 1px;
-        background: valo-overlay-background-color();
+        height: $scroll-divider-width;
+        background: $v-window-background-color;
         left: 0;
         right: 0;
+      }
+
+      .v-panel-captionwrap:after {
+        background: first-color(valo-border($strength: 0.5));
+      }
+
+      .v-panel-content:before {
+        background: $v-window-background-color;
       }
     }
   }
@@ -227,7 +238,8 @@ $v-window-animations-enabled: $v-animations-enabled !default;
 
   .#{$primary-stylename}-bottom-toolbar {
     padding: round($v-unit-size/5) round($v-unit-size/3);
-    background: $v-app-background-color;
+    @include linear-gradient(to bottom, darken($v-background-color, valo-gradient-opacity($v-gradient)/2) 0, $v-background-color round($v-unit-size/10), $fallback: $v-background-color);
+    border-top: valo-border($strength: 0.5);
 
     .v-expand {
       overflow: visible;

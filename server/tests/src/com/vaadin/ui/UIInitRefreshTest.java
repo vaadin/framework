@@ -75,7 +75,7 @@ public class UIInitRefreshTest {
             Assert.assertEquals("bar", event.getUriFragment());
             fragmentChangeCalled = true;
         }
-    };
+    }
 
     @Before
     public void setUp() {

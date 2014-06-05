@@ -1,4 +1,4 @@
-@function contains ($list, $var, $recursive: false) {
+@function contains($list, $var, $recursive: false) {
   @if $recursive == false {
     @return (false != index($list, $var));
   }
@@ -16,6 +16,70 @@
 
   @return false;
 }
+
+
+@function list-of-lists($list) {
+  @each $part in $list {
+    @if type-of($part) != list {
+      @return false;
+    }
+  }
+  @return true;
+}
+
+
+@function first-color($list) {
+  @return first-of-type($list, color);
+}
+
+
+@function first-number($list) {
+  @return first-of-type($list, number);
+}
+
+
+@function first-string($list) {
+  @return first-of-type($list, string);
+}
+
+
+@function first-list($list) {
+  @return first-of-type($list, list);
+}
+
+
+@function first-of-type($list, $type) {
+  @each $item in $list {
+    @if type-of($item) == $type {
+      @return $item;
+    } @else if type-of($item) == list {
+      $ret: first-of-type($item, $type);
+      @if $ret {
+        @return $ret;
+      }
+    }
+  }
+  @return null;
+}
+
+
+@function flatten-list($list) {
+  $ret: ();
+  @each $item in $list {
+    @if type-of($item) != list and $item != null {
+      $ret: join($ret, $item);
+    } @else if length($item) > 0 and $item != null {
+      $t: flatten-list($item);
+      @if length($t) > 0 {
+        $ret: join($ret, $t);
+      }
+    }
+  }
+  @return $ret;
+}
+
+
+
 
 // Author: Hugo Giraudel
 // Repository: https://github.com/Team-Sass/Sass-list-functions
@@ -52,7 +116,7 @@
     @if type-of($e) == list {
       $result: $result#{to-string($e, $glue, true)};
     }
-    
+
     @else {
       $result: if($i != length($list) or $is-nested, $result#{$e}#{$glue}, $result#{$e});
     }
@@ -69,7 +133,7 @@
 
 @function insert-nth($list, $index, $value) {
   $result: false;
-      
+
   @if type-of($index) != number {
     @warn "$index: #{quote($index)} is not a number for `insert-nth`.";
     @return $result;
@@ -87,7 +151,7 @@
 
   @else {
     $result: ();
-        
+
     @for $i from 1 through length($list) {
       @if $i == $index {
         $result: append($result, $value);
@@ -103,7 +167,7 @@
 
 @function replace-nth($list, $index, $value) {
   $result: false;
-      
+
   @if type-of($index) != number {
     @warn "$index: #{quote($index)} is not a number for `replace-nth`.";
     @return $result;
@@ -113,7 +177,7 @@
     @warn "List index 0 must be a non-zero integer for `replace-nth`.";
     @return $result;
   }
-      
+
   @else if abs($index) > length($list) {
     @warn "List index is #{$index} but list is only #{length($list)} item long for `replace-nth`.";
     @return $result;
@@ -121,19 +185,19 @@
 
   @else {
     $result: ();
-    $index: if($index < 0, length($list) + $index + 1, $index);  
+    $index: if($index < 0, length($list) + $index + 1, $index);
 
     @for $i from 1 through length($list) {
       @if $i == $index {
         $result: append($result, $value);
       }
-    
+
       @else {
         $result: append($result, nth($list, $i));
       }
     }
   }
- 
+
   @return $result;
 }
 
@@ -163,7 +227,7 @@
 
 @function remove-nth($list, $index) {
   $result: false;
-        
+
   @if type-of($index) != number {
     @warn "$index: #{quote($index)} is not a number for `remove-nth`.";
     @return $result;
@@ -181,7 +245,7 @@
 
   @else {
     $result: ();
-    $index: if($index < 0, length($list) + $index + 1, $index);  
+    $index: if($index < 0, length($list) + $index + 1, $index);
 
     @for $i from 1 through length($list) {
       @if $i != $index {
@@ -189,7 +253,7 @@
       }
     }
   }
-        
+
   @return $result;
 }
 
@@ -213,12 +277,12 @@
 
 @function slice($list, $start: 1, $end: length($list)) {
   $result: false;
-              
+
   @if type-of($start) != number or type-of($end) != number {
     @warn "Either $start or $end are not a number for `slice`.";
     @return $result;
   }
-             
+
   @else if $start > $end {
     @warn "The start index has to be lesser than or equals to the end index for `slice`.";
     @return $result;
@@ -233,15 +297,15 @@
     @warn "List index is #{$start} but list is only #{length($list)} item long for `slice`.";
     @return $result;
   }
-             
+
   @else if $end > length($list) {
     @warn "List index is #{$end} but list is only #{length($list)} item long for `slice`.";
     @return $result;
   }
-  
+
   @else {
     $result: ();
-                
+
     @for $i from $start through $end {
       $result: append($result, nth($list, $i));
     }
@@ -249,14 +313,14 @@
 
   @return $result;
 }
-    
+
 
 @function reverse($list, $recursive: false) {
    $result: ();
 
    @for $i from length($list)*-1 through -1 {
       @if type-of(nth($list, abs($i))) == list and $recursive {
-        $result: append($result, reverse(nth($list, abs($i)), $recursive));      
+        $result: append($result, reverse(nth($list, abs($i)), $recursive));
       }
 
       @else {
@@ -270,10 +334,10 @@
 
 @function shift($list, $value: 1) {
   $result: ();
-    
+
   @for $i from 0 to length($list) {
     $result: append($result, nth($list, ($i - $value) % length($list) + 1));
   }
-  
+
   @return $result;
 }

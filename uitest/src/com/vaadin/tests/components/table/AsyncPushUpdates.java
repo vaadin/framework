@@ -15,13 +15,9 @@
  */
 package com.vaadin.tests.components.table;
 
-import javax.servlet.annotation.WebServlet;
-
 import com.vaadin.annotations.Push;
-import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -36,11 +32,6 @@ import com.vaadin.ui.Table;
 public class AsyncPushUpdates extends AbstractTestUI {
 
     public int clickCount = 0;
-
-    @WebServlet(value = "/*", asyncSupported = true)
-    @VaadinServletConfiguration(productionMode = false, ui = AsyncPushUpdates.class)
-    public static class Servlet extends VaadinServlet {
-    }
 
     public static final String VALUE_PROPERTY_ID = "value";
 

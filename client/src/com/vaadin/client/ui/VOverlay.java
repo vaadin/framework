@@ -23,6 +23,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -265,7 +266,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
                 shadow = DOM.createDiv();
                 shadow.setClassName(CLASSNAME_SHADOW);
                 shadow.setInnerHTML(SHADOW_HTML);
-                DOM.setStyleAttribute(shadow, "position", "absolute");
+                shadow.getStyle().setPosition(Position.ABSOLUTE);
                 addCloseHandler(this);
             } else {
                 removeShadowIfPresent();
@@ -324,9 +325,9 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      *            The new z-index
      */
     protected void setZIndex(int zIndex) {
-        DOM.setStyleAttribute(getElement(), "zIndex", "" + zIndex);
+        getElement().getStyle().setZIndex(zIndex);
         if (isShadowEnabled()) {
-            DOM.setStyleAttribute(shadow, "zIndex", "" + zIndex);
+            shadow.getStyle().setZIndex(zIndex);
         }
     }
 
@@ -581,8 +582,12 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
 
         updatePositionAndSize(shadow, positionAndSize);
-        DOM.setStyleAttribute(shadow, "zIndex", zIndex);
-        DOM.setStyleAttribute(shadow, "display", progress < 0.9 ? "none" : "");
+        shadow.getStyle().setProperty("zIndex", zIndex);
+        if (progress < 0.9) {
+            shadow.getStyle().setDisplay(Display.NONE);
+        } else {
+            shadow.getStyle().clearDisplay();
+        }
 
         // Opera fix, part 2 (ticket #2704)
         if (BrowserInfo.get().isOpera()) {

@@ -3,17 +3,17 @@
   div.v-layout.v-horizontal.v-widget {
     white-space: nowrap;
   }
-  
+
   .v-layout.v-vertical > .v-expand,
   .v-layout.v-horizontal > .v-expand {
     @include box-sizing(border-box);
     width: 100%;
     height: 100%;
-    
+
     // TODO fixes extra white space issues in some cases (can't remember what anymore), but causes some styles to clip
     //overflow: hidden;
   }
-  
+
   .v-slot,
   .v-spacing {
     display: inline-block;
@@ -21,7 +21,7 @@
     vertical-align: top;
     line-height: 0;
   }
-  
+
   // Clear any floats inside the slot, to prevent unwanted collapsing
   .v-vertical > .v-slot:after {
     display: inline-block;
@@ -30,30 +30,30 @@
     height: 0;
     overflow: hidden;
   }
-  
+
   .v-vertical > .v-slot,
   .v-vertical > .v-expand > .v-slot {
     display: block;
     clear: both;
   }
-  
+
   .v-horizontal > .v-slot,
   .v-horizontal > .v-expand > .v-slot {
     height: 100%;
   }
-  
+
   .v-vertical > .v-spacing,
   .v-vertical > .v-expand > .v-spacing {
     width: 0;
     display: block;
     clear: both;
   }
-  
+
   .v-horizontal > .v-spacing,
   .v-horizontal > .v-expand > .v-spacing {
     height: 0;
   }
-  
+
   .v-align-middle:before,
   .v-align-bottom:before,
   .v-expand > .v-align-middle:before,
@@ -65,12 +65,12 @@
     width: 0;
     overflow: hidden;
   }
-  
+
   .v-align-middle,
   .v-align-bottom {
     white-space: nowrap;
   }
-  
+
   .v-align-middle > .v-widget,
   .v-align-bottom > .v-widget {
     display: inline-block;
@@ -80,106 +80,106 @@
   .v-align-middle > .v-widget {
     vertical-align: middle;
   }
-  
+
   //.v-align-bottom,
   .v-align-bottom > .v-widget {
     vertical-align: bottom;
   }
-  
+
   .v-align-center {
     text-align: center;
   }
-  
+
   .v-align-center > .v-widget {
     margin-left: auto;
     margin-right: auto;
   }
-  
+
   .v-align-right {
     text-align: right;
   }
-  
+
   .v-align-right > .v-widget {
     margin-left: auto;
   }
-  
+
   .v-has-caption,
   .v-has-caption > .v-caption {
     // Force natural width to zero
     display: inline-block;
   }
-  
+
   .v-caption-on-left,
   .v-caption-on-right {
     white-space: nowrap;
   }
-  
+
   .v-caption-on-top > .v-caption,
   .v-caption-on-bottom > .v-caption {
     display: block;
   }
-  
+
   .v-caption-on-left > .v-caption {
     padding-right: .5em;
   }
-  
+
   .v-caption-on-right > .v-caption {
     //vertical-align: top;
   }
-  
+
   .v-caption-on-left > .v-widget,
   .v-caption-on-right > .v-widget {
     display: inline-block;
     //vertical-align: middle;
   }
-  
+
   .v-has-caption.v-has-width > .v-widget {
     width: 100% !important;
   }
-  
+
   .v-has-caption.v-has-height > .v-widget {
     height: 100% !important;
   }
-  
+
 }
 
 
 
 @mixin valo-orderedlayout {
-  
+
   .v-margin-top {
     padding-top: $v-layout-margin-top;
   }
-  
+
   .v-margin-right {
     padding-right: $v-layout-margin-right;
   }
-  
+
   .v-margin-bottom {
     padding-bottom: $v-layout-margin-bottom;
   }
-  
+
   .v-margin-left {
     padding-left: $v-layout-margin-left;
   }
-  
+
   .v-spacing {
     width: $v-layout-spacing-horizontal;
     height: $v-layout-spacing-vertical;
   }
-  
+
 }
 
 
 @mixin valo-horizontallayout--wrapping {
     white-space: normal !important;
-    
+
     & > .v-spacing + .v-slot,
     & > .v-slot:first-child {
       margin-bottom: $v-layout-spacing-vertical;
     }
-    
+
     & > .v-slot:first-child:last-child {
       margin-bottom: 0;
-    } 
+    }
 }

@@ -941,12 +941,12 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Gets the currently processed Vaadin request. The current request is
-     * automatically defined when the request is started. The current request
+     * Gets the currently processed Vaadin response. The current response is
+     * automatically defined when the request is started. The current response
      * can not be used in e.g. background threads because of the way server
-     * implementations reuse request instances.
+     * implementations reuse response instances.
      * 
-     * @return the current Vaadin request instance if available, otherwise
+     * @return the current Vaadin response instance if available, otherwise
      *         <code>null</code>
      * 
      * @see #setCurrentInstances(VaadinRequest, VaadinResponse)

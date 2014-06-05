@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
@@ -179,28 +181,14 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             if (!getWidget().popupOpenerClicked
                     && getWidget().selectPopupItemWhenResponseIsReceived != VFilterSelect.Select.NONE) {
                 // we're paging w/ arrows
-                if (getWidget().selectPopupItemWhenResponseIsReceived == VFilterSelect.Select.LAST) {
-                    getWidget().suggestionPopup.menu.selectLastItem();
-                } else {
-                    getWidget().suggestionPopup.menu.selectFirstItem();
-                }
-
-                // This is used for paging so we update the keyboard selection
-                // variable as well.
-                MenuItem activeMenuItem = getWidget().suggestionPopup.menu
-                        .getSelectedItem();
-                getWidget().suggestionPopup.menu
-                        .setKeyboardSelectedItem(activeMenuItem);
-
-                // Update text field to contain the correct text
-                getWidget().setTextboxText(activeMenuItem.getText());
-                getWidget().tb.setSelectionRange(
-                        getWidget().lastFilter.length(),
-                        activeMenuItem.getText().length()
-                                - getWidget().lastFilter.length());
-
-                getWidget().selectPopupItemWhenResponseIsReceived = VFilterSelect.Select.NONE; // reset
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        navigateItemAfterPageChange();
+                    }
+                });
             }
+
             if (getWidget().updateSelectionWhenReponseIsReceived) {
                 getWidget().suggestionPopup.menu
                         .doPostFilterSelectedItemAction();
@@ -212,11 +200,17 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
         getWidget().popupOpenerClicked = false;
 
-        // styles have changed or this is our first time - either way we
-        // need to recalculate the root width.
-        if (!getWidget().initDone || stylesChanged) {
-            boolean forceUpdate = true;
-            getWidget().updateRootWidth(forceUpdate);
+        /*
+         * if styles have changed or this is our first time we need to
+         * recalculate the root width.
+         */
+        if (!getWidget().initDone) {
+            // no need to force update since we have no existing width
+            getWidget().updateRootWidth(false);
+        } else if (stylesChanged) {
+            // we have previously calculated a width, we must force an update
+            // due to changed styles
+            getWidget().updateRootWidth(true);
         }
 
         // Focus dependent style names are lost during the update, so we add
@@ -229,6 +223,38 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         stylesChanged = false;
 
         getWidget().initDone = true;
+    }
+
+    /*
+     * This method navigates to the proper item in the combobox page. This
+     * should be executed after setSuggestions() method which is called from
+     * vFilterSelect.showSuggestions(). ShowSuggestions() method builds the page
+     * content. As far as setSuggestions() method is called as deferred,
+     * navigateItemAfterPageChange method should be also be called as deferred.
+     * #11333
+     */
+    private void navigateItemAfterPageChange() {
+        if (getWidget().selectPopupItemWhenResponseIsReceived == VFilterSelect.Select.LAST) {
+            getWidget().suggestionPopup.menu.selectLastItem();
+        } else {
+            getWidget().suggestionPopup.menu.selectFirstItem();
+        }
+
+        // This is used for paging so we update the keyboard selection
+        // variable as well.
+        MenuItem activeMenuItem = getWidget().suggestionPopup.menu
+                .getSelectedItem();
+        getWidget().suggestionPopup.menu
+                .setKeyboardSelectedItem(activeMenuItem);
+
+        // Update text field to contain the correct text
+        getWidget().setTextboxText(activeMenuItem.getText());
+        getWidget().tb.setSelectionRange(
+                getWidget().lastFilter.length(),
+                activeMenuItem.getText().length()
+                        - getWidget().lastFilter.length());
+
+        getWidget().selectPopupItemWhenResponseIsReceived = VFilterSelect.Select.NONE; // reset
     }
 
     private void performSelection(String selectedKey) {

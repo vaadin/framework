@@ -17,7 +17,6 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HTML;
 
 /**
@@ -80,8 +79,7 @@ public class VColorPicker extends VButton implements ClickHandler {
             }
 
             // Set the color
-            DOM.setStyleAttribute(colorIcon.getElement(), "background", color);
-
+            colorIcon.getElement().getStyle().setProperty("background", color);
         }
     }
 

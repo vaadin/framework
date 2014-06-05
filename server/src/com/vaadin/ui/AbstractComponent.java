@@ -825,7 +825,27 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setSizeUndefined() {
+        setWidthUndefined();
+        setHeightUndefined();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.server.Sizeable#setWidthUndefined()
+     */
+    @Override
+    public void setWidthUndefined() {
         setWidth(-1, Unit.PIXELS);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.server.Sizeable#setHeightUndefined()
+     */
+    @Override
+    public void setHeightUndefined() {
         setHeight(-1, Unit.PIXELS);
     }
 
@@ -970,5 +990,25 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (actionManager != null) {
             actionManager.removeAction(shortcut);
         }
+    }
+
+    /**
+     * Determine whether a <code>content</code> component is equal to, or the
+     * ancestor of this component.
+     * 
+     * @param content
+     *            the potential ancestor element
+     * @return <code>true</code> if the relationship holds
+     */
+    protected boolean isOrHasAncestor(Component content) {
+        if (content instanceof HasComponents) {
+            for (Component parent = this; parent != null; parent = parent
+                    .getParent()) {
+                if (parent == content) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

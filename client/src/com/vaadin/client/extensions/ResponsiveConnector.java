@@ -383,15 +383,15 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
             var min = parseInt(bp[1]);
             var max = parseInt(bp[2]);
 
-            if(min && max) {
+            if(!isNaN(min) && !isNaN(max)) {
                 if(min <= size && size <= max) {
                     ranges += " " + bp[1] + "-" + bp[2];
                 }
-            } else if (min) {
+            } else if (!isNaN(min)) {
                 if(min <= size) {
                     ranges += " " + bp[1] + "-";
                 }
-            } else if (max) {
+            } else if (!isNaN(max)) {
                 if (size <= max) {
                     ranges += " -" + bp[2];
                 }

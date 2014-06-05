@@ -71,3 +71,5 @@ WebContent/VAADIN/vaadinPush.debug.js
 # build result folders
 */result
 result
+
+.sass-cache

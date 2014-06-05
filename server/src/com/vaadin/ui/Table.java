@@ -2954,23 +2954,22 @@ public class Table extends AbstractSelect implements Action.Container,
             // (row caches emptied by other event)
             if (!containerChangeToBeRendered) {
                 Integer value = (Integer) variables.get("reqfirstrow");
-                int tableSize = size();
                 if (value != null) {
                     reqFirstRowToPaint = value.intValue();
-                    // Sanity check
-                    if (reqFirstRowToPaint < 0) {
-                        reqFirstRowToPaint = -1;
-                    }
-                    if (reqFirstRowToPaint >= tableSize) {
-                        reqFirstRowToPaint = tableSize - 1;
-                    }
                 }
+
                 value = (Integer) variables.get("reqrows");
                 if (value != null) {
                     reqRowsToPaint = value.intValue();
+                    int size = size();
                     // sanity check
-                    if (reqFirstRowToPaint + reqRowsToPaint > tableSize) {
-                        reqRowsToPaint = tableSize - reqFirstRowToPaint;
+
+                    if (reqFirstRowToPaint >= size) {
+                        reqFirstRowToPaint = size;
+                    }
+
+                    if (reqFirstRowToPaint + reqRowsToPaint > size) {
+                        reqRowsToPaint = size - reqFirstRowToPaint;
                     }
                 }
             }

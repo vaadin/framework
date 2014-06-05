@@ -23,17 +23,27 @@
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
       }
+
+      .v-widget ~ .v-widget.first.first {
+        border-radius: $v-border-radius 0 0 $v-border-radius;
+      }
+
+      .v-widget ~ .v-widget.last.last {
+        border-radius: 0 $v-border-radius $v-border-radius 0;
+      }
     }
 
-    // Assume most components have borders. 
+    // Assume most components have borders.
     // This is just a best-guess, will need fine-tuning if border-widths vary from widget-to-widget
     .v-widget {
       vertical-align: middle;
-      
+
+      $v-border-width: first-number($v-border);
+
       @if $v-border-width > 0 {
         margin-left: -$v-border-width;
       } @else {
-        margin-left: round($v-font-size/8);
+        margin-left: 1px;
       }
 
       &:first-child {
@@ -42,9 +52,10 @@
 
       // Focused component should be on top
       &:focus,
+      &[class*="focus"],
       [class*="focus"] {
         position: relative;
-        z-index: 1;
+        z-index: 5;
       }
     }
 

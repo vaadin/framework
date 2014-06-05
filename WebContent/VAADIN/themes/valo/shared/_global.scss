@@ -5,6 +5,9 @@
 @import "tooltip";
 
 
+$v-app-background-color: $v-background-color !default;
+
+
 // Include global styles only once
 $valo-global-included: false !default;
 @mixin valo-global {
@@ -85,6 +88,10 @@ $valo-global-included: false !default;
       overflow: hidden;
     }
 
+    .v-icon {
+      cursor: inherit;
+    }
+
     .v-icon,
     .v-errorindicator,
     .v-required-field-indicator {
@@ -92,19 +99,45 @@ $valo-global-included: false !default;
       line-height: inherit;
     }
 
-    .v-caption,
-    .v-captiontext {
+    .v-caption {
       display: inline-block;
+      white-space: nowrap;
       line-height: $v-line-height;
     }
 
+    .v-captiontext {
+      display: inline-block;
+      line-height: inherit;
+    }
+
     // Component global styles should also be included here
-    @include valo-orderedlayout-global;
-    @include valo-gridlayout-global;
-    @include valo-calendar-global;
-    @include valo-colorpicker-global;
-    @include valo-table-global;
-    @include valo-tabsheet-global;
+    @if v-is-included(orderedlayout) {
+      @include valo-orderedlayout-global;
+    }
+
+    @if v-is-included(gridlayout) {
+      @include valo-gridlayout-global;
+    }
+
+    @if v-is-included(calendar) {
+      @include valo-calendar-global;
+    }
+
+    @if v-is-included(colorpicker) {
+      @include valo-colorpicker-global;
+    }
+
+    @if v-is-included(table) or v-is-included(treetable) {
+      @include valo-table-global;
+    }
+
+    @if v-is-included(tabsheet) {
+      @include valo-tabsheet-global;
+    }
+
+    @if v-is-included(splitpanel) {
+      @include valo-splitpanel-global;
+    }
 
     $valo-global-included: true;
   }
@@ -222,9 +255,6 @@ $valo-shared-pathPrefix: null;
     outline: none;
   }
 
-  //.v-captiontext,
-  //.v-errorindicator,
-  //.v-required-field-indicator,
   img.v-icon {
     vertical-align: middle;
   }
@@ -337,6 +367,7 @@ $valo-shared-pathPrefix: null;
   .v-generated-body {
     height: auto;
     overflow: auto;
+    background-color: $v-app-background-color;
   }
 
   .v-app,
@@ -344,22 +375,6 @@ $valo-shared-pathPrefix: null;
     width: auto !important;
     height: auto !important;
     overflow: visible !important;
-  }
-
-  // Reposition loading indicator so that it doens't scroll with the page
-  .v-loading-indicator {
-    position: fixed !important;
-  }
-
-  .v-overlay-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-
-  // Reposition notifications so that they don't scroll with the page
-  .v-Notification {
-    position: fixed !important;
   }
 
 }

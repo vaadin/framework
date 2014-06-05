@@ -45,6 +45,8 @@
                     @version@</a></li>
             <li><a href="#enhancements">Enhancements in Vaadin
                     @version-minor@</a></li>
+            <li><a href="#knownissues">Known issues in
+                    @version-minor@</a></li>
             <li><a href="#limitations">Limitations in
                     @version-minor@</a></li>
             <li><a href="#vaadin">Vaadin Installation</a></li>
@@ -162,6 +164,18 @@ $v-app-background-color: hsl(200, 50%, 50%);
           <code>VAADIN/themes/my-theme-name</code> folder and use the following command 
           to compile the theme:<br><br>
           <code>$ sass styles.scss styles.css</code></li>
+        </ul>
+
+        <h3 id="knownissues">Known issues</h3>
+        <ul>
+            <li>Reconnecting a dropped push connection sometimes fails when using
+                Firefox and streaming or long polling.
+                (<a href="http://dev.vaadin.com/ticket/13578">#13578</a>)
+            </li>
+            <li>Drag'n'drop in a Table doesn't work on touch devices running
+                Internet Explorer (Windows Phone, Surface)
+                (<a href="http://dev.vaadin.com/ticket/13737">#13737</a>)
+            </li>
         </ul>
 
         <h3 id="limitations">Limitations</h3>

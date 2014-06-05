@@ -1,28 +1,10 @@
-@mixin opacity ($o, $important: false) {
-  $imp: "";
-  
-  @if $important {
-    $imp: "!important";
-  }
-  
-  opacity: $o #{unquote($imp)};
-  
-  @if $o < 1 {
-    filter: alpha(opacity=$o*100) #{unquote($imp)};
+@mixin opacity ($o) {
+  opacity: $o;
+
+  $value: first-number($o);
+  @if $value < 1 {
+    filter: alpha(opacity=$value*100) remove-nth($o, 1);
   } @else {
-    filter: none #{unquote($imp)};
-  }
-}
-
-
-@mixin border-radius ($br) {
-  -webkit-border-radius: $br;
-  border-radius: $br;
-}
-
-
-@mixin width-breakpoint ($point) {
-  @media (max-width: $point) {
-    @content;
+    filter: none remove-nth($o, 1);
   }
 }

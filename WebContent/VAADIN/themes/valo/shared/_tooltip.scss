@@ -1,6 +1,6 @@
 // @category Tooltip
 
-$v-tooltip-background-color: rgba(if(is-dark-color($v-app-background-color), scale-color($v-app-background-color, $lightness: 80%), scale-color($v-app-background-color, $lightness: -80%)), .75) !default;
+$v-tooltip-background-color: rgba(if(is-dark-color($v-background-color), scale-color($v-background-color, $lightness: 80%), scale-color($v-background-color, $lightness: -80%)), .9) !default;
 $v-tooltip-font-color: valo-font-color(opacify($v-tooltip-background-color, 1), 1) !default;
 $v-tooltip-font-size: max(12px, round($v-font-size * 0.86)) !default;
 $v-tooltip-box-shadow: 0 2px 12px rgba(#000, .2) !default;

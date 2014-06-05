@@ -27,6 +27,9 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableElement;
@@ -92,7 +95,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Representation of a single "tab" shown in the TabBar
-     *
+     * 
      */
     public static class Tab extends SimplePanel implements HasFocusHandlers,
             HasBlurHandlers, HasKeyDownHandlers {
@@ -194,7 +197,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         /**
          * Toggles the style names for the Tab
-         *
+         * 
          * @param selected
          *            true if the Tab is selected
          * @param first
@@ -577,7 +580,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         /**
          * Returns the index of the first visible tab
-         *
+         * 
          * @return
          */
         private int getFirstVisibleTab() {
@@ -586,7 +589,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         /**
          * Find the next visible tab. Returns -1 if none is found.
-         *
+         * 
          * @param i
          * @return
          */
@@ -605,7 +608,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         /**
          * Find the previous visible tab. Returns -1 if none is found.
-         *
+         * 
          * @param i
          * @return
          */
@@ -717,7 +720,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Load the content of a tab of the provided index.
-     *
+     * 
      * @param index
      *            of the tab to load
      */
@@ -743,7 +746,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Returns the currently displayed widget in the tab panel.
-     *
+     * 
      * @since 7.2
      * @return currently displayed content widget
      */
@@ -753,7 +756,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Returns the client to server RPC proxy for the tabsheet.
-     *
+     * 
      * @since 7.2
      * @return RPC proxy
      */
@@ -763,10 +766,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * For internal use only.
-     *
+     * 
      * Avoid using this method directly and use appropriate superclass methods
      * where applicable.
-     *
+     * 
      * @deprecated since 7.2 - use more specific methods instead (getRpcProxy(),
      *             getConnectorForWidget(Widget) etc.)
      * @return ApplicationConnection
@@ -800,7 +803,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         addHandler(this, BlurEvent.getType());
 
         // Tab scrolling
-        DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+        getElement().getStyle().setOverflow(Overflow.HIDDEN);
         tabs = DOM.createDiv();
         DOM.setElementProperty(tabs, "className", TABS_CLASSNAME);
         Roles.getTablistRole().set(tabs);
@@ -881,7 +884,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     /**
      * Checks if the tab with the selected index has been scrolled out of the
      * view (on the left side).
-     *
+     * 
      * @param index
      * @return
      */
@@ -1013,7 +1016,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Renders the widget content for a tab sheet.
-     *
+     * 
      * @param newWidget
      */
     public void renderContent(Widget newWidget) {
@@ -1061,9 +1064,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             }
 
             // Set proper values for content element
-            DOM.setStyleAttribute(contentNode, "height", contentHeight + "px");
+            contentNode.getStyle().setHeight(contentHeight, Unit.PX);
         } else {
-            DOM.setStyleAttribute(contentNode, "height", "");
+            contentNode.getStyle().clearHeight();
         }
     }
 
@@ -1113,7 +1116,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
      */
     private void updateTabScroller() {
         if (!isDynamicWidth()) {
-            DOM.setStyleAttribute(tabs, "width", "100%");
+            tabs.getStyle().setWidth(100, Unit.PCT);
         }
 
         // Make sure scrollerIndex is valid
@@ -1127,7 +1130,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         boolean scrolled = isScrolledTabs();
         boolean clipped = isClippedTabs();
         if (tb.getTabCount() > 0 && tb.isVisible() && (scrolled || clipped)) {
-            DOM.setStyleAttribute(scroller, "display", "");
+            scroller.getStyle().clearDisplay();
             DOM.setElementProperty(scrollerPrev, "className",
                     SCROLLER_CLASSNAME + (scrolled ? "Prev" : "Prev-disabled"));
             DOM.setElementProperty(scrollerNext, "className",
@@ -1140,7 +1143,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                     : -1);
 
         } else {
-            DOM.setStyleAttribute(scroller, "display", "none");
+            scroller.getStyle().setDisplay(Display.NONE);
         }
 
         if (BrowserInfo.get().isSafari()) {
@@ -1383,7 +1386,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Makes tab bar visible.
-     *
+     * 
      * @since 7.2
      */
     public void showTabs() {
@@ -1394,7 +1397,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Makes tab bar invisible.
-     *
+     * 
      * @since 7.2
      */
     public void hideTabs() {
