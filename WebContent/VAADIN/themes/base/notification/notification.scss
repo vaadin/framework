@@ -7,7 +7,8 @@
 	overflow: hidden;
 	padding: 1em;
 	max-width:85%;
-	
+	opacity: .9;
+	filter: alpha(opacity=90);
 }
 .#{$primaryStyleName} h1,
 .#{$primaryStyleName} p,
@@ -39,5 +40,14 @@
 	display: block;
 	margin: 0;
 }
+.#{$primaryStyleName}-animate-out {
+	@include animation(animate-out 400ms 1s);
+}
 
+}
+
+@include keyframes(animate-out) {
+  100% {
+   opacity: 0;
+  }
 }

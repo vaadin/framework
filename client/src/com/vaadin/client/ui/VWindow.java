@@ -30,6 +30,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
@@ -200,6 +201,9 @@ public class VWindow extends VWindowOverlay implements
     /** For internal use only. May be removed or replaced in the future. */
     public int bringToFrontSequence = -1;
 
+    /** For internal use only. May be removed or replaced in the future. */
+    public Node windowClone;
+
     private VLazyExecutor delayedContentsSizeUpdater = new VLazyExecutor(200,
             new ScheduledCommand() {
 
@@ -303,7 +307,10 @@ public class VWindow extends VWindowOverlay implements
     }
 
     private static VWindow getTopmostWindow() {
-        return windowOrder.get(windowOrder.size() - 1);
+        if (windowOrder.size() > 0) {
+            return windowOrder.get(windowOrder.size() - 1);
+        }
+        return null;
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -1030,6 +1037,15 @@ public class VWindow extends VWindowOverlay implements
     }
 
     private void onCloseClick() {
+        // Take a copy of the contents, since the server will detach all
+        // children of this window, and the window will be emptied during the
+        // next hierarchy update (we need to keep the contents visible for the
+        // duration of a possible 'out-animation')
+        // This is used by the WindowConnector in the case the window is
+        // actually closed and removed from the UI
+        windowClone = getElement().getFirstChild().cloneNode(true);
+
+        // Send the close event to the server
         client.updateVariable(id, "close", true, true);
     }
 
@@ -1263,7 +1279,7 @@ public class VWindow extends VWindowOverlay implements
         // are not cancelled here and target this window to be consume():d
         // meaning the event won't be sent to the rest of the preview handlers.
 
-        if (getTopmostWindow().vaadinModality) {
+        if (getTopmostWindow() != null && getTopmostWindow().vaadinModality) {
             // Topmost window is modal. Cancel the event if it targets something
             // outside that window (except debug console...)
             if (DOM.getCaptureElement() != null) {
