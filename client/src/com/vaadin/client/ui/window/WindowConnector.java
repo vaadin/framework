@@ -192,6 +192,15 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         // We always have 1 child, unless the child is hidden
         getWidget().contentPanel.setWidget(getContentWidget());
+
+        // If the window is removed from the UI, add the copy of the contents to
+        // the window (in case of an 'out-animation')
+        if (getParent() == null) {
+            getWidget().getElement().removeAllChildren();
+            getWidget().getElement().appendChild(getWidget().windowClone);
+        }
+        // Clean reference
+        getWidget().windowClone = null;
     }
 
     @Override
