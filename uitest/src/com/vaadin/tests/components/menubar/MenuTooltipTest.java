@@ -23,12 +23,9 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.interactions.internal.Coordinates;
-import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.MenuBarElement;
@@ -43,20 +40,14 @@ public class MenuTooltipTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
-        browsers.remove(Browser.IE8.getDesiredCapabilities());
-        browsers.remove(Browser.IE9.getDesiredCapabilities());
-        browsers.remove(Browser.IE10.getDesiredCapabilities());
-        browsers.remove(Browser.IE11.getDesiredCapabilities());
-        return browsers;
-    };
+        return getBrowsersExcludingIE();
+    }
 
     @Test
     public void testToolTipDelay() throws InterruptedException {
         openTestURL();
 
-        Coordinates elementCoordinates = ((Locatable) $(MenuBarElement.class)
-                .first().getWrappedElement()).getCoordinates();
+        Coordinates elementCoordinates = getCoordinates($(MenuBarElement.class).first());
 
         Mouse mouse = ((HasInputDevices) getDriver()).getMouse();
 
@@ -73,9 +64,5 @@ public class MenuTooltipTest extends MultiBrowserTest {
         assertThat(getTooltipElement().getLocation().getX(),
                 is(greaterThan(elementCoordinates.onPage().getX())));
         assertThat(getTooltipElement().getText(), is("TOOLTIP 1"));
-    }
-
-    private WebElement getTooltipElement() {
-        return getDriver().findElement(By.className("v-tooltip-text"));
     }
 }
