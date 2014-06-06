@@ -40,6 +40,16 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  */
 public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
+    protected List<DesiredCapabilities> getBrowsersExcludingIE() {
+        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(getAllBrowsers());
+        browsers.remove(Browser.IE8.getDesiredCapabilities());
+        browsers.remove(Browser.IE9.getDesiredCapabilities());
+        browsers.remove(Browser.IE10.getDesiredCapabilities());
+        browsers.remove(Browser.IE11.getDesiredCapabilities());
+
+        return browsers;
+    }
+
     public enum Browser {
         FIREFOX(BrowserUtil.firefox(24)), CHROME(BrowserUtil.chrome(33)), SAFARI(
                 BrowserUtil.safari(7)), IE8(BrowserUtil.ie(8)), IE9(BrowserUtil

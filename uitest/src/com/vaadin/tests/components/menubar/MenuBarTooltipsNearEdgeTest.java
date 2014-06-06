@@ -29,7 +29,6 @@ import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.MenuBarElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -61,9 +60,5 @@ public class MenuBarTooltipsNearEdgeTest extends MultiBrowserTest {
         assertThat(tooltip.getLocation().x, is(lessThan(menuLocation.onPage().x
                 - tooltip.getSize().getWidth())));
 
-    }
-
-    private WebElement getTooltipElement() {
-        return getDriver().findElement(By.className("v-tooltip-text"));
     }
 }

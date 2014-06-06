@@ -1034,7 +1034,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 return null;
             }
 
-            return new TooltipInfo(description);
+            return new TooltipInfo(description, null, this);
         }
 
         /**

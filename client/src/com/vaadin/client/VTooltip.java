@@ -358,11 +358,9 @@ public class VTooltip extends VWindowOverlay {
          * @return TooltipInfo if connector and tooltip found, null if not
          */
         private TooltipInfo getTooltipFor(Element element) {
-
             ApplicationConnection ac = getApplicationConnection();
             ComponentConnector connector = Util.getConnectorForElement(ac,
                     RootPanel.get(), element);
-
             // Try to find first connector with proper tooltip info
             TooltipInfo info = null;
             while (connector != null) {
@@ -447,10 +445,26 @@ public class VTooltip extends VWindowOverlay {
                 return;
             }
 
+            // If the parent (sub)component already has a tooltip open and it
+            // hasn't changed, we ignore the event.
+            // TooltipInfo contains a reference to the parent component that is
+            // checked in it's equals-method.
+            if (currentElement != null && isActuallyVisible()) {
+                TooltipInfo currentTooltip = getTooltipFor(currentElement);
+                TooltipInfo newTooltip = getTooltipFor(element);
+                if (currentTooltip != null && currentTooltip.equals(newTooltip)) {
+                    return;
+                }
+            }
+
             TooltipInfo info = getTooltipFor(element);
             if (info == null) {
                 handleHideEvent();
             } else {
+                if (closing) {
+                    closeTimer.cancel();
+                    closing = false;
+                }
                 setTooltipText(info);
                 updatePosition(event, isFocused);
                 if (isActuallyVisible() && !isFocused) {
@@ -460,8 +474,7 @@ public class VTooltip extends VWindowOverlay {
                         closeNow();
                     }
                     // Schedule timer for showing the tooltip according to if it
-                    // was
-                    // recently closed or not.
+                    // was recently closed or not.
                     int timeout = justClosed ? getQuickOpenDelay()
                             : getOpenDelay();
                     if (timeout == 0) {

@@ -74,10 +74,6 @@ public class TooltipInWindowTest extends MultiBrowserTest {
 
     }
 
-    private WebElement getTooltipElement() {
-        return getDriver().findElement(By.className("v-tooltip-text"));
-    }
-
     private WebElement getTooltipContainerElement() {
         return getDriver().findElement(By.className("v-tooltip"));
     }
