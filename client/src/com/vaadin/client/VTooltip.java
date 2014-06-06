@@ -404,9 +404,7 @@ public class VTooltip extends VWindowOverlay {
 
             TooltipInfo info = getTooltipFor(element);
             if (info == null) {
-                if (isActuallyVisible()) {
-                    handleHideEvent();
-                }
+                handleHideEvent();
             } else {
                 setTooltipText(info);
                 updatePosition(event, isFocused);
