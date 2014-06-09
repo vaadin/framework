@@ -44,6 +44,25 @@
 	@include animation(animate-out 400ms 1s);
 }
 
+.#{$primaryStyleName} {
+  &.v-position-top {
+    top: 0;
+  }
+  &.v-position-right {
+    right: 0;
+  }
+  &.v-position-bottom {
+    bottom: 0;
+  }
+  &.v-position-left {
+    left: 0;
+  }
+  &.v-position-assistive {
+    top: -9999px;
+    left: -9999px;
+  }
+}
+
 }
 
 @include keyframes(animate-out) {

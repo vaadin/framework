@@ -22,8 +22,7 @@ import java.util.Iterator;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -52,6 +51,14 @@ public class VNotification extends VOverlay {
     public static final Position TOP_RIGHT = Position.TOP_RIGHT;
     public static final Position BOTTOM_LEFT = Position.BOTTOM_LEFT;
     public static final Position BOTTOM_RIGHT = Position.BOTTOM_RIGHT;
+
+    private static final String STYLENAME_POSITION_TOP = "v-position-top";
+    private static final String STYLENAME_POSITION_RIGHT = "v-position-right";
+    private static final String STYLENAME_POSITION_BOTTOM = "v-position-bottom";
+    private static final String STYLENAME_POSITION_LEFT = "v-position-left";
+    private static final String STYLENAME_POSITION_MIDDLE = "v-position-middle";
+    private static final String STYLENAME_POSITION_CENTER = "v-position-center";
+    private static final String STYLENAME_POSITION_ASSISTIVE = "v-position-assistive";
 
     /**
      * Position that is only accessible for assistive devices, invisible for
@@ -263,49 +270,68 @@ public class VNotification extends VOverlay {
     }
 
     public void setPosition(com.vaadin.shared.Position position) {
-        final Style style = getElement().getStyle();
-        style.clearTop();
-        style.clearRight();
-        style.clearBottom();
-        style.clearLeft();
+        final Element el = getElement();
+
+        // Remove all offsets (GWT PopupPanel defaults)
+        el.getStyle().clearTop();
+        el.getStyle().clearLeft();
+
+        // Remove any previous positions
+        el.removeClassName(STYLENAME_POSITION_TOP);
+        el.removeClassName(STYLENAME_POSITION_RIGHT);
+        el.removeClassName(STYLENAME_POSITION_BOTTOM);
+        el.removeClassName(STYLENAME_POSITION_LEFT);
+        el.removeClassName(STYLENAME_POSITION_MIDDLE);
+        el.removeClassName(STYLENAME_POSITION_CENTER);
+        el.removeClassName(STYLENAME_POSITION_ASSISTIVE);
+
         switch (position) {
         case TOP_LEFT:
-            style.setTop(0, Unit.PX);
-            style.setLeft(0, Unit.PX);
+            el.addClassName(STYLENAME_POSITION_TOP);
+            el.addClassName(STYLENAME_POSITION_LEFT);
             break;
         case TOP_RIGHT:
-            style.setTop(0, Unit.PX);
-            style.setRight(0, Unit.PX);
+            el.addClassName(STYLENAME_POSITION_TOP);
+            el.addClassName(STYLENAME_POSITION_RIGHT);
             break;
         case MIDDLE_LEFT:
             center();
-            style.setLeft(0, Unit.PX);
+            // Centering sets the left offset
+            el.getStyle().clearLeft();
+            el.addClassName(STYLENAME_POSITION_MIDDLE);
+            el.addClassName(STYLENAME_POSITION_LEFT);
             break;
         case MIDDLE_RIGHT:
             center();
-            style.clearLeft();
-            style.setRight(0, Unit.PX);
+            // Centering sets the left offset
+            el.getStyle().clearLeft();
+            el.addClassName(STYLENAME_POSITION_MIDDLE);
+            el.addClassName(STYLENAME_POSITION_RIGHT);
             break;
         case BOTTOM_RIGHT:
-            style.setBottom(0, Unit.PX);
-            style.setRight(0, Unit.PX);
+            el.addClassName(STYLENAME_POSITION_BOTTOM);
+            el.addClassName(STYLENAME_POSITION_RIGHT);
             break;
         case BOTTOM_LEFT:
-            style.setBottom(0, Unit.PX);
-            style.setLeft(0, Unit.PX);
+            el.addClassName(STYLENAME_POSITION_BOTTOM);
+            el.addClassName(STYLENAME_POSITION_LEFT);
             break;
         case TOP_CENTER:
             center();
-            style.setTop(0, Unit.PX);
+            // Centering sets the top offset
+            el.getStyle().clearTop();
+            el.addClassName(STYLENAME_POSITION_TOP);
+            el.addClassName(STYLENAME_POSITION_CENTER);
             break;
         case BOTTOM_CENTER:
             center();
-            style.clearTop();
-            style.setBottom(0, Unit.PX);
+            // Centering sets the top offset
+            el.getStyle().clearTop();
+            el.addClassName(STYLENAME_POSITION_BOTTOM);
+            el.addClassName(STYLENAME_POSITION_CENTER);
             break;
         case ASSISTIVE:
-            style.setTop(-2000, Unit.PX);
-            style.setLeft(-2000, Unit.PX);
+            el.addClassName(STYLENAME_POSITION_ASSISTIVE);
             break;
         default:
         case MIDDLE_CENTER:

@@ -8,22 +8,27 @@ $v-notification-title-color: $v-focus-color !default;
 
   // Positional offsets
 
-  // Can't match to "top: 0", since that would target "margin-top: 0" also, which all GWT PopupPanels have always
-  .v-Notification[style*=" top: 0"] {
-    margin-top: $v-layout-spacing-vertical !important;
-  }
+  .v-Notification {
+    &.v-position-top {
+      top: $v-layout-spacing-vertical;
+    }
 
-  .v-Notification[style*="right: 0"] {
-    margin-right: $v-layout-spacing-horizontal;
-  }
+    &.v-position-right {
+      right: $v-layout-spacing-horizontal;
+    }
 
-  .v-Notification[style*="bottom: 0"] {
-    margin-bottom: $v-layout-spacing-vertical;
-  }
+    &.v-position-bottom {
+      bottom: $v-layout-spacing-vertical;
+    }
 
-  // Can't match to "left: 0", since that would target "margin-left: 0" also, which all GWT PopupPanels have always
-  .v-Notification[style*=" left: 0"] {
-    margin-left: $v-layout-spacing-horizontal !important;
+    &.v-position-left {
+      left: $v-layout-spacing-horizontal;
+    }
+
+    &.v-position-assistive {
+      top: -9999px;
+      left: -9999px;
+    }
   }
 
 

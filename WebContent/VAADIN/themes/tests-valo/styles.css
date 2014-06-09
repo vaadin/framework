@@ -4428,14 +4428,17 @@ h4,
   text-align: left;
   white-space: normal;
   line-height: 1.55; }
-.tests-valo .v-Notification[style*=" top: 0"] {
-  margin-top: 12px !important; }
-.tests-valo .v-Notification[style*="right: 0"] {
-  margin-right: 12px; }
-.tests-valo .v-Notification[style*="bottom: 0"] {
-  margin-bottom: 12px; }
-.tests-valo .v-Notification[style*=" left: 0"] {
-  margin-left: 12px !important; }
+.tests-valo .v-Notification.v-position-top {
+  top: 12px; }
+.tests-valo .v-Notification.v-position-right {
+  right: 12px; }
+.tests-valo .v-Notification.v-position-bottom {
+  bottom: 12px; }
+.tests-valo .v-Notification.v-position-left {
+  left: 12px; }
+.tests-valo .v-Notification.v-position-assistive {
+  top: -9999px;
+  top: -9999px; }
 .tests-valo .v-Notification[style*=" top: 0"] {
   -webkit-animation: valo-anim-slide-down 600ms;
   -moz-animation: valo-anim-slide-down 600ms;
