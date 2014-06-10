@@ -21,13 +21,13 @@ import java.util.logging.Logger;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -443,6 +443,8 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         current = null;
     }
 
+    private JavaScriptObject animateInListener;
+
     private boolean maybeShowWithAnimation() {
         boolean isAttached = isAttached() && isShowing();
         super.show();
@@ -467,8 +469,25 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             }
 
             if (animationName.contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
-                AnimationUtil.registerAnimationEndEventListener(getElement(),
-                        getAnimationEndListener(false));
+                animateInListener = AnimationUtil.addAnimationEndListener(
+                        getElement(), new AnimationEndListener() {
+                            @Override
+                            public void onAnimationEnd(NativeEvent event) {
+                                String animationName = AnimationUtil
+                                        .getAnimationName(event);
+                                if (animationName
+                                        .contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                                    AnimationUtil.removeAnimationEndListener(
+                                            getElement(), animateInListener);
+                                    removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                                    if (isShadowEnabled()) {
+                                        shadow.removeClassName(CLASSNAME_SHADOW
+                                                + "-"
+                                                + ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                                    }
+                                }
+                            }
+                        });
                 return true;
             } else {
                 removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
@@ -936,64 +955,75 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * @see com.google.gwt.user.client.ui.PopupPanel#hide(boolean)
      */
     @Override
-    public void hide(boolean autoClosed) {
+    public void hide(final boolean autoClosed) {
         if (BrowserInfo.get().isIE8() || BrowserInfo.get().isIE9()) {
             super.hide(autoClosed);
         } else {
-            // Check if animations are used
-            addStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_OUT);
-            if (isShadowEnabled()) {
-                shadow.addClassName(CLASSNAME_SHADOW + "-"
-                        + ADDITIONAL_CLASSNAME_ANIMATE_OUT);
-            }
-            ComputedStyle cs = new ComputedStyle(getElement());
-            String animationName = AnimationUtil.getAnimationName(cs);
-            if (animationName == null) {
-                animationName = "";
-            }
-
-            if (animationName.contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
-                AnimationUtil.registerAnimationEndEventListener(getElement(),
-                        getAnimationEndListener(autoClosed));
-                // No event previews should happen after the animation has
-                // started
-                VOverlay.this.setPreviewingAllNativeEvents(false);
+            if (getStyleName().contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                AnimationUtil.addAnimationEndListener(getElement(),
+                        new AnimationEndListener() {
+                            @Override
+                            public void onAnimationEnd(NativeEvent event) {
+                                if (AnimationUtil
+                                        .getAnimationName(event)
+                                        .contains(
+                                                ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                                    VOverlay.this.hide(autoClosed);
+                                }
+                            }
+                        });
             } else {
-                removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_OUT);
+                // Check if animations are used
+                addStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_OUT);
                 if (isShadowEnabled()) {
-                    shadow.removeClassName(CLASSNAME_SHADOW + "-"
+                    shadow.addClassName(CLASSNAME_SHADOW + "-"
                             + ADDITIONAL_CLASSNAME_ANIMATE_OUT);
                 }
-                super.hide(autoClosed);
-            }
-        }
-    }
+                ComputedStyle cs = new ComputedStyle(getElement());
+                String animationName = AnimationUtil.getAnimationName(cs);
+                if (animationName == null) {
+                    animationName = "";
+                }
 
-    private AnimationEndListener getAnimationEndListener(
-            final boolean autoClosed) {
-        return new AnimationEndListener() {
-
-            @Override
-            public void onAnimationEnd(NativeEvent event) {
-                AnimationUtil
-                        .unregisterAnimationEndEventListeners(getElement());
-                String animationName = AnimationUtil.getAnimationName(event);
-                if (animationName.contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
-                    removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
-                    if (isShadowEnabled()) {
-                        shadow.removeClassName(CLASSNAME_SHADOW + "-"
-                                + ADDITIONAL_CLASSNAME_ANIMATE_IN);
-                    }
-                } else if (animationName
-                        .contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
+                if (animationName.contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
+                    AnimationUtil.addAnimationEndListener(getElement(),
+                            new AnimationEndListener() {
+                                @Override
+                                public void onAnimationEnd(NativeEvent event) {
+                                    String animationName = AnimationUtil
+                                            .getAnimationName(event);
+                                    if (animationName
+                                            .contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
+                                        AnimationUtil
+                                                .removeAllAnimationEndListeners(getElement());
+                                        // Remove both animation styles just in
+                                        // case
+                                        removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                                        removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_OUT);
+                                        if (isShadowEnabled()) {
+                                            shadow.removeClassName(CLASSNAME_SHADOW
+                                                    + "-"
+                                                    + ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                                            shadow.removeClassName(CLASSNAME_SHADOW
+                                                    + "-"
+                                                    + ADDITIONAL_CLASSNAME_ANIMATE_OUT);
+                                        }
+                                        VOverlay.super.hide(autoClosed);
+                                    }
+                                }
+                            });
+                    // No event previews should happen after the animation has
+                    // started
+                    VOverlay.this.setPreviewingAllNativeEvents(false);
+                } else {
                     removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_OUT);
                     if (isShadowEnabled()) {
                         shadow.removeClassName(CLASSNAME_SHADOW + "-"
                                 + ADDITIONAL_CLASSNAME_ANIMATE_OUT);
                     }
-                    VOverlay.super.hide(autoClosed);
+                    super.hide(autoClosed);
                 }
             }
-        };
+        }
     }
 }

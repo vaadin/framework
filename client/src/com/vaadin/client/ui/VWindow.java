@@ -30,7 +30,6 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
@@ -200,9 +199,6 @@ public class VWindow extends VWindowOverlay implements
 
     /** For internal use only. May be removed or replaced in the future. */
     public int bringToFrontSequence = -1;
-
-    /** For internal use only. May be removed or replaced in the future. */
-    public Node windowClone;
 
     private VLazyExecutor delayedContentsSizeUpdater = new VLazyExecutor(200,
             new ScheduledCommand() {
@@ -1037,14 +1033,6 @@ public class VWindow extends VWindowOverlay implements
     }
 
     private void onCloseClick() {
-        // Take a copy of the contents, since the server will detach all
-        // children of this window, and the window will be emptied during the
-        // next hierarchy update (we need to keep the contents visible for the
-        // duration of a possible 'out-animation')
-        // This is used by the WindowConnector in the case the window is
-        // actually closed and removed from the UI
-        windowClone = getElement().getFirstChild().cloneNode(true);
-
         // Send the close event to the server
         client.updateVariable(id, "close", true, true);
     }

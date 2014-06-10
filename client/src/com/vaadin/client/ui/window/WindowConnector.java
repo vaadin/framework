@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
@@ -57,6 +58,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         implements Paintable, BeforeShortcutActionListener,
         SimpleManagedLayout, PostLayoutListener, MayScrollChildren,
         WindowMoveHandler {
+
+    private Node windowClone;
 
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this) {
         @Override
@@ -193,14 +196,16 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         // We always have 1 child, unless the child is hidden
         getWidget().contentPanel.setWidget(getContentWidget());
 
-        // If the window is removed from the UI, add the copy of the contents to
-        // the window (in case of an 'out-animation')
-        if (getParent() == null) {
+        if (getParent() == null && windowClone != null) {
+            // If the window is removed from the UI, add the copy of the
+            // contents to the window (in case of an 'out-animation')
             getWidget().getElement().removeAllChildren();
-            getWidget().getElement().appendChild(getWidget().windowClone);
+            getWidget().getElement().appendChild(windowClone);
+
+            // Clean reference
+            windowClone = null;
         }
-        // Clean reference
-        getWidget().windowClone = null;
+
     }
 
     @Override
@@ -277,6 +282,16 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             window.center();
         }
         window.positionOrSizeUpdated();
+
+        if (getParent() != null) {
+            // Take a copy of the contents, since the server will detach all
+            // children of this window when it's closed, and the window will be
+            // emptied during the following hierarchy update (we need to keep
+            // the contents visible for the duration of a possible
+            // 'out-animation')
+            windowClone = getWidget().getElement().getFirstChild()
+                    .cloneNode(true);
+        }
     }
 
     @Override
