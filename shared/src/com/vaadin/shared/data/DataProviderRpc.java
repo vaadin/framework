@@ -34,7 +34,8 @@ public interface DataProviderRpc extends ClientRpc {
      * 
      * <pre>
      * [{
-     *   "d": [COL_1_JSON, COL_2_json, ...]
+     *   "d": [COL_1_JSON, COL_2_json, ...],
+     *   "k": "1"
      * },
      * ...
      * ]

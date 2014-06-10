@@ -2678,6 +2678,9 @@ public class Escalator extends Widget {
 
         @Override
         protected void paintRemoveRows(final int index, final int numberOfRows) {
+            if (numberOfRows == 0) {
+                return;
+            }
 
             final Range viewportRange = Range.withLength(
                     getLogicalRowIndex(visualRowOrder.getFirst()),

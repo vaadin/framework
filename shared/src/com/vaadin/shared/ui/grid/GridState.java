@@ -39,10 +39,17 @@ public class GridState extends AbstractComponentState {
 
     /**
      * The key in which a row's data can be found
-     * {@link com.vaadin.shared.data.DataProviderRpc#setRowData(int, List)
-     * DataProviderRpc.setRowData(int, List)}
+     * 
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
      */
     public static final String JSONKEY_DATA = "d";
+
+    /**
+     * The key in which a row's own key can be found
+     * 
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
+     */
+    public static final String JSONKEY_ROWKEY = "k";
 
     {
         // FIXME Grid currently does not support undefined size
@@ -96,5 +103,8 @@ public class GridState extends AbstractComponentState {
     /** FIXME remove once selection mode communcation is done. only for testing. */
     @DelegateToWidget
     public boolean selectionCheckboxes;
+
+    // instantiated just to avoid NPEs
+    public List<String> selectedKeys = new ArrayList<String>();
 
 }

@@ -17,9 +17,11 @@
 package com.vaadin.client.ui.grid;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,13 +30,18 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.data.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
+import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
+import com.vaadin.client.ui.grid.selection.SelectionChangeHandler;
+import com.vaadin.client.ui.grid.selection.SelectionModelMulti;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.ColumnGroupRowState;
 import com.vaadin.shared.ui.grid.ColumnGroupState;
 import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
+import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 
@@ -53,7 +60,66 @@ import com.vaadin.shared.ui.grid.ScrollDestination;
 public class GridConnector extends AbstractComponentConnector {
 
     /**
-     * Custom implementation of the custom grid column using a String[] to
+     * Hacked SelectionModelMulti to make selection communication work for now.
+     */
+    private class RowKeyBasedMultiSelection extends
+            SelectionModelMulti<JSONObject> {
+
+        private final LinkedHashSet<String> selectedKeys = new LinkedHashSet<String>();
+
+        public List<String> getSelectedKeys() {
+            List<String> keys = new ArrayList<String>();
+            keys.addAll(selectedKeys);
+            return keys;
+        }
+
+        public void updateFromState() {
+            boolean changed = false;
+            Set<String> stateKeys = new LinkedHashSet<String>();
+            stateKeys.addAll(getState().selectedKeys);
+            for (String key : stateKeys) {
+                if (!selectedKeys.contains(key)) {
+                    changed = true;
+                    selectByHandle(dataSource.getHandleByKey(key));
+                }
+            }
+            for (String key : selectedKeys) {
+                changed = true;
+                if (!stateKeys.contains(key)) {
+                    deselectByHandle(dataSource.getHandleByKey(key));
+                }
+            }
+            selectedKeys.clear();
+            selectedKeys.addAll(stateKeys);
+
+            if (changed) {
+                // At least for now there's no way to send the selected and/or
+                // deselected row data. Some data is only stored as keys
+                getWidget().fireEvent(
+                        new SelectionChangeEvent<JSONObject>(getWidget(),
+                                (List<JSONObject>) null, null));
+            }
+        }
+
+        @Override
+        public boolean select(Collection<JSONObject> rows) {
+            for (JSONObject row : rows) {
+                selectedKeys.add((String) dataSource.getRowKey(row));
+            }
+            return super.select(rows);
+        }
+
+        @Override
+        public boolean deselect(Collection<JSONObject> rows) {
+            for (JSONObject row : rows) {
+                selectedKeys.remove(dataSource.getRowKey(row));
+            }
+            return super.deselect(rows);
+        }
+    }
+
+    /**
+     * Custom implementation of the custom grid column using a JSONObject to
      * represent the cell value and String as a column type.
      */
     private class CustomGridColumn extends GridColumn<Object, JSONObject> {
@@ -107,6 +173,8 @@ public class GridConnector extends AbstractComponentConnector {
      * Maps a generated column id to a grid column instance
      */
     private Map<String, CustomGridColumn> columnIdToColumn = new HashMap<String, CustomGridColumn>();
+    private final RowKeyBasedMultiSelection selectionModel = new RowKeyBasedMultiSelection();
+    private RpcDataSource dataSource;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -139,6 +207,18 @@ public class GridConnector extends AbstractComponentConnector {
                 getWidget().scrollToRow(row, destination);
             }
         });
+
+        getWidget().setSelectionModel(selectionModel);
+
+        getWidget().addSelectionChangeHandler(new SelectionChangeHandler() {
+            @Override
+            public void onSelectionChange(SelectionChangeEvent<?> event) {
+                // TODO change this to diff based. (henrik paul 24.6.2014)
+                getRpcProxy(GridServerRpc.class).selectionChange(
+                        selectionModel.getSelectedKeys());
+            }
+        });
+
     }
 
     @Override
@@ -210,6 +290,10 @@ public class GridConnector extends AbstractComponentConnector {
 
         if (stateChangeEvent.hasPropertyChanged("heightMode")) {
             getWidget().setHeightMode(getState().heightMode);
+        }
+
+        if (stateChangeEvent.hasPropertyChanged("selectedKeys")) {
+            selectionModel.updateFromState();
         }
     }
 
@@ -331,5 +415,10 @@ public class GridConnector extends AbstractComponentConnector {
                 group.setHeaderCaption(groupState.header);
             }
         }
+    }
+
+    public void setDataSource(RpcDataSource dataSource) {
+        this.dataSource = dataSource;
+        getWidget().setDataSource(this.dataSource);
     }
 }

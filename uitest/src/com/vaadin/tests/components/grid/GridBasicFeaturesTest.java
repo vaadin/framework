@@ -18,6 +18,7 @@ package com.vaadin.tests.components.grid;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -299,6 +300,83 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
                 "Modify first row (getContainerProperty)");
         assertEquals("(Second) modification with getItemProperty failed",
                 "modified: Column0", getBodyCellByRowAndColumn(0, 0).getText());
+    }
+
+    @Test
+    public void testSelectOnOff() throws Exception {
+        openTestURL();
+
+        assertFalse("row shouldn't start out as selected",
+                isSelected(getRow(0)));
+        toggleFirstRowSelection();
+        assertTrue("row should become selected", isSelected(getRow(0)));
+        toggleFirstRowSelection();
+        assertFalse("row shouldn't remain selected", isSelected(getRow(0)));
+    }
+
+    @Test
+    public void testSelectOnScrollOffScroll() throws Exception {
+        openTestURL();
+        assertFalse("row shouldn't start out as selected",
+                isSelected(getRow(0)));
+        toggleFirstRowSelection();
+        assertTrue("row should become selected", isSelected(getRow(0)));
+
+        scrollGridVerticallyTo(10000); // make sure the row is out of cache
+        scrollGridVerticallyTo(0); // scroll it back into view
+
+        assertTrue("row should still be selected when scrolling "
+                + "back into view", isSelected(getRow(0)));
+    }
+
+    @Test
+    public void testSelectScrollOnScrollOff() throws Exception {
+        openTestURL();
+        assertFalse("row shouldn't start out as selected",
+                isSelected(getRow(0)));
+
+        scrollGridVerticallyTo(10000); // make sure the row is out of cache
+        toggleFirstRowSelection();
+
+        scrollGridVerticallyTo(0); // scroll it back into view
+        assertTrue("row should still be selected when scrolling "
+                + "back into view", isSelected(getRow(0)));
+
+        toggleFirstRowSelection();
+        assertFalse("row shouldn't remain selected", isSelected(getRow(0)));
+    }
+
+    @Test
+    public void testSelectScrollOnOffScroll() throws Exception {
+        openTestURL();
+        assertFalse("row shouldn't start out as selected",
+                isSelected(getRow(0)));
+
+        scrollGridVerticallyTo(10000); // make sure the row is out of cache
+        toggleFirstRowSelection();
+        toggleFirstRowSelection();
+
+        scrollGridVerticallyTo(0); // make sure the row is out of cache
+        assertFalse("row shouldn't be selected when scrolling "
+                + "back into view", isSelected(getRow(0)));
+    }
+
+    private void toggleFirstRowSelection() {
+        selectMenuPath("Component", "Body rows", "Select first row");
+    }
+
+    @SuppressWarnings("static-method")
+    private boolean isSelected(TestBenchElement row) {
+        /*
+         * FIXME We probably should get a GridRow instead of a plain
+         * TestBenchElement, that has an "isSelected" thing integrated. (henrik
+         * paul 26.6.2014)
+         */
+        return row.getAttribute("class").contains("-row-selected");
+    }
+
+    private TestBenchElement getRow(int i) {
+        return getGridElement().getRow(i);
     }
 
     private void assertPrimaryStylename(String stylename) {

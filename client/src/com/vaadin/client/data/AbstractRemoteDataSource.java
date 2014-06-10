@@ -42,7 +42,7 @@ import com.vaadin.shared.ui.grid.Range;
  */
 public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
-    private class RowHandleImpl extends RowHandle<T> {
+    protected class RowHandleImpl extends RowHandle<T> {
         private T row;
         private final Object key;
 

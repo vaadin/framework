@@ -23,7 +23,7 @@ import com.vaadin.client.ui.grid.Renderer;
 
 /**
  * No-row selection model.
- *
+ * 
  * @author Vaadin Ltd
  * @since 7.4
  */
@@ -35,7 +35,7 @@ public class SelectionModelNone<T> implements SelectionModel.None<T> {
     }
 
     @Override
-    public Renderer<T> getSelectionColumnRenderer() {
+    public Renderer<Boolean> getSelectionColumnRenderer() {
         return null;
     }
 

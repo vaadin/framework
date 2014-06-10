@@ -18,30 +18,31 @@ package com.vaadin.client.ui.grid.selection;
 import java.util.Collection;
 import java.util.Collections;
 
+import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.Renderer;
 
 /**
  * Single-row selection model.
- *
+ * 
  * @author Vaadin Ltd
  * @since 7.4
  */
 public class SelectionModelSingle<T> implements SelectionModel.Single<T> {
 
     private Grid<T> grid;
-    private T selectedRow;
+    private RowHandle<T> selectedRow;
+    private Renderer<Boolean> renderer;
 
     @Override
     public boolean isSelected(T row) {
-        return row == null ? null : row.equals(getSelectedRow());
+        return selectedRow != null
+                && selectedRow.equals(grid.getDataSource().getHandle(row));
     }
 
     @Override
-    public Renderer<T> getSelectionColumnRenderer() {
-        // TODO: Add implementation of SelectionColumnRenderer; currently none
-        // exists
-        return null;
+    public Renderer<Boolean> getSelectionColumnRenderer() {
+        return renderer;
     }
 
     @Override
@@ -56,6 +57,7 @@ public class SelectionModelSingle<T> implements SelectionModel.Single<T> {
             throw new IllegalStateException(
                     "Grid reference cannot be reassigned");
         }
+        renderer = new MultiSelectionRenderer<T>(grid);
     }
 
     @Override
@@ -65,12 +67,17 @@ public class SelectionModelSingle<T> implements SelectionModel.Single<T> {
             throw new IllegalArgumentException("Row cannot be null");
         }
 
-        if (row.equals(getSelectedRow())) {
+        if (isSelected(row)) {
             return false;
         }
 
-        T removed = selectedRow;
-        selectedRow = row;
+        T removed = getSelectedRow();
+        if (selectedRow != null) {
+            selectedRow.unpin();
+        }
+        selectedRow = grid.getDataSource().getHandle(row);
+        selectedRow.pin();
+
         grid.fireEvent(new SelectionChangeEvent<T>(grid, row, removed));
 
         return true;
@@ -83,8 +90,9 @@ public class SelectionModelSingle<T> implements SelectionModel.Single<T> {
             throw new IllegalArgumentException("Row cannot be null");
         }
 
-        if (row.equals(selectedRow)) {
-            T removed = selectedRow;
+        if (isSelected(row)) {
+            T removed = selectedRow.getRow();
+            selectedRow.unpin();
             selectedRow = null;
             grid.fireEvent(new SelectionChangeEvent<T>(grid, null, removed));
             return true;
@@ -95,16 +103,15 @@ public class SelectionModelSingle<T> implements SelectionModel.Single<T> {
 
     @Override
     public T getSelectedRow() {
-        return selectedRow;
+        return (selectedRow != null ? selectedRow.getRow() : null);
     }
 
     @Override
     public void reset() {
-        T removed = selectedRow;
-        selectedRow = null;
+        T removed = getSelectedRow();
 
         if (removed != null) {
-            grid.fireEvent(new SelectionChangeEvent<T>(grid, null, removed));
+            deselect(removed);
         }
     }
 

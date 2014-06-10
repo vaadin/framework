@@ -48,7 +48,6 @@ import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
 import com.vaadin.client.ui.grid.selection.HasSelectionChangeHandlers;
-import com.vaadin.client.ui.grid.selection.MultiSelectionRenderer;
 import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
 import com.vaadin.client.ui.grid.selection.SelectionChangeHandler;
 import com.vaadin.client.ui.grid.selection.SelectionModel;
@@ -1061,7 +1060,7 @@ public class Grid<T> extends Composite implements
         refreshHeader();
         refreshFooter();
 
-        selectionModel = SelectionMode.SINGLE.createModel();
+        setSelectionMode(SelectionMode.SINGLE);
 
         escalator
                 .addRowVisibilityChangeHandler(new RowVisibilityChangeHandler() {
@@ -1075,6 +1074,16 @@ public class Grid<T> extends Composite implements
                         }
                     }
                 });
+
+        // Default action on SelectionChangeEvents. Refresh the body so changed
+        // become visible.
+        addSelectionChangeHandler(new SelectionChangeHandler() {
+
+            @Override
+            public void onSelectionChange(SelectionChangeEvent<?> event) {
+                refreshBody();
+            }
+        });
     }
 
     @Override
@@ -1338,6 +1347,13 @@ public class Grid<T> extends Composite implements
     void refreshHeader() {
         refreshRowContainer(escalator.getHeader(), isColumnHeadersVisible(),
                 true);
+    }
+
+    /**
+     * Refreshes all body rows
+     */
+    private void refreshBody() {
+        escalator.getBody().refreshRows(0, escalator.getBody().getRowCount());
     }
 
     /**
@@ -1797,6 +1813,15 @@ public class Grid<T> extends Composite implements
     }
 
     /**
+     * Gets the {@Link DataSource} for this Grid.
+     * 
+     * @return the data source used by this grid
+     */
+    public DataSource<T> getDataSource() {
+        return dataSource;
+    }
+
+    /**
      * Sets the rightmost frozen column in the grid.
      * <p>
      * All columns up to and including the given column will be frozen in place
@@ -2177,7 +2202,7 @@ public class Grid<T> extends Composite implements
     /* TODO remove before final */
     public void setSelectionCheckboxes(boolean set) {
         if (set) {
-            setSelectColumnRenderer(new MultiSelectionRenderer(this));
+            setSelectColumnRenderer(selectionModel.getSelectionColumnRenderer());
         } else {
             setSelectColumnRenderer(null);
         }
@@ -2198,6 +2223,8 @@ public class Grid<T> extends Composite implements
 
     /**
      * Sets the current selection model.
+     * <p>
+     * This function will call {@link SelectionModel#setGrid(Grid)}.
      * 
      * @param selectionModel
      *            a selection model implementation.
@@ -2211,6 +2238,7 @@ public class Grid<T> extends Composite implements
         }
 
         this.selectionModel = selectionModel;
+        selectionModel.setGrid(this);
 
     }
 
@@ -2411,15 +2439,5 @@ public class Grid<T> extends Composite implements
     private void sort() {
         fireEvent(new SortEvent<T>(this,
                 Collections.unmodifiableList(sortOrder)));
-    }
-
-    /**
-     * Missing getDataSource method. TODO: remove this and other duplicates
-     * after The Merge
-     * 
-     * @return a DataSource reference
-     */
-    public DataSource<T> getDataSource() {
-        return dataSource;
     }
 }

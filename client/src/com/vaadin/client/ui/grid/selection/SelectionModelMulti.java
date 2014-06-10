@@ -17,38 +17,38 @@ package com.vaadin.client.ui.grid.selection;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.Renderer;
 
 /**
  * Multi-row selection model.
- *
+ * 
  * @author Vaadin Ltd
  * @since 7.4
  */
 public class SelectionModelMulti<T> implements SelectionModel.Multi<T> {
 
-    private final Renderer<T> renderer;
-    private final Set<T> selectedRows;
+    private final Set<RowHandle<T>> selectedRows;
+    private Renderer<Boolean> renderer;
     private Grid<T> grid;
 
     public SelectionModelMulti() {
         grid = null;
         renderer = null;
-        selectedRows = new LinkedHashSet<T>();
+        selectedRows = new LinkedHashSet<RowHandle<T>>();
     }
 
     @Override
     public boolean isSelected(T row) {
-        return selectedRows.contains(row);
+        return isSelectedByHandle(grid.getDataSource().getHandle(row));
     }
 
     @Override
-    public Renderer<T> getSelectionColumnRenderer() {
+    public Renderer<Boolean> getSelectionColumnRenderer() {
         return renderer;
     }
 
@@ -64,6 +64,8 @@ public class SelectionModelMulti<T> implements SelectionModel.Multi<T> {
             throw new IllegalStateException(
                     "Grid reference cannot be reassigned");
         }
+
+        this.renderer = new MultiSelectionRenderer<T>(grid);
     }
 
     @Override
@@ -87,7 +89,7 @@ public class SelectionModelMulti<T> implements SelectionModel.Multi<T> {
         if (selectedRows.size() > 0) {
 
             SelectionChangeEvent<T> event = new SelectionChangeEvent<T>(grid,
-                    null, selectedRows);
+                    null, getSelectedRows());
             selectedRows.clear();
             grid.fireEvent(event);
 
@@ -105,7 +107,8 @@ public class SelectionModelMulti<T> implements SelectionModel.Multi<T> {
         Set<T> added = new LinkedHashSet<T>();
 
         for (T row : rows) {
-            if (selectedRows.add(row)) {
+            RowHandle<T> handle = grid.getDataSource().getHandle(row);
+            if (selectByHandle(handle)) {
                 added.add(row);
             }
         }
@@ -127,7 +130,7 @@ public class SelectionModelMulti<T> implements SelectionModel.Multi<T> {
         Set<T> removed = new LinkedHashSet<T>();
 
         for (T row : rows) {
-            if (selectedRows.remove(row)) {
+            if (deselectByHandle(grid.getDataSource().getHandle(row))) {
                 removed.add(row);
             }
         }
@@ -140,14 +143,37 @@ public class SelectionModelMulti<T> implements SelectionModel.Multi<T> {
         return false;
     }
 
+    protected boolean isSelectedByHandle(RowHandle<T> handle) {
+        return selectedRows.contains(handle);
+    }
+
+    protected boolean selectByHandle(RowHandle<T> handle) {
+        if (selectedRows.add(handle)) {
+            handle.pin();
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean deselectByHandle(RowHandle<T> handle) {
+        if (selectedRows.remove(handle)) {
+            handle.unpin();
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public Collection<T> getSelectedRows() {
-        return Collections.unmodifiableSet(selectedRows);
+        Set<T> selected = new LinkedHashSet<T>();
+        for (RowHandle<T> handle : selectedRows) {
+            selected.add(handle.getRow());
+        }
+        return selected;
     }
 
     @Override
     public void reset() {
         deselectAll();
     }
-
 }

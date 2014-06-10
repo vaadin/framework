@@ -363,6 +363,20 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }
                 }, null);
+
+        createBooleanAction("Select first row", "Body rows", false,
+                new Command<Grid, Boolean>() {
+                    @Override
+                    public void execute(Grid grid, Boolean select, Object data) {
+                        final Object firstItemId = grid
+                                .getContainerDatasource().firstItemId();
+                        if (select.booleanValue()) {
+                            grid.select(firstItemId);
+                        } else {
+                            grid.deselect(firstItemId);
+                        }
+                    }
+                });
     }
 
     @SuppressWarnings("boxing")

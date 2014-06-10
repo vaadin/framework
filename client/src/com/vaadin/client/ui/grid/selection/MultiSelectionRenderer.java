@@ -17,7 +17,6 @@ package com.vaadin.client.ui.grid.selection;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
@@ -37,7 +36,7 @@ import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 
 /* This class will probably not survive the final merge of all selection functionality. */
-public class MultiSelectionRenderer extends ComplexRenderer<Boolean> {
+public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
 
     private class TouchEventHandler implements NativePreviewHandler {
         @Override
@@ -168,12 +167,12 @@ public class MultiSelectionRenderer extends ComplexRenderer<Boolean> {
 
     private static final String LOGICAL_ROW_PROPERTY_INT = "vEscalatorLogicalRow";
 
-    private final Grid<?> grid;
+    private final Grid<T> grid;
     private HandlerRegistration nativePreviewHandlerRegistration;
 
     private final SelectionHandler selectionHandler = new SelectionHandler();
 
-    public MultiSelectionRenderer(final Grid<?> grid) {
+    public MultiSelectionRenderer(final Grid<T> grid) {
         this.grid = grid;
     }
 
@@ -276,23 +275,16 @@ public class MultiSelectionRenderer extends ComplexRenderer<Boolean> {
         }
     }
 
-    private boolean isSelected(final int logicalRow) {
-        // TODO
-        // return grid.getSelectionModel().isSelected(logicalRow);
-        return false;
+    protected boolean isSelected(final int logicalRow) {
+        return grid.isSelected(grid.getDataSource().getRow(logicalRow));
     }
 
-    private void setSelected(final int logicalRow, final boolean select) {
+    protected void setSelected(final int logicalRow, final boolean select) {
+        T row = grid.getDataSource().getRow(logicalRow);
         if (select) {
-            // TODO
-            // grid.getSelectionModel().select(logicalRow);
-            Logger.getLogger(getClass().getName()).warning(
-                    "Selecting " + logicalRow);
+            grid.select(row);
         } else {
-            // TODO
-            // grid.getSelectionModel().deselect(logicalRow);
-            Logger.getLogger(getClass().getName()).warning(
-                    "Deselecting " + logicalRow);
+            grid.deselect(row);
         }
     }
 }

@@ -26,16 +26,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import com.google.gwt.thirdparty.guava.common.collect.Sets;
+import com.google.gwt.thirdparty.guava.common.collect.Sets.SetView;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.data.Container.PropertySetChangeNotifier;
 import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.RpcDataProviderExtension;
+import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.ColumnGroupRowState;
 import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
+import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
@@ -181,6 +188,15 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      */
     private SelectionModel selectionModel;
 
+    /**
+     * The number of times to ignore selection state sync to the client.
+     * <p>
+     * This usually means that the client side has modified the selection. We
+     * still want to inform the listeners that the selection has changed, but we
+     * don't want to send those changes "back to the client".
+     */
+    private int ignoreSelectionClientSync = 0;
+
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
             .findMethod(SelectionChangeListener.class, "selectionChange",
                     SelectionChangeEvent.class);
@@ -191,9 +207,105 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      * @param datasource
      *            the data source for the grid
      */
-    public Grid(Container.Indexed datasource) {
+    public Grid(final Container.Indexed datasource) {
         setContainerDataSource(datasource);
         setSelectionMode(SelectionMode.MULTI);
+        addSelectionChangeListener(new SelectionChangeListener() {
+            @Override
+            public void selectionChange(SelectionChangeEvent event) {
+                for (Object removedItemId : event.getRemoved()) {
+                    keyMapper().unpin(removedItemId);
+                }
+
+                for (Object addedItemId : event.getAdded()) {
+                    keyMapper().pin(addedItemId);
+                }
+
+                List<String> keys = keyMapper().getKeys(getSelectedRows());
+
+                boolean markAsDirty = true;
+
+                /*
+                 * If this clause is true, it means that the selection event
+                 * originated from the client. This means that we don't want to
+                 * send the changes back to the client (markAsDirty => false).
+                 */
+                if (ignoreSelectionClientSync > 0) {
+                    ignoreSelectionClientSync--;
+                    markAsDirty = false;
+
+                    try {
+
+                        /*
+                         * Make sure that the diffstate is aware of the
+                         * "undirty" modification, so that the diffs are
+                         * calculated correctly the next time we actually want
+                         * to send the selection state to the client.
+                         */
+                        getUI().getConnectorTracker().getDiffState(Grid.this)
+                                .put("selectedKeys", new JSONArray(keys));
+                    } catch (JSONException e) {
+                        throw new RuntimeException("Internal error", e);
+                    }
+                }
+
+                getState(markAsDirty).selectedKeys = keys;
+            }
+        });
+
+        registerRpc(new GridServerRpc() {
+
+            @Override
+            public void selectionChange(List<String> selection) {
+                final HashSet<Object> newSelection = new HashSet<Object>(
+                        keyMapper().getItemIds(selection));
+                final HashSet<Object> oldSelection = new HashSet<Object>(
+                        getSelectedRows());
+
+                SetView<Object> addedItemIds = Sets.difference(newSelection,
+                        oldSelection);
+                SetView<Object> removedItemIds = Sets.difference(oldSelection,
+                        newSelection);
+
+                if (!addedItemIds.isEmpty()) {
+                    /*
+                     * Since these changes come from the client, we want to
+                     * modify the selection model and get that event fired to
+                     * all the listeners. One of the listeners is our internal
+                     * selection listener, and this tells it not to send the
+                     * selection event back to the client.
+                     */
+                    ignoreSelectionClientSync++;
+
+                    if (addedItemIds.size() == 1) {
+                        select(addedItemIds.iterator().next());
+                    } else {
+                        assert getSelectionModel() instanceof SelectionModel.Multi : "Got multiple selections, but the selection model is not a SelectionModel.Multi";
+                        ((SelectionModel.Multi) getSelectionModel())
+                                .select(addedItemIds);
+                    }
+                }
+
+                if (!removedItemIds.isEmpty()) {
+                    /*
+                     * Since these changes come from the client, we want to
+                     * modify the selection model and get that event fired to
+                     * all the listeners. One of the listeners is our internal
+                     * selection listener, and this tells it not to send the
+                     * selection event back to the client.
+                     */
+                    ignoreSelectionClientSync++;
+
+                    if (removedItemIds.size() == 1) {
+                        deselect(removedItemIds.iterator().next());
+                    } else {
+                        assert getSelectionModel() instanceof SelectionModel.Multi : "Got multiple deselections, but the selection model is not a SelectionModel.Multi";
+                        ((SelectionModel.Multi) getSelectionModel())
+                                .deselect(removedItemIds);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -205,6 +317,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      *             if the data source is null
      */
     public void setContainerDataSource(Container.Indexed container) {
+
         if (container == null) {
             throw new IllegalArgumentException(
                     "Cannot set the datasource to null");
@@ -935,9 +1048,19 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
                 SELECTION_CHANGE_METHOD);
     }
 
-    /** FIXME remove once selection mode communcation is done. only for testing. */
+    /**
+     * FIXME remove once selection mode communication is done. only for testing.
+     */
     public void setSelectionCheckboxes(boolean value) {
         getState().selectionCheckboxes = value;
+    }
+
+    /**
+     * A shortcut for
+     * <code>{@link #datasourceExtension}.{@link com.vaadin.data.RpcDataProviderExtension#getKeyMapper() getKeyMapper()}</code>
+     */
+    private DataProviderKeyMapper keyMapper() {
+        return datasourceExtension.getKeyMapper();
     }
 
     /**

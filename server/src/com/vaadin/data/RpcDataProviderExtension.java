@@ -17,6 +17,7 @@
 package com.vaadin.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,11 +25,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gwt.thirdparty.guava.common.collect.BiMap;
+import com.google.gwt.thirdparty.guava.common.collect.HashBiMap;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Container.Indexed.ItemAddEvent;
 import com.vaadin.data.Container.Indexed.ItemRemoveEvent;
@@ -63,6 +67,227 @@ import com.vaadin.ui.components.grid.Renderer;
 public class RpcDataProviderExtension extends AbstractExtension {
 
     /**
+     * ItemId to Key to ItemId mapper.
+     * <p>
+     * This class is used when transmitting information about items in container
+     * related to Grid. It introduces a consistent way of mapping ItemIds and
+     * its container to a String that can be mapped back to ItemId.
+     * <p>
+     * <em>Technical note:</em> This class also keeps tabs on which indices are
+     * being shown/selected, and is able to clean up after itself once the
+     * itemId &lrarr; key mapping is not needed anymore. In other words, this
+     * doesn't leak memory.
+     */
+    public class DataProviderKeyMapper {
+        private final BiMap<Integer, Object> indexToItemId = HashBiMap.create();
+        private final BiMap<Object, String> itemIdToKey = HashBiMap.create();
+        private Set<Object> pinnedItemIds = new HashSet<Object>();
+        private Range activeRange = Range.withLength(0, 0);
+        private long rollingIndex = 0;
+
+        private DataProviderKeyMapper() {
+            // private implementation
+        }
+
+        void preActiveRowsChange(Range newActiveRange, int firstNewIndex,
+                List<?> itemIds) {
+            final Range[] removed = activeRange.partitionWith(newActiveRange);
+            final Range[] added = newActiveRange.partitionWith(activeRange);
+
+            removeActiveRows(removed[0]);
+            removeActiveRows(removed[2]);
+            addActiveRows(added[0], firstNewIndex, itemIds);
+            addActiveRows(added[2], firstNewIndex, itemIds);
+
+            activeRange = newActiveRange;
+        }
+
+        private void removeActiveRows(final Range deprecated) {
+            for (int i = deprecated.getStart(); i < deprecated.getEnd(); i++) {
+                final Integer ii = Integer.valueOf(i);
+                final Object itemId = indexToItemId.get(ii);
+
+                if (!pinnedItemIds.contains(itemId)) {
+                    itemIdToKey.remove(itemId);
+                }
+                indexToItemId.remove(ii);
+            }
+        }
+
+        private void addActiveRows(final Range added, int firstNewIndex,
+                List<?> newItemIds) {
+
+            for (int i = added.getStart(); i < added.getEnd(); i++) {
+
+                /*
+                 * We might be in a situation we have an index <-> itemId entry
+                 * already. This happens when something was selected, scrolled
+                 * out of view and now we're scrolling it back into view. It's
+                 * unnecessary to overwrite it in that case.
+                 * 
+                 * Fun thought: considering branch prediction, it _might_ even
+                 * be a bit faster to simply always run the code beyond this
+                 * if-state. But it sounds too stupid (and most often too
+                 * insignificant) to try out.
+                 */
+                final Integer ii = Integer.valueOf(i);
+                if (indexToItemId.containsKey(ii)) {
+                    continue;
+                }
+
+                /*
+                 * We might be in a situation where we have an itemId <-> key
+                 * entry already, but no index for it. This happens when
+                 * something that is out of view is selected programmatically.
+                 * In that case, we only want to add an index for that entry,
+                 * and not overwrite the key.
+                 */
+                final Object itemId = newItemIds.get(i - firstNewIndex);
+                if (!itemIdToKey.containsKey(itemId)) {
+                    itemIdToKey.put(itemId, nextKey());
+                }
+                indexToItemId.put(ii, itemId);
+            }
+        }
+
+        private String nextKey() {
+            return String.valueOf(rollingIndex++);
+        }
+
+        String getKey(Object itemId) {
+            String key = itemIdToKey.get(itemId);
+            if (key == null) {
+                key = nextKey();
+                itemIdToKey.put(itemId, key);
+            }
+            return key;
+        }
+
+        /**
+         * Gets keys for a collection of item ids.
+         * <p>
+         * If the itemIds are currently cached, the existing keys will be used.
+         * Otherwise new ones will be created.
+         * 
+         * @param itemIds
+         *            the item ids for which to get keys
+         * @return keys for the {@code itemIds}
+         */
+        public List<String> getKeys(Collection<Object> itemIds) {
+            if (itemIds == null) {
+                throw new IllegalArgumentException("itemIds can't be null");
+            }
+
+            ArrayList<String> keys = new ArrayList<String>(itemIds.size());
+            for (Object itemId : itemIds) {
+                keys.add(getKey(itemId));
+            }
+            return keys;
+        }
+
+        Object getItemId(String key) throws IllegalStateException {
+            Object itemId = itemIdToKey.inverse().get(key);
+            if (itemId != null) {
+                return itemId;
+            } else {
+                throw new IllegalStateException("No item id for key " + key
+                        + " found.");
+            }
+        }
+
+        /**
+         * Gets corresponding item ids for each of the keys in a collection.
+         * 
+         * @param keys
+         *            the keys for which to retrieve item ids
+         * @return a collection of item ids for the {@code keys}
+         * @throws IllegalStateException
+         *             if one or more of keys don't have a corresponding item id
+         *             in the cache
+         */
+        public Collection<Object> getItemIds(Collection<String> keys)
+                throws IllegalStateException {
+            if (keys == null) {
+                throw new IllegalArgumentException("keys may not be null");
+            }
+
+            ArrayList<Object> itemIds = new ArrayList<Object>(keys.size());
+            for (String key : keys) {
+                itemIds.add(getItemId(key));
+            }
+            return itemIds;
+        }
+
+        /**
+         * Pin an item id to be cached indefinitely.
+         * <p>
+         * Normally when an itemId is not an active row, it is discarded from
+         * the cache. Pinning an item id will make sure that it is kept in the
+         * cache.
+         * <p>
+         * In effect, while an item id is pinned, it always has the same key.
+         * 
+         * @param itemId
+         *            the item id to pin
+         * @throws IllegalStateException
+         *             if {@code itemId} was already pinned
+         * @see #unpin(Object)
+         * @see #isPinned(Object)
+         * @see #getItemIds(Collection)
+         */
+        public void pin(Object itemId) throws IllegalStateException {
+            if (isPinned(itemId)) {
+                throw new IllegalStateException("Item id " + itemId
+                        + " was pinned already");
+            }
+            pinnedItemIds.add(itemId);
+        }
+
+        /**
+         * Unpin an item id.
+         * <p>
+         * This cancels the effect of pinning an item id. If the item id is
+         * currently inactive, it will be immediately removed from the cache.
+         * 
+         * @param itemId
+         *            the item id to unpin
+         * @throws IllegalStateException
+         *             if {@code itemId} was not pinned
+         * @see #pin(Object)
+         * @see #isPinned(Object)
+         * @see #getItemIds(Collection)
+         */
+        public void unpin(Object itemId) throws IllegalStateException {
+            if (!isPinned(itemId)) {
+                throw new IllegalStateException("Item id " + itemId
+                        + " was not pinned");
+            }
+
+            pinnedItemIds.remove(itemId);
+            final Integer removedIndex = indexToItemId.inverse().remove(itemId);
+            if (removedIndex == null
+                    || !activeRange.contains(removedIndex.intValue())) {
+                itemIdToKey.remove(itemId);
+            }
+        }
+
+        /**
+         * Checks whether an item id is pinned or not.
+         * 
+         * @param itemId
+         *            the item id to check for pin status
+         * @return {@code true} iff the item id is currently pinned
+         */
+        public boolean isPinned(Object itemId) {
+            return pinnedItemIds.contains(itemId);
+        }
+
+        Object itemIdAtIndex(int index) {
+            return indexToItemId.inverse().get(Integer.valueOf(index));
+        }
+    }
+
+    /**
      * A helper class that handles the client-side Escalator logic relating to
      * making sure that whatever is currently visible to the user, is properly
      * initialized and otherwise handled on the server side (as far as
@@ -70,8 +295,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * <p>
      * This bookeeping includes, but is not limited to:
      * <ul>
-     * <li>listening to the currently visible {@link Property Properties'} value
-     * changes on the server side and sending those back to the client; and
+     * <li>listening to the currently visible {@link com.vaadin.data.Property
+     * Properties'} value changes on the server side and sending those back to
+     * the client; and
      * <li>attaching and detaching {@link com.vaadin.ui.Component Components}
      * from the Vaadin Component hierarchy.
      * </ul>
@@ -340,7 +566,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 ItemRemoveEvent removeEvent = (ItemRemoveEvent) event;
                 int firstIndex = removeEvent.getFirstIndex();
                 int count = removeEvent.getRemovedItemsCount();
-                removeRowData(firstIndex, count, removeEvent.getFirstItemId());
+                removeRowData(firstIndex, count);
             }
 
             else {
@@ -352,6 +578,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
         }
     };
+
+    private final DataProviderKeyMapper keyMapper = new DataProviderKeyMapper();
 
     /**
      * Creates a new data provider using the given container.
@@ -366,14 +594,17 @@ public class RpcDataProviderExtension extends AbstractExtension {
             @Override
             public void requestRows(int firstRow, int numberOfRows,
                     int firstCachedRowIndex, int cacheSize) {
-                pushRows(firstRow, numberOfRows);
-
                 Range active = Range.withLength(firstRow, numberOfRows);
                 if (cacheSize != 0) {
                     Range cached = Range.withLength(firstCachedRowIndex,
                             cacheSize);
                     active = active.combineWith(cached);
                 }
+
+                List<?> itemIds = RpcDataProviderExtension.this.container
+                        .getItemIds(firstRow, numberOfRows);
+                keyMapper.preActiveRowsChange(active, firstRow, itemIds);
+                pushRows(firstRow, itemIds);
 
                 activeRowHandler.setActiveRows(active.getStart(),
                         active.length());
@@ -389,8 +620,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     }
 
-    private void pushRows(int firstRow, int numberOfRows) {
-        List<?> itemIds = container.getItemIds(firstRow, numberOfRows);
+    private void pushRows(int firstRow, List<?> itemIds) {
         Collection<?> propertyIds = container.getContainerPropertyIds();
         JSONArray rows = new JSONArray();
         for (Object itemId : itemIds) {
@@ -402,6 +632,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     private JSONObject getRowData(Collection<?> propertyIds, Object itemId) {
         Item item = container.getItem(itemId);
+        String[] row = new String[propertyIds.size()];
 
         JSONArray rowData = new JSONArray();
 
@@ -421,13 +652,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
             final JSONObject rowObject = new JSONObject();
             rowObject.put(GridState.JSONKEY_DATA, rowData);
-            /*
-             * TODO: selection wants to put here something in the lines of:
-             * 
-             * rowObject.put(GridState.JSONKEY_ROWKEY, getKey(itemId))
-             * 
-             * Henrik Paul: 18.6.2014
-             */
+            rowObject.put(GridState.JSONKEY_ROWKEY, keyMapper.getKey(itemId));
             return rowObject;
         } catch (final JSONException e) {
             throw new RuntimeException("Grid was unable to serialize "
@@ -477,23 +702,16 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * @param firstItemId
      *            the item id of the first removed item
      */
-    private void removeRowData(int firstIndex, int count, Object firstItemId) {
+    private void removeRowData(int firstIndex, int count) {
         getState().containerSize -= count;
         getRpcProxy(DataProviderRpc.class).removeRowData(firstIndex, count);
 
-        /*
-         * Unfortunately, there's no sane way of getting the rest of the removed
-         * itemIds unless we cache a mapping between index and itemId.
-         * 
-         * Fortunately, the only time _currently_ an event with more than one
-         * removed item seems to be when calling
-         * AbstractInMemoryContainer.removeAllElements(). Otherwise, it's only
-         * removing one item at a time.
-         * 
-         * We _could_ have a backup of all the itemIds, and compare to that one,
-         * but we really really don't want to go there.
-         */
-        activeRowHandler.removeItemId(firstItemId);
+        for (int i = 0; i < count; i++) {
+            Object itemId = keyMapper.itemIdAtIndex(firstIndex + i);
+            if (itemId != null) {
+                activeRowHandler.removeItemId(itemId);
+            }
+        }
     }
 
     /**
@@ -564,6 +782,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     public void propertiesAdded(HashSet<Object> addedPropertyIds) {
         activeRowHandler.propertiesAdded(addedPropertyIds);
+    }
+
+    public DataProviderKeyMapper getKeyMapper() {
+        return keyMapper;
     }
 
     protected Grid getGrid() {

@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
@@ -41,6 +42,14 @@ import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
 public class GridClientRenderers extends MultiBrowserTest {
 
     private int latency = 0;
+
+    @Override
+    protected DesiredCapabilities getDesiredCapabilities() {
+        DesiredCapabilities c = new DesiredCapabilities(
+                super.getDesiredCapabilities());
+        c.setCapability("handlesAlerts", true);
+        return c;
+    }
 
     @Override
     protected Class<?> getUIClass() {

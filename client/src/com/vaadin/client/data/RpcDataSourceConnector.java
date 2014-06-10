@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
@@ -29,6 +30,7 @@ import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataProviderState;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
 
 /**
@@ -43,7 +45,8 @@ import com.vaadin.shared.ui.grid.Range;
 @Connect(com.vaadin.data.RpcDataProviderExtension.class)
 public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
-    private final AbstractRemoteDataSource<JSONObject> dataSource = new AbstractRemoteDataSource<JSONObject>() {
+    public class RpcDataSource extends AbstractRemoteDataSource<JSONObject> {
+
         @Override
         protected void requestRows(int firstRowIndex, int numberOfRows) {
             Range cached = getCachedRange();
@@ -54,18 +57,25 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
         @Override
         public Object getRowKey(JSONObject row) {
-            /*
-             * FIXME will be properly implemented by another patch (Henrik Paul:
-             * 16.6.2014)
-             */
-            return row;
+            JSONString string = row.get(GridState.JSONKEY_ROWKEY).isString();
+            if (string != null) {
+                return string.stringValue();
+            } else {
+                return null;
+            }
         }
-    };
+
+        public RowHandle<JSONObject> getHandleByKey(Object key) {
+            return new RowHandleImpl(null, key);
+        }
+    }
+
+    private final RpcDataSource dataSource = new RpcDataSource();
 
     @Override
     protected void extend(ServerConnector target) {
         dataSource.setEstimatedSize(getState().containerSize);
-        ((GridConnector) target).getWidget().setDataSource(dataSource);
+        ((GridConnector) target).setDataSource(dataSource);
 
         registerRpc(DataProviderRpc.class, new DataProviderRpc() {
             @Override

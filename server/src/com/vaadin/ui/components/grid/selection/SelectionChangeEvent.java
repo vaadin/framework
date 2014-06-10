@@ -17,7 +17,7 @@ package com.vaadin.ui.components.grid.selection;
 
 import java.util.Collection;
 import java.util.EventObject;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.google.gwt.thirdparty.guava.common.collect.Sets;
@@ -32,14 +32,14 @@ import com.vaadin.ui.components.grid.Grid;
  */
 public class SelectionChangeEvent extends EventObject {
 
-    private Set<Object> oldSelection;
-    private Set<Object> newSelection;
+    private LinkedHashSet<Object> oldSelection;
+    private LinkedHashSet<Object> newSelection;
 
     public SelectionChangeEvent(Grid source, Collection<Object> oldSelection,
             Collection<Object> newSelection) {
         super(source);
-        this.oldSelection = new HashSet<Object>(oldSelection);
-        this.newSelection = new HashSet<Object>(newSelection);
+        this.oldSelection = new LinkedHashSet<Object>(oldSelection);
+        this.newSelection = new LinkedHashSet<Object>(newSelection);
     }
 
     /**
