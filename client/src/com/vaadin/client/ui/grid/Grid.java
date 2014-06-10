@@ -778,14 +778,12 @@ public class Grid<T> extends Composite implements
                         }
                     }
                 });
-
     }
 
     @Override
     public void setStylePrimaryName(String style) {
         super.setStylePrimaryName(style);
         escalator.setStylePrimaryName(style);
-
     }
 
     /**
@@ -881,6 +879,12 @@ public class Grid<T> extends Composite implements
                     Renderer renderer = findRenderer(cell);
                     renderer.render(cell, value);
                 }
+
+                final String selectedClassName = getStylePrimaryName()
+                        + "-row-selected";
+
+                setStyleName(row.getElement(), selectedClassName,
+                        isSelected(rowData));
             }
 
             @Override
@@ -1115,8 +1119,8 @@ public class Grid<T> extends Composite implements
         return null;
     }
 
-    private Renderer findRenderer(FlyweightCell cell) {
-        GridColumn column = getColumnFromVisibleIndex(cell.getColumn());
+    private Renderer<?> findRenderer(FlyweightCell cell) {
+        GridColumn<?, T> column = getColumnFromVisibleIndex(cell.getColumn());
         assert column != null : "Could not find column at index:"
                 + cell.getColumn();
         return column.getRenderer();
