@@ -7,18 +7,12 @@
 
 
 @mixin valo-fonts {
-  $valo-fonts-pathPrefix: null;
-  @if $v-relative-paths == false {
-    $valo-fonts-pathPrefix: "../valo/fonts/";
-  }
-
-  // Font Awesome
-  @include valo-icon-font(FontAwesome, #{$valo-fonts-pathPrefix}font-awesome/fontawesome-webfont);
+  // Font Awesome icons from the Base theme
+  @include v-font(FontAwesome, "../base/fonts/fontawesome-webfont");
 }
 
 
-
-@mixin valo-icon-font($font-family, $file-name) {
+@mixin v-font($font-family, $file-name) {
   @include font-face($font-family, $file-name);
 
   .#{$font-family} {
@@ -31,6 +25,12 @@
       text-align: center;
       @include user-select(none);
   }
+}
+
+
+@mixin font($font-family, $file-name) {
+  @warn "The 'font' mixin is DEPRECATED. You should use the corresponding 'v-font' mixin instead.";
+  @include v-font($font-family, $file-name);
 }
 
 
