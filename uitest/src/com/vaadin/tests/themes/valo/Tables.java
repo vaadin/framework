@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -107,19 +107,19 @@ public class Tables extends VerticalLayout implements View {
         addComponent(table);
     }
 
-    TreeTable getTreeTable(String caption) {
+    static TreeTable getTreeTable(String caption) {
         TreeTable table = new TreeTable(caption);
         configure(table, true);
         return table;
     }
 
-    Table getTable(String caption) {
+    static Table getTable(String caption) {
         Table table = new Table(caption);
         configure(table, false);
         return table;
     }
 
-    void configure(Table table, boolean hierarchical) {
+    static void configure(Table table, boolean hierarchical) {
         table.setSelectable(true);
         table.setMultiSelect(true);
         table.setSortEnabled(true);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -69,7 +69,7 @@ public class Tabsheets extends VerticalLayout implements View {
                         "icons-on-top padded-tabbar", closable.getValue(),
                         overflow.getValue(), icon.getValue()));
                 wrap.addComponent(getTabSheet("Only selected tab is closable",
-                        "selected-closable", closable.getValue(),
+                        "only-selected-closable", closable.getValue(),
                         overflow.getValue(), icon.getValue()));
             }
         };
