@@ -2,7 +2,7 @@ $valo-menu-background-color: null !default;
 
 @mixin valo-menu {
 
-  $bg-lightness: if(color-luminance($v-app-background-color) < 10, 10%, -60%);
+  $bg-lightness: if(color-luminance($v-app-background-color) < 10, 15%, -65%);
   $bg: $valo-menu-background-color or scale-color($v-app-background-color, $lightness: $bg-lightness);
 
   .v-slot-valo-menu {
@@ -15,7 +15,7 @@ $valo-menu-background-color: null !default;
     overflow: auto;
     padding-bottom: $v-unit-size;
     @include linear-gradient(to left, (scale-color($bg, $lightness: valo-gradient-opacity()*-1) 0%, $bg round($v-unit-size/4)), $fallback: $bg);
-    color: valo-font-color($bg);
+    color: valo-font-color($bg, 0.65);
     font-size: round($v-font-size * 0.9);
     line-height: round($v-unit-size * 0.8);
     border-right: valo-border($color: $bg);
@@ -56,9 +56,9 @@ $valo-menu-background-color: null !default;
     }
 
     .valo-menu-subtitle {
-      color: valo-font-color($bg, 0.5);
+      color: valo-font-color($bg, 0.35);
       margin: round($v-unit-size/5) 0 round($v-unit-size/5) round($v-unit-size/2);
-      border-bottom: valo-border($color: $bg, $strength: 0.5);
+      border-bottom: valo-border($color: $bg, $strength: 0.5, $border: first-number($v-border) solid v-tone);
       position: relative;
 
       .badge {

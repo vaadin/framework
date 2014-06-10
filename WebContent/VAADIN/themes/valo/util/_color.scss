@@ -39,11 +39,14 @@ $v-luminance-threshold: 150 !default;
 }
 
 
-@function darker-of($c1, $c2) {
-  @if color-luminance($c1) < color-luminance($c2) {
-    @return $c1;
+@function darkest-color($colors...) {
+  $darkest: first($colors);
+  @each $color in $colors {
+    @if color-luminance($color) < color-luminance($darkest) {
+      $darkest: $color;
+    }
   }
-  @return $c2;
+  @return $darkest;
 }
 
 // Returns a text color with enough contrast for the given background color

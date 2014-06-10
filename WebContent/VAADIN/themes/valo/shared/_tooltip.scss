@@ -65,8 +65,4 @@ $v-tooltip-border-radius: $v-border-radius - 1px !default;
   max-width: 35em;
   overflow: hidden !important;
   font-size: $v-tooltip-font-size;
-
-  @if $v-animations-enabled {
-    //@include valo-anim-fade-in;
-  }
 }

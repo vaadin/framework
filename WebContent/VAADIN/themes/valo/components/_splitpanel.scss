@@ -171,26 +171,6 @@
 
 
 
-/*
-@mixin valo-splitpanel-style ($splitter-size: ) {
-  > div > .v-splitpanel-hsplitter {
-    width: ;
-
-    div:after {
-      @include valo-splitpanel-splitter-handle-style($horizontal: true);
-    }
-
-    &:after {
-      left: 0;
-      right: 0;
-    }
-  }
-  .v-splitpanel-horizontal .v-splitpanel-second-container
-}
-*/
-
-
-
 @mixin valo-splitpanel-splitter-handle-style ($horizontal: false, $include-common: true) {
   @if $include-common {
     content: "";

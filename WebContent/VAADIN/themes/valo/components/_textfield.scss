@@ -49,20 +49,12 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
       @if $border-radius {
         $padding-width: $padding-width + ceil($border-radius/3);
       }
-
       $padding-height: round($unit-size/9);
-
       padding: $padding-height $padding-width;
-
-      // Go ask Mozilla why text alignment in text inputs is so wonky
-      .v-ff & {
-        // padding-top: $padding-height - 2px;
-        // padding-bottom: 0;
-      }
     }
 
     @if $background-color and $border {
-      border: valo-border($border, darker-of($background-color, $v-app-background-color));
+      border: valo-border($border, darkest-color($background-color, $v-app-background-color));
     }
 
     @if $gradient == none {

@@ -75,7 +75,11 @@ $v-table-background-color: null !default;
   .v-table-header table,
   .v-table-footer table,
   .v-table-table {
-    outline: $v-table-border-width solid $border-color;
+    box-shadow: 0 0 0 $v-table-border-width $border-color;
+
+    .v-ie8 & {
+      outline: $v-table-border-width solid $border-color;
+    }
   }
 
   .#{$primary-stylename}-header-wrap,
@@ -316,6 +320,19 @@ $v-table-background-color: null !default;
     }
     &:before {
       @include valo-table-column-selector-icon-style;
+    }
+  }
+
+  .v-scrollable > .#{$primary-stylename} .#{$primary-stylename}-column-selector {
+    right: 0;
+    top: 0;
+    border-top: none;
+    border-right: none;
+    border-radius: 0 0 0 50%;
+
+    &:after {
+      top: 0;
+      right: 0;
     }
   }
 

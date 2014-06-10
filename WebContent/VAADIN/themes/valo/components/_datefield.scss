@@ -274,7 +274,7 @@
       &:hover {
         @include opacity(1);
         &:before {
-          color: valo-link-font-color();
+          color: $v-focus-color;
         }
       }
     }

@@ -106,7 +106,7 @@
     border-radius: $border-radius;
 
     @if type-of($background-color) == color {
-      @include valo-border-with-gradient($border: $border, $color: darker-of($background-color, $v-background-color), $gradient: $gradient);
+      @include valo-border-with-gradient($border: $border, $color: darkest-color($background-color, $v-background-color), $gradient: $gradient);
       @include valo-gradient($background-color, $gradient);
       box-shadow: valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient);
     }

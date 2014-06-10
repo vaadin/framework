@@ -38,7 +38,6 @@
 @import "upload";
 @import "widget";
 @import "window";
-@import "dragwrapper";
 
 
 @mixin valo-components {
@@ -98,10 +97,6 @@
   @if v-is-included(datefield) {
     @include valo-datefield;
     @include valo-inline-datefield;
-  }
-
-  @if v-is-included(orderedlayout) {
-    @include valo-orderedlayout;
   }
 
   @if v-is-included(gridlayout) {

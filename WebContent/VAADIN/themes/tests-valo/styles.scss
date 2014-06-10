@@ -130,4 +130,8 @@
   .v-slider-ticks {
     @include valo-slider-ticks($tick-count: 5);
   }
+
+  .v-accordion-item-color1 .v-accordion-item-caption {
+    @include valo-accordion-item-caption-style($background-color: $color2);
+  }
 }

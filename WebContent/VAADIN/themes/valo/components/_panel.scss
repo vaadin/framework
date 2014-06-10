@@ -9,6 +9,7 @@ $v-panel-border: $v-border !default;
 
   .#{$primary-stylename}-caption {
     @include valo-panel-caption-style;
+    border-radius: $v-border-radius - first-number($v-border) $v-border-radius - first-number($v-border) 0 0;
   }
 
   .#{$primary-stylename}-content {
@@ -23,14 +24,16 @@ $v-panel-border: $v-border !default;
 
 
 @mixin valo-panel-style (
+    $primary-stylename: v-panel,
     $background-color : $v-panel-background-color,
     $shadow           : $v-shadow,
-    $border           : $v-panel-border
+    $border           : $v-panel-border,
+    $border-radius    : $v-border-radius
   ) {
   background: $background-color;
   color: valo-font-color($background-color);
-  border-radius: $v-border-radius;
-  border: valo-border($border: $border, $color: darker-of($background-color, $v-app-background-color), $strength: 0.7);
+  border-radius: $border-radius;
+  border: valo-border($border: $border, $color: darkest-color($background-color, $v-app-background-color), $strength: 0.7);
   box-shadow: valo-bevel-and-shadow($shadow: $shadow);
 }
 
@@ -40,15 +43,13 @@ $v-panel-border: $v-border !default;
     $background-color : $v-background-color,
     $bevel            : first($v-bevel),
     $gradient         : valo-gradient-style($v-gradient) valo-gradient-opacity($v-gradient)/4,
-    $border           : $v-panel-border,
-    $border-radius    : $v-border-radius - first-number($v-border) $v-border-radius - first-number($v-border) 0 0
+    $border           : $v-panel-border
   ) {
   @include box-sizing(border-box);
   padding: 0 round($v-unit-size/3);
   line-height: $v-unit-size - first-number($v-border);
   $bg: $background-color;
   border-bottom: valo-border($border: $border, $color: $bg, $strength: 0.5);
-  border-radius: $border-radius;
   @include valo-gradient($color: $bg, $gradient: $gradient);
   color: valo-font-color($bg);
   font-weight: $v-caption-font-weight;
@@ -67,7 +68,7 @@ $v-panel-border: $v-border !default;
   border-radius: $v-border-radius;
   border: valo-border();
 
-  .v-panel-caption {
+  > div > .v-panel-caption {
     background: transparent;
     box-shadow: none;
   }
@@ -79,9 +80,10 @@ $v-panel-border: $v-border !default;
   background: transparent;
   color: inherit;
   border: none;
+  border-radius: 0;
   box-shadow: none;
 
-  .v-panel-caption {
+  > div > .v-panel-caption {
     background: transparent;
     box-shadow: none;
     color: inherit;

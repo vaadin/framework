@@ -67,8 +67,16 @@ $valo-global-included: false !default;
 
     .v-scrollable {
       overflow: auto;
-      // Fix extra whitespace in IE
-      line-height: 0;
+
+      // "Unnecessary scrollbar" related fixes
+      > .v-widget {
+        // This is needed for IE
+        vertical-align: middle;
+
+        // Needed for all browsers. Can't really show anything outside the
+        // scrolling area anyway, so we can safely hide any overflow
+        overflow: hidden;
+      }
     }
 
     .v-ios.v-webkit .v-scrollable {

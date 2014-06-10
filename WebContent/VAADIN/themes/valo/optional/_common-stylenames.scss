@@ -93,6 +93,10 @@
     @include valo-tabsheet-icons-on-top;
   }
 
+  .v-tabsheet-only-selected-closable {
+    @include valo-tabsheet-only-selected-closable;
+  }
+
   .v-panel-borderless {
     @include valo-panel-borderless-style;
   }
@@ -212,6 +216,36 @@
 
   .wrapping {
     @include valo-horizontallayout--wrapping;
+  }
+
+  .v-Notification.bar {
+    @include valo-notification-bar-style;
+  }
+
+  .v-Notification.small {
+    @include valo-notification-small-style;
+  }
+
+  .v-Notification.closable {
+    @include valo-notification-closable-style;
+
+    &.error,
+    &.system {
+      &:after {
+        color: #fff;
+        border-color: #fff;
+        border-color: rgba(255,255,255,.3);
+      }
+      &:active:after {
+        background-color: #fff;
+        color: #000;
+      }
+    }
+
+    &.tray:after {
+      top: round($v-unit-size/2.3);
+      margin-top: 0;
+    }
   }
 
   .v-Notification.success,

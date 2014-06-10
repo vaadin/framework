@@ -6,9 +6,8 @@
     @include user-select(none);
   }
 
-  .v-active-drag-source {
-    // Can't hide since it will hide Tables and Trees as well
-    //@include opacity(0);
+  .#{$primary-stylename}.v-active-drag-source {
+    visibility: hidden;
   }
 
   .#{$primary-stylename} {
@@ -24,6 +23,7 @@
     right: -1px;
     bottom: -1px;
     left: -1px;
+    border: 0 solid $v-focus-color;
   }
 
   .#{$primary-stylename}-over-top:before {

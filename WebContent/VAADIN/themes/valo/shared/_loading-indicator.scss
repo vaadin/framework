@@ -14,7 +14,7 @@
 }
 
 
-@mixin valo-spinner ($size: 24px, $thickness: 4px, $color: null, $speed: 500ms) {
+@mixin valo-spinner ($size: 24px, $thickness: 2px, $color: null, $speed: 500ms) {
   $color: $color or valo-focus-color();
   // Make size divisible by 2, so that the rotation won't jiggle
   $size: $size + $size%2;
@@ -22,11 +22,11 @@
   width: $size !important;
   @include box-sizing(border-box);
   border: $thickness solid transparentize($color, .8);
-  border-top-color: transparentize($color, .15);
+  border-top-color: $color;
+  border-right-color: $color;
   border-radius: 100%;
   @include animation(v-rotate-360 $speed infinite linear);
   pointer-events: none;
-  @include transition(all ease-in-out 300ms);
 }
 
 

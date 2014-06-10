@@ -13,7 +13,7 @@
   }
 
   .#{$primary-stylename}-suggestpopup {
-    @include valo-combobox-popup-style;
+    @include valo-combobox-popup-style($primary-stylename: $primary-stylename);
   }
 
   .#{$primary-stylename}-no-input {
@@ -143,17 +143,6 @@
 
 
 
-
-@include keyframes(valo-combobox-show-status) {
-  0% {
-    opacity: 0;
-    @include transform( translatey(-100%) );
-  }
-}
-
-
-
-
 @mixin valo-combobox-input-style (
     $unit-size: $v-unit-size,
     $padding: null, // Computed by default
@@ -257,9 +246,22 @@
 
 
 
-@mixin valo-combobox-popup-style {
+@mixin valo-combobox-popup-style ($primary-stylename: v-filterselect) {
 
-  .v-filterselect-suggestmenu {
+  @if $v-animations-enabled {
+    @if $v-overlay-animate-in {
+      &[class*="animate-in"] {
+        @include animation($v-overlay-animate-in);
+      }
+    }
+    @if $v-overlay-animate-out {
+      &[class*="animate-out"] {
+        @include animation($v-overlay-animate-out);
+      }
+    }
+  }
+
+  .#{$primary-stylename}-suggestmenu {
     @include valo-selection-overlay-style;
     box-sizing: border-box;
     position: relative;
@@ -283,7 +285,7 @@
     @include valo-selection-item-selected-style;
   }
 
-  .v-filterselect-status {
+  .#{$primary-stylename}-status {
     position: absolute;
     right: $v-border-radius;
     $bg: scale-color($v-background-color, $lightness: -15%);
@@ -299,7 +301,7 @@
     pointer-events: none;
 
     @if $v-animations-enabled {
-       @include animation(valo-combobox-show-status 200ms 80ms backwards);
+       @include animation(valo-anim-slide-in-down 200ms 80ms backwards);
     }
 
     > * {
