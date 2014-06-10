@@ -6693,7 +6693,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 colIndex = 0;
                 while (headCells.hasNext()) {
                     HeaderCell hc = (HeaderCell) headCells.next();
-                    if (!hc.isDefinedWidth()) {
+                    if (!hc.isResizing && !hc.isDefinedWidth()) {
                         setColWidth(colIndex, hc.getWidthWithIndent() + availW
                                 - checksum, false);
                         break;
