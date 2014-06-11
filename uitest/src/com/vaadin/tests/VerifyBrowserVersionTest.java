@@ -49,7 +49,7 @@ public class VerifyBrowserVersionTest extends MultiBrowserTest {
                         "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36");
         expectedUserAgent
                 .put(Browser.PHANTOMJS.getDesiredCapabilities(),
-                        "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.34 (KHTML, like Gecko) PhantomJS/1.9.7 Safari/534.34");
+                        "Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/534.34 (KHTML, like Gecko) PhantomJS/1.9.7 Safari/534.34");
 
     }
 

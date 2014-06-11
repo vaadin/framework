@@ -15,43 +15,5 @@
  */
 package com.vaadin.tests.components.gridlayout;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-
-import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridLayoutElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
-
-public class GridLayoutHideMiddleCellsTest extends MultiBrowserTest {
-    @Test
-    public void gridLayoutInvisibleElementsTest() {
-        openTestURL();
-        GridLayoutElement gridLayout5x5 = $(GridLayoutElement.class).get(0);
-        GridLayoutElement gridLayout4x4 = $(GridLayoutElement.class).get(1);
-        ButtonElement hidingButton = $(ButtonElement.class).get(0);
-        hidingButton.click();
-        List<WebElement> slots5x5 = gridLayout5x5.findElements(By
-                .className("v-gridlayout-slot"));
-        List<WebElement> slots4x4 = gridLayout4x4.findElements(By
-                .className("v-gridlayout-slot"));
-        assertEquals("Different amount of slots", slots5x5.size(),
-                slots4x4.size());
-
-        for (int i = 0; i < slots5x5.size(); i++) {
-            assertEquals("Different left coordinate for element " + i, slots5x5
-                    .get(i).getCssValue("left"),
-                    slots4x4.get(i).getCssValue("left"));
-        }
-        for (int i = 0; i < slots5x5.size(); i++) {
-            assertEquals("Different top coordinate for element " + i, slots5x5
-                    .get(i).getCssValue("top"),
-                    slots4x4.get(i).getCssValue("top"));
-        }
-    }
-
+public class GridLayoutHideMiddleCellsTest extends GridLayoutExpandRatioTest {
 }
