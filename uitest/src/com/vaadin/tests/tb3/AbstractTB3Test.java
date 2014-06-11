@@ -791,7 +791,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
          */
         public static DesiredCapabilities phantomJS(int version) {
             DesiredCapabilities c = DesiredCapabilities.phantomjs();
-            c.setPlatform(Platform.XP);
+            c.setPlatform(Platform.LINUX);
             c.setVersion("" + version);
             return c;
         }
