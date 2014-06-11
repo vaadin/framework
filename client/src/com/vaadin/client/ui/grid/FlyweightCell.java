@@ -74,23 +74,21 @@ public class FlyweightCell {
      * or a <code>TH</code> element.
      */
     public Element getElement() {
+        assertSetup();
         return element;
     }
 
     /**
      * Sets the DOM element for this FlyweightCell, either a <code>TD</code> or
-     * a <code>TH</code>. This method should only be called when
-     * {@code getElement() == null}. It is the caller's responsibility to
-     * actually insert the given element to the document when needed.
+     * a <code>TH</code>. It is the caller's responsibility to actually insert
+     * the given element to the document when needed.
      * 
      * @param element
-     *            the element corresponding to this FlyweightCell
+     *            the element corresponding to this cell, cannot be null
      */
     void setElement(Element element) {
         assert element != null;
-        // When asserts are enabled, teardown() resets the element to null
-        // so this won't fire simply due to cell reuse
-        assert this.element == null : "Cell element can only be set once";
+        assertSetup();
         this.element = element;
     }
 
