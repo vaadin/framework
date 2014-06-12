@@ -144,14 +144,18 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
             return;
         }
 
-        getState().checked = getWidget().getValue();
+        // We get click events also from the label text, which do not alter the
+        // actual value. The server-side is only interested in real changes to
+        // the state.
+        if (getState().checked != getWidget().getValue()) {
+            getState().checked = getWidget().getValue();
 
-        // Add mouse details
-        MouseEventDetails details = MouseEventDetailsBuilder
-                .buildMouseEventDetails(event.getNativeEvent(), getWidget()
-                        .getElement());
-        getRpcProxy(CheckBoxServerRpc.class).setChecked(getState().checked,
-                details);
-
+            // Add mouse details
+            MouseEventDetails details = MouseEventDetailsBuilder
+                    .buildMouseEventDetails(event.getNativeEvent(), getWidget()
+                            .getElement());
+            getRpcProxy(CheckBoxServerRpc.class).setChecked(getState().checked,
+                    details);
+        }
     }
 }
