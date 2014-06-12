@@ -26,6 +26,7 @@ import com.vaadin.client.VCaptionWrapper;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.PostLayoutListener;
+import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VPopupView;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
@@ -100,27 +101,37 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
         if (!getChildComponents().isEmpty()) {
             getWidget().preparePopup(getWidget().popup);
             getWidget().popup.setPopupConnector(getChildComponents().get(0));
-            if (ComponentStateUtil.hasStyles(getState())) {
-                final StringBuffer styleBuf = new StringBuffer();
-                final String primaryName = getWidget().popup
-                        .getStylePrimaryName();
+
+            final StringBuffer styleBuf = new StringBuffer();
+            final String primaryName = getWidget().popup.getStylePrimaryName();
+            styleBuf.append(primaryName);
+
+            // Add "animate-in" class back if already present
+            boolean isAnimatingIn = getWidget().popup.getStyleName().contains(
+                    VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN);
+
+            if (isAnimatingIn) {
+                styleBuf.append(" ");
                 styleBuf.append(primaryName);
+                styleBuf.append("-");
+                styleBuf.append(VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN);
+            }
+
+            if (ComponentStateUtil.hasStyles(getState())) {
                 for (String style : getState().styles) {
                     styleBuf.append(" ");
                     styleBuf.append(primaryName);
                     styleBuf.append("-");
                     styleBuf.append(style);
                 }
-                getWidget().popup.setStyleName(styleBuf.toString());
-            } else {
-                getWidget().popup.setStyleName(getWidget().popup
-                        .getStylePrimaryName());
             }
+
+            getWidget().popup.setStyleName(styleBuf.toString());
             getWidget().showPopup(getWidget().popup);
             centerAfterLayout = true;
 
-            // The popup shouldn't be visible, try to hide it.
         } else {
+            // The popup shouldn't be visible, try to hide it.
             getWidget().popup.hide();
         }
     }

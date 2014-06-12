@@ -23,6 +23,7 @@ import java.util.Iterator;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -32,6 +33,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.AnimationUtil;
+import com.vaadin.client.AnimationUtil.AnimationEndListener;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.UIDL;
@@ -268,13 +270,45 @@ public class VNotification extends VOverlay {
         // Run only once
         if (notifications.contains(this)) {
             DOM.removeEventPreview(this);
-            if (cssAnimationDelay >= 0) {
-                AnimationUtil.setAnimationDelay(getElement(), cssAnimationDelay
-                        + "ms");
+
+            // Still animating in, wait for it to finish before touching
+            // the animation delay (which would restart the animation-in
+            // in some browsers)
+            if (getStyleName().contains(
+                    VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                AnimationUtil.addAnimationEndListener(getElement(),
+                        new AnimationEndListener() {
+                            @Override
+                            public void onAnimationEnd(NativeEvent event) {
+                                if (AnimationUtil
+                                        .getAnimationName(event)
+                                        .contains(
+                                                VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                                    VNotification.this.hide();
+                                }
+                            }
+                        });
+            } else {
+                // Use a timer in browsers without CSS animation support
+                // to show the notification for the duration of the delay
+                if (BrowserInfo.get().isIE8() || BrowserInfo.get().isIE9()) {
+                    new Timer() {
+                        @Override
+                        public void run() {
+                            VNotification.super.hide();
+                        }
+                    }.schedule(cssAnimationDelay);
+                } else {
+                    if (cssAnimationDelay > 0) {
+                        AnimationUtil.setAnimationDelay(getElement(),
+                                cssAnimationDelay + "ms");
+                    }
+                    VNotification.super.hide();
+
+                }
+                fireEvent(new HideEvent(this));
+                notifications.remove(this);
             }
-            super.hide();
-            notifications.remove(this);
-            fireEvent(new HideEvent(this));
         }
     }
 

@@ -164,8 +164,8 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      */
     public static final String CLASSNAME_CONTAINER = "v-overlay-container";
 
-    private static final String ADDITIONAL_CLASSNAME_ANIMATE_IN = "animate-in";
-    private static final String ADDITIONAL_CLASSNAME_ANIMATE_OUT = "animate-out";
+    public static final String ADDITIONAL_CLASSNAME_ANIMATE_IN = "animate-in";
+    public static final String ADDITIONAL_CLASSNAME_ANIMATE_OUT = "animate-out";
 
     /**
      * The shadow element for this overlay.
@@ -433,9 +433,9 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     public void show() {
         current = this;
 
-        boolean hasAnimationIn = maybeShowWithAnimation();
+        maybeShowWithAnimation();
 
-        if (isAnimationEnabled() && !hasAnimationIn) {
+        if (isAnimationEnabled()) {
             new ResizeAnimation().run(POPUP_PANEL_ANIMATION_DURATION);
         } else {
             positionOrSizeUpdated(1.0);
@@ -456,6 +456,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             return false;
         } else {
             // Check if animations are used
+            setVisible(false);
             addStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
             if (isShadowEnabled()) {
                 shadow.addClassName(CLASSNAME_SHADOW + "-"
@@ -467,8 +468,11 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             if (animationName == null) {
                 animationName = "";
             }
+            setVisible(true);
 
             if (animationName.contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                // Disable GWT PopupPanel animation if used
+                setAnimationEnabled(false);
                 animateInListener = AnimationUtil.addAnimationEndListener(
                         getElement(), new AnimationEndListener() {
                             @Override
@@ -974,6 +978,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
                         });
             } else {
                 // Check if animations are used
+                setVisible(false);
                 addStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_OUT);
                 if (isShadowEnabled()) {
                     shadow.addClassName(CLASSNAME_SHADOW + "-"
@@ -984,8 +989,12 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
                 if (animationName == null) {
                     animationName = "";
                 }
+                setVisible(true);
 
                 if (animationName.contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
+                    // Disable GWT PopupPanel closing animation if used
+                    setAnimationEnabled(false);
+
                     AnimationUtil.addAnimationEndListener(getElement(),
                             new AnimationEndListener() {
                                 @Override
