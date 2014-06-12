@@ -3833,7 +3833,7 @@ public class Escalator extends Widget {
      */
     private static final double RATIO_OF_40_DEGREES = Math.tan(2 * Math.PI / 9);
 
-    private static final String DEFAULT_WIDTH = "400.0px";
+    private static final String DEFAULT_WIDTH = "500.0px";
     private static final String DEFAULT_HEIGHT = "400.0px";
 
     private FlyweightRow flyweightRow = new FlyweightRow(this);
