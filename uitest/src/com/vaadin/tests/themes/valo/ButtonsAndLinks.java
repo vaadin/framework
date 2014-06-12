@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -66,26 +66,6 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
         button.addStyleName("danger");
         row.addComponent(button);
 
-        // button = new Button("Custom");
-        // button.addStyleName("color2");
-        // row.addComponent(button);
-        //
-        // button = new Button("User Color");
-        // button.addStyleName("color3");
-        // row.addComponent(button);
-        //
-        // button = new Button("Themed");
-        // button.addStyleName("color4");
-        // row.addComponent(button);
-        //
-        // button = new Button("Alternate");
-        // button.addStyleName("color5");
-        // row.addComponent(button);
-        //
-        // button = new Button("Other");
-        // button.addStyleName("color6");
-        // row.addComponent(button);
-
         button = new Button("Small");
         button.addStyleName("small");
         button.setIcon(TestIcon.get());
@@ -93,7 +73,11 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
 
         button = new Button("Large");
         button.addStyleName("large");
-        button.addStyleName("icon-align-right");
+        button.setIcon(TestIcon.get());
+        row.addComponent(button);
+
+        button = new Button("Top");
+        button.addStyleName("icon-align-top");
         button.setIcon(TestIcon.get());
         row.addComponent(button);
 
@@ -118,6 +102,16 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
         button = new Button("Borderless");
         button.setIcon(TestIcon.get());
         button.addStyleName("borderless");
+        row.addComponent(button);
+
+        button = new Button("Borderless, colored");
+        button.setIcon(TestIcon.get());
+        button.addStyleName("borderless-colored");
+        row.addComponent(button);
+
+        button = new Button("Quiet");
+        button.setIcon(TestIcon.get());
+        button.addStyleName("quiet");
         row.addComponent(button);
 
         button = new Button("Link style");

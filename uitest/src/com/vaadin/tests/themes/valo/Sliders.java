@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -74,6 +74,13 @@ public class Sliders extends VerticalLayout implements View {
         slider.setValue(50.0);
         slider.setWidth("200px");
         slider.addStyleName("ticks");
+        row.addComponent(slider);
+
+        slider = new Slider("Toggle imitation");
+        slider.setWidth("50px");
+        slider.setResolution(0);
+        slider.setMin(0);
+        slider.setMax(1);
         row.addComponent(slider);
 
         slider = new Slider("Vertical");
