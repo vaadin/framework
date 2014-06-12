@@ -229,18 +229,23 @@ public class VTooltip extends VWindowOverlay {
 
     /**
      * For assistive tooltips to work correctly we must have the tooltip visible
-     * and attached to the DOM well in advance.
+     * and attached to the DOM well in advance. For this reason both isShowing
+     * and isVisible return false positives. We can't override either of them as
+     * external code may depend on this behavior.
      * 
-     * @return
+     * @return boolean
      */
-    public boolean isActuallyVisible() {
-        return super.isShowing() && getPopupLeft() > 0 && getPopupTop() > 0;
+    public boolean isTooltipOpen() {
+        return super.isShowing() && super.isVisible() && getPopupLeft() > 0
+                && getPopupTop() > 0;
     }
 
     private void closeNow() {
         hide();
         setWidth("");
         closing = false;
+        justClosedTimer.schedule(getQuickOpenTimeout());
+        justClosed = true;
     }
 
     private Timer showTimer = new Timer() {
@@ -255,8 +260,6 @@ public class VTooltip extends VWindowOverlay {
         @Override
         public void run() {
             closeNow();
-            justClosedTimer.schedule(getQuickOpenTimeout());
-            justClosed = true;
         }
     };
 
@@ -279,7 +282,7 @@ public class VTooltip extends VWindowOverlay {
             // already about to close
             return;
         }
-        if (isActuallyVisible()) {
+        if (isTooltipOpen()) {
             closeTimer.schedule(getCloseTimeout());
             closing = true;
         }
@@ -331,6 +334,8 @@ public class VTooltip extends VWindowOverlay {
         if (closing) {
             closeTimer.cancel();
             closeNow();
+            justClosedTimer.cancel();
+            justClosed = false;
         }
 
         showTooltip();
@@ -449,7 +454,7 @@ public class VTooltip extends VWindowOverlay {
             // hasn't changed, we ignore the event.
             // TooltipInfo contains a reference to the parent component that is
             // checked in it's equals-method.
-            if (currentElement != null && isActuallyVisible()) {
+            if (currentElement != null && isTooltipOpen()) {
                 TooltipInfo currentTooltip = getTooltipFor(currentElement);
                 TooltipInfo newTooltip = getTooltipFor(element);
                 if (currentTooltip != null && currentTooltip.equals(newTooltip)) {
@@ -465,24 +470,21 @@ public class VTooltip extends VWindowOverlay {
                     closeTimer.cancel();
                     closing = false;
                 }
+
+                if (isTooltipOpen()) {
+                    closeNow();
+                }
+
                 setTooltipText(info);
                 updatePosition(event, isFocused);
-                if (isActuallyVisible() && !isFocused) {
+                // Schedule timer for showing the tooltip according to if it
+                // was recently closed or not.
+                int timeout = justClosed ? getQuickOpenDelay() : getOpenDelay();
+                if (timeout == 0) {
                     showTooltip();
                 } else {
-                    if (isActuallyVisible()) {
-                        closeNow();
-                    }
-                    // Schedule timer for showing the tooltip according to if it
-                    // was recently closed or not.
-                    int timeout = justClosed ? getQuickOpenDelay()
-                            : getOpenDelay();
-                    if (timeout == 0) {
-                        showTooltip();
-                    } else {
-                        showTimer.schedule(timeout);
-                        opening = true;
-                    }
+                    showTimer.schedule(timeout);
+                    opening = true;
                 }
             }
 
