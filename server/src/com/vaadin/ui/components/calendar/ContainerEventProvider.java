@@ -532,6 +532,25 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
     public void detachContainerDataSource() {
         ignoreContainerEvents();
     }
+    
+    /**
+     * ContainerEventProvider operates on an inner ContainerCalendarEvent. This is the
+     * way to obtain the Container Item instance (eg from MoveEvent, EventResize, EventClickEvent).
+     */
+    public Item getItem(CalendarEvent ce) {
+        if (eventCache.contains(ce)) {
+            int index;
+            if (ce instanceof ContainerCalendarEvent) {
+                index = ((ContainerCalendarEvent) ce).getContainerIndex();
+            } else {
+                index = container.indexOfId(ce);
+            }
+            Item item = container.getItem(container.getIdByIndex(index));
+            return item;
+        } else {
+            return null;
+        }
+    }
 
     /*
      * (non-Javadoc)
