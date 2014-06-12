@@ -42,6 +42,13 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
     height: $unit-size;
     border-radius: $border-radius;
 
+    .v-ie8 &,
+    .v-ie9 & {
+      line-height: $unit-size;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
     @if type-of($padding) == number or type-of($padding) == list {
       padding: $padding;
     } @else {

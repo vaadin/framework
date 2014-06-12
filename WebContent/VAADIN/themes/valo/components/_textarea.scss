@@ -50,4 +50,11 @@
   //display: block; // Fixes extra white-space under the textarea element
   height: auto;
   resize: none;
+
+  .v-ie8 &,
+  .v-ie9 & {
+    line-height: inherit;
+    padding-top: round($unit-size/9);
+    padding-bottom: round($unit-size/9);
+  }
 }

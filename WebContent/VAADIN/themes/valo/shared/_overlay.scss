@@ -17,7 +17,7 @@ $v-overlay-padding: round($v-unit-size/9) !default;
 $v-overlay-padding-vertical: $v-overlay-padding !default;
 $v-overlay-padding-horizontal: $v-overlay-padding !default;
 
-$v-overlay-shadow: 0 2px 4px 0 v-shade, 0 3px 5px 0 v-shade, 0 0 0 $v-overlay-border-width (v-shade 2-color-luminance($v-background-color)/255) !default;
+$v-overlay-shadow: 0 2px 4px 0 v-shade, 0 3px 5px 0 v-shade, 0 0 0 $v-overlay-border-width (v-shade (2.5 - color-luminance($v-background-color)/255 + $v-bevel-depth/100%)) !default;
 
 $v-selection-overlay-background-color: $v-overlay-background-color !default;
 $v-selection-overlay-padding: $v-overlay-padding !default;
@@ -136,8 +136,8 @@ $v-selection-item-selection-color: $v-selection-color !default;
 
 
 
-@mixin valo-selection-overlay-style ($background-color: $v-selection-overlay-background-color, $animate-in: $v-overlay-animate-in) {
-  @include valo-overlay-style($background-color: $background-color, $animate-in: $animate-in);
+@mixin valo-selection-overlay-style ($background-color: $v-selection-overlay-background-color, $animate-in: $v-overlay-animate-in, $animate-out: $v-overlay-animate-out) {
+  @include valo-overlay-style($background-color: $background-color, $animate-in: $animate-in, $animate-out: $animate-out);
   padding: $v-selection-overlay-padding-vertical $v-selection-overlay-padding-horizontal;
 }
 

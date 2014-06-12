@@ -43,6 +43,14 @@
     @include valo-button-borderless-style;
   }
 
+  .v-button-borderless-colored {
+    @include valo-button-borderless-style($font-color: $v-selection-color);
+  }
+
+  .v-button-quiet {
+    @include valo-button-quiet-style;
+  }
+
   .v-button-link {
     @include valo-button-borderless-style;
     @include valo-link-style;
@@ -58,6 +66,10 @@
 
   .v-button-icon-align-right {
     @include valo-button-icon-align-right-style;
+  }
+
+  .v-button-icon-align-top {
+    @include valo-button-icon-align-top-style;
   }
 
   .v-button-icon-only {

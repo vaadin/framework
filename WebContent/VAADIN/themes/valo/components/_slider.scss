@@ -50,7 +50,7 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
       top: $_valo-slider-base-margin-vertical;
       bottom: $_valo-slider-base-margin-vertical;
       left: $_valo-slider-base-margin-horizontal;
-      width: $v-border-radius;
+      width: $v-border-radius * 2;
       border-radius: $v-border-radius;
       border-left: valo-border($color: $v-selection-color, $context: $v-app-background-color);
     }
@@ -68,6 +68,10 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
         left: round(-$v-slider-handle-width/2);
       }
     }
+  }
+
+  .v-has-width > .#{$primary-stylename}-base {
+    min-width: 0;
   }
 
   .#{$primary-stylename}-handle {
@@ -136,7 +140,7 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
         left: $_valo-slider-base-margin-vertical;
         right: $_valo-slider-base-margin-vertical;
         width: auto;
-        height: $v-border-radius;
+        height: $v-border-radius * 2;
         border-left: none;
         border-bottom: valo-border($color: $v-selection-color, $context: $v-app-background-color);
       }

@@ -3,13 +3,13 @@
   // 'Placeholder' animation names to trigger VOverlay animation-in and animation-out
   @include keyframes(valo-placeholder-animate-in) {
     0% {
-      outline-color: transparent;
+      visibility: visible;
     }
   }
 
   @include keyframes(valo-placeholder-animate-out) {
     100% {
-      outline-color: transparent;
+      visibility: visible;
     }
   }
 

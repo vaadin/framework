@@ -1,8 +1,9 @@
 $v-window-background-color: $v-panel-background-color !default;
 $v-window-border-radius: $v-border-radius !default;
-$v-window-shadow: 0 4px 20px 6px (v-shade 2), $v-overlay-shadow !default;
+$v-window-shadow: 0 2px 10px (v-shade 2), 0 16px 80px -6px (v-shade 3), last($v-overlay-shadow) !default;
 $v-window-animate-in: valo-placeholder-animate-in 140ms, valo-anim-fade-in 140ms !default;
-$v-window-animate-out: valo-placeholder-animate-out 80ms, valo-anim-scale-down-fade-out 80ms !default;
+$v-window-animate-out: valo-placeholder-animate-out 100ms, valo-anim-scale-down-fade-out 100ms !default;
+$v-window-modality-curtain-background-color: #222 !default;
 
 
 @if $v-animations-enabled {
@@ -56,8 +57,14 @@ $v-window-animate-out: valo-placeholder-animate-out 80ms, valo-anim-scale-down-f
     right: 0;
     bottom: 0;
     left: 0;
-    background: $v-app-background-color;
-    @include opacity(.5);
+    @include radial-gradient(circle at 50% 50%, $v-window-modality-curtain-background-color, darken($v-window-modality-curtain-background-color, valo-gradient-opacity()), $fallback: $v-window-modality-curtain-background-color);
+    @include opacity(max(0.2, 0.8 - valo-gradient-opacity()/100%));
+    @include valo-anim-fade-in($duration: 400ms, $delay: 100ms);
+
+    .v-op12 & {
+      // Opera 12 has a shitbreak with the fade-in (flickers)
+      @include animation(none);
+    }
   }
 
   .#{$primary-stylename}-draggingCurtain {

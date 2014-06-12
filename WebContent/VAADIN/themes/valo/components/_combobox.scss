@@ -254,15 +254,12 @@
         @include animation($v-overlay-animate-in);
       }
     }
-    @if $v-overlay-animate-out {
-      &[class*="animate-out"] {
-        @include animation($v-overlay-animate-out);
-      }
-    }
+    // No animate-out since that will currently prevent the dropdown from
+    // closing when the user selects an item
   }
 
   .#{$primary-stylename}-suggestmenu {
-    @include valo-selection-overlay-style;
+    @include valo-selection-overlay-style($animate-in: false, $animate-out: false);
     box-sizing: border-box;
     position: relative;
     z-index: 1;

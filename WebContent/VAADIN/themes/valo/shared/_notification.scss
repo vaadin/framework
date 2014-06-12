@@ -82,6 +82,8 @@ $v-notification-title-color: $v-focus-color !default;
       vertical-align: middle;
       max-width: 30em;
       text-align: left;
+      max-height: 20em;
+      overflow: auto;
     }
 
     h1 ~ p {

@@ -200,11 +200,45 @@
 
 
 
-@mixin valo-button-borderless-style {
+@mixin valo-button-borderless-style ($font-color: inherit) {
   border: none;
   box-shadow: none;
   background: transparent;
-  color: inherit;
+  color: $font-color;
+
+  &:hover {
+    &:after {
+      background: transparent;
+    }
+
+    @if type-of($font-color) == color {
+      color: lighten($font-color, 10%);
+    }
+  }
+
+  &:active {
+    &:after {
+      background: transparent;
+    }
+
+    @if type-of($font-color) == color {
+      color: inherit;
+    }
+  }
+}
+
+
+@mixin valo-button-quiet-style ($primary-stylename: v-button) {
+  visibility: hidden;
+
+  &:focus,
+  &:hover {
+    visibility: visible;
+  }
+
+  .#{$primary-stylename}-wrap {
+    visibility: visible;
+  }
 }
 
 
@@ -219,6 +253,26 @@
     margin-left: $padding-width + ceil($padding-width/-5);
 
     + span:not(:empty) {
+      margin-left: 0;
+    }
+  }
+}
+
+
+@mixin valo-button-icon-align-top-style ($primary-stylename: v-button) {
+  height: auto;
+  padding-top: ceil($v-unit-size/9);
+  padding-bottom: ceil($v-unit-size/9);
+
+  .#{$primary-stylename}-wrap {
+    display: inline-block;
+  }
+
+  .v-icon {
+    display: block;
+
+    + span:not(:empty) {
+      margin-top: ceil($v-unit-size/6);
       margin-left: 0;
     }
   }
