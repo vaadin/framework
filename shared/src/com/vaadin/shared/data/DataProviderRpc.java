@@ -30,6 +30,8 @@ public interface DataProviderRpc extends ClientRpc {
 
     /**
      * Sends updated row data to a client.
+     * <p>
+     * TODO rowData should be List<Object[]>
      * 
      * @param firstRowIndex
      *            the index of the first updated row

@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.data.Container.Indexed;
@@ -31,18 +32,19 @@ import com.vaadin.data.Container.Indexed.ItemRemoveEvent;
 import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Container.ItemSetChangeNotifier;
-import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Property.ValueChangeNotifier;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataProviderState;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.grid.Range;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.components.grid.Grid;
+import com.vaadin.ui.components.grid.GridColumn;
+import com.vaadin.ui.components.grid.Renderer;
 
 /**
  * Provides Vaadin server-side container data source to a
@@ -397,10 +399,17 @@ public class RpcDataProviderExtension extends AbstractExtension {
         String[] row = new String[propertyIds.size()];
 
         int i = 0;
+        final Grid grid = getGrid();
         for (Object propertyId : propertyIds) {
-            Object value = item.getItemProperty(propertyId).getValue();
-            String stringValue = String.valueOf(value);
-            row[i++] = stringValue;
+            GridColumn column = grid.getColumn(propertyId);
+
+            Object propertyValue = item.getItemProperty(propertyId).getValue();
+            Object encodedValue = encodeValue(propertyValue,
+                    column.getRenderer(), column.getConverter(),
+                    grid.getLocale());
+
+            // TODO Drop string conversion once client supports Objects
+            row[i++] = String.valueOf(encodedValue);
         }
         return row;
     }
@@ -530,5 +539,51 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     public void propertiesAdded(HashSet<Object> addedPropertyIds) {
         activeRowHandler.propertiesAdded(addedPropertyIds);
+    }
+
+    protected Grid getGrid() {
+        return (Grid) getParent();
+    }
+
+    /**
+     * Converts and encodes the given data model property value using the given
+     * converter and renderer. This method is public only for testing purposes.
+     * 
+     * @param renderer
+     *            the renderer to use
+     * @param converter
+     *            the converter to use
+     * @param modelValue
+     *            the value to convert and encode
+     * @param locale
+     *            the locale to use in conversion
+     * @return an encoded value ready to be sent to the client
+     */
+    public static <T> Object encodeValue(Object modelValue,
+            Renderer<T> renderer, Converter<?, ?> converter, Locale locale) {
+        Class<T> presentationType = renderer.getPresentationType();
+        T presentationValue;
+
+        if (converter == null) {
+            try {
+                presentationValue = presentationType.cast(modelValue);
+            } catch (ClassCastException e) {
+                throw new Converter.ConversionException(
+                        "Unable to convert value of type "
+                                + modelValue.getClass().getName()
+                                + " to presentation type "
+                                + presentationType.getName()
+                                + ". No converter is set and the types are not compatible.");
+            }
+        } else {
+            assert presentationType.isAssignableFrom(converter
+                    .getPresentationType());
+            @SuppressWarnings("unchecked")
+            Converter<T, Object> safeConverter = (Converter<T, Object>) converter;
+            presentationValue = safeConverter.convertToPresentation(modelValue,
+                    safeConverter.getPresentationType(), locale);
+        }
+
+        return renderer.encode(presentationValue);
     }
 }

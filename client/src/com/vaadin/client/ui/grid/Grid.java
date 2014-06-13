@@ -515,12 +515,7 @@ public class Grid<T> extends Composite implements
         }
 
         /**
-         * Returns the data that should be rendered into the cell. By default
-         * returning Strings and Widgets are supported. If the return type is a
-         * String then it will be treated as preformatted text.
-         * <p>
-         * To support other types you will need to pass a custom renderer to the
-         * column via the column constructor.
+         * Returns the data that should be rendered into the cell.
          * 
          * @param row
          *            The row object that provides the cell content.
@@ -530,11 +525,9 @@ public class Grid<T> extends Composite implements
         public abstract C getValue(T row);
 
         /**
-         * The renderer to render the cell width. By default renders the data as
-         * a String or adds the widget into the cell if the column type is of
-         * widget type.
+         * Returns the renderer used to render the cells of this column.
          * 
-         * @return The renderer to render the cell content with
+         * @return the renderer to render the cell content with
          */
         public Renderer<? super C> getRenderer() {
             return bodyRenderer;

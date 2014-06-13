@@ -26,7 +26,7 @@ import java.util.Set;
 
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.client.ui.grid.renderers.TextRenderer;
+import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.ColumnGroupRowState;
 import com.vaadin.shared.ui.grid.ColumnGroupState;
@@ -53,14 +53,29 @@ public class GridConnector extends AbstractComponentConnector {
 
         private final String id;
 
-        public CustomGridColumn(String id) {
-            super(new TextRenderer());
+        private AbstractRendererConnector<String> rendererConnector;
+
+        public CustomGridColumn(String id,
+                AbstractRendererConnector<String> rendererConnector) {
+            super(rendererConnector.getRenderer());
+            this.rendererConnector = rendererConnector;
             this.id = id;
         }
 
         @Override
         public String getValue(String[] obj) {
+            // TODO this should invoke AbstractRendererConnector.decode
             return obj[resolveCurrentIndexFromState()];
+        }
+
+        /*
+         * Only used to check that the renderer connector will not change during
+         * the column lifetime.
+         * 
+         * TODO remove once support for changing renderers is implemented
+         */
+        private AbstractRendererConnector<String> getRendererConnector() {
+            return rendererConnector;
         }
 
         private int resolveCurrentIndexFromState() {
@@ -195,6 +210,12 @@ public class GridConnector extends AbstractComponentConnector {
         GridColumn<?, String[]> column = getWidget().getColumn(columnIndex);
         GridColumnState columnState = getState().columns.get(columnIndex);
         updateColumnFromState(column, columnState);
+
+        if (columnState.rendererConnector != ((CustomGridColumn) column)
+                .getRendererConnector()) {
+            throw new UnsupportedOperationException(
+                    "Changing column renderer after initialization is currently unsupported");
+        }
     }
 
     /**
@@ -205,7 +226,8 @@ public class GridConnector extends AbstractComponentConnector {
      */
     private void addColumnFromStateChangeEvent(int columnIndex) {
         GridColumnState state = getState().columns.get(columnIndex);
-        CustomGridColumn column = new CustomGridColumn(state.id);
+        CustomGridColumn column = new CustomGridColumn(state.id,
+                ((AbstractRendererConnector<String>) state.rendererConnector));
         columnIdToColumn.put(state.id, column);
 
         // Adds a column to grid, and registers Grid with the column.

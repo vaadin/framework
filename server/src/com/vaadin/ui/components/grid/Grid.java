@@ -150,6 +150,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
                 GridColumn column = columns.remove(columnId);
                 columnKeys.remove(columnId);
                 getState().columns.remove(column.getState());
+                removeExtension(column.getRenderer());
             }
             datasourceExtension.propertiesRemoved(removedColumns);
 
@@ -929,5 +930,15 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
     /** FIXME remove once selection mode communcation is done. only for testing. */
     public void setSelectionCheckboxes(boolean value) {
         getState().selectionCheckboxes = value;
+    }
+
+    /**
+     * Adds a renderer to this grid's connector hierarchy.
+     * 
+     * @param renderer
+     *            the renderer to add
+     */
+    void addRenderer(Renderer<?> renderer) {
+        addExtension(renderer);
     }
 }

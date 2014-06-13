@@ -18,7 +18,12 @@ package com.vaadin.ui.components.grid;
 
 import java.io.Serializable;
 
+import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ConverterUtil;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.grid.GridColumnState;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.components.grid.renderers.TextRenderer;
 
 /**
  * A column in the grid. Can be obtained by calling
@@ -39,6 +44,15 @@ public class GridColumn implements Serializable {
      */
     private final Grid grid;
 
+    private Converter<?, Object> converter;
+
+    /**
+     * A check for allowing the {@link #GridColumn(Grid, GridColumnState)
+     * constructor} to call {@link #setConverter(Converter)} with a
+     * <code>null</code>, even if model and renderer aren't compatible.
+     */
+    private boolean isFirstConverterAssignment = true;
+
     /**
      * Internally used constructor.
      * 
@@ -50,6 +64,7 @@ public class GridColumn implements Serializable {
     GridColumn(Grid grid, GridColumnState state) {
         this.grid = grid;
         this.state = state;
+        internalSetRenderer(new TextRenderer());
     }
 
     /**
@@ -213,4 +228,171 @@ public class GridColumn implements Serializable {
         checkColumnIsAttached();
         grid.setLastFrozenColumn(this);
     }
+
+    /**
+     * Sets the renderer for this column.
+     * <p>
+     * If a suitable converter isn't defined explicitly, the session converter
+     * factory is used to find a compatible converter.
+     * 
+     * @param renderer
+     *            the renderer to use
+     * @throws IllegalArgumentException
+     *             if no compatible converter could be found
+     * @see VaadinSession#getConverterFactory()
+     * @see ConverterUtil#getConverter(Class, Class, VaadinSession)
+     * @see #setConverter(Converter)
+     */
+    public void setRenderer(Renderer<?> renderer) {
+        if (!internalSetRenderer(renderer)) {
+            throw new IllegalArgumentException(
+                    "Could not find a converter for converting from the model type "
+                            + getModelType()
+                            + " to the renderer presentation type "
+                            + renderer.getPresentationType());
+        }
+    }
+
+    /**
+     * Sets the renderer for this column and the converter used to convert from
+     * the property value type to the renderer presentation type.
+     * 
+     * @param renderer
+     *            the renderer to use, cannot be null
+     * @param converter
+     *            the converter to use
+     * 
+     * @throws IllegalArgumentException
+     *             if the renderer is already associated with a grid column
+     */
+    public <T> void setRenderer(Renderer<T> renderer,
+            Converter<? extends T, ?> converter) {
+        if (renderer.getParent() != null) {
+            throw new IllegalArgumentException(
+                    "Cannot set a renderer that is already connected to a grid column");
+        }
+
+        if (getRenderer() != null) {
+            grid.removeExtension(getRenderer());
+        }
+
+        grid.addRenderer(renderer);
+        state.rendererConnector = renderer;
+        setConverter(converter);
+    }
+
+    /**
+     * Sets the converter used to convert from the property value type to the
+     * renderer presentation type.
+     * 
+     * @param converter
+     *            the converter to use, or {@code null} to not use any
+     *            converters
+     * @throws IllegalArgumentException
+     *             if the types are not compatible
+     */
+    public void setConverter(Converter<?, ?> converter)
+            throws IllegalArgumentException {
+        Class<?> modelType = getModelType();
+        if (converter != null) {
+            if (!converter.getModelType().isAssignableFrom(modelType)) {
+                throw new IllegalArgumentException("The converter model type "
+                        + converter.getModelType()
+                        + " is not compatible with the property type "
+                        + modelType);
+
+            } else if (!getRenderer().getPresentationType().isAssignableFrom(
+                    converter.getPresentationType())) {
+                throw new IllegalArgumentException(
+                        "The converter presentation type "
+                                + converter.getPresentationType()
+                                + " is not compatible with the renderer presentation type "
+                                + getRenderer().getPresentationType());
+            }
+        }
+
+        else {
+            /*
+             * Since the converter is null (i.e. will be removed), we need to
+             * know that the renderer and model are compatible. If not, we can't
+             * allow for this to happen.
+             * 
+             * The constructor is allowed to call this method with null without
+             * any compatibility checks, therefore we have a special case for
+             * it.
+             */
+
+            Class<?> rendererPresentationType = getRenderer()
+                    .getPresentationType();
+            if (!isFirstConverterAssignment
+                    && !rendererPresentationType.isAssignableFrom(modelType)) {
+                throw new IllegalArgumentException("Cannot remove converter, "
+                        + "as renderer's presentation type "
+                        + rendererPresentationType.getName() + " and column's "
+                        + "model " + modelType.getName() + " type aren't "
+                        + "directly with each other");
+            }
+        }
+
+        isFirstConverterAssignment = false;
+
+        @SuppressWarnings("unchecked")
+        Converter<?, Object> castConverter = (Converter<?, Object>) converter;
+        this.converter = castConverter;
+    }
+
+    /**
+     * Returns the renderer instance used by this column.
+     * 
+     * @return the renderer
+     */
+    public Renderer<?> getRenderer() {
+        return (Renderer<?>) getState().rendererConnector;
+    }
+
+    /**
+     * Returns the converter instance used by this column.
+     * 
+     * @return the converter
+     */
+    public Converter<?, ?> getConverter() {
+        return converter;
+    }
+
+    private <T> boolean internalSetRenderer(Renderer<T> renderer) {
+
+        Converter<? extends T, ?> converter;
+        if (isCompatibleWithProperty(renderer, getConverter())) {
+            // Use the existing converter (possibly none) if types compatible
+            converter = (Converter<? extends T, ?>) getConverter();
+        } else {
+            converter = ConverterUtil.getConverter(
+                    renderer.getPresentationType(), getModelType(),
+                    getSession());
+        }
+        setRenderer(renderer, converter);
+        return isCompatibleWithProperty(renderer, converter);
+    }
+
+    private VaadinSession getSession() {
+        UI ui = grid.getUI();
+        return ui != null ? ui.getSession() : null;
+    }
+
+    private boolean isCompatibleWithProperty(Renderer<?> renderer,
+            Converter<?, ?> converter) {
+        Class<?> type;
+        if (converter == null) {
+            type = getModelType();
+        } else {
+            type = converter.getPresentationType();
+        }
+        return renderer.getPresentationType().isAssignableFrom(type);
+    }
+
+    private Class<?> getModelType() {
+        return grid.getContainerDatasource().getType(
+                grid.getPropertyIdByColumnId(state.id));
+    }
+
 }

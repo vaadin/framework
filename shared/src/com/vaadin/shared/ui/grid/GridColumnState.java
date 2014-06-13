@@ -17,6 +17,8 @@ package com.vaadin.shared.ui.grid;
 
 import java.io.Serializable;
 
+import com.vaadin.shared.Connector;
+
 /**
  * Column state DTO for transferring column properties from the server to the
  * client
@@ -52,4 +54,5 @@ public class GridColumnState implements Serializable {
      */
     public int width = 100;
 
+    public Connector rendererConnector;
 }
