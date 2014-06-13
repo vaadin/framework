@@ -123,13 +123,13 @@ public class VTooltip extends VWindowOverlay {
     }
 
     private void setTooltipText(TooltipInfo info) {
-        if (info.getErrorMessage() != null) {
+        if (info.getErrorMessage() != null && !info.getErrorMessage().isEmpty()) {
             em.setVisible(true);
             em.updateMessage(info.getErrorMessage());
         } else {
             em.setVisible(false);
         }
-        if (info.getTitle() != null && !"".equals(info.getTitle())) {
+        if (info.getTitle() != null && !info.getTitle().isEmpty()) {
             description.setInnerHTML(info.getTitle());
             description.getStyle().clearDisplay();
         } else {
@@ -144,13 +144,7 @@ public class VTooltip extends VWindowOverlay {
      * 
      */
     private void showTooltip() {
-        boolean hasContent = false;
-        if (currentTooltipInfo.getErrorMessage() != null
-                || (currentTooltipInfo.getTitle() != null && !""
-                        .equals(currentTooltipInfo.getTitle()))) {
-            hasContent = true;
-        }
-        if (hasContent) {
+        if (currentTooltipInfo.hasMessage()) {
             // Issue #8454: With IE7 the tooltips size is calculated based on
             // the last tooltip's position, causing problems if the last one was
             // in the right or bottom edge. For this reason the tooltip is moved
@@ -505,7 +499,6 @@ public class VTooltip extends VWindowOverlay {
             handledByFocus = isFocused;
             currentElement = element;
         }
-
     }
 
     private final TooltipEventHandler tooltipEventHandler = new TooltipEventHandler();
