@@ -1701,7 +1701,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             setPromptingOff(text);
             selectedOptionKey = currentSuggestion.key;
         } else {
-            if (focused) {
+            if (focused || readonly || !enabled) {
                 setPromptingOff("");
             } else {
                 setPromptingOn();
