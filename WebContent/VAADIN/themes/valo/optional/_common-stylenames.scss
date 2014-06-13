@@ -89,24 +89,28 @@
     font-size: $v-font-size--large;
   }
 
+  .v-tabsheet-framed {
+    @include valo-tabsheet-framed-style;
+  }
+
   .v-tabsheet-centered-tabs {
-    @include valo-tabsheet-centered-tabs;
+    @include valo-tabsheet-centered-tabs-style;
   }
 
   .v-tabsheet-equal-width-tabs {
-    @include valo-tabsheet-equal-width-tabs($flex: false);
+    @include valo-tabsheet-equal-width-tabs-style($flex: false);
   }
 
   .v-tabsheet-padded-tabbar {
-    @include valo-tabsheet-padded-tabbar;
+    @include valo-tabsheet-padded-tabbar-style;
   }
 
   .v-tabsheet-icons-on-top {
-    @include valo-tabsheet-icons-on-top;
+    @include valo-tabsheet-icons-on-top-style;
   }
 
   .v-tabsheet-only-selected-closable {
-    @include valo-tabsheet-only-selected-closable;
+    @include valo-tabsheet-only-selected-closable-style;
   }
 
   .v-panel-borderless {

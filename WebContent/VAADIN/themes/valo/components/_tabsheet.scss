@@ -6,10 +6,14 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 @mixin valo-tabsheet-global ($primary-stylename: v-tabsheet) {
   .#{$primary-stylename}-hidetabs > .#{$primary-stylename}-tabcontainer,
   .#{$primary-stylename}-spacertd,
-  .#{$primary-stylename}-deco,
   .v-disabled .#{$primary-stylename}-scroller,
   .#{$primary-stylename} .v-disabled .#{$primary-stylename}-caption-close {
     display: none;
+  }
+
+  .#{$primary-stylename} {
+    overflow: visible !important;
+    position: relative;
   }
 
   .#{$primary-stylename}-tabcontainer {
@@ -59,11 +63,15 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
   }
 
   .#{$primary-stylename}-tabcontainer {
-    @include valo-tabsheet-tabcontainer($primary-stylename);
+    @include valo-tabsheet-tabcontainer-style($primary-stylename);
+  }
+
+  .#{$primary-stylename}-tabitemcell {
+    @include valo-tabsheet-tabitemcell-style($primary-stylename);
   }
 
   .#{$primary-stylename}-scroller {
-    @include valo-tabsheet-scroller($primary-stylename);
+    @include valo-tabsheet-scroller-style($primary-stylename);
   }
 
 
@@ -71,15 +79,33 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     .#{$primary-stylename}-tabsheetpanel > .v-scrollable > .v-widget {
       @include valo-anim-fade-in(300ms);
     }
+
+    .#{$primary-stylename}-deco {
+      @include valo-spinner($size: $v-unit-size/2);
+      display: block;
+      position: absolute;
+      z-index: -1;
+      bottom: 50%;
+      margin-bottom: round($v-unit-size/2 + $v-unit-size/4) * -1;
+      left: 50%;
+      margin-left: round($v-unit-size/-4);
+      opacity: 0;
+    }
+
+    .#{$primary-stylename}-loading .#{$primary-stylename}-deco {
+      @include transition(opacity 200ms 200ms);
+      opacity: 1;
+      z-index: 1;
+    }
   }
 
 }
 
 
-@mixin valo-tabsheet-tabcontainer ($primary-stylename: v-tabsheet) {
+@mixin valo-tabsheet-tabcontainer-style ($primary-stylename: v-tabsheet) {
   position: relative;
-  line-height: $v-unit-size;
   @include user-select(none);
+  @include box-sizing(border-box);
 
   &:before {
     content: "";
@@ -95,12 +121,16 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     height: $v-unit-size;
     position: relative;
   }
-
-  @include valo-tabsheet-tabitem($primary-stylename);
 }
 
 
-@mixin valo-tabsheet-tabitem ($primary-stylename: v-tabsheet) {
+@mixin valo-tabsheet-tabitemcell-style ($primary-stylename: v-tabsheet) {
+
+  .#{$primary-stylename}-tabitem {
+    line-height: 0;
+    overflow: hidden;
+  }
+
   .v-caption {
     height: $v-unit-size;
     margin-left: round($v-unit-size/2);
@@ -111,8 +141,9 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     line-height: $v-unit-size;
     font-size: round($v-font-size * 0.95);
     font-weight: $v-font-weight;
-    color: valo-font-color($v-app-background-color, 0.6);
+    color: valo-font-color($v-app-background-color, 0.58);
     width: auto !important;
+    overflow: hidden;
 
     @if $v-animations-enabled {
       @include transition(border-bottom 200ms, color 200ms);
@@ -134,12 +165,12 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     }
   }
 
-  td:first-child .v-caption,
-  [aria-hidden="true"] + td .v-caption {
+  &:first-child .v-caption,
+  &[aria-hidden="true"] + td .v-caption {
     margin-left: 0;
   }
 
-  .#{$primary-stylename}-tabitemcell:focus {
+  &:focus {
     outline: none;
 
     .v-caption {
@@ -155,32 +186,34 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
   .#{$primary-stylename}-caption-close {
     display: inline-block;
-    font-size: 1.2em;
-    line-height: 1;
+    font-size: round($v-font-size * 1.1);
+    line-height: round($v-font-size * 1.1);
+    width: round($v-font-size * 1.1);
     vertical-align: middle;
-    padding: round($v-font-size/8) round($v-font-size/4);
-    margin: round($v-font-size/-8) round($v-font-size/-4) round($v-font-size/-8) round($v-font-size/4);
+    text-align: center;
+    margin: 0 round($v-font-size/-4) 0 round($v-font-size/2);
     border-radius: round($v-border-radius/2);
+    color: valo-font-color($v-app-background-color, 0.4);
 
     &:hover {
-      background: $v-selection-color;
-      color: valo-font-color($v-selection-color);
+      background: rgba(#000, .03);
+      color: $v-selection-color;
     }
 
     &:active {
-      background: darken($v-selection-color, 5%);
+      background: $v-selection-color;
       color: valo-font-color($v-selection-color);
     }
   }
 }
 
 
-@mixin valo-tabsheet-scroller ($primary-stylename: v-tabsheet) {
+@mixin valo-tabsheet-scroller-style ($primary-stylename: v-tabsheet) {
   $border-color: first-color(valo-border($strength: 0.5));
 
   position: absolute;
   right: 0;
-  top: 0;
+  bottom: 0;
   padding-left: round($v-unit-size/2);
   @include linear-gradient(to left, $v-background-color 70%, rgba($v-background-color, 0) 100%, $fallback: transparent);
   pointer-events: none;
@@ -277,16 +310,86 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 
 
+@mixin valo-tabsheet-framed-style ($primary-stylename: v-tabsheet) {
+  > .#{$primary-stylename}-tabcontainer {
+    .v-caption {
+      position: relative;
+      margin-left: first-number($v-border) * 2;
+      padding: 0 $v-layout-spacing-horizontal;
+      border: first-number($v-border) solid transparent;
+      line-height: $v-unit-size - first-number($v-border);
+      border-radius: $v-border-radius $v-border-radius 0 0;
+      font-weight: $v-font-weight + 100;
+
+      @if $v-animations-enabled {
+        @include transition(background-color 160ms);
+      }
+
+      &:hover {
+        background-color: darken($v-app-background-color, 3%);
+        border-bottom-color: first-color(valo-border($strength: 0.5));
+      }
+    }
+
+    td:first-child .v-caption,
+    [aria-hidden="true"] + td .v-caption {
+      margin-left: 0;
+    }
+
+    .#{$primary-stylename}-tabitem-selected .v-caption {
+      background: $v-panel-background-color;
+      border-color: first-color(valo-border($strength: 0.5));
+      border-bottom: none;
+    }
+
+    .v-caption-closable {
+      padding-right: $v-layout-spacing-horizontal + round($v-font-size * 1.1);
+    }
+
+    .#{$primary-stylename}-caption-close {
+      position: absolute;
+      top: round($v-font-size/4);
+      right: round($v-font-size/4);
+      margin: 0;
+    }
+  }
+
+  > .#{$primary-stylename}-content {
+    background: $v-panel-background-color;
+    border: valo-border($strength: 0.5);
+    border-top: none;
+  }
+
+  &.padded-tabbar {
+    > .#{$primary-stylename}-tabcontainer {
+      border: valo-border($strength: 0.5);
+      border-bottom: none;
+      background: $v-background-color;
+      padding-top: round($v-unit-size/6);
+    }
+  }
+
+  &.icons-on-top .v-caption-closable {
+    padding-right: $v-layout-spacing-horizontal;
+  }
+}
 
 
-@mixin valo-tabsheet-centered-tabs ($primary-stylename: v-tabsheet) {
-  .#{$primary-stylename}-tabcontainer {
+
+
+
+
+
+
+
+@mixin valo-tabsheet-centered-tabs-style ($primary-stylename: v-tabsheet) {
+  > .#{$primary-stylename}-tabcontainer {
     text-align: center;
   }
 }
 
-@mixin valo-tabsheet-equal-width-tabs ($primary-stylename: v-tabsheet, $flex: false) {
-  .#{$primary-stylename}-tabcontainer {
+@mixin valo-tabsheet-equal-width-tabs-style ($primary-stylename: v-tabsheet, $flex: false) {
+  > .#{$primary-stylename}-tabcontainer {
     table,
     tbody,
     tr {
@@ -311,8 +414,8 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
   }
 }
 
-@mixin valo-tabsheet-icons-on-top ($primary-stylename: v-tabsheet) {
-  .#{$primary-stylename}-tabs {
+@mixin valo-tabsheet-icons-on-top-style ($primary-stylename: v-tabsheet) {
+  > div > .#{$primary-stylename}-tabs {
     height: $v-unit-size * 2;
 
     .v-caption {
@@ -341,10 +444,14 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
       display: block;
     }
   }
+
+  > .#{$primary-stylename}-deco {
+    margin-bottom: -$v-unit-size - round($v-unit-size/4);
+  }
 }
 
 
-@mixin valo-tabsheet-only-selected-closable ($primary-stylename: v-tabsheet) {
+@mixin valo-tabsheet-only-selected-closable-style ($primary-stylename: v-tabsheet) {
   > .#{$primary-stylename}-tabcontainer .#{$primary-stylename}-caption-close {
     visibility: hidden;
   }
@@ -355,7 +462,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 }
 
 
-@mixin valo-tabsheet-padded-tabbar ($primary-stylename: v-tabsheet) {
+@mixin valo-tabsheet-padded-tabbar-style ($primary-stylename: v-tabsheet) {
   > .#{$primary-stylename}-tabcontainer .#{$primary-stylename}-tabs {
     padding: 0 round($v-unit-size/4);
   }
