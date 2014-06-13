@@ -978,7 +978,6 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
                         });
             } else {
                 // Check if animations are used
-                setVisible(false);
                 addStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_OUT);
                 if (isShadowEnabled()) {
                     shadow.addClassName(CLASSNAME_SHADOW + "-"
@@ -989,7 +988,6 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
                 if (animationName == null) {
                     animationName = "";
                 }
-                setVisible(true);
 
                 if (animationName.contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
                     // Disable GWT PopupPanel closing animation if used
