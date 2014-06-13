@@ -45,7 +45,7 @@ $v-notification-title-color: $v-focus-color !default;
     }
 
     .#{$primary-stylename}-animate-out {
-      @include animation(valo-placeholder-animate-out 150ms 1s, valo-anim-fade-out 150ms 1s);
+      @include animation(valo-placeholder-animate-out 150ms, valo-anim-fade-out 150ms);
 
       &.v-position-left,
       &.v-position-right {
@@ -206,7 +206,7 @@ $v-notification-title-color: $v-focus-color !default;
       }
 
       &.v-Notification-animate-out {
-        @include animation(valo-placeholder-animate-out 200ms 1s, valo-anim-slide-out-up 200ms 1s);
+        @include animation(valo-placeholder-animate-out 200ms, valo-anim-slide-out-up 200ms);
       }
     }
   }
@@ -220,7 +220,7 @@ $v-notification-title-color: $v-focus-color !default;
       }
 
       &.v-Notification-animate-out {
-        @include animation(valo-placeholder-animate-out 200ms 1s, valo-anim-slide-out-down 200ms 1s);
+        @include animation(valo-placeholder-animate-out 200ms, valo-anim-slide-out-down 200ms);
       }
     }
   }

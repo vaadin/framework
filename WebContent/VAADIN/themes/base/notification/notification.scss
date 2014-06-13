@@ -41,7 +41,7 @@
 	margin: 0;
 }
 .#{$primaryStyleName}-animate-out {
-	@include animation(animate-out 400ms 1s);
+	@include animation(v-notification-animate-out 400ms);
 }
 
 .#{$primaryStyleName} {
@@ -65,7 +65,7 @@
 
 }
 
-@include keyframes(animate-out) {
+@include keyframes(v-notification-animate-out) {
   100% {
    opacity: 0;
   }

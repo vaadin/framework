@@ -79,7 +79,7 @@ public class VNotification extends VOverlay {
     private static final ArrayList<VNotification> notifications = new ArrayList<VNotification>();
 
     private boolean infiniteDelay = false;
-    private int cssAnimationDelay = -1;
+    private int hideDelay = 0;
 
     private int x = -1;
     private int y = -1;
@@ -139,10 +139,10 @@ public class VNotification extends VOverlay {
     private void setDelay(int delayMsec) {
         if (delayMsec < 0) {
             infiniteDelay = true;
-            cssAnimationDelay = 0;
+            hideDelay = 0;
         } else {
             infiniteDelay = false;
-            cssAnimationDelay = delayMsec;
+            hideDelay = delayMsec;
         }
     }
 
@@ -260,11 +260,6 @@ public class VNotification extends VOverlay {
         }
     }
 
-    private void hideWithoutDelay() {
-        cssAnimationDelay = 0;
-        hide();
-    }
-
     @Override
     public void hide() {
         // Run only once
@@ -297,11 +292,11 @@ public class VNotification extends VOverlay {
                         public void run() {
                             VNotification.super.hide();
                         }
-                    }.schedule(cssAnimationDelay);
+                    }.schedule(hideDelay);
                 } else {
-                    if (cssAnimationDelay > 0) {
-                        AnimationUtil.setAnimationDelay(getElement(),
-                                cssAnimationDelay + "ms");
+                    if (hideDelay > 0) {
+                        AnimationUtil.setAnimationDelay(getElement(), hideDelay
+                                + "ms");
                     }
                     VNotification.super.hide();
 
@@ -399,12 +394,12 @@ public class VNotification extends VOverlay {
         if (infiniteDelay || temporaryStyle == STYLE_SYSTEM) {
             if (type == Event.ONCLICK) {
                 if (DOM.isOrHasChild(getElement(), DOM.eventGetTarget(event))) {
-                    hideWithoutDelay();
+                    hide();
                     return false;
                 }
             } else if (type == Event.ONKEYDOWN
                     && event.getKeyCode() == KeyCodes.KEY_ESCAPE) {
-                hideWithoutDelay();
+                hide();
                 return false;
             }
             if (temporaryStyle == STYLE_SYSTEM) {
