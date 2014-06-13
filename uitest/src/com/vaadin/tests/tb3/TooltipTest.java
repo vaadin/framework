@@ -16,11 +16,13 @@
 
 package com.vaadin.tests.tb3;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.junit.Assert;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
 
@@ -58,10 +60,20 @@ public abstract class TooltipTest extends MultiBrowserTest {
     }
 
     protected void checkTooltip(String value) throws Exception {
+        WebElement body = findElement(By.cssSelector("body"));
         WebElement tooltip = getTooltip();
         Assert.assertEquals(value, tooltip.getText());
-        Assert.assertTrue("Tooltip should be in viewport", tooltip
+        Assert.assertTrue("Tooltip overflowed to the left", tooltip
                 .getLocation().getX() >= 0);
+        Assert.assertTrue("Tooltip overflowed up",
+                tooltip.getLocation().getY() >= 0);
+        Assert.assertTrue("Tooltip overflowed to the right", tooltip
+                .getLocation().getX() + tooltip.getSize().getWidth() < body
+                .getSize().getWidth());
+        Assert.assertTrue("Tooltip overflowed down", tooltip.getLocation()
+                .getY() + tooltip.getSize().getHeight() < body.getSize()
+                .getHeight());
+
     }
 
     protected void moveToRoot() {
@@ -88,7 +100,18 @@ public abstract class TooltipTest extends MultiBrowserTest {
     }
 
     protected void moveMouseToTopLeft(WebElement element) {
-        new Actions(getDriver()).moveToElement(element, 0, 0).perform();
+        moveMouseTo(element, 0, 0);
     }
 
+    protected void moveMouseTo(WebElement element, int offsetX, int offsetY) {
+        new Actions(getDriver()).moveToElement(element, offsetX, offsetY)
+                .perform();
+    }
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // TODO Once we figure out how to get mouse hovering work with the IE
+        // webdriver, exclude them from these tests (#13854)
+        return getBrowsersExcludingIE();
+    }
 }
