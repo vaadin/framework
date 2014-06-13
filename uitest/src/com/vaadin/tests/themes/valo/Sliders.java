@@ -71,8 +71,9 @@ public class Sliders extends VerticalLayout implements View {
         row.addComponent(slider);
 
         slider = new Slider("With ticks (not in IE8 & IE9)");
-        slider.setValue(50.0);
+        slider.setValue(3.0);
         slider.setWidth("200px");
+        slider.setMax(4);
         slider.addStyleName("ticks");
         row.addComponent(slider);
 
@@ -123,8 +124,9 @@ public class Sliders extends VerticalLayout implements View {
         row.addComponent(slider);
 
         slider = new Slider("With ticks");
-        slider.setValue(50.0);
+        slider.setValue(3.0);
         slider.setHeight("200px");
+        slider.setMax(4);
         slider.addStyleName("ticks");
         slider.setOrientation(SliderOrientation.VERTICAL);
         row.addComponent(slider);

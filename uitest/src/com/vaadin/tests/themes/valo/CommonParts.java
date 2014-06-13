@@ -42,6 +42,8 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -492,6 +494,17 @@ public class CommonParts extends VerticalLayout implements View {
                     tabs.addTab(new Label("&nbsp;", ContentMode.HTML),
                             "One more");
                     tabs.addStyleName("padded-tabbar");
+                    tabs.addSelectedTabChangeListener(new SelectedTabChangeListener() {
+                        @Override
+                        public void selectedTabChange(
+                                SelectedTabChangeEvent event) {
+                            try {
+                                Thread.sleep(600);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                     content = tabs;
                 } else if (!autoHeight) {
                     Panel p = new Panel();
