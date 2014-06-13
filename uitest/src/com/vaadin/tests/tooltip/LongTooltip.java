@@ -1,11 +1,13 @@
-package com.vaadin.tests.components;
+package com.vaadin.tests.tooltip;
 
+import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.TextField;
 
 public class LongTooltip extends TestBase {
+    private int tooltipCount = 0;
 
     @Override
     public void setup() {
@@ -33,7 +35,8 @@ public class LongTooltip extends TestBase {
 
     private TextField createField() {
         final TextField field = new TextField();
-        field.setDescription(LoremIpsum.get(1000));
+        field.setDescription("Tooltip " + Integer.toString(tooltipCount++)
+                + ": " + LoremIpsum.get(1000));
         return field;
     }
 

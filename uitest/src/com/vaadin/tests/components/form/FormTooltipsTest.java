@@ -33,9 +33,7 @@ public class FormTooltipsTest extends TooltipTest {
         WebElement fieldElement = $(FormElement.class).first()
                 .$(TextFieldElement.class).first();
         checkTooltip(fieldElement, "Fields own tooltip");
-
-        moveToRoot();
-        Thread.sleep(1000);
+        clearTooltip();
         checkTooltipNotPresent();
 
         // first name caption tooltip
@@ -43,8 +41,7 @@ public class FormTooltipsTest extends TooltipTest {
                 $(FormElement.class).first().findElement(
                         By.className("v-caption")), "Fields own tooltip");
 
-        moveToRoot();
-        Thread.sleep(1000);
+        clearTooltip();
         checkTooltipNotPresent();
 
         // Form should not have a description tooltip
