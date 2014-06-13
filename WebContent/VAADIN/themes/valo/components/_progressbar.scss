@@ -33,6 +33,14 @@ $v-progressbar-border-radius: $v-border-radius !default;
     }
   }
 
+  .#{$primary-stylename}-indeterminate {
+    @include valo-spinner;
+    
+    .#{$primary-stylename}-wrapper {
+      display: none;
+    }
+  }
+
 }
 
 
