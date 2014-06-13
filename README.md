@@ -14,8 +14,8 @@ framework follow below.
 Quick Setup
 ======
 1. <code>git clone https://github.com/vaadin/vaadin.git</code>
+1. Install IvyDE, including Ant Tasks, if needed (http://www.apache.org/dist/ant/ivyde/updatesite)
 1. Import the project into Eclipse
-1. Install IvyDE if needed (http://www.apache.org/dist/ant/ivyde/updatesite)
 1. Run build/ide.xml in Eclipse
 
 For more details, see below
