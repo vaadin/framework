@@ -24,6 +24,7 @@ import java.util.ListIterator;
 
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
+import com.vaadin.shared.util.SharedUtil;
 
 /**
  * A simple list based on an in-memory data source for simply adding a list of
@@ -50,6 +51,59 @@ import com.vaadin.client.data.DataSource;
  * @author Vaadin Ltd
  */
 public class ListDataSource<T> implements DataSource<T> {
+
+    private class RowHandleImpl extends RowHandle<T> {
+
+        private final T row;
+
+        public RowHandleImpl(T row) {
+            this.row = row;
+        }
+
+        @Override
+        public T getRow() {
+            /*
+             * We'll cheat here and don't throw an IllegalStateException even if
+             * this isn't pinned, because we know that the reference never gets
+             * stale.
+             */
+            return row;
+        }
+
+        @Override
+        public void pin() {
+            // NOOP, really
+        }
+
+        @Override
+        public void unpin() throws IllegalStateException {
+            /*
+             * Just to make things easier for everyone, we won't throw the
+             * exception, even in illegal situations.
+             */
+        }
+
+        @Override
+        protected boolean equalsExplicit(Object obj) {
+            if (obj instanceof ListDataSource.RowHandleImpl) {
+                /*
+                 * Java prefers AbstractRemoteDataSource<?>.RowHandleImpl. I
+                 * like the @SuppressWarnings more (keeps the line length in
+                 * check.)
+                 */
+                @SuppressWarnings("unchecked")
+                RowHandleImpl rhi = (RowHandleImpl) obj;
+                return SharedUtil.equals(row, rhi.row);
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        protected int hashCodeExplicit() {
+            return row.hashCode();
+        }
+    }
 
     /**
      * Wraps the datasource list and notifies the change handler of changing to
@@ -83,6 +137,7 @@ public class ListDataSource<T> implements DataSource<T> {
         }
 
         @Override
+        @SuppressWarnings("hiding")
         public <T> T[] toArray(T[] a) {
             return toArray(a);
         }
@@ -353,5 +408,12 @@ public class ListDataSource<T> implements DataSource<T> {
      */
     public List<T> asList() {
         return wrapper;
+    }
+
+    @Override
+    public RowHandle<T> getHandle(T row) throws IllegalStateException {
+        assert ds.contains(row) : "This data source doesn't contain the row "
+                + row;
+        return new RowHandleImpl(row);
     }
 }

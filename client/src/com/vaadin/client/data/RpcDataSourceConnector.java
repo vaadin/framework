@@ -47,6 +47,15 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
             getRpcProxy(DataRequestRpc.class).requestRows(firstRowIndex,
                     numberOfRows, cached.getStart(), cached.length());
         }
+
+        @Override
+        public Object getRowKey(String[] row) {
+            /*
+             * FIXME will be properly implemented by another patch (Henrik Paul:
+             * 16.6.2014)
+             */
+            return row;
+        }
     };
 
     @Override

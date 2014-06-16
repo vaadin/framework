@@ -99,6 +99,12 @@ public class GridClientColumnRendererConnector extends
         public void setDataChangeHandler(DataChangeHandler dataChangeHandler) {
             this.dataChangeHandler = dataChangeHandler;
         }
+
+        @Override
+        public RowHandle<String> getHandle(String row) {
+            // TODO Auto-generated method stub (henrik paul: 17.6.)
+            return null;
+        }
     }
 
     @Override

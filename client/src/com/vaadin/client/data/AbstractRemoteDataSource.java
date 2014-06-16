@@ -18,6 +18,7 @@ package com.vaadin.client.data;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
@@ -40,6 +41,88 @@ import com.vaadin.shared.ui.grid.Range;
  *            the row type
  */
 public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
+
+    private class RowHandleImpl extends RowHandle<T> {
+        private T row;
+        private final Object key;
+
+        public RowHandleImpl(final T row, final Object key) {
+            this.row = row;
+            this.key = key;
+        }
+
+        /**
+         * A method for the data source to update the row data.
+         * 
+         * @param row
+         *            the updated row object
+         */
+        public void setRow(final T row) {
+            this.row = row;
+            assert getRowKey(row).equals(key) : "The old key does not "
+                    + "equal the new key for the given row (old: " + key
+                    + ", new :" + getRowKey(row) + ")";
+        }
+
+        @Override
+        public T getRow() throws IllegalStateException {
+            if (isPinned()) {
+                return row;
+            } else {
+                throw new IllegalStateException("The row handle for key " + key
+                        + " was not pinned");
+            }
+        }
+
+        private boolean isPinned() {
+            return pinnedRows.containsKey(key);
+        }
+
+        @Override
+        public void pin() {
+            Integer count = pinnedCounts.get(key);
+            if (count == null) {
+                count = Integer.valueOf(0);
+                pinnedRows.put(key, this);
+            }
+            pinnedCounts.put(key, Integer.valueOf(count.intValue() + 1));
+        }
+
+        @Override
+        public void unpin() throws IllegalStateException {
+            final Integer count = pinnedCounts.get(key);
+            if (count == null) {
+                throw new IllegalStateException("Row " + row + " with key "
+                        + key + " was not pinned to begin with");
+            } else if (count.equals(Integer.valueOf(1))) {
+                pinnedRows.remove(key);
+                pinnedCounts.remove(key);
+            } else {
+                pinnedCounts.put(key, Integer.valueOf(count.intValue() - 1));
+            }
+        }
+
+        @Override
+        protected boolean equalsExplicit(final Object obj) {
+            if (obj instanceof AbstractRemoteDataSource.RowHandleImpl) {
+                /*
+                 * Java prefers AbstractRemoteDataSource<?>.RowHandleImpl. I
+                 * like the @SuppressWarnings more (keeps the line length in
+                 * check.)
+                 */
+                @SuppressWarnings("unchecked")
+                final RowHandleImpl rhi = (RowHandleImpl) obj;
+                return key.equals(rhi.key);
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        protected int hashCodeExplicit() {
+            return key.hashCode();
+        }
+    }
 
     /**
      * Records the start of the previously requested range. This is used when
@@ -70,6 +153,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             checkCacheCoverage();
         }
     };
+
+    private Map<Object, Integer> pinnedCounts = new HashMap<Object, Integer>();
+    private Map<Object, RowHandleImpl> pinnedRows = new HashMap<Object, RowHandleImpl>();
 
     /**
      * Sets the estimated number of rows in the data source.
@@ -243,6 +329,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                     cached = newUsefulData;
                 }
             }
+
+            updatePinnedRows(rowData);
         }
 
         if (!partition[0].isEmpty() || !partition[2].isEmpty()) {
@@ -259,6 +347,16 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         ensureCoverageCheck();
 
         Profiler.leave("AbstractRemoteDataSource.setRowData");
+    }
+
+    private void updatePinnedRows(final List<T> rowData) {
+        for (final T row : rowData) {
+            final Object key = getRowKey(row);
+            final RowHandleImpl handle = pinnedRows.get(key);
+            if (handle != null) {
+                handle.setRow(row);
+            }
+        }
     }
 
     /**
@@ -391,4 +489,46 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         return maxCacheRange;
     }
+
+    @Override
+    public RowHandle<T> getHandle(T row) throws IllegalStateException {
+        Object key = getRowKey(row);
+
+        if (key == null) {
+            throw new NullPointerException("key may not be null (row: " + row
+                    + ")");
+        }
+
+        if (pinnedRows.containsKey(key)) {
+            return pinnedRows.get(key);
+        } else if (rowCache.containsValue(row)) {
+            return new RowHandleImpl(row, key);
+        } else {
+            throw new IllegalStateException("The cache of this DataSource "
+                    + "does not currently contain the row " + row);
+        }
+    }
+
+    /**
+     * Gets a stable key for the row object.
+     * <p>
+     * This method is a workaround for the fact that there is no means to force
+     * proper implementations for {@link #hashCode()} and
+     * {@link #equals(Object)} methods.
+     * <p>
+     * Since the same row object will be created several times for the same
+     * logical data, the DataSource needs a mechanism to be able to compare two
+     * objects, and figure out whether or not they represent the same data. Even
+     * if all the fields of an entity would be changed, it still could represent
+     * the very same thing (say, a person changes all of her names.)
+     * <p>
+     * A very usual and simple example what this could be, is an unique ID for
+     * this object that would also be stored in a database.
+     * 
+     * @param row
+     *            the row object for which to get the key
+     * @return a non-null object that uniquely and consistently represents the
+     *         row object
+     */
+    abstract public Object getRowKey(T row);
 }
