@@ -269,7 +269,8 @@ public class TreeConnector extends AbstractComponentConnector implements
 
         String description = uidl.getStringAttribute("descr");
         if (description != null) {
-            tooltipMap.put(treeNode, new TooltipInfo(description));
+            tooltipMap.put(treeNode, new TooltipInfo(description, null,
+                    treeNode));
         }
 
         if (uidl.getBooleanAttribute("expanded") && !treeNode.getState()) {

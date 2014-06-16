@@ -333,14 +333,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         AbstractComponentState state = getState();
 
         String primaryStyleName = getWidget().getStylePrimaryName();
-        if (state.primaryStyleName != null
-                && !state.primaryStyleName.equals(primaryStyleName)) {
-            /*
-             * We overwrite the widgets primary stylename if state defines a
-             * primary stylename.
-             */
-            getWidget().setStylePrimaryName(state.primaryStyleName);
-        }
 
         // Set the core 'v' style name for the widget
         setWidgetStyleName(StyleConstants.UI_WIDGET, true);
@@ -375,6 +367,16 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                 styleNames.push(newStyle);
             }
 
+        }
+
+        if (state.primaryStyleName != null
+                && !state.primaryStyleName.equals(primaryStyleName)) {
+            /*
+             * We overwrite the widgets primary stylename if state defines a
+             * primary stylename. This has to be done after updating other
+             * styles to be sure the dependent styles are updated correctly.
+             */
+            getWidget().setStylePrimaryName(state.primaryStyleName);
         }
         Profiler.leave("AbstractComponentConnector.updateWidgetStyleNames");
     }

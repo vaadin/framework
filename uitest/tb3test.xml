@@ -7,6 +7,7 @@
     <property name="browsers.exclude" value="" />
     <property name="categories.include" value="" />
     <property name="categories.exclude" value="" />
+    <property name="useLocalWebDriver" value="false" />
 
     <ivy:resolve file="${tb3test.dir}/ivy.xml" conf="build, build-provided" />
     <ivy:cachepath pathid="classpath.tb3.lib" conf="build, build-provided" />
@@ -37,6 +38,7 @@
             <jvmarg value="-Dbrowsers.exclude=${browsers.exclude}" />
             <jvmarg value="-Dcategories.include=${categories.include}" />
             <jvmarg value="-Dcategories.exclude=${categories.exclude}" />
+            <jvmarg value="-DuseLocalWebDriver=${useLocalWebDriver}" />
             <test name="${junit.test.suite}" todir="${report.dir}" />
         </junit>
 

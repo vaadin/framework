@@ -61,12 +61,18 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
     private static final ExecutorService service;
 
     static {
-        if (System.getProperty("useLocalWebDriver") != null) {
+        if (localWebDriverIsUsed()) {
             MAX_CONCURRENT_TESTS = 10;
         } else {
             MAX_CONCURRENT_TESTS = 50;
         }
         service = Executors.newFixedThreadPool(MAX_CONCURRENT_TESTS);
+    }
+
+    protected static boolean localWebDriverIsUsed() {
+        String useLocalWebDriver = System.getProperty("useLocalWebDriver");
+
+        return useLocalWebDriver != null && useLocalWebDriver.toLowerCase().equals("true");
     }
 
     public TB3Runner(Class<?> klass) throws InitializationError {

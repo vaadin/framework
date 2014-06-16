@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
+import com.vaadin.testbench.TestBenchElement;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -35,6 +36,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
+import org.openqa.selenium.interactions.internal.Coordinates;
+import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -50,6 +53,8 @@ import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 import com.vaadin.ui.UI;
+
+import static com.vaadin.tests.tb3.TB3Runner.localWebDriverIsUsed;
 
 /**
  * Base class for TestBench 3+ tests. All TB3+ tests in the project should
@@ -126,7 +131,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         } else {
             capabilities = getDesiredCapabilities();
 
-            if (System.getProperty("useLocalWebDriver") != null) {
+            if (localWebDriverIsUsed()) {
                 setupLocalDriver(capabilities);
             } else {
                 WebDriver dr = TestBench.createDriver(new RemoteWebDriver(
@@ -149,6 +154,14 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
             // Opera does not support this...
         }
 
+    }
+
+    protected WebElement getTooltipElement() {
+        return getDriver().findElement(com.vaadin.testbench.By.className("v-tooltip-text"));
+    }
+
+    protected Coordinates getCoordinates(TestBenchElement element) {
+        return ((Locatable) element.getWrappedElement()).getCoordinates();
     }
 
     @Retention(RetentionPolicy.RUNTIME)

@@ -329,7 +329,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         private boolean update(TabState tabState) {
             if (tabState.description != null || tabState.componentError != null) {
                 setTooltipInfo(new TooltipInfo(tabState.description,
-                        tabState.componentError));
+                        tabState.componentError, this));
             } else {
                 setTooltipInfo(null);
             }

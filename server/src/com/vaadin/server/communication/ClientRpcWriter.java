@@ -81,9 +81,9 @@ public class ClientRpcWriter implements Serializable {
                     // + parameterType.getName());
                     // }
                     // }
-                    EncodeResult encodeResult = JsonCodec.encode(
-                            invocation.getParameters()[i], referenceParameter,
-                            parameterType, ui.getConnectorTracker());
+                    EncodeResult encodeResult = JsonCodec.encode(invocation.getParameters()[i],
+                            referenceParameter, parameterType,
+                            ui.getConnectorTracker());
                     paramJson.put(encodeResult.getEncodedValue());
                 }
                 invocationJson.put(paramJson);

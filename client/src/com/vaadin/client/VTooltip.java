@@ -153,14 +153,60 @@ public class VTooltip extends VWindowOverlay {
                         offsetWidth = getOffsetWidth();
                         offsetHeight = getOffsetHeight();
                     }
+                    int x = getFinalX(offsetWidth);
+                    int y = getFinalY(offsetHeight);
 
-                    int x = tooltipEventMouseX + 10 + Window.getScrollLeft();
-                    int y = tooltipEventMouseY + 10 + Window.getScrollTop();
+                    setPopupPosition(x, y);
+                    sinkEvents(Event.ONMOUSEOVER | Event.ONMOUSEOUT);
+                }
 
+                /**
+                 * Return the final X-coordinate of the tooltip based on cursor
+                 * position, size of the tooltip, size of the page and necessary
+                 * margins.
+                 * 
+                 * @param offsetWidth
+                 * @return The final X-coordinate
+                 */
+                private int getFinalX(int offsetWidth) {
+                    int x = 0;
+                    int widthNeeded = 10 + MARGIN + offsetWidth;
+                    int roomLeft = tooltipEventMouseX;
+                    int roomRight = Window.getClientWidth() - roomLeft;
+                    if (roomRight > widthNeeded) {
+                        x = tooltipEventMouseX + 10 + Window.getScrollLeft();
+                    } else {
+                        x = tooltipEventMouseX + Window.getScrollLeft() - 10
+                                - offsetWidth;
+                    }
                     if (x + offsetWidth + MARGIN - Window.getScrollLeft() > Window
                             .getClientWidth()) {
                         x = Window.getClientWidth() - offsetWidth - MARGIN
                                 + Window.getScrollLeft();
+                    }
+                    return x;
+                }
+
+                /**
+                 * Return the final Y-coordinate of the tooltip based on cursor
+                 * position, size of the tooltip, size of the page and necessary
+                 * margins.
+                 * 
+                 * @param offsetHeight
+                 * @return The final y-coordinate
+                 * 
+                 */
+                private int getFinalY(int offsetHeight) {
+                    int y = 0;
+                    int heightNeeded = 10 + MARGIN + offsetHeight;
+                    int roomAbove = tooltipEventMouseY;
+                    int roomBelow = Window.getClientHeight() - roomAbove;
+
+                    if (roomBelow > heightNeeded) {
+                        y = tooltipEventMouseY + 10 + Window.getScrollTop();
+                    } else {
+                        y = tooltipEventMouseY + Window.getScrollTop() - 10
+                                - offsetHeight;
                     }
 
                     if (y + offsetHeight + MARGIN - Window.getScrollTop() > Window
@@ -173,8 +219,7 @@ public class VTooltip extends VWindowOverlay {
                             y = Window.getScrollTop();
                         }
                     }
-                    setPopupPosition(x, y);
-                    sinkEvents(Event.ONMOUSEOVER | Event.ONMOUSEOUT);
+                    return y;
                 }
             });
         } else {
@@ -234,8 +279,10 @@ public class VTooltip extends VWindowOverlay {
             // already about to close
             return;
         }
-        closeTimer.schedule(getCloseTimeout());
-        closing = true;
+        if (isActuallyVisible()) {
+            closeTimer.schedule(getCloseTimeout());
+            closing = true;
+        }
     }
 
     @Override
@@ -311,11 +358,9 @@ public class VTooltip extends VWindowOverlay {
          * @return TooltipInfo if connector and tooltip found, null if not
          */
         private TooltipInfo getTooltipFor(Element element) {
-
             ApplicationConnection ac = getApplicationConnection();
             ComponentConnector connector = Util.getConnectorForElement(ac,
                     RootPanel.get(), element);
-
             // Try to find first connector with proper tooltip info
             TooltipInfo info = null;
             while (connector != null) {
@@ -348,8 +393,6 @@ public class VTooltip extends VWindowOverlay {
         /**
          * Handle hide event
          * 
-         * @param event
-         *            Event causing hide
          */
         private void handleHideEvent() {
             hideTooltip();
@@ -402,12 +445,26 @@ public class VTooltip extends VWindowOverlay {
                 return;
             }
 
+            // If the parent (sub)component already has a tooltip open and it
+            // hasn't changed, we ignore the event.
+            // TooltipInfo contains a reference to the parent component that is
+            // checked in it's equals-method.
+            if (currentElement != null && isActuallyVisible()) {
+                TooltipInfo currentTooltip = getTooltipFor(currentElement);
+                TooltipInfo newTooltip = getTooltipFor(element);
+                if (currentTooltip != null && currentTooltip.equals(newTooltip)) {
+                    return;
+                }
+            }
+
             TooltipInfo info = getTooltipFor(element);
             if (info == null) {
-                if (isActuallyVisible()) {
-                    handleHideEvent();
-                }
+                handleHideEvent();
             } else {
+                if (closing) {
+                    closeTimer.cancel();
+                    closing = false;
+                }
                 setTooltipText(info);
                 updatePosition(event, isFocused);
                 if (isActuallyVisible() && !isFocused) {
@@ -417,8 +474,7 @@ public class VTooltip extends VWindowOverlay {
                         closeNow();
                     }
                     // Schedule timer for showing the tooltip according to if it
-                    // was
-                    // recently closed or not.
+                    // was recently closed or not.
                     int timeout = justClosed ? getQuickOpenDelay()
                             : getOpenDelay();
                     if (timeout == 0) {

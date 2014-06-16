@@ -90,3 +90,12 @@
 .description[width-range="701px-"] {
     font-size: 30px;
 }
+
+/* Styles for ResponsiveWidthAndHeight test. */
+.v-csslayout-width-and-height[width-range~="0-599px"][height-range~="0-499px"] {
+	background: blue;
+	color: #fff;
+}
+.v-csslayout-width-and-height[height-range~="500px-"][width-range~="600px-"] {
+	background: red;
+}
