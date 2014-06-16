@@ -152,7 +152,8 @@ public class DateField extends AbstractField<Date> implements
     private String dateOutOfRangeMessage = "Date is out of allowed range";
 
     private DateRangeValidator currentRangeValidator;
-    {
+
+    static {
         variableNameForResolution.put(Resolution.SECOND, "sec");
         variableNameForResolution.put(Resolution.MINUTE, "min");
         variableNameForResolution.put(Resolution.HOUR, "hour");

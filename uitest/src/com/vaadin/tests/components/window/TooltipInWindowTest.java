@@ -35,7 +35,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class TooltipInWindowTest extends MultiBrowserTest {
 
     @Test
-    public void testTooltipsInSubWindow() throws Exception {
+    public void testTooltipsInSubWindow() throws InterruptedException {
         openTestURL();
 
         WebElement textfield = vaadinElementById("tf1");
@@ -46,35 +46,32 @@ public class TooltipInWindowTest extends MultiBrowserTest {
 
         // Show tooltip
         mouse.mouseMove(textfieldCoordinates, 10, 10);
-        sleep(1000);
 
+        sleep(100);
         ensureVisibleTooltipPositionedCorrectly();
         assertEquals("My tooltip", getTooltipElement().getText());
 
         // Hide tooltip
         mouse.mouseMove(textfieldCoordinates, -100, -100);
-        sleep(1000);
+        sleep(2000);
 
         ensureHiddenTooltipPositionedCorrectly();
         assertEquals("", getTooltipElement().getText());
 
         // Show tooltip again
         mouse.mouseMove(textfieldCoordinates, 10, 10);
-        sleep(1000);
 
+        sleep(100);
         ensureVisibleTooltipPositionedCorrectly();
         assertEquals("My tooltip", getTooltipElement().getText());
 
         // Hide tooltip
         mouse.mouseMove(textfieldCoordinates, -100, -100);
-        sleep(1000);
+        sleep(2000);
 
         ensureHiddenTooltipPositionedCorrectly();
         assertEquals("", getTooltipElement().getText());
-    }
 
-    private WebElement getTooltipElement() {
-        return getDriver().findElement(By.className("v-tooltip-text"));
     }
 
     private WebElement getTooltipContainerElement() {

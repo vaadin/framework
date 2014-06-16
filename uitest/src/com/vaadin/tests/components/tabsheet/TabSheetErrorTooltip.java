@@ -39,6 +39,9 @@ public class TabSheetErrorTooltip extends AbstractTestUI {
         t.setDescription("This tab has both an error and a description");
 
         setContent(tabSheet);
+        getTooltipConfiguration().setOpenDelay(0);
+        getTooltipConfiguration().setQuickOpenDelay(0);
+        getTooltipConfiguration().setCloseTimeout(1000);
     }
 
     private Tab addTab() {

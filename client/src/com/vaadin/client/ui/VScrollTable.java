@@ -5157,7 +5157,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                 String rowDescription = uidl.getStringAttribute("rowdescr");
                 if (rowDescription != null && !rowDescription.equals("")) {
-                    tooltipInfo = new TooltipInfo(rowDescription);
+                    tooltipInfo = new TooltipInfo(rowDescription, null, this);
                 } else {
                     tooltipInfo = null;
                 }
@@ -5430,7 +5430,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             private void setTooltip(TableCellElement td, String description) {
                 if (description != null && !description.equals("")) {
-                    TooltipInfo info = new TooltipInfo(description);
+                    TooltipInfo info = new TooltipInfo(description, null, this);
                     cellToolTips.put(td, info);
                 } else {
                     cellToolTips.remove(td);

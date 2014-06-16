@@ -1,15 +1,20 @@
 <?xml version="1.0"?>
 
-<project name="GWT files for Vaadin" basedir=".">
+<project name="GWT files for Vaadin" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     <include file="common.xml" as="common" />
 
-    <property name="gwt.lib.dir" location="${gwt.basedir}/build/lib" />
+    <ivy:resolve log="download-only" file="${vaadin.basedir}/gwt/ivy.xml" transitive="false" />
+    <ivy:cachepath pathid="gwt-dev.classpath" conf="gwt-dev" />
+    <ivy:cachepath pathid="gwt-user.classpath" conf="gwt-user" />
+    <ivy:cachepath pathid="gwt-elemental.classpath" conf="gwt-elemental" />
+    <ivy:cachepath pathid="gwt-codeserver.classpath" conf="gwt-codeserver" />
+
     <property name="gwt.eclipse.basedir" location="${gwt.basedir}/eclipse" />
 
-    <property name="gwt.user.jar" location="${gwt.lib.dir}/gwt-user.jar" />
-    <property name="gwt.dev.jar" location="${gwt.lib.dir}/gwt-dev.jar" />
-    <property name="gwt.elemental.jar" location="${gwt.lib.dir}/gwt-elemental.jar" />
-    <property name="gwt.codeserver.jar" location="${gwt.lib.dir}/gwt-codeserver.jar" />
+    <property name="gwt.user.jar" refid="gwt-user.classpath" />
+    <property name="gwt.dev.jar" refid="gwt-dev.classpath" />
+    <property name="gwt.elemental.jar" refid="gwt-elemental.classpath" />
+    <property name="gwt.codeserver.jar" refid="gwt-codeserver.classpath" />
 
     <available file="${gwt.dev.jar}" property="gwt.dev.jar.found" />
     <available file="${gwt.user.jar}" property="gwt.user.jar.found" />

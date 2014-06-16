@@ -22,7 +22,6 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -35,7 +34,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class TextAreaEventPropagationTest extends MultiBrowserTest {
 
     @Test
-    public void testTextAreaEnterEventPropagation() throws InterruptedException {
+    public void textAreaEnterEventPropagation() throws InterruptedException {
         openTestURL();
         WebElement textArea = $(TextAreaElement.class).first();
         Actions builder = new Actions(driver);
@@ -45,23 +44,8 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
         builder.sendKeys(textArea, "second line jkl;");
         builder.perform();
 
-        String text = $(LabelElement.class).caption("Enter Label").first()
-                .getText();
-        assertEquals(TextAreaEventPropagation.NO_BUTTON_PRESSED, text);
-
-        WebElement textField = $(TextFieldElement.class).first();
-        Actions builder2 = new Actions(driver);
-        builder2.click(textField);
-
-        builder2.sendKeys("third line");
-        builder2.sendKeys(Keys.ENTER);
-
-        builder2.perform();
-
-        text = $(LabelElement.class).caption("Enter Label").first().getText();
-
-        assertEquals(TextAreaEventPropagation.BUTTON_PRESSED, text);
-
+        // Should not have triggered shortcut
+        assertEquals(" ", getLogRow(0));
     }
 
     @Test
@@ -72,35 +56,16 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
         Actions builder = new Actions(driver);
         builder.click(textArea);
         builder.sendKeys(textArea, "first line asdf");
-        builder.sendKeys(Keys.ENTER);
-        builder.sendKeys(textArea, "second line jkl;");
         builder.sendKeys(Keys.ESCAPE);
+        builder.sendKeys(textArea, "second line jkl;");
         builder.perform();
 
-        String text = $(LabelElement.class).caption("Enter Label").first()
-                .getText();
-        assertEquals(TextAreaEventPropagation.NO_BUTTON_PRESSED, text);
-        text = $(LabelElement.class).caption("Escape Label").first().getText();
-        assertEquals(TextAreaEventPropagation.BUTTON_PRESSED, text);
-
+        assertEquals("1. Escape button pressed", getLogRow(0));
     }
 
     @Test
-    public void testTextFieldEscapeEventPropagation()
-            throws InterruptedException {
+    public void testTextFieldEscapeEventPropagation() {
         openTestURL();
-        WebElement textArea = $(TextAreaElement.class).first();
-        Actions builder = new Actions(driver);
-        builder.click(textArea);
-        builder.sendKeys(textArea, "first line asdf");
-        builder.sendKeys(Keys.ENTER);
-        builder.sendKeys(textArea, "second line jkl;");
-        builder.perform();
-
-        String text = $(LabelElement.class).caption("Enter Label").first()
-                .getText();
-        assertEquals(TextAreaEventPropagation.NO_BUTTON_PRESSED, text);
-
         WebElement textField = $(TextFieldElement.class).first();
         Actions builder2 = new Actions(driver);
         builder2.click(textField);
@@ -111,10 +76,22 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
 
         builder2.perform();
 
-        text = $(LabelElement.class).caption("Enter Label").first().getText();
-        assertEquals(TextAreaEventPropagation.BUTTON_PRESSED, text);
-        text = $(LabelElement.class).caption("Escape Label").first().getText();
-        assertEquals(TextAreaEventPropagation.BUTTON_PRESSED, text);
+        assertEquals("1. Enter button pressed", getLogRow(1));
+        assertEquals("2. Escape button pressed", getLogRow(0));
+    }
 
+    @Test
+    public void testTextFieldEnterEventPropagation() {
+        openTestURL();
+        WebElement textField = $(TextFieldElement.class).first();
+        Actions builder2 = new Actions(driver);
+        builder2.click(textField);
+
+        builder2.sendKeys("third line");
+        builder2.sendKeys(Keys.ENTER);
+
+        builder2.perform();
+
+        assertEquals("1. Enter button pressed", getLogRow(0));
     }
 }

@@ -674,6 +674,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
                 }
             }
         }
+        Util.forceIE8Redraw(getElement());
     }
 
     /**

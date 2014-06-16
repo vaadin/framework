@@ -904,7 +904,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      *             if the underlying container don't support adding items with
      *             identifiers
      */
-    public void addItems(Collection<Object> itemIds)
+    public void addItems(Collection<?> itemIds)
             throws UnsupportedOperationException {
         addItems(itemIds.toArray());
     }

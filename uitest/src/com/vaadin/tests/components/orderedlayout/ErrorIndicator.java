@@ -54,6 +54,9 @@ public class ErrorIndicator extends AbstractTestUI {
 
         horizontalLayout.addComponent(inHorizontal);
         layout.addComponent(horizontalLayout);
+        getTooltipConfiguration().setOpenDelay(0);
+        getTooltipConfiguration().setQuickOpenDelay(0);
+        getTooltipConfiguration().setCloseTimeout(1000);
     }
 
     /*

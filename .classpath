@@ -22,8 +22,7 @@
 	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=vaadin&amp;ivyXmlPath=push%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/gwt-dev"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/gwt-user"/>
 	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=vaadin&amp;ivyXmlPath=buildhelpers%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles=build.properties"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=vaadin&amp;ivyXmlPath=gwt%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles=%24%7Bworkspace_loc%3Avaadin%2Fbuild.properties%7D"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
