@@ -24,8 +24,11 @@
             <param-name>application</param-name>
             <param-value>com.vaadin.tests.components.button.Buttons</param-value>
         </init-param>
+        <init-param>
+            <param-name>org.atmosphere.cpr.scanClassPath</param-name>
+            <param-value>false</param-value>
+        </init-param>
         <async-supported>true</async-supported>
-        <load-on-startup>-1</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>Embed App 2</servlet-name>
@@ -34,8 +37,11 @@
             <param-name>UI</param-name>
             <param-value>com.vaadin.tests.components.label.MarginsInLabels</param-value>
         </init-param>
+        <init-param>
+            <param-name>org.atmosphere.cpr.scanClassPath</param-name>
+            <param-value>false</param-value>
+        </init-param>
         <async-supported>true</async-supported>
-        <load-on-startup>-1</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>UI provider app</servlet-name>
@@ -48,8 +54,11 @@
             <param-name>UI</param-name>
             <param-value>com.vaadin.tests.VerifyAssertionsEnabled</param-value>
         </init-param>
+        <init-param>
+            <param-name>org.atmosphere.cpr.scanClassPath</param-name>
+            <param-value>false</param-value>
+        </init-param>
         <async-supported>true</async-supported>
-        <load-on-startup>-1</load-on-startup>
     </servlet>
 
     <servlet>
@@ -58,6 +67,10 @@
         <!-- Non-default values for testing purposes -->
         <init-param>
             <param-name>legacyPropertyToString</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <init-param>
+            <param-name>org.atmosphere.cpr.scanClassPath</param-name>
             <param-value>false</param-value>
         </init-param>
         <init-param>
@@ -77,7 +90,6 @@
             <param-value>42</param-value>
         </init-param>
         <async-supported>true</async-supported>
-        <load-on-startup>-1</load-on-startup>
     </servlet>
 
     <servlet>
@@ -88,7 +100,10 @@
         -->
         <servlet-name>VaadinApplicationRunnerWithTimeoutRedirect</servlet-name>
         <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
-        <load-on-startup>-1</load-on-startup>
+        <init-param>
+            <param-name>org.atmosphere.cpr.scanClassPath</param-name>
+            <param-value>false</param-value>
+        </init-param>
     </servlet>
     
     <servlet>
@@ -99,7 +114,10 @@
             <param-value>automatic</param-value>
         </init-param>
         <async-supported>true</async-supported>
-        <load-on-startup>-1</load-on-startup>
+        <init-param>
+            <param-name>org.atmosphere.cpr.scanClassPath</param-name>
+            <param-value>false</param-value>
+        </init-param>
     </servlet>
 
     <!-- For testing GAE - the deployment script changes this to use GAEVaadinServlet -->
@@ -111,7 +129,10 @@
             <param-value>com.vaadin.tests.integration.ServletIntegrationUI</param-value>
         </init-param>
         <async-supported>true</async-supported>
-        <load-on-startup>-1</load-on-startup>
+        <init-param>
+            <param-name>org.atmosphere.cpr.scanClassPath</param-name>
+            <param-value>false</param-value>
+        </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>Embed App 1</servlet-name>
@@ -149,7 +170,7 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>IntegrationTest</servlet-name>
+        <servlet-name>VaadinApplicationRunner</servlet-name>
         <url-pattern>/VAADIN/*</url-pattern>
     </servlet-mapping>
 
