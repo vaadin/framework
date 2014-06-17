@@ -1082,12 +1082,20 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         selected = true;
                         keyboardSelectionOverRowFetchInProgress = true;
                     }
-                    if (selected) {
+                    if (isSingleSelectMode() && selected) {
+
                         if (focusedRow == null
                                 || !selectedRowKeys.contains(focusedRow
                                         .getKey())) {
-                            // The focus is no longer on a selected row,
-                            // move focus to first selected row
+                            /*
+                             * The focus is no longer on a selected row. If we
+                             * are in single select mode, move focus to the
+                             * selected row. (#10522)
+                             * 
+                             * Don't modify the focused row when in multiselect
+                             * mode. (#13341)
+                             */
+
                             setRowFocus(row);
                         }
                     }

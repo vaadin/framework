@@ -303,8 +303,10 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                  * ALWAYS set the prompting style at this point, even though we
                  * think it has been set already...
                  */
-                getWidget().prompting = false;
-                getWidget().setPromptingOn();
+                getWidget().setPromptingOff("");
+                if (getWidget().enabled && !getWidget().readonly) {
+                    getWidget().setPromptingOn();
+                }
             } else {
                 // we have focus in field, prompting can't be set on, instead
                 // just clear the input if the value has changed from something

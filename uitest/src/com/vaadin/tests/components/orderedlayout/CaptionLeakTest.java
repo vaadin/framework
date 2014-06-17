@@ -18,6 +18,7 @@ package com.vaadin.tests.components.orderedlayout;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class CaptionLeakTest extends MultiBrowserTest {
@@ -26,43 +27,53 @@ public class CaptionLeakTest extends MultiBrowserTest {
     public void testCaptionLeak() throws Exception {
         setDebug(true);
         openTestURL();
-        openDebugLogTab();
+
+        openLog();
 
         // this should be present
         // 3 general non-connector elements, none accumulated on click
-        getDriver()
-                .findElement(
-                        By.xpath("//span[text() = 'Measured 3 non connector elements']"));
+        checkConnectorCount();
 
-        getDriver().findElement(By.xpath("//button[@title = 'Clear log']"))
-                .click();
-        getDriver().findElement(By.id("Set leaky content")).click();
+        clearLog();
 
-        getDriver()
-                .findElement(
-                        By.xpath("//span[text() = 'Measured 3 non connector elements']"));
+        $(ButtonElement.class).caption("Set leaky content").first().click();
+
+        checkConnectorCount();
 
         // nothing accumulates over clicks
-        getDriver().findElement(By.xpath("//button[@title = 'Clear log']"))
-                .click();
-        getDriver().findElement(By.id("Set leaky content")).click();
-        getDriver()
-                .findElement(
-                        By.xpath("//span[text() = 'Measured 3 non connector elements']"));
+        clearLog();
+
+        $(ButtonElement.class).caption("Set leaky content").first().click();
+        checkConnectorCount();
     }
 
     @Test
     public void testNoCaptionLeak() throws Exception {
         setDebug(true);
         openTestURL();
-        openDebugLogTab();
 
-        getDriver().findElement(By.xpath("//button[@title = 'Clear log']"))
-                .click();
-        getDriver().findElement(By.id("Set non leaky content")).click();
+        openLog();
 
+        clearLog();
+        $(ButtonElement.class).caption("Set non leaky content").first().click();
         // this should be present
         // 3 general non-connector elements, none accumulated on click
+        checkConnectorCount();
+    }
+
+    private void openLog() {
+        openDebugLogTab();
+        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
+            openDebugLogTab();
+        }
+    }
+
+    private void clearLog() {
+        getDriver().findElement(By.xpath("//button[@title = 'Clear log']"))
+                .click();
+    }
+
+    private void checkConnectorCount() {
         getDriver()
                 .findElement(
                         By.xpath("//span[text() = 'Measured 3 non connector elements']"));
