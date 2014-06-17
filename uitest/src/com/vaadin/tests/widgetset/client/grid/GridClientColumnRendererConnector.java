@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
@@ -39,6 +41,10 @@ import com.vaadin.client.ui.grid.renderers.HtmlRenderer;
 import com.vaadin.client.ui.grid.renderers.NumberRenderer;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
+import com.vaadin.client.ui.grid.sort.Sort;
+import com.vaadin.client.ui.grid.sort.SortEvent;
+import com.vaadin.client.ui.grid.sort.SortEventHandler;
+import com.vaadin.client.ui.grid.sort.SortOrder;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
 
@@ -109,7 +115,7 @@ public class GridClientColumnRendererConnector extends
     @Override
     protected void init() {
         Grid<String> grid = getWidget();
-        grid.setColumnHeadersVisible(false);
+        // grid.setColumnHeadersVisible(false);
 
         // Generated some column data
         List<String> columnData = new ArrayList<String>();
@@ -127,7 +133,25 @@ public class GridClientColumnRendererConnector extends
         }
 
         // Add a column to display the data in
-        grid.addColumn(createColumnWithRenderer(Renderers.TEXT_RENDERER));
+        GridColumn<String, String> c = createColumnWithRenderer(Renderers.TEXT_RENDERER);
+        c.setHeaderCaption("Column 1");
+        grid.addColumn(c);
+
+        // Add method for testing sort event firing
+        grid.addSortHandler(new SortEventHandler<String>() {
+            @Override
+            public void sort(SortEvent<String> event) {
+                Element console = Document.get().getElementById(
+                        "testDebugConsole");
+                String text = "Client-side sort event received<br>"
+                        + "Columns: " + event.getOrder().size() + ", order: ";
+                for (SortOrder order : event.getOrder()) {
+                    text += order.getColumn().getHeaderCaption() + ": "
+                            + order.getDirection().toString();
+                }
+                console.setInnerHTML(text);
+            }
+        });
 
         // Handle RPC calls
         registerRpc(GridClientColumnRendererRpc.class,
@@ -159,6 +183,11 @@ public class GridClientColumnRendererConnector extends
 
                         // Re-attach
                         parent.add(getWidget());
+                    }
+
+                    @Override
+                    public void triggerClientSorting() {
+                        getWidget().sort(Sort.by(getWidget().getColumn(0)));
                     }
                 });
     }

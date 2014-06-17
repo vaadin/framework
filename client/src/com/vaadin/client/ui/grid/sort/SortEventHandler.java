@@ -13,26 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.widgetset.client.grid;
+package com.vaadin.client.ui.grid.sort;
 
-import com.vaadin.shared.communication.ClientRpc;
-import com.vaadin.tests.widgetset.client.grid.GridClientColumnRendererConnector.Renderers;
+import com.google.gwt.event.shared.EventHandler;
 
-public interface GridClientColumnRendererRpc extends ClientRpc {
+/**
+ * Handler for a Grid sort event, called when the Grid needs its data source to
+ * provide data sorted in a specific manner.
+ *
+ * @since 7.4
+ * @author Vaadin Ltd
+ */
+public interface SortEventHandler<T> extends EventHandler {
 
     /**
-     * Adds a new column with a specific renderer to the grid
+     * Handle sorting of the Grid. This method is called when a re-sorting of
+     * the Grid's data is requested.
      *
+     * @param event
+     *            the sort event
      */
-    void addColumn(Renderers renderer);
+    public void sort(SortEvent<T> event);
 
-    /**
-     * Detaches and attaches the client side Grid
-     */
-    void detachAttach();
-
-    /**
-     * Used for client-side sorting API test
-     */
-    void triggerClientSorting();
 }

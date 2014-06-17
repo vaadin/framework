@@ -13,26 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.widgetset.client.grid;
+package com.vaadin.shared.ui.grid;
 
-import com.vaadin.shared.communication.ClientRpc;
-import com.vaadin.tests.widgetset.client.grid.GridClientColumnRendererConnector.Renderers;
-
-public interface GridClientColumnRendererRpc extends ClientRpc {
-
-    /**
-     * Adds a new column with a specific renderer to the grid
-     *
-     */
-    void addColumn(Renderers renderer);
+/**
+ * Describes sorting direction for a Grid column
+ *
+ * @since 7.4
+ * @author Vaadin Ltd
+ */
+public enum SortDirection {
 
     /**
-     * Detaches and attaches the client side Grid
+     * Ascending (e.g. A-Z, 1..9) sort order
      */
-    void detachAttach();
+    ASCENDING,
 
     /**
-     * Used for client-side sorting API test
+     * Descending (e.g. Z-A, 9..1) sort order
      */
-    void triggerClientSorting();
+    DESCENDING
 }

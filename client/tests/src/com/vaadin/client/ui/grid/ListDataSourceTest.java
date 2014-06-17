@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2013 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,8 +16,10 @@
 package com.vaadin.client.ui.grid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -26,7 +28,7 @@ import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.ui.grid.datasources.ListDataSource;
 
 /**
- * 
+ *
  * @since 7.2
  * @author Vaadin Ltd
  */
@@ -173,6 +175,23 @@ public class ListDataSourceTest {
     public void testUnsupportedIteratorRemove() {
         ListDataSource<Integer> ds = new ListDataSource<Integer>(0, 1, 2, 3);
         ds.asList().iterator().remove();
+    }
+
+    @Test
+    public void sortColumn() {
+        ListDataSource<Integer> ds = new ListDataSource<Integer>(3, 4, 2, 3, 1);
+
+        // TODO Should be simplified to sort(). No point in providing these
+        // trivial comparators.
+        ds.sort(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1.compareTo(o2);
+            }
+        });
+
+        assertTrue(Arrays.equals(ds.asList().toArray(), new Integer[] { 1, 2,
+                3, 3, 4 }));
     }
 
 }
