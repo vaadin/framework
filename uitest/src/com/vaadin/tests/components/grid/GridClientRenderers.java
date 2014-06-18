@@ -16,11 +16,15 @@
 package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
-import junit.framework.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
@@ -40,6 +44,14 @@ import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
 public class GridClientRenderers extends MultiBrowserTest {
 
     private int latency = 0;
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
+        // FIXME: PhantomJS can't handle alerts. Fix test to use something else.
+        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
+        return browsers;
+    }
 
     @Override
     protected Class<?> getUIClass() {
@@ -80,7 +92,8 @@ public class GridClientRenderers extends MultiBrowserTest {
 
         // Should be an alert visible
         Alert alert = driver.switchTo().alert();
-        assertEquals(alert.getText(), "Click");
+        assertEquals("Alert window did not contain text \"Click\"",
+                alert.getText(), "Click");
     }
 
     @Test
@@ -102,54 +115,65 @@ public class GridClientRenderers extends MultiBrowserTest {
 
         // Should be an alert visible
         Alert alert = driver.switchTo().alert();
-        assertEquals(alert.getText(), "Click");
+        assertEquals("Alert window did not contain text \"Click\"",
+                alert.getText(), "Click");
     }
 
     @Test
     public void rowsWithDataHasStyleName() throws Exception {
 
-        // Simulate network latency with 1000ms
-        latency = 1000;
+        // Simulate network latency with 1500ms unless it's IE. IE takes longer
+        // time to get started.
+        latency = (BrowserUtil.isIE(getDesiredCapabilities()) ? 4000 : 1500);
 
         openTestURL();
 
         TestBenchElement row = getGrid().getRow(1);
         String className = row.getAttribute("class");
-        Assert.assertFalse(className.contains("v-grid-row-has-data"));
+        assertFalse(
+                "Row should not yet contain style name v-grid-row-has-data",
+                className.contains("v-grid-row-has-data"));
 
         // Wait for data to arrive
-        sleep(3000);
+        sleep(latency + 1000);
 
         row = getGrid().getRow(1);
         className = row.getAttribute("class");
-        Assert.assertTrue(className.contains("v-grid-row-has-data"));
+        assertTrue("Row should now contain style name v-grid-row-has-data",
+                className.contains("v-grid-row-has-data"));
     }
 
     @Test
     public void complexRendererSetVisibleContent() throws Exception {
 
-        // Simulate network latency with 1000ms
-        latency = 1000;
+        // Simulate network latency with 1500ms
+        latency = 1500;
+
+        // Chrome uses RGB instead of RGBA
+        String colorRed = "rgba(255, 0, 0, 1)";
+        String colorWhite = "rgba(255, 255, 255, 1)";
+        if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+            colorRed = "rgb(255, 0, 0)";
+            colorWhite = "rgb(255, 255, 255)";
+        }
 
         openTestURL();
 
         addColumn(Renderers.CPLX_RENDERER);
 
-        // Fetch data
-        getGrid().scrollToRow(50);
-
         // Cell should be red (setContentVisible set cell red)
-        String backgroundColor = getGrid().getCell(1, 1).getCssValue(
+        String backgroundColor = getGrid().getCell(51, 1).getCssValue(
                 "backgroundColor");
-        assertEquals("rgba(255, 0, 0, 1)", backgroundColor);
+        assertEquals("Background color was not red.", colorRed, backgroundColor);
 
         // Wait for data to arrive
-        sleep(3000);
+        sleep(latency + 1000);
 
         // Cell should no longer be red
-        backgroundColor = getGrid().getCell(1, 1)
-                .getCssValue("backgroundColor");
-        assertEquals("rgba(255, 255, 255, 1)", backgroundColor);
+        backgroundColor = getGrid().getCell(51, 1).getCssValue(
+                "backgroundColor");
+        assertEquals("Background color was not white", colorWhite,
+                backgroundColor);
     }
 
     private GridElement getGrid() {
