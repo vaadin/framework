@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.draganddropwrapper;
+package com.vaadin.tests.tooltip;
 
 import java.util.Iterator;
 
@@ -10,7 +10,8 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -18,7 +19,7 @@ import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
-public class DragAndDropWrapperTooltips extends TestBase {
+public class DragAndDropWrapperTooltips extends AbstractTestUI {
 
     private final String BASE = ".v-widget.greenblock {vertical-align: middle; float:left; width:60px;height:60px;background: green !important; padding:0; margin:2px;-webkit-transition: width 0.3s ease-in-out;color: white;}";
     private final String B2 = ".v-widget.b2 {background-color: red !important;}";
@@ -28,9 +29,8 @@ public class DragAndDropWrapperTooltips extends TestBase {
     private DragAndDropWrapper dragAndDropWrapper;
 
     @Override
-    protected void setup() {
-        TestUtils.injectCSS(getMainWindow(), BASE + B4 + B2 + B3
-                + HIDEDRAGSOURCE);
+    protected void setup(VaadinRequest request) {
+        TestUtils.injectCSS(this, BASE + B4 + B2 + B3 + HIDEDRAGSOURCE);
 
         VerticalLayout l = new VerticalLayout();
         l.setWidth("400px");
@@ -49,7 +49,7 @@ public class DragAndDropWrapperTooltips extends TestBase {
             wl.addStyleName("b" + i);
             cssLayout.addComponent(wl);
         }
-
+        getTooltipConfiguration().setOpenDelay(300);
     }
 
     int count;
@@ -123,7 +123,7 @@ public class DragAndDropWrapperTooltips extends TestBase {
     };
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A tooltip should be shown when hovering the DragAndDropWrapper containing all the draggable layouts";
     }
 

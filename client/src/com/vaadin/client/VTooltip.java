@@ -22,13 +22,13 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.user.client.DOM;
@@ -337,7 +337,7 @@ public class VTooltip extends VWindowOverlay {
     }
 
     private class TooltipEventHandler implements MouseMoveHandler,
-            ClickHandler, KeyDownHandler, FocusHandler, BlurHandler {
+            KeyDownHandler, FocusHandler, BlurHandler, MouseDownHandler {
 
         /**
          * Current element hovered
@@ -403,7 +403,7 @@ public class VTooltip extends VWindowOverlay {
         }
 
         @Override
-        public void onClick(ClickEvent event) {
+        public void onMouseDown(MouseDownEvent event) {
             handleHideEvent();
         }
 
@@ -449,9 +449,9 @@ public class VTooltip extends VWindowOverlay {
             // TooltipInfo contains a reference to the parent component that is
             // checked in it's equals-method.
             if (currentElement != null && isTooltipOpen()) {
-                TooltipInfo currentTooltip = getTooltipFor(currentElement);
                 TooltipInfo newTooltip = getTooltipFor(element);
-                if (currentTooltip != null && currentTooltip.equals(newTooltip)) {
+                if (currentTooltipInfo != null
+                        && currentTooltipInfo.equals(newTooltip)) {
                     return;
                 }
             }
@@ -498,7 +498,7 @@ public class VTooltip extends VWindowOverlay {
     public void connectHandlersToWidget(Widget widget) {
         Profiler.enter("VTooltip.connectHandlersToWidget");
         widget.addDomHandler(tooltipEventHandler, MouseMoveEvent.getType());
-        widget.addDomHandler(tooltipEventHandler, ClickEvent.getType());
+        widget.addDomHandler(tooltipEventHandler, MouseDownEvent.getType());
         widget.addDomHandler(tooltipEventHandler, KeyDownEvent.getType());
         widget.addDomHandler(tooltipEventHandler, FocusEvent.getType());
         widget.addDomHandler(tooltipEventHandler, BlurEvent.getType());
