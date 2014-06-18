@@ -19,12 +19,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-
 import org.junit.Test;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
@@ -44,14 +40,6 @@ import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
 public class GridClientRenderers extends MultiBrowserTest {
 
     private int latency = 0;
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
-        // FIXME: PhantomJS can't handle alerts. Fix test to use something else.
-        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        return browsers;
-    }
 
     @Override
     protected Class<?> getUIClass() {
@@ -91,9 +79,8 @@ public class GridClientRenderers extends MultiBrowserTest {
         gwtButton.click();
 
         // Should be an alert visible
-        Alert alert = driver.switchTo().alert();
-        assertEquals("Alert window did not contain text \"Click\"",
-                alert.getText(), "Click");
+        assertEquals("Button did not contain text \"Clicked\"",
+                gwtButton.getText(), "Clicked");
     }
 
     @Test
@@ -114,17 +101,15 @@ public class GridClientRenderers extends MultiBrowserTest {
         gwtButton.click();
 
         // Should be an alert visible
-        Alert alert = driver.switchTo().alert();
-        assertEquals("Alert window did not contain text \"Click\"",
-                alert.getText(), "Click");
+        assertEquals("Button did not contain text \"Clicked\"",
+                gwtButton.getText(), "Clicked");
     }
 
     @Test
     public void rowsWithDataHasStyleName() throws Exception {
 
-        // Simulate network latency with 1500ms unless it's IE. IE takes longer
-        // time to get started.
-        latency = (BrowserUtil.isIE(getDesiredCapabilities()) ? 4000 : 1500);
+        // Simulate network latency with 4000ms
+        latency = 4000;
 
         openTestURL();
 
@@ -146,8 +131,8 @@ public class GridClientRenderers extends MultiBrowserTest {
     @Test
     public void complexRendererSetVisibleContent() throws Exception {
 
-        // Simulate network latency with 1500ms
-        latency = 1500;
+        // Simulate network latency with 2000ms
+        latency = 2000;
 
         // Chrome uses RGB instead of RGBA
         String colorRed = "rgba(255, 0, 0, 1)";

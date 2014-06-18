@@ -22,7 +22,6 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -177,13 +176,15 @@ public class GridClientColumnRendererConnector extends
 
                 @Override
                 public Button createWidget() {
-                    return new Button("", new ClickHandler() {
+                    final Button button = new Button("");
+                    button.addClickHandler(new ClickHandler() {
 
                         @Override
                         public void onClick(ClickEvent event) {
-                            Window.alert("Click");
+                            button.setText("Clicked");
                         }
                     });
+                    return button;
                 }
 
                 @Override
