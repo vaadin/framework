@@ -292,11 +292,13 @@ public abstract class AbstractClientConnector implements ClientConnector,
                     Method m = class1.getDeclaredMethod("getState",
                             (Class[]) null);
                     Class<?> type = m.getReturnType();
-                    return type.asSubclass(SharedState.class);
+                    if (!m.isSynthetic()) {
+                        return type.asSubclass(SharedState.class);
+                    }
                 } catch (NoSuchMethodException nsme) {
-                    // Try in superclass instead
-                    class1 = class1.getSuperclass();
                 }
+                // Try in superclass instead
+                class1 = class1.getSuperclass();
             }
             throw new NoSuchMethodException(getClass().getCanonicalName()
                     + ".getState()");
