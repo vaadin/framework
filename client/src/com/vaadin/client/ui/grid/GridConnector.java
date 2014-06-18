@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
@@ -38,6 +41,10 @@ import com.vaadin.shared.ui.grid.ScrollDestination;
 /**
  * Connects the client side {@link Grid} widget with the server side
  * {@link com.vaadin.ui.components.grid.Grid} component.
+ * <p>
+ * The Grid is typed to JSONObject. The structure of the JSONObject is described
+ * at {@link com.vaadin.shared.data.DataProviderRpc#setRowData(int, List)
+ * DataProviderRpc.setRowData(int, List)}.
  * 
  * @since 7.4
  * @author Vaadin Ltd
@@ -49,23 +56,29 @@ public class GridConnector extends AbstractComponentConnector {
      * Custom implementation of the custom grid column using a String[] to
      * represent the cell value and String as a column type.
      */
-    private class CustomGridColumn extends GridColumn<String, String[]> {
+    private class CustomGridColumn extends GridColumn<Object, JSONObject> {
 
         private final String id;
 
-        private AbstractRendererConnector<String> rendererConnector;
+        private AbstractRendererConnector<Object> rendererConnector;
 
         public CustomGridColumn(String id,
-                AbstractRendererConnector<String> rendererConnector) {
+                AbstractRendererConnector<Object> rendererConnector) {
             super(rendererConnector.getRenderer());
             this.rendererConnector = rendererConnector;
             this.id = id;
         }
 
         @Override
-        public String getValue(String[] obj) {
-            // TODO this should invoke AbstractRendererConnector.decode
-            return obj[resolveCurrentIndexFromState()];
+        public Object getValue(final JSONObject obj) {
+            final JSONValue rowData = obj.get(GridState.JSONKEY_DATA);
+            final JSONArray rowDataArray = rowData.isArray();
+            assert rowDataArray != null : "Was unable to parse JSON into an array: "
+                    + rowData;
+
+            final int columnIndex = resolveCurrentIndexFromState();
+            final JSONValue columnValue = rowDataArray.get(columnIndex);
+            return rendererConnector.decode(columnValue);
         }
 
         /*
@@ -74,7 +87,7 @@ public class GridConnector extends AbstractComponentConnector {
          * 
          * TODO remove once support for changing renderers is implemented
          */
-        private AbstractRendererConnector<String> getRendererConnector() {
+        private AbstractRendererConnector<Object> getRendererConnector() {
             return rendererConnector;
         }
 
@@ -97,8 +110,8 @@ public class GridConnector extends AbstractComponentConnector {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Grid<String[]> getWidget() {
-        return (Grid<String[]>) super.getWidget();
+    public Grid<JSONObject> getWidget() {
+        return (Grid<JSONObject>) super.getWidget();
     }
 
     @Override
@@ -207,7 +220,7 @@ public class GridConnector extends AbstractComponentConnector {
      *            The index of the column to update
      */
     private void updateColumnFromStateChangeEvent(int columnIndex) {
-        GridColumn<?, String[]> column = getWidget().getColumn(columnIndex);
+        GridColumn<?, JSONObject> column = getWidget().getColumn(columnIndex);
         GridColumnState columnState = getState().columns.get(columnIndex);
         updateColumnFromState(column, columnState);
 
@@ -226,8 +239,9 @@ public class GridConnector extends AbstractComponentConnector {
      */
     private void addColumnFromStateChangeEvent(int columnIndex) {
         GridColumnState state = getState().columns.get(columnIndex);
+        @SuppressWarnings("unchecked")
         CustomGridColumn column = new CustomGridColumn(state.id,
-                ((AbstractRendererConnector<String>) state.rendererConnector));
+                ((AbstractRendererConnector<Object>) state.rendererConnector));
         columnIdToColumn.put(state.id, column);
 
         // Adds a column to grid, and registers Grid with the column.
@@ -252,7 +266,7 @@ public class GridConnector extends AbstractComponentConnector {
      * @param state
      *            The state to get the data from
      */
-    private static void updateColumnFromState(GridColumn<?, String[]> column,
+    private static void updateColumnFromState(GridColumn<?, JSONObject> column,
             GridColumnState state) {
         column.setVisible(state.visible);
         column.setHeaderCaption(state.header);
@@ -293,23 +307,25 @@ public class GridConnector extends AbstractComponentConnector {
         // FIXME When something changes the header/footer rows will be
         // re-created. At some point we should optimize this so partial updates
         // can be made on the header/footer.
-        for (ColumnGroupRow<String[]> row : getWidget().getColumnGroupRows()) {
+        for (ColumnGroupRow<JSONObject> row : getWidget().getColumnGroupRows()) {
             getWidget().removeColumnGroupRow(row);
         }
 
         for (ColumnGroupRowState rowState : getState().columnGroupRows) {
-            ColumnGroupRow<String[]> row = getWidget().addColumnGroupRow();
+            ColumnGroupRow<JSONObject> row = getWidget().addColumnGroupRow();
             row.setFooterVisible(rowState.footerVisible);
             row.setHeaderVisible(rowState.headerVisible);
 
             for (ColumnGroupState groupState : rowState.groups) {
-                List<GridColumn<String, String[]>> columns = new ArrayList<GridColumn<String, String[]>>();
+                List<GridColumn<Object, JSONObject>> columns = new ArrayList<GridColumn<Object, JSONObject>>();
                 for (String columnId : groupState.columns) {
                     CustomGridColumn column = columnIdToColumn.get(columnId);
                     columns.add(column);
                 }
-                ColumnGroup<String[]> group = row.addGroup(columns
-                        .toArray(new GridColumn[columns.size()]));
+                @SuppressWarnings("unchecked")
+                final GridColumn<?, JSONObject>[] gridColumns = columns
+                        .toArray(new GridColumn[columns.size()]);
+                ColumnGroup<JSONObject> group = row.addGroup(gridColumns);
                 group.setFooterCaption(groupState.footer);
                 group.setHeaderCaption(groupState.header);
             }

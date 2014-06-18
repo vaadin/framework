@@ -16,8 +16,6 @@
 
 package com.vaadin.shared.data;
 
-import java.util.List;
-
 import com.vaadin.shared.communication.ClientRpc;
 
 /**
@@ -31,14 +29,28 @@ public interface DataProviderRpc extends ClientRpc {
     /**
      * Sends updated row data to a client.
      * <p>
-     * TODO rowData should be List<Object[]>
+     * rowDataJson represents a JSON array of JSON objects in the following
+     * format:
+     * 
+     * <pre>
+     * [{
+     *   "d": [COL_1_JSON, COL_2_json, ...]
+     * },
+     * ...
+     * ]
+     * </pre>
+     * 
+     * where COL_INDEX is the index of the column (as a string), and COL_n_JSON
+     * is valid JSON of the column's data.
      * 
      * @param firstRowIndex
      *            the index of the first updated row
-     * @param rowData
+     * @param rowDataJson
      *            the updated row data
+     * @see com.vaadin.shared.ui.grid.GridState#JSONKEY_DATA
+     * @see com.vaadin.ui.components.grid.Renderer#encode(Object)
      */
-    public void setRowData(int firstRowIndex, List<String[]> rowData);
+    public void setRowData(int firstRowIndex, String rowDataJson);
 
     /**
      * Informs the client to remove row data.

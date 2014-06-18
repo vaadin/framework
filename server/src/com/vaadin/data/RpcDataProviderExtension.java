@@ -17,7 +17,6 @@
 package com.vaadin.data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +24,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Container.Indexed.ItemAddEvent;
@@ -41,6 +44,7 @@ import com.vaadin.server.ClientConnector;
 import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataProviderState;
 import com.vaadin.shared.data.DataRequestRpc;
+import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.GridColumn;
@@ -68,8 +72,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * <ul>
      * <li>listening to the currently visible {@link Property Properties'} value
      * changes on the server side and sending those back to the client; and
-     * <li>attaching and detaching {@link Component Components} from the Vaadin
-     * Component hierarchy.
+     * <li>attaching and detaching {@link com.vaadin.ui.Component Components}
+     * from the Vaadin Component hierarchy.
      * </ul>
      */
     private class ActiveRowHandler implements Serializable {
@@ -191,7 +195,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * @param removedPropertyIds
          *            the property ids that have been removed from the container
          */
-        public void propertiesRemoved(Collection<Object> removedPropertyIds) {
+        public void propertiesRemoved(@SuppressWarnings("unused")
+        Collection<Object> removedPropertyIds) {
             /*
              * no-op, for now.
              * 
@@ -387,31 +392,48 @@ public class RpcDataProviderExtension extends AbstractExtension {
     private void pushRows(int firstRow, int numberOfRows) {
         List<?> itemIds = container.getItemIds(firstRow, numberOfRows);
         Collection<?> propertyIds = container.getContainerPropertyIds();
-        List<String[]> rows = new ArrayList<String[]>(itemIds.size());
+        JSONArray rows = new JSONArray();
         for (Object itemId : itemIds) {
-            rows.add(getRowData(propertyIds, itemId));
+            rows.put(getRowData(propertyIds, itemId));
         }
-        getRpcProxy(DataProviderRpc.class).setRowData(firstRow, rows);
+        String jsonString = rows.toString();
+        getRpcProxy(DataProviderRpc.class).setRowData(firstRow, jsonString);
     }
 
-    private String[] getRowData(Collection<?> propertyIds, Object itemId) {
+    private JSONObject getRowData(Collection<?> propertyIds, Object itemId) {
         Item item = container.getItem(itemId);
-        String[] row = new String[propertyIds.size()];
 
-        int i = 0;
-        final Grid grid = getGrid();
-        for (Object propertyId : propertyIds) {
-            GridColumn column = grid.getColumn(propertyId);
+        JSONArray rowData = new JSONArray();
 
-            Object propertyValue = item.getItemProperty(propertyId).getValue();
-            Object encodedValue = encodeValue(propertyValue,
-                    column.getRenderer(), column.getConverter(),
-                    grid.getLocale());
+        Grid grid = getGrid();
+        try {
+            for (Object propertyId : propertyIds) {
+                GridColumn column = grid.getColumn(propertyId);
 
-            // TODO Drop string conversion once client supports Objects
-            row[i++] = String.valueOf(encodedValue);
+                Object propertyValue = item.getItemProperty(propertyId)
+                        .getValue();
+                Object encodedValue = encodeValue(propertyValue,
+                        column.getRenderer(), column.getConverter(),
+                        grid.getLocale());
+
+                rowData.put(encodedValue);
+            }
+
+            final JSONObject rowObject = new JSONObject();
+            rowObject.put(GridState.JSONKEY_DATA, rowData);
+            /*
+             * TODO: selection wants to put here something in the lines of:
+             * 
+             * rowObject.put(GridState.JSONKEY_ROWKEY, getKey(itemId))
+             * 
+             * Henrik Paul: 18.6.2014
+             */
+            return rowObject;
+        } catch (final JSONException e) {
+            throw new RuntimeException("Grid was unable to serialize "
+                    + "data for row (this should've been caught "
+                    + "eariler by other Grid logic)", e);
         }
-        return row;
     }
 
     @Override
@@ -487,9 +509,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * roundtrip.
          */
         Object itemId = container.getIdByIndex(index);
-        String[] row = getRowData(container.getContainerPropertyIds(), itemId);
-        getRpcProxy(DataProviderRpc.class).setRowData(index,
-                Collections.singletonList(row));
+        JSONObject row = getRowData(container.getContainerPropertyIds(), itemId);
+        JSONArray rowArray = new JSONArray(Collections.singleton(row));
+        String jsonString = rowArray.toString();
+        getRpcProxy(DataProviderRpc.class).setRowData(index, jsonString);
     }
 
     @Override
@@ -513,10 +536,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * Informs this data provider that some of the properties have been removed
      * from the container.
      * <p>
-     * Please note that we could add our own {@link PropertySetChangeListener}
-     * to the container, but then we'd need to implement the same bookeeping for
-     * finding what's added and removed that Grid already does in its own
-     * listener.
+     * Please note that we could add our own
+     * {@link com.vaadin.data.Container.PropertySetChangeListener
+     * PropertySetChangeListener} to the container, but then we'd need to
+     * implement the same bookeeping for finding what's added and removed that
+     * Grid already does in its own listener.
      * 
      * @param removedColumns
      *            a list of property ids for the removed columns
@@ -529,10 +553,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * Informs this data provider that some of the properties have been added to
      * the container.
      * <p>
-     * Please note that we could add our own {@link PropertySetChangeListener}
-     * to the container, but then we'd need to implement the same bookeeping for
-     * finding what's added and removed that Grid already does in its own
-     * listener.
+     * Please note that we could add our own
+     * {@link com.vaadin.data.Container.PropertySetChangeListener
+     * PropertySetChangeListener} to the container, but then we'd need to
+     * implement the same bookeeping for finding what's added and removed that
+     * Grid already does in its own listener.
      * 
      * @param addedPropertyIds
      *            a list of property ids for the added columns
@@ -584,6 +609,24 @@ public class RpcDataProviderExtension extends AbstractExtension {
                     safeConverter.getPresentationType(), locale);
         }
 
-        return renderer.encode(presentationValue);
+        Object encodedValue = renderer.encode(presentationValue);
+
+        /*
+         * because this is a relatively heavy operation, we'll hide this behind
+         * an assert so that the check will be removed in production mode
+         */
+        assert jsonSupports(encodedValue) : "org.json.JSONObject does not know how to serialize objects of type "
+                + encodedValue.getClass().getName();
+        return encodedValue;
+    }
+
+    private static boolean jsonSupports(Object encodedValue) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.accumulate("test", encodedValue);
+        } catch (JSONException e) {
+            return false;
+        }
+        return true;
     }
 }

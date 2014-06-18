@@ -16,8 +16,12 @@
 
 package com.vaadin.client.data;
 
-import java.util.List;
+import java.util.ArrayList;
 
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.ui.grid.GridConnector;
@@ -39,7 +43,7 @@ import com.vaadin.shared.ui.grid.Range;
 @Connect(com.vaadin.data.RpcDataProviderExtension.class)
 public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
-    private final AbstractRemoteDataSource<String[]> dataSource = new AbstractRemoteDataSource<String[]>() {
+    private final AbstractRemoteDataSource<JSONObject> dataSource = new AbstractRemoteDataSource<JSONObject>() {
         @Override
         protected void requestRows(int firstRowIndex, int numberOfRows) {
             Range cached = getCachedRange();
@@ -49,7 +53,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
         }
 
         @Override
-        public Object getRowKey(String[] row) {
+        public Object getRowKey(JSONObject row) {
             /*
              * FIXME will be properly implemented by another patch (Henrik Paul:
              * 16.6.2014)
@@ -65,7 +69,22 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
         registerRpc(DataProviderRpc.class, new DataProviderRpc() {
             @Override
-            public void setRowData(int firstRow, List<String[]> rows) {
+            public void setRowData(int firstRow, String rowsJson) {
+                JSONValue parsedJson = JSONParser.parseStrict(rowsJson);
+                JSONArray rowArray = parsedJson.isArray();
+                assert rowArray != null : "Was unable to parse JSON into an array: "
+                        + parsedJson;
+
+                ArrayList<JSONObject> rows = new ArrayList<JSONObject>(rowArray
+                        .size());
+                for (int i = 0; i < rowArray.size(); i++) {
+                    JSONValue rowValue = rowArray.get(i);
+                    JSONObject rowObject = rowValue.isObject();
+                    assert rowObject != null : "Was unable to parse JSON into an object: "
+                            + rowValue;
+                    rows.add(rowObject);
+                }
+
                 dataSource.setRowData(firstRow, rows);
             }
 

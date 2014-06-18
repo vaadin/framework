@@ -37,6 +37,13 @@ public class GridState extends AbstractComponentState {
      */
     public static final double DEFAULT_HEIGHT_BY_ROWS = 10.0d;
 
+    /**
+     * The key in which a row's data can be found
+     * {@link com.vaadin.shared.data.DataProviderRpc#setRowData(int, List)
+     * DataProviderRpc.setRowData(int, List)}
+     */
+    public static final String JSONKEY_DATA = "d";
+
     {
         // FIXME Grid currently does not support undefined size
         width = "400px";

@@ -102,8 +102,6 @@ public abstract class AbstractRendererConnector<T> extends
      * Decodes the given JSON value into a value of type T so it can be passed
      * to the {@link #getRenderer() renderer}.
      * 
-     * TODO This method is currently not called from anywhere
-     * 
      * @param value
      *            the value to decode
      * @return the decoded value of {@code value}
