@@ -142,6 +142,7 @@ public class DevelopmentServerLauncher {
         assignDefault(serverArgs, "webroot", "WebContent");
         assignDefault(serverArgs, "httpPort", "" + serverPort);
         assignDefault(serverArgs, "context", "");
+        assignDefault(serverArgs, "slowdown", "/run/APP/PUBLISHED/js_label.js");
 
         int port = serverPort;
         try {
