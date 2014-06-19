@@ -1,5 +1,7 @@
-package com.vaadin.tests.layouts;
+package com.vaadin.tests.layouts.gridlayout;
 
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -9,7 +11,7 @@ import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class GridLayoutWidthChange extends TestBase {
+public class GridLayoutWidthChange extends AbstractTestUI {
 
     private GridLayout generateLayout() {
         VerticalLayout fields1 = new VerticalLayout();
@@ -34,7 +36,7 @@ public class GridLayoutWidthChange extends TestBase {
     }
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         final GridLayout layout1 = generateLayout();
         final CustomComponent cc = new CustomComponent(layout1);
         cc.setWidth("500px");
@@ -45,7 +47,7 @@ public class GridLayoutWidthChange extends TestBase {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        cc.setWidth((cc.getWidth() - 10) + "px");
+                        cc.setWidth((cc.getWidth() - 100) + "px");
                     }
 
                 });
@@ -53,7 +55,7 @@ public class GridLayoutWidthChange extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A 100% wide GridLayout is wrapped inside a CustomComponent. When the width of the CustomComponent is reduced, the size of the GridLayout should be reduced accordingly. The Buttons should stay in place vertically and just move closer to each other horizontally.";
     }
 
