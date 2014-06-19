@@ -18,6 +18,7 @@ package com.vaadin.client.ui.grid.renderers;
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.i18n.client.TimeZone;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Renderer;
@@ -30,8 +31,11 @@ import com.vaadin.client.ui.grid.Renderer;
  */
 public class DateRenderer implements Renderer<Date> {
 
-    private DateTimeFormat format = DateTimeFormat.getShortDateTimeFormat();
+    private DateTimeFormat format = DateTimeFormat
+            .getFormat(PredefinedFormat.DATE_TIME_SHORT);
 
+    // Calendar is unavailable for GWT
+    @SuppressWarnings("deprecation")
     private TimeZone timeZone = TimeZone.createTimeZone(new Date()
             .getTimezoneOffset());
 

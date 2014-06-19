@@ -239,6 +239,7 @@ public class GridColumn implements Serializable {
      *            the renderer to use
      * @throws IllegalArgumentException
      *             if no compatible converter could be found
+     *
      * @see VaadinSession#getConverterFactory()
      * @see ConverterUtil#getConverter(Class, Class, VaadinSession)
      * @see #setConverter(Converter)

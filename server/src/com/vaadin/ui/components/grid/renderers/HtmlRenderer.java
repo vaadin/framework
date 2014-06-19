@@ -16,22 +16,21 @@
 package com.vaadin.ui.components.grid.renderers;
 
 /**
- * A renderer for presenting simple plain-text string values.
+ * A renderer for presenting HTML content.
  * 
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class TextRenderer extends AbstractRenderer<String> {
-
+public class HtmlRenderer extends AbstractRenderer<String> {
     /**
-     * Creates a new text renderer
+     * Creates a new HTML renderer.
      */
-    public TextRenderer() {
+    public HtmlRenderer() {
         super(String.class);
     }
 
     @Override
-    public Object encode(String value) {
+    public String encode(String value) {
         return value;
     }
 }

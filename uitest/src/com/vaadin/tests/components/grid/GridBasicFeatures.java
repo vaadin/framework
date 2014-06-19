@@ -16,9 +16,13 @@
 package com.vaadin.tests.components.grid;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
@@ -28,6 +32,9 @@ import com.vaadin.ui.components.grid.ColumnGroup;
 import com.vaadin.ui.components.grid.ColumnGroupRow;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.GridColumn;
+import com.vaadin.ui.components.grid.renderers.DateRenderer;
+import com.vaadin.ui.components.grid.renderers.HtmlRenderer;
+import com.vaadin.ui.components.grid.renderers.NumberRenderer;
 
 /**
  * Tests the basic features like columns, footers and headers
@@ -37,15 +44,15 @@ import com.vaadin.ui.components.grid.GridColumn;
  */
 public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
-    private final int COLUMNS = 10;
+    private static final int MANUALLY_FORMATTED_COLUMNS = 3;
+    private static final int COLUMNS = 10;
+    private static final int ROWS = 1000;
 
     private int columnGroupRows = 0;
-
-    private final int ROWS = 1000;
-
     private IndexedContainer ds;
 
     @Override
+    @SuppressWarnings("unchecked")
     protected Grid constructComponent() {
 
         // Build data source
@@ -58,20 +65,56 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             }
         };
 
-        for (int col = 0; col < COLUMNS; col++) {
-            ds.addContainerProperty(getColumnProperty(col), String.class, "");
+        {
+            int col = 0;
+            for (; col < COLUMNS - MANUALLY_FORMATTED_COLUMNS; col++) {
+                ds.addContainerProperty(getColumnProperty(col), String.class,
+                        "");
+            }
+
+            ds.addContainerProperty(getColumnProperty(col++), Integer.class,
+                    Integer.valueOf(0));
+            ds.addContainerProperty(getColumnProperty(col++), Date.class,
+                    new Date());
+            ds.addContainerProperty(getColumnProperty(col++), String.class, "");
         }
 
-        for (int row = 0; row < ROWS; row++) {
-            Item item = ds.addItem(Integer.valueOf(row));
-            for (int col = 0; col < COLUMNS; col++) {
-                item.getItemProperty(getColumnProperty(col)).setValue(
-                        "(" + row + ", " + col + ")");
+        {
+            long timestamp = 0;
+            for (int row = 0; row < ROWS; row++) {
+                Item item = ds.addItem(Integer.valueOf(row));
+                int col = 0;
+                for (; col < COLUMNS - MANUALLY_FORMATTED_COLUMNS; col++) {
+                    item.getItemProperty(getColumnProperty(col)).setValue(
+                            "(" + row + ", " + col + ")");
+                }
+                item.getItemProperty(getColumnProperty(col++)).setValue(
+                        Integer.valueOf(row));
+                item.getItemProperty(getColumnProperty(col++)).setValue(
+                        new Date(timestamp));
+                timestamp += 91250000; // a bit over a day, just to get
+                                       // variation
+                item.getItemProperty(getColumnProperty(col++)).setValue(
+                        "<b>" + row + "</b>");
             }
         }
 
         // Create grid
         Grid grid = new Grid(ds);
+
+        {
+            int col = grid.getContainerDatasource().getContainerPropertyIds()
+                    .size()
+                    - MANUALLY_FORMATTED_COLUMNS;
+            grid.getColumn(getColumnProperty(col++)).setRenderer(
+                    new NumberRenderer(new DecimalFormat("0,000.00",
+                            DecimalFormatSymbols.getInstance(new Locale("fi",
+                                    "FI")))));
+            grid.getColumn(getColumnProperty(col++)).setRenderer(
+                    new DateRenderer(new SimpleDateFormat("dd.MM.yy HH:mm")));
+            grid.getColumn(getColumnProperty(col++)).setRenderer(
+                    new HtmlRenderer());
+        }
 
         // Add footer values (header values are automatically created)
         for (int col = 0; col < COLUMNS; col++) {

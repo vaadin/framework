@@ -13,25 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui.components.grid.renderers;
+package com.vaadin.client.ui.grid.renderers;
+
+import com.vaadin.shared.ui.Connect;
 
 /**
- * A renderer for presenting simple plain-text string values.
+ * A connector for {@link com.vaadin.ui.components.grid.renderers.DateRenderer
+ * DateRenderer}.
+ * <p>
+ * The server-side Renderer operates on dates, but the data is serialized as a
+ * string, and displayed as-is on the client side. This is to be able to support
+ * the server's locale.
  * 
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class TextRenderer extends AbstractRenderer<String> {
-
-    /**
-     * Creates a new text renderer
-     */
-    public TextRenderer() {
-        super(String.class);
-    }
-
-    @Override
-    public Object encode(String value) {
-        return value;
-    }
+@Connect(com.vaadin.ui.components.grid.renderers.DateRenderer.class)
+public class DateRendererConnector extends TextRendererConnector {
+    // No implementation needed
 }
