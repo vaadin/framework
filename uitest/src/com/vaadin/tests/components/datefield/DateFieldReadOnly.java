@@ -3,16 +3,18 @@ package com.vaadin.tests.components.datefield;
 import java.util.Calendar;
 import java.util.Locale;
 
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.DateField;
 
-public class DateFieldReadOnly extends TestBase {
+public class DateFieldReadOnly extends AbstractTestUI {
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A read-only DateField should not show the popup button and not be editable.";
     }
 
@@ -22,7 +24,7 @@ public class DateFieldReadOnly extends TestBase {
     }
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         final DateField timeField = new DateField("A read-only datefield");
         timeField.setResolution(DateField.RESOLUTION_SEC);
         timeField.setDateFormat("HH:mm:ss");
@@ -30,6 +32,7 @@ public class DateFieldReadOnly extends TestBase {
         timeField.setIcon(null);
         timeField.setWidth("8em");
         timeField.addStyleName("timeField");
+        timeField.setLocale(new Locale("fi"));
 
         // Set date so that testing always has same time
         Calendar c = Calendar.getInstance(Locale.ENGLISH);
