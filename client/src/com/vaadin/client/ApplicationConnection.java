@@ -66,7 +66,6 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -2492,10 +2491,17 @@ public class ApplicationConnection implements HasHandlers {
         ApplicationConfiguration.startDependencyLoading();
         loader.loadScript(url, resourceLoadListener);
 
-        // Preload all remaining
-        for (int i = 0; i < dependencies.length(); i++) {
-            String preloadUrl = translateVaadinUri(dependencies.get(i));
-            loader.preloadResource(preloadUrl, null);
+        if (ResourceLoader.supportsInOrderScriptExecution()) {
+            for (int i = 0; i < dependencies.length(); i++) {
+                String preloadUrl = translateVaadinUri(dependencies.get(i));
+                loader.loadScript(preloadUrl, null);
+            }
+        } else {
+            // Preload all remaining
+            for (int i = 0; i < dependencies.length(); i++) {
+                String preloadUrl = translateVaadinUri(dependencies.get(i));
+                loader.preloadResource(preloadUrl, null);
+            }
         }
     }
 

@@ -1,0 +1,3 @@
+(function() {
+		window.alert("Second");
+})();
