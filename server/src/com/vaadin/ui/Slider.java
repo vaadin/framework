@@ -144,13 +144,18 @@ public class Slider extends AbstractField<Double> {
         return (SliderState) super.getState();
     }
 
+    @Override
+    public SliderState getState(boolean markAsDirty) {
+        return (SliderState) super.getState(markAsDirty);
+    }
+
     /**
      * Gets the maximum slider value
      * 
      * @return the largest value the slider can have
      */
     public double getMax() {
-        return getState().maxValue;
+        return getState(false).maxValue;
     }
 
     /**
@@ -173,7 +178,7 @@ public class Slider extends AbstractField<Double> {
      * @return the smallest value the slider can have
      */
     public double getMin() {
-        return getState().minValue;
+        return getState(false).minValue;
     }
 
     /**
@@ -197,7 +202,7 @@ public class Slider extends AbstractField<Double> {
      *         {@link SliderOrientation#VERTICAL}
      */
     public SliderOrientation getOrientation() {
-        return getState().orientation;
+        return getState(false).orientation;
     }
 
     /**
@@ -219,7 +224,7 @@ public class Slider extends AbstractField<Double> {
      * @return resolution
      */
     public int getResolution() {
-        return getState().resolution;
+        return getState(false).resolution;
     }
 
     /**

@@ -185,7 +185,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
      * @return true if the popup is hidden on mouse out, false otherwise
      */
     public boolean isHideOnMouseOut() {
-        return getState().hideOnMouseOut;
+        return getState(false).hideOnMouseOut;
     }
 
     /**
@@ -232,6 +232,11 @@ public class PopupView extends AbstractComponent implements HasComponents {
     @Override
     protected PopupViewState getState() {
         return (PopupViewState) super.getState();
+    }
+
+    @Override
+    protected PopupViewState getState(boolean markAsDirty) {
+        return (PopupViewState) super.getState(markAsDirty);
     }
 
     /**

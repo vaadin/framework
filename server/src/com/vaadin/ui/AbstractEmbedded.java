@@ -34,6 +34,11 @@ public abstract class AbstractEmbedded extends AbstractComponent {
         return (AbstractEmbeddedState) super.getState();
     }
 
+    @Override
+    protected AbstractEmbeddedState getState(boolean markAsDirty) {
+        return (AbstractEmbeddedState) super.getState(markAsDirty);
+    }
+
     /**
      * Sets the object source resource. The dimensions are assumed if possible.
      * The type is guessed from resource.
@@ -73,7 +78,7 @@ public abstract class AbstractEmbedded extends AbstractComponent {
      * @returns Alternate text
      */
     public String getAlternateText() {
-        return getState().alternateText;
+        return getState(false).alternateText;
     }
 
 }
