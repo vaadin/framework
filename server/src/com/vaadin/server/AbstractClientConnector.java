@@ -243,7 +243,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     @Override
     public JSONObject encodeState() throws JSONException {
-        return LegacyCommunicationManager.encodeState(this, getState());
+        return LegacyCommunicationManager.encodeState(this, getState(false));
     }
 
     /**
@@ -666,7 +666,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * @see #setResource(String, Resource)
      */
     protected Resource getResource(String key) {
-        return ResourceReference.getResource(getState().resources.get(key));
+        return ResourceReference
+                .getResource(getState(false).resources.get(key));
     }
 
     /**

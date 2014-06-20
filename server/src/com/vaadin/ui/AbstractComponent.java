@@ -151,8 +151,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     public String getStyleName() {
         String s = "";
-        if (ComponentStateUtil.hasStyles(getState())) {
-            for (final Iterator<String> it = getState().styles.iterator(); it
+        if (ComponentStateUtil.hasStyles(getState(false))) {
+            for (final Iterator<String> it = getState(false).styles.iterator(); it
                     .hasNext();) {
                 s += it.next();
                 if (it.hasNext()) {
@@ -191,7 +191,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     @Override
     public String getPrimaryStyleName() {
-        return getState().primaryStyleName;
+        return getState(false).primaryStyleName;
     }
 
     @Override

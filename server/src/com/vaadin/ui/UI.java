@@ -1581,7 +1581,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * @return the label of the container
      */
     public String getOverlayContainerLabel() {
-        return getState().overlayContainerLabel;
+        return getState(false).overlayContainerLabel;
     }
 
     /**

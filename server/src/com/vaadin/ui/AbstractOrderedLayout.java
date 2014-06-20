@@ -69,6 +69,11 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         return (AbstractOrderedLayoutState) super.getState();
     }
 
+    @Override
+    protected AbstractOrderedLayoutState getState(boolean markAsDirty) {
+        return (AbstractOrderedLayoutState) super.getState(markAsDirty);
+    }
+
     /**
      * Add a component into this container. The component is added to the right
      * or under the previous component.
@@ -285,7 +290,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     @Override
     public boolean isSpacing() {
-        return getState().spacing;
+        return getState(false).spacing;
     }
 
     /**
@@ -335,7 +340,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @return expand ratio of given component, 0.0f by default.
      */
     public float getExpandRatio(Component component) {
-        ChildComponentData childData = getState().childData.get(component);
+        ChildComponentData childData = getState(false).childData.get(component);
         if (childData == null) {
             throw new IllegalArgumentException(
                     "The given component is not a child of this layout");
@@ -413,7 +418,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     @Override
     public MarginInfo getMargin() {
-        return new MarginInfo(getState().marginsBitmask);
+        return new MarginInfo(getState(false).marginsBitmask);
     }
 
     /*

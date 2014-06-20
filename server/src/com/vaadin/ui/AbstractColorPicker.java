@@ -189,7 +189,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
      * currently selected color, e.g. #ffffff) if no other caption is available.
      */
     public boolean isDefaultCaptionEnabled() {
-        return getState().showDefaultCaption;
+        return getState(false).showDefaultCaption;
     }
 
     /**
@@ -358,6 +358,11 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
         return (ColorPickerState) super.getState();
     }
 
+    @Override
+    protected ColorPickerState getState(boolean markAsDirty) {
+        return (ColorPickerState) super.getState(markAsDirty);
+    }
+
     /**
      * Sets the default styles of the component
      * 
@@ -462,6 +467,6 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
      *         <code>false</code> otherwise
      */
     public boolean isHtmlContentAllowed() {
-        return getState().htmlContentAllowed;
+        return getState(false).htmlContentAllowed;
     }
 }

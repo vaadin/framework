@@ -47,6 +47,11 @@ public abstract class AbstractMedia extends AbstractComponent {
         return (AbstractMediaState) super.getState();
     }
 
+    @Override
+    protected AbstractMediaState getState(boolean markAsDirty) {
+        return (AbstractMediaState) super.getState(markAsDirty);
+    }
+
     /**
      * Sets a single media file as the source of the media component.
      * 
@@ -160,7 +165,7 @@ public abstract class AbstractMedia extends AbstractComponent {
      * @return true if the browser is to show native media controls.
      */
     public boolean isShowControls() {
-        return getState().showControls;
+        return getState(false).showControls;
     }
 
     /**
@@ -183,7 +188,7 @@ public abstract class AbstractMedia extends AbstractComponent {
      *         HTML5.
      */
     public String getAltText() {
-        return getState().altText;
+        return getState(false).altText;
     }
 
     /**
@@ -201,7 +206,7 @@ public abstract class AbstractMedia extends AbstractComponent {
      *         be rendered as HTML.
      */
     public boolean isHtmlContentAllowed() {
-        return getState().htmlContentAllowed;
+        return getState(false).htmlContentAllowed;
     }
 
     /**
@@ -218,7 +223,7 @@ public abstract class AbstractMedia extends AbstractComponent {
      * @return true if the media is set to automatically start playback.
      */
     public boolean isAutoplay() {
-        return getState().autoplay;
+        return getState(false).autoplay;
     }
 
     /**
@@ -234,7 +239,7 @@ public abstract class AbstractMedia extends AbstractComponent {
      * @return true if the audio is muted.
      */
     public boolean isMuted() {
-        return getState().muted;
+        return getState(false).muted;
     }
 
     /**

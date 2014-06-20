@@ -67,6 +67,11 @@ public class Flash extends AbstractEmbedded {
         return (FlashState) super.getState();
     }
 
+    @Override
+    protected FlashState getState(boolean markAsDirty) {
+        return (FlashState) super.getState(markAsDirty);
+    }
+
     /**
      * This attribute specifies the base path used to resolve relative URIs
      * specified by the classid, data, and archive attributes. When absent, its
@@ -156,7 +161,7 @@ public class Flash extends AbstractEmbedded {
      * @return the Value of parameter or null if not found.
      */
     public String getParameter(String name) {
-        return getState().embedParams != null ? getState().embedParams
+        return getState(false).embedParams != null ? getState(false).embedParams
                 .get(name) : null;
     }
 

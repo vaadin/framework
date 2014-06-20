@@ -93,6 +93,11 @@ public class PopupDateField extends DateField {
         return (PopupDateFieldState) super.getState();
     }
 
+    @Override
+    protected PopupDateFieldState getState(boolean markAsDirty) {
+        return (PopupDateFieldState) super.getState(markAsDirty);
+    }
+
     /**
      * Checks whether the text field is enabled (default) or not.
      * 
@@ -101,7 +106,7 @@ public class PopupDateField extends DateField {
      * @return <b>true</b> if the text field is enabled, <b>false</b> otherwise.
      */
     public boolean isTextFieldEnabled() {
-        return getState().textFieldEnabled;
+        return getState(false).textFieldEnabled;
     }
 
     /**
@@ -136,6 +141,6 @@ public class PopupDateField extends DateField {
      * @return String with the description
      */
     public String getAssistiveText() {
-        return getState().descriptionForAssistiveDevices;
+        return getState(false).descriptionForAssistiveDevices;
     }
 }

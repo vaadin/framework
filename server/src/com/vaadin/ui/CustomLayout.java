@@ -124,6 +124,11 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
         return (CustomLayoutState) super.getState();
     }
 
+    @Override
+    protected CustomLayoutState getState(boolean markAsDirty) {
+        return (CustomLayoutState) super.getState(markAsDirty);
+    }
+
     /**
      * Adds the component into this container to given location. If the location
      * is already populated, the old component is removed.
@@ -251,12 +256,12 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     /** Get the name of the template */
     public String getTemplateName() {
-        return getState().templateName;
+        return getState(false).templateName;
     }
 
     /** Get the contents of the template */
     public String getTemplateContents() {
-        return getState().templateContents;
+        return getState(false).templateContents;
     }
 
     /**
@@ -292,7 +297,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
     public void paintContent(PaintTarget target) throws PaintException {
         // Workaround to make the CommunicationManager read the template file
         // and send it to the client
-        String templateName = getState().templateName;
+        String templateName = getState(false).templateName;
         if (templateName != null && templateName.length() != 0) {
             Set<Object> usedResources = ((JsonPaintTarget) target)
                     .getUsedResources();
