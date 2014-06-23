@@ -56,24 +56,23 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector,
     /** The old value. */
     private String oldValue;
 
-    /**
-     * Instantiates a new color picker preview.
-     */
-    public ColorPickerPreview(Color color) {
+    private ColorPickerPreview() {
         setStyleName("v-colorpicker-preview");
         setImmediate(true);
-
-        this.color = color;
-
         field = new TextField();
         field.setImmediate(true);
         field.setSizeFull();
         field.setStyleName("v-colorpicker-preview-textfield");
         field.setData(this);
         field.addValueChangeListener(this);
-
         addComponent(field);
+    }
 
+    /**
+     * Instantiates a new color picker preview.
+     */
+    public ColorPickerPreview(Color color) {
+        this();
         setColor(color);
     }
 

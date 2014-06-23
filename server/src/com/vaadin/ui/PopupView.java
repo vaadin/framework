@@ -61,6 +61,11 @@ public class PopupView extends AbstractComponent implements HasComponents {
 
     /* Constructors */
 
+    private PopupView() {
+        registerRpc(rpc);
+        setHideOnMouseOut(true);
+    }
+
     /**
      * A simple way to create a PopupPanel. Note that the minimal representation
      * may not be dynamically updated, in order to achieve this create your own
@@ -94,9 +99,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
      *            the PopupView.Content that contains the information for this
      */
     public PopupView(PopupView.Content content) {
-        super();
-        registerRpc(rpc);
-        setHideOnMouseOut(true);
+        this();
         setContent(content);
     }
 
