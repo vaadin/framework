@@ -1034,7 +1034,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @return array of previously set components
      */
     public Component[] getAssistiveDescription() {
-        Connector[] contentDescription = getState().contentDescription;
+        Connector[] contentDescription = getState(false).contentDescription;
         if (contentDescription == null) {
             return null;
         }

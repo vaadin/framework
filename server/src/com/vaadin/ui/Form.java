@@ -198,6 +198,11 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         return (FormState) super.getState();
     }
 
+    @Override
+    protected FormState getState(boolean markAsDirty) {
+        return (FormState) super.getState(markAsDirty);
+    }
+
     /* Documented in interface */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
@@ -775,7 +780,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @return the Layout of the form.
      */
     public Layout getLayout() {
-        return (Layout) getState().layout;
+        return (Layout) getState(false).layout;
     }
 
     /**
@@ -1214,7 +1219,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      *         is used
      */
     public Layout getFooter() {
-        return (Layout) getState().footer;
+        return (Layout) getState(false).footer;
     }
 
     /**
