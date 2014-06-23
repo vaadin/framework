@@ -146,7 +146,7 @@ public abstract class AbstractMedia extends AbstractComponent {
      */
     public List<Resource> getSources() {
         ArrayList<Resource> sources = new ArrayList<Resource>();
-        for (URLReference ref : getState().sources) {
+        for (URLReference ref : getState(false).sources) {
             sources.add(((ResourceReference) ref).getResource());
         }
         return sources;

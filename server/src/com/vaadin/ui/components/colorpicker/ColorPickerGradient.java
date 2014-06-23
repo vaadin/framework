@@ -56,7 +56,7 @@ public class ColorPickerGradient extends AbstractComponent implements
     };
 
     /** The converter. */
-    private final Coordinates2Color converter;
+    private Coordinates2Color converter;
 
     /** The foreground color. */
     private Color color;
@@ -67,6 +67,14 @@ public class ColorPickerGradient extends AbstractComponent implements
     /** The y-coordinate. */
     private int y = 0;
 
+    private ColorPickerGradient() {
+        registerRpc(rpc);
+        // width and height must be set here instead of in theme, otherwise
+        // coordinate calculations fail
+        getState().width = "220px";
+        getState().height = "220px";
+    }
+
     /**
      * Instantiates a new color picker gradient.
      * 
@@ -76,12 +84,8 @@ public class ColorPickerGradient extends AbstractComponent implements
      *            the converter
      */
     public ColorPickerGradient(String id, Coordinates2Color converter) {
-        registerRpc(rpc);
+        this();
         addStyleName(id);
-        // width and height must be set here instead of in theme, otherwise
-        // coordinate calculations fail
-        getState().width = "220px";
-        getState().height = "220px";
         this.converter = converter;
     }
 
