@@ -15,13 +15,15 @@
  */
 package com.vaadin.shared.ui.grid;
 
+import java.io.Serializable;
+
 /**
  * Describes sorting direction for a Grid column
  *
  * @since
  * @author Vaadin Ltd
  */
-public enum SortDirection {
+public enum SortDirection implements Serializable {
 
     /**
      * Ascending (e.g. A-Z, 1..9) sort order

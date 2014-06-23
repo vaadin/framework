@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridState.SharedSelectionMode;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
+import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.components.grid.selection.MultiSelectionModel;
 import com.vaadin.ui.components.grid.selection.NoSelectionModel;
@@ -55,6 +57,8 @@ import com.vaadin.ui.components.grid.selection.SelectionChangeListener;
 import com.vaadin.ui.components.grid.selection.SelectionChangeNotifier;
 import com.vaadin.ui.components.grid.selection.SelectionModel;
 import com.vaadin.ui.components.grid.selection.SingleSelectionModel;
+import com.vaadin.ui.components.grid.sort.Sort;
+import com.vaadin.ui.components.grid.sort.SortOrder;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -137,6 +141,11 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      * The column groups added to the grid
      */
     private final List<ColumnGroupRow> columnGroupRows = new ArrayList<ColumnGroupRow>();
+
+    /**
+     * The current sort order
+     */
+    private final List<SortOrder> sortOrder = new ArrayList<SortOrder>();
 
     /**
      * Property listener for listening to changes in data source properties.
@@ -338,6 +347,36 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
         }
 
         datasource = container;
+
+        //
+        // Adjust sort order
+        //
+
+        if (container instanceof Container.Sortable) {
+
+            // If the container is sortable, go through the current sort order
+            // and match each item to the sortable properties of the new
+            // container. If the new container does not support an item in the
+            // current sort order, that item is removed from the current sort
+            // order list.
+            Collection<?> sortableProps = ((Container.Sortable) getContainerDatasource())
+                    .getSortableContainerPropertyIds();
+
+            Iterator<SortOrder> i = sortOrder.iterator();
+            while (i.hasNext()) {
+                if (!sortableProps.contains(i.next().getPropertyId())) {
+                    i.remove();
+                }
+            }
+
+            sort();
+        } else {
+
+            // If the new container is not sortable, we'll just re-set the sort
+            // order altogether.
+            clearSortOrder();
+        }
+
         datasourceExtension = new RpcDataProviderExtension(container);
         datasourceExtension.extend(this);
 
@@ -379,7 +418,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
                 column.setHeaderCaption(String.valueOf(propertyId));
             }
         }
-
     }
 
     /**
@@ -1080,5 +1118,129 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      */
     void addRenderer(Renderer<?> renderer) {
         addExtension(renderer);
+    }
+
+    /**
+     * Sets the current sort order using the fluid Sort API. Read the
+     * documentation for {@link Sort} for more information.
+     * 
+     * @param s
+     *            a sort instance
+     */
+    public void sort(Sort s) {
+        setSortOrder(s.build());
+    }
+
+    /**
+     * Sort this Grid in ascending order by a specified property.
+     * 
+     * @param propertyId
+     *            a property ID
+     */
+    public void sort(Object propertyId) {
+        sort(propertyId, SortDirection.ASCENDING);
+    }
+
+    /**
+     * Sort this Grid in user-specified {@link SortOrder} by a property.
+     * 
+     * @param propertyId
+     *            a property ID
+     * @param direction
+     *            a sort order value (ascending/descending)
+     */
+    public void sort(Object propertyId, SortDirection direction) {
+        sort(Sort.by(propertyId, direction));
+    }
+
+    /**
+     * Clear the current sort order, and re-sort the grid.
+     */
+    public void clearSortOrder() {
+        sortOrder.clear();
+        sort();
+    }
+
+    /**
+     * Sets the sort order to use. This method throws
+     * {@link IllegalStateException} if the attached container is not a
+     * {@link Container.Sortable}, and {@link IllegalArgumentException} if a
+     * property in the list is not recognized by the container, or if the
+     * 'order' parameter is null.
+     * 
+     * @param order
+     *            a sort order list.
+     */
+    public void setSortOrder(List<SortOrder> order) {
+        if (!(getContainerDatasource() instanceof Container.Sortable)) {
+            throw new IllegalStateException(
+                    "Attached container is not sortable (does not implement Container.Sortable)");
+        }
+
+        if (order == null) {
+            throw new IllegalArgumentException("Order list may not be null!");
+        }
+
+        sortOrder.clear();
+
+        Collection<?> sortableProps = ((Container.Sortable) getContainerDatasource())
+                .getSortableContainerPropertyIds();
+
+        for (SortOrder o : order) {
+            if (!sortableProps.contains(o.getPropertyId())) {
+                throw new IllegalArgumentException(
+                        "Property "
+                                + o.getPropertyId()
+                                + " does not exist or is not sortable in the current container");
+            }
+        }
+
+        sortOrder.addAll(order);
+        sort();
+    }
+
+    /**
+     * Get the current sort order list.
+     * 
+     * @return a sort order list
+     */
+    public List<SortOrder> getSortOrder() {
+        return Collections.unmodifiableList(sortOrder);
+    }
+
+    /**
+     * Apply sorting to data source.
+     */
+    private void sort() {
+
+        Container c = getContainerDatasource();
+        if (c instanceof Container.Sortable) {
+            Container.Sortable cs = (Container.Sortable) c;
+
+            final int items = sortOrder.size();
+            Object[] propertyIds = new Object[items];
+            boolean[] directions = new boolean[items];
+
+            for (int i = 0; i < items; ++i) {
+                SortOrder order = sortOrder.get(i);
+                propertyIds[i] = order.getPropertyId();
+                switch (order.getDirection()) {
+                case ASCENDING:
+                    directions[i] = true;
+                    break;
+                case DESCENDING:
+                    directions[i] = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("getDirection() of "
+                            + order + " returned an unexpected value");
+                }
+            }
+
+            cs.sort(propertyIds, directions);
+        } else {
+            throw new IllegalStateException(
+                    "Container is not sortable (does not implement Container.Sortable)");
+        }
     }
 }
