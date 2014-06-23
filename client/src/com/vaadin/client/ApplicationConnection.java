@@ -66,7 +66,6 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -1437,7 +1436,8 @@ public class ApplicationConnection implements HasHandlers {
 
             lastSeenServerSyncId = syncId;
         } else {
-            VConsole.error("Server response didn't contain an id.");
+            VConsole.error("Server response didn't contain a sync id. "
+                    + "Please verify that the server is up-to-date and that the response data has not been modified in transmission.");
         }
 
         // Handle redirect
