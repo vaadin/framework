@@ -298,6 +298,7 @@ public class DateCellDayEvent extends FocusableHTML implements
                 weekGrid.getCalendar().getEventResizeListener()
                         .eventResized(calendarEvent);
             }
+            dateCell.recalculateEventWidths();
         }
     }
 
