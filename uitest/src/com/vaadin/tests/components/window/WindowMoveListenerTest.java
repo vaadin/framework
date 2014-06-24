@@ -23,16 +23,15 @@ public class WindowMoveListenerTest extends MultiBrowserTest {
 
         // I'd loved to use the header, but that doesn't work. Footer works
         // fine, though :)
-        WebElement windowHeader = getDriver().findElement(
+        WebElement windowFooter = getDriver().findElement(
                 By.className("v-window-footer"));
 
         final Point winPos = window.getLocation();
 
         // move window
-        Action a = new Actions(driver).clickAndHold(windowHeader)
+        Action a = new Actions(driver).clickAndHold(windowFooter)
                 .moveByOffset(100, 100).release().build();
         a.perform();
-
         assertNotEquals("Window was not dragged correctly.", winPos.x,
                 window.getLocation().x);
         assertNotEquals("Window was not dragged correctly.", winPos.y,

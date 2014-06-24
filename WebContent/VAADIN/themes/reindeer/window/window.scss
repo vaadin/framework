@@ -2,9 +2,9 @@
 
 .#{$primaryStyleName} {
 	background: transparent;
+	border: 1px solid #808386;
 }
 .#{$primaryStyleName}-wrap {
-	border: 1px solid #808386;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -48,8 +48,8 @@
 	height: 15px;
 }
 .#{$primaryStyleName}-closebox {
-	top: 12px;
-	right: 10px;
+	top: 11px;
+	right: 9px;
 	width: 15px;
 	height: 16px;
 	background: transparent;
@@ -63,8 +63,8 @@
 }
 .#{$primaryStyleName}-maximizebox,
 .#{$primaryStyleName}-restorebox {
-	top: 12px;
-	right: 28px;
+	top: 11px;
+	right: 27px;
 	width: 15px;
 	height: 16px;
 	background: transparent;
@@ -166,7 +166,9 @@
 /**
  Black style window -----------------------------
 **/
-
+.#{$primaryStyleName}-black {
+	border-radius: 8px;
+}
 .#{$primaryStyleName}-black {
 	.#{$primaryStyleName}-wrap {
 		border-color: #2e3030;
