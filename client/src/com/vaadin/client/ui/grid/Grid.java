@@ -366,13 +366,6 @@ public class Grid<T> extends Composite implements
             }
 
             this.grid = grid;
-
-            if (grid != null) {
-                setVisible(visible);
-                setWidth(width);
-                setHeaderCaption(header);
-                setFooterCaption(footer);
-            }
         }
 
         /**
@@ -1092,15 +1085,20 @@ public class Grid<T> extends Composite implements
         // Register column with grid
         columns.add(index, column);
 
+        // Register this grid instance with the column
+        ((AbstractGridColumn<?, T>) column).setGrid(this);
+
         // Insert column into escalator
         if (column.isVisible()) {
             int visibleIndex = findVisibleColumnIndex(column);
             ColumnConfiguration conf = escalator.getColumnConfiguration();
-            conf.insertColumns(visibleIndex, 1);
-        }
 
-        // Register this grid instance with the column
-        ((AbstractGridColumn<?, T>) column).setGrid(this);
+            // Insert column
+            conf.insertColumns(visibleIndex, 1);
+
+            // Transfer column width from column object to escalator
+            conf.setColumnWidth(visibleIndex, column.getWidth());
+        }
 
         if (lastFrozenColumn != null
                 && ((AbstractGridColumn<?, T>) lastFrozenColumn)
