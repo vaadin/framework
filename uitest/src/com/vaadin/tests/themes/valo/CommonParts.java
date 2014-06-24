@@ -22,6 +22,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage.ErrorLevel;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Position;
@@ -272,12 +273,13 @@ public class CommonParts extends VerticalLayout implements View {
                 delay.setValue("1000");
                 group.addComponent(delay);
 
-                Button clear = new Button("×", new ClickListener() {
+                Button clear = new Button(null, new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         delay.setValue("");
                     }
                 });
+                clear.setIcon(FontAwesome.TIMES_CIRCLE);
                 clear.addStyleName("last");
                 clear.addStyleName("small");
                 clear.addStyleName("icon-only");

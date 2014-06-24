@@ -122,18 +122,26 @@ public class ComboBoxes extends VerticalLayout implements View {
 
         combo = new ComboBox("Small");
         combo.setInputPrompt("You can type here");
-        combo.addItem("Option One");
-        combo.addItem("Option Two");
-        combo.addItem("Option Three");
+        combo.setContainerDataSource(generatedContainer);
+        combo.setItemCaptionPropertyId(ValoThemeTest.CAPTION_PROPERTY);
+        combo.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
         combo.addStyleName("small");
         row.addComponent(combo);
 
         combo = new ComboBox("Large");
         combo.setInputPrompt("You can type here");
+        combo.setContainerDataSource(generatedContainer);
+        combo.setItemCaptionPropertyId(ValoThemeTest.CAPTION_PROPERTY);
+        combo.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
+        combo.addStyleName("large");
+        row.addComponent(combo);
+
+        combo = new ComboBox("Borderless");
+        combo.setInputPrompt("You can type here");
         combo.addItem("Option One");
         combo.addItem("Option Two");
         combo.addItem("Option Three");
-        combo.addStyleName("large");
+        combo.addStyleName("borderless");
         row.addComponent(combo);
     }
 

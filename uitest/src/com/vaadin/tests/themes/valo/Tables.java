@@ -16,16 +16,21 @@
 package com.vaadin.tests.themes.valo;
 
 import com.vaadin.data.Container;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
+import com.vaadin.ui.Table.RowHeaderMode;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
@@ -37,6 +42,23 @@ public class Tables extends VerticalLayout implements View {
     static final Container hierarchicalContainer = ValoThemeTest
             .generateContainer(200, true);
 
+    CheckBox hierarchical = new CheckBox("Hierarchical");
+    CheckBox footer = new CheckBox("Footer", true);
+    CheckBox sized = new CheckBox("Sized");
+    CheckBox expandRatios = new CheckBox("Expand ratios");
+    CheckBox stripes = new CheckBox("Sripes", true);
+    CheckBox verticalLines = new CheckBox("Vertical lines", true);
+    CheckBox horizontalLines = new CheckBox("Horizontal lines", true);
+    CheckBox borderless = new CheckBox("Borderless");
+    CheckBox headers = new CheckBox("Header", true);
+    CheckBox compact = new CheckBox("Compact");
+    CheckBox small = new CheckBox("Small");
+    CheckBox rowIndex = new CheckBox("Row index", false);
+    CheckBox rowIcon = new CheckBox("Row icon", true);
+    CheckBox rowCaption = new CheckBox("Row caption", false);
+
+    Table table;
+
     public Tables() {
         setMargin(true);
         setSpacing(true);
@@ -45,81 +67,70 @@ public class Tables extends VerticalLayout implements View {
         h1.addStyleName("h1");
         addComponent(h1);
 
-        Table table = getTable("Normal");
-        addComponent(table);
+        HorizontalLayout wrap = new HorizontalLayout();
+        wrap.addStyleName("wrapping");
+        wrap.setSpacing(true);
+        addComponent(wrap);
 
-        table = getTable("Footer");
-        table.setFooterVisible(true);
-        table.setColumnFooter(ValoThemeTest.CAPTION_PROPERTY, "caption");
-        table.setColumnFooter(ValoThemeTest.DESCRIPTION_PROPERTY, "description");
-        table.setColumnFooter(ValoThemeTest.ICON_PROPERTY, "icon");
-        table.setColumnFooter(ValoThemeTest.INDEX_PROPERTY, "index");
-        addComponent(table);
+        wrap.addComponents(hierarchical, footer, sized, expandRatios, stripes,
+                verticalLines, horizontalLines, borderless, headers, compact,
+                small, rowIndex, rowCaption, rowIcon);
 
-        table = getTable("Sized ");
-        table.setWidth("300px");
-        addComponent(table);
+        ValueChangeListener update = new ValueChangeListener() {
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                if (table == null) {
+                    table = new Table();
+                    table.setContainerDataSource(normalContainer);
+                    addComponent(table);
+                }
+                if (hierarchical.getValue() && table instanceof Table) {
+                    removeComponent(table);
+                    table = new TreeTable();
+                    table.setContainerDataSource(hierarchicalContainer);
+                    addComponent(table);
+                } else if (!hierarchical.getValue()
+                        && table instanceof TreeTable) {
+                    removeComponent(table);
+                    table = new Table();
+                    table.setContainerDataSource(normalContainer);
+                    addComponent(table);
+                }
 
-        table = getTable("Sized w/ expand ratios");
-        table.setWidth("100%");
-        table.setColumnExpandRatio(ValoThemeTest.CAPTION_PROPERTY, 1.0f);
-        table.setColumnExpandRatio(ValoThemeTest.DESCRIPTION_PROPERTY, 1.0f);
-        // table.setColumnExpandRatio(ValoThemeTest.ICON_PROPERTY, 1.0f);
-        // table.setColumnExpandRatio(ValoThemeTest.INDEX_PROPERTY, 1.0f);
-        addComponent(table);
+                configure(table, footer.getValue(), sized.getValue(),
+                        expandRatios.getValue(), stripes.getValue(),
+                        verticalLines.getValue(), horizontalLines.getValue(),
+                        borderless.getValue(), headers.getValue(),
+                        compact.getValue(), small.getValue(),
+                        rowIndex.getValue(), rowCaption.getValue(),
+                        rowIcon.getValue());
+            }
+        };
 
-        table = getTable("No stripes");
-        table.addStyleName("no-stripes");
-        addComponent(table);
+        hierarchical.addValueChangeListener(update);
+        footer.addValueChangeListener(update);
+        sized.addValueChangeListener(update);
+        expandRatios.addValueChangeListener(update);
+        stripes.addValueChangeListener(update);
+        verticalLines.addValueChangeListener(update);
+        horizontalLines.addValueChangeListener(update);
+        borderless.addValueChangeListener(update);
+        headers.addValueChangeListener(update);
+        compact.addValueChangeListener(update);
+        small.addValueChangeListener(update);
+        rowIndex.addValueChangeListener(update);
+        rowCaption.addValueChangeListener(update);
+        rowIcon.addValueChangeListener(update);
 
-        table = getTable("No vertical lines");
-        table.addStyleName("no-vertical-lines");
-        addComponent(table);
+        footer.setValue(false);
 
-        table = getTable("No horizontal lines");
-        table.addStyleName("no-horizontal-lines");
-        addComponent(table);
-
-        table = getTable("Borderless");
-        table.addStyleName("borderless");
-        addComponent(table);
-
-        table = getTable("No headers");
-        table.addStyleName("no-header");
-        addComponent(table);
-
-        table = getTable("Compact");
-        table.addStyleName("compact");
-        addComponent(table);
-
-        table = getTable("Small");
-        table.addStyleName("small");
-        addComponent(table);
-
-        h1 = new Label("Tree Tables");
-        h1.addStyleName("h1");
-        addComponent(h1);
-
-        addComponent(new Label(
-                "TreeTables have all the same features as Tables, but they support hierarchical containers as well."));
-
-        table = getTreeTable(null);
-        addComponent(table);
     }
 
-    static TreeTable getTreeTable(String caption) {
-        TreeTable table = new TreeTable(caption);
-        configure(table, true);
-        return table;
-    }
-
-    static Table getTable(String caption) {
-        Table table = new Table(caption);
-        configure(table, false);
-        return table;
-    }
-
-    static void configure(Table table, boolean hierarchical) {
+    static void configure(Table table, boolean footer, boolean sized,
+            boolean expandRatios, boolean stripes, boolean verticalLines,
+            boolean horizontalLines, boolean borderless, boolean headers,
+            boolean compact, boolean small, boolean rowIndex,
+            boolean rowCaption, boolean rowIcon) {
         table.setSelectable(true);
         table.setMultiSelect(true);
         table.setSortEnabled(true);
@@ -139,14 +150,99 @@ public class Tables extends VerticalLayout implements View {
                 Notification.show(event.getTransferable().toString());
             }
         });
-        Container tableData = hierarchical ? hierarchicalContainer
-                : normalContainer;
-        table.setContainerDataSource(tableData);
-        table.select(tableData.getItemIds().iterator().next());
-        // table.setSortContainerPropertyId(ValoThemeTest.CAPTION_PROPERTY);
-        // table.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
         table.setColumnAlignment(ValoThemeTest.DESCRIPTION_PROPERTY,
                 Align.RIGHT);
+        table.setColumnAlignment(ValoThemeTest.INDEX_PROPERTY, Align.CENTER);
+
+        table.setFooterVisible(footer);
+        if (footer) {
+            table.setColumnFooter(ValoThemeTest.CAPTION_PROPERTY, "caption");
+            table.setColumnFooter(ValoThemeTest.DESCRIPTION_PROPERTY,
+                    "description");
+            table.setColumnFooter(ValoThemeTest.ICON_PROPERTY, "icon");
+            table.setColumnFooter(ValoThemeTest.INDEX_PROPERTY, "index");
+        }
+
+        if (sized) {
+            table.setWidth("400px");
+            table.setHeight("300px");
+        } else {
+            table.setSizeUndefined();
+        }
+
+        if (expandRatios) {
+            if (!sized) {
+                table.setWidth("100%");
+            }
+        }
+        table.setColumnExpandRatio(ValoThemeTest.CAPTION_PROPERTY,
+                expandRatios ? 1.0f : 0);
+        table.setColumnExpandRatio(ValoThemeTest.DESCRIPTION_PROPERTY,
+                expandRatios ? 1.0f : 0);
+
+        if (!stripes) {
+            table.addStyleName("no-stripes");
+        } else {
+            table.removeStyleName("no-stripes");
+        }
+
+        if (!verticalLines) {
+            table.addStyleName("no-vertical-lines");
+        } else {
+            table.removeStyleName("no-vertical-lines");
+        }
+
+        if (!horizontalLines) {
+            table.addStyleName("no-horizontal-lines");
+        } else {
+            table.removeStyleName("no-horizontal-lines");
+        }
+
+        if (borderless) {
+            table.addStyleName("borderless");
+        } else {
+            table.removeStyleName("borderless");
+        }
+
+        if (!headers) {
+            table.addStyleName("no-header");
+        } else {
+            table.removeStyleName("no-header");
+        }
+
+        if (compact) {
+            table.addStyleName("compact");
+        } else {
+            table.removeStyleName("compact");
+        }
+
+        if (small) {
+            table.addStyleName("small");
+        } else {
+            table.removeStyleName("small");
+        }
+
+        if (!rowIndex && !rowCaption && rowIcon) {
+            table.setRowHeaderMode(RowHeaderMode.HIDDEN);
+        }
+
+        if (rowIndex) {
+            table.setRowHeaderMode(RowHeaderMode.INDEX);
+        }
+
+        if (rowCaption) {
+            table.setRowHeaderMode(RowHeaderMode.PROPERTY);
+            table.setItemCaptionPropertyId(ValoThemeTest.CAPTION_PROPERTY);
+        } else {
+            table.setItemCaptionPropertyId(null);
+        }
+
+        if (rowIcon) {
+            table.setRowHeaderMode(RowHeaderMode.ICON_ONLY);
+            table.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
+        } else {
+            table.setItemIconPropertyId(null);
+        }
     }
 
     @Override

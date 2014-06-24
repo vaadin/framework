@@ -15,28 +15,26 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.InlineDateField;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Table;
+import com.vaadin.ui.TreeTable;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
-public class RandomTests extends VerticalLayout implements View {
-    public RandomTests() {
-        setMargin(true);
+public class ValoMiscTests extends UI {
 
-        Label h1 = new Label("Random Tests");
-        h1.addStyleName("h1");
-        addComponent(h1);
+    VerticalLayout layout = new VerticalLayout();
+
+    public ValoMiscTests() {
+        layout.setMargin(true);
 
         Panel p = new Panel();
-        addComponent(p);
+        // layout.addComponent(p);
 
         HorizontalLayout row = new HorizontalLayout();
         p.setHeight("300px");
@@ -56,7 +54,7 @@ public class RandomTests extends VerticalLayout implements View {
         p.setContent(row);
 
         p = new Panel();
-        addComponent(p);
+        // layout.addComponent(p);
         p.setHeight("400px");
 
         VerticalLayout col = new VerticalLayout();
@@ -70,14 +68,18 @@ public class RandomTests extends VerticalLayout implements View {
 
         p.setContent(col);
 
-        Table t = Tables.getTable(null);
-        t.setSizeFull();
-        p.setContent(t);
+        TreeTable table = new TreeTable();
+        table.setWidth("100%");
+        table.setContainerDataSource(Tables.hierarchicalContainer);
+        Tables.configure(table, true, false, false, true, true, true, false,
+                true, false, false, false, false, false);
+        layout.addComponent(table);
+
     }
 
     @Override
-    public void enter(ViewChangeEvent event) {
-        // TODO Auto-generated method stub
+    protected void init(VaadinRequest request) {
+        setContent(layout);
     }
 
 }

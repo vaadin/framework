@@ -19,6 +19,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -39,7 +40,7 @@ public class Tabsheets extends VerticalLayout implements View {
         h1.addStyleName("h1");
         addComponent(h1);
 
-        final HorizontalLayout wrap = new HorizontalLayout();
+        HorizontalLayout wrap = new HorizontalLayout();
         wrap.setSpacing(true);
         wrap.addStyleName("wrapping");
         addComponent(wrap);
@@ -60,6 +61,20 @@ public class Tabsheets extends VerticalLayout implements View {
         icon.setImmediate(true);
         wrap.addComponent(icon);
 
+        final CheckBox disable = new CheckBox("Disable Tabs");
+        disable.setImmediate(true);
+        wrap.addComponent(disable);
+
+        Label h3 = new Label("Additional Styles");
+        h3.addStyleName("h3");
+        addComponent(h3);
+
+        wrap = new HorizontalLayout();
+        wrap.setSpacing(true);
+        wrap.addStyleName("wrapping");
+        wrap.setMargin(new MarginInfo(false, false, true, false));
+        addComponent(wrap);
+
         final CheckBox framed = new CheckBox("Framed", true);
         framed.setImmediate(true);
         wrap.addComponent(framed);
@@ -76,6 +91,10 @@ public class Tabsheets extends VerticalLayout implements View {
         padded.setImmediate(true);
         wrap.addComponent(padded);
 
+        final CheckBox compact = new CheckBox("Compact");
+        compact.setImmediate(true);
+        wrap.addComponent(compact);
+
         final CheckBox iconsOnTop = new CheckBox("Icons on top");
         iconsOnTop.setImmediate(true);
         wrap.addComponent(iconsOnTop);
@@ -91,6 +110,7 @@ public class Tabsheets extends VerticalLayout implements View {
                 style += centered.getValue() ? " centered-tabs" : "";
                 style += equal.getValue() ? " equal-width-tabs" : "";
                 style += padded.getValue() ? " padded-tabbar" : "";
+                style += compact.getValue() ? " compact-tabbar" : "";
                 style += iconsOnTop.getValue() ? " icons-on-top" : "";
                 style += selectedOnly.getValue() ? " only-selected-closable"
                         : "";
@@ -100,7 +120,7 @@ public class Tabsheets extends VerticalLayout implements View {
                 }
                 tabs = getTabSheet(caption.getValue(), style.trim(),
                         closable.getValue(), overflow.getValue(),
-                        icon.getValue());
+                        icon.getValue(), disable.getValue());
                 addComponent(tabs);
             }
         };
@@ -108,10 +128,12 @@ public class Tabsheets extends VerticalLayout implements View {
         overflow.addValueChangeListener(update);
         caption.addValueChangeListener(update);
         icon.addValueChangeListener(update);
+        disable.addValueChangeListener(update);
         framed.addValueChangeListener(update);
         centered.addValueChangeListener(update);
         equal.addValueChangeListener(update);
         padded.addValueChangeListener(update);
+        compact.addValueChangeListener(update);
         iconsOnTop.addValueChangeListener(update);
         selectedOnly.addValueChangeListener(update);
 
@@ -119,8 +141,8 @@ public class Tabsheets extends VerticalLayout implements View {
         icon.setValue(true);
     }
 
-    TabSheet getTabSheet(boolean caption, String style, boolean closable,
-            boolean scrolling, boolean icon) {
+    static TabSheet getTabSheet(boolean caption, String style,
+            boolean closable, boolean scrolling, boolean icon, boolean disable) {
         TabSheet ts = new TabSheet();
         ts.addStyleName(style);
 
@@ -138,6 +160,12 @@ public class Tabsheets extends VerticalLayout implements View {
             }
             Tab t = ts.addTab(content, tabcaption);
             t.setClosable(closable);
+            t.setEnabled(!disable);
+
+            // First tab is always enabled
+            if (i == 1) {
+                t.setEnabled(true);
+            }
 
             if (icon) {
                 t.setIcon(TestIcon.get(false));

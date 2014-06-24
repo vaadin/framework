@@ -136,6 +136,12 @@ public class DateFields extends VerticalLayout implements View {
         date.addStyleName("large");
         row.addComponent(date);
 
+        date = new DateField("Borderless");
+        date.setValue(new Date());
+        date.setResolution(Resolution.DAY);
+        date.addStyleName("borderless");
+        row.addComponent(date);
+
         date = new DateField("Week numbers");
         date.setValue(new Date());
         date.setResolution(Resolution.DAY);
