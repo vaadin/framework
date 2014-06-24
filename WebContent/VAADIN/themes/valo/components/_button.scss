@@ -155,7 +155,7 @@
 
 
 @mixin valo-button-focus-style ($background-color: $v-background-color, $border-fallback: inherit, $include-box-shadow: true) {
-  $focus-color: valo-focus-color();
+  $focus-color: $v-focus-color;
 
   @if color-luminance($focus-color) + 50 < color-luminance($background-color) {
     border-color: $focus-color;

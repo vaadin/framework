@@ -205,7 +205,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
     cursor: pointer;
 
     &:hover {
-      color: valo-focus-color();
+      color: $v-focus-color;
     }
   }
 
@@ -219,17 +219,17 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
     cursor: pointer;
 
     &:hover {
-      color: valo-focus-color();
+      color: $v-focus-color;
     }
   }
 
   .#{$primary-stylename}-month-day-today {
-    background: blend-normal(rgba(valo-focus-color(), .05), $v-background-color);
+    background: blend-normal(rgba($v-focus-color, .05), $v-background-color);
 
     .#{$primary-stylename}-day-number {
       font-weight: $v-font-weight + 100;
-      color: valo-focus-color();
-      border-top: 2px solid valo-focus-color();
+      color: $v-focus-color;
+      border-top: 2px solid $v-focus-color;
       line-height: round($v-unit-size/1.5) - 1px;
       margin: 0;
       padding: 0 round($v-unit-size/8);
@@ -275,10 +275,6 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
 
   .#{$primary-stylename}-header-week td {
     vertical-align: middle !important;
-
-    //&:first-child {
-    //  width: round($v-unit-size*1.5);
-    //}
   }
 
   .#{$primary-stylename}-header-week .#{$primary-stylename}-header-day {
@@ -302,8 +298,6 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
   .#{$primary-stylename}-day-times,
   .#{$primary-stylename}-day-times-today {
     outline: none;
-    //@include box-sizing(border-box);
-    //padding: 0 round($v-unit-size/8);
     border-right: 1px solid transparent;
 
     &:focus {
@@ -311,7 +305,7 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
     }
   }
 
-  $valo-calendar-time-divider-color: darken($v-background-color, 5%);
+  $valo-calendar-time-divider-color: first-color(valo-border($color: $v-app-background-color, $strength: 0.5));
 
   .#{$primary-stylename} .v-datecellslot,
   .#{$primary-stylename} .v-datecellslot-even {
@@ -332,14 +326,14 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
   }
 
   .#{$primary-stylename}-current-time {
-    background: valo-focus-color();
+    background: $v-focus-color;
     line-height: 1px;
     pointer-events: none;
     @include opacity(.5);
 
     &:before {
       content: "\2022";
-      color: valo-focus-color();
+      color: $v-focus-color;
       font-size: 22px;
       margin-left: -0.07em;
     }
@@ -472,7 +466,6 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
 
     // Event is being dragged
     &[style*=" left:"] .#{$primary-stylename}-event-content {
-      //box-shadow: valo-shadow();
     }
   }
 
@@ -486,7 +479,6 @@ $v-calendar-event-colors: dodgerblue, seagreen, darkgoldenrod, firebrick, slateb
     border: 1px solid $v-app-background-color;
     padding-top: 3px;
     margin-right: round($v-unit-size/8);
-    //margin-left: round($v-unit-size/8);
   }
 
 

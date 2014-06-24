@@ -15,9 +15,9 @@
 
 
 @mixin valo-spinner ($size: 24px, $thickness: 2px, $color: null, $speed: 500ms) {
-  $color: $color or valo-focus-color();
+  $color: $color or $v-focus-color;
   // Make size divisible by 2, so that the rotation won't jiggle
-  $size: $size + $size%2;
+  $size: round($size) + round($size) % 2;
   height: $size !important;
   width: $size !important;
   @include box-sizing(border-box);
@@ -60,7 +60,7 @@
 
 
 
-$v-loading-indicator-color: valo-focus-color() !default;
+$v-loading-indicator-color: $v-focus-color !default;
 $v-loading-indicator-bar-height: ceil($v-unit-size/10) !default;
 $v-loading-indicator-bar-height--wait: ceil($v-unit-size/6) !default;
 

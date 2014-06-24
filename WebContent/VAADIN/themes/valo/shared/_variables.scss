@@ -6,7 +6,7 @@
 
 // List of components to include in the theme compilation. The list can be modified to make
 // the compiled theme smaller by removing unused components from the list.
-// @variable v-included-components
+//
 // @usage
 // // Remove the Calendar component styles from the output
 // $v-included-components: remove($v-included-components, calendar);
@@ -54,7 +54,6 @@ $v-included-components:
 
 // Checks if a given component is included in the compilation. Used by the collection mixins that
 // include all components, like valo-components and valo-components.
-// @mixin v-is-included
 // @param     $component-name {String} the name of the component to check
 // @param     $is-included {list} (Optional) the list of components which is checked
 // @return    {Boolean} true if the component is included in the compilation, false if not
@@ -64,14 +63,10 @@ $v-included-components:
 
 
 // A static text that is shown while the application JavaScript is loaded and started
-// @variable    v-app-loading-text
-// @default     ""
 $v-app-loading-text               : ""                                          !default;
 
 
 // Base line height used for all widgets
-// @variable     v-line-height
-// @default     1.55 !default
 $v-line-height                    : 1.55                                        !default;
 
 
@@ -102,21 +97,20 @@ $v-border-radius                  : 4px                                         
 $v-gradient                       : v-linear 8%                                 !default;
 
 $v-bevel                          : inset 0 1px 0 v-tint, inset 0 -1px 0 v-shade !default;
-$v-bevel-depth                    : 25%                                         !default;
+$v-bevel-depth                    : 30%                                         !default;
 
 $v-shadow                         : 0 2px 3px v-shade                           !default;
 $v-shadow-opacity                 : 5%                                          !default;
 
-$v-focus-color                    : null                                        !default;
-$v-focus-style                    : 0 0 0 2px rgba(valo-focus-color(), .5)      !default;
 $v-focus-color                    : valo-focus-color()                          !default;
+$v-focus-style                    : 0 0 0 2px rgba($v-focus-color, .5)          !default;
 
 $v-animations-enabled             : true                                        !default;
 $v-hover-styles-enabled           : true                                        !default;
 
 $v-disabled-opacity               : 0.5                                         !default;
 
-$v-selection-color                : valo-focus-color()                          !default;
+$v-selection-color                : $v-focus-color                              !default;
 
 $v-default-field-width            : $v-unit-size * 5                            !default;
 
@@ -135,7 +129,4 @@ $valo-include-common-stylenames   : true                                        
 // The Vaadin compiler parses URL paths differently than the regular Sass compiler (i.e. Vaadin modifies relative url paths).
 // This boolean is used to flag which compiler is used, so that paths are correct for different resources.
 // false == Ruby, true == Vaadin
-// @private
-// @variable  v-relative-paths
-// @default   false
 $v-relative-paths: false !default;

@@ -74,19 +74,14 @@ $v-luminance-threshold: 150 !default;
 
 
 
-@function valo-focus-color ($color: null, $context: null) {
-  $context: $context or $v-app-background-color;
-
-  $fallback: $context;
-  @if is-dark-color($fallback) {
-    $fallback: scale-color($fallback, $lightness: 40%, $saturation: 80%);
+@function valo-focus-color ($context: $v-app-background-color) {
+  $color: $context;
+  @if is-dark-color($context) {
+    $color: scale-color($color, $lightness: 40%, $saturation: 80%);
   } @else {
-    $fallback: scale-color($fallback, $lightness: -50%, $saturation: 80%);
+    $color: scale-color($color, $lightness: -50%, $saturation: 80%);
   }
-
-  $focus-color: $color or $v-focus-color or $fallback;
-
-  @return $focus-color;
+  @return $color;
 }
 
 

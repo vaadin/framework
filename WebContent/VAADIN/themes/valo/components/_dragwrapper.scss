@@ -110,7 +110,7 @@
   border-radius: $v-border-radius;
   @include opacity(.3);
 
-  $focus-color: valo-focus-color();
+  $focus-color: $v-focus-color;
   @if is-dark-color($focus-color) {
     background: scale-color($focus-color, $lightness: 50%);
   } @else {
