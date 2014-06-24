@@ -1,6 +1,6 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -760,30 +760,10 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     private String getRepaintAllParameters() {
-        // collect some client side data that will be sent to server on
-        // initial uidl request
-        String nativeBootstrapParameters = getNativeBrowserDetailsParameters(getConfiguration()
-                .getRootPanelId());
-        // TODO figure out how client and view size could be used better on
-        // server. screen size can be accessed via Browser object, but other
-        // values currently only via transaction listener.
         String parameters = ApplicationConstants.URL_PARAMETER_REPAINT_ALL
-                + "=1&" + nativeBootstrapParameters;
+                + "=1";
         return parameters;
     }
-
-    /**
-     * Gets the browser detail parameters that are sent by the bootstrap
-     * javascript for two-request initialization.
-     * 
-     * @param parentElementId
-     * @return
-     */
-    private static native String getNativeBrowserDetailsParameters(
-            String parentElementId)
-    /*-{
-       return $wnd.vaadin.getBrowserDetailsParameters(parentElementId);
-    }-*/;
 
     protected void repaintAll() {
         makeUidlRequest(new JSONArray(), getRepaintAllParameters());
@@ -2710,15 +2690,7 @@ public class ApplicationConnection implements HasHandlers {
             lastInvocationTag = 0;
         }
 
-        // Include the browser detail parameters if they aren't already sent
-        String extraParams;
-        if (!getConfiguration().isBrowserDetailsSent()) {
-            extraParams = getNativeBrowserDetailsParameters(getConfiguration()
-                    .getRootPanelId());
-            getConfiguration().setBrowserDetailsSent();
-        } else {
-            extraParams = "";
-        }
+        String extraParams = "";
         if (!getConfiguration().isWidgetsetVersionSent()) {
             if (!extraParams.isEmpty()) {
                 extraParams += "&";
