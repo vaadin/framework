@@ -7,18 +7,12 @@
 // @import "blueprint";
 
 
-@include valo-natural-page-scrolling;
-
 .tests-valo {
   @include valo;
 
   .valo-menu .v-checkbox {
     margin: round($v-unit-size/2);
     font-weight: 400;
-  }
-
-  .view {
-    min-height: 600px;
   }
 
   $color1: hsl(220, 5%, 38%);
@@ -102,10 +96,6 @@
 
   .v-slider-color3 {
     @include valo-slider-indicator-style($background-color: #dcdc1e);
-  }
-
-  .v-slider-no-indicator {
-    @include valo-slider-no-indicator;
   }
 
 
