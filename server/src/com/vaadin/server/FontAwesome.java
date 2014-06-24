@@ -25,6 +25,9 @@ package com.vaadin.server;
  * these icons, and all of them, so you might want to consider making a custom
  * icon font - either to get other icons, or to minimize the size of the font.
  * </p>
+ * <p>
+ * The Font Awesome version currently included is 4.0.3.
+ * </p>
  * 
  * @since 7.2
  * @author Vaadin Ltd
