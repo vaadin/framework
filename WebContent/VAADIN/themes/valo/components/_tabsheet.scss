@@ -80,22 +80,42 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
       @include valo-anim-fade-in(300ms);
     }
 
+    $spinner-size: round($v-unit-size/2);
+    $spinner-size: $spinner-size + $spinner-size % 2;
+
     .#{$primary-stylename}-deco {
-      @include valo-spinner($size: $v-unit-size/2);
+      @include valo-spinner($size: $spinner-size);
+      height: 0 !important;
+      border-style: none;
       display: block;
       position: absolute;
       z-index: -1;
       bottom: 50%;
-      margin-bottom: round($v-unit-size/2 + $v-unit-size/4) * -1;
+      margin-bottom: round($v-unit-size/-2) - $spinner-size/2;
       left: 50%;
-      margin-left: round($v-unit-size/-4);
+      margin-left: $spinner-size/-2;
       opacity: 0;
+
+      .v-ie8 & {
+        min-height: 0;
+      }
     }
 
     .#{$primary-stylename}-loading .#{$primary-stylename}-deco {
       @include transition(opacity 200ms 200ms);
       opacity: 1;
       z-index: 1;
+      height: $spinner-size !important;
+      border-style: solid;
+
+      .v-ie8 &,
+      .v-ie9 & {
+        border-style: none;
+      }
+
+      .v-ie8 & {
+        min-height: 30px;
+      }
     }
   }
 
@@ -110,21 +130,22 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
   &:before {
     content: "";
     position: absolute;
-    height: max(1px, first-number($v-border));
-    background: first-color(valo-border($strength: 0.5));
+    height: 0;
+    // iOS panics with background color, creating black line artifacts
+    border-top: max(1px, first-number($v-border)) solid first-color(valo-border($strength: 0.5));
     bottom: 0;
     left: 0;
     right: 0;
   }
 
   .#{$primary-stylename}-tabs {
-    height: $v-unit-size;
     position: relative;
   }
 }
 
 
 @mixin valo-tabsheet-tabitemcell-style ($primary-stylename: v-tabsheet) {
+  vertical-align: bottom;
 
   .#{$primary-stylename}-tabitem {
     line-height: 0;
@@ -132,7 +153,6 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
   }
 
   .v-caption {
-    height: $v-unit-size;
     margin-left: round($v-unit-size/2);
     padding: 0 round($v-unit-size/10);
     @include box-sizing(border-box);
@@ -144,9 +164,15 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     color: valo-font-color($v-app-background-color, 0.58);
     width: auto !important;
     overflow: hidden;
+    text-overflow: ellipsis;
+    border-bottom: max(1px, first-number($v-border))*2 solid transparent;
 
     @if $v-animations-enabled {
       @include transition(border-bottom 200ms, color 200ms);
+    }
+
+    .v-captiontext {
+      display: inline;
     }
 
     .v-icon + .v-captiontext {
@@ -175,12 +201,11 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
     .v-caption {
       color: $v-selection-color;
-      border-bottom: max(1px, first-number($v-border)) solid $v-selection-color;
     }
   }
 
   .#{$primary-stylename}-tabitem-selected .v-caption.v-caption {
-    border-bottom: max(1px, first-number($v-border))*2 solid $v-selection-color;
+    border-bottom-color: $v-selection-color;
     color: $v-selection-color;
   }
 
@@ -212,12 +237,12 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
   $border-color: first-color(valo-border($strength: 0.5));
 
   position: absolute;
+  top: 0;
   right: 0;
   bottom: 0;
   padding-left: round($v-unit-size/2);
   @include linear-gradient(to left, $v-background-color 70%, rgba($v-background-color, 0) 100%, $fallback: transparent);
   pointer-events: none;
-  line-height: $v-unit-size;
 
   &:after {
     content: "";
@@ -245,8 +270,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     background: transparent;
     font: inherit;
     color: inherit;
-    height: $v-unit-size;
-    line-height: $v-unit-size;
+    height: 100%;
     margin: 0;
     padding: 0 round($v-unit-size/4);
     outline: none;
@@ -310,11 +334,11 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 
 
-@mixin valo-tabsheet-framed-style ($primary-stylename: v-tabsheet) {
+@mixin valo-tabsheet-framed-style ($primary-stylename: v-tabsheet, $frame-inactive-tabs: true, $outer-frame: true, $tab-spacing: round($v-unit-size/10)) {
   > .#{$primary-stylename}-tabcontainer {
     .v-caption {
       position: relative;
-      margin-left: first-number($v-border) * 2;
+      margin-left: $tab-spacing or first-number($v-border) * -1;
       padding: 0 $v-layout-spacing-horizontal;
       border: first-number($v-border) solid transparent;
       line-height: $v-unit-size - first-number($v-border);
@@ -336,10 +360,16 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
       margin-left: 0;
     }
 
+    @if $frame-inactive-tabs {
+      .#{$primary-stylename}-tabitem .v-caption {
+        border-color: first-color(valo-border($strength: 0.5));
+      }
+    }
+
     .#{$primary-stylename}-tabitem-selected .v-caption {
       background: $v-panel-background-color;
       border-color: first-color(valo-border($strength: 0.5));
-      border-bottom: none;
+      border-bottom: first-number($v-border) solid transparent;
     }
 
     .v-caption-closable {
@@ -355,15 +385,25 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
   }
 
   > .#{$primary-stylename}-content {
-    background: $v-panel-background-color;
-    border: valo-border($strength: 0.5);
-    border-top: none;
+    // iOS panics with black line artifacts,
+    // moving the background color to an inner element fixes it
+    > div {
+      background: $v-panel-background-color;
+    }
+
+    @if $outer-frame {
+      border: valo-border($strength: 0.5);
+      border-top: none;
+    }
   }
 
   &.padded-tabbar {
     > .#{$primary-stylename}-tabcontainer {
-      border: valo-border($strength: 0.5);
-      border-bottom: none;
+      @if $outer-frame {
+        border: valo-border($strength: 0.5);
+        border-bottom: none;
+      }
+
       background: $v-background-color;
       padding-top: round($v-unit-size/6);
     }
@@ -416,37 +456,19 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 @mixin valo-tabsheet-icons-on-top-style ($primary-stylename: v-tabsheet) {
   > div > .#{$primary-stylename}-tabs {
-    height: $v-unit-size * 2;
-
     .v-caption {
-      height: $v-unit-size * 2;
-      padding-top: $v-unit-size;
+      padding-top: round($v-unit-size/6);
+      padding-bottom: round($v-unit-size/6);
+      line-height: 1.2;
     }
 
     .v-icon {
       display: block;
-      font-size: $v-font-size * 2;
-      $_offset: round($v-unit-size/4);
-      margin: -($v-unit-size - $_offset) auto #{-$_offset};
-      min-height: $v-unit-size;
 
       + .v-captiontext.v-captiontext {
         margin-left: 0;
       }
     }
-  }
-
-  .#{$primary-stylename}-scroller {
-    line-height: $v-unit-size*2;
-
-    button[class] {
-      padding: 0 round($v-unit-size/4);
-      display: block;
-    }
-  }
-
-  > .#{$primary-stylename}-deco {
-    margin-bottom: -$v-unit-size - round($v-unit-size/4);
   }
 }
 

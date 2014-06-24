@@ -17,7 +17,7 @@ $v-overlay-padding: round($v-unit-size/9) !default;
 $v-overlay-padding-vertical: $v-overlay-padding !default;
 $v-overlay-padding-horizontal: $v-overlay-padding !default;
 
-$v-overlay-shadow: 0 2px 4px 0 v-shade, 0 3px 5px 0 v-shade, 0 0 0 $v-overlay-border-width (v-shade (2.5 - color-luminance($v-background-color)/255 + $v-bevel-depth/100%)) !default;
+$v-overlay-shadow: 0 4px 10px 0 (v-shade 2), 0 3px 5px 0 v-shade, 0 0 0 $v-overlay-border-width (v-shade (2.5 - color-luminance($v-background-color)/255 + $v-bevel-depth/100%)) !default;
 
 $v-selection-overlay-background-color: $v-overlay-background-color !default;
 $v-selection-overlay-padding: $v-overlay-padding !default;

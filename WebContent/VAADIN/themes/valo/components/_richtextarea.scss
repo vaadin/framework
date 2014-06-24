@@ -88,4 +88,9 @@ $valo-richtextarea-use-font-awesome: true !default;
     display: block;
   }
 
+  .#{$primary-stylename}-readonly {
+    padding: ceil($v-unit-size/9) ceil($v-unit-size/6);
+    background: transparent;
+  }
+
 }

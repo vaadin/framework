@@ -86,7 +86,7 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 
     &:after {
       border: valo-border();
-      @include valo-button-focus-style();
+      @include valo-button-focus-style($border-fallback: null);
       opacity: 0;
       @if $v-animations-enabled {
         @include transition(opacity 200ms);
@@ -229,7 +229,7 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 
     &:after {
       border: valo-border($color: $background-color);
-      @include valo-button-focus-style($background-color: $background-color);
+      @include valo-button-focus-style($background-color: $background-color, $border-fallback: null);
     }
   }
 }

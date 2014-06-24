@@ -25,6 +25,12 @@
     .v-caption {
       padding-bottom: 0;
     }
+
+    .v-caption-h2,
+    .v-caption-h3,
+    .v-caption-h4 {
+      height: 3em;
+    }
   }
 
   .#{$primary-stylename}-contentcell {
@@ -33,13 +39,14 @@
       font-weight: $v-font-weight + 100;
     }
 
+    > .h2,
+    > .h3,
     > .h4 {
       position: absolute;
       left: 0;
       margin-top: -0.5em;
       padding-bottom: 0.5em;
       border-bottom: valo-border($color: $v-app-background-color, $strength: 0.5);
-      color: valo-font-color($v-app-background-color, .5);
     }
   }
 
@@ -138,7 +145,8 @@
     > .v-textfield,
     > .v-textarea,
     > .v-filterselect input,
-    > .v-datefield input {
+    > .v-datefield input,
+    > .v-richtextarea {
       @include valo-textfield-style($unit-size: $row-height, $border-radius: 0, $border: null, $bevel: none, $shadow: none, $background-color: null);
       background: transparent;
       border: none;
@@ -152,7 +160,8 @@
       @include valo-textfield-prompt-style;
     }
 
-    > .v-textarea {
+    > .v-textarea,
+    > .v-richtextarea {
       height: auto;
     }
   }
@@ -179,9 +188,17 @@
     margin-left: ceil($v-unit-size/6);
   }
 
-  > table > tbody > .#{$primary-stylename}-row > .#{$primary-stylename}-contentcell > .h4 {
-    border-bottom: none;
-    color: $v-selection-color;
-    margin-top: -0.2em;
+  > table > tbody > .#{$primary-stylename}-row > .#{$primary-stylename}-contentcell {
+    > .h2,
+    > .h3,
+    > .h4 {
+      border-bottom: none;
+      color: $v-selection-color;
+    }
+
+    > .h3,
+    > .h4 {
+      margin-top: 0;
+    }
   }
 }

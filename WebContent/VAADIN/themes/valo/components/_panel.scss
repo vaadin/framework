@@ -106,8 +106,8 @@ $v-panel-border: $v-border !default;
       bottom: -$border-width;
       right: 0;
       left: 0;
-      height: $border-width;
-      background: first-color(valo-border($color: $v-app-background-color, $strength: 0.5));
+      height: 0;
+      border-top: $border-width solid first-color(valo-border($color: $v-app-background-color, $strength: 0.5));
     }
   }
 
@@ -117,8 +117,8 @@ $v-panel-border: $v-border !default;
       position: absolute;
       z-index: 2;
       top: 0;
-      height: $border-width;
-      background: $v-app-background-color;
+      height: 0;
+      border-top: $border-width solid $v-app-background-color;
       left: 0;
       right: 0;
     }

@@ -93,9 +93,9 @@ $v-window-modality-curtain-background-color: #222 !default;
       bottom: -$scroll-divider-width;
       right: 0;
       left: 0;
-      height: $scroll-divider-width;
+      height: 0;
       $_bg: $v-window-background-color;
-      background: first-color(valo-border($strength: 0.5));
+      border-top: $scroll-divider-width solid first-color(valo-border($strength: 0.5));
     }
   }
 
@@ -133,10 +133,6 @@ $v-window-modality-curtain-background-color: #222 !default;
       @include transition(color 140ms);
     }
 
-    @if $v-window-border-radius > 0 {
-      border-radius: 0 0 0 $v-window-border-radius;
-    }
-
     &:focus {
       outline: none;
     }
@@ -154,6 +150,10 @@ $v-window-modality-curtain-background-color: #222 !default;
   .#{$primary-stylename}-closebox {
     padding-right: round($v-unit-size/9);
     @include valo-window-close-icon-style;
+
+    @if $v-window-border-radius > 0 {
+      border-radius: 0 $v-window-border-radius 0 $v-window-border-radius;
+    }
   }
 
   .#{$primary-stylename}-maximizebox,
@@ -161,8 +161,12 @@ $v-window-modality-curtain-background-color: #222 !default;
     right: $v-unit-size - round($v-unit-size/9);
     padding-left: round($v-unit-size/9);
 
-    + .#{$primary-stylename}-closebox {
-      border-bottom-left-radius: 0;
+    @if $v-window-border-radius > 0 {
+      border-radius: 0 0 0 $v-window-border-radius;
+
+      + .#{$primary-stylename}-closebox {
+        border-bottom-left-radius: 0;
+      }
     }
   }
 
@@ -215,18 +219,18 @@ $v-window-modality-curtain-background-color: #222 !default;
         position: absolute;
         z-index: 2;
         top: 0;
-        height: $scroll-divider-width;
-        background: $v-window-background-color;
+        height: 0;
+        border-top: $scroll-divider-width solid $v-window-background-color;
         left: 0;
         right: 0;
       }
 
       .v-panel-captionwrap:after {
-        background: first-color(valo-border($strength: 0.5));
+        border-color: first-color(valo-border($strength: 0.5));
       }
 
       .v-panel-content:before {
-        background: $v-window-background-color;
+        border-color: $v-window-background-color;
       }
     }
   }

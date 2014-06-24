@@ -120,4 +120,12 @@ $v-letter-spacing--h4:    0               !default;
     }
   }
 
+  .#{$primary-stylename}-align-right {
+    text-align: right;
+  }
+
+  .#{$primary-stylename}-align-center {
+    text-align: center;
+  }
+
 }

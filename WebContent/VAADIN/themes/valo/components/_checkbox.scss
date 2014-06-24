@@ -1,7 +1,6 @@
 @mixin valo-checkbox ($primary-stylename: v-checkbox) {
 
-  .#{$primary-stylename},
-  .v-radiobutton {
+  .#{$primary-stylename} {
     @include valo-checkbox-style;
   }
 
@@ -14,10 +13,10 @@
 }
 
 
-@mixin valo-checkbox-style ($background-color: $v-background-color, $size: $v-unit-size, $selection-color: $v-selection-color) {
+@mixin valo-checkbox-style ($background-color: $v-background-color, $unit-size: $v-unit-size, $selection-color: $v-selection-color) {
 
   // So that we can use the same 'unit-size' for all component sizes
-  $size: $size/2;
+  $size: $unit-size/2;
 
   position: relative;
   line-height: round($size);

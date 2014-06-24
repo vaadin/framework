@@ -118,7 +118,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
     @include transition(none);
   }
 
-  $focus-color: valo-focus-color();
+  $focus-color: $v-focus-color;
 
   @if color-luminance($focus-color) + 50 < color-luminance($v-background-color) {
     border-color: $focus-color;
@@ -181,15 +181,30 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 
 
-@mixin valo-textfield-inline-icon($primary-stylename: v-textfield, $stylename: inline-icon, $unit-size: $v-unit-size, $font-size: $v-font-size, $image-icon-size: 16px) {
-  .v-slot-#{$stylename} {
+
+
+
+
+@mixin valo-textfield-inline-icon($primary-stylename: v-textfield, $stylenames: inline-icon, $input-selector: null, $unit-size: $v-unit-size, $font-size: $v-font-size, $image-icon-size: 16px) {
+  $slot-selector: "";
+  $caption-selector: "";
+  $text-input-selector: "";
+
+  @each $style in $stylenames {
+    $slot-selector: $slot-selector + ".v-slot-" + $style;
+    $caption-selector: $caption-selector + ".v-caption-" + $style;
+    $text-input-selector: $text-input-selector + "." + $primary-stylename + "-" + $style;
+  }
+
+  #{$slot-selector} {
     position: relative;
   }
 
-  .v-caption-#{$stylename} {
+  #{$caption-selector} {
     padding: 0;
 
     .v-captiontext {
+      // Need to include to get the default padding back
       @include valo-caption-style;
       margin: 0;
     }
@@ -217,8 +232,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
     }
   }
 
-  .#{$primary-stylename}-#{$stylename},
-  .v-textarea-#{$stylename} {
+  #{$text-input-selector} #{$input-selector} {
     padding-left: $unit-size;
   }
 }

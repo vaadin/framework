@@ -220,10 +220,11 @@
 
   $color: $background-color;
   @each $b in $bevel {
+    $strength: 1;
     @if type-of($b) == list {
       $strength: first-number($b);
-      $color: if($needle==v-tint, rgba(#fff, $v-shadow-opacity/100%*$strength), rgba(#000, $v-shadow-opacity/100%*$strength));
     }
+    $color: if($needle==v-tint, rgba(#fff, $v-shadow-opacity/100%*$strength), rgba(#000, $v-shadow-opacity/100%*$strength));
   }
 
   @return 0 if($needle==v-tint, $offset, $offset*-1) 0 $color;
