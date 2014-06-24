@@ -20,7 +20,7 @@ import com.vaadin.shared.ui.grid.SortDirection;
 
 /**
  * Sort order descriptor. Contains column and direction references.
- *
+ * 
  * @since 7.4
  * @author Vaadin Ltd
  * @param T
@@ -33,7 +33,7 @@ public class SortOrder {
 
     /**
      * Create a sort order descriptor.
-     *
+     * 
      * @param column
      *            a grid column descriptor object
      * @param direction
@@ -54,7 +54,7 @@ public class SortOrder {
 
     /**
      * Returns the {@link GridColumn} reference given in the constructor.
-     *
+     * 
      * @return a grid column reference
      */
     public GridColumn<?, ?> getColumn() {
@@ -63,11 +63,16 @@ public class SortOrder {
 
     /**
      * Returns the {@link SortDirection} value given in the constructor.
-     *
+     * 
      * @return a sort direction value
      */
     public SortDirection getDirection() {
         return direction;
+    }
+
+    @Override
+    public String toString() {
+        return column.getHeaderCaption() + " (" + direction + ")";
     }
 
 }

@@ -26,8 +26,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -63,7 +66,7 @@ import com.vaadin.shared.util.SharedUtil;
 /**
  * A data grid view that supports columns and lazy loading of data rows from a
  * data source.
- *
+ * 
  * <h3>Columns</h3>
  * <p>
  * The {@link GridColumn} class defines the renderer used to render a cell in
@@ -77,15 +80,15 @@ import com.vaadin.shared.util.SharedUtil;
  * specific column index using {@link Grid#getColumn(int)}.
  * </p>
  * <p>
- *
+ * 
  * TODO Explain about headers/footers once the multiple header/footer api has
  * been implemented
- *
+ * 
  * <h3>Data sources</h3>
  * <p>
  * TODO Explain about what a data source is and how it should be implemented.
  * </p>
- *
+ * 
  * @param <T>
  *            The row type of the grid. The row type is the POJO type from where
  *            the data is retrieved into the column cells.
@@ -280,14 +283,164 @@ public class Grid<T> extends Composite implements
     /**
      * Base class for grid columns internally used by the Grid. The user should
      * use {@link GridColumn} when creating new columns.
-     *
+     * 
      * @param <C>
      *            the column type
-     *
+     * 
      * @param <T>
      *            the row type
      */
     static abstract class AbstractGridColumn<C, T> implements HasVisibility {
+
+        /**
+         * Renderer for columns which are sortable
+         * 
+         * FIXME Currently assumes multisorting
+         * 
+         * FIXME Currently all columns are assumed sortable
+         * 
+         */
+        private class SortableColumnHeaderRenderer extends
+                ComplexRenderer<String> {
+
+            private Renderer<String> cellRenderer;
+
+            /**
+             * Creates column renderer with sort indicators
+             * 
+             * @param cellRenderer
+             *            The actual cell renderer
+             */
+            public SortableColumnHeaderRenderer(Renderer<String> cellRenderer) {
+                this.cellRenderer = cellRenderer;
+            }
+
+            @Override
+            public void render(FlyweightCell cell, String data) {
+
+                // Render cell
+                this.cellRenderer.render(cell, data);
+
+                /*
+                 * FIXME This grid null check is needed since Grid.addColumns()
+                 * is invoking Escalator.insertColumn() before the grid instance
+                 * for the column is set resulting in the first render() being
+                 * done without a grid instance. Remove the if statement when
+                 * this is fixed.
+                 */
+                if (grid != null) {
+                    SortOrder sortingOrder = getSortingOrder();
+                    Element cellElement = cell.getElement();
+                    if (sortingOrder != null) {
+                        int sortIndex = grid.getSortOrder().indexOf(
+                                sortingOrder);
+                        if (sortIndex > -1 && grid.getSortOrder().size() > 1) {
+                            // Show sort order indicator if column is sorted and
+                            // other sorted columns also exists.
+                            cellElement.setAttribute("sort-order",
+                                    String.valueOf(sortIndex + 1));
+
+                        } else {
+                            cellElement.removeAttribute("sort-order");
+                        }
+                    } else {
+                        cellElement.removeAttribute("sort-order");
+                        cellElement.removeClassName("sort-desc");
+                        cellElement.removeClassName("sort-asc");
+                    }
+                }
+            }
+
+            @Override
+            public Collection<String> getConsumedEvents() {
+                return Arrays.asList(BrowserEvents.MOUSEDOWN);
+            }
+
+            @Override
+            public void onBrowserEvent(Cell cell, NativeEvent event) {
+                if (BrowserEvents.MOUSEDOWN.equals(event.getType())) {
+                    event.preventDefault();
+
+                    SortOrder sortingOrder = getSortingOrder();
+                    if (sortingOrder == null) {
+                        /*
+                         * No previous sorting, sort Ascending
+                         */
+                        sort(cell, SortDirection.ASCENDING, event.getShiftKey());
+
+                    } else {
+                        // Toggle sorting
+                        SortDirection direction = sortingOrder.getDirection();
+                        if (direction == SortDirection.ASCENDING) {
+                            sort(cell, SortDirection.DESCENDING,
+                                    event.getShiftKey());
+                        } else {
+                            sort(cell, SortDirection.ASCENDING,
+                                    event.getShiftKey());
+                        }
+                    }
+                }
+            }
+
+            /**
+             * Sorts the column in a direction
+             */
+            private void sort(Cell cell, SortDirection direction,
+                    boolean multisort) {
+                TableCellElement th = TableCellElement.as(cell.getElement());
+
+                if (SortDirection.ASCENDING.equals(direction)) {
+                    th.replaceClassName("sort-desc", "sort-asc");
+                } else {
+                    th.replaceClassName("sort-asc", "sort-desc");
+                }
+
+                // Apply primary sorting on clicked column
+                GridColumn<C, T> columnInstance = getColumnInstance();
+                Sort sorting = Sort.by(columnInstance, direction);
+
+                // Re-apply old sorting to the sort order
+                if (multisort) {
+                    for (SortOrder order : grid.getSortOrder()) {
+                        if (order.getColumn() != AbstractGridColumn.this) {
+                            sorting = sorting.then(order.getColumn(),
+                                    order.getDirection());
+                        }
+                    }
+                }
+
+                // Perform sorting
+                grid.sort(sorting);
+
+                // Update header indicators
+                grid.refreshHeader();
+            }
+
+            /**
+             * Resolves a GridColumn out of a AbstractGridColumn
+             */
+            private GridColumn<C, T> getColumnInstance() {
+                for (GridColumn<?, T> column : grid.getColumns()) {
+                    if (column == AbstractGridColumn.this) {
+                        return (GridColumn<C, T>) column;
+                    }
+                }
+                return null;
+            }
+
+            /**
+             * Finds the sorting order for this column
+             */
+            private SortOrder getSortingOrder() {
+                for (SortOrder order : grid.getSortOrder()) {
+                    if (order.getColumn() == AbstractGridColumn.this) {
+                        return order;
+                    }
+                }
+                return null;
+            }
+
+        }
 
         /**
          * The grid the column is associated with
@@ -322,7 +475,8 @@ public class Grid<T> extends Composite implements
         /**
          * Renderer for rendering the header cell value into the cell
          */
-        private Renderer<String> headerRenderer = new TextRenderer();
+        private SortableColumnHeaderRenderer headerRenderer = new SortableColumnHeaderRenderer(
+                new TextRenderer());
 
         /**
          * Renderer for rendering the footer cell value into the cell
@@ -331,7 +485,7 @@ public class Grid<T> extends Composite implements
 
         /**
          * Constructs a new column with a custom renderer.
-         *
+         * 
          * @param renderer
          *            The renderer to use for rendering the cells
          */
@@ -345,7 +499,7 @@ public class Grid<T> extends Composite implements
         /**
          * Constructs a new column with custom renderers for rows, header and
          * footer cells.
-         *
+         * 
          * @param bodyRenderer
          *            The renderer to use for rendering body cells
          * @param headerRenderer
@@ -360,13 +514,14 @@ public class Grid<T> extends Composite implements
                 throw new IllegalArgumentException("Renderer cannot be null.");
             }
 
-            this.headerRenderer = headerRenderer;
+            this.headerRenderer = new SortableColumnHeaderRenderer(
+                    headerRenderer);
             this.footerRenderer = footerRenderer;
         }
 
         /**
          * Internally used by the grid to set itself
-         *
+         * 
          * @param grid
          */
         private void setGrid(Grid<T> grid) {
@@ -382,7 +537,7 @@ public class Grid<T> extends Composite implements
         /**
          * Gets text in the header of the column. By default the header caption
          * is empty.
-         *
+         * 
          * @return the text displayed in the column caption
          */
         public String getHeaderCaption() {
@@ -391,7 +546,7 @@ public class Grid<T> extends Composite implements
 
         /**
          * Returns the renderer used for rendering the header cells
-         *
+         * 
          * @return a renderer that renders header cells
          */
         public Renderer<String> getHeaderRenderer() {
@@ -400,7 +555,7 @@ public class Grid<T> extends Composite implements
 
         /**
          * Sets the renderer that renders header cells. Should not be null.
-         *
+         * 
          * @param renderer
          *            The renderer to use for rendering header cells.
          */
@@ -408,7 +563,7 @@ public class Grid<T> extends Composite implements
             if (renderer == null) {
                 throw new IllegalArgumentException("Renderer cannot be null.");
             }
-            headerRenderer = renderer;
+            headerRenderer = new SortableColumnHeaderRenderer(headerRenderer);
             if (grid != null) {
                 grid.refreshHeader();
             }
@@ -416,7 +571,7 @@ public class Grid<T> extends Composite implements
 
         /**
          * Returns the renderer used for rendering the footer cells
-         *
+         * 
          * @return a renderer that renders footer cells
          */
         public Renderer<String> getFooterRenderer() {
@@ -425,7 +580,7 @@ public class Grid<T> extends Composite implements
 
         /**
          * Sets the renderer that renders footer cells. Should not be null.
-         *
+         * 
          * @param renderer
          *            The renderer to use for rendering footer cells.
          */
@@ -441,7 +596,7 @@ public class Grid<T> extends Composite implements
 
         /**
          * Sets the text in the header of the column.
-         *
+         * 
          * @param caption
          *            the text displayed in the column header
          */
@@ -460,7 +615,7 @@ public class Grid<T> extends Composite implements
         /**
          * Gets text in the footer of the column. By default the footer caption
          * is empty.
-         *
+         * 
          * @return The text displayed in the footer of the column
          */
         public String getFooterCaption() {
@@ -469,7 +624,7 @@ public class Grid<T> extends Composite implements
 
         /**
          * Sets text in the footer of the column.
-         *
+         * 
          * @param caption
          *            the text displayed in the footer of the column
          */
@@ -487,7 +642,7 @@ public class Grid<T> extends Composite implements
 
         /**
          * Is the column visible. By default all columns are visible.
-         *
+         * 
          * @return <code>true</code> if the column is visible
          */
         @Override
@@ -497,7 +652,7 @@ public class Grid<T> extends Composite implements
 
         /**
          * Sets a column as visible in the grid.
-         *
+         * 
          * @param visible
          *            <code>true</code> if the column should be displayed in the
          *            grid
@@ -532,10 +687,10 @@ public class Grid<T> extends Composite implements
          * <p>
          * To support other types you will need to pass a custom renderer to the
          * column via the column constructor.
-         *
+         * 
          * @param row
          *            The row object that provides the cell content.
-         *
+         * 
          * @return The cell content
          */
         public abstract C getValue(T row);
@@ -544,7 +699,7 @@ public class Grid<T> extends Composite implements
          * The renderer to render the cell width. By default renders the data as
          * a String or adds the widget into the cell if the column type is of
          * widget type.
-         *
+         * 
          * @return The renderer to render the cell content with
          */
         public Renderer<? super C> getRenderer() {
@@ -553,7 +708,7 @@ public class Grid<T> extends Composite implements
 
         /**
          * Finds the index of this column instance
-         *
+         * 
          */
         private int findIndexOfColumn() {
             return grid.findVisibleColumnIndex((GridColumn<?, T>) this);
@@ -562,7 +717,7 @@ public class Grid<T> extends Composite implements
         /**
          * Sets the pixel width of the column. Use a negative value for the grid
          * to autosize column based on content and available space
-         *
+         * 
          * @param pixels
          *            the width in pixels or negative for auto sizing
          */
@@ -579,7 +734,7 @@ public class Grid<T> extends Composite implements
 
         /**
          * Returns the pixel width of the column
-         *
+         * 
          * @return pixel width of the column
          */
         public int getWidth() {
@@ -612,7 +767,7 @@ public class Grid<T> extends Composite implements
 
         /**
          * Constructs an updater for updating a header / footer
-         *
+         * 
          * @param rows
          *            The row container
          * @param inverted
@@ -625,17 +780,17 @@ public class Grid<T> extends Composite implements
 
         /**
          * Gets the header/footer caption value
-         *
+         * 
          * @param column
          *            The column to get the value for.
-         *
+         * 
          * @return The value that should be rendered for the column caption
          */
         public abstract String getColumnValue(GridColumn<?, T> column);
 
         /**
          * Gets the group caption value
-         *
+         * 
          * @param group
          *            The group for with the caption value should be returned
          * @return The value that should be rendered for the column caption
@@ -644,34 +799,34 @@ public class Grid<T> extends Composite implements
 
         /**
          * Is the row visible in the header/footer
-         *
+         * 
          * @param row
          *            the row to check
-         *
+         * 
          * @return <code>true</code> if the row should be visible
          */
         public abstract boolean isRowVisible(ColumnGroupRow<T> row);
 
         /**
          * Should the first row be visible
-         *
+         * 
          * @return <code>true</code> if the first row should be visible
          */
         public abstract boolean firstRowIsVisible();
 
         /**
          * The renderer that renders the cell
-         *
+         * 
          * @param column
          *            The column for which the cell should be rendered
-         *
+         * 
          * @return renderer used for rendering
          */
         public abstract Renderer<String> getRenderer(GridColumn<?, T> column);
 
         /**
          * The renderer that renders the cell for column groups
-         *
+         * 
          * @param group
          *            The group that should be rendered
          * @return renderer used for rendering
@@ -798,7 +953,7 @@ public class Grid<T> extends Composite implements
     /**
      * Creates the header updater that updates the escalator header rows from
      * the column and column group rows.
-     *
+     * 
      * @return the updater that updates the data in the escalator.
      */
     private EscalatorUpdater createHeaderUpdater() {
@@ -968,7 +1123,7 @@ public class Grid<T> extends Composite implements
     /**
      * Creates the footer updater that updates the escalator footer rows from
      * the column and column group rows.
-     *
+     * 
      * @return the updater that updates the data in the escalator.
      */
     private EscalatorUpdater createFooterUpdater() {
@@ -1008,7 +1163,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Refreshes header or footer rows on demand
-     *
+     * 
      * @param rows
      *            The row container
      * @param firstRowIsVisible
@@ -1060,7 +1215,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Adds a column as the last column in the grid.
-     *
+     * 
      * @param column
      *            the column to add
      */
@@ -1070,7 +1225,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Inserts a column into a specific position in the grid.
-     *
+     * 
      * @param index
      *            the index where the column should be inserted into
      * @param column
@@ -1179,7 +1334,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Removes a column from the grid.
-     *
+     * 
      * @param column
      *            the column to remove
      */
@@ -1214,7 +1369,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Returns the amount of columns in the grid.
-     *
+     * 
      * @return The number of columns in the grid
      */
     public int getColumnCount() {
@@ -1223,7 +1378,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Returns a list of columns in the grid.
-     *
+     * 
      * @return A unmodifiable list of the columns in the grid
      */
     public List<GridColumn<?, T>> getColumns() {
@@ -1233,7 +1388,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Returns a column by its index in the grid.
-     *
+     * 
      * @param index
      *            the index of the column
      * @return The column in the given index
@@ -1250,30 +1405,30 @@ public class Grid<T> extends Composite implements
 
     /**
      * Set the column headers visible.
-     *
+     * 
      * <p>
      * A column header is a single cell header on top of each column reserved
      * for a specific header for that column. The column header can be set by
      * {@link GridColumn#setHeaderCaption(String)} and column headers cannot be
      * merged with other column headers.
      * </p>
-     *
+     * 
      * <p>
      * All column headers occupy the first header row of the grid. If you do not
      * wish to show the column headers in the grid you should hide the row by
      * setting visibility of the header row to <code>false</code>.
      * </p>
-     *
+     * 
      * <p>
      * If you want to merge the column headers into groups you can use
      * {@link ColumnGroupRow}s to group columns together and give them a common
      * header. See {@link #addColumnGroupRow()} for details.
      * </p>
-     *
+     * 
      * <p>
      * The header row is by default visible.
      * </p>
-     *
+     * 
      * @param visible
      *            <code>true</code> if header rows should be visible
      */
@@ -1287,7 +1442,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Are the column headers visible
-     *
+     * 
      * @return <code>true</code> if they are visible
      */
     public boolean isColumnHeadersVisible() {
@@ -1296,30 +1451,30 @@ public class Grid<T> extends Composite implements
 
     /**
      * Set the column footers visible.
-     *
+     * 
      * <p>
      * A column footer is a single cell footer below of each column reserved for
      * a specific footer for that column. The column footer can be set by
      * {@link GridColumn#setFooterCaption(String)} and column footers cannot be
      * merged with other column footers.
      * </p>
-     *
+     * 
      * <p>
      * All column footers occupy the first footer row of the grid. If you do not
      * wish to show the column footers in the grid you should hide the row by
      * setting visibility of the footer row to <code>false</code>.
      * </p>
-     *
+     * 
      * <p>
      * If you want to merge the column footers into groups you can use
      * {@link ColumnGroupRow}s to group columns together and give them a common
      * footer. See {@link #addColumnGroupRow()} for details.
      * </p>
-     *
+     * 
      * <p>
      * The footer row is by default hidden.
      * </p>
-     *
+     * 
      * @param visible
      *            <code>true</code> if the footer row should be visible
      */
@@ -1333,9 +1488,9 @@ public class Grid<T> extends Composite implements
 
     /**
      * Are the column footers visible
-     *
+     * 
      * @return <code>true</code> if they are visible
-     *
+     * 
      */
     public boolean isColumnFootersVisible() {
         return columnFootersVisible;
@@ -1343,15 +1498,15 @@ public class Grid<T> extends Composite implements
 
     /**
      * Adds a new column group row to the grid.
-     *
+     * 
      * <p>
      * Column group rows are rendered in the header and footer of the grid.
      * Column group rows are made up of column groups which groups together
      * columns for adding a common auxiliary header or footer for the columns.
      * </p>
-     *
+     * 
      * Example usage:
-     *
+     * 
      * <pre>
      * // Add a new column group row to the grid
      * ColumnGroupRow row = grid.addColumnGroupRow();
@@ -1365,7 +1520,7 @@ public class Grid<T> extends Composite implements
      * // Set a common footer for &quot;Column1&quot; and &quot;Column2&quot;
      * column12.setFooter(&quot;Column 1&amp;2&quot;);
      * </pre>
-     *
+     * 
      * @return a column group row instance you can use to add column groups
      */
     public ColumnGroupRow<T> addColumnGroupRow() {
@@ -1378,10 +1533,10 @@ public class Grid<T> extends Composite implements
 
     /**
      * Adds a new column group row to the grid at a specific index.
-     *
+     * 
      * @see #addColumnGroupRow() {@link Grid#addColumnGroupRow()} for example
      *      usage
-     *
+     * 
      * @param rowIndex
      *            the index where the column group row should be added
      * @return a column group row instance you can use to add column groups
@@ -1396,7 +1551,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Removes a column group row
-     *
+     * 
      * @param row
      *            The row to remove
      */
@@ -1408,9 +1563,9 @@ public class Grid<T> extends Composite implements
 
     /**
      * Get the column group rows
-     *
+     * 
      * @return a unmodifiable list of column group rows
-     *
+     * 
      */
     public List<ColumnGroupRow<T>> getColumnGroupRows() {
         return Collections.unmodifiableList(new ArrayList<ColumnGroupRow<T>>(
@@ -1419,7 +1574,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Returns the column group for a row and column
-     *
+     * 
      * @param row
      *            The row of the column
      * @param column
@@ -1443,7 +1598,7 @@ public class Grid<T> extends Composite implements
      * <p>
      * <em>Note:</em> This method will change the widget's size in the browser
      * only if {@link #getHeightMode()} returns {@link HeightMode#CSS}.
-     *
+     * 
      * @see #setHeightMode(HeightMode)
      */
     @Override
@@ -1458,7 +1613,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Sets the data source used by this grid.
-     *
+     * 
      * @param dataSource
      *            the data source to use, not null
      * @throws IllegalArgumentException
@@ -1511,7 +1666,7 @@ public class Grid<T> extends Composite implements
      * <p>
      * All columns up to and including the given column will be frozen in place
      * when the grid is scrolled sideways.
-     *
+     * 
      * @param lastFrozenColumn
      *            the rightmost column to freeze, or <code>null</code> to not
      *            have any columns frozen
@@ -1544,7 +1699,7 @@ public class Grid<T> extends Composite implements
      * <em>Note:</em> Most usually, this method returns the very value set with
      * {@link #setLastFrozenColumn(GridColumn)}. This value, however, can be
      * reset to <code>null</code> if the column is removed from this grid.
-     *
+     * 
      * @return the rightmost frozen column in the grid, or <code>null</code> if
      *         no columns are frozen.
      */
@@ -1564,7 +1719,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Scrolls to a certain row, using {@link ScrollDestination#ANY}.
-     *
+     * 
      * @param rowIndex
      *            zero-based index of the row to scroll to.
      * @throws IllegalArgumentException
@@ -1578,7 +1733,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Scrolls to a certain row, using user-specified scroll destination.
-     *
+     * 
      * @param rowIndex
      *            zero-based index of the row to scroll to.
      * @param destination
@@ -1597,7 +1752,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Scrolls to a certain row using only user-specified parameters.
-     *
+     * 
      * @param rowIndex
      *            zero-based index of the row to scroll to.
      * @param destination
@@ -1654,7 +1809,7 @@ public class Grid<T> extends Composite implements
      * <p>
      * If Grid is currently not in {@link HeightMode#ROW}, the given value is
      * remembered, and applied once the mode is applied.
-     *
+     * 
      * @param rows
      *            The height in terms of number of rows displayed in Grid's
      *            body. If Grid doesn't contain enough rows, white space is
@@ -1666,7 +1821,7 @@ public class Grid<T> extends Composite implements
      *             infinite}
      * @throws IllegalArgumentException
      *             if {@code rows} is {@link Double#isNaN(double) NaN}
-     *
+     * 
      * @see #setHeightMode(HeightMode)
      */
     public void setHeightByRows(double rows) throws IllegalArgumentException {
@@ -1678,7 +1833,7 @@ public class Grid<T> extends Composite implements
      * {@link #getHeightMode()} is {@link HeightMode#ROW}.
      * <p>
      * By default, it is {@value Escalator#DEFAULT_HEIGHT_BY_ROWS}.
-     *
+     * 
      * @return the amount of rows that should be shown in Grid's body, while in
      *         {@link HeightMode#ROW}.
      * @see #setHeightByRows(double)
@@ -1698,7 +1853,7 @@ public class Grid<T> extends Composite implements
      * <em>Note:</em> If headers/footers are inserted or removed, the widget
      * will resize itself to still display the required amount of rows in its
      * body. It also takes the horizontal scrollbar into account.
-     *
+     * 
      * @param heightMode
      *            the mode in to which Grid should be set
      */
@@ -1720,7 +1875,7 @@ public class Grid<T> extends Composite implements
      * Returns the current {@link HeightMode} the Grid is in.
      * <p>
      * Defaults to {@link HeightMode#CSS}.
-     *
+     * 
      * @return the current HeightMode
      */
     public HeightMode getHeightMode() {
@@ -1748,10 +1903,22 @@ public class Grid<T> extends Composite implements
             RowContainer container = escalator.findRowContainer(e);
             if (container != null) {
                 Cell cell = container.getCell(e);
-                Renderer<?> renderer = columns.get(cell.getColumn())
-                        .getRenderer();
-                if (renderer instanceof ComplexRenderer) {
-                    ((ComplexRenderer<?>) renderer).onBrowserEvent(cell, event);
+                if (cell != null) {
+                    GridColumn<?, T> gridColumn = columns.get(cell.getColumn());
+
+                    Renderer<?> renderer;
+                    if (container == escalator.getHeader()) {
+                        renderer = gridColumn.getHeaderRenderer();
+                    } else if (container == escalator.getFooter()) {
+                        renderer = gridColumn.getFooterRenderer();
+                    } else {
+                        renderer = gridColumn.getRenderer();
+                    }
+
+                    if (renderer instanceof ComplexRenderer) {
+                        ((ComplexRenderer<?>) renderer).onBrowserEvent(cell,
+                                event);
+                    }
                 }
             }
         }
@@ -1883,7 +2050,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Accesses the package private method Widget#setParent()
-     *
+     * 
      * @param widget
      *            The widget to access
      * @param parent
@@ -1896,7 +2063,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Sets the current selection model.
-     *
+     * 
      * @param selectionModel
      *            a selection model implementation.
      * @throws IllegalArgumentException
@@ -1914,7 +2081,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Gets a reference to the current selection model.
-     *
+     * 
      * @return the currently used SelectionModel instance.
      */
     public SelectionModel<T> getSelectionModel() {
@@ -1925,7 +2092,7 @@ public class Grid<T> extends Composite implements
      * Sets current selection mode.
      * <p>
      * This is a shorthand method for {@link Grid#setSelectionModel}.
-     *
+     * 
      * @param mode
      *            a selection mode value
      * @see {@link SelectionMode}.
@@ -1937,7 +2104,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Test if a row is selected.
-     *
+     * 
      * @param row
      *            a row object
      * @return true, if the current selection model considers the provided row
@@ -1953,7 +2120,7 @@ public class Grid<T> extends Composite implements
      * Only selection models implementing {@link SelectionModel.Single} and
      * {@link SelectionModel.Multi} are supported; for anything else, an
      * exception will be thrown.
-     *
+     * 
      * @param row
      *            a row object
      * @return <code>true</code> iff the current selection changed
@@ -1978,7 +2145,7 @@ public class Grid<T> extends Composite implements
      * Only selection models implementing {@link SelectionModel.Single} and
      * {@link SelectionModel.Multi} are supported; for anything else, an
      * exception will be thrown.
-     *
+     * 
      * @param row
      *            a row object
      * @return <code>true</code> iff the current selection changed
@@ -2003,7 +2170,7 @@ public class Grid<T> extends Composite implements
      * Only selection models implementing {@link SelectionModel.Single} are
      * valid for this method; for anything else, use the
      * {@link Grid#getSelectedRows()} method.
-     *
+     * 
      * @return a selected row reference, or null, if no row is selected
      * @throws IllegalStateException
      *             if the current selection model is not an instance of
@@ -2020,7 +2187,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Gets currently selected rows from the current selection model.
-     *
+     * 
      * @return a non-null collection containing all currently selected rows.
      */
     public Collection<T> getSelectedRows() {
@@ -2036,7 +2203,7 @@ public class Grid<T> extends Composite implements
     /**
      * Sets the current sort order using the fluid Sort API. Read the
      * documentation for {@link Sort} for more information.
-     *
+     * 
      * @param s
      *            a sort instance
      */
@@ -2046,7 +2213,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Sorts the Grid data in ascending order along one column.
-     *
+     * 
      * @param column
      *            a grid column reference
      */
@@ -2056,7 +2223,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Sorts the Grid data along one column.
-     *
+     * 
      * @param column
      *            a grid column reference
      * @param direction
@@ -2069,7 +2236,7 @@ public class Grid<T> extends Composite implements
     /**
      * Sets the sort order to use. Setting this causes the Grid to re-sort
      * itself.
-     *
+     * 
      * @param order
      *            a sort order list. If set to null, the sort order is cleared.
      */
@@ -2083,7 +2250,7 @@ public class Grid<T> extends Composite implements
 
     /**
      * Get a copy of the current sort order array.
-     *
+     * 
      * @return a copy of the current sort order array
      */
     public List<SortOrder> getSortOrder() {
@@ -2094,7 +2261,7 @@ public class Grid<T> extends Composite implements
      * Register a GWT event handler for a sorting event. This handler gets
      * called whenever this Grid needs its data source to provide data sorted in
      * a specific order.
-     *
+     * 
      * @param handler
      *            a sort event handler
      * @return the registration for the event
@@ -2114,7 +2281,7 @@ public class Grid<T> extends Composite implements
     /**
      * Missing getDataSource method. TODO: remove this and other duplicates
      * after The Merge
-     *
+     * 
      * @return a DataSource reference
      */
     public DataSource<T> getDataSource() {

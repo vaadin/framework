@@ -1,3 +1,17 @@
 @mixin base-grid($primaryStyleName : v-grid) {
 	@include base-escalator($primaryStyleName);
+
+	.#{$primaryStyleName} {
+
+		th.sort-asc:after {
+			content: "\25B2" attr(sort-order);
+			float:right;
+		}
+
+		th.sort-desc:after {
+			content: "\25BC" attr(sort-order);
+			float:right;
+		}
+
+	}
 }

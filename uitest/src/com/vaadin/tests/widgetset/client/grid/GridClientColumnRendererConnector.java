@@ -115,7 +115,6 @@ public class GridClientColumnRendererConnector extends
     @Override
     protected void init() {
         Grid<String> grid = getWidget();
-        // grid.setColumnHeadersVisible(false);
 
         // Generated some column data
         List<String> columnData = new ArrayList<String>();
@@ -161,15 +160,25 @@ public class GridClientColumnRendererConnector extends
                     public void addColumn(Renderers renderer) {
 
                         if (renderer == Renderers.NUMBER_RENDERER) {
-                            getWidget().addColumn(
-                                    createNumberColumnWithRenderer(renderer));
+                            GridColumn<Number, String> numberColumn = createNumberColumnWithRenderer(renderer);
+                            numberColumn.setHeaderCaption("Column "
+                                    + String.valueOf(getWidget()
+                                            .getColumnCount() + 1));
+                            getWidget().addColumn(numberColumn);
+
                         } else if (renderer == Renderers.DATE_RENDERER) {
-                            getWidget().addColumn(
-                                    createDateColumnWithRenderer(renderer));
+                            GridColumn<Date, String> dateColumn = createDateColumnWithRenderer(renderer);
+                            dateColumn.setHeaderCaption("Column "
+                                    + String.valueOf(getWidget()
+                                            .getColumnCount() + 1));
+                            getWidget().addColumn(dateColumn);
 
                         } else {
-                            getWidget().addColumn(
-                                    createColumnWithRenderer(renderer));
+                            GridColumn<String, String> column = createColumnWithRenderer(renderer);
+                            column.setHeaderCaption("Column "
+                                    + String.valueOf(getWidget()
+                                            .getColumnCount() + 1));
+                            getWidget().addColumn(column);
                         }
                     }
 

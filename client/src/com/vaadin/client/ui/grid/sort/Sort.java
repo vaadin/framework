@@ -23,7 +23,7 @@ import com.vaadin.shared.ui.grid.SortDirection;
 
 /**
  * Fluid Sort descriptor object.
- *
+ * 
  * @since 7.4
  * @author Vaadin Ltd
  * @param T
@@ -38,7 +38,7 @@ public class Sort {
     /**
      * Basic constructor, used by the {@link #by(GridColumn)} and
      * {@link #by(GridColumn, SortDirection)} methods.
-     *
+     * 
      * @param column
      *            a grid column
      * @param direction
@@ -56,7 +56,7 @@ public class Sort {
      * isn't already used earlier (which would indicate a bug). If the column
      * has been used before, this constructor throws an
      * {@link IllegalStateException}.
-     *
+     * 
      * @param previous
      *            the sort instance that the new sort instance is to extend
      * @param column
@@ -82,7 +82,7 @@ public class Sort {
     /**
      * Start building a Sort order by sorting a provided column in ascending
      * order.
-     *
+     * 
      * @param column
      *            a grid column object reference
      * @return a sort instance, typed to the grid data type
@@ -93,7 +93,7 @@ public class Sort {
 
     /**
      * Start building a Sort order by sorting a provided column.
-     *
+     * 
      * @param column
      *            a grid column object reference
      * @param direction
@@ -108,7 +108,7 @@ public class Sort {
      * Continue building a Sort order. The provided column is sorted in
      * ascending order if the previously added columns have been evaluated as
      * equals.
-     *
+     * 
      * @param column
      *            a grid column object reference
      * @return a sort instance, typed to the grid data type
@@ -121,7 +121,7 @@ public class Sort {
      * Continue building a Sort order. The provided column is sorted in
      * specified order if the previously added columns have been evaluated as
      * equals.
-     *
+     * 
      * @param column
      *            a grid column object reference
      * @param direction
@@ -137,7 +137,7 @@ public class Sort {
      * calling {@link com.vaadin.client.ui.grid.Grid#sort(Sort)}, but can also
      * be called manually to create a SortOrder list, which can also be provided
      * directly to Grid.
-     *
+     * 
      * @return a sort order list.
      */
     public List<SortOrder> build() {
