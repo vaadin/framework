@@ -66,6 +66,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -471,6 +472,8 @@ public class ApplicationConnection implements HasHandlers {
 
     private Heartbeat heartbeat = GWT.create(Heartbeat.class);
 
+    private boolean tooltipInitialized = false;
+
     public static class MultiStepDuration extends Duration {
         private int previousStep = elapsedMillis();
 
@@ -580,10 +583,19 @@ public class ApplicationConnection implements HasHandlers {
 
             // initial UIDL provided in DOM, continue as if returned by request
             handleJSONText(jsonText, -1);
+        }
 
-            // Tooltip can't be created earlier because the necessary fields are
-            // not setup to add it in the correct place in the DOM
-            getVTooltip().showAssistive(new TooltipInfo(" "));
+        // Tooltip can't be created earlier because the
+        // necessary fields are not setup to add it in the
+        // correct place in the DOM
+        if (!tooltipInitialized) {
+            tooltipInitialized = true;
+            ApplicationConfiguration.runWhenDependenciesLoaded(new Command() {
+                @Override
+                public void execute() {
+                    getVTooltip().initializeAssistiveTooltips();
+                }
+            });
         }
     }
 

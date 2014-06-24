@@ -108,6 +108,20 @@ public class VTooltip extends VWindowOverlay {
         showTooltip();
     }
 
+    /**
+     * Initialize the tooltip overlay for assistive devices.
+     * 
+     * @param info
+     *            with the content of the tooltip
+     */
+    public void initializeAssistiveTooltips() {
+        updatePosition(null, true);
+        setTooltipText(new TooltipInfo(" "));
+        showTooltip();
+        hideTooltip();
+        description.getParentElement().getStyle().clearWidth();
+    }
+
     private void setTooltipText(TooltipInfo info) {
         if (info.getErrorMessage() != null && !info.getErrorMessage().isEmpty()) {
             em.setVisible(true);
