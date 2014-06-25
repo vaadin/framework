@@ -19,6 +19,7 @@ import com.vaadin.data.Container;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
@@ -86,6 +87,27 @@ public class ComboBoxes extends VerticalLayout implements View {
         combo.setTextInputAllowed(false);
         combo.setNullSelectionAllowed(false);
         combo.select("Option One");
+        row.addComponent(combo);
+
+        combo = new ComboBox("Error");
+        combo.setInputPrompt("You can type here");
+        combo.addItem("Option One");
+        combo.addItem("Option Two");
+        combo.addItem("Option Three");
+        combo.setNullSelectionAllowed(false);
+        combo.select("Option One");
+        combo.setComponentError(new UserError("Fix it, now!"));
+        row.addComponent(combo);
+
+        combo = new ComboBox("Error, borderless");
+        combo.setInputPrompt("You can type here");
+        combo.addItem("Option One");
+        combo.addItem("Option Two");
+        combo.addItem("Option Three");
+        combo.setNullSelectionAllowed(false);
+        combo.select("Option One");
+        combo.setComponentError(new UserError("Fix it, now!"));
+        combo.addStyleName("borderless");
         row.addComponent(combo);
 
         combo = new ComboBox("Disabled");

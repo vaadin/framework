@@ -369,7 +369,8 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     .#{$primary-stylename}-tabitem-selected .v-caption {
       background: $v-panel-background-color;
       border-color: first-color(valo-border($strength: 0.5));
-      border-bottom: first-number($v-border) solid transparent;
+      border-bottom: none;
+      padding-bottom: first-number($v-border);
     }
 
     .v-caption-closable {
@@ -422,9 +423,9 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 
 
-@mixin valo-tabsheet-centered-tabs-style ($primary-stylename: v-tabsheet) {
+@mixin valo-tabsheet-align-tabs-style ($primary-stylename: v-tabsheet, $align: center) {
   > .#{$primary-stylename}-tabcontainer {
-    text-align: center;
+    text-align: $align;
   }
 }
 
@@ -460,6 +461,10 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
       padding-top: round($v-unit-size/6);
       padding-bottom: round($v-unit-size/6);
       line-height: 1.2;
+    }
+
+    .#{$primary-stylename}-tabitem-selected .v-caption {
+      padding-bottom: round($v-unit-size/6) + first-number($v-border);
     }
 
     .v-icon {

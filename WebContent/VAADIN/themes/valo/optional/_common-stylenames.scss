@@ -106,7 +106,11 @@
   }
 
   .v-tabsheet-centered-tabs {
-    @include valo-tabsheet-centered-tabs-style;
+    @include valo-tabsheet-align-tabs-style($align: center);
+  }
+
+  .v-tabsheet-right-aligned-tabs {
+    @include valo-tabsheet-align-tabs-style($align: right);
   }
 
   .v-tabsheet-padded-tabbar {
@@ -148,12 +152,12 @@
   }
 
   .v-textfield-small {
-    @include valo-textfield-style($unit-size: $v-unit-size--small);
+    @include valo-textfield-style($unit-size: $v-unit-size--small, $states: normal, $background-color: null, $border: null, $gradient: null, $bevel: null, $shadow: null);
     font-size: $v-font-size--small;
   }
 
   .v-textfield-large {
-    @include valo-textfield-style($unit-size: $v-unit-size--large);
+    @include valo-textfield-style($unit-size: $v-unit-size--large, $states: normal, $background-color: null, $border: null, $gradient: null, $bevel: null, $shadow: null);
     font-size: $v-font-size--large;
   }
 
@@ -162,12 +166,12 @@
   @include valo-textfield-inline-icon($stylenames: inline-icon large, $unit-size: $v-unit-size--large, $font-size: $v-font-size--large);
 
   .v-textarea-small {
-    @include valo-textarea-style($unit-size: $v-unit-size--small);
+    @include valo-textarea-style($unit-size: $v-unit-size--small, $states: normal, $background-color: null, $border: null, $bevel: null, $shadow: null);
     font-size: $v-font-size--small;
   }
 
   .v-textarea-large {
-    @include valo-textarea-style($unit-size: $v-unit-size--large);
+    @include valo-textarea-style($unit-size: $v-unit-size--large, $states: normal, $background-color: null, $border: null, $bevel: null, $shadow: null);
     font-size: $v-font-size--large;
   }
 
@@ -186,22 +190,22 @@
   }
 
   .v-filterselect-small {
-    @include valo-combobox-style($unit-size: $v-unit-size--small, $bevel: null, $shadow: null, $gradient: null, $border: null, $border-radius: null);
+    @include valo-combobox-style($unit-size: $v-unit-size--small, $bevel: null, $shadow: null, $gradient: null, $border: null, $border-radius: null, $background-color: null);
     font-size: $v-font-size--small;
   }
 
   .v-filterselect-large {
-    @include valo-combobox-style($unit-size: $v-unit-size--large, $bevel: null, $shadow: null, $gradient: null, $border: null, $border-radius: null);
+    @include valo-combobox-style($unit-size: $v-unit-size--large, $bevel: null, $shadow: null, $gradient: null, $border: null, $border-radius: null, $background-color: null);
     font-size: $v-font-size--large;
   }
 
   .v-datefield-small {
-    @include valo-datefield-style($unit-size: $v-unit-size--small);
+    @include valo-datefield-style($unit-size: $v-unit-size--small, $bevel: null, $shadow: null, $border: null, $background-color: null);
     font-size: $v-font-size--small;
   }
 
   .v-datefield-large {
-    @include valo-datefield-style($unit-size: $v-unit-size--large);
+    @include valo-datefield-style($unit-size: $v-unit-size--large, $bevel: null, $shadow: null, $border: null, $background-color: null);
     font-size: $v-font-size--large;
   }
 

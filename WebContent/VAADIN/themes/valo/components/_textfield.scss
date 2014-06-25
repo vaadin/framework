@@ -70,8 +70,11 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
       @include valo-gradient($color: $background-color, $gradient: $gradient)
     }
 
-    color: valo-font-color($background-color);
-    box-shadow: valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient);
+    @if $background-color {
+      color: valo-font-color($background-color);
+      box-shadow: valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient);
+    }
+
 
     @if $v-animations-enabled {
       @include transition(box-shadow 180ms, border 180ms);
@@ -163,6 +166,11 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
   border-radius: 0;
   background: $background-color;
   box-shadow: none;
+  @if $background-color == transparent {
+    color: inherit;
+  } @else if type-of($background-color) == color {
+    color: valo-font-color($background-color);
+  }
 
   &:focus {
     box-shadow: none;
@@ -173,7 +181,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 
 @mixin valo-textfield-error-style {
-  border-color: $v-error-indicator-color;
+  border-color: $v-error-indicator-color !important;
   $bg: scale-color($v-error-indicator-color, $lightness: 98%);
   background: $bg;
   color: valo-font-color($bg);

@@ -24,14 +24,17 @@ import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
+import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.Table.RowHeaderMode;
 import com.vaadin.ui.Table.TableDragMode;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
 
@@ -153,6 +156,33 @@ public class Tables extends VerticalLayout implements View {
         table.setColumnAlignment(ValoThemeTest.DESCRIPTION_PROPERTY,
                 Align.RIGHT);
         table.setColumnAlignment(ValoThemeTest.INDEX_PROPERTY, Align.CENTER);
+
+        table.removeContainerProperty("textfield");
+        table.addContainerProperty("textfield", TextField.class, null);
+
+        table.removeGeneratedColumn("textfield");
+        table.addGeneratedColumn("textfield", new ColumnGenerator() {
+            @Override
+            public Object generateCell(Table source, Object itemId,
+                    Object columnId) {
+                TextField tf = new TextField();
+                tf.setInputPrompt("Type here…");
+                return tf;
+            }
+        });
+
+        table.removeContainerProperty("button");
+        table.addContainerProperty("button", Button.class, null);
+
+        table.removeGeneratedColumn("button");
+        table.addGeneratedColumn("button", new ColumnGenerator() {
+            @Override
+            public Object generateCell(Table source, Object itemId,
+                    Object columnId) {
+                Button b = new Button("Button");
+                return b;
+            }
+        });
 
         table.setFooterVisible(footer);
         if (footer) {

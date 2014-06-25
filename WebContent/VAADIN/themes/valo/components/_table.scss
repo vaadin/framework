@@ -29,10 +29,6 @@ $v-table-background-color: null !default;
     float: right;
   }
 
-  .#{$primary-stylename}-cell-wrapper {
-    overflow: hidden;
-  }
-
   .#{$primary-stylename}-caption-container-align-center {
     text-align: center;
   }
@@ -113,6 +109,15 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-footer td {
     border-left: $v-table-border-width solid $border-color;
+    // Hack to overcome fixed "magic number" in VScrollTable.FooterCell (assumes 1px border)
+    @if $v-table-border-width != 1px {
+      display: inline-block;
+      margin-left: ($v-table-border-width - 1px) * -1;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
   }
 
   .#{$primary-stylename}-footer-container,
@@ -498,15 +503,13 @@ $v-table-background-color: null !default;
 
 
 @mixin valo-table-no-vertical-lines-style ($primary-stylename: v-table) {
-  .#{$primary-stylename}-cell-content,
-  [class*="row"].v-selected .#{$primary-stylename}-cell-content {
+  .#{$primary-stylename}-cell-content {
     border-left: none;
     padding-left: $v-table-border-width;
   }
 
   &.v-treetable {
-    .#{$primary-stylename}-cell-content,
-    [class*="row"].v-selected .#{$primary-stylename}-cell-content {
+    .#{$primary-stylename}-cell-content {
       padding-left: $v-table-cell-padding-horizontal + $v-table-border-width;
     }
   }
@@ -514,8 +517,7 @@ $v-table-background-color: null !default;
 
 
 @mixin valo-table-no-horizontal-lines-style ($primary-stylename: v-table) {
-  .#{$primary-stylename}-cell-content,
-  [class*="row"].v-selected .#{$primary-stylename}-cell-content {
+  .#{$primary-stylename}-cell-content {
     border-top: none;
     border-bottom: none;
   }

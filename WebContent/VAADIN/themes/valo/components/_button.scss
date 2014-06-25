@@ -94,7 +94,11 @@
   @if contains($states, normal) {
     @if $unit-size {
       height: $unit-size;
-      padding: if(type-of($padding) == number, $padding, (0 round($unit-size/2.4) + round($border-radius/3)));
+      @if type-of($padding) == number or type-of($padding) == list {
+        padding: $padding;
+      } @else {
+        padding: 0 round($unit-size/2.4) + round($border-radius/3);
+      }
     }
 
     $_font-color: $font-color or valo-font-color($background-color, 0.9);
@@ -217,12 +221,10 @@
   }
 
   &:active {
+    @include opacity(.7);
+
     &:after {
       background: transparent;
-    }
-
-    @if type-of($font-color) == color {
-      color: inherit;
     }
   }
 }

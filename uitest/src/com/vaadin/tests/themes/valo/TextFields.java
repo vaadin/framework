@@ -18,6 +18,7 @@ package com.vaadin.tests.themes.valo;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -59,6 +60,17 @@ public class TextFields extends VerticalLayout implements View {
         tf = new TextField("Themed");
         tf.setInputPrompt("Age");
         tf.addStyleName("color3");
+        row.addComponent(tf);
+
+        tf = new TextField("Error");
+        tf.setValue("Something’s wrong");
+        tf.setComponentError(new UserError("Fix it, now!"));
+        row.addComponent(tf);
+
+        tf = new TextField("Error, borderless");
+        tf.setValue("Something’s wrong");
+        tf.setComponentError(new UserError("Fix it, now!"));
+        tf.addStyleName("borderless");
         row.addComponent(tf);
 
         tf = new TextField("Read-only");

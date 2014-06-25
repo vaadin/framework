@@ -12,6 +12,17 @@
     }
   }
 
+  .#{$primary-stylename}-error {
+    .#{$primary-stylename}-input {
+      @include valo-textfield-error-style;
+    }
+
+    .#{$primary-stylename}-button {
+      color: $v-error-indicator-color;
+      border-color: $v-error-indicator-color;
+    }
+  }
+
   .#{$primary-stylename}-suggestpopup {
     @include valo-combobox-popup-style($primary-stylename: $primary-stylename);
   }
@@ -196,10 +207,14 @@
   bottom: $border-width;
   width: $unit-size;
   cursor: pointer;
-  border-left: valo-border($color: $background-color, $border: $v-textfield-border, $strength: 0.5);
 
-  .v-ie8 & {
-    background-color: $background-color;
+  @if type-of($background-color) == color {
+    border-left: valo-border($color: $background-color, $border: $v-textfield-border, $strength: 0.5);
+    color: mix($background-color, valo-font-color($background-color));
+
+    .v-ie8 & {
+      background-color: $background-color;
+    }
   }
 
   @if $v-border-radius > 0 {
@@ -208,8 +223,8 @@
   }
 
   &:before {
-    @include valo-combobox-button-icon-style($background-color);
-    color: mix($background-color, valo-font-color($background-color));
+    @include valo-combobox-button-icon-style;
+
     @if $v-animations-enabled {
       @include transition(color 140ms);
     }
@@ -221,7 +236,7 @@
     margin-top: -.47em;
   }
 
-  @if $v-hover-styles-enabled {
+  @if $v-hover-styles-enabled and type-of($background-color) == color {
     &:hover:before {
       color: valo-font-color($background-color);
     }
@@ -235,16 +250,17 @@
     bottom: 0;
     left: 0;
     border-radius: inherit;
-    @include valo-button-active-style($background-color);
+    @if type-of($background-color) == color {
+      @include valo-button-active-style($background-color);
+    }
   }
 }
 
 
 
-@mixin valo-combobox-button-icon-style ($background-color) {
+@mixin valo-combobox-button-icon-style {
   font-family: FontAwesome;
   content: "\f078";
-  color: valo-font-color($background-color);
 }
 
 

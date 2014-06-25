@@ -61,7 +61,7 @@ public class Tabsheets extends VerticalLayout implements View {
         icon.setImmediate(true);
         wrap.addComponent(icon);
 
-        final CheckBox disable = new CheckBox("Disable Tabs");
+        final CheckBox disable = new CheckBox("Disable tabs");
         disable.setImmediate(true);
         wrap.addComponent(disable);
 
@@ -79,9 +79,13 @@ public class Tabsheets extends VerticalLayout implements View {
         framed.setImmediate(true);
         wrap.addComponent(framed);
 
-        final CheckBox centered = new CheckBox("Centered Tabs");
+        final CheckBox centered = new CheckBox("Centered tabs");
         centered.setImmediate(true);
         wrap.addComponent(centered);
+
+        final CheckBox rightAlign = new CheckBox("Right-aligned tabs");
+        rightAlign.setImmediate(true);
+        wrap.addComponent(rightAlign);
 
         final CheckBox equal = new CheckBox("Equal-width tabs");
         equal.setImmediate(true);
@@ -108,6 +112,7 @@ public class Tabsheets extends VerticalLayout implements View {
             public void valueChange(ValueChangeEvent event) {
                 String style = framed.getValue() ? "framed " : "";
                 style += centered.getValue() ? " centered-tabs" : "";
+                style += rightAlign.getValue() ? " right-aligned-tabs" : "";
                 style += equal.getValue() ? " equal-width-tabs" : "";
                 style += padded.getValue() ? " padded-tabbar" : "";
                 style += compact.getValue() ? " compact-tabbar" : "";
@@ -131,6 +136,7 @@ public class Tabsheets extends VerticalLayout implements View {
         disable.addValueChangeListener(update);
         framed.addValueChangeListener(update);
         centered.addValueChangeListener(update);
+        rightAlign.addValueChangeListener(update);
         equal.addValueChangeListener(update);
         padded.addValueChangeListener(update);
         compact.addValueChangeListener(update);

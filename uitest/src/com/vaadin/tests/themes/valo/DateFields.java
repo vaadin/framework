@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -46,6 +47,17 @@ public class DateFields extends VerticalLayout implements View {
 
         DateField date = new DateField("Default resolution");
         date.setValue(new Date());
+        row.addComponent(date);
+
+        date = new DateField("Error");
+        date.setValue(new Date());
+        date.setComponentError(new UserError("Fix it, now!"));
+        row.addComponent(date);
+
+        date = new DateField("Error, borderless");
+        date.setValue(new Date());
+        date.setComponentError(new UserError("Fix it, now!"));
+        date.addStyleName("borderless");
         row.addComponent(date);
 
         CssLayout group = new CssLayout();

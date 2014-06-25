@@ -6,6 +6,17 @@
     @include valo-datefield-style($primary-stylename: $primary-stylename);
   }
 
+  .#{$primary-stylename}-error {
+    .#{$primary-stylename}-textfield {
+      @include valo-textfield-error-style;
+    }
+
+    .#{$primary-stylename}-button {
+      color: $v-error-indicator-color;
+      border-color: $v-error-indicator-color;
+    }
+  }
+
   // Different widths for different resolutions
   .#{$primary-stylename}-full {
     width: round($v-font-size * 15);
@@ -73,7 +84,7 @@
   }
 
   .#{$primary-stylename}-button {
-    @include valo-datefield-button-style($unit-size: $unit-size, $bevel: $bevel, $background-color: $background-color, $border-radius: $border-radius);
+    @include valo-datefield-button-style($unit-size: $unit-size, $bevel: $bevel, $background-color: $background-color, $border-radius: $border-radius, $border: $border);
   }
 
   &.v-disabled {
@@ -106,12 +117,15 @@
 
 
 
-@mixin valo-datefield-button-style ($unit-size: $v-unit-size, $bevel: $v-bevel, $background-color: $v-textfield-background-color, $border-radius: $v-border-radius) {
-  $border-width: first-number($v-textfield-border);
+@mixin valo-datefield-button-style ($unit-size: $v-unit-size, $bevel: $v-bevel, $background-color: $v-textfield-background-color, $border-radius: $v-border-radius, $border: $v-textfield-border) {
+  $border-width: first-number($border) or first-number($v-textfield-border);
   @include valo-tappable;
   -webkit-appearance: none;
   background: transparent;
-  border: none;
+  @if $border {
+    // Only override border if we are actually setting some border
+    border: none;
+  }
   padding: 0;
   position: absolute;
   z-index: 10;
@@ -123,9 +137,17 @@
   text-align: center;
   cursor: pointer;
   font: inherit;
-  border-right: valo-border($color: $background-color, $border: $v-textfield-border, $strength: 0.5);
   outline: none;
   margin: 0;
+
+  @if type-of($background-color) == color {
+    border-right: valo-border($color: $background-color, $border: $v-textfield-border, $strength: 0.5);
+    color: mix($background-color, valo-font-color($background-color));
+
+    &:hover {
+      color: valo-font-color($background-color);
+    }
+  }
 
   @if $border-radius > 0 {
     $br: max(0, $border-radius - $border-width);
@@ -133,15 +155,10 @@
   }
 
   &:before {
-    @include valo-datefield-button-icon-style($background-color);
-    color: mix($background-color, valo-font-color($background-color));
+    @include valo-datefield-button-icon-style;
     @if $v-animations-enabled {
       @include transition(color 140ms);
     }
-  }
-
-  &:hover:before {
-    color: valo-font-color($background-color);
   }
 
   &:active:after {
@@ -151,7 +168,9 @@
     right: 0;
     bottom: 0;
     left: 0;
-    @include valo-button-active-style($background-color);
+    @if type-of($background-color) == color {
+      @include valo-button-active-style($background-color);
+    }
     border-radius: inherit;
   }
 }
@@ -159,10 +178,9 @@
 
 
 
-@mixin valo-datefield-button-icon-style ($background-color) {
+@mixin valo-datefield-button-icon-style {
   font-family: FontAwesome;
   content: "\f073";
-  color: valo-font-color($background-color);
 }
 
 
