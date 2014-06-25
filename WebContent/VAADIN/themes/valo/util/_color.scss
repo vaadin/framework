@@ -53,9 +53,9 @@ $v-luminance-threshold: 150 !default;
 @function valo-font-color ($bg-color, $contrast: 0.8) {
   @if $bg-color {
     @if is-dark-color($bg-color) {
-      @return scale_color($bg-color, $lightness: min(100%, 100% * $contrast), $saturation: max(-100%, -50% * $contrast));
+      @return scale-color($bg-color, $lightness: min(100%, 100% * $contrast), $saturation: max(-100%, -50% * $contrast));
     } @else {
-      @return scale_color($bg-color, $lightness: max(-100%, -100% * $contrast * 0.9), $saturation: max(-100%, -50% * $contrast));
+      @return scale-color($bg-color, $lightness: max(-100%, -100% * $contrast * 0.9), $saturation: max(-100%, -50% * $contrast));
     }
   }
   @return null;
