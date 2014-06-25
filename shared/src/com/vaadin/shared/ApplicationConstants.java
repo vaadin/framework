@@ -111,7 +111,9 @@ public class ApplicationConstants implements Serializable {
     public static final String CSRF_TOKEN = "csrfToken";
 
     /**
-     * The name of the parameter used to transmit the sync id
+     * The name of the parameter used to transmit the sync id. The value can be
+     * set to -1 e.g. when testing with pre-recorded requests to make the
+     * framework ignore the sync id.
      * 
      * @see com.vaadin.ui.ConnectorTracker#getCurrentSyncId()
      * @since 7.2
