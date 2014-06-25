@@ -31,9 +31,12 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableCellElement;
+import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasVisibility;
 import com.google.gwt.user.client.ui.Widget;
@@ -300,7 +303,60 @@ public class Grid<T> extends Composite implements
         private class SortableColumnHeaderRenderer extends
                 ComplexRenderer<String> {
 
+            /**
+             * Delay before a long tap action is triggered. Number in
+             * milliseconds.
+             */
+            private static final int LONG_TAP_DELAY = 500;
+
+            /**
+             * The threshold in pixels a finger can move while long tapping.
+             */
+            private static final int LONG_TAP_THRESHOLD = 3;
+
+            /**
+             * Class for sorting at a later time
+             */
+            private class LazySorter extends Timer {
+
+                private Cell cell;
+
+                private boolean multisort;
+
+                @Override
+                public void run() {
+                    SortOrder sortingOrder = getSortingOrder();
+                    if (sortingOrder == null) {
+                        /*
+                         * No previous sorting, sort Ascending
+                         */
+                        sort(cell, SortDirection.ASCENDING, multisort);
+
+                    } else {
+                        // Toggle sorting
+                        SortDirection direction = sortingOrder.getDirection();
+                        if (direction == SortDirection.ASCENDING) {
+                            sort(cell, SortDirection.DESCENDING, multisort);
+                        } else {
+                            sort(cell, SortDirection.ASCENDING, multisort);
+                        }
+                    }
+                }
+
+                public void setCurrentCell(Cell cell) {
+                    this.cell = cell;
+                }
+
+                public void setMultisort(boolean multisort) {
+                    this.multisort = multisort;
+                }
+            }
+
+            private final LazySorter lazySorter = new LazySorter();
+
             private Renderer<String> cellRenderer;
+
+            private Point touchStartPoint;
 
             /**
              * Creates column renderer with sort indicators
@@ -360,37 +416,77 @@ public class Grid<T> extends Composite implements
 
             @Override
             public Collection<String> getConsumedEvents() {
-                return Arrays.asList(BrowserEvents.MOUSEDOWN);
+                return Arrays.asList(BrowserEvents.TOUCHSTART,
+                        BrowserEvents.TOUCHMOVE, BrowserEvents.TOUCHEND,
+                        BrowserEvents.TOUCHCANCEL, BrowserEvents.MOUSEDOWN);
             }
 
             @Override
-            public void onBrowserEvent(Cell cell, NativeEvent event) {
+            public void onBrowserEvent(final Cell cell, NativeEvent event) {
 
                 // Handle sorting events if column is sortable
                 if (grid.getColumn(cell.getColumn()).isSortable()) {
-                    if (BrowserEvents.MOUSEDOWN.equals(event.getType())) {
+
+                    if (BrowserEvents.TOUCHSTART.equals(event.getType())) {
+                        if (event.getTouches().length() > 1) {
+                            return;
+                        }
+
                         event.preventDefault();
 
-                        SortOrder sortingOrder = getSortingOrder();
-                        if (sortingOrder == null) {
-                            /*
-                             * No previous sorting, sort Ascending
-                             */
-                            sort(cell, SortDirection.ASCENDING,
-                                    event.getShiftKey());
+                        Touch touch = event.getChangedTouches().get(0);
+                        touchStartPoint = new Point(touch.getClientX(),
+                                touch.getClientY());
 
-                        } else {
-                            // Toggle sorting
-                            SortDirection direction = sortingOrder
-                                    .getDirection();
-                            if (direction == SortDirection.ASCENDING) {
-                                sort(cell, SortDirection.DESCENDING,
-                                        event.getShiftKey());
-                            } else {
-                                sort(cell, SortDirection.ASCENDING,
-                                        event.getShiftKey());
-                            }
+                        lazySorter.setCurrentCell(cell);
+                        lazySorter.setMultisort(true);
+                        lazySorter.schedule(LONG_TAP_DELAY);
+
+                    } else if (BrowserEvents.TOUCHMOVE.equals(event.getType())) {
+                        if (event.getTouches().length() > 1) {
+                            return;
                         }
+
+                        event.preventDefault();
+
+                        Touch touch = event.getChangedTouches().get(0);
+                        double diffX = Math.abs(touch.getClientX()
+                                - touchStartPoint.getX());
+                        double diffY = Math.abs(touch.getClientY()
+                                - touchStartPoint.getY());
+
+                        // Cancel long tap if finger strays too far from
+                        // starting point
+                        if (diffX > LONG_TAP_THRESHOLD
+                                || diffY > LONG_TAP_THRESHOLD) {
+                            lazySorter.cancel();
+                        }
+
+                    } else if (BrowserEvents.TOUCHEND.equals(event.getType())) {
+                        if (event.getTouches().length() > 0) {
+                            return;
+                        }
+
+                        if (lazySorter.isRunning()) {
+                            // Not a long tap yet, perform single sort
+                            lazySorter.cancel();
+                            lazySorter.setMultisort(false);
+                            lazySorter.run();
+                        }
+
+                    } else if (BrowserEvents.TOUCHCANCEL
+                            .equals(event.getType())) {
+                        if (event.getChangedTouches().length() > 1) {
+                            return;
+                        }
+
+                        lazySorter.cancel();
+
+                    } else if (BrowserEvents.MOUSEDOWN.equals(event.getType())) {
+                        event.preventDefault();
+                        lazySorter.setCurrentCell(cell);
+                        lazySorter.setMultisort(event.getShiftKey());
+                        lazySorter.run();
                     }
                 }
             }
