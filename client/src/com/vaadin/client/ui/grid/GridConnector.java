@@ -272,6 +272,7 @@ public class GridConnector extends AbstractComponentConnector {
         column.setHeaderCaption(state.header);
         column.setFooterCaption(state.footer);
         column.setWidth(state.width);
+        column.setSortable(state.sortable);
     }
 
     /**

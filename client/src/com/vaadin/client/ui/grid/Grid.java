@@ -296,9 +296,6 @@ public class Grid<T> extends Composite implements
          * Renderer for columns which are sortable
          * 
          * FIXME Currently assumes multisorting
-         * 
-         * FIXME Currently all columns are assumed sortable
-         * 
          */
         private class SortableColumnHeaderRenderer extends
                 ComplexRenderer<String> {
@@ -331,24 +328,34 @@ public class Grid<T> extends Composite implements
                 if (grid != null) {
                     SortOrder sortingOrder = getSortingOrder();
                     Element cellElement = cell.getElement();
-                    if (sortingOrder != null) {
-                        int sortIndex = grid.getSortOrder().indexOf(
-                                sortingOrder);
-                        if (sortIndex > -1 && grid.getSortOrder().size() > 1) {
-                            // Show sort order indicator if column is sorted and
-                            // other sorted columns also exists.
-                            cellElement.setAttribute("sort-order",
-                                    String.valueOf(sortIndex + 1));
+                    if (grid.getColumn(cell.getColumn()).isSortable()) {
+                        if (sortingOrder != null) {
+                            int sortIndex = grid.getSortOrder().indexOf(
+                                    sortingOrder);
+                            if (sortIndex > -1
+                                    && grid.getSortOrder().size() > 1) {
+                                // Show sort order indicator if column is sorted
+                                // and other sorted columns also exists.
+                                cellElement.setAttribute("sort-order",
+                                        String.valueOf(sortIndex + 1));
 
+                            } else {
+                                cellElement.removeAttribute("sort-order");
+                            }
                         } else {
-                            cellElement.removeAttribute("sort-order");
+                            cleanup(cell);
                         }
                     } else {
-                        cellElement.removeAttribute("sort-order");
-                        cellElement.removeClassName("sort-desc");
-                        cellElement.removeClassName("sort-asc");
+                        cleanup(cell);
                     }
                 }
+            }
+
+            private void cleanup(FlyweightCell cell) {
+                Element cellElement = cell.getElement();
+                cellElement.removeAttribute("sort-order");
+                cellElement.removeClassName("sort-desc");
+                cellElement.removeClassName("sort-asc");
             }
 
             @Override
@@ -358,25 +365,31 @@ public class Grid<T> extends Composite implements
 
             @Override
             public void onBrowserEvent(Cell cell, NativeEvent event) {
-                if (BrowserEvents.MOUSEDOWN.equals(event.getType())) {
-                    event.preventDefault();
 
-                    SortOrder sortingOrder = getSortingOrder();
-                    if (sortingOrder == null) {
-                        /*
-                         * No previous sorting, sort Ascending
-                         */
-                        sort(cell, SortDirection.ASCENDING, event.getShiftKey());
+                // Handle sorting events if column is sortable
+                if (grid.getColumn(cell.getColumn()).isSortable()) {
+                    if (BrowserEvents.MOUSEDOWN.equals(event.getType())) {
+                        event.preventDefault();
 
-                    } else {
-                        // Toggle sorting
-                        SortDirection direction = sortingOrder.getDirection();
-                        if (direction == SortDirection.ASCENDING) {
-                            sort(cell, SortDirection.DESCENDING,
-                                    event.getShiftKey());
-                        } else {
+                        SortOrder sortingOrder = getSortingOrder();
+                        if (sortingOrder == null) {
+                            /*
+                             * No previous sorting, sort Ascending
+                             */
                             sort(cell, SortDirection.ASCENDING,
                                     event.getShiftKey());
+
+                        } else {
+                            // Toggle sorting
+                            SortDirection direction = sortingOrder
+                                    .getDirection();
+                            if (direction == SortDirection.ASCENDING) {
+                                sort(cell, SortDirection.DESCENDING,
+                                        event.getShiftKey());
+                            } else {
+                                sort(cell, SortDirection.ASCENDING,
+                                        event.getShiftKey());
+                            }
                         }
                     }
                 }
@@ -439,7 +452,6 @@ public class Grid<T> extends Composite implements
                 }
                 return null;
             }
-
         }
 
         /**
@@ -475,13 +487,15 @@ public class Grid<T> extends Composite implements
         /**
          * Renderer for rendering the header cell value into the cell
          */
-        private SortableColumnHeaderRenderer headerRenderer = new SortableColumnHeaderRenderer(
+        private Renderer<String> headerRenderer = new SortableColumnHeaderRenderer(
                 new TextRenderer());
 
         /**
          * Renderer for rendering the footer cell value into the cell
          */
         private Renderer<String> footerRenderer = new TextRenderer();
+
+        private boolean sortable = false;
 
         /**
          * Constructs a new column with a custom renderer.
@@ -746,6 +760,31 @@ public class Grid<T> extends Composite implements
                         .getColumnConfiguration();
                 return conf.getColumnWidth(index);
             }
+        }
+
+        /**
+         * Enables sort indicators for the grid.
+         * <p>
+         * <b>Note:</b>The API can still sort the column even if this is set to
+         * <code>false</code>.
+         * 
+         * @param sortable
+         *            <code>true</code> when column sort indicators are visible.
+         */
+        public void setSortable(boolean sortable) {
+            if (this.sortable != sortable) {
+                this.sortable = sortable;
+                grid.refreshHeader();
+            }
+        }
+
+        /**
+         * Are sort indicators shown for the column.
+         * 
+         * @return <code>true</code> if the column is sortable
+         */
+        public boolean isSortable() {
+            return sortable;
         }
     }
 

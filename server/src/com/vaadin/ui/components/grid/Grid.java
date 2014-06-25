@@ -30,6 +30,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.data.Container.PropertySetChangeNotifier;
+import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.ColumnGroupRowState;
@@ -252,6 +253,13 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
         for (Object propertyId : datasource.getContainerPropertyIds()) {
             if (!columns.containsKey(propertyId)) {
                 GridColumn column = appendColumn(propertyId);
+
+                // Initial sorting is defined by container
+                if (datasource instanceof Sortable) {
+                    column.setSortable(((Sortable) datasource)
+                            .getSortableContainerPropertyIds().contains(
+                                    propertyId));
+                }
 
                 // Add by default property id as column header
                 column.setHeaderCaption(String.valueOf(propertyId));

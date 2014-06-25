@@ -192,6 +192,21 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }, null, c);
 
+            createBooleanAction("Sortable", getColumnProperty(c), true,
+                    new Command<Grid, Boolean>() {
+
+                        @Override
+                        public void execute(Grid grid, Boolean value,
+                                Object columnIndex) {
+                            Object propertyId = (new ArrayList(grid
+                                    .getContainerDatasource()
+                                    .getContainerPropertyIds())
+                                    .get((Integer) columnIndex));
+                            GridColumn column = grid.getColumn(propertyId);
+                            column.setSortable(value);
+                        }
+                    }, c);
+
             createCategory("Column" + c + " Width", getColumnProperty(c));
 
             createClickAction("Auto", "Column" + c + " Width",

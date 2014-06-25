@@ -55,4 +55,9 @@ public class GridColumnState implements Serializable {
     public int width = 100;
 
     public Connector rendererConnector;
+
+    /**
+     * Are sorting indicators shown for a column. Default is false.
+     */
+    public boolean sortable = false;
 }

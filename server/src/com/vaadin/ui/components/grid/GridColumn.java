@@ -395,4 +395,22 @@ public class GridColumn implements Serializable {
                 grid.getPropertyIdByColumnId(state.id));
     }
 
+    /**
+     * Should sorting controls be available for the column
+     * 
+     * @param sortable
+     *            <code>true</code> if the sorting controls should be visible.
+     */
+    public void setSortable(boolean sortable) {
+        checkColumnIsAttached();
+        state.sortable = sortable;
+        grid.markAsDirty();
+    }
+
+    /**
+     * Are the sorting controls visible in the column header
+     */
+    public boolean isSortable() {
+        return state.sortable;
+    }
 }
