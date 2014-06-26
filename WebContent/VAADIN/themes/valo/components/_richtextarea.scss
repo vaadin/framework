@@ -66,8 +66,10 @@ $valo-richtextarea-use-font-awesome: true !default;
       }
 
       @each $pair in $icons {
-        div[title="#{first($pair)}"]:before {
-          content: "#{last($pair)}";
+        $first-of-pair: first($pair);
+        $last-of-pair: last($pair);
+        div[title="#{$first-of-pair}"]:before {
+          content: "#{$last-of-pair}";
         }
       }
     }
