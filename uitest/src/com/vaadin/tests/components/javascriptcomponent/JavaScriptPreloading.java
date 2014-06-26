@@ -22,7 +22,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 
-public class IEJavaScriptPreloading extends AbstractTestUI {
+public class JavaScriptPreloading extends AbstractTestUI {
 
     public static class JsLabelState extends JavaScriptComponentState {
         public String xhtml;
