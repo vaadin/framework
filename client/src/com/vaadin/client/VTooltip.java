@@ -22,13 +22,13 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.user.client.DOM;
@@ -109,13 +109,13 @@ public class VTooltip extends VWindowOverlay {
     }
 
     private void setTooltipText(TooltipInfo info) {
-        if (info.getErrorMessage() != null) {
+        if (info.getErrorMessage() != null && !info.getErrorMessage().isEmpty()) {
             em.setVisible(true);
             em.updateMessage(info.getErrorMessage());
         } else {
             em.setVisible(false);
         }
-        if (info.getTitle() != null && !"".equals(info.getTitle())) {
+        if (info.getTitle() != null && !info.getTitle().isEmpty()) {
             description.setInnerHTML(info.getTitle());
             description.getStyle().clearDisplay();
         } else {
@@ -130,13 +130,7 @@ public class VTooltip extends VWindowOverlay {
      * 
      */
     private void showTooltip() {
-        boolean hasContent = false;
-        if (currentTooltipInfo.getErrorMessage() != null
-                || (currentTooltipInfo.getTitle() != null && !""
-                        .equals(currentTooltipInfo.getTitle()))) {
-            hasContent = true;
-        }
-        if (hasContent) {
+        if (currentTooltipInfo.hasMessage()) {
             // Issue #8454: With IE7 the tooltips size is calculated based on
             // the last tooltip's position, causing problems if the last one was
             // in the right or bottom edge. For this reason the tooltip is moved
@@ -229,18 +223,23 @@ public class VTooltip extends VWindowOverlay {
 
     /**
      * For assistive tooltips to work correctly we must have the tooltip visible
-     * and attached to the DOM well in advance.
+     * and attached to the DOM well in advance. For this reason both isShowing
+     * and isVisible return false positives. We can't override either of them as
+     * external code may depend on this behavior.
      * 
-     * @return
+     * @return boolean
      */
-    public boolean isActuallyVisible() {
-        return super.isShowing() && getPopupLeft() > 0 && getPopupTop() > 0;
+    public boolean isTooltipOpen() {
+        return super.isShowing() && super.isVisible() && getPopupLeft() > 0
+                && getPopupTop() > 0;
     }
 
     private void closeNow() {
         hide();
         setWidth("");
         closing = false;
+        justClosedTimer.schedule(getQuickOpenTimeout());
+        justClosed = true;
     }
 
     private Timer showTimer = new Timer() {
@@ -255,8 +254,6 @@ public class VTooltip extends VWindowOverlay {
         @Override
         public void run() {
             closeNow();
-            justClosedTimer.schedule(getQuickOpenTimeout());
-            justClosed = true;
         }
     };
 
@@ -279,7 +276,7 @@ public class VTooltip extends VWindowOverlay {
             // already about to close
             return;
         }
-        if (isActuallyVisible()) {
+        if (isTooltipOpen()) {
             closeTimer.schedule(getCloseTimeout());
             closing = true;
         }
@@ -331,6 +328,8 @@ public class VTooltip extends VWindowOverlay {
         if (closing) {
             closeTimer.cancel();
             closeNow();
+            justClosedTimer.cancel();
+            justClosed = false;
         }
 
         showTooltip();
@@ -338,7 +337,7 @@ public class VTooltip extends VWindowOverlay {
     }
 
     private class TooltipEventHandler implements MouseMoveHandler,
-            ClickHandler, KeyDownHandler, FocusHandler, BlurHandler {
+            KeyDownHandler, FocusHandler, BlurHandler, MouseDownHandler {
 
         /**
          * Current element hovered
@@ -404,7 +403,7 @@ public class VTooltip extends VWindowOverlay {
         }
 
         @Override
-        public void onClick(ClickEvent event) {
+        public void onMouseDown(MouseDownEvent event) {
             handleHideEvent();
         }
 
@@ -449,10 +448,10 @@ public class VTooltip extends VWindowOverlay {
             // hasn't changed, we ignore the event.
             // TooltipInfo contains a reference to the parent component that is
             // checked in it's equals-method.
-            if (currentElement != null && isActuallyVisible()) {
-                TooltipInfo currentTooltip = getTooltipFor(currentElement);
+            if (currentElement != null && isTooltipOpen()) {
                 TooltipInfo newTooltip = getTooltipFor(element);
-                if (currentTooltip != null && currentTooltip.equals(newTooltip)) {
+                if (currentTooltipInfo != null
+                        && currentTooltipInfo.equals(newTooltip)) {
                     return;
                 }
             }
@@ -465,31 +464,27 @@ public class VTooltip extends VWindowOverlay {
                     closeTimer.cancel();
                     closing = false;
                 }
+
+                if (isTooltipOpen()) {
+                    closeNow();
+                }
+
                 setTooltipText(info);
                 updatePosition(event, isFocused);
-                if (isActuallyVisible() && !isFocused) {
+                // Schedule timer for showing the tooltip according to if it
+                // was recently closed or not.
+                int timeout = justClosed ? getQuickOpenDelay() : getOpenDelay();
+                if (timeout == 0) {
                     showTooltip();
                 } else {
-                    if (isActuallyVisible()) {
-                        closeNow();
-                    }
-                    // Schedule timer for showing the tooltip according to if it
-                    // was recently closed or not.
-                    int timeout = justClosed ? getQuickOpenDelay()
-                            : getOpenDelay();
-                    if (timeout == 0) {
-                        showTooltip();
-                    } else {
-                        showTimer.schedule(timeout);
-                        opening = true;
-                    }
+                    showTimer.schedule(timeout);
+                    opening = true;
                 }
             }
 
             handledByFocus = isFocused;
             currentElement = element;
         }
-
     }
 
     private final TooltipEventHandler tooltipEventHandler = new TooltipEventHandler();
@@ -503,7 +498,7 @@ public class VTooltip extends VWindowOverlay {
     public void connectHandlersToWidget(Widget widget) {
         Profiler.enter("VTooltip.connectHandlersToWidget");
         widget.addDomHandler(tooltipEventHandler, MouseMoveEvent.getType());
-        widget.addDomHandler(tooltipEventHandler, ClickEvent.getType());
+        widget.addDomHandler(tooltipEventHandler, MouseDownEvent.getType());
         widget.addDomHandler(tooltipEventHandler, KeyDownEvent.getType());
         widget.addDomHandler(tooltipEventHandler, FocusEvent.getType());
         widget.addDomHandler(tooltipEventHandler, BlurEvent.getType());

@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.ui;
+package com.vaadin.tests.tooltip;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;

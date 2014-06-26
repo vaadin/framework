@@ -85,6 +85,11 @@ public class TextArea extends AbstractTextField {
         return (TextAreaState) super.getState();
     }
 
+    @Override
+    protected TextAreaState getState(boolean markAsDirty) {
+        return (TextAreaState) super.getState(markAsDirty);
+    }
+
     /**
      * Sets the number of rows in the text area.
      * 
@@ -104,7 +109,7 @@ public class TextArea extends AbstractTextField {
      * @return number of explicitly set rows.
      */
     public int getRows() {
-        return getState().rows;
+        return getState(false).rows;
     }
 
     /**
@@ -125,7 +130,7 @@ public class TextArea extends AbstractTextField {
      *         <code>false</code> if not.
      */
     public boolean isWordwrap() {
-        return getState().wordwrap;
+        return getState(false).wordwrap;
     }
 
 }

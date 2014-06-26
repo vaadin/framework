@@ -143,14 +143,7 @@ public class ColorPickerPopup extends Window implements ClickListener,
      */
     private boolean updatingColors = false;
 
-    /**
-     * Instantiates a new color picker popup.
-     */
-    public ColorPickerPopup(Color initialColor) {
-        super();
-
-        selectedColor = initialColor;
-
+    private ColorPickerPopup() {
         // Set the layout
         layout = new VerticalLayout();
         layout.setSpacing(false);
@@ -162,15 +155,21 @@ public class ColorPickerPopup extends Window implements ClickListener,
         setStyleName(STYLENAME);
         setResizable(false);
         setImmediate(true);
+        // Create the history
+        history = new ColorPickerHistory();
+        history.addColorChangeListener(this);
+    }
 
+    /**
+     * Instantiates a new color picker popup.
+     */
+    public ColorPickerPopup(Color initialColor) {
+        this();
+        selectedColor = initialColor;
         initContents();
     }
 
     private void initContents() {
-        // Create the history
-        history = new ColorPickerHistory();
-        history.addColorChangeListener(this);
-
         // Create the preview on the rgb tab
         rgbPreview = new ColorPickerPreview(selectedColor);
         rgbPreview.setWidth("240px");

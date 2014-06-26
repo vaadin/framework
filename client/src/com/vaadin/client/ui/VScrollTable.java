@@ -1083,11 +1083,15 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         keyboardSelectionOverRowFetchInProgress = true;
                     }
                     if (selected) {
+
                         if (focusedRow == null
                                 || !selectedRowKeys.contains(focusedRow
                                         .getKey())) {
-                            // The focus is no longer on a selected row,
-                            // move focus to first selected row
+                            /*
+                             * The focus is no longer on a selected row. Move
+                             * focus to the selected row. (#10522)
+                             */
+
                             setRowFocus(row);
                         }
                     }
@@ -7258,7 +7262,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // Set new focused row
             focusedRow = row;
 
-            ensureRowIsVisible(row);
+            /*
+             * Don't scroll to the focused row when in multiselect mode.
+             * (#13341)
+             */
+
+            if (isSingleSelectMode()) {
+                ensureRowIsVisible(row);
+            }
 
             return true;
         }

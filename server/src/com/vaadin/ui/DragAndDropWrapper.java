@@ -187,6 +187,10 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     private Set<String> sentIds = new HashSet<String>();
 
+    private DragAndDropWrapper() {
+        super();
+    }
+
     /**
      * Wraps given component in a {@link DragAndDropWrapper}.
      * 
@@ -194,7 +198,8 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
      *            the component to be wrapped
      */
     public DragAndDropWrapper(Component root) {
-        super(root);
+        this();
+        setCompositionRoot(root);
     }
 
     /**

@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class VColorPickerArea extends Widget implements ClickHandler, HasHTML,
         HasClickHandlers {
 
+    public static final String CLASSNAME = "v-colorpicker";
     private String color = null;
 
     private boolean isOpen;
@@ -47,6 +48,7 @@ public class VColorPickerArea extends Widget implements ClickHandler, HasHTML,
     public VColorPickerArea() {
         super();
         setElement(DOM.createDiv());
+        setStyleName(CLASSNAME);
 
         caption = new HTML();
         caption.addStyleName("v-caption");

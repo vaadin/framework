@@ -15,32 +15,30 @@
  */
 package com.vaadin.tests.components.gridlayout;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-
-import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridLayoutElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class GridLayoutExpandRatioTest extends MultiBrowserTest {
     @Test
-    public void gridLayoutExpandRatioTest() {
+    public void cellSizesAreCorrectlyCalculated() {
         openTestURL();
-        GridLayoutElement gridLayout5x5 = $(GridLayoutElement.class).get(0);
-        GridLayoutElement gridLayout4x4 = $(GridLayoutElement.class).get(1);
-        ButtonElement hidingButton = $(ButtonElement.class).get(0);
-        hidingButton.click();
-        List<WebElement> slots5x5 = gridLayout5x5.findElements(By
-                .className("v-gridlayout-slot"));
-        List<WebElement> slots4x4 = gridLayout4x4.findElements(By
-                .className("v-gridlayout-slot"));
-        assertEquals("Different amount of slots", slots5x5.size(),
-                slots4x4.size());
+
+        hideMiddleRowAndColumn();
+        final List<WebElement> slots4x4 = getSlots(1);
+
+        waitUntilColumnAndRowAreHidden(slots4x4);
+        final List<WebElement> slots5x5 = getSlots(0);
+
         for (int i = 0; i < slots5x5.size(); i++) {
             WebElement compared = slots5x5.get(i);
             WebElement actual = slots4x4.get(i);
@@ -49,5 +47,24 @@ public class GridLayoutExpandRatioTest extends MultiBrowserTest {
             assertEquals("Different left coordinate for element " + i,
                     compared.getCssValue("left"), actual.getCssValue("left"));
         }
+    }
+
+    private void waitUntilColumnAndRowAreHidden(final List<WebElement> slots4x4) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver input) {
+                return getSlots(0).size() == slots4x4.size();
+            }
+        }, 5);
+    }
+
+    private List<WebElement> getSlots(int index) {
+        GridLayoutElement layout = $(GridLayoutElement.class).get(index);
+
+        return layout.findElements(By.className("v-gridlayout-slot"));
+    }
+
+    private void hideMiddleRowAndColumn() {
+        $(ButtonElement.class).first().click();
     }
 }

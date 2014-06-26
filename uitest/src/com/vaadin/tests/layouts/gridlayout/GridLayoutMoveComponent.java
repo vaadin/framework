@@ -1,5 +1,7 @@
-package com.vaadin.tests.layouts;
+package com.vaadin.tests.layouts.gridlayout;
 
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -7,10 +9,10 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 
-public class GridLayoutMoveComponent extends TestBase {
+public class GridLayoutMoveComponent extends AbstractTestUI {
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         final GridLayout grid = new GridLayout(2, 3);
         grid.setCaption("Fixed size grid");
         grid.setWidth("300px");
@@ -51,13 +53,14 @@ public class GridLayoutMoveComponent extends TestBase {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         grid.removeComponent(tf);
+                        grid.addComponent(new Label("I'm on left"), 0, 2);
                         grid.addComponent(tf, 1, 2);
                     }
                 }));
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Click the buttons below the GridLayout to move the components to the right. Should definitely work no matter what.";
     }
 

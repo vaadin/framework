@@ -6,6 +6,7 @@
 	<classpathentry kind="src" path="client/src"/>
 	<classpathentry kind="src" path="server/src"/>
 	<classpathentry kind="src" path="client-compiler/src"/>
+	<classpathentry kind="src" path="client-compiler/tests/src"/>
 	<classpathentry kind="src" path="uitest/src"/>
 	<classpathentry kind="src" path="buildhelpers/src"/>
 	<classpathentry kind="src" path="shared/src"/>

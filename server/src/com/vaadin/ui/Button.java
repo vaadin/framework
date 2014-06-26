@@ -556,7 +556,7 @@ public class Button extends AbstractComponent implements
      * @return true if the button is disabled when clicked, false otherwise
      */
     public boolean isDisableOnClick() {
-        return getState().disableOnClick;
+        return getState(false).disableOnClick;
     }
 
     /**
@@ -582,7 +582,7 @@ public class Button extends AbstractComponent implements
      */
     @Override
     public int getTabIndex() {
-        return getState().tabIndex;
+        return getState(false).tabIndex;
     }
 
     /*
@@ -604,6 +604,11 @@ public class Button extends AbstractComponent implements
     @Override
     protected ButtonState getState() {
         return (ButtonState) super.getState();
+    }
+
+    @Override
+    protected ButtonState getState(boolean markAsDirty) {
+        return (ButtonState) super.getState(markAsDirty);
     }
 
     /**
@@ -628,7 +633,7 @@ public class Button extends AbstractComponent implements
      * @return String with the alt text
      */
     public String getIconAlternateText() {
-        return getState().iconAltText;
+        return getState(false).iconAltText;
     }
 
     public void setIconAlternateText(String iconAltText) {
@@ -658,7 +663,7 @@ public class Button extends AbstractComponent implements
      *         <code>false</code> otherwise
      */
     public boolean isHtmlContentAllowed() {
-        return getState().htmlContentAllowed;
+        return getState(false).htmlContentAllowed;
     }
 
 }

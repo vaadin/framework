@@ -23,6 +23,7 @@ import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
+import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VRichTextArea;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
@@ -31,7 +32,7 @@ import com.vaadin.ui.RichTextArea;
 
 @Connect(value = RichTextArea.class, loadStyle = LoadStyle.LAZY)
 public class RichTextAreaConnector extends AbstractFieldConnector implements
-        Paintable, BeforeShortcutActionListener {
+        Paintable, BeforeShortcutActionListener, SimpleManagedLayout {
 
     /*
      * Last value received from the server
@@ -47,6 +48,15 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
                 flush();
             }
         });
+        getLayoutManager().registerDependency(this,
+                getWidget().formatter.getElement());
+    }
+
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+        getLayoutManager().unregisterDependency(this,
+                getWidget().formatter.getElement());
     }
 
     @Override
@@ -108,6 +118,21 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
                 getConnection().updateVariable(getConnectorId(), "text", html,
                         getState().immediate);
             }
+        }
+    }
+
+    @Override
+    public void layout() {
+        if (!isUndefinedHeight()) {
+            int rootElementInnerHeight = getLayoutManager().getInnerHeight(
+                    getWidget().getElement());
+            int formatterHeight = getLayoutManager().getOuterHeight(
+                    getWidget().formatter.getElement());
+            int editorHeight = rootElementInnerHeight - formatterHeight;
+            if (editorHeight < 0) {
+                editorHeight = 0;
+            }
+            getWidget().rta.setHeight(editorHeight + "px");
         }
     }
 }

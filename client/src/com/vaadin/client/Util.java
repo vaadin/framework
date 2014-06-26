@@ -35,6 +35,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Touch;
+import com.google.gwt.event.dom.client.KeyEvent;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -66,7 +67,23 @@ public class Util {
     }-*/;
 
     /**
-     * 
+     * Helper method for a bug fix #14041. For mozilla getKeyCode return 0 for
+     * space bar (because space is considered as char). If return 0 use
+     * getCharCode.
+     *
+     * @param event
+     * @return return key code
+     */
+    public static int getKeyCode(KeyEvent<?> event) {
+        int keyCode = event.getNativeEvent().getKeyCode();
+        if (keyCode == 0) {
+            keyCode = event.getNativeEvent().getCharCode();
+        }
+        return keyCode;
+    }
+
+    /**
+     *
      * Returns the topmost element of from given coordinates.
      * 
      * TODO fix crossplat issues clientX vs pageX. See quircksmode. Not critical
