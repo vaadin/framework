@@ -424,7 +424,7 @@
   .v-accordion-borderless {
     border: none;
     border-radius: 0;
-    box-shadow: none;
+    @include box-shadow(none);
 
     > .v-accordion-item {
       border-radius: 0;

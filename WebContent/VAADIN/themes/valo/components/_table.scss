@@ -75,7 +75,7 @@ $v-table-background-color: null !default;
   .v-table-header table,
   .v-table-footer table,
   .v-table-table {
-    box-shadow: 0 0 0 $v-table-border-width $border-color;
+    @include box-shadow(0 0 0 $v-table-border-width $border-color);
 
     .v-ie8 & {
       outline: $v-table-border-width solid $border-color;
@@ -371,7 +371,7 @@ $v-table-background-color: null !default;
   tbody.v-drag-element {
     display: block;
     overflow: visible;
-    box-shadow: none;
+    @include box-shadow(none);
     background: transparent;
     @include opacity(1);
 
@@ -410,7 +410,7 @@ $v-table-background-color: null !default;
   // Drag'n'drop styles
 
   .#{$primary-stylename}-drag .#{$primary-stylename}-body {
-    box-shadow: 0 0 0 2px rgba($v-focus-color, .5);
+    @include box-shadow(0 0 0 2px rgba($v-focus-color, .5));
 
     @if color-luminance($v-focus-color) + 50 < color-luminance($background-color) {
       border-color: $v-focus-color;

@@ -34,7 +34,7 @@ $v-panel-border: $v-border !default;
   color: valo-font-color($background-color);
   border-radius: $border-radius;
   border: valo-border($border: $border, $color: darkest-color($background-color, $v-app-background-color), $strength: 0.7);
-  box-shadow: valo-bevel-and-shadow($shadow: $shadow);
+  @include box-shadow(valo-bevel-and-shadow($shadow: $shadow));
 }
 
 
@@ -54,7 +54,7 @@ $v-panel-border: $v-border !default;
   color: valo-font-color($bg);
   font-weight: $v-caption-font-weight;
   font-size: $v-caption-font-size;
-  box-shadow: valo-bevel-and-shadow($background-color: $bg, $bevel: $bevel, $gradient: $gradient);
+  @include box-shadow(valo-bevel-and-shadow($background-color: $bg, $bevel: $bevel, $gradient: $gradient));
   text-shadow: valo-text-shadow(valo-font-color($bg), $bg, $v-bevel);
 }
 
@@ -64,13 +64,13 @@ $v-panel-border: $v-border !default;
   $bg: scale-color(adjust-color($v-background-color, $lightness: -2%), $saturation: -1.5%);
   background: $bg;
   color: valo-font-color($bg);
-  box-shadow: valo-bevel-and-shadow($shadow: $shadow);
+  @include box-shadow(valo-bevel-and-shadow($shadow: $shadow));
   border-radius: $v-border-radius;
   border: valo-border();
 
   > div > .v-panel-caption {
     background: transparent;
-    box-shadow: none;
+    @include box-shadow(none);
   }
 }
 
@@ -81,11 +81,11 @@ $v-panel-border: $v-border !default;
   color: inherit;
   border: none;
   border-radius: 0;
-  box-shadow: none;
+  @include box-shadow(none);
 
   > div > .v-panel-caption {
     background: transparent;
-    box-shadow: none;
+    @include box-shadow(none);
     color: inherit;
     padding: 0;
     margin: 0 round($v-unit-size/3);

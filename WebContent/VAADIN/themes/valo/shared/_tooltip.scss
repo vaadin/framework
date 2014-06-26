@@ -58,7 +58,7 @@ $v-tooltip-border-radius: $v-border-radius - 1px !default;
 @mixin valo-tooltip-style {
   background-color: opacify($v-tooltip-background-color, 1);  // For IE8
   background-color: $v-tooltip-background-color;
-  box-shadow: $v-tooltip-box-shadow;
+  @include box-shadow($v-tooltip-box-shadow);
   color: $v-tooltip-font-color;
   padding: $v-tooltip-padding-vertical $v-tooltip-padding-horizontal;
   border-radius: $v-tooltip-border-radius;

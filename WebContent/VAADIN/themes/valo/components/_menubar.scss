@@ -13,7 +13,7 @@
       @if type-of($v-focus-style) == list {
         $box-shadow: $box-shadow, $v-focus-style;
       }
-      box-shadow: $box-shadow;
+      @include box-shadow($box-shadow);
     }
 
     &.v-disabled {
@@ -229,7 +229,7 @@
 
 @mixin valo-menubar-menuitem-checked-style ($background-color: if(color-luminance($v-background-color) < 10, scale-color($v-background-color, $lightness: 10%, $saturation: -5%), scale-color($v-background-color, $lightness: -5%, $saturation: -5%))) {
   $grad: valo-gradient-style($v-gradient) valo-gradient-opacity($v-gradient)/4;
-  box-shadow: none;
+  @include box-shadow(none);
   @include valo-gradient($color: $background-color, $gradient: $grad, $direction: to top);
   color: valo-font-color($background-color, 0.9);
 }
@@ -259,17 +259,17 @@
   border: none;
   border-radius: 0;
   padding: first-number($v-border);
-  box-shadow: none;
+  @include box-shadow(none);
   background: transparent;
   color: inherit;
 
   &:not(.v-disabled):focus {
     border: none;
-    box-shadow: none;
+    @include box-shadow(none);
   }
 
   .#{$primary-stylename}-menuitem {
-    box-shadow: none;
+    @include box-shadow(none);
     border: none;
     margin-right: max(1px, first-number($v-border));
     border-radius: $v-border-radius;

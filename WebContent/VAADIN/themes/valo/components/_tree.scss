@@ -230,7 +230,7 @@ $v-tree-expand-animation-enabled: false !default;
   }
 
   .#{$primary-stylename}-node-caption-drag-center {
-    box-shadow: 0 0 0 2px $v-focus-color;
+    @include box-shadow(0 0 0 2px $v-focus-color);
     position: relative;
     border-radius: $v-border-radius;
 

@@ -72,7 +72,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
     @if $background-color {
       color: valo-font-color($background-color);
-      box-shadow: valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient);
+      @include box-shadow(valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient));
     }
 
 
@@ -127,7 +127,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
     border-color: $focus-color;
   }
 
-  box-shadow: valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient, $include-focus: true);
+  @include box-shadow(valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient, $include-focus: true));
 
   @include valo-focus-style;
 }
@@ -135,7 +135,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 @mixin valo-textfield-readonly-style {
   background: transparent;
-  box-shadow: none;
+  @include box-shadow(none);
   &:focus {
     @include valo-focus-style($include-box-shadow: true);
   }
@@ -165,7 +165,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
   border: none;
   border-radius: 0;
   background: $background-color;
-  box-shadow: none;
+  @include box-shadow(none);
   @if $background-color == transparent {
     color: inherit;
   } @else if type-of($background-color) == color {
@@ -173,7 +173,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
   }
 
   &:focus {
-    box-shadow: none;
+    @include box-shadow(none);
   }
 }
 

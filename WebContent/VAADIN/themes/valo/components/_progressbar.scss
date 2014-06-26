@@ -18,7 +18,7 @@ $v-progressbar-border-radius: $v-border-radius !default;
   .#{$primary-stylename}-point {
     .#{$primary-stylename}-indicator {
       background: transparent;
-      box-shadow: none;
+      @include box-shadow(none);
       border: none;
       text-align: right;
       overflow: hidden;
@@ -57,7 +57,7 @@ $v-progressbar-border-radius: $v-border-radius !default;
   border-radius: $v-progressbar-border-radius;
   height: inherit;
   @include valo-gradient($color: $background-color);
-  box-shadow: valo-bevel-and-shadow($background-color: $background-color);
+  @include box-shadow(valo-bevel-and-shadow($background-color: $background-color));
   @if $border {
     border: valo-border($border: $border, $color: $background-color, $context: $v-app-background-color);
   } @else {

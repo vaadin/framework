@@ -8,3 +8,8 @@
     filter: none remove-nth($o, 1);
   }
 }
+
+// -webkit-box-shadow still needed for Android 2.3 and 3.0, as well as iOS 5
+@mixin box-shadow ($shadows...) {
+  @include prefixer(box-shadow, $shadows, webkit spec);
+}

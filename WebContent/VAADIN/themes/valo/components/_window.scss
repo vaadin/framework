@@ -28,9 +28,9 @@ $v-window-modality-curtain-background-color: #222 !default;
 
     @if $v-window-shadow {
       @if $v-window-shadow == none {
-        box-shadow: none;
+        @include box-shadow(none);
       } @else if $v-window-shadow != $v-overlay-shadow {
-        box-shadow: valo-bevel-and-shadow($shadow: $v-window-shadow);
+        @include box-shadow(valo-bevel-and-shadow($shadow: $v-window-shadow));
       }
     }
     @if $v-window-border-radius != $v-border-radius {

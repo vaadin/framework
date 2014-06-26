@@ -31,7 +31,7 @@
       height: 11px;
       border-radius: 7px;
       border: 1px solid #fff;
-      box-shadow: 0 0 0 1px rgba(0,0,0,.3), inset 0 0 0 1px rgba(0,0,0,.3);
+      @include box-shadow(0 0 0 1px rgba(0,0,0,.3), inset 0 0 0 1px rgba(0,0,0,.3));
       position: absolute;
       bottom: -6px;
       left: -6px;
@@ -123,19 +123,19 @@
     .v-slider-red .v-slider-base:after {
       background: red;
       border: none;
-      box-shadow: none;
+      @include box-shadow(none);
     }
 
     .v-slider-green .v-slider-base:after {
       background: green;
       border: none;
-      box-shadow: none;
+      @include box-shadow(none);
     }
 
     .v-slider-blue .v-slider-base:after {
       background: blue;
       border: none;
-      box-shadow: none;
+      @include box-shadow(none);
     }
 
     .v-margin-bottom {

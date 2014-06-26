@@ -39,7 +39,7 @@
       @include user-select(none);
       @include valo-gradient;
       cursor: inherit;
-      box-shadow: valo-bevel-and-shadow($bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient);
+      @include box-shadow(valo-bevel-and-shadow($bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient));
       @include valo-border-with-gradient($border: $v-border, $color: $v-background-color, $gradient: $v-gradient);
       text-shadow: inherit;
       text-overflow: ellipsis;

@@ -110,7 +110,7 @@ $v-selection-item-selection-color: $v-selection-color !default;
   background-color: $background-color;
   color: valo-font-color($background-color);
 
-  box-shadow:  valo-bevel-and-shadow($bevel: null, $shadow: $shadow);
+  @include box-shadow( valo-bevel-and-shadow($bevel: null, $shadow: $shadow));
 
   @if $v-animations-enabled {
     @if $animate-in {
@@ -200,7 +200,7 @@ $v-selection-item-selection-color: $v-selection-color !default;
 @mixin valo-drag-element-style ($background-color: $v-app-background-color) {
   background: $background-color;
   color: valo-font-color($background-color);
-  box-shadow: 0 2px 10px rgba(#000, .2);
+  @include box-shadow(0 2px 10px rgba(#000, .2));
   border-radius: $v-border-radius;
   overflow: hidden;
   @include opacity(.5);

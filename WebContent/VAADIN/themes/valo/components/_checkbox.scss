@@ -44,7 +44,7 @@
 
     &:focus ~ label:before {
       @include valo-button-focus-style($background-color: $background-color, $border-fallback: null, $include-box-shadow: false);
-      box-shadow: valo-bevel-and-shadow($background-color: $background-color, $bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient, $include-focus: true);
+      @include box-shadow(valo-bevel-and-shadow($background-color: $background-color, $bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient, $include-focus: true));
     }
 
     & ~ label:before,

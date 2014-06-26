@@ -88,7 +88,7 @@ $v-luminance-threshold: 150 !default;
 
 @mixin valo-focus-style($include-box-shadow: false) {
   @if $include-box-shadow and type-of($v-focus-style) == list {
-    box-shadow: $v-focus-style;
+    @include box-shadow($v-focus-style);
   } @else if type-of($v-focus-style) == color {
     border-color: $v-focus-style;
   }

@@ -102,7 +102,7 @@
   width: 100%;
   bottom: 0;
   right: 0;
-  box-shadow: valo-bevel-and-shadow($shadow: join(inset, $v-shadow), $shadow-opacity: $v-shadow-opacity/2);
+  @include box-shadow(valo-bevel-and-shadow($shadow: join(inset, $v-shadow), $shadow-opacity: $v-shadow-opacity/2));
   background-color: $v-panel-background-color;
   @include box-sizing(border-box);
   @include valo-panel-adjust-content-margins;

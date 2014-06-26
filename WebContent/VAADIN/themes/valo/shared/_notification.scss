@@ -171,7 +171,7 @@ $v-notification-title-color: $v-focus-color !default;
 
 @mixin valo-notification-style {
   background: valo-overlay-background-color();
-  box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.15);
+  @include box-shadow(0px 5px 15px 0px rgba(0,0,0,0.15));
   padding: round($v-unit-size/2) round($v-unit-size/1.7);
 
   h1 {
@@ -190,7 +190,7 @@ $v-notification-title-color: $v-focus-color !default;
   max-width: 100%;
   margin: 0 !important;
   border-radius: 0;
-  box-shadow: 0 0 20px 0 rgba(0,0,0,0.25);
+  @include box-shadow(0 0 20px 0 rgba(0,0,0,0.25));
   padding: round($v-unit-size/3) round($v-unit-size/2.5);
 
   p {
@@ -264,7 +264,7 @@ $v-notification-title-color: $v-focus-color !default;
 @mixin valo-notification-error-style {
   background: $v-error-indicator-color;
   font-weight: $v-font-weight + 100;
-  box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.25);
+  @include box-shadow(0px 5px 15px 0px rgba(0,0,0,0.25));
 
   h1 {
     color: valo-font-color($v-error-indicator-color, 1);
