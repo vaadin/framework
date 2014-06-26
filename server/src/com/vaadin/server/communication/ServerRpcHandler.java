@@ -75,10 +75,16 @@ public class ServerRpcHandler implements Serializable {
         private final int syncId;
         private final JSONObject json;
 
-        public RpcRequest(String jsonString) throws JSONException {
+        public RpcRequest(String jsonString, VaadinRequest request)
+                throws JSONException {
             json = new JSONObject(jsonString);
             csrfToken = json.getString(ApplicationConstants.CSRF_TOKEN);
-            syncId = json.getInt(ApplicationConstants.SERVER_SYNC_ID);
+            if (request.getService().getDeploymentConfiguration()
+                    .isSyncIdCheckEnabled()) {
+                syncId = json.getInt(ApplicationConstants.SERVER_SYNC_ID);
+            } else {
+                syncId = -1;
+            }
             invocations = new JSONArray(
                     json.getString(ApplicationConstants.RPC_INVOCATIONS));
         }
@@ -157,7 +163,7 @@ public class ServerRpcHandler implements Serializable {
             return;
         }
 
-        RpcRequest rpcRequest = new RpcRequest(changeMessage);
+        RpcRequest rpcRequest = new RpcRequest(changeMessage, request);
 
         // Security: double cookie submission pattern unless disabled by
         // property
