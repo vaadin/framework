@@ -39,9 +39,9 @@
       font-weight: $v-font-weight + 100;
     }
 
-    > .h2,
-    > .h3,
-    > .h4 {
+    > .v-label-h2,
+    > .v-label-h3,
+    > .v-label-h4 {
       position: absolute;
       left: 0;
       margin-top: -0.5em;
@@ -189,15 +189,15 @@
   }
 
   > table > tbody > .#{$primary-stylename}-row > .#{$primary-stylename}-contentcell {
-    > .h2,
-    > .h3,
-    > .h4 {
+    > .v-label-h2,
+    > .v-label-h3,
+    > .v-label-h4 {
       border-bottom: none;
       color: $v-selection-color;
     }
 
-    > .h3,
-    > .h4 {
+    > .v-label-h3,
+    > .v-label-h4 {
       margin-top: 0;
     }
   }
