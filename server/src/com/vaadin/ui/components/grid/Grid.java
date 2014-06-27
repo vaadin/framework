@@ -1049,13 +1049,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
     }
 
     /**
-     * FIXME remove once selection mode communication is done. only for testing.
-     */
-    public void setSelectionCheckboxes(boolean value) {
-        getState().selectionCheckboxes = value;
-    }
-
-    /**
      * A shortcut for
      * <code>{@link #datasourceExtension}.{@link com.vaadin.data.RpcDataProviderExtension#getKeyMapper() getKeyMapper()}</code>
      */

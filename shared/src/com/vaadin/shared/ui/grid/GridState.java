@@ -92,10 +92,6 @@ public class GridState extends AbstractComponentState {
     @DelegateToWidget
     public HeightMode heightMode = HeightMode.CSS;
 
-    /** FIXME remove once selection mode communcation is done. only for testing. */
-    @DelegateToWidget
-    public boolean selectionCheckboxes;
-
     // instantiated just to avoid NPEs
     public List<String> selectedKeys = new ArrayList<String>();
 

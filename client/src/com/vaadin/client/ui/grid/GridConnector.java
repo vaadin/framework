@@ -234,6 +234,9 @@ public class GridConnector extends AbstractComponentConnector {
             purgeRemovedColumns();
 
             int currentColumns = getWidget().getColumnCount();
+            if (getWidget().getSelectionModel().getSelectionColumnRenderer() != null) {
+                currentColumns--;
+            }
 
             // Add new columns
             for (int columnIndex = currentColumns; columnIndex < totalColumns; columnIndex++) {
@@ -289,10 +292,23 @@ public class GridConnector extends AbstractComponentConnector {
      * @param columnIndex
      *            The index of the column to update
      */
-    private void updateColumnFromStateChangeEvent(int columnIndex) {
-        GridColumn<?, JSONObject> column = getWidget().getColumn(columnIndex);
+    private void updateColumnFromStateChangeEvent(final int columnIndex) {
+        /*
+         * We use the widget column index here instead of the given column
+         * index. SharedState contains information only about the explicitly
+         * defined columns, while the widget counts the selection column as an
+         * explicit one.
+         */
+        GridColumn<?, JSONObject> column = getWidget().getColumn(
+                getWidgetColumnIndex(columnIndex));
+
         GridColumnState columnState = getState().columns.get(columnIndex);
         updateColumnFromState(column, columnState);
+
+        assert column instanceof CustomGridColumn : "column at index "
+                + columnIndex + " is not a "
+                + CustomGridColumn.class.getSimpleName() + ", but a "
+                + column.getClass().getSimpleName();
 
         if (columnState.rendererConnector != ((CustomGridColumn) column)
                 .getRendererConnector()) {
@@ -314,8 +330,15 @@ public class GridConnector extends AbstractComponentConnector {
                 ((AbstractRendererConnector<Object>) state.rendererConnector));
         columnIdToColumn.put(state.id, column);
 
-        // Adds a column to grid, and registers Grid with the column.
-        getWidget().addColumn(column, columnIndex);
+        /*
+         * Adds a column to grid, and registers Grid with the column.
+         * 
+         * We use the widget column index here instead of the given column
+         * index. SharedState contains information only about the explicitly
+         * defined columns, while the widget counts the selection column as an
+         * explicit one.
+         */
+        getWidget().addColumn(column, getWidgetColumnIndex(columnIndex));
 
         /*
          * Have to update state _after_ the column has been added to the grid as
@@ -326,6 +349,20 @@ public class GridConnector extends AbstractComponentConnector {
          * present.
          */
         updateColumnFromState(column, state);
+    }
+
+    /**
+     * If we have a selection column renderer, we need to offset the index by
+     * one when referring to the column index in the widget.
+     */
+    private int getWidgetColumnIndex(final int columnIndex) {
+        Renderer<Boolean> selectionColumnRenderer = getWidget()
+                .getSelectionModel().getSelectionColumnRenderer();
+        int widgetColumnIndex = columnIndex;
+        if (selectionColumnRenderer != null) {
+            widgetColumnIndex++;
+        }
+        return widgetColumnIndex;
     }
 
     /**

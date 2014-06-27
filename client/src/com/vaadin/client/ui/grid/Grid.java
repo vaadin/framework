@@ -123,9 +123,9 @@ public class Grid<T> extends Composite implements
 
         @Override
         public void setFooterCaption(String caption) {
-            if (initDone) {
-                throw new UnsupportedOperationException(
-                        "The selection column is read only");
+            if (!SharedUtil.equals(caption, getFooterCaption()) && initDone) {
+                throw new UnsupportedOperationException("The selection "
+                        + "column cannot be modified after init");
             } else {
                 super.setFooterCaption(caption);
             }
@@ -133,9 +133,9 @@ public class Grid<T> extends Composite implements
 
         @Override
         public void setFooterRenderer(Renderer<String> renderer) {
-            if (initDone) {
-                throw new UnsupportedOperationException(
-                        "The selection column is read only");
+            if (!SharedUtil.equals(renderer, getFooterRenderer()) && initDone) {
+                throw new UnsupportedOperationException("The selection "
+                        + "column cannot be modified after init");
             } else {
                 super.setFooterRenderer(renderer);
             }
@@ -143,9 +143,9 @@ public class Grid<T> extends Composite implements
 
         @Override
         public void setHeaderCaption(String caption) {
-            if (initDone) {
-                throw new UnsupportedOperationException(
-                        "The selection column is read only");
+            if (!SharedUtil.equals(caption, getHeaderCaption()) && initDone) {
+                throw new UnsupportedOperationException("The selection "
+                        + "column cannot be modified after init");
             } else {
                 super.setHeaderCaption(caption);
             }
@@ -153,9 +153,9 @@ public class Grid<T> extends Composite implements
 
         @Override
         public void setHeaderRenderer(Renderer<String> renderer) {
-            if (initDone) {
-                throw new UnsupportedOperationException(
-                        "The selection column is read only");
+            if (!SharedUtil.equals(renderer, getHeaderRenderer()) && initDone) {
+                throw new UnsupportedOperationException("The selection "
+                        + "column cannot be modified after init");
             } else {
                 super.setHeaderRenderer(renderer);
             }
@@ -163,9 +163,9 @@ public class Grid<T> extends Composite implements
 
         @Override
         public void setVisible(boolean visible) {
-            if (initDone) {
-                throw new UnsupportedOperationException(
-                        "The selection column is read only");
+            if (!visible && initDone) {
+                throw new UnsupportedOperationException("The selection "
+                        + "column cannot be modified after init");
             } else {
                 super.setVisible(visible);
             }
@@ -173,9 +173,9 @@ public class Grid<T> extends Composite implements
 
         @Override
         public void setWidth(int pixels) {
-            if (initDone) {
-                throw new UnsupportedOperationException(
-                        "The selection column is read only");
+            if (pixels != getWidth() && initDone) {
+                throw new UnsupportedOperationException("The selection "
+                        + "column cannot be modified after init");
             } else {
                 super.setWidth(pixels);
             }
@@ -2199,15 +2199,6 @@ public class Grid<T> extends Composite implements
         }
     }
 
-    /* TODO remove before final */
-    public void setSelectionCheckboxes(boolean set) {
-        if (set) {
-            setSelectColumnRenderer(selectionModel.getSelectionColumnRenderer());
-        } else {
-            setSelectColumnRenderer(null);
-        }
-    }
-
     /**
      * Accesses the package private method Widget#setParent()
      * 
@@ -2239,7 +2230,8 @@ public class Grid<T> extends Composite implements
 
         this.selectionModel = selectionModel;
         selectionModel.setGrid(this);
-
+        setSelectColumnRenderer(this.selectionModel
+                .getSelectionColumnRenderer());
     }
 
     /**
