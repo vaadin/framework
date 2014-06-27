@@ -204,6 +204,26 @@ public class ResourceLoader {
      */
     public void loadScript(final String scriptUrl,
             final ResourceLoadListener resourceLoadListener) {
+        loadScript(scriptUrl, resourceLoadListener,
+                !supportsInOrderScriptExecution());
+    }
+
+    /**
+     * Load a script and notify a listener when the script is loaded. Calling
+     * this method when the script is currently loading or already loaded
+     * doesn't cause the script to be loaded again, but the listener will still
+     * be notified when appropriate.
+     * 
+     * 
+     * @param scriptUrl
+     *            url of script to load
+     * @param resourceLoadListener
+     *            listener to notify when script is loaded
+     * @param async
+     *            What mode the script.async attribute should be set to
+     */
+    public void loadScript(final String scriptUrl,
+            final ResourceLoadListener resourceLoadListener, boolean async) {
         final String url = Util.getAbsoluteUrl(scriptUrl);
         ResourceLoadEvent event = new ResourceLoadEvent(this, url, false);
         if (loadedResources.contains(url)) {
@@ -236,6 +256,9 @@ public class ResourceLoader {
             ScriptElement scriptTag = Document.get().createScriptElement();
             scriptTag.setSrc(url);
             scriptTag.setType("text/javascript");
+
+            scriptTag.setPropertyBoolean("async", async);
+
             addOnloadHandler(scriptTag, new ResourceLoadListener() {
                 @Override
                 public void onLoad(ResourceLoadEvent event) {
@@ -249,6 +272,17 @@ public class ResourceLoader {
             }, event);
             head.appendChild(scriptTag);
         }
+    }
+
+    /**
+     * The current browser supports script.async='false' for maintaining
+     * execution order for dynamically-added scripts.
+     * 
+     * @return Browser supports script.async='false'
+     */
+    public static boolean supportsInOrderScriptExecution() {
+        return BrowserInfo.get().isIE()
+                && BrowserInfo.get().getBrowserMajorVersion() >= 11;
     }
 
     /**
@@ -316,6 +350,11 @@ public class ResourceLoader {
          *  XHR not tested - should work, probably causes other issues
          -*/
         if (BrowserInfo.get().isIE()) {
+            // If ie11+ for some reason gets a preload request
+            if (BrowserInfo.get().getBrowserMajorVersion() >= 11) {
+                throw new RuntimeException(
+                        "Browser doesn't support preloading with text/cache");
+            }
             ScriptElement element = Document.get().createScriptElement();
             element.setSrc(url);
             element.setType("text/cache");
@@ -334,7 +373,20 @@ public class ResourceLoader {
         }
     }
 
-    private native void addOnloadHandler(Element element,
+    /**
+     * Adds an onload listener to the given element, which should be a link or a
+     * script tag. The listener is called whenever loading is complete or an
+     * error occurred.
+     * 
+     * @since
+     * @param element
+     *            the element to attach a listener to
+     * @param listener
+     *            the listener to call
+     * @param event
+     *            the event passed to the listener
+     */
+    public static native void addOnloadHandler(Element element,
             ResourceLoadListener listener, ResourceLoadEvent event)
     /*-{
         element.onload = $entry(function() {
@@ -349,11 +401,11 @@ public class ResourceLoader {
             element.onreadystatechange = null;
             listener.@com.vaadin.client.ResourceLoader.ResourceLoadListener::onError(Lcom/vaadin/client/ResourceLoader$ResourceLoadEvent;)(event);
         });
-        element.onreadystatechange = function() { 
+        element.onreadystatechange = function() {
             if ("loaded" === element.readyState || "complete" === element.readyState ) {
                 element.onload(arguments[0]);
             }
-        };       
+        };
     }-*/;
 
     /**
@@ -479,12 +531,12 @@ public class ResourceLoader {
                     if (rules === undefined) {
                         rules = sheet.rules;
                     }
-                    
+
                     if (rules === null) {
                         // Style sheet loaded, but can't access length because of XSS -> assume there's something there
                         return 1;
                     }
-                    
+
                     // Return length so we can distinguish 0 (probably 404 error) from normal case.
                     return rules.length;
                 } catch (err) {

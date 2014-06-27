@@ -16,6 +16,8 @@
 
 package com.vaadin.tests.tb3;
 
+import static com.vaadin.tests.tb3.TB3Runner.localWebDriverIsUsed;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -24,7 +26,6 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
-import com.vaadin.testbench.TestBenchElement;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -49,12 +50,11 @@ import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UIProvider;
 import com.vaadin.testbench.TestBench;
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 import com.vaadin.ui.UI;
-
-import static com.vaadin.tests.tb3.TB3Runner.localWebDriverIsUsed;
 
 /**
  * Base class for TestBench 3+ tests. All TB3+ tests in the project should
@@ -157,7 +157,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     protected WebElement getTooltipElement() {
-        return getDriver().findElement(com.vaadin.testbench.By.className("v-tooltip-text"));
+        return getDriver().findElement(
+                com.vaadin.testbench.By.className("v-tooltip-text"));
     }
 
     protected Coordinates getCoordinates(TestBenchElement element) {
@@ -184,7 +185,22 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * {@link #isPush()}.
      */
     protected void openTestURL() {
-        driver.get(getTestUrl());
+        openTestURL("");
+    }
+
+    /**
+     * Opens the given test (defined by {@link #getTestUrl()}, optionally with
+     * debug window and/or push (depending on {@link #isDebug()} and
+     * {@link #isPush()}.
+     */
+    protected void openTestURL(String extraParameters) {
+        String url = getTestUrl();
+        if (url.contains("?")) {
+            url = url + "&" + extraParameters;
+        } else {
+            url = url + "?" + extraParameters;
+        }
+        driver.get(url);
     }
 
     /**
