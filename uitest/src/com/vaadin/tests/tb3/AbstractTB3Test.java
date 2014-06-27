@@ -16,24 +16,19 @@
 
 package com.vaadin.tests.tb3;
 
-import static com.vaadin.tests.tb3.TB3Runner.localWebDriverIsUsed;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-
+import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
+import com.vaadin.server.LegacyApplication;
+import com.vaadin.server.UIProvider;
+import com.vaadin.testbench.TestBench;
+import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.TestBenchTestCase;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
+import com.vaadin.ui.UI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
@@ -46,15 +41,15 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
-import com.vaadin.server.LegacyApplication;
-import com.vaadin.server.UIProvider;
-import com.vaadin.testbench.TestBench;
-import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.TestBenchTestCase;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
-import com.vaadin.ui.UI;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+
+import static com.vaadin.tests.tb3.TB3Runner.localWebDriverIsUsed;
 
 /**
  * Base class for TestBench 3+ tests. All TB3+ tests in the project should
@@ -1030,7 +1025,19 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     protected void openDebugLogTab() {
-        findElement(By.xpath("//button[@title='Debug message log']")).click();
+
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver input) {
+                WebElement element = getDebugLogButton();
+                return element != null;
+            }
+        }, 15);
+        getDebugLogButton().click();
+    }
+
+    private WebElement getDebugLogButton() {
+        return findElement(By.xpath("//button[@title='Debug message log']"));
     }
 
 }
