@@ -33,7 +33,7 @@
   .v-ie9 & {
     border: none;
     border-radius: $v-border-radius;
-    background: #fff url($valo-shared-pathPrefix + "img/spinner.gif") no-repeat 50% 50%;
+    background: #fff url(#{$valo-shared-pathPrefix}img/spinner.gif) no-repeat 50% 50%;
     background-size: 80%;
   }
 
