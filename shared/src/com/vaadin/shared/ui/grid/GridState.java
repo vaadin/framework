@@ -85,19 +85,11 @@ public class GridState extends AbstractComponentState {
     public String lastFrozenColumnId = null;
 
     /** The height of the Grid in terms of body rows. */
-    // @DelegateToWidget
-    /*
-     * Annotation doesn't work because of http://dev.vaadin.com/ticket/12900.
-     * Remove manual code from Connector once fixed
-     */
+    @DelegateToWidget
     public double heightByRows = DEFAULT_HEIGHT_BY_ROWS;
 
     /** The mode by which Grid defines its height. */
-    // @DelegateToWidget
-    /*
-     * Annotation doesn't work because of http://dev.vaadin.com/ticket/12900.
-     * Remove manual code from Connector once fixed
-     */
+    @DelegateToWidget
     public HeightMode heightMode = HeightMode.CSS;
 
     /** FIXME remove once selection mode communcation is done. only for testing. */

@@ -278,20 +278,6 @@ public class GridConnector extends AbstractComponentConnector {
             }
         }
 
-        /*
-         * @DelegateToWidget annotation doesn't work because of
-         * http://dev.vaadin.com/ticket/12900. Remove manual code and uncomment
-         * annotations at GridState once fixed.
-         */
-
-        if (stateChangeEvent.hasPropertyChanged("heightByRows")) {
-            getWidget().setHeightByRows(getState().heightByRows);
-        }
-
-        if (stateChangeEvent.hasPropertyChanged("heightMode")) {
-            getWidget().setHeightMode(getState().heightMode);
-        }
-
         if (stateChangeEvent.hasPropertyChanged("selectedKeys")) {
             selectionModel.updateFromState();
         }
