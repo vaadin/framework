@@ -31,14 +31,11 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.GridColumn;
 import com.vaadin.ui.components.grid.renderers.TextRenderer;
 
-/**
- * @since 7.4
- * @author Vaadin Ltd
- */
 public class RendererTest {
 
     private static class TestBean {
@@ -97,7 +94,7 @@ public class RendererTest {
 
     @Before
     public void setUp() {
-        VaadinSession.setCurrent(new VaadinSession(null));
+        VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
 
         IndexedContainer c = new IndexedContainer();
 

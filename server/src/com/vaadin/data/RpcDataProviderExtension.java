@@ -78,7 +78,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * itemId &lrarr; key mapping is not needed anymore. In other words, this
      * doesn't leak memory.
      */
-    public class DataProviderKeyMapper {
+    public class DataProviderKeyMapper implements Serializable {
         private final BiMap<Integer, Object> indexToItemId = HashBiMap.create();
         private final BiMap<Object, String> itemIdToKey = HashBiMap.create();
         private Set<Object> pinnedItemIds = new HashSet<Object>();
