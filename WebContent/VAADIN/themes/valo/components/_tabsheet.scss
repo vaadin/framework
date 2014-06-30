@@ -311,7 +311,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
   [class*="disabled"] {
     cursor: default;
     color: inherit !important;
-    @include opacity(.1 !important);
+    @include opacity(.1, true);
   }
 }
 

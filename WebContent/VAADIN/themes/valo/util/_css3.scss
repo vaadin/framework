@@ -1,11 +1,16 @@
-@mixin opacity ($o) {
-  opacity: $o;
+@mixin opacity ($value, $important: false) {
+  $importantValue: null;
+  @if $important {
+    $importantValue: unquote("!important");
+  }
 
-  $value: first-number($o);
+  opacity: $value $importantValue;
+
   @if $value < 1 {
-    filter: alpha(opacity=$value*100) remove-nth($o, 1);
+    $valueperc: $value*100;
+    filter: alpha(opacity=#{$valueperc}) #{$importantValue};
   } @else {
-    filter: none remove-nth($o, 1);
+    filter: none #{$importantValue};
   }
 }
 
