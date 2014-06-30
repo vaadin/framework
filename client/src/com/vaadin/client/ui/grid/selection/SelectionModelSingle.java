@@ -28,7 +28,8 @@ import com.vaadin.client.ui.grid.Renderer;
  * @author Vaadin Ltd
  * @since 7.4
  */
-public class SelectionModelSingle<T> implements SelectionModel.Single<T> {
+public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
+        implements SelectionModel.Single<T> {
 
     private Grid<T> grid;
     private RowHandle<T> selectedRow;
@@ -123,4 +124,23 @@ public class SelectionModelSingle<T> implements SelectionModel.Single<T> {
         return Collections.emptySet();
     }
 
+    @Override
+    protected boolean selectByHandle(RowHandle<T> handle) {
+        if (!handle.equals(selectedRow)) {
+            selectedRow = handle;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    protected boolean deselectByHandle(RowHandle<T> handle) {
+        if (handle.equals(selectedRow)) {
+            selectedRow = null;
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -16,11 +16,10 @@
 package com.vaadin.client.ui.grid.selection;
 
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.vaadin.client.ui.grid.Grid.SelectionMode;
 
 /**
  * Marker interface for widgets that fires selection change events.
- *
+ * 
  * @author Vaadin Ltd
  * @since 7.4
  */
@@ -29,15 +28,16 @@ public interface HasSelectionChangeHandlers<T> {
     /**
      * Register a selection change handler.
      * <p>
-     * This handler is called whenever a {@link SelectionMode} detects a change
-     * in selection state.
-     *
+     * This handler is called whenever a
+     * {@link com.vaadin.ui.components.grid.selection.SelectionModel
+     * SelectionModel} detects a change in selection state.
+     * 
      * @param handler
      *            a {@link SelectionChangeHandler}
      * @return a handler registration object, which can be used to remove the
      *         handler.
      */
     public HandlerRegistration addSelectionChangeHandler(
-            SelectionChangeHandler handler);
+            SelectionChangeHandler<T> handler);
 
 }

@@ -1077,10 +1077,10 @@ public class Grid<T> extends Composite implements
 
         // Default action on SelectionChangeEvents. Refresh the body so changed
         // become visible.
-        addSelectionChangeHandler(new SelectionChangeHandler() {
+        addSelectionChangeHandler(new SelectionChangeHandler<T>() {
 
             @Override
-            public void onSelectionChange(SelectionChangeEvent<?> event) {
+            public void onSelectionChange(SelectionChangeEvent<T> event) {
                 refreshBody();
             }
         });
@@ -2370,7 +2370,7 @@ public class Grid<T> extends Composite implements
 
     @Override
     public HandlerRegistration addSelectionChangeHandler(
-            final SelectionChangeHandler handler) {
+            final SelectionChangeHandler<T> handler) {
         return addHandler(handler, SelectionChangeEvent.getType());
     }
 

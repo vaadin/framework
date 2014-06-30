@@ -32,12 +32,16 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.data.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
+import com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel;
 import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
 import com.vaadin.client.ui.grid.selection.SelectionChangeHandler;
 import com.vaadin.client.ui.grid.selection.SelectionModelMulti;
+import com.vaadin.client.ui.grid.selection.SelectionModelNone;
+import com.vaadin.client.ui.grid.selection.SelectionModelSingle;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.ColumnGroupRowState;
 import com.vaadin.shared.ui.grid.ColumnGroupState;
@@ -62,39 +66,78 @@ import com.vaadin.shared.ui.grid.ScrollDestination;
 @Connect(com.vaadin.ui.components.grid.Grid.class)
 public class GridConnector extends AbstractComponentConnector {
 
-    /**
-     * Hacked SelectionModelMulti to make selection communication work for now.
+    /*
+     * TODO: henrik paul (4.7.2014)
+     * 
+     * This class should optimally not be needed. We should be able to use the
+     * keys in the state as the primary source of selection, and "simply" diff
+     * things once the state changes (we can't rebuild the selection pins from
+     * scratch, since we might lose some data that's currently out of view).
+     * 
+     * I was unable to remove this class with little effort, so it may remain as
+     * a todo for now.
      */
-    private class RowKeyBasedMultiSelection extends
-            SelectionModelMulti<JSONObject> {
+    private class RowKeyHelper {
+        private LinkedHashSet<String> selectedKeys = new LinkedHashSet<String>();
 
-        private final LinkedHashSet<String> selectedKeys = new LinkedHashSet<String>();
+        public LinkedHashSet<String> getSelectedKeys() {
+            return selectedKeys;
+        }
 
-        public List<String> getSelectedKeys() {
-            List<String> keys = new ArrayList<String>();
-            keys.addAll(selectedKeys);
-            return keys;
+        public void add(Collection<JSONObject> rows) {
+            for (JSONObject row : rows) {
+                add(row);
+            }
+        }
+
+        private void add(JSONObject row) {
+            selectedKeys.add((String) dataSource.getRowKey(row));
+        }
+
+        public void remove(Collection<JSONObject> rows) {
+            for (JSONObject row : rows) {
+                remove(row);
+            }
+        }
+
+        private void remove(JSONObject row) {
+            selectedKeys.remove(dataSource.getRowKey(row));
         }
 
         public void updateFromState() {
             boolean changed = false;
-            Set<String> stateKeys = new LinkedHashSet<String>();
-            stateKeys.addAll(getState().selectedKeys);
+
+            List<String> stateKeys = getState().selectedKeys;
+
+            // find new selections
             for (String key : stateKeys) {
                 if (!selectedKeys.contains(key)) {
                     changed = true;
                     selectByHandle(dataSource.getHandleByKey(key));
                 }
             }
+
+            // find new deselections
             for (String key : selectedKeys) {
                 changed = true;
                 if (!stateKeys.contains(key)) {
                     deselectByHandle(dataSource.getHandleByKey(key));
                 }
             }
-            selectedKeys.clear();
-            selectedKeys.addAll(stateKeys);
 
+            /*
+             * A defensive copy in case the collection in the state is mutated
+             * instead of re-assigned.
+             */
+            selectedKeys = new LinkedHashSet<String>(stateKeys);
+
+            /*
+             * We need to fire this event so that Grid is able to re-render the
+             * selection changes (if applicable).
+             * 
+             * add/remove methods will be called from the
+             * internalSelectionChangeHandler, so they shouldn't be called here.
+             */
             if (changed) {
                 // At least for now there's no way to send the selected and/or
                 // deselected row data. Some data is only stored as keys
@@ -102,22 +145,6 @@ public class GridConnector extends AbstractComponentConnector {
                         new SelectionChangeEvent<JSONObject>(getWidget(),
                                 (List<JSONObject>) null, null));
             }
-        }
-
-        @Override
-        public boolean select(Collection<JSONObject> rows) {
-            for (JSONObject row : rows) {
-                selectedKeys.add((String) dataSource.getRowKey(row));
-            }
-            return super.select(rows);
-        }
-
-        @Override
-        public boolean deselect(Collection<JSONObject> rows) {
-            for (JSONObject row : rows) {
-                selectedKeys.remove(dataSource.getRowKey(row));
-            }
-            return super.deselect(rows);
         }
     }
 
@@ -176,8 +203,23 @@ public class GridConnector extends AbstractComponentConnector {
      * Maps a generated column id to a grid column instance
      */
     private Map<String, CustomGridColumn> columnIdToColumn = new HashMap<String, CustomGridColumn>();
-    private final RowKeyBasedMultiSelection selectionModel = new RowKeyBasedMultiSelection();
+    private AbstractRowHandleSelectionModel<JSONObject> selectionModel = new SelectionModelMulti<JSONObject>();
     private RpcDataSource dataSource;
+
+    private final RowKeyHelper rowKeyHelper = new RowKeyHelper();
+
+    private SelectionChangeHandler<JSONObject> internalSelectionChangeHandler = new SelectionChangeHandler<JSONObject>() {
+        @Override
+        public void onSelectionChange(SelectionChangeEvent<JSONObject> event) {
+            rowKeyHelper.remove(event.getRemoved());
+            rowKeyHelper.add(event.getAdded());
+
+            // TODO change this to diff based. (henrik paul 24.6.2014)
+            List<String> selectedKeys = new ArrayList<String>(
+                    rowKeyHelper.getSelectedKeys());
+            getRpcProxy(GridServerRpc.class).selectionChange(selectedKeys);
+        }
+    };
 
     @Override
     @SuppressWarnings("unchecked")
@@ -213,14 +255,7 @@ public class GridConnector extends AbstractComponentConnector {
 
         getWidget().setSelectionModel(selectionModel);
 
-        getWidget().addSelectionChangeHandler(new SelectionChangeHandler() {
-            @Override
-            public void onSelectionChange(SelectionChangeEvent<?> event) {
-                // TODO change this to diff based. (henrik paul 24.6.2014)
-                getRpcProxy(GridServerRpc.class).selectionChange(
-                        selectionModel.getSelectedKeys());
-            }
-        });
+        getWidget().addSelectionChangeHandler(internalSelectionChangeHandler);
 
     }
 
@@ -285,7 +320,7 @@ public class GridConnector extends AbstractComponentConnector {
         }
 
         if (stateChangeEvent.hasPropertyChanged("selectedKeys")) {
-            selectionModel.updateFromState();
+            rowKeyHelper.updateFromState();
         }
     }
 
@@ -452,13 +487,53 @@ public class GridConnector extends AbstractComponentConnector {
     private void onSelectionModeChange() {
         SharedSelectionMode mode = getState().selectionMode;
         if (mode == null) {
-            getLogger().warning("ignored mode change");
+            getLogger().fine("ignored mode change");
             return;
         }
-        getLogger().warning(mode.toString());
+
+        AbstractRowHandleSelectionModel<JSONObject> model = createSelectionModel(mode);
+        if (!model.getClass().equals(selectionModel.getClass())) {
+            selectionModel = model;
+            getWidget().setSelectionModel(model);
+        }
     }
 
     private Logger getLogger() {
         return Logger.getLogger(getClass().getName());
     }
+
+    @SuppressWarnings("static-method")
+    private AbstractRowHandleSelectionModel<JSONObject> createSelectionModel(
+            SharedSelectionMode mode) {
+        switch (mode) {
+        case SINGLE:
+            return new SelectionModelSingle<JSONObject>();
+        case MULTI:
+            return new SelectionModelMulti<JSONObject>();
+        case NONE:
+            return new SelectionModelNone<JSONObject>();
+        default:
+            throw new IllegalStateException("unexpected mode value: " + mode);
+        }
+    }
+
+    /**
+     * A workaround method for accessing the protected method
+     * {@code AbstractRowHandleSelectionModel.selectByHandle}
+     */
+    private native void selectByHandle(RowHandle<JSONObject> handle)
+    /*-{
+        var model = this.@com.vaadin.client.ui.grid.GridConnector::selectionModel;
+        model.@com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel::selectByHandle(*)(handle);
+    }-*/;
+
+    /**
+     * A workaround method for accessing the protected method
+     * {@code AbstractRowHandleSelectionModel.deselectByHandle}
+     */
+    private native void deselectByHandle(RowHandle<JSONObject> handle)
+    /*-{
+        var model = this.@com.vaadin.client.ui.grid.GridConnector::selectionModel;
+        model.@com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel::deselectByHandle(*)(handle);
+    }-*/;
 }

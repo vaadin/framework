@@ -18,6 +18,7 @@ package com.vaadin.client.ui.grid.selection;
 import java.util.Collection;
 import java.util.Collections;
 
+import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.Renderer;
 
@@ -27,7 +28,8 @@ import com.vaadin.client.ui.grid.Renderer;
  * @author Vaadin Ltd
  * @since 7.4
  */
-public class SelectionModelNone<T> implements SelectionModel.None<T> {
+public class SelectionModelNone<T> extends AbstractRowHandleSelectionModel<T>
+        implements SelectionModel.None<T> {
 
     @Override
     public boolean isSelected(T row) {
@@ -41,17 +43,31 @@ public class SelectionModelNone<T> implements SelectionModel.None<T> {
 
     @Override
     public void setGrid(Grid<T> grid) {
-
+        // noop
     }
 
     @Override
     public void reset() {
-
+        // noop
     }
 
     @Override
     public Collection<T> getSelectedRows() {
         return Collections.emptySet();
+    }
+
+    @Override
+    protected boolean selectByHandle(RowHandle<T> handle)
+            throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("This selection model "
+                + "does not support selection");
+    }
+
+    @Override
+    protected boolean deselectByHandle(RowHandle<T> handle)
+            throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("This selection model "
+                + "does not support deselection");
     }
 
 }

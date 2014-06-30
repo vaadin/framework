@@ -30,7 +30,8 @@ import com.vaadin.client.ui.grid.Renderer;
  * @author Vaadin Ltd
  * @since 7.4
  */
-public class SelectionModelMulti<T> implements SelectionModel.Multi<T> {
+public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
+        implements SelectionModel.Multi<T> {
 
     private final Set<RowHandle<T>> selectedRows;
     private Renderer<Boolean> renderer;
@@ -147,6 +148,7 @@ public class SelectionModelMulti<T> implements SelectionModel.Multi<T> {
         return selectedRows.contains(handle);
     }
 
+    @Override
     protected boolean selectByHandle(RowHandle<T> handle) {
         if (selectedRows.add(handle)) {
             handle.pin();
@@ -155,6 +157,7 @@ public class SelectionModelMulti<T> implements SelectionModel.Multi<T> {
         return false;
     }
 
+    @Override
     protected boolean deselectByHandle(RowHandle<T> handle) {
         if (selectedRows.remove(handle)) {
             handle.unpin();

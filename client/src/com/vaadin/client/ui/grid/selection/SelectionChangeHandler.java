@@ -19,19 +19,21 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link SelectionChangeEvent}s.
- *
+ * 
  * @since 7.4
  * @author Vaadin Ltd
+ * @param <T>
+ *            The row data type
  */
-public interface SelectionChangeHandler extends EventHandler {
+public interface SelectionChangeHandler<T> extends EventHandler {
 
     /**
      * Called when a selection model's selection state is changed.
-     *
+     * 
      * @param event
      *            a selection change event, containing info about rows that have
      *            been added to or removed from the selection.
      */
-    public void onSelectionChange(SelectionChangeEvent<?> event);
+    public void onSelectionChange(SelectionChangeEvent<T> event);
 
 }
