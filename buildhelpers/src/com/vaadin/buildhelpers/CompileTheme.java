@@ -73,9 +73,14 @@ public class CompileTheme {
         }
         // Legacy theme w/o .themename{} wrapping
         try {
-            processSassTheme(themeFolder, themeName, "legacy-styles", version);
-            System.out.println("Compiling theme " + themeName
-                    + " legacy-styles successful");
+            String legacyFile = themeFolder + File.separator + themeName
+                    + File.separator + "legacy-styles.scss";
+            if (new File(legacyFile).exists()) {
+                processSassTheme(themeFolder, themeName, "legacy-styles",
+                        version);
+                System.out.println("Compiling theme " + themeName
+                        + " legacy-styles successful");
+            }
         } catch (Exception e) {
             System.err.println("Compiling theme " + themeName
                     + " legacy-styles failed");
