@@ -31,6 +31,42 @@ import com.vaadin.shared.annotations.DelegateToWidget;
 public class GridState extends AbstractComponentState {
 
     /**
+     * A description of which of the three bundled SelectionModels is currently
+     * in use.
+     * <p>
+     * Used as a data transfer object instead of the client/server ones, because
+     * they don't know about each others classes.
+     * 
+     * @see com.vaadin.ui.components.grid.Grid.SelectionMode
+     * @see com.vaadin.client.ui.grid.Grid.SelectionMode
+     */
+    public enum SharedSelectionMode {
+        /**
+         * Representation of a single selection mode
+         * 
+         * @see com.vaadin.ui.components.grid.Grid.SelectionMode#SINGLE
+         * @see com.vaadin.client.ui.grid.Grid.SelectionMode#SINGLE
+         */
+        SINGLE,
+
+        /**
+         * Representation of a multiselection mode
+         * 
+         * @see com.vaadin.ui.components.grid.Grid.SelectionMode#MULTI
+         * @see com.vaadin.client.ui.grid.Grid.SelectionMode#MULTI
+         */
+        MULTI,
+
+        /**
+         * Representation of a no-selection mode
+         * 
+         * @see com.vaadin.ui.components.grid.Grid.SelectionMode#NONE
+         * @see com.vaadin.client.ui.grid.Grid.SelectionMode#NONE
+         */
+        NONE;
+    }
+
+    /**
      * The default value for height-by-rows for both GWT widgets
      * {@link com.vaadin.ui.components.grid Grid} and
      * {@link com.vaadin.client.ui.grid.Escalator Escalator}
@@ -95,4 +131,5 @@ public class GridState extends AbstractComponentState {
     // instantiated just to avoid NPEs
     public List<String> selectedKeys = new ArrayList<String>();
 
+    public SharedSelectionMode selectionMode;
 }

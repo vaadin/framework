@@ -31,6 +31,7 @@ import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.components.grid.ColumnGroup;
 import com.vaadin.ui.components.grid.ColumnGroupRow;
 import com.vaadin.ui.components.grid.Grid;
+import com.vaadin.ui.components.grid.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.GridColumn;
 import com.vaadin.ui.components.grid.renderers.DateRenderer;
 import com.vaadin.ui.components.grid.renderers.HtmlRenderer;
@@ -159,6 +160,19 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     }
                 }, primaryStyleNames.get("v-grid"));
+
+        LinkedHashMap<String, SelectionMode> selectionModes = new LinkedHashMap<String, Grid.SelectionMode>();
+        selectionModes.put("single", SelectionMode.SINGLE);
+        selectionModes.put("multi", SelectionMode.MULTI);
+        selectionModes.put("none", SelectionMode.NONE);
+        createSelectAction("Selection mode", "State", selectionModes, "multi",
+                new Command<Grid, Grid.SelectionMode>() {
+                    @Override
+                    public void execute(Grid grid, SelectionMode selectionMode,
+                            Object data) {
+                        grid.setSelectionMode(selectionMode);
+                    }
+                });
     }
 
     protected void createHeaderActions() {

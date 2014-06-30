@@ -25,10 +25,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.data.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -43,6 +45,7 @@ import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.ui.grid.GridState.SharedSelectionMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 
 /**
@@ -443,5 +446,19 @@ public class GridConnector extends AbstractComponentConnector {
     public void setDataSource(RpcDataSource dataSource) {
         this.dataSource = dataSource;
         getWidget().setDataSource(this.dataSource);
+    }
+
+    @OnStateChange("selectionMode")
+    private void onSelectionModeChange() {
+        SharedSelectionMode mode = getState().selectionMode;
+        if (mode == null) {
+            getLogger().warning("ignored mode change");
+            return;
+        }
+        getLogger().warning(mode.toString());
+    }
+
+    private Logger getLogger() {
+        return Logger.getLogger(getClass().getName());
     }
 }

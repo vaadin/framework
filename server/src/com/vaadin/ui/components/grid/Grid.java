@@ -44,6 +44,7 @@ import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.ui.grid.GridState.SharedSelectionMode;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.ui.AbstractComponent;
@@ -830,6 +831,18 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
             this.selectionModel = selectionModel;
             this.selectionModel.setGrid(this);
             this.selectionModel.reset();
+
+            if (selectionModel.getClass().equals(SingleSelectionModel.class)) {
+                getState().selectionMode = SharedSelectionMode.SINGLE;
+            } else if (selectionModel.getClass().equals(
+                    MultiSelectionModel.class)) {
+                getState().selectionMode = SharedSelectionMode.MULTI;
+            } else if (selectionModel.getClass().equals(NoSelectionModel.class)) {
+                getState().selectionMode = SharedSelectionMode.NONE;
+            } else {
+                throw new UnsupportedOperationException("Grid currently "
+                        + "supports only its own bundled selection models");
+            }
         }
     }
 
