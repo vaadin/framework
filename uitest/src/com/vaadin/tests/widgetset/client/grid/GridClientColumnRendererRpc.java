@@ -35,4 +35,14 @@ public interface GridClientColumnRendererRpc extends ClientRpc {
      * Used for client-side sorting API test
      */
     void triggerClientSorting();
+
+    /**
+     * @since
+     */
+    void triggerClientSortingTest();
+
+    /**
+     * @since
+     */
+    void shuffle();
 }

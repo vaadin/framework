@@ -65,6 +65,20 @@ public class GridClientColumnRenderers extends UI {
         public void triggerClientSorting() {
             rpc().triggerClientSorting();
         }
+
+        /**
+         * @since
+         */
+        public void triggerClientSortingTest() {
+            rpc().triggerClientSortingTest();
+        }
+
+        /**
+         * @since
+         */
+        public void shuffle() {
+            rpc().shuffle();
+        }
     }
 
     @Override
@@ -104,7 +118,16 @@ public class GridClientColumnRenderers extends UI {
         });
         controls.addComponent(detachAttachBtn);
 
-        NativeButton sortButton = new NativeButton("Trigger sorting");
+        NativeButton shuffleButton = new NativeButton("Shuffle");
+        shuffleButton.addClickListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                controller.shuffle();
+            }
+        });
+        controls.addComponent(shuffleButton);
+
+        NativeButton sortButton = new NativeButton("Trigger sorting event");
         sortButton.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
@@ -112,6 +135,15 @@ public class GridClientColumnRenderers extends UI {
             }
         });
         controls.addComponent(sortButton);
+
+        NativeButton testSortingButton = new NativeButton("Test sorting");
+        testSortingButton.addClickListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                controller.triggerClientSortingTest();
+            }
+        });
+        controls.addComponent(testSortingButton);
 
         Label console = new Label();
         console.setContentMode(ContentMode.HTML);

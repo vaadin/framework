@@ -175,7 +175,8 @@ public class GridClientRenderers extends MultiBrowserTest {
     public void testSortingEvent() throws Exception {
         openTestURL();
 
-        $(NativeButtonElement.class).caption("Trigger sorting").first().click();
+        $(NativeButtonElement.class).caption("Trigger sorting event").first()
+                .click();
         sleep(1000);
 
         String consoleText = $(LabelElement.class).id("testDebugConsole")
@@ -184,6 +185,56 @@ public class GridClientRenderers extends MultiBrowserTest {
         assertTrue("Console text as expected",
                 consoleText.contains("Columns: 1, order: Column 1: ASCENDING"));
 
+    }
+
+    @Test
+    public void testListSorter() throws Exception {
+        openTestURL();
+        sleep(1000);
+
+        $(NativeButtonElement.class).caption("Shuffle").first().click();
+        sleep(1000);
+
+        GridElement gridElem = $(MyClientGridElement.class).first();
+
+        // XXX: DANGER! We'll need to know how many rows the Grid has!
+        // XXX: Currently, this is impossible; hence the hardcoded value of 70.
+
+        boolean shuffled = false;
+        for (int i = 1, l = 70; i < l; ++i) {
+
+            String str_a = gridElem.getCell(i - 1, 0).getAttribute("innerHTML");
+            String str_b = gridElem.getCell(i, 0).getAttribute("innerHTML");
+
+            int value_a = Integer.parseInt(str_a);
+            int value_b = Integer.parseInt(str_b);
+
+            if (value_a > value_b) {
+                shuffled = true;
+                break;
+            }
+        }
+        assertTrue("Grid shuffled", shuffled);
+
+        $(NativeButtonElement.class).caption("Test sorting").first().click();
+        sleep(1000);
+
+        for (int i = 1, l = 70; i < l; ++i) {
+
+            if (i == 19) {
+                System.err.println("foo");
+            }
+
+            String str_a = gridElem.getCell(i - 1, 0).getAttribute("innerHTML");
+            String str_b = gridElem.getCell(i, 0).getAttribute("innerHTML");
+
+            int value_a = Integer.parseInt(str_a);
+            int value_b = Integer.parseInt(str_b);
+
+            if (value_a > value_b) {
+                assertTrue("Grid sorted", false);
+            }
+        }
     }
 
     private GridElement getGrid() {

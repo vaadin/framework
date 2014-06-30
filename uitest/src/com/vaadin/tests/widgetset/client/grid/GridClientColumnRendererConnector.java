@@ -16,6 +16,7 @@
 package com.vaadin.tests.widgetset.client.grid;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +36,7 @@ import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.GridColumn;
 import com.vaadin.client.ui.grid.Renderer;
 import com.vaadin.client.ui.grid.datasources.ListDataSource;
+import com.vaadin.client.ui.grid.datasources.ListSorter;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.DateRenderer;
 import com.vaadin.client.ui.grid.renderers.HtmlRenderer;
@@ -197,6 +199,56 @@ public class GridClientColumnRendererConnector extends
                     @Override
                     public void triggerClientSorting() {
                         getWidget().sort(Sort.by(getWidget().getColumn(0)));
+                    }
+
+                    @Override
+                    @SuppressWarnings("unchecked")
+                    public void triggerClientSortingTest() {
+                        Grid<String> grid = getWidget();
+                        ListSorter<String> sorter = new ListSorter<String>(grid);
+
+                        // Make sorter sort the numbers in natural order
+                        sorter.setComparator(
+                                (GridColumn<String, String>) grid.getColumn(0),
+                                new Comparator<String>() {
+                                    @Override
+                                    public int compare(String o1, String o2) {
+                                        return Integer.parseInt(o1)
+                                                - Integer.parseInt(o2);
+                                    }
+                                });
+
+                        // Sort along column 0 in ascending order
+                        grid.sort(grid.getColumn(0));
+
+                        // Remove the sorter once we're done
+                        sorter.removeFromGrid();
+                    }
+
+                    @Override
+                    @SuppressWarnings("unchecked")
+                    public void shuffle() {
+                        Grid<String> grid = getWidget();
+                        ListSorter<String> shuffler = new ListSorter<String>(
+                                grid);
+
+                        // Make shuffler return random order
+                        shuffler.setComparator(
+                                (GridColumn<String, String>) grid.getColumn(0),
+                                new Comparator<String>() {
+                                    @Override
+                                    public int compare(String o1, String o2) {
+                                        return com.google.gwt.user.client.Random
+                                                .nextInt(3) - 1;
+                                    }
+                                });
+
+                        // "Sort" (actually shuffle) along column 0
+                        grid.sort(grid.getColumn(0));
+
+                        // Remove the shuffler when we're done so that it
+                        // doesn't interfere with further operations
+                        shuffler.removeFromGrid();
                     }
                 });
     }
