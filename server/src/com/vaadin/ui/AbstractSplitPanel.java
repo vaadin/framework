@@ -186,7 +186,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * @return the first component of this split panel
      */
     public Component getFirstComponent() {
-        return (Component) getState().firstChild;
+        return (Component) getState(false).firstChild;
     }
 
     /**
@@ -196,7 +196,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * @return the second component of this split panel
      */
     public Component getSecondComponent() {
-        return (Component) getState().secondChild;
+        return (Component) getState(false).secondChild;
     }
 
     /**
@@ -534,7 +534,12 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         return (AbstractSplitPanelState) super.getState();
     }
 
+    @Override
+    protected AbstractSplitPanelState getState(boolean markAsDirty) {
+        return (AbstractSplitPanelState) super.getState(markAsDirty);
+    }
+
     private SplitterState getSplitterState() {
-        return getState().splitterState;
+        return getState(false).splitterState;
     }
 }

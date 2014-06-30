@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,6 +19,7 @@ package com.vaadin.client.ui;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -71,6 +72,8 @@ public class VGridLayout extends ComplexPanel {
 
     /** For internal use only. May be removed or replaced in the future. */
     public DivElement spacingMeasureElement;
+    public Set<Integer> explicitRowRatios;
+    public Set<Integer> explicitColRatios;
 
     public VGridLayout() {
         super();
@@ -92,7 +95,7 @@ public class VGridLayout extends ComplexPanel {
 
     /**
      * Returns the column widths measured in pixels
-     * 
+     *
      * @return
      */
     protected int[] getColumnWidths() {
@@ -101,7 +104,7 @@ public class VGridLayout extends ComplexPanel {
 
     /**
      * Returns the row heights measured in pixels
-     * 
+     *
      * @return
      */
     protected int[] getRowHeights() {
@@ -110,7 +113,7 @@ public class VGridLayout extends ComplexPanel {
 
     /**
      * Returns the spacing between the cells horizontally in pixels
-     * 
+     *
      * @return
      */
     protected int getHorizontalSpacing() {
@@ -119,7 +122,7 @@ public class VGridLayout extends ComplexPanel {
 
     /**
      * Returns the spacing between the cells vertically in pixels
-     * 
+     *
      * @return
      */
     protected int getVerticalSpacing() {
@@ -136,18 +139,20 @@ public class VGridLayout extends ComplexPanel {
 
     void expandRows() {
         if (!isUndefinedHeight()) {
-            int usedSpace = minRowHeights[0];
-            int verticalSpacing = getVerticalSpacing();
-            for (int i = 1; i < minRowHeights.length; i++) {
-                usedSpace += verticalSpacing + minRowHeights[i];
-            }
+            int usedSpace = calcRowUsedSpace();
+            int[] actualExpandRatio = calcRowExpandRatio();
             int availableSpace = LayoutManager.get(client).getInnerHeight(
                     getElement());
             int excessSpace = availableSpace - usedSpace;
             int distributed = 0;
             if (excessSpace > 0) {
+                int expandRatioSum = 0;
                 for (int i = 0; i < rowHeights.length; i++) {
-                    int ew = excessSpace * rowExpandRatioArray[i] / 1000;
+                    expandRatioSum += actualExpandRatio[i];
+                }
+                for (int i = 0; i < rowHeights.length; i++) {
+                    int ew = excessSpace * actualExpandRatio[i]
+                            / expandRatioSum;
                     rowHeights[i] = minRowHeights[i] + ew;
                     distributed += ew;
                 }
@@ -160,6 +165,134 @@ public class VGridLayout extends ComplexPanel {
                 }
             }
         }
+    }
+
+    private int[] calcRowExpandRatio() {
+        int[] actualExpandRatio = new int[minRowHeights.length];
+        for (int i = 0; i < minRowHeights.length; i++) {
+            if (rowHasComponentsOrRowSpan(i)) {
+                actualExpandRatio[i] = rowExpandRatioArray[i];
+            } else {
+                // Should not do this if this has explicitly been
+                // expanded
+                if (explicitRowRatios.contains(i)) {
+                    actualExpandRatio[i] = rowExpandRatioArray[i];
+                } else {
+                    actualExpandRatio[i] = 0;
+                }
+            }
+        }
+        return actualExpandRatio;
+    }
+
+    private int calcRowUsedSpace() {
+        int usedSpace = minRowHeights[0];
+        int verticalSpacing = getVerticalSpacing();
+        for (int i = 1; i < minRowHeights.length; i++) {
+            if (rowHasComponentsOrRowSpan(i) || minRowHeights[i] > 0
+                    || explicitRowRatios.contains(i)) {
+                usedSpace += verticalSpacing + minRowHeights[i];
+            }
+        }
+        return usedSpace;
+    }
+
+    void expandColumns() {
+        if (!isUndefinedWidth()) {
+            int usedSpace = calcColumnUsedSpace();
+            int[] actualExpandRatio = calcColumnExpandRatio();
+            int availableSpace = LayoutManager.get(client).getInnerWidth(
+                    getElement());
+            int excessSpace = availableSpace - usedSpace;
+            int distributed = 0;
+            if (excessSpace > 0) {
+                int expandRatioSum = 0;
+                for (int i = 0; i < columnWidths.length; i++) {
+                    expandRatioSum += actualExpandRatio[i];
+                }
+                for (int i = 0; i < columnWidths.length; i++) {
+                    int ew = excessSpace * actualExpandRatio[i]
+                            / expandRatioSum;
+                    columnWidths[i] = minColumnWidths[i] + ew;
+                    distributed += ew;
+                }
+                excessSpace -= distributed;
+                int c = 0;
+                while (excessSpace > 0) {
+                    columnWidths[c % columnWidths.length]++;
+                    excessSpace--;
+                    c++;
+                }
+            }
+        }
+    }
+
+    /**
+     * Calculates column expand ratio.
+     */
+    private int[] calcColumnExpandRatio() {
+        int[] actualExpandRatio = new int[minColumnWidths.length];
+        for (int i = 0; i < minColumnWidths.length; i++) {
+            if (colHasComponentsOrColSpan(i)) {
+                actualExpandRatio[i] = colExpandRatioArray[i];
+            } else {
+                // Should not do this if this has explicitly been
+                // expanded
+                if (explicitColRatios.contains(i)) {
+                    actualExpandRatio[i] = colExpandRatioArray[i];
+                } else {
+                    actualExpandRatio[i] = 0;
+                }
+            }
+        }
+        return actualExpandRatio;
+    }
+
+    /**
+     * Calculates column used space
+     */
+    private int calcColumnUsedSpace() {
+        int usedSpace = minColumnWidths[0];
+        int horizontalSpacing = getHorizontalSpacing();
+        for (int i = 1; i < minColumnWidths.length; i++) {
+            if (colHasComponentsOrColSpan(i) || minColumnWidths[i] > 0
+                    || explicitColRatios.contains(i)) {
+                usedSpace += horizontalSpacing + minColumnWidths[i];
+            }
+        }
+        return usedSpace;
+    }
+
+    private boolean rowHasComponentsOrRowSpan(int i) {
+        for (Cell cell : widgetToCell.values()) {
+            if (cell.row == i) {
+                return true;
+            }
+        }
+        for (SpanList l : rowSpans) {
+            for (Cell cell : l.cells) {
+                if (cell.row >= i && i < cell.row + cell.rowspan) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean colHasComponentsOrColSpan(int i) {
+        for (Cell cell : widgetToCell.values()) {
+            if (cell.col == i) {
+                return true;
+            }
+        }
+        for (SpanList l : colSpans) {
+            for (Cell cell : l.cells) {
+                if (cell.col >= i && i < cell.col + cell.colspan) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -183,35 +316,6 @@ public class VGridLayout extends ComplexPanel {
         // Position
         layoutCellsHorizontally();
 
-    }
-
-    void expandColumns() {
-        if (!isUndefinedWidth()) {
-            int usedSpace = minColumnWidths[0];
-            int horizontalSpacing = getHorizontalSpacing();
-            for (int i = 1; i < minColumnWidths.length; i++) {
-                usedSpace += horizontalSpacing + minColumnWidths[i];
-            }
-
-            int availableSpace = LayoutManager.get(client).getInnerWidth(
-                    getElement());
-            int excessSpace = availableSpace - usedSpace;
-            int distributed = 0;
-            if (excessSpace > 0) {
-                for (int i = 0; i < columnWidths.length; i++) {
-                    int ew = excessSpace * colExpandRatioArray[i] / 1000;
-                    columnWidths[i] = minColumnWidths[i] + ew;
-                    distributed += ew;
-                }
-                excessSpace -= distributed;
-                int c = 0;
-                while (excessSpace > 0) {
-                    columnWidths[c % columnWidths.length]++;
-                    excessSpace--;
-                    c++;
-                }
-            }
-        }
     }
 
     void layoutCellsVertically() {
@@ -241,7 +345,9 @@ public class VGridLayout extends ComplexPanel {
 
                     cell.layoutVertically(y, reservedMargin);
                 }
-                y += rowHeights[row] + verticalSpacing;
+                if (rowHasComponentsOrRowSpan(row) || rowHeights[row] > 0) {
+                    y += rowHeights[row] + verticalSpacing;
+                }
             }
         }
 
@@ -277,7 +383,9 @@ public class VGridLayout extends ComplexPanel {
                     cell.layoutHorizontally(x, reservedMargin);
                 }
             }
-            x += columnWidths[i] + horizontalSpacing;
+            if (colHasComponentsOrColSpan(i) || columnWidths[i] > 0) {
+                x += columnWidths[i] + horizontalSpacing;
+            }
         }
 
         if (isUndefinedWidth()) {
@@ -602,7 +710,6 @@ public class VGridLayout extends ComplexPanel {
                     - childComponentData.column1;
             // Set cell height
             rowspan = 1 + childComponentData.row2 - childComponentData.row1;
-
             setAlignment(new AlignmentInfo(childComponentData.alignment));
         }
 
@@ -644,7 +751,7 @@ public class VGridLayout extends ComplexPanel {
      * Creates a new Cell with the given coordinates.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param row
      * @param col
      * @return
@@ -660,7 +767,7 @@ public class VGridLayout extends ComplexPanel {
      * child component is also returned if "element" is part of its caption.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param element
      *            An element that is a nested sub element of the root element in
      *            this layout
@@ -681,13 +788,13 @@ public class VGridLayout extends ComplexPanel {
      * child component is also returned if "element" is part of its caption.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param element
      *            An element that is a nested sub element of the root element in
      *            this layout
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
-     * 
+     *
      * @since 7.2
      */
     public ComponentConnector getComponent(Element element) {

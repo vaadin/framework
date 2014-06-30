@@ -15,16 +15,19 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Before;
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.ComboBoxElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.vaadin.testbench.By;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 /**
  * When pressed down key, while positioned on the last item - should show next
@@ -32,52 +35,72 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  */
 public class ComboBoxScrollingWithArrowsTest extends MultiBrowserTest {
 
-    @Before
-    public void openURL() {
+    private final int PAGESIZE = 10;
+
+    @Override
+    public void setup() throws Exception {
+        super.setup();
+
         openTestURL();
+        openPopup();
     }
 
-    @Test
-    public void scrollDownArrowKeyTest() throws InterruptedException {
-        final int ITEMS_PER_PAGE = 10;
+    private WebElement getDropDown() {
         // Selenium is used instead of TestBench4, because there is no method to
         // access the popup of the combobox
         // The method ComboBoxElement.openPopup() opens the popup, but doesn't
         // provide any way to access the popup and send keys to it.
         // Ticket #13756
-        WebElement dropDownComboBox = driver.findElement(By
+
+        return driver.findElement(By
                 .className("v-filterselect-input"));
-        // opens Lookup
-        dropDownComboBox.sendKeys(Keys.DOWN);
+    }
+
+    private void openPopup() {
+        ComboBoxElement cb = $(ComboBoxElement.class).first();
+        cb.openPopup();
+    }
+
+    @Test
+    public void scrollDownArrowKeyTest() throws InterruptedException {
+        WebElement dropDownComboBox = getDropDown();
+
         // go to the last item and then one more
-        for (int i = 0; i < ITEMS_PER_PAGE + 1; i++) {
+        for (int i = 0; i < PAGESIZE + 1; i++) {
             dropDownComboBox.sendKeys(Keys.DOWN);
         }
-        String expected = "item " + ITEMS_PER_PAGE;// item 10
 
+        assertThat(getSelectedItemText(), is("item " + PAGESIZE)); //item 10
+    }
+
+    private String getSelectedItemText() {
         List<WebElement> items = driver.findElements(By
                 .className("gwt-MenuItem-selected"));
-        String actual = items.get(0).getText();
-        Assert.assertEquals(expected, actual);
+        return items.get(0).getText();
     }
 
     @Test
     public void scrollUpArrowKeyTest() throws InterruptedException {
-        final int ITEMS_PER_PAGE = 10;
-        WebElement dropDownComboBox = driver.findElement(By
-                .className("v-filterselect-input"));
-        // opens Lookup
-        dropDownComboBox.sendKeys(Keys.DOWN);
+        WebElement dropDownComboBox = getDropDown();
+
         // go to the last item and then one more
-        for (int i = 0; i < ITEMS_PER_PAGE + 1; i++) {
+        for (int i = 0; i < PAGESIZE + 1; i++) {
             dropDownComboBox.sendKeys(Keys.DOWN);
         }
+
         // move to one item up
+        waitUntilNextPageIsVisible();
         dropDownComboBox.sendKeys(Keys.UP);
-        String expected = "item " + (ITEMS_PER_PAGE - 1);// item 9
-        List<WebElement> items = driver.findElements(By
-                .className("gwt-MenuItem-selected"));
-        String actual = items.get(0).getText();
-        Assert.assertEquals(expected, actual);
+
+        assertThat(getSelectedItemText(), is("item " + (PAGESIZE - 1))); //item 9
+    }
+
+    private void waitUntilNextPageIsVisible() {
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver input) {
+                return getSelectedItemText().equals("item " + PAGESIZE);
+            }
+        }, 5);
     }
 }

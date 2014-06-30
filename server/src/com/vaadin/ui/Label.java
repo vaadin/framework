@@ -155,6 +155,11 @@ public class Label extends AbstractComponent implements Property<String>,
         return (LabelState) super.getState();
     }
 
+    @Override
+    protected LabelState getState(boolean markAsDirty) {
+        return (LabelState) super.getState(markAsDirty);
+    }
+
     /**
      * Gets the value of the label.
      * <p>
@@ -168,7 +173,7 @@ public class Label extends AbstractComponent implements Property<String>,
     public String getValue() {
         if (getPropertyDataSource() == null) {
             // Use internal value if we are running without a data source
-            return getState().text;
+            return getState(false).text;
         }
         return getDataSourceValue();
     }
@@ -196,7 +201,7 @@ public class Label extends AbstractComponent implements Property<String>,
     public void setValue(String newStringValue) {
         if (getPropertyDataSource() == null) {
 
-            LabelState state = (LabelState) getState(false);
+            LabelState state = getState(false);
             String oldTextValue = state.text;
             if (!SharedUtil.equals(oldTextValue, newStringValue)) {
                 getState().text = newStringValue;
@@ -281,7 +286,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * @see ContentMode
      */
     public ContentMode getContentMode() {
-        return getState().contentMode;
+        return getState(false).contentMode;
     }
 
     /**
@@ -412,8 +417,7 @@ public class Label extends AbstractComponent implements Property<String>,
     private void updateValueFromDataSource() {
         // Update the internal value from the data source
         String newConvertedValue = getDataSourceValue();
-        if (!SharedUtil.equals(newConvertedValue,
-                ((LabelState) getState(false)).text)) {
+        if (!SharedUtil.equals(newConvertedValue, getState(false).text)) {
             getState().text = newConvertedValue;
             fireValueChange();
         }

@@ -9,17 +9,13 @@
     @include box-sizing(border-box);
     width: 100%;
     height: 100%;
-
-    // TODO fixes extra white space issues in some cases (can't remember what anymore), but causes some styles to clip
-    //overflow: hidden;
   }
 
   .v-slot,
   .v-spacing {
     display: inline-block;
-    white-space: normal;
+    white-space: nowrap;
     vertical-align: top;
-    line-height: 0;
   }
 
   // Clear any floats inside the slot, to prevent unwanted collapsing
@@ -44,14 +40,14 @@
 
   .v-vertical > .v-spacing,
   .v-vertical > .v-expand > .v-spacing {
-    width: 0;
+    width: 0 !important;
     display: block;
     clear: both;
   }
 
   .v-horizontal > .v-spacing,
   .v-horizontal > .v-expand > .v-spacing {
-    height: 0;
+    height: 0 !important;
   }
 
   .v-align-middle:before,
@@ -63,7 +59,6 @@
     height: 100%;
     vertical-align: middle;
     width: 0;
-    overflow: hidden;
   }
 
   .v-align-middle,
@@ -76,12 +71,12 @@
     display: inline-block;
   }
 
-  //.v-align-middle,
+  .v-align-middle,
   .v-align-middle > .v-widget {
     vertical-align: middle;
   }
 
-  //.v-align-bottom,
+  .v-align-bottom,
   .v-align-bottom > .v-widget {
     vertical-align: bottom;
   }

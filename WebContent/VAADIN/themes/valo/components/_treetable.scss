@@ -1,20 +1,41 @@
 @mixin valo-treetable ($primary-stylename: v-treetable) {
-  .v-table-cell-wrapper {
-    //position: relative;
+  .#{$primary-stylename} {
+    [class*="caption-container"],
+    [class*="footer-container"],
+    [class*="cell-wrapper"] {
+      @include box-sizing(content-box);
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    [class*="caption-container"] {
+      padding-left: $v-table-cell-padding-horizontal;
+    }
+
+    [class*="caption-container-align-right"] {
+      padding-left: $v-table-cell-padding-horizontal + $v-table-resizer-width;
+    }
+
+    [class*="footer-container"] {
+      padding-right: $v-table-cell-padding-horizontal;
+    }
+
+    [class*="cell-content"] {
+      padding-left: $v-table-cell-padding-horizontal;
+      padding-right: $v-table-cell-padding-horizontal;
+
+      &:first-child {
+        padding-left: $v-table-cell-padding-horizontal + $v-table-border-width;
+      }
+    }
   }
 
   .#{$primary-stylename}-treespacer {
     display: inline-block;
-    background: transparent;
-    width: round($v-unit-size/2);
-    //left: round($v-unit-size/-8);
-    left: 0;
     position: absolute;
-    text-align: right;
-
-    &:before {
-      
-    }
+    width: round($v-unit-size/2);
+    margin-left: round($v-unit-size/-2) - round($v-table-cell-padding-horizontal/2);
+    text-align: center;
   }
 
   .#{$primary-stylename}-node-closed:before {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -47,45 +47,58 @@ public class MenuBars extends VerticalLayout implements View {
         menuBar.setCaption("Borderless style");
         menuBar.addStyleName("borderless");
         addComponent(menuBar);
+
+        menuBar = getMenuBar();
+        menuBar.setCaption("Small borderless style");
+        menuBar.addStyleName("borderless");
+        menuBar.addStyleName("small");
+        addComponent(menuBar);
     }
 
-    MenuBar getMenuBar() {
+    static MenuBar getMenuBar() {
+        Command click = new Command() {
+            @Override
+            public void menuSelected(MenuItem selectedItem) {
+                Notification.show("Clicked " + selectedItem.getText());
+            }
+        };
+
         MenuBar menubar = new MenuBar();
         menubar.setWidth("100%");
         final MenuBar.MenuItem file = menubar.addItem("File", null);
         final MenuBar.MenuItem newItem = file.addItem("New", null);
-        file.addItem("Open file...", null);
+        file.addItem("Open file...", click);
         file.addSeparator();
 
-        newItem.addItem("File", null);
-        newItem.addItem("Folder", null);
-        newItem.addItem("Project...", null);
+        newItem.addItem("File", click);
+        newItem.addItem("Folder", click);
+        newItem.addItem("Project...", click);
 
-        file.addItem("Close", null);
-        file.addItem("Close All", null);
+        file.addItem("Close", click);
+        file.addItem("Close All", click);
         file.addSeparator();
 
-        file.addItem("Save", null);
-        file.addItem("Save As...", null);
-        file.addItem("Save All", null);
+        file.addItem("Save", click);
+        file.addItem("Save As...", click);
+        file.addItem("Save All", click);
 
         final MenuBar.MenuItem edit = menubar.addItem("Edit", null);
-        edit.addItem("Undo", null);
-        edit.addItem("Redo", null).setEnabled(false);
+        edit.addItem("Undo", click);
+        edit.addItem("Redo", click).setEnabled(false);
         edit.addSeparator();
 
-        edit.addItem("Cut", null);
-        edit.addItem("Copy", null);
-        edit.addItem("Paste", null);
+        edit.addItem("Cut", click);
+        edit.addItem("Copy", click);
+        edit.addItem("Paste", click);
         edit.addSeparator();
 
         final MenuBar.MenuItem find = edit.addItem("Find/Replace", null);
 
-        find.addItem("Google Search", null);
+        find.addItem("Google Search", click);
         find.addSeparator();
-        find.addItem("Find/Replace...", null);
-        find.addItem("Find Next", null);
-        find.addItem("Find Previous", null);
+        find.addItem("Find/Replace...", click);
+        find.addItem("Find Next", click);
+        find.addItem("Find Previous", click);
 
         Command check = new Command() {
             @Override
@@ -100,12 +113,12 @@ public class MenuBars extends VerticalLayout implements View {
         MenuItem title = view.addItem("Show Title Bar", check);
         title.setCheckable(true);
         title.setChecked(true);
-        view.addItem("Customize Toolbar...", null);
+        view.addItem("Customize Toolbar...", click);
         view.addSeparator();
 
-        view.addItem("Actual Size", null);
-        view.addItem("Zoom In", null);
-        view.addItem("Zoom Out", null);
+        view.addItem("Actual Size", click);
+        view.addItem("Zoom In", click);
+        view.addItem("Zoom Out", click);
 
         MenuItem fav = menubar.addItem("", check);
         fav.setIcon(TestIcon.get());
@@ -119,12 +132,48 @@ public class MenuBars extends VerticalLayout implements View {
         fav.setCheckable(true);
         fav.setCheckable(true);
 
-        menubar.addItem("Attach", null).setIcon(FontAwesome.PAPERCLIP);
-        menubar.addItem("Undo", null).setIcon(FontAwesome.UNDO);
-        MenuItem redo = menubar.addItem("Redo", null);
+        menubar.addItem("Attach", click).setIcon(FontAwesome.PAPERCLIP);
+        menubar.addItem("Undo", click).setIcon(FontAwesome.UNDO);
+        MenuItem redo = menubar.addItem("Redo", click);
         redo.setIcon(FontAwesome.REPEAT);
         redo.setEnabled(false);
-        menubar.addItem("Upload", null).setIcon(FontAwesome.UPLOAD);
+        menubar.addItem("Upload", click).setIcon(FontAwesome.UPLOAD);
+
+        return menubar;
+    }
+
+    static MenuBar getToolBar() {
+        MenuBar menubar = new MenuBar();
+        menubar.setWidth("100%");
+
+        MenuItem fav = menubar.addItem("", null);
+        fav.setIcon(FontAwesome.ALIGN_LEFT);
+        fav.setStyleName("icon-only");
+        fav.setCheckable(true);
+        // fav.setChecked(true);
+
+        fav = menubar.addItem("", null);
+        fav.setIcon(FontAwesome.ALIGN_CENTER);
+        fav.setStyleName("icon-only");
+        fav.setCheckable(true);
+
+        fav = menubar.addItem("", null);
+        fav.setIcon(FontAwesome.ALIGN_RIGHT);
+        fav.setStyleName("icon-only");
+        fav.setCheckable(true);
+
+        MenuItem clip = menubar.addItem("", null);
+        clip.setIcon(FontAwesome.PAPERCLIP);
+        clip.setStyleName("icon-only");
+
+        MenuItem undo = menubar.addItem("", null);
+        undo.setIcon(FontAwesome.UNDO);
+        undo.setStyleName("icon-only");
+
+        MenuItem redo = menubar.addItem("", null);
+        redo.setIcon(FontAwesome.REPEAT);
+        redo.setEnabled(false);
+        redo.setStyleName("icon-only");
 
         return menubar;
     }

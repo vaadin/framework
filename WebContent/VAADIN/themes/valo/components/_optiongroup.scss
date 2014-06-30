@@ -1,47 +1,68 @@
 @mixin valo-optiongroup ($primary-stylename: v-optiongroup) {
 
   .v-radiobutton {
-    :root & > input {
-      &:checked ~ label:after {
-        $size: ceil($v-unit-size/6);
-        $offset: round($v-unit-size/6);
-        width: $size;
-        height: $size;
-        top: $offset;
-        left: $offset;
-        background: $v-selection-color;
-      }
-
-      & ~ label:before,
-      & ~ label:after {
-        border-radius: 50%;
-        content: "";
-      }
-    }
+    @include valo-radiobutton-style;
   }
 
   .v-select-optiongroup {
-
-    .v-radiobutton,
-    .v-checkbox {
-      display: block;
-      margin: round($v-unit-size/4) $v-font-size 0 0;
-
-      &:first-child {
-        margin-top: round($v-unit-size/6);
-      }
-
-      &:last-child {
-        margin-bottom: round($v-unit-size/6);
-      }
-    }
-
-    &.v-has-width label {
-      white-space: normal;
-    }
-
+    @include valo-optiongroup-style;
   }
 
+}
+
+
+@mixin valo-radiobutton-style ($background-color: $v-background-color, $unit-size: $v-unit-size, $selection-color: $v-selection-color) {
+  @include valo-checkbox-style($background-color: $background-color, $unit-size: $unit-size, $selection-color: $selection-color);
+
+  :root & > input {
+    &:checked ~ label:after {
+      $size: ceil($unit-size/6);
+      $offset: round($unit-size/6);
+      width: $size;
+      height: $size;
+      top: $offset;
+      left: $offset;
+      background: $selection-color;
+    }
+
+    & ~ label:before,
+    & ~ label:after {
+      border-radius: 50%;
+      content: "";
+    }
+  }
+}
+
+
+
+@mixin valo-optiongroup-style ($unit-size: $v-unit-size, $font-size: $v-font-size) {
+
+  @if $unit-size != $v-unit-size {
+    .v-checkbox {
+      @include valo-checkbox-style($unit-size: $unit-size);
+    }
+    .v-radiobutton {
+      @include valo-radiobutton-style($unit-size: $unit-size);
+    }
+  }
+
+  .v-radiobutton,
+  .v-checkbox {
+    display: block;
+    margin: round($unit-size/4) $font-size 0 0;
+
+    &:first-child {
+      margin-top: round($unit-size/6);
+    }
+
+    &:last-child {
+      margin-bottom: round($unit-size/6);
+    }
+  }
+
+  &.v-has-width label {
+    white-space: normal;
+  }
 }
 
 
@@ -55,7 +76,7 @@
 
   &.v-has-width {
     white-space: normal;
-    
+
     label {
       white-space: nowrap;
     }

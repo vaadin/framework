@@ -111,7 +111,7 @@ public class Panels extends VerticalLayout implements View {
 
         Button action = new Button();
         action.setIcon(FontAwesome.PENCIL);
-        action.addStyleName("borderless");
+        action.addStyleName("borderless-colored");
         action.addStyleName("small");
         action.addStyleName("icon-only");
         panelCaption.addComponent(action);

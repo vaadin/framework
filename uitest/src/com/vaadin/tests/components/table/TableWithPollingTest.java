@@ -24,6 +24,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TableWithPollingTest extends MultiBrowserTest {
@@ -32,25 +33,54 @@ public class TableWithPollingTest extends MultiBrowserTest {
     public void testColumnResizing() throws Exception {
         openTestURL();
 
-        WebElement headerCell = driver.findElement(By
-                .xpath("(//td[contains(@class, 'v-table-header-cell')])[1]"));
-        WebElement bodyCell = driver.findElement(By
-                .xpath("(//td[contains(@class, 'v-table-cell-content')])[1]"));
-        WebElement resizer = driver.findElement(By
-                .xpath("(//div[contains(@class, 'v-table-resizer')])[1]"));
+        int offset = -20;
+        int headerCellWidth = getHeaderCell(0).getSize().width;
+        int bodyCellWidth = getBodyCell(0).getSize().width;
 
-        final int offset = 50;
-        final int headerCellWidth = headerCell.getSize().width;
-        final int bodyCellWidth = bodyCell.getSize().width;
+        resizeColumn(0, offset);
 
-        new Actions(driver).clickAndHold(resizer).moveByOffset(offset, 0)
-                .perform();
+        assertHeaderCellWidth(0, headerCellWidth + offset);
+        assertBodyCellWidth(0, bodyCellWidth + offset);
+
+        offset = 50;
+        headerCellWidth = getHeaderCell(1).getSize().width;
+        bodyCellWidth = getBodyCell(1).getSize().width;
+
+        resizeColumn(1, offset);
+
+        assertHeaderCellWidth(1, headerCellWidth + offset);
+        assertBodyCellWidth(1, bodyCellWidth + offset);
+
+    }
+
+    private WebElement getHeaderCell(int column) {
+        return $(TableElement.class).get(0).getHeaderCell(column);
+    }
+
+    private WebElement getBodyCell(int column) {
+        return $(TableElement.class).get(0).getCell(0, column);
+    }
+
+    private WebElement getColumnResizer(int column) {
+        return getHeaderCell(column).findElement(
+                By.className("v-table-resizer"));
+    }
+
+    private void resizeColumn(int column, int by) throws InterruptedException {
+        new Actions(driver).clickAndHold(getColumnResizer(column))
+                .moveByOffset(by, 0).perform();
         sleep(2000);
         new Actions(driver).release().perform();
+    }
 
-        Assert.assertEquals(headerCellWidth + offset,
-                headerCell.getSize().width);
-        Assert.assertEquals(bodyCellWidth + offset, bodyCell.getSize().width);
+    private void assertHeaderCellWidth(int column, int width)
+            throws AssertionError {
+        Assert.assertEquals(width, getHeaderCell(column).getSize().width);
+    }
+
+    private void assertBodyCellWidth(int column, int width)
+            throws AssertionError {
+        Assert.assertEquals(width, getBodyCell(column).getSize().width);
     }
 
     @Override

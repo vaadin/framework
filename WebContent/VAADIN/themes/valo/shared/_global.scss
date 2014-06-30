@@ -28,6 +28,11 @@ $valo-global-included: false !default;
       height: 100%;
       // Cancel tap highlight from all elements inside the app
       -webkit-tap-highlight-color: rgba(0,0,0,0);
+
+      // Prevent iOS text size adjust after orientation change, without disabling user zoom
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
     }
 
     .v-ui {
@@ -67,8 +72,16 @@ $valo-global-included: false !default;
 
     .v-scrollable {
       overflow: auto;
-      // Fix extra whitespace in IE
-      line-height: 0;
+
+      // "Unnecessary scrollbar" related fixes
+      > .v-widget {
+        // This is needed for IE
+        vertical-align: middle;
+
+        // Needed for all browsers. Can't really show anything outside the
+        // scrolling area anyway, so we can safely hide any overflow
+        overflow: hidden;
+      }
     }
 
     .v-ios.v-webkit .v-scrollable {
@@ -204,7 +217,7 @@ $valo-shared-pathPrefix: null;
       padding: round($v-unit-size/4);
       margin-top: round($_size/-2);
       margin-left: round($_size/-2);
-      background: #fff url($valo-shared-pathPrefix + "img/spinner.gif") no-repeat 50%;
+      background: #fff url(#{$valo-shared-pathPrefix}img/spinner.gif) no-repeat 50%;
       border-radius: $v-border-radius;
     }
 
@@ -234,7 +247,7 @@ $valo-shared-pathPrefix: null;
       width: 28px !important;
       height: 28px;
       padding: round($v-unit-size/4);
-      background: #fff url($valo-shared-pathPrefix + "img/spinner.gif") no-repeat 50%;
+      background: #fff url(#{$valo-shared-pathPrefix}img/spinner.gif) no-repeat 50%;
       border-radius: $v-border-radius;
       top: round($v-unit-size/4);
       right: round($v-unit-size/4);

@@ -161,7 +161,7 @@
       $ret: join($ret, $part);
     }
   }
-  
+
   @return $ret;
 }
 
@@ -176,8 +176,8 @@
       $adjust-type: first-string($part);
       $adjust-amount: first-number($part);
 
-      $tint: rgba(#fff, $v-shadow-opacity/100% * $adjust-amount);
-      $shade: rgba(#000, $v-shadow-opacity/100% * $adjust-amount);
+      $tint: rgba(#fff, min(1, $v-shadow-opacity/100% * $adjust-amount));
+      $shade: rgba(#000, min(1, $v-shadow-opacity/100% * $adjust-amount));
 
       $color: null;
       @if $adjust-type == v-tint {
@@ -220,10 +220,11 @@
 
   $color: $background-color;
   @each $b in $bevel {
+    $strength: 1;
     @if type-of($b) == list {
       $strength: first-number($b);
-      $color: if($needle==v-tint, rgba(#fff, $v-shadow-opacity/100%*$strength), rgba(#000, $v-shadow-opacity/100%*$strength));
     }
+    $color: if($needle==v-tint, rgba(#fff, $v-shadow-opacity/100%*$strength), rgba(#000, $v-shadow-opacity/100%*$strength));
   }
 
   @return 0 if($needle==v-tint, $offset, $offset*-1) 0 $color;

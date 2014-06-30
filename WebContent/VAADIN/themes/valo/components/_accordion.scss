@@ -1,40 +1,74 @@
-$v-accordion-content-shadow: join(inset, $v-shadow) !default;
-$v-accordion-content-shadow-opacity: $v-shadow-opacity/2 !default;
-
-
 @mixin valo-accordion ($primary-stylename: v-accordion) {
   .#{$primary-stylename} {
-    @include valo-panel-style;
-    $grad-style: valo-gradient-style($v-gradient);
-    $grad-opacity: valo-gradient-opacity($v-gradient);
-    @include valo-gradient($color: $v-background-color, $gradient: ($grad-style $grad-opacity/2));
-    overflow: hidden;
+    @include valo-accordion-style;
   }
 
   .#{$primary-stylename}-item {
-    position: relative;
-    overflow: hidden;
+    @include valo-accordion-item-style;
+  }
 
-    @if $v-border-radius > 0 {
-      $_br: $v-border-radius - first-number($v-border);
-      &:first-child {
-        border-radius: $_br $_br 0 0;
+  .#{$primary-stylename}-item-caption {
+    @include valo-accordion-item-caption-style;
+  }
 
-        .#{$primary-stylename}-item-caption {
-          border-radius: inherit;
-        }
+  .#{$primary-stylename}-item-content {
+    @include valo-accordion-item-content-style;
+  }
+}
+
+
+
+@mixin valo-accordion-style {
+  @include valo-panel-style;
+  $grad-style: valo-gradient-style($v-gradient);
+  $grad-opacity: valo-gradient-opacity($v-gradient);
+  @include valo-gradient($color: $v-background-color, $gradient: ($grad-style $grad-opacity/2));
+  overflow: hidden;
+}
+
+
+@mixin valo-accordion-item-style {
+  position: relative;
+  overflow: hidden;
+
+  @if $v-border-radius > 0 {
+    $_br: $v-border-radius - first-number($v-border);
+
+    &:first-child {
+      border-radius: $_br $_br 0 0;
+
+      .v-caption {
+        border-radius: inherit;
       }
-      &:last-child {
-        border-radius: 0 0 $_br $_br;
+    }
+
+    &:last-child {
+      border-radius: 0 0 $_br $_br;
+
+      .v-caption {
+        border-radius: 0;
       }
     }
   }
 
-  .#{$primary-stylename}-item-caption .v-caption {
-    @include valo-panel-caption-style;
-    border-radius: inherit;
+  &:last-child:not([class*="item-open"]) .v-caption {
+    border-bottom: none;
+  }
+
+  &[class*="item-open"] + [class*="item"] {
+    border-top: valo-border($color: $v-panel-background-color, $strength: 0.7);
+  }
+}
+
+
+
+@mixin valo-accordion-item-caption-style ($background-color: null) {
+  .v-caption {
+    @include valo-panel-caption-style($background-color: $background-color or $v-background-color);
     display: block;
-    background: transparent;
+    @if $background-color == null {
+      background: transparent;
+    }
     border-bottom-color: first-color(valo-border($color: $v-panel-background-color));
     cursor: pointer;
     @include user-select(none);;
@@ -60,23 +94,16 @@ $v-accordion-content-shadow-opacity: $v-shadow-opacity/2 !default;
       @include valo-button-active-style;
     }
   }
+}
 
-  .#{$primary-stylename}-item:last-child:not(.#{$primary-stylename}-item-open) .v-caption {
-    border-bottom: none;
-  }
 
-  .#{$primary-stylename}-item-content {
-    position: absolute;
-    width: 100%;
-    bottom: 0;
-    right: 0;
-    box-shadow: valo-bevel-and-shadow($shadow: $v-accordion-content-shadow, $shadow-opacity: $v-accordion-content-shadow-opacity);
-    background-color: $v-panel-background-color;
-    @include box-sizing(border-box);
-    @include valo-panel-adjust-content-margins;
-  }
-
-  .#{$primary-stylename}-item-open + .#{$primary-stylename}-item {
-    border-top: valo-border($color: $v-panel-background-color, $strength: 0.7);
-  }
+@mixin valo-accordion-item-content-style {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  right: 0;
+  @include box-shadow(valo-bevel-and-shadow($shadow: join(inset, $v-shadow), $shadow-opacity: $v-shadow-opacity/2));
+  background-color: $v-panel-background-color;
+  @include box-sizing(border-box);
+  @include valo-panel-adjust-content-margins;
 }

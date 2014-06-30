@@ -171,7 +171,7 @@ public class Panel extends AbstractSingleComponentContainer implements
      */
     @Override
     public int getScrollLeft() {
-        return getState().scrollLeft;
+        return getState(false).scrollLeft;
     }
 
     /*
@@ -181,7 +181,7 @@ public class Panel extends AbstractSingleComponentContainer implements
      */
     @Override
     public int getScrollTop() {
-        return getState().scrollTop;
+        return getState(false).scrollTop;
     }
 
     /*
@@ -309,7 +309,7 @@ public class Panel extends AbstractSingleComponentContainer implements
      */
     @Override
     public int getTabIndex() {
-        return getState().tabIndex;
+        return getState(false).tabIndex;
     }
 
     /**
@@ -332,6 +332,11 @@ public class Panel extends AbstractSingleComponentContainer implements
     @Override
     protected PanelState getState() {
         return (PanelState) super.getState();
+    }
+
+    @Override
+    protected PanelState getState(boolean markAsDirty) {
+        return (PanelState) super.getState(markAsDirty);
     }
 
 }

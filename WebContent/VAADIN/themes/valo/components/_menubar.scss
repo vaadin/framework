@@ -13,7 +13,7 @@
       @if type-of($v-focus-style) == list {
         $box-shadow: $box-shadow, $v-focus-style;
       }
-      box-shadow: $box-shadow;
+      @include box-shadow($box-shadow);
     }
 
     &.v-disabled {
@@ -64,6 +64,10 @@
 
   .#{$primary-stylename}-popup {
     @include valo-menubar-popup-style($primary-stylename);
+
+    &.#{$primary-stylename}-popup-animate-out {
+      @include animation(none);
+    }
   }
 
 }
@@ -77,13 +81,14 @@
   z-index: 1;
   display: inline-block;
   @include box-sizing(border-box);
-  @include valo-button-style($border-radius: 0, $shadow: null, $font-color: inherit, $cursor: pointer);
+  @include valo-button-style($states: normal, $border-radius: 0, $shadow: null, $font-color: inherit, $cursor: pointer);
   background: transparent;
   border-width: 0 $border-width 0 0;
   height: 100%;
   vertical-align: top;
   line-height: $v-unit-size - $border-width*2 - 1px;
   text-align: center;
+
   @if $border-width == 0 {
     margin-right: 1px;
   }
@@ -115,9 +120,16 @@
     border-radius: inherit;
   }
 
-  &:hover:before {
-    @include valo-button-hover-style;
-    border: none;
+  @if $v-hover-styles-enabled {
+    &:hover {
+      // IE needs some nudging to show the :before element
+      zoom: 1;
+
+      &:before {
+        @include valo-button-hover-style;
+        border: none;
+      }
+    }
   }
 
   &:active:before {
@@ -144,11 +156,7 @@
 
 
 
-@mixin valo-menubar-popup-style ($primary-stylename: v-menubar, $context: $v-background-color) {
-
-  $copy: $v-background-color;
-  $v-background-color: $context;
-
+@mixin valo-menubar-popup-style ($primary-stylename: v-menubar) {
   @include valo-selection-overlay-style;
 
   margin: ceil($v-unit-size/8) 0 0 1px !important;
@@ -203,8 +211,6 @@
   [class*="disabled"] {
     cursor: default;
   }
-
-  $v-background-color: $copy;
 }
 
 
@@ -223,7 +229,7 @@
 
 @mixin valo-menubar-menuitem-checked-style ($background-color: if(color-luminance($v-background-color) < 10, scale-color($v-background-color, $lightness: 10%, $saturation: -5%), scale-color($v-background-color, $lightness: -5%, $saturation: -5%))) {
   $grad: valo-gradient-style($v-gradient) valo-gradient-opacity($v-gradient)/4;
-  box-shadow: none;
+  @include box-shadow(none);
   @include valo-gradient($color: $background-color, $gradient: $grad, $direction: to top);
   color: valo-font-color($background-color, 0.9);
 }
@@ -241,6 +247,7 @@
 
   .#{$primary-stylename}-menuitem {
     line-height: $unit-size - first-number($v-border)*2;
+    padding: 0 round($unit-size/2.5);
 
     &[class*="-icon-only"] {
       width: $unit-size;
@@ -250,22 +257,25 @@
 
 @mixin valo-menubar-borderless-style ($primary-stylename: v-menubar) {
   border: none;
+  border-radius: 0;
   padding: first-number($v-border);
-  box-shadow: none;
+  @include box-shadow(none);
   background: transparent;
   color: inherit;
 
-  &:focus:not(.v-disabled) {
+  &:not(.v-disabled):focus {
     border: none;
-    box-shadow: none;
+    @include box-shadow(none);
   }
 
   .#{$primary-stylename}-menuitem {
-    box-shadow: none;
+    @include box-shadow(none);
     border: none;
     margin-right: max(1px, first-number($v-border));
     border-radius: $v-border-radius;
-    text-shadow: valo-text-shadow($offset: -1px);
+    color: $v-selection-color;
+    text-shadow: valo-text-shadow($font-color: $v-selection-color, $offset: -1px);
+    padding: 0 round($v-unit-size/3);
 
     @if $v-animations-enabled {
       @include transition(color 140ms);
@@ -273,30 +283,36 @@
 
     &:first-child,
     &:last-child {
-      border-radius: inherit;
+      border-radius: $v-border-radius;
     }
 
-    &:hover:before {
-      display: none;
-    }
-
-    &:active:not(.#{$primary-stylename}-menuitem-disabled):before {
-      display: block;
+    &:before {
+      content: none;
     }
 
     &:hover {
-      color: $v-focus-color;
+      color: lighten($v-selection-color, 10%);
+    }
+
+    &:active {
+      color: inherit;
     }
   }
 
-  .#{$primary-stylename}-menuitem-checked {
+  .#{$primary-stylename}-menuitem-checked,
+  .#{$primary-stylename}-menuitem-checked:first-child {
     border: valo-border();
-    line-height: $v-unit-size - first-number($v-border)*4 - 1px;
     color: $v-selection-color;
+
+    .#{$primary-stylename}-menuitem-caption {
+      position: relative;
+      top: first-number($v-border)*-1;
+    }
   }
 
   .#{$primary-stylename}-menuitem-selected {
     $font-color: valo-font-color($v-selection-color, 0.9);
+    color: $font-color;
     text-shadow: valo-text-shadow($background-color: $v-selection-color, $font-color: $font-color);
 
     &:hover {
@@ -304,6 +320,7 @@
     }
   }
 
+  .#{$primary-stylename}-menuitem-disabled,
   .#{$primary-stylename}-menuitem-disabled:hover {
     color: inherit;
   }

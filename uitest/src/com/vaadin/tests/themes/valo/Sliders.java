@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -71,9 +71,17 @@ public class Sliders extends VerticalLayout implements View {
         row.addComponent(slider);
 
         slider = new Slider("With ticks (not in IE8 & IE9)");
-        slider.setValue(50.0);
+        slider.setValue(3.0);
         slider.setWidth("200px");
+        slider.setMax(4);
         slider.addStyleName("ticks");
+        row.addComponent(slider);
+
+        slider = new Slider("Toggle imitation");
+        slider.setWidth("50px");
+        slider.setResolution(0);
+        slider.setMin(0);
+        slider.setMax(1);
         row.addComponent(slider);
 
         slider = new Slider("Vertical");
@@ -116,8 +124,9 @@ public class Sliders extends VerticalLayout implements View {
         row.addComponent(slider);
 
         slider = new Slider("With ticks");
-        slider.setValue(50.0);
+        slider.setValue(3.0);
         slider.setHeight("200px");
+        slider.setMax(4);
         slider.addStyleName("ticks");
         slider.setOrientation(SliderOrientation.VERTICAL);
         row.addComponent(slider);

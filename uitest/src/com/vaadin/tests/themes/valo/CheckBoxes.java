@@ -112,6 +112,54 @@ public class CheckBoxes extends VerticalLayout implements View {
         options.setItemIcon("Option Three", TestIcon.get(true));
         row.addComponent(options);
 
+        options = new OptionGroup("Choose one, small");
+        options.addStyleName("small");
+        options.setMultiSelect(false);
+        options.addItem("Option One");
+        options.addItem("Option Two");
+        options.addItem("Option Three");
+        options.select("Option One");
+        options.setItemIcon("Option One", TestIcon.get());
+        options.setItemIcon("Option Two", TestIcon.get());
+        options.setItemIcon("Option Three", TestIcon.get(true));
+        row.addComponent(options);
+
+        options = new OptionGroup("Choose many, small");
+        options.addStyleName("small");
+        options.setMultiSelect(true);
+        options.addItem("Option One");
+        options.addItem("Option Two");
+        options.addItem("Option Three");
+        options.select("Option One");
+        options.setItemIcon("Option One", TestIcon.get());
+        options.setItemIcon("Option Two", TestIcon.get());
+        options.setItemIcon("Option Three", TestIcon.get(true));
+        row.addComponent(options);
+
+        options = new OptionGroup("Choose one, large");
+        options.addStyleName("large");
+        options.setMultiSelect(false);
+        options.addItem("Option One");
+        options.addItem("Option Two");
+        options.addItem("Option Three");
+        options.select("Option One");
+        options.setItemIcon("Option One", TestIcon.get());
+        options.setItemIcon("Option Two", TestIcon.get());
+        options.setItemIcon("Option Three", TestIcon.get(true));
+        row.addComponent(options);
+
+        options = new OptionGroup("Choose many, large");
+        options.addStyleName("large");
+        options.setMultiSelect(true);
+        options.addItem("Option One");
+        options.addItem("Option Two");
+        options.addItem("Option Three");
+        options.select("Option One");
+        options.setItemIcon("Option One", TestIcon.get());
+        options.setItemIcon("Option Two", TestIcon.get());
+        options.setItemIcon("Option Three", TestIcon.get(true));
+        row.addComponent(options);
+
         options = new OptionGroup("Horizontal items");
         options.addStyleName("horizontal");
         options.addItem("Option One");

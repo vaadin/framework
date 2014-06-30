@@ -40,6 +40,9 @@
         <antcall target="compile-theme">
             <param name="theme" value="liferay" />
         </antcall>
+        <antcall target="compile-theme">
+            <param name="theme" value="valo" />
+        </antcall>
     </target>
 
     <target name="jar" depends="compile-themes">

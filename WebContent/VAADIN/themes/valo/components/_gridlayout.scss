@@ -1,7 +1,6 @@
 @mixin valo-gridlayout-global ($primary-stylename: v-gridlayout) {
   .#{$primary-stylename} {
     position: relative;
-    line-height: 0;
   }
   .#{$primary-stylename}-slot {
     position: absolute;

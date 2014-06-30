@@ -15,6 +15,7 @@
  */
 package com.vaadin.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
@@ -57,7 +58,7 @@ public class AnimationUtil {
     }
 
     /** For internal use only. May be removed or replaced in the future. */
-    public static native void registerAnimationEndEventListener(Element elem,
+    public static native JavaScriptObject addAnimationEndListener(Element elem,
             AnimationEndListener listener)
     /*-{
       var callbackFunc = $entry(function(e) {
@@ -71,10 +72,19 @@ public class AnimationUtil {
         elem._vaadin_animationend_callbacks = [];
       }
       elem._vaadin_animationend_callbacks.push(callbackFunc);
+      
+      return callbackFunc;
     }-*/;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public static native void unregisterAnimationEndEventListeners(Element elem)
+    public static native void removeAnimationEndListener(Element elem,
+            JavaScriptObject listener)
+    /*-{
+      elem.removeEventListener(@com.vaadin.client.AnimationUtil::ANIMATION_END_EVENT_NAME, listener, false);
+    }-*/;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public static native void removeAllAnimationEndListeners(Element elem)
     /*-{
       if(elem._vaadin_animationend_callbacks) {
         var callbacks = elem._vaadin_animationend_callbacks;

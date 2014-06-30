@@ -45,6 +45,8 @@
                     @version@</a></li>
             <li><a href="#enhancements">Enhancements in Vaadin
                     @version-minor@</a></li>
+            <li><a href="#incompatible">Incompatible or behavior-altering changes in
+                    @version-minor@</a></li>
             <li><a href="#knownissues">Known issues in
                     @version-minor@</a></li>
             <li><a href="#limitations">Limitations in
@@ -71,14 +73,6 @@
                 href="#changelog">change log</a> below.
         </p>
 
-        <p>
-            For a list of enhancements in the last feature release, see
-            <a href="#enhancements">Enhancements in Vaadin
-                @version-minor@</a> and the <a
-                href="http://vaadin.com/download/release/@version-minor@/@version-minor@.0/release-notes.html">Release
-                Notes for Vaadin @version-minor@.0</a>.
-        </p>
-        
         <!-- ================================================================ -->
         <h3 id="changelog">Change log for Vaadin @version@</h3>
 
@@ -93,85 +87,46 @@
         <br/>
         <p>
             You can also view the <a
-                href="http://dev.vaadin.com/query?status=closed&resolution=fixed&milestone=Vaadin+@version@&order=id">list
+                href="http://dev.vaadin.com/query?status=closed&resolution=fixed&milestone=Vaadin+7.3.0.alpha1&milestone=Vaadin+7.3.0.alpha2&milestone=Vaadin+7.3.0.alpha3&milestone=Vaadin+7.3.0.beta1&order=id">list
                 of the closed issues</a> at the Vaadin developer's site.
         </p>
 
-        <h2 id="enhancements">Enhancements in Vaadin
-            @version-minor@</h2>
+        <h2 id="enhancements">Enhancements in Vaadin @version-minor@</h2>
 
         <p>The @version-minor@ includes many major and minor
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Valo theme &ndash; <a href="#valo">see the separate section</a> 
-            about the features of the new theme and how to use it</li>
+            <li>Valo is a brand new built-in theme for Vaadin. It leverages 
+                the Sass CSS preprocessor heavily, 
+                providing a variety of ways to customize the look and feel of your theme. 
+                See <a href="https://vaadin.com/wiki/-/wiki/Main/Valo+theme+-+Getting+started">the Valo theme tutorial</a> or <a href="https://vaadin.com/book/-/page/themes.valo.html">the Valo theme section</a> in Book of Vaadin for information on how to get started.</li>
+            <li>Support for changing theme on the fly</li>
         </ul>
-
-        <!-- <p>Tools have been updated for Vaadin @version-minor@ with
-            the following changes:</p>
-
-        <ul>
-            <li>-</li>
-        </ul>-->
 
         <p>
-            For enchancements introduced in Vaadin 7, see the <a
-                href="http://vaadin.com/download/release/7.0/7.0.0/release-notes.html">Release
-                Notes for Vaadin 7.0.0</a>.
+            For enhancements introduced in Vaadin 7.2, see the <a
+                href="http://vaadin.com/download/release/7.2/7.2.0/release-notes.html">Release
+                Notes for Vaadin 7.2.0</a>.
         </p>
-        
-        <h2 id="valo">Valo theme</h2>
-        
-        <p>Valo is a brand new built-in theme for Vaadin. It leverages 
-        the <a href="http://www.sass-lang.com">Sass CSS preprocessor</a> heavily, 
-        providing a variety of ways to customize the look and feel of your theme. 
-        Read the introductory blog post describing the features for the
-        <a href="https://vaadin.com/blog/-/blogs/7-series">Vaadin 7.x series</a>.</p>
-        
-        <h4>Using Valo</h4>
-        
-        <p>The Java-based Sass compiler bundled with this Vaadin release 
-        does not support all the features that Valo requires at the moment. 
-        The compiler in the release version of Vaadin 7.3 will support Valo, 
-        but for this alpha release, you need to use the original Ruby-based 
-        compiler (or any other Sass 3.2 compatible Sass compiler). See 
-        instructions below.</p>
-        
+
+        <h3 id="incompatible">Incompatible or behavior-altering changes in @version-minor@</h3>
         <ul>
-          <li>Install the command-line version of the Sass compiler by following 
-          the instructions in <a href="http://sass-lang.com/install">http://sass-lang.com/install</a></li>
-          <li>Unpack the <code>VAADIN/themes/valo</code> folder from 
-          <code>vaadin-themes-7.3.0.alpha1.jar</code> and place it under your 
-          project's <code>VAADIN/themes</code> folder</li>
-          <li>In your project's custom theme, import Valo and do any modifications 
-          you wish using the Sass API in Valo (i.e., variables, mixins, and functions), 
-          and then include the main valo mixin<br>
-            <br>Example (in <code>my-theme-name.scss</code>):<br>
-            <pre>// Any variables you wish to override should be done before importing Valo
-
-// Modify the base color of the theme
-$v-app-background-color: hsl(200, 50%, 50%);
-
-@import "../valo/valo";
-
-.my-theme-name {
-  @include valo;
-}
-</pre>
-          </li>
-          <li>From the command-line, navigate to your project's 
-          <code>VAADIN/themes/my-theme-name</code> folder and use the following command 
-          to compile the theme:<br><br>
-          <code>$ sass styles.scss styles.css</code></li>
+            <li>
+                <p>The shadow of all overlays (VOverlay) are now implemented with CSS box-shadow in all browsers except Internet Explorer 8 (<a href="http://dev.vaadin.com/ticket/9303">#9303</a>). 
+                In IE8 the old image-based implementation is still used.
+                </p><p>
+                The image-based shadow implementation is also deprecated, so if you have any custom shadow implementations in your themes or add-ons, 
+                please update them accordingly to use CSS box-shadow instead.
+                </p><p>
+                Note that the CSS-based implementation is visually not 100% identical to the old implementation. This should not cause issues except
+                if you are using screenshot-based TestBench tests or similar visual regression tests.
+                </p>
+            </li>
+            <li>The theme for the debug window is now implemented using a GWT client bundle and is no longer included in the standard theme.</li>
         </ul>
-
         <h3 id="knownissues">Known issues</h3>
         <ul>
-            <li>Reconnecting a dropped push connection sometimes fails when using
-                Firefox and streaming or long polling.
-                (<a href="http://dev.vaadin.com/ticket/13578">#13578</a>)
-            </li>
             <li>Drag'n'drop in a Table doesn't work on touch devices running
                 Internet Explorer (Windows Phone, Surface)
                 (<a href="http://dev.vaadin.com/ticket/13737">#13737</a>)

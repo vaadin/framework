@@ -20,6 +20,7 @@ import java.util.Date;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.UserError;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -57,7 +58,7 @@ public class Forms extends VerticalLayout implements View {
         addComponent(form);
 
         Label section = new Label("Personal Info");
-        section.addStyleName("h4");
+        section.addStyleName("h2");
         form.addComponent(section);
 
         TextField name = new TextField("Name");
@@ -84,7 +85,7 @@ public class Forms extends VerticalLayout implements View {
         form.addComponent(sex);
 
         section = new Label("Contact Info");
-        section.addStyleName("h4");
+        section.addStyleName("h3");
         form.addComponent(section);
 
         TextField email = new TextField("Email");
@@ -139,22 +140,26 @@ public class Forms extends VerticalLayout implements View {
         shortbio.setRows(2);
         form.addComponent(shortbio);
 
-        RichTextArea bio = new RichTextArea("Bio");
+        final RichTextArea bio = new RichTextArea("Bio");
         bio.setWidth("100%");
+        bio.setValue("<div><p><span>Integer legentibus erat a ante historiarum dapibus.</span> <span>Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</span> <span>A communi observantia non est recedendum.</span> <span>Morbi fringilla convallis sapien, id pulvinar odio volutpat.</span> <span>Ab illo tempore, ab est sed immemorabili.</span> <span>Quam temere in vitiis, legem sancimus haerentia.</span></p><p><span>Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh.</span> <span>Quam diu etiam furor iste tuus nos eludet?</span> <span>Cum sociis natoque penatibus et magnis dis parturient.</span> <span>Quam diu etiam furor iste tuus nos eludet?</span> <span>Tityre, tu patulae recubans sub tegmine fagi  dolor.</span></p><p><span>Curabitur blandit tempus ardua ridiculus sed magna.</span> <span>Phasellus laoreet lorem vel dolor tempus vehicula.</span> <span>Etiam habebis sem dicantur magna mollis euismod.</span> <span>Hi omnes lingua, institutis, legibus inter se differunt.</span></p></div>");
         form.addComponent(bio);
 
         form.setReadOnly(true);
+        bio.setReadOnly(true);
 
         Button edit = new Button("Edit", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 boolean readOnly = form.isReadOnly();
                 if (readOnly) {
+                    bio.setReadOnly(false);
                     form.setReadOnly(false);
                     form.removeStyleName("light");
                     event.getButton().setCaption("Save");
                     event.getButton().addStyleName("primary");
                 } else {
+                    bio.setReadOnly(true);
                     form.setReadOnly(true);
                     form.addStyleName("light");
                     event.getButton().setCaption("Edit");
@@ -163,7 +168,16 @@ public class Forms extends VerticalLayout implements View {
             }
         });
 
-        addComponent(edit);
+        HorizontalLayout footer = new HorizontalLayout();
+        footer.setMargin(new MarginInfo(true, false, true, false));
+        footer.setSpacing(true);
+        footer.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
+        form.addComponent(footer);
+        footer.addComponent(edit);
+
+        Label lastModified = new Label("Last modified by you a minute ago");
+        lastModified.addStyleName("light");
+        footer.addComponent(lastModified);
     }
 
     @Override

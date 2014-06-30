@@ -9,7 +9,7 @@ $valo-richtextarea-use-font-awesome: true !default;
 
   .#{$primary-stylename} .gwt-RichTextToolbar {
     @include valo-gradient($color: $v-background-color);
-    box-shadow: valo-bevel-and-shadow($bevel: $v-bevel, $background-color: $v-background-color, $gradient: $v-gradient);
+    @include box-shadow(valo-bevel-and-shadow($bevel: $v-bevel, $background-color: $v-background-color, $gradient: $v-gradient));
     border-bottom: valo-border();
     color: valo-font-color($v-background-color);
   }
@@ -88,6 +88,11 @@ $valo-richtextarea-use-font-awesome: true !default;
   	background: #fff;
   	border: none;
     display: block;
+  }
+
+  .#{$primary-stylename}-readonly {
+    padding: ceil($v-unit-size/9) ceil($v-unit-size/6);
+    background: transparent;
   }
 
 }

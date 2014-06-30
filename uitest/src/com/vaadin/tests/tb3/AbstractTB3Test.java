@@ -16,6 +16,8 @@
 
 package com.vaadin.tests.tb3;
 
+import static com.vaadin.tests.tb3.TB3Runner.localWebDriverIsUsed;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -35,6 +37,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
+import org.openqa.selenium.interactions.internal.Coordinates;
+import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -46,6 +50,7 @@ import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UIProvider;
 import com.vaadin.testbench.TestBench;
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
@@ -126,7 +131,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         } else {
             capabilities = getDesiredCapabilities();
 
-            if (System.getProperty("useLocalWebDriver") != null) {
+            if (localWebDriverIsUsed()) {
                 setupLocalDriver(capabilities);
             } else {
                 WebDriver dr = TestBench.createDriver(new RemoteWebDriver(
@@ -151,6 +156,45 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
 
     }
 
+    protected WebElement getTooltipElement() {
+        return getDriver().findElement(
+                com.vaadin.testbench.By.className("v-tooltip-text"));
+    }
+
+    protected Coordinates getCoordinates(TestBenchElement element) {
+        return ((Locatable) element.getWrappedElement()).getCoordinates();
+    }
+
+    private boolean hasDebugMessage(String message) {
+        return getDebugMessage(message) != null;
+    }
+
+    private WebElement getDebugMessage(String message) {
+        return driver.findElement(By.xpath(String.format(
+                "//span[@class='v-debugwindow-message' and text()='%s']",
+                message)));
+    }
+
+    protected void waitForDebugMessage(final String expectedMessage) {
+        waitForDebugMessage(expectedMessage, 30);
+    }
+
+    protected void waitForDebugMessage(final String expectedMessage, int timeout) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                return hasDebugMessage(expectedMessage);
+            }
+        }, timeout);
+    }
+
+    protected void clearDebugMessages() {
+        driver.findElement(
+                By.xpath("//button[@class='v-debugwindow-button' and @title='Clear log']"))
+                .click();
+    }
+
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
     public @interface RunLocally {
@@ -171,7 +215,22 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * {@link #isPush()}.
      */
     protected void openTestURL() {
-        driver.get(getTestUrl());
+        openTestURL("");
+    }
+
+    /**
+     * Opens the given test (defined by {@link #getTestUrl()}, optionally with
+     * debug window and/or push (depending on {@link #isDebug()} and
+     * {@link #isPush()}.
+     */
+    protected void openTestURL(String extraParameters) {
+        String url = getTestUrl();
+        if (url.contains("?")) {
+            url = url + "&" + extraParameters;
+        } else {
+            url = url + "?" + extraParameters;
+        }
+        driver.get(url);
     }
 
     /**
@@ -778,7 +837,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
          */
         public static DesiredCapabilities phantomJS(int version) {
             DesiredCapabilities c = DesiredCapabilities.phantomjs();
-            c.setPlatform(Platform.XP);
+            c.setPlatform(Platform.LINUX);
             c.setVersion("" + version);
             return c;
         }

@@ -45,6 +45,10 @@ $v-tree-expand-animation-enabled: false !default;
       width: 1.9em;
       height: $v-tree-row-height;
       cursor: pointer;
+      // IE 9/10 need some color so that this element can receive mouse events.
+      // 'red' just happens to be the shortest color name.
+      background: red;
+      opacity: 0;
 
       .v-ie8 & {
         content: "+";
@@ -53,6 +57,7 @@ $v-tree-expand-animation-enabled: false !default;
         vertical-align: top;
         @include valo-tree-collapsed-icon-style;
         text-align: center;
+        background: transparent;
       }
     }
 
@@ -157,7 +162,7 @@ $v-tree-expand-animation-enabled: false !default;
     // This a v-tree-node-caption element
     &:after {
       opacity: 1;
-      border: 1px solid valo-focus-color();
+      border: 1px solid $v-focus-color;
     }
 
     .v-ie8 & {
@@ -216,21 +221,21 @@ $v-tree-expand-animation-enabled: false !default;
     position: absolute;
     height: 2px;
     width: 100%;
-    background: valo-focus-color();
+    background: $v-focus-color;
     font-size: $v-font-size * 2;
     line-height: 2px;
-    color: valo-focus-color();
+    color: $v-focus-color;
     text-indent: round($v-font-size/-4);
     text-shadow: 0 0 1px $v-background-color, 0 0 1px $v-background-color;
   }
 
   .#{$primary-stylename}-node-caption-drag-center {
-    box-shadow: 0 0 0 2px valo-focus-color();
+    @include box-shadow(0 0 0 2px $v-focus-color);
     position: relative;
     border-radius: $v-border-radius;
 
     .v-ie8 & {
-      outline: 2px solid valo-focus-color();
+      outline: 2px solid $v-focus-color;
     }
   }
 

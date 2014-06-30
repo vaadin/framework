@@ -1,5 +1,5 @@
 // Common styles for components
-// About 50KB of CSS output
+// About 90KB of CSS output
 
 @import "valo-menu";
 
@@ -43,6 +43,14 @@
     @include valo-button-borderless-style;
   }
 
+  .v-button-borderless-colored {
+    @include valo-button-borderless-style($font-color: $v-selection-color);
+  }
+
+  .v-button-quiet {
+    @include valo-button-quiet-style;
+  }
+
   .v-button-link {
     @include valo-button-borderless-style;
     @include valo-link-style;
@@ -60,12 +68,24 @@
     @include valo-button-icon-align-right-style;
   }
 
+  .v-button-icon-align-top {
+    @include valo-button-icon-align-top-style;
+  }
+
   .v-button-icon-only {
     width: $v-unit-size;
     padding: 0;
 
     &.v-button-small {
       width: $v-unit-size--small;
+    }
+
+    &.v-button-large {
+      width: $v-unit-size--large;
+    }
+
+    .v-button-caption {
+      display: none;
     }
   }
 
@@ -77,20 +97,38 @@
     font-size: $v-font-size--large;
   }
 
-  .v-tabsheet-centered-tabs {
-    @include valo-tabsheet-centered-tabs;
+  .v-tabsheet-equal-width-tabs {
+    @include valo-tabsheet-equal-width-tabs-style($flex: false);
   }
 
-  .v-tabsheet-equal-width-tabs {
-    @include valo-tabsheet-equal-width-tabs($flex: false);
+  .v-tabsheet-framed {
+    @include valo-tabsheet-framed-style;
+  }
+
+  .v-tabsheet-centered-tabs {
+    @include valo-tabsheet-align-tabs-style($align: center);
+  }
+
+  .v-tabsheet-right-aligned-tabs {
+    @include valo-tabsheet-align-tabs-style($align: right);
   }
 
   .v-tabsheet-padded-tabbar {
-    @include valo-tabsheet-padded-tabbar;
+    @include valo-tabsheet-padded-tabbar-style;
   }
 
   .v-tabsheet-icons-on-top {
-    @include valo-tabsheet-icons-on-top;
+    @include valo-tabsheet-icons-on-top-style;
+  }
+
+  .v-tabsheet-compact-tabbar {
+    > .v-tabsheet-tabcontainer-compact-tabbar .v-caption {
+      line-height: 1.8;
+    }
+  }
+
+  .v-tabsheet-only-selected-closable {
+    @include valo-tabsheet-only-selected-closable-style;
   }
 
   .v-panel-borderless {
@@ -102,69 +140,92 @@
   }
 
   .v-textfield-borderless,
-  .v-textarea-borderless {
+  .v-textarea-borderless,
+  .v-datefield-borderless .v-datefield-textfield,
+  .v-filterselect-borderless .v-filterselect-input {
     @include valo-textfield-borderless-style;
   }
 
+  .v-datefield-borderless .v-datefield-button,
+  .v-filterselect-borderless .v-filterselect-button {
+    border: none;
+  }
+
   .v-textfield-small {
-    @include valo-textfield-style($unit-size: $v-unit-size--small);
+    @include valo-textfield-style($unit-size: $v-unit-size--small, $states: normal, $background-color: null, $border: null, $gradient: null, $bevel: null, $shadow: null);
     font-size: $v-font-size--small;
   }
 
   .v-textfield-large {
-    @include valo-textfield-style($unit-size: $v-unit-size--large);
+    @include valo-textfield-style($unit-size: $v-unit-size--large, $states: normal, $background-color: null, $border: null, $gradient: null, $bevel: null, $shadow: null);
     font-size: $v-font-size--large;
   }
 
-  @include valo-textfield-inline-icon($stylename: inline-icon);
+  @include valo-textfield-inline-icon($stylenames: inline-icon);
+  @include valo-textfield-inline-icon($stylenames: inline-icon small, $unit-size: $v-unit-size--small, $font-size: $v-font-size--small);
+  @include valo-textfield-inline-icon($stylenames: inline-icon large, $unit-size: $v-unit-size--large, $font-size: $v-font-size--large);
 
   .v-textarea-small {
-    @include valo-textarea-style($unit-size: $v-unit-size--small);
+    @include valo-textarea-style($unit-size: $v-unit-size--small, $states: normal, $background-color: null, $border: null, $bevel: null, $shadow: null);
     font-size: $v-font-size--small;
   }
 
   .v-textarea-large {
-    @include valo-textarea-style($unit-size: $v-unit-size--large);
+    @include valo-textarea-style($unit-size: $v-unit-size--large, $states: normal, $background-color: null, $border: null, $bevel: null, $shadow: null);
     font-size: $v-font-size--large;
   }
 
   .v-textfield-align-right,
-  .v-textarea-align-right {
+  .v-textarea-align-right,
+  .v-datefield-align-right input,
+  .v-filterselect-align-right input {
     text-align: right;
   }
 
   .v-textfield-align-center,
-  .v-textarea-align-center {
+  .v-textarea-align-center,
+  .v-datefield-align-center input,
+  .v-filterselect-align-center input {
     text-align: center;
   }
 
   .v-filterselect-small {
-    @include valo-combobox-style($unit-size: $v-unit-size--small, $bevel: null, $shadow: null, $gradient: null, $border: null, $border-radius: null);
+    @include valo-combobox-style($unit-size: $v-unit-size--small, $bevel: null, $shadow: null, $gradient: null, $border: null, $border-radius: null, $background-color: null);
     font-size: $v-font-size--small;
   }
 
   .v-filterselect-large {
-    @include valo-combobox-style($unit-size: $v-unit-size--large, $bevel: null, $shadow: null, $gradient: null, $border: null, $border-radius: null);
+    @include valo-combobox-style($unit-size: $v-unit-size--large, $bevel: null, $shadow: null, $gradient: null, $border: null, $border-radius: null, $background-color: null);
     font-size: $v-font-size--large;
   }
 
   .v-datefield-small {
-    @include valo-datefield-style($unit-size: $v-unit-size--small);
+    @include valo-datefield-style($unit-size: $v-unit-size--small, $bevel: null, $shadow: null, $border: null, $background-color: null);
     font-size: $v-font-size--small;
   }
 
   .v-datefield-large {
-    @include valo-datefield-style($unit-size: $v-unit-size--large);
+    @include valo-datefield-style($unit-size: $v-unit-size--large, $bevel: null, $shadow: null, $border: null, $background-color: null);
     font-size: $v-font-size--large;
   }
 
   .v-checkbox-small {
-    @include valo-checkbox-style($size: $v-unit-size--small);
+    @include valo-checkbox-style($unit-size: $v-unit-size--small);
     font-size: $v-font-size--small;
   }
 
   .v-checkbox-large {
-    @include valo-checkbox-style($size: $v-unit-size--large);
+    @include valo-checkbox-style($unit-size: $v-unit-size--large);
+    font-size: $v-font-size--large;
+  }
+
+  .v-select-optiongroup-small {
+    @include valo-optiongroup-style($unit-size: $v-unit-size--small);
+    font-size: $v-font-size--small;
+  }
+
+  .v-select-optiongroup-large {
+    @include valo-optiongroup-style($unit-size: $v-unit-size--large);
     font-size: $v-font-size--large;
   }
 
@@ -184,12 +245,16 @@
     @include valo-panel-scroll-divider-style;
   }
 
-  .v-csslayout-well {
+  .v-csslayout-well,
+  .v-verticallayout-well,
+  .v-horizontallayout-well {
     @include valo-panel-well-style;
     @include valo-panel-adjust-content-margins;
   }
 
-  .v-csslayout-card {
+  .v-csslayout-card,
+  .v-verticallayout-card,
+  .v-horizontallayout-card {
     @include valo-panel-style;
     @include valo-panel-adjust-content-margins;
   }
@@ -212,6 +277,36 @@
 
   .wrapping {
     @include valo-horizontallayout--wrapping;
+  }
+
+  .v-Notification.bar {
+    @include valo-notification-bar-style;
+  }
+
+  .v-Notification.small {
+    @include valo-notification-small-style;
+  }
+
+  .v-Notification.closable {
+    @include valo-notification-closable-style;
+
+    &.error,
+    &.system {
+      &:after {
+        color: #fff;
+        border-color: #fff;
+        border-color: rgba(255,255,255,.3);
+      }
+      &:active:after {
+        background-color: #fff;
+        color: #000;
+      }
+    }
+
+    &.tray:after {
+      top: round($v-unit-size/2.3);
+      margin-top: 0;
+    }
   }
 
   .v-Notification.success,
@@ -297,28 +392,28 @@
 
 
   .v-table-no-stripes {
-    @include valo-table-no-stripes;
+    @include valo-table-no-stripes-style;
   }
 
   .v-table-no-vertical-lines {
-    @include valo-table-no-vertical-lines;
+    @include valo-table-no-vertical-lines-style;
   }
 
   .v-table-no-horizontal-lines {
-    @include valo-table-no-horizontal-lines;
+    @include valo-table-no-horizontal-lines-style;
   }
 
   .v-table-no-header {
-    @include valo-table-no-header;
+    @include valo-table-no-header-style;
   }
 
   .v-table-borderless {
-    @include valo-table-borderless;
+    @include valo-table-borderless-style;
   }
 
   .v-table-compact,
   .v-table-small {
-    @include valo-table-compact-style($row-height: round($v-table-row-height * $v-scaling-factor--small), $cell-padding-horizontal: round($v-table-cell-padding-horizontal / 2));
+    @include valo-table-spacing-style($row-height: round($v-table-row-height * $v-scaling-factor--small), $cell-padding-horizontal: round($v-table-cell-padding-horizontal / 2));
   }
 
   .v-table-small {
@@ -329,11 +424,15 @@
   .v-accordion-borderless {
     border: none;
     border-radius: 0;
-    box-shadow: none;
+    @include box-shadow(none);
 
     > .v-accordion-item {
       border-radius: 0;
     }
+  }
+
+  .v-slider-no-indicator {
+    @include valo-slider-no-indicator;
   }
 
 

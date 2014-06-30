@@ -1,41 +1,93 @@
-@include keyframes(valo-anim-fade-in) {
-  0% {
-    opacity: 0;
+@if $v-animations-enabled {
+
+  // 'Placeholder' animation names to trigger VOverlay animation-in and animation-out
+  @include keyframes(valo-placeholder-animate-in) {
+    0% {
+      visibility: visible;
+    }
   }
-}
 
-
-@include keyframes(valo-anim-fade-out) {
-  100% {
-    opacity: 0;
+  @include keyframes(valo-placeholder-animate-out) {
+    100% {
+      visibility: visible;
+    }
   }
-}
 
-
-@include keyframes(valo-anim-slide-down) {
-  0% {
-    @include transform( translateY(-100%) );
+  @include keyframes(valo-anim-fade-in) {
+    0% {
+      opacity: 0;
+    }
   }
-}
 
-@include keyframes(valo-anim-slide-up) {
-  0% {
-    @include transform( translateY(100%) );
+  @include keyframes(valo-anim-fade-out) {
+    100% {
+      opacity: 0;
+    }
   }
-}
 
-@include keyframes(valo-anim-slide-left) {
-  0% {
-    @include transform( translateX(100%) );
+  @include keyframes(valo-anim-slide-in-down) {
+    0% {
+      @include transform( translateY(-100%) );
+    }
   }
-}
 
-@include keyframes(valo-anim-slide-right) {
-  0% {
-    @include transform( translateX(-100%) );
+  @include keyframes(valo-anim-slide-in-up) {
+    0% {
+      @include transform( translateY(100%) );
+    }
   }
-}
 
+  @include keyframes(valo-anim-slide-in-left) {
+    0% {
+      @include transform( translateX(100%) );
+    }
+  }
+
+  @include keyframes(valo-anim-slide-in-right) {
+    0% {
+      @include transform( translateX(-100%) );
+    }
+  }
+
+  @include keyframes(valo-anim-slide-out-down) {
+    100% {
+      @include transform( translateY(100%) );
+    }
+  }
+
+  @include keyframes(valo-anim-slide-out-up) {
+    100% {
+      @include transform( translateY(-100%) );
+    }
+  }
+
+  @include keyframes(valo-anim-slide-out-left) {
+    100% {
+      @include transform( translateX(-100%) );
+    }
+  }
+
+  @include keyframes(valo-anim-slide-out-right) {
+    100% {
+      @include transform( translateX(100%) );
+    }
+  }
+
+  @include keyframes(valo-overlay-animate-in) {
+    0% {
+      @include transform(translatey(-4px));
+      opacity: 0;
+    }
+  }
+
+  @include keyframes(valo-anim-drop-fade-out) {
+    100% {
+      opacity: 0;
+      @include transform(translatey(30%));
+    }
+  }
+
+}
 
 
 @mixin valo-anim-fade-in ($duration: 120ms, $delay: null){

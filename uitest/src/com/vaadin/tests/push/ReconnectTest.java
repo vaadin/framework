@@ -83,32 +83,6 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
         waitForDebugMessage("Reopening push connection");
     }
 
-    private void clearDebugMessages() {
-        driver.findElement(
-                By.xpath("//button[@class='v-debugwindow-button' and @title='Clear log']"))
-                .click();
-    }
-
-    private boolean hasDebugMessage(String message) {
-        return getDebugMessage(message) != null;
-    }
-
-    private WebElement getDebugMessage(String message) {
-        return driver.findElement(By.xpath(String.format(
-                "//span[@class='v-debugwindow-message' and text()='%s']",
-                message)));
-    }
-
-    private void waitForDebugMessage(final String expectedMessage) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return hasDebugMessage(expectedMessage);
-            }
-        }, 30);
-    }
-
     private void connectAndVerifyConnectionEstablished() throws JSchException {
         connectProxy();
         waitUntilServerCounterChanges();

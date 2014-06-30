@@ -22,8 +22,8 @@ import java.util.Iterator;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.AnimationUtil;
+import com.vaadin.client.AnimationUtil.AnimationEndListener;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.UIDL;
@@ -53,6 +54,14 @@ public class VNotification extends VOverlay {
     public static final Position BOTTOM_LEFT = Position.BOTTOM_LEFT;
     public static final Position BOTTOM_RIGHT = Position.BOTTOM_RIGHT;
 
+    private static final String STYLENAME_POSITION_TOP = "v-position-top";
+    private static final String STYLENAME_POSITION_RIGHT = "v-position-right";
+    private static final String STYLENAME_POSITION_BOTTOM = "v-position-bottom";
+    private static final String STYLENAME_POSITION_LEFT = "v-position-left";
+    private static final String STYLENAME_POSITION_MIDDLE = "v-position-middle";
+    private static final String STYLENAME_POSITION_CENTER = "v-position-center";
+    private static final String STYLENAME_POSITION_ASSISTIVE = "v-position-assistive";
+
     /**
      * Position that is only accessible for assistive devices, invisible for
      * visual users.
@@ -70,7 +79,7 @@ public class VNotification extends VOverlay {
     private static final ArrayList<VNotification> notifications = new ArrayList<VNotification>();
 
     private boolean infiniteDelay = false;
-    private int cssTransitionDelay = -1;
+    private int hideDelay = 0;
 
     private int x = -1;
     private int y = -1;
@@ -130,10 +139,10 @@ public class VNotification extends VOverlay {
     private void setDelay(int delayMsec) {
         if (delayMsec < 0) {
             infiniteDelay = true;
-            cssTransitionDelay = 0;
+            hideDelay = 0;
         } else {
             infiniteDelay = false;
-            cssTransitionDelay = delayMsec;
+            hideDelay = delayMsec;
         }
     }
 
@@ -231,15 +240,16 @@ public class VNotification extends VOverlay {
             removeStyleDependentName(temporaryStyle);
             temporaryStyle = null;
         }
-        if (style != null) {
+        if (style != null && style.length() > 0) {
             temporaryStyle = style;
             addStyleName(style);
             addStyleDependentName(style);
         }
 
-        super.show();
-        notifications.add(this);
         setPosition(position);
+        super.show();
+        updatePositionOffsets(position);
+        notifications.add(this);
         positionOrSizeUpdated();
         /**
          * Android 4 fails to render notifications correctly without a little
@@ -252,71 +262,128 @@ public class VNotification extends VOverlay {
 
     @Override
     public void hide() {
-        DOM.removeEventPreview(this);
-        if (cssTransitionDelay >= 0) {
-            AnimationUtil.setAnimationDelay(getElement(), cssTransitionDelay
-                    + "ms");
+        // Run only once
+        if (notifications.contains(this)) {
+            DOM.removeEventPreview(this);
+
+            // Still animating in, wait for it to finish before touching
+            // the animation delay (which would restart the animation-in
+            // in some browsers)
+            if (getStyleName().contains(
+                    VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                AnimationUtil.addAnimationEndListener(getElement(),
+                        new AnimationEndListener() {
+                            @Override
+                            public void onAnimationEnd(NativeEvent event) {
+                                if (AnimationUtil
+                                        .getAnimationName(event)
+                                        .contains(
+                                                VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                                    VNotification.this.hide();
+                                }
+                            }
+                        });
+            } else {
+                // Use a timer in browsers without CSS animation support
+                // to show the notification for the duration of the delay
+                if (BrowserInfo.get().isIE8() || BrowserInfo.get().isIE9()) {
+                    new Timer() {
+                        @Override
+                        public void run() {
+                            VNotification.super.hide();
+                        }
+                    }.schedule(hideDelay);
+                } else {
+                    if (hideDelay > 0) {
+                        AnimationUtil.setAnimationDelay(getElement(), hideDelay
+                                + "ms");
+                    }
+                    VNotification.super.hide();
+
+                }
+                fireEvent(new HideEvent(this));
+                notifications.remove(this);
+            }
         }
-        super.hide();
-        notifications.remove(this);
-        fireEvent(new HideEvent(this));
     }
 
-    public void setPosition(com.vaadin.shared.Position position) {
-        final Style style = getElement().getStyle();
-        style.clearTop();
-        style.clearRight();
-        style.clearBottom();
-        style.clearLeft();
+    private void updatePositionOffsets(com.vaadin.shared.Position position) {
+        final Element el = getElement();
+
+        // Remove all offsets (GWT PopupPanel defaults)
+        el.getStyle().clearTop();
+        el.getStyle().clearLeft();
+
         switch (position) {
-        case TOP_LEFT:
-            style.setTop(0, Unit.PX);
-            style.setLeft(0, Unit.PX);
-            break;
-        case TOP_RIGHT:
-            style.setTop(0, Unit.PX);
-            style.setRight(0, Unit.PX);
-            break;
         case MIDDLE_LEFT:
-            center();
-            style.setLeft(0, Unit.PX);
-            break;
         case MIDDLE_RIGHT:
             center();
-            style.clearLeft();
-            style.setRight(0, Unit.PX);
-            break;
-        case BOTTOM_RIGHT:
-            style.setBottom(0, Unit.PX);
-            style.setRight(0, Unit.PX);
-            break;
-        case BOTTOM_LEFT:
-            style.setBottom(0, Unit.PX);
-            style.setLeft(0, Unit.PX);
+            el.getStyle().clearLeft();
             break;
         case TOP_CENTER:
-            center();
-            style.setTop(0, Unit.PX);
-            break;
         case BOTTOM_CENTER:
             center();
-            style.clearTop();
-            style.setBottom(0, Unit.PX);
+            el.getStyle().clearTop();
             break;
-        case ASSISTIVE:
-            style.setTop(-2000, Unit.PX);
-            style.setLeft(-2000, Unit.PX);
-            break;
-        default:
         case MIDDLE_CENTER:
             center();
             break;
         }
     }
 
+    public void setPosition(com.vaadin.shared.Position position) {
+        final Element el = getElement();
+
+        // Remove any previous positions
+        el.removeClassName(STYLENAME_POSITION_TOP);
+        el.removeClassName(STYLENAME_POSITION_RIGHT);
+        el.removeClassName(STYLENAME_POSITION_BOTTOM);
+        el.removeClassName(STYLENAME_POSITION_LEFT);
+        el.removeClassName(STYLENAME_POSITION_MIDDLE);
+        el.removeClassName(STYLENAME_POSITION_CENTER);
+        el.removeClassName(STYLENAME_POSITION_ASSISTIVE);
+
+        switch (position) {
+        case TOP_LEFT:
+            el.addClassName(STYLENAME_POSITION_TOP);
+            el.addClassName(STYLENAME_POSITION_LEFT);
+            break;
+        case TOP_RIGHT:
+            el.addClassName(STYLENAME_POSITION_TOP);
+            el.addClassName(STYLENAME_POSITION_RIGHT);
+            break;
+        case MIDDLE_LEFT:
+            el.addClassName(STYLENAME_POSITION_MIDDLE);
+            el.addClassName(STYLENAME_POSITION_LEFT);
+            break;
+        case MIDDLE_RIGHT:
+            el.addClassName(STYLENAME_POSITION_MIDDLE);
+            el.addClassName(STYLENAME_POSITION_RIGHT);
+            break;
+        case BOTTOM_RIGHT:
+            el.addClassName(STYLENAME_POSITION_BOTTOM);
+            el.addClassName(STYLENAME_POSITION_RIGHT);
+            break;
+        case BOTTOM_LEFT:
+            el.addClassName(STYLENAME_POSITION_BOTTOM);
+            el.addClassName(STYLENAME_POSITION_LEFT);
+            break;
+        case TOP_CENTER:
+            el.addClassName(STYLENAME_POSITION_TOP);
+            el.addClassName(STYLENAME_POSITION_CENTER);
+            break;
+        case BOTTOM_CENTER:
+            el.addClassName(STYLENAME_POSITION_BOTTOM);
+            el.addClassName(STYLENAME_POSITION_CENTER);
+            break;
+        case ASSISTIVE:
+            el.addClassName(STYLENAME_POSITION_ASSISTIVE);
+            break;
+        }
+    }
+
     @Override
     public void onBrowserEvent(Event event) {
-        DOM.removeEventPreview(this);
         hide();
     }
 
@@ -344,7 +411,6 @@ public class VNotification extends VOverlay {
         // default
         switch (type) {
         case Event.ONMOUSEMOVE:
-
             if (x < 0) {
                 x = DOM.eventGetClientX(event);
                 y = DOM.eventGetClientY(event);

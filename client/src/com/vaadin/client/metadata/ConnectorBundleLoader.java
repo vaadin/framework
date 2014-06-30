@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,13 +15,35 @@
  */
 package com.vaadin.client.metadata;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.FastStringMap;
 import com.vaadin.client.metadata.AsyncBundleLoader.State;
+import com.vaadin.client.ui.VNotification;
+import com.vaadin.shared.Position;
 
 public abstract class ConnectorBundleLoader {
+
+    public static class CValUiInfo {
+        public final String widgetset;
+        public final String product;
+        public final String version;
+        public final String type;
+
+        public CValUiInfo(String product, String version, String widgetset,
+                String type) {
+            this.product = product;
+            this.version = version;
+            this.widgetset = widgetset;
+            this.type = type;
+        }
+    }
+
     public static final String EAGER_BUNDLE_NAME = "__eager";
     public static final String DEFERRED_BUNDLE_NAME = "__deferred";
 
@@ -113,4 +135,27 @@ public abstract class ConnectorBundleLoader {
 
     public abstract void init();
 
+    protected List<CValUiInfo> cvals = new ArrayList<CValUiInfo>();
+
+    public void cval(String typeName) {
+        if (!cvals.isEmpty()) {
+            String msg = "";
+            for (CValUiInfo c : cvals) {
+                String ns = c.widgetset.replaceFirst("\\.[^\\.]+$", "");
+                if (typeName.startsWith(ns)) {
+                    cvals.remove(c);
+                    msg += c.product + " " + c.version + "<br/>";
+                }
+            }
+            if (!msg.isEmpty()) {
+                // We need a widget for using VNotification, using the
+                // context-menu parent. Is there an easy way?
+                Widget w = ApplicationConfiguration.getRunningApplications()
+                        .get(0).getContextMenu().getParent();
+                VNotification n = VNotification.createNotification(0, w);
+                n.setWidget(new HTML("Using Evaluation License of:<br/>" + msg));
+                n.show(Position.BOTTOM_RIGHT);
+            }
+        }
+    }
 }

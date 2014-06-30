@@ -10,7 +10,7 @@
 
   @if length($to-align) > 0 {
     @each $selector in $to-align {
-      & > #{unquote($selector)} {
+      & > #{$selector} {
         vertical-align: $align;
       }
     }

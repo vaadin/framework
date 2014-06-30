@@ -1,14 +1,22 @@
 $v-window-background-color: $v-panel-background-color !default;
-$v-window-border-radius: null !default;
-$v-window-shadow: 0 4px 12px 6px rgba(0,0,0, $v-shadow-opacity/100%), $v-overlay-shadow !default;
-$v-window-open-animation: null !default;
-$v-window-animations-enabled: $v-animations-enabled !default;
+$v-window-border-radius: $v-border-radius !default;
+$v-window-shadow: 0 2px 10px (v-shade 2), 0 16px 80px -6px (v-shade 3), last($v-overlay-shadow) !default;
+$v-window-animate-in: valo-placeholder-animate-in 140ms, valo-anim-fade-in 140ms !default;
+$v-window-animate-out: valo-placeholder-animate-out 100ms, valo-anim-scale-down-fade-out 100ms !default;
+$v-window-modality-curtain-background-color: #222 !default;
 
 
-@if $v-window-animations-enabled {
+@if $v-animations-enabled {
   @include keyframes(valo-modal-window-indication) {
     0% { opacity: 0; }
     100% { opacity: 1; }
+  }
+
+  @include keyframes(valo-anim-scale-down-fade-out) {
+    100% {
+      @include transform(scale(0.8));
+      opacity: 0;
+    }
   }
 }
 
@@ -16,29 +24,30 @@ $v-window-animations-enabled: $v-animations-enabled !default;
 @mixin valo-window ($primary-stylename: v-window) {
 
   .#{$primary-stylename} {
-    @include valo-overlay-style($background-color: $v-window-background-color);
-
-    @if $v-window-animations-enabled and $v-window-open-animation {
-      @include animation($v-window-open-animation);
-    }
+    @include valo-overlay-style($background-color: $v-window-background-color, $animate-in: $v-window-animate-in, $animate-out: $v-window-animate-out);
 
     @if $v-window-shadow {
       @if $v-window-shadow == none {
-        box-shadow: none;
+        @include box-shadow(none);
       } @else if $v-window-shadow != $v-overlay-shadow {
-        box-shadow: valo-bevel-and-shadow($shadow: $v-window-shadow);
+        @include box-shadow(valo-bevel-and-shadow($shadow: $v-window-shadow));
       }
     }
-    border-radius: $v-window-border-radius;
-    //border: first-number($v-border) solid valo-panel-border-color();
+    @if $v-window-border-radius != $v-border-radius {
+      border-radius: $v-window-border-radius;
+    }
     padding: 0;
     min-width: 4*$v-unit-size !important;
     min-height: $v-unit-size !important;
-    overflow: hidden !important;
     white-space: nowrap;
+    overflow: hidden !important;
 
-    @if $v-window-animations-enabled {
+    @if $v-animations-enabled {
       @include transition(width 200ms, height 200ms, top 200ms, left 200ms);
+
+      &.#{$primary-stylename}-animate-in {
+        @include transition(none);
+      }
     }
   }
 
@@ -48,8 +57,14 @@ $v-window-animations-enabled: $v-animations-enabled !default;
     right: 0;
     bottom: 0;
     left: 0;
-    background: $v-app-background-color;
-    @include opacity(.5);
+    @include radial-gradient(circle at 50% 50%, $v-window-modality-curtain-background-color, darken($v-window-modality-curtain-background-color, valo-gradient-opacity()), $fallback: $v-window-modality-curtain-background-color);
+    @include opacity(max(0.2, 0.8 - valo-gradient-opacity()/100%));
+    @include valo-anim-fade-in($duration: 400ms, $delay: 100ms);
+
+    .v-op12 & {
+      // Opera 12 has a shitbreak with the fade-in (flickers)
+      @include animation(none);
+    }
   }
 
   .#{$primary-stylename}-draggingCurtain {
@@ -78,9 +93,9 @@ $v-window-animations-enabled: $v-animations-enabled !default;
       bottom: -$scroll-divider-width;
       right: 0;
       left: 0;
-      height: $scroll-divider-width;
+      height: 0;
       $_bg: $v-window-background-color;
-      background: first-color(valo-border($strength: 0.5));
+      border-top: $scroll-divider-width solid first-color(valo-border($strength: 0.5));
     }
   }
 
@@ -100,19 +115,22 @@ $v-window-animations-enabled: $v-animations-enabled !default;
   .#{$primary-stylename}-maximizebox,
   .#{$primary-stylename}-restorebox {
     position: absolute;
-    z-index: 2;
+    z-index: 3;
     top: 0;
     right: 0;
-    width: $v-unit-size;
+    @include box-sizing(border-box);
+    width: $v-unit-size - round($v-unit-size/9);
     height: $v-unit-size - 1px;
+    background-color: $v-window-background-color;
     line-height: $v-unit-size - 3px;
     text-align: center;
     cursor: pointer;
     font-family: FontAwesome;
     font-size: round($v-font-size * 1.3);
-    @include opacity(.4);
+    color: valo-font-color($v-window-background-color, .4);
+
     @if $v-animations-enabled {
-      @include transition(all 140ms);
+      @include transition(color 140ms);
     }
 
     &:focus {
@@ -130,17 +148,37 @@ $v-window-animations-enabled: $v-animations-enabled !default;
   }
 
   .#{$primary-stylename}-closebox {
+    padding-right: round($v-unit-size/9);
     @include valo-window-close-icon-style;
+
+    @if $v-window-border-radius > 0 {
+      border-radius: 0 $v-window-border-radius 0 $v-window-border-radius;
+    }
   }
 
   .#{$primary-stylename}-maximizebox,
   .#{$primary-stylename}-restorebox {
-    right: $v-unit-size;
+    right: $v-unit-size - round($v-unit-size/9);
+    padding-left: round($v-unit-size/9);
+
+    @if $v-window-border-radius > 0 {
+      border-radius: 0 0 0 $v-window-border-radius;
+
+      + .#{$primary-stylename}-closebox {
+        border-bottom-left-radius: 0;
+      }
+    }
   }
 
   .#{$primary-stylename}-restorebox-disabled,
   .#{$primary-stylename}-maximizebox-disabled {
     display: none;
+
+    + .#{$primary-stylename}-closebox {
+      width: $v-unit-size;
+      padding-right: 0;
+      border-bottom-left-radius: $v-window-border-radius;
+    }
   }
 
   .#{$primary-stylename}-maximizebox {
@@ -181,18 +219,18 @@ $v-window-animations-enabled: $v-animations-enabled !default;
         position: absolute;
         z-index: 2;
         top: 0;
-        height: $scroll-divider-width;
-        background: $v-window-background-color;
+        height: 0;
+        border-top: $scroll-divider-width solid $v-window-background-color;
         left: 0;
         right: 0;
       }
 
       .v-panel-captionwrap:after {
-        background: first-color(valo-border($strength: 0.5));
+        border-color: first-color(valo-border($strength: 0.5));
       }
 
       .v-panel-content:before {
-        background: $v-window-background-color;
+        border-color: $v-window-background-color;
       }
     }
   }
@@ -234,15 +272,10 @@ $v-window-animations-enabled: $v-animations-enabled !default;
   }
 
 
-
-
+  .#{$primary-stylename}-top-toolbar,
   .#{$primary-stylename}-bottom-toolbar {
-    padding: round($v-unit-size/5) round($v-unit-size/3);
-    @include linear-gradient(to bottom, darken($v-background-color, valo-gradient-opacity($v-gradient)/2) 0, $v-background-color round($v-unit-size/10), $fallback: $v-background-color);
-    border-top: valo-border($strength: 0.5);
-
-    .v-expand {
-      overflow: visible;
+    > .v-widget {
+      vertical-align: top;
     }
 
     .v-label {
@@ -254,10 +287,58 @@ $v-window-animations-enabled: $v-animations-enabled !default;
     }
   }
 
+  .#{$primary-stylename}-top-toolbar {
+    &.v-layout {
+      padding: round($v-unit-size/5) round($v-unit-size/3);
+      position: relative;
+      z-index: 2;
+      border-top: valo-border($strength: 0.5);
+      border-bottom: valo-border($strength: 0.5);
+      background-color: $v-background-color;
+    }
+
+    &.v-menubar {
+      margin: round($v-unit-size/3) round($v-unit-size/3) round($v-unit-size/6);
+    }
+
+    &.v-menubar-borderless {
+      padding-left: round($v-unit-size/6);
+      padding-right: round($v-unit-size/6);
+      margin: round($v-unit-size/6) - first-number($v-border) 0;
+    }
+  }
+
+  .#{$primary-stylename}-bottom-toolbar.v-layout {
+    padding: round($v-unit-size/5) round($v-unit-size/3);
+    @include linear-gradient(to bottom, darken($v-background-color, valo-gradient-opacity($v-gradient)/2) 0, $v-background-color round($v-unit-size/10), $fallback: $v-background-color);
+    border-top: valo-border($strength: 0.5);
+    border-radius: 0 0 $v-border-radius $v-border-radius;
+  }
+
+  .v-margin-left.v-margin-right.v-margin-top {
+    .#{$primary-stylename}-top-toolbar {
+      &.v-layout {
+        @include box-sizing(content-box);
+        margin: round($v-unit-size/-3) round($v-unit-size/-3) 0;
+      }
+
+      &.v-menubar {
+        margin: 0;
+      }
+
+      &.v-menubar-borderless {
+        margin: round($v-unit-size/6) - round($v-unit-size/3) round($v-unit-size/6) - round($v-unit-size/3) 0;
+        padding: 0;
+      }
+    }
+  }
+
   .v-margin-left.v-margin-right.v-margin-bottom {
     .#{$primary-stylename}-bottom-toolbar {
-      margin: 0 round($v-unit-size/-3) round($v-unit-size/-3);
-      @include box-sizing(content-box);
+      &.v-layout {
+        @include box-sizing(content-box);
+        margin: 0 round($v-unit-size/-3) round($v-unit-size/-3);
+      }
     }
   }
 

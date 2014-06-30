@@ -19,6 +19,7 @@ import com.vaadin.data.Container;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
@@ -88,6 +89,27 @@ public class ComboBoxes extends VerticalLayout implements View {
         combo.select("Option One");
         row.addComponent(combo);
 
+        combo = new ComboBox("Error");
+        combo.setInputPrompt("You can type here");
+        combo.addItem("Option One");
+        combo.addItem("Option Two");
+        combo.addItem("Option Three");
+        combo.setNullSelectionAllowed(false);
+        combo.select("Option One");
+        combo.setComponentError(new UserError("Fix it, now!"));
+        row.addComponent(combo);
+
+        combo = new ComboBox("Error, borderless");
+        combo.setInputPrompt("You can type here");
+        combo.addItem("Option One");
+        combo.addItem("Option Two");
+        combo.addItem("Option Three");
+        combo.setNullSelectionAllowed(false);
+        combo.select("Option One");
+        combo.setComponentError(new UserError("Fix it, now!"));
+        combo.addStyleName("borderless");
+        row.addComponent(combo);
+
         combo = new ComboBox("Disabled");
         combo.setInputPrompt("You can't type here");
         combo.addItem("Option One");
@@ -122,18 +144,26 @@ public class ComboBoxes extends VerticalLayout implements View {
 
         combo = new ComboBox("Small");
         combo.setInputPrompt("You can type here");
-        combo.addItem("Option One");
-        combo.addItem("Option Two");
-        combo.addItem("Option Three");
+        combo.setContainerDataSource(generatedContainer);
+        combo.setItemCaptionPropertyId(ValoThemeTest.CAPTION_PROPERTY);
+        combo.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
         combo.addStyleName("small");
         row.addComponent(combo);
 
         combo = new ComboBox("Large");
         combo.setInputPrompt("You can type here");
+        combo.setContainerDataSource(generatedContainer);
+        combo.setItemCaptionPropertyId(ValoThemeTest.CAPTION_PROPERTY);
+        combo.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
+        combo.addStyleName("large");
+        row.addComponent(combo);
+
+        combo = new ComboBox("Borderless");
+        combo.setInputPrompt("You can type here");
         combo.addItem("Option One");
         combo.addItem("Option Two");
         combo.addItem("Option Three");
-        combo.addStyleName("large");
+        combo.addStyleName("borderless");
         row.addComponent(combo);
     }
 

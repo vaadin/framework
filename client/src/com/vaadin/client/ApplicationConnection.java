@@ -1,6 +1,6 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -472,6 +472,8 @@ public class ApplicationConnection implements HasHandlers {
 
     private Heartbeat heartbeat = GWT.create(Heartbeat.class);
 
+    private boolean tooltipInitialized = false;
+
     public static class MultiStepDuration extends Duration {
         private int previousStep = elapsedMillis();
 
@@ -581,10 +583,19 @@ public class ApplicationConnection implements HasHandlers {
 
             // initial UIDL provided in DOM, continue as if returned by request
             handleJSONText(jsonText, -1);
+        }
 
-            // Tooltip can't be created earlier because the necessary fields are
-            // not setup to add it in the correct place in the DOM
-            getVTooltip().showAssistive(new TooltipInfo(" "));
+        // Tooltip can't be created earlier because the
+        // necessary fields are not setup to add it in the
+        // correct place in the DOM
+        if (!tooltipInitialized) {
+            tooltipInitialized = true;
+            ApplicationConfiguration.runWhenDependenciesLoaded(new Command() {
+                @Override
+                public void execute() {
+                    getVTooltip().initializeAssistiveTooltips();
+                }
+            });
         }
     }
 
@@ -749,30 +760,10 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     private String getRepaintAllParameters() {
-        // collect some client side data that will be sent to server on
-        // initial uidl request
-        String nativeBootstrapParameters = getNativeBrowserDetailsParameters(getConfiguration()
-                .getRootPanelId());
-        // TODO figure out how client and view size could be used better on
-        // server. screen size can be accessed via Browser object, but other
-        // values currently only via transaction listener.
         String parameters = ApplicationConstants.URL_PARAMETER_REPAINT_ALL
-                + "=1&" + nativeBootstrapParameters;
+                + "=1";
         return parameters;
     }
-
-    /**
-     * Gets the browser detail parameters that are sent by the bootstrap
-     * javascript for two-request initialization.
-     * 
-     * @param parentElementId
-     * @return
-     */
-    private static native String getNativeBrowserDetailsParameters(
-            String parentElementId)
-    /*-{
-       return $wnd.vaadin.getBrowserDetailsParameters(parentElementId);
-    }-*/;
 
     protected void repaintAll() {
         makeUidlRequest(new JSONArray(), getRepaintAllParameters());
@@ -1432,12 +1423,19 @@ public class ApplicationConnection implements HasHandlers {
         if (json.containsKey(ApplicationConstants.SERVER_SYNC_ID)) {
             int syncId = json.getInt(ApplicationConstants.SERVER_SYNC_ID);
 
-            assert (lastSeenServerSyncId == UNDEFINED_SYNC_ID || syncId == lastSeenServerSyncId + 1) : "Newly retrieved server sync id was not exactly one larger than the previous one (new: "
-                    + syncId + ", last seen: " + lastSeenServerSyncId + ")";
+            /*
+             * Use sync id unless explicitly set as undefined, as is done by
+             * e.g. critical server-side notifications
+             */
+            if (syncId != -1) {
+                assert (lastSeenServerSyncId == UNDEFINED_SYNC_ID || syncId == lastSeenServerSyncId + 1) : "Newly retrieved server sync id was not exactly one larger than the previous one (new: "
+                        + syncId + ", last seen: " + lastSeenServerSyncId + ")";
 
-            lastSeenServerSyncId = syncId;
+                lastSeenServerSyncId = syncId;
+            }
         } else {
-            VConsole.error("Server response didn't contain an id.");
+            VConsole.error("Server response didn't contain a sync id. "
+                    + "Please verify that the server is up-to-date and that the response data has not been modified in transmission.");
         }
 
         // Handle redirect
@@ -2492,10 +2490,17 @@ public class ApplicationConnection implements HasHandlers {
         ApplicationConfiguration.startDependencyLoading();
         loader.loadScript(url, resourceLoadListener);
 
-        // Preload all remaining
-        for (int i = 0; i < dependencies.length(); i++) {
-            String preloadUrl = translateVaadinUri(dependencies.get(i));
-            loader.preloadResource(preloadUrl, null);
+        if (ResourceLoader.supportsInOrderScriptExecution()) {
+            for (int i = 0; i < dependencies.length(); i++) {
+                String preloadUrl = translateVaadinUri(dependencies.get(i));
+                loader.loadScript(preloadUrl, null);
+            }
+        } else {
+            // Preload all remaining
+            for (int i = 0; i < dependencies.length(); i++) {
+                String preloadUrl = translateVaadinUri(dependencies.get(i));
+                loader.preloadResource(preloadUrl, null);
+            }
         }
     }
 
@@ -2685,15 +2690,7 @@ public class ApplicationConnection implements HasHandlers {
             lastInvocationTag = 0;
         }
 
-        // Include the browser detail parameters if they aren't already sent
-        String extraParams;
-        if (!getConfiguration().isBrowserDetailsSent()) {
-            extraParams = getNativeBrowserDetailsParameters(getConfiguration()
-                    .getRootPanelId());
-            getConfiguration().setBrowserDetailsSent();
-        } else {
-            extraParams = "";
-        }
+        String extraParams = "";
         if (!getConfiguration().isWidgetsetVersionSent()) {
             if (!extraParams.isEmpty()) {
                 extraParams += "&";
@@ -3111,7 +3108,7 @@ public class ApplicationConnection implements HasHandlers {
             return null;
         }
         if (uidlUri.startsWith("theme://")) {
-            final String themeUri = configuration.getThemeUri();
+            final String themeUri = getThemeUri();
             if (themeUri == null) {
                 VConsole.error("Theme not set: ThemeResource will not be found. ("
                         + uidlUri + ")");
@@ -3177,7 +3174,8 @@ public class ApplicationConnection implements HasHandlers {
      * @return URI to the current theme
      */
     public String getThemeUri() {
-        return configuration.getThemeUri();
+        return configuration.getVaadinDirUrl() + "themes/"
+                + getUIConnector().getActiveTheme();
     }
 
     /**

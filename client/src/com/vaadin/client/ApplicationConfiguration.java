@@ -51,6 +51,7 @@ import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.ui.UnknownComponentConnector;
+import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 
@@ -84,7 +85,7 @@ public class ApplicationConfiguration implements EntryPoint {
                 return null;
             } else {
                 return value +"";
-            } 
+            }
         }-*/;
 
         /**
@@ -105,7 +106,7 @@ public class ApplicationConfiguration implements EntryPoint {
             } else {
                  // $entry not needed as function is not exported
                 return @java.lang.Boolean::valueOf(Z)(value);
-            } 
+            }
         }-*/;
 
         /**
@@ -126,7 +127,7 @@ public class ApplicationConfiguration implements EntryPoint {
             } else {
                  // $entry not needed as function is not exported
                 return @java.lang.Integer::valueOf(I)(value);
-            } 
+            }
         }-*/;
 
         /**
@@ -222,7 +223,6 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private Map<Integer, Class<? extends ServerConnector>> classes = new HashMap<Integer, Class<? extends ServerConnector>>();
 
-    private boolean browserDetailsSent = false;
     private boolean widgetsetVersionSent = false;
     private static boolean moduleLoaded = false;
 
@@ -286,12 +286,14 @@ public class ApplicationConfiguration implements EntryPoint {
         return serviceUrl;
     }
 
+    /**
+     * @return the theme name used when initializing the application
+     * @deprecated as of 7.3. Use {@link UIConnector#getActiveTheme()} to get the
+     *             theme currently in use
+     */
+    @Deprecated
     public String getThemeName() {
         return getJsoConfiguration(id).getConfigString("theme");
-    }
-
-    public String getThemeUri() {
-        return getVaadinDirUrl() + "themes/" + getThemeName();
     }
 
     /**
@@ -401,11 +403,6 @@ public class ApplicationConfiguration implements EntryPoint {
         communicationError = jsoConfiguration.getConfigError("comErrMsg");
         authorizationError = jsoConfiguration.getConfigError("authErrMsg");
         sessionExpiredError = jsoConfiguration.getConfigError("sessExpMsg");
-
-        // boostrap sets initPending to false if it has sent the browser details
-        if (jsoConfiguration.getConfigBoolean("initPending") == Boolean.FALSE) {
-            setBrowserDetailsSent();
-        }
     }
 
     /**
@@ -797,33 +794,10 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     /**
-     * Checks whether information from the web browser (e.g. uri fragment and
-     * screen size) has been sent to the server.
-     * 
-     * @return <code>true</code> if browser information has already been sent
-     * 
-     * @see ApplicationConnection#getNativeBrowserDetailsParameters(String)
-     */
-    public boolean isBrowserDetailsSent() {
-        return browserDetailsSent;
-    }
-
-    /**
-     * Registers that the browser details have been sent.
-     * {@link #isBrowserDetailsSent()} will return
-     * <code> after this method has been invoked.
-     */
-    public void setBrowserDetailsSent() {
-        browserDetailsSent = true;
-    }
-
-    /**
      * Checks whether the widget set version has been sent to the server. It is
      * sent in the first UIDL request.
      * 
      * @return <code>true</code> if browser information has already been sent
-     * 
-     * @see ApplicationConnection#getNativeBrowserDetailsParameters(String)
      */
     public boolean isWidgetsetVersionSent() {
         return widgetsetVersionSent;

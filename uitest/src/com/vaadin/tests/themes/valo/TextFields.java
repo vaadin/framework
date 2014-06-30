@@ -17,10 +17,13 @@ package com.vaadin.tests.themes.valo;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.FontAwesome;
+import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
@@ -59,6 +62,17 @@ public class TextFields extends VerticalLayout implements View {
         tf.addStyleName("color3");
         row.addComponent(tf);
 
+        tf = new TextField("Error");
+        tf.setValue("Something’s wrong");
+        tf.setComponentError(new UserError("Fix it, now!"));
+        row.addComponent(tf);
+
+        tf = new TextField("Error, borderless");
+        tf.setValue("Something’s wrong");
+        tf.setComponentError(new UserError("Fix it, now!"));
+        tf.addStyleName("borderless");
+        row.addComponent(tf);
+
         tf = new TextField("Read-only");
         tf.setInputPrompt("Nationality");
         tf.setValue("Finnish");
@@ -78,6 +92,20 @@ public class TextFields extends VerticalLayout implements View {
 
         tf = new TextField("Icon inside");
         tf.setInputPrompt("Ooh, an icon");
+        tf.addStyleName("inline-icon");
+        tf.setIcon(TestIcon.get());
+        row.addComponent(tf);
+
+        tf = new TextField("Large, Icon inside");
+        tf.setInputPrompt("Ooh, an icon");
+        tf.addStyleName("large");
+        tf.addStyleName("inline-icon");
+        tf.setIcon(TestIcon.get());
+        row.addComponent(tf);
+
+        tf = new TextField("Small, Icon inside");
+        tf.setInputPrompt("Ooh, an icon");
+        tf.addStyleName("small");
         tf.addStyleName("inline-icon");
         tf.setIcon(TestIcon.get());
         row.addComponent(tf);
@@ -121,6 +149,36 @@ public class TextFields extends VerticalLayout implements View {
         tf.addStyleName("borderless");
         tf.setIcon(TestIcon.get());
         row.addComponent(tf);
+
+        tf = new TextField("Right-aligned");
+        tf.setValue("1,234");
+        tf.addStyleName("align-right");
+        row.addComponent(tf);
+
+        tf = new TextField("Centered");
+        tf.setInputPrompt("Guess what?");
+        tf.addStyleName("align-center");
+        row.addComponent(tf);
+
+        PasswordField pwf = new PasswordField("Password");
+        pwf.setInputPrompt("Secret words");
+        pwf.addStyleName("inline-icon");
+        pwf.setIcon(FontAwesome.LOCK);
+        row.addComponent(pwf);
+
+        pwf = new PasswordField("Password, right-aligned");
+        pwf.setInputPrompt("Secret words");
+        pwf.addStyleName("inline-icon");
+        pwf.addStyleName("align-right");
+        pwf.setIcon(FontAwesome.LOCK);
+        row.addComponent(pwf);
+
+        pwf = new PasswordField("Password, centered");
+        pwf.setInputPrompt("Secret words");
+        pwf.addStyleName("inline-icon");
+        pwf.addStyleName("align-center");
+        pwf.setIcon(FontAwesome.LOCK);
+        row.addComponent(pwf);
 
         h1 = new Label("Text Areas");
         h1.addStyleName("h1");
@@ -172,8 +230,23 @@ public class TextFields extends VerticalLayout implements View {
         ta.setInputPrompt("Write your comment…");
         row.addComponent(ta);
 
+        ta = new TextArea("Right-aligned");
+        ta.addStyleName("align-right");
+        ta.setValue("Field value, spanning multiple lines of text");
+        row.addComponent(ta);
+
+        ta = new TextArea("Centered");
+        ta.addStyleName("align-center");
+        ta.setValue("Field value, spanning multiple lines of text");
+        row.addComponent(ta);
+
         RichTextArea rta = new RichTextArea();
         rta.setValue("<b>Some</b> <i>rich</i> content");
+        row.addComponent(rta);
+
+        rta = new RichTextArea("Read-only");
+        rta.setValue("<b>Some</b> <i>rich</i> content");
+        rta.setReadOnly(true);
         row.addComponent(rta);
     }
 

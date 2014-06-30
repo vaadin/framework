@@ -15,11 +15,18 @@
  */
 package com.vaadin.client;
 
+import com.vaadin.shared.util.SharedUtil;
+
 public class TooltipInfo {
 
     private String title;
 
     private String errorMessageHtml;
+
+    // Contains the tooltip's identifier. If a tooltip's contents and this
+    // identifier haven't changed, the tooltip won't be updated in subsequent
+    // events.
+    private Object identifier;
 
     public TooltipInfo() {
     }
@@ -29,8 +36,21 @@ public class TooltipInfo {
     }
 
     public TooltipInfo(String tooltip, String errorMessage) {
+        this(tooltip, errorMessage, null);
+    }
+
+    public TooltipInfo(String tooltip, String errorMessage, Object identifier) {
+        setIdentifier(identifier);
         setTitle(tooltip);
         setErrorMessage(errorMessage);
+    }
+
+    public void setIdentifier(Object identifier) {
+        this.identifier = identifier;
+    }
+
+    public Object getIdentifier() {
+        return identifier;
     }
 
     public String getTitle() {
@@ -61,6 +81,7 @@ public class TooltipInfo {
     }
 
     public boolean equals(TooltipInfo other) {
-        return (other != null && other.title == title && other.errorMessageHtml == errorMessageHtml);
+        return (other != null && SharedUtil.equals(other.title, title)
+                && SharedUtil.equals(other.errorMessageHtml, errorMessageHtml) && other.identifier == identifier);
     }
 }

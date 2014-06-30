@@ -94,7 +94,11 @@
   @if contains($states, normal) {
     @if $unit-size {
       height: $unit-size;
-      padding: if(type-of($padding) == number, $padding, (0 round($unit-size/2.4) + round($border-radius/3)));
+      @if type-of($padding) == number or type-of($padding) == list {
+        padding: $padding;
+      } @else {
+        padding: 0 round($unit-size/2.4) + round($border-radius/3);
+      }
     }
 
     $_font-color: $font-color or valo-font-color($background-color, 0.9);
@@ -106,9 +110,9 @@
     border-radius: $border-radius;
 
     @if type-of($background-color) == color {
-      @include valo-border-with-gradient($border: $border, $color: darker-of($background-color, $v-background-color), $gradient: $gradient);
+      @include valo-border-with-gradient($border: $border, $color: darkest-color($background-color, $v-background-color), $gradient: $gradient);
       @include valo-gradient($background-color, $gradient);
-      box-shadow: valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient);
+      @include box-shadow(valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient));
     }
 
     @if $bevel and type-of($_font-color) == color and type-of($background-color) == color {
@@ -116,7 +120,7 @@
     }
 
     @if $bevel == none and $shadow == none {
-      box-shadow: none;
+      @include box-shadow(none);
     }
   }
 
@@ -155,7 +159,7 @@
 
 
 @mixin valo-button-focus-style ($background-color: $v-background-color, $border-fallback: inherit, $include-box-shadow: true) {
-  $focus-color: valo-focus-color();
+  $focus-color: $v-focus-color;
 
   @if color-luminance($focus-color) + 50 < color-luminance($background-color) {
     border-color: $focus-color;
@@ -200,11 +204,43 @@
 
 
 
-@mixin valo-button-borderless-style {
+@mixin valo-button-borderless-style ($font-color: inherit) {
   border: none;
-  box-shadow: none;
+  @include box-shadow(none);
   background: transparent;
-  color: inherit;
+  color: $font-color;
+
+  &:hover {
+    &:after {
+      background: transparent;
+    }
+
+    @if type-of($font-color) == color {
+      color: lighten($font-color, 10%);
+    }
+  }
+
+  &:active {
+    @include opacity(.7);
+
+    &:after {
+      background: transparent;
+    }
+  }
+}
+
+
+@mixin valo-button-quiet-style ($primary-stylename: v-button) {
+  visibility: hidden;
+
+  &:focus,
+  &:hover {
+    visibility: visible;
+  }
+
+  .#{$primary-stylename}-wrap {
+    visibility: visible;
+  }
 }
 
 
@@ -219,6 +255,26 @@
     margin-left: $padding-width + ceil($padding-width/-5);
 
     + span:not(:empty) {
+      margin-left: 0;
+    }
+  }
+}
+
+
+@mixin valo-button-icon-align-top-style ($primary-stylename: v-button) {
+  height: auto;
+  padding-top: ceil($v-unit-size/9);
+  padding-bottom: ceil($v-unit-size/9);
+
+  .#{$primary-stylename}-wrap {
+    display: inline-block;
+  }
+
+  .v-icon {
+    display: block;
+
+    + span:not(:empty) {
+      margin-top: ceil($v-unit-size/6);
       margin-left: 0;
     }
   }

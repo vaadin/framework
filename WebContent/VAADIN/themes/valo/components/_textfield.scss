@@ -42,6 +42,13 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
     height: $unit-size;
     border-radius: $border-radius;
 
+    .v-ie8 &,
+    .v-ie9 & {
+      line-height: $unit-size;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
     @if type-of($padding) == number or type-of($padding) == list {
       padding: $padding;
     } @else {
@@ -49,20 +56,12 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
       @if $border-radius {
         $padding-width: $padding-width + ceil($border-radius/3);
       }
-
       $padding-height: round($unit-size/9);
-
       padding: $padding-height $padding-width;
-
-      // Go ask Mozilla why text alignment in text inputs is so wonky
-      .v-ff & {
-        // padding-top: $padding-height - 2px;
-        // padding-bottom: 0;
-      }
     }
 
     @if $background-color and $border {
-      border: valo-border($border, darker-of($background-color, $v-app-background-color));
+      border: valo-border($border, darkest-color($background-color, $v-app-background-color));
     }
 
     @if $gradient == none {
@@ -71,8 +70,11 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
       @include valo-gradient($color: $background-color, $gradient: $gradient)
     }
 
-    color: valo-font-color($background-color);
-    box-shadow: valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient);
+    @if $background-color {
+      color: valo-font-color($background-color);
+    }
+
+    @include box-shadow(valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient));
 
     @if $v-animations-enabled {
       @include transition(box-shadow 180ms, border 180ms);
@@ -119,13 +121,13 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
     @include transition(none);
   }
 
-  $focus-color: valo-focus-color();
+  $focus-color: $v-focus-color;
 
   @if color-luminance($focus-color) + 50 < color-luminance($v-background-color) {
     border-color: $focus-color;
   }
 
-  box-shadow: valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient, $include-focus: true);
+  @include box-shadow(valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient, $include-focus: true));
 
   @include valo-focus-style;
 }
@@ -133,7 +135,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 @mixin valo-textfield-readonly-style {
   background: transparent;
-  box-shadow: none;
+  @include box-shadow(none);
   &:focus {
     @include valo-focus-style($include-box-shadow: true);
   }
@@ -163,10 +165,15 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
   border: none;
   border-radius: 0;
   background: $background-color;
-  box-shadow: none;
+  @include box-shadow(none);
+  @if $background-color == transparent {
+    color: inherit;
+  } @else if type-of($background-color) == color {
+    color: valo-font-color($background-color);
+  }
 
   &:focus {
-    box-shadow: none;
+    @include box-shadow(none);
   }
 }
 
@@ -174,7 +181,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 
 @mixin valo-textfield-error-style {
-  border-color: $v-error-indicator-color;
+  border-color: $v-error-indicator-color !important;
   $bg: scale-color($v-error-indicator-color, $lightness: 98%);
   background: $bg;
   color: valo-font-color($bg);
@@ -182,15 +189,30 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 
 
-@mixin valo-textfield-inline-icon($primary-stylename: v-textfield, $stylename: inline-icon, $unit-size: $v-unit-size, $font-size: $v-font-size, $image-icon-size: 16px) {
-  .v-slot-#{$stylename} {
+
+
+
+
+@mixin valo-textfield-inline-icon($primary-stylename: v-textfield, $stylenames: inline-icon, $input-selector: null, $unit-size: $v-unit-size, $font-size: $v-font-size, $image-icon-size: 16px) {
+  $slot-selector: "";
+  $caption-selector: "";
+  $text-input-selector: "";
+
+  @each $style in $stylenames {
+    $slot-selector: $slot-selector + ".v-slot-" + $style;
+    $caption-selector: $caption-selector + ".v-caption-" + $style;
+    $text-input-selector: $text-input-selector + "." + $primary-stylename + "-" + $style;
+  }
+
+  #{$slot-selector} {
     position: relative;
   }
 
-  .v-caption-#{$stylename} {
+  #{$caption-selector} {
     padding: 0;
 
     .v-captiontext {
+      // Need to include to get the default padding back
       @include valo-caption-style;
       margin: 0;
     }
@@ -218,8 +240,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
     }
   }
 
-  .#{$primary-stylename}-#{$stylename},
-  .v-textarea-#{$stylename} {
+  #{$text-input-selector} #{$input-selector} {
     padding-left: $unit-size;
   }
 }

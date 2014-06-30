@@ -12,25 +12,38 @@
     }
   }
 
+  .#{$primary-stylename}-error {
+    .#{$primary-stylename}-input {
+      @include valo-textfield-error-style;
+    }
+
+    .#{$primary-stylename}-button {
+      color: $v-error-indicator-color;
+      border-color: $v-error-indicator-color;
+    }
+  }
+
   .#{$primary-stylename}-suggestpopup {
-    @include valo-combobox-popup-style;
+    @include valo-combobox-popup-style($primary-stylename: $primary-stylename);
   }
 
   .#{$primary-stylename}-no-input {
     cursor: pointer;
     text-shadow: valo-text-shadow();
 
+    @if $v-border-radius != $v-textfield-border-radius {
+      border-radius: $v-border-radius;
+    }
+
     .#{$primary-stylename}-input {
       @include user-select(none);
       @include valo-gradient;
       cursor: inherit;
-      box-shadow: valo-bevel-and-shadow($bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient);
+      @include box-shadow(valo-bevel-and-shadow($bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient));
       @include valo-border-with-gradient($border: $v-border, $color: $v-background-color, $gradient: $v-gradient);
       text-shadow: inherit;
       text-overflow: ellipsis;
-      @if $v-border-radius != $v-textfield-border-radius {
-        border-radius: $v-border-radius;
-      }
+      border-radius: inherit;
 
       &:focus {
         @include valo-textfield-focus-style($bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient, $background-color: $v-background-color);
@@ -104,6 +117,8 @@
   span.v-icon {
     color: valo-font-color($background-color);
     width: $unit-size;
+    line-height: 1;
+    padding-top: .12em;
   }
 
   &.#{$primary-stylename}-prompt > .#{$primary-stylename}-input {
@@ -137,17 +152,6 @@
         display: none;
       }
     }
-  }
-}
-
-
-
-
-
-@include keyframes(valo-combobox-show-status) {
-  0% {
-    opacity: 0;
-    @include transform( translatey(-100%) );
   }
 }
 
@@ -203,10 +207,14 @@
   bottom: $border-width;
   width: $unit-size;
   cursor: pointer;
-  border-left: valo-border($color: $background-color, $border: $v-textfield-border, $strength: 0.5);
 
-  .v-ie8 & {
-    background-color: $background-color;
+  @if type-of($background-color) == color {
+    border-left: valo-border($color: $background-color, $border: $v-textfield-border, $strength: 0.5);
+    color: mix($background-color, valo-font-color($background-color));
+
+    .v-ie8 & {
+      background-color: $background-color;
+    }
   }
 
   @if $v-border-radius > 0 {
@@ -215,8 +223,8 @@
   }
 
   &:before {
-    @include valo-combobox-button-icon-style($background-color);
-    color: mix($background-color, valo-font-color($background-color));
+    @include valo-combobox-button-icon-style;
+
     @if $v-animations-enabled {
       @include transition(color 140ms);
     }
@@ -228,7 +236,7 @@
     margin-top: -.47em;
   }
 
-  @if $v-hover-styles-enabled {
+  @if $v-hover-styles-enabled and type-of($background-color) == color {
     &:hover:before {
       color: valo-font-color($background-color);
     }
@@ -242,25 +250,36 @@
     bottom: 0;
     left: 0;
     border-radius: inherit;
-    @include valo-button-active-style($background-color);
+    @if type-of($background-color) == color {
+      @include valo-button-active-style($background-color);
+    }
   }
 }
 
 
 
-@mixin valo-combobox-button-icon-style ($background-color) {
+@mixin valo-combobox-button-icon-style {
   font-family: FontAwesome;
   content: "\f078";
-  color: valo-font-color($background-color);
 }
 
 
 
 
-@mixin valo-combobox-popup-style {
+@mixin valo-combobox-popup-style ($primary-stylename: v-filterselect) {
 
-  .v-filterselect-suggestmenu {
-    @include valo-selection-overlay-style;
+  @if $v-animations-enabled {
+    @if $v-overlay-animate-in {
+      &[class*="animate-in"] {
+        @include animation($v-overlay-animate-in);
+      }
+    }
+    // No animate-out since that will currently prevent the dropdown from
+    // closing when the user selects an item
+  }
+
+  .#{$primary-stylename}-suggestmenu {
+    @include valo-selection-overlay-style($animate-in: false, $animate-out: false);
     box-sizing: border-box;
     position: relative;
     z-index: 1;
@@ -283,7 +302,7 @@
     @include valo-selection-item-selected-style;
   }
 
-  .v-filterselect-status {
+  .#{$primary-stylename}-status {
     position: absolute;
     right: $v-border-radius;
     $bg: scale-color($v-background-color, $lightness: -15%);
@@ -299,7 +318,7 @@
     pointer-events: none;
 
     @if $v-animations-enabled {
-       @include animation(valo-combobox-show-status 200ms 80ms backwards);
+       @include animation(valo-anim-slide-in-down 200ms 80ms backwards);
     }
 
     > * {

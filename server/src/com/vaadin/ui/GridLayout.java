@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -139,6 +139,11 @@ public class GridLayout extends AbstractLayout implements
     @Override
     protected GridLayoutState getState() {
         return (GridLayoutState) super.getState();
+    }
+
+    @Override
+    protected GridLayoutState getState(boolean markAsDirty) {
+        return (GridLayoutState) super.getState(markAsDirty);
     }
 
     /**
@@ -497,7 +502,6 @@ public class GridLayout extends AbstractLayout implements
         if (columnExpandRatioArray.length > 0) {
             columnExpandRatioArray[0] -= realColExpandRatioSum - 1000;
         }
-
         target.addAttribute("colExpand", columnExpandRatioArray);
         target.addAttribute("rowExpand", rowExpandRatioArray);
 
@@ -520,7 +524,7 @@ public class GridLayout extends AbstractLayout implements
      */
     @Override
     public Alignment getComponentAlignment(Component childComponent) {
-        ChildComponentData childComponentData = getState().childData
+        ChildComponentData childComponentData = getState(false).childData
                 .get(childComponent);
         if (childComponentData == null) {
             throw new IllegalArgumentException(
@@ -781,7 +785,7 @@ public class GridLayout extends AbstractLayout implements
      * @return the number of columns in the grid.
      */
     public int getColumns() {
-        return getState().columns;
+        return getState(false).columns;
     }
 
     /**
@@ -825,7 +829,7 @@ public class GridLayout extends AbstractLayout implements
      * @return the number of rows in the grid.
      */
     public int getRows() {
-        return getState().rows;
+        return getState(false).rows;
     }
 
     /**
@@ -952,7 +956,7 @@ public class GridLayout extends AbstractLayout implements
      */
     @Override
     public boolean isSpacing() {
-        return getState().spacing;
+        return getState(false).spacing;
     }
 
     /**
@@ -1068,6 +1072,7 @@ public class GridLayout extends AbstractLayout implements
      */
     public void setColumnExpandRatio(int columnIndex, float ratio) {
         columnExpandRatio.put(columnIndex, ratio);
+        getState().explicitColRatios.add(columnIndex);
         markAsDirty();
     }
 
@@ -1106,6 +1111,7 @@ public class GridLayout extends AbstractLayout implements
      */
     public void setRowExpandRatio(int rowIndex, float ratio) {
         rowExpandRatio.put(rowIndex, ratio);
+        getState().explicitRowRatios.add(rowIndex);
         markAsDirty();
     }
 
@@ -1133,7 +1139,7 @@ public class GridLayout extends AbstractLayout implements
      * @return Component in given cell or null if empty
      */
     public Component getComponent(int x, int y) {
-        for (Entry<Connector, ChildComponentData> entry : getState().childData
+        for (Entry<Connector, ChildComponentData> entry : getState(false).childData
                 .entrySet()) {
             ChildComponentData childData = entry.getValue();
             if (childData.column1 <= x && x <= childData.column2
@@ -1154,7 +1160,7 @@ public class GridLayout extends AbstractLayout implements
      *         the grid
      */
     public Area getComponentArea(Component component) {
-        ChildComponentData childComponentData = getState().childData
+        ChildComponentData childComponentData = getState(false).childData
                 .get(component);
         if (childComponentData == null) {
             return null;
@@ -1225,7 +1231,7 @@ public class GridLayout extends AbstractLayout implements
      */
     @Override
     public MarginInfo getMargin() {
-        return new MarginInfo(getState().marginsBitmask);
+        return new MarginInfo(getState(false).marginsBitmask);
     }
 
     /*

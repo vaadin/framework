@@ -7,18 +7,12 @@
 // @import "blueprint";
 
 
-@include valo-natural-page-scrolling;
-
 .tests-valo {
   @include valo;
 
   .valo-menu .v-checkbox {
     margin: round($v-unit-size/2);
     font-weight: 400;
-  }
-
-  .view {
-    min-height: 600px;
   }
 
   $color1: hsl(220, 5%, 38%);
@@ -104,10 +98,6 @@
     @include valo-slider-indicator-style($background-color: #dcdc1e);
   }
 
-  .v-slider-no-indicator {
-    @include valo-slider-no-indicator;
-  }
-
 
   .v-panel-caption-color1 {
     @include valo-panel-caption-style($background-color: $color1);
@@ -129,5 +119,9 @@
 
   .v-slider-ticks {
     @include valo-slider-ticks($tick-count: 5);
+  }
+
+  .v-accordion-item-color1 .v-accordion-item-caption {
+    @include valo-accordion-item-caption-style($background-color: $color2);
   }
 }

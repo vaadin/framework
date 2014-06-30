@@ -1,9 +1,25 @@
+/*
+ * Copyright 2000-2014 Vaadin Ltd.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package com.vaadin.tests.themes.valo;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.data.Container;
@@ -28,6 +44,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -38,17 +55,18 @@ import com.vaadin.ui.UI;
 
 @Theme("tests-valo")
 @Title("Valo Theme Test")
+@PreserveOnRefresh
 public class ValoThemeTest extends UI {
 
-    HorizontalLayout root = new HorizontalLayout();
-    CssLayout viewDisplay = new CssLayout();
+    ValoMenuLayout root = new ValoMenuLayout();
+    ComponentContainer viewDisplay = root.getContentContainer();
     CssLayout menu = new CssLayout();
     private Navigator navigator;
     private LinkedHashMap<String, String> menuItems = new LinkedHashMap<String, String>();
 
     @Override
     protected void init(VaadinRequest request) {
-        // Show .v-app-loading badge
+        // Show .v-app-loading valo-menu-badge
         // try {
         // Thread.sleep(2000);
         // } catch (InterruptedException e) {
@@ -59,12 +77,8 @@ public class ValoThemeTest extends UI {
         setContent(root);
         root.setWidth("100%");
 
-        root.addComponent(buildMenu());
-
-        viewDisplay.setWidth("100%");
-        viewDisplay.addStyleName("view");
-        root.addComponent(viewDisplay);
-        root.setExpandRatio(viewDisplay, 1);
+        root.addMenu(buildTestMenu());
+        root.addMenu(buildMenu());
 
         navigator = new Navigator(this, viewDisplay);
 
@@ -88,6 +102,7 @@ public class ValoThemeTest extends UI {
         navigator.addView("calendar", CalendarTest.class);
         navigator.addView("forms", Forms.class);
         navigator.addView("popupviews", PopupViews.class);
+        navigator.addView("dragging", Dragging.class);
 
         String f = Page.getCurrent().getUriFragment();
         if (f == null || f.equals("")) {
@@ -111,7 +126,9 @@ public class ValoThemeTest extends UI {
                         for (Iterator<Component> it = menu.iterator(); it
                                 .hasNext();) {
                             Component c = it.next();
-                            if (item.getValue().equals(c.getCaption())) {
+                            if (c.getCaption() != null
+                                    && c.getCaption().startsWith(
+                                            item.getValue())) {
                                 c.addStyleName("selected");
                                 break;
                             }
@@ -122,6 +139,37 @@ public class ValoThemeTest extends UI {
             }
         });
 
+    }
+
+    Component buildTestMenu() {
+        CssLayout menu = new CssLayout();
+        menu.addStyleName("large-icons");
+
+        Label logo = new Label("Va");
+        logo.setSizeUndefined();
+        logo.setPrimaryStyleName("valo-menu-logo");
+        menu.addComponent(logo);
+
+        Button b = new Button(
+                "Reference <span class=\"valo-menu-badge\">3</span>");
+        b.setIcon(FontAwesome.TH_LIST);
+        b.setPrimaryStyleName("valo-menu-item");
+        b.addStyleName("selected");
+        b.setHtmlContentAllowed(true);
+        menu.addComponent(b);
+
+        b = new Button("API");
+        b.setIcon(FontAwesome.BOOK);
+        b.setPrimaryStyleName("valo-menu-item");
+        menu.addComponent(b);
+
+        b = new Button("Examples <span class=\"valo-menu-badge\">12</span>");
+        b.setIcon(FontAwesome.TABLE);
+        b.setPrimaryStyleName("valo-menu-item");
+        b.setHtmlContentAllowed(true);
+        menu.addComponent(b);
+
+        return menu;
     }
 
     CssLayout buildMenu() {
@@ -139,6 +187,7 @@ public class ValoThemeTest extends UI {
         menuItems.put("menubars", "Menu Bars");
         menuItems.put("trees", "Trees");
         menuItems.put("tables", "Tables");
+        menuItems.put("dragging", "Drag and Drop");
         menuItems.put("panels", "Panels");
         menuItems.put("splitpanels", "Split Panels");
         menuItems.put("tabs", "Tabs");
@@ -146,8 +195,6 @@ public class ValoThemeTest extends UI {
         menuItems.put("popupviews", "Popup Views");
         menuItems.put("calendar", "Calendar");
         menuItems.put("forms", "Forms");
-
-        menu.setStyleName("valo-menu");
 
         HorizontalLayout top = new HorizontalLayout();
         top.setWidth("100%");
@@ -191,8 +238,9 @@ public class ValoThemeTest extends UI {
                 menu.addComponent(label);
             }
             if (item.getKey().equals("panels")) {
-                label.setValue(label.getValue() + " <span class=\"badge\">"
-                        + count + "</span>");
+                label.setValue(label.getValue()
+                        + " <span class=\"valo-menu-badge\">" + count
+                        + "</span>");
                 count = 0;
                 label = new Label("Containers", ContentMode.HTML);
                 label.setPrimaryStyleName("valo-menu-subtitle");
@@ -201,8 +249,9 @@ public class ValoThemeTest extends UI {
                 menu.addComponent(label);
             }
             if (item.getKey().equals("calendar")) {
-                label.setValue(label.getValue() + " <span class=\"badge\">"
-                        + count + "</span>");
+                label.setValue(label.getValue()
+                        + " <span class=\"valo-menu-badge\">" + count
+                        + "</span>");
                 count = 0;
                 label = new Label("Other", ContentMode.HTML);
                 label.setPrimaryStyleName("valo-menu-subtitle");
@@ -216,18 +265,25 @@ public class ValoThemeTest extends UI {
                     navigator.navigateTo(item.getKey());
                 }
             });
+            if (count == 2) {
+                b.setCaption(b.getCaption()
+                        + " <span class=\"valo-menu-badge\">123</span>");
+            }
+            b.setHtmlContentAllowed(true);
             b.setPrimaryStyleName("valo-menu-item");
+            b.setIcon(TestIcon.get());
             menu.addComponent(b);
             count++;
         }
-        label.setValue(label.getValue() + " <span class=\"badge\">" + count
-                + "</span>");
+        label.setValue(label.getValue() + " <span class=\"valo-menu-badge\">"
+                + count + "</span>");
 
         return menu;
     }
 
     static String[] strings = new String[] { "lorem", "ipsum", "dolor", "sit",
-            "amet", "consectetur" };
+            "amet", "consectetur", "quid", "securi", "etiam", "tamquam", "eu",
+            "fugiat", "nulla", "pariatur" };
     static int stringCount = -1;
 
     static String nextString(boolean capitalize) {

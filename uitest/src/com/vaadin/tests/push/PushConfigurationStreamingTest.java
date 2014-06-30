@@ -27,33 +27,19 @@ import org.openqa.selenium.support.ui.Select;
 
 public class PushConfigurationStreamingTest extends PushConfigurationTest {
 
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
-
-        browsers.remove(Browser.IE8.getDesiredCapabilities());
-
-        return browsers;
-    }
-
     @Test
     public void testStreaming() throws InterruptedException {
         openDebugLogTab();
 
         new Select(getTransportSelect()).selectByVisibleText("STREAMING");
-        new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
-
         assertThat(getStatusText(),
                 containsString("fallbackTransport: long-polling"));
         assertThat(getStatusText(), containsString("transport: streaming"));
 
-        waitForServerCounterToUpdate();
+        clearDebugMessages();
+        new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
 
-        // Use debug console to verify we used the correct transport type
-        assertThat(
-                driver.getPageSource(),
-                not(containsString("Push connection established using websocket")));
-        assertThat(driver.getPageSource(),
-                containsString("Push connection established using streaming"));
+        waitForDebugMessage("Push connection established using streaming", 10);
+        waitForServerCounterToUpdate();
     }
 }
