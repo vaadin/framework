@@ -1,3 +1,4 @@
+@import "common/mixins.scss";
 @import "absolutelayout/absolutelayout.scss";
 @import "accordion/accordion.scss";
 @import "button/button.scss";
@@ -39,7 +40,6 @@
 @import "upload/upload.scss";
 @import "widget/widget.scss";
 @import "window/window.scss";
-@import "debug/debug.scss";
 @import "browserframe/browserframe.scss";
 
 .v-vaadin-version:after {
@@ -119,5 +119,4 @@ $line-height: normal;
 }
 
 // always include, don't wrap in .themename{}
-@include debug-globals;
 @include fonts;

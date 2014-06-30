@@ -91,6 +91,9 @@ public class VPopupView extends HTML implements Iterable<Widget> {
         addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
+                preparePopup(popup);
+                showPopup(popup);
+                center();
                 fireEvent(new VisibilityChangeEvent(true));
             }
         });
@@ -111,7 +114,8 @@ public class VPopupView extends HTML implements Iterable<Widget> {
 
     /** For internal use only. May be removed or replaced in the future. */
     public void preparePopup(final CustomPopup popup) {
-        popup.setVisible(false);
+        popup.setVisible(true);
+        popup.setWidget(loading);
         popup.show();
     }
 
@@ -128,8 +132,6 @@ public class VPopupView extends HTML implements Iterable<Widget> {
      */
     public void showPopup(final CustomPopup popup) {
         popup.setPopupPosition(0, 0);
-
-        popup.setVisible(true);
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -270,9 +272,7 @@ public class VPopupView extends HTML implements Iterable<Widget> {
         public void hide(boolean autoClosed) {
             VConsole.log("Hiding popupview");
             syncChildren();
-            if (popupComponentWidget != null && popupComponentWidget != loading) {
-                remove(popupComponentWidget);
-            }
+            clearPopupComponentConnector();
             hasHadMouseOver = false;
             shortcutActionHandler = null;
             super.hide(autoClosed);
@@ -333,15 +333,18 @@ public class VPopupView extends HTML implements Iterable<Widget> {
             }
         }
 
-        @Override
-        public boolean remove(Widget w) {
+        private void clearPopupComponentConnector() {
             if (popupComponentConnector != null) {
                 popupComponentConnector.removeStateChangeHandler(this);
             }
             popupComponentConnector = null;
             popupComponentWidget = null;
             captionWrapper = null;
+        }
 
+        @Override
+        public boolean remove(Widget w) {
+            clearPopupComponentConnector();
             return super.remove(w);
         }
 

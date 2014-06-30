@@ -1,0 +1,246 @@
+$v-textfield-background-color: if(is-dark-color($v-app-background-color), darken($v-app-background-color, 4%), lighten($v-app-background-color, 8%)) !default;
+$v-textfield-bevel: inset 0 1px 0 v-shade !default;
+$v-textfield-shadow: 0 1px 0 (v-tint 2) !default;
+$v-textfield-font-weight: 400 !default;
+$v-textfield-border: $v-border !default;
+$v-textfield-border-radius: $v-border-radius !default;
+$v-textfield-disabled-opacity: $v-disabled-opacity !default;
+
+
+
+
+
+
+
+
+@mixin valo-textfield-style (
+    $unit-size        : $v-unit-size,
+    $padding          : null, // Computed by default
+
+    $font-color       : null, // Computed by default
+    $font-weight      : max(400, $v-font-weight),
+    $font-size        : null, // Inherited by default
+
+    $background-color : $v-textfield-background-color,
+    $border           : $v-textfield-border,
+    $border-radius    : $v-textfield-border-radius,
+
+    $gradient         : none,
+    $bevel            : $v-textfield-bevel,
+    $shadow           : $v-textfield-shadow,
+
+    $states           : (normal, focus, disabled)
+  ) {
+
+  @if contains($states, normal) {
+    @include appearance(none);
+    margin: 0;
+    font: inherit;
+    font-size: $font-size;
+    font-weight: $font-weight;
+    line-height: normal;
+    height: $unit-size;
+    border-radius: $border-radius;
+
+    .v-ie8 &,
+    .v-ie9 & {
+      line-height: $unit-size;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    @if type-of($padding) == number or type-of($padding) == list {
+      padding: $padding;
+    } @else {
+      $padding-width: ceil($unit-size/6);
+      @if $border-radius {
+        $padding-width: $padding-width + ceil($border-radius/3);
+      }
+      $padding-height: round($unit-size/9);
+      padding: $padding-height $padding-width;
+    }
+
+    @if $background-color and $border {
+      border: valo-border($border, darkest-color($background-color, $v-app-background-color));
+    }
+
+    @if $gradient == none {
+      background: $background-color;
+    } @else if $gradient {
+      @include valo-gradient($color: $background-color, $gradient: $gradient)
+    }
+
+    @if $background-color {
+      color: valo-font-color($background-color);
+    }
+
+    @include box-shadow(valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient));
+
+    @if $v-animations-enabled {
+      @include transition(box-shadow 180ms, border 180ms);
+    }
+  }
+
+  @if contains($states, disabled) {
+    &.v-disabled {
+      @include opacity($v-textfield-disabled-opacity);
+    }
+  }
+
+  @if contains($states, focus) {
+    &:focus {
+      @include valo-textfield-focus-style($bevel: $bevel, $shadow: $shadow, $gradient: $gradient, $background-color: $background-color);
+    }
+  }
+
+  // TODO allow parent selector to be used in interpolation
+  &.v-textfield-prompt,
+  &.v-textarea-prompt {
+    @include valo-textfield-prompt-style($background-color);
+  }
+
+}
+
+
+@mixin valo-textfield-prompt-style ($background-color: $v-textfield-background-color) {
+  @if type-of($background-color) == color {
+    $font-color: valo-font-color($background-color);
+    $font-color: mix($background-color, $font-color);
+    @if is-dark-color($background-color) and saturation($background-color) > 50% {
+      $font-color: scale-color($font-color, $lightness: 20%);
+    }
+    $font-color: scale-color($font-color, $saturation: saturation($font-color));
+    color: $font-color;
+  }
+}
+
+
+@mixin valo-textfield-focus-style ($bevel: $v-textfield-bevel, $shadow: $v-textfield-shadow, $background-color: $v-textfield-background-color, $gradient: null) {
+  outline: none;
+  @if $v-animations-enabled {
+    @include transition(none);
+  }
+
+  $focus-color: $v-focus-color;
+
+  @if color-luminance($focus-color) + 50 < color-luminance($v-background-color) {
+    border-color: $focus-color;
+  }
+
+  @include box-shadow(valo-bevel-and-shadow($bevel: $bevel, $shadow: $shadow, $background-color: $background-color, $gradient: $gradient, $include-focus: true));
+
+  @include valo-focus-style;
+}
+
+
+@mixin valo-textfield-readonly-style {
+  background: transparent;
+  @include box-shadow(none);
+  &:focus {
+    @include valo-focus-style($include-box-shadow: true);
+  }
+}
+
+
+@mixin valo-textfield ($primary-stylename: v-textfield) {
+
+  .#{$primary-stylename} {
+    @include valo-textfield-style;
+    width: $v-default-field-width;
+  }
+
+  .#{$primary-stylename}-readonly {
+    @include valo-textfield-readonly-style;
+  }
+
+  .#{$primary-stylename}-error {
+    @include valo-textfield-error-style;
+  }
+
+}
+
+
+
+@mixin valo-textfield-borderless-style ($background-color: transparent) {
+  border: none;
+  border-radius: 0;
+  background: $background-color;
+  @include box-shadow(none);
+  @if $background-color == transparent {
+    color: inherit;
+  } @else if type-of($background-color) == color {
+    color: valo-font-color($background-color);
+  }
+
+  &:focus {
+    @include box-shadow(none);
+  }
+}
+
+
+
+
+@mixin valo-textfield-error-style {
+  border-color: $v-error-indicator-color !important;
+  $bg: scale-color($v-error-indicator-color, $lightness: 98%);
+  background: $bg;
+  color: valo-font-color($bg);
+}
+
+
+
+
+
+
+
+@mixin valo-textfield-inline-icon($primary-stylename: v-textfield, $stylenames: inline-icon, $input-selector: null, $unit-size: $v-unit-size, $font-size: $v-font-size, $image-icon-size: 16px) {
+  $slot-selector: "";
+  $caption-selector: "";
+  $text-input-selector: "";
+
+  @each $style in $stylenames {
+    $slot-selector: $slot-selector + ".v-slot-" + $style;
+    $caption-selector: $caption-selector + ".v-caption-" + $style;
+    $text-input-selector: $text-input-selector + "." + $primary-stylename + "-" + $style;
+  }
+
+  #{$slot-selector} {
+    position: relative;
+  }
+
+  #{$caption-selector} {
+    padding: 0;
+
+    .v-captiontext {
+      // Need to include to get the default padding back
+      @include valo-caption-style;
+      margin: 0;
+    }
+
+    .v-icon {
+      position: absolute;
+      z-index: 10;
+    }
+
+    // Font icons
+    span.v-icon {
+      $border-width: first-number($v-textfield-border);
+      left: $border-width;
+      bottom: $border-width;
+      width: $unit-size;
+      line-height: $unit-size - $border-width*2;
+      text-align: center;
+      font-size: $font-size;
+    }
+
+    // Image icons
+    img.v-icon {
+      left: round(($unit-size - $image-icon-size)/2);
+      bottom: round(($unit-size - $image-icon-size)/2);
+    }
+  }
+
+  #{$text-input-selector} #{$input-selector} {
+    padding-left: $unit-size;
+  }
+}

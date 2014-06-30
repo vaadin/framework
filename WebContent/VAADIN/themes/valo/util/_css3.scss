@@ -1,0 +1,20 @@
+@mixin opacity ($value, $important: false) {
+  $importantValue: null;
+  @if $important {
+    $importantValue: unquote("!important");
+  }
+
+  opacity: $value $importantValue;
+
+  @if $value < 1 {
+    $valueperc: $value*100;
+    filter: alpha(opacity=#{$valueperc}) #{$importantValue};
+  } @else {
+    filter: none #{$importantValue};
+  }
+}
+
+// -webkit-box-shadow still needed for Android 2.3 and 3.0, as well as iOS 5
+@mixin box-shadow ($shadows...) {
+  @include prefixer(box-shadow, $shadows, webkit spec);
+}

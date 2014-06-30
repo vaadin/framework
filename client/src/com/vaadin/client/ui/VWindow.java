@@ -303,7 +303,10 @@ public class VWindow extends VWindowOverlay implements
     }
 
     private static VWindow getTopmostWindow() {
-        return windowOrder.get(windowOrder.size() - 1);
+        if (windowOrder.size() > 0) {
+            return windowOrder.get(windowOrder.size() - 1);
+        }
+        return null;
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -1030,6 +1033,7 @@ public class VWindow extends VWindowOverlay implements
     }
 
     private void onCloseClick() {
+        // Send the close event to the server
         client.updateVariable(id, "close", true, true);
     }
 
@@ -1263,7 +1267,7 @@ public class VWindow extends VWindowOverlay implements
         // are not cancelled here and target this window to be consume():d
         // meaning the event won't be sent to the rest of the preview handlers.
 
-        if (getTopmostWindow().vaadinModality) {
+        if (getTopmostWindow() != null && getTopmostWindow().vaadinModality) {
             // Topmost window is modal. Cancel the event if it targets something
             // outside that window (except debug console...)
             if (DOM.getCaptureElement() != null) {

@@ -45,12 +45,10 @@
                     @version@</a></li>
             <li><a href="#enhancements">Enhancements in Vaadin
                     @version-minor@</a></li>
-            <li><a href="#incompatible">Incompatible changes in
-                @version-minor@</a></li>
-            <li><a href="#behavioraltering">Behavior altering
-                changes in @version-minor@</a></li>
+            <li><a href="#incompatible">Incompatible or behavior-altering changes in
+                    @version-minor@</a></li>
             <li><a href="#knownissues">Known issues in
-                @version-minor@</a></li>
+                    @version-minor@</a></li>
             <li><a href="#limitations">Limitations in
                     @version-minor@</a></li>
             <li><a href="#vaadin">Vaadin Installation</a></li>
@@ -93,75 +91,42 @@
                 of the closed issues</a> at the Vaadin developer's site.
         </p>
 
-        <h2 id="enhancements">Enhancements in Vaadin
-            @version-minor@</h2>
+        <h2 id="enhancements">Enhancements in Vaadin @version-minor@</h2>
 
         <p>The @version-minor@ includes many major and minor
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Internet Explorer 11 support</li>
-            <li>Window Phone 8.1 support</li>
-            <li>Long polling support through Atmosphere 2</li>
-            <li>Font icon support</li>
-            <li>Tomcat 8 support</li>
-            <li>Wildfly 8 support</li>
-            <li>Websocket support for Tomcat 8, Glassfish 4, Jetty 9.1, Wildfly 8</li>
-            <li>TestBench 4 support</li>
-            <li>GWT 2.6 compatibility</li>
-            <li>Widget set size reduction</li>
-            <li>Widget set compilation speed improvement by collapsing all permutations</li>
-            <li>New built-in converters: StringToBigDecimal, StringToLong</li>
-            <li>New built-in support for Date in communication</li>
-            <li>WAI-ARIA improvements: Window, Notification, TabSheet</li>
-            <li>Sass compiler is a separate project</li>
-            <li>Support for @OnStateChange for easier state handling</li>
-            <li>Reload events for UIs with @PreserveOnRefresh</li>
-            <li>Responsive layouts</li>
+            <li>Valo is a brand new built-in theme for Vaadin. It leverages 
+                the Sass CSS preprocessor heavily, 
+                providing a variety of ways to customize the look and feel of your theme. 
+                See <a href="https://vaadin.com/wiki/-/wiki/Main/Valo+theme+-+Getting+started">the Valo theme tutorial</a> or <a href="https://vaadin.com/book/-/page/themes.valo.html">the Valo theme section</a> in Book of Vaadin for information on how to get started.</li>
+            <li>Support for changing theme on the fly</li>
         </ul>
 
         <p>
-            For enchancements introduced in Vaadin 7, see the <a
-                href="http://vaadin.com/download/release/7.0/7.0.0/release-notes.html">Release
-                Notes for Vaadin 7.0.0</a>.
+            For enhancements introduced in Vaadin 7.2, see the <a
+                href="http://vaadin.com/download/release/7.2/7.2.0/release-notes.html">Release
+                Notes for Vaadin 7.2.0</a>.
         </p>
 
-        <h3 id="incompatible">Incompatible changes</h3>
+        <h3 id="incompatible">Incompatible or behavior-altering changes in @version-minor@</h3>
         <ul>
-            <li>It is assumed that the UI will no longer be used after Page.setLocation
-                is called. Do not use this to start downloads.</li>
-            <li>The portlet requests class VaadinGateinRequest is now called
-                VaadinGateInRequest</li>
-            <li>The JSON library has been changed from org.json to the json implementation
-                from the Android SDK. They are 99% compatible.</li>
-            <li>StringToNumberConverter has been removed in favor of more specific
-                converters such as StringToBigDecimalConverter.</li>
-            <li>There is no longer support for "multiple variable bursts"
-                in the UIDL communication.</li>
+            <li>
+                <p>The shadow of all overlays (VOverlay) are now implemented with CSS box-shadow in all browsers except Internet Explorer 8 (<a href="http://dev.vaadin.com/ticket/9303">#9303</a>). 
+                In IE8 the old image-based implementation is still used.
+                </p><p>
+                The image-based shadow implementation is also deprecated, so if you have any custom shadow implementations in your themes or add-ons, 
+                please update them accordingly to use CSS box-shadow instead.
+                </p><p>
+                Note that the CSS-based implementation is visually not 100% identical to the old implementation. This should not cause issues except
+                if you are using screenshot-based TestBench tests or similar visual regression tests.
+                </p>
+            </li>
+            <li>The theme for the debug window is now implemented using a GWT client bundle and is no longer included in the standard theme.</li>
         </ul>
-        <h3 id="behavioraltering">Behavior altering changes</h3>
-        <ul>
-            <li>Default push fallback is now long-polling</li>
-            <li>VerticalLayout and HorizontalLayout.replaceComponent now applies old
-                component parameters (e.g. expand ratio) to the new component. This is
-                now consistent between all layouts in the framework, where relevant
-                properties are applied to the replacement.</li>
-            <li>All GWT permutations are collapsed when using DefaultWidgetSet. To use
-                separate permutations, inherit Vaadin instead of DefaultWidgetSet and
-                add the needed entry-point.</li>
-            <li>Requests to "/context;jsessionid=xyz" are redirected to
-                "/context/;jsessionid=xyz" which is against specifications but based
-                on how jsessionid is used</li>
-            <li>Adding a ValueChangeListener to a component will make it immediate</li>
-            <li>ComboBox is immediate by default</li>
-        </ul>
-
         <h3 id="knownissues">Known issues</h3>
         <ul>
-            <li>Reconnecting a dropped push connection sometimes fails when using
-                Firefox and streaming or long polling.
-                (<a href="http://dev.vaadin.com/ticket/13578">#13578</a>)
-            </li>
             <li>Drag'n'drop in a Table doesn't work on touch devices running
                 Internet Explorer (Windows Phone, Surface)
                 (<a href="http://dev.vaadin.com/ticket/13737">#13737</a>)
@@ -170,10 +135,13 @@
 
         <h3 id="limitations">Limitations</h3>
         <ul>
-            <li>It is currently not possible to specify <tt>font-size</tt>
+            <li><p>It is currently not possible to specify <tt>font-size</tt>
                 as <tt>em</tt> or <tt>%</tt>, or layout component sizes
                 with <tt>em</tt> (<a
-                href="http://dev.vaadin.com/ticket/10634">#10634</a>)
+                href="http://dev.vaadin.com/ticket/10634">#10634</a>).</p><p>This 
+                does not apply to Valo, but using em sizes to size layouts is discouraged, 
+                because it results in fractional component sizes in many cases, which 
+                might cause unwanted 1px gaps between components.</p>
             </li>
             <li>Push is currently not supported in portals (See <a
                 href="http://dev.vaadin.com/ticket/11493">#11493</a>)

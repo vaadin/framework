@@ -1,0 +1,155 @@
+$lato-pathPrefix: null;
+  
+@if $v-relative-paths == false {
+  $lato-pathPrefix: "../valo/fonts/lato/";
+}
+
+@mixin font-lato-regular ($italic: true) {
+  @font-face {
+    font-family: 'Lato';
+    src: url('#{$lato-pathPrefix}lato-regular-webfont.eot');
+    src: url('#{$lato-pathPrefix}lato-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('#{$lato-pathPrefix}lato-regular-webfont.woff') format('woff'),
+         url('#{$lato-pathPrefix}lato-regular-webfont.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @if $italic {
+    @font-face {
+      font-family: 'Lato';
+      src: url('#{$lato-pathPrefix}lato-italic-webfont.eot');
+      src: url('#{$lato-pathPrefix}lato-italic-webfont.eot?#iefix') format('embedded-opentype'),
+           url('#{$lato-pathPrefix}lato-italic-webfont.woff') format('woff'),
+           url('#{$lato-pathPrefix}lato-italic-webfont.ttf') format('truetype');
+      font-weight: 400;
+      font-style: italic;
+    }
+  }
+}
+
+
+
+
+
+@mixin font-lato-hairline ($italic: true) {
+  @font-face {
+    font-family: 'Lato';
+    src: url('#{$lato-pathPrefix}lato-hairline-webfont.eot');
+    src: url('#{$lato-pathPrefix}lato-hairline-webfont.eot?#iefix') format('embedded-opentype'),
+         url('#{$lato-pathPrefix}lato-hairline-webfont.woff') format('woff'),
+         url('#{$lato-pathPrefix}lato-hairline-webfont.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+  }
+  @if $italic {
+    @font-face {
+      font-family: 'Lato';
+      src: url('#{$lato-pathPrefix}lato-hairlineitalic-webfont.eot');
+      src: url('#{$lato-pathPrefix}lato-hairlineitalic-webfont.eot?#iefix') format('embedded-opentype'),
+           url('#{$lato-pathPrefix}lato-hairlineitalic-webfont.woff') format('woff'),
+           url('#{$lato-pathPrefix}lato-hairlineitalic-webfont.ttf') format('truetype');
+      font-weight: 600;
+      font-style: italic;
+    }
+  }
+}
+
+
+
+
+@mixin font-lato-light ($italic: true) {
+  @font-face {
+    font-family: 'Lato';
+    src: url('#{$lato-pathPrefix}lato-light-webfont.eot');
+    src: url('#{$lato-pathPrefix}lato-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('#{$lato-pathPrefix}lato-light-webfont.woff') format('woff'),
+         url('#{$lato-pathPrefix}lato-light-webfont.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+  }
+  @if $italic {
+    @font-face {
+      font-family: 'Lato';
+      src: url('#{$lato-pathPrefix}lato-lightitalic-webfont.eot');
+      src: url('#{$lato-pathPrefix}lato-lightitalic-webfont.eot?#iefix') format('embedded-opentype'),
+           url('#{$lato-pathPrefix}lato-lightitalic-webfont.woff') format('woff'),
+           url('#{$lato-pathPrefix}lato-lightitalic-webfont.ttf') format('truetype');
+      font-weight: 300;
+      font-style: italic;
+    }
+  }
+}
+
+
+
+@mixin font-lato-bold ($italic: true) {
+  @font-face {
+    font-family: 'Lato';
+    src: url('#{$lato-pathPrefix}lato-bold-webfont.eot');
+    src: url('#{$lato-pathPrefix}lato-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('#{$lato-pathPrefix}lato-bold-webfont.woff') format('woff'),
+         url('#{$lato-pathPrefix}lato-bold-webfont.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+  }
+  @if $italic {
+    @font-face {
+      font-family: 'Lato';
+      src: url('#{$lato-pathPrefix}lato-bolditalic-webfont.eot');
+      src: url('#{$lato-pathPrefix}lato-bolditalic-webfont.eot?#iefix') format('embedded-opentype'),
+           url('#{$lato-pathPrefix}lato-bolditalic-webfont.woff') format('woff'),
+           url('#{$lato-pathPrefix}lato-bolditalic-webfont.ttf') format('truetype');
+      font-weight: 700;
+      font-style: italic;
+    }
+  }
+}
+
+
+
+
+
+@mixin font-lato-black ($italic) {
+  @font-face {
+    font-family: 'Lato';
+    src: url('#{$lato-pathPrefix}lato-black-webfont.eot');
+    src: url('#{$lato-pathPrefix}lato-black-webfont.eot?#iefix') format('embedded-opentype'),
+         url('#{$lato-pathPrefix}lato-black-webfont.woff') format('woff'),
+         url('#{$lato-pathPrefix}lato-black-webfont.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+  }
+  @if $italic {
+    @font-face {
+      font-family: 'Lato';
+      src: url('#{$lato-pathPrefix}lato-blackitalic-webfont.eot');
+      src: url('#{$lato-pathPrefix}lato-blackitalic-webfont.eot?#iefix') format('embedded-opentype'),
+           url('#{$lato-pathPrefix}lato-blackitalic-webfont.woff') format('woff'),
+           url('#{$lato-pathPrefix}lato-blackitalic-webfont.ttf') format('truetype');
+      font-weight: 900;
+      font-style: italic;
+    }  
+  }
+}
+
+
+
+
+
+@mixin font-lato ($italic: false, $extralight: false, $light: false, $regular: true, $medium: false, $bold: false, $black: false) {
+  @if $extralight {
+    @include font-lato-hairline($italic);
+  }
+  @if $light {
+    @include font-lato-light($italic);
+  }
+  @if $regular {
+    @include font-lato-regular($italic);
+  }
+  @if $bold {
+    @include font-lato-bold($italic);
+  }
+  @if $black {
+    @include font-lato-black($italic);
+  }
+}

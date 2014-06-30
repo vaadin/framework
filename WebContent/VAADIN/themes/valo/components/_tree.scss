@@ -1,0 +1,264 @@
+$v-tree-row-height: round($v-unit-size/1.3) !default;
+$v-tree-animations-enabled: true !default;
+$v-tree-expand-animation-enabled: false !default;
+
+
+@if $v-tree-expand-animation-enabled {
+  @include keyframes(valo-tree-node-open) {
+    0% {
+      max-height: 0;
+    }
+    100% {
+      max-height: $v-tree-row-height * 10;
+    }
+  }
+
+  @include keyframes(valo-tree-node-close) {
+    0% {
+      max-height: $v-tree-row-height * 10;
+    }
+    100% {
+      max-height: 0;
+    }
+  }
+}
+
+
+@mixin valo-tree ($primary-stylename: v-tree) {
+
+  .#{$primary-stylename} {
+    position: relative;
+    white-space: nowrap;
+    @include user-select(none);
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .#{$primary-stylename}-node {
+    &:before {
+      content: "";
+      position: absolute;
+      display: inline-block;
+      z-index: 3;
+      width: 1.9em;
+      height: $v-tree-row-height;
+      cursor: pointer;
+      // IE 9/10 need some color so that this element can receive mouse events.
+      // 'red' just happens to be the shortest color name.
+      background: red;
+      opacity: 0;
+
+      .v-ie8 & {
+        content: "+";
+        position: static;
+        margin-left: -1.9em;
+        vertical-align: top;
+        @include valo-tree-collapsed-icon-style;
+        text-align: center;
+        background: transparent;
+      }
+    }
+
+    .v-ie8 & {
+      padding-left: 1.9em;
+    }
+  }
+
+  .#{$primary-stylename}-node-caption {
+    height: $v-tree-row-height;
+    line-height: $v-tree-row-height - 1px;
+    overflow: hidden;
+    white-space: nowrap;
+
+    & > div {
+      display: inline-block;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+
+      &:before {
+        @include valo-tree-collapsed-icon-style;
+        display: inline-block;
+        width: .5em;
+        text-align: center;
+        margin: 0 .6em 0 .8em;
+
+        @if $v-tree-animations-enabled {
+          @include transition(all 100ms);
+        }
+
+        .v-ie8 & {
+          display: none;
+        }
+      }
+    }
+
+    span {
+      padding-right: $v-tree-row-height;
+      cursor: pointer;
+      display: inline-block;
+      // Allow to click on the whole row (almost, at least the right side part)
+      width: 100%;
+
+      // IE does strange things when the width is wider than the parent
+      .v-ie & {
+        width: auto;
+      }
+    }
+
+    .v-icon {
+      padding-right: 0;
+      width: auto;
+      min-width: 1em;
+    }
+
+    &:after {
+      content: "";
+      display: inline-block;
+      vertical-align: top;
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      width: 100%;
+      height: $v-tree-row-height;
+      border-radius: $v-border-radius;
+      opacity: 0;
+
+      @if $v-tree-animations-enabled {
+        @include transition(opacity 120ms);
+      }
+
+      .v-ie8 & {
+        content: none;
+      }
+    }
+
+    .v-ie8 & {
+      display: inline-block;
+    }
+  }
+
+  .#{$primary-stylename}-node-expanded > .#{$primary-stylename}-node-caption > div:before {
+    @include valo-tree-expanded-icon-style;
+
+    @if $v-tree-animations-enabled {
+      @include transform(rotate(90deg));
+      @include valo-tree-collapsed-icon-style;
+    }
+  }
+
+  .v-ie8 & .#{$primary-stylename}-node-expanded:before {
+    @include valo-tree-expanded-icon-style(true);
+  }
+
+  .#{$primary-stylename}-node-leaf > .#{$primary-stylename}-node-caption > div:before,
+  .v-ie8 & .#{$primary-stylename}-node-leaf:before {
+    visibility: hidden;
+  }
+
+  .#{$primary-stylename}-node-focused {
+    // This a v-tree-node-caption element
+    &:after {
+      opacity: 1;
+      border: 1px solid $v-focus-color;
+    }
+
+    .v-ie8 & {
+      outline: 1px dotted $v-focus-color;
+    }
+  }
+
+
+
+  .#{$primary-stylename}-node-selected {
+    color: valo-font-color($v-selection-color, 0.9);
+    text-shadow: valo-button-text-shadow($v-selection-color, $v-bevel-depth);
+
+    &:after {
+      opacity: 1;
+      @include valo-gradient($v-selection-color);
+      border: none;
+
+      .v-ie8 & {
+        //visibility: visible;
+      }
+    }
+
+    .v-ie8 & {
+      @include valo-gradient($v-selection-color);
+    }
+  }
+
+  .#{$primary-stylename}-node-children {
+    padding-left: round($v-unit-size/2);
+
+    .v-ie8 & {
+      padding-left: 0;
+    }
+  }
+
+  @if $v-tree-expand-animation-enabled {
+    .#{$primary-stylename}-node-children[style*="display: none"] {
+      @include animation(valo-tree-node-close 400ms ease-out forwards);
+      display: block !important;
+    }
+
+    .#{$primary-stylename}-node-expanded > .#{$primary-stylename}-node-children {
+      @include animation(valo-tree-node-open 400ms ease-in);
+    }
+  }
+
+
+
+  // Drag'n'drop styles
+
+  .#{$primary-stylename}-node-drag-top:before,
+  .#{$primary-stylename}-node-drag-bottom:after {
+    content: "\2022";
+    display: block;
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    background: $v-focus-color;
+    font-size: $v-font-size * 2;
+    line-height: 2px;
+    color: $v-focus-color;
+    text-indent: round($v-font-size/-4);
+    text-shadow: 0 0 1px $v-background-color, 0 0 1px $v-background-color;
+  }
+
+  .#{$primary-stylename}-node-caption-drag-center {
+    @include box-shadow(0 0 0 2px $v-focus-color);
+    position: relative;
+    border-radius: $v-border-radius;
+
+    .v-ie8 & {
+      outline: 2px solid $v-focus-color;
+    }
+  }
+
+  .v-ff & .#{$primary-stylename}-node-drag-top:before,
+  .v-ff & .#{$primary-stylename}-node-drag-bottom:after {
+    line-height: 1px;
+  }
+
+  .v-ie8 & .#{$primary-stylename}-node-drag-top:before,
+  .v-ie8 & .#{$primary-stylename}-node-drag-bottom:after {
+    line-height: 0;
+  }
+}
+
+
+@mixin valo-tree-collapsed-icon-style {
+  content: "\f0da";
+  font-family: FontAwesome;
+}
+
+@mixin valo-tree-expanded-icon-style ($force: false) {
+  @if $v-tree-animations-enabled == false or $force {
+    content: "\f0d7";
+    font-family: FontAwesome;
+  }
+}

@@ -1,0 +1,20 @@
+//
+// @mixin valo-widget-style
+@mixin valo-widget-style {
+  // Baseline expectations for all Vaadin widgets
+  @include box-sizing(border-box);
+  display: inline-block;
+  vertical-align: top;
+
+  // Reset, since ordered layout uses text-align for horizotal alignment inside slots and
+  // white-space: nowrap; for horizontal layout orientation
+  text-align: left;
+  white-space: normal;
+}
+
+
+@mixin valo-widget {
+  .v-widget {
+    @include valo-widget-style;
+  }
+}

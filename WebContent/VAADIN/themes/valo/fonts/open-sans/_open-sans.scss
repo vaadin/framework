@@ -1,0 +1,155 @@
+$open-sans-pathPrefix: null;
+  
+@if $v-relative-paths == false {
+  $open-sans-pathPrefix: "../valo/fonts/open-sans/";
+}
+
+@mixin font-open-sans-book ($italic: true) {
+  @font-face {
+    font-family: 'Open Sans';
+    src: url('#{$open-sans-pathPrefix}OpenSans-Regular-webfont.eot');
+    src: url('#{$open-sans-pathPrefix}OpenSans-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('#{$open-sans-pathPrefix}OpenSans-Regular-webfont.woff') format('woff'),
+         url('#{$open-sans-pathPrefix}OpenSans-Regular-webfont.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @if $italic {
+    @font-face {
+      font-family: 'Open Sans';
+      src: url('#{$open-sans-pathPrefix}OpenSans-Italic-webfont.eot');
+      src: url('#{$open-sans-pathPrefix}OpenSans-Italic-webfont.eot?#iefix') format('embedded-opentype'),
+           url('#{$open-sans-pathPrefix}OpenSans-Italic-webfont.woff') format('woff'),
+           url('#{$open-sans-pathPrefix}OpenSans-Italic-webfont.ttf') format('truetype');
+      font-weight: 400;
+      font-style: italic;
+    }
+  }
+}
+
+
+
+
+@mixin font-open-sans-light ($italic: true) {
+  @font-face {
+    font-family: 'Open Sans';
+    src: url('#{$open-sans-pathPrefix}OpenSans-Light-webfont.eot');
+    src: url('#{$open-sans-pathPrefix}OpenSans-Light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('#{$open-sans-pathPrefix}OpenSans-Light-webfont.woff') format('woff'),
+         url('#{$open-sans-pathPrefix}OpenSans-Light-webfont.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+  }
+  @if $italic {
+    @font-face {
+      font-family: 'Open Sans';
+      src: url('#{$open-sans-pathPrefix}OpenSans-LightItalic-webfont.eot');
+      src: url('#{$open-sans-pathPrefix}OpenSans-LightItalic-webfont.eot?#iefix') format('embedded-opentype'),
+           url('#{$open-sans-pathPrefix}OpenSans-LightItalic-webfont.woff') format('woff'),
+           url('#{$open-sans-pathPrefix}OpenSans-LightItalic-webfont.ttf') format('truetype');
+      font-weight: 300;
+      font-style: italic;
+    }
+  }
+}
+
+
+
+
+
+@mixin font-open-sans-semibold ($italic: true) {
+  @font-face {
+    font-family: 'Open Sans';
+    src: url('#{$open-sans-pathPrefix}OpenSans-Semibold-webfont.eot');
+    src: url('#{$open-sans-pathPrefix}OpenSans-Semibold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('#{$open-sans-pathPrefix}OpenSans-Semibold-webfont.woff') format('woff'),
+         url('#{$open-sans-pathPrefix}OpenSans-Semibold-webfont.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+  }
+  @if $italic {
+    @font-face {
+      font-family: 'Open Sans';
+      src: url('#{$open-sans-pathPrefix}OpenSans-SemiboldItalic-webfont.eot');
+      src: url('#{$open-sans-pathPrefix}OpenSans-SemiboldItalic-webfont.eot?#iefix') format('embedded-opentype'),
+           url('#{$open-sans-pathPrefix}OpenSans-SemiboldItalic-webfont.woff') format('woff'),
+           url('#{$open-sans-pathPrefix}OpenSans-SemiboldItalic-webfont.ttf') format('truetype');
+      font-weight: 600;
+      font-style: italic;
+    }
+  }
+}
+
+
+
+@mixin font-open-sans-bold ($italic: true) {
+  @font-face {
+    font-family: 'Open Sans';
+    src: url('#{$open-sans-pathPrefix}OpenSans-Bold-webfont.eot');
+    src: url('#{$open-sans-pathPrefix}OpenSans-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('#{$open-sans-pathPrefix}OpenSans-Bold-webfont.woff') format('woff'),
+         url('#{$open-sans-pathPrefix}OpenSans-Bold-webfont.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+  }
+  @if $italic {
+    @font-face {
+      font-family: 'Open Sans';
+      src: url('#{$open-sans-pathPrefix}OpenSans-BoldItalic-webfont.eot');
+      src: url('#{$open-sans-pathPrefix}OpenSans-BoldItalic-webfont.eot?#iefix') format('embedded-opentype'),
+           url('#{$open-sans-pathPrefix}OpenSans-BoldItalic-webfont.woff') format('woff'),
+           url('#{$open-sans-pathPrefix}OpenSans-BoldItalic-webfont.ttf') format('truetype');
+      font-weight: 700;
+      font-style: italic;
+    }
+  }
+}
+
+
+
+
+
+@mixin font-open-sans-extrabold ($italic) {
+  @font-face {
+    font-family: 'Open Sans';
+    src: url('#{$open-sans-pathPrefix}OpenSans-ExtraBold-webfont.eot');
+    src: url('#{$open-sans-pathPrefix}OpenSans-ExtraBold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('#{$open-sans-pathPrefix}OpenSans-ExtraBold-webfont.woff') format('woff'),
+         url('#{$open-sans-pathPrefix}OpenSans-ExtraBold-webfont.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+  }
+  @if $italic {
+    @font-face {
+      font-family: 'Open Sans';
+      src: url('#{$open-sans-pathPrefix}OpenSans-ExtraBoldItalic-webfont.eot');
+      src: url('#{$open-sans-pathPrefix}OpenSans-ExtraBoldItalic-webfont.eot?#iefix') format('embedded-opentype'),
+           url('#{$open-sans-pathPrefix}OpenSans-ExtraBoldItalic-webfont.woff') format('woff'),
+           url('#{$open-sans-pathPrefix}OpenSans-ExtraBoldItalic-webfont.ttf') format('truetype');
+      font-weight: 900;
+      font-style: italic;
+    }  
+  }
+}
+
+
+
+
+
+@mixin font-open-sans ($italic: false, $light: false, $regular: true, $medium: false, $bold: false, $black: false) {
+  @if $light {
+    @include font-open-sans-light($italic);
+  }
+  @if $regular {
+    @include font-open-sans-book($italic);
+  }
+  @if $medium {
+    @include font-open-sans-semibold($italic);
+  }
+  @if $bold {
+    @include font-open-sans-bold($italic);
+  }
+  @if $black {
+    @include font-open-sans-extrabold($italic);
+  }
+}

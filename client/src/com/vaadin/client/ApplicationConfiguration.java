@@ -29,6 +29,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -43,6 +44,7 @@ import com.vaadin.client.debug.internal.ProfilerSection;
 import com.vaadin.client.debug.internal.Section;
 import com.vaadin.client.debug.internal.TestBenchSection;
 import com.vaadin.client.debug.internal.VDebugWindow;
+import com.vaadin.client.debug.internal.theme.DebugWindowStyles;
 import com.vaadin.client.event.PointerEventSupport;
 import com.vaadin.client.metadata.BundleLoadCallback;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
@@ -642,6 +644,21 @@ public class ApplicationConfiguration implements EntryPoint {
             if (isQuietDebugMode()) {
                 window.close();
             } else {
+                // Load debug window styles asynchronously
+                GWT.runAsync(new RunAsyncCallback() {
+                    @Override
+                    public void onSuccess() {
+                        DebugWindowStyles dws = GWT
+                                .create(DebugWindowStyles.class);
+                        dws.css().ensureInjected();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable reason) {
+                        Window.alert("Failed to load Vaadin debug window styles");
+                    }
+                });
+
                 window.init();
             }
 

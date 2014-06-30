@@ -1,0 +1,95 @@
+// "Photoshop" blend modes
+@import "blend-modes";
+
+// Returns the luminance of a color (0-255)
+// (perceived brightness, rather than absolute mathematical lightness value)
+//
+// "The luminance calculation is a weighted average of the color channels that approximates
+// how humans perceive brightness, while lightness is just an average of the largest and
+// smallest channels without regard to perception."
+//
+// Source for equation: http://en.wikipedia.org/wiki/Luminance_(relative)
+@function color-luminance ($color) {
+  @return 0.2126 * red($color) + 0.7152 * green($color) + 0.0722 * blue($color);
+}
+
+
+// Arbitrary luminance threshold after which colors should be adjusted either darker or lighter
+$v-luminance-threshold: 150 !default;
+
+
+
+@function black($opacity: 1) {
+  @return transparentize(#000, 1 - $opacity);
+}
+
+@function white($opacity: 1) {
+  @return transparentize(#fff, 1 - $opacity);
+}
+
+
+
+@function is-dark-color($bg-color) {
+  $luminance: color-luminance($bg-color);
+  @if $luminance < $v-luminance-threshold or (saturation($bg-color) > 80% and ($luminance < $v-luminance-threshold + 20)) {
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+
+@function darkest-color($colors...) {
+  $darkest: first($colors);
+  @each $color in $colors {
+    @if color-luminance($color) < color-luminance($darkest) {
+      $darkest: $color;
+    }
+  }
+  @return $darkest;
+}
+
+// Returns a text color with enough contrast for the given background color
+@function valo-font-color ($bg-color, $contrast: 0.8) {
+  @if $bg-color {
+    @if is-dark-color($bg-color) {
+      @return scale-color($bg-color, $lightness: min(100%, 100% * $contrast), $saturation: max(-100%, -50% * $contrast));
+    } @else {
+      @return scale-color($bg-color, $lightness: max(-100%, -100% * $contrast * 0.9), $saturation: max(-100%, -50% * $contrast));
+    }
+  }
+  @return null;
+}
+
+
+@function valo-header-color ($bg-color, $contrast: 1) {
+  $font-color: valo-font-color($bg-color);
+  @if is-dark-color($bg-color) {
+    @return lighten($font-color, 30% * $contrast);
+  } @else {
+    @return darken($font-color, 20% * $contrast);
+  }
+}
+
+
+
+
+@function valo-focus-color ($context: $v-app-background-color) {
+  $color: $context;
+  @if is-dark-color($context) {
+    $color: scale-color($color, $lightness: 40%, $saturation: 80%);
+  } @else {
+    $color: scale-color($color, $lightness: -50%, $saturation: 80%);
+  }
+  @return $color;
+}
+
+
+
+@mixin valo-focus-style($include-box-shadow: false) {
+  @if $include-box-shadow and type-of($v-focus-style) == list {
+    @include box-shadow($v-focus-style);
+  } @else if type-of($v-focus-style) == color {
+    border-color: $v-focus-style;
+  }
+}

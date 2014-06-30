@@ -1,0 +1,115 @@
+@if $v-animations-enabled {
+
+  // 'Placeholder' animation names to trigger VOverlay animation-in and animation-out
+  @include keyframes(valo-placeholder-animate-in) {
+    0% {
+      visibility: visible;
+    }
+  }
+
+  @include keyframes(valo-placeholder-animate-out) {
+    100% {
+      visibility: visible;
+    }
+  }
+
+  @include keyframes(valo-anim-fade-in) {
+    0% {
+      opacity: 0;
+    }
+  }
+
+  @include keyframes(valo-anim-fade-out) {
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @include keyframes(valo-anim-slide-in-down) {
+    0% {
+      @include transform( translateY(-100%) );
+    }
+  }
+
+  @include keyframes(valo-anim-slide-in-up) {
+    0% {
+      @include transform( translateY(100%) );
+    }
+  }
+
+  @include keyframes(valo-anim-slide-in-left) {
+    0% {
+      @include transform( translateX(100%) );
+    }
+  }
+
+  @include keyframes(valo-anim-slide-in-right) {
+    0% {
+      @include transform( translateX(-100%) );
+    }
+  }
+
+  @include keyframes(valo-anim-slide-out-down) {
+    100% {
+      @include transform( translateY(100%) );
+    }
+  }
+
+  @include keyframes(valo-anim-slide-out-up) {
+    100% {
+      @include transform( translateY(-100%) );
+    }
+  }
+
+  @include keyframes(valo-anim-slide-out-left) {
+    100% {
+      @include transform( translateX(-100%) );
+    }
+  }
+
+  @include keyframes(valo-anim-slide-out-right) {
+    100% {
+      @include transform( translateX(100%) );
+    }
+  }
+
+  @include keyframes(valo-overlay-animate-in) {
+    0% {
+      @include transform(translatey(-4px));
+      opacity: 0;
+    }
+  }
+
+  @include keyframes(valo-anim-drop-fade-out) {
+    100% {
+      opacity: 0;
+      @include transform(translatey(30%));
+    }
+  }
+
+}
+
+
+@mixin valo-anim-fade-in ($duration: 120ms, $delay: null){
+  @include animation(valo-anim-fade-in $duration $delay);
+}
+
+@mixin valo-anim-fade-out ($duration: 120ms, $delay: null){
+  @include animation(valo-anim-fade-out $duration $delay);
+}
+
+@mixin valo-anim-slide-down ($duration: 260ms, $delay: null){
+  @include animation(valo-anim-slide-down $duration $delay);
+}
+
+@mixin valo-anim-slide-up ($duration: 260ms, $delay: null){
+  @include animation(valo-anim-slide-up $duration $delay);
+}
+
+@mixin valo-anim-slide-left ($duration: 260ms, $delay: null){
+  @include animation(valo-anim-slide-left $duration $delay);
+}
+
+@mixin valo-anim-slide-right ($duration: 260ms, $delay: null){
+  @include animation(valo-anim-slide-right $duration $delay);
+}

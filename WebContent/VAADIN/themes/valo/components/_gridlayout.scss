@@ -1,0 +1,47 @@
+@mixin valo-gridlayout-global ($primary-stylename: v-gridlayout) {
+  .#{$primary-stylename} {
+    position: relative;
+  }
+  .#{$primary-stylename}-slot {
+    position: absolute;
+    line-height: $v-line-height;
+  }
+  .#{$primary-stylename}-spacing-on {
+    overflow: hidden;
+  }
+  .#{$primary-stylename}-spacing,
+  .#{$primary-stylename}-spacing-off {
+    padding-left: 0;
+    padding-top: 0;
+  }
+  .#{$primary-stylename}-spacing-off {
+    overflow: hidden;
+  }
+}
+
+
+@mixin valo-gridlayout($primary-stylename : v-gridlayout) {
+
+  .#{$primary-stylename}-margin-top {
+    padding-top: $v-layout-margin-top;
+  }
+
+  .#{$primary-stylename}-margin-bottom {
+    padding-bottom: $v-layout-margin-bottom;
+  }
+
+  .#{$primary-stylename}-margin-left {
+    padding-left: $v-layout-margin-left;
+  }
+
+  .#{$primary-stylename}-margin-right {
+    padding-right: $v-layout-margin-right;
+  }
+
+  .#{$primary-stylename}-spacing-on {
+    padding-left: $v-layout-spacing-horizontal;
+    padding-top: $v-layout-spacing-vertical;
+  }
+
+
+}

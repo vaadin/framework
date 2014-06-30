@@ -3,10 +3,10 @@
 }
 
 @mixin fonticons {
-	@include font(FontAwesome, fontawesome-webfont);
+	@include v-font(FontAwesome, fontawesome-webfont);
 }
 
-@mixin font($font-family, $file-name) {
+@mixin v-font($font-family, $file-name) {
 	@font-face {
 	  font-family: '#{$font-family}';
 	  src: url('#{$file-name}.eot');
@@ -22,4 +22,9 @@
         -moz-osx-font-smoothing: grayscale;
         display: inline-block;
     }
+}
+
+@mixin font($font-family, $file-name) {
+  @warn "The 'font' mixin is DEPRECATED. You should use the corresponding 'v-font' mixin instead.";
+  @include v-font($font-family, $file-name);
 }

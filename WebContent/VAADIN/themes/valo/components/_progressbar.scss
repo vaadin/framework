@@ -1,0 +1,68 @@
+$v-progressbar-border-radius: $v-border-radius !default;
+
+
+@mixin valo-progressbar ($primary-stylename: v-progressbar) {
+
+  .#{$primary-stylename}-wrapper {
+    @include valo-progressbar-track-style;
+    min-width: $v-unit-size * 2;
+  }
+
+  .#{$primary-stylename}-indicator {
+    @include valo-progressbar-indicator-style;
+    min-width: max($v-border-radius*2, 3px);
+    @include transition(width 160ms );
+  }
+
+
+  .#{$primary-stylename}-point {
+    .#{$primary-stylename}-indicator {
+      background: transparent;
+      @include box-shadow(none);
+      border: none;
+      text-align: right;
+      overflow: hidden;
+
+      &:before {
+        content: "";
+        display: inline-block;
+        @include valo-progressbar-indicator-style;
+        width: round($v-unit-size/4);
+        vertical-align: top;
+      }
+    }
+  }
+
+  .#{$primary-stylename}-indeterminate {
+    @include valo-spinner;
+    
+    .#{$primary-stylename}-wrapper {
+      display: none;
+    }
+  }
+
+}
+
+
+@mixin valo-progressbar-track-style ($background-color: $v-background-color) {
+  border-radius: $v-progressbar-border-radius;
+  height: round($v-unit-size/4);
+  $bg-lightness: if(color-luminance($background-color) < 10, min($v-bevel-depth/2, 10%), min($v-bevel-depth/-2, -10%));
+  @include valo-gradient($color: scale-color($background-color, $lightness: $bg-lightness, $saturation: $v-bevel-depth/-2), $direction: to top);
+  @include box-sizing(border-box);
+}
+
+
+@mixin valo-progressbar-indicator-style ($background-color: $v-selection-color, $border: $v-border) {
+  border-radius: $v-progressbar-border-radius;
+  height: inherit;
+  @include valo-gradient($color: $background-color);
+  @include box-shadow(valo-bevel-and-shadow($background-color: $background-color));
+  @if $border {
+    border: valo-border($border: $border, $color: $background-color, $context: $v-app-background-color);
+  } @else {
+    border: none;
+  }
+  @include box-sizing(border-box);
+  max-width: 100%;
+}

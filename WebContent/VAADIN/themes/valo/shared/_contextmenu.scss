@@ -1,0 +1,19 @@
+@mixin valo-contextmenu {
+
+  .v-contextmenu {
+    @include valo-selection-overlay-style;
+
+    table {
+      border-spacing: 0;
+    }
+  }
+
+  .v-contextmenu .gwt-MenuItem {
+    @include valo-selection-item-style;
+  }
+
+  .v-contextmenu .gwt-MenuItem-selected {
+    @include valo-selection-item-selected-style;
+  }
+
+}

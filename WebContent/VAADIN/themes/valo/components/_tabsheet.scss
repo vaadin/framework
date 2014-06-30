@@ -1,0 +1,496 @@
+$v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
+
+
+
+
+@mixin valo-tabsheet-global ($primary-stylename: v-tabsheet) {
+  .#{$primary-stylename}-hidetabs > .#{$primary-stylename}-tabcontainer,
+  .#{$primary-stylename}-spacertd,
+  .v-disabled .#{$primary-stylename}-scroller,
+  .#{$primary-stylename} .v-disabled .#{$primary-stylename}-caption-close {
+    display: none;
+  }
+
+  .#{$primary-stylename} {
+    overflow: visible !important;
+    position: relative;
+  }
+
+  .#{$primary-stylename}-tabcontainer {
+    table,
+    tbody,
+    tr {
+      display: inline-block;
+      border-spacing: 0;
+      border-collapse: collapse;
+      vertical-align: top;
+    }
+
+    td {
+      display: inline-block;
+      padding: 0;
+    }
+  }
+
+  .#{$primary-stylename}-tabs {
+    white-space: nowrap;
+    @include box-sizing(border-box);
+  }
+
+  .#{$primary-stylename}-content {
+    position: relative;
+
+    > div > .v-scrollable {
+      @include valo-panel-adjust-content-margins;
+    }
+  }
+
+}
+
+
+
+
+
+@mixin valo-tabsheet ($primary-stylename: v-tabsheet) {
+  .#{$primary-stylename} {
+    &:not(.v-has-width) {
+      width: auto !important;
+    }
+  }
+
+  .#{$primary-stylename}-spacertd {
+    display: none !important;
+  }
+
+  .#{$primary-stylename}-tabcontainer {
+    @include valo-tabsheet-tabcontainer-style($primary-stylename);
+  }
+
+  .#{$primary-stylename}-tabitemcell {
+    @include valo-tabsheet-tabitemcell-style($primary-stylename);
+  }
+
+  .#{$primary-stylename}-scroller {
+    @include valo-tabsheet-scroller-style($primary-stylename);
+  }
+
+
+  @if $v-tabsheet-content-animation-enabled {
+    .#{$primary-stylename}-tabsheetpanel > .v-scrollable > .v-widget {
+      @include valo-anim-fade-in(300ms);
+    }
+
+    $spinner-size: round($v-unit-size/2);
+    $spinner-size: $spinner-size + $spinner-size % 2;
+
+    .#{$primary-stylename}-deco {
+      @include valo-spinner($size: $spinner-size);
+      height: 0 !important;
+      border-style: none;
+      display: block;
+      position: absolute;
+      z-index: -1;
+      bottom: 50%;
+      margin-bottom: round($v-unit-size/-2) - $spinner-size/2;
+      left: 50%;
+      margin-left: $spinner-size/-2;
+      opacity: 0;
+
+      .v-ie8 & {
+        min-height: 0;
+      }
+    }
+
+    .#{$primary-stylename}-loading .#{$primary-stylename}-deco {
+      @include transition(opacity 200ms 200ms);
+      opacity: 1;
+      z-index: 1;
+      height: $spinner-size !important;
+      border-style: solid;
+
+      .v-ie8 &,
+      .v-ie9 & {
+        border-style: none;
+      }
+
+      .v-ie8 & {
+        min-height: 30px;
+      }
+    }
+  }
+
+}
+
+
+@mixin valo-tabsheet-tabcontainer-style ($primary-stylename: v-tabsheet) {
+  position: relative;
+  @include user-select(none);
+  @include box-sizing(border-box);
+
+  &:before {
+    content: "";
+    position: absolute;
+    height: 0;
+    // iOS panics with background color, creating black line artifacts
+    border-top: max(1px, first-number($v-border)) solid first-color(valo-border($strength: 0.5));
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .#{$primary-stylename}-tabs {
+    position: relative;
+  }
+}
+
+
+@mixin valo-tabsheet-tabitemcell-style ($primary-stylename: v-tabsheet) {
+  vertical-align: bottom;
+
+  .#{$primary-stylename}-tabitem {
+    line-height: 0;
+    overflow: hidden;
+  }
+
+  .v-caption {
+    margin-left: round($v-unit-size/2);
+    padding: 0 round($v-unit-size/10);
+    @include box-sizing(border-box);
+    cursor: pointer;
+    text-align: center;
+    line-height: $v-unit-size;
+    font-size: round($v-font-size * 0.95);
+    font-weight: $v-font-weight;
+    color: valo-font-color($v-app-background-color, 0.58);
+    width: auto !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-bottom: max(1px, first-number($v-border))*2 solid transparent;
+
+    @if $v-animations-enabled {
+      @include transition(border-bottom 200ms, color 200ms);
+    }
+
+    .v-captiontext {
+      display: inline;
+    }
+
+    .v-icon + .v-captiontext {
+      margin-left: round($v-unit-size/4);
+    }
+
+    &:hover {
+      color: $v-selection-color;
+    }
+
+    &.v-disabled {
+      @include opacity($v-disabled-opacity);
+      cursor: default;
+      color: inherit !important;
+      border-bottom: none;
+    }
+  }
+
+  &:first-child .v-caption,
+  &[aria-hidden="true"] + td .v-caption {
+    margin-left: 0;
+  }
+
+  &:focus {
+    outline: none;
+
+    .v-caption {
+      color: $v-selection-color;
+    }
+  }
+
+  .#{$primary-stylename}-tabitem-selected .v-caption.v-caption {
+    border-bottom-color: $v-selection-color;
+    color: $v-selection-color;
+  }
+
+  .#{$primary-stylename}-caption-close {
+    display: inline-block;
+    font-size: round($v-font-size * 1.1);
+    line-height: round($v-font-size * 1.1);
+    width: round($v-font-size * 1.1);
+    vertical-align: middle;
+    text-align: center;
+    margin: 0 round($v-font-size/-4) 0 round($v-font-size/2);
+    border-radius: round($v-border-radius/2);
+    color: valo-font-color($v-app-background-color, 0.4);
+
+    &:hover {
+      background: rgba(#000, .03);
+      color: $v-selection-color;
+    }
+
+    &:active {
+      background: $v-selection-color;
+      color: valo-font-color($v-selection-color);
+    }
+  }
+}
+
+
+@mixin valo-tabsheet-scroller-style ($primary-stylename: v-tabsheet) {
+  $border-color: first-color(valo-border($strength: 0.5));
+
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding-left: round($v-unit-size/2);
+  @include linear-gradient(to left, $v-background-color 70%, rgba($v-background-color, 0) 100%, $fallback: transparent);
+  pointer-events: none;
+
+  &:after {
+    content: "";
+    height: first-number($v-border);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: block;
+    @include linear-gradient(to left, $border-color 70%, rgba($border-color, 0) 100%, $fallback: transparent);
+  }
+
+  .v-ie8 &,
+  .v-ie9 & {
+    background-color: $v-background-color;
+
+    &:after {
+      background-color: $border-color;
+    }
+  }
+
+  button {
+    @include appearance(none);
+    border: none;
+    background: transparent;
+    font: inherit;
+    color: inherit;
+    height: 100%;
+    margin: 0;
+    padding: 0 round($v-unit-size/4);
+    outline: none;
+    cursor: pointer;
+    pointer-events: auto;
+    @include opacity(.5);
+
+    &:hover {
+      @include opacity(1);
+      color: $v-selection-color;
+    }
+
+    &:active {
+      @include opacity(.7);
+      color: $v-selection-color;
+    }
+
+    &::-moz-focus-inner {
+      padding: 0;
+      border: 0
+    }
+  }
+
+  [class*="Next"] {
+    padding-left: round($v-unit-size/8);
+    &:before {
+      @include valo-tabsheet-scroller-next-icon-style;
+    }
+  }
+
+  [class*="Prev"] {
+    padding-right: round($v-unit-size/8);
+    &:before {
+      @include valo-tabsheet-scroller-prev-icon-style;
+    }
+  }
+
+  [class*="disabled"] {
+    cursor: default;
+    color: inherit !important;
+    @include opacity(.1, true);
+  }
+}
+
+
+@mixin valo-tabsheet-scroller-prev-icon-style {
+  font-family: FontAwesome;
+  content: "\f053";
+}
+
+
+@mixin valo-tabsheet-scroller-next-icon-style {
+  font-family: FontAwesome;
+  content: "\f054";
+}
+
+
+
+
+
+
+
+
+@mixin valo-tabsheet-framed-style ($primary-stylename: v-tabsheet, $frame-inactive-tabs: true, $outer-frame: true, $tab-spacing: round($v-unit-size/10)) {
+  > .#{$primary-stylename}-tabcontainer {
+    .v-caption {
+      position: relative;
+      margin-left: $tab-spacing or first-number($v-border) * -1;
+      padding: 0 $v-layout-spacing-horizontal;
+      border: first-number($v-border) solid transparent;
+      line-height: $v-unit-size - first-number($v-border);
+      border-radius: $v-border-radius $v-border-radius 0 0;
+      font-weight: $v-font-weight + 100;
+
+      @if $v-animations-enabled {
+        @include transition(background-color 160ms);
+      }
+
+      &:hover {
+        background-color: darken($v-app-background-color, 3%);
+        border-bottom-color: first-color(valo-border($strength: 0.5));
+      }
+    }
+
+    td:first-child .v-caption,
+    [aria-hidden="true"] + td .v-caption {
+      margin-left: 0;
+    }
+
+    @if $frame-inactive-tabs {
+      .#{$primary-stylename}-tabitem .v-caption {
+        border-color: first-color(valo-border($strength: 0.5));
+      }
+    }
+
+    .#{$primary-stylename}-tabitem-selected .v-caption {
+      background: $v-panel-background-color;
+      border-color: first-color(valo-border($strength: 0.5));
+      border-bottom: none;
+      padding-bottom: first-number($v-border);
+    }
+
+    .v-caption-closable {
+      padding-right: $v-layout-spacing-horizontal + round($v-font-size * 1.1);
+    }
+
+    .#{$primary-stylename}-caption-close {
+      position: absolute;
+      top: round($v-font-size/4);
+      right: round($v-font-size/4);
+      margin: 0;
+    }
+  }
+
+  > .#{$primary-stylename}-content {
+    // iOS panics with black line artifacts,
+    // moving the background color to an inner element fixes it
+    > div {
+      background: $v-panel-background-color;
+    }
+
+    @if $outer-frame {
+      border: valo-border($strength: 0.5);
+      border-top: none;
+    }
+  }
+
+  &.padded-tabbar {
+    > .#{$primary-stylename}-tabcontainer {
+      @if $outer-frame {
+        border: valo-border($strength: 0.5);
+        border-bottom: none;
+      }
+
+      background: $v-background-color;
+      padding-top: round($v-unit-size/6);
+    }
+  }
+
+  &.icons-on-top .v-caption-closable {
+    padding-right: $v-layout-spacing-horizontal;
+  }
+}
+
+
+
+
+
+
+
+
+
+@mixin valo-tabsheet-align-tabs-style ($primary-stylename: v-tabsheet, $align: center) {
+  > .#{$primary-stylename}-tabcontainer {
+    text-align: $align;
+  }
+}
+
+@mixin valo-tabsheet-equal-width-tabs-style ($primary-stylename: v-tabsheet, $flex: false) {
+  > .#{$primary-stylename}-tabcontainer {
+    table,
+    tbody,
+    tr {
+      width: 100%;
+    }
+
+    tr {
+      display: table;
+      @if $flex == false {
+        table-layout: fixed;
+      }
+    }
+
+    td {
+      display: table-cell;
+    }
+
+    .v-caption {
+      margin: 0;
+      display: block;
+    }
+  }
+}
+
+@mixin valo-tabsheet-icons-on-top-style ($primary-stylename: v-tabsheet) {
+  > div > .#{$primary-stylename}-tabs {
+    .v-caption {
+      padding-top: round($v-unit-size/6);
+      padding-bottom: round($v-unit-size/6);
+      line-height: 1.2;
+    }
+
+    .#{$primary-stylename}-tabitem-selected .v-caption {
+      padding-bottom: round($v-unit-size/6) + first-number($v-border);
+    }
+
+    .v-icon {
+      display: block;
+
+      + .v-captiontext.v-captiontext {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+
+@mixin valo-tabsheet-only-selected-closable-style ($primary-stylename: v-tabsheet) {
+  > .#{$primary-stylename}-tabcontainer .#{$primary-stylename}-caption-close {
+    visibility: hidden;
+  }
+
+  > .#{$primary-stylename}-tabcontainer .#{$primary-stylename}-tabitem-selected .#{$primary-stylename}-caption-close {
+    visibility: visible;
+  }
+}
+
+
+@mixin valo-tabsheet-padded-tabbar-style ($primary-stylename: v-tabsheet) {
+  > .#{$primary-stylename}-tabcontainer .#{$primary-stylename}-tabs {
+    padding: 0 round($v-unit-size/4);
+  }
+}
