@@ -165,6 +165,36 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         return ((Locatable) element.getWrappedElement()).getCoordinates();
     }
 
+    private boolean hasDebugMessage(String message) {
+        return getDebugMessage(message) != null;
+    }
+
+    private WebElement getDebugMessage(String message) {
+        return driver.findElement(By.xpath(String.format(
+                "//span[@class='v-debugwindow-message' and text()='%s']",
+                message)));
+    }
+
+    protected void waitForDebugMessage(final String expectedMessage) {
+        waitForDebugMessage(expectedMessage, 30);
+    }
+
+    protected void waitForDebugMessage(final String expectedMessage, int timeout) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                return hasDebugMessage(expectedMessage);
+            }
+        }, timeout);
+    }
+
+    protected void clearDebugMessages() {
+        driver.findElement(
+                By.xpath("//button[@class='v-debugwindow-button' and @title='Clear log']"))
+                .click();
+    }
+
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
     public @interface RunLocally {
