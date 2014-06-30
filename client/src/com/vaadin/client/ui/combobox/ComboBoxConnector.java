@@ -28,7 +28,6 @@ import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VFilterSelect;
 import com.vaadin.client.ui.VFilterSelect.FilterSelectSuggestion;
-import com.vaadin.client.ui.menubar.MenuItem;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
@@ -157,7 +156,15 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         }
 
         // handle selection (null or a single value)
-        if (uidl.hasVariable("selected")) {
+        if (uidl.hasVariable("selected")
+
+        // In case we're switching page no need to update the selection as the
+        // selection process didn't finish.
+        // && getWidget().selectPopupItemWhenResponseIsReceived ==
+        // VFilterSelect.Select.NONE
+        //
+        ) {
+
             String[] selectedKeys = uidl.getStringArrayVariable("selected");
             if (selectedKeys.length > 0) {
                 performSelection(selectedKeys[0]);
@@ -169,12 +176,16 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         if ((getWidget().waitingForFilteringResponse && getWidget().lastFilter
                 .toLowerCase().equals(uidl.getStringVariable("filter")))
                 || popupOpenAndCleared) {
+
             getWidget().suggestionPopup.showSuggestions(
                     getWidget().currentSuggestions, getWidget().currentPage,
                     getWidget().totalMatches);
+
             getWidget().waitingForFilteringResponse = false;
+
             if (!getWidget().popupOpenerClicked
                     && getWidget().selectPopupItemWhenResponseIsReceived != VFilterSelect.Select.NONE) {
+
                 // we're paging w/ arrows
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                     @Override
@@ -218,26 +229,16 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      */
     private void navigateItemAfterPageChange() {
         if (getWidget().selectPopupItemWhenResponseIsReceived == VFilterSelect.Select.LAST) {
-            getWidget().suggestionPopup.menu.selectLastItem();
+            getWidget().suggestionPopup.selectLastItem();
         } else {
-            getWidget().suggestionPopup.menu.selectFirstItem();
+            getWidget().suggestionPopup.selectFirstItem();
         }
 
-        // This is used for paging so we update the keyboard selection
-        // variable as well.
-        MenuItem activeMenuItem = getWidget().suggestionPopup.menu
-                .getSelectedItem();
-        getWidget().suggestionPopup.menu
-                .setKeyboardSelectedItem(activeMenuItem);
-
-        // Update text field to contain the correct text
-        getWidget().setTextboxText(activeMenuItem.getText());
-        getWidget().tb.setSelectionRange(
-                getWidget().lastFilter.length(),
-                activeMenuItem.getText().length()
-                        - getWidget().lastFilter.length());
-
-        getWidget().selectPopupItemWhenResponseIsReceived = VFilterSelect.Select.NONE; // reset
+        // If you're in between 2 requests both changing the page back and
+        // forth, you don't want this here, instead you need it before any
+        // other request.
+        // getWidget().selectPopupItemWhenResponseIsReceived =
+        // VFilterSelect.Select.NONE; // reset
     }
 
     private void performSelection(String selectedKey) {
