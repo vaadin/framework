@@ -185,7 +185,20 @@ public class RpcDataProviderExtension extends AbstractExtension {
             return keys;
         }
 
-        Object getItemId(String key) throws IllegalStateException {
+        /**
+         * Gets the registered item id based on its key.
+         * <p>
+         * A key is used to identify a particular row on both a server and a
+         * client. This method can be used to get the item id for the row key
+         * that the client has sent.
+         * 
+         * @param key
+         *            the row key for which to retrieve an item id
+         * @return the item id corresponding to {@code key}
+         * @throws IllegalStateException
+         *             if the key mapper does not have a record of {@code key} .
+         */
+        public Object getItemId(String key) throws IllegalStateException {
             Object itemId = itemIdToKey.inverse().get(key);
             if (itemId != null) {
                 return itemId;

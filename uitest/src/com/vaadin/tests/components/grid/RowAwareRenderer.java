@@ -15,22 +15,27 @@
  */
 package com.vaadin.tests.components.grid;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import org.json.JSONObject;
 
+import com.vaadin.tests.widgetset.client.grid.RowAwareRendererConnector.RowAwareRendererRpc;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.components.grid.AbstractRenderer;
 
-public class IntArrayRenderer extends AbstractRenderer<int[]> {
-    public IntArrayRenderer() {
-        super(int[].class);
+public class RowAwareRenderer extends AbstractRenderer<Void> {
+    public RowAwareRenderer(final Label debugLabel) {
+        super(Void.class);
+        registerRpc(new RowAwareRendererRpc() {
+            @Override
+            public void clicky(String key) {
+                Object itemId = getItemId(key);
+                debugLabel.setValue("key: " + key + ", itemId: " + itemId);
+            }
+        });
     }
 
     @Override
-    public Object encode(int[] value) {
-        try {
-            return new JSONArray(value);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+    public Object encode(Void value) {
+        return JSONObject.NULL;
     }
+
 }

@@ -19,6 +19,8 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import com.vaadin.ui.components.grid.AbstractRenderer;
+
 /**
  * A renderer for presenting date values.
  * 

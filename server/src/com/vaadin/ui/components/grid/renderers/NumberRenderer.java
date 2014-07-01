@@ -18,6 +18,8 @@ package com.vaadin.ui.components.grid.renderers;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
+import com.vaadin.ui.components.grid.AbstractRenderer;
+
 /**
  * A renderer for presenting number values.
  * 

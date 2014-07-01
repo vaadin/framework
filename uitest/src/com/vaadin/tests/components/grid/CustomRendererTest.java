@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -35,8 +36,27 @@ public class CustomRendererTest extends MultiBrowserTest {
                 .getText());
     }
 
+    @Test
+    public void testRowAwareRenderer() throws Exception {
+        openTestURL();
+
+        GridElement grid = findGrid();
+        assertEquals("Click me!", grid.getCell(0, 1).getText());
+        assertEquals(CustomRenderer.INIT_DEBUG_LABEL_CAPTION, findDebugLabel()
+                .getText());
+
+        grid.getCell(0, 1).click();
+        assertEquals("row: 0, key: 0", grid.getCell(0, 1).getText());
+        assertEquals("key: 0, itemId: " + CustomRenderer.ITEM_ID,
+                findDebugLabel().getText());
+    }
+
     private GridElement findGrid() {
         List<GridElement> elements = $(GridElement.class).all();
         return elements.get(0);
+    }
+
+    private LabelElement findDebugLabel() {
+        return $(LabelElement.class).id(CustomRenderer.DEBUG_LABEL_ID);
     }
 }

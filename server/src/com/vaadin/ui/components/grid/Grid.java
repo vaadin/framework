@@ -215,14 +215,14 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
             @Override
             public void selectionChange(SelectionChangeEvent event) {
                 for (Object removedItemId : event.getRemoved()) {
-                    keyMapper().unpin(removedItemId);
+                    getKeyMapper().unpin(removedItemId);
                 }
 
                 for (Object addedItemId : event.getAdded()) {
-                    keyMapper().pin(addedItemId);
+                    getKeyMapper().pin(addedItemId);
                 }
 
-                List<String> keys = keyMapper().getKeys(getSelectedRows());
+                List<String> keys = getKeyMapper().getKeys(getSelectedRows());
 
                 boolean markAsDirty = true;
 
@@ -259,7 +259,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
             @Override
             public void selectionChange(List<String> selection) {
                 final HashSet<Object> newSelection = new HashSet<Object>(
-                        keyMapper().getItemIds(selection));
+                        getKeyMapper().getItemIds(selection));
                 final HashSet<Object> oldSelection = new HashSet<Object>(
                         getSelectedRows());
 
@@ -1062,10 +1062,13 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
     }
 
     /**
-     * A shortcut for
-     * <code>{@link #datasourceExtension}.{@link com.vaadin.data.RpcDataProviderExtension#getKeyMapper() getKeyMapper()}</code>
+     * Gets the
+     * {@link com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper
+     * DataProviderKeyMapper} being used by the data source.
+     * 
+     * @return the key mapper being used by the data source
      */
-    private DataProviderKeyMapper keyMapper() {
+    DataProviderKeyMapper getKeyMapper() {
         return datasourceExtension.getKeyMapper();
     }
 

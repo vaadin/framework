@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui.components.grid.renderers;
 
+import com.vaadin.ui.components.grid.AbstractRenderer;
+
 /**
  * A renderer for presenting simple plain-text string values.
  * 

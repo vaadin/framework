@@ -22,28 +22,42 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.components.grid.Grid;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class CustomRenderer extends AbstractTestUI {
 
     private static final Object INT_ARRAY_PROPERTY = "int array";
+    private static final Object VOID_PROPERTY = "void";
+
+    static final Object ITEM_ID = "itemId1";
+    static final String DEBUG_LABEL_ID = "debuglabel";
+    static final String INIT_DEBUG_LABEL_CAPTION = "Debug label placeholder";
 
     @Override
     protected void setup(VaadinRequest request) {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(INT_ARRAY_PROPERTY, int[].class,
                 new int[] {});
+        container.addContainerProperty(VOID_PROPERTY, Void.class, null);
 
-        Object itemId = new Object();
-        Item item = container.addItem(itemId);
+        Item item = container.addItem(ITEM_ID);
+
         @SuppressWarnings("unchecked")
-        Property<int[]> property = item.getItemProperty(INT_ARRAY_PROPERTY);
-        property.setValue(new int[] { 1, 1, 2, 3, 5, 8, 13 });
+        Property<int[]> propertyIntArray = item
+                .getItemProperty(INT_ARRAY_PROPERTY);
+        propertyIntArray.setValue(new int[] { 1, 1, 2, 3, 5, 8, 13 });
+
+        Label debugLabel = new Label(INIT_DEBUG_LABEL_CAPTION);
+        debugLabel.setId(DEBUG_LABEL_ID);
 
         Grid grid = new Grid(container);
         grid.getColumn(INT_ARRAY_PROPERTY).setRenderer(new IntArrayRenderer());
+        grid.getColumn(VOID_PROPERTY).setRenderer(
+                new RowAwareRenderer(debugLabel));
         addComponent(grid);
+        addComponent(debugLabel);
     }
 
     @Override

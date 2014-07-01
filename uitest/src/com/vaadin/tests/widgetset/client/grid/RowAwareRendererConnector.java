@@ -1,0 +1,78 @@
+/*
+ * Copyright 2000-2014 Vaadin Ltd.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package com.vaadin.tests.widgetset.client.grid;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import com.google.gwt.dom.client.BrowserEvents;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.user.client.DOM;
+import com.vaadin.client.ui.grid.Cell;
+import com.vaadin.client.ui.grid.FlyweightCell;
+import com.vaadin.client.ui.grid.Renderer;
+import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
+import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
+import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.shared.ui.Connect;
+
+@Connect(com.vaadin.tests.components.grid.RowAwareRenderer.class)
+public class RowAwareRendererConnector extends AbstractRendererConnector<Void> {
+    public interface RowAwareRendererRpc extends ServerRpc {
+        void clicky(String key);
+    }
+
+    public class RowAwareRenderer extends ComplexRenderer<Void> {
+
+        @Override
+        public Collection<String> getConsumedEvents() {
+            return Arrays.asList(BrowserEvents.CLICK);
+        }
+
+        @Override
+        public void init(FlyweightCell cell) {
+            DivElement div = DivElement.as(DOM.createDiv());
+            div.setAttribute("style",
+                    "border: 1px solid red; background: pink;");
+            div.setInnerText("Click me!");
+            cell.getElement().appendChild(div);
+        }
+
+        @Override
+        public void render(FlyweightCell cell, Void data) {
+            // NOOP
+        }
+
+        @Override
+        public void onBrowserEvent(Cell cell, NativeEvent event) {
+            int row = cell.getRow();
+            String key = getRowKey(row);
+            getRpcProxy(RowAwareRendererRpc.class).clicky(key);
+            cell.getElement().setInnerText("row: " + row + ", key: " + key);
+        }
+    }
+
+    @Override
+    protected Class<Void> getType() {
+        return Void.class;
+    }
+
+    @Override
+    protected Renderer<Void> createRenderer() {
+        return new RowAwareRenderer();
+    }
+}

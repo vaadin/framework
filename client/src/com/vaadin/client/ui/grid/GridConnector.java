@@ -536,4 +536,19 @@ public class GridConnector extends AbstractComponentConnector {
         var model = this.@com.vaadin.client.ui.grid.GridConnector::selectionModel;
         model.@com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel::deselectByHandle(*)(handle);
     }-*/;
+
+    /**
+     * Gets the row key for a row by index.
+     * 
+     * @param index
+     *            the index of the row for which to get the key
+     * @return the key for the row at {@code index}
+     */
+    public String getRowKey(int index) {
+        final JSONObject row = dataSource.getRow(index);
+        final Object key = dataSource.getRowKey(row);
+        assert key instanceof String : "Internal key was not a String but a "
+                + key.getClass().getSimpleName() + " (" + key + ")";
+        return (String) key;
+    }
 }

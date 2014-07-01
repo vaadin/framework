@@ -23,6 +23,7 @@ import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
+import com.vaadin.client.ui.grid.GridConnector;
 import com.vaadin.client.ui.grid.Renderer;
 
 /**
@@ -120,5 +121,26 @@ public abstract class AbstractRendererConnector<T> extends
     @Deprecated
     protected void extend(ServerConnector target) {
         // NOOP
+    }
+
+    /**
+     * Gets the row key for a row index.
+     * <p>
+     * In case this renderer wants be able to identify a row in such a way that
+     * the server also understands it, the row key is used for that. Rows are
+     * identified by unified keys between the client and the server.
+     * 
+     * @param index
+     *            the row index for which to get the row key
+     * @return the row key for the row at {@code index}
+     */
+    protected String getRowKey(int index) {
+        final ServerConnector parent = getParent();
+        if (parent instanceof GridConnector) {
+            return ((GridConnector) parent).getRowKey(index);
+        } else {
+            throw new IllegalStateException("Renderers can only be used "
+                    + "with a Grid.");
+        }
     }
 }

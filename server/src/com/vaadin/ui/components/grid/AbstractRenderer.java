@@ -13,12 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui.components.grid.renderers;
+package com.vaadin.ui.components.grid;
 
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
-import com.vaadin.ui.components.grid.Grid;
-import com.vaadin.ui.components.grid.Renderer;
 
 /**
  * An abstract base class for server-side Grid renderers.
@@ -65,5 +63,26 @@ public abstract class AbstractRenderer<T> extends AbstractExtension implements
     @Override
     public Class<T> getPresentationType() {
         return presentationType;
+    }
+
+    /**
+     * Gets the item id for a row key.
+     * <p>
+     * A key is used to identify a particular row on both a server and a client.
+     * This method can be used to get the item id for the row key that the
+     * client has sent.
+     * 
+     * @param key
+     *            the row key for which to retrieve an item id
+     * @return the item id corresponding to {@code key}
+     */
+    protected Object getItemId(String key) {
+        if (getParent() instanceof Grid) {
+            Grid grid = (Grid) getParent();
+            return grid.getKeyMapper().getItemId(key);
+        } else {
+            throw new IllegalStateException(
+                    "Renderers can be used only with Grid");
+        }
     }
 }

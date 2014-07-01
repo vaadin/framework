@@ -23,6 +23,9 @@ package com.vaadin.client.ui.grid;
  * <p>
  * The updater is responsible for internally handling all remote communication,
  * should the displayed data need to be fetched remotely.
+ * <p>
+ * This has a similar function to {@link Grid Grid's} {@link Renderer Renderers}
+ * , although they operate on different abstraction levels.
  * 
  * @since 7.4
  * @author Vaadin Ltd
@@ -30,6 +33,7 @@ package com.vaadin.client.ui.grid;
  * @see Escalator#getHeader()
  * @see Escalator#getBody()
  * @see Escalator#getFooter()
+ * @see Renderer
  */
 public interface EscalatorUpdater {
 
@@ -75,8 +79,8 @@ public interface EscalatorUpdater {
      * <em>Note:</em> If rendering of cells is deferred (e.g. because
      * asynchronous data retrieval), this method is responsible for explicitly
      * displaying some placeholder data (empty content is valid). Because the
-     * cells (and rows) in an escalator are recycled, failing to reset a cell
-     * will lead to invalid data being displayed in the escalator.
+     * cells (and rows) in an escalator are recycled, failing to reset a cell's
+     * presentation will lead to wrong data being displayed in the escalator.
      * <p>
      * For performance reasons, the escalator will never autonomously clear any
      * data in a cell.
@@ -85,7 +89,7 @@ public interface EscalatorUpdater {
      *            Information about the row that is being updated.
      *            <em>Note:</em> You should not store nor reuse this reference.
      * @param cellsToUpdate
-     *            A collection of cells which need to be updated. <em>Note:</em>
+     *            A collection of cells that need to be updated. <em>Note:</em>
      *            You should neither store nor reuse the reference to the
      *            iterable, nor to the individual cells.
      */
