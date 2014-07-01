@@ -605,13 +605,18 @@ public class ConnectorBundleLoaderFactory extends Generator {
 
     private void writeDelegateToWidget(TreeLogger logger,
             SplittingSourceWriter w, ConnectorBundle bundle) {
-        Set<Property> needsDelegateToWidget = bundle.getNeedsDelegateToWidget();
-        for (Property property : needsDelegateToWidget) {
-            w.println("store.setDelegateToWidget(%s, \"%s\", \"%s\");",
-                    getClassLiteralString(property.getBeanType()),
-                    property.getName(),
-                    property.getAnnotation(DelegateToWidget.class).value());
-
+        Map<JClassType, Set<Property>> needsDelegateToWidget = bundle
+                .getNeedsDelegateToWidgetMap();
+        for (Entry<JClassType, Set<Property>> entry : needsDelegateToWidget
+                .entrySet()) {
+            JClassType beanType = entry.getKey();
+            for (Property property : entry.getValue()) {
+                w.println(
+                        "store.setDelegateToWidget(%s, \"%s\", \"%s\");",
+                        getClassLiteralString(beanType),// property.getBeanType()),
+                        property.getName(),
+                        property.getAnnotation(DelegateToWidget.class).value());
+            }
             w.splitIfNeeded();
         }
     }
