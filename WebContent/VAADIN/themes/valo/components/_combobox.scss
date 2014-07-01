@@ -1,0 +1,383 @@
+@mixin valo-combobox ($primary-stylename: v-filterselect) {
+
+  .#{$primary-stylename} {
+    position: relative;
+    width: $v-default-field-width;
+    @include valo-combobox-style($primary-stylename: $primary-stylename);
+    white-space: nowrap;
+
+    .v-icon {
+      position: absolute;
+      pointer-events: none;
+    }
+  }
+
+  .#{$primary-stylename}-error {
+    .#{$primary-stylename}-input {
+      @include valo-textfield-error-style;
+    }
+
+    .#{$primary-stylename}-button {
+      color: $v-error-indicator-color;
+      border-color: $v-error-indicator-color;
+    }
+  }
+
+  .#{$primary-stylename}-suggestpopup {
+    @include valo-combobox-popup-style($primary-stylename: $primary-stylename);
+  }
+
+  .#{$primary-stylename}-no-input {
+    cursor: pointer;
+    text-shadow: valo-text-shadow();
+
+    @if $v-border-radius != $v-textfield-border-radius {
+      border-radius: $v-border-radius;
+    }
+
+    .#{$primary-stylename}-input {
+      @include user-select(none);
+      @include valo-gradient;
+      cursor: inherit;
+      @include box-shadow(valo-bevel-and-shadow($bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient));
+      @include valo-border-with-gradient($border: $v-border, $color: $v-background-color, $gradient: $v-gradient);
+      text-shadow: inherit;
+      text-overflow: ellipsis;
+      border-radius: inherit;
+
+      &:focus {
+        @include valo-textfield-focus-style($bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient, $background-color: $v-background-color);
+      }
+    }
+
+    .#{$primary-stylename}-button {
+      border-left: none !important;
+    }
+
+    &:hover .#{$primary-stylename}-button:before {
+      color: inherit;
+    }
+  }
+
+}
+
+
+
+
+
+
+@mixin valo-combobox-style (
+    $unit-size: $v-unit-size,
+
+    $font-color: null, // Computed by default
+    $font-weight: max(400, $v-font-weight),
+    $font-size: null, // Inherited by default
+
+    $background-color: $v-textfield-background-color,
+    $border: $v-textfield-border,
+    $border-radius: $v-textfield-border-radius,
+
+    $gradient: none,
+    $bevel: $v-textfield-bevel,
+    $shadow: $v-textfield-shadow,
+
+    $primary-stylename: v-filterselect
+  ) {
+
+    height: $unit-size;
+    border-radius: $border-radius;
+
+  .#{$primary-stylename}-input {
+    @include valo-combobox-input-style(
+          $unit-size: $unit-size,
+          $gradient: $gradient,
+          $bevel: $bevel,
+          $shadow: $shadow,
+          $border: $border,
+          $border-radius: $border-radius,
+          $background-color: $background-color,
+          $font-color: $font-color,
+          $font-size: $font-size,
+          $font-weight: $font-weight);
+  }
+
+  .v-icon + .#{$primary-stylename}-input {
+    padding-left: $unit-size;
+  }
+
+  img.v-icon {
+    $padding-width: ceil($unit-size/6);
+    max-height: $unit-size;
+    @if $border-radius {
+      $padding-width: $padding-width + ceil($border-radius/3);
+    }
+    margin-left: $padding-width;
+  }
+
+  span.v-icon {
+    color: valo-font-color($background-color);
+    width: $unit-size;
+    line-height: 1;
+    padding-top: .12em;
+  }
+
+  &.#{$primary-stylename}-prompt > .#{$primary-stylename}-input {
+    @include valo-textfield-prompt-style($background-color);
+  }
+
+  .#{$primary-stylename}-button {
+    @include valo-combobox-button-style($unit-size: $unit-size, $bevel: $bevel, $background-color: $background-color);
+  }
+
+  &.v-disabled  {
+    @include opacity($v-textfield-disabled-opacity);
+    & .#{$primary-stylename}-button {
+      cursor: default;
+      pointer-events: none;
+      &:active:after {
+        display: none;
+      }
+    }
+  }
+
+  &.v-readonly {
+    .#{$primary-stylename}-input {
+      @include valo-textfield-readonly-style;
+    }
+
+    .#{$primary-stylename}-button {
+      cursor: default;
+      pointer-events: none;
+      &:active:after {
+        display: none;
+      }
+    }
+  }
+}
+
+
+
+
+@mixin valo-combobox-input-style (
+    $unit-size: $v-unit-size,
+    $padding: null, // Computed by default
+
+    $font-color: null, // Computed by default
+    $font-weight: null, // Inherited by default
+    $font-size: null, // Inherited by default
+
+    $background-color: $v-textfield-background-color,
+    $border: $v-border,
+    $border-radius: $v-textfield-border-radius,
+
+    $gradient: none,
+    $bevel: $v-bevel,
+    $shadow: $v-shadow
+) {
+  @include box-sizing(border-box);
+  @include valo-textfield-style($unit-size: $unit-size,
+                                $padding: $padding,
+                                $font-color: $font-color,
+                                $font-weight: $font-weight,
+                                $font-size: $font-size,
+                                $background-color: $background-color,
+                                $border: $border,
+                                $border-radius: $border-radius,
+                                $gradient: $gradient,
+                                $bevel: $bevel,
+                                $shadow: $shadow);
+  width: 100% !important; // Need to override calculated inline style which is sometimes added
+  height: 100%;
+  padding-right: round($unit-size * 1.2);
+  border-radius: inherit;
+}
+
+
+
+
+
+
+
+@mixin valo-combobox-button-style ($unit-size: $v-unit-size, $bevel: $v-bevel, $background-color: $v-textfield-background-color) {
+  $border-width: first-number($v-textfield-border);
+  @include valo-tappable;
+  position: absolute;
+  top: $border-width;
+  right: $border-width;
+  bottom: $border-width;
+  width: $unit-size;
+  cursor: pointer;
+
+  @if type-of($background-color) == color {
+    border-left: valo-border($color: $background-color, $border: $v-textfield-border, $strength: 0.5);
+    color: mix($background-color, valo-font-color($background-color));
+
+    .v-ie8 & {
+      background-color: $background-color;
+    }
+  }
+
+  @if $v-border-radius > 0 {
+    $br: $v-border-radius - $border-width;
+    border-radius: 0 $br $br 0;
+  }
+
+  &:before {
+    @include valo-combobox-button-icon-style;
+
+    @if $v-animations-enabled {
+      @include transition(color 140ms);
+    }
+    position: absolute;
+    width: $unit-size;
+    text-align: center;
+    top: 50%;
+    line-height: 1;
+    margin-top: -.47em;
+  }
+
+  @if $v-hover-styles-enabled and type-of($background-color) == color {
+    &:hover:before {
+      color: valo-font-color($background-color);
+    }
+  }
+
+  &:active:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: inherit;
+    @if type-of($background-color) == color {
+      @include valo-button-active-style($background-color);
+    }
+  }
+}
+
+
+
+@mixin valo-combobox-button-icon-style {
+  font-family: FontAwesome;
+  content: "\f078";
+}
+
+
+
+
+@mixin valo-combobox-popup-style ($primary-stylename: v-filterselect) {
+
+  @if $v-animations-enabled {
+    @if $v-overlay-animate-in {
+      &[class*="animate-in"] {
+        @include animation($v-overlay-animate-in);
+      }
+    }
+    // No animate-out since that will currently prevent the dropdown from
+    // closing when the user selects an item
+  }
+
+  .#{$primary-stylename}-suggestmenu {
+    @include valo-selection-overlay-style($animate-in: false, $animate-out: false);
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+  }
+
+   margin-top: ceil($v-unit-size/8) !important;
+
+  table,
+  tbody,
+  tr,
+  td {
+    display: block;
+  }
+
+  .gwt-MenuItem {
+    @include valo-selection-item-style;
+  }
+
+  .gwt-MenuItem-selected {
+    @include valo-selection-item-selected-style;
+  }
+
+  .#{$primary-stylename}-status {
+    position: absolute;
+    right: $v-border-radius;
+    $bg: scale-color($v-background-color, $lightness: -15%);
+    background: transparentize($bg, .1);
+    color: valo-font-color($bg);
+    border-radius: 0 0 $v-border-radius $v-border-radius;
+    height: ceil($v-unit-size*0.6);
+    bottom: -(ceil($v-unit-size*0.6));
+    font-size: ceil($v-font-size*0.73);
+    line-height: ceil($v-unit-size*0.6);
+    padding: 0 ceil($v-unit-size/7);
+    cursor: default;
+    pointer-events: none;
+
+    @if $v-animations-enabled {
+       @include animation(valo-anim-slide-in-down 200ms 80ms backwards);
+    }
+
+    > * {
+      color: valo-font-color($bg);
+      text-decoration: none;
+    }
+  }
+
+  div[class*="page"] {
+    position: absolute;
+    z-index: 3;
+    right: 0;
+    @include opacity(.2);
+    cursor: pointer;
+    @include transition( all 200ms );
+    width: ceil($v-unit-size/1.5);
+    height: ceil($v-unit-size/1.5);
+    line-height: ceil($v-unit-size/1.5);
+    text-align: center;
+    font-family: FontAwesome;
+    @include transform( scale(.8) );
+
+    color: valo-font-color($v-background-color);
+
+    &:hover {
+      @include opacity(1);
+      background: rgba($v-background-color, .5);
+    }
+
+    span {
+      // Hide text
+      display: none;
+    }
+  }
+
+  &:hover div[class*="page"] {
+    @include transform( scale(1) );
+  }
+
+  div[class*="prev"] {
+    top: 0;
+    @include transform-origin( 100% 0% );
+    border-radius: 0 $v-border-radius 0 $v-border-radius;
+    &:before {
+      content: "\f0d8";
+    }
+
+  }
+
+  div[class*="next"] {
+    bottom: 0;
+    @include transform-origin( 100% 100% );
+    border-radius: $v-border-radius 0 $v-border-radius 0;
+    &:before {
+      content: "\f0d7";
+    }
+  }
+
+  div[class*="-off"] {
+    display: none;
+  }
+}

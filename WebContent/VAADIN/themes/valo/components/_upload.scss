@@ -1,0 +1,5 @@
+@mixin valo-upload ($primary-stylename: v-upload) {
+  .#{$primary-stylename} .v-button {
+    @include valo-widget-style;
+  }
+}

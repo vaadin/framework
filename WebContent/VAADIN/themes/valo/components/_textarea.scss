@@ -1,0 +1,60 @@
+@mixin valo-textarea ($primary-stylename: v-textarea) {
+
+  .#{$primary-stylename} {
+    @include valo-textarea-style;
+    width: $v-default-field-width;
+  }
+
+  .#{$primary-stylename}-readonly {
+    @include valo-textfield-readonly-style;
+  }
+
+  .#{$primary-stylename}-error {
+    @include valo-textfield-error-style;
+  }
+
+}
+
+
+@mixin valo-textarea-style (
+    $unit-size        : $v-unit-size,
+    $padding          : round($v-unit-size/6), // Computed by default
+
+    $font-color       : null, // Computed by default
+    $font-weight      : max(400, $v-font-weight), // Inherited by default
+    $font-size        : null, // Inherited by default
+
+    $background-color : $v-textfield-background-color,
+    $border           : $v-textfield-border,
+    $border-radius    : $v-textfield-border-radius,
+
+    $bevel            : $v-textfield-bevel,
+    $shadow           : $v-textfield-shadow,
+
+    $states           : (normal, focus, disabled)
+  ) {
+
+  @include valo-textfield-style($unit-size: $unit-size, $padding: $padding,
+                                $font-color: $font-color,
+                                $font-weight: $font-weight, // Inherited by default
+                                $font-size: $font-size, // Inherited by default
+
+                                $background-color: $background-color,
+                                $border: $border,
+                                $border-radius: $border-radius,
+
+                                $bevel: $bevel,
+                                $shadow: $shadow,
+
+                                $states: $states);
+  //display: block; // Fixes extra white-space under the textarea element
+  height: auto;
+  resize: none;
+
+  .v-ie8 &,
+  .v-ie9 & {
+    line-height: inherit;
+    padding-top: round($unit-size/9);
+    padding-bottom: round($unit-size/9);
+  }
+}

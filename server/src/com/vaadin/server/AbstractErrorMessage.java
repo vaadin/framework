@@ -126,7 +126,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
             StringBuilder sb = new StringBuilder();
             for (ErrorMessage cause : getCauses()) {
                 String childMessage = cause.getFormattedHtmlMessage();
-                if (null != childMessage) {
+                if (null != childMessage && !childMessage.isEmpty()) {
                     sb.append("<div>");
                     sb.append(childMessage);
                     sb.append("</div>\n");

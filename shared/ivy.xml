@@ -27,8 +27,8 @@
             conf="build,ide,test->default" />
         <dependency org="com.vaadin.external.google" name="guava"
             rev="16.0.1.vaadin1" conf="build,ide,test->default" />
-        <dependency org="com.vaadin.external.google" name="android-json"
-            rev="0.0.20131108.vaadin1" conf="build,ide,test->default" />
+        <dependency org="com.vaadin.external.json" name="json"
+            rev="0.0.20080701" conf="build,ide,test->default" />
         <dependency org="junit" name="junit" rev="4.11"
             conf="test,ide -> default" />
 

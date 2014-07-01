@@ -51,6 +51,11 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
      */
     public static final LegacyProperyToStringMode DEFAULT_LEGACY_PROPERTY_TO_STRING = LegacyProperyToStringMode.WARNING;
 
+    /**
+     * Default value for {@link #isSyncIdCheckEnabled()} = {@value} .
+     */
+    public static final boolean DEFAULT_SYNC_ID_CHECK = true;
+
     private final Properties initParameters;
     private boolean productionMode;
     private boolean xsrfProtectionEnabled;
@@ -60,6 +65,7 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
     private PushMode pushMode;
     private final Class<?> systemPropertyBaseClass;
     private LegacyProperyToStringMode legacyPropertyToStringMode;
+    private boolean syncIdCheck;
 
     /**
      * Create a new deployment configuration instance.
@@ -83,6 +89,7 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
         checkCloseIdleSessions();
         checkPushMode();
         checkLegacyPropertyToString();
+        checkSyncIdCheck();
     }
 
     private void checkLegacyPropertyToString() {
@@ -238,6 +245,16 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
     /**
      * {@inheritDoc}
      * <p>
+     * The default value is <code>true</code>.
+     */
+    @Override
+    public boolean isSyncIdCheckEnabled() {
+        return syncIdCheck;
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
      * The default mode is {@link PushMode#DISABLED}.
      */
     @Override
@@ -319,6 +336,12 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
             getLogger().warning(Constants.WARNING_PUSH_MODE_NOT_RECOGNIZED);
             pushMode = PushMode.DISABLED;
         }
+    }
+
+    private void checkSyncIdCheck() {
+        syncIdCheck = getApplicationOrSystemProperty(
+                Constants.SERVLET_PARAMETER_SYNC_ID_CHECK,
+                Boolean.toString(DEFAULT_SYNC_ID_CHECK)).equals("true");
     }
 
     private Logger getLogger() {

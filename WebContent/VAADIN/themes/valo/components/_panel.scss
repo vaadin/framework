@@ -1,0 +1,146 @@
+$v-panel-background-color: scale-color(lighten($v-app-background-color, 5%), $saturation: -5%) !default;
+$v-panel-border: $v-border !default;
+
+@mixin valo-panel ($primary-stylename: v-panel) {
+
+  .#{$primary-stylename} {
+    @include valo-panel-style;
+  }
+
+  .#{$primary-stylename}-caption {
+    @include valo-panel-caption-style;
+    border-radius: $v-border-radius - first-number($v-border) $v-border-radius - first-number($v-border) 0 0;
+  }
+
+  .#{$primary-stylename}-content {
+    @include box-sizing(border-box);
+    width: 100%;
+    height: 100%;
+    @include valo-panel-adjust-content-margins;
+  }
+
+}
+
+
+
+@mixin valo-panel-style (
+    $primary-stylename: v-panel,
+    $background-color : $v-panel-background-color,
+    $shadow           : $v-shadow,
+    $border           : $v-panel-border,
+    $border-radius    : $v-border-radius
+  ) {
+  background: $background-color;
+  color: valo-font-color($background-color);
+  border-radius: $border-radius;
+  border: valo-border($border: $border, $color: darkest-color($background-color, $v-app-background-color), $strength: 0.7);
+  @include box-shadow(valo-bevel-and-shadow($shadow: $shadow));
+}
+
+
+
+@mixin valo-panel-caption-style (
+    $background-color : $v-background-color,
+    $bevel            : first($v-bevel),
+    $gradient         : valo-gradient-style($v-gradient) valo-gradient-opacity($v-gradient)/4,
+    $border           : $v-panel-border
+  ) {
+  @include box-sizing(border-box);
+  padding: 0 round($v-unit-size/3);
+  line-height: $v-unit-size - first-number($v-border);
+  $bg: $background-color;
+  border-bottom: valo-border($border: $border, $color: $bg, $strength: 0.5);
+  @include valo-gradient($color: $bg, $gradient: $gradient);
+  color: valo-font-color($bg);
+  font-weight: $v-caption-font-weight;
+  font-size: $v-caption-font-size;
+  @include box-shadow(valo-bevel-and-shadow($background-color: $bg, $bevel: $bevel, $gradient: $gradient));
+  text-shadow: valo-text-shadow(valo-font-color($bg), $bg, $v-bevel);
+}
+
+
+
+@mixin valo-panel-well-style ($shadow: (0 1px 0 0 v-tint, join(inset, $v-shadow))) {
+  $bg: scale-color(adjust-color($v-background-color, $lightness: -2%), $saturation: -1.5%);
+  background: $bg;
+  color: valo-font-color($bg);
+  @include box-shadow(valo-bevel-and-shadow($shadow: $shadow));
+  border-radius: $v-border-radius;
+  border: valo-border();
+
+  > div > .v-panel-caption {
+    background: transparent;
+    @include box-shadow(none);
+  }
+}
+
+
+
+@mixin valo-panel-borderless-style {
+  background: transparent;
+  color: inherit;
+  border: none;
+  border-radius: 0;
+  @include box-shadow(none);
+
+  > div > .v-panel-caption {
+    background: transparent;
+    @include box-shadow(none);
+    color: inherit;
+    padding: 0;
+    margin: 0 round($v-unit-size/3);
+    border-bottom: none;
+  }
+}
+
+
+
+@mixin valo-panel-scroll-divider-style ($border-width: max(1px, first-number($v-panel-border))) {
+  > .v-panel-captionwrap {
+    position: relative;
+    z-index: 2;
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: -$border-width;
+      right: 0;
+      left: 0;
+      height: 0;
+      border-top: $border-width solid first-color(valo-border($color: $v-app-background-color, $strength: 0.5));
+    }
+  }
+
+  > .v-panel-content {
+    &:before {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      height: 0;
+      border-top: $border-width solid $v-app-background-color;
+      left: 0;
+      right: 0;
+    }
+  }
+}
+
+
+
+@mixin valo-panel-adjust-content-margins {
+  > .v-margin-top {
+    padding-top: round($v-unit-size/3);
+  }
+
+  > .v-margin-right {
+    padding-right: round($v-unit-size/3);
+  }
+
+  > .v-margin-bottom {
+    padding-bottom: round($v-unit-size/3);
+  }
+
+  > .v-margin-left {
+    padding-left: round($v-unit-size/3);
+  }
+}

@@ -1,0 +1,86 @@
+@mixin valo-twincolselect ($primary-stylename: v-select-twincol) {
+
+  .#{$primary-stylename} {
+    white-space: normal;
+
+    select {
+      @include valo-nativeselect-select-style;
+    }
+
+    .v-textfield,
+    .v-nativebutton {
+     width: auto !important;
+     margin-top: round($v-unit-size/4);
+    }
+
+    .v-nativebutton {
+      margin-left: round($v-unit-size/4);
+    }
+  }
+
+  .#{$primary-stylename}-caption-left,
+  .#{$primary-stylename}-caption-right {
+    @include valo-caption-style;
+  }
+
+  .#{$primary-stylename}-buttons {
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    min-width: 3.5em;
+
+    .v-button {
+      @include valo-widget-style;
+      position: absolute;
+      left: round($v-unit-size/4);
+      right: round($v-unit-size/4);
+      top: $v-unit-size - first-number($v-border);
+      padding: 0;
+      text-align: center;
+
+      &:first-child {
+        top: 0;
+      }
+    }
+
+    .v-button-caption {
+      display: none;
+    }
+
+    .v-button:focus {
+      z-index: 1;
+    }
+
+    @if $v-border-radius > 0 {
+      .v-button:first-child {
+        border-radius: $v-border-radius $v-border-radius 0 0;
+      }
+
+      .v-button:last-child {
+        border-radius: 0 0 $v-border-radius $v-border-radius;
+      }
+    }
+
+    .v-button-wrap:before {
+      @include valo-twincolselect-remove-icon-style;
+    }
+
+    .v-button:first-child .v-button-wrap:before {
+      @include valo-twincolselect-add-icon-style;
+    }
+  }
+
+}
+
+
+
+@mixin valo-twincolselect-add-icon-style {
+  font-family: FontAwesome;
+  content: "\f054";
+}
+
+@mixin valo-twincolselect-remove-icon-style {
+  font-family: FontAwesome;
+  content: "\f053";
+}

@@ -96,6 +96,11 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     }
 
     @Override
+    protected AbstractTextFieldState getState(boolean markAsDirty) {
+        return (AbstractTextFieldState) super.getState(markAsDirty);
+    }
+
+    @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
 
@@ -311,7 +316,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @return the maxLength
      */
     public int getMaxLength() {
-        return getState().maxLength;
+        return getState(false).maxLength;
     }
 
     /**
@@ -333,7 +338,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @return the number of columns in the editor.
      */
     public int getColumns() {
-        return getState().columns;
+        return getState(false).columns;
     }
 
     /**
@@ -358,7 +363,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @return the current input prompt, or null if not enabled
      */
     public String getInputPrompt() {
-        return getState().inputPrompt;
+        return getState(false).inputPrompt;
     }
 
     /**

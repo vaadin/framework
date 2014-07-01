@@ -126,6 +126,7 @@ public interface Constants {
     static final String SERVLET_PARAMETER_PUSH_MODE = "pushMode";
     static final String SERVLET_PARAMETER_UI_PROVIDER = "UIProvider";
     static final String SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING = "legacyPropertyToString";
+    static final String SERVLET_PARAMETER_SYNC_ID_CHECK = "syncIdCheck";
 
     // Configurable parameter names
     static final String PARAMETER_VAADIN_RESOURCES = "Resources";

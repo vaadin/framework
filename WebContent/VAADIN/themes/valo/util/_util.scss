@@ -1,0 +1,27 @@
+// Align element vertically inside
+@mixin valo-vertical-align-guide ($to-align: (), $align: middle, $pseudo-element: after) {
+  &:#{$pseudo-element} {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 100%;
+    vertical-align: middle;
+  }
+
+  @if length($to-align) > 0 {
+    @each $selector in $to-align {
+      & > #{$selector} {
+        vertical-align: $align;
+      }
+    }
+  }
+}
+
+
+
+@mixin valo-tappable {
+  @include user-select(none);
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+  cursor: pointer;
+}

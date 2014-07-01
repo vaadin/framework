@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,6 +19,7 @@ import java.util.Collection;
 
 import com.google.gwt.core.client.JsArrayString;
 import com.vaadin.client.JsArrayObject;
+import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.JSONSerializer;
 
 public class Type {
@@ -47,7 +48,11 @@ public class Type {
 
     public Object createInstance() throws NoDataException {
         Invoker invoker = TypeDataStore.getConstructor(this);
-        return invoker.invoke(null);
+        Object ret = invoker.invoke(null);
+        if (ret instanceof ServerConnector) {
+            ConnectorBundleLoader.get().cval(name);
+        }
+        return ret;
     }
 
     public Method getMethod(String name) {
@@ -57,7 +62,7 @@ public class Type {
     /**
      * @return
      * @throws NoDataException
-     * 
+     *
      * @deprecated As of 7.0.1, use {@link #getPropertiesAsArray()} instead for
      *             improved performance
      */
@@ -96,7 +101,7 @@ public class Type {
      * returned string may change without notice and should not be used for any
      * other purpose than identification. The signature is currently based on
      * the fully qualified name of the type.
-     * 
+     *
      * @return the unique signature of this type
      */
     public String getSignature() {

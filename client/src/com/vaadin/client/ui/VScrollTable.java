@@ -1082,18 +1082,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         selected = true;
                         keyboardSelectionOverRowFetchInProgress = true;
                     }
-                    if (isSingleSelectMode() && selected) {
+                    if (selected) {
 
                         if (focusedRow == null
                                 || !selectedRowKeys.contains(focusedRow
                                         .getKey())) {
                             /*
-                             * The focus is no longer on a selected row. If we
-                             * are in single select mode, move focus to the
-                             * selected row. (#10522)
-                             * 
-                             * Don't modify the focused row when in multiselect
-                             * mode. (#13341)
+                             * The focus is no longer on a selected row. Move
+                             * focus to the selected row. (#10522)
                              */
 
                             setRowFocus(row);
@@ -6697,7 +6693,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 colIndex = 0;
                 while (headCells.hasNext()) {
                     HeaderCell hc = (HeaderCell) headCells.next();
-                    if (!hc.isDefinedWidth()) {
+                    if (!hc.isResizing && !hc.isDefinedWidth()) {
                         setColWidth(colIndex, hc.getWidthWithIndent() + availW
                                 - checksum, false);
                         break;
@@ -7266,7 +7262,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // Set new focused row
             focusedRow = row;
 
-            ensureRowIsVisible(row);
+            /*
+             * Don't scroll to the focused row when in multiselect mode.
+             * (#13341)
+             */
+
+            if (isSingleSelectMode()) {
+                ensureRowIsVisible(row);
+            }
 
             return true;
         }

@@ -1,0 +1,31 @@
+@mixin valo-nativeselect ($primary-stylename: v-select) {
+  .#{$primary-stylename} select {
+    @include valo-nativeselect-select-style;
+  }
+
+  .#{$primary-stylename}-select {
+    display: block;
+
+    + .v-textfield {
+      width: auto !important;
+      margin-top: round($v-unit-size/4);
+
+      + .v-nativebutton {
+        margin-top: round($v-unit-size/4);
+        margin-left: round($v-unit-size/4);
+      }
+    }
+  }
+}
+
+
+
+@mixin valo-nativeselect-select-style {
+  border: valo-border();
+  @include valo-gradient;
+
+  &:focus {
+    outline: none;
+    @include valo-focus-style($include-box-shadow: true);
+  }
+}

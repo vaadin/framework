@@ -547,42 +547,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return DEFAULT_THEME_NAME;
     }
 
-    private void handleServiceSecurityException(VaadinServletRequest request,
-            VaadinServletResponse response) throws IOException,
-            ServletException {
-
-        try {
-            /*
-             * We might have a UI, but we don't want to leak any information in
-             * this case so just use the info provided in the request.
-             */
-            SystemMessages ci = getService().getSystemMessages(
-                    request.getLocale(), request);
-            if (ServletPortletHelper.isUIDLRequest(request)) {
-                // send uidl redirect
-                getService().writeStringResponse(
-                        response,
-                        JsonConstants.JSON_CONTENT_TYPE,
-                        VaadinService.createCriticalNotificationJSON(
-                                ci.getCommunicationErrorCaption(),
-                                ci.getCommunicationErrorMessage(),
-                                INVALID_SECURITY_KEY_MSG,
-                                ci.getCommunicationErrorURL()));
-            } else if (ServletPortletHelper.isHeartbeatRequest(request)) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN,
-                        "Forbidden");
-            } else {
-                // 'plain' http req - e.g. browser reload;
-                // just go ahead redirect the browser
-                response.sendRedirect(ci.getCommunicationErrorURL());
-            }
-        } catch (SystemMessageException ee) {
-            throw new ServletException(ee);
-        }
-
-        log("Invalid security key received from " + request.getRemoteHost());
-    }
-
     /**
      * Check if this is a request for a static resource and, if it is, serve the
      * resource to the client.

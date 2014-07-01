@@ -198,6 +198,11 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         return (FormState) super.getState();
     }
 
+    @Override
+    protected FormState getState(boolean markAsDirty) {
+        return (FormState) super.getState(markAsDirty);
+    }
+
     /* Documented in interface */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
@@ -775,7 +780,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @return the Layout of the form.
      */
     public Layout getLayout() {
-        return (Layout) getState().layout;
+        return (Layout) getState(false).layout;
     }
 
     /**
@@ -1054,8 +1059,9 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @return the Field.
      */
     private Field<?> getFirstFocusableField() {
-        if (getItemPropertyIds() != null) {
-            for (Object id : getItemPropertyIds()) {
+        Collection<?> itemPropertyIds = getItemPropertyIds();
+        if (itemPropertyIds != null && itemPropertyIds.size() > 0) {
+            for (Object id : itemPropertyIds) {
                 if (id != null) {
                     Field<?> field = getField(id);
                     if (field.isEnabled() && !field.isReadOnly()) {
@@ -1065,7 +1071,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
             }
             // fallback: first field if none of the fields is enabled and
             // writable
-            Object id = getItemPropertyIds().iterator().next();
+            Object id = itemPropertyIds.iterator().next();
             if (id != null) {
                 return getField(id);
             }
@@ -1214,7 +1220,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      *         is used
      */
     public Layout getFooter() {
-        return (Layout) getState().footer;
+        return (Layout) getState(false).footer;
     }
 
     /**

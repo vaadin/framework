@@ -46,9 +46,11 @@ public class ComboBoxSetNullWhenNewItemsAllowedTest extends MultiBrowserTest {
         assertEquals("New value", element.getAttribute("value"));
         if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
             new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+            Thread.sleep(500);
         } else {
             element.sendKeys(Keys.RETURN);
         }
+
         assertEquals("", element.getAttribute("value"));
     }
 }

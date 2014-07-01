@@ -1,0 +1,22 @@
+@mixin valo-absolutelayout ($primary-stylename: v-absolutelayout) {
+  
+  .#{$primary-stylename}-wrapper {
+    position: absolute;
+  }
+  
+  .#{$primary-stylename}-margin,
+  .#{$primary-stylename}-canvas {
+    @include box-sizing(border-box);
+  }
+  
+  .#{$primary-stylename}.v-has-height > div,
+  .#{$primary-stylename}.v-has-height .#{$primary-stylename}-margin {
+    height: 100%;
+  }
+  
+  .#{$primary-stylename}.v-has-height > div,
+  .#{$primary-stylename}.v-has-width .#{$primary-stylename}-margin {
+    width: 100%;
+  }
+  
+}

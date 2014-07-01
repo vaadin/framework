@@ -17,14 +17,13 @@
 package com.vaadin.client.ui;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.EventObject;
 import java.util.Iterator;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -33,6 +32,8 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.AnimationUtil;
+import com.vaadin.client.AnimationUtil.AnimationEndListener;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.UIDL;
@@ -53,6 +54,14 @@ public class VNotification extends VOverlay {
     public static final Position BOTTOM_LEFT = Position.BOTTOM_LEFT;
     public static final Position BOTTOM_RIGHT = Position.BOTTOM_RIGHT;
 
+    private static final String STYLENAME_POSITION_TOP = "v-position-top";
+    private static final String STYLENAME_POSITION_RIGHT = "v-position-right";
+    private static final String STYLENAME_POSITION_BOTTOM = "v-position-bottom";
+    private static final String STYLENAME_POSITION_LEFT = "v-position-left";
+    private static final String STYLENAME_POSITION_MIDDLE = "v-position-middle";
+    private static final String STYLENAME_POSITION_CENTER = "v-position-center";
+    private static final String STYLENAME_POSITION_ASSISTIVE = "v-position-assistive";
+
     /**
      * Position that is only accessible for assistive devices, invisible for
      * visual users.
@@ -66,16 +75,11 @@ public class VNotification extends VOverlay {
     private static final int mouseMoveThreshold = 7;
     private static final int Z_INDEX_BASE = 20000;
     public static final String STYLE_SYSTEM = "system";
-    private static final int FADE_ANIMATION_INTERVAL = 50; // == 20 fps
 
     private static final ArrayList<VNotification> notifications = new ArrayList<VNotification>();
 
-    private int startOpacity = 90;
-    private int fadeMsec = 400;
-    private int delayMsec = 1000;
-
-    private Timer fader;
-    private Timer delay;
+    private boolean infiniteDelay = false;
+    private int hideDelay = 0;
 
     private int x = -1;
     private int y = -1;
@@ -103,13 +107,14 @@ public class VNotification extends VOverlay {
     @Deprecated
     public VNotification(int delayMsec) {
         this();
-        this.delayMsec = delayMsec;
+        setDelay(delayMsec);
+
         if (BrowserInfo.get().isTouchDevice()) {
             new Timer() {
                 @Override
                 public void run() {
                     if (isAttached()) {
-                        fade();
+                        hide();
                     }
                 }
             }.schedule(delayMsec + TOUCH_DEVICE_IDLE_DELAY);
@@ -127,24 +132,17 @@ public class VNotification extends VOverlay {
     @Deprecated
     public VNotification(int delayMsec, int fadeMsec, int startOpacity) {
         this(delayMsec);
-        this.fadeMsec = fadeMsec;
-        this.startOpacity = startOpacity;
+        AnimationUtil.setAnimationDuration(getElement(), fadeMsec + "ms");
+        getElement().getStyle().setOpacity(startOpacity / 100);
     }
 
-    public void startDelay() {
-        DOM.removeEventPreview(this);
-        if (delayMsec > 0) {
-            if (delay == null) {
-                delay = new Timer() {
-                    @Override
-                    public void run() {
-                        fade();
-                    }
-                };
-                delay.schedule(delayMsec);
-            }
-        } else if (delayMsec == 0) {
-            fade();
+    private void setDelay(int delayMsec) {
+        if (delayMsec < 0) {
+            infiniteDelay = true;
+            hideDelay = 0;
+        } else {
+            infiniteDelay = false;
+            hideDelay = delayMsec;
         }
     }
 
@@ -237,15 +235,21 @@ public class VNotification extends VOverlay {
     }
 
     public void show(Position position, String style) {
-        setOpacity(getElement(), startOpacity);
-        if (style != null) {
+        if (temporaryStyle != null) {
+            removeStyleName(temporaryStyle);
+            removeStyleDependentName(temporaryStyle);
+            temporaryStyle = null;
+        }
+        if (style != null && style.length() > 0) {
             temporaryStyle = style;
             addStyleName(style);
             addStyleDependentName(style);
         }
-        super.show();
-        notifications.add(this);
+
         setPosition(position);
+        super.show();
+        updatePositionOffsets(position);
+        notifications.add(this);
         positionOrSizeUpdated();
         /**
          * Android 4 fails to render notifications correctly without a little
@@ -258,149 +262,144 @@ public class VNotification extends VOverlay {
 
     @Override
     public void hide() {
-        DOM.removeEventPreview(this);
-        cancelDelay();
-        cancelFade();
-        if (temporaryStyle != null) {
-            removeStyleName(temporaryStyle);
-            removeStyleDependentName(temporaryStyle);
-            temporaryStyle = null;
-        }
-        super.hide();
-        notifications.remove(this);
-        fireEvent(new HideEvent(this));
-    }
+        // Run only once
+        if (notifications.contains(this)) {
+            DOM.removeEventPreview(this);
 
-    public void fade() {
-        DOM.removeEventPreview(this);
-        cancelDelay();
-        if (fader == null) {
-            fader = new Timer() {
-                private final long start = new Date().getTime();
-
-                @Override
-                public void run() {
-                    /*
-                     * To make animation smooth, don't count that event happens
-                     * on time. Reduce opacity according to the actual time
-                     * spent instead of fixed decrement.
-                     */
-                    long now = new Date().getTime();
-                    long timeEplaced = now - start;
-                    float remainingFraction = 1 - timeEplaced
-                            / (float) fadeMsec;
-                    int opacity = (int) (startOpacity * remainingFraction);
-                    if (opacity <= 0) {
-                        cancel();
-                        hide();
-                    } else {
-                        setOpacity(getElement(), opacity);
+            // Still animating in, wait for it to finish before touching
+            // the animation delay (which would restart the animation-in
+            // in some browsers)
+            if (getStyleName().contains(
+                    VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                AnimationUtil.addAnimationEndListener(getElement(),
+                        new AnimationEndListener() {
+                            @Override
+                            public void onAnimationEnd(NativeEvent event) {
+                                if (AnimationUtil
+                                        .getAnimationName(event)
+                                        .contains(
+                                                VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                                    VNotification.this.hide();
+                                }
+                            }
+                        });
+            } else {
+                // Use a timer in browsers without CSS animation support
+                // to show the notification for the duration of the delay
+                if (BrowserInfo.get().isIE8() || BrowserInfo.get().isIE9()) {
+                    new Timer() {
+                        @Override
+                        public void run() {
+                            VNotification.super.hide();
+                        }
+                    }.schedule(hideDelay);
+                } else {
+                    if (hideDelay > 0) {
+                        AnimationUtil.setAnimationDelay(getElement(), hideDelay
+                                + "ms");
                     }
+                    VNotification.super.hide();
+
                 }
-            };
-            fader.scheduleRepeating(FADE_ANIMATION_INTERVAL);
+                fireEvent(new HideEvent(this));
+                notifications.remove(this);
+            }
         }
     }
 
-    public void setPosition(com.vaadin.shared.Position position) {
+    private void updatePositionOffsets(com.vaadin.shared.Position position) {
         final Element el = getElement();
+
+        // Remove all offsets (GWT PopupPanel defaults)
         el.getStyle().clearTop();
         el.getStyle().clearLeft();
-        el.getStyle().clearBottom();
-        el.getStyle().clearRight();
+
         switch (position) {
-        case TOP_LEFT:
-            el.getStyle().setTop(0, Unit.PX);
-            el.getStyle().setLeft(0, Unit.PX);
-            break;
-        case TOP_RIGHT:
-            el.getStyle().setTop(0, Unit.PX);
-            el.getStyle().setRight(0, Unit.PX);
-            break;
         case MIDDLE_LEFT:
-            center();
-            el.getStyle().setLeft(0, Unit.PX);
-            break;
         case MIDDLE_RIGHT:
             center();
             el.getStyle().clearLeft();
-            el.getStyle().setRight(0, Unit.PX);
-            break;
-        case BOTTOM_RIGHT:
-            // Avoiding strings would be ugly since another Position is imported
-            // TODO this is most likely redundant
-            el.getStyle().setProperty("position", "absolute");
-
-            el.getStyle().setBottom(0, Unit.PX);
-            el.getStyle().setRight(0, Unit.PX);
-            break;
-        case BOTTOM_LEFT:
-            el.getStyle().setBottom(0, Unit.PX);
-            el.getStyle().setLeft(0, Unit.PX);
             break;
         case TOP_CENTER:
-            center();
-            el.getStyle().setTop(0, Unit.PX);
-            break;
         case BOTTOM_CENTER:
             center();
             el.getStyle().clearTop();
-            el.getStyle().setBottom(0, Unit.PX);
             break;
-        case ASSISTIVE:
-            el.getStyle().setTop(-2000, Unit.PX);
-            el.getStyle().setLeft(-2000, Unit.PX);
-            break;
-        default:
         case MIDDLE_CENTER:
             center();
             break;
         }
     }
 
-    private void cancelFade() {
-        if (fader != null) {
-            fader.cancel();
-            fader = null;
-        }
-    }
+    public void setPosition(com.vaadin.shared.Position position) {
+        final Element el = getElement();
 
-    private void cancelDelay() {
-        if (delay != null) {
-            delay.cancel();
-            delay = null;
-        }
-    }
+        // Remove any previous positions
+        el.removeClassName(STYLENAME_POSITION_TOP);
+        el.removeClassName(STYLENAME_POSITION_RIGHT);
+        el.removeClassName(STYLENAME_POSITION_BOTTOM);
+        el.removeClassName(STYLENAME_POSITION_LEFT);
+        el.removeClassName(STYLENAME_POSITION_MIDDLE);
+        el.removeClassName(STYLENAME_POSITION_CENTER);
+        el.removeClassName(STYLENAME_POSITION_ASSISTIVE);
 
-    private void setOpacity(Element el, int opacity) {
-        el.getStyle().setOpacity(opacity / 100.0);
-        if (BrowserInfo.get().isIE()) {
-            el.getStyle().setProperty("filter",
-                    "Alpha(opacity=" + opacity + ")");
+        switch (position) {
+        case TOP_LEFT:
+            el.addClassName(STYLENAME_POSITION_TOP);
+            el.addClassName(STYLENAME_POSITION_LEFT);
+            break;
+        case TOP_RIGHT:
+            el.addClassName(STYLENAME_POSITION_TOP);
+            el.addClassName(STYLENAME_POSITION_RIGHT);
+            break;
+        case MIDDLE_LEFT:
+            el.addClassName(STYLENAME_POSITION_MIDDLE);
+            el.addClassName(STYLENAME_POSITION_LEFT);
+            break;
+        case MIDDLE_RIGHT:
+            el.addClassName(STYLENAME_POSITION_MIDDLE);
+            el.addClassName(STYLENAME_POSITION_RIGHT);
+            break;
+        case BOTTOM_RIGHT:
+            el.addClassName(STYLENAME_POSITION_BOTTOM);
+            el.addClassName(STYLENAME_POSITION_RIGHT);
+            break;
+        case BOTTOM_LEFT:
+            el.addClassName(STYLENAME_POSITION_BOTTOM);
+            el.addClassName(STYLENAME_POSITION_LEFT);
+            break;
+        case TOP_CENTER:
+            el.addClassName(STYLENAME_POSITION_TOP);
+            el.addClassName(STYLENAME_POSITION_CENTER);
+            break;
+        case BOTTOM_CENTER:
+            el.addClassName(STYLENAME_POSITION_BOTTOM);
+            el.addClassName(STYLENAME_POSITION_CENTER);
+            break;
+        case ASSISTIVE:
+            el.addClassName(STYLENAME_POSITION_ASSISTIVE);
+            break;
         }
     }
 
     @Override
     public void onBrowserEvent(Event event) {
-        DOM.removeEventPreview(this);
-        if (fader == null) {
-            fade();
-        }
+        hide();
     }
 
     @Override
     public boolean onEventPreview(Event event) {
         int type = DOM.eventGetType(event);
         // "modal"
-        if (delayMsec == -1 || temporaryStyle == STYLE_SYSTEM) {
+        if (infiniteDelay || temporaryStyle == STYLE_SYSTEM) {
             if (type == Event.ONCLICK) {
                 if (DOM.isOrHasChild(getElement(), DOM.eventGetTarget(event))) {
-                    fade();
+                    hide();
                     return false;
                 }
             } else if (type == Event.ONKEYDOWN
                     && event.getKeyCode() == KeyCodes.KEY_ESCAPE) {
-                fade();
+                hide();
                 return false;
             }
             if (temporaryStyle == STYLE_SYSTEM) {
@@ -412,25 +411,24 @@ public class VNotification extends VOverlay {
         // default
         switch (type) {
         case Event.ONMOUSEMOVE:
-
             if (x < 0) {
                 x = DOM.eventGetClientX(event);
                 y = DOM.eventGetClientY(event);
             } else if (Math.abs(DOM.eventGetClientX(event) - x) > mouseMoveThreshold
                     || Math.abs(DOM.eventGetClientY(event) - y) > mouseMoveThreshold) {
-                startDelay();
+                hide();
             }
             break;
         case Event.ONMOUSEDOWN:
         case Event.ONMOUSEWHEEL:
         case Event.ONSCROLL:
-            startDelay();
+            hide();
             break;
         case Event.ONKEYDOWN:
             if (event.getRepeat()) {
                 return true;
             }
-            startDelay();
+            hide();
             break;
         default:
             break;
@@ -511,17 +509,17 @@ public class VNotification extends VOverlay {
     public static VNotification createNotification(int delayMsec, Widget owner) {
         final VNotification notification = GWT.create(VNotification.class);
         notification.setWaiAriaRole(null);
+        notification.setDelay(delayMsec);
 
-        notification.delayMsec = delayMsec;
         if (BrowserInfo.get().isTouchDevice()) {
             new Timer() {
                 @Override
                 public void run() {
                     if (notification.isAttached()) {
-                        notification.fade();
+                        notification.hide();
                     }
                 }
-            }.schedule(notification.delayMsec + TOUCH_DEVICE_IDLE_DELAY);
+            }.schedule(delayMsec + TOUCH_DEVICE_IDLE_DELAY);
         }
         notification.setOwner(owner);
         return notification;

@@ -1,0 +1,109 @@
+@mixin valo-escalator($primaryStyleName : v-escalator) {
+
+$background-color: white;
+$border-color: #aaa;
+
+.#{$primaryStyleName} {
+  position: relative;
+  background-color: $background-color;
+}
+
+.#{$primaryStyleName}-scroller {
+  position: absolute;
+  overflow: auto;
+  z-index: 20;
+}
+
+.#{$primaryStyleName}-scroller-horizontal {
+  left: 0; /* Left position adjusted to align with frozen columns */
+  right: 0;
+  bottom: 0;
+  overflow-y: hidden;
+  -ms-overflow-y: hidden;
+}
+
+.#{$primaryStyleName}-scroller-vertical {
+  right: 0;
+  top: 0;    /* this will be overridden by code, but it's a good default behavior */
+  bottom: 0; /* this will be overridden by code, but it's a good default behavior */
+  overflow-x: hidden;
+  -ms-overflow-x: hidden;
+}
+
+.#{$primaryStyleName}-tablewrapper {
+  position: absolute;
+  overflow: hidden;
+}
+
+.#{$primaryStyleName}-tablewrapper > table {
+  border-spacing: 0;
+  table-layout: fixed;
+  width: inherit; /* a decent default fallback */
+}
+
+.#{$primaryStyleName}-header,
+.#{$primaryStyleName}-body,
+.#{$primaryStyleName}-footer {
+  position: absolute;
+  left: 0;
+  width: inherit;
+  z-index: 10;
+}
+
+.#{$primaryStyleName}-header { top: 0; }
+.#{$primaryStyleName}-footer { bottom: 0; }
+
+.#{$primaryStyleName}-body {
+  z-index: 0;
+  top: 0;
+  
+  .#{$primaryStyleName}-row {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.#{$primaryStyleName}-row {
+  display: block;
+  
+  .v-ie8 & {
+    /* IE8 doesn't let table rows be longer than body only with display block. Moar hax. */
+    float: left;
+    clear: left;
+    
+    /* 
+     * The inline style of margin-top from the <tbody> to offset the header's dimension is, 
+     * for some strange reason, inherited into each contained <tr>. 
+     * We need to cancel it: 
+     */
+    margin-top: 0;
+  }
+
+  > td, > th {
+    /* IE8 likes the bgcolor here instead of on the row */
+    background-color: $background-color;
+  }
+}
+
+
+.#{$primaryStyleName}-row {
+  width: inherit;
+}
+
+.#{$primaryStyleName}-cell {
+  display: block;
+  float: left;
+  border: 1px solid $border-color;
+  padding: 2px;
+  white-space: nowrap;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.#{$primaryStyleName}-cell.frozen {
+  position: relative;
+  z-index: 0;
+}
+
+}

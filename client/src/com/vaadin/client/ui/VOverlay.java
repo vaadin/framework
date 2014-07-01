@@ -16,14 +16,18 @@
 
 package com.vaadin.client.ui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -33,16 +37,45 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.AnimationUtil;
+import com.vaadin.client.AnimationUtil.AnimationEndListener;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 
 /**
+ * <p>
  * In Vaadin UI this Overlay should always be used for all elements that
  * temporary float over other components like context menus etc. This is to deal
  * stacking order correctly with VWindow objects.
+ * </p>
+ * 
+ * <h3>Shadow</h3>
+ * <p>
+ * The separate shadow element underneath the main overlay element is <strong>
+ * <em>deprecated</em></strong>, and should not be used for new overlay
+ * components. CSS box-shadow should be used instead of a separate shadow
+ * element. Remember to include any vendor-prefixed versions to support all
+ * browsers that you need to. To cover all possible browsers that Vaadin 7
+ * supports, add <code>-webkit-box-shadow</code> and the standard
+ * <code>box-shadow</code> properties.
+ * </p>
+ * 
+ * <p>
+ * For IE8, which doesn't support CSS box-shadow, you can use the proprietary
+ * DropShadow filter. It doesn't provide the exact same features as box-shadow,
+ * but it is suitable for graceful degradation. Other options are to use a
+ * border or a pseudo-element underneath the overlay which mimics a shadow, or
+ * any combination of these.
+ * </p>
+ * 
+ * <p>
+ * Read more about the DropShadow filter from <a
+ * href="http://msdn.microsoft.com/en-us/library/ms532985(v=vs.85).aspx"
+ * >Microsoft Developer Network</a>
+ * </p>
  */
 public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
@@ -119,7 +152,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * Shadow element style. If an extending class wishes to use a different
      * style of shadow, it can use setShadowStyle(String) to give the shadow
      * element a new style name.
+     * 
+     * @deprecated See main JavaDoc for VOverlay
      */
+    @Deprecated
     public static final String CLASSNAME_SHADOW = "v-shadow";
 
     /**
@@ -128,9 +164,16 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      */
     public static final String CLASSNAME_CONTAINER = "v-overlay-container";
 
-    /*
+    public static final String ADDITIONAL_CLASSNAME_ANIMATE_IN = "animate-in";
+    public static final String ADDITIONAL_CLASSNAME_ANIMATE_OUT = "animate-out";
+
+    /**
      * The shadow element for this overlay.
+     * 
+     * @deprecated See main JavaDoc for VOverlay
+     * 
      */
+    @Deprecated
     private Element shadow;
 
     /*
@@ -172,7 +215,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * </pre>
      * 
      * See default theme 'shadow.css' for implementation example.
+     * 
+     * @deprecated See main JavaDoc for VOverlay
      */
+    @Deprecated
     private static final String SHADOW_HTML = "<div aria-hidden=\"true\" class=\"top-left\"></div><div class=\"top\"></div><div class=\"top-right\"></div><div class=\"left\"></div><div class=\"center\"></div><div class=\"right\"></div><div class=\"bottom-left\"></div><div class=\"bottom\"></div><div class=\"bottom-right\"></div>";
 
     /**
@@ -180,6 +226,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      */
     private static final int POPUP_PANEL_ANIMATION_DURATION = 200;
 
+    /**
+     * @deprecated See main JavaDoc for VOverlay
+     */
+    @Deprecated
     private boolean sinkShadowEvents = false;
 
     public VOverlay() {
@@ -197,6 +247,11 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         adjustZIndex();
     }
 
+    /**
+     * @deprecated See main JavaDoc for VOverlay. Use the other constructors
+     *             without the <code>showShadow</code> parameter.
+     */
+    @Deprecated
     public VOverlay(boolean autoHide, boolean modal, boolean showShadow) {
         super(autoHide, modal);
         setShadowEnabled(showShadow);
@@ -210,7 +265,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * 
      * @param enabled
      *            true if shadow should be displayed
+     * 
+     * @deprecated See main JavaDoc for VOverlay
      */
+    @Deprecated
     protected void setShadowEnabled(boolean enabled) {
         if (enabled != isShadowEnabled()) {
             if (enabled) {
@@ -226,6 +284,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
     }
 
+    /**
+     * @deprecated See main JavaDoc for VOverlay
+     */
+    @Deprecated
     protected boolean isShadowEnabled() {
         return shadow != null;
     }
@@ -240,6 +302,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
     }
 
+    /**
+     * @deprecated See main JavaDoc for VOverlay
+     */
+    @Deprecated
     private void removeShadowIfPresent() {
         if (isShadowAttached()) {
             // Remove event listener from the shadow
@@ -249,6 +315,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
     }
 
+    /**
+     * @deprecated See main JavaDoc for VOverlay
+     */
+    @Deprecated
     private boolean isShadowAttached() {
         return isShadowEnabled() && shadow.getParentElement() != null;
     }
@@ -362,13 +432,76 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     @Override
     public void show() {
         current = this;
-        super.show();
+
+        maybeShowWithAnimation();
+
         if (isAnimationEnabled()) {
             new ResizeAnimation().run(POPUP_PANEL_ANIMATION_DURATION);
         } else {
             positionOrSizeUpdated(1.0);
         }
         current = null;
+    }
+
+    private JavaScriptObject animateInListener;
+
+    private boolean maybeShowWithAnimation() {
+        boolean isAttached = isAttached() && isShowing();
+        super.show();
+
+        // Don't animate if already visible or browser is IE8 or IE9 (no CSS
+        // animation support)
+        if (isAttached || BrowserInfo.get().isIE8()
+                || BrowserInfo.get().isIE9()) {
+            return false;
+        } else {
+            // Check if animations are used
+            setVisible(false);
+            addStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
+            if (isShadowEnabled()) {
+                shadow.addClassName(CLASSNAME_SHADOW + "-"
+                        + ADDITIONAL_CLASSNAME_ANIMATE_IN);
+            }
+
+            ComputedStyle cs = new ComputedStyle(getElement());
+            String animationName = AnimationUtil.getAnimationName(cs);
+            if (animationName == null) {
+                animationName = "";
+            }
+            setVisible(true);
+
+            if (animationName.contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                // Disable GWT PopupPanel animation if used
+                setAnimationEnabled(false);
+                animateInListener = AnimationUtil.addAnimationEndListener(
+                        getElement(), new AnimationEndListener() {
+                            @Override
+                            public void onAnimationEnd(NativeEvent event) {
+                                String animationName = AnimationUtil
+                                        .getAnimationName(event);
+                                if (animationName
+                                        .contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                                    AnimationUtil.removeAnimationEndListener(
+                                            getElement(), animateInListener);
+                                    removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                                    if (isShadowEnabled()) {
+                                        shadow.removeClassName(CLASSNAME_SHADOW
+                                                + "-"
+                                                + ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                                    }
+                                }
+                            }
+                        });
+                return true;
+            } else {
+                removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                if (isShadowEnabled()) {
+                    shadow.removeClassName(CLASSNAME_SHADOW + "-"
+                            + ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                }
+                return false;
+            }
+        }
     }
 
     @Override
@@ -414,7 +547,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      *            The new style name for the shadow element. Will be prefixed by
      *            CLASSNAME_SHADOW, e.g. style=='foobar' -> actual style
      *            name=='v-shadow-foobar'.
+     * 
+     * @deprecated See main JavaDoc for VOverlay
      */
+    @Deprecated
     protected void setShadowStyle(String style) {
         if (isShadowEnabled()) {
             shadow.setClassName(CLASSNAME_SHADOW + "-" + style);
@@ -455,17 +591,17 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             return;
         }
         // Calculate proper z-index
-        String zIndex = null;
+        int zIndex = -1;
         try {
             // Odd behaviour with Windows Hosted Mode forces us to use
             // this redundant try/catch block (See dev.vaadin.com #2011)
-            zIndex = DOM.getStyleAttribute(getElement(), "zIndex");
+            zIndex = Integer.parseInt(getElement().getStyle().getZIndex());
         } catch (Exception ignore) {
             // Ignored, will cause no harm
-            zIndex = "1000";
+            zIndex = 1000;
         }
-        if (zIndex == null) {
-            zIndex = "" + Z_INDEX;
+        if (zIndex == -1) {
+            zIndex = Z_INDEX;
         }
         // Calculate position and size
         if (BrowserInfo.get().isIE()) {
@@ -502,7 +638,11 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
     }
 
-    private void updateShadowPosition(final double progress, String zIndex,
+    /**
+     * @deprecated See main JavaDoc for VOverlay
+     */
+    @Deprecated
+    private void updateShadowPosition(final double progress, int zIndex,
             PositionAndSize positionAndSize) {
         // Opera needs some shaking to get parts of the shadow showing
         // properly (ticket #2704)
@@ -514,12 +654,8 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
 
         updatePositionAndSize(shadow, positionAndSize);
-        shadow.getStyle().setProperty("zIndex", zIndex);
-        if (progress < 0.9) {
-            shadow.getStyle().setDisplay(Display.NONE);
-        } else {
-            shadow.getStyle().clearDisplay();
-        }
+        shadow.getStyle().setZIndex(zIndex);
+        shadow.getStyle().setProperty("display", progress < 0.9 ? "none" : "");
 
         // Opera fix, part 2 (ticket #2704)
         if (BrowserInfo.get().isOpera()) {
@@ -582,6 +718,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         sinkShadowEvents();
     }
 
+    /**
+     * @deprecated See main JavaDoc for VOverlay
+     */
+    @Deprecated
     private void sinkShadowEvents() {
         if (isSinkShadowEvents() && isShadowAttached()) {
             // Sink the same events as the actual overlay has sunk
@@ -591,6 +731,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
     }
 
+    /**
+     * @deprecated See main JavaDoc for VOverlay
+     */
+    @Deprecated
     private void unsinkShadowEvents() {
         if (isShadowAttached()) {
             DOM.setEventListener(shadow, null);
@@ -607,7 +751,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * overlay
      * 
      * @param sinkShadowEvents
+     * 
+     * @deprecated See main JavaDoc for VOverlay
      */
+    @Deprecated
     protected void setSinkShadowEvents(boolean sinkShadowEvents) {
         this.sinkShadowEvents = sinkShadowEvents;
         if (sinkShadowEvents) {
@@ -617,6 +764,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
     }
 
+    /**
+     * @deprecated See main JavaDoc for VOverlay
+     */
+    @Deprecated
     protected boolean isSinkShadowEvents() {
         return sinkShadowEvents;
     }
@@ -675,7 +826,9 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         if (ac == null) {
             // could not figure out which one we belong to, styling will
             // probably fail
-            VConsole.error("Could not determine ApplicationConnection for Overlay. Overlay will be attached directly to the root panel");
+            Logger.getLogger(getClass().getSimpleName())
+                    .log(Level.WARNING,
+                            "Could not determine ApplicationConnection for Overlay. Overlay will be attached directly to the root panel");
             return RootPanel.get().getElement();
         } else {
             return getOverlayContainer(ac);
@@ -790,4 +943,94 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
          return $wnd.innerHeight !== undefined ? $wnd.innerHeight :-1;
     }-*/;
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.PopupPanel#hide()
+     */
+    @Override
+    public void hide() {
+        hide(false);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.PopupPanel#hide(boolean)
+     */
+    @Override
+    public void hide(final boolean autoClosed) {
+        if (BrowserInfo.get().isIE8() || BrowserInfo.get().isIE9()) {
+            super.hide(autoClosed);
+        } else {
+            if (getStyleName().contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                AnimationUtil.addAnimationEndListener(getElement(),
+                        new AnimationEndListener() {
+                            @Override
+                            public void onAnimationEnd(NativeEvent event) {
+                                if (AnimationUtil
+                                        .getAnimationName(event)
+                                        .contains(
+                                                ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                                    VOverlay.this.hide(autoClosed);
+                                }
+                            }
+                        });
+            } else {
+                // Check if animations are used
+                addStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_OUT);
+                if (isShadowEnabled()) {
+                    shadow.addClassName(CLASSNAME_SHADOW + "-"
+                            + ADDITIONAL_CLASSNAME_ANIMATE_OUT);
+                }
+                ComputedStyle cs = new ComputedStyle(getElement());
+                String animationName = AnimationUtil.getAnimationName(cs);
+                if (animationName == null) {
+                    animationName = "";
+                }
+
+                if (animationName.contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
+                    // Disable GWT PopupPanel closing animation if used
+                    setAnimationEnabled(false);
+
+                    AnimationUtil.addAnimationEndListener(getElement(),
+                            new AnimationEndListener() {
+                                @Override
+                                public void onAnimationEnd(NativeEvent event) {
+                                    String animationName = AnimationUtil
+                                            .getAnimationName(event);
+                                    if (animationName
+                                            .contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
+                                        AnimationUtil
+                                                .removeAllAnimationEndListeners(getElement());
+                                        // Remove both animation styles just in
+                                        // case
+                                        removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                                        removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_OUT);
+                                        if (isShadowEnabled()) {
+                                            shadow.removeClassName(CLASSNAME_SHADOW
+                                                    + "-"
+                                                    + ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                                            shadow.removeClassName(CLASSNAME_SHADOW
+                                                    + "-"
+                                                    + ADDITIONAL_CLASSNAME_ANIMATE_OUT);
+                                        }
+                                        VOverlay.super.hide(autoClosed);
+                                    }
+                                }
+                            });
+                    // No event previews should happen after the animation has
+                    // started
+                    VOverlay.this.setPreviewingAllNativeEvents(false);
+                } else {
+                    removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_OUT);
+                    if (isShadowEnabled()) {
+                        shadow.removeClassName(CLASSNAME_SHADOW + "-"
+                                + ADDITIONAL_CLASSNAME_ANIMATE_OUT);
+                    }
+                    super.hide(autoClosed);
+                }
+            }
+        }
+    }
 }

@@ -57,6 +57,11 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
         return (MenuBarState) super.getState();
     }
 
+    @Override
+    protected MenuBarState getState(boolean markAsDirty) {
+        return (MenuBarState) super.getState(markAsDirty);
+    }
+
     /** Paint (serialise) the component for the client. */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
@@ -396,7 +401,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
     @Override
     public int getTabIndex() {
-        return getState().tabIndex;
+        return getState(false).tabIndex;
     }
 
     /*

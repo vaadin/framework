@@ -147,7 +147,7 @@ public class BrowserWindowOpener extends AbstractExtension {
      * @return the window target string
      */
     public String getWindowName() {
-        return getState().target;
+        return getState(false).target;
     }
 
     // Avoid breaking url to multiple lines
@@ -171,12 +171,17 @@ public class BrowserWindowOpener extends AbstractExtension {
      * @return
      */
     public String getFeatures() {
-        return getState().features;
+        return getState(false).features;
     }
 
     @Override
     protected BrowserWindowOpenerState getState() {
         return (BrowserWindowOpenerState) super.getState();
+    }
+
+    @Override
+    protected BrowserWindowOpenerState getState(boolean markAsDirty) {
+        return (BrowserWindowOpenerState) super.getState(markAsDirty);
     }
 
     @Override
@@ -226,7 +231,7 @@ public class BrowserWindowOpener extends AbstractExtension {
      * @see #setUriFragment(String)
      */
     public String getUriFragment() {
-        return getState().uriFragment;
+        return getState(false).uriFragment;
     }
 
     /**
@@ -301,7 +306,7 @@ public class BrowserWindowOpener extends AbstractExtension {
         if (name == null) {
             throw new IllegalArgumentException("Null not allowed");
         }
-        return getState().parameters.get(name);
+        return getState(false).parameters.get(name);
     }
 
 }

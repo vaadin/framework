@@ -17,7 +17,7 @@ public class DateFieldReadOnlyTest extends MultiBrowserTest {
     public void readOnlyDateFieldPopupShouldNotOpen() throws IOException, InterruptedException {
         openTestURL();
 
-        compareScreen("readonly");
+        compareScreen("initial");
         toggleReadOnly();
 
         openPopup();

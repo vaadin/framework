@@ -36,9 +36,9 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.window.WindowMode;
+import com.vaadin.shared.ui.window.WindowRole;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
-import com.vaadin.shared.ui.window.WindowRole;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -254,7 +254,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @since 4.0.0
      */
     public int getPositionX() {
-        return getState().positionX;
+        return getState(false).positionX;
     }
 
     /**
@@ -283,7 +283,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @since 4.0.0
      */
     public int getPositionY() {
-        return getState().positionY;
+        return getState(false).positionY;
     }
 
     /**
@@ -661,7 +661,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @return true if this window is modal.
      */
     public boolean isModal() {
-        return getState().modal;
+        return getState(false).modal;
     }
 
     /**
@@ -679,7 +679,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @return true if window is resizable by the end-user, otherwise false.
      */
     public boolean isResizable() {
-        return getState().resizable;
+        return getState(false).resizable;
     }
 
     /**
@@ -688,7 +688,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      *         sizes are recalculated immediately.
      */
     public boolean isResizeLazy() {
-        return getState().resizeLazy;
+        return getState(false).resizeLazy;
     }
 
     /**
@@ -764,7 +764,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      *            true if the window can be dragged by the user
      */
     public boolean isDraggable() {
-        return getState().draggable;
+        return getState(false).draggable;
     }
 
     /**
@@ -1034,7 +1034,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @return array of previously set components
      */
     public Component[] getAssistiveDescription() {
-        Connector[] contentDescription = getState().contentDescription;
+        Connector[] contentDescription = getState(false).contentDescription;
         if (contentDescription == null) {
             return null;
         }
@@ -1068,7 +1068,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @return The accessibility prefix
      */
     public String getAssistivePrefix() {
-        return getState().assistivePrefix;
+        return getState(false).assistivePrefix;
     }
 
     /**
@@ -1093,7 +1093,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @return The accessibility postfix
      */
     public String getAssistivePostfix() {
-        return getState().assistivePostfix;
+        return getState(false).assistivePostfix;
     }
 
     /**
@@ -1124,7 +1124,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @return WAI-ARIA role set for the window
      */
     public WindowRole getAssistiveRole() {
-        return getState().role;
+        return getState(false).role;
     }
 
     /**
@@ -1152,7 +1152,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      *         focus can leave the window
      */
     public boolean isTabStopEnabled() {
-        return getState().assistiveTabStop;
+        return getState(false).assistiveTabStop;
     }
 
     /**
@@ -1193,7 +1193,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @return the top message
      */
     public String getTabStopTopAssistiveText() {
-        return getState().assistiveTabStopTopText;
+        return getState(false).assistiveTabStopTopText;
     }
 
     /**
@@ -1204,6 +1204,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @return the bottom message
      */
     public String getTabStopBottomAssistiveText() {
-        return getState().assistiveTabStopBottomText;
+        return getState(false).assistiveTabStopBottomText;
     }
 }

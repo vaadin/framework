@@ -37,6 +37,7 @@ import com.vaadin.server.JsonPaintTarget;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.LegacyCommunicationManager.ClientCache;
 import com.vaadin.server.SystemMessages;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.ConnectorTracker;
@@ -75,10 +76,11 @@ public class UidlWriter implements Serializable {
     public void write(UI ui, Writer writer, boolean repaintAll, boolean async)
             throws IOException, JSONException {
         VaadinSession session = ui.getSession();
+        VaadinService service = session.getService();
 
         // Purge pending access calls as they might produce additional changes
         // to write out
-        session.getService().runPendingAccessTasks(session);
+        service.runPendingAccessTasks(session);
 
         ArrayList<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
@@ -99,8 +101,12 @@ public class UidlWriter implements Serializable {
 
         uiConnectorTracker.setWritingResponse(true);
         try {
+
+            int syncId = service.getDeploymentConfiguration()
+                    .isSyncIdCheckEnabled() ? uiConnectorTracker
+                    .getCurrentSyncId() : -1;
             writer.write("\"" + ApplicationConstants.SERVER_SYNC_ID + "\": "
-                    + uiConnectorTracker.getCurrentSyncId() + ", ");
+                    + syncId + ", ");
 
             writer.write("\"changes\" : ");
 

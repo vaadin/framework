@@ -1,0 +1,210 @@
+@function valo-overlay-background-color ($context: $v-background-color) {
+  @if is-dark-color($context) {
+    @return darken($context, 3%);
+  }
+  @return lighten($context, 2%);
+}
+
+
+$v-overlay-background-color: valo-overlay-background-color() !default;
+$v-overlay-border-radius: $v-border-radius !default;
+$v-overlay-border-width: first-number($v-border) !default;
+
+$v-overlay-animate-in: valo-overlay-animate-in 120ms !default;
+$v-overlay-animate-out: valo-placeholder-animate-out 120ms, valo-anim-fade-out 120ms !default;
+
+$v-overlay-padding: round($v-unit-size/9) !default;
+$v-overlay-padding-vertical: $v-overlay-padding !default;
+$v-overlay-padding-horizontal: $v-overlay-padding !default;
+
+$v-overlay-shadow: 0 4px 10px 0 (v-shade 2), 0 3px 5px 0 v-shade, 0 0 0 $v-overlay-border-width (v-shade (2.5 - color-luminance($v-background-color)/255 + $v-bevel-depth/100%)) !default;
+
+$v-selection-overlay-background-color: $v-overlay-background-color !default;
+$v-selection-overlay-padding: $v-overlay-padding !default;
+$v-selection-overlay-padding-vertical: $v-selection-overlay-padding !default;
+$v-selection-overlay-padding-horizontal: $v-selection-overlay-padding !default;
+
+$v-selection-item-border-radius: $v-border-radius - 1px !default;
+$v-selection-item-height: ceil($v-unit-size/1.4) !default;
+$v-selection-item-padding-horizontal: ceil($v-unit-size/4) !default;
+$v-selection-item-font-weight: max(400, $v-font-weight);
+$v-selection-item-selection-color: $v-selection-color !default;
+
+
+
+
+
+
+@mixin valo-ie8-shadow($shadow, $element: top) {
+  .#{$element} {
+    $shadow-offset-x: nth($shadow, 1);
+    $shadow-offset-y: nth($shadow, 2);
+    $shadow-blur: nth($shadow, 3);
+    $shadow-spread: 0;
+    @if length($shadow) > 4 {
+      $shadow-spread: nth($shadow, 4);
+    }
+    $shadow-color: last($shadow);
+    $shadow-color-opacity: round(opacity($shadow-color) * 100);
+    $shadow-color: opacify($shadow-color, 1);
+
+    position: absolute;
+    top: $shadow-offset-y - $shadow-blur - $shadow-spread;
+    right: -$shadow-offset-x + $shadow-blur - $shadow-spread;
+    bottom: -$shadow-offset-y + $shadow-blur - $shadow-spread;
+    left: $shadow-offset-x - $shadow-blur - $shadow-spread;
+    background: $shadow-color;
+    filter: alpha(opacity=#{$shadow-color-opacity}) progid:DXImageTransform.Microsoft.blur(pixelradius=#{strip-units($shadow-blur)}, makeShadow=false);
+  }
+}
+
+
+
+
+
+// Not needed in modern browsers
+.v-shadow,
+.v-shadow-window {
+  display: none;
+
+  // In IE8 windows get the same shadow as other overlays
+  .v-ie8 & {
+    display: block;
+
+    // Up to 8 shadows are supported
+    $elements: top, top-left, top-right, left, right, bottom, bottom-left, bottom-right;
+    $shadows: valo-bevel-and-shadow($shadow: $v-overlay-shadow);
+
+    @if type-of(last($shadows)) == color {
+      @include valo-ie8-shadow($shadows);
+    } @else {
+      @for $i from 1 through min(length($elements), length($shadows)) {
+        $shadow: nth($shadows, $i);
+        @if length($shadow) == 2 {
+          $shadow: flatten-list($shadow); // Workaround for a weird issue when sometimes a shadow is appended to a null list
+        }
+        @if length($shadow) > 3 {
+          @include valo-ie8-shadow($shadow: $shadow, $element: nth($elements, $i));
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+@mixin valo-overlay-style (
+    $background-color: $v-overlay-background-color,
+    $shadow: $v-overlay-shadow,
+    $animate-in: $v-overlay-animate-in,
+    $animate-out: $v-overlay-animate-out
+  ) {
+  padding: $v-overlay-padding-vertical $v-overlay-padding-horizontal;
+  border-radius: $v-overlay-border-radius;
+
+  background-color: $background-color;
+  color: valo-font-color($background-color);
+
+  @include box-shadow( valo-bevel-and-shadow($bevel: null, $shadow: $shadow));
+
+  @if $v-animations-enabled {
+    @if $animate-in {
+      &[class*="animate-in"] {
+        @include animation($animate-in);
+      }
+    }
+    @if $animate-out {
+      &[class*="animate-out"] {
+        @include animation($animate-out);
+      }
+    }
+  }
+
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+
+
+
+
+
+@mixin valo-selection-overlay-style ($background-color: $v-selection-overlay-background-color, $animate-in: $v-overlay-animate-in, $animate-out: $v-overlay-animate-out) {
+  @include valo-overlay-style($background-color: $background-color, $animate-in: $animate-in, $animate-out: $animate-out);
+  padding: $v-selection-overlay-padding-vertical $v-selection-overlay-padding-horizontal;
+}
+
+
+
+
+@mixin valo-selection-item-style {
+  cursor: pointer;
+  line-height: $v-selection-item-height;
+  padding: 0 $v-selection-item-padding-horizontal*2 0 $v-selection-item-padding-horizontal;
+  @if $v-selection-item-border-radius > 0 {
+    border-radius: $v-selection-item-border-radius;
+  }
+  font-weight: $v-selection-item-font-weight;
+  white-space: nowrap;
+
+  position: relative;
+  &:active:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    $sat: if(saturation($v-selection-item-selection-color) > 0, 50%, 0%);
+    background: scale-color($v-selection-item-selection-color, $lightness: -30%, $saturation: $sat);
+    @include opacity(.15);
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  .v-icon {
+    max-height: $v-selection-item-height;
+    margin-right: round($v-selection-item-padding-horizontal/2);
+    min-width: 1em;
+  }
+}
+
+
+
+
+@mixin valo-selection-item-selected-style {
+  @include valo-gradient($v-selection-item-selection-color);
+  color: valo-font-color($v-selection-item-selection-color, 0.9);
+}
+
+
+
+
+
+
+
+
+@mixin valo-drag-element {
+  .v-drag-element {
+    @include valo-drag-element-style;
+  }
+}
+
+@mixin valo-drag-element-style ($background-color: $v-app-background-color) {
+  background: $background-color;
+  color: valo-font-color($background-color);
+  @include box-shadow(0 2px 10px rgba(#000, .2));
+  border-radius: $v-border-radius;
+  overflow: hidden;
+  @include opacity(.5);
+
+  // This has the unfortunate side-effect of selecting an the table row where the drag is dropped
+  //pointer-events: none;
+}
