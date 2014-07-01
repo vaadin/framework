@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -38,6 +38,7 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
@@ -72,7 +73,7 @@ public class ConnectorBundle {
     private final Map<JClassType, Set<JMethod>> needsOnStateChange = new HashMap<JClassType, Set<JMethod>>();
 
     private final Set<Property> needsProperty = new HashSet<Property>();
-    private final Set<Property> needsDelegateToWidget = new HashSet<Property>();
+    private final Map<JClassType, Set<Property>> needsDelegateToWidget = new HashMap<JClassType, Set<Property>>();
 
     private ConnectorBundle(String name, ConnectorBundle previousBundle,
             Collection<TypeVisitor> visitors,
@@ -567,23 +568,25 @@ public class ConnectorBundle {
         }
     }
 
-    public void setNeedsDelegateToWidget(Property property) {
-        if (!isNeedsDelegateToWidget(property)) {
-            needsDelegateToWidget.add(property);
+    public void setNeedsDelegateToWidget(Property property, JClassType type) {
+        if (!isNeedsDelegateToWidget(type)) {
+            needsDelegateToWidget.put(type, Sets.newHashSet(property));
+        } else if (!needsDelegateToWidget.get(type).contains(property)) {
+            needsDelegateToWidget.get(type).add(property);
         }
     }
 
-    private boolean isNeedsDelegateToWidget(Property property) {
-        if (needsDelegateToWidget.contains(property)) {
+    private boolean isNeedsDelegateToWidget(JClassType type) {
+        if (needsDelegateToWidget.containsKey(type)) {
             return true;
         } else {
             return previousBundle != null
-                    && previousBundle.isNeedsDelegateToWidget(property);
+                    && previousBundle.isNeedsDelegateToWidget(type);
         }
     }
 
-    public Set<Property> getNeedsDelegateToWidget() {
-        return Collections.unmodifiableSet(needsDelegateToWidget);
+    public Map<JClassType, Set<Property>> getNeedsDelegateToWidget() {
+        return Collections.unmodifiableMap(needsDelegateToWidget);
     }
 
     public void setNeedsOnStateChangeHandler(JClassType type, JMethod method) {

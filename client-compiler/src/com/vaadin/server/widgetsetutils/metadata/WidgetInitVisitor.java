@@ -59,7 +59,7 @@ public class WidgetInitVisitor extends TypeVisitor {
                         .getAnnotation(DelegateToWidget.class);
                 if (delegateToWidget != null) {
                     // Generate meta data required for @DelegateToWidget
-                    bundle.setNeedsDelegateToWidget(property);
+                    bundle.setNeedsDelegateToWidget(property, stateType);
 
                     // Find the delegate target method
                     String methodName = DelegateToWidget.Helper
