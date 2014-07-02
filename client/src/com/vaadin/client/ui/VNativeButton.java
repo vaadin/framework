@@ -104,7 +104,9 @@ public class VNativeButton extends Button implements ClickHandler {
             }
             clickPending = false;
         } else if (event.getTypeInt() == Event.ONFOCUS) {
-            if (BrowserInfo.get().isIE() && clickPending) {
+            if (BrowserInfo.get().isIE()
+                    && BrowserInfo.get().getBrowserMajorVersion() < 11
+                    && clickPending) {
                 /*
                  * The focus event will mess up IE and IE will not trigger the
                  * mouse up event (which in turn triggers the click event) until
