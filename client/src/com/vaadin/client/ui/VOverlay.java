@@ -164,7 +164,13 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      */
     public static final String CLASSNAME_CONTAINER = "v-overlay-container";
 
+    /**
+     * @since 7.3
+     */
     public static final String ADDITIONAL_CLASSNAME_ANIMATE_IN = "animate-in";
+    /**
+     * @since 7.3
+     */
     public static final String ADDITIONAL_CLASSNAME_ANIMATE_OUT = "animate-out";
 
     /**

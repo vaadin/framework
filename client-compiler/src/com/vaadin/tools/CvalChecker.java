@@ -36,19 +36,21 @@ import org.json.JSONObject;
 
 /**
  * This class is able to validate the vaadin CVAL license.
- *
+ * 
  * It reads the developer license file and asks the server to validate the
  * licenseKey. If the license is invalid it throws an exception with the
  * information about the problem and the server response.
+ * 
+ * @since 7.3
  */
 public final class CvalChecker {
 
     /*
      * Class used for binding the JSON gotten from server.
-     *
+     * 
      * It is not in a separate f le, so as it is easier to copy into any product
      * which does not depend on vaadin core.
-     *
+     * 
      * We are using org.json in order not to use additional dependency like
      * auto-beans, gson, etc.
      */
@@ -301,7 +303,7 @@ public final class CvalChecker {
 
     /**
      * Given a product name returns the name of the file with the license key.
-     *
+     * 
      * Traditionally we have delivered license keys with a name like
      * 'vaadin.touchkit.developer.license' but our database product name is
      * 'vaadin-touchkit' so we have to replace '-' by '.' to maintain
@@ -342,7 +344,7 @@ public final class CvalChecker {
 
     /**
      * Validate whether there is a valid license key for a product.
-     *
+     * 
      * @param productName
      *            for example vaadin-touchkit
      * @param productVersion

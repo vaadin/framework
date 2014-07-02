@@ -24,6 +24,7 @@ import com.google.gwt.dom.client.Style;
  * Utility methods for working with CSS transitions and animations.
  * 
  * @author Vaadin Ltd
+ * @since 7.3
  */
 public class AnimationUtil {
 

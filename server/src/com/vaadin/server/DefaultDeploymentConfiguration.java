@@ -53,6 +53,8 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
 
     /**
      * Default value for {@link #isSyncIdCheckEnabled()} = {@value} .
+     * 
+     * @since 7.3
      */
     public static final boolean DEFAULT_SYNC_ID_CHECK = true;
 

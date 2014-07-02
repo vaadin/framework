@@ -1152,7 +1152,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * CSS file will be removed even if there are other UIs on the page which
      * are still using it.
      * 
-     * @since
+     * @since 7.3
      * @param theme
      *            The new theme name
      */

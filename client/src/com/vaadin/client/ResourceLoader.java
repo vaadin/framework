@@ -380,7 +380,7 @@ public class ResourceLoader {
      * script tag. The listener is called whenever loading is complete or an
      * error occurred.
      * 
-     * @since
+     * @since 7.3
      * @param element
      *            the element to attach a listener to
      * @param listener

@@ -18,6 +18,10 @@ package com.vaadin.client.communication;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.shared.communication.URLReference;
 
+/**
+ * @since 7.3
+ * @author Vaadin Ltd
+ */
 public class TranslatedURLReference extends URLReference {
 
     private ApplicationConnection connection;

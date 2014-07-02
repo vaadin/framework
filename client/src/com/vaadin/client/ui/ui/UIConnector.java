@@ -403,7 +403,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     /**
      * Reads CSS strings and resources injected by {@link Styles#inject} from
      * the UIDL stream.
-     *
+     * 
      * @param uidl
      *            The uidl which contains "css-resource" and "css-string" tags
      */
@@ -439,8 +439,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Internal helper to get the <head> tag of the page
-     *
-     * @since
+     * 
+     * @since 7.3
      * @return the head element
      */
     private HeadElement getHead() {
@@ -450,8 +450,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Internal helper for removing any stylesheet with the given URL
-     *
-     * @since
+     * 
+     * @since 7.3
      * @param url
      *            the url to match with existing stylesheets
      */
@@ -581,7 +581,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Checks if the given sub window is a child of this UI Connector
-     *
+     * 
      * @deprecated Should be replaced by a more generic mechanism for getting
      *             non-ComponentConnector children
      * @param wc
@@ -595,7 +595,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     /**
      * Return an iterator for current subwindows. This method is meant for
      * testing purposes only.
-     *
+     * 
      * @return
      */
     public List<WindowConnector> getSubWindows() {
@@ -622,7 +622,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * public API instead of their state object directly. The page state might
      * not be an independent state object but can be embedded in UI state.
      * </p>
-     *
+     * 
      * @since 7.1
      * @return state object of the page
      */
@@ -686,10 +686,10 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Tries to scroll the viewport so that the given connector is in view.
-     *
+     * 
      * @param componentConnector
      *            The connector which should be visible
-     *
+     * 
      */
     public void scrollIntoView(final ComponentConnector componentConnector) {
         if (componentConnector == null) {
@@ -783,7 +783,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Invokes the layout analyzer on the server
-     *
+     * 
      * @since 7.1
      */
     public void analyzeLayouts() {
@@ -794,7 +794,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * Sends a request to the server to print details to console that will help
      * the developer to locate the corresponding server-side connector in the
      * source code.
-     *
+     * 
      * @since 7.1
      * @param serverConnector
      *            the connector to locate
@@ -822,7 +822,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Loads the new theme and removes references to the old theme
-     *
+     * 
      * @param oldTheme
      *            The name of the old theme
      * @param newTheme
@@ -875,7 +875,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     /**
      * Loads the given theme and replaces the given link element with the new
      * theme link element.
-     *
+     * 
      * @param newTheme
      *            The name of the new theme
      * @param newThemeUrl
@@ -924,7 +924,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     /**
      * Activates the new theme. Assumes the theme has been loaded and taken into
      * use in the browser.
-     *
+     * 
      * @since 7.3
      * @param newTheme
      */
@@ -945,9 +945,9 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Force a full recursive recheck of every connector's state variables.
-     *
+     * 
      * @see #forceStateChange()
-     *
+     * 
      * @since 7.3
      */
     protected static void forceStateChangeRecursively(
@@ -968,8 +968,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Internal helper to get the theme URL for a given theme
-     *
-     * @since
+     * 
+     * @since 7.3
      * @param theme
      *            the name of the theme
      * @return The URL the theme can be loaded from
@@ -982,8 +982,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Returns the name of the theme currently in used by the UI
-     *
-     * @since
+     * 
+     * @since 7.3
      * @return the theme name used by this UI
      */
     public String getActiveTheme() {
