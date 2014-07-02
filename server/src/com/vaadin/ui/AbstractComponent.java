@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,6 +37,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Field.ValueChangeEvent;
 import com.vaadin.util.ReflectTools;
 
@@ -45,7 +46,7 @@ import com.vaadin.util.ReflectTools;
  * {@link Component} interface. Basic UI components that are not derived from an
  * external component can inherit this class to easily qualify as Vaadin
  * components. Most components in Vaadin do just that.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -83,7 +84,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     private Unit widthUnit = Unit.PIXELS;
     private Unit heightUnit = Unit.PIXELS;
     private static final Pattern sizePattern = Pattern
-            .compile("^(-?\\d+(\\.\\d+)?)(%|px|em|rem|ex|in|cm|mm|pt|pc)?$");
+            .compile(SharedUtil.SIZE_PATTERN);
 
     /**
      * Keeps track of the Actions added to this component; the actual
@@ -240,7 +241,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Sets the component's caption <code>String</code>. Caption is the visible
      * name of the component. This method will trigger a
      * {@link RepaintRequestEvent}.
-     * 
+     *
      * @param caption
      *            the new caption <code>String</code> for the component.
      */
@@ -271,7 +272,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Sets the locale of this component.
-     * 
+     *
      * <pre>
      * // Component for which the locale is meaningful
      * InlineDateField date = new InlineDateField(&quot;Datum&quot;);
@@ -283,8 +284,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * date.setResolution(DateField.RESOLUTION_DAY);
      * layout.addComponent(date);
      * </pre>
-     * 
-     * 
+     *
+     *
      * @param locale
      *            the locale to become this component's locale.
      */
@@ -310,7 +311,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Sets the component's icon. This method will trigger a
      * {@link RepaintRequestEvent}.
-     * 
+     *
      * @param icon
      *            the icon to be shown with the component's caption.
      */
@@ -376,7 +377,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Sets the component's immediate mode to the specified status.
-     * 
+     *
      * @param immediate
      *            the boolean value specifying if the component should be in the
      *            immediate mode after the call.
@@ -437,11 +438,11 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Sets the component's description. See {@link #getDescription()} for more
      * information on what the description is. This method will trigger a
      * {@link RepaintRequestEvent}.
-     * 
+     *
      * The description is displayed as HTML in tooltips or directly in certain
      * components so care should be taken to avoid creating the possibility for
      * HTML injection and possibly XSS vulnerabilities.
-     * 
+     *
      * @param description
      *            the new description string for the component.
      */
@@ -490,7 +491,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * To find the Window that contains the component, use {@code Window w =
      * getParent(Window.class);}
      * </p>
-     * 
+     *
      * @param <T>
      *            The type of the ancestor
      * @param parentType
@@ -511,7 +512,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Gets the error message for this component.
-     * 
+     *
      * @return ErrorMessage containing the description of the error state of the
      *         component or null, if the component contains no errors. Extending
      *         classes should override this method if they support other error
@@ -524,9 +525,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Gets the component's error message.
-     * 
+     *
      * @link Terminal.ErrorMessage#ErrorMessage(String, int)
-     * 
+     *
      * @return the component's error message.
      */
     public ErrorMessage getComponentError() {
@@ -536,9 +537,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Sets the component's error message. The message may contain certain XML
      * tags, for more information see
-     * 
+     *
      * @link Component.ErrorMessage#ErrorMessage(String, int)
-     * 
+     *
      * @param componentError
      *            the new <code>ErrorMessage</code> of the component.
      */
@@ -615,7 +616,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Build CSS compatible string representation of height.
-     * 
+     *
      * @return CSS height
      */
     private String getCSSHeight() {
@@ -624,7 +625,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Build CSS compatible string representation of width.
-     * 
+     *
      * @return CSS width
      */
     private String getCSSWidth() {
@@ -634,12 +635,12 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Returns the shared state bean with information to be sent from the server
      * to the client.
-     * 
+     *
      * Subclasses should override this method and set any relevant fields of the
      * state returned by super.getState().
-     * 
+     *
      * @since 7.0
-     * 
+     *
      * @return updated component shared state
      */
     @Override
@@ -730,7 +731,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Sets the data object, that can be used for any application specific data.
      * The component does not use or modify this data.
-     * 
+     *
      * @param data
      *            the Application specific data.
      * @since 3.1
@@ -741,7 +742,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Gets the application specific data. See {@link #setData(Object)}.
-     * 
+     *
      * @return the Application specific data set with setData function.
      * @since 3.1
      */
@@ -896,7 +897,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
                 size = -1;
                 unit = Unit.PIXELS;
             } else {
-                String symbol = matcher.group(3);
+                String symbol = matcher.group(2);
                 unit = Unit.getUnitFromSymbol(symbol);
             }
         } else {
@@ -931,7 +932,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Gets the {@link ActionManager} used to manage the
      * {@link ShortcutListener}s added to this {@link Field}.
-     * 
+     *
      * @return the ActionManager in use
      */
     protected ActionManager getActionManager() {
@@ -975,7 +976,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Determine whether a <code>content</code> component is equal to, or the
      * ancestor of this component.
-     * 
+     *
      * @param content
      *            the potential ancestor element
      * @return <code>true</code> if the relationship holds
