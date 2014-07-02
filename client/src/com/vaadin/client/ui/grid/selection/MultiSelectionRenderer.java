@@ -152,16 +152,23 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         private static final int GRADIENT_MIN_THRESHOLD_PX = 10;
 
         /**
+         * The speed at which the gradient area recovers, once scrolling in that
+         * direction has started.
+         */
+        private static final int SCROLL_AREA_REBOUND_PX_PER_SEC = 1;
+        private static final double SCROLL_AREA_REBOUND_PX_PER_MS = SCROLL_AREA_REBOUND_PX_PER_SEC / 1000.0d;
+
+        /**
          * The lowest y-coordinate on the {@link Event#getClientY() client} from
          * where we need to start scrolling towards the top.
          */
-        private final int topBound;
+        private int topBound = -1;
 
         /**
          * The highest y-coordinate on the {@link Event#getClientY() client}
          * from where we need to scrolling towards the bottom.
          */
-        private final int bottomBound;
+        private int bottomBound = -1;
 
         /**
          * <code>true</code> if the pointer is selecting, <code>false</code> if
@@ -204,11 +211,19 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         /** The logical index of the row that was most recently modified. */
         private int logicalRow = -1;
 
+        /** @see #doScrollAreaChecks(int) */
+        private int finalTopBound;
+
+        /** @see #doScrollAreaChecks(int) */
+        private int finalBottomBound;
+
+        private boolean scrollAreaShouldRebound = false;
+
         public AutoScrollerAndSelector(final int topBound,
                 final int bottomBound, final int gradientArea,
                 final boolean selectionPaint) {
-            this.topBound = topBound;
-            this.bottomBound = bottomBound;
+            this.finalTopBound = topBound;
+            this.finalBottomBound = bottomBound;
             this.gradientArea = gradientArea;
             this.selectionPaint = selectionPaint;
         }
@@ -217,6 +232,8 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         public void execute(final double timestamp) {
             final double timeDiff = timestamp - prevTimestamp;
             prevTimestamp = timestamp;
+
+            reboundScrollArea(timeDiff);
 
             pixelsToScroll += scrollSpeed * (timeDiff / 1000.0d);
             final int intPixelsToScroll = (int) pixelsToScroll;
@@ -235,6 +252,28 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
             }
 
             reschedule();
+        }
+
+        /**
+         * If the scroll are has been offset by the pointer starting out there,
+         * move it back a bit
+         */
+        private void reboundScrollArea(double timeDiff) {
+            if (!scrollAreaShouldRebound) {
+                return;
+            }
+
+            int reboundPx = (int) Math.ceil(SCROLL_AREA_REBOUND_PX_PER_MS
+                    * timeDiff);
+            if (topBound < finalTopBound) {
+                topBound += reboundPx;
+                topBound = Math.min(topBound, finalTopBound);
+                updateScrollSpeed(pageY);
+            } else if (bottomBound > finalBottomBound) {
+                bottomBound -= reboundPx;
+                bottomBound = Math.max(bottomBound, finalBottomBound);
+                updateScrollSpeed(pageY);
+            }
         }
 
         private void updateScrollSpeed(final int pointerPageY) {
@@ -282,9 +321,56 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
 
         @SuppressWarnings("hiding")
         public void updatePointerCoords(int pageX, int pageY) {
+            doScrollAreaChecks(pageY);
             updateScrollSpeed(pageY);
             this.pageX = pageX;
             this.pageY = pageY;
+        }
+
+        /**
+         * This method checks whether the first pointer event started in an area
+         * that would start scrolling immediately, and does some actions
+         * accordingly.
+         * <p>
+         * If it is, that scroll area will be offset "beyond" the pointer (above
+         * if pointer is towards the top, otherwise below).
+         * <p>
+         * <span style="font-size:smaller">*) This behavior will change in
+         * future patches (henrik paul 2.7.2014)</span>
+         */
+        private void doScrollAreaChecks(int pageY) {
+            /*
+             * The first run makes sure that neither scroll position is
+             * underneath the finger, but offset to either direction from
+             * underneath the pointer.
+             */
+            if (topBound == -1) {
+                topBound = Math.min(finalTopBound, pageY);
+                bottomBound = Math.max(finalBottomBound, pageY);
+            }
+
+            /*
+             * Subsequent runs make sure that the scroll area grows (but doesn't
+             * shrink) with the finger, but no further than the final bound.
+             */
+            else {
+                int oldTopBound = topBound;
+                if (topBound < finalTopBound) {
+                    topBound = Math.max(topBound,
+                            Math.min(finalTopBound, pageY));
+                }
+
+                int oldBottomBound = bottomBound;
+                if (bottomBound > finalBottomBound) {
+                    bottomBound = Math.min(bottomBound,
+                            Math.max(finalBottomBound, pageY));
+                }
+
+                final boolean topDidNotMove = oldTopBound == topBound;
+                final boolean bottomDidNotMove = oldBottomBound == bottomBound;
+                final boolean wasVerticalMovement = pageY != this.pageY;
+                scrollAreaShouldRebound = (topDidNotMove && bottomDidNotMove && wasVerticalMovement);
+            }
         }
     }
 
