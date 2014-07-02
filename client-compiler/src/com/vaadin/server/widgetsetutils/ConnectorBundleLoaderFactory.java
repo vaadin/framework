@@ -68,6 +68,7 @@ import com.vaadin.server.widgetsetutils.metadata.TypeVisitor;
 import com.vaadin.server.widgetsetutils.metadata.WidgetInitVisitor;
 import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
@@ -454,6 +455,10 @@ public class ConnectorBundleLoaderFactory extends Generator {
             writer.println("var data = {");
             writer.indent();
 
+            if (property.getAnnotation(NoLayout.class) != null) {
+                writer.println("noLayout: 1, ");
+            }
+
             writer.println("setter: function(bean, value) {");
             writer.indent();
             property.writeSetterBody(logger, writer, "bean", "value");
@@ -497,6 +502,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writeParamTypes(w, bundle);
         writeProxys(w, bundle);
         writeDelayedInfo(w, bundle);
+        writeNoLayoutRpcMethods(w, bundle);
 
         w.println("%s(store);", loadNativeJsMethodName);
 
@@ -507,6 +513,22 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writePresentationTypes(w, bundle);
         writeDelegateToWidget(logger, w, bundle);
         writeOnStateChangeHandlers(logger, w, bundle);
+    }
+
+    private void writeNoLayoutRpcMethods(SplittingSourceWriter w,
+            ConnectorBundle bundle) {
+        Map<JClassType, Set<JMethod>> needsNoLayout = bundle
+                .getNeedsNoLayoutRpcMethods();
+        for (Entry<JClassType, Set<JMethod>> entry : needsNoLayout.entrySet()) {
+            JClassType type = entry.getKey();
+
+            for (JMethod method : entry.getValue()) {
+                w.println("store.setNoLayoutRpcMethod(%s, \"%s\");",
+                        getClassLiteralString(type), method.getName());
+            }
+
+            w.splitIfNeeded();
+        }
     }
 
     private void writeOnStateChangeHandlers(TreeLogger logger,

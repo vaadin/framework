@@ -100,6 +100,7 @@ import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.Version;
+import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.SharedState;
@@ -1541,6 +1542,8 @@ public class ApplicationConnection implements HasHandlers {
         }
 
         Command c = new Command() {
+            private boolean onlyNoLayoutUpdates = true;
+
             @Override
             public void execute() {
                 assert syncId == -1 || syncId == lastSeenServerSyncId;
@@ -1630,15 +1633,17 @@ public class ApplicationConnection implements HasHandlers {
                         + (Duration.currentTimeMillis() - processUidlStart)
                         + " ms");
 
-                Profiler.enter("Layout processing");
-                try {
-                    LayoutManager layoutManager = getLayoutManager();
-                    layoutManager.setEverythingNeedsMeasure();
-                    layoutManager.layoutNow();
-                } catch (final Throwable e) {
-                    VConsole.error(e);
+                if (!onlyNoLayoutUpdates) {
+                    Profiler.enter("Layout processing");
+                    try {
+                        LayoutManager layoutManager = getLayoutManager();
+                        layoutManager.setEverythingNeedsMeasure();
+                        layoutManager.layoutNow();
+                    } catch (final Throwable e) {
+                        VConsole.error(e);
+                    }
+                    Profiler.leave("Layout processing");
                 }
-                Profiler.leave("Layout processing");
 
                 if (ApplicationConfiguration.isDebugMode()) {
                     Profiler.enter("Dumping state changes to the console");
@@ -1942,6 +1947,11 @@ public class ApplicationConnection implements HasHandlers {
                         if (connector != null) {
                             continue;
                         }
+
+                        // Always do layouts if there's at least one new
+                        // connector
+                        onlyNoLayoutUpdates = false;
+
                         int connectorType = Integer.parseInt(types
                                 .getString(connectorId));
 
@@ -1982,6 +1992,11 @@ public class ApplicationConnection implements HasHandlers {
 
                 JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
                 int length = changes.length();
+
+                // Must always do layout if there's even a single legacy update
+                if (length != 0) {
+                    onlyNoLayoutUpdates = false;
+                }
 
                 VConsole.log(" * Passing UIDL to Vaadin 6 style connectors");
                 // update paintables
@@ -2111,11 +2126,26 @@ public class ApplicationConnection implements HasHandlers {
                             }
 
                             SharedState state = connector.getState();
+                            Type stateType = new Type(state.getClass()
+                                    .getName(), null);
+
+                            if (onlyNoLayoutUpdates) {
+                                Profiler.enter("updateConnectorState @NoLayout handling");
+                                Set<String> keySet = stateJson.keySet();
+                                for (String propertyName : keySet) {
+                                    Property property = stateType
+                                            .getProperty(propertyName);
+                                    if (!property.isNoLayout()) {
+                                        onlyNoLayoutUpdates = false;
+                                        break;
+                                    }
+                                }
+                                Profiler.leave("updateConnectorState @NoLayout handling");
+                            }
 
                             Profiler.enter("updateConnectorState decodeValue");
-                            JsonDecoder.decodeValue(new Type(state.getClass()
-                                    .getName(), null), stateJson, state,
-                                    ApplicationConnection.this);
+                            JsonDecoder.decodeValue(stateType, stateJson,
+                                    state, ApplicationConnection.this);
                             Profiler.leave("updateConnectorState decodeValue");
 
                             if (Profiler.isEnabled()) {
@@ -2332,6 +2362,10 @@ public class ApplicationConnection implements HasHandlers {
 
                 Profiler.leave("updateConnectorHierarchy detach removed connectors");
 
+                if (result.events.size() != 0) {
+                    onlyNoLayoutUpdates = false;
+                }
+
                 Profiler.leave("updateConnectorHierarchy");
 
                 return result;
@@ -2460,8 +2494,16 @@ public class ApplicationConnection implements HasHandlers {
                     for (int i = 0; i < rpcLength; i++) {
                         try {
                             JSONArray rpcCall = (JSONArray) rpcCalls.get(i);
-                            rpcManager.parseAndApplyInvocation(rpcCall,
-                                    ApplicationConnection.this);
+                            MethodInvocation invocation = rpcManager
+                                    .parseAndApplyInvocation(rpcCall,
+                                            ApplicationConnection.this);
+
+                            if (onlyNoLayoutUpdates
+                                    && !RpcManager.getMethod(invocation)
+                                            .isNoLayout()) {
+                                onlyNoLayoutUpdates = false;
+                            }
+
                         } catch (final Throwable e) {
                             VConsole.error(e);
                         }

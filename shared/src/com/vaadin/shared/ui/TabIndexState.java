@@ -16,6 +16,7 @@
 package com.vaadin.shared.ui;
 
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.annotations.NoLayout;
 
 /**
  * Interface implemented by state classes that support tab indexes.
@@ -29,6 +30,7 @@ public class TabIndexState extends AbstractComponentState {
     /**
      * The <i>tabulator index</i> of the field.
      */
+    @NoLayout
     public int tabIndex = 0;
 
 }

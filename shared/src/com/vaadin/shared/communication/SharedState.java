@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.annotations.NoLayout;
 
 /**
  * Interface to be implemented by all shared state classes used to communicate
@@ -64,6 +65,7 @@ public class SharedState implements Serializable {
     /**
      * A set of event identifiers with registered listeners.
      */
+    @NoLayout
     public Set<String> registeredEventListeners = null;
 
 }

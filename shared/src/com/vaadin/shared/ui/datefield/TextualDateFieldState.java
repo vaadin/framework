@@ -18,6 +18,7 @@ package com.vaadin.shared.ui.datefield;
 import java.util.Date;
 
 import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.annotations.NoLayout;
 
 public class TextualDateFieldState extends AbstractFieldState {
     {
@@ -28,11 +29,13 @@ public class TextualDateFieldState extends AbstractFieldState {
      * Start range that has been cleared, depending on the resolution of the
      * date field
      */
+    @NoLayout
     public Date rangeStart = null;
 
     /*
      * End range that has been cleared, depending on the resolution of the date
      * field
      */
+    @NoLayout
     public Date rangeEnd = null;
 }

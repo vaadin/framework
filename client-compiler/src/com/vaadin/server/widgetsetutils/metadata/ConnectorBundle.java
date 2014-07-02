@@ -73,6 +73,7 @@ public class ConnectorBundle {
     private final Map<JClassType, Set<JMethod>> needsParamTypes = new HashMap<JClassType, Set<JMethod>>();
     private final Map<JClassType, Set<JMethod>> needsDelayedInfo = new HashMap<JClassType, Set<JMethod>>();
     private final Map<JClassType, Set<JMethod>> needsOnStateChange = new HashMap<JClassType, Set<JMethod>>();
+    private final Map<JClassType, Set<JMethod>> needsNoLayoutRpcMethods = new HashMap<JClassType, Set<JMethod>>();
 
     private final Set<Property> needsProperty = new HashSet<Property>();
     private final Map<JClassType, Set<Property>> needsDelegateToWidget = new HashMap<JClassType, Set<Property>>();
@@ -632,6 +633,25 @@ public class ConnectorBundle {
 
     public Map<JClassType, Set<JMethod>> getNeedsOnStateChangeHandler() {
         return Collections.unmodifiableMap(needsOnStateChange);
+    }
+
+    public void setNeedsNoLayoutRpcMethod(JClassType type, JMethod method) {
+        if (!isNeedsNoLayoutRpcMethod(type, method)) {
+            addMapping(needsNoLayoutRpcMethods, type, method);
+        }
+    }
+
+    private boolean isNeedsNoLayoutRpcMethod(JClassType type, JMethod method) {
+        if (hasMapping(needsNoLayoutRpcMethods, type, method)) {
+            return true;
+        } else {
+            return previousBundle != null
+                    && previousBundle.isNeedsNoLayoutRpcMethod(type, method);
+        }
+    }
+
+    public Map<JClassType, Set<JMethod>> getNeedsNoLayoutRpcMethods() {
+        return Collections.unmodifiableMap(needsNoLayoutRpcMethods);
     }
 
     public static JMethod findInheritedMethod(JClassType type,

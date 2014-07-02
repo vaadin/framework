@@ -16,6 +16,7 @@
 package com.vaadin.client.metadata;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.shared.annotations.NoLayout;
 
 public class Property {
     private final Type bean;
@@ -125,6 +126,18 @@ public class Property {
             }
         }
         return b.toString();
+    }
+
+    /**
+     * Checks whether this property is annotated with {@link NoLayout}.
+     * 
+     * @since
+     * 
+     * @return <code>true</code> if this property has a NoLayout annotation;
+     *         otherwise <code>false</code>
+     */
+    public boolean isNoLayout() {
+        return TypeDataStore.isNoLayoutProperty(this);
     }
 
 }

@@ -16,6 +16,7 @@
 
 package com.vaadin.shared.data;
 
+import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.ClientRpc;
 
 /**
@@ -51,6 +52,7 @@ public interface DataProviderRpc extends ClientRpc {
      * @see com.vaadin.shared.ui.grid.GridState#JSONKEY_DATA
      * @see com.vaadin.ui.components.grid.Renderer#encode(Object)
      */
+    @NoLayout
     public void setRowData(int firstRowIndex, String rowDataJson);
 
     /**
@@ -62,6 +64,7 @@ public interface DataProviderRpc extends ClientRpc {
      *            the number of rows removed from <code>firstRowIndex</code> and
      *            onwards
      */
+    @NoLayout
     public void removeRowData(int firstRowIndex, int count);
 
     /**
@@ -72,6 +75,7 @@ public interface DataProviderRpc extends ClientRpc {
      * @param count
      *            the number of rows inserted at <code>firstRowIndex</code>
      */
+    @NoLayout
     public void insertRowData(int firstRowIndex, int count);
 
     /**

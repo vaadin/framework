@@ -25,6 +25,7 @@ import com.vaadin.client.FastStringSet;
 import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.JSONSerializer;
+import com.vaadin.shared.annotations.NoLayout;
 
 public class TypeDataStore {
     private static final String CONSTRUCTOR_NAME = "!new";
@@ -48,6 +49,7 @@ public class TypeDataStore {
 
     private final FastStringSet delayedMethods = FastStringSet.create();
     private final FastStringSet lastOnlyMethods = FastStringSet.create();
+    private final FastStringSet noLayoutRpcMethods = FastStringSet.create();
 
     private final FastStringMap<Type> returnTypes = FastStringMap.create();
     private final FastStringMap<Invoker> invokers = FastStringMap.create();
@@ -345,6 +347,12 @@ public class TypeDataStore {
         return typeData[beanName][propertyName].setter !== undefined;
     }-*/;
 
+    private static native boolean hasNoLayout(JavaScriptObject typeData,
+            String beanName, String propertyName)
+    /*-{
+        return typeData[beanName][propertyName].noLayout !== undefined;
+    }-*/;
+
     private static native Object getJsPropertyValue(JavaScriptObject typeData,
             String beanName, String propertyName, Object beanInstance)
     /*-{
@@ -428,5 +436,51 @@ public class TypeDataStore {
 
             propertyHandlers.add(method);
         }
+    }
+
+    /**
+     * Checks whether the provided method is annotated with {@link NoLayout}.
+     * 
+     * @param method
+     *            the rpc method to check
+     * 
+     * @since
+     * 
+     * @return <code>true</code> if the method has a NoLayout annotation;
+     *         otherwise <code>false</code>
+     */
+    public static boolean isNoLayoutRpcMethod(Method method) {
+        return get().noLayoutRpcMethods.contains(method.getLookupKey());
+    }
+
+    /**
+     * Defines that a method is annotated with {@link NoLayout}.
+     * 
+     * @since
+     * 
+     * @param type
+     *            the where the method is defined
+     * @param methodName
+     *            the name of the method
+     */
+    public void setNoLayoutRpcMethod(Class<?> type, String methodName) {
+        noLayoutRpcMethods.add(new Method(getType(type), methodName)
+                .getLookupKey());
+    }
+
+    /**
+     * Checks whether the provided property is annotated with {@link NoLayout}.
+     * 
+     * @param property
+     *            the property to check
+     * 
+     * @since
+     * 
+     * @return <code>true</code> if the property has a NoLayout annotation;
+     *         otherwise <code>false</code>
+     */
+    public static boolean isNoLayoutProperty(Property property) {
+        return hasNoLayout(get().jsTypeData, property.getBeanType()
+                .getSignature(), property.getName());
     }
 }
