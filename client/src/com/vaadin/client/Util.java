@@ -73,6 +73,7 @@ public class Util {
      *
      * @param event
      * @return return key code
+     * @since 7.2.4
      */
     public static int getKeyCode(KeyEvent<?> event) {
         int keyCode = event.getNativeEvent().getKeyCode();

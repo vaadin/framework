@@ -221,6 +221,7 @@ public class ResourceLoader {
      *            listener to notify when script is loaded
      * @param async
      *            What mode the script.async attribute should be set to
+     * @since 7.2.4
      */
     public void loadScript(final String scriptUrl,
             final ResourceLoadListener resourceLoadListener, boolean async) {
@@ -279,6 +280,7 @@ public class ResourceLoader {
      * execution order for dynamically-added scripts.
      * 
      * @return Browser supports script.async='false'
+     * @since 7.2.4
      */
     public static boolean supportsInOrderScriptExecution() {
         return BrowserInfo.get().isIE()
