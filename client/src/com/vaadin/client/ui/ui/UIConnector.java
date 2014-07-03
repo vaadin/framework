@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,7 +18,6 @@ package com.vaadin.client.ui.ui;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -27,10 +26,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
 import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.dom.client.StyleElement;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
@@ -54,17 +51,12 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.Paintable;
-import com.vaadin.client.ResourceLoader;
-import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
-import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
-import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
-import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.ShortcutActionHandler;
@@ -74,7 +66,6 @@ import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.server.Page.Styles;
-import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
@@ -89,7 +80,6 @@ import com.vaadin.shared.ui.ui.UIClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
-import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.UI;
 
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
@@ -97,8 +87,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         implements Paintable, MayScrollChildren {
 
     private HandlerRegistration childStateChangeHandlerRegistration;
-
-    private String activeTheme = null;
 
     private final StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
         @Override
@@ -209,6 +197,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
         getWidget().immediate = getState().immediate;
         getWidget().resizeLazy = uidl.hasAttribute(UIConstants.RESIZE_LAZY);
+        String newTheme = uidl.getStringAttribute("theme");
+        if (getWidget().theme != null && !newTheme.equals(getWidget().theme)) {
+            // Complete page refresh is needed due css can affect layout
+            // calculations etc
+            getWidget().reloadHostPage();
+        } else {
+            getWidget().theme = newTheme;
+        }
         // this also implicitly removes old styles
         String styles = "";
         styles += getWidget().getStylePrimaryName() + " ";
@@ -409,6 +405,9 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      */
     private void injectCSS(UIDL uidl) {
 
+        final HeadElement head = HeadElement.as(Document.get()
+                .getElementsByTagName(HeadElement.TAG).getItem(0));
+
         /*
          * Search the UIDL stream for CSS resources and strings to be injected.
          */
@@ -425,7 +424,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 link.setRel("stylesheet");
                 link.setHref(url);
                 link.setType("text/css");
-                getHead().appendChild(link);
+                head.appendChild(link);
+
                 // Check if we have CSS string to inject
             } else if (cssInjectionsUidl.getTag().equals("css-string")) {
                 for (Iterator<?> it2 = cssInjectionsUidl.getChildIterator(); it2
@@ -437,53 +437,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
     }
 
-    /**
-     * Internal helper to get the <head> tag of the page
-     * 
-     * @since 7.3
-     * @return the head element
-     */
-    private HeadElement getHead() {
-        return HeadElement.as(Document.get()
-                .getElementsByTagName(HeadElement.TAG).getItem(0));
-    }
-
-    /**
-     * Internal helper for removing any stylesheet with the given URL
-     * 
-     * @since 7.3
-     * @param url
-     *            the url to match with existing stylesheets
-     */
-    private void removeStylesheet(String url) {
-        NodeList<Element> linkTags = getHead().getElementsByTagName(
-                LinkElement.TAG);
-        for (int i = 0; i < linkTags.getLength(); i++) {
-            LinkElement link = LinkElement.as(linkTags.getItem(i));
-            if (!"stylesheet".equals(link.getRel())) {
-                continue;
-            }
-            if (!"text/css".equals(link.getType())) {
-                continue;
-            }
-            if (url.equals(link.getHref())) {
-                getHead().removeChild(link);
-            }
-        }
-    }
-
     public void init(String rootPanelId,
             ApplicationConnection applicationConnection) {
-        // Create a style tag for style injections so they don't end up in
-        // the theme tag in IE8-IE10 (we don't want to wipe them out if we
-        // change theme)
-        if (BrowserInfo.get().isIE()
-                && BrowserInfo.get().getBrowserMajorVersion() < 11) {
-            StyleElement style = Document.get().createStyleElement();
-            style.setType("text/css");
-            getHead().appendChild(style);
-        }
-
         DOM.sinkEvents(getWidget().getElement(), Event.ONKEYDOWN
                 | Event.ONSCROLL);
 
@@ -493,7 +448,9 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         // the user
         root.getElement().setInnerHTML("");
 
-        activeTheme = applicationConnection.getConfiguration().getThemeName();
+        String themeName = applicationConnection.getConfiguration()
+                .getThemeName();
+        root.addStyleName(themeName);
 
         root.add(getWidget());
 
@@ -803,195 +760,4 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         getRpcProxy(DebugWindowServerRpc.class).showServerDebugInfo(
                 serverConnector);
     }
-
-    @OnStateChange("theme")
-    void onThemeChange() {
-        final String oldTheme = activeTheme;
-        final String newTheme = getState().theme;
-        if (SharedUtil.equals(oldTheme, newTheme)) {
-            // This should only happen on the initial load when activeTheme has
-            // been updated in init
-            return;
-        }
-
-        final String oldThemeUrl = getThemeUrl(oldTheme);
-        final String newThemeUrl = getThemeUrl(newTheme);
-        getLogger().info("Changing theme from " + oldTheme + " to " + newTheme);
-        replaceTheme(oldTheme, newTheme, oldThemeUrl, newThemeUrl);
-    }
-
-    /**
-     * Loads the new theme and removes references to the old theme
-     * 
-     * @param oldTheme
-     *            The name of the old theme
-     * @param newTheme
-     *            The name of the new theme
-     * @param oldThemeUrl
-     *            The url of the old theme
-     * @param newThemeUrl
-     *            The url of the new theme
-     */
-    private void replaceTheme(final String oldTheme, final String newTheme,
-            String oldThemeUrl, final String newThemeUrl) {
-
-        LinkElement tagToReplace = null;
-
-        if (oldTheme != null) {
-            NodeList<Element> linkTags = getHead().getElementsByTagName(
-                    LinkElement.TAG);
-            for (int i = 0; i < linkTags.getLength(); i++) {
-                final LinkElement link = LinkElement.as(linkTags.getItem(i));
-                if ("stylesheet".equals(link.getRel())
-                        && "text/css".equals(link.getType())
-                        && oldThemeUrl.equals(link.getHref())) {
-                    tagToReplace = link;
-                    break;
-                }
-            }
-
-            if (tagToReplace == null) {
-                getLogger()
-                        .warning(
-                                "Did not find the link tag for the old theme ("
-                                        + oldThemeUrl
-                                        + "), adding a new stylesheet for the new theme ("
-                                        + newThemeUrl + ")");
-            }
-        }
-
-        if (newTheme != null) {
-            loadTheme(newTheme, newThemeUrl, tagToReplace);
-        } else {
-            if (tagToReplace != null) {
-                tagToReplace.getParentElement().removeChild(tagToReplace);
-            }
-
-            activateTheme(null);
-        }
-
-    }
-
-    /**
-     * Loads the given theme and replaces the given link element with the new
-     * theme link element.
-     * 
-     * @param newTheme
-     *            The name of the new theme
-     * @param newThemeUrl
-     *            The url of the new theme
-     * @param tagToReplace
-     *            The link element to replace. If null, then the new link
-     *            element is added at the end.
-     */
-    private void loadTheme(final String newTheme, final String newThemeUrl,
-            final LinkElement tagToReplace) {
-        LinkElement newThemeLinkElement = Document.get().createLinkElement();
-        newThemeLinkElement.setRel("stylesheet");
-        newThemeLinkElement.setType("text/css");
-        newThemeLinkElement.setHref(newThemeUrl);
-        ResourceLoader.addOnloadHandler(newThemeLinkElement,
-                new ResourceLoadListener() {
-
-                    @Override
-                    public void onLoad(ResourceLoadEvent event) {
-                        getLogger().info(
-                                "Loading of " + newTheme + " from "
-                                        + newThemeUrl + " completed");
-
-                        if (tagToReplace != null) {
-                            tagToReplace.getParentElement().removeChild(
-                                    tagToReplace);
-                        }
-                        activateTheme(newTheme);
-                    }
-
-                    @Override
-                    public void onError(ResourceLoadEvent event) {
-                        getLogger().warning(
-                                "Could not load theme from "
-                                        + getThemeUrl(newTheme));
-                    }
-                }, null);
-
-        if (tagToReplace != null) {
-            getHead().insertBefore(newThemeLinkElement, tagToReplace);
-        } else {
-            getHead().appendChild(newThemeLinkElement);
-        }
-    }
-
-    /**
-     * Activates the new theme. Assumes the theme has been loaded and taken into
-     * use in the browser.
-     * 
-     * @since 7.3
-     * @param newTheme
-     */
-    private void activateTheme(String newTheme) {
-        if (activeTheme != null) {
-            getWidget().getParent().removeStyleName(activeTheme);
-        }
-
-        activeTheme = newTheme;
-
-        if (newTheme != null) {
-            getWidget().getParent().addStyleName(newTheme);
-        }
-
-        forceStateChangeRecursively(UIConnector.this);
-        getLayoutManager().forceLayout();
-    }
-
-    /**
-     * Force a full recursive recheck of every connector's state variables.
-     * 
-     * @see #forceStateChange()
-     * 
-     * @since 7.3
-     */
-    protected static void forceStateChangeRecursively(
-            AbstractConnector connector) {
-        connector.forceStateChange();
-
-        for (ServerConnector child : connector.getChildren()) {
-            if (child instanceof AbstractConnector) {
-                forceStateChangeRecursively((AbstractConnector) child);
-            } else {
-                getLogger().warning(
-                        "Could not force state change for unknown connector type: "
-                                + child.getClass().getName());
-            }
-        }
-
-    }
-
-    /**
-     * Internal helper to get the theme URL for a given theme
-     * 
-     * @since 7.3
-     * @param theme
-     *            the name of the theme
-     * @return The URL the theme can be loaded from
-     */
-    private String getThemeUrl(String theme) {
-        return getConnection().translateVaadinUri(
-                ApplicationConstants.VAADIN_PROTOCOL_PREFIX + "themes/" + theme
-                        + "/styles" + ".css");
-    }
-
-    /**
-     * Returns the name of the theme currently in used by the UI
-     * 
-     * @since 7.3
-     * @return the theme name used by this UI
-     */
-    public String getActiveTheme() {
-        return activeTheme;
-    }
-
-    private static Logger getLogger() {
-        return Logger.getLogger(UIConnector.class.getName());
-    }
-
 }

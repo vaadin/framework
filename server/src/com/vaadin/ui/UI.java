@@ -549,6 +549,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     private boolean resizeLazy = false;
 
+    private String theme;
+
     private Navigator navigator;
 
     private PushConnection pushConnection = null;
@@ -631,7 +633,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         this.embedId = embedId;
 
         // Actual theme - used for finding CustomLayout templates
-        getState(false).theme = request.getParameter("theme");
+        theme = request.getParameter("theme");
 
         getPage().init(request);
 
@@ -1133,31 +1135,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * Gets the theme currently in use by this UI
+     * Gets the theme that was used when the UI was initialized.
      * 
      * @return the theme name
      */
     public String getTheme() {
-        return getState(false).theme;
-    }
-
-    /**
-     * Sets the theme currently in use by this UI
-     * <p>
-     * Calling this method will remove the old theme (CSS file) from the
-     * application and add the new theme.
-     * <p>
-     * Note that this method is NOT SAFE to call in a portal environment or
-     * other environment where there are multiple UIs on the same page. The old
-     * CSS file will be removed even if there are other UIs on the page which
-     * are still using it.
-     * 
-     * @since 7.3
-     * @param theme
-     *            The new theme name
-     */
-    public void setTheme(String theme) {
-        getState().theme = theme;
+        return theme;
     }
 
     /**

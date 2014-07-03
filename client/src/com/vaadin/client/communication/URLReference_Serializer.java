@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -30,16 +30,14 @@ public class URLReference_Serializer implements JSONSerializer<URLReference> {
     @Override
     public URLReference deserialize(Type type, JSONValue jsonValue,
             ApplicationConnection connection) {
-        TranslatedURLReference reference = GWT
-                .create(TranslatedURLReference.class);
-        reference.setConnection(connection);
+        URLReference reference = GWT.create(URLReference.class);
         JSONObject json = (JSONObject) jsonValue;
         if (json.containsKey(URL_FIELD)) {
             JSONValue jsonURL = json.get(URL_FIELD);
             String URL = (String) JsonDecoder.decodeValue(
                     new Type(String.class.getName(), null), jsonURL, null,
                     connection);
-            reference.setURL(URL);
+            reference.setURL(connection.translateVaadinUri(URL));
         }
         return reference;
     }

@@ -28,7 +28,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.FastStringMap;
-import com.vaadin.client.FastStringSet;
 import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
@@ -479,28 +478,5 @@ public abstract class AbstractConnector implements ServerConnector,
     public boolean hasEventListener(String eventIdentifier) {
         Set<String> reg = getState().registeredEventListeners;
         return (reg != null && reg.contains(eventIdentifier));
-    }
-
-    /**
-     * Force the connector to recheck its state variables as the variables or
-     * their meaning might have changed.
-     * 
-     * @since 7.3
-     */
-    public void forceStateChange() {
-        StateChangeEvent event = new FullStateChangeEvent(this);
-        fireEvent(event);
-    }
-
-    private static class FullStateChangeEvent extends StateChangeEvent {
-        public FullStateChangeEvent(ServerConnector connector) {
-            super(connector, FastStringSet.create());
-        }
-
-        @Override
-        public boolean hasPropertyChanged(String property) {
-            return true;
-        }
-
     }
 }

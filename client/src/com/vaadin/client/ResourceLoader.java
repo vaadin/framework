@@ -375,20 +375,7 @@ public class ResourceLoader {
         }
     }
 
-    /**
-     * Adds an onload listener to the given element, which should be a link or a
-     * script tag. The listener is called whenever loading is complete or an
-     * error occurred.
-     * 
-     * @since 7.3
-     * @param element
-     *            the element to attach a listener to
-     * @param listener
-     *            the listener to call
-     * @param event
-     *            the event passed to the listener
-     */
-    public static native void addOnloadHandler(Element element,
+    private native void addOnloadHandler(Element element,
             ResourceLoadListener listener, ResourceLoadEvent event)
     /*-{
         element.onload = $entry(function() {
@@ -403,11 +390,11 @@ public class ResourceLoader {
             element.onreadystatechange = null;
             listener.@com.vaadin.client.ResourceLoader.ResourceLoadListener::onError(Lcom/vaadin/client/ResourceLoader$ResourceLoadEvent;)(event);
         });
-        element.onreadystatechange = function() {
+        element.onreadystatechange = function() { 
             if ("loaded" === element.readyState || "complete" === element.readyState ) {
                 element.onload(arguments[0]);
             }
-        };
+        };       
     }-*/;
 
     /**
@@ -533,12 +520,12 @@ public class ResourceLoader {
                     if (rules === undefined) {
                         rules = sheet.rules;
                     }
-
+                    
                     if (rules === null) {
                         // Style sheet loaded, but can't access length because of XSS -> assume there's something there
                         return 1;
                     }
-
+                    
                     // Return length so we can distinguish 0 (probably 404 error) from normal case.
                     return rules.length;
                 } catch (err) {
