@@ -1,5 +1,8 @@
 @mixin chameleon-window($primaryStyleName : v-window) {
 
+.#{$primaryStyleName} {
+	 border-radius: 3px;
+}
 .#{$primaryStyleName}-closebox,
 .#{$primaryStyleName}-restorebox,
 .#{$primaryStyleName}-maximizebox {

@@ -11,6 +11,19 @@
 .v-caption {
 	cursor: default;
 }
+/* add box-shadows to overlay elements */
+.v-window {
+  box-shadow: 0 5px 18px 0 rgba(0, 0, 0, .5);
+}
+.v-datefield-popup,
+.v-filterselect-suggestpopup,
+.v-menubar-popup,
+.v-slider-feedback,
+.v-popupview-popup,
+.v-contextmenu  {
+	 box-shadow: 0 2px 6px 0 rgba(0, 0, 0, .5);
+}
+
 body &.v-app .v-app-loading {
 	/* You can use this to provide indication for the user that the application is loading. */
 	/* It is applied to the same element as .v-app */
@@ -115,6 +128,7 @@ body &.v-app .v-app-loading {
 .v-tooltip {
 	cursor: default;
 	background: #fff;
+	box-shadow: 0 2px 6px 0 rgba(0, 0, 0, .5);
 }
 .v-tooltip-text {
 	overflow: auto;

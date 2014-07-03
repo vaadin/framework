@@ -15,15 +15,11 @@
  */
 package com.vaadin.tests.push;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import java.util.List;
-
 import org.junit.Test;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PushConfigurationStreamingTest extends PushConfigurationTest {
 

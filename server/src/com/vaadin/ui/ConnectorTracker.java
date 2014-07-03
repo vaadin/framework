@@ -774,7 +774,7 @@ public class ConnectorTracker implements Serializable {
      *            concurrently or not.
      * @param lastSyncIdSeenByClient
      *            the most recent sync id the client has seen at the time the
-     *            request was sent
+     *            request was sent, or -1 to ignore potential problems
      * @return <code>true</code> if the connector was removed before the client
      *         had a chance to react to it.
      */
@@ -784,7 +784,8 @@ public class ConnectorTracker implements Serializable {
         assert getConnector(connectorId) == null : "Connector " + connectorId
                 + " is still attached";
 
-        boolean clientRequestIsTooOld = lastSyncIdSeenByClient < currentSyncId;
+        boolean clientRequestIsTooOld = lastSyncIdSeenByClient < currentSyncId
+                && lastSyncIdSeenByClient != -1;
         if (clientRequestIsTooOld) {
             /*
              * The headMap call is present here because we're only interested in
@@ -823,6 +824,9 @@ public class ConnectorTracker implements Serializable {
      * packet is sent. If the state has changed on the server side since that,
      * the server can try to adjust the way it handles the actions from the
      * client side.
+     * <p>
+     * The sync id value <code>-1</code> is ignored to facilitate testing with
+     * pre-recorded requests.
      * 
      * @see #setWritingResponse(boolean)
      * @see #connectorWasPresentAsRequestWasSent(String, long)
@@ -846,6 +850,9 @@ public class ConnectorTracker implements Serializable {
      * Entries that both client and server agree upon are removed. Since
      * argument is the last sync id that the client has seen from the server, we
      * know that entries earlier than that cannot cause any problems anymore.
+     * <p>
+     * The sync id value <code>-1</code> is ignored to facilitate testing with
+     * pre-recorded requests.
      * 
      * @see #connectorWasPresentAsRequestWasSent(String, long)
      * @since 7.2
@@ -854,6 +861,12 @@ public class ConnectorTracker implements Serializable {
      *            server.
      */
     public void cleanConcurrentlyRemovedConnectorIds(int lastSyncIdSeenByClient) {
+        if (lastSyncIdSeenByClient == -1) {
+            // Sync id checking is not in use, so we should just clear the
+            // entire map to avoid leaking memory
+            syncIdToUnregisteredConnectorIds.clear();
+            return;
+        }
         /*
          * We remove all entries _older_ than the one reported right now,
          * because the remaining still contain components that might cause

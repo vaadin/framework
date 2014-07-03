@@ -125,6 +125,12 @@ div.#{$primaryStyleName}-header {
 /* Shadow for window */
 .v-shadow-window {
 	position: absolute;
+	display: none;
+	pointer-events: none;
+	
+	.v-ie8 & {
+	  display: block;
+	}
 }
 .v-shadow-window .top-left {
     position: absolute; overflow: hidden;

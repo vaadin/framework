@@ -85,6 +85,17 @@ public interface DeploymentConfiguration extends Serializable {
     public boolean isXsrfProtectionEnabled();
 
     /**
+     * Returns whether sync id checking is enabled. The sync id is used to
+     * gracefully handle situations when the client sends a message to a
+     * connector that has recently been removed on the server.
+     * 
+     * @since 7.3
+     * @return <code>true</code> if sync id checking is enabled;
+     *         <code>false</code> otherwise
+     */
+    public boolean isSyncIdCheckEnabled();
+
+    /**
      * Returns the time resources can be cached in the browsers, in seconds.
      * 
      * @return The resource cache time.

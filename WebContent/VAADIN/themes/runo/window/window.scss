@@ -1,5 +1,10 @@
 @mixin runo-window($primaryStyleName : v-window) {
 
+/* add box-shadows to an overlay element */
+.#{$primaryStyleName} {
+	box-shadow: 0 10px 24px 0 rgba(42, 45, 46, .4);
+	border-radius: 10px;
+}
 .#{$primaryStyleName} {
 	color: #464f52;
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;

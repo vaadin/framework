@@ -2,6 +2,12 @@
 
 .#{$primaryStyleName} {
 	position: absolute;
+	display: none;
+	pointer-events: none;
+	
+	.v-ie8 & {
+	  display: block;
+	}
 }
 
 .#{$primaryStyleName} .top-left {

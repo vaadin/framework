@@ -163,7 +163,7 @@ public class InfoSection implements Section {
 
         addVersionInfo(configuration);
         addRow("Widget set", GWT.getModuleName());
-        addRow("Theme", connection.getUIConnector().getActiveTheme());
+        addRow("Theme", connection.getConfiguration().getThemeName());
 
         String communicationMethodInfo = connection
                 .getCommunicationMethodName();

@@ -19,6 +19,7 @@ public class MockDeploymentConfiguration implements DeploymentConfiguration {
     private Properties initParameters = new Properties();
     private Map<String, String> applicationOrSystemProperty = new HashMap<String, String>();
     private LegacyProperyToStringMode legacyPropertyToStringMode = LegacyProperyToStringMode.DISABLED;
+    private boolean syncIdCheckEnabled = true;
 
     @Override
     public boolean isProductionMode() {
@@ -32,6 +33,15 @@ public class MockDeploymentConfiguration implements DeploymentConfiguration {
     @Override
     public boolean isXsrfProtectionEnabled() {
         return xsrfProtectionEnabled;
+    }
+
+    @Override
+    public boolean isSyncIdCheckEnabled() {
+        return syncIdCheckEnabled;
+    }
+
+    public void setSyncIdCheckEnabled(boolean syncIdCheckEnabled) {
+        this.syncIdCheckEnabled = syncIdCheckEnabled;
     }
 
     public void setXsrfProtectionEnabled(boolean xsrfProtectionEnabled) {

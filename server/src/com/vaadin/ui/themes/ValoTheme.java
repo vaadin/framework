@@ -38,7 +38,7 @@ import com.vaadin.ui.Table.ColumnHeaderMode;
  * 
  * TODO link to Sass API documentation
  * 
- * @since 7.3.0
+ * @since 7.3
  * @author Vaadin Ltd
  */
 public class ValoTheme {

@@ -15,12 +15,16 @@
  */
 package com.vaadin.tests.components.combobox;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -59,5 +63,10 @@ public class ComboboxPageLengthZeroScrollTest extends MultiBrowserTest {
         Assert.assertNotEquals("v-shadow height should not be 10px", "10px",
                 cssValue);
 
+    }
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        return Collections.singletonList(Browser.IE8.getDesiredCapabilities());
     }
 }

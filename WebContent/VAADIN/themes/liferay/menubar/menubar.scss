@@ -58,7 +58,9 @@
 	text-shadow: 1px 1px #000;
 	background-color: #5b677d;
 }
-
+.v-menubar-popup {
+	border-radius: 5px;
+ }
 .v-menubar-menuitem-disabled,
 .v-menubar-submenu .v-menubar-menuitem-disabled,
 .v-menubar span.v-menubar-menuitem-disabled:hover,
