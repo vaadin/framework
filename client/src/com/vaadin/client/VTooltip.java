@@ -113,6 +113,7 @@ public class VTooltip extends VWindowOverlay {
      * 
      * @param info
      *            with the content of the tooltip
+     * @since 7.2.4
      */
     public void initializeAssistiveTooltips() {
         updatePosition(null, true);
