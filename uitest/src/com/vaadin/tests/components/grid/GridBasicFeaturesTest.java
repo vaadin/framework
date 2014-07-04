@@ -306,6 +306,8 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
     public void testSelectOnOff() throws Exception {
         openTestURL();
 
+        setSelectionModelMulti();
+
         assertFalse("row shouldn't start out as selected",
                 isSelected(getRow(0)));
         toggleFirstRowSelection();
@@ -317,6 +319,9 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
     @Test
     public void testSelectOnScrollOffScroll() throws Exception {
         openTestURL();
+
+        setSelectionModelMulti();
+
         assertFalse("row shouldn't start out as selected",
                 isSelected(getRow(0)));
         toggleFirstRowSelection();
@@ -332,6 +337,9 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
     @Test
     public void testSelectScrollOnScrollOff() throws Exception {
         openTestURL();
+
+        setSelectionModelMulti();
+
         assertFalse("row shouldn't start out as selected",
                 isSelected(getRow(0)));
 
@@ -349,6 +357,9 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
     @Test
     public void testSelectScrollOnOffScroll() throws Exception {
         openTestURL();
+
+        setSelectionModelMulti();
+
         assertFalse("row shouldn't start out as selected",
                 isSelected(getRow(0)));
 
@@ -393,6 +404,10 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         String vscrollStyleName = getVerticalScroller().getAttribute("class");
         assertTrue(vscrollStyleName.contains(stylename + "-scroller"));
         assertTrue(vscrollStyleName.contains(stylename + "-scroller-vertical"));
+    }
+
+    private void setSelectionModelMulti() {
+        selectMenuPath("Component", "State", "Selection mode", "multi");
     }
 
     private WebElement getBodyCellByRowAndColumn(int row, int column) {

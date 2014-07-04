@@ -119,8 +119,8 @@ public class GridConnector extends AbstractComponentConnector {
 
             // find new deselections
             for (String key : selectedKeys) {
-                changed = true;
                 if (!stateKeys.contains(key)) {
+                    changed = true;
                     deselectByHandle(dataSource.getHandleByKey(key));
                 }
             }
@@ -203,7 +203,7 @@ public class GridConnector extends AbstractComponentConnector {
      * Maps a generated column id to a grid column instance
      */
     private Map<String, CustomGridColumn> columnIdToColumn = new HashMap<String, CustomGridColumn>();
-    private AbstractRowHandleSelectionModel<JSONObject> selectionModel = new SelectionModelMulti<JSONObject>();
+    private AbstractRowHandleSelectionModel<JSONObject> selectionModel = createSelectionModel(SharedSelectionMode.NONE);
     private RpcDataSource dataSource;
 
     private final RowKeyHelper rowKeyHelper = new RowKeyHelper();
@@ -495,7 +495,9 @@ public class GridConnector extends AbstractComponentConnector {
         if (!model.getClass().equals(selectionModel.getClass())) {
             selectionModel = model;
             getWidget().setSelectionModel(model);
+            rowKeyHelper.selectedKeys.clear();
         }
+
     }
 
     private Logger getLogger() {

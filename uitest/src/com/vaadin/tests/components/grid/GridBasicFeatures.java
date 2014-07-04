@@ -128,6 +128,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             grid.getColumn("Column" + col).setWidth(100 + col * 50);
         }
 
+        grid.setSelectionMode(SelectionMode.NONE);
+
         createGridActions();
 
         createColumnActions();
@@ -165,7 +167,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         selectionModes.put("single", SelectionMode.SINGLE);
         selectionModes.put("multi", SelectionMode.MULTI);
         selectionModes.put("none", SelectionMode.NONE);
-        createSelectAction("Selection mode", "State", selectionModes, "multi",
+        createSelectAction("Selection mode", "State", selectionModes, "none",
                 new Command<Grid, Grid.SelectionMode>() {
                     @Override
                     public void execute(Grid grid, SelectionMode selectionMode,
