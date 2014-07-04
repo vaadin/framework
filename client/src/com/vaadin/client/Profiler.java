@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,14 +37,14 @@ import com.vaadin.client.debug.internal.ProfilerSection.ProfilerResultConsumer;
  * zero overhead unless enabled. To enable profiling, add
  * <code>&lt;set-property name="vaadin.profiler" value="true" /&gt;</code> to
  * your .gwt.xml file.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
 public class Profiler {
     /**
      * Class to include using deferred binding to enable the profiling.
-     * 
+     *
      * @author Vaadin Ltd
      * @since 7.0.0
      */
@@ -101,7 +101,7 @@ public class Profiler {
 
     /**
      * Checks whether the profiling gathering is enabled.
-     * 
+     *
      * @return <code>true</code> if the profiling is enabled, else
      *         <code>false</code>
      */
@@ -115,7 +115,7 @@ public class Profiler {
      * Enters a named block. There should always be a matching invocation of
      * {@link #leave(String)} when leaving the block. Calls to this method will
      * be removed by the compiler unless profiling is enabled.
-     * 
+     *
      * @param name
      *            the name of the entered block
      */
@@ -129,7 +129,7 @@ public class Profiler {
      * Leaves a named block. There should always be a matching invocation of
      * {@link #enter(String)} when entering the block. Calls to this method will
      * be removed by the compiler unless profiling is enabled.
-     * 
+     *
      * @param name
      *            the name of the left block
      */
@@ -178,7 +178,7 @@ public class Profiler {
      * enabled because it will then remove a logger function that might have
      * been included in the HTML page and that would leak memory unless removed.
      * </p>
-     * 
+     *
      * @since 7.0.2
      */
     public static void initialize() {
@@ -281,7 +281,7 @@ public class Profiler {
     /**
      * Overridden in {@link EnabledProfiler} to make {@link #isEnabled()} return
      * true if GWT.create returns that class.
-     * 
+     *
      * @return <code>true</code> if the profiling is enabled, else
      *         <code>false</code>
      */
@@ -352,7 +352,7 @@ public class Profiler {
         if (typeof $wnd.__gwtStatsEvent != 'function') {
             if (typeof $wnd.vaadin.gwtStatsEvents != 'object') {
                 $wnd.vaadin.gwtStatsEvents = [];
-            }  
+            }
             $wnd.__gwtStatsEvent = function(event) {
                 $wnd.vaadin.gwtStatsEvents.push(event);
                 return true;
@@ -369,9 +369,9 @@ public class Profiler {
         if (typeof $wnd.vaadin.gwtStatsEvents == 'object') {
             delete $wnd.vaadin.gwtStatsEvents;
             if (typeof $wnd.__gwtStatsEvent == 'function') {
-                $wnd.__gwtStatsEvent = function(){};
+                $wnd.__gwtStatsEvent = function() { return true; };
             }
-        }  
+        }
     }-*/;
 
     private static native JsArray<GwtStatsEvent> clearEventsList()
@@ -385,7 +385,7 @@ public class Profiler {
      * <p>
      * <b>Warning!</b> This is internal API and should not be used by
      * applications or add-ons.
-     * 
+     *
      * @since 7.1.4
      * @param profilerResultConsumer
      *            the consumer that gets profiler data
