@@ -117,6 +117,7 @@ public class GridClientColumnRendererConnector extends
     @Override
     protected void init() {
         Grid<String> grid = getWidget();
+        grid.setSelectionMode(Grid.SelectionMode.NONE);
 
         // Generated some column data
         List<String> columnData = new ArrayList<String>();

@@ -35,7 +35,7 @@ import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
 
 /**
  * Tests Grid client side renderers
- *
+ * 
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -220,10 +220,6 @@ public class GridClientRenderers extends MultiBrowserTest {
         sleep(1000);
 
         for (int i = 1, l = 70; i < l; ++i) {
-
-            if (i == 19) {
-                System.err.println("foo");
-            }
 
             String str_a = gridElem.getCell(i - 1, 0).getAttribute("innerHTML");
             String str_b = gridElem.getCell(i, 0).getAttribute("innerHTML");
