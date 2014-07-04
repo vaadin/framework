@@ -116,6 +116,8 @@ import com.vaadin.shared.ui.JavaScriptComponentState;
  * <li>The primitive Java boolean and the boxed Boolean are represented by
  * JavaScript booleans.</li>
  * <li>Java Strings are represented by JavaScript strings.</li>
+ * <li>Java Dates are represented by JavaScript numbers containing the timestamp
+ * </li>
  * <li>List, Set and all arrays in Java are represented by JavaScript arrays.</li>
  * <li>Map<String, ?> in Java is represented by JavaScript object with fields
  * corresponding to the map keys.</li>
