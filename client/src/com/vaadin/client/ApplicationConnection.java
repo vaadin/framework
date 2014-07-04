@@ -759,30 +759,10 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     private String getRepaintAllParameters() {
-        // collect some client side data that will be sent to server on
-        // initial uidl request
-        String nativeBootstrapParameters = getNativeBrowserDetailsParameters(getConfiguration()
-                .getRootPanelId());
-        // TODO figure out how client and view size could be used better on
-        // server. screen size can be accessed via Browser object, but other
-        // values currently only via transaction listener.
         String parameters = ApplicationConstants.URL_PARAMETER_REPAINT_ALL
-                + "=1&" + nativeBootstrapParameters;
+                + "=1";
         return parameters;
     }
-
-    /**
-     * Gets the browser detail parameters that are sent by the bootstrap
-     * javascript for two-request initialization.
-     * 
-     * @param parentElementId
-     * @return
-     */
-    private static native String getNativeBrowserDetailsParameters(
-            String parentElementId)
-    /*-{
-       return $wnd.vaadin.getBrowserDetailsParameters(parentElementId);
-    }-*/;
 
     protected void repaintAll() {
         makeUidlRequest(new JSONArray(), getRepaintAllParameters());
@@ -2703,15 +2683,11 @@ public class ApplicationConnection implements HasHandlers {
             lastInvocationTag = 0;
         }
 
-        // Include the browser detail parameters if they aren't already sent
-        String extraParams;
-        if (!getConfiguration().isBrowserDetailsSent()) {
-            extraParams = getNativeBrowserDetailsParameters(getConfiguration()
-                    .getRootPanelId());
-            getConfiguration().setBrowserDetailsSent();
-        } else {
-            extraParams = "";
-        }
+        String extraParams = "";
+
+        //Calling setBrowserDetailsSent to emulate previously broken behaviour in 7.2.x.
+        getConfiguration().setBrowserDetailsSent();
+
         if (!getConfiguration().isWidgetsetVersionSent()) {
             if (!extraParams.isEmpty()) {
                 extraParams += "&";

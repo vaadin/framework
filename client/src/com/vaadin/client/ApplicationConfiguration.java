@@ -786,7 +786,10 @@ public class ApplicationConfiguration implements EntryPoint {
      * @return <code>true</code> if browser information has already been sent
      * 
      * @see ApplicationConnection#getNativeBrowserDetailsParameters(String)
+     *
+     * @deprecated since 7.2.5
      */
+    @Deprecated
     public boolean isBrowserDetailsSent() {
         return browserDetailsSent;
     }
@@ -795,7 +798,10 @@ public class ApplicationConfiguration implements EntryPoint {
      * Registers that the browser details have been sent.
      * {@link #isBrowserDetailsSent()} will return
      * <code> after this method has been invoked.
+     *
+     * @deprecated since 7.2.5
      */
+    @Deprecated
     public void setBrowserDetailsSent() {
         browserDetailsSent = true;
     }
