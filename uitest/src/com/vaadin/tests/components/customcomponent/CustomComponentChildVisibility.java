@@ -15,11 +15,9 @@
  */
 package com.vaadin.tests.components.customcomponent;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -28,20 +26,21 @@ public class CustomComponentChildVisibility extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
+        Label label = new Label("In panel");
+        label.setId("label");
         final CustomComponent cc = new CustomComponent(new Panel(
-                "In CustomComponent", new Label("In panel")));
+                "In CustomComponent", label));
 
-        final CheckBox cb = new CheckBox("CustomComponent visible");
-        cb.setValue(true);
-        cb.setImmediate(true);
-        cb.addValueChangeListener(new ValueChangeListener() {
+        Button hideButton = new Button("Hide CustomComponent");
+        hideButton.addClickListener(new Button.ClickListener() {
             @Override
-            public void valueChange(ValueChangeEvent event) {
-                cc.setVisible(cb.getValue());
+            public void buttonClick(Button.ClickEvent event) {
+                cc.setVisible(false);
             }
         });
+
         addComponent(cc);
-        addComponent(cb);
+        addComponent(hideButton);
 
     }
 
