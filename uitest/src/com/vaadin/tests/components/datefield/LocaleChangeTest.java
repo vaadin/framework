@@ -34,7 +34,7 @@ public class LocaleChangeTest extends MultiBrowserTest {
         assertPopupOpen(true);
 
         // Close the popup and change the locale.
-        toggleDatePopup();
+        toggleDatePopupWorkaroundClosePopupIE();
         assertPopupOpen(false);
         driver.findElement(By.className("v-button")).click(); // Locale change.
 
@@ -53,6 +53,26 @@ public class LocaleChangeTest extends MultiBrowserTest {
 
     private void toggleDatePopup() {
         driver.findElement(By.className("v-datefield-button")).click();
+    }
+
+    /*
+     * Work around bug reported in ticket #14086. Delete this method once fixed
+     * andd use toggleDatePopup() instead.
+     */
+    private void toggleDatePopupWorkaroundClosePopupIE() {
+        if (!BrowserUtil.isIE(getDesiredCapabilities())) {
+            driver.findElement(By.className("v-datefield-button")).click();
+        } else {
+            boolean popupOpen = driver.findElements(
+                    By.className("v-datefield-popup")).size() == 1;
+            if (popupOpen) {
+                driver.findElement(
+                        By.className("v-datefield-calendarpanel-day-selected"))
+                        .click();
+            } else {
+                driver.findElement(By.className("v-datefield-button")).click();
+            }
+        }
     }
 
     private String getDateValue() {
