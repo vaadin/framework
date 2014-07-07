@@ -24,6 +24,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.components.grid.Grid;
+import com.vaadin.ui.components.grid.Grid.SelectionMode;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class CustomRenderer extends AbstractTestUI {
@@ -56,6 +57,7 @@ public class CustomRenderer extends AbstractTestUI {
         grid.getColumn(INT_ARRAY_PROPERTY).setRenderer(new IntArrayRenderer());
         grid.getColumn(VOID_PROPERTY).setRenderer(
                 new RowAwareRenderer(debugLabel));
+        grid.setSelectionMode(SelectionMode.NONE);
         addComponent(grid);
         addComponent(debugLabel);
     }

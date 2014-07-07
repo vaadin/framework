@@ -20,6 +20,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.components.grid.Grid;
+import com.vaadin.ui.components.grid.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.GridColumn;
 
 public class GridSingleColumn extends AbstractTestUI {
@@ -36,6 +37,7 @@ public class GridSingleColumn extends AbstractTestUI {
         }
 
         Grid grid = new Grid(indexedContainer);
+        grid.setSelectionMode(SelectionMode.NONE);
 
         GridColumn column = grid.getColumn("column1");
 
