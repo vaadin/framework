@@ -161,6 +161,8 @@ public class VContextMenu extends VOverlay implements SubPartAware {
                     top = top - offsetHeight;
                     if (top < 0) {
                         top = 0;
+
+                        setHeight(Window.getClientHeight() + "px");
                     }
                 }
                 setPopupPosition(left, top);
