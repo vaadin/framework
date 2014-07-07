@@ -125,7 +125,11 @@ class FlyweightRow implements Row {
         public List<FlyweightCell> rawPeekNext(final int n) {
             final int from = Math.min(cursor, cells.size());
             final int to = Math.min(cursor + n, cells.size());
-            return cells.subList(from, to);
+            List<FlyweightCell> nextCells = cells.subList(from, to);
+            for (FlyweightCell cell : nextCells) {
+                cell.setup(this);
+            }
+            return nextCells;
         }
 
         public boolean areCellsAttached() {
