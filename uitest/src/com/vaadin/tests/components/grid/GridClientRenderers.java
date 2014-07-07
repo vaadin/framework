@@ -41,15 +41,8 @@ import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
  */
 public class GridClientRenderers extends MultiBrowserTest {
 
+    private static final double SLEEP_MULTIPLIER = 1.2;
     private int latency = 0;
-
-    @Override
-    protected DesiredCapabilities getDesiredCapabilities() {
-        DesiredCapabilities c = new DesiredCapabilities(
-                super.getDesiredCapabilities());
-        c.setCapability("handlesAlerts", true);
-        return c;
-    }
 
     @Override
     protected Class<?> getUIClass() {
@@ -58,10 +51,11 @@ public class GridClientRenderers extends MultiBrowserTest {
 
     @Override
     protected String getDeploymentPath() {
+        String path = super.getDeploymentPath();
         if (latency > 0) {
-            return super.getDeploymentPath() + "?latency=" + latency;
+            path += (path.contains("?") ? "&" : "?") + "latency=" + latency;
         }
-        return super.getDeploymentPath();
+        return path;
     }
 
     @ServerClass("com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers.GridController")
@@ -89,8 +83,8 @@ public class GridClientRenderers extends MultiBrowserTest {
         gwtButton.click();
 
         // Should be an alert visible
-        assertEquals("Button did not contain text \"Clicked\"",
-                gwtButton.getText(), "Clicked");
+        assertEquals("Button did not contain text \"Clicked\"", "Clicked",
+                gwtButton.getText());
     }
 
     @Test
@@ -118,21 +112,23 @@ public class GridClientRenderers extends MultiBrowserTest {
     @Test
     public void rowsWithDataHasStyleName() throws Exception {
 
-        // Simulate network latency with 4000ms
-        latency = 4000;
+        // Simulate network latency with 2000ms
+        latency = 2000;
 
         openTestURL();
 
-        TestBenchElement row = getGrid().getRow(1);
+        sleep((int) (latency * SLEEP_MULTIPLIER));
+
+        TestBenchElement row = getGrid().getRow(51);
         String className = row.getAttribute("class");
         assertFalse(
                 "Row should not yet contain style name v-grid-row-has-data",
                 className.contains("v-grid-row-has-data"));
 
         // Wait for data to arrive
-        sleep(latency + 1000);
+        sleep((int) (latency * SLEEP_MULTIPLIER));
 
-        row = getGrid().getRow(1);
+        row = getGrid().getRow(51);
         className = row.getAttribute("class");
         assertTrue("Row should now contain style name v-grid-row-has-data",
                 className.contains("v-grid-row-has-data"));
@@ -141,13 +137,20 @@ public class GridClientRenderers extends MultiBrowserTest {
     @Test
     public void complexRendererSetVisibleContent() throws Exception {
 
+        DesiredCapabilities desiredCapabilities = getDesiredCapabilities();
+
         // Simulate network latency with 2000ms
         latency = 2000;
+        if (BrowserUtil.isIE8(desiredCapabilities)) {
+            // IE8 is slower than other browsers. Bigger latency is needed for
+            // stability in this test.
+            latency = 3000;
+        }
 
         // Chrome uses RGB instead of RGBA
         String colorRed = "rgba(255, 0, 0, 1)";
         String colorWhite = "rgba(255, 255, 255, 1)";
-        if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+        if (BrowserUtil.isChrome(desiredCapabilities)) {
             colorRed = "rgb(255, 0, 0)";
             colorWhite = "rgb(255, 255, 255)";
         }
@@ -156,17 +159,19 @@ public class GridClientRenderers extends MultiBrowserTest {
 
         addColumn(Renderers.CPLX_RENDERER);
 
+        sleep((int) (latency * SLEEP_MULTIPLIER));
+
+        getGrid().scrollToRow(60);
         // Cell should be red (setContentVisible set cell red)
-        String backgroundColor = getGrid().getCell(51, 1).getCssValue(
-                "backgroundColor");
+        TestBenchElement cell = getGrid().getCell(51, 1);
+        String backgroundColor = cell.getCssValue("backgroundColor");
         assertEquals("Background color was not red.", colorRed, backgroundColor);
 
         // Wait for data to arrive
-        sleep(latency + 1000);
+        sleep((int) (latency * SLEEP_MULTIPLIER));
 
         // Cell should no longer be red
-        backgroundColor = getGrid().getCell(51, 1).getCssValue(
-                "backgroundColor");
+        backgroundColor = cell.getCssValue("backgroundColor");
         assertEquals("Background color was not white", colorWhite,
                 backgroundColor);
     }
@@ -177,7 +182,6 @@ public class GridClientRenderers extends MultiBrowserTest {
 
         $(NativeButtonElement.class).caption("Trigger sorting event").first()
                 .click();
-        sleep(1000);
 
         String consoleText = $(LabelElement.class).id("testDebugConsole")
                 .getText();
@@ -190,10 +194,8 @@ public class GridClientRenderers extends MultiBrowserTest {
     @Test
     public void testListSorter() throws Exception {
         openTestURL();
-        sleep(1000);
 
         $(NativeButtonElement.class).caption("Shuffle").first().click();
-        sleep(1000);
 
         GridElement gridElem = $(MyClientGridElement.class).first();
 
@@ -217,7 +219,6 @@ public class GridClientRenderers extends MultiBrowserTest {
         assertTrue("Grid shuffled", shuffled);
 
         $(NativeButtonElement.class).caption("Test sorting").first().click();
-        sleep(1000);
 
         for (int i = 1, l = 70; i < l; ++i) {
 
