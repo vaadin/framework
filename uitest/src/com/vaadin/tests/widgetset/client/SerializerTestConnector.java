@@ -284,11 +284,12 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         rpc.log("state.booleanValue: " + getState().booleanValue);
         rpc.log("state.booleanObjectValue: " + getState().booleanObjectValue);
-        rpc.log("state.booleanArray: " + getState().booleanArray);
+        rpc.log("state.booleanArray: "
+                + Arrays.toString(getState().booleanArray));
 
         rpc.log("state.byteValue: " + getState().byteValue);
         rpc.log("state.byteObjectValue: " + getState().byteObjectValue);
-        rpc.log("state.byteArray: " + getState().byteArray);
+        rpc.log("state.byteArray: " + Arrays.toString(getState().byteArray));
 
         rpc.log("state.charValue: " + getState().charValue);
         rpc.log("state.charObjectValue: " + getState().charObjectValue);
@@ -296,19 +297,19 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
 
         rpc.log("state.intValue: " + getState().intValue);
         rpc.log("state.intObjectValue: " + getState().intObjectValue);
-        rpc.log("state.intArray: " + getState().intArray);
+        rpc.log("state.intArray: " + Arrays.toString(getState().intArray));
 
         rpc.log("state.longValue: " + getState().longValue);
         rpc.log("state.longObjectValue: " + getState().longObjectValue);
-        rpc.log("state.longArray: " + getState().longArray);
+        rpc.log("state.longArray: " + Arrays.toString(getState().longArray));
 
         rpc.log("state.floatValue: " + getState().floatValue);
         rpc.log("state.floatObjectValue: " + getState().floatObjectValue);
-        rpc.log("state.floatArray: " + getState().floatArray);
+        rpc.log("state.floatArray: " + Arrays.toString(getState().floatArray));
 
         rpc.log("state.doubleValue: " + getState().doubleValue);
         rpc.log("state.doubleObjectValue: " + getState().doubleObjectValue);
-        rpc.log("state.doubleArray: " + getState().doubleArray);
+        rpc.log("state.doubleArray: " + Arrays.toString(getState().doubleArray));
 
         /*
          * TODO public double doubleValue; public Double DoubleValue; public
