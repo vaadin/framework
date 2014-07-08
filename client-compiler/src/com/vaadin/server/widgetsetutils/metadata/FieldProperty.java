@@ -45,25 +45,17 @@ public class FieldProperty extends Property {
     @Override
     public void writeSetterBody(TreeLogger logger, SourceWriter w,
             String beanVariable, String valueVariable) {
-        // Don't try to unbox Longs in javascript, as it's not supported.
-        // (#13692)
-        boolean shouldUnbox = !"long".equals(field.getType()
-                .getSimpleSourceName());
         w.println("%s.@%s::%s = %s;", beanVariable, getBeanType()
-                .getQualifiedSourceName(), getName(),
-                shouldUnbox ? unboxValue(valueVariable) : valueVariable);
+                .getQualifiedSourceName(), getName(), unboxValue(valueVariable));
     }
 
     @Override
     public void writeGetterBody(TreeLogger logger, SourceWriter w,
             String beanVariable) {
-        // Longs are not unboxed, as it's not supported. (#13692)
-        boolean shouldBox = !"long".equals(field.getType()
-                .getSimpleSourceName());
         String value = String.format("%s.@%s::%s", beanVariable, getBeanType()
                 .getQualifiedSourceName(), getName());
         w.print("return ");
-        w.print(shouldBox ? boxValue(value) : value);
+        w.print(boxValue(value));
         w.println(";");
     }
 
