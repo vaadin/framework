@@ -656,6 +656,12 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
                 }
             }
         }
+        // Fix for #14173
+        // IE9 and IE10 have a bug, when resize an a element with box-shadow.
+        // IE9 and IE10 need explicit update to remove extra box-shadows
+        if (BrowserInfo.get().isIE9() || BrowserInfo.get().isIE10()) {
+            Util.forceIERedraw(getElement());
+        }
     }
 
     /**

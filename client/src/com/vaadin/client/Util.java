@@ -925,12 +925,27 @@ public class Util {
      * Performs a hack to trigger a re-layout in the IE8. This is usually
      * necessary in cases where IE8 "forgets" to update child elements when they
      * resize.
-     * 
+     *
      * @param e
      *            The element to perform the hack on
      */
     public static final void forceIE8Redraw(Element e) {
         if (BrowserInfo.get().isIE8()) {
+            forceIERedraw(e);
+        }
+    }
+
+    /**
+     * Performs a hack to trigger a re-layout in the IE browser. This is usually
+     * necessary in cases where IE "forgets" to update child elements when they
+     * resize.
+     *
+     * @since
+     * @param e
+     *            The element to perform the hack on
+     */
+    public static void forceIERedraw(Element e) {
+        if (BrowserInfo.get().isIE()) {
             setStyleTemporarily(e, "zoom", "1");
         }
     }
