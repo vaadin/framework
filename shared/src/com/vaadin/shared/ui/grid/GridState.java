@@ -25,7 +25,7 @@ import com.vaadin.shared.annotations.DelegateToWidget;
 /**
  * The shared state for the {@link com.vaadin.ui.components.grid.Grid} component
  * 
- * @since 7.2
+ * @since
  * @author Vaadin Ltd
  */
 public class GridState extends AbstractComponentState {

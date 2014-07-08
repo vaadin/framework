@@ -36,7 +36,7 @@ import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
 /**
  * Tests Grid client side renderers
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class GridClientRenderers extends MultiBrowserTest {

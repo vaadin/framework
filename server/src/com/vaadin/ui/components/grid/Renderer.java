@@ -28,7 +28,7 @@ import com.vaadin.server.Extension;
  * @param <T>
  *            the type this renderer knows how to present
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public interface Renderer<T> extends Extension {

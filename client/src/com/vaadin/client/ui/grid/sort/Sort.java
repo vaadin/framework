@@ -24,7 +24,7 @@ import com.vaadin.shared.ui.grid.SortDirection;
 /**
  * Fluid Sort descriptor object.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  * @param T
  *            grid data type

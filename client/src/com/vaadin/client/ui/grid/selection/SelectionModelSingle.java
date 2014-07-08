@@ -26,7 +26,7 @@ import com.vaadin.client.ui.grid.Renderer;
  * Single-row selection model.
  * 
  * @author Vaadin Ltd
- * @since 7.4
+ * @since
  */
 public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
         implements SelectionModel.Single<T> {

@@ -29,7 +29,7 @@ import com.vaadin.ui.components.grid.renderers.TextRenderer;
  * A column in the grid. Can be obtained by calling
  * {@link Grid#getColumn(Object propertyId)}.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class GridColumn implements Serializable {

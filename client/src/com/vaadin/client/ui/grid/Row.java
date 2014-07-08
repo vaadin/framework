@@ -21,7 +21,7 @@ import com.google.gwt.dom.client.Element;
 /**
  * A representation of a row in an {@link Escalator}.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public interface Row {

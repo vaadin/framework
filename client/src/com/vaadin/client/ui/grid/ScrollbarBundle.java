@@ -29,7 +29,7 @@ import com.google.gwt.user.client.DOM;
  * An element-like bundle representing a configurable and visual scrollbar in
  * one axis.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  * @see VerticalScrollbarBundle
  * @see HorizontalScrollbarBundle

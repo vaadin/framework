@@ -39,7 +39,7 @@ import com.vaadin.shared.ui.grid.Range;
  * connector type. This will be changed once framework support for something
  * more flexible has been implemented.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.data.RpcDataProviderExtension.class)

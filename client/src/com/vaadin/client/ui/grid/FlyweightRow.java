@@ -29,7 +29,7 @@ import com.google.gwt.dom.client.Node;
  * There is only one instance per Escalator. This is designed to be re-used when
  * rendering rows.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  * @see Escalator.AbstractRowContainer#refreshRow(Node, int)
  */

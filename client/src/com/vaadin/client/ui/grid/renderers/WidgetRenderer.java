@@ -22,7 +22,7 @@ import com.vaadin.client.ui.grid.FlyweightCell;
 /**
  * A renderer for rendering widgets into cells.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  * @param <T>
  *            the row data type

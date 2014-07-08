@@ -28,7 +28,7 @@ import com.vaadin.client.ui.grid.Renderer;
  * Multi-row selection model.
  * 
  * @author Vaadin Ltd
- * @since 7.4
+ * @since
  */
 public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
         implements SelectionModel.Multi<T> {

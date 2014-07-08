@@ -25,7 +25,7 @@ import com.vaadin.shared.ui.Connect;
  * string, and displayed as-is on the client side. This is to be able to support
  * the server's locale.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.components.grid.renderers.DateRenderer.class)

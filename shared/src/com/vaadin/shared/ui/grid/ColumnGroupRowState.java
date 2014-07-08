@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * The column group row data shared between the server and client
  * 
- * @since 7.2
+ * @since
  * @author Vaadin Ltd
  */
 public class ColumnGroupRowState implements Serializable {

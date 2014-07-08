@@ -32,7 +32,7 @@ import com.vaadin.client.ui.grid.FlyweightRow.CellIterator;
  * and so should not be stored anywhere outside of the method providing these
  * instances.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class FlyweightCell {

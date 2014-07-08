@@ -36,7 +36,7 @@ import com.vaadin.client.ui.grid.Renderer;
  * {@link com.vaadin.shared.communication.SharedState SharedState} and no RPC
  * interfaces.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public abstract class AbstractRendererConnector<T> extends

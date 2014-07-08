@@ -61,7 +61,7 @@ import com.vaadin.ui.components.grid.Renderer;
  * This will be changed once framework support for something more flexible has
  * been implemented.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class RpcDataProviderExtension extends AbstractExtension {

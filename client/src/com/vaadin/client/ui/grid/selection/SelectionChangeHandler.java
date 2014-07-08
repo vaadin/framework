@@ -20,7 +20,7 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Handler for {@link SelectionChangeEvent}s.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  * @param <T>
  *            The row data type

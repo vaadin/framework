@@ -27,7 +27,7 @@ import com.vaadin.testbench.elements.ServerClass;
 /**
  * TestBench Element API for Grid
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 @ServerClass("com.vaadin.ui.components.grid.Grid")

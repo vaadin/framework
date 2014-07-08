@@ -28,7 +28,7 @@ import com.vaadin.client.ui.grid.Renderer;
  * contract. For more information see
  * {@link SafeHtmlUtils#fromSafeConstant(String)}.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  * @see SafeHtmlUtils#fromSafeConstant(String)
  */

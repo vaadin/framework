@@ -18,7 +18,7 @@ package com.vaadin.tests.widgetset.client.grid;
 import com.vaadin.shared.AbstractComponentState;
 
 /**
- * @since 7.2
+ * @since
  * @author Vaadin Ltd
  */
 public class TestGridState extends AbstractComponentState {

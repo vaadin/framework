@@ -21,7 +21,7 @@ import com.vaadin.client.ui.grid.Renderer;
 /**
  * Renderer that renders text into a cell.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class TextRenderer implements Renderer<String> {

@@ -22,7 +22,7 @@ import com.google.gwt.dom.client.Element;
  * A representation of the rows in each of the sections (header, body and
  * footer) in an {@link Escalator}.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  * @see Escalator#getHeader()
  * @see Escalator#getBody()

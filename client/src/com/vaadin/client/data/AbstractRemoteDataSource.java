@@ -35,7 +35,7 @@ import com.vaadin.shared.ui.grid.Range;
  * {@link #setRowData(int, List)}. {@link #setEstimatedSize(int)} should be used
  * based on estimations of how many rows are available.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  * @param <T>
  *            the row type

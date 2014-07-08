@@ -72,7 +72,7 @@ import com.vaadin.util.ReflectTools;
  * <h3>Auxiliary headers and footers</h3> TODO To be revised when column
  * grouping is implemented.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class Grid extends AbstractComponent implements SelectionChangeNotifier {

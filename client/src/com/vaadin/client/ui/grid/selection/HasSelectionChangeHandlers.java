@@ -21,7 +21,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * Marker interface for widgets that fires selection change events.
  * 
  * @author Vaadin Ltd
- * @since 7.4
+ * @since
  */
 public interface HasSelectionChangeHandlers<T> {
 

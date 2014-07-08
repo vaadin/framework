@@ -27,7 +27,7 @@ package com.vaadin.client.ui.grid;
  * This has a similar function to {@link Grid Grid's} {@link Renderer Renderers}
  * , although they operate on different abstraction levels.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  * @see RowContainer#setEscalatorUpdater(EscalatorUpdater)
  * @see Escalator#getHeader()

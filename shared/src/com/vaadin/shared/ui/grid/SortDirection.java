@@ -18,7 +18,7 @@ package com.vaadin.shared.ui.grid;
 /**
  * Describes sorting direction for a Grid column
  *
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public enum SortDirection {

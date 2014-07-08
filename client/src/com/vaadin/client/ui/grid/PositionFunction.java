@@ -22,7 +22,7 @@ import com.google.gwt.dom.client.Style.Unit;
 /**
  * A functional interface that can be used for positioning elements in the DOM.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 interface PositionFunction {

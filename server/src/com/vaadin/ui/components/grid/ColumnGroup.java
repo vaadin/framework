@@ -27,7 +27,7 @@ import com.vaadin.shared.ui.grid.ColumnGroupState;
  * Column groups are used to group columns together for adding common auxiliary
  * headers and footers. Columns groups are added to {@link ColumnGroupRow}'s.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class ColumnGroup implements Serializable {

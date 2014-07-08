@@ -28,7 +28,7 @@ import com.vaadin.server.AbstractExtension;
  * @param <T>
  *            the type this renderer knows how to present
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public abstract class AbstractRenderer<T> extends AbstractExtension implements

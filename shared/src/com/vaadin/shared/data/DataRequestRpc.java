@@ -21,7 +21,7 @@ import com.vaadin.shared.communication.ServerRpc;
 /**
  * RPC interface used for requesting container data to the client.
  * 
- * @since 7.2
+ * @since
  * @author Vaadin Ltd
  */
 public interface DataRequestRpc extends ServerRpc {

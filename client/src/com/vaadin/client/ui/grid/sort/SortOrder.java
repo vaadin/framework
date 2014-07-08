@@ -21,7 +21,7 @@ import com.vaadin.shared.ui.grid.SortDirection;
 /**
  * Sort order descriptor. Contains column and direction references.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  * @param T
  *            grid data type

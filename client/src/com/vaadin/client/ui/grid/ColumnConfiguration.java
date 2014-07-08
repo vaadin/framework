@@ -19,7 +19,7 @@ package com.vaadin.client.ui.grid;
 /**
  * A representation of the columns in an instance of {@link Escalator}.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  * @see Escalator#getColumnConfiguration()
  */

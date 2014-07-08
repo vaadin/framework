@@ -20,7 +20,7 @@ import com.vaadin.shared.ui.Connect;
 /**
  * A connector for {@link TextRenderer}.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.components.grid.renderers.TextRenderer.class)

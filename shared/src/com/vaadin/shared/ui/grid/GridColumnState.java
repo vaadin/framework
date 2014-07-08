@@ -23,7 +23,7 @@ import com.vaadin.shared.Connector;
  * Column state DTO for transferring column properties from the server to the
  * client
  * 
- * @since 7.2
+ * @since
  * @author Vaadin Ltd
  */
 public class GridColumnState implements Serializable {

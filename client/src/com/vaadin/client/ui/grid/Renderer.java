@@ -26,7 +26,7 @@ package com.vaadin.client.ui.grid;
  * @param <T>
  *            The column type
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public interface Renderer<T> {

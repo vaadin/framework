@@ -27,11 +27,6 @@ import org.junit.Test;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.ui.grid.datasources.ListDataSource;
 
-/**
- *
- * @since 7.2
- * @author Vaadin Ltd
- */
 public class ListDataSourceTest {
 
     @Test

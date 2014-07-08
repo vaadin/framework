@@ -27,7 +27,7 @@ import com.vaadin.client.ui.grid.Renderer;
  * dispatching events when the selection state changes.
  * 
  * @author Vaadin Ltd
- * @since 7.4
+ * @since
  * @param <T>
  *            Grid's row type
  */

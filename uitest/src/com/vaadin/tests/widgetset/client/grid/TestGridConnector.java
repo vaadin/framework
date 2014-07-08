@@ -22,7 +22,7 @@ import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.tests.widgetset.server.grid.TestGrid;
 
 /**
- * @since 7.2
+ * @since
  * @author Vaadin Ltd
  */
 @Connect(TestGrid.class)

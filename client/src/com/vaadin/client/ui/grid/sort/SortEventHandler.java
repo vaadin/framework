@@ -21,7 +21,7 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for a Grid sort event, called when the Grid needs its data source to
  * provide data sorted in a specific manner.
  *
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public interface SortEventHandler<T> extends EventHandler {

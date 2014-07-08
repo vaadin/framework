@@ -20,7 +20,7 @@ import com.vaadin.ui.components.grid.AbstractRenderer;
 /**
  * A renderer for presenting simple plain-text string values.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class TextRenderer extends AbstractRenderer<String> {

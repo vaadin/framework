@@ -24,7 +24,7 @@ import com.vaadin.client.ui.grid.Renderer;
  * default uses the default number format returned by
  * {@link NumberFormat#getDecimalFormat()}.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  * @param <T>
  *            The number type to render.

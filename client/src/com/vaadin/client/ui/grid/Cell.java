@@ -24,6 +24,7 @@ import com.google.gwt.dom.client.Element;
  * class is still under debate and the API is not final. Improve the description
  * when API has been finalized.
  * 
+ * @since
  * @author Vaadin Ltd
  */
 public class Cell {

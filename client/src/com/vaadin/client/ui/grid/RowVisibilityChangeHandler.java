@@ -22,7 +22,7 @@ import com.google.gwt.event.shared.EventHandler;
  * Event handler that gets notified when the range of visible rows changes e.g.
  * because of scrolling.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public interface RowVisibilityChangeHandler extends EventHandler {

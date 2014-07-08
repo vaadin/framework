@@ -60,7 +60,7 @@ import com.vaadin.shared.ui.grid.ScrollDestination;
  * at {@link com.vaadin.shared.data.DataProviderRpc#setRowData(int, List)
  * DataProviderRpc.setRowData(int, List)}.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.components.grid.Grid.class)

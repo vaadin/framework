@@ -24,7 +24,7 @@ package com.vaadin.client.ui.grid;
  * @param <T>
  *            The row type
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public abstract class GridColumn<C, T> extends Grid.AbstractGridColumn<C, T> {

@@ -24,7 +24,7 @@ import com.vaadin.ui.components.grid.AbstractRenderer;
 /**
  * A renderer for presenting date values.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class DateRenderer extends AbstractRenderer<Date> {

@@ -49,7 +49,7 @@ import com.vaadin.shared.util.SharedUtil;
  * ds.asList().addAll(Arrays.asList(5, 6, 7));
  * </pre>
  *
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class ListDataSource<T> implements DataSource<T> {

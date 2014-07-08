@@ -20,7 +20,7 @@ import com.vaadin.tests.widgetset.client.grid.TestGridState;
 import com.vaadin.ui.AbstractComponent;
 
 /**
- * @since 7.2
+ * @since
  * @author Vaadin Ltd
  */
 public class TestGrid extends AbstractComponent {

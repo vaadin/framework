@@ -25,7 +25,7 @@ import com.vaadin.ui.components.grid.Grid;
  * A base class for SelectionModels that contains some of the logic that is
  * reusable.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public abstract class AbstractSelectionModel implements SelectionModel {

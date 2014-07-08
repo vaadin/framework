@@ -23,7 +23,7 @@ import com.vaadin.ui.components.grid.AbstractRenderer;
 /**
  * A renderer for presenting number values.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class NumberRenderer extends AbstractRenderer<Number> {

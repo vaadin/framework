@@ -21,7 +21,7 @@ import com.vaadin.shared.communication.SharedState;
 /**
  * Shared state used by client-side data sources.
  * 
- * @since 7.2
+ * @since
  * @author Vaadin Ltd
  */
 public class DataProviderState extends SharedState {

@@ -31,7 +31,7 @@ import com.vaadin.client.ui.grid.renderers.TextRenderer;
  * @param <T>
  *            The row type of the grid. The row type is the POJO type from where
  *            the data is retrieved into the column cells.
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class ColumnGroup<T> {

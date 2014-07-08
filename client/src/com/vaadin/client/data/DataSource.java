@@ -21,7 +21,7 @@ package com.vaadin.client.data;
  * items (e.g. rows) of a specified type. The data source is a lazy view into a
  * larger data set.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  * @param <T>
  *            the row type

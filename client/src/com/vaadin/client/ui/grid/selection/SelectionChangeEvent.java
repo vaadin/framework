@@ -26,7 +26,7 @@ import com.vaadin.client.ui.grid.Grid;
 /**
  * Event object describing a change in Grid row selection state.
  *
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class SelectionChangeEvent<T> extends GwtEvent<SelectionChangeHandler> {

@@ -26,7 +26,7 @@ import com.vaadin.client.ui.grid.Renderer;
 /**
  * A renderer for rendering dates into cells
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class DateRenderer implements Renderer<Date> {

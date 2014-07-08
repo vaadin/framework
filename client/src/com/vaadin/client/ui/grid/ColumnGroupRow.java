@@ -30,7 +30,7 @@ import java.util.Set;
  * 
  * @param <T>
  *            Row type
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class ColumnGroupRow<T> {

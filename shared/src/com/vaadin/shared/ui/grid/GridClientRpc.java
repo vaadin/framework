@@ -20,7 +20,7 @@ import com.vaadin.shared.communication.ClientRpc;
 /**
  * Server-to-client RPC interface for the Grid component.
  * 
- * @since 7.2
+ * @since
  * @author Vaadin Ltd
  */
 public interface GridClientRpc extends ClientRpc {

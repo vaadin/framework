@@ -30,7 +30,7 @@ import com.vaadin.shared.ui.grid.ColumnGroupState;
  * A column group row represents an auxiliary header or footer row added to the
  * grid. A column group row includes column groups that group columns together.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
 public class ColumnGroupRow implements Serializable {
