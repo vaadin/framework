@@ -21,7 +21,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
@@ -210,13 +209,8 @@ public class TableConnector extends AbstractHasComponentsConnector implements
                         // by changing overflows as the length of the contents
                         // *shouldn't* have changed (unless the number of rows
                         // or the height of the widget has also changed)
-                        Scheduler.get().scheduleDeferred(new Command() {
-                            @Override
-                            public void execute() {
-                                Util.runWebkitOverflowAutoFix(getWidget().scrollBodyPanel
-                                        .getElement());
-                            }
-                        });
+                        Util.runWebkitOverflowAutoFixDeferred(getWidget().scrollBodyPanel
+                                .getElement());
                     }
                 } else {
                     getWidget().initializeRows(uidl, rowData);
