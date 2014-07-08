@@ -469,6 +469,24 @@ public class Util {
     }
 
     /**
+     * Defers the execution of {@link #runWebkitOverflowAutoFix(Element)}
+     * 
+     * @since
+     * @param elem
+     *            with overflow auto
+     */
+    public static void runWebkitOverflowAutoFixDeferred(final Element elem) {
+        Scheduler.get().scheduleDeferred(new Command() {
+
+            @Override
+            public void execute() {
+                Util.runWebkitOverflowAutoFix(elem);
+            }
+        });
+
+    }
+
+    /**
      * Run workaround for webkits overflow auto issue.
      * 
      * See: our bug #2138 and https://bugs.webkit.org/show_bug.cgi?id=21462

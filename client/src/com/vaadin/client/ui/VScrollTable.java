@@ -2251,13 +2251,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * Ensures the column alignments are correct at initial loading. <br/>
          * (child components widths are correct)
          */
-        Scheduler.get().scheduleDeferred(new Command() {
-
-            @Override
-            public void execute() {
-                Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
-            }
-        });
+        Util.runWebkitOverflowAutoFixDeferred(scrollBodyPanel.getElement());
 
         hadScrollBars = willHaveScrollbarz;
     }
@@ -6720,13 +6714,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     Util.notifyParentOfSizeChange(VScrollTable.this, rendering);
                 }
             }
-            Scheduler.get().scheduleDeferred(new Command() {
 
-                @Override
-                public void execute() {
-                    Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
-                }
-            });
+            Util.runWebkitOverflowAutoFixDeferred(scrollBodyPanel.getElement());
 
             forceRealignColumnHeaders();
         }
@@ -6863,13 +6852,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // We must run the fix as a deferred command to prevent it from
             // overwriting the scroll position with an outdated value, see
             // #7607.
-            Scheduler.get().scheduleDeferred(new Command() {
-
-                @Override
-                public void execute() {
-                    Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
-                }
-            });
+            Util.runWebkitOverflowAutoFixDeferred(scrollBodyPanel.getElement());
         }
 
         triggerLazyColumnAdjustment(false);
