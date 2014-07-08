@@ -89,7 +89,7 @@ public interface DeploymentConfiguration extends Serializable {
      * gracefully handle situations when the client sends a message to a
      * connector that has recently been removed on the server.
      * 
-     * @since
+     * @since 7.3
      * @return <code>true</code> if sync id checking is enabled;
      *         <code>false</code> otherwise
      */

@@ -38,12 +38,12 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ui.VWindowOverlay;
+import com.vaadin.client.ui.VOverlay;
 
 /**
  * TODO open for extension
  */
-public class VTooltip extends VWindowOverlay {
+public class VTooltip extends VOverlay {
     private static final String CLASSNAME = "v-tooltip";
     private static final int MARGIN = 4;
     public static final int TOOLTIP_EVENTS = Event.ONKEYDOWN
@@ -113,6 +113,7 @@ public class VTooltip extends VWindowOverlay {
      * 
      * @param info
      *            with the content of the tooltip
+     * @since 7.2.4
      */
     public void initializeAssistiveTooltips() {
         updatePosition(null, true);

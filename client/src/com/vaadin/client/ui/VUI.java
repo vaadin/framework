@@ -48,12 +48,11 @@ import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
-import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 
 /**
- * 
+ *
  */
 public class VUI extends SimplePanel implements ResizeHandler,
         Window.ClosingHandler, ShortcutActionHandlerOwner, Focusable,
@@ -61,6 +60,9 @@ public class VUI extends SimplePanel implements ResizeHandler,
         HasScrollHandlers {
 
     private static int MONITOR_PARENT_TIMER_INTERVAL = 1000;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public String theme;
 
     /** For internal use only. May be removed or replaced in the future. */
     public String id;
@@ -317,15 +319,19 @@ public class VUI extends SimplePanel implements ResizeHandler,
         }
     }
 
-    /**
-     * @return the name of the theme in use by this UI.
-     * @deprecated as of 7.3. Use {@link UIConnector#getActiveTheme()} instead.
-     */
-    @Deprecated
     public String getTheme() {
-        return ((UIConnector) ConnectorMap.get(connection).getConnector(this))
-                .getActiveTheme();
+        return theme;
     }
+
+    /**
+     * Used to reload host page on theme changes.
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     */
+    public static native void reloadHostPage()
+    /*-{
+         $wnd.location.reload();
+     }-*/;
 
     /**
      * Returns true if the body is NOT generated, i.e if someone else has made
@@ -524,5 +530,4 @@ public class VUI extends SimplePanel implements ResizeHandler,
             });
         }
     }
-
 }

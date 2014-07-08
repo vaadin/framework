@@ -13,26 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.communication;
+package com.vaadin.tests.widgetset.client.gwtrpc;
 
-import com.vaadin.client.ApplicationConnection;
-import com.vaadin.shared.communication.URLReference;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-public class TranslatedURLReference extends URLReference {
+/**
+ * Test GWT RPC in Vaadin DevMode.
+ *
+ * @author Vaadin Ltd
+ */
+@RemoteServiceRelativePath("GwtRpcTest")
+public interface GwtRpcServiceTest extends RemoteService {
 
-    private ApplicationConnection connection;
-
-    /**
-     * @param connection
-     *            the connection to set
+    /*
+     * Dummy method to verify if RPC works.
      */
-    public void setConnection(ApplicationConnection connection) {
-        this.connection = connection;
-    }
-
-    @Override
-    public String getURL() {
-        return connection.translateVaadinUri(super.getURL());
-    }
+    String giveMeThat(String that, String haveThis);
 
 }

@@ -41,6 +41,7 @@ import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.LegacyComponent;
@@ -339,31 +340,6 @@ public abstract class AbstractClientConnector implements ClientConnector,
         }
     }
 
-    private static final class AllChildrenIterable implements
-            Iterable<ClientConnector>, Serializable {
-        private final ClientConnector connector;
-
-        private AllChildrenIterable(ClientConnector connector) {
-            this.connector = connector;
-        }
-
-        @Override
-        public Iterator<ClientConnector> iterator() {
-            CombinedIterator<ClientConnector> iterator = new CombinedIterator<ClientConnector>();
-
-            if (connector instanceof HasComponents) {
-                HasComponents hasComponents = (HasComponents) connector;
-                iterator.addIterator(hasComponents.iterator());
-            }
-
-            Collection<Extension> extensions = connector.getExtensions();
-            if (extensions.size() > 0) {
-                iterator.addIterator(extensions.iterator());
-            }
-            return iterator;
-        }
-    }
-
     private class RpcInvocationHandler implements InvocationHandler,
             Serializable {
 
@@ -493,41 +469,6 @@ public abstract class AbstractClientConnector implements ClientConnector,
         }
     }
 
-    private static final class CombinedIterator<T> implements Iterator<T>,
-            Serializable {
-
-        private final Collection<Iterator<? extends T>> iterators = new ArrayList<Iterator<? extends T>>();
-
-        public void addIterator(Iterator<? extends T> iterator) {
-            iterators.add(iterator);
-        }
-
-        @Override
-        public boolean hasNext() {
-            for (Iterator<? extends T> i : iterators) {
-                if (i.hasNext()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public T next() {
-            for (Iterator<? extends T> i : iterators) {
-                if (i.hasNext()) {
-                    return i.next();
-                }
-            }
-            throw new NoSuchElementException();
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-    }
-
     /**
      * Get an Iterable for iterating over all child connectors, including both
      * extensions and child components.
@@ -536,9 +477,62 @@ public abstract class AbstractClientConnector implements ClientConnector,
      *            the connector to get children for
      * @return an Iterable giving all child connectors.
      */
-    public static Iterable<ClientConnector> getAllChildrenIterable(
+    public static Iterable<? extends ClientConnector> getAllChildrenIterable(
             final ClientConnector connector) {
-        return new AllChildrenIterable(connector);
+
+        Collection<Extension> extensions = connector.getExtensions();
+        boolean hasComponents = connector instanceof HasComponents;
+        boolean hasExtensions = extensions.size() > 0;
+        if (!hasComponents && !hasExtensions) {
+            // If has neither component nor extensions, return immutable empty
+            // list as iterable.
+            return Collections.emptyList();
+        }
+        if (hasComponents && !hasExtensions) {
+            // only components
+            return (HasComponents) connector;
+        }
+        if (!hasComponents && hasExtensions) {
+            // only extensions
+            return extensions;
+        }
+
+        // combine the iterators of extensions and components to a new iterable.
+        final Iterator<Component> componentsIterator = ((HasComponents) connector)
+                .iterator();
+        final Iterator<Extension> extensionsIterator = extensions.iterator();
+        Iterable<? extends ClientConnector> combinedIterable = new Iterable<ClientConnector>() {
+
+            @Override
+            public Iterator<ClientConnector> iterator() {
+                return new Iterator<ClientConnector>() {
+
+                    @Override
+                    public boolean hasNext() {
+                        return componentsIterator.hasNext()
+                                || extensionsIterator.hasNext();
+                    }
+
+                    @Override
+                    public ClientConnector next() {
+                        if (componentsIterator.hasNext()) {
+                            return componentsIterator.next();
+                        }
+                        if (extensionsIterator.hasNext()) {
+                            return extensionsIterator.next();
+                        }
+                        throw new NoSuchElementException();
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+
+                };
+            }
+        };
+        return combinedIterable;
     }
 
     @Override

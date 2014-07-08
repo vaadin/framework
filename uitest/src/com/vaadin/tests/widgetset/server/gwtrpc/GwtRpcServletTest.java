@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,14 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.gridlayout;
+package com.vaadin.tests.widgetset.server.gwtrpc;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.vaadin.tests.widgetset.client.gwtrpc.GwtRpcServiceTest;
 
 /**
- * A test class for testing GridLayoutExpandRatio. The class is empty because
- * the name convention is UIClassName+Test. GridLayoutExpandRatioTest and
- * GridLayoutHideMiddleCellsTest behave the same way but on different UI
- * classes. Thats why they have different names and zero code.
+ * Test GWT RPC in Vaadin DevMode.
+ *
+ * @author Vaadin Ltd
  */
-public class GridLayoutExpandRatioTest extends GridLayoutBaseTest {
+@SuppressWarnings("serial")
+public class GwtRpcServletTest extends RemoteServiceServlet implements
+        GwtRpcServiceTest {
+
+    @Override
+    public String giveMeThat(String that, String haveThis) {
+        return "Take " + that + " for " + haveThis;
+    }
 
 }

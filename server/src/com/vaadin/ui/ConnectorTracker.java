@@ -366,7 +366,7 @@ public class ConnectorTracker implements Serializable {
             ClientConnector connector = stack.pop();
             danglingConnectors.remove(connector);
 
-            Iterable<ClientConnector> children = AbstractClientConnector
+            Iterable<? extends ClientConnector> children = AbstractClientConnector
                     .getAllChildrenIterable(connector);
             for (ClientConnector child : children) {
                 stack.add(child);

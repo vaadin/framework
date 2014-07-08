@@ -91,8 +91,6 @@ $chameleon-line-height: 1.4;
 	.v-contextmenu,
 	.v-Notification,
 	.v-menubar-submenu {
-		background: #fff url(../img/grad-light-top.png) repeat-x;
-		background-color: rgba(255,255,255,.85);
 		border: 1px solid #adadad;
 		border-color: rgba(0,0,0,.4);
 		border-radius: 4px;
@@ -100,7 +98,14 @@ $chameleon-line-height: 1.4;
 		-moz-border-radius: 4px;
 		overflow: hidden;
 		}
-	
+	.v-window,
+	.v-popupview-popup,
+	.v-filterselect-suggestpopup,
+	.v-datefield-popup,
+	.v-contextmenu,
+	.v-menubar-submenu{
+    	background: rgba(232,232,232,.90) url(../img/grad-light-top.png) repeat-x;
+    	}
 	.v-filterselect-suggestpopup,
 	.v-contextmenu,
 	.v-menubar-submenu {

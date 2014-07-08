@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 Vaadin Ltd.
+ * Copyright 2000-2014 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,14 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.gridlayout;
+package com.vaadin.tests.widgetset.server.gwtrpc;
+
+import com.vaadin.ui.AbstractComponent;
 
 /**
- * A test class for testing GridLayoutExpandRatio. The class is empty because
- * the name convention is UIClassName+Test. GridLayoutExpandRatioTest and
- * GridLayoutHideMiddleCellsTest behave the same way but on different UI
- * classes. Thats why they have different names and zero code.
+ * Dummy client connector to link with the client functionality where the GWT
+ * RPC is triggered.
+ *
+ * @since
+ * @author Vaadin Ltd
  */
-public class GridLayoutExpandRatioTest extends GridLayoutBaseTest {
+@SuppressWarnings("serial")
+public class GwtRpcButton extends AbstractComponent {
 
 }

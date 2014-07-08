@@ -26,33 +26,19 @@ import org.openqa.selenium.support.ui.Select;
 
 public class PushConfigurationLongPollingTest extends PushConfigurationTest {
 
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
-
-        browsers.remove(Browser.IE8.getDesiredCapabilities());
-
-        return browsers;
-    }
-
     @Test
     public void testLongPolling() throws InterruptedException {
-        new Select(getTransportSelect()).selectByVisibleText("LONG_POLLING");
-        new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
+        openDebugLogTab();
 
+        new Select(getTransportSelect()).selectByVisibleText("LONG_POLLING");
         assertThat(getStatusText(),
                 containsString("fallbackTransport: long-polling"));
         assertThat(getStatusText(), containsString("transport: long-polling"));
 
+        clearDebugMessages();
+        new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
+        waitForDebugMessage("Push connection established using long-polling", 10);
         waitForServerCounterToUpdate();
-
-        // Use debug console to verify we used the correct transport type
-        assertThat(
-                driver.getPageSource(),
-                containsString("Push connection established using long-polling"));
-
-        new Select(getPushModeSelect()).selectByVisibleText("DISABLED");
-
     }
 
 }

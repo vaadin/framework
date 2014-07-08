@@ -247,7 +247,7 @@ public class VaadinPortletRequest extends PortletRequestWrapper implements
      * 
      * @return the current portlet request instance if available, otherwise
      *         <code>null</code>
-     * 
+     * @since 7.3
      */
     public static PortletRequest getCurrentPortletRequest() {
         return VaadinPortletService.getCurrentPortletRequest();
@@ -262,7 +262,7 @@ public class VaadinPortletRequest extends PortletRequestWrapper implements
      * 
      * @return the current Vaadin portlet request instance if available,
      *         otherwise <code>null</code>
-     * 
+     * @since 7.3
      */
     public static VaadinPortletRequest getCurrent() {
         return VaadinPortletService.getCurrentRequest();
