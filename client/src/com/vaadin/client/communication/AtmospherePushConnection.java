@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,7 +37,7 @@ import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 /**
  * The default {@link PushConnection} implementation that uses Atmosphere for
  * handling the communication channel.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -171,8 +171,12 @@ public class AtmospherePushConnection implements PushConnection {
                         + ApplicationConstants.PUSH_PATH + '/');
         String extraParams = UIConstants.UI_ID_PARAMETER + "="
                 + connection.getConfiguration().getUIId();
-        extraParams += "&" + ApplicationConstants.CSRF_TOKEN_PARAMETER + "="
-                + connection.getCsrfToken();
+
+        if (!connection.getCsrfToken().equals(
+                ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE)) {
+            extraParams += "&" + ApplicationConstants.CSRF_TOKEN_PARAMETER
+                    + "=" + connection.getCsrfToken();
+        }
 
         // uri is needed to identify the right connection when closing
         uri = ApplicationConnection.addGetParameters(baseUrl, extraParams);
@@ -239,9 +243,9 @@ public class AtmospherePushConnection implements PushConnection {
     /**
      * Called whenever a server push connection is established (or
      * re-established).
-     * 
+     *
      * @param response
-     * 
+     *
      * @since 7.2
      */
     protected void onConnect(AtmosphereResponse response) {
@@ -330,7 +334,7 @@ public class AtmospherePushConnection implements PushConnection {
     /**
      * Called if the push connection fails. Atmosphere will automatically retry
      * the connection until successful.
-     * 
+     *
      */
     protected void onError(AtmosphereResponse response) {
         state = State.DISCONNECTED;
@@ -448,7 +452,7 @@ public class AtmospherePushConnection implements PushConnection {
             contentType: 'application/json; charset=UTF-8',
             reconnectInterval: 5000,
             timeout: -1,
-            maxReconnectOnClose: 10000000, 
+            maxReconnectOnClose: 10000000,
             trackMessageLength: true,
             enableProtocol: true,
             messageDelimiter: String.fromCharCode(@com.vaadin.shared.communication.PushConstants::MESSAGE_DELIMITER)
@@ -501,7 +505,7 @@ public class AtmospherePushConnection implements PushConnection {
 
     private static native boolean isAtmosphereLoaded()
     /*-{
-        return $wnd.jQueryVaadin != undefined;  
+        return $wnd.jQueryVaadin != undefined;
     }-*/;
 
     private void runWhenAtmosphereLoaded(final Command command) {
