@@ -78,7 +78,13 @@ public class ServerRpcHandler implements Serializable {
         public RpcRequest(String jsonString, VaadinRequest request)
                 throws JSONException {
             json = new JSONObject(jsonString);
-            csrfToken = json.getString(ApplicationConstants.CSRF_TOKEN);
+
+            String csrfToken = json.optString(ApplicationConstants.CSRF_TOKEN);
+            if (csrfToken.equals("")) {
+                csrfToken = ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE;
+            }
+            this.csrfToken = csrfToken;
+
             if (request.getService().getDeploymentConfiguration()
                     .isSyncIdCheckEnabled()) {
                 syncId = json.getInt(ApplicationConstants.SERVER_SYNC_ID);
