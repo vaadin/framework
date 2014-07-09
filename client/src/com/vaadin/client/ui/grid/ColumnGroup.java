@@ -24,15 +24,15 @@ import java.util.List;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
 
 /**
- * Column groups are used to group columns together for adding common auxiliary
- * headers and footers. Columns groups are added to {@link ColumnGroupRow
- * ColumnGroupRows}.
+ * A column group is a horizontal grouping of columns in a header or footer.
+ * Columns groups are added to {@link ColumnGroupRow ColumnGroupRows}.
  * 
  * @param <T>
  *            The row type of the grid. The row type is the POJO type from where
  *            the data is retrieved into the column cells.
  * @since
  * @author Vaadin Ltd
+ * @see ColumnGroupRow#addGroup(ColumnGroup...)
  */
 public class ColumnGroup<T> {
 
@@ -81,7 +81,7 @@ public class ColumnGroup<T> {
     }
 
     /**
-     * Gets the header text.
+     * Gets the text shown in the header.
      * 
      * @return the header text
      */
@@ -92,61 +92,60 @@ public class ColumnGroup<T> {
     /**
      * Sets the text shown in the header.
      * 
-     * @param header
-     *            the header to set
+     * @param caption
+     *            the caption to set
      */
-    public void setHeaderCaption(String header) {
-        this.header = header;
+    public void setHeaderCaption(String caption) {
+        this.header = caption;
         grid.refreshHeader();
     }
 
     /**
      * Gets the text shown in the footer.
      * 
-     * @return the text in the footer
+     * @return the footer text
      */
     public String getFooterCaption() {
         return footer;
     }
 
     /**
-     * Sets the text displayed in the footer.
+     * Sets the text shown in the footer.
      * 
-     * @param footer
-     *            the footer to set
+     * @param caption
+     *            the caption to set
      */
-    public void setFooterCaption(String footer) {
-        this.footer = footer;
+    public void setFooterCaption(String caption) {
+        this.footer = caption;
         grid.refreshFooter();
     }
 
     /**
-     * Returns all column in this group. It includes the subgroups columns as
-     * well.
+     * Returns all columns in this group. This includes columns in all the
+     * sub-groups as well.
      * 
-     * @return unmodifiable list of columns
+     * @return an unmodifiable list of columns
      */
     public List<GridColumn<?, T>> getColumns() {
         return columns;
     }
 
     /**
-     * Returns the renderer used for rendering the header cells
+     * Returns the renderer for the header cells.
      * 
-     * @return a renderer that renders header cells
+     * @return the renderer for the header cells
      */
     public Renderer<String> getHeaderRenderer() {
         return headerRenderer;
     }
 
     /**
-     * Sets the renderer that renders header cells.
+     * Sets the renderer for the header cells.
      * 
      * @param renderer
-     *            The renderer to use for rendering header cells. Must not be
-     *            null.
+     *            a non-{@code null} renderer to use for the header cells.
      * @throws IllegalArgumentException
-     *             thrown when renderer is null
+     *             if {@code renderer} is {@code null}
      */
     public void setHeaderRenderer(Renderer<String> renderer) {
         if (renderer == null) {
@@ -157,9 +156,9 @@ public class ColumnGroup<T> {
     }
 
     /**
-     * Returns the renderer used for rendering the footer cells
+     * Returns the renderer for the footer cells.
      * 
-     * @return a renderer that renders footer cells
+     * @return the renderer for the footer cells
      */
     public Renderer<String> getFooterRenderer() {
         return footerRenderer;
@@ -169,10 +168,9 @@ public class ColumnGroup<T> {
      * Sets the renderer that renders footer cells.
      * 
      * @param renderer
-     *            The renderer to use for rendering footer cells. Must not be
-     *            null.
+     *            a non-{@code null} renderer for footer cells.
      * @throws IllegalArgumentException
-     *             thrown when renderer is null
+     *             if {@code renderer} is {@code null}
      */
     public void setFooterRenderer(Renderer<String> renderer) {
         if (renderer == null) {

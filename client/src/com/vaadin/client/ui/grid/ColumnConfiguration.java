@@ -26,7 +26,7 @@ package com.vaadin.client.ui.grid;
 public interface ColumnConfiguration {
 
     /**
-     * Removes columns at a certain index.
+     * Removes columns at certain indices.
      * <p>
      * If any of the removed columns were frozen, the number of frozen columns
      * will be reduced by the number of the removed columns that were frozen.
@@ -34,11 +34,10 @@ public interface ColumnConfiguration {
      * @param index
      *            the index of the first column to be removed
      * @param numberOfColumns
-     *            the number of rows to remove, starting from the index
+     *            the number of rows to remove, starting from {@code index}
      * @throws IndexOutOfBoundsException
-     *             if any integer in the range
-     *             <code>[index..(index+numberOfColumns)]</code> is not an
-     *             existing column index.
+     *             if the entire range of removed columns is not currently
+     *             present in the escalator
      * @throws IllegalArgumentException
      *             if <code>numberOfColumns</code> is less than 1.
      */

@@ -19,10 +19,12 @@ import com.google.gwt.dom.client.Element;
 
 /**
  * Describes a cell
- * 
- * TODO The description is still very vague since the content and naming of this
- * class is still under debate and the API is not final. Improve the description
- * when API has been finalized.
+ * <p>
+ * It's a representation of the element in a grid cell, and its row and column
+ * indices.
+ * <p>
+ * Unlike the {@link FlyweightRow}, an instance of {@link Cell} can be stored in
+ * a field.
  * 
  * @since
  * @author Vaadin Ltd
@@ -36,7 +38,7 @@ public class Cell {
     private final Element element;
 
     /**
-     * Constructs a new {@link Cell}
+     * Constructs a new {@link Cell}.
      * 
      * @param row
      *            The index of the row
@@ -53,7 +55,7 @@ public class Cell {
     }
 
     /**
-     * Returns the index of the row the cell resides on
+     * Returns the index of the row the cell resides in.
      * 
      * @return the row index
      * 
@@ -63,7 +65,7 @@ public class Cell {
     }
 
     /**
-     * Returns the index of the column the cell resides on
+     * Returns the index of the column the cell resides in.
      * 
      * @return the column index
      */
@@ -72,9 +74,9 @@ public class Cell {
     }
 
     /**
-     * Returns the element of the cell
+     * Returns the element of the cell.
      * 
-     * @return the element
+     * @return the cell element
      */
     public Element getElement() {
         return element;

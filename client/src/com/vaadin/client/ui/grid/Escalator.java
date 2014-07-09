@@ -63,6 +63,8 @@ import com.vaadin.shared.util.SharedUtil;
 /*-
 
  Maintenance Notes! Reading these might save your day.
+ (note for editors: line width is 80 chars, including the
+ one-space indentation)
 
 
  == Row Container Structure
@@ -71,7 +73,7 @@ import com.vaadin.shared.util.SharedUtil;
  |-- AbstractStaticRowContainer
  | |-- HeaderRowContainer
  | `-- FooterContainer
- `-- BodyRowContainer
+ `---- BodyRowContainer
 
  AbstractRowContainer is intended to contain all common logic
  between RowContainers. It manages the bookkeeping of row
@@ -134,15 +136,23 @@ import com.vaadin.shared.util.SharedUtil;
  element's visual index via the field
  BodyRowContainer.visualRowOrder.
 
+ Currently, the physical and visual indices are kept in sync
+ _most of the time_ by a deferred rearrangement of rows.
+ They become desynced when scrolling. This is to help screen
+ readers to read the contents from the DOM in a natural
+ order. See BodyRowContainer.DeferredDomSorter for more
+ about that.
+
  */
 
 /**
  * A workaround-class for GWT and JSNI.
  * <p>
  * GWT is unable to handle some method calls to Java methods in inner-classes
- * from within JSNI blocks. Having that inner class implement a non-inner-class
- * (or interface), makes it possible for JSNI to indirectly refer to the inner
- * class, by invoking methods and fields in the non-inner-class.
+ * from within JSNI blocks. Having that inner class extend a non-inner-class (or
+ * implement such an interface), makes it possible for JSNI to indirectly refer
+ * to the inner class, by invoking methods and fields in the non-inner-class
+ * API.
  * 
  * @see Escalator.Scroller
  */
@@ -246,10 +256,6 @@ public class Escalator extends Widget {
      * being able to support variable row heights. NOTE: these bits can most
      * often also be identified by searching for code reading the ROW_HEIGHT_PX
      * constant.
-     */
-    /*
-     * [[API]]: Implementing this suggestion would require a change in the
-     * public API. These suggestions usually don't come lightly.
      */
     /*
      * [[mpixscroll]]: This code will require alterations that are relevant for
@@ -4070,7 +4076,7 @@ public class Escalator extends Widget {
     }
 
     /**
-     * Returns the representation of this Escalator header.
+     * Returns the row container for the header in this Escalator.
      * 
      * @return the header. Never <code>null</code>
      */
@@ -4079,7 +4085,7 @@ public class Escalator extends Widget {
     }
 
     /**
-     * Returns the representation of this Escalator body.
+     * Returns the row container for the body in this Escalator.
      * 
      * @return the body. Never <code>null</code>
      */
@@ -4088,7 +4094,7 @@ public class Escalator extends Widget {
     }
 
     /**
-     * Returns the representation of this Escalator footer.
+     * Returns the row container for the footer in this Escalator.
      * 
      * @return the footer. Never <code>null</code>
      */
@@ -4148,7 +4154,7 @@ public class Escalator extends Widget {
 
     /**
      * Returns the vertical scroll offset. Note that this is not necessarily the
-     * same as the scroll top in the DOM
+     * same as the {@code scrollTop} attribute in the DOM.
      * 
      * @return the logical vertical scroll offset
      */
@@ -4157,8 +4163,8 @@ public class Escalator extends Widget {
     }
 
     /**
-     * Sets the vertical scroll offset. Note that this is not necessarily the
-     * same as the scroll top in the DOM
+     * Sets the vertical scroll offset. Note that this will not necessarily
+     * become the same as the {@code scrollTop} attribute in the DOM.
      * 
      * @param scrollTop
      *            the number of pixels to scroll vertically
@@ -4169,7 +4175,7 @@ public class Escalator extends Widget {
 
     /**
      * Returns the logical horizontal scroll offset. Note that this is not
-     * necessarily the same as the scroll left in the DOM.
+     * necessarily the same as the {@code scrollLeft} attribute in the DOM.
      * 
      * @return the logical horizontal scroll offset
      */
@@ -4178,8 +4184,8 @@ public class Escalator extends Widget {
     }
 
     /**
-     * Sets the logical horizontal scroll offset. Note that this is not
-     * necessarily the same as the scroll left in the DOM.
+     * Sets the logical horizontal scroll offset. Note that will not necessarily
+     * become the same as the {@code scrollLeft} attribute in the DOM.
      * 
      * @param scrollLeft
      *            the number of pixels to scroll horizontally
@@ -4190,8 +4196,8 @@ public class Escalator extends Widget {
 
     /**
      * Scrolls the body horizontally so that the column at the given index is
-     * visible and there is at least {@code padding} pixels to the given scroll
-     * destination.
+     * visible and there is at least {@code padding} pixels in the direction of
+     * the given scroll destination.
      * 
      * @param columnIndex
      *            the index of the column to scroll to
@@ -4205,9 +4211,7 @@ public class Escalator extends Widget {
      *             column
      * @throws IllegalArgumentException
      *             if {@code destination} is {@link ScrollDestination#MIDDLE}
-     *             and padding is nonzero, because having a padding on a
-     *             centered column is undefined behavior, or if the column is
-     *             frozen
+     *             and padding is nonzero, or if the indicated column is frozen
      */
     public void scrollToColumn(final int columnIndex,
             final ScrollDestination destination, final int padding)
@@ -4251,8 +4255,7 @@ public class Escalator extends Widget {
      *             if {@code rowIndex} is not a valid index for an existing row
      * @throws IllegalArgumentException
      *             if {@code destination} is {@link ScrollDestination#MIDDLE}
-     *             and padding is nonzero, because having a padding on a
-     *             centered row is undefined behavior
+     *             and padding is nonzero
      */
     public void scrollToRow(final int rowIndex,
             final ScrollDestination destination, final int padding)
@@ -4348,7 +4351,7 @@ public class Escalator extends Widget {
 
     /**
      * Adds an event handler that gets notified when the range of visible rows
-     * changes e.g. because of scrolling.
+     * changes e.g. because of scrolling or row resizing.
      * 
      * @param rowVisibilityChangeHandler
      *            the event handler
@@ -4376,14 +4379,14 @@ public class Escalator extends Widget {
     }
 
     /**
-     * Gets the range of currently visible rows
+     * Gets the range of currently visible rows.
      * 
      * @return range of visible rows
      */
     public Range getVisibleRowRange() {
-        return Range.between(
+        return Range.withLength(
                 body.getLogicalRowIndex(body.visualRowOrder.getFirst()),
-                body.getLogicalRowIndex(body.visualRowOrder.getLast()) + 1);
+                body.visualRowOrder.size());
     }
 
     /**
@@ -4473,12 +4476,9 @@ public class Escalator extends Widget {
      * @param rows
      *            the number of rows that should be visible in Escalator's body
      * @throws IllegalArgumentException
-     *             if {@code rows} is zero or less
-     * @throws IllegalArgumentException
-     *             if {@code rows} is {@link Double#isInifinite(double)
-     *             infinite}
-     * @throws IllegalArgumentException
-     *             if {@code rows} is {@link Double#isNaN(double) NaN}.
+     *             if {@code rows} is &leq; 0,
+     *             {@link Double#isInifinite(double) infinite} or
+     *             {@link Double#isNaN(double) NaN}.
      * @see #setHeightMode(HeightMode)
      */
     public void setHeightByRows(double rows) throws IllegalArgumentException {
