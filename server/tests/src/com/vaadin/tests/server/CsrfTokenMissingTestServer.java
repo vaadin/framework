@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.server.ServiceException;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinServletRequest;
@@ -37,6 +38,7 @@ import com.vaadin.server.communication.ServerRpcHandler.RpcRequest;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.tests.util.MockDeploymentConfiguration;
+import com.vaadin.util.CurrentInstance;
 
 /**
  * Test the actual csrf token validation by the server.
@@ -139,13 +141,16 @@ public class CsrfTokenMissingTestServer {
      * Create the requets.
      */
     private RpcRequest createRequest() {
+        CurrentInstance.set(VaadinRequest.class, vaadinRequest);
         try {
-            return new RpcRequest(getPayload(), vaadinRequest);
+            return new RpcRequest(getPayload());
         } catch (JSONException e) {
             LOGGER.log(Level.SEVERE, "", e);
 
             Assert.assertTrue(false);
             return null;
+        } finally {
+            CurrentInstance.set(VaadinRequest.class, null);
         }
     }
 
