@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
 
         // Column headers should be visible
         List<TestBenchElement> cells = getGridHeaderRowCells();
-        assertEquals(10, cells.size());
+        assertEquals(GridBasicFeatures.COLUMNS, cells.size());
         assertEquals("Column0", cells.get(0).getText());
         assertEquals("Column1", cells.get(1).getText());
         assertEquals("Column2", cells.get(2).getText());
@@ -63,7 +64,7 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
 
         // Footers should now be visible
         cells = getGridFooterRowCells();
-        assertEquals(10, cells.size());
+        assertEquals(GridBasicFeatures.COLUMNS, cells.size());
         assertEquals("Footer 0", cells.get(0).getText());
         assertEquals("Footer 1", cells.get(1).getText());
         assertEquals("Footer 2", cells.get(2).getText());
@@ -86,7 +87,7 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
 
         // Empty group row cells should be present
         cells = getGridHeaderRowCells();
-        assertEquals(10, cells.size());
+        assertEquals(GridBasicFeatures.COLUMNS, cells.size());
 
         // Group columns 0 & 1
         selectMenuPath("Component", "Column groups", "Column group row 1",
@@ -370,6 +371,55 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         scrollGridVerticallyTo(0); // make sure the row is out of cache
         assertFalse("row shouldn't be selected when scrolling "
                 + "back into view", isSelected(getRow(0)));
+    }
+
+    @Test
+    public void testSorting() throws IOException {
+        openTestURL();
+
+        GridElement grid = getGridElement();
+
+        // Sorting by column 9 is sorting by row index that is represented as a
+        // String.
+        // First cells for first 3 rows are (9, 0), (99, 0) and (999, 0)
+        sortBy("Column9, DESC");
+        String row = "";
+        for (int i = 0; i < 3; ++i) {
+            row += "9";
+            assertEquals(
+                    "Grid is not sorted by Column9 using descending direction.",
+                    "(" + row + ", 0)", grid.getCell(i, 0).getText());
+        }
+
+        // Column 10 is random numbers from Random with seed 13334
+        sortBy("Column10, ASC");
+
+        // Not cleaning up correctly causes exceptions when scrolling.
+        grid.scrollToRow(50);
+        assertFalse("Scrolling caused and exception when shuffled.",
+                getLogRow(0).contains("Exception"));
+
+        for (int i = 0; i < 5; ++i) {
+            assertGreater(
+                    "Grid is not sorted by Column10 using ascending direction",
+                    Integer.parseInt(grid.getCell(i + 1, 10).getText()),
+                    Integer.parseInt(grid.getCell(i, 10).getText()));
+
+        }
+
+        // Column 7 is row index as a number. Last three row are original rows
+        // 2, 1 and 0.
+        sortBy("Column7, DESC");
+        for (int i = 0; i < 3; ++i) {
+            assertEquals(
+                    "Grid is not sorted by Column7 using descending direction",
+                    "(" + i + ", 0)",
+                    grid.getCell(GridBasicFeatures.ROWS - (i + 1), 0).getText());
+        }
+    }
+
+    private void sortBy(String column) {
+        selectMenuPath("Component", "State", "Sort by column", column);
     }
 
     private void toggleFirstRowSelection() {

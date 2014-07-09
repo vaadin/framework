@@ -23,10 +23,12 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.components.grid.ColumnGroup;
 import com.vaadin.ui.components.grid.ColumnGroupRow;
@@ -36,6 +38,8 @@ import com.vaadin.ui.components.grid.GridColumn;
 import com.vaadin.ui.components.grid.renderers.DateRenderer;
 import com.vaadin.ui.components.grid.renderers.HtmlRenderer;
 import com.vaadin.ui.components.grid.renderers.NumberRenderer;
+import com.vaadin.ui.components.grid.sort.Sort;
+import com.vaadin.ui.components.grid.sort.SortOrder;
 
 /**
  * Tests the basic features like columns, footers and headers
@@ -45,9 +49,9 @@ import com.vaadin.ui.components.grid.renderers.NumberRenderer;
  */
 public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
-    private static final int MANUALLY_FORMATTED_COLUMNS = 3;
-    private static final int COLUMNS = 10;
-    private static final int ROWS = 1000;
+    private static final int MANUALLY_FORMATTED_COLUMNS = 4;
+    public static final int COLUMNS = 11;
+    public static final int ROWS = 1000;
 
     private int columnGroupRows = 0;
     private IndexedContainer ds;
@@ -78,9 +82,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             ds.addContainerProperty(getColumnProperty(col++), Date.class,
                     new Date());
             ds.addContainerProperty(getColumnProperty(col++), String.class, "");
+
+            ds.addContainerProperty(getColumnProperty(col++), Integer.class, 0);
+
         }
 
         {
+            Random rand = new Random();
+            rand.setSeed(13334);
             long timestamp = 0;
             for (int row = 0; row < ROWS; row++) {
                 Item item = ds.addItem(Integer.valueOf(row));
@@ -97,6 +106,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                                        // variation
                 item.getItemProperty(getColumnProperty(col++)).setValue(
                         "<b>" + row + "</b>");
+
+                item.getItemProperty(getColumnProperty(col++)).setValue(
+                        rand.nextInt());
             }
         }
 
@@ -115,6 +127,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     new DateRenderer(new SimpleDateFormat("dd.MM.yy HH:mm")));
             grid.getColumn(getColumnProperty(col++)).setRenderer(
                     new HtmlRenderer());
+            grid.getColumn(getColumnProperty(col++)).setRenderer(
+                    new NumberRenderer());
         }
 
         // Add footer values (header values are automatically created)
@@ -173,6 +187,22 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     public void execute(Grid grid, SelectionMode selectionMode,
                             Object data) {
                         grid.setSelectionMode(selectionMode);
+                    }
+                });
+
+        LinkedHashMap<String, List<SortOrder>> sortableProperties = new LinkedHashMap<String, List<SortOrder>>();
+        for (Object propertyId : ds.getSortableContainerPropertyIds()) {
+            sortableProperties.put(propertyId + ", ASC", Sort.by(propertyId)
+                    .build());
+            sortableProperties.put(propertyId + ", DESC",
+                    Sort.by(propertyId, SortDirection.DESCENDING).build());
+        }
+        createSelectAction("Sort by column", "State", sortableProperties,
+                "Column 9, ascending", new Command<Grid, List<SortOrder>>() {
+                    @Override
+                    public void execute(Grid grid, List<SortOrder> sortOrder,
+                            Object data) {
+                        grid.setSortOrder(sortOrder);
                     }
                 });
     }

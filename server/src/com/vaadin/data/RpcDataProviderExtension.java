@@ -583,11 +583,17 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
 
             else {
-                // TODO no diff info available, redraw everything
-                throw new UnsupportedOperationException("bare "
-                        + "ItemSetChangeEvents are currently "
-                        + "not supported, use a container that "
-                        + "uses AddItemEvents and RemoveItemEvents.");
+                Range visibleRows = activeRowHandler.activeRange;
+                List<?> itemIds = container.getItemIds(visibleRows.getStart(),
+                        visibleRows.length());
+
+                keyMapper.removeActiveRows(keyMapper.activeRange);
+                keyMapper.addActiveRows(visibleRows, visibleRows.getStart(),
+                        itemIds);
+
+                pushRows(visibleRows.getStart(), itemIds);
+                activeRowHandler.setActiveRows(visibleRows.getStart(),
+                        visibleRows.length());
             }
         }
     };
