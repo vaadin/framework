@@ -277,10 +277,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
 
             pinnedItemIds.remove(itemId);
-            final Integer removedIndex = indexToItemId.inverse().remove(itemId);
-            if (removedIndex == null
-                    || !activeRange.contains(removedIndex.intValue())) {
+            final Integer index = indexToItemId.inverse().get(itemId);
+            if (index == null || !activeRange.contains(index.intValue())) {
                 itemIdToKey.remove(itemId);
+                indexToItemId.remove(index);
             }
         }
 
