@@ -324,6 +324,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     /** For internal use only. May be removed or replaced in the future. */
     public boolean immediate;
 
+    private boolean updatedReqRows = true;
+
     private boolean nullSelectionAllowed = true;
 
     private SelectMode selectMode = SelectMode.NONE;
@@ -2563,10 +2565,32 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 // if client connection is busy, don't bother loading it more
                 VConsole.log("Postponed rowfetch");
                 schedule(250);
+            } else if (!updatedReqRows && allRenderedRowsAreNew()) {
+
+                /*
+                 * If all rows are new, there might have been a server-side call
+                 * to Table.setCurrentPageFirstItemIndex(int) In this case,
+                 * scrolling event takes way too late, and all the rows from
+                 * previous viewport to this one were requested.
+                 * 
+                 * This should prevent requesting unneeded rows by updating
+                 * reqFirstRow and reqRows before needing them. See (#14135)
+                 */
+
+                setReqFirstRow((firstRowInViewPort - (int) (pageLength * cache_rate)));
+                int last = firstRowInViewPort + (int) (cache_rate * pageLength)
+                        + pageLength - 1;
+                if (last >= totalRows) {
+                    last = totalRows - 1;
+                }
+                setReqRows(last - getReqFirstRow() + 1);
+                updatedReqRows = true;
+                schedule(250);
             } else {
 
                 int firstRendered = scrollBody.getFirstRendered();
                 int lastRendered = scrollBody.getLastRendered();
+
                 if (lastRendered > totalRows) {
                     lastRendered = totalRows - 1;
                 }
@@ -6441,6 +6465,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             public Widget getWidgetForPaintable() {
                 return this;
             }
+
         }
 
         protected class VScrollTableGeneratedRow extends VScrollTableRow {
@@ -7172,8 +7197,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             return;
         }
 
-        if (firstRowInViewPort - pageLength * cache_rate > lastRendered
-                || firstRowInViewPort + pageLength + pageLength * cache_rate < firstRendered) {
+        if (allRenderedRowsAreNew()) {
             // need a totally new set of rows
             rowRequestHandler
                     .setReqFirstRow((firstRowInViewPort - (int) (pageLength * cache_rate)));
@@ -7184,6 +7208,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
             rowRequestHandler.setReqRows(last
                     - rowRequestHandler.getReqFirstRow() + 1);
+            updatedReqRows = false;
             rowRequestHandler.deferRowFetch();
             return;
         }
@@ -7204,6 +7229,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     * cache_rate) - lastRendered);
             rowRequestHandler.triggerRowFetch(lastRendered + 1, reqRows);
         }
+    }
+
+    private boolean allRenderedRowsAreNew() {
+        int firstRowInViewPort = calcFirstRowInViewPort();
+        int firstRendered = scrollBody.getFirstRendered();
+        int lastRendered = scrollBody.getLastRendered();
+        return (firstRowInViewPort - pageLength * cache_rate > lastRendered || firstRowInViewPort
+                + pageLength + pageLength * cache_rate < firstRendered);
     }
 
     protected int calcFirstRowInViewPort() {
