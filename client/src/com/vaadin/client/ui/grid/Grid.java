@@ -385,6 +385,15 @@ public class Grid<T> extends Composite implements
                     Element cellElement = cell.getElement();
                     if (grid.getColumn(cell.getColumn()).isSortable()) {
                         if (sortingOrder != null) {
+                            if (SortDirection.ASCENDING == sortingOrder
+                                    .getDirection()) {
+                                cellElement.replaceClassName("sort-desc",
+                                        "sort-asc");
+                            } else {
+                                cellElement.replaceClassName("sort-asc",
+                                        "sort-desc");
+                            }
+
                             int sortIndex = grid.getSortOrder().indexOf(
                                     sortingOrder);
                             if (sortIndex > -1
@@ -497,12 +506,6 @@ public class Grid<T> extends Composite implements
                     boolean multisort) {
                 TableCellElement th = TableCellElement.as(cell.getElement());
 
-                if (SortDirection.ASCENDING.equals(direction)) {
-                    th.replaceClassName("sort-desc", "sort-asc");
-                } else {
-                    th.replaceClassName("sort-asc", "sort-desc");
-                }
-
                 // Apply primary sorting on clicked column
                 GridColumn<C, T> columnInstance = getColumnInstance();
                 Sort sorting = Sort.by(columnInstance, direction);
@@ -519,9 +522,6 @@ public class Grid<T> extends Composite implements
 
                 // Perform sorting
                 grid.sort(sorting);
-
-                // Update header indicators
-                grid.refreshHeader();
             }
 
             /**
@@ -2448,6 +2448,7 @@ public class Grid<T> extends Composite implements
      * Apply sorting to data source.
      */
     private void sort() {
+        refreshHeader();
         fireEvent(new SortEvent<T>(this,
                 Collections.unmodifiableList(sortOrder)));
     }
