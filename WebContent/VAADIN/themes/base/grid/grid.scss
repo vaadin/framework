@@ -3,14 +3,20 @@
 
 	.#{$primaryStyleName} {
 
+		th {
+			position: relative;
+		}
+
 		th.sort-asc:after {
 			content: "\25B2" attr(sort-order);
-			float:right;
+			position: absolute;
+			right: 5px;
 		}
 
 		th.sort-desc:after {
 			content: "\25BC" attr(sort-order);
-			float:right;
+			position: absolute;
+			right: 5px;
 		}
 
 	}
