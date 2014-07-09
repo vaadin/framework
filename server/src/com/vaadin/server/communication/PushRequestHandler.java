@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -47,7 +47,7 @@ import com.vaadin.shared.communication.PushConstants;
  * Handles requests to open a push (bidirectional) communication channel between
  * the client and the server. After the initial request, communication through
  * the push channel is managed by {@link PushHandler}.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -66,7 +66,8 @@ public class PushRequestHandler implements RequestHandler,
     public PushRequestHandler(VaadinServletService service)
             throws ServiceException {
 
-        final ServletConfig config = service.getServlet().getServletConfig();
+        final ServletConfig vaadinServletConfig = service.getServlet()
+                .getServletConfig();
 
         atmosphere = new AtmosphereFramework() {
             @Override
@@ -77,7 +78,7 @@ public class PushRequestHandler implements RequestHandler,
             @Override
             public AtmosphereFramework addInitParameter(String name,
                     String value) {
-                if (config.getInitParameter(name) == null) {
+                if (vaadinServletConfig.getInitParameter(name) == null) {
                     super.addInitParameter(name, value);
                 }
                 return this;
@@ -117,7 +118,7 @@ public class PushRequestHandler implements RequestHandler,
                     "org.atmosphere.cpr.showSupportMessage", "false");
 
             try {
-                atmosphere.init(config);
+                atmosphere.init(vaadinServletConfig);
 
                 // Ensure the client-side knows how to split the message stream
                 // into individual messages when using certain transports
