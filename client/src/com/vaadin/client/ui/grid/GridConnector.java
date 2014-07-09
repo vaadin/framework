@@ -42,6 +42,9 @@ import com.vaadin.client.ui.grid.selection.SelectionChangeHandler;
 import com.vaadin.client.ui.grid.selection.SelectionModelMulti;
 import com.vaadin.client.ui.grid.selection.SelectionModelNone;
 import com.vaadin.client.ui.grid.selection.SelectionModelSingle;
+import com.vaadin.client.ui.grid.sort.SortEvent;
+import com.vaadin.client.ui.grid.sort.SortEventHandler;
+import com.vaadin.client.ui.grid.sort.SortOrder;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.ColumnGroupRowState;
 import com.vaadin.shared.ui.grid.ColumnGroupState;
@@ -51,6 +54,7 @@ import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridState.SharedSelectionMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
+import com.vaadin.shared.ui.grid.SortDirection;
 
 /**
  * Connects the client side {@link Grid} widget with the server side
@@ -257,6 +261,24 @@ public class GridConnector extends AbstractComponentConnector {
 
         getWidget().addSelectionChangeHandler(internalSelectionChangeHandler);
 
+        getWidget().addSortHandler(new SortEventHandler<JSONObject>() {
+            @Override
+            public void sort(SortEvent<JSONObject> event) {
+                List<SortOrder> order = event.getOrder();
+                String[] columnIds = new String[order.size()];
+                SortDirection[] directions = new SortDirection[order.size()];
+                for (int i = 0; i < order.size(); i++) {
+                    SortOrder sortOrder = order.get(i);
+                    CustomGridColumn column = (CustomGridColumn) sortOrder
+                            .getColumn();
+                    columnIds[i] = column.id;
+
+                    directions[i] = sortOrder.getDirection();
+                }
+
+                getRpcProxy(GridServerRpc.class).sort(columnIds, directions);
+            }
+        });
     }
 
     @Override

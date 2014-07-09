@@ -27,4 +27,6 @@ import com.vaadin.shared.communication.ServerRpc;
  */
 public interface GridServerRpc extends ServerRpc {
     void selectionChange(List<String> newSelection);
+
+    void sort(String[] columnIds, SortDirection[] directions);
 }

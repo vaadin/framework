@@ -374,7 +374,7 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     @Test
-    public void testSorting() throws IOException {
+    public void testProgrammaticSorting() throws IOException {
         openTestURL();
 
         GridElement grid = getGridElement();
@@ -410,6 +410,57 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         // Column 7 is row index as a number. Last three row are original rows
         // 2, 1 and 0.
         sortBy("Column7, DESC");
+        for (int i = 0; i < 3; ++i) {
+            assertEquals(
+                    "Grid is not sorted by Column7 using descending direction",
+                    "(" + i + ", 0)",
+                    grid.getCell(GridBasicFeatures.ROWS - (i + 1), 0).getText());
+        }
+    }
+
+    @Test
+    public void testUserSorting() {
+        openTestURL();
+
+        GridElement grid = getGridElement();
+
+        // Sorting by column 9 is sorting by row index that is represented as a
+        // String.
+        // First cells for first 3 rows are (9, 0), (99, 0) and (999, 0)
+
+        // Click header twice to sort descending
+        grid.getHeaderCell(0, 9).click();
+        grid.getHeaderCell(0, 9).click();
+        String row = "";
+        for (int i = 0; i < 3; ++i) {
+            row += "9";
+            assertEquals(
+                    "Grid is not sorted by Column9 using descending direction.",
+                    "(" + row + ", 0)", grid.getCell(i, 0).getText());
+        }
+
+        // Column 10 is random numbers from Random with seed 13334
+        // Click header to sort ascending
+        grid.getHeaderCell(0, 10).click();
+
+        // Not cleaning up correctly causes exceptions when scrolling.
+        grid.scrollToRow(50);
+        assertFalse("Scrolling caused and exception when shuffled.",
+                getLogRow(0).contains("Exception"));
+
+        for (int i = 0; i < 5; ++i) {
+            assertGreater(
+                    "Grid is not sorted by Column10 using ascending direction",
+                    Integer.parseInt(grid.getCell(i + 1, 10).getText()),
+                    Integer.parseInt(grid.getCell(i, 10).getText()));
+
+        }
+
+        // Column 7 is row index as a number. Last three row are original rows
+        // 2, 1 and 0.
+        // Click header twice to sort descending
+        grid.getHeaderCell(0, 7).click();
+        grid.getHeaderCell(0, 7).click();
         for (int i = 0; i < 3; ++i) {
             assertEquals(
                     "Grid is not sorted by Column7 using descending direction",

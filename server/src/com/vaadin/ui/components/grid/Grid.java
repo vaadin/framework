@@ -315,6 +315,20 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
                     }
                 }
             }
+
+            @Override
+            public void sort(String[] columnIds, SortDirection[] directions) {
+                assert columnIds.length == directions.length;
+
+                List<SortOrder> order = new ArrayList<SortOrder>(
+                        columnIds.length);
+                for (int i = 0; i < columnIds.length; i++) {
+                    Object propertyId = getPropertyIdByColumnId(columnIds[i]);
+                    order.add(new SortOrder(propertyId, directions[i]));
+                }
+
+                setSortOrder(order);
+            }
         });
     }
 
