@@ -29,6 +29,7 @@ import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NativeButtonElement;
 import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.elements.ServerClass;
+import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.widgetset.client.grid.GridClientColumnRendererConnector.Renderers;
 import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
@@ -39,6 +40,7 @@ import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
  * @since
  * @author Vaadin Ltd
  */
+@TestCategory("grid")
 public class GridClientRenderers extends MultiBrowserTest {
 
     private static final double SLEEP_MULTIPLIER = 1.2;
