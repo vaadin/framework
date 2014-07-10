@@ -13,31 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.grid;
+package com.vaadin.tests.components.grid.basicfeatures;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.tests.annotations.TestCategory;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
-@TestCategory("grid")
-public class GridBasicFeaturesTest extends MultiBrowserTest {
+public class GridStructureTest extends GridBasicFeaturesTest {
 
     @Test
     public void testColumnHeaderCaptions() throws Exception {
@@ -303,224 +297,6 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
                 "modified: Column0", getBodyCellByRowAndColumn(0, 0).getText());
     }
 
-    @Test
-    public void testSelectOnOff() throws Exception {
-        openTestURL();
-
-        setSelectionModelMulti();
-
-        assertFalse("row shouldn't start out as selected",
-                isSelected(getRow(0)));
-        toggleFirstRowSelection();
-        assertTrue("row should become selected", isSelected(getRow(0)));
-        toggleFirstRowSelection();
-        assertFalse("row shouldn't remain selected", isSelected(getRow(0)));
-    }
-
-    @Test
-    public void testSelectOnScrollOffScroll() throws Exception {
-        openTestURL();
-
-        setSelectionModelMulti();
-
-        assertFalse("row shouldn't start out as selected",
-                isSelected(getRow(0)));
-        toggleFirstRowSelection();
-        assertTrue("row should become selected", isSelected(getRow(0)));
-
-        scrollGridVerticallyTo(10000); // make sure the row is out of cache
-        scrollGridVerticallyTo(0); // scroll it back into view
-
-        assertTrue("row should still be selected when scrolling "
-                + "back into view", isSelected(getRow(0)));
-    }
-
-    @Test
-    public void testSelectScrollOnScrollOff() throws Exception {
-        openTestURL();
-
-        setSelectionModelMulti();
-
-        assertFalse("row shouldn't start out as selected",
-                isSelected(getRow(0)));
-
-        scrollGridVerticallyTo(10000); // make sure the row is out of cache
-        toggleFirstRowSelection();
-
-        scrollGridVerticallyTo(0); // scroll it back into view
-        assertTrue("row should still be selected when scrolling "
-                + "back into view", isSelected(getRow(0)));
-
-        toggleFirstRowSelection();
-        assertFalse("row shouldn't remain selected", isSelected(getRow(0)));
-    }
-
-    @Test
-    public void testSelectScrollOnOffScroll() throws Exception {
-        openTestURL();
-
-        setSelectionModelMulti();
-
-        assertFalse("row shouldn't start out as selected",
-                isSelected(getRow(0)));
-
-        scrollGridVerticallyTo(10000); // make sure the row is out of cache
-        toggleFirstRowSelection();
-        toggleFirstRowSelection();
-
-        scrollGridVerticallyTo(0); // make sure the row is out of cache
-        assertFalse("row shouldn't be selected when scrolling "
-                + "back into view", isSelected(getRow(0)));
-    }
-
-    @Test
-    public void testProgrammaticSorting() throws IOException {
-        openTestURL();
-
-        GridElement grid = getGridElement();
-
-        // Sorting by column 9 is sorting by row index that is represented as a
-        // String.
-        // First cells for first 3 rows are (9, 0), (99, 0) and (999, 0)
-        sortBy("Column9, DESC");
-
-        assertTrue("Column 9 should have the sort-desc stylename", grid
-                .getHeaderCell(0, 9).getAttribute("class")
-                .contains("sort-desc"));
-
-        String row = "";
-        for (int i = 0; i < 3; ++i) {
-            row += "9";
-            assertEquals(
-                    "Grid is not sorted by Column9 using descending direction.",
-                    "(" + row + ", 0)", grid.getCell(i, 0).getText());
-        }
-
-        // Column 10 is random numbers from Random with seed 13334
-        sortBy("Column10, ASC");
-
-        assertFalse(
-                "Column 9 should no longer have the sort-desc stylename",
-                grid.getHeaderCell(0, 9).getAttribute("class")
-                        .contains("sort-desc"));
-        assertTrue("Column 10 should have the sort-asc stylename", grid
-                .getHeaderCell(0, 10).getAttribute("class")
-                .contains("sort-asc"));
-
-        // Not cleaning up correctly causes exceptions when scrolling.
-        grid.scrollToRow(50);
-        assertFalse("Scrolling caused and exception when shuffled.",
-                getLogRow(0).contains("Exception"));
-
-        for (int i = 0; i < 5; ++i) {
-            assertGreater(
-                    "Grid is not sorted by Column10 using ascending direction",
-                    Integer.parseInt(grid.getCell(i + 1, 10).getText()),
-                    Integer.parseInt(grid.getCell(i, 10).getText()));
-
-        }
-
-        // Column 7 is row index as a number. Last three row are original rows
-        // 2, 1 and 0.
-        sortBy("Column7, DESC");
-        for (int i = 0; i < 3; ++i) {
-            assertEquals(
-                    "Grid is not sorted by Column7 using descending direction",
-                    "(" + i + ", 0)",
-                    grid.getCell(GridBasicFeatures.ROWS - (i + 1), 0).getText());
-        }
-
-        assertFalse(
-                "Column 10 should no longer have the sort-asc stylename",
-                grid.getHeaderCell(0, 10).getAttribute("class")
-                        .contains("sort-asc"));
-        assertTrue("Column 7 should have the sort-desc stylename", grid
-                .getHeaderCell(0, 7).getAttribute("class")
-                .contains("sort-desc"));
-
-    }
-
-    @Test
-    public void testUserSorting() throws InterruptedException {
-        openTestURL();
-
-        GridElement grid = getGridElement();
-
-        // Sorting by column 9 is sorting by row index that is represented as a
-        // String.
-        // First cells for first 3 rows are (9, 0), (99, 0) and (999, 0)
-
-        // Click header twice to sort descending
-        grid.getHeaderCell(0, 9).click();
-        grid.getHeaderCell(0, 9).click();
-        String row = "";
-        for (int i = 0; i < 3; ++i) {
-            row += "9";
-            assertEquals(
-                    "Grid is not sorted by Column9 using descending direction.",
-                    "(" + row + ", 0)", grid.getCell(i, 0).getText());
-        }
-
-        assertEquals("2. Sort order: [Column9 ASCENDING]", getLogRow(2));
-        assertEquals("4. Sort order: [Column9 DESCENDING]", getLogRow(0));
-
-        // Column 10 is random numbers from Random with seed 13334
-        // Click header to sort ascending
-        grid.getHeaderCell(0, 10).click();
-
-        assertEquals("6. Sort order: [Column10 ASCENDING]", getLogRow(0));
-
-        // Not cleaning up correctly causes exceptions when scrolling.
-        grid.scrollToRow(50);
-        assertFalse("Scrolling caused and exception when shuffled.",
-                getLogRow(0).contains("Exception"));
-
-        for (int i = 0; i < 5; ++i) {
-            assertGreater(
-                    "Grid is not sorted by Column10 using ascending direction",
-                    Integer.parseInt(grid.getCell(i + 1, 10).getText()),
-                    Integer.parseInt(grid.getCell(i, 10).getText()));
-
-        }
-
-        // Column 7 is row index as a number. Last three row are original rows
-        // 2, 1 and 0.
-        // Click header twice to sort descending
-        grid.getHeaderCell(0, 7).click();
-        grid.getHeaderCell(0, 7).click();
-        for (int i = 0; i < 3; ++i) {
-            assertEquals(
-                    "Grid is not sorted by Column7 using descending direction",
-                    "(" + i + ", 0)",
-                    grid.getCell(GridBasicFeatures.ROWS - (i + 1), 0).getText());
-        }
-
-        assertEquals("9. Sort order: [Column7 ASCENDING]", getLogRow(3));
-        assertEquals("11. Sort order: [Column7 DESCENDING]", getLogRow(1));
-    }
-
-    private void sortBy(String column) {
-        selectMenuPath("Component", "State", "Sort by column", column);
-    }
-
-    private void toggleFirstRowSelection() {
-        selectMenuPath("Component", "Body rows", "Select first row");
-    }
-
-    @SuppressWarnings("static-method")
-    private boolean isSelected(TestBenchElement row) {
-        /*
-         * FIXME We probably should get a GridRow instead of a plain
-         * TestBenchElement, that has an "isSelected" thing integrated. (henrik
-         * paul 26.6.2014)
-         */
-        return row.getAttribute("class").contains("-row-selected");
-    }
-
-    private TestBenchElement getRow(int i) {
-        return getGridElement().getRow(i);
-    }
-
     private void assertPrimaryStylename(String stylename) {
         assertTrue(getGridElement().getAttribute("class").contains(stylename));
 
@@ -537,29 +313,8 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         assertTrue(vscrollStyleName.contains(stylename + "-scroller-vertical"));
     }
 
-    private void setSelectionModelMulti() {
-        selectMenuPath("Component", "State", "Selection mode", "multi");
-    }
-
     private WebElement getBodyCellByRowAndColumn(int row, int column) {
         return getGridElement().getCell(row, column);
-    }
-
-    private void selectSubMenu(String menuCaption) {
-        selectMenu(menuCaption);
-        new Actions(getDriver()).moveByOffset(100, 0).build().perform();
-    }
-
-    private void selectMenu(String menuCaption) {
-        getDriver().findElement(
-                By.xpath("//span[text() = '" + menuCaption + "']")).click();
-    }
-
-    private void selectMenuPath(String... menuCaptions) {
-        selectMenu(menuCaptions[0]);
-        for (int i = 1; i < menuCaptions.length; i++) {
-            selectSubMenu(menuCaptions[i]);
-        }
     }
 
     private WebElement getVerticalScroller() {
@@ -572,10 +327,6 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
 
     private WebElement getTableWrapper() {
         return getGridElement().findElement(By.xpath("./div[3]"));
-    }
-
-    private GridElement getGridElement() {
-        return $(GridElement.class).id("testComponent");
     }
 
     private List<TestBenchElement> getGridHeaderRowCells() {
@@ -592,29 +343,5 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
             footerCells.addAll(getGridElement().getFooterCells(i));
         }
         return footerCells;
-    }
-
-    private void scrollGridVerticallyTo(double px) {
-        executeScript("arguments[0].scrollTop = " + px,
-                getGridVerticalScrollbar());
-    }
-
-    private Object executeScript(String script, WebElement element) {
-        @SuppressWarnings("hiding")
-        final WebDriver driver = getDriver();
-        if (driver instanceof JavascriptExecutor) {
-            final JavascriptExecutor je = (JavascriptExecutor) driver;
-            return je.executeScript(script, element);
-        } else {
-            throw new IllegalStateException("current driver "
-                    + getDriver().getClass().getName() + " is not a "
-                    + JavascriptExecutor.class.getSimpleName());
-        }
-    }
-
-    private WebElement getGridVerticalScrollbar() {
-        return getDriver()
-                .findElement(
-                        By.xpath("//div[contains(@class, \"v-grid-scroller-vertical\")]"));
     }
 }
