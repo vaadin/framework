@@ -419,7 +419,7 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     @Test
-    public void testUserSorting() {
+    public void testUserSorting() throws InterruptedException {
         openTestURL();
 
         GridElement grid = getGridElement();
@@ -439,9 +439,14 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
                     "(" + row + ", 0)", grid.getCell(i, 0).getText());
         }
 
+        assertEquals("2. Sort order: [Column9 ASCENDING]", getLogRow(2));
+        assertEquals("4. Sort order: [Column9 DESCENDING]", getLogRow(0));
+
         // Column 10 is random numbers from Random with seed 13334
         // Click header to sort ascending
         grid.getHeaderCell(0, 10).click();
+
+        assertEquals("6. Sort order: [Column10 ASCENDING]", getLogRow(0));
 
         // Not cleaning up correctly causes exceptions when scrolling.
         grid.scrollToRow(50);
@@ -467,6 +472,9 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
                     "(" + i + ", 0)",
                     grid.getCell(GridBasicFeatures.ROWS - (i + 1), 0).getText());
         }
+
+        assertEquals("9. Sort order: [Column7 ASCENDING]", getLogRow(3));
+        assertEquals("11. Sort order: [Column7 DESCENDING]", getLogRow(1));
     }
 
     private void sortBy(String column) {

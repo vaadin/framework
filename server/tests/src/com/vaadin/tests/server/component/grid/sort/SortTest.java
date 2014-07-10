@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.server.component.grid.sort;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +26,10 @@ import org.junit.Test;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.ui.components.grid.Grid;
+import com.vaadin.ui.components.grid.SortOrderChangeEvent;
+import com.vaadin.ui.components.grid.SortOrderChangeListener;
 import com.vaadin.ui.components.grid.sort.Sort;
+import com.vaadin.ui.components.grid.sort.SortOrder;
 
 public class SortTest {
 
@@ -65,14 +71,38 @@ public class SortTest {
         }
     }
 
+    class RegisteringSortChangeListener implements SortOrderChangeListener {
+        private List<SortOrder> order;
+
+        @Override
+        public void sortOrderChange(SortOrderChangeEvent event) {
+            assert order == null : "The same listener was notified multipe times without checking";
+
+            order = event.getSortOrder();
+        }
+
+        public void assertEventFired(SortOrder... expectedOrder) {
+            Assert.assertEquals(Arrays.asList(expectedOrder), order);
+
+            // Reset for nest test
+            order = null;
+        }
+
+    }
+
     private DummySortingIndexedContainer container;
+    private RegisteringSortChangeListener listener;
     private Grid grid;
 
     @Before
     public void setUp() {
         container = createContainer();
         container.expectedSort(new Object[] {}, new SortDirection[] {});
+
+        listener = new RegisteringSortChangeListener();
+
         grid = new Grid(container);
+        grid.addSortOrderChangeListener(listener);
     }
 
     @After
@@ -107,6 +137,8 @@ public class SortTest {
         container.expectedSort(new Object[] { "foo" },
                 new SortDirection[] { SortDirection.ASCENDING });
         grid.sort("foo");
+
+        listener.assertEventFired(new SortOrder("foo", SortDirection.ASCENDING));
     }
 
     @Test
@@ -114,6 +146,8 @@ public class SortTest {
         container.expectedSort(new Object[] { "foo" },
                 new SortDirection[] { SortDirection.DESCENDING });
         grid.sort("foo", SortDirection.DESCENDING);
+
+        listener.assertEventFired(new SortOrder("foo", SortDirection.DESCENDING));
     }
 
     @Test
@@ -123,6 +157,12 @@ public class SortTest {
                         SortDirection.ASCENDING, SortDirection.DESCENDING });
         grid.sort(Sort.by("foo").then("bar")
                 .then("baz", SortDirection.DESCENDING));
+
+        listener.assertEventFired(
+                new SortOrder("foo", SortDirection.ASCENDING), new SortOrder(
+                        "bar", SortDirection.ASCENDING), new SortOrder("baz",
+                        SortDirection.DESCENDING));
+
     }
 
     @Test
@@ -132,11 +172,20 @@ public class SortTest {
                         SortDirection.ASCENDING, SortDirection.DESCENDING });
         grid.sort(Sort.by("foo").then("bar")
                 .then("baz", SortDirection.DESCENDING));
+
+        listener.assertEventFired(
+                new SortOrder("foo", SortDirection.ASCENDING), new SortOrder(
+                        "bar", SortDirection.ASCENDING), new SortOrder("baz",
+                        SortDirection.DESCENDING));
+
         container = new DummySortingIndexedContainer();
         container.addContainerProperty("baz", String.class, "");
         container.expectedSort(new Object[] { "baz" },
                 new SortDirection[] { SortDirection.DESCENDING });
         grid.setContainerDataSource(container);
+
+        listener.assertEventFired(new SortOrder("baz", SortDirection.DESCENDING));
+
     }
 
     private DummySortingIndexedContainer createContainer() {

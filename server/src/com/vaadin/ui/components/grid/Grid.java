@@ -211,6 +211,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
             .findMethod(SelectionChangeListener.class, "selectionChange",
                     SelectionChangeEvent.class);
 
+    private static final Method SORT_ORDER_CHANGE_METHOD = ReflectTools
+            .findMethod(SortOrderChangeListener.class, "sortOrderChange",
+                    SortOrderChangeEvent.class);
+
     /**
      * Creates a new Grid using the given datasource.
      * 
@@ -1252,9 +1256,36 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
             }
 
             cs.sort(propertyIds, directions);
+
+            fireEvent(new SortOrderChangeEvent(this, new ArrayList<SortOrder>(
+                    sortOrder)));
         } else {
             throw new IllegalStateException(
                     "Container is not sortable (does not implement Container.Sortable)");
         }
+    }
+
+    /**
+     * Adds a sort order change listener that gets notified when the sort order
+     * changes.
+     * 
+     * @param listener
+     *            the sort order change listener to add
+     */
+    public void addSortOrderChangeListener(SortOrderChangeListener listener) {
+        addListener(SortOrderChangeEvent.class, listener,
+                SORT_ORDER_CHANGE_METHOD);
+    }
+
+    /**
+     * Removes a sort order change listener previously added using
+     * {@link #addSortOrderChangeListener(SortOrderChangeListener)}.
+     * 
+     * @param listener
+     *            the sort order change listener to remove
+     */
+    public void removeSortOrderChangeListener(SortOrderChangeListener listener) {
+        removeListener(SortOrderChangeEvent.class, listener,
+                SORT_ORDER_CHANGE_METHOD);
     }
 }

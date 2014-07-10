@@ -36,6 +36,8 @@ import com.vaadin.ui.components.grid.ColumnGroupRow;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.GridColumn;
+import com.vaadin.ui.components.grid.SortOrderChangeEvent;
+import com.vaadin.ui.components.grid.SortOrderChangeListener;
 import com.vaadin.ui.components.grid.renderers.DateRenderer;
 import com.vaadin.ui.components.grid.renderers.HtmlRenderer;
 import com.vaadin.ui.components.grid.renderers.NumberRenderer;
@@ -142,6 +144,13 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         for (int col = 0; col < COLUMNS; col++) {
             grid.getColumn("Column" + col).setWidth(100 + col * 50);
         }
+
+        grid.addSortOrderChangeListener(new SortOrderChangeListener() {
+            @Override
+            public void sortOrderChange(SortOrderChangeEvent event) {
+                log("Sort order: " + event.getSortOrder());
+            }
+        });
 
         grid.setSelectionMode(SelectionMode.NONE);
 
