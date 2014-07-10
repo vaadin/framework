@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SortDirection;
@@ -420,27 +421,37 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         createClickAction("Modify first row (getItemProperty)", "Body rows",
                 new Command<Grid, String>() {
+                    @SuppressWarnings("unchecked")
                     @Override
                     public void execute(Grid c, String value, Object data) {
                         Object firstItemId = ds.getIdByIndex(0);
                         Item item = ds.getItem(firstItemId);
                         for (int i = 0; i < COLUMNS; i++) {
-                            item.getItemProperty(getColumnProperty(i))
-                                    .setValue("modified: " + i);
+                            Property<?> property = item
+                                    .getItemProperty(getColumnProperty(i));
+                            if (property.getType().equals(String.class)) {
+                                ((Property<String>) property)
+                                        .setValue("modified: " + i);
+                            }
                         }
                     }
                 }, null);
 
         createClickAction("Modify first row (getContainerProperty)",
                 "Body rows", new Command<Grid, String>() {
+                    @SuppressWarnings("unchecked")
                     @Override
                     public void execute(Grid c, String value, Object data) {
                         Object firstItemId = ds.getIdByIndex(0);
                         for (Object containerPropertyId : ds
                                 .getContainerPropertyIds()) {
-                            ds.getContainerProperty(firstItemId,
-                                    containerPropertyId).setValue(
-                                    "modified: " + containerPropertyId);
+                            Property<?> property = ds.getContainerProperty(
+                                    firstItemId, containerPropertyId);
+                            if (property.getType().equals(String.class)) {
+                                ((Property<String>) property)
+                                        .setValue("modified: "
+                                                + containerPropertyId);
+                            }
                         }
                     }
                 }, null);
