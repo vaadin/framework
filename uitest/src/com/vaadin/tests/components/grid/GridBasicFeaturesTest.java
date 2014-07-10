@@ -383,6 +383,11 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
         // String.
         // First cells for first 3 rows are (9, 0), (99, 0) and (999, 0)
         sortBy("Column9, DESC");
+
+        assertTrue("Column 9 should have the sort-desc stylename", grid
+                .getHeaderCell(0, 9).getAttribute("class")
+                .contains("sort-desc"));
+
         String row = "";
         for (int i = 0; i < 3; ++i) {
             row += "9";
@@ -393,6 +398,14 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
 
         // Column 10 is random numbers from Random with seed 13334
         sortBy("Column10, ASC");
+
+        assertFalse(
+                "Column 9 should no longer have the sort-desc stylename",
+                grid.getHeaderCell(0, 9).getAttribute("class")
+                        .contains("sort-desc"));
+        assertTrue("Column 10 should have the sort-asc stylename", grid
+                .getHeaderCell(0, 10).getAttribute("class")
+                .contains("sort-asc"));
 
         // Not cleaning up correctly causes exceptions when scrolling.
         grid.scrollToRow(50);
@@ -416,6 +429,15 @@ public class GridBasicFeaturesTest extends MultiBrowserTest {
                     "(" + i + ", 0)",
                     grid.getCell(GridBasicFeatures.ROWS - (i + 1), 0).getText());
         }
+
+        assertFalse(
+                "Column 10 should no longer have the sort-asc stylename",
+                grid.getHeaderCell(0, 10).getAttribute("class")
+                        .contains("sort-asc"));
+        assertTrue("Column 7 should have the sort-desc stylename", grid
+                .getHeaderCell(0, 7).getAttribute("class")
+                .contains("sort-desc"));
+
     }
 
     @Test

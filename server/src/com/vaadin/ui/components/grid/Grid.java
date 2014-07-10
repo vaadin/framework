@@ -1239,8 +1239,15 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
             Object[] propertyIds = new Object[items];
             boolean[] directions = new boolean[items];
 
+            String[] columnKeys = new String[items];
+            SortDirection[] stateDirs = new SortDirection[items];
+
             for (int i = 0; i < items; ++i) {
                 SortOrder order = sortOrder.get(i);
+
+                columnKeys[i] = this.columnKeys.key(order.getPropertyId());
+                stateDirs[i] = order.getDirection();
+
                 propertyIds[i] = order.getPropertyId();
                 switch (order.getDirection()) {
                 case ASCENDING:
@@ -1259,6 +1266,9 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
 
             fireEvent(new SortOrderChangeEvent(this, new ArrayList<SortOrder>(
                     sortOrder)));
+
+            getState().sortColumns = columnKeys;
+            getState(false).sortDirs = stateDirs;
         } else {
             throw new IllegalStateException(
                     "Container is not sortable (does not implement Container.Sortable)");

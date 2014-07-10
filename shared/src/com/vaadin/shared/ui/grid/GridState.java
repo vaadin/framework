@@ -132,4 +132,10 @@ public class GridState extends AbstractComponentState {
     public List<String> selectedKeys = new ArrayList<String>();
 
     public SharedSelectionMode selectionMode;
+
+    /** Keys of the currently sorted columns */
+    public String[] sortColumns = new String[0];
+
+    /** Directions for each sorted column */
+    public SortDirection[] sortDirs = new SortDirection[0];
 }

@@ -17,6 +17,7 @@
 package com.vaadin.client.ui.grid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -276,7 +277,12 @@ public class GridConnector extends AbstractComponentConnector {
                     directions[i] = sortOrder.getDirection();
                 }
 
-                getRpcProxy(GridServerRpc.class).sort(columnIds, directions);
+                if (!Arrays.equals(columnIds, getState().sortColumns)
+                        || !Arrays.equals(directions, getState().sortDirs)) {
+                    // Report back to server if changed
+                    getRpcProxy(GridServerRpc.class)
+                            .sort(columnIds, directions);
+                }
             }
         });
     }
@@ -520,6 +526,21 @@ public class GridConnector extends AbstractComponentConnector {
             rowKeyHelper.selectedKeys.clear();
         }
 
+    }
+
+    @OnStateChange({ "sortColumns", "sortDirs" })
+    void onSortStateChange() {
+        List<SortOrder> sortOrder = new ArrayList<SortOrder>();
+
+        String[] sortColumns = getState().sortColumns;
+        SortDirection[] sortDirs = getState().sortDirs;
+
+        for (int i = 0; i < sortColumns.length; i++) {
+            sortOrder.add(new SortOrder(columnIdToColumn.get(sortColumns[i]),
+                    sortDirs[i]));
+        }
+
+        getWidget().setSortOrder(sortOrder);
     }
 
     private Logger getLogger() {
