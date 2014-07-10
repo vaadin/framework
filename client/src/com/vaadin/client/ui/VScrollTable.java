@@ -588,6 +588,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private boolean hadScrollBars = false;
 
+    private HandlerRegistration addCloseHandler;
+
     public VScrollTable() {
         setMultiSelectMode(MULTISELECT_MODE_DEFAULT);
 
@@ -669,13 +671,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         this.client = client;
         // Add a handler to clear saved context menu details when the menu
         // closes. See #8526.
-        client.getContextMenu().addCloseHandler(new CloseHandler<PopupPanel>() {
+        addCloseHandler = client.getContextMenu().addCloseHandler(
+                new CloseHandler<PopupPanel>() {
 
-            @Override
-            public void onClose(CloseEvent<PopupPanel> event) {
-                contextMenu = null;
-            }
-        });
+                    @Override
+                    public void onClose(CloseEvent<PopupPanel> event) {
+                        contextMenu = null;
+                    }
+                });
     }
 
     private void handleBodyContextMenu(ContextMenuEvent event) {
@@ -7928,5 +7931,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
         // Nothing found.
         return null;
+    }
+
+    /**
+     * @since
+     */
+    public void onUnregister() {
+        if (addCloseHandler != null) {
+            addCloseHandler.removeHandler();
+        }
     }
 }
