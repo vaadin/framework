@@ -40,9 +40,4 @@ public class UnsafeHtmlRendererConnector extends
     public UnsafeHtmlRenderer getRenderer() {
         return (UnsafeHtmlRenderer) super.getRenderer();
     }
-
-    @Override
-    public Class<String> getType() {
-        return String.class;
-    }
 }

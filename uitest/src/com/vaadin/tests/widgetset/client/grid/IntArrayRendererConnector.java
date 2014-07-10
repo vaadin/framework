@@ -43,9 +43,4 @@ public class IntArrayRendererConnector extends AbstractRendererConnector<int[]> 
     public IntArrayRenderer getRenderer() {
         return (IntArrayRenderer) super.getRenderer();
     }
-
-    @Override
-    public Class<int[]> getType() {
-        return int[].class;
-    }
 }

@@ -30,9 +30,4 @@ public class TextRendererConnector extends AbstractRendererConnector<String> {
     public TextRenderer getRenderer() {
         return (TextRenderer) super.getRenderer();
     }
-
-    @Override
-    public Class<String> getType() {
-        return String.class;
-    }
 }

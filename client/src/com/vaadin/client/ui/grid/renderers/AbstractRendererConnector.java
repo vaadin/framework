@@ -23,6 +23,7 @@ import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
+import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.grid.GridConnector;
 import com.vaadin.client.ui.grid.Renderer;
 
@@ -43,6 +44,18 @@ public abstract class AbstractRendererConnector<T> extends
         AbstractExtensionConnector {
 
     private Renderer<T> renderer = null;
+
+    private final Type presentationType = TypeDataStore
+            .getPresentationType(this.getClass());
+
+    protected AbstractRendererConnector() {
+        if (presentationType == null) {
+            throw new IllegalStateException(
+                    "No presentation type found for "
+                            + Util.getSimpleName(this)
+                            + ". This may be caused by some unspecified problem in widgetset compilation.");
+        }
+    }
 
     /**
      * Returns the renderer associated with this renderer connector.
@@ -109,13 +122,10 @@ public abstract class AbstractRendererConnector<T> extends
      */
     public T decode(JSONValue value) {
         @SuppressWarnings("unchecked")
-        T decodedValue = (T) JsonDecoder.decodeValue(new Type(getType()),
-                value, null, getConnection());
+        T decodedValue = (T) JsonDecoder.decodeValue(presentationType, value,
+                null, getConnection());
         return decodedValue;
     }
-
-    // TODO generate data type
-    protected abstract Class<T> getType();
 
     @Override
     @Deprecated
