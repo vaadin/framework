@@ -43,6 +43,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.JSONSerializer;
 import com.vaadin.client.ui.UnknownComponentConnector;
+import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
@@ -412,6 +413,11 @@ public class ConnectorBundle {
 
     public static boolean isConnectedComponentConnector(JClassType type) {
         return isConnected(type) && isType(type, ComponentConnector.class);
+    }
+
+    public static boolean isConnectedRendererConnector(JClassType type) {
+        return isConnected(type)
+                && isType(type, AbstractRendererConnector.class);
     }
 
     private static boolean isInterfaceType(JClassType type, Class<?> class1) {

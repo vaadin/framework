@@ -73,6 +73,8 @@ public class RowAwareRendererConnector extends AbstractRendererConnector<Void> {
 
     @Override
     protected Renderer<Void> createRenderer() {
+        // cannot use the default createRenderer as RowAwareRenderer needs a
+        // reference to its connector - it has no "real" no-argument constructor
         return new RowAwareRenderer();
     }
 }

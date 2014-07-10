@@ -23,7 +23,7 @@ import com.vaadin.shared.ui.Connect;
 @Connect(com.vaadin.tests.components.grid.IntArrayRenderer.class)
 public class IntArrayRendererConnector extends AbstractRendererConnector<int[]> {
 
-    public class IntArrayRenderer implements Renderer<int[]> {
+    public static class IntArrayRenderer implements Renderer<int[]> {
         private static final String JOINER = " :: ";
 
         @Override
@@ -40,8 +40,8 @@ public class IntArrayRendererConnector extends AbstractRendererConnector<int[]> 
     }
 
     @Override
-    protected IntArrayRenderer createRenderer() {
-        return new IntArrayRenderer();
+    public IntArrayRenderer getRenderer() {
+        return (IntArrayRenderer) super.getRenderer();
     }
 
     @Override

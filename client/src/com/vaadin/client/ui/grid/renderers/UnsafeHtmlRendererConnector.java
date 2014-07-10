@@ -29,7 +29,7 @@ import com.vaadin.shared.ui.Connect;
 public class UnsafeHtmlRendererConnector extends
         AbstractRendererConnector<String> {
 
-    public class UnsafeHtmlRenderer implements Renderer<String> {
+    public static class UnsafeHtmlRenderer implements Renderer<String> {
         @Override
         public void render(FlyweightCell cell, String data) {
             cell.getElement().setInnerHTML(data);
@@ -39,11 +39,6 @@ public class UnsafeHtmlRendererConnector extends
     @Override
     public UnsafeHtmlRenderer getRenderer() {
         return (UnsafeHtmlRenderer) super.getRenderer();
-    }
-
-    @Override
-    protected UnsafeHtmlRenderer createRenderer() {
-        return new UnsafeHtmlRenderer();
     }
 
     @Override
