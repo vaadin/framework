@@ -17,12 +17,17 @@ package com.vaadin.launcher;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +35,11 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import com.vaadin.launcher.CustomDeploymentConfiguration.Conf;
+import com.vaadin.server.DefaultDeploymentConfiguration;
+import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.LegacyVaadinServlet;
 import com.vaadin.server.ServiceException;
@@ -43,6 +52,7 @@ import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
 
 @SuppressWarnings("serial")
 public class ApplicationRunnerServlet extends LegacyVaadinServlet {
@@ -287,4 +297,129 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         return Logger.getLogger(ApplicationRunnerServlet.class.getName());
     }
 
+    @Override
+    protected DeploymentConfiguration createDeploymentConfiguration(
+            Properties initParameters) {
+        // Get the original configuration from the super class
+        final DeploymentConfiguration originalConfiguration = super
+                .createDeploymentConfiguration(initParameters);
+
+        // And then create a proxy instance that delegates to the original
+        // configuration or a customized version
+        return (DeploymentConfiguration) Proxy.newProxyInstance(
+                DeploymentConfiguration.class.getClassLoader(),
+                new Class[] { DeploymentConfiguration.class },
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method,
+                            Object[] args) throws Throwable {
+                        if (method.getDeclaringClass() == DeploymentConfiguration.class) {
+                            // Find the configuration instance to delegate to
+                            DeploymentConfiguration configuration = findDeploymentConfiguration(originalConfiguration);
+
+                            return method.invoke(configuration, args);
+                        } else {
+                            return method.invoke(proxy, args);
+                        }
+                    }
+                });
+    }
+
+    private DeploymentConfiguration findDeploymentConfiguration(
+            DeploymentConfiguration originalConfiguration) throws Exception {
+        // First level of cache
+        DeploymentConfiguration configuration = CurrentInstance
+                .get(DeploymentConfiguration.class);
+
+        if (configuration == null) {
+            // Not in cache, try to find a VaadinSession to get it from
+            VaadinSession session = VaadinSession.getCurrent();
+
+            if (session == null) {
+                /*
+                 * There's no current session, request or response when serving
+                 * static resources, but there's still the current request
+                 * maintained by AppliationRunnerServlet, and there's most
+                 * likely also a HttpSession containing a VaadinSession for that
+                 * request.
+                 */
+
+                HttpServletRequest currentRequest = request.get();
+                if (currentRequest != null) {
+                    HttpSession httpSession = currentRequest.getSession(false);
+                    if (httpSession != null) {
+                        Map<Class<?>, CurrentInstance> oldCurrent = CurrentInstance
+                                .setCurrent((VaadinSession) null);
+                        try {
+                            session = getService().findVaadinSession(
+                                    new VaadinServletRequest(currentRequest,
+                                            getService()));
+                        } finally {
+                            /*
+                             * Clear some state set by findVaadinSession to
+                             * avoid accidentally depending on it when coding on
+                             * e.g. static request handling.
+                             */
+                            CurrentInstance.restoreInstances(oldCurrent);
+                            currentRequest.removeAttribute(VaadinSession.class
+                                    .getName());
+                        }
+                    }
+                }
+            }
+
+            if (session != null) {
+                String name = ApplicationRunnerServlet.class.getName()
+                        + ".deploymentConfiguration";
+                try {
+                    session.lock();
+                    configuration = (DeploymentConfiguration) session
+                            .getAttribute(name);
+
+                    if (configuration == null) {
+                        Class<?> classToRun;
+                        try {
+                            classToRun = getClassToRun();
+                        } catch (ClassNotFoundException e) {
+                            /*
+                             * This happens e.g. if the UI class defined in the
+                             * URL is not found or if this servlet just serves
+                             * static resources while there's some other servlet
+                             * that serves the UI (e.g. when using /run-push/).
+                             */
+                            return originalConfiguration;
+                        }
+
+                        CustomDeploymentConfiguration customDeploymentConfiguration = classToRun
+                                .getAnnotation(CustomDeploymentConfiguration.class);
+                        if (customDeploymentConfiguration != null) {
+                            Properties initParameters = new Properties(
+                                    originalConfiguration.getInitParameters());
+
+                            for (Conf entry : customDeploymentConfiguration
+                                    .value()) {
+                                initParameters.put(entry.name(), entry.value());
+                            }
+
+                            configuration = new DefaultDeploymentConfiguration(
+                                    getClass(), initParameters);
+                        } else {
+                            configuration = originalConfiguration;
+                        }
+
+                        session.setAttribute(name, configuration);
+                    }
+                } finally {
+                    session.unlock();
+                }
+
+                CurrentInstance.set(DeploymentConfiguration.class,
+                        configuration);
+
+            } else {
+                configuration = originalConfiguration;
+            }
+        }
+        return configuration;
+    }
 }
