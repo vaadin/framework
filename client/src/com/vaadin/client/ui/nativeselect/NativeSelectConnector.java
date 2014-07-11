@@ -16,16 +16,38 @@
 
 package com.vaadin.client.ui.nativeselect;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.vaadin.client.ui.VNativeSelect;
 import com.vaadin.client.ui.optiongroup.OptionGroupBaseConnector;
+import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.ui.NativeSelect;
 
 @Connect(NativeSelect.class)
-public class NativeSelectConnector extends OptionGroupBaseConnector {
+public class NativeSelectConnector extends OptionGroupBaseConnector implements
+        BlurHandler, FocusHandler {
+
+    public NativeSelectConnector() {
+        super();
+        getWidget().addFocusHandler(this);
+        getWidget().addBlurHandler(this);
+    }
 
     @Override
     public VNativeSelect getWidget() {
         return (VNativeSelect) super.getWidget();
+    }
+
+    @Override
+    public void onFocus(FocusEvent event) {
+        getRpcProxy(FocusAndBlurServerRpc.class).focus();
+    }
+
+    @Override
+    public void onBlur(BlurEvent event) {
+        getRpcProxy(FocusAndBlurServerRpc.class).blur();
     }
 }

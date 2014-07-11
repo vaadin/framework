@@ -19,6 +19,12 @@ package com.vaadin.ui;
 import java.util.Collection;
 
 import com.vaadin.data.Container;
+import com.vaadin.event.FieldEvents;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 
@@ -29,13 +35,23 @@ import com.vaadin.server.PaintTarget;
  * better choice.
  */
 @SuppressWarnings("serial")
-public class NativeSelect extends AbstractSelect {
+public class NativeSelect extends AbstractSelect implements
+        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
     // width in characters, mimics TextField
     private int columns = 0;
 
+    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
+
+        @Override
+        protected void fireEvent(Event event) {
+            NativeSelect.this.fireEvent(event);
+        }
+    };
+
     public NativeSelect() {
         super();
+        registerRpc(focusBlurRpc);
     }
 
     public NativeSelect(String caption, Collection<?> options) {
@@ -116,6 +132,67 @@ public class NativeSelect extends AbstractSelect {
             throw new UnsupportedOperationException(
                     "newItemsAllowed not supported");
         }
+    }
+
+    @Override
+    public void addFocusListener(FocusListener listener) {
+        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+                FocusListener.focusMethod);
+    }
+
+    /**
+     * @deprecated As of 7.0, replaced by
+     *             {@link #addFocusListener(FocusListener)}
+     **/
+    @Override
+    @Deprecated
+    public void addListener(FocusListener listener) {
+        addFocusListener(listener);
+    }
+
+    @Override
+    public void removeFocusListener(FocusListener listener) {
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+    }
+
+    /**
+     * @deprecated As of 7.0, replaced by
+     *             {@link #removeFocusListener(FocusListener)}
+     **/
+    @Override
+    @Deprecated
+    public void removeListener(FocusListener listener) {
+        removeFocusListener(listener);
+    }
+
+    @Override
+    public void addBlurListener(BlurListener listener) {
+        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+                BlurListener.blurMethod);
+    }
+
+    /**
+     * @deprecated As of 7.0, replaced by {@link #addBlurListener(BlurListener)}
+     **/
+    @Override
+    @Deprecated
+    public void addListener(BlurListener listener) {
+        addBlurListener(listener);
+    }
+
+    @Override
+    public void removeBlurListener(BlurListener listener) {
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    }
+
+    /**
+     * @deprecated As of 7.0, replaced by
+     *             {@link #removeBlurListener(BlurListener)}
+     **/
+    @Override
+    @Deprecated
+    public void removeListener(BlurListener listener) {
+        removeBlurListener(listener);
     }
 
 }
