@@ -122,6 +122,10 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
 
         RunLocally runLocally = getClass().getAnnotation(RunLocally.class);
         if (runLocally != null) {
+            if (System.getenv().containsKey("TEAMCITY_VERSION")) {
+                throw new RuntimeException(
+                        "@RunLocally is not supported for tests run on the build server");
+            }
             capabilities = runLocally.value().getDesiredCapabilities();
             setupLocalDriver(capabilities);
         } else {
