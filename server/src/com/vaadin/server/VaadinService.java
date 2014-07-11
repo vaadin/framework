@@ -1173,16 +1173,16 @@ public abstract class VaadinService implements Serializable {
     private void removeClosedUIs(final VaadinSession session) {
         ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
         for (final UI ui : uis) {
-            ui.accessSynchronously(new Runnable() {
-                @Override
-                public void run() {
-                    if (ui.isClosing()) {
+            if (ui.isClosing()) {
+                ui.accessSynchronously(new Runnable() {
+                    @Override
+                    public void run() {
                         getLogger().log(Level.FINER, "Removing closed UI {0}",
                                 ui.getUIId());
                         session.removeUI(ui);
                     }
-                }
-            });
+                });
+            }
         }
     }
 
@@ -1338,23 +1338,16 @@ public abstract class VaadinService implements Serializable {
     public void requestEnd(VaadinRequest request, VaadinResponse response,
             VaadinSession session) {
         if (session != null) {
-            final VaadinSession finalSession = session;
-
-            session.accessSynchronously(new Runnable() {
-                @Override
-                public void run() {
-                    cleanupSession(finalSession);
-                }
-            });
-
-            final long duration = (System.nanoTime() - (Long) request
-                    .getAttribute(REQUEST_START_TIME_ATTRIBUTE)) / 1000000;
-            session.accessSynchronously(new Runnable() {
-                @Override
-                public void run() {
-                    finalSession.setLastRequestDuration(duration);
-                }
-            });
+            assert VaadinSession.getCurrent() == session;
+            session.lock();
+            try {
+                cleanupSession(session);
+                final long duration = (System.nanoTime() - (Long) request
+                        .getAttribute(REQUEST_START_TIME_ATTRIBUTE)) / 1000000;
+                session.setLastRequestDuration(duration);
+            } finally {
+                session.unlock();
+            }
         }
         CurrentInstance.clearAll();
     }
