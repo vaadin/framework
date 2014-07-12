@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -52,12 +52,14 @@ import com.vaadin.ui.UI;
  * <p>
  * Non-inheritable: {@link VaadinRequest}, {@link VaadinResponse}.
  * </p>
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
 public class CurrentInstance implements Serializable {
     private static final Object NULL_OBJECT = new Object();
+    private static final CurrentInstance CURRENT_INSTANCE_NULL = new CurrentInstance(
+            NULL_OBJECT, true);
 
     private final WeakReference<Object> instance;
     private final boolean inheritable;
@@ -90,7 +92,7 @@ public class CurrentInstance implements Serializable {
 
     /**
      * Gets the current instance of a specific type if available.
-     * 
+     *
      * @param type
      *            the class to get an instance of
      * @return the current instance or the provided type, or <code>null</code>
@@ -110,7 +112,7 @@ public class CurrentInstance implements Serializable {
                  * ThreadLocal should only outlive the referenced object on
                  * threads that are not doing anything related to Vaadin, which
                  * should thus never invoke CurrentInstance.get().
-                 * 
+                 *
                  * At this point, there might also be other values that have
                  * been collected, so we'll scan the entire map and remove stale
                  * CurrentInstance objects. Using a ReferenceQueue could make
@@ -148,10 +150,10 @@ public class CurrentInstance implements Serializable {
 
     /**
      * Sets the current instance of the given type.
-     * 
+     *
      * @see #setInheritable(Class, Object)
      * @see ThreadLocal
-     * 
+     *
      * @param type
      *            the class that should be used when getting the current
      *            instance back
@@ -167,10 +169,10 @@ public class CurrentInstance implements Serializable {
      * instance that is inheritable will be available for child threads and in
      * code run by {@link VaadinSession#access(Runnable)} and
      * {@link UI#access(Runnable)}.
-     * 
+     *
      * @see #set(Class, Object)
      * @see InheritableThreadLocal
-     * 
+     *
      * @param type
      *            the class that should be used when getting the current
      *            instance back
@@ -181,17 +183,18 @@ public class CurrentInstance implements Serializable {
         set(type, instance, true);
     }
 
-    private static <T> void set(Class<T> type, T instance, boolean inheritable) {
+    private static <T> CurrentInstance set(Class<T> type, T instance,
+            boolean inheritable) {
         Map<Class<?>, CurrentInstance> map = instances.get();
+        CurrentInstance previousInstance = null;
         if (instance == null) {
             // remove the instance
-            if (map == null) {
-                return;
-            }
-            map.remove(type);
-            if (map.isEmpty()) {
-                instances.remove();
-                map = null;
+            if (map != null) {
+                previousInstance = map.remove(type);
+                if (map.isEmpty()) {
+                    instances.remove();
+                    map = null;
+                }
             }
         } else {
             assert type.isInstance(instance) : "Invald instance type";
@@ -200,8 +203,8 @@ public class CurrentInstance implements Serializable {
                 instances.set(map);
             }
 
-            CurrentInstance previousInstance = map.put(type,
-                    new CurrentInstance(instance, inheritable));
+            previousInstance = map.put(type, new CurrentInstance(instance,
+                    inheritable));
             if (previousInstance != null) {
                 assert previousInstance.inheritable == inheritable : "Inheritable status mismatch for "
                         + type
@@ -211,6 +214,10 @@ public class CurrentInstance implements Serializable {
                         + inheritable + ")";
             }
         }
+        if (previousInstance == null) {
+            previousInstance = CURRENT_INSTANCE_NULL;
+        }
+        return previousInstance;
     }
 
     /**
@@ -223,9 +230,9 @@ public class CurrentInstance implements Serializable {
     /**
      * Restores the given instances to the given values. Note that this should
      * only be used internally to restore Vaadin classes.
-     * 
+     *
      * @since 7.1
-     * 
+     *
      * @param old
      *            A Class -> CurrentInstance map to set as current instances
      */
@@ -243,7 +250,7 @@ public class CurrentInstance implements Serializable {
                  * CurrentInstance. Without this a reference to an already
                  * collected instance may be left in the CurrentInstance when it
                  * really should be restored to null.
-                 * 
+                 *
                  * One example case that this fixes:
                  * VaadinService.runPendingAccessTasks() clears all current
                  * instances and then sets everything but the UI. This makes
@@ -267,9 +274,9 @@ public class CurrentInstance implements Serializable {
     /**
      * Gets the currently set instances so that they can later be restored using
      * {@link #restoreInstances(Map)}.
-     * 
+     *
      * @since 7.1
-     * 
+     *
      * @param onlyInheritable
      *            <code>true</code> if only the inheritable instances should be
      *            included; <code>false</code> to get all instances.
@@ -305,20 +312,17 @@ public class CurrentInstance implements Serializable {
      * Sets current instances for the UI and all related classes. The previously
      * defined values can be restored by passing the returned map to
      * {@link #restoreInstances(Map)}.
-     * 
+     *
      * @since 7.1
-     * 
+     *
      * @param ui
      *            The UI
      * @return A map containing the old values of the instances that this method
      *         updated.
      */
     public static Map<Class<?>, CurrentInstance> setCurrent(UI ui) {
-        Map<Class<?>, CurrentInstance> old = new HashMap<Class<?>, CurrentInstance>();
-        old.put(UI.class,
-                new CurrentInstance(getSameOrNullObject(UI.getCurrent()), true));
-        UI.setCurrent(ui);
-        old.putAll(setCurrent(ui.getSession()));
+        Map<Class<?>, CurrentInstance> old = setCurrent(ui.getSession());
+        old.put(UI.class, set(UI.class, ui, true));
         return old;
     }
 
@@ -326,9 +330,9 @@ public class CurrentInstance implements Serializable {
      * Sets current instances for the {@link VaadinSession} and all related
      * classes. The previously defined values can be restored by passing the
      * returned map to {@link #restoreInstances(Map)}.
-     * 
+     *
      * @since 7.1
-     * 
+     *
      * @param session
      *            The VaadinSession
      * @return A map containing the old values of the instances this method
@@ -337,31 +341,13 @@ public class CurrentInstance implements Serializable {
     public static Map<Class<?>, CurrentInstance> setCurrent(
             VaadinSession session) {
         Map<Class<?>, CurrentInstance> old = new HashMap<Class<?>, CurrentInstance>();
-        old.put(VaadinSession.class, new CurrentInstance(
-                getSameOrNullObject(VaadinSession.getCurrent()), true));
-        old.put(VaadinService.class, new CurrentInstance(
-                getSameOrNullObject(VaadinService.getCurrent()), true));
+        old.put(VaadinSession.class, set(VaadinSession.class, session, true));
         VaadinService service = null;
         if (session != null) {
             service = session.getService();
         }
-
-        VaadinSession.setCurrent(session);
-        VaadinService.setCurrent(service);
-
+        old.put(VaadinService.class, set(VaadinService.class, service, true));
         return old;
-    }
-
-    /**
-     * Returns {@code object} unless it is null, in which case #NULL_OBJECT is
-     * returned.
-     * 
-     * @param object
-     *            The instance to return if non-null.
-     * @return {@code object} or #NULL_OBJECT if {@code object} is null.
-     */
-    private static Object getSameOrNullObject(Object object) {
-        return object == null ? NULL_OBJECT : object;
     }
 
     private static Logger getLogger() {
