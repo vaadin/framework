@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -55,10 +55,10 @@ import com.vaadin.server.StreamVariable;
  * operation new information needs to be sent to its
  * {@link com.vaadin.client.ServerConnector}.
  * </p>
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
- * 
+ *
  */
 public class ConnectorTracker implements Serializable {
 
@@ -87,7 +87,7 @@ public class ConnectorTracker implements Serializable {
 
     /**
      * Map to track on which syncId each connector was removed.
-     * 
+     *
      * @see #getCurrentSyncId()
      * @see #cleanConcurrentlyRemovedConnectorIds(long)
      */
@@ -95,9 +95,9 @@ public class ConnectorTracker implements Serializable {
 
     /**
      * Gets a logger for this class
-     * 
+     *
      * @return A logger instance for logging within this class
-     * 
+     *
      */
     public static Logger getLogger() {
         return Logger.getLogger(ConnectorTracker.class.getName());
@@ -107,7 +107,7 @@ public class ConnectorTracker implements Serializable {
      * Creates a new ConnectorTracker for the given uI. A tracker is always
      * attached to a uI and the uI cannot be changed during the lifetime of a
      * {@link ConnectorTracker}.
-     * 
+     *
      * @param uI
      *            The uI to attach to. Cannot be null.
      */
@@ -121,7 +121,7 @@ public class ConnectorTracker implements Serializable {
      * The lookup method {@link #getConnector(String)} only returns registered
      * connectors.
      * </p>
-     * 
+     *
      * @param connector
      *            The connector to register.
      */
@@ -157,12 +157,12 @@ public class ConnectorTracker implements Serializable {
 
     /**
      * Unregister the given connector.
-     * 
+     *
      * <p>
      * The lookup method {@link #getConnector(String)} only returns registered
      * connectors.
      * </p>
-     * 
+     *
      * @param connector
      *            The connector to unregister
      */
@@ -213,7 +213,7 @@ public class ConnectorTracker implements Serializable {
      * Checks whether the given connector has already been initialized in the
      * browser. The given connector should be registered with this connector
      * tracker.
-     * 
+     *
      * @param connector
      *            the client connector to check
      * @return <code>true</code> if the initial state has previously been sent
@@ -228,9 +228,9 @@ public class ConnectorTracker implements Serializable {
     /**
      * Marks the given connector as initialized, meaning that the client-side
      * state has been initialized for the connector.
-     * 
+     *
      * @see #isClientSideInitialized(ClientConnector)
-     * 
+     *
      * @param connector
      *            the connector that should be marked as initialized
      */
@@ -242,7 +242,7 @@ public class ConnectorTracker implements Serializable {
      * Marks all currently registered connectors as uninitialized. This should
      * be done when the client-side has been reset but the server-side state is
      * retained.
-     * 
+     *
      * @see #isClientSideInitialized(ClientConnector)
      */
     public void markAllClientSidesUninitialized() {
@@ -252,7 +252,7 @@ public class ConnectorTracker implements Serializable {
 
     /**
      * Gets a connector by its id.
-     * 
+     *
      * @param connectorId
      *            The connector id to look for
      * @return The connector with the given id or null if no connector has the
@@ -400,10 +400,10 @@ public class ConnectorTracker implements Serializable {
     /**
      * Mark the connector as dirty. This should not be done while the response
      * is being written.
-     * 
+     *
      * @see #getDirtyConnectors()
      * @see #isWritingResponse()
-     * 
+     *
      * @param connector
      *            The connector that should be marked clean.
      */
@@ -425,7 +425,7 @@ public class ConnectorTracker implements Serializable {
 
     /**
      * Mark the connector as clean.
-     * 
+     *
      * @param connector
      *            The connector that should be marked clean.
      */
@@ -443,7 +443,7 @@ public class ConnectorTracker implements Serializable {
     /**
      * Returns {@link #getConnectorString(ClientConnector)} for the connector
      * and its parent (if it has a parent).
-     * 
+     *
      * @param connector
      *            The connector
      * @return A string describing the connector and its parent
@@ -460,7 +460,7 @@ public class ConnectorTracker implements Serializable {
     /**
      * Returns a string with the connector name and id. Useful mostly for
      * debugging and logging.
-     * 
+     *
      * @param connector
      *            The connector
      * @return A string that describes the connector
@@ -500,7 +500,7 @@ public class ConnectorTracker implements Serializable {
     /**
      * Marks all visible connectors dirty, starting from the given connector and
      * going downwards in the hierarchy.
-     * 
+     *
      * @param c
      *            The component to start iterating downwards from
      */
@@ -521,7 +521,7 @@ public class ConnectorTracker implements Serializable {
      * The state and pending RPC calls for dirty connectors are sent to the
      * client in the following request.
      * </p>
-     * 
+     *
      * @return A collection of all dirty connectors for this uI. This list may
      *         contain invisible connectors.
      */
@@ -531,7 +531,7 @@ public class ConnectorTracker implements Serializable {
 
     /**
      * Checks if there a dirty connectors.
-     * 
+     *
      * @return true if there are dirty connectors, false otherwise
      */
     public boolean hasDirtyConnectors() {
@@ -541,17 +541,19 @@ public class ConnectorTracker implements Serializable {
     /**
      * Returns a collection of those {@link #getDirtyConnectors() dirty
      * connectors} that are actually visible to the client.
-     * 
+     *
      * @return A list of dirty and visible connectors.
      */
     public ArrayList<ClientConnector> getDirtyVisibleConnectors() {
-        ArrayList<ClientConnector> dirtyConnectors = new ArrayList<ClientConnector>();
-        for (ClientConnector c : getDirtyConnectors()) {
+        Collection<ClientConnector> dirtyConnectors = getDirtyConnectors();
+        ArrayList<ClientConnector> dirtyVisibleConnectors = new ArrayList<ClientConnector>(
+                dirtyConnectors.size());
+        for (ClientConnector c : dirtyConnectors) {
             if (LegacyCommunicationManager.isConnectorVisibleToClient(c)) {
-                dirtyConnectors.add(c);
+                dirtyVisibleConnectors.add(c);
             }
         }
-        return dirtyConnectors;
+        return dirtyVisibleConnectors;
     }
 
     public JSONObject getDiffState(ClientConnector connector) {
@@ -571,10 +573,10 @@ public class ConnectorTracker implements Serializable {
     /**
      * Checks whether the response is currently being written. Connectors can
      * not be marked as dirty when a response is being written.
-     * 
+     *
      * @see #setWritingResponse(boolean)
      * @see #markDirty(ClientConnector)
-     * 
+     *
      * @return <code>true</code> if the response is currently being written,
      *         <code>false</code> if outside the response writing phase.
      */
@@ -590,14 +592,14 @@ public class ConnectorTracker implements Serializable {
      * {@link #getCurrentSyncId()}), if {@link #isWritingResponse()} returns
      * <code>false</code> and <code>writingResponse</code> is set to
      * <code>true</code>.
-     * 
+     *
      * @param writingResponse
      *            the new response status.
-     * 
+     *
      * @see #markDirty(ClientConnector)
      * @see #isWritingResponse()
      * @see #getCurrentSyncId()
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the new response status is the same as the previous value.
      *             This is done to help detecting problems caused by missed
@@ -625,7 +627,7 @@ public class ConnectorTracker implements Serializable {
         // Convert JSONObjects in diff state to String representation as
         // JSONObject is not serializable
         HashMap<ClientConnector, String> stringDiffStates = new HashMap<ClientConnector, String>(
-                diffStates.size());
+                diffStates.size() * 2);
         for (ClientConnector key : diffStates.keySet()) {
             stringDiffStates.put(key, diffStates.get(key).toString());
         }
@@ -643,7 +645,8 @@ public class ConnectorTracker implements Serializable {
         @SuppressWarnings("unchecked")
         HashMap<ClientConnector, String> stringDiffStates = (HashMap<ClientConnector, String>) in
                 .readObject();
-        diffStates = new HashMap<ClientConnector, JSONObject>();
+        diffStates = new HashMap<ClientConnector, JSONObject>(
+                stringDiffStates.size() * 2);
         for (ClientConnector key : stringDiffStates.keySet()) {
             try {
                 diffStates.put(key, new JSONObject(stringDiffStates.get(key)));
@@ -657,7 +660,7 @@ public class ConnectorTracker implements Serializable {
     /**
      * Checks if the indicated connector has a StreamVariable of the given name
      * and returns the variable if one is found.
-     * 
+     *
      * @param connectorId
      * @param variableName
      * @return variable if a matching one exists, otherwise null
@@ -678,7 +681,7 @@ public class ConnectorTracker implements Serializable {
 
     /**
      * Adds a StreamVariable of the given name to the indicated connector.
-     * 
+     *
      * @param connectorId
      * @param variableName
      * @param variable
@@ -734,7 +737,7 @@ public class ConnectorTracker implements Serializable {
     /**
      * Removes any StreamVariable of the given name from the indicated
      * connector.
-     * 
+     *
      * @param connectorId
      * @param variableName
      */
@@ -752,7 +755,7 @@ public class ConnectorTracker implements Serializable {
 
     /**
      * Returns the security key associated with the given StreamVariable.
-     * 
+     *
      * @param variable
      * @return matching security key if one exists, null otherwise
      */
@@ -767,7 +770,7 @@ public class ConnectorTracker implements Serializable {
      * Check whether a connector was present on the client when the it was
      * creating this request, but was removed server-side before the request
      * arrived.
-     * 
+     *
      * @since 7.2
      * @param connectorId
      *            The connector id to check for whether it was removed
@@ -827,7 +830,7 @@ public class ConnectorTracker implements Serializable {
      * <p>
      * The sync id value <code>-1</code> is ignored to facilitate testing with
      * pre-recorded requests.
-     * 
+     *
      * @see #setWritingResponse(boolean)
      * @see #connectorWasPresentAsRequestWasSent(String, long)
      * @since 7.2
@@ -853,7 +856,7 @@ public class ConnectorTracker implements Serializable {
      * <p>
      * The sync id value <code>-1</code> is ignored to facilitate testing with
      * pre-recorded requests.
-     * 
+     *
      * @see #connectorWasPresentAsRequestWasSent(String, long)
      * @since 7.2
      * @param lastSyncIdSeenByClient

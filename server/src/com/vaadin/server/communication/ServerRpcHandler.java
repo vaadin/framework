@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -56,7 +56,7 @@ import com.vaadin.ui.UI;
 /**
  * Handles a client-to-server message containing serialized {@link ServerRpc
  * server RPC} invocations.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -65,7 +65,7 @@ public class ServerRpcHandler implements Serializable {
     /**
      * A data transfer object representing an RPC request sent by the client
      * side.
-     * 
+     *
      * @since 7.2
      * @author Vaadin Ltd
      */
@@ -105,7 +105,7 @@ public class ServerRpcHandler implements Serializable {
 
         /**
          * Gets the CSRF security token (double submit cookie) for this request.
-         * 
+         *
          * @return the CSRF security token for this current change request
          */
         public String getCsrfToken() {
@@ -114,7 +114,7 @@ public class ServerRpcHandler implements Serializable {
 
         /**
          * Gets the data to recreate the RPC as requested by the client side.
-         * 
+         *
          * @return the data describing which RPC should be made, and all their
          *         data
          */
@@ -124,7 +124,7 @@ public class ServerRpcHandler implements Serializable {
 
         /**
          * Gets the sync id last seen by the client.
-         * 
+         *
          * @return the last sync id given by the server, according to the
          *         client's request
          */
@@ -138,9 +138,9 @@ public class ServerRpcHandler implements Serializable {
          * <p>
          * <em>Note:</em> This is a shared reference - any modifications made
          * will be shared.
-         * 
+         *
          * @return the raw JSON object that was received from the client
-         * 
+         *
          */
         public JSONObject getRawJson() {
             return json;
@@ -152,7 +152,7 @@ public class ServerRpcHandler implements Serializable {
     /**
      * Reads JSON containing zero or more serialized RPC calls (including legacy
      * variable changes) and executes the calls.
-     * 
+     *
      * @param ui
      *            The {@link UI} receiving the calls. Cannot be null.
      * @param reader
@@ -202,7 +202,7 @@ public class ServerRpcHandler implements Serializable {
      * changeVariables() is only called once for them. This preserves the Vaadin
      * 6 semantics for components and add-ons that do not use Vaadin 7 RPC
      * directly.
-     * 
+     *
      * @param uI
      *            the UI receiving the invocations data
      * @param lastSyncIdSeenByClient
@@ -332,7 +332,7 @@ public class ServerRpcHandler implements Serializable {
 
     /**
      * Parse JSON from the client into a list of MethodInvocation instances.
-     * 
+     *
      * @param connectorTracker
      *            The ConnectorTracker used to lookup connectors
      * @param invocationsJson
@@ -347,11 +347,13 @@ public class ServerRpcHandler implements Serializable {
     private List<MethodInvocation> parseInvocations(
             ConnectorTracker connectorTracker, JSONArray invocationsJson,
             int lastSyncIdSeenByClient) throws JSONException {
-        ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>();
+        int invocationCount = invocationsJson.length();
+        ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>(
+                invocationCount);
 
         MethodInvocation previousInvocation = null;
         // parse JSON to MethodInvocations
-        for (int i = 0; i < invocationsJson.length(); ++i) {
+        for (int i = 0; i < invocationCount; ++i) {
 
             JSONArray invocationJson = invocationsJson.getJSONArray(i);
 
@@ -514,7 +516,7 @@ public class ServerRpcHandler implements Serializable {
     /**
      * Generates an error message when the client is trying to to something
      * ('what') with a connector which is disabled or invisible.
-     * 
+     *
      * @since 7.1.8
      * @param connector
      *            the connector which is disabled (or invisible)
