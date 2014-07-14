@@ -59,6 +59,7 @@ import com.vaadin.server.communication.HeartbeatHandler;
 import com.vaadin.server.communication.PublishedFileHandler;
 import com.vaadin.server.communication.SessionRequestHandler;
 import com.vaadin.server.communication.UidlRequestHandler;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
@@ -1590,6 +1591,7 @@ public abstract class VaadinService implements Serializable {
             json.put("resources", new JSONObject());
             json.put("locales", new JSONObject());
             json.put("meta", meta);
+            json.put(ApplicationConstants.SERVER_SYNC_ID, -1);
             returnString = json.toString();
         } catch (JSONException e) {
             getLogger().log(Level.WARNING,

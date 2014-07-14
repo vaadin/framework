@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.Constants;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
@@ -78,7 +79,19 @@ public class ServerRpcHandler implements Serializable {
         public RpcRequest(String jsonString) throws JSONException {
             json = new JSONObject(jsonString);
             csrfToken = json.getString(ApplicationConstants.CSRF_TOKEN);
-            syncId = json.getInt(ApplicationConstants.SERVER_SYNC_ID);
+
+            VaadinRequest request = VaadinService.getCurrentRequest();
+            if (request == null
+                    || request
+                            .getService()
+                            .getDeploymentConfiguration()
+                            .getApplicationOrSystemProperty(
+                                    Constants.SERVLET_PARAMETER_SYNC_ID_CHECK,
+                                    Boolean.toString(true)).equals("true")) {
+                syncId = json.getInt(ApplicationConstants.SERVER_SYNC_ID);
+            } else {
+                syncId = -1;
+            }
             invocations = new JSONArray(
                     json.getString(ApplicationConstants.RPC_INVOCATIONS));
         }

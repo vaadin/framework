@@ -66,6 +66,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -1422,10 +1423,16 @@ public class ApplicationConnection implements HasHandlers {
         if (json.containsKey(ApplicationConstants.SERVER_SYNC_ID)) {
             int syncId = json.getInt(ApplicationConstants.SERVER_SYNC_ID);
 
-            assert (lastSeenServerSyncId == UNDEFINED_SYNC_ID || syncId == lastSeenServerSyncId + 1) : "Newly retrieved server sync id was not exactly one larger than the previous one (new: "
-                    + syncId + ", last seen: " + lastSeenServerSyncId + ")";
+            /*
+             * Use sync id unless explicitly set as undefined, as is done by
+             * e.g. critical server-side notifications
+             */
+            if (syncId != -1) {
+                assert (lastSeenServerSyncId == UNDEFINED_SYNC_ID || syncId == lastSeenServerSyncId + 1) : "Newly retrieved server sync id was not exactly one larger than the previous one (new: "
+                        + syncId + ", last seen: " + lastSeenServerSyncId + ")";
 
-            lastSeenServerSyncId = syncId;
+                lastSeenServerSyncId = syncId;
+            }
         } else {
             VConsole.error("Server response didn't contain a sync id. "
                     + "Please verify that the server is up-to-date and that the response data has not been modified in transmission.");
