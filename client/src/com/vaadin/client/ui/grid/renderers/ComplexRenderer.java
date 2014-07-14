@@ -86,6 +86,9 @@ public abstract class ComplexRenderer<T> implements Renderer<T> {
      * <p>
      * The events that triggers this needs to be returned by the
      * {@link #getConsumedEvents()} method.
+     * <p>
+     * Returns boolean telling if the event has been completely handled and
+     * should not cause any other actions.
      * 
      * @param cell
      *            Object containing information about the cell the event was
@@ -93,9 +96,10 @@ public abstract class ComplexRenderer<T> implements Renderer<T> {
      * 
      * @param event
      *            The original DOM event
+     * @return true if event should not be handled by grid
      */
-    public void onBrowserEvent(Cell cell, NativeEvent event) {
-        // Implement if needed
+    public boolean onBrowserEvent(Cell cell, NativeEvent event) {
+        return false;
     }
 
     /**

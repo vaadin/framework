@@ -58,11 +58,12 @@ public class RowAwareRendererConnector extends AbstractRendererConnector<Void> {
         }
 
         @Override
-        public void onBrowserEvent(Cell cell, NativeEvent event) {
+        public boolean onBrowserEvent(Cell cell, NativeEvent event) {
             int row = cell.getRow();
             String key = getRowKey(row);
             getRpcProxy(RowAwareRendererRpc.class).clicky(key);
             cell.getElement().setInnerText("row: " + row + ", key: " + key);
+            return true;
         }
     }
 

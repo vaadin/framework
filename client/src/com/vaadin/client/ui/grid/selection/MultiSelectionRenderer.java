@@ -482,7 +482,7 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
     }
 
     @Override
-    public void onBrowserEvent(final Cell cell, final NativeEvent event) {
+    public boolean onBrowserEvent(final Cell cell, final NativeEvent event) {
         if (BrowserEvents.TOUCHSTART.equals(event.getType())
                 || BrowserEvents.MOUSEDOWN.equals(event.getType())) {
             injectNativeHandler();
@@ -491,6 +491,7 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
             autoScrollHandler.start(logicalRowIndex);
             event.preventDefault();
             event.stopPropagation();
+            return true;
         } else {
             throw new IllegalStateException("received unexpected event: "
                     + event.getType());

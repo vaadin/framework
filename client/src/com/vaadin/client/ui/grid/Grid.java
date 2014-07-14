@@ -235,11 +235,20 @@ public class Grid<T> extends Composite implements
 
     private String rowHasDataStyleName;
     private String rowSelectedStyleName;
+    private String cellActiveStyleName;
+    private String rowActiveStyleName;
+    private String headerFooterFocusedStyleName;
 
     /**
      * Current selection model.
      */
     private SelectionModel<T> selectionModel;
+
+    /**
+     * Current active cell.
+     */
+    private int activeRow = 0;
+    private int activeColumn = 0;
 
     /**
      * Enumeration for easy setting of selection mode.
@@ -430,14 +439,14 @@ public class Grid<T> extends Composite implements
             }
 
             @Override
-            public void onBrowserEvent(final Cell cell, NativeEvent event) {
+            public boolean onBrowserEvent(final Cell cell, NativeEvent event) {
 
                 // Handle sorting events if column is sortable
                 if (grid.getColumn(cell.getColumn()).isSortable()) {
 
                     if (BrowserEvents.TOUCHSTART.equals(event.getType())) {
                         if (event.getTouches().length() > 1) {
-                            return;
+                            return false;
                         }
 
                         event.preventDefault();
@@ -452,7 +461,7 @@ public class Grid<T> extends Composite implements
 
                     } else if (BrowserEvents.TOUCHMOVE.equals(event.getType())) {
                         if (event.getTouches().length() > 1) {
-                            return;
+                            return false;
                         }
 
                         event.preventDefault();
@@ -472,7 +481,7 @@ public class Grid<T> extends Composite implements
 
                     } else if (BrowserEvents.TOUCHEND.equals(event.getType())) {
                         if (event.getTouches().length() > 0) {
-                            return;
+                            return false;
                         }
 
                         if (lazySorter.isRunning()) {
@@ -485,7 +494,7 @@ public class Grid<T> extends Composite implements
                     } else if (BrowserEvents.TOUCHCANCEL
                             .equals(event.getType())) {
                         if (event.getChangedTouches().length() > 1) {
-                            return;
+                            return false;
                         }
 
                         lazySorter.cancel();
@@ -496,7 +505,10 @@ public class Grid<T> extends Composite implements
                         lazySorter.setMultisort(event.getShiftKey());
                         lazySorter.run();
                     }
+                    return true;
                 }
+                return false;
+
             }
 
             /**
@@ -986,6 +998,10 @@ public class Grid<T> extends Composite implements
                         getRenderer(column)
                                 .render(cell, getColumnValue(column));
                     }
+
+                    setStyleName(cell.getElement(),
+                            headerFooterFocusedStyleName,
+                            activeColumn == cell.getColumn());
                 }
 
             } else if (columnGroupRows.size() > 0) {
@@ -1023,6 +1039,10 @@ public class Grid<T> extends Composite implements
                         // Cells are reused
                         cellElement.setInnerHTML(null);
                         cell.setColSpan(1);
+
+                        setStyleName(cell.getElement(),
+                                headerFooterFocusedStyleName,
+                                activeColumn == cell.getColumn());
                     }
                 }
             }
@@ -1060,6 +1080,7 @@ public class Grid<T> extends Composite implements
         refreshHeader();
         refreshFooter();
 
+        sinkEvents(Event.ONMOUSEDOWN);
         setSelectionMode(SelectionMode.SINGLE);
 
         escalator
@@ -1092,6 +1113,9 @@ public class Grid<T> extends Composite implements
         escalator.setStylePrimaryName(style);
         rowHasDataStyleName = getStylePrimaryName() + "-row-has-data";
         rowSelectedStyleName = getStylePrimaryName() + "-row-selected";
+        cellActiveStyleName = getStylePrimaryName() + "-cell-active";
+        headerFooterFocusedStyleName = getStylePrimaryName() + "-header-active";
+        rowActiveStyleName = getStylePrimaryName() + "-row-active";
     }
 
     /**
@@ -1194,12 +1218,18 @@ public class Grid<T> extends Composite implements
                     setStyleName(rowElement, rowSelectedStyleName, false);
                 }
 
+                setStyleName(rowElement, rowActiveStyleName,
+                        rowIndex == activeRow);
+
                 for (FlyweightCell cell : cellsToUpdate) {
                     GridColumn<?, T> column = getColumnFromVisibleIndex(cell
                             .getColumn());
 
                     assert column != null : "Column was not found from cell ("
                             + cell.getColumn() + "," + cell.getRow() + ")";
+
+                    setStyleName(cell.getElement(), cellActiveStyleName,
+                            isActiveCell(cell));
 
                     Renderer renderer = column.getRenderer();
 
@@ -1230,6 +1260,11 @@ public class Grid<T> extends Composite implements
                         cell.getElement().removeAllChildren();
                     }
                 }
+            }
+
+            private boolean isActiveCell(FlyweightCell cell) {
+                return cell.getRow() == activeRow
+                        && cell.getColumn() == activeColumn;
             }
 
             @Override
@@ -2095,8 +2130,19 @@ public class Grid<T> extends Composite implements
                     }
 
                     if (renderer instanceof ComplexRenderer) {
-                        ((ComplexRenderer<?>) renderer).onBrowserEvent(cell,
-                                event);
+                        ComplexRenderer<?> cplxRenderer = (ComplexRenderer<?>) renderer;
+                        if (cplxRenderer.getConsumedEvents().contains(
+                                event.getType())) {
+                            if (cplxRenderer.onBrowserEvent(cell, event)) {
+                                return;
+                            }
+                        }
+                    }
+
+                    // TODO: Support active cells in Headers and Footers,
+                    // 14.07.2014, Teemu Suo-Anttila
+                    if (event.getTypeInt() == Event.ONMOUSEDOWN) {
+                        setActiveCell(cell);
                     }
                 }
             }
@@ -2202,11 +2248,13 @@ public class Grid<T> extends Composite implements
 
         if (this.selectColumnRenderer != null) {
             removeColumnSkipSelectionColumnCheck(selectionColumn);
+            --activeColumn;
         }
 
         this.selectColumnRenderer = selectColumnRenderer;
 
         if (selectColumnRenderer != null) {
+            ++activeColumn;
             selectionColumn = new SelectionColumn(selectColumnRenderer);
 
             // FIXME: this needs to be done elsewhere, requires design...
@@ -2215,6 +2263,7 @@ public class Grid<T> extends Composite implements
             selectionColumn.initDone();
         } else {
             selectionColumn = null;
+            refreshBody();
         }
     }
 
@@ -2451,5 +2500,33 @@ public class Grid<T> extends Composite implements
         refreshHeader();
         fireEvent(new SortEvent<T>(this,
                 Collections.unmodifiableList(sortOrder)));
+    }
+
+    /**
+     * Set currently active cell used for keyboard navigation. Note that active
+     * cell is not {@code activeElement}.
+     * 
+     * @param cell
+     *            a cell object
+     */
+    public void setActiveCell(Cell cell) {
+        int oldRow = activeRow;
+        int oldColumn = activeColumn;
+
+        activeRow = cell.getRow();
+        activeColumn = cell.getColumn();
+
+        if (oldRow != activeRow) {
+            escalator.getBody().refreshRows(oldRow, 1);
+            escalator.getBody().refreshRows(activeRow, 1);
+        }
+
+        if (oldColumn != activeColumn) {
+            if (oldRow == activeRow) {
+                escalator.getBody().refreshRows(oldRow, 1);
+            }
+            refreshHeader();
+            refreshFooter();
+        }
     }
 }

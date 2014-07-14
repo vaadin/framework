@@ -19,8 +19,19 @@
 			right: 5px;
 		}
 
+		.#{$primaryStyleName}-cell-active {
+			border-color: blue;
+		}
+
+		.#{$primaryStyleName}-header-active {
+			background: lightgray;
+		}
+
+		.#{$primaryStyleName}-row-active > td {
+			background: rgb(244,244,244);
+		}
 	}
-	
+
 	.#{$primaryStyleName}-row-selected > td {
 		background: lightblue;
 	}
