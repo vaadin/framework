@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.components.grid;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.NoSuchElementException;
@@ -22,6 +23,7 @@ import org.openqa.selenium.NoSuchElementException;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.AbstractComponentElement;
+import com.vaadin.testbench.elements.AbstractElement;
 import com.vaadin.testbench.elements.ServerClass;
 
 /**
@@ -32,6 +34,30 @@ import com.vaadin.testbench.elements.ServerClass;
  */
 @ServerClass("com.vaadin.ui.components.grid.Grid")
 public class GridElement extends AbstractComponentElement {
+
+    public static class GridCellElement extends AbstractElement {
+
+        private String ACTIVE_CLASS_NAME = "-cell-active";
+
+        public boolean isActive() {
+            return getAttribute("class").contains(ACTIVE_CLASS_NAME);
+        }
+    }
+
+    public static class GridRowElement extends AbstractElement {
+
+        private String ACTIVE_CLASS_NAME = "-row-active";
+        private String SELECTED_CLASS_NAME = "-row-selected";
+
+        public boolean isActive() {
+            return getAttribute("class").contains(ACTIVE_CLASS_NAME);
+        }
+
+        @Override
+        public boolean isSelected() {
+            return getAttribute("class").contains(SELECTED_CLASS_NAME);
+        }
+    }
 
     /**
      * Scrolls Grid element so that wanted row is displayed
@@ -56,9 +82,10 @@ public class GridElement extends AbstractComponentElement {
      *            Column index
      * @return Cell element with given indices.
      */
-    public TestBenchElement getCell(int rowIndex, int colIndex) {
+    public GridCellElement getCell(int rowIndex, int colIndex) {
         scrollToRow(rowIndex);
-        return getSubPart("#cell[" + rowIndex + "][" + colIndex + "]");
+        return getSubPart("#cell[" + rowIndex + "][" + colIndex + "]").wrap(
+                GridCellElement.class);
     }
 
     /**
@@ -68,9 +95,9 @@ public class GridElement extends AbstractComponentElement {
      *            Row index
      * @return Row element with given index.
      */
-    public TestBenchElement getRow(int index) {
+    public GridRowElement getRow(int index) {
         scrollToRow(index);
-        return getSubPart("#cell[" + index + "]");
+        return getSubPart("#cell[" + index + "]").wrap(GridRowElement.class);
     }
 
     /**
@@ -82,8 +109,9 @@ public class GridElement extends AbstractComponentElement {
      *            Column index
      * @return Header cell element with given indices.
      */
-    public TestBenchElement getHeaderCell(int rowIndex, int colIndex) {
-        return getSubPart("#header[" + rowIndex + "][" + colIndex + "]");
+    public GridCellElement getHeaderCell(int rowIndex, int colIndex) {
+        return getSubPart("#header[" + rowIndex + "][" + colIndex + "]").wrap(
+                GridCellElement.class);
     }
 
     /**
@@ -95,8 +123,9 @@ public class GridElement extends AbstractComponentElement {
      *            Column index
      * @return Footer cell element with given indices.
      */
-    public TestBenchElement getFooterCell(int rowIndex, int colIndex) {
-        return getSubPart("#footer[" + rowIndex + "][" + colIndex + "]");
+    public GridCellElement getFooterCell(int rowIndex, int colIndex) {
+        return getSubPart("#footer[" + rowIndex + "][" + colIndex + "]").wrap(
+                GridCellElement.class);
     }
 
     /**
@@ -106,10 +135,14 @@ public class GridElement extends AbstractComponentElement {
      *            Row index
      * @return Header cell elements on given row.
      */
-    public List<TestBenchElement> getHeaderCells(int rowIndex) {
-        return TestBenchElement.wrapElements(
+    public List<GridCellElement> getHeaderCells(int rowIndex) {
+        List<GridCellElement> headers = new ArrayList<GridCellElement>();
+        for (TestBenchElement e : TestBenchElement.wrapElements(
                 getSubPart("#header[" + rowIndex + "]").findElements(
-                        By.xpath("./th")), getTestBenchCommandExecutor());
+                        By.xpath("./th")), getCommandExecutor())) {
+            headers.add(e.wrap(GridCellElement.class));
+        }
+        return headers;
     }
 
     /**
@@ -119,10 +152,14 @@ public class GridElement extends AbstractComponentElement {
      *            Row index
      * @return Header cell elements on given row.
      */
-    public List<TestBenchElement> getFooterCells(int rowIndex) {
-        return TestBenchElement.wrapElements(
+    public List<GridCellElement> getFooterCells(int rowIndex) {
+        List<GridCellElement> footers = new ArrayList<GridCellElement>();
+        for (TestBenchElement e : TestBenchElement.wrapElements(
                 getSubPart("#footer[" + rowIndex + "]").findElements(
-                        By.xpath("./td")), getTestBenchCommandExecutor());
+                        By.xpath("./td")), getCommandExecutor())) {
+            footers.add(e.wrap(GridCellElement.class));
+        }
+        return footers;
     }
 
     /**

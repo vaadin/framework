@@ -29,13 +29,13 @@ public class GridKeyboardNavigationTest extends GridBasicFeaturesTest {
         openTestURL();
 
         GridElement grid = getGridElement();
-        assertTrue("Body cell 0, 0 is not active on init.",
-                cellIsActive(grid, 0, 0));
+        assertTrue("Body cell 0, 0 is not active on init.", grid.getCell(0, 0)
+                .isActive());
         grid.getCell(5, 2).click();
-        assertFalse("Body cell 0, 0 was still active after clicking",
-                cellIsActive(grid, 0, 0));
+        assertFalse("Body cell 0, 0 was still active after clicking", grid
+                .getCell(0, 0).isActive());
         assertTrue("Body cell 5, 2 is not active after clicking",
-                cellIsActive(grid, 5, 2));
+                grid.getCell(5, 2).isActive());
     }
 
     @Test
@@ -43,15 +43,10 @@ public class GridKeyboardNavigationTest extends GridBasicFeaturesTest {
         openTestURL();
 
         GridElement grid = getGridElement();
-        assertTrue("Body cell 0, 0 is not active on init.",
-                cellIsActive(grid, 0, 0));
+        assertTrue("Body cell 0, 0 is not active on init.", grid.getCell(0, 0)
+                .isActive());
         grid.getHeaderCell(0, 3).click();
-        assertTrue("Body cell 0, 0 is not active after click on header.",
-                cellIsActive(grid, 0, 0));
-    }
-
-    private boolean cellIsActive(GridElement grid, int row, int col) {
-        return grid.getCell(row, col).getAttribute("class")
-                .contains("-cell-active");
+        assertTrue("Body cell 0, 0 is not active after click on header.", grid
+                .getCell(0, 0).isActive());
     }
 }
