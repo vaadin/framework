@@ -34,6 +34,7 @@ import com.vaadin.client.ui.grid.renderers.TextRenderer;
  * @author Vaadin Ltd
  * @see ColumnGroupRow#addGroup(ColumnGroup...)
  */
+@Deprecated
 public class ColumnGroup<T> {
 
     /**

@@ -33,6 +33,7 @@ import java.util.Set;
  * @since
  * @author Vaadin Ltd
  */
+@Deprecated
 public class ColumnGroupRow<T> {
 
     /**

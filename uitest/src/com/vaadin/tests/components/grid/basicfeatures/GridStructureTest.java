@@ -20,117 +20,22 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
-import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public class GridStructureTest extends GridBasicFeaturesTest {
 
+    /*
+     * TODO unignore once column header captions are reimplemented
+     */
     @Test
-    public void testColumnHeaderCaptions() throws Exception {
-        openTestURL();
-
-        // Column headers should be visible
-        List<TestBenchElement> cells = getGridHeaderRowCells();
-        assertEquals(GridBasicFeatures.COLUMNS, cells.size());
-        assertEquals("Column0", cells.get(0).getText());
-        assertEquals("Column1", cells.get(1).getText());
-        assertEquals("Column2", cells.get(2).getText());
-    }
-
-    @Test
-    public void testColumnFooterCaptions() throws Exception {
-        openTestURL();
-
-        // footer row should by default be hidden
-        List<TestBenchElement> cells = getGridFooterRowCells();
-        assertEquals(0, cells.size());
-
-        // Open footer row
-        selectMenuPath("Component", "Footers", "Visible");
-
-        // Footers should now be visible
-        cells = getGridFooterRowCells();
-        assertEquals(GridBasicFeatures.COLUMNS, cells.size());
-        assertEquals("Footer 0", cells.get(0).getText());
-        assertEquals("Footer 1", cells.get(1).getText());
-        assertEquals("Footer 2", cells.get(2).getText());
-    }
-
-    @Test
-    public void testColumnGroupHeaders() throws Exception {
-        openTestURL();
-
-        // Hide column headers for this test
-        selectMenuPath("Component", "Headers", "Visible");
-
-        List<TestBenchElement> cells = getGridHeaderRowCells();
-
-        // header row should be empty
-        assertEquals(0, cells.size());
-
-        // add a group row
-        selectMenuPath("Component", "Column groups", "Add group row");
-
-        // Empty group row cells should be present
-        cells = getGridHeaderRowCells();
-        assertEquals(GridBasicFeatures.COLUMNS, cells.size());
-
-        // Group columns 0 & 1
-        selectMenuPath("Component", "Column groups", "Column group row 1",
-                "Group Column 0 & 1");
-
-        cells = getGridHeaderRowCells();
-        assertEquals("Column 0 & 1", cells.get(0).getText());
-    }
-
-    @Test
-    public void testColumnGroupFooters() throws Exception {
-        openTestURL();
-
-        // add a group row
-        selectMenuPath("Component", "Column groups", "Add group row");
-
-        // Set footer visible
-        selectMenuPath("Component", "Column groups", "Column group row 1",
-                "Footer Visible");
-
-        // Group columns 0 & 1
-        selectMenuPath("Component", "Column groups", "Column group row 1",
-                "Group Column 0 & 1");
-
-        List<TestBenchElement> cells = getGridFooterRowCells();
-        assertEquals("Column 0 & 1", cells.get(0).getText());
-    }
-
-    @Test
-    public void testGroupingSameColumnsOnRowThrowsException() throws Exception {
-        openTestURL();
-
-        // add a group row
-        selectMenuPath("Component", "Column groups", "Add group row");
-
-        // Group columns 0 & 1
-        selectMenuPath("Component", "Column groups", "Column group row 1",
-                "Group Column 0 & 1");
-
-        // Group columns 1 & 2 shoud fail
-        selectMenuPath("Component", "Column groups", "Column group row 1",
-                "Group Column 1 & 2");
-
-        assertTrue(getLogRow(0)
-                .contains(
-                        "Exception occured, java.lang.IllegalArgumentExceptionColumn Column1 already belongs to another group."));
-    }
-
-    @Test
+    @Ignore
     public void testHidingColumn() throws Exception {
         openTestURL();
 
@@ -146,7 +51,11 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         assertEquals("Column1", cells.get(0).getText());
     }
 
+    /*
+     * TODO unignore once column header captions are reimplemented
+     */
     @Test
+    @Ignore
     public void testRemovingColumn() throws Exception {
         openTestURL();
 
@@ -327,21 +236,5 @@ public class GridStructureTest extends GridBasicFeaturesTest {
 
     private WebElement getTableWrapper() {
         return getGridElement().findElement(By.xpath("./div[3]"));
-    }
-
-    private List<TestBenchElement> getGridHeaderRowCells() {
-        List<TestBenchElement> headerCells = new ArrayList<TestBenchElement>();
-        for (int i = 0; i < getGridElement().getHeaderCount(); ++i) {
-            headerCells.addAll(getGridElement().getHeaderCells(i));
-        }
-        return headerCells;
-    }
-
-    private List<TestBenchElement> getGridFooterRowCells() {
-        List<TestBenchElement> footerCells = new ArrayList<TestBenchElement>();
-        for (int i = 0; i < getGridElement().getFooterCount(); ++i) {
-            footerCells.addAll(getGridElement().getFooterCells(i));
-        }
-        return footerCells;
     }
 }

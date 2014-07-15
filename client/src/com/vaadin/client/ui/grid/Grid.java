@@ -192,6 +192,8 @@ public class Grid<T> extends Composite implements
      */
     private Escalator escalator = GWT.create(Escalator.class);
 
+    private GridHeader header = GWT.create(GridHeader.class);
+
     /**
      * List of columns in the grid. Order defines the visible order.
      */
@@ -206,16 +208,19 @@ public class Grid<T> extends Composite implements
     /**
      * The column groups rows added to the grid
      */
+    @Deprecated
     private final List<ColumnGroupRow<T>> columnGroupRows = new ArrayList<ColumnGroupRow<T>>();
 
     /**
      * Are the headers for the columns visible
      */
+    @Deprecated
     private boolean columnHeadersVisible = true;
 
     /**
      * Are the footers for the columns visible
      */
+    @Deprecated
     private boolean columnFootersVisible = false;
 
     /**
@@ -574,11 +579,13 @@ public class Grid<T> extends Composite implements
         /**
          * The text displayed in the header of the column
          */
+        @Deprecated
         private String header;
 
         /**
          * Text displayed in the column footer
          */
+        @Deprecated
         private String footer;
 
         /**
@@ -594,12 +601,14 @@ public class Grid<T> extends Composite implements
         /**
          * Renderer for rendering the header cell value into the cell
          */
+        @Deprecated
         private Renderer<String> headerRenderer = new SortableColumnHeaderRenderer(
                 new TextRenderer());
 
         /**
          * Renderer for rendering the footer cell value into the cell
          */
+        @Deprecated
         private Renderer<String> footerRenderer = new TextRenderer();
 
         private boolean sortable = false;
@@ -661,6 +670,7 @@ public class Grid<T> extends Composite implements
          * 
          * @return the text displayed in the column caption
          */
+        @Deprecated
         public String getHeaderCaption() {
             return header;
         }
@@ -670,6 +680,7 @@ public class Grid<T> extends Composite implements
          * 
          * @return a renderer that renders header cells
          */
+        @Deprecated
         public Renderer<String> getHeaderRenderer() {
             return headerRenderer;
         }
@@ -680,6 +691,7 @@ public class Grid<T> extends Composite implements
          * @param renderer
          *            The renderer to use for rendering header cells.
          */
+        @Deprecated
         public void setHeaderRenderer(Renderer<String> renderer) {
             if (renderer == null) {
                 throw new IllegalArgumentException("Renderer cannot be null.");
@@ -695,6 +707,7 @@ public class Grid<T> extends Composite implements
          * 
          * @return a renderer that renders footer cells
          */
+        @Deprecated
         public Renderer<String> getFooterRenderer() {
             return footerRenderer;
         }
@@ -705,6 +718,7 @@ public class Grid<T> extends Composite implements
          * @param renderer
          *            The renderer to use for rendering footer cells.
          */
+        @Deprecated
         public void setFooterRenderer(Renderer<String> renderer) {
             if (renderer == null) {
                 throw new IllegalArgumentException("Renderer cannot be null.");
@@ -721,6 +735,7 @@ public class Grid<T> extends Composite implements
          * @param caption
          *            the text displayed in the column header
          */
+        @Deprecated
         public void setHeaderCaption(String caption) {
             if (SharedUtil.equals(caption, header)) {
                 return;
@@ -739,6 +754,7 @@ public class Grid<T> extends Composite implements
          * 
          * @return The text displayed in the footer of the column
          */
+        @Deprecated
         public String getFooterCaption() {
             return footer;
         }
@@ -749,6 +765,7 @@ public class Grid<T> extends Composite implements
          * @param caption
          *            the text displayed in the footer of the column
          */
+        @Deprecated
         public void setFooterCaption(String caption) {
             if (SharedUtil.equals(caption, footer)) {
                 return;
@@ -898,6 +915,7 @@ public class Grid<T> extends Composite implements
     /**
      * Base class for header / footer escalator updater
      */
+    @Deprecated
     protected abstract class HeaderFooterEscalatorUpdater implements
             EscalatorUpdater {
 
@@ -1125,36 +1143,44 @@ public class Grid<T> extends Composite implements
      * @return the updater that updates the data in the escalator.
      */
     private EscalatorUpdater createHeaderUpdater() {
-        return new HeaderFooterEscalatorUpdater(escalator.getHeader(), true) {
+        return new EscalatorUpdater() {
 
             @Override
-            public boolean isRowVisible(ColumnGroupRow<T> row) {
-                return row.isHeaderVisible();
+            public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
+                GridHeader.HeaderRow headerRow = header.getRow(row.getRow());
+
+                int colIndex = -1;
+                for (FlyweightCell cell : cellsToUpdate) {
+                    if (colIndex == -1) {
+                        colIndex = cell.getColumn();
+                    }
+                    while (!columns.get(colIndex).isVisible()) {
+                        colIndex++;
+                    }
+
+                    headerRow.getRenderer().render(cell,
+                            headerRow.getCell(colIndex).getText());
+
+                    colIndex++;
+                }
             }
 
             @Override
-            public String getGroupValue(ColumnGroup<T> group) {
-                return group.getHeaderCaption();
+            public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
             }
 
             @Override
-            public String getColumnValue(GridColumn<?, T> column) {
-                return column.getHeaderCaption();
+            public void postAttach(Row row,
+                    Iterable<FlyweightCell> attachedCells) {
             }
 
             @Override
-            public boolean firstRowIsVisible() {
-                return isColumnHeadersVisible();
+            public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
             }
 
             @Override
-            public Renderer<String> getRenderer(GridColumn<?, T> column) {
-                return column.getHeaderRenderer();
-            }
-
-            @Override
-            public Renderer<String> getGroupRenderer(ColumnGroup<T> group) {
-                return group.getHeaderRenderer();
+            public void postDetach(Row row,
+                    Iterable<FlyweightCell> detachedCells) {
             }
         };
     }
@@ -1306,38 +1332,7 @@ public class Grid<T> extends Composite implements
      * @return the updater that updates the data in the escalator.
      */
     private EscalatorUpdater createFooterUpdater() {
-        return new HeaderFooterEscalatorUpdater(escalator.getFooter(), false) {
-
-            @Override
-            public boolean isRowVisible(ColumnGroupRow<T> row) {
-                return row.isFooterVisible();
-            }
-
-            @Override
-            public String getGroupValue(ColumnGroup<T> group) {
-                return group.getFooterCaption();
-            }
-
-            @Override
-            public String getColumnValue(GridColumn<?, T> column) {
-                return column.getFooterCaption();
-            }
-
-            @Override
-            public boolean firstRowIsVisible() {
-                return isColumnFootersVisible();
-            }
-
-            @Override
-            public Renderer<String> getRenderer(GridColumn<?, T> column) {
-                return column.getFooterRenderer();
-            }
-
-            @Override
-            public Renderer<String> getGroupRenderer(ColumnGroup<T> group) {
-                return group.getFooterRenderer();
-            }
-        };
+        return EscalatorUpdater.NULL;
     }
 
     /**
@@ -1436,6 +1431,8 @@ public class Grid<T> extends Composite implements
             int index) {
         // Register column with grid
         columns.add(index, column);
+
+        header.addColumn(column, index);
 
         // Register this grid instance with the column
         ((AbstractGridColumn<?, T>) column).setGrid(this);
@@ -1537,6 +1534,7 @@ public class Grid<T> extends Composite implements
         int columnIndex = columns.indexOf(column);
         int visibleIndex = findVisibleColumnIndex(column);
         columns.remove(columnIndex);
+        header.removeColumn(columnIndex);
 
         // de-register column with grid
         ((AbstractGridColumn<?, T>) column).setGrid(null);
@@ -1618,6 +1616,7 @@ public class Grid<T> extends Composite implements
      * @param visible
      *            <code>true</code> if header rows should be visible
      */
+    @Deprecated
     public void setColumnHeadersVisible(boolean visible) {
         if (visible == isColumnHeadersVisible()) {
             return;
@@ -1631,6 +1630,7 @@ public class Grid<T> extends Composite implements
      * 
      * @return <code>true</code> if they are visible
      */
+    @Deprecated
     public boolean isColumnHeadersVisible() {
         return columnHeadersVisible;
     }
@@ -1664,6 +1664,7 @@ public class Grid<T> extends Composite implements
      * @param visible
      *            <code>true</code> if the footer row should be visible
      */
+    @Deprecated
     public void setColumnFootersVisible(boolean visible) {
         if (visible == isColumnFootersVisible()) {
             return;
@@ -1678,6 +1679,7 @@ public class Grid<T> extends Composite implements
      * @return <code>true</code> if they are visible
      * 
      */
+    @Deprecated
     public boolean isColumnFootersVisible() {
         return columnFootersVisible;
     }
@@ -1709,6 +1711,7 @@ public class Grid<T> extends Composite implements
      * 
      * @return a column group row instance you can use to add column groups
      */
+    @Deprecated
     public ColumnGroupRow<T> addColumnGroupRow() {
         ColumnGroupRow<T> row = new ColumnGroupRow<T>(this);
         columnGroupRows.add(row);
@@ -1727,6 +1730,7 @@ public class Grid<T> extends Composite implements
      *            the index where the column group row should be added
      * @return a column group row instance you can use to add column groups
      */
+    @Deprecated
     public ColumnGroupRow<T> addColumnGroupRow(int rowIndex) {
         ColumnGroupRow<T> row = new ColumnGroupRow<T>(this);
         columnGroupRows.add(rowIndex, row);
@@ -1741,6 +1745,7 @@ public class Grid<T> extends Composite implements
      * @param row
      *            The row to remove
      */
+    @Deprecated
     public void removeColumnGroupRow(ColumnGroupRow<T> row) {
         columnGroupRows.remove(row);
         refreshHeader();
@@ -1753,6 +1758,7 @@ public class Grid<T> extends Composite implements
      * @return a unmodifiable list of column group rows
      * 
      */
+    @Deprecated
     public List<ColumnGroupRow<T>> getColumnGroupRows() {
         return Collections.unmodifiableList(new ArrayList<ColumnGroupRow<T>>(
                 columnGroupRows));
@@ -1768,6 +1774,7 @@ public class Grid<T> extends Composite implements
      * @return A column group for the row and column or <code>null</code> if not
      *         found.
      */
+    @Deprecated
     private ColumnGroup<T> getGroupForColumn(ColumnGroupRow<T> row,
             GridColumn<?, T> column) {
         for (ColumnGroup<T> group : row.getGroups()) {

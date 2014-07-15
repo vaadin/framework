@@ -18,6 +18,7 @@ package com.vaadin.tests.components.grid;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -28,7 +29,11 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 @TestCategory("grid")
 public class GridSingleColumnTest extends MultiBrowserTest {
 
+    /*
+     * TODO unignore once column header captions are reimplemented
+     */
     @Test
+    @Ignore
     public void headerIsVisible() {
         openTestURL();
 

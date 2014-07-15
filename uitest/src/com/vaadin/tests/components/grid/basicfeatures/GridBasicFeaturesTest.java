@@ -15,12 +15,16 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.components.grid.GridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -57,6 +61,14 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
     protected void scrollGridVerticallyTo(double px) {
         executeScript("arguments[0].scrollTop = " + px,
                 getGridVerticalScrollbar());
+    }
+
+    protected List<TestBenchElement> getGridHeaderRowCells() {
+        List<TestBenchElement> headerCells = new ArrayList<TestBenchElement>();
+        for (int i = 0; i < getGridElement().getHeaderCount(); ++i) {
+            headerCells.addAll(getGridElement().getHeaderCells(i));
+        }
+        return headerCells;
     }
 
     private Object executeScript(String script, WebElement element) {
