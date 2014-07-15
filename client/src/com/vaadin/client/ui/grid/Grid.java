@@ -45,6 +45,7 @@ import com.vaadin.client.Util;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SubPartAware;
+import com.vaadin.client.ui.grid.GridStaticSection.StaticRow;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
@@ -409,7 +410,9 @@ public class Grid<T> extends Composite implements
      */
     private Escalator escalator = GWT.create(Escalator.class);
 
-    private GridHeader header = GWT.create(GridHeader.class);
+    private final GridHeader header = GWT.create(GridHeader.class);
+
+    private final GridFooter footer = GWT.create(GridFooter.class);
 
     /**
      * List of columns in the grid. Order defines the visible order.
@@ -1292,6 +1295,57 @@ public class Grid<T> extends Composite implements
         }
     }
 
+    protected class StaticSectionUpdater implements EscalatorUpdater {
+
+        private GridStaticSection<?> section;
+
+        public StaticSectionUpdater(GridStaticSection<?> section) {
+            super();
+            this.section = section;
+        }
+
+        @Override
+        public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
+            StaticRow<?> gridRow = section.getRow(row.getRow());
+
+            final List<Integer> columnIndices = getVisibleColumnIndices();
+
+            for (FlyweightCell cell : cellsToUpdate) {
+                int index = columnIndices.get(cell.getColumn());
+                gridRow.getRenderer().render(cell,
+                        gridRow.getCell(index).getText());
+
+                activeCellHandler.updateActiveCellStyle(cell);
+            }
+        }
+
+        @Override
+        public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
+        }
+
+        @Override
+        public void postAttach(Row row, Iterable<FlyweightCell> attachedCells) {
+        }
+
+        @Override
+        public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
+        }
+
+        @Override
+        public void postDetach(Row row, Iterable<FlyweightCell> detachedCells) {
+        }
+
+        private List<Integer> getVisibleColumnIndices() {
+            List<Integer> indices = new ArrayList<Integer>(getColumnCount());
+            for (int i = 0; i < getColumnCount(); i++) {
+                if (getColumn(i).isVisible()) {
+                    indices.add(i);
+                }
+            }
+            return indices;
+        }
+    };
+
     /**
      * Creates a new instance.
      */
@@ -1353,48 +1407,7 @@ public class Grid<T> extends Composite implements
      * @return the updater that updates the data in the escalator.
      */
     private EscalatorUpdater createHeaderUpdater() {
-        return new EscalatorUpdater() {
-
-            @Override
-            public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
-                GridHeader.HeaderRow headerRow = header.getRow(row.getRow());
-
-                int colIndex = -1;
-                for (FlyweightCell cell : cellsToUpdate) {
-                    activeCellHandler.updateActiveCellStyle(cell);
-
-                    if (colIndex == -1) {
-                        colIndex = cell.getColumn();
-                    }
-                    while (!columns.get(colIndex).isVisible()) {
-                        colIndex++;
-                    }
-
-                    headerRow.getRenderer().render(cell,
-                            headerRow.getCell(colIndex).getText());
-
-                    colIndex++;
-                }
-            }
-
-            @Override
-            public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
-            }
-
-            @Override
-            public void postAttach(Row row,
-                    Iterable<FlyweightCell> attachedCells) {
-            }
-
-            @Override
-            public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
-            }
-
-            @Override
-            public void postDetach(Row row,
-                    Iterable<FlyweightCell> detachedCells) {
-            }
-        };
+        return new StaticSectionUpdater(header);
     }
 
     private EscalatorUpdater createBodyUpdater() {
@@ -1537,7 +1550,7 @@ public class Grid<T> extends Composite implements
      * @return the updater that updates the data in the escalator.
      */
     private EscalatorUpdater createFooterUpdater() {
-        return EscalatorUpdater.NULL;
+        return new StaticSectionUpdater(footer);
     }
 
     /**
@@ -1552,18 +1565,10 @@ public class Grid<T> extends Composite implements
      *            the footer
      */
     private void refreshRowContainer(RowContainer rows,
-            boolean firstRowIsVisible, boolean isHeader) {
-
-        // Count needed rows
-        int totalRows = firstRowIsVisible ? 1 : 0;
-        for (ColumnGroupRow<T> row : columnGroupRows) {
-            if (isHeader ? row.isHeaderVisible() : row.isFooterVisible()) {
-                totalRows++;
-            }
-        }
+            GridStaticSection<?> section) {
 
         // Add or Remove rows on demand
-        int rowDiff = totalRows - rows.getRowCount();
+        int rowDiff = section.getRows().size() - rows.getRowCount();
         if (rowDiff > 0) {
             rows.insertRows(0, rowDiff);
         } else if (rowDiff < 0) {
@@ -1580,8 +1585,7 @@ public class Grid<T> extends Composite implements
      * Refreshes all header rows
      */
     void refreshHeader() {
-        refreshRowContainer(escalator.getHeader(), isColumnHeadersVisible(),
-                true);
+        refreshRowContainer(escalator.getHeader(), header);
     }
 
     /**
@@ -1595,8 +1599,7 @@ public class Grid<T> extends Composite implements
      * Refreshes all footer rows
      */
     void refreshFooter() {
-        refreshRowContainer(escalator.getFooter(), isColumnFootersVisible(),
-                false);
+        refreshRowContainer(escalator.getFooter(), footer);
     }
 
     /**
@@ -1638,6 +1641,7 @@ public class Grid<T> extends Composite implements
         columns.add(index, column);
 
         header.addColumn(column, index);
+        footer.addColumn(column, index);
 
         // Register this grid instance with the column
         ((AbstractGridColumn<?, T>) column).setGrid(this);
@@ -1739,7 +1743,9 @@ public class Grid<T> extends Composite implements
         int columnIndex = columns.indexOf(column);
         int visibleIndex = findVisibleColumnIndex(column);
         columns.remove(columnIndex);
+
         header.removeColumn(columnIndex);
+        footer.removeColumn(columnIndex);
 
         // de-register column with grid
         ((AbstractGridColumn<?, T>) column).setGrid(null);
@@ -1989,6 +1995,25 @@ public class Grid<T> extends Composite implements
             }
         }
         return null;
+    }
+
+    /**
+     * Returns the header section of this grid. The default header contains a
+     * single row displaying the column captions.
+     * 
+     * @return the header
+     */
+    public GridHeader getHeader() {
+        return header;
+    }
+
+    /**
+     * Returns the footer section of this grid. The default footer is empty.
+     * 
+     * @return the footer
+     */
+    public GridFooter getFooter() {
+        return footer;
     }
 
     /**

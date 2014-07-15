@@ -15,18 +15,15 @@
  */
 package com.vaadin.client.ui.grid;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.vaadin.client.ui.grid.renderers.TextRenderer;
 
 /**
  * Represents the header section of a Grid. A header consists of a single header
  * row containing a header cell for each column. Each cell has a simple textual
  * caption.
  * 
- * TODO Arbitrary number of header rows (zero included)
+ * TODO Arbitrary number of header rows (zero included, one by default)
  * 
  * TODO Merging header cells
  * 
@@ -39,67 +36,35 @@ import com.vaadin.client.ui.grid.renderers.TextRenderer;
  * @since
  * @author Vaadin Ltd
  */
-public class GridHeader {
+public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
 
     /**
      * A single row in a grid header section.
      * 
-     * @since
-     * @author Vaadin Ltd
      */
-    public static class HeaderRow {
+    public static class HeaderRow extends
+            GridStaticSection.StaticRow<HeaderCell> {
 
-        private List<HeaderCell> cells = new ArrayList<HeaderCell>();
-
-        private Renderer<String> renderer = new TextRenderer();
-
-        public HeaderCell getCell(int index) {
-            return cells.get(index);
-        }
-
-        protected void addCell(int index) {
-            cells.add(index, new HeaderCell());
-        }
-
-        protected void removeCell(int index) {
-            cells.remove(index);
-        }
-
-        protected Renderer<String> getRenderer() {
-            return renderer;
+        @Override
+        protected HeaderCell createCell() {
+            return new HeaderCell();
         }
     }
 
     /**
      * A single cell in a grid header row. Has a textual caption.
      * 
-     * @since
-     * @author Vaadin Ltd
      */
-    public static class HeaderCell {
-
-        private String text = "";
-
-        public void setText(String text) {
-            this.text = text;
-        }
-
-        public String getText() {
-            return text;
-        }
+    public static class HeaderCell extends GridStaticSection.StaticCell {
     }
 
-    private List<HeaderRow> rows = Arrays.asList(new HeaderRow());
-
-    public HeaderRow getRow(int index) {
-        return rows.get(index);
+    @Override
+    protected HeaderRow createRow() {
+        return new HeaderRow();
     }
 
-    protected void addColumn(GridColumn<?, ?> column, int index) {
-        getRow(0).addCell(index);
-    }
-
-    protected void removeColumn(int index) {
-        getRow(0).removeCell(index);
+    @Override
+    protected List<HeaderRow> createRowList() {
+        return Arrays.asList(createRow());
     }
 }

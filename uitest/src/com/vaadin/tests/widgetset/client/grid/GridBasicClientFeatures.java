@@ -25,6 +25,7 @@ import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.Grid.SelectionMode;
 import com.vaadin.client.ui.grid.GridColumn;
+import com.vaadin.client.ui.grid.GridHeader.HeaderCell;
 import com.vaadin.client.ui.grid.Renderer;
 import com.vaadin.client.ui.grid.datasources.ListDataSource;
 import com.vaadin.client.ui.grid.renderers.DateRenderer;
@@ -192,35 +193,61 @@ public class GridBasicClientFeatures extends
             });
         }
 
+        // Set captions to column headers
+
+        for (int i = 0; i < COLUMNS; ++i) {
+            HeaderCell cell = grid.getHeader().getRow(0).getCell(i);
+            cell.setText("Column " + i);
+        }
+
         //
         // Populate the menu
         //
+
+        createStateMenu();
+        createColumnsMenu();
+
+        grid.getElement().getStyle().setZIndex(0);
+        add(grid);
+    }
+
+    private void createStateMenu() {
+        String[] selectionModePath = { "Component", "State", "Selection mode" };
 
         addMenuCommand("multi", new ScheduledCommand() {
             @Override
             public void execute() {
                 grid.setSelectionMode(SelectionMode.MULTI);
             }
-        }, "Component", "State", "Selection mode");
+        }, selectionModePath);
 
         addMenuCommand("single", new ScheduledCommand() {
-
             @Override
             public void execute() {
                 grid.setSelectionMode(SelectionMode.SINGLE);
             }
-        }, "Component", "State", "Selection mode");
+        }, selectionModePath);
 
         addMenuCommand("none", new ScheduledCommand() {
-
             @Override
             public void execute() {
                 grid.setSelectionMode(SelectionMode.NONE);
             }
-        }, "Component", "State", "Selection mode");
+        }, selectionModePath);
+    }
 
-        grid.getElement().getStyle().setZIndex(0);
-        add(grid);
+    private void createColumnsMenu() {
+
+        for (int i = 0; i < COLUMNS; i++) {
+            final int index = i;
+            addMenuCommand("Visible", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    grid.getColumn(index).setVisible(
+                            !grid.getColumn(index).isVisible());
+                }
+            }, "Component", "Columns", "Column " + i);
+        }
     }
 
     /**

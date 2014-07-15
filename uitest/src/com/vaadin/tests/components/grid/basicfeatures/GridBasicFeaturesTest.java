@@ -71,6 +71,14 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         return headerCells;
     }
 
+    protected List<TestBenchElement> getGridFooterRowCells() {
+        List<TestBenchElement> footerCells = new ArrayList<TestBenchElement>();
+        for (int i = 0; i < getGridElement().getFooterCount(); ++i) {
+            footerCells.addAll(getGridElement().getFooterCells(i));
+        }
+        return footerCells;
+    }
+
     private Object executeScript(String script, WebElement element) {
         final WebDriver driver = getDriver();
         if (driver instanceof JavascriptExecutor) {
