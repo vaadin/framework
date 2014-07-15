@@ -713,8 +713,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      * @throws IllegalArgumentException
      *             if the provided id is not recognized by the data source.
      */
-    public void scrollToItem(Object itemId) throws IllegalArgumentException {
-        scrollToItem(itemId, ScrollDestination.ANY);
+    public void scrollTo(Object itemId) throws IllegalArgumentException {
+        scrollTo(itemId, ScrollDestination.ANY);
     }
 
     /**
@@ -727,7 +727,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      * @throws IllegalArgumentException
      *             if the provided id is not recognized by the data source.
      */
-    public void scrollToItem(Object itemId, ScrollDestination destination)
+    public void scrollTo(Object itemId, ScrollDestination destination)
             throws IllegalArgumentException {
 
         int row = datasource.indexOfId(itemId);

@@ -78,7 +78,7 @@ public class GridScrolling extends AbstractTestUI {
                     new ClickListener() {
                         @Override
                         public void buttonClick(ClickEvent event) {
-                            grid.scrollToItem(Integer.valueOf(row),
+                            grid.scrollTo(Integer.valueOf(row),
                                     ScrollDestination.MIDDLE);
                         }
                     });
