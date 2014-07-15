@@ -146,6 +146,9 @@ public class TableConnector extends AbstractHasComponentsConnector implements
         getWidget().updatePageLength(uidl);
 
         getWidget().updateFirstVisibleAndScrollIfNeeded(uidl);
+        if (totalRowsChanged == true) {
+            getWidget().totalRowsChanged();
+        }
 
         getWidget().showRowHeaders = uidl.getBooleanAttribute("rowheaders");
         getWidget().showColHeaders = uidl.getBooleanAttribute("colheaders");
