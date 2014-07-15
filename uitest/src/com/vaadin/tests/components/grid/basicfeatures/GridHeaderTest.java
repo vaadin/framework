@@ -23,28 +23,21 @@ import org.junit.Test;
 
 import com.vaadin.testbench.TestBenchElement;
 
-public class GridHeaderTest extends GridBasicClientFeaturesTest {
+public class GridHeaderTest extends GridStaticSectionTest {
 
     @Test
     public void testHeaderVisibility() throws Exception {
         openTestURL();
 
         // Column headers should be visible by default
-        List<TestBenchElement> cells = getGridHeaderRowCells();
-        assertEquals(GridBasicFeatures.COLUMNS, cells.size());
+        assertEquals(GridBasicFeatures.COLUMNS, getGridHeaderRowCells().size());
     }
 
     @Test
     public void testHeaderCaptions() throws Exception {
         openTestURL();
 
-        List<TestBenchElement> cells = getGridHeaderRowCells();
-
-        int i = 0;
-        for (TestBenchElement cell : cells) {
-            assertText("Column " + i, cell);
-            i++;
-        }
+        assertHeaderTexts(0, 0);
     }
 
     @Test
@@ -57,23 +50,66 @@ public class GridHeaderTest extends GridBasicClientFeaturesTest {
         List<TestBenchElement> cells = getGridHeaderRowCells();
         assertEquals(GridBasicFeatures.COLUMNS - 2, cells.size());
 
-        assertText("Column 0", cells.get(0));
-        assertText("Column 2", cells.get(1));
-        assertText("Column 4", cells.get(2));
+        assertText("Header (0,0)", cells.get(0));
+        assertText("Header (0,2)", cells.get(1));
+        assertText("Header (0,4)", cells.get(2));
 
         selectMenuPath("Component", "Columns", "Column 3", "Visible");
 
         cells = getGridHeaderRowCells();
         assertEquals(GridBasicFeatures.COLUMNS - 1, cells.size());
 
-        assertText("Column 0", cells.get(0));
-        assertText("Column 2", cells.get(1));
-        assertText("Column 3", cells.get(2));
-        assertText("Column 4", cells.get(3));
+        assertText("Header (0,0)", cells.get(0));
+        assertText("Header (0,2)", cells.get(1));
+        assertText("Header (0,3)", cells.get(2));
+        assertText("Header (0,4)", cells.get(3));
     }
 
-    private static void assertText(String text, TestBenchElement e) {
-        // TBE.getText returns "" if the element is scrolled out of view
-        assertEquals(text, e.getAttribute("innerHTML"));
+    @Test
+    public void testAddRows() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Header", "Append row");
+
+        assertHeaderCount(2);
+        assertHeaderTexts(0, 0);
+        assertHeaderTexts(1, 1);
+
+        selectMenuPath("Component", "Header", "Prepend row");
+
+        assertHeaderCount(3);
+        assertHeaderTexts(2, 0);
+        assertHeaderTexts(0, 1);
+        assertHeaderTexts(1, 2);
+
+        selectMenuPath("Component", "Header", "Append row");
+
+        assertHeaderCount(4);
+        assertHeaderTexts(2, 0);
+        assertHeaderTexts(0, 1);
+        assertHeaderTexts(1, 2);
+        assertHeaderTexts(3, 3);
+    }
+
+    @Test
+    public void testRemoveRows() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Header", "Prepend row");
+        selectMenuPath("Component", "Header", "Append row");
+
+        selectMenuPath("Component", "Header", "Remove top row");
+
+        assertHeaderCount(2);
+        assertHeaderTexts(0, 0);
+        assertHeaderTexts(2, 1);
+
+        selectMenuPath("Component", "Header", "Remove bottom row");
+        assertHeaderCount(1);
+        assertHeaderTexts(0, 0);
+    }
+
+    private void assertHeaderCount(int count) {
+        assertEquals("header count", count, getGridElement().getHeaderCount());
     }
 }

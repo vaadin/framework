@@ -15,9 +15,6 @@
  */
 package com.vaadin.client.ui.grid;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Represents the footer section of a Grid. The footer is always empty.
  * 
@@ -38,8 +35,7 @@ public class GridFooter extends GridStaticSection<GridFooter.FooterRow> {
      * A single row in a grid Footer section.
      * 
      */
-    public static class FooterRow extends
-            GridStaticSection.StaticRow<FooterCell> {
+    public class FooterRow extends GridStaticSection.StaticRow<FooterCell> {
 
         @Override
         protected FooterCell createCell() {
@@ -51,7 +47,7 @@ public class GridFooter extends GridStaticSection<GridFooter.FooterRow> {
      * A single cell in a grid Footer row. Has a textual caption.
      * 
      */
-    public static class FooterCell extends GridStaticSection.StaticCell {
+    public class FooterCell extends GridStaticSection.StaticCell {
     }
 
     @Override
@@ -60,7 +56,7 @@ public class GridFooter extends GridStaticSection<GridFooter.FooterRow> {
     }
 
     @Override
-    protected List<FooterRow> createRowList() {
-        return Collections.emptyList();
+    protected void refreshGrid() {
+        getGrid().refreshFooter();
     }
 }

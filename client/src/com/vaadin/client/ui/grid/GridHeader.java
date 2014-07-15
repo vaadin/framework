@@ -15,9 +15,6 @@
  */
 package com.vaadin.client.ui.grid;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Represents the header section of a Grid. A header consists of a single header
  * row containing a header cell for each column. Each cell has a simple textual
@@ -42,8 +39,7 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
      * A single row in a grid header section.
      * 
      */
-    public static class HeaderRow extends
-            GridStaticSection.StaticRow<HeaderCell> {
+    public class HeaderRow extends GridStaticSection.StaticRow<HeaderCell> {
 
         @Override
         protected HeaderCell createCell() {
@@ -55,7 +51,7 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
      * A single cell in a grid header row. Has a textual caption.
      * 
      */
-    public static class HeaderCell extends GridStaticSection.StaticCell {
+    public class HeaderCell extends GridStaticSection.StaticCell {
     }
 
     @Override
@@ -64,7 +60,7 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
     }
 
     @Override
-    protected List<HeaderRow> createRowList() {
-        return Arrays.asList(createRow());
+    protected void refreshGrid() {
+        getGrid().refreshHeader();
     }
 }

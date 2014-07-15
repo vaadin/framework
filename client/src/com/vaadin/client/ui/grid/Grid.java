@@ -45,7 +45,6 @@ import com.vaadin.client.Util;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SubPartAware;
-import com.vaadin.client.ui.grid.GridStaticSection.StaticRow;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
@@ -1311,7 +1310,8 @@ public class Grid<T> extends Composite implements
 
         @Override
         public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
-            StaticRow<?> gridRow = section.getRow(row.getRow());
+            GridStaticSection.StaticRow<?> gridRow = section.getRow(row
+                    .getRow());
 
             final List<Integer> columnIndices = getVisibleColumnIndices();
 
@@ -1365,8 +1365,10 @@ public class Grid<T> extends Composite implements
         escalator.getBody().setEscalatorUpdater(createBodyUpdater());
         escalator.getFooter().setEscalatorUpdater(createFooterUpdater());
 
-        refreshHeader();
-        refreshFooter();
+        header.setGrid(this);
+        header.appendRow();
+
+        footer.setGrid(this);
 
         setSelectionMode(SelectionMode.SINGLE);
 
@@ -1574,7 +1576,7 @@ public class Grid<T> extends Composite implements
             GridStaticSection<?> section) {
 
         // Add or Remove rows on demand
-        int rowDiff = section.getRows().size() - rows.getRowCount();
+        int rowDiff = section.getRowCount() - rows.getRowCount();
         if (rowDiff > 0) {
             rows.insertRows(0, rowDiff);
         } else if (rowDiff < 0) {

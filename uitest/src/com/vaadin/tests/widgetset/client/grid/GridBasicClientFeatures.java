@@ -25,7 +25,10 @@ import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.Grid.SelectionMode;
 import com.vaadin.client.ui.grid.GridColumn;
-import com.vaadin.client.ui.grid.GridHeader.HeaderCell;
+import com.vaadin.client.ui.grid.GridFooter;
+import com.vaadin.client.ui.grid.GridFooter.FooterRow;
+import com.vaadin.client.ui.grid.GridHeader;
+import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.Renderer;
 import com.vaadin.client.ui.grid.datasources.ListDataSource;
 import com.vaadin.client.ui.grid.renderers.DateRenderer;
@@ -193,12 +196,7 @@ public class GridBasicClientFeatures extends
             });
         }
 
-        // Set captions to column headers
-
-        for (int i = 0; i < COLUMNS; ++i) {
-            HeaderCell cell = grid.getHeader().getRow(0).getCell(i);
-            cell.setText("Column " + i);
-        }
+        setHeaderTexts(grid.getHeader().getRow(0));
 
         //
         // Populate the menu
@@ -206,6 +204,8 @@ public class GridBasicClientFeatures extends
 
         createStateMenu();
         createColumnsMenu();
+        createHeaderMenu();
+        createFooterMenu();
 
         grid.getElement().getStyle().setZIndex(0);
         add(grid);
@@ -248,6 +248,81 @@ public class GridBasicClientFeatures extends
                 }
             }, "Component", "Columns", "Column " + i);
         }
+    }
+
+    private int headerCounter = 0;
+    private int footerCounter = 0;
+
+    private void setHeaderTexts(HeaderRow row) {
+        for (int i = 0; i < COLUMNS; ++i) {
+            row.getCell(i).setText("Header (" + headerCounter + "," + i + ")");
+        }
+        headerCounter++;
+    }
+
+    private void setFooterTexts(FooterRow row) {
+        for (int i = 0; i < COLUMNS; ++i) {
+            row.getCell(i).setText("Footer (" + footerCounter + "," + i + ")");
+        }
+        footerCounter++;
+    }
+
+    private void createHeaderMenu() {
+        final GridHeader header = grid.getHeader();
+        addMenuCommand("Prepend row", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                setHeaderTexts(header.prependRow());
+            }
+        }, "Component", "Header");
+        addMenuCommand("Append row", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                setHeaderTexts(header.appendRow());
+            }
+        }, "Component", "Header");
+        addMenuCommand("Remove top row", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                header.removeRow(0);
+            }
+        }, "Component", "Header");
+        addMenuCommand("Remove bottom row", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                header.removeRow(header.getRowCount() - 1);
+            }
+        }, "Component", "Header");
+    }
+
+    private void createFooterMenu() {
+
+        final GridFooter footer = grid.getFooter();
+
+        addMenuCommand("Prepend row", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                setFooterTexts(footer.prependRow());
+            }
+        }, "Component", "Footer");
+        addMenuCommand("Append row", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                setFooterTexts(footer.appendRow());
+            }
+        }, "Component", "Footer");
+        addMenuCommand("Remove top row", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                footer.removeRow(0);
+            }
+        }, "Component", "Footer");
+        addMenuCommand("Remove bottom row", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                footer.removeRow(footer.getRowCount() - 1);
+            }
+        }, "Component", "Footer");
     }
 
     /**

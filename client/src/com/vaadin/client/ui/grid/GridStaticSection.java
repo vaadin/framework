@@ -18,7 +18,6 @@ package com.vaadin.client.ui.grid;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.client.ui.grid.GridStaticSection.StaticRow;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
 
 /**
@@ -29,7 +28,7 @@ import com.vaadin.client.ui.grid.renderers.TextRenderer;
  * @param <ROWTYPE>
  *            the type of the rows in the section
  */
-abstract class GridStaticSection<ROWTYPE extends StaticRow<?>> {
+abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>> {
 
     /**
      * A header or footer cell. Has a simple textual caption.
@@ -42,6 +41,8 @@ abstract class GridStaticSection<ROWTYPE extends StaticRow<?>> {
 
         private String text = "";
 
+        private GridStaticSection<?> section;
+
         /**
          * Sets the text displayed in this cell.
          *
@@ -50,6 +51,7 @@ abstract class GridStaticSection<ROWTYPE extends StaticRow<?>> {
          */
         public void setText(String text) {
             this.text = text;
+            section.refreshGrid();
         }
 
         /**
@@ -60,6 +62,16 @@ abstract class GridStaticSection<ROWTYPE extends StaticRow<?>> {
         public String getText() {
             return text;
         }
+
+        protected GridStaticSection<?> getSection() {
+            assert section != null;
+            return section;
+        }
+
+        protected void setSection(GridStaticSection<?> section) {
+            this.section = section;
+        }
+
     }
 
     /**
@@ -73,6 +85,8 @@ abstract class GridStaticSection<ROWTYPE extends StaticRow<?>> {
         private List<CELLTYPE> cells = new ArrayList<CELLTYPE>();
 
         private Renderer<String> renderer = new TextRenderer();
+
+        private GridStaticSection<?> section;
 
         /**
          * Returns the cell at the given position in this row.
@@ -88,7 +102,9 @@ abstract class GridStaticSection<ROWTYPE extends StaticRow<?>> {
         }
 
         protected void addCell(int index) {
-            cells.add(index, createCell());
+            CELLTYPE cell = createCell();
+            cell.setSection(getSection());
+            cells.add(index, cell);
         }
 
         protected void removeCell(int index) {
@@ -100,16 +116,109 @@ abstract class GridStaticSection<ROWTYPE extends StaticRow<?>> {
         }
 
         protected abstract CELLTYPE createCell();
+
+        protected GridStaticSection<?> getSection() {
+            return section;
+        }
+
+        protected void setSection(GridStaticSection<?> section) {
+            this.section = section;
+        }
     }
 
-    private List<ROWTYPE> rows = createRowList();
+    private Grid<?> grid;
+
+    private List<ROWTYPE> rows = new ArrayList<ROWTYPE>();
 
     /**
-     * Returns the row at the given position in this section.
+     * Creates and returns a new instance of the row type.
+     * 
+     * @return the created row
+     */
+    protected abstract ROWTYPE createRow();
+
+    /**
+     * Informs the grid that this section should be re-rendered.
+     */
+    protected abstract void refreshGrid();
+
+    /**
+     * Inserts a new row at the given position.
+     * 
+     * @param index
+     *            the position at which to insert the row
+     * @return the new row
+     * 
+     * @throws IndexOutOfBoundsException
+     *             if the index is out of bounds
+     */
+    public ROWTYPE addRow(int index) {
+        ROWTYPE row = createRow();
+        row.setSection(this);
+        for (int i = 0; i < getGrid().getColumnCount(); ++i) {
+            row.addCell(i);
+        }
+        rows.add(index, row);
+        refreshGrid();
+        return row;
+    }
+
+    /**
+     * Adds a new row at the top of this section.
+     * 
+     * @return the new row
+     */
+    public ROWTYPE prependRow() {
+        return addRow(0);
+    }
+
+    /**
+     * Adds a new row at the bottom of this section.
+     * 
+     * @return the new row
+     */
+    public ROWTYPE appendRow() {
+        return addRow(rows.size());
+    }
+
+    /**
+     * Removes the row at the given position.
      * 
      * @param index
      *            the position of the row
-     * @return the row at the index
+     * 
+     * @throws IndexOutOfBoundsException
+     *             if the index is out of bounds
+     */
+    public void removeRow(int index) {
+        rows.remove(index);
+        refreshGrid();
+    }
+
+    /**
+     * Removes the given row from the section.
+     *
+     * @param row
+     *            the row to be removed
+     * 
+     * @throws IllegalArgumentException
+     *             if the row does not exist in this section
+     */
+    public void removeRow(ROWTYPE row) {
+        if (!rows.remove(row)) {
+            throw new IllegalArgumentException(
+                    "Section does not contain the given row");
+        }
+        refreshGrid();
+    }
+
+    /**
+     * Returns the row at the given position.
+     * 
+     * @param index
+     *            the position of the row
+     * @return the row with the given index
+     * 
      * @throws IndexOutOfBoundsException
      *             if the index is out of bounds
      */
@@ -117,25 +226,37 @@ abstract class GridStaticSection<ROWTYPE extends StaticRow<?>> {
         return rows.get(index);
     }
 
+    /**
+     * Returns the number of rows in this section.
+     * 
+     * @return the number of rows
+     */
+    public int getRowCount() {
+        return rows.size();
+    }
+
     protected List<ROWTYPE> getRows() {
         return rows;
     }
 
     protected void addColumn(GridColumn<?, ?> column, int index) {
-        for (ROWTYPE row : getRows()) {
+        for (ROWTYPE row : rows) {
             row.addCell(index);
         }
     }
 
     protected void removeColumn(int index) {
-        for (ROWTYPE row : getRows()) {
+        for (ROWTYPE row : rows) {
             row.removeCell(index);
         }
     }
 
-    protected List<ROWTYPE> createRowList() {
-        return new ArrayList<ROWTYPE>();
+    protected void setGrid(Grid<?> grid) {
+        this.grid = grid;
     }
 
-    protected abstract ROWTYPE createRow();
+    protected Grid<?> getGrid() {
+        assert grid != null;
+        return grid;
+    }
 }

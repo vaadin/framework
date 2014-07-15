@@ -17,20 +17,58 @@ package com.vaadin.tests.components.grid.basicfeatures;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
 import org.junit.Test;
 
-import com.vaadin.testbench.TestBenchElement;
-
-public class GridFooterTest extends GridBasicClientFeaturesTest {
+public class GridFooterTest extends GridStaticSectionTest {
 
     @Test
     public void testFooterVisibility() throws Exception {
         openTestURL();
 
         // Footer should have zero rows by default
-        List<TestBenchElement> cells = getGridFooterRowCells();
-        assertEquals(0, cells.size());
+        assertEquals(0, getGridFooterRowCells().size());
+    }
+
+    @Test
+    public void testAddRows() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Footer", "Append row");
+
+        assertFooterCount(1);
+        assertFooterTexts(0, 0);
+
+        selectMenuPath("Component", "Footer", "Prepend row");
+
+        assertFooterCount(2);
+        assertFooterTexts(1, 0);
+        assertFooterTexts(0, 1);
+
+        selectMenuPath("Component", "Footer", "Append row");
+
+        assertFooterCount(3);
+        assertFooterTexts(1, 0);
+        assertFooterTexts(0, 1);
+        assertFooterTexts(2, 2);
+    }
+
+    @Test
+    public void testRemoveRows() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Footer", "Prepend row");
+        selectMenuPath("Component", "Footer", "Append row");
+
+        selectMenuPath("Component", "Footer", "Remove top row");
+
+        assertFooterCount(1);
+        assertFooterTexts(1, 0);
+
+        selectMenuPath("Component", "Footer", "Remove bottom row");
+        assertFooterCount(0);
+    }
+
+    private void assertFooterCount(int count) {
+        assertEquals("footer count", count, getGridElement().getFooterCount());
     }
 }
