@@ -33,12 +33,12 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         return GridBasicFeatures.class;
     }
 
-    private void selectSubMenu(String menuCaption) {
+    protected void selectSubMenu(String menuCaption) {
         selectMenu(menuCaption);
         new Actions(getDriver()).moveByOffset(100, 0).build().perform();
     }
 
-    private void selectMenu(String menuCaption) {
+    protected void selectMenu(String menuCaption) {
         getDriver().findElement(
                 By.xpath("//span[text() = '" + menuCaption + "']")).click();
     }
