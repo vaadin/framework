@@ -1185,7 +1185,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         @Override
         public void execute() {
-            if (firstvisible > 0) {
+            if (firstvisible >= 0) {
                 firstRowInViewPort = firstvisible;
                 if (firstvisibleOnLastPage > -1) {
                     scrollBodyPanel
@@ -7924,5 +7924,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         if (addCloseHandler != null) {
             addCloseHandler.removeHandler();
         }
+    }
+
+    public void totalRowsChanged() {
+        firstvisibleOnLastPage = -1;
     }
 }
