@@ -13,21 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.grid;
+package com.vaadin.tests.components.grid.basicfeatures;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.components.grid.GridElement;
 
-public class GridKeyboardNavigationTest extends MultiBrowserTest {
-
-    @Override
-    protected Class<?> getUIClass() {
-        return GridBasicFeatures.class;
-    }
+public class GridKeyboardNavigationTest extends GridBasicFeaturesTest {
 
     @Test
     public void testCellActiveOnClick() {
@@ -58,9 +53,5 @@ public class GridKeyboardNavigationTest extends MultiBrowserTest {
     private boolean cellIsActive(GridElement grid, int row, int col) {
         return grid.getCell(row, col).getAttribute("class")
                 .contains("-cell-active");
-    }
-
-    private GridElement getGridElement() {
-        return $(GridElement.class).first();
     }
 }
