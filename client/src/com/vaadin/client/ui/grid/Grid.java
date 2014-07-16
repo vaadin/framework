@@ -45,6 +45,7 @@ import com.vaadin.client.Util;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SubPartAware;
+import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
@@ -616,6 +617,13 @@ public class Grid<T> extends Composite implements
         protected abstract <T> SelectionModel<T> createModel();
     }
 
+    class SortableColumnHeaderRenderer extends
+            AbstractGridColumn.SortableColumnHeaderRenderer {
+        SortableColumnHeaderRenderer(Renderer<String> cellRenderer) {
+            super(Grid.this, cellRenderer);
+        }
+    }
+
     /**
      * Base class for grid columns internally used by the Grid. The user should
      * use {@link GridColumn} when creating new columns.
@@ -633,8 +641,10 @@ public class Grid<T> extends Composite implements
          * 
          * FIXME Currently assumes multisorting
          */
-        private class SortableColumnHeaderRenderer extends
+        static class SortableColumnHeaderRenderer extends
                 ComplexRenderer<String> {
+
+            private Grid<?> grid;
 
             /**
              * Delay before a long tap action is triggered. Number in
@@ -658,7 +668,8 @@ public class Grid<T> extends Composite implements
 
                 @Override
                 public void run() {
-                    SortOrder sortingOrder = getSortingOrder();
+                    SortOrder sortingOrder = getSortingOrder(grid
+                            .getColumnFromVisibleIndex(cell.getColumn()));
                     if (sortingOrder == null) {
                         /*
                          * No previous sorting, sort Ascending
@@ -697,7 +708,9 @@ public class Grid<T> extends Composite implements
              * @param cellRenderer
              *            The actual cell renderer
              */
-            public SortableColumnHeaderRenderer(Renderer<String> cellRenderer) {
+            public SortableColumnHeaderRenderer(Grid<?> grid,
+                    Renderer<String> cellRenderer) {
+                this.grid = grid;
                 this.cellRenderer = cellRenderer;
             }
 
@@ -715,9 +728,11 @@ public class Grid<T> extends Composite implements
                  * this is fixed.
                  */
                 if (grid != null) {
-                    SortOrder sortingOrder = getSortingOrder();
+                    GridColumn<?, ?> column = grid
+                            .getColumnFromVisibleIndex(cell.getColumn());
+                    SortOrder sortingOrder = getSortingOrder(column);
                     Element cellElement = cell.getElement();
-                    if (grid.getColumn(cell.getColumn()).isSortable()) {
+                    if (column.isSortable()) {
                         if (sortingOrder != null) {
                             if (SortDirection.ASCENDING == sortingOrder
                                     .getDirection()) {
@@ -836,6 +851,18 @@ public class Grid<T> extends Composite implements
 
             }
 
+            protected void removeFromRow(HeaderRow row) {
+                row.setRenderer(new Renderer<String>() {
+                    @Override
+                    public void render(FlyweightCell cell, String data) {
+                        cleanup(cell);
+                    }
+                });
+                grid.refreshHeader();
+                row.setRenderer(cellRenderer);
+                grid.refreshHeader();
+            }
+
             /**
              * Sorts the column in a direction
              */
@@ -844,13 +871,14 @@ public class Grid<T> extends Composite implements
                 TableCellElement th = TableCellElement.as(cell.getElement());
 
                 // Apply primary sorting on clicked column
-                GridColumn<C, T> columnInstance = getColumnInstance();
+                GridColumn<?, ?> columnInstance = grid
+                        .getColumnFromVisibleIndex(cell.getColumn());
                 Sort sorting = Sort.by(columnInstance, direction);
 
                 // Re-apply old sorting to the sort order
                 if (multisort) {
                     for (SortOrder order : grid.getSortOrder()) {
-                        if (order.getColumn() != AbstractGridColumn.this) {
+                        if (order.getColumn() != columnInstance) {
                             sorting = sorting.then(order.getColumn(),
                                     order.getDirection());
                         }
@@ -862,23 +890,11 @@ public class Grid<T> extends Composite implements
             }
 
             /**
-             * Resolves a GridColumn out of a AbstractGridColumn
-             */
-            private GridColumn<C, T> getColumnInstance() {
-                for (GridColumn<?, T> column : grid.getColumns()) {
-                    if (column == AbstractGridColumn.this) {
-                        return (GridColumn<C, T>) column;
-                    }
-                }
-                return null;
-            }
-
-            /**
              * Finds the sorting order for this column
              */
-            private SortOrder getSortingOrder() {
+            private SortOrder getSortingOrder(GridColumn<?, ?> column) {
                 for (SortOrder order : grid.getSortOrder()) {
-                    if (order.getColumn() == AbstractGridColumn.this) {
+                    if (order.getColumn() == column) {
                         return order;
                     }
                 }
@@ -922,8 +938,7 @@ public class Grid<T> extends Composite implements
          * Renderer for rendering the header cell value into the cell
          */
         @Deprecated
-        private Renderer<String> headerRenderer = new SortableColumnHeaderRenderer(
-                new TextRenderer());
+        private Renderer<String> headerRenderer = new TextRenderer();
 
         /**
          * Renderer for rendering the footer cell value into the cell
@@ -964,8 +979,7 @@ public class Grid<T> extends Composite implements
                 throw new IllegalArgumentException("Renderer cannot be null.");
             }
 
-            this.headerRenderer = new SortableColumnHeaderRenderer(
-                    headerRenderer);
+            this.headerRenderer = headerRenderer;
             this.footerRenderer = footerRenderer;
         }
 
@@ -1016,7 +1030,7 @@ public class Grid<T> extends Composite implements
             if (renderer == null) {
                 throw new IllegalArgumentException("Renderer cannot be null.");
             }
-            headerRenderer = new SortableColumnHeaderRenderer(headerRenderer);
+            this.headerRenderer = headerRenderer;
             if (grid != null) {
                 grid.refreshHeader();
             }
@@ -1472,7 +1486,8 @@ public class Grid<T> extends Composite implements
         escalator.getFooter().setEscalatorUpdater(createFooterUpdater());
 
         header.setGrid(this);
-        header.appendRow();
+        HeaderRow defaultRow = header.appendRow();
+        header.setDefaultRow(defaultRow);
 
         footer.setGrid(this);
 
@@ -2470,13 +2485,14 @@ public class Grid<T> extends Composite implements
             if (container != null) {
                 cell = container.getCell(e);
                 if (cell != null) {
+                    // FIXME getFromVisibleIndex???
                     GridColumn<?, T> gridColumn = columns.get(cell.getColumn());
 
                     Renderer<?> renderer;
                     if (container == escalator.getHeader()) {
-                        renderer = gridColumn.getHeaderRenderer();
+                        renderer = header.getRow(cell.getRow()).getRenderer();
                     } else if (container == escalator.getFooter()) {
-                        renderer = gridColumn.getFooterRenderer();
+                        renderer = footer.getRow(cell.getRow()).getRenderer();
                     } else {
                         renderer = gridColumn.getRenderer();
                     }

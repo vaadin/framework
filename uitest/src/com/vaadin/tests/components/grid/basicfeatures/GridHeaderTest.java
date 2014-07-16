@@ -16,12 +16,16 @@
 package com.vaadin.tests.components.grid.basicfeatures;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
 
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.tests.components.grid.GridElement.GridCellElement;
 
 public class GridHeaderTest extends GridStaticSectionTest {
 
@@ -126,7 +130,41 @@ public class GridHeaderTest extends GridStaticSectionTest {
         assertHeaderTexts(0, 0);
     }
 
+    @Test
+    public void testDefaultRow() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Columns", "Column 0", "Sortable");
+
+        GridCellElement headerCell = getGridElement().getHeaderCell(0, 0);
+
+        headerCell.click();
+
+        assertTrue(hasClassName(headerCell, "sort-asc"));
+
+        headerCell.click();
+
+        assertFalse(hasClassName(headerCell, "sort-asc"));
+        assertTrue(hasClassName(headerCell, "sort-desc"));
+
+        selectMenuPath("Component", "Header", "Prepend row");
+        selectMenuPath("Component", "Header", "Default row", "Top");
+
+        assertFalse(hasClassName(headerCell, "sort-desc"));
+        headerCell = getGridElement().getHeaderCell(0, 0);
+        assertTrue(hasClassName(headerCell, "sort-desc"));
+
+        selectMenuPath("Component", "Header", "Default row", "Unset");
+
+        assertFalse(hasClassName(headerCell, "sort-desc"));
+    }
+
     private void assertHeaderCount(int count) {
         assertEquals("header count", count, getGridElement().getHeaderCount());
+    }
+
+    private boolean hasClassName(TestBenchElement element, String name) {
+        return Arrays.asList(element.getAttribute("class").split(" "))
+                .contains(name);
     }
 }

@@ -31,6 +31,7 @@ import com.vaadin.client.ui.grid.GridHeader;
 import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.Renderer;
 import com.vaadin.client.ui.grid.datasources.ListDataSource;
+import com.vaadin.client.ui.grid.datasources.ListSorter;
 import com.vaadin.client.ui.grid.renderers.DateRenderer;
 import com.vaadin.client.ui.grid.renderers.HtmlRenderer;
 import com.vaadin.client.ui.grid.renderers.NumberRenderer;
@@ -57,6 +58,7 @@ public class GridBasicClientFeatures extends
     private final Grid<List<Data>> grid;
     private final List<List<Data>> data;
     private final ListDataSource<List<Data>> ds;
+    private final ListSorter<List<Data>> sorter;
 
     /**
      * Our basic data object
@@ -123,6 +125,8 @@ public class GridBasicClientFeatures extends
         grid = getTestedWidget();
         grid.setDataSource(ds);
         grid.setSelectionMode(SelectionMode.NONE);
+
+        sorter = new ListSorter<List<Data>>(grid);
 
         // Create a bunch of grid columns
 
@@ -247,6 +251,13 @@ public class GridBasicClientFeatures extends
                             !grid.getColumn(index).isVisible());
                 }
             }, "Component", "Columns", "Column " + i);
+            addMenuCommand("Sortable", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    grid.getColumn(index).setSortable(
+                            !grid.getColumn(index).isSortable());
+                }
+            }, "Component", "Columns", "Column " + i);
         }
     }
 
@@ -277,6 +288,25 @@ public class GridBasicClientFeatures extends
                 header.setVisible(!header.isVisible());
             }
         }, menuPath);
+
+        addMenuCommand("Top", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                header.setDefaultRow(header.getRow(0));
+            }
+        }, "Component", "Header", "Default row");
+        addMenuCommand("Bottom", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                header.setDefaultRow(header.getRow(header.getRowCount() - 1));
+            }
+        }, "Component", "Header", "Default row");
+        addMenuCommand("Unset", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                header.setDefaultRow(null);
+            }
+        }, "Component", "Header", "Default row");
 
         addMenuCommand("Prepend row", new ScheduledCommand() {
             @Override

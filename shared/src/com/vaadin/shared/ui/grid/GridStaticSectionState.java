@@ -33,6 +33,8 @@ public class GridStaticSectionState implements Serializable {
 
     public static class RowState implements Serializable {
         public List<CellState> cells = new ArrayList<CellState>();
+
+        public boolean defaultRow = false;
     }
 
     public List<RowState> rows = new ArrayList<RowState>();

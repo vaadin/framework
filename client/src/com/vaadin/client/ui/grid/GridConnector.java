@@ -36,6 +36,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.data.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.GridStaticSection.StaticRow;
 import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
 import com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel;
@@ -367,6 +368,10 @@ public class GridConnector extends AbstractComponentConnector {
             int i = 0;
             for (CellState cellState : rowState.cells) {
                 row.getCell(i++).setText(cellState.text);
+            }
+
+            if (section instanceof GridHeader && rowState.defaultRow) {
+                ((GridHeader) section).setDefaultRow((HeaderRow) row);
             }
         }
 

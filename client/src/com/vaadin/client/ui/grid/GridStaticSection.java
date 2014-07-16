@@ -111,6 +111,10 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
             cells.remove(index);
         }
 
+        protected void setRenderer(Renderer<String> renderer) {
+            this.renderer = renderer;
+        }
+
         protected Renderer<String> getRenderer() {
             return renderer;
         }
@@ -227,11 +231,12 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      *             if the row does not exist in this section
      */
     public void removeRow(ROWTYPE row) {
-        if (!rows.remove(row)) {
+        try {
+            removeRow(rows.indexOf(row));
+        } catch (IndexOutOfBoundsException e) {
             throw new IllegalArgumentException(
                     "Section does not contain the given row");
         }
-        refreshGrid();
     }
 
     /**

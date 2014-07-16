@@ -225,8 +225,13 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      */
     public Grid(final Container.Indexed datasource) {
 
-        getState().header.rows.add(new RowState());
+        RowState headerDefaultRow = new RowState();
+        headerDefaultRow.defaultRow = true;
+        getState().header.rows.add(headerDefaultRow);
+
+        // FIXME By default there shouldn't be any footer row
         getState().footer.rows.add(new RowState());
+
         setColumnFootersVisible(false);
 
         setContainerDataSource(datasource);

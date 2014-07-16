@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui.grid;
 
+import com.vaadin.client.ui.grid.Grid.AbstractGridColumn.SortableColumnHeaderRenderer;
+
 /**
  * Represents the header section of a Grid. A header consists of a single header
  * row containing a header cell for each column. Each cell has a simple textual
@@ -41,6 +43,16 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
      */
     public class HeaderRow extends GridStaticSection.StaticRow<HeaderCell> {
 
+        private boolean isDefault = false;
+
+        protected void setDefault(boolean isDefault) {
+            this.isDefault = isDefault;
+        }
+
+        public boolean isDefault() {
+            return isDefault;
+        }
+
         @Override
         protected HeaderCell createCell() {
             return new HeaderCell();
@@ -52,6 +64,67 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
      * 
      */
     public class HeaderCell extends GridStaticSection.StaticCell {
+    }
+
+    private HeaderRow defaultRow;
+
+    @Override
+    public void removeRow(int index) {
+        HeaderRow removedRow = getRow(index);
+        super.removeRow(index);
+        if (removedRow == defaultRow) {
+            setDefaultRow(null);
+        }
+    }
+
+    /**
+     * Sets the default row of this header. The default row is a special header
+     * row providing a user interface for sorting columns.
+     * 
+     * @param row
+     *            the new default row, or null for no default row
+     * 
+     * @throws IllegalArgumentException
+     *             this header does not contain the row
+     */
+    public void setDefaultRow(HeaderRow row) {
+        if (row == defaultRow) {
+            return;
+        }
+        if (row != null && !getRows().contains(row)) {
+            throw new IllegalArgumentException(
+                    "Cannot set a default row that does not exist in the container");
+        }
+        if (defaultRow != null) {
+            assert defaultRow.getRenderer() instanceof SortableColumnHeaderRenderer;
+
+            // Eclipse is wrong about this warning - javac does not accept the
+            // parameterized version
+            ((Grid.SortableColumnHeaderRenderer) defaultRow.getRenderer())
+                    .removeFromRow(defaultRow);
+
+            defaultRow.setDefault(false);
+        }
+        if (row != null) {
+            assert !(row.getRenderer() instanceof SortableColumnHeaderRenderer);
+
+            row.setRenderer(getGrid().new SortableColumnHeaderRenderer(row
+                    .getRenderer()));
+
+            row.setDefault(true);
+        }
+        defaultRow = row;
+        refreshGrid();
+    }
+
+    /**
+     * Returns the current default row of this header. The default row is a
+     * special header row providing a user interface for sorting columns.
+     * 
+     * @return the default row or null if no default row set
+     */
+    public HeaderRow getDefaultRow() {
+        return defaultRow;
     }
 
     @Override
