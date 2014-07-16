@@ -678,6 +678,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 for (String style : componentState.styles) {
                     if (!"".equals(style)) {
                         addStyleDependentName(style);
+                        suggestionPopup.addStyleName(style);
                     }
                 }
             }
