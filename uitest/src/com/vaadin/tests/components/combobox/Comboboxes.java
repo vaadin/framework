@@ -73,6 +73,11 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
         s.setCaption("Pagelength 0");
         populate(s, 15);
         addTestComponent(s);
+
+        s = createSelect("Styled suggest box");
+        populate(s, 5);
+        s.addStyleName("styled-suggest");
+        addTestComponent(s);
     }
 
     public class PageLength0ComboBox extends ComboBox {
