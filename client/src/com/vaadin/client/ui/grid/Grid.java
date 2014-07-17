@@ -265,16 +265,10 @@ public class Grid<T> extends Composite implements
          * Handle events that can change the currently active cell.
          */
         public void handleNavigationEvent(Event event, Cell cell) {
-            if (event.getType().equals(BrowserEvents.CLICK)
-                    && event.getButton() == NativeEvent.BUTTON_LEFT
-                    && cell != null) {
+            if (event.getType().equals(BrowserEvents.CLICK) && cell != null) {
                 setActiveCell(cell);
                 getElement().focus();
             } else if (event.getType().equals(BrowserEvents.KEYDOWN)) {
-                int keyCode = event.getKeyCode();
-                if (keyCode == 0) {
-                    keyCode = event.getCharCode();
-                }
                 int newRow = activeRow;
                 int newColumn = activeColumn;
                 RowContainer newContainer = container;
@@ -292,12 +286,36 @@ public class Grid<T> extends Composite implements
                 case KeyCodes.KEY_LEFT:
                     newColumn -= 1;
                     break;
+                default:
+                    return;
                 }
 
                 if (newRow < 0) {
-                    newRow = 0;
+                    newContainer = getPreviousContainer(newContainer);
+
+                    if (newContainer == container) {
+                        newRow = 0;
+                    } else if (newContainer == escalator.getBody()) {
+                        newRow = getLastVisibleRowIndex();
+                    } else {
+                        newRow = newContainer.getRowCount() - 1;
+                    }
                 } else if (newRow >= container.getRowCount()) {
-                    newRow = container.getRowCount() - 1;
+                    newContainer = getNextContainer(newContainer);
+
+                    if (newContainer == container) {
+                        newRow = container.getRowCount() - 1;
+                    } else if (newContainer == escalator.getBody()) {
+                        newRow = getFirstVisibleRowIndex();
+                    } else {
+                        newRow = 0;
+                    }
+                }
+
+                if (newContainer.getRowCount() == 0) {
+                    // There are no rows in the container. Can't change the
+                    // active cell.
+                    return;
                 }
 
                 if (newColumn < 0) {
@@ -306,9 +324,67 @@ public class Grid<T> extends Composite implements
                     newColumn = getColumnCount() - 1;
                 }
 
+                event.preventDefault();
+                event.stopPropagation();
+
                 setActiveCell(newRow, newColumn, newContainer);
             }
 
+        }
+
+        private int getLastVisibleRowIndex() {
+            int lastRowIndex = escalator.getVisibleRowRange().getEnd();
+            int footerTop = escalator.getFooter().getElement().getAbsoluteTop();
+            Element lastRow;
+
+            do {
+                lastRow = escalator.getBody().getRowElement(--lastRowIndex);
+            } while (lastRow.getAbsoluteBottom() > footerTop);
+
+            return lastRowIndex;
+        }
+
+        private int getFirstVisibleRowIndex() {
+            int firstRowIndex = escalator.getVisibleRowRange().getStart();
+            int headerBottom = escalator.getHeader().getElement()
+                    .getAbsoluteBottom();
+            Element firstRow = escalator.getBody().getRowElement(firstRowIndex);
+
+            while (firstRow.getAbsoluteTop() < headerBottom) {
+                firstRow = escalator.getBody().getRowElement(++firstRowIndex);
+            }
+
+            return firstRowIndex;
+        }
+
+        private RowContainer getPreviousContainer(RowContainer current) {
+            if (current == escalator.getFooter()) {
+                current = escalator.getBody();
+            } else if (current == escalator.getBody()) {
+                current = escalator.getHeader();
+            } else {
+                return current;
+            }
+
+            if (current.getRowCount() == 0) {
+                return getPreviousContainer(current);
+            }
+            return current;
+        }
+
+        private RowContainer getNextContainer(RowContainer current) {
+            if (current == escalator.getHeader()) {
+                current = escalator.getBody();
+            } else if (current == escalator.getBody()) {
+                current = escalator.getFooter();
+            } else {
+                return current;
+            }
+
+            if (current.getRowCount() == 0) {
+                return getNextContainer(current);
+            }
+            return current;
         }
 
         private void refreshRow(int row) {

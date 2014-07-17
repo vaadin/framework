@@ -18,9 +18,6 @@ package com.vaadin.tests.components.grid.basicfeatures;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -89,18 +86,36 @@ public class GridKeyboardNavigationTest extends GridBasicFeaturesTest {
     }
 
     @Test
-    @Ignore("This feature is still on the TODO list")
-    public void testNavigateFromHeaderToBody() throws IOException {
+    public void testNavigateFromHeaderToBody() {
         openTestURL();
 
         GridElement grid = getGridElement();
         grid.scrollToRow(300);
-        grid.getHeaderCell(0, 7).click();
+        new Actions(driver).moveToElement(grid.getHeaderCell(0, 7)).click()
+                .perform();
+        grid.scrollToRow(280);
 
         assertTrue("Header cell is not active.", grid.getHeaderCell(0, 7)
                 .isActive());
         new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN).perform();
-        assertTrue("Body cell 282, 7 is not active", grid.getCell(282, 7)
+        assertTrue("Body cell 280, 7 is not active", grid.getCell(280, 7)
+                .isActive());
+    }
+
+    @Test
+    public void testNavigationFromFooterToBody() {
+        openTestURL();
+
+        selectMenuPath("Component", "Footers", "Visible");
+
+        GridElement grid = getGridElement();
+        grid.scrollToRow(300);
+        grid.getFooterCell(0, 2).click();
+
+        assertTrue("Footer cell is not active.", grid.getFooterCell(0, 2)
+                .isActive());
+        new Actions(getDriver()).sendKeys(Keys.ARROW_UP).perform();
+        assertTrue("Body cell 300, 2 is not active", grid.getCell(300, 2)
                 .isActive());
     }
 }
