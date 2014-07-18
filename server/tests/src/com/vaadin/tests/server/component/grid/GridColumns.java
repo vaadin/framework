@@ -175,30 +175,30 @@ public class GridColumns {
     public void testHeaderVisiblility() throws Exception {
 
         assertTrue(grid.isColumnHeadersVisible());
-        assertTrue(state.columnHeadersVisible);
+        assertTrue(state.header.visible);
 
         grid.setColumnHeadersVisible(false);
         assertFalse(grid.isColumnHeadersVisible());
-        assertFalse(state.columnHeadersVisible);
+        assertFalse(state.header.visible);
 
         grid.setColumnHeadersVisible(true);
         assertTrue(grid.isColumnHeadersVisible());
-        assertTrue(state.columnHeadersVisible);
+        assertTrue(state.header.visible);
     }
 
     @Test
     public void testFooterVisibility() throws Exception {
 
         assertFalse(grid.isColumnFootersVisible());
-        assertFalse(state.columnFootersVisible);
+        assertFalse(state.footer.visible);
 
         grid.setColumnFootersVisible(false);
         assertFalse(grid.isColumnFootersVisible());
-        assertFalse(state.columnFootersVisible);
+        assertFalse(state.footer.visible);
 
         grid.setColumnFootersVisible(true);
         assertTrue(grid.isColumnFootersVisible());
-        assertTrue(state.columnFootersVisible);
+        assertTrue(state.footer.visible);
     }
 
     @Test

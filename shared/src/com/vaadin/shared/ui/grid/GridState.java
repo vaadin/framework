@@ -98,15 +98,9 @@ public class GridState extends AbstractComponentState {
      */
     public List<GridColumnState> columns = new ArrayList<GridColumnState>();
 
-    /**
-     * Is the column header row visible
-     */
-    public boolean columnHeadersVisible = true;
+    public GridStaticSectionState header = new GridStaticSectionState();
 
-    /**
-     * Is the column footer row visible
-     */
-    public boolean columnFootersVisible = false;
+    public GridStaticSectionState footer = new GridStaticSectionState();
 
     /**
      * The column groups added to the grid

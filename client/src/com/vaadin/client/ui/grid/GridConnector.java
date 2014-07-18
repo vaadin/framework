@@ -36,6 +36,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.data.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.grid.GridStaticSection.StaticRow;
 import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
 import com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel;
 import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
@@ -54,6 +55,9 @@ import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridState.SharedSelectionMode;
+import com.vaadin.shared.ui.grid.GridStaticSectionState;
+import com.vaadin.shared.ui.grid.GridStaticSectionState.CellState;
+import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SortDirection;
 
@@ -262,9 +266,6 @@ public class GridConnector extends AbstractComponentConnector {
 
         getWidget().addSelectionChangeHandler(internalSelectionChangeHandler);
 
-        // TODO: Remove this workaround once we have header/footer communication
-        getWidget().getFooter().appendRow();
-
         getWidget().addSortHandler(new SortEventHandler<JSONObject>() {
             @Override
             public void sort(SortEvent<JSONObject> event) {
@@ -321,14 +322,12 @@ public class GridConnector extends AbstractComponentConnector {
             }
         }
 
-        // Header
-        if (stateChangeEvent.hasPropertyChanged("columnHeadersVisible")) {
-            getWidget().getHeader().setVisible(getState().columnHeadersVisible);
+        if (stateChangeEvent.hasPropertyChanged("header")) {
+            updateSectionFromState(getWidget().getHeader(), getState().header);
         }
 
-        // Footer
-        if (stateChangeEvent.hasPropertyChanged("columnFootersVisible")) {
-            getWidget().getFooter().setVisible(getState().columnFootersVisible);
+        if (stateChangeEvent.hasPropertyChanged("footer")) {
+            updateSectionFromState(getWidget().getFooter(), getState().footer);
         }
 
         // Column row groups
@@ -351,6 +350,29 @@ public class GridConnector extends AbstractComponentConnector {
         if (stateChangeEvent.hasPropertyChanged("selectedKeys")) {
             rowKeyHelper.updateFromState();
         }
+    }
+
+    private void updateSectionFromState(GridStaticSection<?> section,
+            GridStaticSectionState state) {
+
+        while (section.getRowCount() != 0) {
+            section.removeRow(0);
+        }
+
+        for (RowState rowState : state.rows) {
+            StaticRow<?> row = section.appendRow();
+
+            assert rowState.cells.size() == getWidget().getColumnCount();
+
+            int i = 0;
+            for (CellState cellState : rowState.cells) {
+                row.getCell(i++).setText(cellState.text);
+            }
+        }
+
+        section.setVisible(state.visible);
+
+        section.refreshGrid();
     }
 
     /**

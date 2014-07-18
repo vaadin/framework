@@ -22,6 +22,7 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.grid.GridColumnState;
+import com.vaadin.shared.ui.grid.GridStaticSectionState.CellState;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.components.grid.renderers.TextRenderer;
 
@@ -88,7 +89,7 @@ public class GridColumn implements Serializable {
      */
     public String getHeaderCaption() throws IllegalStateException {
         checkColumnIsAttached();
-        return state.header;
+        return getHeaderCellState().text;
     }
 
     /**
@@ -102,6 +103,7 @@ public class GridColumn implements Serializable {
      */
     public void setHeaderCaption(String caption) throws IllegalStateException {
         checkColumnIsAttached();
+        getHeaderCellState().text = caption;
         state.header = caption;
         grid.markAsDirty();
     }
@@ -116,7 +118,7 @@ public class GridColumn implements Serializable {
      */
     public String getFooterCaption() throws IllegalStateException {
         checkColumnIsAttached();
-        return state.footer;
+        return getFooterCellState().text;
     }
 
     /**
@@ -130,8 +132,19 @@ public class GridColumn implements Serializable {
      */
     public void setFooterCaption(String caption) throws IllegalStateException {
         checkColumnIsAttached();
+        getFooterCellState().text = caption;
         state.footer = caption;
         grid.markAsDirty();
+    }
+
+    private CellState getHeaderCellState() {
+        int index = grid.getState().columns.indexOf(state);
+        return grid.getState().header.rows.get(0).cells.get(index);
+    }
+
+    private CellState getFooterCellState() {
+        int index = grid.getState().columns.indexOf(state);
+        return grid.getState().footer.rows.get(0).cells.get(index);
     }
 
     /**

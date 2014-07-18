@@ -37,11 +37,13 @@ public class GridColumnState implements Serializable {
     /**
      * Header caption for the column
      */
+    @Deprecated
     public String header;
 
     /**
      * Footer caption for the column
      */
+    @Deprecated
     public String footer;
 
     /**

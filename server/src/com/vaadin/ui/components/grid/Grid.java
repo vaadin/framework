@@ -46,6 +46,8 @@ import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridState.SharedSelectionMode;
+import com.vaadin.shared.ui.grid.GridStaticSectionState.CellState;
+import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SortDirection;
@@ -222,6 +224,11 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      *            the data source for the grid
      */
     public Grid(final Container.Indexed datasource) {
+
+        getState().header.rows.add(new RowState());
+        getState().footer.rows.add(new RowState());
+        setColumnFootersVisible(false);
+
         setContainerDataSource(datasource);
         setSelectionMode(SelectionMode.MULTI);
         addSelectionChangeListener(new SelectionChangeListener() {
@@ -465,7 +472,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      *            <code>true</code> if the header rows should be visible
      */
     public void setColumnHeadersVisible(boolean visible) {
-        getState().columnHeadersVisible = visible;
+        getState().header.visible = visible;
     }
 
     /**
@@ -474,7 +481,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      * @return <code>true</code> if the headers of the columns are visible
      */
     public boolean isColumnHeadersVisible() {
-        return getState(false).columnHeadersVisible;
+        return getState(false).header.visible;
     }
 
     /**
@@ -484,7 +491,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      *            <code>true</code> if the footer rows should be visible
      */
     public void setColumnFootersVisible(boolean visible) {
-        getState().columnFootersVisible = visible;
+        getState().footer.visible = visible;
     }
 
     /**
@@ -493,7 +500,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      * @return <code>true</code> if the footer rows should be visible
      */
     public boolean isColumnFootersVisible() {
-        return getState(false).columnFootersVisible;
+        return getState(false).footer.visible;
     }
 
     /**
@@ -623,6 +630,12 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
         GridColumnState columnState = new GridColumnState();
         columnState.id = columnKeys.key(datasourcePropertyId);
         getState().columns.add(columnState);
+        for (RowState row : getState().header.rows) {
+            row.cells.add(new CellState());
+        }
+        for (RowState row : getState().footer.rows) {
+            row.cells.add(new CellState());
+        }
 
         GridColumn column = new GridColumn(this, columnState);
         columns.put(datasourcePropertyId, column);
