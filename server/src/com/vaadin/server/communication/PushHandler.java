@@ -18,6 +18,7 @@ package com.vaadin.server.communication;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,7 +49,7 @@ import com.vaadin.ui.UI;
 
 /**
  * Establishes bidirectional ("push") communication channels
- *
+ * 
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -194,7 +195,7 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
 
     /**
      * Find the UI for the atmosphere resource, lock it and invoke the callback.
-     *
+     * 
      * @param resource
      *            the atmosphere resource for the current request
      * @param callback
@@ -357,9 +358,31 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
             // Sets UI.currentInstance
             ui = service.findUI(vaadinRequest);
             if (ui == null) {
-                getLogger().log(Level.SEVERE,
-                        "Could not get UI. This should never happen");
-                return;
+                /*
+                 * UI not found, could be because FF has asynchronously closed
+                 * the websocket connection and Atmosphere has already done
+                 * cleanup of the request attributes.
+                 * 
+                 * In that case, we still have a chance of finding the right UI
+                 * by iterating through the UIs in the session looking for one
+                 * using the same AtmosphereResource.
+                 */
+                ui = findUiUsingResource(resource, session.getUIs());
+
+                if (ui == null) {
+                    getLogger()
+                            .log(Level.SEVERE,
+                                    "Could not get UI. This should never happen,"
+                                            + " except when reloading in Firefox -"
+                                            + " see http://dev.vaadin.com/ticket/14251.");
+                    return;
+                } else {
+                    getLogger()
+                            .log(Level.INFO,
+                                    "No UI was found based on data in the request,"
+                                            + " but a slower lookup based on the AtmosphereResource succeeded."
+                                            + " See http://dev.vaadin.com/ticket/14251 for more details.");
+                }
             }
 
             PushMode pushMode = ui.getPushConfiguration().getPushMode();
@@ -411,6 +434,19 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
         }
     }
 
+    private static UI findUiUsingResource(AtmosphereResource resource,
+            Collection<UI> uIs) {
+        for (UI ui : uIs) {
+            PushConnection pushConnection = ui.getPushConnection();
+            if (pushConnection instanceof AtmospherePushConnection) {
+                if (((AtmospherePushConnection) pushConnection).getResource() == resource) {
+                    return ui;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Sends a refresh message to the given atmosphere resource. Uses an
      * AtmosphereResource instead of an AtmospherePushConnection even though it
@@ -419,10 +455,10 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
      * two push connections which try to use the same UI. Using the
      * AtmosphereResource directly guarantees the message goes to the correct
      * recipient.
-     *
+     * 
      * @param resource
      *            The atmosphere resource to send refresh to
-     *
+     * 
      */
     private static void sendRefreshAndDisconnect(AtmosphereResource resource)
             throws IOException {
