@@ -106,6 +106,9 @@ public class Grid<T> extends Composite implements
         private RowContainer container = escalator.getBody();
         private int activeRow = 0;
         private int activeColumn = 0;
+        private int lastActiveBodyRow = 0;
+        private int lastActiveHeaderRow = 0;
+        private int lastActiveFooterRow = 0;
         private Element cellWithActiveStyle = null;
         private Element rowWithActiveStyle = null;
 
@@ -227,6 +230,14 @@ public class Grid<T> extends Composite implements
                 RowContainer oldContainer = this.container;
                 this.container = container;
 
+                if (oldContainer == escalator.getBody()) {
+                    lastActiveBodyRow = oldRow;
+                } else if (oldContainer == escalator.getHeader()) {
+                    lastActiveHeaderRow = oldRow;
+                } else {
+                    lastActiveFooterRow = oldRow;
+                }
+
                 if (oldColumn != activeColumn) {
                     refreshHeader();
                     refreshFooter();
@@ -286,11 +297,30 @@ public class Grid<T> extends Composite implements
                 case KeyCodes.KEY_LEFT:
                     newColumn -= 1;
                     break;
+                case KeyCodes.KEY_TAB:
+                    if (event.getShiftKey()) {
+                        newContainer = getPreviousContainer(container);
+                    } else {
+                        newContainer = getNextContainer(container);
+                    }
+
+                    if (newContainer == container) {
+                        return;
+                    }
+                    break;
                 default:
                     return;
                 }
 
-                if (newRow < 0) {
+                if (newContainer != container) {
+                    if (newContainer == escalator.getBody()) {
+                        newRow = lastActiveBodyRow;
+                    } else if (newContainer == escalator.getHeader()) {
+                        newRow = lastActiveHeaderRow;
+                    } else {
+                        newRow = lastActiveFooterRow;
+                    }
+                } else if (newRow < 0) {
                     newContainer = getPreviousContainer(newContainer);
 
                     if (newContainer == container) {

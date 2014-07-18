@@ -23,6 +23,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.tests.annotations.TestCategory;
@@ -31,6 +32,15 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")
 public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
+
+    @Override
+    protected DesiredCapabilities getDesiredCapabilities() {
+        DesiredCapabilities dCap = super.getDesiredCapabilities();
+        if (BrowserUtil.isIE(dCap)) {
+            dCap.setCapability("requireWindowFocus", true);
+        }
+        return super.getDesiredCapabilities();
+    }
 
     @Override
     protected Class<?> getUIClass() {

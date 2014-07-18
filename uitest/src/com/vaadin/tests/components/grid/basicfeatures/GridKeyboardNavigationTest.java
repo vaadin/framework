@@ -118,4 +118,55 @@ public class GridKeyboardNavigationTest extends GridBasicFeaturesTest {
         assertTrue("Body cell 300, 2 is not active", grid.getCell(300, 2)
                 .isActive());
     }
+
+    @Test
+    public void testNavigateBetweenHeaderAndBodyWithTab() {
+        openTestURL();
+
+        GridElement grid = getGridElement();
+        grid.getCell(10, 2).click();
+
+        assertTrue("Body cell 10, 2 is not active", grid.getCell(10, 2)
+                .isActive());
+        new Actions(getDriver()).keyDown(Keys.SHIFT).sendKeys(Keys.TAB)
+                .keyUp(Keys.SHIFT).perform();
+        assertTrue("Header cell 0, 2 is not active", grid.getHeaderCell(0, 2)
+                .isActive());
+        new Actions(getDriver()).sendKeys(Keys.TAB).perform();
+        assertTrue("Body cell 10, 2 is not active", grid.getCell(10, 2)
+                .isActive());
+
+        // Navigate out of the Grid and try to navigate with arrow keys.
+        new Actions(getDriver()).keyDown(Keys.SHIFT).sendKeys(Keys.TAB)
+                .sendKeys(Keys.TAB).keyUp(Keys.SHIFT).sendKeys(Keys.ARROW_DOWN)
+                .perform();
+        assertTrue("Header cell 0, 2 is not active", grid.getHeaderCell(0, 2)
+                .isActive());
+    }
+
+    @Test
+    public void testNavigateBetweenFooterAndBodyWithTab() {
+        openTestURL();
+
+        selectMenuPath("Component", "Footers", "Visible");
+
+        GridElement grid = getGridElement();
+        grid.getCell(10, 2).click();
+
+        assertTrue("Body cell 10, 2 is not active", grid.getCell(10, 2)
+                .isActive());
+        new Actions(getDriver()).sendKeys(Keys.TAB).perform();
+        assertTrue("Footer cell 0, 2 is not active", grid.getFooterCell(0, 2)
+                .isActive());
+        new Actions(getDriver()).keyDown(Keys.SHIFT).sendKeys(Keys.TAB)
+                .keyUp(Keys.SHIFT).perform();
+        assertTrue("Body cell 10, 2 is not active", grid.getCell(10, 2)
+                .isActive());
+
+        // Navigate out of the Grid and try to navigate with arrow keys.
+        new Actions(getDriver()).sendKeys(Keys.TAB).sendKeys(Keys.TAB)
+                .sendKeys(Keys.ARROW_UP).perform();
+        assertTrue("Footer cell 0, 2 is not active", grid.getFooterCell(0, 2)
+                .isActive());
+    }
 }

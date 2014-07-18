@@ -3938,9 +3938,11 @@ public class Escalator extends Widget {
         setElement(root);
 
         root.appendChild(verticalScrollbar.getElement());
+        verticalScrollbar.getElement().setTabIndex(-1);
         verticalScrollbar.setScrollbarThickness(Util.getNativeScrollbarSize());
 
         root.appendChild(horizontalScrollbar.getElement());
+        horizontalScrollbar.getElement().setTabIndex(-1);
         horizontalScrollbar
                 .setScrollbarThickness(Util.getNativeScrollbarSize());
         horizontalScrollbar
