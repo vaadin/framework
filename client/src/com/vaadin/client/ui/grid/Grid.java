@@ -1682,7 +1682,7 @@ public class Grid<T> extends Composite implements
             GridStaticSection<?> section) {
 
         // Add or Remove rows on demand
-        int rowDiff = section.getRowCount() - rows.getRowCount();
+        int rowDiff = section.getVisibleRowCount() - rows.getRowCount();
         if (rowDiff > 0) {
             rows.insertRows(0, rowDiff);
         } else if (rowDiff < 0) {

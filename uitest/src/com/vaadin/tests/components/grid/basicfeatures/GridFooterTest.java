@@ -22,11 +22,28 @@ import org.junit.Test;
 public class GridFooterTest extends GridStaticSectionTest {
 
     @Test
-    public void testFooterVisibility() throws Exception {
+    public void testDefaultFooter() {
         openTestURL();
 
         // Footer should have zero rows by default
-        assertEquals(0, getGridFooterRowCells().size());
+        assertFooterCount(0);
+    }
+
+    @Test
+    public void testFooterVisibility() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Footer", "Visible");
+
+        assertFooterCount(0);
+
+        selectMenuPath("Component", "Footer", "Append row");
+
+        assertFooterCount(0);
+
+        selectMenuPath("Component", "Footer", "Visible");
+
+        assertFooterCount(1);
     }
 
     @Test

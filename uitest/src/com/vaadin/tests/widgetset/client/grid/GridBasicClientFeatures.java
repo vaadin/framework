@@ -269,60 +269,76 @@ public class GridBasicClientFeatures extends
 
     private void createHeaderMenu() {
         final GridHeader header = grid.getHeader();
+        final String[] menuPath = { "Component", "Header" };
+
+        addMenuCommand("Visible", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                header.setVisible(!header.isVisible());
+            }
+        }, menuPath);
+
         addMenuCommand("Prepend row", new ScheduledCommand() {
             @Override
             public void execute() {
                 setHeaderTexts(header.prependRow());
             }
-        }, "Component", "Header");
+        }, menuPath);
         addMenuCommand("Append row", new ScheduledCommand() {
             @Override
             public void execute() {
                 setHeaderTexts(header.appendRow());
             }
-        }, "Component", "Header");
+        }, menuPath);
         addMenuCommand("Remove top row", new ScheduledCommand() {
             @Override
             public void execute() {
                 header.removeRow(0);
             }
-        }, "Component", "Header");
+        }, menuPath);
         addMenuCommand("Remove bottom row", new ScheduledCommand() {
             @Override
             public void execute() {
                 header.removeRow(header.getRowCount() - 1);
             }
-        }, "Component", "Header");
+        }, menuPath);
     }
 
     private void createFooterMenu() {
-
         final GridFooter footer = grid.getFooter();
+        final String[] menuPath = { "Component", "Footer" };
+
+        addMenuCommand("Visible", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                footer.setVisible(!footer.isVisible());
+            }
+        }, menuPath);
 
         addMenuCommand("Prepend row", new ScheduledCommand() {
             @Override
             public void execute() {
                 setFooterTexts(footer.prependRow());
             }
-        }, "Component", "Footer");
+        }, menuPath);
         addMenuCommand("Append row", new ScheduledCommand() {
             @Override
             public void execute() {
                 setFooterTexts(footer.appendRow());
             }
-        }, "Component", "Footer");
+        }, menuPath);
         addMenuCommand("Remove top row", new ScheduledCommand() {
             @Override
             public void execute() {
                 footer.removeRow(0);
             }
-        }, "Component", "Footer");
+        }, menuPath);
         addMenuCommand("Remove bottom row", new ScheduledCommand() {
             @Override
             public void execute() {
                 footer.removeRow(footer.getRowCount() - 1);
             }
-        }, "Component", "Footer");
+        }, menuPath);
     }
 
     /**

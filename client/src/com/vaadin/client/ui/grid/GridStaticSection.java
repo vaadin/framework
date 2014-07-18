@@ -130,6 +130,8 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
 
     private List<ROWTYPE> rows = new ArrayList<ROWTYPE>();
 
+    private boolean visible = true;
+
     /**
      * Creates and returns a new instance of the row type.
      * 
@@ -141,6 +143,26 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      * Informs the grid that this section should be re-rendered.
      */
     protected abstract void refreshGrid();
+
+    /**
+     * Sets the visibility of the whole section.
+     * 
+     * @param visible
+     *            true to show this section, false to hide
+     */
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+        refreshGrid();
+    }
+
+    /**
+     * Returns the visibility of this section.
+     * 
+     * @return true if visible, false otherwise.
+     */
+    public boolean isVisible() {
+        return visible;
+    }
 
     /**
      * Inserts a new row at the given position.
@@ -237,6 +259,10 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
 
     protected List<ROWTYPE> getRows() {
         return rows;
+    }
+
+    protected int getVisibleRowCount() {
+        return isVisible() ? getRowCount() : 0;
     }
 
     protected void addColumn(GridColumn<?, ?> column, int index) {

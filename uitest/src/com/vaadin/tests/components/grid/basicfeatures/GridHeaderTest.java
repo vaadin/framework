@@ -26,11 +26,28 @@ import com.vaadin.testbench.TestBenchElement;
 public class GridHeaderTest extends GridStaticSectionTest {
 
     @Test
+    public void testDefaultHeader() throws Exception {
+        openTestURL();
+
+        assertHeaderCount(1);
+        assertHeaderTexts(0, 0);
+    }
+
+    @Test
     public void testHeaderVisibility() throws Exception {
         openTestURL();
 
-        // Column headers should be visible by default
-        assertEquals(GridBasicFeatures.COLUMNS, getGridHeaderRowCells().size());
+        selectMenuPath("Component", "Header", "Visible");
+
+        assertHeaderCount(0);
+
+        selectMenuPath("Component", "Header", "Append row");
+
+        assertHeaderCount(0);
+
+        selectMenuPath("Component", "Header", "Visible");
+
+        assertHeaderCount(2);
     }
 
     @Test
