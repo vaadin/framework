@@ -117,11 +117,10 @@ public class Grid<T> extends Composite implements
         /**
          * Sets style names for given cell when needed.
          */
-        public void updateActiveCellStyle(FlyweightCell cell) {
+        public void updateActiveCellStyle(FlyweightCell cell,
+                RowContainer cellContainer) {
             int cellRow = cell.getRow();
             int cellColumn = cell.getColumn();
-            RowContainer cellContainer = escalator.findRowContainer(cell
-                    .getElement());
 
             if (cellContainer == container) {
                 // Cell is in the current container
@@ -1222,6 +1221,8 @@ public class Grid<T> extends Composite implements
             } else {
                 rowIndex = row.getRow();
             }
+            RowContainer container = escalator.findRowContainer(row
+                    .getElement());
 
             if (firstRowIsVisible() && rowIndex == 0) {
                 // column headers
@@ -1233,7 +1234,7 @@ public class Grid<T> extends Composite implements
                                 .render(cell, getColumnValue(column));
                     }
 
-                    activeCellHandler.updateActiveCellStyle(cell);
+                    activeCellHandler.updateActiveCellStyle(cell, container);
                 }
 
             } else if (columnGroupRows.size() > 0) {
@@ -1272,7 +1273,8 @@ public class Grid<T> extends Composite implements
                         cellElement.setInnerHTML(null);
                         cell.setColSpan(1);
 
-                        activeCellHandler.updateActiveCellStyle(cell);
+                        activeCellHandler
+                                .updateActiveCellStyle(cell, container);
                     }
                 }
             }
@@ -1298,10 +1300,13 @@ public class Grid<T> extends Composite implements
     protected class StaticSectionUpdater implements EscalatorUpdater {
 
         private GridStaticSection<?> section;
+        private RowContainer container;
 
-        public StaticSectionUpdater(GridStaticSection<?> section) {
+        public StaticSectionUpdater(GridStaticSection<?> section,
+                RowContainer container) {
             super();
             this.section = section;
+            this.container = container;
         }
 
         @Override
@@ -1315,7 +1320,7 @@ public class Grid<T> extends Composite implements
                 gridRow.getRenderer().render(cell,
                         gridRow.getCell(index).getText());
 
-                activeCellHandler.updateActiveCellStyle(cell);
+                activeCellHandler.updateActiveCellStyle(cell, container);
             }
         }
 
@@ -1407,7 +1412,7 @@ public class Grid<T> extends Composite implements
      * @return the updater that updates the data in the escalator.
      */
     private EscalatorUpdater createHeaderUpdater() {
-        return new StaticSectionUpdater(header);
+        return new StaticSectionUpdater(header, escalator.getHeader());
     }
 
     private EscalatorUpdater createBodyUpdater() {
@@ -1478,7 +1483,8 @@ public class Grid<T> extends Composite implements
                     assert column != null : "Column was not found from cell ("
                             + cell.getColumn() + "," + cell.getRow() + ")";
 
-                    activeCellHandler.updateActiveCellStyle(cell);
+                    activeCellHandler.updateActiveCellStyle(cell,
+                            escalator.getBody());
 
                     Renderer renderer = column.getRenderer();
 
@@ -1550,7 +1556,7 @@ public class Grid<T> extends Composite implements
      * @return the updater that updates the data in the escalator.
      */
     private EscalatorUpdater createFooterUpdater() {
-        return new StaticSectionUpdater(footer);
+        return new StaticSectionUpdater(footer, escalator.getFooter());
     }
 
     /**
