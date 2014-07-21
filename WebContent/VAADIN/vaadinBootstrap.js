@@ -101,7 +101,7 @@
 				return value;
 			};
 			
-			var fetchRootConfig = function() {
+			var fetchRootConfig = function(callback) {
 				log('Fetching root config');
 				var url = getConfig('browserDetailsUrl');
 				if (!url) {
@@ -141,6 +141,12 @@
 				r.open('POST', url, true);
 				r.onreadystatechange = function (aEvt) {  
 					if (r.readyState == 4) {
+						// Save responseStatus so as Offline Applications know what happened
+						// when loading root configuration from server, and depending on the
+						// error status display an error message or the offline UI.
+						config.rootResponseStatus = r.status;
+						config.rootResponseText = r.responseText;
+
 						var text = r.responseText;
 						if (r.status == 200){
 							log("Got root config response", text);
@@ -166,6 +172,9 @@
 							appDiv.innerHTML = text;
 							appDiv.style['overflow'] = 'auto';
 						}
+
+						// Run the fetchRootConfig callback if present.
+						callback && callback(r);
 					}  
 				};
 				// send parameters as POST data
@@ -177,7 +186,10 @@
 			
 			//Export public data
 			var app = {
-				'getConfig': getConfig
+				getConfig: getConfig,
+				// Used when the app was started in offline, so as it is possible
+				// to defer root configuration loading until network is available.
+				fetchRootConfig: fetchRootConfig
 			};
 			apps[appId] = app;
 			
@@ -224,9 +236,17 @@
 			return app;
 		},
 		clients: {},
+		getAppIds: function() {
+			var ids = [ ];
+			for (var id in apps) {
+				if (apps.hasOwnProperty(id)) {
+					ids.push(id);
+				}
+			}
+			return ids;
+		},
 		getApp: function(appId) {
-			var app = apps[appId]; 
-			return app;
+			return apps[appId];
 		},
 		loadTheme: loadTheme,
 		registerWidgetset: function(widgetset, callback) {
