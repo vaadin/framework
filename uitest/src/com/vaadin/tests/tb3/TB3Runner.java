@@ -37,7 +37,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.AbstractTB3Test.BrowserUtil;
-import com.vaadin.tests.tb3.AbstractTB3Test.RunLocally;
+import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 
 /**
  * This runner is loosely based on FactoryTestRunner by Ted Young
@@ -179,17 +179,17 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
     /*
      * Returns a list of desired browser capabilities according to browsers
      * defined in the test class, filtered by possible filter parameters. Use
-     * {@code @RunLocally} annotation to override all capabilities.
+     * {@code @RunLocally} annotation or com.vaadin.testbench.runLocally
+     * property to override all capabilities.
      */
     private Collection<DesiredCapabilities> getDesiredCapabilities(
             AbstractTB3Test testClassInstance) {
         Collection<DesiredCapabilities> desiredCapabilites = getFilteredCapabilities(testClassInstance);
 
-        if (isRunLocally(testClassInstance)) {
+        Browser runLocallyBrowser = testClassInstance.getRunLocallyBrowser();
+        if (runLocallyBrowser != null) {
             desiredCapabilites = new ArrayList<DesiredCapabilities>();
-            desiredCapabilites.add(testClassInstance.getClass()
-                    .getAnnotation(RunLocally.class).value()
-                    .getDesiredCapabilities());
+            desiredCapabilites.add(runLocallyBrowser.getDesiredCapabilities());
         }
 
         return desiredCapabilites;
@@ -229,10 +229,6 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
 
         }
         return filteredCapabilities;
-    }
-
-    private boolean isRunLocally(AbstractTB3Test testClassInstance) {
-        return testClassInstance.getClass().getAnnotation(RunLocally.class) != null;
     }
 
     private AbstractTB3Test getTestClassInstance()

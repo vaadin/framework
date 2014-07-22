@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -34,6 +35,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
 
 import com.vaadin.testbench.TestBench;
+import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 
 /**
  * Provides values for parameters which depend on where the test is run.
@@ -43,6 +45,7 @@ import com.vaadin.testbench.TestBench;
  * @author Vaadin Ltd
  */
 public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
+    private static final String RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.runLocally";
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
     private static final String PORT_PROPERTY = "com.vaadin.testbench.deployment.port";
     private static final Properties properties = new Properties();
@@ -67,6 +70,16 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         return property;
     }
 
+    private static String getSource(String propertyName) {
+        if (properties.containsKey(propertyName)) {
+            return propertiesFile.getAbsolutePath();
+        } else if (System.getProperty(propertyName) != null) {
+            return "System.getProperty()";
+        } else {
+            return null;
+        }
+    }
+
     @Override
     protected String getScreenshotDirectory() {
         String screenshotDirectory = getProperty("com.vaadin.testbench.screenshot.directory");
@@ -84,7 +97,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     @Override
     protected String getDeploymentHostname() {
-        if (getClass().getAnnotation(RunLocally.class) != null) {
+        if (getRunLocallyBrowser() != null) {
             return "localhost";
         }
         return getConfiguredDeploymentHostname();
@@ -209,5 +222,29 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         }
         setDriver(TestBench.createDriver(driver));
         setDesiredCapabilities(desiredCapabilities);
+    }
+
+    @Override
+    protected Browser getRunLocallyBrowser() {
+        Browser runLocallyBrowser = super.getRunLocallyBrowser();
+        if (runLocallyBrowser != null) {
+            // Always use annotation value if present
+            return runLocallyBrowser;
+        }
+
+        String runLocallyValue = getProperty(RUN_LOCALLY_PROPERTY);
+        if (runLocallyValue == null || runLocallyValue.trim().isEmpty()) {
+            return null;
+        }
+
+        String browserName = runLocallyValue.trim().toUpperCase();
+        try {
+            return Browser.valueOf(browserName);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid " + RUN_LOCALLY_PROPERTY
+                    + " property from " + getSource(RUN_LOCALLY_PROPERTY)
+                    + ": " + runLocallyValue + ". Expected one of "
+                    + Arrays.toString(Browser.values()));
+        }
     }
 }
