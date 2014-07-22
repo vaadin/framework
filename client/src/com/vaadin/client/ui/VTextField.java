@@ -16,6 +16,8 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -254,6 +256,48 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         el.oncut = null;
     }-*/;
 
+    private void onDrop() {
+        if (focusedTextField == this) {
+            return;
+        }
+        updateText(false);
+    }
+
+    private void updateText(boolean blurred) {
+        String text = getText();
+        setPrompting(inputPrompt != null && (text == null || text.isEmpty()));
+        if (prompting) {
+            setText(isReadOnly() ? "" : inputPrompt);
+            if (blurred) {
+                addStyleDependentName(CLASSNAME_PROMPT);
+            }
+        }
+
+        valueChange(blurred);
+    }
+
+    private void scheduleOnDropEvent() {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                onDrop();
+            }
+        });
+    }
+
+    private native void attachDropEventListener(Element el)
+    /*-{
+        var me = this;
+        el.ondrop = $entry(function() {
+            me.@com.vaadin.client.ui.VTextField::scheduleOnDropEvent()();
+        });
+    }-*/;
+
+    private native void detachDropEventListener(Element el)
+    /*-{
+        el.ondrop = null;
+    }-*/;
+
     @Override
     protected void onDetach() {
         super.onDetach();
@@ -263,6 +307,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         }
         if (BrowserInfo.get().isFirefox()) {
             removeOnInputListener(getElement());
+            detachDropEventListener(getElement());
         }
     }
 
@@ -276,6 +321,9 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
             // Workaround for FF setting input prompt as the value if esc is
             // pressed while the field is focused and empty (#8051).
             addOnInputListener(getElement());
+            // Workaround for FF updating component's internal value after
+            // having drag-and-dropped text from another element (#14056)
+            attachDropEventListener(getElement());
         }
     }
 
@@ -418,14 +466,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         }
         removeStyleDependentName(CLASSNAME_FOCUS);
         focusedTextField = null;
-        String text = getText();
-        setPrompting(inputPrompt != null && (text == null || "".equals(text)));
-        if (prompting) {
-            setText(isReadOnly() ? "" : inputPrompt);
-            addStyleDependentName(CLASSNAME_PROMPT);
-        }
-
-        valueChange(true);
+        updateText(true);
     }
 
     private void setPrompting(boolean prompting) {

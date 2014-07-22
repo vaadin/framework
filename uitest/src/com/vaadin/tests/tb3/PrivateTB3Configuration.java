@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -34,6 +35,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
 
 import com.vaadin.testbench.TestBench;
+import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 
 /**
  * Provides values for parameters which depend on where the test is run.
@@ -43,14 +45,16 @@ import com.vaadin.testbench.TestBench;
  * @author Vaadin Ltd
  */
 public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
+    private static final String RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.runLocally";
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
     private static final String PORT_PROPERTY = "com.vaadin.testbench.deployment.port";
     private static final Properties properties = new Properties();
+    private static final File propertiesFile = new File("work",
+            "eclipse-run-selected-test.properties");
     static {
-        File file = new File("work", "eclipse-run-selected-test.properties");
-        if (file.exists()) {
+        if (propertiesFile.exists()) {
             try {
-                properties.load(new FileInputStream(file));
+                properties.load(new FileInputStream(propertiesFile));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -64,6 +68,16 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         }
 
         return property;
+    }
+
+    private static String getSource(String propertyName) {
+        if (properties.containsKey(propertyName)) {
+            return propertiesFile.getAbsolutePath();
+        } else if (System.getProperty(propertyName) != null) {
+            return "System.getProperty()";
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -83,7 +97,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     @Override
     protected String getDeploymentHostname() {
-        if (getClass().getAnnotation(RunLocally.class) != null) {
+        if (getRunLocallyBrowser() != null) {
             return "localhost";
         }
         return getConfiguredDeploymentHostname();
@@ -180,8 +194,21 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                 driver = new FirefoxDriver();
             }
         } else if (BrowserUtil.isChrome(desiredCapabilities)) {
-            System.setProperty("webdriver.chrome.driver",
-                    getProperty("chrome.driver.path"));
+            String propertyName = "chrome.driver.path";
+            String chromeDriverPath = getProperty(propertyName);
+            if (chromeDriverPath == null) {
+                throw new RuntimeException(
+                        "You need to install ChromeDriver to use @"
+                                + RunLocally.class.getSimpleName()
+                                + " with Chrome."
+                                + "\nFirst install it from https://code.google.com/p/selenium/wiki/ChromeDriver."
+                                + "\nThen update "
+                                + propertiesFile.getAbsolutePath()
+                                + " to define a property named "
+                                + propertyName
+                                + " containing the path of your local ChromeDriver installation.");
+            }
+            System.setProperty("webdriver.chrome.driver", chromeDriverPath);
             driver = new ChromeDriver();
         } else if (BrowserUtil.isSafari(desiredCapabilities)) {
             driver = new SafariDriver();
@@ -195,5 +222,29 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         }
         setDriver(TestBench.createDriver(driver));
         setDesiredCapabilities(desiredCapabilities);
+    }
+
+    @Override
+    protected Browser getRunLocallyBrowser() {
+        Browser runLocallyBrowser = super.getRunLocallyBrowser();
+        if (runLocallyBrowser != null) {
+            // Always use annotation value if present
+            return runLocallyBrowser;
+        }
+
+        String runLocallyValue = getProperty(RUN_LOCALLY_PROPERTY);
+        if (runLocallyValue == null || runLocallyValue.trim().isEmpty()) {
+            return null;
+        }
+
+        String browserName = runLocallyValue.trim().toUpperCase();
+        try {
+            return Browser.valueOf(browserName);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid " + RUN_LOCALLY_PROPERTY
+                    + " property from " + getSource(RUN_LOCALLY_PROPERTY)
+                    + ": " + runLocallyValue + ". Expected one of "
+                    + Arrays.toString(Browser.values()));
+        }
     }
 }

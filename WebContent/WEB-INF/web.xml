@@ -118,11 +118,11 @@
             <param-name>pushmode</param-name>
             <param-value>automatic</param-value>
         </init-param>
-        <async-supported>true</async-supported>
         <init-param>
             <param-name>org.atmosphere.cpr.scanClassPath</param-name>
             <param-value>false</param-value>
         </init-param>
+        <async-supported>true</async-supported>
     </servlet>
 
     <!-- For testing GAE - the deployment script changes this to use GAEVaadinServlet -->
@@ -133,11 +133,11 @@
             <param-name>UI</param-name>
             <param-value>com.vaadin.tests.integration.ServletIntegrationUI</param-value>
         </init-param>
-        <async-supported>true</async-supported>
         <init-param>
             <param-name>org.atmosphere.cpr.scanClassPath</param-name>
             <param-value>false</param-value>
         </init-param>
+        <async-supported>true</async-supported>
     </servlet>
 
     <servlet-mapping>

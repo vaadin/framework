@@ -55,6 +55,17 @@ public class TableConnector extends AbstractHasComponentsConnector implements
     /*
      * (non-Javadoc)
      * 
+     * @see com.vaadin.client.ui.AbstractComponentConnector#onUnregister()
+     */
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+        getWidget().onUnregister();
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see com.vaadin.client.Paintable#updateFromUIDL(com.vaadin.client.UIDL,
      * com.vaadin.client.ApplicationConnection)
      */

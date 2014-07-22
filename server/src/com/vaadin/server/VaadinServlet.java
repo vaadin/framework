@@ -16,12 +16,14 @@
 package com.vaadin.server;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,7 +31,10 @@ import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,6 +55,59 @@ import com.vaadin.util.CurrentInstance;
 
 @SuppressWarnings("serial")
 public class VaadinServlet extends HttpServlet implements Constants {
+
+    private static class ScssCacheEntry implements Serializable {
+
+        private final String css;
+        private final List<String> sourceUris;
+        private final long timestamp;
+
+        public ScssCacheEntry(String css, List<String> sourceUris) {
+            this.css = css;
+            this.sourceUris = sourceUris;
+
+            timestamp = getLastModified();
+        }
+
+        public String getCss() {
+            return css;
+        }
+
+        private long getLastModified() {
+            long newest = 0;
+            for (String uri : sourceUris) {
+                File file = new File(uri);
+                if (!file.exists()) {
+                    return -1;
+                } else {
+                    newest = Math.max(newest, file.lastModified());
+                }
+            }
+
+            return newest;
+        }
+
+        public boolean isStillValid() {
+            if (timestamp == -1) {
+                /*
+                 * Don't ever bother checking anything if files used during the
+                 * compilation were gone before the cache entry was created.
+                 */
+                return false;
+            } else if (timestamp != getLastModified()) {
+                /*
+                 * Would in theory still be valid if the last modification is
+                 * before the recorded timestamp, but that would still mean that
+                 * something has changed since we last checked, so let's
+                 * invalidate in that case as well to be on the safe side.
+                 */
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+    }
 
     private VaadinServletService servletService;
 
@@ -535,8 +593,16 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * Mutex for preventing to scss compilations to take place simultaneously.
      * This is a workaround needed as the scss compiler currently is not thread
      * safe (#10292).
+     * <p>
+     * In addition, this is also used to protect the cached compilation results.
      */
     private static final Object SCSS_MUTEX = new Object();
+
+    /**
+     * Global cache of scss compilation results. This map is protected from
+     * concurrent access by {@link #SCSS_MUTEX}.
+     */
+    private static final Map<String, ScssCacheEntry> scssCache = new HashMap<String, ScssCacheEntry>();
 
     /**
      * Returns the default theme. Must never return null.
@@ -824,44 +890,60 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         synchronized (SCSS_MUTEX) {
-            String realFilename = sc.getRealPath(scssFilename);
-            ScssStylesheet scss = ScssStylesheet.get(realFilename);
-            if (scss == null) {
-                // Not a file in the file system (WebContent directory). Use the
-                // identifier directly (VAADIN/themes/.../styles.css) so
-                // ScssStylesheet will try using the class loader.
-                if (scssFilename.startsWith("/")) {
-                    scssFilename = scssFilename.substring(1);
-                }
+            ScssCacheEntry cacheEntry = scssCache.get(scssFilename);
 
-                scss = ScssStylesheet.get(scssFilename);
+            if (cacheEntry == null || !cacheEntry.isStillValid()) {
+                cacheEntry = compileScssOnTheFly(filename, scssFilename, sc);
+                scssCache.put(scssFilename, cacheEntry);
             }
 
-            if (scss == null) {
-                getLogger()
-                        .log(Level.WARNING,
-                                "Scss file {0} exists but ScssStylesheet was not able to find it",
-                                scssFilename);
-                return false;
-            }
-            try {
-                getLogger().log(Level.FINE, "Compiling {0} for request to {1}",
-                        new Object[] { realFilename, filename });
-                scss.compile();
-            } catch (Exception e) {
-                getLogger().log(Level.WARNING, "Scss compilation failed", e);
+            if (cacheEntry == null) {
+                // compilation did not produce any result, but logged a message
                 return false;
             }
 
             // This is for development mode only so instruct the browser to
-            // never
-            // cache it
+            // never cache it
             response.setHeader("Cache-Control", "no-cache");
             final String mimetype = getService().getMimeType(filename);
-            writeResponse(response, mimetype, scss.printState());
+            writeResponse(response, mimetype, cacheEntry.getCss());
 
             return true;
         }
+    }
+
+    private ScssCacheEntry compileScssOnTheFly(String filename,
+            String scssFilename, ServletContext sc) throws IOException {
+        String realFilename = sc.getRealPath(scssFilename);
+        ScssStylesheet scss = ScssStylesheet.get(realFilename);
+        if (scss == null) {
+            // Not a file in the file system (WebContent directory). Use the
+            // identifier directly (VAADIN/themes/.../styles.css) so
+            // ScssStylesheet will try using the class loader.
+            if (scssFilename.startsWith("/")) {
+                scssFilename = scssFilename.substring(1);
+            }
+
+            scss = ScssStylesheet.get(scssFilename);
+        }
+
+        if (scss == null) {
+            getLogger()
+                    .log(Level.WARNING,
+                            "Scss file {0} exists but ScssStylesheet was not able to find it",
+                            scssFilename);
+            return null;
+        }
+        try {
+            getLogger().log(Level.FINE, "Compiling {0} for request to {1}",
+                    new Object[] { realFilename, filename });
+            scss.compile();
+        } catch (Exception e) {
+            getLogger().log(Level.WARNING, "Scss compilation failed", e);
+            return null;
+        }
+
+        return new ScssCacheEntry(scss.printState(), scss.getSourceUris());
     }
 
     /**

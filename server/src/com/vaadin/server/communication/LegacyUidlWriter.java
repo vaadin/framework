@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,7 +35,7 @@ import com.vaadin.ui.UI;
 
 /**
  * Serializes legacy UIDL changes to JSON.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -44,7 +44,7 @@ public class LegacyUidlWriter implements Serializable {
     /**
      * Writes a JSON array containing the changes of all dirty
      * {@link LegacyComponent}s in the given UI.
-     * 
+     *
      * @param ui
      *            The {@link UI} whose legacy changes to write
      * @param writer
@@ -60,7 +60,8 @@ public class LegacyUidlWriter implements Serializable {
         Collection<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
 
-        List<Component> legacyComponents = new ArrayList<Component>();
+        List<Component> legacyComponents = new ArrayList<Component>(
+                dirtyVisibleConnectors.size());
         for (ClientConnector connector : dirtyVisibleConnectors) {
             // All Components that want to use paintContent must implement
             // LegacyComponent

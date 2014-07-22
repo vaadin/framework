@@ -93,13 +93,13 @@ public class SerializerTest extends AbstractTestUI {
 
         rpc.sendInt(Integer.MAX_VALUE, Integer.valueOf(0), new int[] { 5, 7 });
         state.intValue = Integer.MAX_VALUE;
-        state.intObjectValue = Integer.valueOf(0);
+        state.intObjectValue = Integer.valueOf(42);
         state.intArray = new int[] { 5, 7 };
 
         rpc.sendLong(577431841358l, Long.valueOf(0), new long[] {
                 -57841235865l, 57 });
-        state.longValue = 577431841358l;
-        state.longObjectValue = Long.valueOf(0);
+        state.longValue = 577431841359l;
+        state.longObjectValue = Long.valueOf(577431841360l);
         state.longArray = new long[] { -57841235865l, 57 };
 
         rpc.sendFloat(3.14159f, Float.valueOf(Math.nextUp(1)), new float[] {
@@ -111,7 +111,7 @@ public class SerializerTest extends AbstractTestUI {
         rpc.sendDouble(Math.PI, Double.valueOf(-Math.E), new double[] {
                 Double.MAX_VALUE, Double.MIN_VALUE });
         state.doubleValue = Math.PI;
-        state.doubleValue = Double.valueOf(-Math.E);
+        state.doubleObjectValue = Double.valueOf(-Math.E);
         state.doubleArray = new double[] { Double.MAX_VALUE, Double.MIN_VALUE };
 
         rpc.sendString("This is a tesing string ‡");

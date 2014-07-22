@@ -89,6 +89,7 @@
 .#{$primaryStyleName}-scrollerNext-disabled,
 .#{$primaryStyleName}-scrollerPrev-disabled:active,
 .#{$primaryStyleName}-scrollerNext-disabled:active {
+	padding-top: 12px;
 	border: 1px solid #b3b3b3;
 	border-width: 0;
 	background: transparent url(../../img/tab-arrows.png) no-repeat 6px 50%;

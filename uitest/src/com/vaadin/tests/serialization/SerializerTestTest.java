@@ -77,5 +77,36 @@ public class SerializerTestTest extends MultiBrowserTest {
                 "sendBoolean: false, false, [false, false, true, false, true, true]",
                 getLogRow(logRow++));
         Assert.assertEquals("sendBeanSubclass: 43", getLogRow(logRow++));
+        Assert.assertEquals(
+                "state.doubleArray: [1.7976931348623157e+308, 5e-324]",
+                getLogRow(logRow++));
+        Assert.assertEquals("state.doubleObjectValue: -2.718281828459045",
+                getLogRow(logRow++));
+        Assert.assertEquals("state.doubleValue: 3.141592653589793",
+                getLogRow(logRow++));
+        Assert.assertEquals("state.floatArray: [57, 0, -12]",
+                getLogRow(logRow++));
+        Assert.assertEquals("state.floatObjectValue: 1.0000001",
+                getLogRow(logRow++));
+        Assert.assertEquals("state.floatValue: 3.14159", getLogRow(logRow++));
+        Assert.assertEquals("state.longArray: [-57841235865, 57]",
+                getLogRow(logRow++));
+        Assert.assertEquals("state.longObjectValue: 577431841360",
+                getLogRow(logRow++));
+        Assert.assertEquals("state.longValue: 577431841359",
+                getLogRow(logRow++));
+        Assert.assertEquals("state.intArray: [5, 7]", getLogRow(logRow++));
+        Assert.assertEquals("state.intObjectValue: 42", getLogRow(logRow++));
+        Assert.assertEquals("state.intValue: 2147483647", getLogRow(logRow++));
+        Assert.assertEquals("state.charArray: aBcD", getLogRow(logRow++));
+        Assert.assertEquals("state.charObjectValue: å", getLogRow(logRow++));
+        Assert.assertEquals("state.charValue: ∫", getLogRow(logRow++));
+        Assert.assertEquals("state.byteArray: [3, 1, 2]", getLogRow(logRow++));
+        Assert.assertEquals("state.byteObjectValue: -12", getLogRow(logRow++));
+        Assert.assertEquals("state.byteValue: 5", getLogRow(logRow++));
+        Assert.assertEquals(
+                "state.booleanArray: [true, true, false, true, false, false]",
+                getLogRow(logRow++));
+
     }
 }

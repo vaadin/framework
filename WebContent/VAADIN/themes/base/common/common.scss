@@ -146,6 +146,12 @@ body &.v-app .v-app-loading {
 	border: 0;
 	margin: 0;
 }
+
+.v-contextmenu .gwt-MenuBar {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
 .v-contextmenu .gwt-MenuItem div {
 	cursor: pointer;
 	vertical-align: middle;

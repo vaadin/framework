@@ -15,4 +15,9 @@
         <when-type-is class="com.vaadin.client.communication.PushConnection" />
     </replace-with>
 
+    <replace-with
+        class="com.vaadin.tests.widgetset.client.MockApplicationConnection">
+        <when-type-is class="com.vaadin.client.ApplicationConnection" />
+    </replace-with>
+
 </module>

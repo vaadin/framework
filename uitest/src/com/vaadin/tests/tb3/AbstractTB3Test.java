@@ -120,9 +120,13 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     protected void setupDriver() throws Exception {
         DesiredCapabilities capabilities;
 
-        RunLocally runLocally = getClass().getAnnotation(RunLocally.class);
-        if (runLocally != null) {
-            capabilities = runLocally.value().getDesiredCapabilities();
+        Browser runLocallyBrowser = getRunLocallyBrowser();
+        if (runLocallyBrowser != null) {
+            if (System.getenv().containsKey("TEAMCITY_VERSION")) {
+                throw new RuntimeException(
+                        "@RunLocally is not supported for tests run on the build server");
+            }
+            capabilities = runLocallyBrowser.getDesiredCapabilities();
             setupLocalDriver(capabilities);
         } else {
             capabilities = getDesiredCapabilities();
@@ -150,6 +154,15 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
             // Opera does not support this...
         }
 
+    }
+
+    protected Browser getRunLocallyBrowser() {
+        RunLocally runLocally = getClass().getAnnotation(RunLocally.class);
+        if (runLocally != null) {
+            return runLocally.value();
+        } else {
+            return null;
+        }
     }
 
     protected WebElement getTooltipElement() {

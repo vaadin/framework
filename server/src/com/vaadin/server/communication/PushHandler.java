@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -48,7 +48,7 @@ import com.vaadin.ui.UI;
 
 /**
  * Establishes bidirectional ("push") communication channels
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -194,7 +194,7 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
 
     /**
      * Find the UI for the atmosphere resource, lock it and invoke the callback.
-     * 
+     *
      * @param resource
      *            the atmosphere resource for the current request
      * @param callback
@@ -211,6 +211,8 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
         try {
             try {
                 session = service.findVaadinSession(vaadinRequest);
+                assert VaadinSession.getCurrent() == session;
+
             } catch (ServiceException e) {
                 getLogger().log(Level.SEVERE,
                         "Could not get session. This should never happen", e);
@@ -231,9 +233,9 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
             UI ui = null;
             session.lock();
             try {
-                VaadinSession.setCurrent(session);
-                // Sets UI.currentInstance
                 ui = service.findUI(vaadinRequest);
+                assert UI.getCurrent() == ui;
+
                 if (ui == null) {
                     sendNotificationAndDisconnect(resource,
                             UidlRequestHandler.getUINotFoundErrorJSON(service,
@@ -417,10 +419,10 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
      * two push connections which try to use the same UI. Using the
      * AtmosphereResource directly guarantees the message goes to the correct
      * recipient.
-     * 
+     *
      * @param resource
      *            The atmosphere resource to send refresh to
-     * 
+     *
      */
     private static void sendRefreshAndDisconnect(AtmosphereResource resource)
             throws IOException {

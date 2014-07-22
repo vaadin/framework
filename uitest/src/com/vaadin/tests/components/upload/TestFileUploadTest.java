@@ -109,7 +109,7 @@ public class TestFileUploadTest extends MultiBrowserTest {
     }
 
     private void setLocalFileDetector(WebElement element) throws Exception {
-        if (getClass().isAnnotationPresent(RunLocally.class)) {
+        if (getRunLocallyBrowser() != null) {
             return;
         }
 
