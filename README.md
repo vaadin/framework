@@ -25,7 +25,9 @@ Cloning the project repositories
 The Vaadin repository can be cloned using
 <pre><code>git clone https://github.com/vaadin/vaadin.git</code></pre>
 
-or using your favorite Git tool
+or using your favorite Git tool.
+
+If using Windows, you might want to add these Git settings: core.autocrlf=false and core.fileMode=false.
 
 Setting up Eclipse to Develop Vaadin 7
 =========
