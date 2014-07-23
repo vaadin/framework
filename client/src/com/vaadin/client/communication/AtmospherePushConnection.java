@@ -31,6 +31,7 @@ import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.VConsole;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.PushConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
@@ -514,16 +515,10 @@ public class AtmospherePushConnection implements PushConnection {
     }-*/;
 
     private void runWhenAtmosphereLoaded(final Command command) {
-
         if (isAtmosphereLoaded()) {
             command.execute();
         } else {
-            final String pushJs;
-            if (ApplicationConfiguration.isProductionMode()) {
-                pushJs = ApplicationConstants.VAADIN_PUSH_JS;
-            } else {
-                pushJs = ApplicationConstants.VAADIN_PUSH_DEBUG_JS;
-            }
+            final String pushJs = getVersionedPushJs();
 
             VConsole.log("Loading " + pushJs);
             ResourceLoader.get().loadScript(
@@ -551,6 +546,18 @@ public class AtmospherePushConnection implements PushConnection {
                         }
                     });
         }
+    }
+
+    private String getVersionedPushJs() {
+        String pushJs;
+        if (ApplicationConfiguration.isProductionMode()) {
+            pushJs = ApplicationConstants.VAADIN_PUSH_JS;
+        } else {
+            pushJs = ApplicationConstants.VAADIN_PUSH_DEBUG_JS;
+        }
+        // Parameter appended to bypass caches after version upgrade.
+        pushJs += "?v=" + Version.getFullVersion();
+        return pushJs;
     }
 
     /*

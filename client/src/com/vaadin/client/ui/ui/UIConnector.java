@@ -76,6 +76,7 @@ import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.server.Page.Styles;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
@@ -1014,9 +1015,13 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * @return The URL the theme can be loaded from
      */
     private String getThemeUrl(String theme) {
-        return getConnection().translateVaadinUri(
+        String themeUrl = getConnection().translateVaadinUri(
                 ApplicationConstants.VAADIN_PROTOCOL_PREFIX + "themes/" + theme
                         + "/styles" + ".css");
+        // Parameter appended to bypass caches after version upgrade.
+        themeUrl += "?v=" + Version.getFullVersion();
+        return themeUrl;
+
     }
 
     /**
