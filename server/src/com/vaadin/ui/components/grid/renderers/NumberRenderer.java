@@ -15,7 +15,7 @@
  */
 package com.vaadin.ui.components.grid.renderers;
 
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.vaadin.ui.components.grid.AbstractRenderer;
@@ -28,7 +28,7 @@ import com.vaadin.ui.components.grid.AbstractRenderer;
  */
 public class NumberRenderer extends AbstractRenderer<Number> {
     private final Locale locale;
-    private final DecimalFormat decimalFormat;
+    private final NumberFormat numberFormat;
     private final String formatString;
 
     /**
@@ -45,23 +45,23 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      * Creates a new number renderer.
      * <p>
      * The renderer is configured to render the number as defined with the given
-     * decimal format.
+     * number format.
      * 
-     * @param decimalFormat
-     *            the decimal format with which to display numbers
+     * @param numberFormat
+     *            the number format with which to display numbers
      * @throws IllegalArgumentException
-     *             if {@code decimalFormat} is {@code null}
+     *             if {@code numberFormat} is {@code null}
      */
-    public NumberRenderer(DecimalFormat decimalFormat)
+    public NumberRenderer(NumberFormat numberFormat)
             throws IllegalArgumentException {
         super(Number.class);
 
-        if (decimalFormat == null) {
-            throw new IllegalArgumentException("Decimal format may not be null");
+        if (numberFormat == null) {
+            throw new IllegalArgumentException("Number format may not be null");
         }
 
         locale = null;
-        this.decimalFormat = decimalFormat;
+        this.numberFormat = numberFormat;
         formatString = null;
     }
 
@@ -126,7 +126,7 @@ public class NumberRenderer extends AbstractRenderer<Number> {
         }
 
         this.locale = locale;
-        decimalFormat = null;
+        numberFormat = null;
         this.formatString = formatString;
     }
 
@@ -134,13 +134,13 @@ public class NumberRenderer extends AbstractRenderer<Number> {
     public String encode(Number value) {
         if (formatString != null && locale != null) {
             return String.format(locale, formatString, value);
-        } else if (decimalFormat != null) {
-            return decimalFormat.format(value);
+        } else if (numberFormat != null) {
+            return numberFormat.format(value);
         } else {
             throw new IllegalStateException(String.format("Internal bug: "
                     + "%s is in an illegal state: "
-                    + "[locale: %s, decimalFormat: %s, formatString: %s]",
-                    getClass().getSimpleName(), locale, decimalFormat,
+                    + "[locale: %s, numberFormat: %s, formatString: %s]",
+                    getClass().getSimpleName(), locale, numberFormat,
                     formatString));
         }
     }
@@ -148,8 +148,8 @@ public class NumberRenderer extends AbstractRenderer<Number> {
     @Override
     public String toString() {
         final String fieldInfo;
-        if (decimalFormat != null) {
-            fieldInfo = "decimalFormat: " + decimalFormat.toString();
+        if (numberFormat != null) {
+            fieldInfo = "numberFormat: " + numberFormat.toString();
         } else {
             fieldInfo = "locale: " + locale + ", formatString: " + formatString;
         }
