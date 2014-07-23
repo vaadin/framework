@@ -262,6 +262,9 @@ public class GridConnector extends AbstractComponentConnector {
 
         getWidget().addSelectionChangeHandler(internalSelectionChangeHandler);
 
+        // TODO: Remove this workaround once we have header/footer communication
+        getWidget().getFooter().appendRow();
+
         getWidget().addSortHandler(new SortEventHandler<JSONObject>() {
             @Override
             public void sort(SortEvent<JSONObject> event) {
@@ -320,14 +323,12 @@ public class GridConnector extends AbstractComponentConnector {
 
         // Header
         if (stateChangeEvent.hasPropertyChanged("columnHeadersVisible")) {
-            getWidget()
-                    .setColumnHeadersVisible(getState().columnHeadersVisible);
+            getWidget().getHeader().setVisible(getState().columnHeadersVisible);
         }
 
         // Footer
         if (stateChangeEvent.hasPropertyChanged("columnFootersVisible")) {
-            getWidget()
-                    .setColumnFootersVisible(getState().columnFootersVisible);
+            getWidget().getFooter().setVisible(getState().columnFootersVisible);
         }
 
         // Column row groups

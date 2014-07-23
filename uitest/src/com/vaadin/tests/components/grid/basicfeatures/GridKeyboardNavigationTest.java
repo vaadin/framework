@@ -70,18 +70,16 @@ public class GridKeyboardNavigationTest extends GridBasicFeaturesTest {
         assertTrue("Body cell 1, 1 is not active after keyboard navigation.",
                 grid.getCell(1, 1).isActive());
 
-        Actions manyClicks = new Actions(getDriver());
         int i;
         for (i = 1; i < 40; ++i) {
-            manyClicks.sendKeys(Keys.ARROW_DOWN);
+            new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN).perform();
         }
-        manyClicks.perform();
 
         assertFalse("Grid has not scrolled with active cell",
                 isElementPresent(By.xpath("//td[text() = '(0, 0)']")));
         assertTrue("Active cell is not visible",
                 isElementPresent(By.xpath("//td[text() = '(" + i + ", 0)']")));
-        assertTrue("Body cell" + i + ", 1 is not active", grid.getCell(i, 1)
+        assertTrue("Body cell " + i + ", 1 is not active", grid.getCell(i, 1)
                 .isActive());
     }
 
