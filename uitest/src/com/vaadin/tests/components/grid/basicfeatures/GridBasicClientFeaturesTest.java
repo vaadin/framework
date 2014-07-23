@@ -16,6 +16,7 @@
 package com.vaadin.tests.components.grid.basicfeatures;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
@@ -45,7 +46,9 @@ public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest 
     @Override
     protected void selectMenu(String menuCaption) {
         WebElement menuElement = getMenuElement(menuCaption);
-        new Actions(getDriver()).moveToElement(menuElement).perform();
+        Dimension size = menuElement.getSize();
+        new Actions(getDriver()).moveToElement(menuElement, size.width - 10,
+                size.height / 2).perform();
     }
 
     private WebElement getMenuElement(String menuCaption) {
@@ -59,6 +62,7 @@ public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest 
                 .click().perform();
         for (int i = 1; i < menuCaptions.length - 1; ++i) {
             selectMenu(menuCaptions[i]);
+            new Actions(getDriver()).moveByOffset(20, 0).perform();
         }
         new Actions(getDriver())
                 .moveToElement(
