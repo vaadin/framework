@@ -66,7 +66,9 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
         }
 
         public RowHandle<JSONObject> getHandleByKey(Object key) {
-            return new RowHandleImpl(null, key);
+            JSONObject row = new JSONObject();
+            row.put(GridState.JSONKEY_ROWKEY, new JSONString((String) key));
+            return new RowHandleImpl(row, key);
         }
     }
 

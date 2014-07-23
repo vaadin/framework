@@ -18,7 +18,6 @@ package com.vaadin.client.ui.grid;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -73,88 +72,6 @@ import com.vaadin.shared.ui.grid.SortDirection;
  */
 @Connect(com.vaadin.ui.components.grid.Grid.class)
 public class GridConnector extends AbstractComponentConnector {
-
-    /*
-     * TODO: henrik paul (4.7.2014)
-     * 
-     * This class should optimally not be needed. We should be able to use the
-     * keys in the state as the primary source of selection, and "simply" diff
-     * things once the state changes (we can't rebuild the selection pins from
-     * scratch, since we might lose some data that's currently out of view).
-     * 
-     * I was unable to remove this class with little effort, so it may remain as
-     * a todo for now.
-     */
-    private class RowKeyHelper {
-        private LinkedHashSet<String> selectedKeys = new LinkedHashSet<String>();
-
-        public LinkedHashSet<String> getSelectedKeys() {
-            return selectedKeys;
-        }
-
-        public void add(Collection<JSONObject> rows) {
-            for (JSONObject row : rows) {
-                add(row);
-            }
-        }
-
-        private void add(JSONObject row) {
-            selectedKeys.add((String) dataSource.getRowKey(row));
-        }
-
-        public void remove(Collection<JSONObject> rows) {
-            for (JSONObject row : rows) {
-                remove(row);
-            }
-        }
-
-        private void remove(JSONObject row) {
-            selectedKeys.remove(dataSource.getRowKey(row));
-        }
-
-        public void updateFromState() {
-            boolean changed = false;
-
-            List<String> stateKeys = getState().selectedKeys;
-
-            // find new selections
-            for (String key : stateKeys) {
-                if (!selectedKeys.contains(key)) {
-                    changed = true;
-                    selectByHandle(dataSource.getHandleByKey(key));
-                }
-            }
-
-            // find new deselections
-            for (String key : selectedKeys) {
-                if (!stateKeys.contains(key)) {
-                    changed = true;
-                    deselectByHandle(dataSource.getHandleByKey(key));
-                }
-            }
-
-            /*
-             * A defensive copy in case the collection in the state is mutated
-             * instead of re-assigned.
-             */
-            selectedKeys = new LinkedHashSet<String>(stateKeys);
-
-            /*
-             * We need to fire this event so that Grid is able to re-render the
-             * selection changes (if applicable).
-             * 
-             * add/remove methods will be called from the
-             * internalSelectionChangeHandler, so they shouldn't be called here.
-             */
-            if (changed) {
-                // At least for now there's no way to send the selected and/or
-                // deselected row data. Some data is only stored as keys
-                getWidget().fireEvent(
-                        new SelectionChangeEvent<JSONObject>(getWidget(),
-                                (List<JSONObject>) null, null));
-            }
-        }
-    }
 
     /**
      * Custom implementation of the custom grid column using a JSONObject to
@@ -211,21 +128,38 @@ public class GridConnector extends AbstractComponentConnector {
      * Maps a generated column id to a grid column instance
      */
     private Map<String, CustomGridColumn> columnIdToColumn = new HashMap<String, CustomGridColumn>();
-    private AbstractRowHandleSelectionModel<JSONObject> selectionModel = createSelectionModel(SharedSelectionMode.NONE);
-    private RpcDataSource dataSource;
 
-    private final RowKeyHelper rowKeyHelper = new RowKeyHelper();
+    private AbstractRowHandleSelectionModel<JSONObject> selectionModel = createSelectionModel(SharedSelectionMode.NONE);
+    private Set<String> selectedKeys = new LinkedHashSet<String>();
+
+    /**
+     * updateFromState is set to true when {@link #updateSelectionFromState()}
+     * makes changes to selection. This flag tells the
+     * {@code internalSelectionChangeHandler} to not send same data straight
+     * back to server. Said listener sets it back to false when handling that
+     * event.
+     */
+    private boolean updatedFromState = false;
+
+    private RpcDataSource dataSource;
 
     private SelectionChangeHandler<JSONObject> internalSelectionChangeHandler = new SelectionChangeHandler<JSONObject>() {
         @Override
         public void onSelectionChange(SelectionChangeEvent<JSONObject> event) {
-            rowKeyHelper.remove(event.getRemoved());
-            rowKeyHelper.add(event.getAdded());
+            if (!updatedFromState) {
+                for (JSONObject row : event.getRemoved()) {
+                    selectedKeys.remove(dataSource.getRowKey(row));
+                }
 
-            // TODO change this to diff based. (henrik paul 24.6.2014)
-            List<String> selectedKeys = new ArrayList<String>(
-                    rowKeyHelper.getSelectedKeys());
-            getRpcProxy(GridServerRpc.class).selectionChange(selectedKeys);
+                for (JSONObject row : event.getAdded()) {
+                    selectedKeys.add((String) dataSource.getRowKey(row));
+                }
+
+                getRpcProxy(GridServerRpc.class).selectionChange(
+                        new ArrayList<String>(selectedKeys));
+            } else {
+                updatedFromState = false;
+            }
         }
     };
 
@@ -339,10 +273,6 @@ public class GridConnector extends AbstractComponentConnector {
             } else {
                 getWidget().setLastFrozenColumn(null);
             }
-        }
-
-        if (stateChangeEvent.hasPropertyChanged("selectedKeys")) {
-            rowKeyHelper.updateFromState();
         }
     }
 
@@ -511,13 +441,54 @@ public class GridConnector extends AbstractComponentConnector {
         if (!model.getClass().equals(selectionModel.getClass())) {
             selectionModel = model;
             getWidget().setSelectionModel(model);
-            rowKeyHelper.selectedKeys.clear();
+            selectedKeys.clear();
+        }
+    }
+
+    @OnStateChange("selectedKeys")
+    private void updateSelectionFromState() {
+        boolean changed = false;
+
+        List<String> stateKeys = getState().selectedKeys;
+
+        // find new deselections
+        for (String key : selectedKeys) {
+            if (!stateKeys.contains(key)) {
+                changed = true;
+                deselectByHandle(dataSource.getHandleByKey(key));
+            }
         }
 
+        // find new selections
+        for (String key : stateKeys) {
+            if (!selectedKeys.contains(key)) {
+                changed = true;
+                selectByHandle(dataSource.getHandleByKey(key));
+            }
+        }
+
+        /*
+         * A defensive copy in case the collection in the state is mutated
+         * instead of re-assigned.
+         */
+        selectedKeys = new LinkedHashSet<String>(stateKeys);
+
+        /*
+         * We need to fire this event so that Grid is able to re-render the
+         * selection changes (if applicable).
+         */
+        if (changed) {
+            // At least for now there's no way to send the selected and/or
+            // deselected row data. Some data is only stored as keys
+            updatedFromState = true;
+            getWidget().fireEvent(
+                    new SelectionChangeEvent<JSONObject>(getWidget(),
+                            (List<JSONObject>) null, null));
+        }
     }
 
     @OnStateChange({ "sortColumns", "sortDirs" })
-    void onSortStateChange() {
+    private void onSortStateChange() {
         List<SortOrder> sortOrder = new ArrayList<SortOrder>();
 
         String[] sortColumns = getState().sortColumns;

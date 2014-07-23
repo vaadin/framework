@@ -286,25 +286,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
                 SetView<Object> removedItemIds = Sets.difference(oldSelection,
                         newSelection);
 
-                if (!addedItemIds.isEmpty()) {
-                    /*
-                     * Since these changes come from the client, we want to
-                     * modify the selection model and get that event fired to
-                     * all the listeners. One of the listeners is our internal
-                     * selection listener, and this tells it not to send the
-                     * selection event back to the client.
-                     */
-                    ignoreSelectionClientSync++;
-
-                    if (addedItemIds.size() == 1) {
-                        select(addedItemIds.iterator().next());
-                    } else {
-                        assert getSelectionModel() instanceof SelectionModel.Multi : "Got multiple selections, but the selection model is not a SelectionModel.Multi";
-                        ((SelectionModel.Multi) getSelectionModel())
-                                .select(addedItemIds);
-                    }
-                }
-
                 if (!removedItemIds.isEmpty()) {
                     /*
                      * Since these changes come from the client, we want to
@@ -321,6 +302,25 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
                         assert getSelectionModel() instanceof SelectionModel.Multi : "Got multiple deselections, but the selection model is not a SelectionModel.Multi";
                         ((SelectionModel.Multi) getSelectionModel())
                                 .deselect(removedItemIds);
+                    }
+                }
+
+                if (!addedItemIds.isEmpty()) {
+                    /*
+                     * Since these changes come from the client, we want to
+                     * modify the selection model and get that event fired to
+                     * all the listeners. One of the listeners is our internal
+                     * selection listener, and this tells it not to send the
+                     * selection event back to the client.
+                     */
+                    ignoreSelectionClientSync++;
+
+                    if (addedItemIds.size() == 1) {
+                        select(addedItemIds.iterator().next());
+                    } else {
+                        assert getSelectionModel() instanceof SelectionModel.Multi : "Got multiple selections, but the selection model is not a SelectionModel.Multi";
+                        ((SelectionModel.Multi) getSelectionModel())
+                                .select(addedItemIds);
                     }
                 }
             }
