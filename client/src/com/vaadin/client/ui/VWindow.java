@@ -233,7 +233,7 @@ public class VWindow extends VWindowOverlay implements
         /*
          * Stores the element that has focus in the application UI when the
          * window is opened, so it can be restored when the window closes.
-         * 
+         *
          * This is currently implemented for the case when one non-modal window
          * can be open at the same time, and the focus is not changed while the
          * window is open.
@@ -253,7 +253,7 @@ public class VWindow extends VWindowOverlay implements
 
         /*
          * Restores the previously stored focused element.
-         * 
+         *
          * When the focus was changed outside the window while the window was
          * open, the originally stored element is restored.
          */
@@ -637,7 +637,7 @@ public class VWindow extends VWindowOverlay implements
          * correctly if clicking on the "close" button in the window header but
          * closing the window from a button for example in the window will fail.
          * Symptom described in #10776
-         * 
+         *
          * The problematic part is that for the focus to be returned correctly
          * an input element needs to be focused in the root panel. Focusing some
          * other element apparently won't work.
@@ -1407,7 +1407,7 @@ public class VWindow extends VWindowOverlay implements
      *            WAI-ARIA role to set for the window
      */
     public void setWaiAriaRole(WindowRole role) {
-        if ("alertdialog".equals(role)) {
+        if (role == WindowRole.ALERTDIALOG) {
             Roles.getAlertdialogRole().set(getElement());
         } else {
             Roles.getDialogRole().set(getElement());
