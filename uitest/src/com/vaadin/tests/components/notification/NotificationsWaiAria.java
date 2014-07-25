@@ -2,8 +2,9 @@ package com.vaadin.tests.components.notification;
 
 import com.vaadin.data.Item;
 import com.vaadin.server.Page;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ui.NotificationRole;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -16,10 +17,15 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
-public class NotificationsWaiAria extends TestBase {
+/**
+ * Test UI for different roles of Notifications.
+ *
+ * @since 7.2
+ * @author Vaadin Ltd
+ */
+public class NotificationsWaiAria extends AbstractTestUI {
 
     private static final String CAPTION = "CAPTION";
-    private static final String ROLE = "ROLE";
 
     private TextField prefix;
     private TextField postfix;
@@ -28,9 +34,9 @@ public class NotificationsWaiAria extends TestBase {
     private TextArea tf;
     private ComboBox type;
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings("unchecked")
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         prefix = new TextField("Prefix", "Info");
         addComponent(prefix);
 
@@ -53,16 +59,16 @@ public class NotificationsWaiAria extends TestBase {
 
         type.setItemCaptionPropertyId(CAPTION);
 
-        Item item = type.addItem(Notification.TYPE_HUMANIZED_MESSAGE);
+        Item item = type.addItem(Notification.Type.HUMANIZED_MESSAGE);
         item.getItemProperty(CAPTION).setValue("Humanized");
 
-        item = type.addItem(Notification.TYPE_ERROR_MESSAGE);
+        item = type.addItem(Notification.Type.ERROR_MESSAGE);
         item.getItemProperty(CAPTION).setValue("Error");
 
-        item = type.addItem(Notification.TYPE_WARNING_MESSAGE);
+        item = type.addItem(Notification.Type.WARNING_MESSAGE);
         item.getItemProperty(CAPTION).setValue("Warning");
 
-        item = type.addItem(Notification.TYPE_TRAY_NOTIFICATION);
+        item = type.addItem(Notification.Type.TRAY_NOTIFICATION);
         item.getItemProperty(CAPTION).setValue("Tray");
 
         item = type.addItem(Notification.Type.ASSISTIVE_NOTIFICATION);
@@ -81,13 +87,12 @@ public class NotificationsWaiAria extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Generic test case for notifications";
     }
 
     @Override
     protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -97,6 +102,7 @@ public class NotificationsWaiAria extends TestBase {
             Type typeValue = (Type) type.getValue();
 
             Notification n = new Notification(tf.getValue(), typeValue);
+            n.setDelayMsec(-1);
             n.setHtmlContentAllowed(true);
             NotificationConfiguration notificationConf = UI.getCurrent()
                     .getNotificationConfiguration();
@@ -118,4 +124,5 @@ public class NotificationsWaiAria extends TestBase {
             n.show(Page.getCurrent());
         }
     }
+
 }
