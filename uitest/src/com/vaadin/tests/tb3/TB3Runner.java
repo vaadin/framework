@@ -17,8 +17,10 @@
 package com.vaadin.tests.tb3;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -26,6 +28,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -34,6 +38,8 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.HttpCommandExecutor;
+import org.openqa.selenium.remote.internal.HttpClientFactory;
 
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.AbstractTB3Test.BrowserUtil;
@@ -44,10 +50,17 @@ import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
  * (http://tedyoung.me/2011/01/23/junit-runtime-tests-custom-runners/). The
  * generated test names give information about the parameters used (unlike
  * {@link Parameterized}).
- * 
+ *
  * @since 7.1
  */
 public class TB3Runner extends BlockJUnit4ClassRunner {
+
+    /**
+     * Socket timeout for HTTP connections to the grid hub. The connection is
+     * closed after 15 minutes of inactivity to avoid builds hanging for up to
+     * three hours per connection if the test client crashes/hangs.
+     */
+    private static final int SOCKET_TIMEOUT = 15 * 60 * 1000;
 
     /**
      * This is the total limit of actual JUnit test instances run in parallel
@@ -67,6 +80,34 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
             MAX_CONCURRENT_TESTS = 50;
         }
         service = Executors.newFixedThreadPool(MAX_CONCURRENT_TESTS);
+
+        // reduce socket timeout to avoid tests hanging for three hours
+        try {
+            Field field = HttpCommandExecutor.class
+                    .getDeclaredField("httpClientFactory");
+            assert (Modifier.isStatic(field.getModifiers()));
+            field.setAccessible(true);
+            field.set(null, new HttpClientFactory() {
+                @Override
+                public HttpParams getHttpParams() {
+                    HttpParams params = super.getHttpParams();
+                    // fifteen minute timeout
+                    HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT);
+                    return params;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(
+                    "Changing socket timeout for TestBench failed", e);
+        }
+    }
+
+    protected static boolean localWebDriverIsUsed() {
+        String useLocalWebDriver = System.getProperty("useLocalWebDriver");
+
+        return useLocalWebDriver != null
+                && useLocalWebDriver.toLowerCase().equals("true");
     }
 
     public TB3Runner(Class<?> klass) throws InitializationError {
@@ -281,7 +322,7 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
     /**
      * Finds the given annotation in the given class or one of its super
      * classes. Return the first found annotation
-     * 
+     *
      * @param searchClass
      * @param annotationClass
      * @return
@@ -301,7 +342,7 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.junit.runners.BlockJUnit4ClassRunner#withBefores(org.junit.runners
      * .model.FrameworkMethod, java.lang.Object,
