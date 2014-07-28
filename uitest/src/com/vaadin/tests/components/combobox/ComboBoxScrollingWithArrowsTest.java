@@ -52,8 +52,7 @@ public class ComboBoxScrollingWithArrowsTest extends MultiBrowserTest {
         // provide any way to access the popup and send keys to it.
         // Ticket #13756
 
-        return driver.findElement(By
-                .className("v-filterselect-input"));
+        return driver.findElement(By.className("v-filterselect-input"));
     }
 
     private void openPopup() {
@@ -70,7 +69,7 @@ public class ComboBoxScrollingWithArrowsTest extends MultiBrowserTest {
             dropDownComboBox.sendKeys(Keys.DOWN);
         }
 
-        assertThat(getSelectedItemText(), is("item " + PAGESIZE)); //item 10
+        assertThat(getSelectedItemText(), is("item " + PAGESIZE)); // item 10
     }
 
     private String getSelectedItemText() {
@@ -92,7 +91,8 @@ public class ComboBoxScrollingWithArrowsTest extends MultiBrowserTest {
         waitUntilNextPageIsVisible();
         dropDownComboBox.sendKeys(Keys.UP);
 
-        assertThat(getSelectedItemText(), is("item " + (PAGESIZE - 1))); //item 9
+        assertThat(getSelectedItemText(), is("item " + (PAGESIZE - 1))); // item
+                                                                         // 9
     }
 
     private void waitUntilNextPageIsVisible() {

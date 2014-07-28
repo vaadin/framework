@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.datefield;
 
-
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.DateFieldElement;
@@ -14,7 +13,8 @@ import java.io.IOException;
 public class DateFieldReadOnlyTest extends MultiBrowserTest {
 
     @Test
-    public void readOnlyDateFieldPopupShouldNotOpen() throws IOException, InterruptedException {
+    public void readOnlyDateFieldPopupShouldNotOpen() throws IOException,
+            InterruptedException {
         openTestURL();
 
         compareScreen("initial");
@@ -29,12 +29,15 @@ public class DateFieldReadOnlyTest extends MultiBrowserTest {
     }
 
     private void closePopup() {
-        findElement(By.className("v-datefield-calendarpanel")).sendKeys(Keys.RETURN);
+        findElement(By.className("v-datefield-calendarpanel")).sendKeys(
+                Keys.RETURN);
     }
 
     private void openPopup() {
-        //waiting for openPopup() in TB4 beta1: http://dev.vaadin.com/ticket/13766
-        $(DateFieldElement.class).first().findElement(By.tagName("button")).click();
+        // waiting for openPopup() in TB4 beta1:
+        // http://dev.vaadin.com/ticket/13766
+        $(DateFieldElement.class).first().findElement(By.tagName("button"))
+                .click();
     }
 
     private void toggleReadOnly() {

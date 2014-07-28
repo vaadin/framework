@@ -317,7 +317,8 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      *            the position at where the the tab should be added.
      * @return the created {@link Tab}
      */
-    public Tab addTab(Component tabComponent, String caption, Resource icon, int position) {
+    public Tab addTab(Component tabComponent, String caption, Resource icon,
+            int position) {
         if (tabComponent == null) {
             return null;
         } else if (tabs.containsKey(tabComponent)) {
@@ -1070,8 +1071,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         @Override
         public Resource getIcon() {
-            return getResource(ComponentConstants.ICON_RESOURCE
-                    + tabState.key);
+            return getResource(ComponentConstants.ICON_RESOURCE + tabState.key);
         }
 
         @Override
@@ -1211,8 +1211,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         @Override
         public void setIcon(Resource icon, String iconAltText) {
-            setResource(ComponentConstants.ICON_RESOURCE + tabState.key,
-                    icon);
+            setResource(ComponentConstants.ICON_RESOURCE + tabState.key, icon);
             tabState.iconAltText = iconAltText;
         }
     }

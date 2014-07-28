@@ -809,7 +809,8 @@ public class ApplicationConnection implements HasHandlers {
         startRequest();
 
         JSONObject payload = new JSONObject();
-        if (!getCsrfToken().equals(ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE)) {
+        if (!getCsrfToken().equals(
+                ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE)) {
             payload.put(ApplicationConstants.CSRF_TOKEN, new JSONString(
                     getCsrfToken()));
         }

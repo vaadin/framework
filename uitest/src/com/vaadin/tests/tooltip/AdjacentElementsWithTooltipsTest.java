@@ -69,7 +69,6 @@ public class AdjacentElementsWithTooltipsTest extends MultiBrowserTest {
     }
 
     private ButtonElement getButton(String caption) {
-        return $(ButtonElement.class)
-                    .caption(caption).first();
+        return $(ButtonElement.class).caption(caption).first();
     }
 }

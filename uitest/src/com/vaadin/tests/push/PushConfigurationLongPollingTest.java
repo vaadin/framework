@@ -37,7 +37,8 @@ public class PushConfigurationLongPollingTest extends PushConfigurationTest {
 
         clearDebugMessages();
         new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
-        waitForDebugMessage("Push connection established using long-polling", 10);
+        waitForDebugMessage("Push connection established using long-polling",
+                10);
         waitForServerCounterToUpdate();
     }
 

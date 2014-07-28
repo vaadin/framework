@@ -87,8 +87,7 @@ public interface LocatorStrategy {
      * @return The DOM element identified by {@code path} or null if the element
      *         could not be located.
      */
-    Element getElementByPathStartingAt(String path,
-            Element root);
+    Element getElementByPathStartingAt(String path, Element root);
 
     /**
      * Locates all elements that match a String locator (path) which identifies
@@ -119,6 +118,5 @@ public interface LocatorStrategy {
      *         found.
      */
 
-    List<Element> getElementsByPathStartingAt(
-            String path, Element root);
+    List<Element> getElementsByPathStartingAt(String path, Element root);
 }

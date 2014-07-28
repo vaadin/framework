@@ -102,8 +102,8 @@ public class NotificationsWaiAria extends TestBase {
                     .getNotificationConfiguration();
             notificationConf.setAssistivePrefix(typeValue, prefix.getValue());
             notificationConf.setAssistivePostfix(typeValue, postfix.getValue());
-            notificationConf
-                    .setAssistiveRole(typeValue, (NotificationRole) role.getValue());
+            notificationConf.setAssistiveRole(typeValue,
+                    (NotificationRole) role.getValue());
 
             n.show(Page.getCurrent());
         }

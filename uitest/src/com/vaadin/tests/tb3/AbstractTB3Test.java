@@ -166,7 +166,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     protected WebElement getTooltipElement() {
-        return getDriver().findElement(com.vaadin.testbench.By.className("v-tooltip-text"));
+        return getDriver().findElement(
+                com.vaadin.testbench.By.className("v-tooltip-text"));
     }
 
     protected Coordinates getCoordinates(TestBenchElement element) {

@@ -20,7 +20,8 @@ import com.google.gwt.dom.client.Element;
 /**
  * Interface implemented by widgets if the drag image used for drag'n'drop
  * requires additional initialization/configuration. The method
- * {@link #modifyDragImage(Element)} is called for each element in the automatically generated drag image.
+ * {@link #modifyDragImage(Element)} is called for each element in the
+ * automatically generated drag image.
  * 
  * @since 7.2
  * @author Vaadin Ltd
