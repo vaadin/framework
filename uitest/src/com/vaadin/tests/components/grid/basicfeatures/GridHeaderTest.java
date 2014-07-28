@@ -159,6 +159,57 @@ public class GridHeaderTest extends GridStaticSectionTest {
         assertFalse(hasClassName(headerCell, "sort-desc"));
     }
 
+    @Test
+    public void joinHeaderColumnsByCells() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Header", "Append row");
+
+        selectMenuPath("Component", "Header", "Row 2", "Join column cells 0, 1");
+
+        GridCellElement spannedCell = getGridElement().getHeaderCell(1, 0);
+        assertTrue(spannedCell.isDisplayed());
+        assertEquals("2", spannedCell.getAttribute("colspan"));
+
+        GridCellElement hiddenCell = getGridElement().getHeaderCell(1, 1);
+        assertFalse(hiddenCell.isDisplayed());
+    }
+
+    @Test
+    public void joinHeaderColumnsByColumns() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Header", "Append row");
+
+        selectMenuPath("Component", "Header", "Row 2", "Join columns 1, 2");
+
+        GridCellElement spannedCell = getGridElement().getHeaderCell(1, 1);
+        assertTrue(spannedCell.isDisplayed());
+        assertEquals("2", spannedCell.getAttribute("colspan"));
+
+        GridCellElement hiddenCell = getGridElement().getHeaderCell(1, 2);
+        assertFalse(hiddenCell.isDisplayed());
+    }
+
+    @Test
+    public void joinAllColumnsInHeaderRow() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Header", "Append row");
+
+        selectMenuPath("Component", "Header", "Row 2", "Join all columns");
+
+        GridCellElement spannedCell = getGridElement().getHeaderCell(1, 0);
+        assertTrue(spannedCell.isDisplayed());
+        assertEquals("11", spannedCell.getAttribute("colspan"));
+
+        for (int columnIndex = 1; columnIndex < 11; columnIndex++) {
+            GridCellElement hiddenCell = getGridElement().getHeaderCell(1,
+                    columnIndex);
+            assertFalse(hiddenCell.isDisplayed());
+        }
+    }
+
     private void assertHeaderCount(int count) {
         assertEquals("header count", count, getGridElement().getHeaderCount());
     }

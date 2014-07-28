@@ -311,13 +311,13 @@ public class GridBasicClientFeatures extends
         addMenuCommand("Prepend row", new ScheduledCommand() {
             @Override
             public void execute() {
-                setHeaderTexts(header.prependRow());
+                configureHeaderRow(header.prependRow());
             }
         }, menuPath);
         addMenuCommand("Append row", new ScheduledCommand() {
             @Override
             public void execute() {
-                setHeaderTexts(header.appendRow());
+                configureHeaderRow(header.appendRow());
             }
         }, menuPath);
         addMenuCommand("Remove top row", new ScheduledCommand() {
@@ -330,6 +330,42 @@ public class GridBasicClientFeatures extends
             @Override
             public void execute() {
                 header.removeRow(header.getRowCount() - 1);
+            }
+        }, menuPath);
+
+    }
+
+    private void configureHeaderRow(final HeaderRow row) {
+        final GridHeader header = grid.getHeader();
+        setHeaderTexts(row);
+        String rowTitle = "Row " + header.getRowCount();
+        final String[] menuPath = { "Component", "Header", rowTitle };
+
+        addMenuCommand("Join column cells 0, 1", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                row.join(row.getCell(0), row.getCell(1));
+
+            }
+        }, menuPath);
+
+        addMenuCommand("Join columns 1, 2", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                row.join(grid.getColumn(1), grid.getColumn(2));
+
+            }
+        }, menuPath);
+
+        addMenuCommand("Join all columns", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                row.join(grid.getColumns().toArray(
+                        new GridColumn[grid.getColumnCount()]));
+
             }
         }, menuPath);
     }
@@ -348,13 +384,13 @@ public class GridBasicClientFeatures extends
         addMenuCommand("Prepend row", new ScheduledCommand() {
             @Override
             public void execute() {
-                setFooterTexts(footer.prependRow());
+                configureFooterRow(footer.prependRow());
             }
         }, menuPath);
         addMenuCommand("Append row", new ScheduledCommand() {
             @Override
             public void execute() {
-                setFooterTexts(footer.appendRow());
+                configureFooterRow(footer.appendRow());
             }
         }, menuPath);
         addMenuCommand("Remove top row", new ScheduledCommand() {
@@ -367,6 +403,41 @@ public class GridBasicClientFeatures extends
             @Override
             public void execute() {
                 footer.removeRow(footer.getRowCount() - 1);
+            }
+        }, menuPath);
+    }
+
+    private void configureFooterRow(final FooterRow row) {
+        final GridFooter footer = grid.getFooter();
+        setFooterTexts(row);
+        String rowTitle = "Row " + footer.getRowCount();
+        final String[] menuPath = { "Component", "Footer", rowTitle };
+
+        addMenuCommand("Join column cells 0, 1", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                row.join(row.getCell(0), row.getCell(1));
+
+            }
+        }, menuPath);
+
+        addMenuCommand("Join columns 1, 2", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                row.join(grid.getColumn(1), grid.getColumn(2));
+
+            }
+        }, menuPath);
+
+        addMenuCommand("Join all columns", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                row.join(grid.getColumns().toArray(
+                        new GridColumn[grid.getColumnCount()]));
+
             }
         }, menuPath);
     }

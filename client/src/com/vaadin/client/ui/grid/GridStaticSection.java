@@ -16,6 +16,9 @@
 package com.vaadin.client.ui.grid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
@@ -41,17 +44,19 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
 
         private String text = "";
 
+        private int colspan = 1;
+
         private GridStaticSection<?> section;
 
         /**
          * Sets the text displayed in this cell.
-         *
+         * 
          * @param text
          *            a plain text caption
          */
         public void setText(String text) {
             this.text = text;
-            section.refreshGrid();
+            section.refreshSection();
         }
 
         /**
@@ -72,6 +77,21 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
             this.section = section;
         }
 
+        /**
+         * @return the colspan
+         */
+        public int getColspan() {
+            return colspan;
+        }
+
+        /**
+         * @param colspan
+         *            the colspan to set
+         */
+        public void setColspan(int colspan) {
+            this.colspan = colspan;
+        }
+
     }
 
     /**
@@ -88,6 +108,8 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
 
         private GridStaticSection<?> section;
 
+        private Collection<List<CELLTYPE>> cellGroups = new HashSet<List<CELLTYPE>>();
+
         /**
          * Returns the cell at the given position in this row.
          * 
@@ -99,6 +121,105 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          */
         public CELLTYPE getCell(int index) {
             return cells.get(index);
+        }
+
+        /**
+         * Merges cells in a row
+         * 
+         * @param cells
+         *            The cells to be merged
+         * @return The first cell of the merged cells
+         */
+        protected CELLTYPE join(List<CELLTYPE> cells) {
+            assert cells.size() > 1 : "You cannot merge less than 2 cells together";
+
+            // Ensure no cell is already grouped
+            for (CELLTYPE cell : cells) {
+                if (getCellGroupForCell(cell) != null) {
+                    throw new IllegalStateException("Cell " + cell.getText()
+                            + " is already grouped.");
+                }
+            }
+
+            // Ensure continuous range
+            int firstCellIndex = this.cells.indexOf(cells.get(0));
+            for (int i = 0; i < cells.size(); i++) {
+                if (this.cells.get(firstCellIndex + i) != cells.get(i)) {
+                    throw new IllegalStateException(
+                            "Cell range must be a continous range");
+                }
+            }
+
+            // Create a new group
+            cellGroups.add(new ArrayList<CELLTYPE>(cells));
+
+            calculateColspans();
+
+            getSection().refreshSection();
+
+            // Returns first cell of group
+            return cells.get(0);
+        }
+
+        /**
+         * Merges columns cells in a row
+         * 
+         * @param columns
+         *            The columns which header should be merged
+         * @return The remaining visible cell after the merge
+         */
+        public CELLTYPE join(GridColumn<?, ?>... columns) {
+            assert columns.length > 1 : "You cannot merge less than 2 columns together";
+
+            // Convert columns to cells
+            List<CELLTYPE> cells = new ArrayList<CELLTYPE>();
+            for (GridColumn<?, ?> c : columns) {
+                int index = getSection().getGrid().getColumns().indexOf(c);
+                cells.add(this.cells.get(index));
+            }
+
+            return join(cells);
+        }
+
+        /**
+         * Merges columns cells in a row
+         * 
+         * @param cells
+         *            The cells to merge. Must be from the same row.
+         * @return The remaining visible cell after the merge
+         */
+        public CELLTYPE join(CELLTYPE... cells) {
+            return join(Arrays.asList(cells));
+        }
+
+        private List<CELLTYPE> getCellGroupForCell(CELLTYPE cell) {
+            for (List<CELLTYPE> group : cellGroups) {
+                if (group.contains(cell)) {
+                    return group;
+                }
+            }
+            return null;
+        }
+
+        private void calculateColspans() {
+            // Reset all cells
+            for (CELLTYPE cell : cells) {
+                cell.setColspan(1);
+            }
+
+            // Set colspan for grouped cells
+            for (List<CELLTYPE> group : cellGroups) {
+                for (int i = 0; i < group.size(); i++) {
+                    CELLTYPE cell = group.get(i);
+                    if (i == 0) {
+                        // Assign full colspan to first cell
+                        cell.setColspan(group.size());
+                    } else {
+                        // Hide other cells
+                        cell.setColspan(0);
+                    }
+                }
+            }
         }
 
         protected void addCell(int index) {
@@ -146,7 +267,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
     /**
      * Informs the grid that this section should be re-rendered.
      */
-    protected abstract void refreshGrid();
+    protected abstract void refreshSection();
 
     /**
      * Sets the visibility of the whole section.
@@ -156,7 +277,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      */
     public void setVisible(boolean visible) {
         this.visible = visible;
-        refreshGrid();
+        refreshSection();
     }
 
     /**
@@ -185,7 +306,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
             row.addCell(i);
         }
         rows.add(index, row);
-        refreshGrid();
+        refreshSection();
         return row;
     }
 
@@ -218,12 +339,12 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      */
     public void removeRow(int index) {
         rows.remove(index);
-        refreshGrid();
+        refreshSection();
     }
 
     /**
      * Removes the given row from the section.
-     *
+     * 
      * @param row
      *            the row to be removed
      * 

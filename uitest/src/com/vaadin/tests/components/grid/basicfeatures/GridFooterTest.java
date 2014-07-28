@@ -16,8 +16,12 @@
 package com.vaadin.tests.components.grid.basicfeatures;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import com.vaadin.tests.components.grid.GridElement.GridCellElement;
 
 public class GridFooterTest extends GridStaticSectionTest {
 
@@ -83,6 +87,57 @@ public class GridFooterTest extends GridStaticSectionTest {
 
         selectMenuPath("Component", "Footer", "Remove bottom row");
         assertFooterCount(0);
+    }
+
+    @Test
+    public void joinColumnsByCells() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Footer", "Append row");
+
+        selectMenuPath("Component", "Footer", "Row 1", "Join column cells 0, 1");
+
+        GridCellElement spannedCell = getGridElement().getFooterCell(0, 0);
+        assertTrue(spannedCell.isDisplayed());
+        assertEquals("2", spannedCell.getAttribute("colspan"));
+
+        GridCellElement hiddenCell = getGridElement().getFooterCell(0, 1);
+        assertFalse(hiddenCell.isDisplayed());
+    }
+
+    @Test
+    public void joinColumnsByColumns() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Footer", "Append row");
+
+        selectMenuPath("Component", "Footer", "Row 1", "Join columns 1, 2");
+
+        GridCellElement spannedCell = getGridElement().getFooterCell(0, 1);
+        assertTrue(spannedCell.isDisplayed());
+        assertEquals("2", spannedCell.getAttribute("colspan"));
+
+        GridCellElement hiddenCell = getGridElement().getFooterCell(0, 2);
+        assertFalse(hiddenCell.isDisplayed());
+    }
+
+    @Test
+    public void joinAllColumnsInRow() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Footer", "Append row");
+
+        selectMenuPath("Component", "Footer", "Row 1", "Join all columns");
+
+        GridCellElement spannedCell = getGridElement().getFooterCell(0, 0);
+        assertTrue(spannedCell.isDisplayed());
+        assertEquals("11", spannedCell.getAttribute("colspan"));
+
+        for (int columnIndex = 1; columnIndex < 11; columnIndex++) {
+            GridCellElement hiddenCell = getGridElement().getFooterCell(0,
+                    columnIndex);
+            assertFalse(hiddenCell.isDisplayed());
+        }
     }
 
     private void assertFooterCount(int count) {

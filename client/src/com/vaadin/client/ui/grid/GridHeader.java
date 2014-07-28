@@ -24,7 +24,7 @@ import com.vaadin.client.ui.grid.Grid.AbstractGridColumn.SortableColumnHeaderRen
  * 
  * TODO Arbitrary number of header rows (zero included, one by default)
  * 
- * TODO Merging header cells
+ * TODO Account for hidden columns when merging header cells
  * 
  * TODO "Default" row with sorting
  * 
@@ -114,7 +114,7 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
             row.setDefault(true);
         }
         defaultRow = row;
-        refreshGrid();
+        refreshSection();
     }
 
     /**
@@ -133,7 +133,7 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
     }
 
     @Override
-    protected void refreshGrid() {
+    protected void refreshSection() {
         getGrid().refreshHeader();
     }
 }

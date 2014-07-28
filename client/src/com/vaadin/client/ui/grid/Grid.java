@@ -46,6 +46,7 @@ import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
+import com.vaadin.client.ui.grid.GridStaticSection.StaticCell;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
@@ -1436,9 +1437,15 @@ public class Grid<T> extends Composite implements
             final List<Integer> columnIndices = getVisibleColumnIndices();
 
             for (FlyweightCell cell : cellsToUpdate) {
+
                 int index = columnIndices.get(cell.getColumn());
-                gridRow.getRenderer().render(cell,
-                        gridRow.getCell(index).getText());
+                StaticCell metadata = gridRow.getCell(index);
+
+                // Assign colspan to cell before rendering
+                cell.setColSpan(metadata.getColspan());
+
+                // Render
+                gridRow.getRenderer().render(cell, metadata.getText());
 
                 activeCellHandler.updateActiveCellStyle(cell, container);
             }

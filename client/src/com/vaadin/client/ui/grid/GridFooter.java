@@ -56,7 +56,7 @@ public class GridFooter extends GridStaticSection<GridFooter.FooterRow> {
     }
 
     @Override
-    protected void refreshGrid() {
+    protected void refreshSection() {
         getGrid().refreshFooter();
     }
 }
