@@ -23,6 +23,8 @@ import java.io.IOException;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.tests.components.grid.GridElement;
 
@@ -156,6 +158,30 @@ public class GridSortingTest extends GridBasicFeaturesTest {
 
         assertEquals("9. Sort order: [Column7 ASCENDING]", getLogRow(3));
         assertEquals("11. Sort order: [Column7 DESCENDING]", getLogRow(1));
+    }
+
+    @Test
+    public void testUserMultiColumnSorting() {
+        openTestURL();
+
+        getGridElement().getHeaderCell(0, 0).click();
+        new Actions(driver).keyDown(Keys.SHIFT).perform();
+        getGridElement().getHeaderCell(0, 11).click();
+        new Actions(driver).keyUp(Keys.SHIFT).perform();
+
+        String prev = getGridElement().getCell(0, 11).getAttribute("innerHTML");
+        for (int i = 1; i <= 6; ++i) {
+            assertEquals("Column 11 should contain same values.", prev,
+                    getGridElement().getCell(i, 11).getAttribute("innerHTML"));
+        }
+
+        prev = getGridElement().getCell(0, 0).getText();
+        for (int i = 1; i <= 6; ++i) {
+            assertTrue(
+                    "Grid is not sorted by column 0.",
+                    prev.compareTo(getGridElement().getCell(i, 0).getText()) < 0);
+        }
+
     }
 
     private void sortBy(String column) {

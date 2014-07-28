@@ -51,8 +51,8 @@ public class GridBasicClientFeatures extends
         TEXT_RENDERER, HTML_RENDERER, NUMBER_RENDERER, DATE_RENDERER;
     }
 
-    private static final int MANUALLY_FORMATTED_COLUMNS = 4;
-    public static final int COLUMNS = 11;
+    private static final int MANUALLY_FORMATTED_COLUMNS = 5;
+    public static final int COLUMNS = 12;
     public static final int ROWS = 1000;
 
     private final Grid<List<Data>> grid;
@@ -118,6 +118,9 @@ public class GridBasicClientFeatures extends
 
                 d = datarow.get(col++);
                 d.value = Integer.valueOf(rand.nextInt());
+
+                d = datarow.get(col++);
+                d.value = Integer.valueOf(rand.nextInt(5));
             }
         }
 
@@ -189,6 +192,18 @@ public class GridBasicClientFeatures extends
         }
 
         // Random integer value
+        {
+            final int c = col++;
+            grid.addColumn(new GridColumn<Integer, List<Data>>(
+                    createRenderer(Renderers.NUMBER_RENDERER)) {
+                @Override
+                public Integer getValue(List<Data> row) {
+                    return (Integer) row.get(c).value;
+                }
+            });
+        }
+
+        // Random integer value between 0 and 5
         {
             final int c = col++;
             grid.addColumn(new GridColumn<Integer, List<Data>>(

@@ -52,8 +52,8 @@ import com.vaadin.ui.components.grid.sort.SortOrder;
  */
 public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
-    private static final int MANUALLY_FORMATTED_COLUMNS = 4;
-    public static final int COLUMNS = 11;
+    private static final int MANUALLY_FORMATTED_COLUMNS = 5;
+    public static final int COLUMNS = 12;
     public static final int ROWS = 1000;
 
     private int columnGroupRows = 0;
@@ -86,6 +86,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     new Date());
             ds.addContainerProperty(getColumnProperty(col++), String.class, "");
 
+            // Random numbers
+            ds.addContainerProperty(getColumnProperty(col++), Integer.class, 0);
             ds.addContainerProperty(getColumnProperty(col++), Integer.class, 0);
 
         }
@@ -110,8 +112,12 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 item.getItemProperty(getColumnProperty(col++)).setValue(
                         "<b>" + row + "</b>");
 
+                // Random numbers
                 item.getItemProperty(getColumnProperty(col++)).setValue(
                         rand.nextInt());
+                // Random between 0 - 5 to test multisorting
+                item.getItemProperty(getColumnProperty(col++)).setValue(
+                        rand.nextInt(5));
             }
         }
 
@@ -130,6 +136,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     new DateRenderer(new SimpleDateFormat("dd.MM.yy HH:mm")));
             grid.getColumn(getColumnProperty(col++)).setRenderer(
                     new HtmlRenderer());
+            grid.getColumn(getColumnProperty(col++)).setRenderer(
+                    new NumberRenderer());
             grid.getColumn(getColumnProperty(col++)).setRenderer(
                     new NumberRenderer());
         }
