@@ -68,20 +68,13 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
             throw new IllegalArgumentException("Row cannot be null");
         }
 
-        if (isSelected(row)) {
-            return false;
-        }
-
         T removed = getSelectedRow();
-        if (selectedRow != null) {
-            selectedRow.unpin();
+        if (selectByHandle(grid.getDataSource().getHandle(row))) {
+            grid.fireEvent(new SelectionChangeEvent<T>(grid, row, removed));
+
+            return true;
         }
-        selectedRow = grid.getDataSource().getHandle(row);
-        selectedRow.pin();
-
-        grid.fireEvent(new SelectionChangeEvent<T>(grid, row, removed));
-
-        return true;
+        return false;
     }
 
     @Override
@@ -92,10 +85,8 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
         }
 
         if (isSelected(row)) {
-            T removed = selectedRow.getRow();
-            selectedRow.unpin();
-            selectedRow = null;
-            grid.fireEvent(new SelectionChangeEvent<T>(grid, null, removed));
+            deselectByHandle(selectedRow);
+            grid.fireEvent(new SelectionChangeEvent<T>(grid, null, row));
             return true;
         }
 
@@ -109,10 +100,8 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
 
     @Override
     public void reset() {
-        T removed = getSelectedRow();
-
-        if (removed != null) {
-            deselect(removed);
+        if (selectedRow != null) {
+            deselect(getSelectedRow());
         }
     }
 
@@ -126,8 +115,10 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
 
     @Override
     protected boolean selectByHandle(RowHandle<T> handle) {
-        if (!handle.equals(selectedRow)) {
+        if (handle != null && !handle.equals(selectedRow)) {
+            deselectByHandle(selectedRow);
             selectedRow = handle;
+            selectedRow.pin();
             return true;
         } else {
             return false;
@@ -136,7 +127,8 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
 
     @Override
     protected boolean deselectByHandle(RowHandle<T> handle) {
-        if (handle.equals(selectedRow)) {
+        if (handle != null && handle.equals(selectedRow)) {
+            selectedRow.unpin();
             selectedRow = null;
             return true;
         } else {

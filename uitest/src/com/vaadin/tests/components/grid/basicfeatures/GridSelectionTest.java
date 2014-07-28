@@ -21,7 +21,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+import com.vaadin.tests.components.grid.GridElement;
+import com.vaadin.tests.components.grid.GridElement.GridRowElement;
 
 public class GridSelectionTest extends GridBasicFeaturesTest {
 
@@ -31,12 +32,12 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
         setSelectionModelMulti();
 
-        assertFalse("row shouldn't start out as selected",
-                isSelected(getRow(0)));
+        assertFalse("row shouldn't start out as selected", getRow(0)
+                .isSelected());
         toggleFirstRowSelection();
-        assertTrue("row should become selected", isSelected(getRow(0)));
+        assertTrue("row should become selected", getRow(0).isSelected());
         toggleFirstRowSelection();
-        assertFalse("row shouldn't remain selected", isSelected(getRow(0)));
+        assertFalse("row shouldn't remain selected", getRow(0).isSelected());
     }
 
     @Test
@@ -45,16 +46,16 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
         setSelectionModelMulti();
 
-        assertFalse("row shouldn't start out as selected",
-                isSelected(getRow(0)));
+        assertFalse("row shouldn't start out as selected", getRow(0)
+                .isSelected());
         toggleFirstRowSelection();
-        assertTrue("row should become selected", isSelected(getRow(0)));
+        assertTrue("row should become selected", getRow(0).isSelected());
 
         scrollGridVerticallyTo(10000); // make sure the row is out of cache
         scrollGridVerticallyTo(0); // scroll it back into view
 
         assertTrue("row should still be selected when scrolling "
-                + "back into view", isSelected(getRow(0)));
+                + "back into view", getRow(0).isSelected());
     }
 
     @Test
@@ -63,18 +64,18 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
         setSelectionModelMulti();
 
-        assertFalse("row shouldn't start out as selected",
-                isSelected(getRow(0)));
+        assertFalse("row shouldn't start out as selected", getRow(0)
+                .isSelected());
 
         scrollGridVerticallyTo(10000); // make sure the row is out of cache
         toggleFirstRowSelection();
 
         scrollGridVerticallyTo(0); // scroll it back into view
         assertTrue("row should still be selected when scrolling "
-                + "back into view", isSelected(getRow(0)));
+                + "back into view", getRow(0).isSelected());
 
         toggleFirstRowSelection();
-        assertFalse("row shouldn't remain selected", isSelected(getRow(0)));
+        assertFalse("row shouldn't remain selected", getRow(0).isSelected());
     }
 
     @Test
@@ -83,8 +84,8 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
         setSelectionModelMulti();
 
-        assertFalse("row shouldn't start out as selected",
-                isSelected(getRow(0)));
+        assertFalse("row shouldn't start out as selected", getRow(0)
+                .isSelected());
 
         scrollGridVerticallyTo(10000); // make sure the row is out of cache
         toggleFirstRowSelection();
@@ -92,11 +93,41 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
         scrollGridVerticallyTo(0); // make sure the row is out of cache
         assertFalse("row shouldn't be selected when scrolling "
-                + "back into view", isSelected(getRow(0)));
+                + "back into view", getRow(0).isSelected());
+    }
+
+    @Test
+    public void testSingleSelectionUpdatesFromServer() {
+        openTestURL();
+        setSelectionModelSingle();
+
+        GridElement grid = getGridElement();
+        assertFalse("First row was selected from start", grid.getRow(0)
+                .isSelected());
+        toggleFirstRowSelection();
+        assertTrue("First row was not selected.", getRow(0).isSelected());
+        grid.getCell(5, 0).click();
+        assertTrue("Fifth row was not selected.", getRow(5).isSelected());
+        assertFalse("First row was still selected.", getRow(0).isSelected());
+        grid.getCell(0, 0).click();
+        toggleFirstRowSelection();
+        assertFalse("First row was still selected.", getRow(0).isSelected());
+        assertFalse("Fifth row was still selected.", getRow(5).isSelected());
+
+        grid.scrollToRow(600);
+        grid.getCell(595, 0).click();
+        assertTrue("Row 595 was not selected.", getRow(595).isSelected());
+        toggleFirstRowSelection();
+        assertFalse("Row 595 was still selected.", getRow(595).isSelected());
+        assertTrue("First row was not selected.", getRow(0).isSelected());
     }
 
     private void setSelectionModelMulti() {
         selectMenuPath("Component", "State", "Selection mode", "multi");
+    }
+
+    private void setSelectionModelSingle() {
+        selectMenuPath("Component", "State", "Selection mode", "single");
     }
 
     @SuppressWarnings("static-method")
@@ -113,7 +144,7 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Body rows", "Select first row");
     }
 
-    private TestBenchElement getRow(int i) {
+    private GridRowElement getRow(int i) {
         return getGridElement().getRow(i);
     }
 }
