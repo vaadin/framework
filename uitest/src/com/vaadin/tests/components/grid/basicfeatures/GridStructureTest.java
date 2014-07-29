@@ -22,7 +22,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -31,44 +30,36 @@ import com.vaadin.testbench.TestBenchElement;
 
 public class GridStructureTest extends GridBasicFeaturesTest {
 
-    /*
-     * TODO unignore once column header captions are reimplemented
-     */
     @Test
-    @Ignore
     public void testHidingColumn() throws Exception {
         openTestURL();
 
         // Column 0 should be visible
         List<TestBenchElement> cells = getGridHeaderRowCells();
-        assertEquals("Column0", cells.get(0).getText());
+        assertEquals("Column 0", cells.get(0).getText());
 
         // Hide column 0
-        selectMenuPath("Component", "Columns", "Column0", "Visible");
+        selectMenuPath("Component", "Columns", "Column 0", "Visible");
 
         // Column 1 should now be the first cell
         cells = getGridHeaderRowCells();
-        assertEquals("Column1", cells.get(0).getText());
+        assertEquals("Column 1", cells.get(0).getText());
     }
 
-    /*
-     * TODO unignore once column header captions are reimplemented
-     */
     @Test
-    @Ignore
     public void testRemovingColumn() throws Exception {
         openTestURL();
 
         // Column 0 should be visible
         List<TestBenchElement> cells = getGridHeaderRowCells();
-        assertEquals("Column0", cells.get(0).getText());
+        assertEquals("Column 0", cells.get(0).getText());
 
         // Hide column 0
-        selectMenuPath("Component", "Columns", "Column0", "Remove");
+        selectMenuPath("Component", "Columns", "Column 0", "Remove");
 
         // Column 1 should now be the first cell
         cells = getGridHeaderRowCells();
-        assertEquals("Column1", cells.get(0).getText());
+        assertEquals("Column 1", cells.get(0).getText());
     }
 
     @Test
@@ -76,9 +67,9 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         openTestURL();
 
         // Remove columns 2,3,4
-        selectMenuPath("Component", "Columns", "Column2", "Remove");
-        selectMenuPath("Component", "Columns", "Column3", "Remove");
-        selectMenuPath("Component", "Columns", "Column4", "Remove");
+        selectMenuPath("Component", "Columns", "Column 2", "Remove");
+        selectMenuPath("Component", "Columns", "Column 3", "Remove");
+        selectMenuPath("Component", "Columns", "Column 4", "Remove");
 
         // Scroll so new data is lazy loaded
         scrollGridVerticallyTo(1000);
@@ -95,7 +86,7 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         openTestURL();
 
         // Freeze column 2
-        selectMenuPath("Component", "Columns", "Column2", "Freeze");
+        selectMenuPath("Component", "Columns", "Column 2", "Freeze");
 
         WebElement cell = getBodyCellByRowAndColumn(0, 0);
         assertTrue(cell.getAttribute("class").contains("frozen"));
@@ -127,20 +118,20 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         assertEquals(100, cell.getSize().getWidth());
 
         // Set first column to be 200px wide
-        selectMenuPath("Component", "Columns", "Column0", "Column0 Width",
+        selectMenuPath("Component", "Columns", "Column 0", "Column 0 Width",
                 "200px");
 
         cell = getBodyCellByRowAndColumn(0, 0);
         assertEquals(200, cell.getSize().getWidth());
 
         // Set second column to be 150px wide
-        selectMenuPath("Component", "Columns", "Column1", "Column1 Width",
+        selectMenuPath("Component", "Columns", "Column 1", "Column 1 Width",
                 "150px");
         cell = getBodyCellByRowAndColumn(0, 1);
         assertEquals(150, cell.getSize().getWidth());
 
         // Set first column to be auto sized (defaults to 100px currently)
-        selectMenuPath("Component", "Columns", "Column0", "Column0 Width",
+        selectMenuPath("Component", "Columns", "Column 0", "Column 0 Width",
                 "Auto");
 
         cell = getBodyCellByRowAndColumn(0, 0);
@@ -203,7 +194,7 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Body rows",
                 "Modify first row (getContainerProperty)");
         assertEquals("(Second) modification with getItemProperty failed",
-                "modified: Column0", getBodyCellByRowAndColumn(0, 0).getText());
+                "modified: Column 0", getBodyCellByRowAndColumn(0, 0).getText());
     }
 
     private void assertPrimaryStylename(String stylename) {

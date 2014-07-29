@@ -82,14 +82,15 @@ public class GridColumn implements Serializable {
      * Returns the caption of the header. By default the header caption is the
      * property id of the column.
      * 
-     * @return the text in the header
+     * @return the text in the default row of header, null if no default row
      * 
      * @throws IllegalStateException
      *             if the column no longer is attached to the grid
      */
+    @Deprecated
     public String getHeaderCaption() throws IllegalStateException {
         checkColumnIsAttached();
-        return getHeaderCellState().text;
+        return state.header;
     }
 
     /**
@@ -101,11 +102,10 @@ public class GridColumn implements Serializable {
      * @throws IllegalStateException
      *             if the column is no longer attached to any grid
      */
+    @Deprecated
     public void setHeaderCaption(String caption) throws IllegalStateException {
         checkColumnIsAttached();
-        getHeaderCellState().text = caption;
         state.header = caption;
-        grid.markAsDirty();
     }
 
     /**
@@ -116,6 +116,7 @@ public class GridColumn implements Serializable {
      * @throws IllegalStateException
      *             if the column is no longer attached to any grid
      */
+    @Deprecated
     public String getFooterCaption() throws IllegalStateException {
         checkColumnIsAttached();
         return getFooterCellState().text;
@@ -130,16 +131,12 @@ public class GridColumn implements Serializable {
      * @throws IllegalStateException
      *             if the column is no longer attached to any grid
      */
+    @Deprecated
     public void setFooterCaption(String caption) throws IllegalStateException {
         checkColumnIsAttached();
         getFooterCellState().text = caption;
         state.footer = caption;
         grid.markAsDirty();
-    }
-
-    private CellState getHeaderCellState() {
-        int index = grid.getState().columns.indexOf(state);
-        return grid.getState().header.rows.get(0).cells.get(index);
     }
 
     private CellState getFooterCellState() {
@@ -252,7 +249,7 @@ public class GridColumn implements Serializable {
      *            the renderer to use
      * @throws IllegalArgumentException
      *             if no compatible converter could be found
-     *
+     * 
      * @see VaadinSession#getConverterFactory()
      * @see ConverterUtil#getConverter(Class, Class, VaadinSession)
      * @see #setConverter(Converter)

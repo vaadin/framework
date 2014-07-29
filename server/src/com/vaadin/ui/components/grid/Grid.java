@@ -46,12 +46,11 @@ import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridState.SharedSelectionMode;
-import com.vaadin.shared.ui.grid.GridStaticSectionState.CellState;
-import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.components.grid.GridHeader.HeaderRow;
 import com.vaadin.ui.components.grid.selection.MultiSelectionModel;
 import com.vaadin.ui.components.grid.selection.NoSelectionModel;
 import com.vaadin.ui.components.grid.selection.SelectionChangeEvent;
@@ -209,6 +208,9 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      */
     private int ignoreSelectionClientSync = 0;
 
+    private final GridHeader header = new GridHeader(this);
+    private final GridFooter footer = new GridFooter(this);
+
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
             .findMethod(SelectionChangeListener.class, "selectionChange",
                     SelectionChangeEvent.class);
@@ -224,17 +226,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      *            the data source for the grid
      */
     public Grid(final Container.Indexed datasource) {
-
-        RowState headerDefaultRow = new RowState();
-        headerDefaultRow.defaultRow = true;
-        getState().header.rows.add(headerDefaultRow);
-
-        // FIXME By default there shouldn't be any footer row
-        getState().footer.rows.add(new RowState());
-
-        setColumnFootersVisible(false);
-
         setContainerDataSource(datasource);
+
         setSelectionMode(SelectionMode.MULTI);
         addSelectionChangeListener(new SelectionChangeListener() {
             @Override
@@ -433,6 +426,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
         setLastFrozenPropertyId(null);
 
         // Add columns
+        HeaderRow row = getHeader().getDefaultRow();
         for (Object propertyId : datasource.getContainerPropertyIds()) {
             if (!columns.containsKey(propertyId)) {
                 GridColumn column = appendColumn(propertyId);
@@ -445,7 +439,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
                 }
 
                 // Add by default property id as column header
-                column.setHeaderCaption(String.valueOf(propertyId));
+                row.getCell(propertyId).setText(String.valueOf(propertyId));
             }
         }
     }
@@ -476,8 +470,9 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      * @param visible
      *            <code>true</code> if the header rows should be visible
      */
+    @Deprecated
     public void setColumnHeadersVisible(boolean visible) {
-        getState().header.visible = visible;
+        getHeader().setVisible(visible);
     }
 
     /**
@@ -485,8 +480,9 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      * 
      * @return <code>true</code> if the headers of the columns are visible
      */
+    @Deprecated
     public boolean isColumnHeadersVisible() {
-        return getState(false).header.visible;
+        return getHeader().isVisible();
     }
 
     /**
@@ -495,8 +491,9 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      * @param visible
      *            <code>true</code> if the footer rows should be visible
      */
+    @Deprecated
     public void setColumnFootersVisible(boolean visible) {
-        getState().footer.visible = visible;
+        getFooter().setVisible(visible);
     }
 
     /**
@@ -504,8 +501,9 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      * 
      * @return <code>true</code> if the footer rows should be visible
      */
+    @Deprecated
     public boolean isColumnFootersVisible() {
-        return getState(false).footer.visible;
+        return getFooter().isVisible();
     }
 
     /**
@@ -537,6 +535,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      * 
      * @return a column group instance you can use to add column groups
      */
+    @Deprecated
     public ColumnGroupRow addColumnGroupRow() {
         ColumnGroupRowState state = new ColumnGroupRowState();
         ColumnGroupRow row = new ColumnGroupRow(this, state, columnKeys);
@@ -552,6 +551,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      *            the index of the row
      * @return a column group instance you can use to add column groups
      */
+    @Deprecated
     public ColumnGroupRow addColumnGroupRow(int rowIndex) {
         ColumnGroupRowState state = new ColumnGroupRowState();
         ColumnGroupRow row = new ColumnGroupRow(this, state, columnKeys);
@@ -566,6 +566,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      * @param row
      *            the row to remove
      */
+    @Deprecated
     public void removeColumnGroupRow(ColumnGroupRow row) {
         columnGroupRows.remove(row);
         getState().columnGroupRows.remove(row.getState());
@@ -576,6 +577,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      * 
      * @return an unmodifiable list of column group rows
      */
+    @Deprecated
     public List<ColumnGroupRow> getColumnGroupRows() {
         return Collections.unmodifiableList(new ArrayList<ColumnGroupRow>(
                 columnGroupRows));
@@ -635,11 +637,13 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
         GridColumnState columnState = new GridColumnState();
         columnState.id = columnKeys.key(datasourcePropertyId);
         getState().columns.add(columnState);
-        for (RowState row : getState().header.rows) {
-            row.cells.add(new CellState());
+
+        for (int i = 0; i < getHeader().getRowCount(); ++i) {
+            getHeader().getRow(i).addCell(datasourcePropertyId);
         }
-        for (RowState row : getState().footer.rows) {
-            row.cells.add(new CellState());
+
+        for (int i = 0; i < getFooter().getRowCount(); ++i) {
+            getFooter().getRow(i).addCell(datasourcePropertyId);
         }
 
         GridColumn column = new GridColumn(this, columnState);
@@ -1315,5 +1319,25 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
     public void removeSortOrderChangeListener(SortOrderChangeListener listener) {
         removeListener(SortOrderChangeEvent.class, listener,
                 SORT_ORDER_CHANGE_METHOD);
+    }
+
+    /**
+     * Returns the header section of this grid. The default header contains a
+     * single row displaying the column captions.
+     * 
+     * @return the header
+     */
+    public GridHeader getHeader() {
+        return header;
+    }
+
+    /**
+     * Returns the footer section of this grid. The default header contains a
+     * single row displaying the column captions.
+     * 
+     * @return the footer
+     */
+    public GridFooter getFooter() {
+        return footer;
     }
 }

@@ -36,6 +36,9 @@ import com.vaadin.ui.components.grid.ColumnGroupRow;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.GridColumn;
+import com.vaadin.ui.components.grid.GridFooter;
+import com.vaadin.ui.components.grid.GridHeader;
+import com.vaadin.ui.components.grid.GridHeader.HeaderRow;
 import com.vaadin.ui.components.grid.SortOrderChangeEvent;
 import com.vaadin.ui.components.grid.SortOrderChangeListener;
 import com.vaadin.ui.components.grid.renderers.DateRenderer;
@@ -142,15 +145,20 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     new NumberRenderer());
         }
 
+        // Create footer
+        GridFooter footer = grid.getFooter();
+        footer.appendRow();
+        footer.setVisible(false);
+
         // Add footer values (header values are automatically created)
         for (int col = 0; col < COLUMNS; col++) {
-            grid.getColumn(getColumnProperty(col)).setFooterCaption(
-                    "Footer " + col);
+            footer.getRow(0).getCell(getColumnProperty(col))
+                    .setText("Footer " + col);
         }
 
         // Set varying column widths
         for (int col = 0; col < COLUMNS; col++) {
-            grid.getColumn("Column" + col).setWidth(100 + col * 50);
+            grid.getColumn(getColumnProperty(col)).setWidth(100 + col * 50);
         }
 
         grid.addSortOrderChangeListener(new SortOrderChangeListener() {
@@ -226,29 +234,125 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     }
 
     protected void createHeaderActions() {
-        createCategory("Headers", null);
+        createCategory("Header", null);
 
-        createBooleanAction("Visible", "Headers", true,
+        createBooleanAction("Visible", "Header", true,
                 new Command<Grid, Boolean>() {
 
                     @Override
                     public void execute(Grid grid, Boolean value, Object data) {
-                        grid.setColumnHeadersVisible(value);
+                        grid.getHeader().setVisible(value);
                     }
                 });
+
+        LinkedHashMap<String, String> defaultRows = new LinkedHashMap<String, String>();
+        defaultRows.put("Top", "Top");
+        defaultRows.put("Bottom", "Bottom");
+        defaultRows.put("Unset", "Unset");
+
+        createMultiClickAction("Default row", "Header", defaultRows,
+                new Command<Grid, String>() {
+
+                    @Override
+                    public void execute(Grid grid, String value, Object data) {
+                        HeaderRow defaultRow = null;
+                        GridHeader header = grid.getHeader();
+                        if (value.equals("Top")) {
+                            defaultRow = header.getRow(0);
+                        } else if (value.equals("Bottom")) {
+                            defaultRow = header.getRow(header.getRowCount() - 1);
+                        }
+                        header.setDefaultRow(defaultRow);
+                    }
+
+                }, defaultRows.get("Top"));
+
+        createClickAction("Prepend row", "Header", new Command<Grid, Object>() {
+
+            @Override
+            public void execute(Grid grid, Object value, Object data) {
+                grid.getHeader().prependRow();
+            }
+
+        }, null);
+        createClickAction("Append row", "Header", new Command<Grid, Object>() {
+
+            @Override
+            public void execute(Grid grid, Object value, Object data) {
+                grid.getHeader().appendRow();
+            }
+
+        }, null);
+
+        createClickAction("Remove top row", "Header",
+                new Command<Grid, Object>() {
+
+                    @Override
+                    public void execute(Grid grid, Object value, Object data) {
+                        grid.getHeader().removeRow(0);
+                    }
+
+                }, null);
+        createClickAction("Remove bottom row", "Header",
+                new Command<Grid, Object>() {
+
+                    @Override
+                    public void execute(Grid grid, Object value, Object data) {
+                        grid.getHeader().removeRow(
+                                grid.getHeader().getRowCount() - 1);
+                    }
+
+                }, null);
     }
 
     protected void createFooterActions() {
-        createCategory("Footers", null);
+        createCategory("Footer", null);
 
-        createBooleanAction("Visible", "Footers", false,
+        createBooleanAction("Visible", "Footer", false,
                 new Command<Grid, Boolean>() {
 
                     @Override
                     public void execute(Grid grid, Boolean value, Object data) {
-                        grid.setColumnFootersVisible(value);
+                        grid.getFooter().setVisible(value);
                     }
                 });
+
+        createClickAction("Prepend row", "Footer", new Command<Grid, Object>() {
+
+            @Override
+            public void execute(Grid grid, Object value, Object data) {
+                grid.getFooter().prependRow();
+            }
+
+        }, null);
+        createClickAction("Append row", "Footer", new Command<Grid, Object>() {
+
+            @Override
+            public void execute(Grid grid, Object value, Object data) {
+                grid.getFooter().appendRow();
+            }
+
+        }, null);
+
+        createClickAction("Remove top row", "Footer",
+                new Command<Grid, Object>() {
+
+                    @Override
+                    public void execute(Grid grid, Object value, Object data) {
+                        grid.getFooter().removeRow(0);
+                    }
+
+                }, null);
+        createClickAction("Remove bottom row", "Footer",
+                new Command<Grid, Object>() {
+
+                    @Override
+                    public void execute(Grid grid, Object value, Object data) {
+                        grid.getFooter().removeRow(
+                                grid.getFooter().getRowCount() - 1);
+                    }
+
+                }, null);
     }
 
     protected void createColumnActions() {
@@ -278,7 +382,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         @Override
                         public void execute(Grid grid, String value, Object data) {
                             grid.getContainerDatasource()
-                                    .removeContainerProperty("Column" + data);
+                                    .removeContainerProperty(
+                                            getColumnProperty((Integer) data));
                         }
                     }, null, c);
 
@@ -287,7 +392,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                         @Override
                         public void execute(Grid grid, String value, Object data) {
-                            grid.setLastFrozenPropertyId("Column" + data);
+                            grid.setLastFrozenPropertyId(getColumnProperty((Integer) data));
                         }
                     }, null, c);
 
@@ -306,9 +411,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }, c);
 
-            createCategory("Column" + c + " Width", getColumnProperty(c));
+            createCategory("Column " + c + " Width", getColumnProperty(c));
 
-            createClickAction("Auto", "Column" + c + " Width",
+            createClickAction("Auto", "Column " + c + " Width",
                     new Command<Grid, Integer>() {
 
                         @Override
@@ -324,7 +429,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }, -1, c);
 
             for (int w = 50; w < 300; w += 50) {
-                createClickAction(w + "px", "Column" + c + " Width",
+                createClickAction(w + "px", "Column " + c + " Width",
                         new Command<Grid, Integer>() {
 
                             @Override
@@ -343,7 +448,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     }
 
     private static String getColumnProperty(int c) {
-        return "Column" + c;
+        return "Column " + c;
     }
 
     protected void createColumnGroupActions() {

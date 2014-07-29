@@ -104,7 +104,7 @@ public class GridKeyboardNavigationTest extends GridBasicFeaturesTest {
     public void testNavigationFromFooterToBody() {
         openTestURL();
 
-        selectMenuPath("Component", "Footers", "Visible");
+        selectMenuPath("Component", "Footer", "Visible");
 
         GridElement grid = getGridElement();
         grid.scrollToRow(300);
@@ -146,7 +146,7 @@ public class GridKeyboardNavigationTest extends GridBasicFeaturesTest {
     public void testNavigateBetweenFooterAndBodyWithTab() {
         openTestURL();
 
-        selectMenuPath("Component", "Footers", "Visible");
+        selectMenuPath("Component", "Footer", "Visible");
 
         GridElement grid = getGridElement();
         grid.getCell(10, 2).click();

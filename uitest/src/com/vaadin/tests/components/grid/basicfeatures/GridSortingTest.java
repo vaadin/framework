@@ -21,7 +21,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
@@ -30,11 +29,7 @@ import com.vaadin.tests.components.grid.GridElement;
 
 public class GridSortingTest extends GridBasicFeaturesTest {
 
-    /*
-     * TODO unignore once column header captions are reimplemented
-     */
     @Test
-    @Ignore
     public void testProgrammaticSorting() throws IOException {
         openTestURL();
 
@@ -43,7 +38,7 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         // Sorting by column 9 is sorting by row index that is represented as a
         // String.
         // First cells for first 3 rows are (9, 0), (99, 0) and (999, 0)
-        sortBy("Column9, DESC");
+        sortBy("Column 9, DESC");
 
         assertTrue("Column 9 should have the sort-desc stylename", grid
                 .getHeaderCell(0, 9).getAttribute("class")
@@ -53,12 +48,12 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         for (int i = 0; i < 3; ++i) {
             row += "9";
             assertEquals(
-                    "Grid is not sorted by Column9 using descending direction.",
+                    "Grid is not sorted by Column 9 using descending direction.",
                     "(" + row + ", 0)", grid.getCell(i, 0).getText());
         }
 
         // Column 10 is random numbers from Random with seed 13334
-        sortBy("Column10, ASC");
+        sortBy("Column 10, ASC");
 
         assertFalse(
                 "Column 9 should no longer have the sort-desc stylename",
@@ -75,7 +70,7 @@ public class GridSortingTest extends GridBasicFeaturesTest {
 
         for (int i = 0; i < 5; ++i) {
             assertGreater(
-                    "Grid is not sorted by Column10 using ascending direction",
+                    "Grid is not sorted by Column 10 using ascending direction",
                     Integer.parseInt(grid.getCell(i + 1, 10).getText()),
                     Integer.parseInt(grid.getCell(i, 10).getText()));
 
@@ -83,10 +78,10 @@ public class GridSortingTest extends GridBasicFeaturesTest {
 
         // Column 7 is row index as a number. Last three row are original rows
         // 2, 1 and 0.
-        sortBy("Column7, DESC");
+        sortBy("Column 7, DESC");
         for (int i = 0; i < 3; ++i) {
             assertEquals(
-                    "Grid is not sorted by Column7 using descending direction",
+                    "Grid is not sorted by Column 7 using descending direction",
                     "(" + i + ", 0)",
                     grid.getCell(GridBasicFeatures.ROWS - (i + 1), 0).getText());
         }
@@ -118,18 +113,18 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         for (int i = 0; i < 3; ++i) {
             row += "9";
             assertEquals(
-                    "Grid is not sorted by Column9 using descending direction.",
+                    "Grid is not sorted by Column 9 using descending direction.",
                     "(" + row + ", 0)", grid.getCell(i, 0).getText());
         }
 
-        assertEquals("2. Sort order: [Column9 ASCENDING]", getLogRow(2));
-        assertEquals("4. Sort order: [Column9 DESCENDING]", getLogRow(0));
+        assertEquals("2. Sort order: [Column 9 ASCENDING]", getLogRow(2));
+        assertEquals("4. Sort order: [Column 9 DESCENDING]", getLogRow(0));
 
         // Column 10 is random numbers from Random with seed 13334
         // Click header to sort ascending
         grid.getHeaderCell(0, 10).click();
 
-        assertEquals("6. Sort order: [Column10 ASCENDING]", getLogRow(0));
+        assertEquals("6. Sort order: [Column 10 ASCENDING]", getLogRow(0));
 
         // Not cleaning up correctly causes exceptions when scrolling.
         grid.scrollToRow(50);
@@ -138,7 +133,7 @@ public class GridSortingTest extends GridBasicFeaturesTest {
 
         for (int i = 0; i < 5; ++i) {
             assertGreater(
-                    "Grid is not sorted by Column10 using ascending direction",
+                    "Grid is not sorted by Column 10 using ascending direction",
                     Integer.parseInt(grid.getCell(i + 1, 10).getText()),
                     Integer.parseInt(grid.getCell(i, 10).getText()));
 
@@ -151,13 +146,13 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         grid.getHeaderCell(0, 7).click();
         for (int i = 0; i < 3; ++i) {
             assertEquals(
-                    "Grid is not sorted by Column7 using descending direction",
+                    "Grid is not sorted by Column 7 using descending direction",
                     "(" + i + ", 0)",
                     grid.getCell(GridBasicFeatures.ROWS - (i + 1), 0).getText());
         }
 
-        assertEquals("9. Sort order: [Column7 ASCENDING]", getLogRow(3));
-        assertEquals("11. Sort order: [Column7 DESCENDING]", getLogRow(1));
+        assertEquals("9. Sort order: [Column 7 ASCENDING]", getLogRow(3));
+        assertEquals("11. Sort order: [Column 7 DESCENDING]", getLogRow(1));
     }
 
     @Test
