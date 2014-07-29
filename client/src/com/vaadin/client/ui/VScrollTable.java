@@ -8026,7 +8026,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
     }
 
-    public void totalRowsChanged() {
+    public void totalRowsHaveChanged() {
         firstvisibleOnLastPage = -1;
     }
 }
