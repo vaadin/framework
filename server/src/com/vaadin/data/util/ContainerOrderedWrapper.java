@@ -494,7 +494,6 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     @Override
     public int size() {
         int newSize = container.size();
-        assert newSize >= 0;
         if (lastKnownSize != -1 && newSize != lastKnownSize
                 && !(container instanceof Container.ItemSetChangeNotifier)) {
             // Update the internal cache when the size of the container changes

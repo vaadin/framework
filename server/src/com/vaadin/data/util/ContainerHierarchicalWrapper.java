@@ -701,9 +701,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      */
     @Override
     public int size() {
-        int size = container.size();
-        assert size >= 0;
-        return size;
+        return container.size();
     }
 
     /*

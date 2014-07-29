@@ -354,7 +354,6 @@ public class ComboBox extends AbstractSelect implements
         if (pageLength == 0) {
             // no paging: return all items
             filteredSize = container.size();
-            assert filteredSize >= 0;
             return new ArrayList<Object>(container.getItemIds());
         }
 
@@ -392,7 +391,6 @@ public class ComboBox extends AbstractSelect implements
             }
 
             filteredSize = container.size();
-            assert filteredSize >= 0;
             currentPage = adjustCurrentPage(currentPage, needNullSelectOption,
                     indexToEnsureInView, filteredSize);
             int first = getFirstItemIndexOnCurrentPage(needNullSelectOption,
