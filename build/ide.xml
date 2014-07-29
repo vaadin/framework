@@ -29,22 +29,19 @@
         <ivy:cachepath pathid="uitest.deps" conf="ide" />
         <ivy:resolve log="download-only" file="buildhelpers/ivy.xml" />
         <ivy:cachepath pathid="buildhelpers.deps" />
+        <ivy:resolve log="download-only" file="gwt/ivy.xml" conf="ide" />
+        <ivy:cachepath pathid="gwt.deps" conf="ide" />
 
         <path id="classpath">
             <path location="bin" />
             <path location="build/classes" />
-        	<path location="${gwt.user.classes}" />
-	        <path location="${gwt.user.src}" />
-    	    <path location="${gwt.user.super.src}" />
-        	<path location="${gwt.dev.classes}" />
-	        <path location="${gwt.dev.super.src}" />
-    	    <path location="${gwt.dev.src}" />
             <path refid="client-compiler.deps" />
             <path refid="server.deps" />
             <path refid="shared.deps" />
             <path refid="uitest.deps" />
             <path refid="client.deps" />
             <path refid="buildhelpers.deps" />
+            <path refid="gwt.deps" />
             <path location="server/src" />
             <path location="shared/src" />
             <path location="uitest/src" />
