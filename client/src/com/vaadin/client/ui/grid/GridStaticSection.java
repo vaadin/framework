@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import com.vaadin.client.ui.grid.renderers.TextRenderer;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Abstract base class for Grid header and footer sections.
@@ -36,17 +36,20 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
     /**
      * A header or footer cell. Has a simple textual caption.
      * 
-     * TODO HTML content
-     * 
-     * TODO Widget content
      */
     static class StaticCell {
 
-        private String text = "";
+        public enum Type {
+            TEXT, HTML, WIDGET;
+        }
+
+        private Object content = null;
 
         private int colspan = 1;
 
         private GridStaticSection<?> section;
+
+        private Type type = Type.TEXT;
 
         /**
          * Sets the text displayed in this cell.
@@ -55,8 +58,9 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          *            a plain text caption
          */
         public void setText(String text) {
-            this.text = text;
-            section.refreshSection();
+            this.content = text;
+            this.type = Type.TEXT;
+            section.requestSectionRefresh();
         }
 
         /**
@@ -65,7 +69,11 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          * @return the plain text caption
          */
         public String getText() {
-            return text;
+            if (type != Type.TEXT) {
+                throw new IllegalStateException(
+                        "Cannot fetch Text from a cell with type " + type);
+            }
+            return (String) content;
         }
 
         protected GridStaticSection<?> getSection() {
@@ -78,14 +86,17 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
         }
 
         /**
-         * @return the colspan
+         * Returns the amount of columns the cell spans. By default is 1.
+         * 
+         * @return The amount of columns the cell spans.
          */
         public int getColspan() {
             return colspan;
         }
 
         /**
-         * Sets the colspan for the cell
+         * Sets the amount of columns the cell spans. Must be more or equal to
+         * 1. By default is 1.
          * 
          * @param colspan
          *            the colspan to set
@@ -95,10 +106,78 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
                 throw new IllegalArgumentException(
                         "Colspan cannot be less than 1");
             }
+
             this.colspan = colspan;
-            section.refreshSection();
+            section.requestSectionRefresh();
         }
 
+        /**
+         * Returns the html inside the cell.
+         * 
+         * @throws IllegalStateException
+         *             if trying to retrive HTML from a cell with a type other
+         *             than {@link Type#HTML}.
+         * @return the html content of the cell.
+         */
+        public String getHtml() {
+            if (type != Type.HTML) {
+                throw new IllegalStateException(
+                        "Cannot fetch HTML from a cell with type " + type);
+            }
+            return (String) content;
+        }
+
+        /**
+         * Sets the content of the cell to the provided html. All previous
+         * content is discarded and the cell type is set to {@link Type#HTML}.
+         * 
+         * @param html
+         *            The html content of the cell
+         */
+        public void setHtml(String html) {
+            this.content = html;
+            this.type = Type.HTML;
+            section.requestSectionRefresh();
+        }
+
+        /**
+         * Returns the widget in the cell.
+         * 
+         * @throws IllegalStateException
+         *             if the cell is not {@link Type#WIDGET}
+         * 
+         * @return the widget in the cell
+         */
+        public Widget getWidget() {
+            if (type != Type.WIDGET) {
+                throw new IllegalStateException(
+                        "Cannot fetch Widget from a cell with type " + type);
+            }
+            return (Widget) content;
+        }
+
+        /**
+         * Set widget as the content of the cell. The type of the cell becomes
+         * {@link Type#WIDGET}. All previous content is discarded.
+         * 
+         * @param widget
+         *            The widget to add to the cell. Should not be previously
+         *            attached anywhere (widget.getParent == null).
+         */
+        public void setWidget(Widget widget) {
+            this.content = widget;
+            this.type = Type.WIDGET;
+            section.requestSectionRefresh();
+        }
+
+        /**
+         * Returns the type of the cell.
+         * 
+         * @return the type of content the cell contains.
+         */
+        public Type getType() {
+            return type;
+        }
     }
 
     /**
@@ -111,7 +190,16 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
 
         private List<CELLTYPE> cells = new ArrayList<CELLTYPE>();
 
-        private Renderer<String> renderer = new TextRenderer();
+        private Renderer<String> renderer = new Renderer<String>() {
+
+            @Override
+            public void render(FlyweightCell cell, String data) {
+                /*
+                 * The rendering into the cell is done directly from the updater
+                 * since it needs to handle multiple types of data.
+                 */
+            }
+        };
 
         private GridStaticSection<?> section;
 
@@ -160,9 +248,8 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
             // Create a new group
             cellGroups.add(new ArrayList<CELLTYPE>(cells));
 
+            // Calculates colspans, triggers refresh on section implicitly
             calculateColspans();
-
-            getSection().refreshSection();
 
             // Returns first cell of group
             return cells.get(0);
@@ -309,8 +396,12 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
 
     /**
      * Informs the grid that this section should be re-rendered.
+     * <p>
+     * <b>Note</b> that re-render means calling update() on each cell,
+     * preAttach()/postAttach()/preDetach()/postDetach() is not called as the
+     * cells are not removed from the DOM.
      */
-    protected abstract void refreshSection();
+    protected abstract void requestSectionRefresh();
 
     /**
      * Sets the visibility of the whole section.
@@ -320,7 +411,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      */
     public void setVisible(boolean visible) {
         this.visible = visible;
-        refreshSection();
+        requestSectionRefresh();
     }
 
     /**
@@ -349,7 +440,8 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
             row.addCell(i);
         }
         rows.add(index, row);
-        refreshSection();
+
+        requestSectionRefresh();
         return row;
     }
 
@@ -382,7 +474,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      */
     public void removeRow(int index) {
         rows.remove(index);
-        refreshSection();
+        requestSectionRefresh();
     }
 
     /**
@@ -414,7 +506,12 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      *             if the index is out of bounds
      */
     public ROWTYPE getRow(int index) {
-        return rows.get(index);
+        try {
+            return rows.get(index);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("Row with index " + index
+                    + " does not exist");
+        }
     }
 
     /**

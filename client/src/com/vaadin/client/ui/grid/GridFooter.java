@@ -20,14 +20,6 @@ import com.google.gwt.core.client.Scheduler;
 /**
  * Represents the footer section of a Grid. The footer is always empty.
  * 
- * TODO Arbitrary number of footer rows (zero by default)
- * 
- * TODO Merging footer cells
- * 
- * TODO Widgets in cells
- * 
- * TODO HTML in cells
- * 
  * @since
  * @author Vaadin Ltd
  */
@@ -60,7 +52,7 @@ public class GridFooter extends GridStaticSection<GridFooter.FooterRow> {
     }
 
     @Override
-    protected void refreshSection() {
+    protected void requestSectionRefresh() {
         markAsDirty = true;
 
         /*

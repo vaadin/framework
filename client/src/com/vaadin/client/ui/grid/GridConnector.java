@@ -317,7 +317,7 @@ public class GridConnector extends AbstractComponentConnector {
 
         section.setVisible(state.visible);
 
-        section.refreshSection();
+        section.requestSectionRefresh();
     }
 
     /**

@@ -710,7 +710,7 @@ public class Grid<T> extends Composite implements
             public Collection<String> getConsumedEvents() {
                 return Arrays.asList(BrowserEvents.TOUCHSTART,
                         BrowserEvents.TOUCHMOVE, BrowserEvents.TOUCHEND,
-                        BrowserEvents.TOUCHCANCEL, BrowserEvents.MOUSEDOWN);
+                        BrowserEvents.TOUCHCANCEL, BrowserEvents.CLICK);
             }
 
             @Override
@@ -774,11 +774,14 @@ public class Grid<T> extends Composite implements
 
                         lazySorter.cancel();
 
-                    } else if (BrowserEvents.MOUSEDOWN.equals(event.getType())) {
-                        event.preventDefault();
+                    } else if (BrowserEvents.CLICK.equals(event.getType())) {
                         lazySorter.setCurrentCell(cell);
                         lazySorter.setMultisort(event.getShiftKey());
                         lazySorter.run();
+
+                        // Active cell handling is also monitoring the click
+                        // event so we allow event to propagate for it
+                        return false;
                     }
                     return true;
                 }
@@ -1046,7 +1049,7 @@ public class Grid<T> extends Composite implements
 
         @Override
         public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
-            GridStaticSection.StaticRow<?> gridRow = section.getRow(row
+            GridStaticSection.StaticRow<?> staticRow = section.getRow(row
                     .getRow());
 
             final List<Integer> columnIndices = getVisibleColumnIndices();
@@ -1054,13 +1057,28 @@ public class Grid<T> extends Composite implements
             for (FlyweightCell cell : cellsToUpdate) {
 
                 int index = columnIndices.get(cell.getColumn());
-                StaticCell metadata = gridRow.getCell(index);
+                final StaticCell metadata = staticRow.getCell(index);
 
                 // Assign colspan to cell before rendering
                 cell.setColSpan(metadata.getColspan());
 
-                // Render
-                gridRow.getRenderer().render(cell, metadata.getText());
+                // Decorates cell with possible indicators onto the cell.
+                // Actual content is rendered below.
+                staticRow.getRenderer().render(cell, null);
+
+                switch (metadata.getType()) {
+                case TEXT:
+                    cell.getElement().setInnerText(metadata.getText());
+                    break;
+                case HTML:
+                    cell.getElement().setInnerHTML(metadata.getHtml());
+                    break;
+                case WIDGET:
+                    preDetach(row, Arrays.asList(cell));
+                    cell.getElement().setInnerHTML("");
+                    postAttach(row, Arrays.asList(cell));
+                    break;
+                }
 
                 activeCellHandler.updateActiveCellStyle(cell, container);
             }
@@ -1072,10 +1090,60 @@ public class Grid<T> extends Composite implements
 
         @Override
         public void postAttach(Row row, Iterable<FlyweightCell> attachedCells) {
+            GridStaticSection.StaticRow<?> gridRow = section.getRow(row
+                    .getRow());
+            List<Integer> columnIndices = getVisibleColumnIndices();
+
+            for (FlyweightCell cell : attachedCells) {
+                int index = columnIndices.get(cell.getColumn());
+                StaticCell metadata = gridRow.getCell(index);
+                /*
+                 * If the cell contains widgets that are not currently attach
+                 * then attach them now.
+                 */
+                if (StaticCell.Type.WIDGET.equals(metadata.getType())) {
+                    final Widget widget = metadata.getWidget();
+                    final Element cellElement = cell.getElement();
+
+                    if (!widget.isAttached()) {
+
+                        // Physical attach
+                        cellElement.appendChild(widget.getElement());
+
+                        // Logical attach
+                        setParent(widget, Grid.this);
+
+                        getLogger().info("Attached widget " + widget);
+                    }
+                }
+            }
         }
 
         @Override
         public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
+            if (section.getRowCount() > row.getRow()) {
+                GridStaticSection.StaticRow<?> gridRow = section.getRow(row
+                        .getRow());
+                List<Integer> columnIndices = getVisibleColumnIndices();
+                for (FlyweightCell cell : cellsToDetach) {
+                    int index = columnIndices.get(cell.getColumn());
+                    StaticCell metadata = gridRow.getCell(index);
+
+                    if (StaticCell.Type.WIDGET.equals(metadata.getType())
+                            && metadata.getWidget().isAttached()) {
+
+                        Widget widget = metadata.getWidget();
+
+                        // Logical detach
+                        setParent(widget, null);
+
+                        // Physical detach
+                        widget.getElement().removeFromParent();
+
+                        getLogger().info("Detached widget " + widget);
+                    }
+                }
+            }
         }
 
         @Override

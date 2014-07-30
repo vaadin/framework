@@ -17,12 +17,15 @@ package com.vaadin.tests.components.grid.basicfeatures;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.tests.components.grid.GridElement.GridCellElement;
@@ -72,8 +75,8 @@ public class GridHeaderTest extends GridStaticSectionTest {
         assertEquals(GridBasicFeatures.COLUMNS - 2, cells.size());
 
         assertText("Header (0,0)", cells.get(0));
-        assertText("Header (0,2)", cells.get(1));
-        assertText("Header (0,4)", cells.get(2));
+        assertHTML("<b>Header (0,2)</b>", cells.get(1));
+        assertHTML("<b>Header (0,4)</b>", cells.get(2));
 
         selectMenuPath("Component", "Columns", "Column 3", "Visible");
 
@@ -81,9 +84,9 @@ public class GridHeaderTest extends GridStaticSectionTest {
         assertEquals(GridBasicFeatures.COLUMNS - 1, cells.size());
 
         assertText("Header (0,0)", cells.get(0));
-        assertText("Header (0,2)", cells.get(1));
+        assertHTML("<b>Header (0,2)</b>", cells.get(1));
         assertText("Header (0,3)", cells.get(2));
-        assertText("Header (0,4)", cells.get(3));
+        assertHTML("<b>Header (0,4)</b>", cells.get(3));
     }
 
     @Test
@@ -274,6 +277,74 @@ public class GridHeaderTest extends GridStaticSectionTest {
         assertEquals("2", spannedCell.getAttribute("colspan"));
         spannedCell = getGridElement().getHeaderCell(1, 3);
         assertEquals("3", spannedCell.getAttribute("colspan"));
+
+    }
+
+    @Test
+    public void testInitialCellTypes() throws Exception {
+        openTestURL();
+
+        GridCellElement textCell = getGridElement().getHeaderCell(0, 0);
+        assertEquals("Header (0,0)", textCell.getText());
+
+        GridCellElement widgetCell = getGridElement().getHeaderCell(0, 1);
+        assertTrue(widgetCell.isElementPresent(By.className("gwt-HTML")));
+
+        GridCellElement htmlCell = getGridElement().getHeaderCell(0, 2);
+        assertHTML("<b>Header (0,2)</b>", htmlCell);
+    }
+
+    @Test
+    public void testDynamicallyChangingCellType() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Columns", "Column 0", "Header Type",
+                "Widget Header");
+        GridCellElement widgetCell = getGridElement().getHeaderCell(0, 0);
+        assertTrue(widgetCell.isElementPresent(By.className("gwt-Button")));
+
+        selectMenuPath("Component", "Columns", "Column 1", "Header Type",
+                "HTML Header");
+        GridCellElement htmlCell = getGridElement().getHeaderCell(0, 1);
+        assertHTML("<b>HTML Header</b>", htmlCell);
+
+        selectMenuPath("Component", "Columns", "Column 2", "Header Type",
+                "Text Header");
+        GridCellElement textCell = getGridElement().getHeaderCell(0, 2);
+        assertEquals("Text Header", textCell.getText());
+    }
+
+    @Test
+    public void testCellWidgetInteraction() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Columns", "Column 0", "Header Type",
+                "Widget Header");
+        GridCellElement widgetCell = getGridElement().getHeaderCell(0, 0);
+        WebElement button = widgetCell.findElement(By.className("gwt-Button"));
+
+        button.click();
+
+        assertEquals("Clicked", button.getText());
+    }
+
+    @Test
+    public void widgetInSortableCellInteraction() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Columns", "Column 0", "Header Type",
+                "Widget Header");
+
+        selectMenuPath("Component", "Columns", "Column 0", "Sortable");
+
+        GridCellElement widgetCell = getGridElement().getHeaderCell(0, 0);
+        WebElement button = widgetCell.findElement(By.className("gwt-Button"));
+
+        assertNotEquals("Clicked", button.getText());
+
+        button.click();
+
+        assertEquals("Clicked", button.getText());
     }
 
     private void assertHeaderCount(int count) {

@@ -17,9 +17,12 @@ package com.vaadin.tests.components.grid.basicfeatures;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.components.grid.GridElement.GridCellElement;
 
@@ -139,6 +142,62 @@ public class GridFooterTest extends GridStaticSectionTest {
                     columnIndex);
             assertFalse(hiddenCell.isDisplayed());
         }
+    }
+
+    @Test
+    public void testInitialCellTypes() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Footer", "Append row");
+
+        GridCellElement textCell = getGridElement().getFooterCell(0, 0);
+        assertEquals("Footer (0,0)", textCell.getText());
+
+        GridCellElement widgetCell = getGridElement().getFooterCell(0, 1);
+        assertTrue(widgetCell.isElementPresent(By.className("gwt-HTML")));
+
+        GridCellElement htmlCell = getGridElement().getFooterCell(0, 2);
+        assertHTML("<b>Footer (0,2)</b>", htmlCell);
+    }
+
+    @Test
+    public void testDynamicallyChangingCellType() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Footer", "Append row");
+
+        selectMenuPath("Component", "Columns", "Column 0", "Footer Type",
+                "Widget Footer");
+        GridCellElement widgetCell = getGridElement().getFooterCell(0, 0);
+        assertTrue(widgetCell.isElementPresent(By.className("gwt-Button")));
+
+        selectMenuPath("Component", "Columns", "Column 1", "Footer Type",
+                "HTML Footer");
+        GridCellElement htmlCell = getGridElement().getFooterCell(0, 1);
+        assertHTML("<b>HTML Footer</b>", htmlCell);
+
+        selectMenuPath("Component", "Columns", "Column 2", "Footer Type",
+                "Text Footer");
+        GridCellElement textCell = getGridElement().getFooterCell(0, 2);
+        assertEquals("Text Footer", textCell.getText());
+    }
+
+    @Test
+    public void testCellWidgetInteraction() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Footer", "Append row");
+
+        selectMenuPath("Component", "Columns", "Column 0", "Footer Type",
+                "Widget Footer");
+        GridCellElement widgetCell = getGridElement().getFooterCell(0, 0);
+        WebElement button = widgetCell.findElement(By.className("gwt-Button"));
+
+        assertNotEquals("Clicked", button.getText());
+
+        button.click();
+
+        assertEquals("Clicked", button.getText());
     }
 
     private void assertFooterCount(int count) {

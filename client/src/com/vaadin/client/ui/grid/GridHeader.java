@@ -23,16 +23,6 @@ import com.vaadin.client.ui.grid.Grid.AbstractGridColumn.SortableColumnHeaderRen
  * row containing a header cell for each column. Each cell has a simple textual
  * caption.
  * 
- * TODO Arbitrary number of header rows (zero included, one by default)
- * 
- * TODO Account for hidden columns when merging header cells
- * 
- * TODO "Default" row with sorting
- * 
- * TODO Widgets in cells
- * 
- * TODO HTML in cells
- * 
  * @since
  * @author Vaadin Ltd
  */
@@ -117,7 +107,7 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
             row.setDefault(true);
         }
         defaultRow = row;
-        refreshSection();
+        requestSectionRefresh();
     }
 
     /**
@@ -136,7 +126,7 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
     }
 
     @Override
-    protected void refreshSection() {
+    protected void requestSectionRefresh() {
         markAsDirty = true;
 
         /*

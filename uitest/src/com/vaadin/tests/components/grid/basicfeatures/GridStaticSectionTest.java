@@ -30,7 +30,18 @@ public abstract class GridStaticSectionTest extends GridBasicClientFeaturesTest 
     protected void assertHeaderTexts(int headerId, int rowIndex) {
         int i = 0;
         for (TestBenchElement cell : getGridElement().getHeaderCells(rowIndex)) {
-            assertText(String.format("Header (%d,%d)", headerId, i), cell);
+
+            if (i % 3 == 0) {
+                assertText(String.format("Header (%d,%d)", headerId, i), cell);
+            } else if (i % 2 == 0) {
+                assertHTML(String.format("<b>Header (%d,%d)</b>", headerId, i),
+                        cell);
+            } else {
+                assertHTML(String.format(
+                        "<div class=\"gwt-HTML\">Header (%d,%d)</div>",
+                        headerId, i), cell);
+            }
+
             i++;
         }
         assertEquals("number of header columns", GridBasicFeatures.COLUMNS, i);
@@ -39,7 +50,16 @@ public abstract class GridStaticSectionTest extends GridBasicClientFeaturesTest 
     protected void assertFooterTexts(int footerId, int rowIndex) {
         int i = 0;
         for (TestBenchElement cell : getGridElement().getFooterCells(rowIndex)) {
-            assertText(String.format("Footer (%d,%d)", footerId, i), cell);
+            if (i % 3 == 0) {
+                assertText(String.format("Footer (%d,%d)", footerId, i), cell);
+            } else if (i % 2 == 0) {
+                assertHTML(String.format("<b>Footer (%d,%d)</b>", footerId, i),
+                        cell);
+            } else {
+                assertHTML(String.format(
+                        "<div class=\"gwt-HTML\">Footer (%d,%d)</div>",
+                        footerId, i), cell);
+            }
             i++;
         }
         assertEquals("number of footer columns", GridBasicFeatures.COLUMNS, i);
@@ -48,5 +68,21 @@ public abstract class GridStaticSectionTest extends GridBasicClientFeaturesTest 
     protected static void assertText(String text, TestBenchElement e) {
         // TBE.getText returns "" if the element is scrolled out of view
         assertEquals(text, e.getAttribute("innerHTML"));
+    }
+
+    protected static void assertHTML(String text, TestBenchElement e) {
+        String html = e.getAttribute("innerHTML");
+
+        // IE 8 returns tags as upper case while other browsers do not, make the
+        // comparison non-casesensive
+        html = html.toLowerCase();
+        text = text.toLowerCase();
+
+        // IE 8 returns attributes without quotes, make the comparison without
+        // quotes
+        html = html.replaceAll("\"", "");
+        text = html.replaceAll("\"", "");
+
+        assertEquals(text, html);
     }
 }

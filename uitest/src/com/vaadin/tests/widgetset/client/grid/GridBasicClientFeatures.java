@@ -21,6 +21,10 @@ import java.util.List;
 import java.util.Random;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.Grid.SelectionMode;
@@ -277,6 +281,7 @@ public class GridBasicClientFeatures extends
                             !grid.getColumn(index).isSortable());
                 }
             }, "Component", "Columns", "Column " + i);
+
             addMenuCommand("auto", new ScheduledCommand() {
                 @Override
                 public void execute() {
@@ -295,6 +300,66 @@ public class GridBasicClientFeatures extends
                     grid.getColumn(index).setWidth(200);
                 }
             }, "Component", "Columns", "Column " + i, "Width");
+
+            // Header types
+            addMenuCommand("Text Header", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    grid.getHeader().getRow(0).getCell(index)
+                            .setText("Text Header");
+                }
+            }, "Component", "Columns", "Column " + i, "Header Type");
+            addMenuCommand("HTML Header", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    grid.getHeader().getRow(0).getCell(index)
+                            .setHtml("<b>HTML Header</b>");
+                }
+            }, "Component", "Columns", "Column " + i, "Header Type");
+            addMenuCommand("Widget Header", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    final Button button = new Button("Button Header");
+                    button.addClickHandler(new ClickHandler() {
+
+                        @Override
+                        public void onClick(ClickEvent event) {
+                            button.setText("Clicked");
+                        }
+                    });
+                    grid.getHeader().getRow(0).getCell(index).setWidget(button);
+                }
+            }, "Component", "Columns", "Column " + i, "Header Type");
+
+            // Footer types
+            addMenuCommand("Text Footer", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    grid.getFooter().getRow(0).getCell(index)
+                            .setText("Text Footer");
+                }
+            }, "Component", "Columns", "Column " + i, "Footer Type");
+            addMenuCommand("HTML Footer", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    grid.getFooter().getRow(0).getCell(index)
+                            .setHtml("<b>HTML Footer</b>");
+                }
+            }, "Component", "Columns", "Column " + i, "Footer Type");
+            addMenuCommand("Widget Footer", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    final Button button = new Button("Button Footer");
+                    button.addClickHandler(new ClickHandler() {
+
+                        @Override
+                        public void onClick(ClickEvent event) {
+                            button.setText("Clicked");
+                        }
+                    });
+                    grid.getFooter().getRow(0).getCell(index).setWidget(button);
+                }
+            }, "Component", "Columns", "Column " + i, "Footer Type");
         }
     }
 
@@ -303,14 +368,32 @@ public class GridBasicClientFeatures extends
 
     private void setHeaderTexts(HeaderRow row) {
         for (int i = 0; i < COLUMNS; ++i) {
-            row.getCell(i).setText("Header (" + headerCounter + "," + i + ")");
+            String caption = "Header (" + headerCounter + "," + i + ")";
+
+            // Lets use some different cell types
+            if (i % 3 == 0) {
+                row.getCell(i).setText(caption);
+            } else if (i % 2 == 0) {
+                row.getCell(i).setHtml("<b>" + caption + "</b>");
+            } else {
+                row.getCell(i).setWidget(new HTML(caption));
+            }
         }
         headerCounter++;
     }
 
     private void setFooterTexts(FooterRow row) {
         for (int i = 0; i < COLUMNS; ++i) {
-            row.getCell(i).setText("Footer (" + footerCounter + "," + i + ")");
+            String caption = "Footer (" + footerCounter + "," + i + ")";
+
+            // Lets use some different cell types
+            if (i % 3 == 0) {
+                row.getCell(i).setText(caption);
+            } else if (i % 2 == 0) {
+                row.getCell(i).setHtml("<b>" + caption + "</b>");
+            } else {
+                row.getCell(i).setWidget(new HTML(caption));
+            }
         }
         footerCounter++;
     }
@@ -449,6 +532,7 @@ public class GridBasicClientFeatures extends
         addMenuCommand("Remove bottom row", new ScheduledCommand() {
             @Override
             public void execute() {
+                assert footer.getRowCount() > 0;
                 footer.removeRow(footer.getRowCount() - 1);
             }
         }, menuPath);
