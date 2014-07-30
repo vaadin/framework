@@ -3110,7 +3110,7 @@ public class ApplicationConnection implements HasHandlers {
             return null;
         }
         if (uidlUri.startsWith("theme://")) {
-            final String themeUri = configuration.getThemeUri();
+            final String themeUri = getThemeUri();
             if (themeUri == null) {
                 VConsole.error("Theme not set: ThemeResource will not be found. ("
                         + uidlUri + ")");
@@ -3176,7 +3176,8 @@ public class ApplicationConnection implements HasHandlers {
      * @return URI to the current theme
      */
     public String getThemeUri() {
-        return configuration.getThemeUri();
+        return configuration.getVaadinDirUrl() + "themes/"
+                + getUIConnector().getActiveTheme();
     }
 
     /**

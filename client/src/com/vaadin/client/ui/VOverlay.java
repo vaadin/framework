@@ -881,7 +881,9 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             container.setId(id);
             String styles = ac.getUIConnector().getWidget().getParent()
                     .getStyleName();
-            container.addClassName(styles);
+            if (styles != null && !styles.equals("")) {
+                container.addClassName(styles);
+            }
             container.addClassName(CLASSNAME_CONTAINER);
             RootPanel.get().getElement().appendChild(container);
         }

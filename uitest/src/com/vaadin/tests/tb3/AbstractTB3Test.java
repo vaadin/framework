@@ -16,15 +16,15 @@
 
 package com.vaadin.tests.tb3;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-
+import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
+import com.vaadin.server.LegacyApplication;
+import com.vaadin.server.UIProvider;
+import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.TestBenchTestCase;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
+import com.vaadin.ui.UI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -41,14 +41,13 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
-import com.vaadin.server.LegacyApplication;
-import com.vaadin.server.UIProvider;
-import com.vaadin.testbench.TestBench;
-import com.vaadin.testbench.TestBenchTestCase;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
-import com.vaadin.ui.UI;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 
 import static com.vaadin.tests.tb3.TB3Runner.localWebDriverIsUsed;
 
@@ -224,7 +223,22 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * {@link #isPush()}.
      */
     protected void openTestURL() {
-        driver.get(getTestUrl());
+        openTestURL("");
+    }
+
+    /**
+     * Opens the given test (defined by {@link #getTestUrl()}, optionally with
+     * debug window and/or push (depending on {@link #isDebug()} and
+     * {@link #isPush()}.
+     */
+    protected void openTestURL(String extraParameters) {
+        String url = getTestUrl();
+        if (url.contains("?")) {
+            url = url + "&" + extraParameters;
+        } else {
+            url = url + "?" + extraParameters;
+        }
+        driver.get(url);
     }
 
     /**
