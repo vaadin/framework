@@ -69,10 +69,4 @@ public class SortOrder {
     public SortDirection getDirection() {
         return direction;
     }
-
-    @Override
-    public String toString() {
-        return column.getHeaderCaption() + " (" + direction + ")";
-    }
-
 }

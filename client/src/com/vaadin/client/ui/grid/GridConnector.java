@@ -393,8 +393,6 @@ public class GridConnector extends AbstractComponentConnector {
     private static void updateColumnFromState(GridColumn<?, JSONObject> column,
             GridColumnState state) {
         column.setVisible(state.visible);
-        column.setHeaderCaption(state.header);
-        column.setFooterCaption(state.footer);
         column.setWidth(state.width);
         column.setSortable(state.sortable);
     }

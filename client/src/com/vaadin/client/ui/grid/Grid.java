@@ -48,7 +48,6 @@ import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.GridStaticSection.StaticCell;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
-import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
 import com.vaadin.client.ui.grid.selection.HasSelectionChangeHandlers;
 import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
@@ -66,7 +65,6 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SortDirection;
-import com.vaadin.shared.util.SharedUtil;
 
 /**
  * A data grid view that supports columns and lazy loading of data rows from a
@@ -429,60 +427,10 @@ public class Grid<T> extends Composite implements
 
         public SelectionColumn(final Renderer<Boolean> selectColumnRenderer) {
             super(selectColumnRenderer);
-
-            setHeaderRenderer(new Renderer<String>() {
-                @Override
-                public void render(FlyweightCell cell, String data) {
-                    if (cell.getRow() == escalator.getHeader().getRowCount() - 1) {
-                        // TODO: header "select all / select none" logic
-                        selectColumnRenderer.render(cell, Boolean.FALSE);
-                    }
-                }
-            });
         }
 
         public void initDone() {
             initDone = true;
-        }
-
-        @Override
-        public void setFooterCaption(String caption) {
-            if (!SharedUtil.equals(caption, getFooterCaption()) && initDone) {
-                throw new UnsupportedOperationException("The selection "
-                        + "column cannot be modified after init");
-            } else {
-                super.setFooterCaption(caption);
-            }
-        }
-
-        @Override
-        public void setFooterRenderer(Renderer<String> renderer) {
-            if (!SharedUtil.equals(renderer, getFooterRenderer()) && initDone) {
-                throw new UnsupportedOperationException("The selection "
-                        + "column cannot be modified after init");
-            } else {
-                super.setFooterRenderer(renderer);
-            }
-        }
-
-        @Override
-        public void setHeaderCaption(String caption) {
-            if (!SharedUtil.equals(caption, getHeaderCaption()) && initDone) {
-                throw new UnsupportedOperationException("The selection "
-                        + "column cannot be modified after init");
-            } else {
-                super.setHeaderCaption(caption);
-            }
-        }
-
-        @Override
-        public void setHeaderRenderer(Renderer<String> renderer) {
-            if (!SharedUtil.equals(renderer, getHeaderRenderer()) && initDone) {
-                throw new UnsupportedOperationException("The selection "
-                        + "column cannot be modified after init");
-            } else {
-                super.setHeaderRenderer(renderer);
-            }
         }
 
         @Override
@@ -917,18 +865,6 @@ public class Grid<T> extends Composite implements
          */
         private Renderer<? super C> bodyRenderer;
 
-        /**
-         * Renderer for rendering the header cell value into the cell
-         */
-        @Deprecated
-        private Renderer<String> headerRenderer = new TextRenderer();
-
-        /**
-         * Renderer for rendering the footer cell value into the cell
-         */
-        @Deprecated
-        private Renderer<String> footerRenderer = new TextRenderer();
-
         private boolean sortable = false;
 
         /**
@@ -945,28 +881,6 @@ public class Grid<T> extends Composite implements
         }
 
         /**
-         * Constructs a new column with custom renderers for rows, header and
-         * footer cells.
-         * 
-         * @param bodyRenderer
-         *            The renderer to use for rendering body cells
-         * @param headerRenderer
-         *            The renderer to use for rendering header cells
-         * @param footerRenderer
-         *            The renderer to use for rendering footer cells
-         */
-        public AbstractGridColumn(Renderer<C> bodyRenderer,
-                Renderer<String> headerRenderer, Renderer<String> footerRenderer) {
-            this(bodyRenderer);
-            if (headerRenderer == null || footerRenderer == null) {
-                throw new IllegalArgumentException("Renderer cannot be null.");
-            }
-
-            this.headerRenderer = headerRenderer;
-            this.footerRenderer = footerRenderer;
-        }
-
-        /**
          * Internally used by the grid to set itself
          * 
          * @param grid
@@ -979,120 +893,6 @@ public class Grid<T> extends Composite implements
             }
 
             this.grid = grid;
-        }
-
-        /**
-         * Gets text in the header of the column. By default the header caption
-         * is empty.
-         * 
-         * @return the text displayed in the column caption
-         */
-        @Deprecated
-        public String getHeaderCaption() {
-            return header;
-        }
-
-        /**
-         * Returns the renderer used for rendering the header cells
-         * 
-         * @return a renderer that renders header cells
-         */
-        @Deprecated
-        public Renderer<String> getHeaderRenderer() {
-            return headerRenderer;
-        }
-
-        /**
-         * Sets the renderer that renders header cells. Should not be null.
-         * 
-         * @param renderer
-         *            The renderer to use for rendering header cells.
-         */
-        @Deprecated
-        public void setHeaderRenderer(Renderer<String> renderer) {
-            if (renderer == null) {
-                throw new IllegalArgumentException("Renderer cannot be null.");
-            }
-            this.headerRenderer = headerRenderer;
-            if (grid != null) {
-                grid.refreshHeader();
-            }
-        }
-
-        /**
-         * Returns the renderer used for rendering the footer cells
-         * 
-         * @return a renderer that renders footer cells
-         */
-        @Deprecated
-        public Renderer<String> getFooterRenderer() {
-            return footerRenderer;
-        }
-
-        /**
-         * Sets the renderer that renders footer cells. Should not be null.
-         * 
-         * @param renderer
-         *            The renderer to use for rendering footer cells.
-         */
-        @Deprecated
-        public void setFooterRenderer(Renderer<String> renderer) {
-            if (renderer == null) {
-                throw new IllegalArgumentException("Renderer cannot be null.");
-            }
-            footerRenderer = renderer;
-            if (grid != null) {
-                grid.refreshFooter();
-            }
-        }
-
-        /**
-         * Sets the text in the header of the column.
-         * 
-         * @param caption
-         *            the text displayed in the column header
-         */
-        @Deprecated
-        public void setHeaderCaption(String caption) {
-            if (SharedUtil.equals(caption, header)) {
-                return;
-            }
-
-            header = caption;
-
-            if (grid != null) {
-                grid.refreshHeader();
-            }
-        }
-
-        /**
-         * Gets text in the footer of the column. By default the footer caption
-         * is empty.
-         * 
-         * @return The text displayed in the footer of the column
-         */
-        @Deprecated
-        public String getFooterCaption() {
-            return footer;
-        }
-
-        /**
-         * Sets text in the footer of the column.
-         * 
-         * @param caption
-         *            the text displayed in the footer of the column
-         */
-        @Deprecated
-        public void setFooterCaption(String caption) {
-            if (SharedUtil.equals(caption, footer)) {
-                return;
-            }
-
-            footer = caption;
-
-            if (grid != null) {
-                grid.refreshFooter();
-            }
         }
 
         /**
@@ -1607,9 +1407,7 @@ public class Grid<T> extends Composite implements
 
         // Sink all renderer events
         Set<String> events = new HashSet<String>();
-        events.addAll(getConsumedEventsForRenderer(column.getHeaderRenderer()));
         events.addAll(getConsumedEventsForRenderer(column.getRenderer()));
-        events.addAll(getConsumedEventsForRenderer(column.getFooterRenderer()));
 
         sinkEvents(events);
     }
