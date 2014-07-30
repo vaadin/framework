@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -103,25 +103,25 @@ import com.vaadin.shared.ui.table.TableConstants;
 
 /**
  * VScrollTable
- * 
+ *
  * VScrollTable is a FlowPanel having two widgets in it: * TableHead component *
  * ScrollPanel
- * 
+ *
  * TableHead contains table's header and widgets + logic for resizing,
  * reordering and hiding columns.
- * 
+ *
  * ScrollPanel contains VScrollTableBody object which handles content. To save
  * some bandwidth and to improve clients responsiveness with loads of data, in
  * VScrollTableBody all rows are not necessary rendered. There are "spacers" in
  * VScrollTableBody to use the exact same space as non-rendered rows would use.
  * This way we can use seamlessly traditional scrollbars and scrolling to fetch
  * more rows instead of "paging".
- * 
+ *
  * In VScrollTable we listen to scroll events. On horizontal scrolling we also
  * update TableHeads scroll position which has its scrollbars hidden. On
  * vertical scroll events we will check if we are reaching the end of area where
  * we have rows rendered and
- * 
+ *
  * TODO implement unregistering for child components in Cells
  */
 public class VScrollTable extends FlowPanel implements HasWidgets,
@@ -264,7 +264,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * The last known row height used to preserve the height of a table with
      * custom row heights and a fixed page length after removing the last row
      * from the table.
-     * 
+     *
      * A new VScrollTableBody instance is created every time the number of rows
      * changes causing {@link VScrollTableBody#rowHeight} to be discarded and
      * the height recalculated by {@link VScrollTableBody#getRowHeight(boolean)}
@@ -308,7 +308,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.lang.Object#toString()
          */
 
@@ -533,14 +533,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * Values (serverCacheFirst+serverCacheLast) sent by server that tells which
      * rows (indexes) are in the server side cache (page buffer). -1 means
      * unknown. The server side cache row MUST MATCH the client side cache rows.
-     * 
+     *
      * If the client side cache contains additional rows with e.g. buttons, it
      * will cause out of sync when such a button is pressed.
-     * 
+     *
      * If the server side cache contains additional rows with e.g. buttons,
      * scrolling in the client will cause empty buttons to be rendered
      * (cached=true request for non-existing components)
-     * 
+     *
      * For internal use only. May be removed or replaced in the future.
      */
     public int serverCacheFirst = -1;
@@ -699,7 +699,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     /**
      * Fires a column resize event which sends the resize information to the
      * server.
-     * 
+     *
      * @param columnId
      *            The columnId of the column which was resized
      * @param originalWidth
@@ -721,7 +721,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     /**
      * Non-immediate variable update of column widths for a collection of
      * columns.
-     * 
+     *
      * @param columns
      *            the columns to trigger the events for.
      */
@@ -737,7 +737,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Moves the focus one step down
-     * 
+     *
      * @return Returns true if succeeded
      */
     private boolean moveFocusDown() {
@@ -746,7 +746,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Moves the focus down by 1+offset rows
-     * 
+     *
      * @return Returns true if succeeded, else false if the selection could not
      *         be move downwards
      */
@@ -770,7 +770,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Moves the selection one step up
-     * 
+     *
      * @return Returns true if succeeded
      */
     private boolean moveFocusUp() {
@@ -779,10 +779,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Moves the focus row upwards
-     * 
+     *
      * @return Returns true if succeeded, else false if the selection could not
      *         be move upwards
-     * 
+     *
      */
     private boolean moveFocusUp(int offset) {
         if (isSelectable()) {
@@ -806,7 +806,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Selects a row where the current selection head is
-     * 
+     *
      * @param ctrlSelect
      *            Is the selection a ctrl+selection
      * @param shiftSelect
@@ -841,7 +841,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     /**
      * Sends the selection to the server if it has been changed since the last
      * update/visit.
-     * 
+     *
      * @param immediately
      *            set to true to immediately send the rows
      */
@@ -898,7 +898,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * Get the key that moves the selection head upwards. By default it is the
      * up arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationUpKey() {
@@ -909,7 +909,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * Get the key that moves the selection head downwards. By default it is the
      * down arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationDownKey() {
@@ -920,7 +920,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * Get the key that scrolls to the left in the table. By default it is the
      * left arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationLeftKey() {
@@ -931,7 +931,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * Get the key that scroll to the right on the table. By default it is the
      * right arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationRightKey() {
@@ -942,7 +942,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * Get the key that selects an item in the table. By default it is the space
      * bar key but by overriding this you can change the key to whatever you
      * want.
-     * 
+     *
      * @return
      */
     protected int getNavigationSelectKey() {
@@ -953,7 +953,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * Get the key the moves the selection one page up in the table. By default
      * this is the Page Up key but by overriding this you can change the key to
      * whatever you want.
-     * 
+     *
      * @return
      */
     protected int getNavigationPageUpKey() {
@@ -964,7 +964,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * Get the key the moves the selection one page down in the table. By
      * default this is the Page Down key but by overriding this you can change
      * the key to whatever you want.
-     * 
+     *
      * @return
      */
     protected int getNavigationPageDownKey() {
@@ -975,7 +975,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * Get the key the moves the selection to the beginning of the table. By
      * default this is the Home key but by overriding this you can change the
      * key to whatever you want.
-     * 
+     *
      * @return
      */
     protected int getNavigationStartKey() {
@@ -986,7 +986,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * Get the key the moves the selection to the end of the table. By default
      * this is the End key but by overriding this you can change the key to
      * whatever you want.
-     * 
+     *
      * @return
      */
     protected int getNavigationEndKey() {
@@ -1093,9 +1093,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                             /*
                              * The focus is no longer on a selected row. Move
                              * focus to the selected row. (#10522)
-                             * 
+                             *
                              * Don't do this for multiselect (#13341).
-                             * 
+                             *
                              * Checking the selection mode here instead of in
                              * setRowFocus allows keyboard shift+downarrow
                              * selection to work as expected.
@@ -1185,7 +1185,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         @Override
         public void execute() {
-            if (firstvisible >= 0) {
+            if (firstvisible > 0) {
                 firstRowInViewPort = firstvisible;
                 if (firstvisibleOnLastPage > -1) {
                     scrollBodyPanel
@@ -1302,7 +1302,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     /**
      * Returns the extra space that is given to the header column when column
      * width is determined by header text.
-     * 
+     *
      * @return extra space in pixels
      */
     private int getHeaderPadding() {
@@ -1313,7 +1313,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * This method exists for the needs of {@link VTreeTable} only. Not part of
      * the official API, <b>extend at your own risk</b>. May be removed or
      * replaced in the future.
-     * 
+     *
      * @return index of TreeTable's hierarchy column, or -1 if not applicable
      */
     protected int getHierarchyColumnIndex() {
@@ -1359,7 +1359,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * Selects the last row visible in the table
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param focusOnly
      *            Should the focus only be moved to the last row
      */
@@ -1386,7 +1386,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * Selects the first row visible in the table
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param focusOnly
      *            Should the focus only be moved to the first row
      */
@@ -1485,7 +1485,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * <p>
      * Update headers whould be called before this method is called!
      * </p>
-     * 
+     *
      * @param strings
      */
     private void updateFooter(String[] strings) {
@@ -1514,7 +1514,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param uidl
      *            which contains row data
      * @param firstRow
@@ -1643,7 +1643,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * on the commands in the UIDL.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param partialRowAdditions
      *            the UIDL containing row updates.
      */
@@ -1673,7 +1673,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Gives correct column index for given column key ("cid" in UIDL).
-     * 
+     *
      * @param colKey
      * @return column index of visible columns, -1 if column not visible
      */
@@ -1741,9 +1741,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     /**
      * Note: not part of the official API, extend at your own risk. May be
      * removed or replaced in the future.
-     * 
+     *
      * Sets the indicated column's width for headers and scrollBody alike.
-     * 
+     *
      * @param colIndex
      *            index of the modified column
      * @param w
@@ -1791,7 +1791,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Get a rendered row by its key
-     * 
+     *
      * @param key
      *            The key to search with
      * @return
@@ -1812,10 +1812,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Returns the next row to the given row
-     * 
+     *
      * @param row
      *            The row to calculate from
-     * 
+     *
      * @return The next row or null if no row exists
      */
     private VScrollTableRow getNextRow(VScrollTableRow row, int offset) {
@@ -1838,7 +1838,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Returns the previous row from the given row
-     * 
+     *
      * @param row
      *            The row to calculate from
      * @return The previous row or null if no row exists
@@ -1950,13 +1950,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     /**
      * Run only once when component is attached and received its initial
      * content. This function:
-     * 
+     *
      * * Syncs headers and bodys "natural widths and saves the values.
-     * 
+     *
      * * Sets proper width and height
-     * 
+     *
      * * Makes deferred request to get some cache rows
-     * 
+     *
      * For internal use only. May be removed or replaced in the future.
      */
     public void sizeInit() {
@@ -1968,7 +1968,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * We will use browsers table rendering algorithm to find proper column
          * widths. If content and header take less space than available, we will
          * divide extra space relatively to each column which has not width set.
-         * 
+         *
          * Overflow pixels are added to last column.
          */
 
@@ -2267,7 +2267,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     /**
      * Note: this method is not part of official API although declared as
      * protected. Extend at your own risk.
-     * 
+     *
      * @return true if content area will have scrollbars visible.
      */
     protected boolean willHaveScrollbars() {
@@ -2657,7 +2657,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * Sets width to the header cell. This width should not include any
          * possible indent modifications that are present in
          * {@link VScrollTableBody#getMaxIndent()}.
-         * 
+         *
          * @param w
          *            required width of the cell sans indentations
          * @param ensureDefinedWidth
@@ -2720,7 +2720,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         /**
          * Detects if width is fixed by developer on server side or resized to
          * current width by user.
-         * 
+         *
          * @return true if defined, false if "natural" width
          */
         public boolean isDefinedWidth() {
@@ -2729,10 +2729,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * This method exists for the needs of {@link VTreeTable} only.
-         * 
+         *
          * Returns the pixels width of the header cell. This includes the
          * indent, if applicable.
-         * 
+         *
          * @return The width in pixels
          */
         protected int getWidthWithIndent() {
@@ -2747,7 +2747,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Returns the pixels width of the header cell.
-         * 
+         *
          * @return The width in pixels
          */
         public int getWidth() {
@@ -2756,7 +2756,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * This method exists for the needs of {@link VTreeTable} only.
-         * 
+         *
          * @return <code>true</code> if this is hierarcyColumn's header cell,
          *         <code>false</code> otherwise
          */
@@ -2870,7 +2870,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         /**
          * Fires a header click event after the user has clicked a column header
          * cell
-         * 
+         *
          * @param event
          *            The click event
          */
@@ -3082,7 +3082,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Returns the smallest possible cell width in pixels.
-         * 
+         *
          * @param includeIndent
          *            - width should include hierarchy column indent if
          *            applicable (VTreeTable only)
@@ -3134,10 +3134,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * Detects the natural minimum width for the column of this header cell.
          * If column is resized by user or the width is defined by server the
          * actual width is returned. Else the natural min width is returned.
-         * 
+         *
          * @param columnIndex
          *            column index hint, if -1 (unknown) it will be detected
-         * 
+         *
          * @return
          */
         public int getNaturalColumnWidth(int columnIndex) {
@@ -3198,7 +3198,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * HeaderCell that is header cell for row headers.
-     * 
+     *
      * Reordering disabled and clicking on it resets sorting.
      */
     public class RowHeadersHeaderCell extends HeaderCell {
@@ -3527,9 +3527,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Get's HeaderCell by it's column Key.
-         * 
+         *
          * Note that this returns HeaderCell even if it is currently collapsed.
-         * 
+         *
          * @param cid
          *            Column key of accessed HeaderCell
          * @return HeaderCell
@@ -3822,7 +3822,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Sets the text of the footer
-         * 
+         *
          * @param footerText
          *            The text in the footer
          */
@@ -3836,7 +3836,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Set alignment of the text in the cell
-         * 
+         *
          * @param c
          *            The alignment which can be ALIGN_CENTER, ALIGN_LEFT,
          *            ALIGN_RIGHT
@@ -3860,7 +3860,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Get the alignment of the text int the cell
-         * 
+         *
          * @return Returns either ALIGN_CENTER, ALIGN_LEFT or ALIGN_RIGHT
          */
         public char getAlign() {
@@ -3871,7 +3871,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * Sets the width of the cell. This width should not include any
          * possible indent modifications that are present in
          * {@link VScrollTableBody#getMaxIndent()}.
-         * 
+         *
          * @param w
          *            The width of the cell
          * @param ensureDefinedWidth
@@ -3953,7 +3953,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         /**
          * Detects if width is fixed by developer on server side or resized to
          * current width by user.
-         * 
+         *
          * @return true if defined, false if "natural" width
          */
         public boolean isDefinedWidth() {
@@ -3962,7 +3962,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Returns the pixels width of the footer cell.
-         * 
+         *
          * @return The width in pixels
          */
         public int getWidth() {
@@ -3971,7 +3971,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Sets the expand ratio of the cell
-         * 
+         *
          * @param floatAttribute
          *            The expand ratio
          */
@@ -3981,7 +3981,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Returns the expand ration of the cell
-         * 
+         *
          * @return The expand ratio
          */
         public float getExpandRatio() {
@@ -3990,7 +3990,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Is the cell enabled?
-         * 
+         *
          * @return True if enabled else False
          */
         public boolean isEnabled() {
@@ -4026,7 +4026,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Handles a event on the captions
-         * 
+         *
          * @param event
          *            The event to handle
          */
@@ -4040,7 +4040,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         /**
          * Fires a footer click event after the user has clicked a column footer
          * cell
-         * 
+         *
          * @param event
          *            The click event
          */
@@ -4057,7 +4057,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Returns the column key of the column
-         * 
+         *
          * @return The column key
          */
         public String getColKey() {
@@ -4068,10 +4068,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * Detects the natural minimum width for the column of this header cell.
          * If column is resized by user or the width is defined by server the
          * actual width is returned. Else the natural min width is returned.
-         * 
+         *
          * @param columnIndex
          *            column index hint, if -1 (unknown) it will be detected
-         * 
+         *
          * @return
          */
         public int getNaturalColumnWidth(int columnIndex) {
@@ -4117,7 +4117,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * HeaderCell that is header cell for row headers.
-     * 
+     *
      * Reordering disabled and clicking on it resets sorting.
      */
     public class RowHeadersFooterCell extends FooterCell {
@@ -4187,7 +4187,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.user.client.ui.Panel#remove(com.google.gwt.user.client
          * .ui.Widget)
@@ -4206,7 +4206,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
          */
 
@@ -4217,10 +4217,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Gets a footer cell which represents the given columnId
-         * 
+         *
          * @param cid
          *            The columnId
-         * 
+         *
          * @return The cell
          */
         public FooterCell getFooterCell(String cid) {
@@ -4229,7 +4229,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Gets a footer cell by using a column index
-         * 
+         *
          * @param index
          *            The index of the column
          * @return The Cell
@@ -4244,7 +4244,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Updates the cells contents when updateUIDL request is received
-         * 
+         *
          * @param uidl
          *            The UIDL
          */
@@ -4315,7 +4315,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Set a footer cell for a specified column index
-         * 
+         *
          * @param index
          *            The index
          * @param cell
@@ -4346,7 +4346,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Remove a cell by using the columnId
-         * 
+         *
          * @param colKey
          *            The columnId to remove
          */
@@ -4357,7 +4357,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Enable a column (Sets the footer cell)
-         * 
+         *
          * @param cid
          *            The columnId
          * @param index
@@ -4390,7 +4390,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         /**
          * Set the horizontal position in the cell in the footer. This is done
          * when a horizontal scrollbar is present.
-         * 
+         *
          * @param scrollLeft
          *            The value of the leftScroll
          */
@@ -4400,7 +4400,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Swap cells when the column are dragged
-         * 
+         *
          * @param oldIndex
          *            The old index of the cell
          * @param newIndex
@@ -4422,7 +4422,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * This Panel can only contain VScrollTableRow type of widgets. This
      * "simulates" very large table, keeping spacers which take room of
      * unrendered rows.
-     * 
+     *
      */
     public class VScrollTableBody extends Panel {
 
@@ -4615,7 +4615,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 /*
                  * #8040 - scroll position is completely changed since the
                  * latest request, so request a new set of rows.
-                 * 
+                 *
                  * TODO: We should probably check whether the fetched rows match
                  * the current scroll position right when they arrive, so as to
                  * not waste time rendering a set of rows that will never be
@@ -4630,7 +4630,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             } else if (firstRendered > reactFirstRow) {
                 /*
                  * Branch for fetching cache above visible area.
-                 * 
+                 *
                  * If cache needed for both before and after visible area, this
                  * will be rendered after-cache is received and rendered. So in
                  * some rare situations the table may make two cache visits to
@@ -4643,7 +4643,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Inserts rows as provided in the rowData starting at firstIndex.
-         * 
+         *
          * @param rowData
          * @param firstIndex
          * @param rows
@@ -4725,9 +4725,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * This method is used to instantiate new rows for this table. It
          * automatically sets correct widths to rows cells and assigns correct
          * client reference for child widgets.
-         * 
+         *
          * This method can be called only after table has been initialized
-         * 
+         *
          * @param uidl
          */
         private VScrollTableRow prepareRow(UIDL uidl) {
@@ -4968,7 +4968,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Returns the width available for column content.
-         * 
+         *
          * @param columnIndex
          * @return
          */
@@ -4994,14 +4994,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Sets the content width of a column.
-         * 
+         *
          * Due IE limitation, we must set the width to a wrapper elements inside
          * table cells (with overflow hidden, which does not work on td
          * elements).
-         * 
+         *
          * To get this work properly crossplatform, we will also set the width
          * of td.
-         * 
+         *
          * @param colIndex
          * @param w
          */
@@ -5027,9 +5027,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * This method exists for the needs of {@link VTreeTable} only. May be
          * removed or replaced in the future.</br> </br> Returns the maximum
          * indent of the hierarcyColumn, if applicable.
-         * 
+         *
          * @see {@link VScrollTable#getHierarchyColumnIndex()}
-         * 
+         *
          * @return maximum indent in pixels
          */
         protected int getMaxIndent() {
@@ -5295,7 +5295,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             /**
              * Overriding this and returning true causes all text cells to be
              * rendered as HTML.
-             * 
+             *
              * @return always returns false in the default implementation
              */
             protected boolean isRenderHtmlInCells() {
@@ -5304,7 +5304,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             /**
              * Detects whether row is visible in tables viewport.
-             * 
+             *
              * @return
              */
             public boolean isInViewPort() {
@@ -5320,7 +5320,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             /**
              * Makes a check based on indexes whether the row is before the
              * compared row.
-             * 
+             *
              * @param row1
              * @return true if this rows index is smaller than in the row1
              */
@@ -5331,7 +5331,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             /**
              * Sets the index of the row in the whole table. Currently used just
              * to set even/odd classname
-             * 
+             *
              * @param indexInWholeTable
              */
             private void setIndex(int indexInWholeTable) {
@@ -5510,7 +5510,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             /**
              * If there are registered click listeners, sends a click event and
              * returns true. Otherwise, does nothing and returns false.
-             * 
+             *
              * @param event
              * @param targetTdOrTr
              * @param immediate
@@ -5585,7 +5585,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             /**
              * Special handler for touch devices that support native scrolling
-             * 
+             *
              * @return Whether the event was handled by this method.
              */
             private boolean handleTouchEvent(final Event event) {
@@ -6008,7 +6008,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             /**
              * Checks if the row represented by the row key has been selected
-             * 
+             *
              * @param key
              *            The generated row key
              */
@@ -6078,7 +6078,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
              * target of the event should not be handled. If the event target is
              * the row directly this method returns the TR element instead of
              * the TD.
-             * 
+             *
              * @param event
              * @return TD or TR element that the event targets (the actual event
              *         target is this element or a child of it)
@@ -6127,7 +6127,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             /**
              * Has the row been selected?
-             * 
+             *
              * @return Returns true if selected, else false
              */
             public boolean isSelected() {
@@ -6152,7 +6152,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             /**
              * Is called when a user clicks an item when holding SHIFT key down.
              * This will select a new range from the last focused row
-             * 
+             *
              * @param deselectPrevious
              *            Should the previous selected range be deselected
              */
@@ -6221,7 +6221,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see com.vaadin.client.ui.IActionOwner#getActions ()
              */
 
@@ -6399,7 +6399,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Ensure the component has a focus.
-         * 
+         *
          * TODO the current implementation simply always calls focus for the
          * component. In case the Table at some point implements focus/blur
          * listeners, this method needs to be evolved to conditionally call
@@ -6593,7 +6593,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 if (getTotalRows() == 0) {
                     /*
                      * Too wide header combined with no rows in the table.
-                     * 
+                     *
                      * No horizontal scrollbars would be displayed because
                      * there's no rows that grows too wide causing the
                      * scrollBody container div to overflow. Must explicitely
@@ -6744,7 +6744,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * helper to set pixel size of head and body part
-     * 
+     *
      * @param pixels
      */
     private void setContentWidth(int pixels) {
@@ -6900,7 +6900,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Helper function to build html snippet for column or row headers
-     * 
+     *
      * @param uidl
      *            possibly with values caption and icon
      * @return html snippet containing possibly an icon + caption text
@@ -6933,7 +6933,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         scrollTop = scrollBodyPanel.getScrollPosition();
         /*
          * #6970 - IE sometimes fires scroll events for a detached table.
-         * 
+         *
          * FIXME initializedAndAttached should probably be renamed - its name
          * doesn't seem to reflect its semantics. onDetach() doesn't set it to
          * false, and changing that might break something else, so we need to
@@ -7225,7 +7225,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Moves the selection head to a specific row
-     * 
+     *
      * @param row
      *            The row to where the selection head should move
      * @return Returns true if focus was moved successfully, else false
@@ -7266,7 +7266,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Ensures that the row is visible
-     * 
+     *
      * @param row
      *            The row to ensure is visible
      */
@@ -7281,7 +7281,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Handles the keyboard events handled by the table
-     * 
+     *
      * @param event
      *            The keyboard event received
      * @return true iff the navigation event was handled
@@ -7538,7 +7538,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
@@ -7560,7 +7560,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
      * .dom.client.BlurEvent)
@@ -7598,7 +7598,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Removes a key from a range if the key is found in a selected range
-     * 
+     *
      * @param key
      *            The key to remove
      */
@@ -7624,7 +7624,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Can the Table be focused?
-     * 
+     *
      * @return True if the table can be focused, else false
      */
     public boolean isFocusable() {
@@ -7644,7 +7644,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.Focusable#focus()
      */
 
@@ -7713,7 +7713,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     }
 
     /**
-     * 
+     *
      * @param keyCode
      * @return true if the given keyCode is used by the table for navigation
      */
@@ -7774,7 +7774,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * Add this to the element mouse down event by using element.setPropertyJSO
      * ("onselectstart",applyDisableTextSelectionIEHack()); Remove it then again
      * when the mouse is depressed in the mouse up event.
-     * 
+     *
      * @return Returns the JSO preventing text selection
      */
     private static native JavaScriptObject getPreventTextSelectionIEHack()
@@ -7924,9 +7924,5 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         if (addCloseHandler != null) {
             addCloseHandler.removeHandler();
         }
-    }
-
-    public void totalRowsHaveChanged() {
-        firstvisibleOnLastPage = -1;
     }
 }

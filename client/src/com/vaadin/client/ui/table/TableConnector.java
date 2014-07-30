@@ -53,7 +53,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.AbstractComponentConnector#onUnregister()
      */
     @Override
@@ -64,7 +64,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.Paintable#updateFromUIDL(com.vaadin.client.UIDL,
      * com.vaadin.client.ApplicationConnection)
      */
@@ -146,9 +146,6 @@ public class TableConnector extends AbstractHasComponentsConnector implements
         getWidget().updatePageLength(uidl);
 
         getWidget().updateFirstVisibleAndScrollIfNeeded(uidl);
-        if (totalRowsHaveChanged) {
-            getWidget().totalRowsHaveChanged();
-        }
 
         getWidget().showRowHeaders = uidl.getBooleanAttribute("rowheaders");
         getWidget().showColHeaders = uidl.getBooleanAttribute("colheaders");

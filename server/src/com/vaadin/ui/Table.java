@@ -1513,7 +1513,7 @@ public class Table extends AbstractSelect implements Action.Container,
                  * position not be updated correctly when the lazy rows are
                  * finally rendered.
                  */
-                currentPageFirstItemIndexOnLastPage = currentPageFirstItemIndex;
+                currentPageFirstItemIndexOnLastPage = indexOnLastPage;
             }
 
         } else {
