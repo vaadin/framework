@@ -49,8 +49,6 @@ import com.vaadin.client.ui.grid.sort.SortEvent;
 import com.vaadin.client.ui.grid.sort.SortEventHandler;
 import com.vaadin.client.ui.grid.sort.SortOrder;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.grid.ColumnGroupRowState;
-import com.vaadin.shared.ui.grid.ColumnGroupState;
 import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
@@ -331,11 +329,6 @@ public class GridConnector extends AbstractComponentConnector {
             updateSectionFromState(getWidget().getFooter(), getState().footer);
         }
 
-        // Column row groups
-        if (stateChangeEvent.hasPropertyChanged("columnGroupRows")) {
-            updateColumnGroupsFromStateChangeEvent();
-        }
-
         if (stateChangeEvent.hasPropertyChanged("lastFrozenColumnId")) {
             String frozenColId = getState().lastFrozenColumnId;
             if (frozenColId != null) {
@@ -497,39 +490,6 @@ public class GridConnector extends AbstractComponentConnector {
                 CustomGridColumn column = columnIdToColumn.get(id);
                 columnIdIterator.remove();
                 getWidget().removeColumn(column);
-            }
-        }
-    }
-
-    /**
-     * Updates the column groups from a state change
-     */
-    private void updateColumnGroupsFromStateChangeEvent() {
-
-        // FIXME When something changes the header/footer rows will be
-        // re-created. At some point we should optimize this so partial updates
-        // can be made on the header/footer.
-        for (ColumnGroupRow<JSONObject> row : getWidget().getColumnGroupRows()) {
-            getWidget().removeColumnGroupRow(row);
-        }
-
-        for (ColumnGroupRowState rowState : getState().columnGroupRows) {
-            ColumnGroupRow<JSONObject> row = getWidget().addColumnGroupRow();
-            row.setFooterVisible(rowState.footerVisible);
-            row.setHeaderVisible(rowState.headerVisible);
-
-            for (ColumnGroupState groupState : rowState.groups) {
-                List<GridColumn<Object, JSONObject>> columns = new ArrayList<GridColumn<Object, JSONObject>>();
-                for (String columnId : groupState.columns) {
-                    CustomGridColumn column = columnIdToColumn.get(columnId);
-                    columns.add(column);
-                }
-                @SuppressWarnings("unchecked")
-                final GridColumn<?, JSONObject>[] gridColumns = columns
-                        .toArray(new GridColumn[columns.size()]);
-                ColumnGroup<JSONObject> group = row.addGroup(gridColumns);
-                group.setFooterCaption(groupState.footer);
-                group.setHeaderCaption(groupState.header);
             }
         }
     }
