@@ -1,18 +1,19 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.TextField;
 
-public class TableColumnResizeContentsWidth extends TestBase {
+public class TableColumnResizeContentsWidth extends AbstractTestUI {
 
     private static final String COL1 = "COL1";
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         final Table table = new Table();
         table.addGeneratedColumn(COL1, new ColumnGenerator() {
             @Override
@@ -47,7 +48,7 @@ public class TableColumnResizeContentsWidth extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "When a column is resized, it's contents should update to match the new size";
     }
 
