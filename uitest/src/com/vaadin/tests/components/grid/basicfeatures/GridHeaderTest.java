@@ -201,9 +201,10 @@ public class GridHeaderTest extends GridStaticSectionTest {
 
         GridCellElement spannedCell = getGridElement().getHeaderCell(1, 0);
         assertTrue(spannedCell.isDisplayed());
-        assertEquals("11", spannedCell.getAttribute("colspan"));
+        assertEquals("" + GridBasicFeatures.COLUMNS,
+                spannedCell.getAttribute("colspan"));
 
-        for (int columnIndex = 1; columnIndex < 11; columnIndex++) {
+        for (int columnIndex = 1; columnIndex < GridBasicFeatures.COLUMNS; columnIndex++) {
             GridCellElement hiddenCell = getGridElement().getHeaderCell(1,
                     columnIndex);
             assertFalse(hiddenCell.isDisplayed());
