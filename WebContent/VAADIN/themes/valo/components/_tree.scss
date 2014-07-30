@@ -116,11 +116,12 @@ $v-tree-expand-animation-enabled: false !default;
 
     &:after {
       content: "";
-      display: inline-block;
+      display: block;
       vertical-align: top;
       position: absolute;
       z-index: 1;
       left: 0;
+      margin-top: -$v-tree-row-height;
       width: 100%;
       height: $v-tree-row-height;
       border-radius: $v-border-radius;
@@ -153,8 +154,8 @@ $v-tree-expand-animation-enabled: false !default;
     @include valo-tree-expanded-icon-style(true);
   }
 
-  .#{$primary-stylename}-node-leaf > .#{$primary-stylename}-node-caption > div:before,
-  .v-ie8 & .#{$primary-stylename}-node-leaf:before {
+  .#{$primary-stylename}-node-leaf:before,
+  .#{$primary-stylename}-node-leaf > .#{$primary-stylename}-node-caption > div:before {
     visibility: hidden;
   }
 
