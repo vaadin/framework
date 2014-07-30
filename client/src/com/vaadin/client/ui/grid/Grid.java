@@ -123,10 +123,13 @@ public class Grid<T> extends Composite implements
                 RowContainer cellContainer) {
             int cellRow = cell.getRow();
             int cellColumn = cell.getColumn();
+            int colSpan = cell.getColSpan();
+            boolean columnActive = Range.withLength(cellColumn, colSpan)
+                    .contains(activeColumn);
 
             if (cellContainer == container) {
                 // Cell is in the current container
-                if (cellRow == activeRow && cellColumn == activeColumn) {
+                if (cellRow == activeRow && columnActive) {
                     if (cellWithActiveStyle != cell.getElement()) {
                         // Cell is correct but it does not have active style
                         if (cellWithActiveStyle != null) {
@@ -152,7 +155,7 @@ public class Grid<T> extends Composite implements
                     || cellContainer == escalator.getFooter()) {
                 // Correct header and footer column also needs highlighting
                 setStyleName(cell.getElement(), headerFooterActiveStyleName,
-                        cellColumn == activeColumn);
+                        columnActive);
             }
         }
 

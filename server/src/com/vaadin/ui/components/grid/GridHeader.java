@@ -57,7 +57,7 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
         HeaderRow row = createRow();
         rows.add(row);
         setDefaultRow(row);
-        getState().rows.add(row.getRowState());
+        getSectionState().rows.add(row.getRowState());
     }
 
     /**
@@ -103,7 +103,7 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
     }
 
     @Override
-    protected GridStaticSectionState getState() {
+    protected GridStaticSectionState getSectionState() {
         return headerState;
     }
 

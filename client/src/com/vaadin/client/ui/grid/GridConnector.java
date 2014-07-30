@@ -36,11 +36,13 @@ import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.data.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
+import com.vaadin.client.ui.grid.GridStaticSection.StaticCell;
 import com.vaadin.client.ui.grid.GridStaticSection.StaticRow;
 import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
 import com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel;
 import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
 import com.vaadin.client.ui.grid.selection.SelectionChangeHandler;
+import com.vaadin.client.ui.grid.selection.SelectionModel;
 import com.vaadin.client.ui.grid.selection.SelectionModelMulti;
 import com.vaadin.client.ui.grid.selection.SelectionModelNone;
 import com.vaadin.client.ui.grid.selection.SelectionModelSingle;
@@ -288,9 +290,24 @@ public class GridConnector extends AbstractComponentConnector {
 
             assert rowState.cells.size() == getWidget().getColumnCount();
 
+            int diff = 1;
+            if (getWidget().getSelectionModel() instanceof SelectionModel.None) {
+                diff = 0;
+            }
+
             int i = 0;
             for (CellState cellState : rowState.cells) {
-                row.getCell(i++).setText(cellState.text);
+                StaticCell cell = row.getCell(diff + (i++));
+                cell.setText(cellState.text);
+            }
+
+            for (List<Integer> group : rowState.cellGroups) {
+                GridColumn<?, ?>[] columns = new GridColumn<?, ?>[group.size()];
+                i = 0;
+                for (Integer colIndex : group) {
+                    columns[i++] = getWidget().getColumn(diff + colIndex);
+                }
+                row.join(columns);
             }
 
             if (section instanceof GridHeader && rowState.defaultRow) {

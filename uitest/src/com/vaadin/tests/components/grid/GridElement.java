@@ -38,9 +38,14 @@ public class GridElement extends AbstractComponentElement {
     public static class GridCellElement extends AbstractElement {
 
         private String ACTIVE_CLASS_NAME = "-cell-active";
+        private String ACTIVE_HEADER_CLASS_NAME = "-header-active";
 
         public boolean isActive() {
             return getAttribute("class").contains(ACTIVE_CLASS_NAME);
+        }
+
+        public boolean isActiveHeader() {
+            return getAttribute("class").contains(ACTIVE_HEADER_CLASS_NAME);
         }
     }
 

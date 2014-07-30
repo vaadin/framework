@@ -54,7 +54,7 @@ public class GridFooter extends GridStaticSection<GridFooter.FooterRow> {
     }
 
     @Override
-    protected GridStaticSectionState getState() {
+    protected GridStaticSectionState getSectionState() {
         return footerState;
     }
 

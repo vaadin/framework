@@ -17,6 +17,10 @@ package com.vaadin.ui.components.grid;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +53,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
         private RowState rowState = new RowState();
         protected GridStaticSection<?> section;
         private Map<Object, CELLTYPE> cells = new LinkedHashMap<Object, CELLTYPE>();
+        private Collection<List<CELLTYPE>> cellGroups = new HashSet<List<CELLTYPE>>();
 
         protected StaticRow(GridStaticSection<?> section) {
             this.section = section;
@@ -82,6 +87,98 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          */
         public CELLTYPE getCell(Object propertyId) {
             return cells.get(propertyId);
+        }
+
+        /**
+         * Merges cells in a row
+         * 
+         * @param cells
+         *            The cells to be merged
+         * @return The first cell of the merged cells
+         */
+        protected CELLTYPE join(List<CELLTYPE> cells) {
+            assert cells.size() > 1 : "You cannot merge less than 2 cells together";
+
+            // Ensure no cell is already grouped
+            for (CELLTYPE cell : cells) {
+                if (getCellGroupForCell(cell) != null) {
+                    throw new IllegalStateException("Cell " + cell.getText()
+                            + " is already grouped.");
+                }
+            }
+
+            // Ensure continuous range
+            Iterator<CELLTYPE> cellIterator = this.cells.values().iterator();
+            CELLTYPE current = null;
+            int firstIndex = 0;
+
+            while (cellIterator.hasNext()) {
+                current = cellIterator.next();
+                if (current == cells.get(0)) {
+                    break;
+                }
+                firstIndex++;
+            }
+
+            for (int i = 1; i < cells.size(); ++i) {
+                current = cellIterator.next();
+
+                if (current != cells.get(i)) {
+                    throw new IllegalStateException(
+                            "Cell range must be a continous range");
+                }
+            }
+
+            // Create a new group
+            final ArrayList<CELLTYPE> cellGroup = new ArrayList<CELLTYPE>(cells);
+            cellGroups.add(cellGroup);
+
+            // Add group to state
+            List<Integer> stateGroup = new ArrayList<Integer>();
+            for (int i = 0; i < cells.size(); ++i) {
+                stateGroup.add(firstIndex + i);
+            }
+            rowState.cellGroups.add(stateGroup);
+            section.markAsDirty();
+
+            // Returns first cell of group
+            return cells.get(0);
+        }
+
+        /**
+         * Merges columns cells in a row
+         * 
+         * @param properties
+         *            The column properties which header should be merged
+         * @return The remaining visible cell after the merge
+         */
+        public CELLTYPE join(Object... properties) {
+            List<CELLTYPE> cells = new ArrayList<CELLTYPE>();
+            for (int i = 0; i < properties.length; ++i) {
+                cells.add(getCell(properties[i]));
+            }
+
+            return join(cells);
+        }
+
+        /**
+         * Merges columns cells in a row
+         * 
+         * @param cells
+         *            The cells to merge. Must be from the same row.
+         * @return The remaining visible cell after the merge
+         */
+        public CELLTYPE join(CELLTYPE... cells) {
+            return join(Arrays.asList(cells));
+        }
+
+        private List<CELLTYPE> getCellGroupForCell(CELLTYPE cell) {
+            for (List<CELLTYPE> group : cellGroups) {
+                if (group.contains(cell)) {
+                    return group;
+                }
+            }
+            return null;
         }
     }
 
@@ -148,8 +245,8 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      *            true to show this section, false to hide
      */
     public void setVisible(boolean visible) {
-        if (getState().visible != visible) {
-            getState().visible = visible;
+        if (getSectionState().visible != visible) {
+            getSectionState().visible = visible;
             markAsDirty();
         }
     }
@@ -160,7 +257,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      * @return true if visible, false otherwise.
      */
     public boolean isVisible() {
-        return getState().visible;
+        return getSectionState().visible;
     }
 
     /**
@@ -174,7 +271,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      */
     public ROWTYPE removeRow(int rowIndex) {
         ROWTYPE row = rows.remove(rowIndex);
-        getState().rows.remove(rowIndex);
+        getSectionState().rows.remove(rowIndex);
 
         markAsDirty();
         return row;
@@ -240,7 +337,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
     public ROWTYPE addRowAt(int index) {
         ROWTYPE row = createRow();
         rows.add(index, row);
-        getState().rows.add(index, row.getRowState());
+        getSectionState().rows.add(index, row.getRowState());
 
         Indexed dataSource = grid.getContainerDatasource();
         for (Object id : dataSource.getContainerPropertyIds()) {
@@ -260,7 +357,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
         return rows.size();
     }
 
-    protected abstract GridStaticSectionState getState();
+    protected abstract GridStaticSectionState getSectionState();
 
     protected abstract ROWTYPE createRow();
 

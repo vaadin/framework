@@ -79,6 +79,14 @@ public class FlyweightCell {
     }
 
     /**
+     * Return the colspan attribute of the element of the cell.
+     */
+    public int getColSpan() {
+        assertSetup();
+        return element.getPropertyInt(COLSPAN_ATTR);
+    }
+
+    /**
      * Sets the DOM element for this FlyweightCell, either a <code>TD</code> or
      * a <code>TH</code>. It is the caller's responsibility to actually insert
      * the given element to the document when needed.
