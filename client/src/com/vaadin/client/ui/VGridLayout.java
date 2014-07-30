@@ -95,7 +95,7 @@ public class VGridLayout extends ComplexPanel {
 
     /**
      * Returns the column widths measured in pixels
-     *
+     * 
      * @return
      */
     protected int[] getColumnWidths() {
@@ -104,7 +104,7 @@ public class VGridLayout extends ComplexPanel {
 
     /**
      * Returns the row heights measured in pixels
-     *
+     * 
      * @return
      */
     protected int[] getRowHeights() {
@@ -113,7 +113,7 @@ public class VGridLayout extends ComplexPanel {
 
     /**
      * Returns the spacing between the cells horizontally in pixels
-     *
+     * 
      * @return
      */
     protected int getHorizontalSpacing() {
@@ -122,7 +122,7 @@ public class VGridLayout extends ComplexPanel {
 
     /**
      * Returns the spacing between the cells vertically in pixels
-     *
+     * 
      * @return
      */
     protected int getVerticalSpacing() {
@@ -271,7 +271,7 @@ public class VGridLayout extends ComplexPanel {
         }
         for (SpanList l : rowSpans) {
             for (Cell cell : l.cells) {
-                if (cell.row >= i && i < cell.row + cell.rowspan) {
+                if (cell.row <= i && i < cell.row + cell.rowspan) {
                     return true;
                 }
             }
@@ -287,7 +287,7 @@ public class VGridLayout extends ComplexPanel {
         }
         for (SpanList l : colSpans) {
             for (Cell cell : l.cells) {
-                if (cell.col >= i && i < cell.col + cell.colspan) {
+                if (cell.col <= i && i < cell.col + cell.colspan) {
                     return true;
                 }
             }
@@ -751,7 +751,7 @@ public class VGridLayout extends ComplexPanel {
      * Creates a new Cell with the given coordinates.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     *
+     * 
      * @param row
      * @param col
      * @return
@@ -767,7 +767,7 @@ public class VGridLayout extends ComplexPanel {
      * child component is also returned if "element" is part of its caption.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     *
+     * 
      * @param element
      *            An element that is a nested sub element of the root element in
      *            this layout
@@ -788,13 +788,13 @@ public class VGridLayout extends ComplexPanel {
      * child component is also returned if "element" is part of its caption.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     *
+     * 
      * @param element
      *            An element that is a nested sub element of the root element in
      *            this layout
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
-     *
+     * 
      * @since 7.2
      */
     public ComponentConnector getComponent(Element element) {
