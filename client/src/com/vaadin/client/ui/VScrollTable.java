@@ -1100,10 +1100,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                              * setRowFocus allows keyboard shift+downarrow
                              * selection to work as expected.
                              */
-                            if (isSingleSelectMode()) {
-                                setRowFocus(row);
-                            }
 
+                            setRowFocus(row);
                         }
                     }
                     if (selected != row.isSelected()) {
@@ -7256,7 +7254,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // Set new focused row
             focusedRow = row;
 
-            ensureRowIsVisible(row);
+            /*
+             * Don't scroll to the focused row when in multiselect mode.
+             * (#13341)
+             */
+
+            if (isSingleSelectMode()) {
+                ensureRowIsVisible(row);
+            }
 
             return true;
         }

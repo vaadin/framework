@@ -65,7 +65,7 @@ public class SelectAllConstantViewport extends AbstractTestUIWithLog {
             table.addItem(new Object[] { new Integer(i) }, new Integer(i));
         }
 
-        table.setCurrentPageFirstItemIndex(178);
+        table.setCurrentPageFirstItemIndex(185);
 
         final CssLayout layout = new CssLayout();
         layout.addComponent(selectAllCheckbox);
@@ -82,9 +82,7 @@ public class SelectAllConstantViewport extends AbstractTestUIWithLog {
     @Override
     protected String getTestDescription() {
 
-        return "The scroll position of a table with many items should remain constant if all items are "
-                + "selected. The scroll position should change if the user uses the keyboard to select "
-                + "multiple lines with shift+arrowkeys.";
+        return "The scroll position of a table with many items should remain constant if all items are selected.";
     }
 
     /*
