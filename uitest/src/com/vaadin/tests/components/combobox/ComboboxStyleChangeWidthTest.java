@@ -21,7 +21,6 @@ import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.tests.tb3.AbstractTB3Test.RunLocally;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -31,7 +30,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * @author Vaadin Ltd
  */
 
-@RunLocally()
 public class ComboboxStyleChangeWidthTest extends MultiBrowserTest {
 
     @Test
