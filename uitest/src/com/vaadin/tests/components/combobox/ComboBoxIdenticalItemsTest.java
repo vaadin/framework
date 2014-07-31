@@ -36,8 +36,8 @@ public class ComboBoxIdenticalItemsTest extends MultiBrowserTest {
         openTestURL();
 
         // wait for the UI to be fully loaded
-        waitForElementToBePresent(By.className("v-filterselect"));
-        waitForElementToBePresent(By.id("Log"));
+        waitForElementVisible(By.className("v-filterselect"));
+        waitForElementVisible(By.id("Log"));
 
         select = findElement(By
                 .vaadin("/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VFilterSelect[0]/domChild[0]"));

@@ -453,7 +453,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         waitUntil(ExpectedConditions.not(condition), timeoutInSeconds);
     }
 
-    protected void waitForElementToBePresent(By by) {
+    protected void waitForElementVisible(By by) {
         waitUntil(ExpectedConditions.not(ExpectedConditions
                 .invisibilityOfElementLocated(by)));
     }
