@@ -16,19 +16,24 @@
 
 package com.vaadin.tests.tb3;
 
-import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
-import com.vaadin.server.LegacyApplication;
-import com.vaadin.server.UIProvider;
-import com.vaadin.testbench.TestBench;
-import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.TestBenchTestCase;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
-import com.vaadin.ui.UI;
+import static com.vaadin.tests.tb3.TB3Runner.localWebDriverIsUsed;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Platform;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
@@ -41,15 +46,15 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-
-import static com.vaadin.tests.tb3.TB3Runner.localWebDriverIsUsed;
+import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
+import com.vaadin.server.LegacyApplication;
+import com.vaadin.server.UIProvider;
+import com.vaadin.testbench.TestBench;
+import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.TestBenchTestCase;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
+import com.vaadin.ui.UI;
 
 /**
  * Base class for TestBench 3+ tests. All TB3+ tests in the project should
@@ -356,13 +361,25 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @return Focused element or null
      */
     protected WebElement getFocusedElement() {
-        Object focusedElement = ((JavascriptExecutor) getDriver())
-                .executeScript("return document.activeElement");
+        Object focusedElement = executeScript("return document.activeElement");
         if (null != focusedElement) {
             return (WebElement) focusedElement;
         } else {
             return null;
         }
+    }
+
+    /**
+     * Executes the given Javascript
+     * 
+     * @param script
+     *            the script to execute
+     * @return whatever
+     *         {@link org.openqa.selenium.JavascriptExecutor#executeScript(String, Object...)}
+     *         returns
+     */
+    protected Object executeScript(String script) {
+        return ((JavascriptExecutor) getDriver()).executeScript(script);
     }
 
     /**
@@ -411,7 +428,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @param condition
      *            the condition to wait for to become true
      */
-    protected void waitUntil(ExpectedCondition<Boolean> condition) {
+    protected <T> void waitUntil(ExpectedCondition<T> condition) {
         waitUntil(condition, 10);
     }
 
@@ -423,7 +440,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @param condition
      *            the condition to wait for to become true
      */
-    protected void waitUntil(ExpectedCondition<Boolean> condition,
+    protected <T> void waitUntil(ExpectedCondition<T> condition,
             long timeoutInSeconds) {
         new WebDriverWait(driver, timeoutInSeconds).until(condition);
     }
@@ -436,7 +453,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @param condition
      *            the condition to wait for to become false
      */
-    protected void waitUntilNot(ExpectedCondition<Boolean> condition) {
+    protected <T> void waitUntilNot(ExpectedCondition<T> condition) {
         waitUntilNot(condition, 10);
     }
 
@@ -448,14 +465,42 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @param condition
      *            the condition to wait for to become false
      */
-    protected void waitUntilNot(ExpectedCondition<Boolean> condition,
+    protected <T> void waitUntilNot(ExpectedCondition<T> condition,
             long timeoutInSeconds) {
         waitUntil(ExpectedConditions.not(condition), timeoutInSeconds);
     }
 
-    protected void waitForElementVisible(By by) {
-        waitUntil(ExpectedConditions.not(ExpectedConditions
-                .invisibilityOfElementLocated(by)));
+    protected void waitForElementPresent(final By by) {
+        waitUntil(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    protected void waitForElementVisible(final By by) {
+        waitUntil(ExpectedConditions.visibilityOfElementLocated(by));
+    }
+
+    /**
+     * Checks if the given element has the given class name.
+     * 
+     * Matches only full class names, i.e. has ("foo") does not match
+     * class="foobar"
+     * 
+     * @param element
+     * @param className
+     * @return
+     */
+    protected boolean hasCssClass(WebElement element, String className) {
+        String classes = element.getAttribute("class");
+        if (classes == null || classes.isEmpty()) {
+            return (className == null || className.isEmpty());
+        }
+
+        for (String cls : classes.split(" ")) {
+            if (className.equals(cls)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
