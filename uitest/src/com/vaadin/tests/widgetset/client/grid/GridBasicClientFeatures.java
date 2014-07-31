@@ -145,13 +145,17 @@ public class GridBasicClientFeatures extends
 
             final int c = col;
 
-            grid.addColumn(new GridColumn<String, List<Data>>(
+            GridColumn<String, List<Data>> column = new GridColumn<String, List<Data>>(
                     createRenderer(Renderers.TEXT_RENDERER)) {
                 @Override
                 public String getValue(List<Data> row) {
                     return (String) row.get(c).value;
                 }
-            });
+            };
+
+            column.setWidth(50 + c * 25);
+
+            grid.addColumn(column);
 
         }
 
@@ -273,6 +277,24 @@ public class GridBasicClientFeatures extends
                             !grid.getColumn(index).isSortable());
                 }
             }, "Component", "Columns", "Column " + i);
+            addMenuCommand("auto", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    grid.getColumn(index).setWidth(-1);
+                }
+            }, "Component", "Columns", "Column " + i, "Width");
+            addMenuCommand("50px", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    grid.getColumn(index).setWidth(50);
+                }
+            }, "Component", "Columns", "Column " + i, "Width");
+            addMenuCommand("200px", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    grid.getColumn(index).setWidth(200);
+                }
+            }, "Component", "Columns", "Column " + i, "Width");
         }
     }
 

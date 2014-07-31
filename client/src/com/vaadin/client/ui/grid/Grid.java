@@ -1193,14 +1193,7 @@ public class Grid<T> extends Composite implements
          * @return pixel width of the column
          */
         public int getWidth() {
-            if (grid == null) {
-                return width;
-            } else {
-                int index = findIndexOfColumn();
-                ColumnConfiguration conf = grid.escalator
-                        .getColumnConfiguration();
-                return conf.getColumnWidth(index);
-            }
+            return width;
         }
 
         /**
