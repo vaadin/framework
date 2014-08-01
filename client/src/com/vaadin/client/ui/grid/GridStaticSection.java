@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.grid.GridStaticCellType;
 
 /**
  * Abstract base class for Grid header and footer sections.
@@ -39,17 +40,13 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      */
     static class StaticCell {
 
-        public enum Type {
-            TEXT, HTML, WIDGET;
-        }
-
         private Object content = null;
 
         private int colspan = 1;
 
         private GridStaticSection<?> section;
 
-        private Type type = Type.TEXT;
+        private GridStaticCellType type = GridStaticCellType.TEXT;
 
         /**
          * Sets the text displayed in this cell.
@@ -59,7 +56,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          */
         public void setText(String text) {
             this.content = text;
-            this.type = Type.TEXT;
+            this.type = GridStaticCellType.TEXT;
             section.requestSectionRefresh();
         }
 
@@ -69,7 +66,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          * @return the plain text caption
          */
         public String getText() {
-            if (type != Type.TEXT) {
+            if (type != GridStaticCellType.TEXT) {
                 throw new IllegalStateException(
                         "Cannot fetch Text from a cell with type " + type);
             }
@@ -120,7 +117,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          * @return the html content of the cell.
          */
         public String getHtml() {
-            if (type != Type.HTML) {
+            if (type != GridStaticCellType.HTML) {
                 throw new IllegalStateException(
                         "Cannot fetch HTML from a cell with type " + type);
             }
@@ -136,7 +133,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          */
         public void setHtml(String html) {
             this.content = html;
-            this.type = Type.HTML;
+            this.type = GridStaticCellType.HTML;
             section.requestSectionRefresh();
         }
 
@@ -149,7 +146,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          * @return the widget in the cell
          */
         public Widget getWidget() {
-            if (type != Type.WIDGET) {
+            if (type != GridStaticCellType.WIDGET) {
                 throw new IllegalStateException(
                         "Cannot fetch Widget from a cell with type " + type);
             }
@@ -166,7 +163,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          */
         public void setWidget(Widget widget) {
             this.content = widget;
-            this.type = Type.WIDGET;
+            this.type = GridStaticCellType.WIDGET;
             section.requestSectionRefresh();
         }
 
@@ -175,7 +172,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          * 
          * @return the type of content the cell contains.
          */
-        public Type getType() {
+        public GridStaticCellType getType() {
             return type;
         }
     }

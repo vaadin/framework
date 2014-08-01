@@ -26,9 +26,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.data.Container.Indexed;
+import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.GridStaticSectionState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.CellState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
+import com.vaadin.ui.Component;
 
 /**
  * Abstract base class for Grid header and footer sections.
@@ -47,7 +49,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      * @param <CELLTYPE>
      *            the type of the cells in the row
      */
-    abstract static class StaticRow<CELLTYPE extends StaticCell<?>> implements
+    abstract static class StaticRow<CELLTYPE extends StaticCell> implements
             Serializable {
 
         private RowState rowState = new RowState();
@@ -184,17 +186,13 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
 
     /**
      * A header or footer cell. Has a simple textual caption.
-     * 
-     * @param <ROWTYPE>
-     *            the type of row this cells is in
      */
-    abstract static class StaticCell<ROWTYPE extends StaticRow<?>> implements
-            Serializable {
+    abstract static class StaticCell implements Serializable {
 
         private CellState cellState = new CellState();
-        private ROWTYPE row;
+        private StaticRow<?> row;
 
-        protected StaticCell(ROWTYPE row) {
+        protected StaticCell(StaticRow<?> row) {
             this.row = row;
         }
 
@@ -203,7 +201,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          * 
          * @return row for this cell
          */
-        public ROWTYPE getRow() {
+        public StaticRow<?> getRow() {
             return row;
         }
 
@@ -212,26 +210,83 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
         }
 
         /**
-         * Gets the current text content of this cell. Text is null if HTML or
-         * Component content is used.
+         * Sets the text displayed in this cell.
          * 
-         * @return text content or null
+         * @param text
+         *            a plain text caption
+         */
+        public void setText(String text) {
+            cellState.text = text;
+            cellState.type = GridStaticCellType.TEXT;
+            row.section.markAsDirty();
+        }
+
+        /**
+         * Returns the text displayed in this cell.
+         * 
+         * @return the plain text caption
          */
         public String getText() {
+            if (cellState.type != GridStaticCellType.TEXT) {
+                throw new IllegalStateException(
+                        "Cannot fetch Text from a cell with type "
+                                + cellState.type);
+            }
             return cellState.text;
         }
 
         /**
-         * Sets the current text content of this cell.
+         * Returns the HTML content displayed in this cell.
          * 
-         * @param text
-         *            new text content
+         * @return the html
+         * 
          */
-        public void setText(String text) {
-            if (text != null && !text.equals(getCellState().text)) {
-                getCellState().text = text;
-                row.section.markAsDirty();
+        public String getHtml() {
+            if (cellState.type != GridStaticCellType.HTML) {
+                throw new IllegalStateException(
+                        "Cannot fetch HTML from a cell with type "
+                                + cellState.type);
             }
+            return cellState.html;
+        }
+
+        /**
+         * Sets the HTML content displayed in this cell.
+         * 
+         * @param html
+         *            the html to set
+         */
+        public void setHtml(String html) {
+            cellState.html = html;
+            cellState.type = GridStaticCellType.HTML;
+            row.section.markAsDirty();
+        }
+
+        /**
+         * Returns the component displayed in this cell.
+         * 
+         * @return the component
+         */
+        public Component getComponent() {
+            if (cellState.type != GridStaticCellType.WIDGET) {
+                throw new IllegalStateException(
+                        "Cannot fetch Component from a cell with type "
+                                + cellState.type);
+            }
+            return (Component) cellState.connector;
+        }
+
+        /**
+         * Sets the component displayed in this cell.
+         * 
+         * @param component
+         *            the component to set
+         */
+        public void setComponent(Component component) {
+            component.setParent(row.section.grid);
+            cellState.connector = component;
+            cellState.type = GridStaticCellType.WIDGET;
+            row.section.markAsDirty();
         }
     }
 

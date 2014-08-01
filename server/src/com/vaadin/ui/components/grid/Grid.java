@@ -45,10 +45,16 @@ import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridState.SharedSelectionMode;
+import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.HasComponents;
+import com.vaadin.ui.components.grid.GridFooter.FooterCell;
+import com.vaadin.ui.components.grid.GridFooter.FooterRow;
+import com.vaadin.ui.components.grid.GridHeader.HeaderCell;
 import com.vaadin.ui.components.grid.GridHeader.HeaderRow;
 import com.vaadin.ui.components.grid.selection.MultiSelectionModel;
 import com.vaadin.ui.components.grid.selection.NoSelectionModel;
@@ -123,7 +129,8 @@ import com.vaadin.util.ReflectTools;
  * @since
  * @author Vaadin Ltd
  */
-public class Grid extends AbstractComponent implements SelectionChangeNotifier {
+public class Grid extends AbstractComponent implements SelectionChangeNotifier,
+        HasComponents {
 
     /**
      * Selection modes representing built-in {@link SelectionModel
@@ -1258,5 +1265,34 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      */
     public GridFooter getFooter() {
         return footer;
+    }
+
+    @Override
+    public Iterator<Component> iterator() {
+        List<Component> componentList = new ArrayList<Component>();
+
+        GridHeader header = getHeader();
+        for (int i = 0; i < header.getRowCount(); ++i) {
+            HeaderRow row = header.getRow(i);
+            for (Object propId : datasource.getContainerPropertyIds()) {
+                HeaderCell cell = row.getCell(propId);
+                if (cell.getCellState().type == GridStaticCellType.WIDGET) {
+                    componentList.add(cell.getComponent());
+                }
+            }
+        }
+
+        GridFooter footer = getFooter();
+        for (int i = 0; i < footer.getRowCount(); ++i) {
+            FooterRow row = footer.getRow(i);
+            for (Object propId : datasource.getContainerPropertyIds()) {
+                FooterCell cell = row.getCell(propId);
+                if (cell.getCellState().type == GridStaticCellType.WIDGET) {
+                    componentList.add(cell.getComponent());
+                }
+            }
+        }
+
+        return componentList.iterator();
     }
 }

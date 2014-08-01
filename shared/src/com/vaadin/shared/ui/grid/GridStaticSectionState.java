@@ -19,6 +19,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.shared.Connector;
+
 /**
  * Shared state for Grid headers and footers.
  * 
@@ -29,6 +31,12 @@ public class GridStaticSectionState implements Serializable {
 
     public static class CellState implements Serializable {
         public String text = "";
+
+        public String html = "";
+
+        public Connector connector = null;
+
+        public GridStaticCellType type = GridStaticCellType.TEXT;
     }
 
     public static class RowState implements Serializable {

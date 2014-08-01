@@ -28,14 +28,20 @@ import java.util.Random;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.tests.components.AbstractComponentTest;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.GridColumn;
 import com.vaadin.ui.components.grid.GridFooter;
+import com.vaadin.ui.components.grid.GridFooter.FooterCell;
 import com.vaadin.ui.components.grid.GridHeader;
+import com.vaadin.ui.components.grid.GridHeader.HeaderCell;
 import com.vaadin.ui.components.grid.GridHeader.HeaderRow;
 import com.vaadin.ui.components.grid.SortOrderChangeEvent;
 import com.vaadin.ui.components.grid.SortOrderChangeListener;
@@ -440,6 +446,88 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             }
                         }, w, c);
             }
+
+            LinkedHashMap<String, GridStaticCellType> defaultRows = new LinkedHashMap<String, GridStaticCellType>();
+            defaultRows.put("Text Header", GridStaticCellType.TEXT);
+            defaultRows.put("Html Header ", GridStaticCellType.HTML);
+            defaultRows.put("Widget Header", GridStaticCellType.WIDGET);
+
+            createMultiClickAction("Header Type", getColumnProperty(c),
+                    defaultRows, new Command<Grid, GridStaticCellType>() {
+
+                        @Override
+                        public void execute(Grid grid,
+                                GridStaticCellType value, Object columnIndex) {
+                            final Object propertyId = (new ArrayList(grid
+                                    .getContainerDatasource()
+                                    .getContainerPropertyIds())
+                                    .get((Integer) columnIndex));
+                            final HeaderCell cell = grid.getHeader()
+                                    .getDefaultRow().getCell(propertyId);
+                            switch (value) {
+                            case TEXT:
+                                cell.setText("Text Header");
+                                break;
+                            case HTML:
+                                cell.setHtml("HTML Header");
+                                break;
+                            case WIDGET:
+                                cell.setComponent(new Button("Button Header",
+                                        new ClickListener() {
+
+                                            @Override
+                                            public void buttonClick(
+                                                    ClickEvent event) {
+                                                log("Button clicked!");
+                                            }
+                                        }));
+                            default:
+                                break;
+                            }
+                        }
+
+                    }, c);
+
+            defaultRows = new LinkedHashMap<String, GridStaticCellType>();
+            defaultRows.put("Text Footer", GridStaticCellType.TEXT);
+            defaultRows.put("Html Footer", GridStaticCellType.HTML);
+            defaultRows.put("Widget Footer", GridStaticCellType.WIDGET);
+
+            createMultiClickAction("Footer Type", getColumnProperty(c),
+                    defaultRows, new Command<Grid, GridStaticCellType>() {
+
+                        @Override
+                        public void execute(Grid grid,
+                                GridStaticCellType value, Object columnIndex) {
+                            final Object propertyId = (new ArrayList(grid
+                                    .getContainerDatasource()
+                                    .getContainerPropertyIds())
+                                    .get((Integer) columnIndex));
+                            final FooterCell cell = grid.getFooter().getRow(0)
+                                    .getCell(propertyId);
+                            switch (value) {
+                            case TEXT:
+                                cell.setText("Text Footer");
+                                break;
+                            case HTML:
+                                cell.setHtml("HTML Footer");
+                                break;
+                            case WIDGET:
+                                cell.setComponent(new Button("Button Footer",
+                                        new ClickListener() {
+
+                                            @Override
+                                            public void buttonClick(
+                                                    ClickEvent event) {
+                                                log("Button clicked!");
+                                            }
+                                        }));
+                            default:
+                                break;
+                            }
+                        }
+
+                    }, c);
         }
     }
 

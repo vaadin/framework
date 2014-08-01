@@ -62,6 +62,7 @@ import com.vaadin.client.ui.grid.sort.SortEvent;
 import com.vaadin.client.ui.grid.sort.SortEventHandler;
 import com.vaadin.client.ui.grid.sort.SortOrder;
 import com.vaadin.shared.ui.grid.GridConstants;
+import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.ui.grid.ScrollDestination;
@@ -1101,7 +1102,7 @@ public class Grid<T> extends Composite implements
                  * If the cell contains widgets that are not currently attach
                  * then attach them now.
                  */
-                if (StaticCell.Type.WIDGET.equals(metadata.getType())) {
+                if (GridStaticCellType.WIDGET.equals(metadata.getType())) {
                     final Widget widget = metadata.getWidget();
                     final Element cellElement = cell.getElement();
 
@@ -1129,7 +1130,7 @@ public class Grid<T> extends Composite implements
                     int index = columnIndices.get(cell.getColumn());
                     StaticCell metadata = gridRow.getCell(index);
 
-                    if (StaticCell.Type.WIDGET.equals(metadata.getType())
+                    if (GridStaticCellType.WIDGET.equals(metadata.getType())
                             && metadata.getWidget().isAttached()) {
 
                         Widget widget = metadata.getWidget();

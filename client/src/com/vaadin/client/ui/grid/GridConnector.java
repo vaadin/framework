@@ -30,11 +30,13 @@ import java.util.logging.Logger;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
+import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.data.RpcDataSourceConnector.RpcDataSource;
-import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.GridStaticSection.StaticCell;
 import com.vaadin.client.ui.grid.GridStaticSection.StaticRow;
@@ -73,7 +75,7 @@ import com.vaadin.shared.ui.grid.SortDirection;
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.components.grid.Grid.class)
-public class GridConnector extends AbstractComponentConnector {
+public class GridConnector extends AbstractHasComponentsConnector {
 
     /**
      * Custom implementation of the custom grid column using a JSONObject to
@@ -297,8 +299,22 @@ public class GridConnector extends AbstractComponentConnector {
 
             int i = 0;
             for (CellState cellState : rowState.cells) {
-                StaticCell cell = row.getCell(diff + (i++));
-                cell.setText(cellState.text);
+                StaticCell cell = row.getCell(i++);
+                switch (cellState.type) {
+                case TEXT:
+                    cell.setText(cellState.text);
+                    break;
+                case HTML:
+                    cell.setHtml(cellState.text);
+                    break;
+                case WIDGET:
+                    ComponentConnector connector = (ComponentConnector) cellState.connector;
+                    cell.setWidget(connector.getWidget());
+                    break;
+                default:
+                    throw new IllegalStateException("unexpected cell type: "
+                            + cellState.type);
+                }
             }
 
             for (List<Integer> group : rowState.cellGroups) {
@@ -569,5 +585,23 @@ public class GridConnector extends AbstractComponentConnector {
         assert key instanceof String : "Internal key was not a String but a "
                 + key.getClass().getSimpleName() + " (" + key + ")";
         return (String) key;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin.client
+     * .ComponentConnector)
+     */
+    @Override
+    public void updateCaption(ComponentConnector connector) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
     }
 }

@@ -38,7 +38,7 @@ public class GridFooter extends GridStaticSection<GridFooter.FooterRow> {
 
     }
 
-    public class FooterCell extends GridStaticSection.StaticCell<FooterRow> {
+    public class FooterCell extends GridStaticSection.StaticCell {
 
         protected FooterCell(FooterRow row) {
             super(row);

@@ -41,7 +41,7 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
         }
     }
 
-    public class HeaderCell extends GridStaticSection.StaticCell<HeaderRow> {
+    public class HeaderCell extends GridStaticSection.StaticCell {
 
         protected HeaderCell(HeaderRow row) {
             super(row);
