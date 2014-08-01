@@ -5,7 +5,8 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractSelect.ItemDescriptionGenerator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -13,7 +14,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
-public class TableItemDescriptionGeneratorTest extends TestBase {
+public class TableItemDescriptionGeneratorUI extends AbstractTestUI {
 
     private final String TEXT_PROPERTY_ID = "Text";
     private final String GEN_WIDGET_PROPERTY_ID = "Generated component";
@@ -23,7 +24,7 @@ public class TableItemDescriptionGeneratorTest extends TestBase {
     private CheckBox tableRowItemDescription;
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         final Table table = createTable();
         table.setId("table");
         componentDescription = new CheckBox("Tooltip on components");
@@ -73,7 +74,7 @@ public class TableItemDescriptionGeneratorTest extends TestBase {
                 if (propertyId == null && tableRowItemDescription.getValue()) {
                     return "Row description " + itemId;
                 } else if (tableCellItemDescription.getValue()) {
-                    return "Cell description " + itemId + "," + propertyId;
+                    return "Cell description " + itemId + ", " + propertyId;
                 }
                 return null;
             }
@@ -100,7 +101,7 @@ public class TableItemDescriptionGeneratorTest extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Cells and rows should have tooltips";
     }
 
@@ -109,13 +110,12 @@ public class TableItemDescriptionGeneratorTest extends TestBase {
         return 5414;
     }
 
+    @SuppressWarnings("unchecked")
     private Container createContainer(boolean description) {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(TEXT_PROPERTY_ID, String.class, "");
         container.addContainerProperty(WIDGET_PROPERTY_ID, Component.class,
                 null);
-        // container.addContainerProperty(COLUMN3_PROPERTY_ID, String.class,
-        // "");
 
         for (int i = 0; i < 5; i++) {
             Item item = container.addItem("item " + i);
@@ -125,7 +125,6 @@ public class TableItemDescriptionGeneratorTest extends TestBase {
                 b.setDescription("Button " + i + " description");
             }
             item.getItemProperty(WIDGET_PROPERTY_ID).setValue(b);
-            // item.getItemProperty(COLUMN3_PROPERTY_ID).setValue("last" + i);
         }
 
         return container;
