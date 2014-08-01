@@ -1,16 +1,19 @@
 package com.vaadin.tests.components.table;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.data.Item;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.BaseTheme;
 
-public class TableRowHeight2 extends TestBase {
+@Theme("tests-tickets")
+public class TableRowHeight2 extends AbstractTestUI {
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "The table contains 2 rows, which both should be shown completely as the table height is undefined.";
     }
 
@@ -19,9 +22,9 @@ public class TableRowHeight2 extends TestBase {
         return 2747;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    protected void setup() {
-        setTheme("tests-tickets");
+    protected void setup(VaadinRequest request) {
         HorizontalLayout vl = new HorizontalLayout();
         vl.setSizeFull();
 
