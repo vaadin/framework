@@ -15,14 +15,16 @@
  */
 package com.vaadin.tests.components.treetable;
 
-import com.vaadin.tests.components.table.TableItemDescriptionGeneratorTest;
+import com.vaadin.tests.components.table.TableItemDescriptionGeneratorUI;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TreeTable;
 
-public class TreeTableItemDescriptionGeneratorTest extends
-        TableItemDescriptionGeneratorTest {
+public class TreeTableItemDescriptionGeneratorUI extends
+        TableItemDescriptionGeneratorUI {
+
     @Override
     protected Table createTable() {
         return new TreeTable();
     }
+
 }
