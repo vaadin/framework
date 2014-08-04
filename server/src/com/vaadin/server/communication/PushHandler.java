@@ -71,9 +71,10 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
             AtmosphereRequest req = resource.getRequest();
 
             if (req.getMethod().equalsIgnoreCase("GET")) {
-                callWithUi(resource, establishCallback);
+                callWithUi(resource, establishCallback, false);
             } else if (req.getMethod().equalsIgnoreCase("POST")) {
-                callWithUi(resource, receiveCallback);
+                callWithUi(resource, receiveCallback,
+                        resource.transport() == TRANSPORT.WEBSOCKET);
             }
         }
 
@@ -200,15 +201,22 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
      *            the atmosphere resource for the current request
      * @param callback
      *            the push callback to call when a UI is found and locked
+     * @param websocket
+     *            true if this is a websocket message (as opposed to a HTTP
+     *            request)
      */
     private void callWithUi(final AtmosphereResource resource,
-            final PushEventCallback callback) {
+            final PushEventCallback callback, boolean websocket) {
         AtmosphereRequest req = resource.getRequest();
         VaadinServletRequest vaadinRequest = new VaadinServletRequest(req,
                 service);
         VaadinSession session = null;
 
-        service.requestStart(vaadinRequest, null);
+        if (websocket) {
+            // For any HTTP request we have already started the request in the
+            // servlet
+            service.requestStart(vaadinRequest, null);
+        }
         try {
             try {
                 session = service.findVaadinSession(vaadinRequest);
@@ -279,7 +287,9 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
             }
         } finally {
             try {
-                service.requestEnd(vaadinRequest, null, session);
+                if (websocket) {
+                    service.requestEnd(vaadinRequest, null, session);
+                }
             } catch (Exception e) {
                 getLogger().log(Level.WARNING, "Error while ending request", e);
 
