@@ -1923,8 +1923,10 @@ public class Grid<T> extends Composite implements
                 }
             }
 
-            if (activeCellHandler.getNavigationEvents().contains(
-                    event.getType())) {
+            Collection<String> navigation = activeCellHandler
+                    .getNavigationEvents();
+            if (navigation.contains(event.getType())
+                    && (Util.getFocusedElement() == getElement() || cell != null)) {
                 activeCellHandler.handleNavigationEvent(event, cell);
             }
         }
