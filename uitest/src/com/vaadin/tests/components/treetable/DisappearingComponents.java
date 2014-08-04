@@ -1,16 +1,15 @@
 package com.vaadin.tests.components.treetable;
 
 import com.vaadin.server.ExternalResource;
-import com.vaadin.tests.components.AbstractTestCase;
-import com.vaadin.ui.LegacyWindow;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.TreeTable;
 
-public class DisappearingComponents extends AbstractTestCase {
+public class DisappearingComponents extends AbstractTestUI {
 
     @Override
-    public void init() {
-        LegacyWindow mainWindow = new LegacyWindow("Application");
+    public void setup(VaadinRequest request) {
         final TreeTable tt = new TreeTable();
         tt.setSizeUndefined();
         tt.setWidth("100%");
@@ -33,13 +32,11 @@ public class DisappearingComponents extends AbstractTestCase {
         tt.setChildrenAllowed(items[2], false);
         tt.setParent(items[2], items[1]);
 
-        mainWindow.addComponent(tt);
-
-        setMainWindow(mainWindow);
+        addComponent(tt);
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "TreeTable column component empty after expand+collapse when pageLength is set to zero";
     }
 
