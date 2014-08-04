@@ -62,19 +62,63 @@ import com.vaadin.ui.components.grid.sort.SortOrder;
 import com.vaadin.util.ReflectTools;
 
 /**
- * Data grid component
+ * A grid component for displaying tabular data.
+ * <p>
+ * Grid is always bound to a {@link Container.Indexed}, but is not a
+ * {@code Container} of any kind in of itself. The contents of the given
+ * Container is displayed with the help of {@link Renderer Renderers}.
  * 
- * <h3>Lazy loading</h3> TODO To be revised when the data data source
- * implementation has been don.
+ * <h3 id="grid-headers-and-footers">Headers and Footers</h3>
+ * <p>
  * 
- * <h3>Columns</h3> The grid columns are based on the property ids of the
- * underlying data source. Each property id represents one column in the grid.
- * To retrive a column in the grid you can use {@link Grid#getColumn(Object)}
- * with the property id of the column. A grid column contains properties like
- * the width, the footer and header captions of the column.
  * 
- * <h3>Auxiliary headers and footers</h3> TODO To be revised when column
- * grouping is implemented.
+ * <h3 id="grid-converters-and-renderers">Converters and Renderers</h3>
+ * <p>
+ * Each column has its own {@link Renderer} that displays data into something
+ * that can be displayed in the browser. That data is first converted with a
+ * {@link com.vaadin.data.util.converter.Converter Converter} into something
+ * that the Renderer can process. This can also be an implicit step - if a
+ * column has a simple data type, like a String, no explicit assignment is
+ * needed.
+ * <p>
+ * Usually a renderer takes some kind of object, and converts it into a
+ * HTML-formatted string.
+ * <p>
+ * <code><pre>
+ * Grid grid = new Grid(myContainer);
+ * GridColumn column = grid.getColumn(STRING_DATE_PROPERTY);
+ * column.setConverter(new StringToDateConverter());
+ * column.setRenderer(new MyColorfulDateRenderer());
+ * </pre></code>
+ * 
+ * <h3 id="grid-lazyloading">Lazy Loading</h3>
+ * <p>
+ * The data is accessed as it is needed by Grid and not any sooner. In other
+ * words, if the given Container is huge, but only the first few rows are
+ * displayed to the user, only those (and a few more, for caching purposes) are
+ * accessed.
+ * 
+ * <h3 id="grid-selection-modes-and-models">Selection Modes and Models</h3>
+ * <p>
+ * Grid supports three selection <em>{@link SelectionMode modes}</em> (single,
+ * multi, none), and comes bundled with one
+ * <em>{@link SelectionModel model}</em> for each of the modes. The distinction
+ * between a selection mode and selection model is as follows: a <em>mode</em>
+ * essentially says whether you can have one, many or no rows selected. The
+ * model, however, has the behavioral details of each. A single selection model
+ * may require that the user deselects one row before selecting another one. A
+ * variant of a multiselect might have a configurable maximum of rows that may
+ * be selected. And so on.
+ * <p>
+ * <code><pre>
+ * Grid grid = new Grid(myContainer);
+ * 
+ * // uses the bundled SingleSelectionModel class
+ * grid.setSelectionMode(SelectionMode.SINGLE);
+ * 
+ * // changes the behavior to a custom selection model
+ * grid.setSelectionModel(new MyTwoSelectionModel());
+ * </pre></code>
  * 
  * @since
  * @author Vaadin Ltd
