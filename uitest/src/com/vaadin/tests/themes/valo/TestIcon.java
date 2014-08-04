@@ -30,15 +30,21 @@ import com.vaadin.server.ThemeResource;
  */
 public class TestIcon {
 
-    public static Resource get() {
+    int iconCount = 0;
+
+    public TestIcon(int startIndex) {
+        iconCount = startIndex;
+    }
+
+    public Resource get() {
         return get(false, 32);
     }
 
-    public static Resource get(boolean isImage) {
+    public Resource get(boolean isImage) {
         return get(isImage, 32);
     }
 
-    public static Resource get(boolean isImage, int imageSize) {
+    public Resource get(boolean isImage, int imageSize) {
         if (!isImage) {
             if (++iconCount >= ICONS.size()) {
                 iconCount = 0;
@@ -51,5 +57,4 @@ public class TestIcon {
     static List<FontAwesome> ICONS = Collections.unmodifiableList(Arrays
             .asList(FontAwesome.values()));
 
-    static int iconCount = 0;
 }

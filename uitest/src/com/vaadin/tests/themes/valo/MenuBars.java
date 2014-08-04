@@ -120,14 +120,16 @@ public class MenuBars extends VerticalLayout implements View {
         view.addItem("Zoom In", click);
         view.addItem("Zoom Out", click);
 
+        TestIcon testIcon = new TestIcon(50);
+
         MenuItem fav = menubar.addItem("", check);
-        fav.setIcon(TestIcon.get());
+        fav.setIcon(testIcon.get());
         fav.setStyleName("icon-only");
         fav.setCheckable(true);
         fav.setChecked(true);
 
         fav = menubar.addItem("", check);
-        fav.setIcon(TestIcon.get());
+        fav.setIcon(testIcon.get());
         fav.setStyleName("icon-only");
         fav.setCheckable(true);
         fav.setCheckable(true);

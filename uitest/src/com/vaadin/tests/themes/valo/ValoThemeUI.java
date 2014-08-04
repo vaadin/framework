@@ -69,6 +69,8 @@ public class ValoThemeUI extends UI {
         themeVariants.put("tests-valo-flat", "Flat");
         themeVariants.put("tests-valo-metro", "Metro");
     }
+    private TestIcon testIcon = new TestIcon(100);
+
     ValoMenuLayout root = new ValoMenuLayout();
     ComponentContainer viewDisplay = root.getContentContainer();
     CssLayout menu = new CssLayout();
@@ -283,7 +285,7 @@ public class ValoThemeUI extends UI {
             }
             b.setHtmlContentAllowed(true);
             b.setPrimaryStyleName("valo-menu-item");
-            b.setIcon(TestIcon.get());
+            b.setIcon(testIcon.get());
             menu.addComponent(b);
             count++;
         }
@@ -312,19 +314,6 @@ public class ValoThemeUI extends UI {
             }
         });
         return ns;
-    }
-
-    static String[] strings = new String[] { "lorem", "ipsum", "dolor", "sit",
-            "amet", "consectetur", "quid", "securi", "etiam", "tamquam", "eu",
-            "fugiat", "nulla", "pariatur" };
-    static int stringCount = -1;
-
-    static String nextString(boolean capitalize) {
-        if (++stringCount >= strings.length) {
-            stringCount = 0;
-        }
-        return capitalize ? strings[stringCount].substring(0, 1).toUpperCase()
-                + strings[stringCount].substring(1) : strings[stringCount];
     }
 
     static Handler actionHandler = new Handler() {
@@ -357,9 +346,10 @@ public class ValoThemeUI extends UI {
     @SuppressWarnings("unchecked")
     static Container generateContainer(final int size,
             final boolean hierarchical) {
+        TestIcon testIcon = new TestIcon(90);
         IndexedContainer container = hierarchical ? new HierarchicalContainer()
                 : new IndexedContainer();
-
+        StringGenerator sg = new StringGenerator();
         container.addContainerProperty(CAPTION_PROPERTY, String.class, null);
         container.addContainerProperty(ICON_PROPERTY, Resource.class, null);
         container.addContainerProperty(INDEX_PROPERTY, Integer.class, null);
@@ -368,15 +358,15 @@ public class ValoThemeUI extends UI {
         for (int i = 1; i < size + 1; i++) {
             Item item = container.addItem(i);
             item.getItemProperty(CAPTION_PROPERTY).setValue(
-                    nextString(true) + " " + nextString(false));
+                    sg.nextString(true) + " " + sg.nextString(false));
             item.getItemProperty(INDEX_PROPERTY).setValue(i);
             item.getItemProperty(DESCRIPTION_PROPERTY).setValue(
-                    nextString(true) + " " + nextString(false) + " "
-                            + nextString(false));
-            item.getItemProperty(ICON_PROPERTY).setValue(TestIcon.get());
+                    sg.nextString(true) + " " + sg.nextString(false) + " "
+                            + sg.nextString(false));
+            item.getItemProperty(ICON_PROPERTY).setValue(testIcon.get());
         }
         container.getItem(container.getIdByIndex(0))
-                .getItemProperty(ICON_PROPERTY).setValue(TestIcon.get());
+                .getItemProperty(ICON_PROPERTY).setValue(testIcon.get());
 
         if (hierarchical) {
             for (int i = 1; i < size + 1; i++) {
@@ -384,9 +374,9 @@ public class ValoThemeUI extends UI {
                     String id = i + " -> " + j;
                     Item child = container.addItem(id);
                     child.getItemProperty(CAPTION_PROPERTY).setValue(
-                            nextString(true) + " " + nextString(false));
+                            sg.nextString(true) + " " + sg.nextString(false));
                     child.getItemProperty(ICON_PROPERTY).setValue(
-                            TestIcon.get());
+                            testIcon.get());
                     ((Hierarchical) container).setChildrenAllowed(id, false);
                     ((Hierarchical) container).setParent(id, i);
                 }

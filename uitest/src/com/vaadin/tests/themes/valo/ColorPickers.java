@@ -37,9 +37,11 @@ public class ColorPickers extends VerticalLayout implements View {
         row.setSpacing(true);
         addComponent(row);
 
+        TestIcon testIcon = new TestIcon(40);
+
         ColorPicker cp = new ColorPicker();
         cp.setDefaultCaptionEnabled(true);
-        cp.setIcon(TestIcon.get());
+        cp.setIcon(testIcon.get());
         cp.setColor(new Color(138, 73, 115));
         row.addComponent(cp);
 
