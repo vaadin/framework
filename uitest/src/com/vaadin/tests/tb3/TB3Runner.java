@@ -57,10 +57,10 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
 
     /**
      * Socket timeout for HTTP connections to the grid hub. The connection is
-     * closed after 15 minutes of inactivity to avoid builds hanging for up to
+     * closed after 30 minutes of inactivity to avoid builds hanging for up to
      * three hours per connection if the test client crashes/hangs.
      */
-    private static final int SOCKET_TIMEOUT = 15 * 60 * 1000;
+    private static final int SOCKET_TIMEOUT = 30 * 60 * 1000;
 
     /**
      * This is the total limit of actual JUnit test instances run in parallel
