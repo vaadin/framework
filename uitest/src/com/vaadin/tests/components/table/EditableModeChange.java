@@ -7,22 +7,24 @@ import java.util.Locale;
 
 import com.vaadin.data.Container;
 import com.vaadin.event.ItemClickEvent;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TableFieldFactory;
 
-public class EditableModeChange extends TestBase {
+public class EditableModeChange extends AbstractTestUI {
 
     private ItemClickEvent selectionEvent;
 
     private final String[] names = { "Teemu", "Teppo", "Seppo", "Matti",
             "Pekka" };
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void setup() {
+    public void setup(VaadinRequest request) {
 
         final Table items = new Table("Items - double-click to edit");
         items.setSelectable(true);
@@ -42,7 +44,7 @@ public class EditableModeChange extends TestBase {
                     .setValue(new FormattedDate(cal.getTime().getTime()));
         }
 
-        items.addListener(new ItemClickEvent.ItemClickListener() {
+        items.addItemClickListener(new ItemClickEvent.ItemClickListener() {
 
             @Override
             public void itemClick(ItemClickEvent event) {
@@ -89,7 +91,7 @@ public class EditableModeChange extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Double click a cell to edit, then click on another row to select it (editmode is set to false). The clicked row should now be selected without any flickering.";
     }
 
