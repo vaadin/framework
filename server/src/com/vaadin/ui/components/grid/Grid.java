@@ -40,7 +40,6 @@ import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
 import com.vaadin.server.KeyMapper;
-import com.vaadin.shared.ui.grid.ColumnGroupRowState;
 import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
@@ -137,11 +136,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      * Key generator for column server-to-client communication
      */
     private final KeyMapper<Object> columnKeys = new KeyMapper<Object>();
-
-    /**
-     * The column groups added to the grid
-     */
-    private final List<ColumnGroupRow> columnGroupRows = new ArrayList<ColumnGroupRow>();
 
     /**
      * The current sort order
@@ -462,125 +456,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier {
      */
     public GridColumn getColumn(Object propertyId) {
         return columns.get(propertyId);
-    }
-
-    /**
-     * Sets the header rows visible.
-     * 
-     * @param visible
-     *            <code>true</code> if the header rows should be visible
-     */
-    @Deprecated
-    public void setColumnHeadersVisible(boolean visible) {
-        getHeader().setVisible(visible);
-    }
-
-    /**
-     * Are the header rows visible?
-     * 
-     * @return <code>true</code> if the headers of the columns are visible
-     */
-    @Deprecated
-    public boolean isColumnHeadersVisible() {
-        return getHeader().isVisible();
-    }
-
-    /**
-     * Sets the footer rows visible.
-     * 
-     * @param visible
-     *            <code>true</code> if the footer rows should be visible
-     */
-    @Deprecated
-    public void setColumnFootersVisible(boolean visible) {
-        getFooter().setVisible(visible);
-    }
-
-    /**
-     * Are the footer rows visible.
-     * 
-     * @return <code>true</code> if the footer rows should be visible
-     */
-    @Deprecated
-    public boolean isColumnFootersVisible() {
-        return getFooter().isVisible();
-    }
-
-    /**
-     * <p>
-     * Adds a new column group to the grid.
-     * 
-     * <p>
-     * Column group rows are rendered in the header and footer of the grid.
-     * Column group rows are made up of column groups which groups together
-     * columns for adding a common auxiliary header or footer for the columns.
-     * </p>
-     * </p>
-     * 
-     * <p>
-     * Example usage:
-     * 
-     * <pre>
-     * // Add a new column group row to the grid
-     * ColumnGroupRow row = grid.addColumnGroupRow();
-     * 
-     * // Group &quot;Column1&quot; and &quot;Column2&quot; together to form a header in the row
-     * ColumnGroup column12 = row.addGroup(&quot;Column1&quot;, &quot;Column2&quot;);
-     * 
-     * // Set a common header for &quot;Column1&quot; and &quot;Column2&quot;
-     * column12.setHeader(&quot;Column 1&amp;2&quot;);
-     * </pre>
-     * 
-     * </p>
-     * 
-     * @return a column group instance you can use to add column groups
-     */
-    @Deprecated
-    public ColumnGroupRow addColumnGroupRow() {
-        ColumnGroupRowState state = new ColumnGroupRowState();
-        ColumnGroupRow row = new ColumnGroupRow(this, state, columnKeys);
-        columnGroupRows.add(row);
-        getState().columnGroupRows.add(state);
-        return row;
-    }
-
-    /**
-     * Adds a new column group to the grid at a specific index
-     * 
-     * @param rowIndex
-     *            the index of the row
-     * @return a column group instance you can use to add column groups
-     */
-    @Deprecated
-    public ColumnGroupRow addColumnGroupRow(int rowIndex) {
-        ColumnGroupRowState state = new ColumnGroupRowState();
-        ColumnGroupRow row = new ColumnGroupRow(this, state, columnKeys);
-        columnGroupRows.add(rowIndex, row);
-        getState().columnGroupRows.add(rowIndex, state);
-        return row;
-    }
-
-    /**
-     * Removes a column group.
-     * 
-     * @param row
-     *            the row to remove
-     */
-    @Deprecated
-    public void removeColumnGroupRow(ColumnGroupRow row) {
-        columnGroupRows.remove(row);
-        getState().columnGroupRows.remove(row.getState());
-    }
-
-    /**
-     * Gets the column group rows.
-     * 
-     * @return an unmodifiable list of column group rows
-     */
-    @Deprecated
-    public List<ColumnGroupRow> getColumnGroupRows() {
-        return Collections.unmodifiableList(new ArrayList<ColumnGroupRow>(
-                columnGroupRows));
     }
 
     /**

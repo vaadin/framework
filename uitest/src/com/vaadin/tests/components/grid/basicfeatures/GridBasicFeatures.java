@@ -31,8 +31,6 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.tests.components.AbstractComponentTest;
-import com.vaadin.ui.components.grid.ColumnGroup;
-import com.vaadin.ui.components.grid.ColumnGroupRow;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.GridColumn;
@@ -177,8 +175,6 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         createHeaderActions();
 
         createFooterActions();
-
-        createColumnGroupActions();
 
         createRowActions();
 
@@ -449,72 +445,6 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
     private static String getColumnProperty(int c) {
         return "Column " + c;
-    }
-
-    protected void createColumnGroupActions() {
-        createCategory("Column groups", null);
-
-        createClickAction("Add group row", "Column groups",
-                new Command<Grid, String>() {
-
-                    @Override
-                    public void execute(Grid grid, String value, Object data) {
-                        final ColumnGroupRow row = grid.addColumnGroupRow();
-                        columnGroupRows++;
-                        createCategory("Column group row " + columnGroupRows,
-                                "Column groups");
-
-                        createBooleanAction("Header Visible",
-                                "Column group row " + columnGroupRows, true,
-                                new Command<Grid, Boolean>() {
-
-                                    @Override
-                                    public void execute(Grid grid,
-                                            Boolean value, Object columnIndex) {
-                                        row.setHeaderVisible(value);
-                                    }
-                                }, row);
-
-                        createBooleanAction("Footer Visible",
-                                "Column group row " + columnGroupRows, false,
-                                new Command<Grid, Boolean>() {
-
-                                    @Override
-                                    public void execute(Grid grid,
-                                            Boolean value, Object columnIndex) {
-                                        row.setFooterVisible(value);
-                                    }
-                                }, row);
-
-                        for (int i = 0; i < COLUMNS; i++) {
-                            final int columnIndex = i;
-                            createClickAction("Group Column " + columnIndex
-                                    + " & " + (columnIndex + 1),
-                                    "Column group row " + columnGroupRows,
-                                    new Command<Grid, Integer>() {
-
-                                        @Override
-                                        public void execute(Grid c,
-                                                Integer value, Object data) {
-                                            final ColumnGroup group = row
-                                                    .addGroup(
-                                                            "Column" + value,
-                                                            "Column"
-                                                                    + (value + 1));
-
-                                            group.setHeaderCaption("Column "
-                                                    + value + " & "
-                                                    + (value + 1));
-
-                                            group.setFooterCaption("Column "
-                                                    + value + " & "
-                                                    + (value + 1));
-                                        }
-                                    }, i, row);
-                        }
-                    }
-                }, null, null);
-
     }
 
     protected void createRowActions() {
