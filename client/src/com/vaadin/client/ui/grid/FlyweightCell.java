@@ -144,6 +144,11 @@ public class FlyweightCell {
     }
 
     public void setColSpan(final int numberOfCells) {
+        if (numberOfCells < 1) {
+            throw new IllegalArgumentException(
+                    "Number of cells should be more than 0");
+        }
+
         /*-
          * This will default to 1 if unset, as per DOM specifications:
          * http://www.w3.org/TR/html5/tabular-data.html#attributes-common-to-td-and-th-elements

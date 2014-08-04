@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.grid;
 
+import com.google.gwt.core.client.Scheduler;
 import com.vaadin.client.ui.grid.Grid.AbstractGridColumn.SortableColumnHeaderRenderer;
 
 /**
@@ -67,6 +68,8 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
     }
 
     private HeaderRow defaultRow;
+
+    private boolean markAsDirty = false;
 
     @Override
     public void removeRow(int index) {
@@ -134,6 +137,22 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
 
     @Override
     protected void refreshSection() {
-        getGrid().refreshHeader();
+        markAsDirty = true;
+
+        /*
+         * Defer the refresh so if we multiple times call refreshSection() (for
+         * example when updating cell values) we only get one actual refresh in
+         * the end.
+         */
+        Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                if (markAsDirty) {
+                    markAsDirty = false;
+                    getGrid().refreshHeader();
+                }
+            }
+        });
     }
 }

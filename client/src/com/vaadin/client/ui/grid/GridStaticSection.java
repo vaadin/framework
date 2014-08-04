@@ -85,11 +85,18 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
         }
 
         /**
+         * Sets the colspan for the cell
+         * 
          * @param colspan
          *            the colspan to set
          */
         public void setColspan(int colspan) {
+            if (colspan < 1) {
+                throw new IllegalArgumentException(
+                        "Colspan cannot be less than 1");
+            }
             this.colspan = colspan;
+            section.refreshSection();
         }
 
     }
@@ -201,7 +208,8 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
             return null;
         }
 
-        private void calculateColspans() {
+        void calculateColspans() {
+
             // Reset all cells
             for (CELLTYPE cell : cells) {
                 cell.setColspan(1);
@@ -209,17 +217,52 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
 
             // Set colspan for grouped cells
             for (List<CELLTYPE> group : cellGroups) {
+
+                int firstVisibleColumnInGroup = -1;
+                int lastVisibleColumnInGroup = -1;
+                int hiddenInsideGroup = 0;
+
+                /*
+                 * To be able to calculate the colspan correctly we need to two
+                 * things; find the first visible cell in the group which will
+                 * get the colspan assigned to and find the amount of columns
+                 * which should be spanned.
+                 * 
+                 * To do that we iterate through all cells, marking into memory
+                 * when we find the first visible cell, when we find the last
+                 * visible cell and how many cells are hidden in between.
+                 */
                 for (int i = 0; i < group.size(); i++) {
                     CELLTYPE cell = group.get(i);
-                    if (i == 0) {
-                        // Assign full colspan to first cell
-                        cell.setColspan(group.size());
-                    } else {
-                        // Hide other cells
-                        cell.setColspan(0);
+                    int cellIndex = this.cells.indexOf(cell);
+                    boolean columnVisible = getSection().getGrid()
+                            .getColumn(cellIndex).isVisible();
+                    if (columnVisible) {
+                        lastVisibleColumnInGroup = i;
+                        if (firstVisibleColumnInGroup == -1) {
+                            firstVisibleColumnInGroup = i;
+                        }
+                    } else if (firstVisibleColumnInGroup != -1) {
+                        hiddenInsideGroup++;
                     }
                 }
+
+                if (firstVisibleColumnInGroup == -1
+                        || lastVisibleColumnInGroup == -1
+                        || firstVisibleColumnInGroup == lastVisibleColumnInGroup) {
+                    // No cells in group
+                    continue;
+                }
+
+                /*
+                 * Assign colspan to first cell in group.
+                 */
+                CELLTYPE firstVisibleCell = group
+                        .get(firstVisibleColumnInGroup);
+                firstVisibleCell.setColspan(lastVisibleColumnInGroup
+                        - firstVisibleColumnInGroup - hiddenInsideGroup + 1);
             }
+
         }
 
         protected void addCell(int index) {

@@ -396,6 +396,16 @@ public class GridBasicClientFeatures extends
             }
         }, menuPath);
 
+        addMenuCommand("Join columns 3, 4, 5", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                row.join(grid.getColumn(3), grid.getColumn(4),
+                        grid.getColumn(5));
+
+            }
+        }, menuPath);
+
         addMenuCommand("Join all columns", new ScheduledCommand() {
 
             @Override

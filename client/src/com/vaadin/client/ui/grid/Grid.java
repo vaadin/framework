@@ -45,6 +45,7 @@ import com.vaadin.client.Util;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SubPartAware;
+import com.vaadin.client.ui.grid.GridFooter.FooterRow;
 import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.GridStaticSection.StaticCell;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
@@ -923,7 +924,6 @@ public class Grid<T> extends Composite implements
 
             this.visible = visible;
 
-            // Remove column
             if (grid != null) {
                 int index = findIndexOfColumn();
                 ColumnConfiguration conf = grid.escalator
@@ -934,8 +934,15 @@ public class Grid<T> extends Composite implements
                 } else {
                     conf.removeColumns(index, 1);
                 }
-            }
 
+                for (HeaderRow row : grid.getHeader().getRows()) {
+                    row.calculateColspans();
+                }
+
+                for (FooterRow row : grid.getFooter().getRows()) {
+                    row.calculateColspans();
+                }
+            }
         }
 
         /**

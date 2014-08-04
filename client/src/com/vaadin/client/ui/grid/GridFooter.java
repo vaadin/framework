@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui.grid;
 
+import com.google.gwt.core.client.Scheduler;
+
 /**
  * Represents the footer section of a Grid. The footer is always empty.
  * 
@@ -50,6 +52,8 @@ public class GridFooter extends GridStaticSection<GridFooter.FooterRow> {
     public class FooterCell extends GridStaticSection.StaticCell {
     }
 
+    private boolean markAsDirty = false;
+
     @Override
     protected FooterRow createRow() {
         return new FooterRow();
@@ -57,6 +61,22 @@ public class GridFooter extends GridStaticSection<GridFooter.FooterRow> {
 
     @Override
     protected void refreshSection() {
-        getGrid().refreshFooter();
+        markAsDirty = true;
+
+        /*
+         * Defer the refresh so if we multiple times call refreshSection() (for
+         * example when updating cell values) we only get one actual refresh in
+         * the end.
+         */
+        Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                if (markAsDirty) {
+                    markAsDirty = false;
+                    getGrid().refreshFooter();
+                }
+            }
+        });
     }
 }
