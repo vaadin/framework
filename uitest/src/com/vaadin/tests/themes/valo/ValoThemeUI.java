@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -50,14 +50,25 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
 @Theme("tests-valo")
 @Title("Valo Theme Test")
 @PreserveOnRefresh
-public class ValoThemeTest extends UI {
+public class ValoThemeUI extends UI {
 
+    private static LinkedHashMap<String, String> themeVariants = new LinkedHashMap<String, String>();
+    static {
+        themeVariants.put("tests-valo", "Default");
+        themeVariants.put("tests-valo-blueprint", "Blueprint");
+        themeVariants.put("tests-valo-dark", "Dark");
+        themeVariants.put("tests-valo-facebook", "Facebook");
+        themeVariants.put("tests-valo-flatdark", "Flat dark");
+        themeVariants.put("tests-valo-flat", "Flat");
+        themeVariants.put("tests-valo-metro", "Metro");
+    }
     ValoMenuLayout root = new ValoMenuLayout();
     ComponentContainer viewDisplay = root.getContentContainer();
     CssLayout menu = new CssLayout();
@@ -201,6 +212,7 @@ public class ValoThemeTest extends UI {
         top.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
         top.addStyleName("valo-menu-title");
         menu.addComponent(top);
+        menu.addComponent(createThemeSelect());
 
         Label title = new Label("Vaadin<br><strong>Valo Theme Styles</strong>",
                 ContentMode.HTML);
@@ -279,6 +291,27 @@ public class ValoThemeTest extends UI {
                 + count + "</span>");
 
         return menu;
+    }
+
+    private Component createThemeSelect() {
+        final NativeSelect ns = new NativeSelect();
+        ns.setNullSelectionAllowed(false);
+        ns.setId("themeSelect");
+        ns.addContainerProperty("caption", String.class, "");
+        ns.setItemCaptionPropertyId("caption");
+        for (String identifier : themeVariants.keySet()) {
+            ns.addItem(identifier).getItemProperty("caption")
+                    .setValue(themeVariants.get(identifier));
+        }
+
+        ns.setValue("tests-valo");
+        ns.addValueChangeListener(new ValueChangeListener() {
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                setTheme((String) ns.getValue());
+            }
+        });
+        return ns;
     }
 
     static String[] strings = new String[] { "lorem", "ipsum", "dolor", "sit",

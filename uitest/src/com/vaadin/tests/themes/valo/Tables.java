@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,10 +40,9 @@ import com.vaadin.ui.VerticalLayout;
 
 public class Tables extends VerticalLayout implements View {
 
-    static final Container normalContainer = ValoThemeTest.generateContainer(
-            200, false);
-    static final Container hierarchicalContainer = ValoThemeTest
-            .generateContainer(200, true);
+    final Container normalContainer = ValoThemeUI.generateContainer(200, false);
+    final Container hierarchicalContainer = ValoThemeUI.generateContainer(200,
+            true);
 
     CheckBox hierarchical = new CheckBox("Hierarchical");
     CheckBox footer = new CheckBox("Footer", true);
@@ -140,7 +139,7 @@ public class Tables extends VerticalLayout implements View {
         table.setColumnCollapsingAllowed(true);
         table.setColumnReorderingAllowed(true);
         table.setPageLength(6);
-        table.addActionHandler(ValoThemeTest.getActionHandler());
+        table.addActionHandler(ValoThemeUI.getActionHandler());
         table.setDragMode(TableDragMode.MULTIROW);
         table.setDropHandler(new DropHandler() {
             @Override
@@ -153,9 +152,8 @@ public class Tables extends VerticalLayout implements View {
                 Notification.show(event.getTransferable().toString());
             }
         });
-        table.setColumnAlignment(ValoThemeTest.DESCRIPTION_PROPERTY,
-                Align.RIGHT);
-        table.setColumnAlignment(ValoThemeTest.INDEX_PROPERTY, Align.CENTER);
+        table.setColumnAlignment(ValoThemeUI.DESCRIPTION_PROPERTY, Align.RIGHT);
+        table.setColumnAlignment(ValoThemeUI.INDEX_PROPERTY, Align.CENTER);
 
         table.removeContainerProperty("textfield");
         table.addContainerProperty("textfield", TextField.class, null);
@@ -186,11 +184,11 @@ public class Tables extends VerticalLayout implements View {
 
         table.setFooterVisible(footer);
         if (footer) {
-            table.setColumnFooter(ValoThemeTest.CAPTION_PROPERTY, "caption");
-            table.setColumnFooter(ValoThemeTest.DESCRIPTION_PROPERTY,
+            table.setColumnFooter(ValoThemeUI.CAPTION_PROPERTY, "caption");
+            table.setColumnFooter(ValoThemeUI.DESCRIPTION_PROPERTY,
                     "description");
-            table.setColumnFooter(ValoThemeTest.ICON_PROPERTY, "icon");
-            table.setColumnFooter(ValoThemeTest.INDEX_PROPERTY, "index");
+            table.setColumnFooter(ValoThemeUI.ICON_PROPERTY, "icon");
+            table.setColumnFooter(ValoThemeUI.INDEX_PROPERTY, "index");
         }
 
         if (sized) {
@@ -205,9 +203,9 @@ public class Tables extends VerticalLayout implements View {
                 table.setWidth("100%");
             }
         }
-        table.setColumnExpandRatio(ValoThemeTest.CAPTION_PROPERTY,
+        table.setColumnExpandRatio(ValoThemeUI.CAPTION_PROPERTY,
                 expandRatios ? 1.0f : 0);
-        table.setColumnExpandRatio(ValoThemeTest.DESCRIPTION_PROPERTY,
+        table.setColumnExpandRatio(ValoThemeUI.DESCRIPTION_PROPERTY,
                 expandRatios ? 1.0f : 0);
 
         if (!stripes) {
@@ -262,14 +260,14 @@ public class Tables extends VerticalLayout implements View {
 
         if (rowCaption) {
             table.setRowHeaderMode(RowHeaderMode.PROPERTY);
-            table.setItemCaptionPropertyId(ValoThemeTest.CAPTION_PROPERTY);
+            table.setItemCaptionPropertyId(ValoThemeUI.CAPTION_PROPERTY);
         } else {
             table.setItemCaptionPropertyId(null);
         }
 
         if (rowIcon) {
             table.setRowHeaderMode(RowHeaderMode.ICON_ONLY);
-            table.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
+            table.setItemIconPropertyId(ValoThemeUI.ICON_PROPERTY);
         } else {
             table.setItemIconPropertyId(null);
         }

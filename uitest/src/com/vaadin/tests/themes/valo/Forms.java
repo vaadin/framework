@@ -62,8 +62,8 @@ public class Forms extends VerticalLayout implements View {
         form.addComponent(section);
 
         TextField name = new TextField("Name");
-        name.setValue(ValoThemeTest.nextString(true) + " "
-                + ValoThemeTest.nextString(true));
+        name.setValue(ValoThemeUI.nextString(true) + " "
+                + ValoThemeUI.nextString(true));
         name.setWidth("50%");
         form.addComponent(name);
 
@@ -72,8 +72,8 @@ public class Forms extends VerticalLayout implements View {
         form.addComponent(birthday);
 
         TextField username = new TextField("Username");
-        username.setValue(ValoThemeTest.nextString(false)
-                + ValoThemeTest.nextString(false));
+        username.setValue(ValoThemeUI.nextString(false)
+                + ValoThemeUI.nextString(false));
         username.setRequired(true);
         form.addComponent(username);
 
@@ -89,15 +89,15 @@ public class Forms extends VerticalLayout implements View {
         form.addComponent(section);
 
         TextField email = new TextField("Email");
-        email.setValue(ValoThemeTest.nextString(false) + "@"
-                + ValoThemeTest.nextString(false) + ".com");
+        email.setValue(ValoThemeUI.nextString(false) + "@"
+                + ValoThemeUI.nextString(false) + ".com");
         email.setWidth("50%");
         email.setRequired(true);
         form.addComponent(email);
 
         TextField location = new TextField("Location");
-        location.setValue(ValoThemeTest.nextString(true) + ", "
-                + ValoThemeTest.nextString(true));
+        location.setValue(ValoThemeUI.nextString(true) + ", "
+                + ValoThemeUI.nextString(true));
         location.setWidth("50%");
         location.setComponentError(new UserError("This address doesn't exist"));
         form.addComponent(location);

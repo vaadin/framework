@@ -153,8 +153,8 @@ public class Tabsheets extends VerticalLayout implements View {
         ts.addStyleName(style);
 
         for (int i = 1; i <= (scrolling ? 10 : 3); i++) {
-            String tabcaption = caption ? ValoThemeTest.nextString(true) + " "
-                    + ValoThemeTest.nextString(false) : null;
+            String tabcaption = caption ? ValoThemeUI.nextString(true) + " "
+                    + ValoThemeUI.nextString(false) : null;
 
             VerticalLayout content = new VerticalLayout();
             content.setMargin(true);

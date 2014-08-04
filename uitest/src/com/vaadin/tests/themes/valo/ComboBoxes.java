@@ -40,15 +40,15 @@ public class ComboBoxes extends VerticalLayout implements View {
         row.setSpacing(true);
         addComponent(row);
 
-        Container generatedContainer = ValoThemeTest.generateContainer(200,
-                false);
+        Container generatedContainer = ValoThemeUI
+                .generateContainer(200, false);
         ComboBox combo = new ComboBox("Normal");
         combo.setInputPrompt("You can type here");
         combo.setContainerDataSource(generatedContainer);
         combo.setNullSelectionAllowed(false);
         combo.select(generatedContainer.getItemIds().iterator().next());
-        combo.setItemCaptionPropertyId(ValoThemeTest.CAPTION_PROPERTY);
-        combo.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
+        combo.setItemCaptionPropertyId(ValoThemeUI.CAPTION_PROPERTY);
+        combo.setItemIconPropertyId(ValoThemeUI.ICON_PROPERTY);
         combo.setItemIcon(combo.getItemIds().iterator().next(),
                 new ThemeResource("../runo/icons/16/document.png"));
         row.addComponent(combo);
@@ -63,8 +63,8 @@ public class ComboBoxes extends VerticalLayout implements View {
         combo.setContainerDataSource(generatedContainer);
         combo.setNullSelectionAllowed(false);
         combo.select(generatedContainer.getItemIds().iterator().next());
-        combo.setItemCaptionPropertyId(ValoThemeTest.CAPTION_PROPERTY);
-        combo.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
+        combo.setItemCaptionPropertyId(ValoThemeUI.CAPTION_PROPERTY);
+        combo.setItemIconPropertyId(ValoThemeUI.ICON_PROPERTY);
         combo.setWidth("240px");
         group.addComponent(combo);
         Button today = new Button("Do It");
@@ -121,40 +121,40 @@ public class ComboBoxes extends VerticalLayout implements View {
         combo = new ComboBox("Custom color");
         combo.setInputPrompt("You can type here");
         combo.setContainerDataSource(generatedContainer);
-        combo.setItemCaptionPropertyId(ValoThemeTest.CAPTION_PROPERTY);
-        combo.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
+        combo.setItemCaptionPropertyId(ValoThemeUI.CAPTION_PROPERTY);
+        combo.setItemIconPropertyId(ValoThemeUI.ICON_PROPERTY);
         combo.addStyleName("color1");
         row.addComponent(combo);
 
         combo = new ComboBox("Custom color");
         combo.setInputPrompt("You can type here");
         combo.setContainerDataSource(generatedContainer);
-        combo.setItemCaptionPropertyId(ValoThemeTest.CAPTION_PROPERTY);
-        combo.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
+        combo.setItemCaptionPropertyId(ValoThemeUI.CAPTION_PROPERTY);
+        combo.setItemIconPropertyId(ValoThemeUI.ICON_PROPERTY);
         combo.addStyleName("color2");
         row.addComponent(combo);
 
         combo = new ComboBox("Custom color");
         combo.setInputPrompt("You can type here");
         combo.setContainerDataSource(generatedContainer);
-        combo.setItemCaptionPropertyId(ValoThemeTest.CAPTION_PROPERTY);
-        combo.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
+        combo.setItemCaptionPropertyId(ValoThemeUI.CAPTION_PROPERTY);
+        combo.setItemIconPropertyId(ValoThemeUI.ICON_PROPERTY);
         combo.addStyleName("color3");
         row.addComponent(combo);
 
         combo = new ComboBox("Small");
         combo.setInputPrompt("You can type here");
         combo.setContainerDataSource(generatedContainer);
-        combo.setItemCaptionPropertyId(ValoThemeTest.CAPTION_PROPERTY);
-        combo.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
+        combo.setItemCaptionPropertyId(ValoThemeUI.CAPTION_PROPERTY);
+        combo.setItemIconPropertyId(ValoThemeUI.ICON_PROPERTY);
         combo.addStyleName("small");
         row.addComponent(combo);
 
         combo = new ComboBox("Large");
         combo.setInputPrompt("You can type here");
         combo.setContainerDataSource(generatedContainer);
-        combo.setItemCaptionPropertyId(ValoThemeTest.CAPTION_PROPERTY);
-        combo.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
+        combo.setItemCaptionPropertyId(ValoThemeUI.CAPTION_PROPERTY);
+        combo.setItemIconPropertyId(ValoThemeUI.ICON_PROPERTY);
         combo.addStyleName("large");
         row.addComponent(combo);
 
