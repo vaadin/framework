@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -64,7 +64,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.Paintable#updateFromUIDL(com.vaadin.client.UIDL,
      * com.vaadin.client.ApplicationConnection)
      */
@@ -121,7 +121,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
 
         int previousTotalRows = getWidget().totalRows;
         getWidget().updateTotalRows(uidl);
-        boolean totalRowsHaveChanged = (getWidget().totalRows != previousTotalRows);
+        boolean totalRowsChanged = (getWidget().totalRows != previousTotalRows);
 
         getWidget().updateDragMode(uidl);
 
@@ -146,9 +146,6 @@ public class TableConnector extends AbstractHasComponentsConnector implements
         getWidget().updatePageLength(uidl);
 
         getWidget().updateFirstVisibleAndScrollIfNeeded(uidl);
-        if (totalRowsHaveChanged) {
-            getWidget().totalRowsHaveChanged();
-        }
 
         getWidget().showRowHeaders = uidl.getBooleanAttribute("rowheaders");
         getWidget().showColHeaders = uidl.getBooleanAttribute("colheaders");
@@ -202,7 +199,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
                     if (getWidget().headerChangedDuringUpdate) {
                         getWidget().triggerLazyColumnAdjustment(true);
                     } else if (!getWidget().isScrollPositionVisible()
-                            || totalRowsHaveChanged
+                            || totalRowsChanged
                             || getWidget().lastRenderedHeight != getWidget().scrollBody
                                     .getOffsetHeight()) {
                         // webkits may still bug with their disturbing scrollbar
@@ -387,7 +384,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
     /**
      * Shows a saved row context menu if the row for the context menu is still
      * visible. Does nothing if a context menu has not been saved.
-     *
+     * 
      * @param savedContextMenu
      */
     public void showSavedContextMenu(ContextMenuDetails savedContextMenu) {
