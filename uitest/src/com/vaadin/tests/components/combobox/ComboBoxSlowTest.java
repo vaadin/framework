@@ -23,8 +23,10 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -58,21 +60,44 @@ public class ComboBoxSlowTest extends MultiBrowserTest {
         sleep(250);
         typeString("Item 12");
 
-        assertEquals(10, getNumberOfSuggestions());
+        final WebElement popup = driver.findElement(By
+                .className("v-filterselect-suggestpopup"));
+        List<WebElement> filteredItems = getFilteredItems(popup);
+        assertEquals("unexpected amount of suggestions found on first page",
+                10, filteredItems.size());
+        assertEquals("wrong filtering result", "Item 12", filteredItems.get(0)
+                .getText());
+        assertEquals("wrong filtering result", "Item 128", filteredItems.get(9)
+                .getText());
+
         assertTrue(isPagingActive());
         goToNextPage();
 
-        sleep(500);
-        assertEquals(1, getNumberOfSuggestions());
-
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver input) {
+                List<WebElement> filteredItems = getFilteredItems(popup);
+                return filteredItems.size() == 1
+                        && "Item 129".equals(filteredItems.get(0).getText());
+            }
+        });
     }
 
     @Test
     public void testTwoMatchesNoPaging() {
         clickComboBoxTextArea();
         typeString("Item 100");
-        assertEquals(2, getNumberOfSuggestions());
         assertFalse(isPagingActive());
+
+        WebElement popup = driver.findElement(By
+                .className("v-filterselect-suggestpopup"));
+        List<WebElement> filteredItems = getFilteredItems(popup);
+        assertEquals("unexpected amount of suggestions found", 2,
+                filteredItems.size());
+        assertEquals("wrong filtering result", "Item 100", filteredItems.get(0)
+                .getText());
+        assertEquals("wrong filtering result", "Item 1000", filteredItems
+                .get(1).getText());
     }
 
     private void clickComboBoxTextArea() {
@@ -104,5 +129,13 @@ public class ComboBoxSlowTest extends MultiBrowserTest {
         WebElement nextPage = getDriver().findElement(
                 By.className("v-filterselect-nextpage"));
         nextPage.click();
+    }
+
+    /*
+     * Gets the list of filtered items from the combobox popup.
+     */
+    private List<WebElement> getFilteredItems(final WebElement popup) {
+        return popup.findElement(By.className("v-filterselect-suggestmenu"))
+                .findElements(By.className("gwt-MenuItem"));
     }
 }
