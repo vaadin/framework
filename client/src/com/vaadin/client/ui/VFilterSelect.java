@@ -46,6 +46,7 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -452,9 +453,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             setSelectedItemIcon(suggestion.getIconUri());
 
             // Set the text.
-            tb.setText(text);
-            tb.setSelectionRange(lastFilter.length(), text.length()
-                    - lastFilter.length());
+            setText(text);
 
             menu.updateKeyboardSelectedItem();
         }
@@ -916,11 +915,11 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                         && !currentSuggestion.key.equals("")) {
                     // An item (not null) selected
                     String text = currentSuggestion.getReplacementString();
-                    tb.setText(text);
+                    setText(text);
                     selectedOptionKey = currentSuggestion.key;
                 } else {
                     // Null selected
-                    tb.setText("");
+                    setText("");
                     selectedOptionKey = null;
                 }
             }
@@ -1060,7 +1059,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             if (textInputEnabled) {
                 super.setSelectionRange(pos, length);
             } else {
-                super.setSelectionRange(getValue().length(), 0);
+                super.setSelectionRange(0, getValue().length());
             }
         }
     }
@@ -1452,7 +1451,19 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         if (enableDebug) {
             debug("VFS: setTextboxText(" + text + ")");
         }
+        setText(text);
+    }
+
+    private void setText(final String text) {
+        /**
+         * To leave caret in the beginning of the line.
+         * SetSelectionRange wouldn't work on IE
+         * (see #13477)
+         */
+        Direction previousDirection = tb.getDirection();
+        tb.setDirection(Direction.RTL);
         tb.setText(text);
+        tb.setDirection(previousDirection);
     }
 
     /**
