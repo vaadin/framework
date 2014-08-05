@@ -282,7 +282,9 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 }
 
                 for (Object addedItemId : event.getAdded()) {
-                    getKeyMapper().pin(addedItemId);
+                    if (!getKeyMapper().isPinned(addedItemId)) {
+                        getKeyMapper().pin(addedItemId);
+                    }
                 }
 
                 List<String> keys = getKeyMapper().getKeys(getSelectedRows());

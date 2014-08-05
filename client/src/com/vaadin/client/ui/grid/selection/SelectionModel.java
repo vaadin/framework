@@ -126,6 +126,59 @@ public interface SelectionModel<T> {
     public interface Multi<T> extends SelectionModel<T> {
 
         /**
+         * A multi selection model that can send selections and deselections in
+         * a batch, instead of committing them one-by-one.
+         * 
+         * @param <T>
+         *            type parameter corresponding with Grid row type
+         */
+        public interface Batched<T> extends Multi<T> {
+            /**
+             * Starts a batch selection.
+             * <p>
+             * Any commands to any select or deselect method will be batched
+             * into one, and a final selection event will be fired when
+             * {@link #commitBatchSelect()} is called.
+             * <p>
+             * <em>Note:</em> {@link SelectionChangeEvent SelectionChangeEvents}
+             * will still be fired for each selection/deselection. You should
+             * check whether the event is a part of a batch or not with
+             * {@link SelectionChangeEvent#isBatchedSelection()}.
+             */
+            public void startBatchSelect();
+
+            /**
+             * Commits and ends a batch selection.
+             * <p>
+             * Any and all selections and deselections since the last invocation
+             * of {@link #startBatchSelect()} will be fired at once as one
+             * collated {@link SelectionChangeEvent}.
+             */
+            public void commitBatchSelect();
+
+            /**
+             * Checks whether or not a batch has been started.
+             * 
+             * @return <code>true</code> iff a batch has been started
+             */
+            public boolean isBeingBatchSelected();
+
+            /**
+             * Gets all the rows that would become selected in this batch.
+             * 
+             * @return a collection of the rows that would become selected
+             */
+            public Collection<T> getSelectedRowsBatch();
+
+            /**
+             * Gets all the rows that would become deselected in this batch.
+             * 
+             * @return a collection of the rows that would become deselected
+             */
+            public Collection<T> getDeselectedRowsBatch();
+        }
+
+        /**
          * Selects one or more rows.
          * 
          * @param rows

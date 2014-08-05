@@ -16,6 +16,8 @@
 
 package com.vaadin.client.data;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,6 +158,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     private Map<Object, Integer> pinnedCounts = new HashMap<Object, Integer>();
     private Map<Object, RowHandleImpl> pinnedRows = new HashMap<Object, RowHandleImpl>();
+    protected Collection<T> temporarilyPinnedRows = Collections.emptySet();
 
     /**
      * Sets the estimated number of rows in the data source.
@@ -533,4 +536,33 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      *         row object
      */
     abstract public Object getRowKey(T row);
+
+    /**
+     * Marks rows as pinned when fetching new rows.
+     * <p>
+     * This collection of rows are intended to remain pinned if new rows are
+     * fetched from the data source, even if some of the pinned rows would fall
+     * off the cache and become inactive.
+     * <p>
+     * This method does nothing by itself, other than it stores the rows into a
+     * field. The implementation needs to make all the adjustments for itself.
+     * Check {@link RpcDataSourceConnector.RpcDataSource#requestRows(int, int)}
+     * for an implementation example.
+     * 
+     * @param keys
+     *            a collection of rows to keep pinned
+     * 
+     * @see #temporarilyPinnedRows
+     * @see RpcDataSourceConnector.RpcDataSource#requestRows(int, int)
+     * @deprecated You probably don't want to call this method unless you're
+     *             writing a Renderer for a selection model. Even if you are, be
+     *             very aware what this method does and how it behaves.
+     */
+    @Deprecated
+    public void transactionPin(Collection<T> rows) {
+        if (rows == null) {
+            throw new IllegalArgumentException("argument may not be null");
+        }
+        temporarilyPinnedRows = rows;
+    }
 }

@@ -150,6 +150,9 @@ public class GridConnector extends AbstractHasComponentsConnector {
     private SelectionChangeHandler<JSONObject> internalSelectionChangeHandler = new SelectionChangeHandler<JSONObject>() {
         @Override
         public void onSelectionChange(SelectionChangeEvent<JSONObject> event) {
+            if (event.isBatchedSelection()) {
+                return;
+            }
             if (!updatedFromState) {
                 for (JSONObject row : event.getRemoved()) {
                     selectedKeys.remove(dataSource.getRowKey(row));
@@ -514,7 +517,7 @@ public class GridConnector extends AbstractHasComponentsConnector {
             updatedFromState = true;
             getWidget().fireEvent(
                     new SelectionChangeEvent<JSONObject>(getWidget(),
-                            (List<JSONObject>) null, null));
+                            (List<JSONObject>) null, null, false));
         }
     }
 

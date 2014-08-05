@@ -53,6 +53,8 @@ import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.GridColumn;
 import com.vaadin.ui.components.grid.Renderer;
+import com.vaadin.ui.components.grid.selection.SelectionChangeEvent;
+import com.vaadin.ui.components.grid.selection.SelectionChangeListener;
 
 /**
  * Provides Vaadin server-side container data source to a
@@ -107,10 +109,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 final Integer ii = Integer.valueOf(i);
                 final Object itemId = indexToItemId.get(ii);
 
-                if (!pinnedItemIds.contains(itemId)) {
+                if (!isPinned(itemId)) {
                     itemIdToKey.remove(itemId);
+                    indexToItemId.remove(ii);
                 }
-                indexToItemId.remove(ii);
             }
         }
 
@@ -610,9 +612,21 @@ public class RpcDataProviderExtension extends AbstractExtension {
         this.container = container;
 
         registerRpc(new DataRequestRpc() {
+            private Collection<String> allTemporarilyPinnedKeys = new ArrayList<String>();
+
             @Override
             public void requestRows(int firstRow, int numberOfRows,
-                    int firstCachedRowIndex, int cacheSize) {
+                    int firstCachedRowIndex, int cacheSize,
+                    List<String> temporarilyPinnedKeys) {
+
+                for (String key : temporarilyPinnedKeys) {
+                    Object itemId = keyMapper.getItemId(key);
+                    if (!keyMapper.isPinned(itemId)) {
+                        keyMapper.pin(itemId);
+                    }
+                }
+                allTemporarilyPinnedKeys.addAll(temporarilyPinnedKeys);
+
                 Range active = Range.withLength(firstRow, numberOfRows);
                 if (cacheSize != 0) {
                     Range cached = Range.withLength(firstCachedRowIndex,
@@ -627,6 +641,55 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
                 activeRowHandler.setActiveRows(active.getStart(),
                         active.length());
+            }
+
+            @Override
+            public void releaseTemporarilyPinnedKeys() {
+                /*
+                 * This needs to be done deferredly since the selection event
+                 * comes after this RPC call.
+                 */
+
+                final SelectionChangeListener listener = new SelectionChangeListener() {
+                    @Override
+                    public void selectionChange(SelectionChangeEvent event) {
+                        for (String tempPinnedKey : allTemporarilyPinnedKeys) {
+                            /*
+                             * TODO: this could be moved into a field instead of
+                             * inline to reduce indentations.
+                             */
+
+                            /*
+                             * This works around the fact that when deselecting
+                             * and leaping through the cache, the client tries
+                             * to send a deselect event even though a row never
+                             * was selected. So, it tries to unpin something
+                             * that never was temporarily pinned.
+                             * 
+                             * If the same thing would happen while selecting
+                             * (instead of deselecting), the row would be
+                             * pinned, not because of the temporary pinning, but
+                             * because it's selected.
+                             */
+                            if (!keyMapper.isPinned(tempPinnedKey)) {
+                                continue;
+                            }
+
+                            Object itemId = keyMapper.getItemId(tempPinnedKey);
+                            Integer index = keyMapper.indexToItemId.inverse()
+                                    .get(itemId);
+                            if (!getGrid().isSelected(itemId)
+                                    && !activeRowHandler.activeRange
+                                            .contains(index.intValue())) {
+                                keyMapper.unpin(itemId);
+                            }
+                        }
+                        allTemporarilyPinnedKeys = new ArrayList<String>();
+                        getGrid().removeSelectionChangeListener(this);
+                    }
+                };
+
+                getGrid().addSelectionChangeListener(listener);
             }
         });
 

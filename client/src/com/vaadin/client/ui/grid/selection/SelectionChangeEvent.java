@@ -25,10 +25,11 @@ import com.vaadin.client.ui.grid.Grid;
 
 /**
  * Event object describing a change in Grid row selection state.
- *
+ * 
  * @since
  * @author Vaadin Ltd
  */
+@SuppressWarnings("rawtypes")
 public class SelectionChangeEvent<T> extends GwtEvent<SelectionChangeHandler> {
 
     private static final Type<SelectionChangeHandler> eventType = new Type<SelectionChangeHandler>();
@@ -36,66 +37,77 @@ public class SelectionChangeEvent<T> extends GwtEvent<SelectionChangeHandler> {
     private final Grid<T> grid;
     private final List<T> added;
     private final List<T> removed;
-
-    /**
-     * Basic constructor.
-     *
-     * @param grid
-     *            Grid reference, used for getSource
-     */
-    private SelectionChangeEvent(Grid<T> grid) {
-        if (grid == null) {
-            throw new IllegalArgumentException("grid parameter can not be null");
-        }
-        this.grid = grid;
-        added = new ArrayList<T>();
-        removed = new ArrayList<T>();
-    }
+    private final boolean batched;
 
     /**
      * Creates an event with a single added or removed row.
-     *
+     * 
      * @param grid
-     *            Grid reference, used for getSource
+     *            grid reference, used for getSource
      * @param added
-     *            Added row
+     *            the added row, or <code>null</code> if a row was not added
      * @param removed
-     *            Removed row
+     *            the removed row, or <code>null</code> if a row was not removed
+     * @param batched
+     *            whether or not this selection change event is triggered during
+     *            a batched selection/deselection action
+     * @see SelectionModel.Multi.Batched
      */
-    public SelectionChangeEvent(Grid<T> grid, T added, T removed) {
-        this(grid);
+    public SelectionChangeEvent(Grid<T> grid, T added, T removed,
+            boolean batched) {
+        this.grid = grid;
+        this.batched = batched;
+
         if (added != null) {
-            this.added.add(added);
+            this.added = Collections.singletonList(added);
+        } else {
+            this.added = Collections.emptyList();
         }
+
         if (removed != null) {
-            this.removed.add(removed);
+            this.removed = Collections.singletonList(removed);
+        } else {
+            this.removed = Collections.emptyList();
         }
     }
 
     /**
      * Creates an event where several rows have been added or removed.
-     *
+     * 
      * @param grid
      *            Grid reference, used for getSource
      * @param added
-     *            collection of added rows
+     *            a collection of added rows, or <code>null</code> if no rows
+     *            were added
      * @param removed
-     *            collection of removed rows
+     *            a collection of removed rows, or <code>null</code> if no rows
+     *            were removed
+     * @param batched
+     *            whether or not this selection change event is triggered during
+     *            a batched selection/deselection action
+     * @see SelectionModel.Multi.Batched
      */
     public SelectionChangeEvent(Grid<T> grid, Collection<T> added,
-            Collection<T> removed) {
-        this(grid);
+            Collection<T> removed, boolean batched) {
+        this.grid = grid;
+        this.batched = batched;
+
         if (added != null) {
-            this.added.addAll(added);
+            this.added = new ArrayList<T>(added);
+        } else {
+            this.added = Collections.emptyList();
         }
+
         if (removed != null) {
-            this.removed.addAll(removed);
+            this.removed = new ArrayList<T>(removed);
+        } else {
+            this.removed = Collections.emptyList();
         }
     }
 
     /**
      * Get a reference to the Grid object that fired this event.
-     *
+     * 
      * @return a grid reference
      */
     @Override
@@ -106,7 +118,7 @@ public class SelectionChangeEvent<T> extends GwtEvent<SelectionChangeHandler> {
     /**
      * Get all rows added to the selection since the last
      * {@link SelectionChangeEvent}.
-     *
+     * 
      * @return a collection of added rows. Empty collection if no rows were
      *         added.
      */
@@ -117,7 +129,7 @@ public class SelectionChangeEvent<T> extends GwtEvent<SelectionChangeHandler> {
     /**
      * Get all rows removed from the selection since the last
      * {@link SelectionChangeEvent}.
-     *
+     * 
      * @return a collection of removed rows. Empty collection if no rows were
      *         removed.
      */
@@ -127,7 +139,7 @@ public class SelectionChangeEvent<T> extends GwtEvent<SelectionChangeHandler> {
 
     /**
      * Gets a type identifier for this event.
-     *
+     * 
      * @return a {@link Type} identifier.
      */
     public static Type<SelectionChangeHandler> getType() {
@@ -140,8 +152,19 @@ public class SelectionChangeEvent<T> extends GwtEvent<SelectionChangeHandler> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void dispatch(SelectionChangeHandler handler) {
         handler.onSelectionChange(this);
     }
 
+    /**
+     * Checks if this selection change event is fired during a batched
+     * selection/deselection operation.
+     * 
+     * @return <code>true</code> iff this event is fired during a batched
+     *         selection/deselection operation
+     */
+    public boolean isBatchedSelection() {
+        return batched;
+    }
 }

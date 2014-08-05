@@ -16,6 +16,8 @@
 
 package com.vaadin.shared.data;
 
+import java.util.List;
+
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
@@ -37,7 +39,17 @@ public interface DataRequestRpc extends ServerRpc {
      *            the index of the first cached row
      * @param cacheSize
      *            the number of cached rows
+     * @param temporarilyPinnedKeys
+     *            the keys that should remain pinned, even if some of these
+     *            would fall out of the cache range
      */
     public void requestRows(int firstRowIndex, int numberOfRows,
-            int firstCachedRowIndex, int cacheSize);
+            int firstCachedRowIndex, int cacheSize,
+            List<String> temporarilyPinnedKeys);
+
+    /**
+     * Informs the back-end that the temporarily pinned keys in
+     * {@link #requestRows(int, int, int, int, List)} may be released.
+     */
+    public void releaseTemporarilyPinnedKeys();
 }

@@ -16,6 +16,7 @@
 package com.vaadin.client.ui.grid.selection;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -32,10 +33,13 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.vaadin.client.Util;
+import com.vaadin.client.data.AbstractRemoteDataSource;
+import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
+import com.vaadin.client.ui.grid.selection.SelectionModel.Multi.Batched;
 
 /* This class will probably not survive the final merge of all selection functionality. */
 public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
@@ -219,11 +223,14 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
 
         private boolean scrollAreaShouldRebound = false;
 
+        private AbstractRemoteDataSource<T> remoteDataSource = null;
+        private Batched<T> batchedSelectionModel = null;
+
         public AutoScrollerAndSelector(final int topBound,
                 final int bottomBound, final int gradientArea,
                 final boolean selectionPaint) {
-            this.finalTopBound = topBound;
-            this.finalBottomBound = bottomBound;
+            finalTopBound = topBound;
+            finalBottomBound = bottomBound;
             this.gradientArea = gradientArea;
             this.selectionPaint = selectionPaint;
         }
@@ -249,6 +256,14 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
             if (logicalRow != -1 && logicalRow != this.logicalRow) {
                 this.logicalRow = logicalRow;
                 setSelected(logicalRow, selectionPaint);
+
+                if (remoteDataSource != null && batchedSelectionModel != null) {
+                    Collection<T> pinneds = batchedSelectionModel
+                            .getSelectedRowsBatch();
+                    pinneds.addAll(batchedSelectionModel
+                            .getDeselectedRowsBatch());
+                    remoteDataSource.transactionPin(pinneds);
+                }
             }
 
             reschedule();
@@ -296,15 +311,37 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
             scrollSpeed = ratio * SCROLL_TOP_SPEED_PX_SEC;
         }
 
+        @SuppressWarnings("deprecation")
         public void start(int logicalRowIndex) {
             running = true;
             setSelected(logicalRowIndex, selectionPaint);
             logicalRow = logicalRowIndex;
             reschedule();
+
+            DataSource<T> dataSource = grid.getDataSource();
+            SelectionModel<T> selectionModel = grid.getSelectionModel();
+            if (dataSource instanceof AbstractRemoteDataSource
+                    && selectionModel instanceof Batched) {
+                this.remoteDataSource = (AbstractRemoteDataSource<T>) dataSource;
+                this.batchedSelectionModel = (Batched<T>) selectionModel;
+
+                Collection<T> pinneds = batchedSelectionModel
+                        .getSelectedRowsBatch();
+                pinneds.addAll(batchedSelectionModel.getDeselectedRowsBatch());
+                remoteDataSource.transactionPin(pinneds);
+            }
         }
 
+        @SuppressWarnings("deprecation")
         public void stop() {
             running = false;
+
+            // split into two lines because of Java generics not playing nice.
+            @SuppressWarnings("unchecked")
+            Collection<T> emptySet = (Collection<T>) Collections.emptySet();
+            remoteDataSource.transactionPin(emptySet);
+            remoteDataSource = null;
+            batchedSelectionModel = null;
 
             if (handle != null) {
                 handle.cancel();
@@ -435,6 +472,13 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         private int gradientArea;
 
         public void start(int logicalRowIndex) {
+
+            SelectionModel<T> model = grid.getSelectionModel();
+            if (model instanceof Batched) {
+                Batched<?> batchedModel = (Batched<?>) model;
+                batchedModel.startBatchSelect();
+            }
+
             /*
              * bounds are updated whenever the autoscroll cycle starts, to make
              * sure that the widget hasn't changed in size, moved around, or
@@ -520,6 +564,12 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
             if (autoScroller != null) {
                 autoScroller.stop();
                 autoScroller = null;
+            }
+
+            SelectionModel<T> model = grid.getSelectionModel();
+            if (model instanceof Batched) {
+                Batched<?> batchedModel = (Batched<?>) model;
+                batchedModel.commitBatchSelect();
             }
 
             removeNativeHandler();

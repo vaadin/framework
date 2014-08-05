@@ -17,6 +17,9 @@
 package com.vaadin.client.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -47,12 +50,27 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
     public class RpcDataSource extends AbstractRemoteDataSource<JSONObject> {
 
+        private Collection<JSONObject> prevRows = Collections.emptySet();
+
         @Override
         protected void requestRows(int firstRowIndex, int numberOfRows) {
             Range cached = getCachedRange();
 
+            Collection<JSONObject> newRows = new ArrayList<JSONObject>(
+                    temporarilyPinnedRows);
+            newRows.removeAll(prevRows);
+
+            List<String> temporarilyPinnedKeys = new ArrayList<String>(
+                    newRows.size());
+            for (JSONObject row : newRows) {
+                temporarilyPinnedKeys.add((String) getRowKey(row));
+            }
+
             getRpcProxy(DataRequestRpc.class).requestRows(firstRowIndex,
-                    numberOfRows, cached.getStart(), cached.length());
+                    numberOfRows, cached.getStart(), cached.length(),
+                    temporarilyPinnedKeys);
+
+            prevRows = temporarilyPinnedRows;
         }
 
         @Override
@@ -69,6 +87,17 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
             JSONObject row = new JSONObject();
             row.put(GridState.JSONKEY_ROWKEY, new JSONString((String) key));
             return new RowHandleImpl(row, key);
+        }
+
+        @Override
+        @SuppressWarnings("deprecation")
+        public void transactionPin(Collection<JSONObject> keys) {
+            super.transactionPin(keys);
+            if (keys.isEmpty() && !prevRows.isEmpty()) {
+                prevRows = Collections.emptySet();
+                getRpcProxy(DataRequestRpc.class)
+                        .releaseTemporarilyPinnedKeys();
+            }
         }
     }
 
