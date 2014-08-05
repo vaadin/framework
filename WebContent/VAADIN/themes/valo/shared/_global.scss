@@ -13,6 +13,11 @@ $valo-global-included: false !default;
 @mixin valo-global {
   @if $valo-global-included == false {
 
+    // Version info for the debug window
+    .v-vaadin-version:after {
+      content: "@version@";
+    }
+
     // Core widget styles come before any other component (and are always included),
     // so that it has the least specificity
     @include valo-widget;
