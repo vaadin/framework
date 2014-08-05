@@ -1093,17 +1093,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                             /*
                              * The focus is no longer on a selected row. Move
                              * focus to the selected row. (#10522)
-                             * 
-                             * Don't do this for multiselect (#13341).
-                             * 
-                             * Checking the selection mode here instead of in
-                             * setRowFocus allows keyboard shift+downarrow
-                             * selection to work as expected.
                              */
-                            if (isSingleSelectMode()) {
-                                setRowFocus(row);
-                            }
 
+                            setRowFocus(row);
                         }
                     }
                     if (selected != row.isSelected()) {
@@ -7256,7 +7248,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // Set new focused row
             focusedRow = row;
 
-            ensureRowIsVisible(row);
+            /*
+             * Don't scroll to the focused row when in multiselect mode.
+             * (#13341)
+             */
+
+            if (isSingleSelectMode()) {
+                ensureRowIsVisible(row);
+            }
 
             return true;
         }
