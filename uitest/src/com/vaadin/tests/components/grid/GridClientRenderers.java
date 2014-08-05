@@ -17,6 +17,7 @@ package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -80,7 +81,7 @@ public class GridClientRenderers extends MultiBrowserTest {
         $(NativeButtonElement.class).caption("Add").first().click();
 
         // Click the button in cell 1,1
-        TestBenchElement cell = getGrid().getCell(1, 1);
+        TestBenchElement cell = getGrid().getCell(1, 2);
         WebElement gwtButton = cell.findElement(By.tagName("button"));
         gwtButton.click();
 
@@ -102,7 +103,7 @@ public class GridClientRenderers extends MultiBrowserTest {
         $(NativeButtonElement.class).caption("DetachAttach").first().click();
 
         // Click the button in cell 1,1
-        TestBenchElement cell = getGrid().getCell(1, 1);
+        TestBenchElement cell = getGrid().getCell(1, 2);
         WebElement gwtButton = cell.findElement(By.tagName("button"));
         gwtButton.click();
 
@@ -159,17 +160,28 @@ public class GridClientRenderers extends MultiBrowserTest {
 
         openTestURL();
 
-        addColumn(Renderers.CPLX_RENDERER);
-
-        sleep((int) (latency * SLEEP_MULTIPLIER));
-
-        getGrid().scrollToRow(60);
-        // Cell should be red (setContentVisible set cell red)
+        // Test initial renderering with contentVisible = False
         TestBenchElement cell = getGrid().getCell(51, 1);
         String backgroundColor = cell.getCssValue("backgroundColor");
         assertEquals("Background color was not red.", colorRed, backgroundColor);
 
-        // Wait for data to arrive
+        // data arrives...
+        sleep((int) (latency * SLEEP_MULTIPLIER));
+
+        // Content becomes visible
+        cell = getGrid().getCell(51, 1);
+        backgroundColor = cell.getCssValue("backgroundColor");
+        assertNotEquals("Background color was red.", colorRed, backgroundColor);
+
+        // scroll down, new cells becomes contentVisible = False
+        getGrid().scrollToRow(60);
+
+        // Cell should be red (setContentVisible set cell red)
+        cell = getGrid().getCell(55, 1);
+        backgroundColor = cell.getCssValue("backgroundColor");
+        assertEquals("Background color was not red.", colorRed, backgroundColor);
+
+        // data arrives...
         sleep((int) (latency * SLEEP_MULTIPLIER));
 
         // Cell should no longer be red

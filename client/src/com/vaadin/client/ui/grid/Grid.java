@@ -1238,7 +1238,7 @@ public class Grid<T> extends Composite implements
                             Object value = column.getValue(rowData);
                             clxRenderer.render(cell, value);
 
-                        } else if (usedToHaveData) {
+                        } else {
                             // Prepare cell for no data
                             clxRenderer.setContentVisible(cell, false);
                         }

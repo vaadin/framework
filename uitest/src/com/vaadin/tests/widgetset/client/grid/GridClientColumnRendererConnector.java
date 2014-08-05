@@ -64,7 +64,7 @@ public class GridClientColumnRendererConnector extends
     private class DelayedDataSource implements DataSource<String> {
 
         private DataSource<String> ds;
-        private int firstRowIndex;
+        private int firstRowIndex = -1;
         private int numberOfRows;
         private DataChangeHandler dataChangeHandler;
         private int latency;
@@ -138,6 +138,11 @@ public class GridClientColumnRendererConnector extends
         GridColumn<String, String> c = createColumnWithRenderer(Renderers.TEXT_RENDERER);
         grid.addColumn(c);
         grid.getHeader().getDefaultRow().getCell(0).setText("Column 1");
+
+        // Add another column with a custom complex renderer
+        c = createColumnWithRenderer(Renderers.CPLX_RENDERER);
+        grid.addColumn(c);
+        grid.getHeader().getDefaultRow().getCell(1).setText("Column 2");
 
         // Add method for testing sort event firing
         grid.addSortHandler(new SortEventHandler<String>() {
