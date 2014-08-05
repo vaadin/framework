@@ -80,6 +80,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
+import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.StyleConstants;
@@ -126,7 +127,7 @@ import com.vaadin.shared.ui.table.TableConstants;
  */
 public class VScrollTable extends FlowPanel implements HasWidgets,
         ScrollHandler, VHasDropHandler, FocusHandler, BlurHandler, Focusable,
-        ActionOwner, SubPartAware {
+        ActionOwner, SubPartAware, DeferredWorker {
 
     public static final String STYLENAME = "v-table";
 
@@ -7923,5 +7924,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         if (addCloseHandler != null) {
             addCloseHandler.removeHandler();
         }
+    }
+
+    /*
+     * Return true if component need to perform some work and false otherwise.
+     */
+    @Override
+    public boolean isWorkPending() {
+        return lazyAdjustColumnWidths.isRunning();
     }
 }
