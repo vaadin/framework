@@ -115,6 +115,11 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         desiredCapabilities = Browser.FIREFOX.getDesiredCapabilities();
     }
 
+    static {
+        com.vaadin.testbench.Parameters
+                .setScreenshotComparisonCursorDetection(true);
+    }
+
     /**
      * Connect to the hub using a remote web driver, set the canvas size and
      * opens the initial URL as specified by {@link #getTestUrl()}
