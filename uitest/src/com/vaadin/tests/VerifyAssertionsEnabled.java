@@ -17,18 +17,17 @@
 package com.vaadin.tests;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Label;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 
-public class VerifyAssertionsEnabled extends AbstractTestUI {
+public class VerifyAssertionsEnabled extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
         try {
             assert false;
-            addComponent(new Label("Assertions are not enabled"));
+            log("Assertions are not enabled");
         } catch (AssertionError e) {
-            addComponent(new Label("Assertions are enabled"));
+            log("Assertions are enabled");
         }
     }
 
