@@ -288,12 +288,12 @@ public class GridConnector extends AbstractComponentConnector {
         for (RowState rowState : state.rows) {
             StaticRow<?> row = section.appendRow();
 
-            assert rowState.cells.size() == getWidget().getColumnCount();
-
             int diff = 1;
             if (getWidget().getSelectionModel() instanceof SelectionModel.None) {
                 diff = 0;
             }
+
+            assert rowState.cells.size() == getWidget().getColumnCount() - diff;
 
             int i = 0;
             for (CellState cellState : rowState.cells) {
