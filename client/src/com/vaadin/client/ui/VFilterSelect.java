@@ -254,7 +254,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Shows the popup where the user can see the filtered options
-         *
+         * 
          * @param currentSuggestions
          *            The filtered suggestions
          * @param currentPage
@@ -345,7 +345,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Should the next page button be visible to the user?
-         *
+         * 
          * @param active
          */
         private void setNextButtonActive(boolean active) {
@@ -365,7 +365,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Should the previous page button be visible to the user
-         *
+         * 
          * @param active
          */
         private void setPrevButtonActive(boolean active) {
@@ -554,7 +554,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * amount of items are visible at a time and a scrollbar or buttons are
          * visible to change page. If paging is turned of then all options are
          * rendered into the popup menu.
-         *
+         * 
          * @param paging
          *            Should the paging be turned on?
          */
@@ -679,7 +679,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Was the popup just closed?
-         *
+         * 
          * @return true if popup was just closed
          */
         public boolean isJustClosed() {
@@ -708,7 +708,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Updates style names in suggestion popup to help theme building.
-         *
+         * 
          * @param uidl
          *            UIDL for the whole combo box
          * @param componentState
@@ -799,7 +799,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Sets the suggestions rendered in the menu
-         *
+         * 
          * @param suggestions
          *            The suggestions to be rendered in the menu
          */
@@ -1784,10 +1784,14 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 if (!allowNewItem) {
                     /*
                      * New items are not allowed: If there is only one
-                     * suggestion, select that. Otherwise do nothing.
+                     * suggestion, select that. If there is more than one
+                     * suggestion Enter key should work as Escape key. Otherwise
+                     * do nothing.
                      */
                     if (currentSuggestions.size() == 1) {
                         onSuggestionSelected(currentSuggestions.get(0));
+                    } else if (currentSuggestions.size() > 1) {
+                        reset();
                     }
                 } else {
                     // Handle addition of new items.
