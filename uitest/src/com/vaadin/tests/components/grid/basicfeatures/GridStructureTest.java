@@ -78,7 +78,7 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         sleep(1000);
 
         // Check that row is loaded
-        assertThat(getBodyCellByRowAndColumn(11, 0).getText(), not("..."));
+        assertThat(getGridElement().getCell(11, 0).getText(), not("..."));
     }
 
     @Test
@@ -88,10 +88,10 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         // Freeze column 2
         selectMenuPath("Component", "Columns", "Column 2", "Freeze");
 
-        WebElement cell = getBodyCellByRowAndColumn(0, 0);
+        WebElement cell = getGridElement().getCell(0, 0);
         assertTrue(cell.getAttribute("class").contains("frozen"));
 
-        cell = getBodyCellByRowAndColumn(0, 1);
+        cell = getGridElement().getCell(0, 1);
         assertTrue(cell.getAttribute("class").contains("frozen"));
     }
 
@@ -99,13 +99,13 @@ public class GridStructureTest extends GridBasicFeaturesTest {
     public void testInitialColumnWidths() throws Exception {
         openTestURL();
 
-        WebElement cell = getBodyCellByRowAndColumn(0, 0);
+        WebElement cell = getGridElement().getCell(0, 0);
         assertEquals(100, cell.getSize().getWidth());
 
-        cell = getBodyCellByRowAndColumn(0, 1);
+        cell = getGridElement().getCell(0, 1);
         assertEquals(150, cell.getSize().getWidth());
 
-        cell = getBodyCellByRowAndColumn(0, 2);
+        cell = getGridElement().getCell(0, 2);
         assertEquals(200, cell.getSize().getWidth());
     }
 
@@ -114,27 +114,27 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         openTestURL();
 
         // Default column width is 100px
-        WebElement cell = getBodyCellByRowAndColumn(0, 0);
+        WebElement cell = getGridElement().getCell(0, 0);
         assertEquals(100, cell.getSize().getWidth());
 
         // Set first column to be 200px wide
         selectMenuPath("Component", "Columns", "Column 0", "Column 0 Width",
                 "200px");
 
-        cell = getBodyCellByRowAndColumn(0, 0);
+        cell = getGridElement().getCell(0, 0);
         assertEquals(200, cell.getSize().getWidth());
 
         // Set second column to be 150px wide
         selectMenuPath("Component", "Columns", "Column 1", "Column 1 Width",
                 "150px");
-        cell = getBodyCellByRowAndColumn(0, 1);
+        cell = getGridElement().getCell(0, 1);
         assertEquals(150, cell.getSize().getWidth());
 
         // Set first column to be auto sized (defaults to 100px currently)
         selectMenuPath("Component", "Columns", "Column 0", "Column 0 Width",
                 "Auto");
 
-        cell = getBodyCellByRowAndColumn(0, 0);
+        cell = getGridElement().getCell(0, 0);
         assertEquals(100, cell.getSize().getWidth());
     }
 
@@ -184,17 +184,17 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         openTestURL();
 
         assertEquals("Unexpected cell initial state", "(0, 0)",
-                getBodyCellByRowAndColumn(0, 0).getText());
+                getGridElement().getCell(0, 0).getText());
 
         selectMenuPath("Component", "Body rows",
                 "Modify first row (getItemProperty)");
         assertEquals("(First) modification with getItemProperty failed",
-                "modified: 0", getBodyCellByRowAndColumn(0, 0).getText());
+                "modified: 0", getGridElement().getCell(0, 0).getText());
 
         selectMenuPath("Component", "Body rows",
                 "Modify first row (getContainerProperty)");
         assertEquals("(Second) modification with getItemProperty failed",
-                "modified: Column 0", getBodyCellByRowAndColumn(0, 0).getText());
+                "modified: Column 0", getGridElement().getCell(0, 0).getText());
     }
 
     @Test
@@ -210,32 +210,19 @@ public class GridStructureTest extends GridBasicFeaturesTest {
     private void assertPrimaryStylename(String stylename) {
         assertTrue(getGridElement().getAttribute("class").contains(stylename));
 
-        String tableWrapperStyleName = getTableWrapper().getAttribute("class");
+        String tableWrapperStyleName = getGridElement().getTableWrapper()
+                .getAttribute("class");
         assertTrue(tableWrapperStyleName.contains(stylename + "-tablewrapper"));
 
-        String hscrollStyleName = getHorizontalScroller().getAttribute("class");
+        String hscrollStyleName = getGridElement().getHorizontalScroller()
+                .getAttribute("class");
         assertTrue(hscrollStyleName.contains(stylename + "-scroller"));
         assertTrue(hscrollStyleName
                 .contains(stylename + "-scroller-horizontal"));
 
-        String vscrollStyleName = getVerticalScroller().getAttribute("class");
+        String vscrollStyleName = getGridElement().getVerticalScroller()
+                .getAttribute("class");
         assertTrue(vscrollStyleName.contains(stylename + "-scroller"));
         assertTrue(vscrollStyleName.contains(stylename + "-scroller-vertical"));
-    }
-
-    private WebElement getBodyCellByRowAndColumn(int row, int column) {
-        return getGridElement().getCell(row, column);
-    }
-
-    private WebElement getVerticalScroller() {
-        return getGridElement().findElement(By.xpath("./div[1]"));
-    }
-
-    private WebElement getHorizontalScroller() {
-        return getGridElement().findElement(By.xpath("./div[2]"));
-    }
-
-    private WebElement getTableWrapper() {
-        return getGridElement().findElement(By.xpath("./div[3]"));
     }
 }

@@ -130,6 +130,7 @@ public class GridBasicClientFeatures extends
 
         ds = new ListDataSource<List<Data>>(data);
         grid = getTestedWidget();
+        grid.getElement().setId("testComponent");
         grid.setDataSource(ds);
         grid.setSelectionMode(SelectionMode.NONE);
 
@@ -240,6 +241,8 @@ public class GridBasicClientFeatures extends
 
     private void createStateMenu() {
         String[] selectionModePath = { "Component", "State", "Selection mode" };
+        String[] primaryStyleNamePath = { "Component", "State",
+                "Primary Stylename" };
 
         addMenuCommand("multi", new ScheduledCommand() {
             @Override
@@ -261,6 +264,31 @@ public class GridBasicClientFeatures extends
                 grid.setSelectionMode(SelectionMode.NONE);
             }
         }, selectionModePath);
+
+        addMenuCommand("v-grid", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setStylePrimaryName("v-grid");
+
+            }
+        }, primaryStyleNamePath);
+
+        addMenuCommand("v-escalator", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setStylePrimaryName("v-escalator");
+
+            }
+        }, primaryStyleNamePath);
+
+        addMenuCommand("v-custom-style", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setStylePrimaryName("v-custom-style");
+
+            }
+        }, primaryStyleNamePath);
+
     }
 
     private void createColumnsMenu() {

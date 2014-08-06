@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
@@ -186,6 +187,85 @@ public class GridElement extends AbstractComponentElement {
     }
 
     /**
+     * Get a header row by index
+     * 
+     * @param rowIndex
+     *            Row index
+     * @return The th element of the row
+     */
+    public WebElement getHeaderRow(int rowIndex) {
+        return getSubPart("#header[" + rowIndex + "]");
+    }
+
+    /**
+     * Get a footer row by index
+     * 
+     * @param rowIndex
+     *            Row index
+     * @return The tr element of the row
+     */
+    public WebElement getFooterRow(int rowIndex) {
+        return getSubPart("#footer[" + rowIndex + "]");
+    }
+
+    /**
+     * Get the vertical scroll element
+     * 
+     * @return The element representing the vertical scrollbar
+     */
+    public WebElement getVerticalScroller() {
+        List<WebElement> rootElements = findElements(By.xpath("./div"));
+        return rootElements.get(0);
+    }
+
+    /**
+     * Get the horizontal scroll element
+     * 
+     * @return The element representing the horizontal scrollbar
+     */
+    public WebElement getHorizontalScroller() {
+        List<WebElement> rootElements = findElements(By.xpath("./div"));
+        return rootElements.get(1);
+    }
+
+    /**
+     * Get the header element
+     * 
+     * @return The thead element
+     */
+    public WebElement getHeader() {
+        return getSubPart("#header");
+    }
+
+    /**
+     * Get the body element
+     * 
+     * @return the tbody element
+     */
+    public WebElement getBody() {
+        return getSubPart("#cell");
+    }
+
+    /**
+     * Get the footer element
+     * 
+     * @return the tfoot element
+     */
+    public WebElement getFooter() {
+        return getSubPart("#footer");
+    }
+
+    /**
+     * Get the element wrapping the table element
+     * 
+     * @return The element that wraps the table element
+     */
+    public WebElement getTableWrapper() {
+        List<WebElement> rootElements = findElements(By.xpath("./div"));
+        return rootElements.get(2);
+    }
+
+    /**
      * Helper function to get Grid subparts wrapped correctly
      * 
      * @param subPartSelector
@@ -195,4 +275,5 @@ public class GridElement extends AbstractComponentElement {
     private TestBenchElement getSubPart(String subPartSelector) {
         return (TestBenchElement) findElement(By.vaadin(subPartSelector));
     }
+
 }

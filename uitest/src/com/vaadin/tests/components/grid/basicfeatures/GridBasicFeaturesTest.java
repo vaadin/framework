@@ -65,7 +65,8 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     protected GridElement getGridElement() {
-        return $(GridElement.class).id("testComponent");
+        return ((TestBenchElement) findElement(By.id("testComponent")))
+                .wrap(GridElement.class);
     }
 
     protected void scrollGridVerticallyTo(double px) {

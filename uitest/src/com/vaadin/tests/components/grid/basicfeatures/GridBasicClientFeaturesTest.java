@@ -20,8 +20,6 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.tests.components.grid.GridElement;
 import com.vaadin.tests.widgetset.server.grid.GridBasicClientFeatures;
 
 /**
@@ -35,12 +33,6 @@ public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest 
     @Override
     protected Class<?> getUIClass() {
         return GridBasicClientFeatures.class;
-    }
-
-    @Override
-    protected GridElement getGridElement() {
-        return ((TestBenchElement) findElement(By.className("v-grid")))
-                .wrap(GridElement.class);
     }
 
     @Override

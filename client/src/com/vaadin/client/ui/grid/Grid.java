@@ -1217,6 +1217,12 @@ public class Grid<T> extends Composite implements
         cellActiveStyleName = getStylePrimaryName() + "-cell-active";
         headerFooterActiveStyleName = getStylePrimaryName() + "-header-active";
         rowActiveStyleName = getStylePrimaryName() + "-row-active";
+
+        if (isAttached()) {
+            refreshHeader();
+            refreshBody();
+            refreshFooter();
+        }
     }
 
     /**
