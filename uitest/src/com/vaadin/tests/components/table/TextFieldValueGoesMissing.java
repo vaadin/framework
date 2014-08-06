@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
@@ -8,17 +9,18 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class TextFieldValueGoesMissing extends TestBase {
+public class TextFieldValueGoesMissing extends AbstractTestUI {
 
+    @SuppressWarnings("unchecked")
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         final VerticalLayout verticalLayout = new VerticalLayout();
 
         final Label label1 = new Label("1");
         final Label label2 = new Label("2");
 
         Button button = new Button("Replace label");
-        button.addListener(new Button.ClickListener() {
+        button.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -45,7 +47,7 @@ public class TextFieldValueGoesMissing extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Enter a text in the TextField in the table and press the 'Replace label' button. This replaces the label which is in the same layout as the table but should not cause the TextField in the table to lose its contents";
     }
 
