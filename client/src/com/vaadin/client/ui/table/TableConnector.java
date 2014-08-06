@@ -64,7 +64,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.vaadin.client.Paintable#updateFromUIDL(com.vaadin.client.UIDL,
      * com.vaadin.client.ApplicationConnection)
      */
