@@ -1,6 +1,11 @@
 @mixin valo-splitpanel($primary-stylename : v-splitpanel) {
-  // No need for parent selector
-  @include valo-splitpanel-style($primary-stylename: $primary-stylename);
+  .#{$primary-stylename}-horizontal {
+    @include valo-splitpanel-style($primary-stylename: $primary-stylename, $orientation: horizontal);
+  }
+
+  .#{$primary-stylename}-vertical {
+    @include valo-splitpanel-style($primary-stylename: $primary-stylename, $orientation: vertical);
+  }
 }
 
 
@@ -68,14 +73,14 @@
 
   // Allow undefined/auto height for horizontal split
 
-  .#{$primary-stylename}-horizontal {
-    .#{$primary-stylename}-second-container {
+  .#{$primary-stylename}-horizontal > div {
+    > .#{$primary-stylename}-second-container {
       position: static !important;
       display: inline-block;
       vertical-align: top;
     }
 
-    .#{$primary-stylename}-first-container {
+    > .#{$primary-stylename}-first-container {
       display: inline-block;
       vertical-align: top;
     }
@@ -94,76 +99,61 @@
     $orientation: vertical horizontal
   ) {
 
-  @if contains($orientation, horizontal) {
-    .#{$primary-stylename}-hsplitter {
-      width: $splitter-size;
-    }
-  }
-
-  @if contains($orientation, vertical) {
-    .#{$primary-stylename}-vsplitter {
-      height: $splitter-size;
-    }
-  }
-
   $offset: round(($splitter-active-size - $splitter-size)/-2);
 
   @if contains($orientation, horizontal) {
-    .#{$primary-stylename}-hsplitter:after {
-      left: $offset;
-      right: $offset;
+    > div > .#{$primary-stylename}-hsplitter {
+      width: $splitter-size;
+
+      &:after {
+        left: $offset;
+        right: $offset;
+      }
+
+      div {
+       &:before {
+          @include valo-button-style($shadow: $splitter-shadow);
+          height: auto;
+          padding: 0;
+          border-radius: 0;
+          @include valo-gradient($color: $v-background-color, $direction: to right);
+        }
+
+        @if $splitter-handle-visible {
+          &:after {
+            @include valo-splitpanel-splitter-handle-style($horizontal: true);
+          }
+        }
+      }
+    }
+
+    > div > .#{$primary-stylename}-second-container {
+      margin-left: $splitter-size;
     }
   }
 
   @if contains($orientation, vertical) {
-    .#{$primary-stylename}-vsplitter:after {
-      top: $offset;
-      bottom: $offset;
-    }
-  }
+    > div > .#{$primary-stylename}-vsplitter {
+      height: $splitter-size;
 
-  @if contains($orientation, horizontal) or contains($orientation, vertical) {
-    .#{$primary-stylename}-hsplitter div,
-    .#{$primary-stylename}-vsplitter div {
-      &:before {
-        @include valo-button-style($shadow: $splitter-shadow);
-        height: auto;
-        padding: 0;
-        border-radius: 0;
-      }
-    }
-  }
-
-  @if contains($orientation, horizontal) {
-    .#{$primary-stylename}-hsplitter div {
-      &:before {
-        $color: $v-background-color;
-        @include valo-gradient($color: $color, $direction: to right);
-      }
-    }
-  }
-
-  @if $splitter-handle-visible {
-    .#{$primary-stylename}-vsplitter div,
-    .#{$primary-stylename}-hsplitter div {
       &:after {
-        @include valo-splitpanel-splitter-handle-style;
+        top: $offset;
+        bottom: $offset;
       }
-    }
 
-    @if contains($orientation, horizontal) {
-      .#{$primary-stylename}-hsplitter div {
-        &:after {
-          @include valo-splitpanel-splitter-handle-style($horizontal: true, $include-common: false);
+      div {
+       &:before {
+          @include valo-button-style($shadow: $splitter-shadow);
+          height: auto;
+          padding: 0;
+          border-radius: 0;
         }
-      }
-    }
-  }
 
-  @if contains($orientation, horizontal) {
-    &.#{$primary-stylename}-horizontal {
-      .#{$primary-stylename}-second-container {
-        margin-left: $splitter-size;
+        @if $splitter-handle-visible {
+          &:after {
+            @include valo-splitpanel-splitter-handle-style;
+          }
+        }
       }
     }
   }
