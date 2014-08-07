@@ -30,6 +30,7 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -464,6 +465,83 @@ public class Grid<T> extends Composite implements
     }
 
     /**
+     * Class for sorting at a later time
+     */
+    private class LazySorter extends Timer {
+
+        private Cell cell;
+
+        private boolean multisort;
+
+        @Override
+        public void run() {
+            SortOrder sortingOrder = getSortOrder(getColumnFromVisibleIndex(cell
+                    .getColumn()));
+            if (sortingOrder == null) {
+                /*
+                 * No previous sorting, sort Ascending
+                 */
+                sort(cell, SortDirection.ASCENDING, multisort);
+
+            } else {
+                // Toggle sorting
+                SortDirection direction = sortingOrder.getDirection();
+                if (direction == SortDirection.ASCENDING) {
+                    sort(cell, SortDirection.DESCENDING, multisort);
+                } else {
+                    sort(cell, SortDirection.ASCENDING, multisort);
+                }
+            }
+        }
+
+        /**
+         * Set the cell reference to the primary cell that sorting should be
+         * done for.
+         * 
+         * @param cell
+         * 
+         */
+        public void setCellReference(Cell cell) {
+            this.cell = cell;
+        }
+
+        /**
+         * Is multiple column sorting is enabled/disabled
+         * 
+         * @param multisort
+         *            true if multiple column sorting is enabled
+         */
+        public void setMultisort(boolean multisort) {
+            this.multisort = multisort;
+        }
+
+        /**
+         * Sorts the column in a direction
+         */
+        private void sort(Cell cell, SortDirection direction, boolean multisort) {
+            TableCellElement th = TableCellElement.as(cell.getElement());
+
+            // Apply primary sorting on clicked column
+            GridColumn<?, ?> columnInstance = getColumnFromVisibleIndex(cell
+                    .getColumn());
+            Sort sorting = Sort.by(columnInstance, direction);
+
+            // Re-apply old sorting to the sort order
+            if (multisort) {
+                for (SortOrder order : getSortOrder()) {
+                    if (order.getColumn() != columnInstance) {
+                        sorting = sorting.then(order.getColumn(),
+                                order.getDirection());
+                    }
+                }
+            }
+
+            // Perform sorting
+            Grid.this.sort(sorting);
+        }
+    }
+
+    /**
      * Escalator used internally by grid to render the rows
      */
     private Escalator escalator = GWT.create(Escalator.class);
@@ -511,6 +589,8 @@ public class Grid<T> extends Composite implements
 
     private final ActiveCellHandler activeCellHandler;
 
+    private final LazySorter lazySorter = new LazySorter();
+
     /**
      * Enumeration for easy setting of selection mode.
      */
@@ -552,13 +632,6 @@ public class Grid<T> extends Composite implements
         protected abstract <T> SelectionModel<T> createModel();
     }
 
-    class SortableColumnHeaderRenderer extends
-            AbstractGridColumn.SortableColumnHeaderRenderer {
-        SortableColumnHeaderRenderer(Renderer<String> cellRenderer) {
-            super(Grid.this, cellRenderer);
-        }
-    }
-
     /**
      * Base class for grid columns internally used by the Grid. The user should
      * use {@link GridColumn} when creating new columns.
@@ -572,274 +645,7 @@ public class Grid<T> extends Composite implements
     static abstract class AbstractGridColumn<C, T> implements HasVisibility {
 
         /**
-         * Renderer for columns which are sortable
-         * 
-         * FIXME Currently assumes multisorting
-         */
-        static class SortableColumnHeaderRenderer extends
-                ComplexRenderer<String> {
-
-            private Grid<?> grid;
-
-            /**
-             * Delay before a long tap action is triggered. Number in
-             * milliseconds.
-             */
-            private static final int LONG_TAP_DELAY = 500;
-
-            /**
-             * The threshold in pixels a finger can move while long tapping.
-             */
-            private static final int LONG_TAP_THRESHOLD = 3;
-
-            /**
-             * Class for sorting at a later time
-             */
-            private class LazySorter extends Timer {
-
-                private Cell cell;
-
-                private boolean multisort;
-
-                @Override
-                public void run() {
-                    SortOrder sortingOrder = getSortingOrder(grid
-                            .getColumnFromVisibleIndex(cell.getColumn()));
-                    if (sortingOrder == null) {
-                        /*
-                         * No previous sorting, sort Ascending
-                         */
-                        sort(cell, SortDirection.ASCENDING, multisort);
-
-                    } else {
-                        // Toggle sorting
-                        SortDirection direction = sortingOrder.getDirection();
-                        if (direction == SortDirection.ASCENDING) {
-                            sort(cell, SortDirection.DESCENDING, multisort);
-                        } else {
-                            sort(cell, SortDirection.ASCENDING, multisort);
-                        }
-                    }
-                }
-
-                public void setCurrentCell(Cell cell) {
-                    this.cell = cell;
-                }
-
-                public void setMultisort(boolean multisort) {
-                    this.multisort = multisort;
-                }
-            }
-
-            private final LazySorter lazySorter = new LazySorter();
-
-            private Renderer<String> cellRenderer;
-
-            private Point touchStartPoint;
-
-            /**
-             * Creates column renderer with sort indicators
-             * 
-             * @param cellRenderer
-             *            The actual cell renderer
-             */
-            public SortableColumnHeaderRenderer(Grid<?> grid,
-                    Renderer<String> cellRenderer) {
-                this.grid = grid;
-                this.cellRenderer = cellRenderer;
-            }
-
-            @Override
-            public void render(FlyweightCell cell, String data) {
-
-                // Render cell
-                this.cellRenderer.render(cell, data);
-
-                /*
-                 * FIXME This grid null check is needed since Grid.addColumns()
-                 * is invoking Escalator.insertColumn() before the grid instance
-                 * for the column is set resulting in the first render() being
-                 * done without a grid instance. Remove the if statement when
-                 * this is fixed.
-                 */
-                if (grid != null) {
-                    GridColumn<?, ?> column = grid
-                            .getColumnFromVisibleIndex(cell.getColumn());
-                    SortOrder sortingOrder = getSortingOrder(column);
-                    Element cellElement = cell.getElement();
-                    if (column.isSortable()) {
-                        if (sortingOrder != null) {
-                            if (SortDirection.ASCENDING == sortingOrder
-                                    .getDirection()) {
-                                cellElement.replaceClassName("sort-desc",
-                                        "sort-asc");
-                            } else {
-                                cellElement.replaceClassName("sort-asc",
-                                        "sort-desc");
-                            }
-
-                            int sortIndex = grid.getSortOrder().indexOf(
-                                    sortingOrder);
-                            if (sortIndex > -1
-                                    && grid.getSortOrder().size() > 1) {
-                                // Show sort order indicator if column is sorted
-                                // and other sorted columns also exists.
-                                cellElement.setAttribute("sort-order",
-                                        String.valueOf(sortIndex + 1));
-
-                            } else {
-                                cellElement.removeAttribute("sort-order");
-                            }
-                        } else {
-                            cleanup(cell);
-                        }
-                    } else {
-                        cleanup(cell);
-                    }
-                }
-            }
-
-            private void cleanup(FlyweightCell cell) {
-                Element cellElement = cell.getElement();
-                cellElement.removeAttribute("sort-order");
-                cellElement.removeClassName("sort-desc");
-                cellElement.removeClassName("sort-asc");
-            }
-
-            @Override
-            public Collection<String> getConsumedEvents() {
-                return Arrays.asList(BrowserEvents.TOUCHSTART,
-                        BrowserEvents.TOUCHMOVE, BrowserEvents.TOUCHEND,
-                        BrowserEvents.TOUCHCANCEL, BrowserEvents.CLICK);
-            }
-
-            @Override
-            public boolean onBrowserEvent(final Cell cell, NativeEvent event) {
-
-                // Handle sorting events if column is sortable
-                if (grid.getColumn(cell.getColumn()).isSortable()) {
-
-                    if (BrowserEvents.TOUCHSTART.equals(event.getType())) {
-                        if (event.getTouches().length() > 1) {
-                            return false;
-                        }
-
-                        event.preventDefault();
-
-                        Touch touch = event.getChangedTouches().get(0);
-                        touchStartPoint = new Point(touch.getClientX(),
-                                touch.getClientY());
-
-                        lazySorter.setCurrentCell(cell);
-                        lazySorter.setMultisort(true);
-                        lazySorter.schedule(LONG_TAP_DELAY);
-
-                    } else if (BrowserEvents.TOUCHMOVE.equals(event.getType())) {
-                        if (event.getTouches().length() > 1) {
-                            return false;
-                        }
-
-                        event.preventDefault();
-
-                        Touch touch = event.getChangedTouches().get(0);
-                        double diffX = Math.abs(touch.getClientX()
-                                - touchStartPoint.getX());
-                        double diffY = Math.abs(touch.getClientY()
-                                - touchStartPoint.getY());
-
-                        // Cancel long tap if finger strays too far from
-                        // starting point
-                        if (diffX > LONG_TAP_THRESHOLD
-                                || diffY > LONG_TAP_THRESHOLD) {
-                            lazySorter.cancel();
-                        }
-
-                    } else if (BrowserEvents.TOUCHEND.equals(event.getType())) {
-                        if (event.getTouches().length() > 0) {
-                            return false;
-                        }
-
-                        if (lazySorter.isRunning()) {
-                            // Not a long tap yet, perform single sort
-                            lazySorter.cancel();
-                            lazySorter.setMultisort(false);
-                            lazySorter.run();
-                        }
-
-                    } else if (BrowserEvents.TOUCHCANCEL
-                            .equals(event.getType())) {
-                        if (event.getChangedTouches().length() > 1) {
-                            return false;
-                        }
-
-                        lazySorter.cancel();
-
-                    } else if (BrowserEvents.CLICK.equals(event.getType())) {
-                        lazySorter.setCurrentCell(cell);
-                        lazySorter.setMultisort(event.getShiftKey());
-                        lazySorter.run();
-
-                        // Active cell handling is also monitoring the click
-                        // event so we allow event to propagate for it
-                        return false;
-                    }
-                    return true;
-                }
-                return false;
-
-            }
-
-            protected void removeFromRow(HeaderRow row) {
-                row.setRenderer(new Renderer<String>() {
-                    @Override
-                    public void render(FlyweightCell cell, String data) {
-                        cleanup(cell);
-                    }
-                });
-                grid.refreshHeader();
-                row.setRenderer(cellRenderer);
-                grid.refreshHeader();
-            }
-
-            /**
-             * Sorts the column in a direction
-             */
-            private void sort(Cell cell, SortDirection direction,
-                    boolean multisort) {
-                // Apply primary sorting on clicked column
-                GridColumn<?, ?> columnInstance = grid
-                        .getColumnFromVisibleIndex(cell.getColumn());
-                Sort sorting = Sort.by(columnInstance, direction);
-
-                // Re-apply old sorting to the sort order
-                if (multisort) {
-                    for (SortOrder order : grid.getSortOrder()) {
-                        if (order.getColumn() != columnInstance) {
-                            sorting = sorting.then(order.getColumn(),
-                                    order.getDirection());
-                        }
-                    }
-                }
-
-                // Perform sorting
-                grid.sort(sorting);
-            }
-
-            /**
-             * Finds the sorting order for this column
-             */
-            private SortOrder getSortingOrder(GridColumn<?, ?> column) {
-                for (SortOrder order : grid.getSortOrder()) {
-                    if (order.getColumn() == column) {
-                        return order;
-                    }
-                }
-                return null;
-            }
-        }
-
-        /**
-         * The grid the column is associated with
+         * the column is associated with
          */
         private Grid<T> grid;
 
@@ -1187,12 +993,13 @@ public class Grid<T> extends Composite implements
                 int index = columnIndices.get(cell.getColumn());
                 final StaticCell metadata = staticRow.getCell(index);
 
+                // Decorate default row with sorting indicators
+                if (staticRow instanceof HeaderRow) {
+                    addSortingIndicatorsToHeaderRow((HeaderRow) staticRow, cell);
+                }
+
                 // Assign colspan to cell before rendering
                 cell.setColSpan(metadata.getColspan());
-
-                // Decorates cell with possible indicators onto the cell.
-                // Actual content is rendered below.
-                staticRow.getRenderer().render(cell, null);
 
                 switch (metadata.getType()) {
                 case TEXT:
@@ -1210,6 +1017,57 @@ public class Grid<T> extends Composite implements
 
                 activeCellHandler.updateActiveCellStyle(cell, container);
             }
+        }
+
+        private void addSortingIndicatorsToHeaderRow(HeaderRow headerRow,
+                FlyweightCell cell) {
+
+            cleanup(cell);
+
+            GridColumn<?, ?> column = getColumnFromVisibleIndex(cell
+                    .getColumn());
+            SortOrder sortingOrder = getSortOrder(column);
+            if (!headerRow.isDefault() || !column.isSortable()
+                    || sortingOrder == null) {
+                // Only apply sorting indicators to sortable header columns in
+                // the default header row
+                return;
+            }
+
+            Element cellElement = cell.getElement();
+
+            if (SortDirection.ASCENDING == sortingOrder.getDirection()) {
+                cellElement.addClassName("sort-asc");
+            } else {
+                cellElement.addClassName("sort-desc");
+            }
+
+            int sortIndex = Grid.this.getSortOrder().indexOf(sortingOrder);
+            if (sortIndex > -1 && Grid.this.getSortOrder().size() > 1) {
+                // Show sort order indicator if column is
+                // sorted and other sorted columns also exists.
+                cellElement.setAttribute("sort-order",
+                        String.valueOf(sortIndex + 1));
+            }
+        }
+
+        /**
+         * Finds the sort order for this column
+         */
+        private SortOrder getSortOrder(GridColumn<?, ?> column) {
+            for (SortOrder order : Grid.this.getSortOrder()) {
+                if (order.getColumn() == column) {
+                    return order;
+                }
+            }
+            return null;
+        }
+
+        private void cleanup(FlyweightCell cell) {
+            Element cellElement = cell.getElement();
+            cellElement.removeAttribute("sort-order");
+            cellElement.removeClassName("sort-desc");
+            cellElement.removeClassName("sort-asc");
         }
 
         @Override
@@ -1333,6 +1191,9 @@ public class Grid<T> extends Composite implements
                 refreshBody();
             }
         });
+
+        // Sink header events
+        sinkEvents(getHeader().getConsumedEvents());
     }
 
     @Override
@@ -1371,7 +1232,7 @@ public class Grid<T> extends Composite implements
      * The updater is invoked when body rows or columns are added or removed,
      * the content of body cells is changed, or the body is scrolled to expose
      * previously hidden content.
-     *
+     * 
      * @return the new body updater instance
      */
     protected EscalatorUpdater createBodyUpdater() {
@@ -1997,17 +1858,15 @@ public class Grid<T> extends Composite implements
                     // FIXME getFromVisibleIndex???
                     GridColumn<?, T> gridColumn = columns.get(cell.getColumn());
 
-                    Renderer<?> renderer;
                     if (container == escalator.getHeader()) {
-                        renderer = header.getRow(cell.getRow()).getRenderer();
+                        if (getHeader().getRow(cell.getRow()).isDefault()) {
+                            handleDefaultRowEvent(cell, event);
+                        }
                     } else if (container == escalator.getFooter()) {
-                        renderer = footer.getRow(cell.getRow()).getRenderer();
-                    } else {
-                        renderer = gridColumn.getRenderer();
-                    }
-
-                    if (renderer instanceof ComplexRenderer) {
-                        ComplexRenderer<?> cplxRenderer = (ComplexRenderer<?>) renderer;
+                        // NOP
+                    } else if (gridColumn.getRenderer() instanceof ComplexRenderer) {
+                        ComplexRenderer<?> cplxRenderer = (ComplexRenderer<?>) gridColumn
+                                .getRenderer();
                         if (cplxRenderer.getConsumedEvents().contains(
                                 event.getType())) {
                             if (cplxRenderer.onBrowserEvent(cell, event)) {
@@ -2025,6 +1884,81 @@ public class Grid<T> extends Composite implements
                 activeCellHandler.handleNavigationEvent(event, cell);
             }
         }
+    }
+
+    private Point rowEventTouchStartingPoint;
+
+    private boolean handleDefaultRowEvent(final Cell cell, NativeEvent event) {
+        if (!getColumn(cell.getColumn()).isSortable()) {
+            // Only handle sorting events if the column is sortable
+            return false;
+        }
+
+        if (BrowserEvents.TOUCHSTART.equals(event.getType())) {
+            if (event.getTouches().length() > 1) {
+                return false;
+            }
+
+            event.preventDefault();
+
+            Touch touch = event.getChangedTouches().get(0);
+            rowEventTouchStartingPoint = new Point(touch.getClientX(),
+                    touch.getClientY());
+
+            lazySorter.setCellReference(cell);
+            lazySorter.setMultisort(true);
+            lazySorter.schedule(GridConstants.LONG_TAP_DELAY);
+
+        } else if (BrowserEvents.TOUCHMOVE.equals(event.getType())) {
+            if (event.getTouches().length() > 1) {
+                return false;
+            }
+
+            event.preventDefault();
+
+            Touch touch = event.getChangedTouches().get(0);
+            double diffX = Math.abs(touch.getClientX()
+                    - rowEventTouchStartingPoint.getX());
+            double diffY = Math.abs(touch.getClientY()
+                    - rowEventTouchStartingPoint.getY());
+
+            // Cancel long tap if finger strays too far from
+            // starting point
+            if (diffX > GridConstants.LONG_TAP_THRESHOLD
+                    || diffY > GridConstants.LONG_TAP_THRESHOLD) {
+                lazySorter.cancel();
+            }
+
+        } else if (BrowserEvents.TOUCHEND.equals(event.getType())) {
+            if (event.getTouches().length() > 0) {
+                return false;
+            }
+
+            if (lazySorter.isRunning()) {
+                // Not a long tap yet, perform single sort
+                lazySorter.cancel();
+                lazySorter.setMultisort(false);
+                lazySorter.run();
+            }
+
+        } else if (BrowserEvents.TOUCHCANCEL.equals(event.getType())) {
+            if (event.getChangedTouches().length() > 1) {
+                return false;
+            }
+
+            lazySorter.cancel();
+
+        } else if (BrowserEvents.CLICK.equals(event.getType())) {
+            lazySorter.setCellReference(cell);
+            lazySorter.setMultisort(event.getShiftKey());
+            lazySorter.run();
+
+            // Active cell handling is also monitoring the click
+            // event so we allow event to propagate for it
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -2356,6 +2290,18 @@ public class Grid<T> extends Composite implements
      */
     public List<SortOrder> getSortOrder() {
         return Collections.unmodifiableList(sortOrder);
+    }
+
+    /**
+     * Finds the sorting order for this column
+     */
+    private SortOrder getSortOrder(GridColumn<?, ?> column) {
+        for (SortOrder order : getSortOrder()) {
+            if (order.getColumn() == column) {
+                return order;
+            }
+        }
+        return null;
     }
 
     /**

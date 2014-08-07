@@ -187,17 +187,6 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
 
         private List<CELLTYPE> cells = new ArrayList<CELLTYPE>();
 
-        private Renderer<String> renderer = new Renderer<String>() {
-
-            @Override
-            public void render(FlyweightCell cell, String data) {
-                /*
-                 * The rendering into the cell is done directly from the updater
-                 * since it needs to handle multiple types of data.
-                 */
-            }
-        };
-
         private GridStaticSection<?> section;
 
         private Collection<List<CELLTYPE>> cellGroups = new HashSet<List<CELLTYPE>>();
@@ -357,14 +346,6 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
 
         protected void removeCell(int index) {
             cells.remove(index);
-        }
-
-        protected void setRenderer(Renderer<String> renderer) {
-            this.renderer = renderer;
-        }
-
-        protected Renderer<String> getRenderer() {
-            return renderer;
         }
 
         protected abstract CELLTYPE createCell();

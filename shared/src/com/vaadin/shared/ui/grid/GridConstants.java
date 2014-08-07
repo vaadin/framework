@@ -31,4 +31,14 @@ public final class GridConstants implements Serializable {
      * explicitly defined padding value.
      */
     public static final int DEFAULT_PADDING = 0;
+
+    /**
+     * Delay before a long tap action is triggered. Number in milliseconds.
+     */
+    public static final int LONG_TAP_DELAY = 500;
+
+    /**
+     * The threshold in pixels a finger can move while long tapping.
+     */
+    public static final int LONG_TAP_THRESHOLD = 3;
 }

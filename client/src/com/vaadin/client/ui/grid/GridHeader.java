@@ -15,8 +15,11 @@
  */
 package com.vaadin.client.ui.grid;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import com.google.gwt.core.client.Scheduler;
-import com.vaadin.client.ui.grid.Grid.AbstractGridColumn.SortableColumnHeaderRenderer;
+import com.google.gwt.dom.client.BrowserEvents;
 
 /**
  * Represents the header section of a Grid. A header consists of a single header
@@ -89,21 +92,9 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
                     "Cannot set a default row that does not exist in the container");
         }
         if (defaultRow != null) {
-            assert defaultRow.getRenderer() instanceof SortableColumnHeaderRenderer;
-
-            // Eclipse is wrong about this warning - javac does not accept the
-            // parameterized version
-            ((Grid.SortableColumnHeaderRenderer) defaultRow.getRenderer())
-                    .removeFromRow(defaultRow);
-
             defaultRow.setDefault(false);
         }
         if (row != null) {
-            assert !(row.getRenderer() instanceof SortableColumnHeaderRenderer);
-
-            row.setRenderer(getGrid().new SortableColumnHeaderRenderer(row
-                    .getRenderer()));
-
             row.setDefault(true);
         }
         defaultRow = row;
@@ -144,5 +135,16 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
                 }
             }
         });
+    }
+
+    /**
+     * Returns the events consumed by the header
+     * 
+     * @return a collection of BrowserEvents
+     */
+    public Collection<String> getConsumedEvents() {
+        return Arrays.asList(BrowserEvents.TOUCHSTART, BrowserEvents.TOUCHMOVE,
+                BrowserEvents.TOUCHEND, BrowserEvents.TOUCHCANCEL,
+                BrowserEvents.CLICK);
     }
 }
