@@ -197,6 +197,16 @@ public class GridStructureTest extends GridBasicFeaturesTest {
                 "modified: Column 0", getBodyCellByRowAndColumn(0, 0).getText());
     }
 
+    @Test
+    public void testRemovingAllItems() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Body rows", "Remove all rows");
+
+        assertEquals(0, getGridElement().findElement(By.tagName("tbody"))
+                .findElements(By.tagName("tr")).size());
+    }
+
     private void assertPrimaryStylename(String stylename) {
         assertTrue(getGridElement().getAttribute("class").contains(stylename));
 

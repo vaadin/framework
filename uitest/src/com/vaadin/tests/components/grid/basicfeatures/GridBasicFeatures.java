@@ -521,6 +521,15 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }
                 });
+
+        createClickAction("Remove all rows", "Body rows",
+                new Command<Grid, String>() {
+                    @SuppressWarnings("unchecked")
+                    @Override
+                    public void execute(Grid c, String value, Object data) {
+                        ds.removeAllItems();
+                    }
+                }, null);
     }
 
     @SuppressWarnings("boxing")
