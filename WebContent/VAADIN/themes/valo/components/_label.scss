@@ -137,8 +137,8 @@ $v-letter-spacing--h4:    0               !default;
 
     .#{$primary-stylename}-success,
     .#{$primary-stylename}-failure {
-      background: #fff;
-      color: #555;
+      background: $v-textfield-background-color;
+      color: valo-font-color($v-textfield-background-color);
       border: 2px solid $v-friendly-color;
       border-radius: $v-border-radius;
       padding: round($v-unit-size/5) round($v-unit-size/2) round($v-unit-size/5) round($v-unit-size);
