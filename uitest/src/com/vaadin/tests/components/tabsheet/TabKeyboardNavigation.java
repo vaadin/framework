@@ -6,7 +6,8 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -19,7 +20,16 @@ import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class TabKeyboardNavigation extends TestBase {
+/**
+ * Test if the click and key tab selection in a tabsheet generate the correct
+ * focus/blur events.
+ * 
+ * The solution was broken in ticket (#14304)
+ * 
+ * @since
+ * @author Vaadin Ltd
+ */
+public class TabKeyboardNavigation extends AbstractTestUI {
 
     int index = 1;
     ArrayList<Component> tabs = new ArrayList<Component>();
@@ -27,18 +37,18 @@ public class TabKeyboardNavigation extends TestBase {
     Log focusblur = new Log(10);
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         ts.setWidth("500px");
         ts.setHeight("500px");
 
-        ts.addListener(new FocusListener() {
+        ts.addFocusListener(new FocusListener() {
             @Override
             public void focus(FocusEvent event) {
                 focusblur.log("Tabsheet focused!");
             }
         });
 
-        ts.addListener(new BlurListener() {
+        ts.addBlurListener(new BlurListener() {
             @Override
             public void blur(BlurEvent event) {
                 focusblur.log("Tabsheet blurred!");
@@ -74,7 +84,7 @@ public class TabKeyboardNavigation extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "The tab bar should be focusable and arrow keys should switch tabs. The del key should close a tab if closable.";
     }
 
@@ -83,10 +93,18 @@ public class TabKeyboardNavigation extends TestBase {
         return 5100;
     }
 
+    public final static String LABEL_ID = "sheetLabel";
+
+    public final static String labelID(int index) {
+        return LABEL_ID + index;
+    }
+
     private Tab addTab() {
         Layout content = new VerticalLayout();
         tabs.add(content);
-        content.addComponent(new Label("Tab " + index));
+        Label label = new Label("Tab " + index);
+        label.setId(labelID(index));
+        content.addComponent(label);
         content.addComponent(new TextField());
         Tab tab = ts.addTab(content, "Tab " + index, null);
         if (index == 2) {
