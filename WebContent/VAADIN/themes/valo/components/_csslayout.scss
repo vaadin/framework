@@ -1,3 +1,6 @@
+$v-component-group-spacing: null !default;
+
+
 @mixin valo-csslayout ($primary-stylename: v-csslayout, $include-additional-styles: contains($v-included-additional-styles, csslayout)){
   @if $include-additional-styles {
     .#{$primary-stylename}-well {
@@ -54,9 +57,9 @@
     $v-border-width: first-number($v-border);
 
     @if $v-border-width > 0 {
-      margin-left: -$v-border-width;
+      margin-left: $v-component-group-spacing or -$v-border-width;
     } @else {
-      margin-left: 1px;
+      margin-left: $v-component-group-spacing or 1px;
     }
 
     &:first-child {
