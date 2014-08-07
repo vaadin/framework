@@ -37,9 +37,10 @@
   .#{$primary-stylename}-treespacer {
     display: inline-block;
     position: absolute;
-    width: round($v-unit-size/2);
+    width: round($v-unit-size/2) !important;
     margin-left: round($v-unit-size/-2) - round($v-table-cell-padding-horizontal/2);
     text-align: center;
+    cursor: pointer;
   }
 
   .#{$primary-stylename}-node-closed:before {
