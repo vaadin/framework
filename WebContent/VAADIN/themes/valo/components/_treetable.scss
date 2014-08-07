@@ -8,6 +8,10 @@
       padding-right: 0;
     }
 
+    [class*="cell-wrapper"] {
+      min-height: $v-font-size;
+    }
+
     [class*="caption-container"] {
       padding-left: $v-table-cell-padding-horizontal;
     }

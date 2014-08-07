@@ -1,10 +1,20 @@
-@mixin valo-splitpanel($primary-stylename : v-splitpanel) {
+@mixin valo-splitpanel($primary-stylename : v-splitpanel, $include-additional-styles: contains($v-included-additional-styles, splitpanel)) {
   .#{$primary-stylename}-horizontal {
     @include valo-splitpanel-style($primary-stylename: $primary-stylename, $orientation: horizontal);
   }
 
   .#{$primary-stylename}-vertical {
     @include valo-splitpanel-style($primary-stylename: $primary-stylename, $orientation: vertical);
+  }
+  
+  @if $include-additional-styles {
+    .#{$primary-stylename}-horizontal.large {
+      @include valo-splitpanel-style($splitter-size: round($v-unit-size/3), $splitter-handle-visible: true, $orientation: horizontal);
+    }
+    
+    .#{$primary-stylename}-vertical.large {
+      @include valo-splitpanel-style($splitter-size: round($v-unit-size/3), $splitter-handle-visible: true, $orientation: vertical);
+    }
   }
 }
 

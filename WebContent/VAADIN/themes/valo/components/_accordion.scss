@@ -1,4 +1,4 @@
-@mixin valo-accordion ($primary-stylename: v-accordion) {
+@mixin valo-accordion ($primary-stylename: v-accordion, $include-additional-styles: contains($v-included-additional-styles, accordion)) {
   .#{$primary-stylename} {
     @include valo-accordion-style;
   }
@@ -13,6 +13,20 @@
 
   .#{$primary-stylename}-item-content {
     @include valo-accordion-item-content-style;
+  }
+
+
+  @if $include-additional-styles {
+    .#{$primary-stylename}-borderless {
+      border: none;
+      border-radius: 0;
+      @include box-shadow(none);
+
+      > .#{$primary-stylename}-item {
+        border-radius: 0;
+      }
+    }
+
   }
 }
 

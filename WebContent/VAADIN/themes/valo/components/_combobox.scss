@@ -1,4 +1,4 @@
-@mixin valo-combobox ($primary-stylename: v-filterselect) {
+@mixin valo-combobox ($primary-stylename: v-filterselect, $include-additional-styles: contains($v-included-additional-styles, combobox)) {
 
   .#{$primary-stylename} {
     position: relative;
@@ -59,6 +59,35 @@
     }
   }
 
+
+  @if $include-additional-styles {
+    .#{$primary-stylename}-borderless {
+      .#{$primary-stylename}-input {
+        @include valo-textfield-borderless-style;
+      }
+      .#{$primary-stylename}-button {
+        border: none;
+      }
+    }
+
+    .#{$primary-stylename}-align-right input {
+      text-align: right;
+    }
+
+    .#{$primary-stylename}-align-center input {
+      text-align: center;
+    }
+
+    .#{$primary-stylename}-small {
+      @include valo-combobox-style($unit-size: $v-unit-size--small, $bevel: null, $shadow: null, $gradient: null, $border: null, $border-radius: null, $background-color: null);
+      font-size: $v-font-size--small;
+    }
+
+    .#{$primary-stylename}-large {
+      @include valo-combobox-style($unit-size: $v-unit-size--large, $bevel: null, $shadow: null, $gradient: null, $border: null, $border-radius: null, $background-color: null);
+      font-size: $v-font-size--large;
+    }
+  }
 }
 
 

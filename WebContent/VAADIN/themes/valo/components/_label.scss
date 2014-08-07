@@ -18,7 +18,7 @@ $v-letter-spacing--h3:    0               !default;
 $v-letter-spacing--h4:    0               !default;
 
 
-@mixin valo-label ($primary-stylename: v-label) {
+@mixin valo-label ($primary-stylename: v-label, $include-additional-styles: contains($v-included-additional-styles, label)) {
 
   .#{$primary-stylename}-undef-w {
     white-space: nowrap;
@@ -101,31 +101,67 @@ $v-letter-spacing--h4:    0               !default;
     }
   }
 
-  .#{$primary-stylename}-large {
-    font-size: $v-font-size--large;
-  }
 
-  .#{$primary-stylename}-small {
-    font-size: $v-font-size--small;
-  }
+  @if $include-additional-styles {
 
-  .#{$primary-stylename}-bold {
-    font-weight: $v-font-weight + 200;
-  }
-
-  .#{$primary-stylename}-light {
-    font-weight: $v-font-weight - 100;
-    @if $v-font-weight < 400 {
-      color: valo-font-color($v-app-background-color, .5);
+    .#{$primary-stylename}-large {
+      font-size: $v-font-size--large;
     }
-  }
 
-  .#{$primary-stylename}-align-right {
-    text-align: right;
-  }
+    .#{$primary-stylename}-small {
+      font-size: $v-font-size--small;
+    }
 
-  .#{$primary-stylename}-align-center {
-    text-align: center;
+    .#{$primary-stylename}-bold {
+      font-weight: $v-font-weight + 200;
+    }
+
+    .#{$primary-stylename}-light {
+      font-weight: $v-font-weight - 100;
+      @if $v-font-weight < 400 {
+        color: valo-font-color($v-app-background-color, .5);
+      }
+    }
+
+    .#{$primary-stylename}-align-right {
+      text-align: right;
+    }
+
+    .#{$primary-stylename}-align-center {
+      text-align: center;
+    }
+
+    .#{$primary-stylename}-spinner {
+      @include valo-spinner;
+    }
+
+    .#{$primary-stylename}-success,
+    .#{$primary-stylename}-failure {
+      background: #fff;
+      color: #555;
+      border: 2px solid $v-friendly-color;
+      border-radius: $v-border-radius;
+      padding: round($v-unit-size/5) round($v-unit-size/2) round($v-unit-size/5) round($v-unit-size);
+      font-weight: $v-font-weight + 100;
+      font-size: round($v-font-size * 0.95);
+
+      &:before {
+        font-family: FontAwesome;
+        content: "\f00c";
+        margin-right: .5em;
+        margin-left: round($v-unit-size/-2);
+        color: $v-friendly-color;
+      }
+    }
+
+    .#{$primary-stylename}-failure {
+      border-color: $v-error-indicator-color;
+
+      &:before {
+        content: "\f05e";
+        color: $v-error-indicator-color;
+      }
+    }
   }
 
 }

@@ -1,15 +1,12 @@
 @import "loading-indicator";
 @import "contextmenu";
 @import "overlay";
-@import "notification";
 @import "tooltip";
-
-
-$v-app-background-color: $v-background-color !default;
 
 
 // Include global styles only once
 $valo-global-included: false !default;
+
 @mixin valo-global {
   @if $valo-global-included == false {
 

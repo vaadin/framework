@@ -1,7 +1,7 @@
 $v-panel-background-color: scale-color(lighten($v-app-background-color, 5%), $saturation: -5%) !default;
 $v-panel-border: $v-border !default;
 
-@mixin valo-panel ($primary-stylename: v-panel) {
+@mixin valo-panel ($primary-stylename: v-panel, $include-additional-styles: contains($v-included-additional-styles, panel)) {
 
   .#{$primary-stylename} {
     @include valo-panel-style;
@@ -17,6 +17,34 @@ $v-panel-border: $v-border !default;
     width: 100%;
     height: 100%;
     @include valo-panel-adjust-content-margins;
+  }
+
+
+  @if $include-additional-styles {
+    .#{$primary-stylename}-borderless {
+      @include valo-panel-borderless-style;
+    }
+
+    .#{$primary-stylename}-well {
+      @include valo-panel-well-style;
+    }
+
+    .#{$primary-stylename}-scroll-divider {
+      @include valo-panel-scroll-divider-style;
+    }
+
+    .#{$primary-stylename}-caption.v-horizontallayout {
+      height: auto !important;
+      line-height: 0;
+
+      .v-slot {
+        vertical-align: middle;
+      }
+
+      .v-label {
+        line-height: $v-unit-size;
+      }
+    }
   }
 
 }
@@ -68,7 +96,7 @@ $v-panel-border: $v-border !default;
   border-radius: $v-border-radius;
   border: valo-border();
 
-  > div > .v-panel-caption {
+  > div > [class*="-caption"] {
     background: transparent;
     @include box-shadow(none);
   }
@@ -83,7 +111,7 @@ $v-panel-border: $v-border !default;
   border-radius: 0;
   @include box-shadow(none);
 
-  > div > .v-panel-caption {
+  > div > [class*="-caption"] {
     background: transparent;
     @include box-shadow(none);
     color: inherit;
@@ -96,7 +124,7 @@ $v-panel-border: $v-border !default;
 
 
 @mixin valo-panel-scroll-divider-style ($border-width: max(1px, first-number($v-panel-border))) {
-  > .v-panel-captionwrap {
+  > [class*="-captionwrap"] {
     position: relative;
     z-index: 2;
 
@@ -111,7 +139,7 @@ $v-panel-border: $v-border !default;
     }
   }
 
-  > .v-panel-content {
+  > [class*="-content"] {
     &:before {
       content: "";
       position: absolute;

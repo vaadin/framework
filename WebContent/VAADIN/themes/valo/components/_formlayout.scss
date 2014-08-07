@@ -1,4 +1,4 @@
-@mixin valo-formlayout ($primary-stylename: v-formlayout) {
+@mixin valo-formlayout ($primary-stylename: v-formlayout, $include-additional-styles: contains($v-included-additional-styles, formlayout)) {
 
   @include valo-formlayout-spacing;
   @include valo-formlayout-margins;
@@ -51,6 +51,11 @@
   }
 
 
+  @if $include-additional-styles {
+    .#{$primary-stylename}.light {
+      @include valo-formlayout-light-style($primary-stylename);
+    }
+  }
 
 }
 

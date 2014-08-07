@@ -60,7 +60,7 @@ $v-table-background-color: null !default;
 }
 
 
-@mixin valo-table ($primary-stylename: v-table) {
+@mixin valo-table ($primary-stylename: v-table, $include-additional-styles: contains($v-included-additional-styles, table)) {
 
   $background-color: $v-table-background-color or valo-table-background-color();
   $border-color: $v-table-border-color or first-color(valo-border($color: $background-color, $strength: 0.8));
@@ -72,9 +72,9 @@ $v-table-background-color: null !default;
     color: valo-font-color($v-background-color);
   }
 
-  .v-table-header table,
-  .v-table-footer table,
-  .v-table-table {
+  .#{$primary-stylename}-header table,
+  .#{$primary-stylename}-footer table,
+  .#{$primary-stylename}-table {
     @include box-shadow(0 0 0 $v-table-border-width $border-color);
 
     .v-ie8 & {
@@ -178,6 +178,7 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-cell-wrapper {
     line-height: 1;
+    min-height: $v-table-row-height;
     $vertical-padding: round(($v-table-row-height - $v-font-size)/2);
     padding: $vertical-padding $v-table-cell-padding-horizontal;
     @include box-sizing(border-box);
@@ -472,6 +473,44 @@ $v-table-background-color: null !default;
     line-height: 0;
   }
 
+
+
+
+  @if $include-additional-styles {
+    .#{$primary-stylename}-no-stripes {
+      @include valo-table-no-stripes-style;
+    }
+
+    .#{$primary-stylename}-no-vertical-lines {
+      @include valo-table-no-vertical-lines-style;
+    }
+
+    .#{$primary-stylename}-no-horizontal-lines {
+      @include valo-table-no-horizontal-lines-style;
+    }
+
+    .#{$primary-stylename}-no-header {
+      @include valo-table-no-header-style;
+    }
+
+    .#{$primary-stylename}-borderless {
+      @include valo-table-borderless-style;
+    }
+
+    .#{$primary-stylename}-compact,
+    .#{$primary-stylename}-small {
+      @include valo-table-spacing-style($row-height: round($v-table-row-height * $v-scaling-factor--small), $cell-padding-horizontal: round($v-table-cell-padding-horizontal / 2));
+    }
+
+    .#{$primary-stylename}-small {
+      font-size: $v-font-size--small;
+
+      &.v-treetable .#{$primary-stylename}-cell-wrapper {
+        min-height: $v-font-size--small;
+      }
+    }
+  }
+
 }
 
 
@@ -600,6 +639,7 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-cell-wrapper {
     padding: $vertical-padding $cell-padding-horizontal;
+    min-height: $row-height;
 
     > .v-widget {
       margin: round($vertical-padding / -2) round($cell-padding-horizontal / -2);
@@ -624,6 +664,7 @@ $v-table-background-color: null !default;
     .#{$primary-stylename}-cell-wrapper {
       padding-left: 0;
       padding-right: 0;
+      min-height: $v-font-size;
     }
 
     .#{$primary-stylename}-cell-content {

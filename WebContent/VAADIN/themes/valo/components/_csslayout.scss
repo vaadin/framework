@@ -1,63 +1,74 @@
-@mixin valo-csslayout ($primary-stylename: v-csslayout){
+@mixin valo-csslayout ($primary-stylename: v-csslayout, $include-additional-styles: contains($v-included-additional-styles, csslayout)){
+  @if $include-additional-styles {
+    .#{$primary-stylename}-well {
+      @include valo-panel-well-style;
+      @include valo-panel-adjust-content-margins;
+    }
 
+    .#{$primary-stylename}-card {
+      @include valo-panel-style;
+      @include valo-panel-adjust-content-margins;
+    }
+
+    .#{$primary-stylename}-v-component-group {
+      @include valo-component-group($primary-stylename);
+    }
+  }
 }
 
 
-@mixin valo-component-group ($primary-stylename: v-csslayout) {
-  .#{$primary-stylename}-v-component-group {
-    white-space: nowrap;
-    position: relative;
+@mixin valo-component-group {
+  white-space: nowrap;
+  position: relative;
 
-    @if $v-border-radius > 0 {
-      .v-widget ~ .v-widget:not(:last-child) {
-        border-radius: 0;
-      }
-
-      .v-widget:last-child {
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-      }
-
-      .v-widget:first-child,
-      .v-caption:first-child + .v-widget {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-      }
-
-      .v-widget ~ .v-widget.first.first {
-        border-radius: $v-border-radius 0 0 $v-border-radius;
-      }
-
-      .v-widget ~ .v-widget.last.last {
-        border-radius: 0 $v-border-radius $v-border-radius 0;
-      }
+  @if $v-border-radius > 0 {
+    .v-widget ~ .v-widget:not(:last-child) {
+      border-radius: 0;
     }
 
-    // Assume most components have borders.
-    // This is just a best-guess, will need fine-tuning if border-widths vary from widget-to-widget
-    .v-widget {
-      vertical-align: middle;
-
-      $v-border-width: first-number($v-border);
-
-      @if $v-border-width > 0 {
-        margin-left: -$v-border-width;
-      } @else {
-        margin-left: 1px;
-      }
-
-      &:first-child {
-        margin-left: 0;
-      }
-
-      // Focused component should be on top
-      &:focus,
-      &[class*="focus"],
-      [class*="focus"] {
-        position: relative;
-        z-index: 5;
-      }
+    .v-widget:last-child {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
     }
 
+    .v-widget:first-child,
+    .v-caption:first-child + .v-widget {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .v-widget ~ .v-widget.first.first {
+      border-radius: $v-border-radius 0 0 $v-border-radius;
+    }
+
+    .v-widget ~ .v-widget.last.last {
+      border-radius: 0 $v-border-radius $v-border-radius 0;
+    }
+  }
+
+  // Assume most components have borders.
+  // This is just a best-guess, will need fine-tuning if border-widths vary from widget-to-widget
+  .v-widget {
+    vertical-align: middle;
+
+    $v-border-width: first-number($v-border);
+
+    @if $v-border-width > 0 {
+      margin-left: -$v-border-width;
+    } @else {
+      margin-left: 1px;
+    }
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    // Focused component should be on top
+    &:focus,
+    &[class*="focus"],
+    [class*="focus"] {
+      position: relative;
+      z-index: 5;
+    }
   }
 }

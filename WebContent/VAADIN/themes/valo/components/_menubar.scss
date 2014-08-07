@@ -1,4 +1,4 @@
-@mixin valo-menubar ($primary-stylename: v-menubar) {
+@mixin valo-menubar ($primary-stylename: v-menubar, $include-additional-styles: contains($v-included-additional-styles, menubar)) {
 
   .#{$primary-stylename} {
     @include valo-button-static-style($states: normal, $vertical-centering: false);
@@ -67,6 +67,18 @@
 
     &.#{$primary-stylename}-popup-animate-out {
       @include animation(none);
+    }
+  }
+
+  
+  @if $include-additional-styles {
+    .#{$primary-stylename}-small {
+      @include valo-menubar-small-style($unit-size: $v-unit-size--small);
+      font-size: $v-font-size--small;
+    }
+
+    .#{$primary-stylename}-borderless {
+      @include valo-menubar-borderless-style;
     }
   }
 

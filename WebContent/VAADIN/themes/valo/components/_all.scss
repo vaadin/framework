@@ -20,6 +20,7 @@
 @import "menubar";
 @import "nativebutton";
 @import "nativeselect";
+@import "notification";
 @import "optiongroup";
 @import "orderedlayout";
 @import "panel";
@@ -38,6 +39,7 @@
 @import "upload";
 @import "widget";
 @import "window";
+@import "valo-menu";
 
 
 @mixin valo-components {
@@ -205,6 +207,14 @@
 
   @if v-is-included(upload) {
     @include valo-upload;
+  }
+
+  @if v-is-included(notification) {
+    @include valo-notification;
+  }
+
+  @if v-is-included(valo-menu) {
+    @include valo-menu;
   }
 
 }
