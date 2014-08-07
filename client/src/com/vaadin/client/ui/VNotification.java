@@ -81,6 +81,8 @@ public class VNotification extends VOverlay {
     private boolean infiniteDelay = false;
     private int hideDelay = 0;
 
+    private Timer delay;
+
     private int x = -1;
     private int y = -1;
 
@@ -260,8 +262,23 @@ public class VNotification extends VOverlay {
         }
     }
 
+    protected void hideAfterDelay() {
+        if (delay == null) {
+            delay = new Timer() {
+                @Override
+                public void run() {
+                    VNotification.super.hide();
+                }
+            };
+            delay.schedule(hideDelay);
+        }
+    }
+
     @Override
     public void hide() {
+        if (delay != null) {
+            delay.cancel();
+        }
         // Run only once
         if (notifications.contains(this)) {
             DOM.removeEventPreview(this);
@@ -284,23 +301,7 @@ public class VNotification extends VOverlay {
                             }
                         });
             } else {
-                // Use a timer in browsers without CSS animation support
-                // to show the notification for the duration of the delay
-                if (BrowserInfo.get().isIE8() || BrowserInfo.get().isIE9()) {
-                    new Timer() {
-                        @Override
-                        public void run() {
-                            VNotification.super.hide();
-                        }
-                    }.schedule(hideDelay);
-                } else {
-                    if (hideDelay > 0) {
-                        AnimationUtil.setAnimationDelay(getElement(), hideDelay
-                                + "ms");
-                    }
-                    VNotification.super.hide();
-
-                }
+                VNotification.super.hide();
                 fireEvent(new HideEvent(this));
                 notifications.remove(this);
             }
@@ -416,19 +417,19 @@ public class VNotification extends VOverlay {
                 y = DOM.eventGetClientY(event);
             } else if (Math.abs(DOM.eventGetClientX(event) - x) > mouseMoveThreshold
                     || Math.abs(DOM.eventGetClientY(event) - y) > mouseMoveThreshold) {
-                hide();
+                hideAfterDelay();
             }
             break;
         case Event.ONMOUSEDOWN:
         case Event.ONMOUSEWHEEL:
         case Event.ONSCROLL:
-            hide();
+            hideAfterDelay();
             break;
         case Event.ONKEYDOWN:
             if (event.getRepeat()) {
                 return true;
             }
-            hide();
+            hideAfterDelay();
             break;
         default:
             break;
