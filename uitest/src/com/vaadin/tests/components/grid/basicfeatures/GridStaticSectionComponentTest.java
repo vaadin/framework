@@ -36,8 +36,6 @@ public class GridStaticSectionComponentTest extends GridBasicFeaturesTest {
 
         // Clicking also triggers sorting
         assertEquals("2. Button clicked!", getLogRow(2));
-
-        compareScreen("button");
     }
 
     @Test
