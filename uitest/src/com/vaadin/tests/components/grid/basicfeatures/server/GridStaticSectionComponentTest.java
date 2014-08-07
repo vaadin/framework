@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.grid.basicfeatures;
+package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,6 +22,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public class GridStaticSectionComponentTest extends GridBasicFeaturesTest {
 

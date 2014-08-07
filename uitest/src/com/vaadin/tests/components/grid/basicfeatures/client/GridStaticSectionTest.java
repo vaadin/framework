@@ -13,11 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.grid.basicfeatures;
+package com.vaadin.tests.components.grid.basicfeatures.client;
 
 import static org.junit.Assert.assertEquals;
 
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 
 /**
  * Abstract base class for header and footer tests.

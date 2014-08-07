@@ -13,13 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.grid.basicfeatures;
+package com.vaadin.tests.components.grid.basicfeatures.client;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeatures;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
+import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget;
 
 public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest {
 
@@ -27,7 +28,7 @@ public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest 
     public void initialColumnWidths() {
         openTestURL();
 
-        for (int col = 0; col < GridBasicClientFeatures.COLUMNS; col++) {
+        for (int col = 0; col < GridBasicClientFeaturesWidget.COLUMNS; col++) {
             int width = getGridElement().getCell(0, col).getSize().getWidth();
             if (col <= 6) {
                 // Growing column widths

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.grid.basicfeatures;
+package com.vaadin.tests.components.grid.basicfeatures.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -25,6 +25,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.components.grid.GridElement.GridCellElement;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 
 public class GridFooterTest extends GridStaticSectionTest {
 

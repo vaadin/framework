@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.grid.basicfeatures;
+package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -23,6 +23,7 @@ import org.junit.Test;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.tests.components.grid.GridElement;
 import com.vaadin.tests.components.grid.GridElement.GridRowElement;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public class GridSelectionTest extends GridBasicFeaturesTest {
 

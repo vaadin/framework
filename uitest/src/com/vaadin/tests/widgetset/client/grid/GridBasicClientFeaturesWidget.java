@@ -40,7 +40,7 @@ import com.vaadin.client.ui.grid.renderers.DateRenderer;
 import com.vaadin.client.ui.grid.renderers.HtmlRenderer;
 import com.vaadin.client.ui.grid.renderers.NumberRenderer;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
-import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeatures.Data;
+import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget.Data;
 
 /**
  * Grid basic client features test application.
@@ -48,7 +48,7 @@ import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeatures.Data;
  * @since
  * @author Vaadin Ltd
  */
-public class GridBasicClientFeatures extends
+public class GridBasicClientFeaturesWidget extends
         PureGWTTestApplication<Grid<List<Data>>> {
 
     public static enum Renderers {
@@ -89,7 +89,7 @@ public class GridBasicClientFeatures extends
     }
 
     @SuppressWarnings("unchecked")
-    public GridBasicClientFeatures() {
+    public GridBasicClientFeaturesWidget() {
         super(new Grid<List<Data>>());
 
         // Initialize data source

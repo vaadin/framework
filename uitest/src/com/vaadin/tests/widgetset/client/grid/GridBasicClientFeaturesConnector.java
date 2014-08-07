@@ -17,20 +17,21 @@ package com.vaadin.tests.widgetset.client.grid;
 
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeatures.GridTestComponent;
 
 /**
  * Connector for the GridClientBasicFeatures ApplicationWidget
- *
+ * 
  * @since
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.tests.widgetset.server.grid.GridBasicClientFeatures.GridTestComponent.class)
+@Connect(GridTestComponent.class)
 public class GridBasicClientFeaturesConnector extends
         AbstractComponentConnector {
 
     @Override
-    public GridBasicClientFeatures getWidget() {
-        return (GridBasicClientFeatures) super.getWidget();
+    public GridBasicClientFeaturesWidget getWidget() {
+        return (GridBasicClientFeaturesWidget) super.getWidget();
     }
 
 }

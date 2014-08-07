@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.widgetset.server.grid;
+package com.vaadin.tests.components.grid.basicfeatures;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;

@@ -20,8 +20,6 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.tests.widgetset.server.grid.GridBasicClientFeatures;
-
 /**
  * Variant of GridBasicFeaturesTest to be used with GridBasicClientFeatures.
  * 
