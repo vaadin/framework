@@ -5,6 +5,7 @@ $v-panel-border: $v-border !default;
 
   .#{$primary-stylename} {
     @include valo-panel-style;
+    overflow: visible !important;
   }
 
   .#{$primary-stylename}-caption {
@@ -69,7 +70,7 @@ $v-panel-border: $v-border !default;
 
 @mixin valo-panel-caption-style (
     $background-color : $v-background-color,
-    $bevel            : first($v-bevel),
+    $bevel            : $v-bevel,
     $gradient         : valo-gradient-style($v-gradient) valo-gradient-opacity($v-gradient)/4,
     $border           : $v-panel-border
   ) {
@@ -77,18 +78,43 @@ $v-panel-border: $v-border !default;
   padding: 0 round($v-unit-size/3);
   line-height: $v-unit-size - first-number($v-border);
   $bg: $background-color;
-  border-bottom: valo-border($border: $border, $color: $bg, $strength: 0.5);
+
+  $shadow: null;
+  @if color-luminance($background-color) < color-luminance($v-background-color) - 10 {
+    $border-style: valo-border($border: $border, $color: $bg, $strength: 0.7);
+    $shadow: 0 0 0 first-number($border-style) first-color($border-style);
+    border-bottom: none;
+    margin-bottom: first-number($border-style);
+
+    .v-ie8 & {
+      outline: first-number($border-style) solid first-color($border-style);
+    }
+  } @else {
+    border-bottom: valo-border($border: $border, $color: $v-background-color, $strength: 0.7);
+  }
   @include valo-gradient($color: $bg, $gradient: $gradient);
   color: valo-font-color($bg);
   font-weight: $v-caption-font-weight;
   font-size: $v-caption-font-size;
-  @include box-shadow(valo-bevel-and-shadow($background-color: $bg, $bevel: $bevel, $gradient: $gradient));
+  @include box-shadow(valo-bevel-and-shadow($background-color: $bg, $bevel: $bevel, $shadow: $shadow, $gradient: $gradient));
   text-shadow: valo-text-shadow(valo-font-color($bg), $bg, $v-bevel);
 }
 
 
 
-@mixin valo-panel-well-style ($shadow: (0 1px 0 0 v-tint, join(inset, $v-shadow))) {
+@mixin valo-panel-well-style ($shadow: false) {
+  @if $shadow == false {
+    $new-shadow: ();
+    @if list-of-lists($v-shadow) {
+      @each $part in $v-shadow {
+        $new-part: join(inset, $part);
+        $new-shadow: $new-shadow, $new-part;
+      }
+    } @else {
+      $new-shadow: join(inset, $v-shadow);
+    }
+    $shadow: 0 1px 0 0 v-tint, $new-shadow;
+  }
   $bg: scale-color(adjust-color($v-background-color, $lightness: -2%), $saturation: -1.5%);
   background: $bg;
   color: valo-font-color($bg);
