@@ -48,7 +48,7 @@ public class Tables extends VerticalLayout implements View {
     CheckBox footer = new CheckBox("Footer", true);
     CheckBox sized = new CheckBox("Sized");
     CheckBox expandRatios = new CheckBox("Expand ratios");
-    CheckBox stripes = new CheckBox("Sripes", true);
+    CheckBox stripes = new CheckBox("Stripes", true);
     CheckBox verticalLines = new CheckBox("Vertical lines", true);
     CheckBox horizontalLines = new CheckBox("Horizontal lines", true);
     CheckBox borderless = new CheckBox("Borderless");

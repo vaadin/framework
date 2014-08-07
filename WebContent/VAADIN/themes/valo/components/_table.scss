@@ -162,6 +162,7 @@ $v-table-background-color: null !default;
   .#{$primary-stylename}-cell-content {
     border-left: $v-table-border-width solid $border-color;
     overflow: hidden;
+    height: $v-table-row-height;
 
     &:first-child {
       border-left: none;
@@ -181,6 +182,10 @@ $v-table-background-color: null !default;
     padding: $vertical-padding $v-table-cell-padding-horizontal;
     @include box-sizing(border-box);
     margin-right: 0 !important;
+
+    > .v-widget {
+      margin: round($vertical-padding / -2) round($v-table-cell-padding-horizontal / -2);
+    }
   }
 
   .#{$primary-stylename}-body {
@@ -429,6 +434,7 @@ $v-table-background-color: null !default;
     content: "";
     display: block;
     position: absolute;
+    z-index: 1;
     height: $v-table-row-height + $v-table-border-width;
     left: 0;
     right: 0;
@@ -588,8 +594,16 @@ $v-table-background-color: null !default;
     height: $row-height;
   }
 
+  .#{$primary-stylename}-cell-content {
+    height: $row-height;
+  }
+
   .#{$primary-stylename}-cell-wrapper {
     padding: $vertical-padding $cell-padding-horizontal;
+
+    > .v-widget {
+      margin: round($vertical-padding / -2) round($cell-padding-horizontal / -2);
+    }
   }
 
   .#{$primary-stylename}-header-cell-asc .#{$primary-stylename}-sort-indicator,
