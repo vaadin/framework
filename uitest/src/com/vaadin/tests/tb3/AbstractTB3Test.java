@@ -34,6 +34,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
@@ -903,6 +904,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         public static DesiredCapabilities ie(int version) {
             DesiredCapabilities c = DesiredCapabilities.internetExplorer();
             c.setVersion("" + version);
+            c.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION,
+                    true);
             return c;
         }
 
