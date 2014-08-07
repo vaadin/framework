@@ -4,7 +4,7 @@ $v-table-border-color: null !default;
 $v-table-border-radius: 0 !default;
 $v-table-cell-padding-horizontal: round($v-unit-size/3) !default;
 //$v-table-cell-padding-horizontal-edge: round($v-unit-size/2.5) !default;
-$v-table-resizer-width: round($v-unit-size/5) !default;
+$v-table-resizer-width: round($v-unit-size/4.5) !default;
 $v-table-sort-indicator-width: round($v-unit-size/2) !default;
 $v-table-header-font-size: round($v-font-size * 0.86) !default;
 $v-table-background-color: null !default;
@@ -155,7 +155,7 @@ $v-table-background-color: null !default;
     cursor: col-resize;
     position: absolute;
     top: 0;
-    right: 0;
+    right: round($v-table-resizer-width / -2);
     z-index: 1;
   }
 
@@ -293,12 +293,13 @@ $v-table-background-color: null !default;
   }
 
   .#{$primary-stylename}-focus-slot-right {
-    border-right: 2px solid rgba($v-focus-color, .5);
+    border-right: $v-table-border-width + 2px solid $v-focus-color;
+    right: -$v-table-border-width - 1px;
   }
 
   .#{$primary-stylename}-focus-slot-left {
-    border-left: 2px solid rgba($v-focus-color, .5);
-    left: 0;
+    border-left: $v-table-border-width + 2px solid $v-focus-color;
+    left: -$v-table-border-width;
     right: auto;
     margin-left: 0 !important;
   }
