@@ -60,12 +60,12 @@
     }
 
     .#{$primary-stylename}-small {
-      @include valo-datefield-style($unit-size: $v-unit-size--small, $bevel: null, $shadow: null, $border: null, $background-color: null);
+      @include valo-datefield-style($unit-size: $v-unit-size--small, $bevel: null, $shadow: null, $border: null, $background-color: null, $states: normal);
       font-size: $v-font-size--small;
     }
 
     .#{$primary-stylename}-large {
-      @include valo-datefield-style($unit-size: $v-unit-size--large, $bevel: null, $shadow: null, $border: null, $background-color: null);
+      @include valo-datefield-style($unit-size: $v-unit-size--large, $bevel: null, $shadow: null, $border: null, $background-color: null, $states: normal);
       font-size: $v-font-size--large;
     }
   }
@@ -94,7 +94,8 @@
     $border            : $v-textfield-border,
     $border-radius     : $v-textfield-border-radius,
     $background-color  : $v-textfield-background-color,
-    $primary-stylename : v-datefield
+    $primary-stylename : v-datefield,
+    $states            : normal focus disabled
   ) {
 
   height: $unit-size;
@@ -102,7 +103,7 @@
 
   .#{$primary-stylename}-textfield {
     @include box-sizing(border-box);
-    @include valo-textfield-style($bevel: $bevel, $shadow: $shadow, $unit-size: $unit-size, $border: $border, $border-radius: $border-radius, $background-color: $background-color) ;
+    @include valo-textfield-style($bevel: $bevel, $shadow: $shadow, $unit-size: $unit-size, $border: $border, $border-radius: $border-radius, $background-color: $background-color, $states: $states) ;
     padding-left: $unit-size * 1.2;
     width: 100%;
     height: 100%;
