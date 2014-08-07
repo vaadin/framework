@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -45,10 +45,10 @@ import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
 /**
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
- * 
+ *
  * @deprecated As of 7.0. Will likely change or be removed in a future version
  */
 @Deprecated
@@ -336,9 +336,9 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
      * Override this method if you want to add some custom html around around
      * the div element into which the actual Vaadin application will be
      * rendered.
-     * 
+     *
      * @param context
-     * 
+     *
      * @throws IOException
      * @throws JSONException
      */
@@ -397,7 +397,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                     "type", "text/javascript").attr("src", pushJS));
         }
 
-        String bootstrapLocation = vaadinLocation + "vaadinBootstrap.js";
+        String bootstrapLocation = vaadinLocation
+                + ApplicationConstants.VAADIN_BOOTSTRAP_JS;
         fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr("type",
                 "text/javascript").attr("src", bootstrapLocation));
         Element mainScriptTag = new Element(Tag.valueOf("script"), "").attr(
@@ -543,13 +544,13 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * Get the URI for the application theme.
-     * 
+     *
      * A portal-wide default theme is fetched from the portal shared resource
      * directory (if any), other themes from the portlet.
-     * 
+     *
      * @param context
      * @param themeName
-     * 
+     *
      * @return
      */
     public String getThemeUri(BootstrapContext context, String themeName) {
@@ -562,7 +563,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * Override if required
-     * 
+     *
      * @param context
      * @return
      */
@@ -574,7 +575,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * Don not override.
-     * 
+     *
      * @param context
      * @return
      */

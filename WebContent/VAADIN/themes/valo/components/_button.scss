@@ -241,6 +241,11 @@
   .#{$primary-stylename}-wrap {
     visibility: visible;
   }
+
+  .#{$primary-stylename}-caption {
+    // For IE8
+    display: inline-block;
+  }
 }
 
 

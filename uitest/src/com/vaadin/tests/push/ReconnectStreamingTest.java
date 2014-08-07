@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.push;
 
-
 public class ReconnectStreamingTest extends ReconnectTest {
 
     @Override

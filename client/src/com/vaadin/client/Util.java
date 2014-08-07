@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,11 +16,14 @@
 
 package com.vaadin.client;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -36,6 +39,8 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.KeyEvent;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -56,9 +61,9 @@ public class Util {
 
     /**
      * Helper method for debugging purposes.
-     * 
+     *
      * Stops execution on firefox browsers on a breakpoint.
-     * 
+     *
      */
     public static native void browserDebugger()
     /*-{
@@ -86,10 +91,10 @@ public class Util {
     /**
      *
      * Returns the topmost element of from given coordinates.
-     * 
+     *
      * TODO fix crossplat issues clientX vs pageX. See quircksmode. Not critical
      * for vaadin as we scroll div istead of page.
-     * 
+     *
      * @param x
      * @param y
      * @return the element at given coordinates
@@ -98,7 +103,7 @@ public class Util {
             int clientX, int clientY)
     /*-{
         var el = $wnd.document.elementFromPoint(clientX, clientY);
-        // Call elementFromPoint two times to make sure IE8 also returns something sensible if the application is running in an iframe 
+        // Call elementFromPoint two times to make sure IE8 also returns something sensible if the application is running in an iframe
         el = $wnd.document.elementFromPoint(clientX, clientY);
         if(el != null && el.nodeType == 3) {
             el = el.parentNode;
@@ -110,18 +115,18 @@ public class Util {
      * This helper method can be called if components size have been changed
      * outside rendering phase. It notifies components parent about the size
      * change so it can react.
-     * 
+     *
      * When using this method, developer should consider if size changes could
      * be notified lazily. If lazy flag is true, method will save widget and
      * wait for a moment until it notifies parents in chunks. This may vastly
      * optimize layout in various situation. Example: if component have a lot of
      * images their onload events may fire "layout phase" many times in a short
      * period.
-     * 
+     *
      * @param widget
      * @param lazy
      *            run componentSizeUpdated lazyly
-     * 
+     *
      * @deprecated As of 7.0, use
      *             {@link LayoutManager#setNeedsMeasure(ComponentConnector)}
      *             instead
@@ -171,7 +176,7 @@ public class Util {
 
     /**
      * Converts html entities to text.
-     * 
+     *
      * @param html
      * @return escaped string presentation of given html
      */
@@ -189,7 +194,7 @@ public class Util {
 
     /**
      * Escapes the string so it is safe to write inside an HTML attribute.
-     * 
+     *
      * @param attribute
      *            The string to escape
      * @return An escaped version of <literal>attribute</literal>.
@@ -208,9 +213,9 @@ public class Util {
 
     /**
      * Clones given element as in JavaScript.
-     * 
+     *
      * Deprecate this if there appears similar method into GWT someday.
-     * 
+     *
      * @param element
      * @param deep
      *            clone child tree also
@@ -469,10 +474,28 @@ public class Util {
     }
 
     /**
+     * Defers the execution of {@link #runWebkitOverflowAutoFix(Element)}
+     * 
+     * @since
+     * @param elem
+     *            with overflow auto
+     */
+    public static void runWebkitOverflowAutoFixDeferred(final Element elem) {
+        Scheduler.get().scheduleDeferred(new Command() {
+
+            @Override
+            public void execute() {
+                Util.runWebkitOverflowAutoFix(elem);
+            }
+        });
+
+    }
+
+    /**
      * Run workaround for webkits overflow auto issue.
-     * 
+     *
      * See: our bug #2138 and https://bugs.webkit.org/show_bug.cgi?id=21462
-     * 
+     *
      * @param elem
      *            with overflow auto
      */
@@ -543,7 +566,7 @@ public class Util {
      * dimension is not specified as relative it will return -1. If the shared
      * state does not contain width or height specifications this will return
      * null.
-     * 
+     *
      * @param state
      * @return
      */
@@ -576,7 +599,7 @@ public class Util {
      * Checks if a and b are equals using {@link #equals(Object)}. Handles null
      * values as well. Does not ensure that objects are of the same type.
      * Assumes that the first object's equals method handle equals properly.
-     * 
+     *
      * @param a
      *            The first value to compare
      * @param b
@@ -597,7 +620,7 @@ public class Util {
     /**
      * Gets the border-box width for the given element, i.e. element width +
      * border + padding. Always rounds up to nearest integer.
-     * 
+     *
      * @param element
      *            The element to check
      * @return The border-box width for the element
@@ -622,7 +645,7 @@ public class Util {
     /**
      * Gets the border-box height for the given element, i.e. element height +
      * border + padding. Always rounds up to nearest integer.
-     * 
+     *
      * @param element
      *            The element to check
      * @return The border-box height for the element
@@ -669,7 +692,7 @@ public class Util {
          var borderBottomPx = cs.borderBottom;
          var paddingTopPx = cs.paddingTop;
          var paddingBottomPx = cs.paddingBottom;
-         
+
          var height = heightPx.substring(0,heightPx.length-2);
          var border = borderTopPx.substring(0,borderTopPx.length-2)+borderBottomPx.substring(0,borderBottomPx.length-2);
          var padding = paddingTopPx.substring(0,paddingTopPx.length-2)+paddingBottomPx.substring(0,paddingBottomPx.length-2);
@@ -689,7 +712,7 @@ public class Util {
          var borderRightPx = cs.borderRight;
          var paddingLeftPx = cs.paddingLeft;
          var paddingRightPx = cs.paddingRight;
-         
+
          var width = widthPx.substring(0,widthPx.length-2);
          var border = borderLeftPx.substring(0,borderLeftPx.length-2)+borderRightPx.substring(0,borderRightPx.length-2);
          var padding = paddingLeftPx.substring(0,paddingLeftPx.length-2)+paddingRightPx.substring(0,paddingRightPx.length-2);
@@ -719,7 +742,7 @@ public class Util {
 
     /**
      * Detects what is currently the overflow style attribute in given element.
-     * 
+     *
      * @param pe
      *            the element to detect
      * @return true if auto or scroll
@@ -741,7 +764,7 @@ public class Util {
      * A simple helper method to detect "computed style" (aka style sheets +
      * element styles). Values returned differ a lot depending on browsers.
      * Always be very careful when using this.
-     * 
+     *
      * @param el
      *            the element from which the style property is detected
      * @param p
@@ -752,7 +775,7 @@ public class Util {
             com.google.gwt.dom.client.Element el, String p)
     /*-{
         try {
-        
+
         if (el.currentStyle) {
             // IE
             return el.currentStyle[p];
@@ -776,9 +799,9 @@ public class Util {
      * also returned if "element" is part of its caption. If
      * <literal>element</literal> is not part of any child component, null is
      * returned.
-     * 
+     *
      * This method returns the deepest nested VPaintableWidget.
-     * 
+     *
      * @param client
      *            A reference to ApplicationConnection
      * @param parent
@@ -836,7 +859,7 @@ public class Util {
 
     /**
      * Will (attempt) to focus the given DOM Element.
-     * 
+     *
      * @param el
      *            the element to focus
      */
@@ -852,7 +875,7 @@ public class Util {
     /**
      * Helper method to find the nearest parent paintable instance by traversing
      * the DOM upwards from given element.
-     * 
+     *
      * @param element
      *            the element to start from
      */
@@ -870,7 +893,7 @@ public class Util {
     /**
      * Helper method to find first instance of given Widget type found by
      * traversing DOM upwards from given element.
-     * 
+     *
      * @param element
      *            the element where to start seeking of Widget
      * @param class1
@@ -907,7 +930,7 @@ public class Util {
 
     /**
      * Force webkit to redraw an element
-     * 
+     *
      * @param element
      *            The element that should be redrawn
      */
@@ -953,9 +976,9 @@ public class Util {
     /**
      * Detaches and re-attaches the element from its parent. The element is
      * reattached at the same position in the DOM as it was before.
-     * 
+     *
      * Does nothing if the element is not attached to the DOM.
-     * 
+     *
      * @param element
      *            The element to detach and re-attach
      */
@@ -990,7 +1013,7 @@ public class Util {
 
     /**
      * Returns the index of the childElement within its parent.
-     * 
+     *
      * @param subElement
      * @return
      */
@@ -1066,7 +1089,7 @@ public class Util {
      * Temporarily sets the {@code styleProperty} to {@code tempValue} and then
      * resets it to its current value. Used mainly to work around rendering
      * issues in IE (and possibly in other browsers)
-     * 
+     *
      * @param element
      *            The target element
      * @param styleProperty
@@ -1089,7 +1112,7 @@ public class Util {
      * A helper method to return the client position from an event. Returns
      * position from either first changed touch (if touch event) or from the
      * event itself.
-     * 
+     *
      * @param event
      * @return
      */
@@ -1105,7 +1128,7 @@ public class Util {
      * Find the element corresponding to the coordinates in the passed mouse
      * event. Please note that this is not always the same as the target of the
      * event e.g. if event capture is used.
-     * 
+     *
      * @param event
      *            the mouse event to get coordinates from
      * @return the element at the coordinates of the event
@@ -1122,7 +1145,7 @@ public class Util {
      * A helper method to return the client position from an event. Returns
      * position from either first changed touch (if touch event) or from the
      * event itself.
-     * 
+     *
      * @param event
      * @return
      */
@@ -1135,7 +1158,7 @@ public class Util {
     }
 
     /**
-     * 
+     *
      * @see #getTouchOrMouseClientY(Event)
      * @param currentGwtEvent
      * @return
@@ -1146,7 +1169,7 @@ public class Util {
 
     /**
      * @see #getTouchOrMouseClientX(Event)
-     * 
+     *
      * @param event
      * @return
      */
@@ -1215,7 +1238,7 @@ public class Util {
 
     /**
      * Gets the currently focused element.
-     * 
+     *
      * @return The active element or null if no active element could be found.
      */
     public native static com.google.gwt.user.client.Element getFocusedElement()
@@ -1223,13 +1246,13 @@ public class Util {
        if ($wnd.document.activeElement) {
            return $wnd.document.activeElement;
        }
-       
+
        return null;
      }-*/;
 
     /**
      * Gets the currently focused element for Internet Explorer.
-     * 
+     *
      * @return The currently focused element
      * @deprecated Use #getFocusedElement instead
      */
@@ -1243,7 +1266,7 @@ public class Util {
      * this method checks that this widget nor any of its parents is hidden. Can
      * be e.g used to check whether component should react to some events or
      * not.
-     * 
+     *
      * @param widget
      * @return true if attached and displayed
      */
@@ -1276,7 +1299,7 @@ public class Util {
     /**
      * Scrolls an element into view vertically only. Modified version of
      * Element.scrollIntoView.
-     * 
+     *
      * @param elem
      *            The element to scroll into view
      */
@@ -1284,11 +1307,11 @@ public class Util {
     /*-{
         var top = elem.offsetTop;
         var height = elem.offsetHeight;
-    
+
         if (elem.parentNode != elem.offsetParent) {
           top -= elem.parentNode.offsetTop;
         }
-    
+
         var cur = elem.parentNode;
         while (cur && (cur.nodeType == 1)) {
           if (top < cur.scrollTop) {
@@ -1297,12 +1320,12 @@ public class Util {
           if (top + height > cur.scrollTop + cur.clientHeight) {
             cur.scrollTop = (top + height) - cur.clientHeight;
           }
-    
+
           var offsetTop = cur.offsetTop;
           if (cur.parentNode != cur.offsetParent) {
             offsetTop -= cur.parentNode.offsetTop;
           }
-           
+
           top += offsetTop - cur.scrollTop;
           cur = cur.parentNode;
         }
@@ -1311,7 +1334,7 @@ public class Util {
     /**
      * Checks if the given event is either a touch event or caused by the left
      * mouse button
-     * 
+     *
      * @param event
      * @return true if the event is a touch event or caused by the left mouse
      *         button, false otherwise
@@ -1323,7 +1346,7 @@ public class Util {
 
     /**
      * Performs a shallow comparison of the collections.
-     * 
+     *
      * @param collection1
      *            The first collection
      * @param collection2
@@ -1369,7 +1392,7 @@ public class Util {
     /**
      * Resolve a relative URL to an absolute URL based on the current document's
      * location.
-     * 
+     *
      * @param url
      *            a string with the relative URL to resolve
      * @return the corresponding absolute URL as a string
@@ -1394,6 +1417,163 @@ public class Util {
             a.setHref(url);
             return a.getHref();
         }
+    }
+
+    /**
+     * Wrap a css size value and its unit and translate back and forth to the
+     * string representation.<br/>
+     * Eg. 50%, 123px, ...
+     *
+     * @since
+     * @author Vaadin Ltd
+     */
+    @SuppressWarnings("serial")
+    public static class CssSize implements Serializable {
+
+        /*
+         * Map the size units with their type.
+         */
+        private static Map<String, Unit> type2Unit = new HashMap<String, Style.Unit>();
+        static {
+            for (Unit unit : Unit.values()) {
+                type2Unit.put(unit.getType(), unit);
+            }
+        }
+
+        /**
+         * Gets the unit value by its type.
+         *
+         * @since
+         * @param type
+         *            the type of the unit as found in the style.
+         * @return the unit value.
+         */
+        public static Unit unitByType(String type) {
+            return type2Unit.get(type);
+        }
+
+        /*
+         * Regex to parse the size.
+         */
+        private static final RegExp sizePattern = RegExp
+                .compile(SharedUtil.SIZE_PATTERN);
+
+        /**
+         * Parse the size from string format to {@link CssSize}.
+         *
+         * @param s
+         *            the size as string.
+         * @return a {@link CssSize} object.
+         */
+        public static CssSize fromString(String s) {
+            if (s == null) {
+                return null;
+            }
+
+            s = s.trim();
+            if ("".equals(s)) {
+                return null;
+            }
+
+            float size = 0;
+            Unit unit = null;
+
+            MatchResult matcher = sizePattern.exec(s);
+            if (matcher.getGroupCount() > 1) {
+
+                size = Float.parseFloat(matcher.getGroup(1));
+                if (size < 0) {
+                    size = -1;
+                    unit = Unit.PX;
+
+                } else {
+                    String symbol = matcher.getGroup(2);
+                    unit = unitByType(symbol);
+                }
+            } else {
+                throw new IllegalArgumentException("Invalid size argument: \""
+                        + s + "\" (should match " + sizePattern.getSource()
+                        + ")");
+            }
+            return new CssSize(size, unit);
+        }
+
+        /**
+         * Creates a {@link CssSize} using a value and its measurement unit.
+         *
+         * @since
+         * @param value
+         *            the value.
+         * @param unit
+         *            the unit.
+         * @return the {@link CssSize} object.
+         */
+        public static CssSize fromValueUnit(float value, Unit unit) {
+            return new CssSize(value, unit);
+        }
+
+        /*
+         * The value.
+         */
+        private final float value;
+
+        /*
+         * The measure unit.
+         */
+        private final Unit unit;
+
+        private CssSize(float value, Unit unit) {
+            this.value = value;
+            this.unit = unit;
+        }
+
+        /**
+         * Gets the value for this css size.
+         *
+         * @return the value.
+         */
+        public float getValue() {
+            return value;
+        }
+
+        /**
+         * Gets the measurement unit for this css size.
+         *
+         * @return the unit.
+         */
+        public Unit getUnit() {
+            return unit;
+        }
+
+        @Override
+        public String toString() {
+            return value + unit.getType();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof CssSize) {
+                CssSize size = (CssSize) obj;
+                return size.value == value && size.unit == unit;
+            }
+
+            return false;
+        }
+
+        /**
+         * Check whether the two sizes are equals.
+         *
+         * @since
+         * @param cssSize1
+         *            the first size to compare.
+         * @param cssSize2
+         *            the other size to compare with the first one.
+         * @return true if the two sizes are equals, otherwise false.
+         */
+        public static boolean equals(String cssSize1, String cssSize2) {
+            return CssSize.fromString(cssSize1).equals(CssSize.fromString(cssSize2));
+        }
+
     }
 
 }

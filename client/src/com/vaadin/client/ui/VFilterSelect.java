@@ -46,6 +46,7 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -62,6 +63,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.UIDL;
@@ -252,7 +254,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Shows the popup where the user can see the filtered options
-         * 
+         *
          * @param currentSuggestions
          *            The filtered suggestions
          * @param currentPage
@@ -264,10 +266,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 final Collection<FilterSelectSuggestion> currentSuggestions,
                 final int currentPage, final int totalSuggestions) {
 
-            if (enableDebug) {
-                debug("VFS.SP: showSuggestions(" + currentSuggestions + ", "
-                        + currentPage + ", " + totalSuggestions + ")");
-            }
+            debug("VFS.SP: showSuggestions(" + currentSuggestions + ", "
+                    + currentPage + ", " + totalSuggestions + ")");
 
             /*
              * We need to defer the opening of the popup so that the parent DOM
@@ -316,8 +316,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                         status.setInnerText("");
                     }
                     // We don't need to show arrows or statusbar if there is
-                    // only one
-                    // page
+                    // only one page
                     if (totalSuggestions <= pageLength || pageLength == 0) {
                         setPagingEnabled(false);
                     } else {
@@ -346,7 +345,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Should the next page button be visible to the user?
-         * 
+         *
          * @param active
          */
         private void setNextButtonActive(boolean active) {
@@ -366,7 +365,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Should the previous page button be visible to the user
-         * 
+         *
          * @param active
          */
         private void setPrevButtonActive(boolean active) {
@@ -391,18 +390,13 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          */
         public void selectNextItem() {
             debug("VFS.SP: selectNextItem()");
-            final MenuItem cur = menu.getSelectedItem();
-            final int index = 1 + menu.getItems().indexOf(cur);
-            if (menu.getItems().size() > index) {
-                final MenuItem newSelectedItem = menu.getItems().get(index);
-                menu.selectItem(newSelectedItem);
-                tb.setText(newSelectedItem.getText());
-                tb.setSelectionRange(lastFilter.length(), newSelectedItem
-                        .getText().length() - lastFilter.length());
 
-            } else if (hasNextPage()) {
-                selectPopupItemWhenResponseIsReceived = Select.FIRST;
-                filterOptions(currentPage + 1, lastFilter);
+            final int index = menu.getSelectedIndex() + 1;
+            if (menu.getItems().size() > index) {
+                selectItem(menu.getItems().get(index));
+
+            } else {
+                selectNextPage();
             }
         }
 
@@ -411,27 +405,57 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          */
         public void selectPrevItem() {
             debug("VFS.SP: selectPrevItem()");
-            final MenuItem cur = menu.getSelectedItem();
-            final int index = -1 + menu.getItems().indexOf(cur);
+
+            final int index = menu.getSelectedIndex() - 1;
             if (index > -1) {
-                final MenuItem newSelectedItem = menu.getItems().get(index);
-                menu.selectItem(newSelectedItem);
-                tb.setText(newSelectedItem.getText());
-                tb.setSelectionRange(lastFilter.length(), newSelectedItem
-                        .getText().length() - lastFilter.length());
+                selectItem(menu.getItems().get(index));
+
             } else if (index == -1) {
-                if (currentPage > 0) {
-                    selectPopupItemWhenResponseIsReceived = Select.LAST;
-                    filterOptions(currentPage - 1, lastFilter);
-                }
+                selectPrevPage();
+
             } else {
-                final MenuItem newSelectedItem = menu.getItems().get(
-                        menu.getItems().size() - 1);
-                menu.selectItem(newSelectedItem);
-                tb.setText(newSelectedItem.getText());
-                tb.setSelectionRange(lastFilter.length(), newSelectedItem
-                        .getText().length() - lastFilter.length());
+                selectItem(menu.getItems().get(menu.getItems().size() - 1));
             }
+        }
+
+        /**
+         * Select the first item of the suggestions list popup.
+         * 
+         * @since
+         */
+        public void selectFirstItem() {
+            debug("VFS.SP: selectFirstItem()");
+            selectItem(menu.getFirstItem());
+        }
+
+        /**
+         * Select the last item of the suggestions list popup.
+         * 
+         * @since
+         */
+        public void selectLastItem() {
+            debug("VFS.SP: selectLastItem()");
+            selectItem(menu.getLastItem());
+        }
+
+        /*
+         * Sets the selected item in the popup menu.
+         */
+        private void selectItem(final MenuItem newSelectedItem) {
+            menu.selectItem(newSelectedItem);
+
+            String text = newSelectedItem != null ? newSelectedItem.getText()
+                    : "";
+
+            // Set the icon.
+            FilterSelectSuggestion suggestion = (FilterSelectSuggestion) newSelectedItem
+                    .getCommand();
+            setSelectedItemIcon(suggestion.getIconUri());
+
+            // Set the text.
+            setText(text);
+
+            menu.updateKeyboardSelectedItem();
         }
 
         /*
@@ -486,17 +510,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
-         * .user.client.Event)
-         */
-
         @Override
         public void onBrowserEvent(Event event) {
             debug("VFS.SP: onBrowserEvent()");
+
             if (event.getTypeInt() == Event.ONCLICK) {
                 final Element target = DOM.eventGetTarget(event);
                 if (target == up || target == DOM.getChild(up, 0)) {
@@ -504,12 +521,24 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 } else if (target == down || target == DOM.getChild(down, 0)) {
                     lazyPageScroller.scrollDown();
                 }
+
             } else if (event.getTypeInt() == Event.ONMOUSEWHEEL) {
-                int velocity = event.getMouseWheelVelocityY();
-                if (velocity > 0) {
-                    lazyPageScroller.scrollDown();
-                } else {
-                    lazyPageScroller.scrollUp();
+
+                boolean scrollNotActive = !menu.isScrollActive();
+
+                debug("VFS.SP: onBrowserEvent() scrollNotActive: "
+                        + scrollNotActive);
+
+                if (scrollNotActive) {
+                    int velocity = event.getMouseWheelVelocityY();
+
+                    debug("VFS.SP: onBrowserEvent() velocity: " + velocity);
+
+                    if (velocity > 0) {
+                        lazyPageScroller.scrollDown();
+                    } else {
+                        lazyPageScroller.scrollUp();
+                    }
                 }
             }
 
@@ -525,7 +554,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * amount of items are visible at a time and a scrollbar or buttons are
          * visible to change page. If paging is turned of then all options are
          * rendered into the popup menu.
-         * 
+         *
          * @param paging
          *            Should the paging be turned on?
          */
@@ -546,32 +575,29 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             isPagingEnabled = paging;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * com.google.gwt.user.client.ui.PopupPanel$PositionCallback#setPosition
-         * (int, int)
-         */
-
         @Override
         public void setPosition(int offsetWidth, int offsetHeight) {
-            debug("VFS.SP: setPosition()");
+            debug("VFS.SP: setPosition(" + offsetWidth + ", " + offsetHeight
+                    + ")");
 
-            int top = -1;
-            int left = -1;
+            int top = topPosition;
+            int left = getPopupLeft();
 
             // reset menu size and retrieve its "natural" size
             menu.setHeight("");
-            if (currentPage > 0) {
+            if (currentPage > 0 && !hasNextPage()) {
                 // fix height to avoid height change when getting to last page
                 menu.fixHeightTo(pageLength);
             }
-            offsetHeight = getOffsetHeight();
 
+            final int desiredHeight = offsetHeight = getOffsetHeight();
             final int desiredWidth = getMainWidth();
+
+            debug("VFS.SP:     desired[" + desiredWidth + ", " + desiredHeight
+                    + "]");
+
             Element menuFirstChild = menu.getElement().getFirstChildElement();
-            int naturalMenuWidth = menuFirstChild.getOffsetWidth();
+            final int naturalMenuWidth = menuFirstChild.getOffsetWidth();
 
             if (popupOuterPadding == -1) {
                 popupOuterPadding = Util.measureHorizontalPaddingAndBorder(
@@ -581,7 +607,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             if (naturalMenuWidth < desiredWidth) {
                 menu.setWidth((desiredWidth - popupOuterPadding) + "px");
                 menuFirstChild.getStyle().setWidth(100, Unit.PCT);
-                naturalMenuWidth = desiredWidth;
             }
 
             if (BrowserInfo.get().isIE()) {
@@ -589,48 +614,72 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                  * IE requires us to specify the width for the container
                  * element. Otherwise it will be 100% wide
                  */
-                int rootWidth = naturalMenuWidth - popupOuterPadding;
+                int rootWidth = Math.max(desiredWidth, naturalMenuWidth)
+                        - popupOuterPadding;
                 getContainerElement().getStyle().setWidth(rootWidth, Unit.PX);
             }
 
-            if (offsetHeight + getPopupTop() > Window.getClientHeight()
-                    + Window.getScrollTop()) {
+            final int vfsHeight = VFilterSelect.this.getOffsetHeight();
+            final int spaceAvailableAbove = top - vfsHeight;
+            final int spaceAvailableBelow = Window.getClientHeight() - top;
+            if (spaceAvailableBelow < offsetHeight
+                    && spaceAvailableBelow < spaceAvailableAbove) {
                 // popup on top of input instead
-                top = getPopupTop() - offsetHeight
-                        - VFilterSelect.this.getOffsetHeight();
+                top -= offsetHeight + vfsHeight;
                 if (top < 0) {
+                    offsetHeight += top;
                     top = 0;
                 }
             } else {
-                top = getPopupTop();
-                /*
-                 * Take popup top margin into account. getPopupTop() returns the
-                 * top value including the margin but the value we give must not
-                 * include the margin.
-                 */
-                int topMargin = (top - topPosition);
-                top -= topMargin;
+                offsetHeight = Math.min(offsetHeight, spaceAvailableBelow);
             }
 
             // fetch real width (mac FF bugs here due GWT popups overflow:auto )
             offsetWidth = menuFirstChild.getOffsetWidth();
-            if (offsetWidth + getPopupLeft() > Window.getClientWidth()
-                    + Window.getScrollLeft()) {
+
+            if (offsetHeight < desiredHeight) {
+                int menuHeight = offsetHeight;
+                if (isPagingEnabled) {
+                    menuHeight -= up.getOffsetHeight() + down.getOffsetHeight()
+                            + status.getOffsetHeight();
+                } else {
+                    final ComputedStyle s = new ComputedStyle(menu.getElement());
+                    menuHeight -= s.getIntProperty("marginBottom")
+                            + s.getIntProperty("marginTop");
+                }
+
+                // If the available page height is really tiny then this will be
+                // negative and an exception will be thrown on setHeight.
+                int menuElementHeight = menu.getItemOffsetHeight();
+                if (menuHeight < menuElementHeight) {
+                    menuHeight = menuElementHeight;
+                }
+
+                menu.setHeight(menuHeight + "px");
+
+                final int naturalMenuWidthPlusScrollBar = naturalMenuWidth
+                        + Util.getNativeScrollbarSize();
+                if (offsetWidth < naturalMenuWidthPlusScrollBar) {
+                    menu.setWidth(naturalMenuWidthPlusScrollBar + "px");
+                }
+            }
+
+            if (offsetWidth + left > Window.getClientWidth()) {
                 left = VFilterSelect.this.getAbsoluteLeft()
-                        + VFilterSelect.this.getOffsetWidth()
-                        + Window.getScrollLeft() - offsetWidth;
+                        + VFilterSelect.this.getOffsetWidth() - offsetWidth;
                 if (left < 0) {
                     left = 0;
+                    menu.setWidth(Window.getClientWidth() + "px");
                 }
-            } else {
-                left = getPopupLeft();
             }
+
             setPopupPosition(left, top);
+            menu.scrollSelectionIntoView();
         }
 
         /**
          * Was the popup just closed?
-         * 
+         *
          * @return true if popup was just closed
          */
         public boolean isJustClosed() {
@@ -659,7 +708,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Updates style names in suggestion popup to help theme building.
-         * 
+         *
          * @param uidl
          *            UIDL for the whole combo box
          * @param componentState
@@ -723,23 +772,34 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             super(true);
             debug("VFS.SM: constructor()");
             addDomHandler(this, LoadEvent.getType());
+
+            setScrollEnabled(true);
         }
 
         /**
          * Fixes menus height to use same space as full page would use. Needed
-         * to avoid height changes when quickly "scrolling" to last page
+         * to avoid height changes when quickly "scrolling" to last page.
          */
-        public void fixHeightTo(int pagelenth) {
+        public void fixHeightTo(int pageItemsCount) {
+            setHeight(getPreferredHeight(pageItemsCount));
+        }
+
+        /*
+         * Gets the preferred height of the menu including pageItemsCount items.
+         */
+        String getPreferredHeight(int pageItemsCount) {
             if (currentSuggestions.size() > 0) {
-                final int pixels = pagelenth * (getOffsetHeight() - 2)
-                        / currentSuggestions.size();
-                setHeight((pixels + 2) + "px");
+                final int pixels = (getPreferredHeight() / currentSuggestions
+                        .size()) * pageItemsCount;
+                return pixels + "px";
+            } else {
+                return "";
             }
         }
 
         /**
          * Sets the suggestions rendered in the menu
-         * 
+         *
          * @param suggestions
          *            The suggestions to be rendered in the menu
          */
@@ -789,6 +849,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 client.updateVariable(paintableId, "page", 0, false);
                 client.updateVariable(paintableId, "selected", new String[] {},
                         immediate);
+                afterUpdateClientVariables();
+
                 suggestionPopup.hide();
                 return;
             }
@@ -837,6 +899,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                     lastNewItemString = enteredItemValue;
                     client.updateVariable(paintableId, "newitem",
                             enteredItemValue, immediate);
+                    afterUpdateClientVariables();
                 }
             } else if (item != null
                     && !"".equals(lastFilter)
@@ -852,11 +915,11 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                         && !currentSuggestion.key.equals("")) {
                     // An item (not null) selected
                     String text = currentSuggestion.getReplacementString();
-                    tb.setText(text);
+                    setText(text);
                     selectedOptionKey = currentSuggestion.key;
                 } else {
                     // Null selected
-                    tb.setText("");
+                    setText("");
                     selectedOptionKey = null;
                 }
             }
@@ -909,26 +972,75 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         }
 
+        private MenuItem getKeyboardSelectedItem() {
+            return keyboardSelectedItem;
+        }
+
+        public void setKeyboardSelectedItem(MenuItem menuItem) {
+            keyboardSelectedItem = menuItem;
+        }
+
+        /**
+         * @deprecated use {@link SuggestionPopup#selectFirstItem()} instead.
+         */
+        @Deprecated
         public void selectFirstItem() {
             debug("VFS.SM: selectFirstItem()");
             MenuItem firstItem = getItems().get(0);
             selectItem(firstItem);
         }
 
-        private MenuItem getKeyboardSelectedItem() {
-            return keyboardSelectedItem;
-        }
-
-        public void setKeyboardSelectedItem(MenuItem firstItem) {
-            keyboardSelectedItem = firstItem;
-        }
-
+        /**
+         * @deprecated use {@link SuggestionPopup#selectLastItem()} instead.
+         */
+        @Deprecated
         public void selectLastItem() {
             debug("VFS.SM: selectLastItem()");
             List<MenuItem> items = getItems();
             MenuItem lastItem = items.get(items.size() - 1);
             selectItem(lastItem);
         }
+
+        /*
+         * Sets the keyboard item as the current selected one.
+         */
+        void updateKeyboardSelectedItem() {
+            setKeyboardSelectedItem(getSelectedItem());
+        }
+
+        /*
+         * Gets the height of one menu item.
+         */
+        int getItemOffsetHeight() {
+            List<MenuItem> items = getItems();
+            return items != null && items.size() > 0 ? items.get(0)
+                    .getOffsetHeight() : 0;
+        }
+
+        /*
+         * Gets the width of one menu item.
+         */
+        int getItemOffsetWidth() {
+            List<MenuItem> items = getItems();
+            return items != null && items.size() > 0 ? items.get(0)
+                    .getOffsetWidth() : 0;
+        }
+
+        /**
+         * Returns true if the scroll is active on the menu element or if the
+         * menu currently displays the last page with less items then the
+         * maximum visibility (in which case the scroll is not active, but the
+         * scroll is active for any other page in general).
+         */
+        @Override
+        public boolean isScrollActive() {
+            String height = getElement().getStyle().getHeight();
+            String preferredHeight = getPreferredHeight(pageLength);
+
+            return !(height == null || height.length() == 0 || height
+                    .equals(preferredHeight));
+        }
+
     }
 
     /**
@@ -947,7 +1059,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             if (textInputEnabled) {
                 super.setSelectionRange(pos, length);
             } else {
-                super.setSelectionRange(getValue().length(), 0);
+                super.setSelectionRange(0, getValue().length());
             }
         }
     }
@@ -1273,10 +1385,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      *            Whether to send the options request immediately
      */
     private void filterOptions(int page, String filter, boolean immediate) {
-        if (enableDebug) {
-            debug("VFS: filterOptions(" + page + ", " + filter + ", "
-                    + immediate + ")");
-        }
+        debug("VFS: filterOptions(" + page + ", " + filter + ", " + immediate
+                + ")");
+
         if (filter.equals(lastFilter) && currentPage == page) {
             if (!suggestionPopup.isAttached()) {
                 suggestionPopup.showSuggestions(currentSuggestions,
@@ -1297,8 +1408,11 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         waitingForFilteringResponse = true;
         client.updateVariable(paintableId, "filter", filter, false);
         client.updateVariable(paintableId, "page", page, immediate);
+        afterUpdateClientVariables();
+
         lastFilter = filter;
         currentPage = page;
+
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -1337,7 +1451,19 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         if (enableDebug) {
             debug("VFS: setTextboxText(" + text + ")");
         }
+        setText(text);
+    }
+
+    private void setText(final String text) {
+        /**
+         * To leave caret in the beginning of the line.
+         * SetSelectionRange wouldn't work on IE
+         * (see #13477)
+         */
+        Direction previousDirection = tb.getDirection();
+        tb.setDirection(Direction.RTL);
         tb.setText(text);
+        tb.setDirection(previousDirection);
     }
 
     /**
@@ -1401,10 +1527,13 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             setPromptingOff(text);
         }
         setSelectedItemIcon(suggestion.getIconUri());
+
         if (!(newKey.equals(selectedOptionKey) || ("".equals(newKey) && selectedOptionKey == null))) {
             selectedOptionKey = newKey;
             client.updateVariable(paintableId, "selected",
                     new String[] { selectedOptionKey }, immediate);
+            afterUpdateClientVariables();
+
             // currentPage = -1; // forget the page
         }
         suggestionPopup.hide();
@@ -1597,28 +1726,22 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         switch (event.getNativeKeyCode()) {
         case KeyCodes.KEY_DOWN:
             suggestionPopup.selectNextItem();
-            suggestionPopup.menu.setKeyboardSelectedItem(suggestionPopup.menu
-                    .getSelectedItem());
+
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
             event.stopPropagation();
             break;
         case KeyCodes.KEY_UP:
             suggestionPopup.selectPrevItem();
-            suggestionPopup.menu.setKeyboardSelectedItem(suggestionPopup.menu
-                    .getSelectedItem());
+
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
             event.stopPropagation();
             break;
         case KeyCodes.KEY_PAGEDOWN:
-            if (hasNextPage()) {
-                filterOptions(currentPage + 1, lastFilter);
-            }
+            selectNextPage();
             event.stopPropagation();
             break;
         case KeyCodes.KEY_PAGEUP:
-            if (currentPage > 0) {
-                filterOptions(currentPage - 1, lastFilter);
-            }
+            selectPrevPage();
             event.stopPropagation();
             break;
         case KeyCodes.KEY_TAB:
@@ -1664,6 +1787,26 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     }
 
+    /*
+     * Show the prev page.
+     */
+    private void selectPrevPage() {
+        if (currentPage > 0) {
+            filterOptions(currentPage - 1, lastFilter);
+            selectPopupItemWhenResponseIsReceived = Select.LAST;
+        }
+    }
+
+    /*
+     * Show the next page.
+     */
+    private void selectNextPage() {
+        if (hasNextPage()) {
+            filterOptions(currentPage + 1, lastFilter);
+            selectPopupItemWhenResponseIsReceived = Select.FIRST;
+        }
+    }
+
     /**
      * Triggered when a key was depressed
      * 
@@ -1707,15 +1850,21 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         if (currentSuggestion != null) {
             String text = currentSuggestion.getReplacementString();
             setPromptingOff(text);
+            setSelectedItemIcon(currentSuggestion.getIconUri());
+
             selectedOptionKey = currentSuggestion.key;
+
         } else {
             if (focused || readonly || !enabled) {
                 setPromptingOff("");
             } else {
                 setPromptingOn();
             }
+            setSelectedItemIcon(null);
+
             selectedOptionKey = null;
         }
+
         lastFilter = "";
         suggestionPopup.hide();
     }
@@ -1837,6 +1986,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         if (client.hasEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(paintableId, EventId.FOCUS, "", true);
+            afterUpdateClientVariables();
         }
 
         ComponentConnector connector = ConnectorMap.get(client).getConnector(
@@ -1913,6 +2063,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         if (client.hasEventListeners(this, EventId.BLUR)) {
             client.updateVariable(paintableId, EventId.BLUR, "", true);
+            afterUpdateClientVariables();
         }
     }
 
@@ -2091,4 +2242,15 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             com.google.gwt.user.client.Element captionElement) {
         AriaHelper.bindCaption(tb, captionElement);
     }
+
+    /*
+     * Anything that should be set after the client updates the server.
+     */
+    private void afterUpdateClientVariables() {
+        // We need this here to be consistent with the all the calls.
+        // Then set your specific selection type only after
+        // client.updateVariable() method call.
+        selectPopupItemWhenResponseIsReceived = Select.NONE;
+    }
+
 }

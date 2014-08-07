@@ -8,6 +8,8 @@ div.#{$primaryStyleName} {
 	-webkit-box-shadow: 0 2px 5px rgba(0,0,0,.7);
 	-moz-box-shadow: 0 2px 5px rgba(0,0,0,.7);
 	box-shadow: 0 2px 5px rgba(0,0,0,.7);
+	//IE8 does not support rgba, using just rgb
+	background:rgb(255,255,255) url(../img/grad-light-top.png) repeat-x;
 	background:rgba(255,255,255,.90) url(../img/grad-light-top.png) repeat-x;
 	}
 

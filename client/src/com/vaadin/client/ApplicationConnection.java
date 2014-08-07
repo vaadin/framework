@@ -66,7 +66,6 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -599,14 +598,23 @@ public class ApplicationConnection implements HasHandlers {
         }
     }
 
+    /**
+     * Checks if there is some work to be done on the client side
+     * 
+     * @return true if the client has some work to be done, false otherwise
+     */
+    private boolean isActive() {
+        return isWorkPending() || hasActiveRequest()
+                || isExecutingDeferredCommands();
+    }
+
     private native void initializeTestbenchHooks(
             ComponentLocator componentLocator, String TTAppId)
     /*-{
         var ap = this;
         var client = {};
         client.isActive = $entry(function() {
-            return ap.@com.vaadin.client.ApplicationConnection::hasActiveRequest()()
-                    || ap.@com.vaadin.client.ApplicationConnection::isExecutingDeferredCommands()();
+            return ap.@com.vaadin.client.ApplicationConnection::isActive()();
         });
         var vi = ap.@com.vaadin.client.ApplicationConnection::getVersionInfo()();
         if (vi) {
@@ -810,7 +818,8 @@ public class ApplicationConnection implements HasHandlers {
         startRequest();
 
         JSONObject payload = new JSONObject();
-        if (!getCsrfToken().equals(ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE)) {
+        if (!getCsrfToken().equals(
+                ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE)) {
             payload.put(ApplicationConstants.CSRF_TOKEN, new JSONString(
                     getCsrfToken()));
         }
@@ -1320,6 +1329,30 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
+     * Checks if the client has running or scheduled commands
+     */
+    private boolean isWorkPending() {
+        ConnectorMap connectorMap = getConnectorMap();
+        JsArrayObject<ServerConnector> connectors = connectorMap
+                .getConnectorsAsJsArray();
+        int size = connectors.size();
+        for (int i = 0; i < size; i++) {
+            ServerConnector conn = connectors.get(i);
+            ComponentConnector compConn = null;
+            if (conn instanceof ComponentConnector) {
+                compConn = (ComponentConnector) conn;
+                Widget wgt = compConn.getWidget();
+                if (wgt instanceof DeferredWorker) {
+                    if (((DeferredWorker) wgt).isWorkPending()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Checks if deferred commands are (potentially) still being executed as a
      * result of an update from the server. Returns true if a deferred command
      * might still be executing, false otherwise. This will not work correctly
@@ -1483,6 +1516,7 @@ public class ApplicationConnection implements HasHandlers {
         if (json.containsKey("typeMappings")) {
             configuration.addComponentMappings(
                     json.getValueMap("typeMappings"), widgetSet);
+
         }
 
         VConsole.log("Handling resource dependencies");
@@ -1717,6 +1751,7 @@ public class ApplicationConnection implements HasHandlers {
                 for (int i = 0; i < needsUpdateLength; i++) {
                     String childId = dump.get(i);
                     ServerConnector child = connectorMap.getConnector(childId);
+
                     if (child instanceof ComponentConnector
                             && ((ComponentConnector) child)
                                     .delegateCaptionHandling()) {
@@ -3110,7 +3145,7 @@ public class ApplicationConnection implements HasHandlers {
             return null;
         }
         if (uidlUri.startsWith("theme://")) {
-            final String themeUri = configuration.getThemeUri();
+            final String themeUri = getThemeUri();
             if (themeUri == null) {
                 VConsole.error("Theme not set: ThemeResource will not be found. ("
                         + uidlUri + ")");
@@ -3176,7 +3211,8 @@ public class ApplicationConnection implements HasHandlers {
      * @return URI to the current theme
      */
     public String getThemeUri() {
-        return configuration.getThemeUri();
+        return configuration.getVaadinDirUrl() + "themes/"
+                + getUIConnector().getActiveTheme();
     }
 
     /**

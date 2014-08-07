@@ -62,6 +62,12 @@ public class UIState extends TabIndexState {
      * Configuration for the push channel
      */
     public PushConfigurationState pushConfiguration = new PushConfigurationState();
+    /**
+     * Currently used theme.
+     * 
+     * @since 7.3
+     */
+    public String theme;
     {
         primaryStyleName = "v-ui";
         // Default is 1 for legacy reasons
@@ -95,7 +101,7 @@ public class UIState extends TabIndexState {
                 NotificationRole role) {
             this.prefix = prefix;
             this.postfix = postfix;
-            this.notificationRole = role;
+            notificationRole = role;
         }
     }
 

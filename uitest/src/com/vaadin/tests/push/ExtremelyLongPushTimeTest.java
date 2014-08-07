@@ -36,7 +36,7 @@ public abstract class ExtremelyLongPushTimeTest extends MultiBrowserTest {
         testBench(driver).disableWaitForVaadin();
 
         // Wait for startButton to be present
-        waitForElementToBePresent(vaadinLocatorById("startButton"));
+        waitForElementVisible(vaadinLocatorById("startButton"));
 
         String logRow0Id = "Log_row_0";
         By logRow0 = vaadinLocatorById(logRow0Id);

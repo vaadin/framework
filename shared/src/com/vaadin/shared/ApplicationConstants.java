@@ -78,6 +78,14 @@ public class ApplicationConstants implements Serializable {
     public static final String VAADIN_DIR_URL = "vaadinDir";
 
     /**
+     * The name of the javascript containing the bootstrap code. The file is
+     * located in the VAADIN directory.
+     *
+     * @since 7.3
+     */
+    public static final String VAADIN_BOOTSTRAP_JS = "vaadinBootstrap.js";
+
+    /**
      * The name of the javascript containing push support. The file is located
      * in the VAADIN directory.
      */

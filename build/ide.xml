@@ -4,61 +4,77 @@
     <property name="work.dir" location="work" />
     <property file="build.properties" />
 
-    <ivy:resolve log="download-only" file="client-compiler/ivy.xml" conf="ide" />
-    <ivy:cachepath pathid="client-compiler.deps" conf="ide" />
-    <ivy:resolve log="download-only" file="server/ivy.xml" conf="ide" />
-    <ivy:cachepath pathid="server.deps" conf="ide" />
-    <ivy:resolve log="download-only" file="client/ivy.xml" conf="ide" />
-    <ivy:cachepath pathid="client.deps" conf="ide" />
-    <ivy:resolve log="download-only" file="shared/ivy.xml" conf="ide" />
-    <ivy:cachepath pathid="shared.deps" conf="ide" />
-    <ivy:resolve log="download-only" file="uitest/ivy.xml" conf="ide" />
-    <ivy:cachepath pathid="uitest.deps" conf="ide" />
-    <ivy:resolve log="download-only" file="buildhelpers/ivy.xml" />
-    <ivy:cachepath pathid="buildhelpers.deps" />
-    <ivy:resolve log="download-only" file="gwt/ivy.xml" conf="ide" />
-    <ivy:cachepath pathid="gwt.deps" conf="ide" />
+    <!-- Setting this to 0 disables the parallel compilation -->
+    <property name="threadsPerProcessor" value="1" />
 
-    <path id="classpath">
-        <path location="bin" />
-        <path location="build/classes" />
-        <path refid="client-compiler.deps" />
-        <path refid="server.deps" />
-        <path refid="shared.deps" />
-        <path refid="uitest.deps" />
-        <path refid="client.deps" />
-        <path refid="buildhelpers.deps" />
-        <path refid="gwt.deps" />
-        <path location="server/src" />
-        <path location="shared/src" />
-        <path location="uitest/src" />
-        <path location="client/src" />
-    </path>
+    <target name="resolve" unless="resolve.done">
+        <ivy:resolve log="download-only" file="client-compiler/ivy.xml" conf="ide" />
+        <ivy:cachepath pathid="client-compiler.deps" conf="ide" />
+        <ivy:resolve log="download-only" file="server/ivy.xml" conf="ide" />
+        <ivy:cachepath pathid="server.deps" conf="ide" />
+        <ivy:resolve log="download-only" file="client/ivy.xml" conf="ide" />
+        <ivy:cachepath pathid="client.deps" conf="ide" />
+        <ivy:resolve log="download-only" file="shared/ivy.xml" conf="ide" />
+        <ivy:cachepath pathid="shared.deps" conf="ide" />
+        <ivy:resolve log="download-only" file="uitest/ivy.xml" conf="ide" />
+        <ivy:cachepath pathid="uitest.deps" conf="ide" />
+        <ivy:resolve log="download-only" file="buildhelpers/ivy.xml" />
+        <ivy:cachepath pathid="buildhelpers.deps" />
+        <ivy:resolve log="download-only" file="gwt/ivy.xml" conf="ide" />
+        <ivy:cachepath pathid="gwt.deps" conf="ide" />
 
-    <target name="theme-and-default-widgetset" depends="default-widgetset, themes, vaadinPush.js">
-    </target>
-    <target name="themes">
-        <antcall target="compile-theme">
-            <param name="theme" value="base" />
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="runo" />
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="reindeer" />
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="chameleon" />
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="liferay" />
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="valo" />
-        </antcall>
+        <path id="classpath">
+            <path location="bin" />
+            <path location="build/classes" />
+            <path refid="client-compiler.deps" />
+            <path refid="server.deps" />
+            <path refid="shared.deps" />
+            <path refid="uitest.deps" />
+            <path refid="client.deps" />
+            <path refid="buildhelpers.deps" />
+            <path refid="gwt.deps" />
+            <path location="server/src" />
+            <path location="shared/src" />
+            <path location="uitest/src" />
+            <path location="client/src" />
+        </path>
+        <property name="resolve.done" value="true" />
     </target>
 
-    <target name="compile-theme">
+    <target name="theme-and-default-widgetset" depends="resolve">
+        <!-- threadCount is ignored unless threadsPerProcessor is 0 -->
+        <parallel threadsPerProcessor="${threadsPerProcessor}" threadCount="1">
+            <antcall target="default-widgetset" inheritRefs="true" />
+            <antcall target="themes" inheritRefs="true" />
+            <antcall target="vaadinPush.js" inheritRefs="true" />
+        </parallel>
+    </target>
+
+    <target name="themes" depends="resolve">
+        <!-- threadCount is ignored unless threadsPerProcessor is 0 -->
+        <parallel threadsPerProcessor="${threadsPerProcessor}" threadCount="1">
+            <antcall target="compile-theme" inheritRefs="true">
+                <param name="theme" value="base" />
+            </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+                <param name="theme" value="runo" />
+            </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+                <param name="theme" value="reindeer" />
+            </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+                <param name="theme" value="chameleon" />
+            </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+                <param name="theme" value="liferay" />
+            </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+                <param name="theme" value="valo" />
+            </antcall>
+        </parallel>
+    </target>
+
+    <target name="compile-theme" depends="resolve">
         <java classname="com.vaadin.buildhelpers.CompileTheme" failonerror="yes" fork="yes">
             <classpath refid="classpath" />
             <jvmarg value="-Djava.awt.headless=true" />
@@ -74,18 +90,18 @@
 
 
     <target name="default-widgetset">
-        <antcall target="compile-widgetset">
+        <antcall target="compile-widgetset" inheritRefs="true">
             <param name="widgetset" value="com.vaadin.DefaultWidgetSet" />
         </antcall>
     </target>
 
     <target name="testing-widgetset">
-        <antcall target="compile-widgetset">
+        <antcall target="compile-widgetset" inheritRefs="true">
             <param name="widgetset" value="com.vaadin.tests.widgetset.TestingWidgetSet" />
         </antcall>
     </target>
 
-    <target name="compile-widgetset">
+    <target name="compile-widgetset" depends="resolve">
         <property name="module" value="${widgetset}" />
         <property name="module.output.dir" location="WebContent/VAADIN/widgetsets" />
         <property name="style" value="PRETTY" />
@@ -125,7 +141,7 @@
             <jvmarg value="-Dgwt.persistentunitcache=false" />
         </java>
     </target>
-    <target name="vaadinPush.js">
+    <target name="vaadinPush.js" depends="resolve">
         <ant antfile="${basedir}/push/build.xml" target="vaadinPush.js" dir="${basedir}/push" />
         <property name="js.output.dir" location="WebContent" />
         <property name="push.js.dir" location="${basedir}/push/result/js" />

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2013 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,21 +24,27 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 
 /**
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
 public class TestIcon {
 
-    public static Resource get() {
+    int iconCount = 0;
+
+    public TestIcon(int startIndex) {
+        iconCount = startIndex;
+    }
+
+    public Resource get() {
         return get(false, 32);
     }
 
-    public static Resource get(boolean isImage) {
+    public Resource get(boolean isImage) {
         return get(isImage, 32);
     }
 
-    public static Resource get(boolean isImage, int imageSize) {
+    public Resource get(boolean isImage, int imageSize) {
         if (!isImage) {
             if (++iconCount >= ICONS.size()) {
                 iconCount = 0;
@@ -51,5 +57,4 @@ public class TestIcon {
     static List<FontAwesome> ICONS = Collections.unmodifiableList(Arrays
             .asList(FontAwesome.values()));
 
-    static int iconCount = 0;
 }

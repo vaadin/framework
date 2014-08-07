@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2013 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -44,6 +44,7 @@ public class Accordions extends VerticalLayout implements View {
     }
 
     Accordion getAccordion(String caption) {
+        TestIcon testIcon = new TestIcon(0);
         Accordion ac = new Accordion();
         ac.setCaption(caption);
         ac.addTab(new VerticalLayout() {
@@ -52,28 +53,28 @@ public class Accordions extends VerticalLayout implements View {
                 addComponent(new Label(
                         "Fabio vel iudice vincam, sunt in culpa qui officia. Ut enim ad minim veniam, quis nostrud exercitation."));
             }
-        }, "First Caption", TestIcon.get());
+        }, "First Caption", testIcon.get());
         ac.addTab(new VerticalLayout() {
             {
                 setMargin(true);
                 addComponent(new Label(
                         "Gallia est omnis divisa in partes tres, quarum."));
             }
-        }, "Second Caption", TestIcon.get());
+        }, "Second Caption", testIcon.get());
         ac.addTab(new VerticalLayout() {
             {
                 setMargin(true);
                 addComponent(new Label(
                         "Nihil hic munitissimus habendi senatus locus, nihil horum? Sed haec quis possit intrepidus aestimare tellus."));
             }
-        }, "Third Caption", TestIcon.get());
+        }, "Third Caption", testIcon.get());
         ac.addTab(new VerticalLayout() {
             {
                 setMargin(true);
                 addComponent(new Label(
                         "Inmensae subtilitatis, obscuris et malesuada fames. Quisque ut dolor gravida, placerat libero vel, euismod."));
             }
-        }, "Custom Caption Style", TestIcon.get()).setStyleName("color1");
+        }, "Custom Caption Style", testIcon.get()).setStyleName("color1");
         return ac;
     }
 

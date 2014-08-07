@@ -87,15 +87,17 @@ public class PopupDateFieldConnector extends TextualDateConnector {
                 .isShowISOWeekNumbers());
         if (getWidget().calendar.getResolution() != getWidget()
                 .getCurrentResolution()) {
+            boolean hasSelectedDate = false;
             getWidget().calendar.setResolution(getWidget()
                     .getCurrentResolution());
             if (getWidget().calendar.getDate() != null
                     && getWidget().getCurrentDate() != null) {
+                hasSelectedDate = true;
                 getWidget().calendar.setDate((Date) getWidget()
                         .getCurrentDate().clone());
-                // force re-render when changing resolution only
-                getWidget().calendar.renderCalendar();
             }
+            // force re-render when changing resolution only
+            getWidget().calendar.renderCalendar(hasSelectedDate);
         }
 
         // Force re-render of calendar if locale has changed (#12153)

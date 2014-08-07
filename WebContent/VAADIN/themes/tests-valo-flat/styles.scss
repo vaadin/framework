@@ -1,0 +1,6 @@
+@import "variables";
+@import "../tests-valo/valotest";
+
+.tests-valo-flat {
+   @include valotest;
+}

@@ -7,7 +7,8 @@
   }
 
   .#{$primary-stylename}.v-active-drag-source {
-    visibility: hidden;
+    // This breaks file upload dragging (for some reason the ddwrapper gets this class when an active file drag is over it)
+    // visibility: hidden;
   }
 
   .#{$primary-stylename} {

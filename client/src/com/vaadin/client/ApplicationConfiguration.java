@@ -51,6 +51,7 @@ import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.ui.UnknownComponentConnector;
+import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 
@@ -84,7 +85,7 @@ public class ApplicationConfiguration implements EntryPoint {
                 return null;
             } else {
                 return value +"";
-            } 
+            }
         }-*/;
 
         /**
@@ -105,7 +106,7 @@ public class ApplicationConfiguration implements EntryPoint {
             } else {
                  // $entry not needed as function is not exported
                 return @java.lang.Boolean::valueOf(Z)(value);
-            } 
+            }
         }-*/;
 
         /**
@@ -126,7 +127,7 @@ public class ApplicationConfiguration implements EntryPoint {
             } else {
                  // $entry not needed as function is not exported
                 return @java.lang.Integer::valueOf(I)(value);
-            } 
+            }
         }-*/;
 
         /**
@@ -285,12 +286,14 @@ public class ApplicationConfiguration implements EntryPoint {
         return serviceUrl;
     }
 
+    /**
+     * @return the theme name used when initializing the application
+     * @deprecated as of 7.3. Use {@link UIConnector#getActiveTheme()} to get
+     *             the theme currently in use
+     */
+    @Deprecated
     public String getThemeName() {
         return getJsoConfiguration(id).getConfigString("theme");
-    }
-
-    public String getThemeUri() {
-        return getVaadinDirUrl() + "themes/" + getThemeName();
     }
 
     /**

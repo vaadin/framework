@@ -36,7 +36,7 @@ public class GwtRpcTest extends MultiBrowserTest {
 
         By label = By.id(GwtRpcButtonConnector.SUCCESS_LABEL_ID);
 
-        waitForElementToBePresent(label);
+        waitForElementVisible(label);
         getDriver().findElement(label);
     }
 

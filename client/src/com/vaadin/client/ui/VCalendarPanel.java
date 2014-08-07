@@ -786,6 +786,21 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * Updates the calendar and text field with the selected dates.
      */
     public void renderCalendar() {
+        renderCalendar(true);
+    }
+
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     * 
+     * Updates the calendar and text field with the selected dates.
+     * 
+     * @param updateDate
+     *            The value false prevents setting the selected date of the
+     *            calendar based on focusedDate. That can be used when only the
+     *            resolution of the calendar is changed and no date has been
+     *            selected.
+     */
+    public void renderCalendar(boolean updateDate) {
 
         super.setStylePrimaryName(parent.getStylePrimaryName()
                 + "-calendarpanel");
@@ -798,8 +813,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
             displayedMonth = new FocusedDate(now.getYear(), now.getMonth(), 1);
         }
 
-        if (getResolution().getCalendarField() <= Resolution.MONTH
-                .getCalendarField() && focusChangeListener != null) {
+        if (updateDate
+                && getResolution().getCalendarField() <= Resolution.MONTH
+                        .getCalendarField() && focusChangeListener != null) {
             focusChangeListener.focusChanged(new Date(focusedDate.getTime()));
         }
 

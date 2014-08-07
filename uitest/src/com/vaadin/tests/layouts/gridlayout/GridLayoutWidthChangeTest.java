@@ -17,7 +17,8 @@ public class GridLayoutWidthChangeTest extends MultiBrowserTest {
 
         compareScreen("initial");
 
-        $(ButtonElement.class).caption("Reduce GridLayout parent width").first().click();
+        $(ButtonElement.class).caption("Reduce GridLayout parent width")
+                .first().click();
 
         compareScreen("buttonMoved");
     }

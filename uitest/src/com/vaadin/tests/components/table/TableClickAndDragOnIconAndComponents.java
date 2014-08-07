@@ -9,29 +9,31 @@ import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
+import com.vaadin.ui.Table.RowHeaderMode;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TextField;
 
-public class TableClickAndDragOnIconAndComponents extends TestBase {
+public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
 
     private static final long serialVersionUID = -2534880024131980135L;
     private Table table;
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         table = new Table();
         table.addContainerProperty("foo", String.class, "foo");
         table.addContainerProperty("red", String.class, "red");
         table.addContainerProperty("icon", Resource.class, null);
         table.setSelectable(true);
-        table.setRowHeaderMode(Table.ROW_HEADER_MODE_ICON_ONLY);
+        table.setRowHeaderMode(RowHeaderMode.ICON_ONLY);
         table.setItemIconPropertyId("icon");
         table.setId("testable-table");
         addComponent(table);
@@ -122,6 +124,7 @@ public class TableClickAndDragOnIconAndComponents extends TestBase {
         });
     }
 
+    @SuppressWarnings("unchecked")
     private void addItemAfter(Object itemId, Object afterItemId) {
         Item item;
         if (afterItemId != null) {
@@ -136,7 +139,7 @@ public class TableClickAndDragOnIconAndComponents extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Tests that you can click on a row icon in a table to select the row, or to drag the row. Verifies also that the table doesn't capture the click events meant for components inside the table";
     }
 
