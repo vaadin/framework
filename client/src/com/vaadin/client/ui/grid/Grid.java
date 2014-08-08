@@ -2027,7 +2027,7 @@ public class Grid<T> extends Composite implements
         } else if (type.equalsIgnoreCase("cell")) {
             // If wanted row is not visible, we need to scroll there.
             Range visibleRowRange = escalator.getVisibleRowRange();
-            if (!visibleRowRange.contains(indices[0])) {
+            if (indices.length > 0 && !visibleRowRange.contains(indices[0])) {
                 try {
                     scrollToRow(indices[0]);
                 } catch (IllegalArgumentException e) {
