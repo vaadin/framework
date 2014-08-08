@@ -381,7 +381,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         }
 
         Range removedRange = Range.withLength(firstRowIndex, count);
-        if (removedRange.intersects(cached)) {
+        if (cached.isSubsetOf(removedRange)) {
+            cached = Range.withLength(0, 0);
+        } else if (removedRange.intersects(cached)) {
             Range[] partitions = cached.partitionWith(removedRange);
             Range remainsBefore = partitions[0];
             Range transposedRemainsAfter = partitions[2].offsetBy(-removedRange

@@ -369,12 +369,6 @@ public final class Range implements Serializable {
      *             if the two ranges aren't connected
      */
     public Range combineWith(Range other) throws IllegalArgumentException {
-        if (other.isEmpty()) {
-            return this;
-        } else if (isEmpty()) {
-            return other;
-        }
-
         if (getStart() > other.getEnd() || other.getStart() > getEnd()) {
             throw new IllegalArgumentException("There is a gap between " + this
                     + " and " + other);
