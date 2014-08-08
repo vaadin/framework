@@ -37,9 +37,12 @@ public class GridLayoutExpandRatio extends AbstractTestUI {
         labels = new Label[ROWS][COLS];
         layout = new HorizontalLayout();
         gridLayout = new GridLayout(ROWS, COLS);
+        gridLayout.setHideEmptyRowsAndColumns(true);
+
         layout.setImmediate(true);
         gridLayout.setImmediate(true);
         gridLayout2 = new GridLayout(4, 4);
+        gridLayout2.setHideEmptyRowsAndColumns(true);
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 Label label = new Label("Slot " + i + " " + j);

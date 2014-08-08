@@ -93,6 +93,8 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
 
         clickEventHandler.handleEventHandlerRegistration();
 
+        getWidget().hideEmptyRowsAndColumns = getState().hideEmptyRowsAndColumns;
+
     }
 
     @Override

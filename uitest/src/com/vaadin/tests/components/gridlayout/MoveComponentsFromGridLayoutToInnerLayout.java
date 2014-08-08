@@ -2,9 +2,12 @@ package com.vaadin.tests.components.gridlayout;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 
 public class MoveComponentsFromGridLayoutToInnerLayout extends AbstractTestUI {
 
@@ -15,6 +18,7 @@ public class MoveComponentsFromGridLayoutToInnerLayout extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         gl = new GridLayout();
+        gl.setHideEmptyRowsAndColumns(true);
         gl.setWidth("200px");
         gl.setHeight("200px");
 
