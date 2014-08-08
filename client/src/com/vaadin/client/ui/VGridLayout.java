@@ -75,6 +75,8 @@ public class VGridLayout extends ComplexPanel {
     public Set<Integer> explicitRowRatios;
     public Set<Integer> explicitColRatios;
 
+    public boolean hideEmptyRowsAndColumns = false;
+
     public VGridLayout() {
         super();
         setElement(Document.get().createDivElement());
@@ -170,27 +172,47 @@ public class VGridLayout extends ComplexPanel {
     private int[] calcRowExpandRatio() {
         int[] actualExpandRatio = new int[minRowHeights.length];
         for (int i = 0; i < minRowHeights.length; i++) {
-            if (rowHasComponentsOrRowSpan(i)) {
-                actualExpandRatio[i] = rowExpandRatioArray[i];
+            if (hiddenEmptyRow(i)) {
+                actualExpandRatio[i] = 0;
             } else {
-                // Should not do this if this has explicitly been
-                // expanded
-                if (explicitRowRatios.contains(i)) {
-                    actualExpandRatio[i] = rowExpandRatioArray[i];
-                } else {
-                    actualExpandRatio[i] = 0;
-                }
+                actualExpandRatio[i] = rowExpandRatioArray[i];
             }
         }
         return actualExpandRatio;
+    }
+
+    /**
+     * Checks if it is ok to hide (or ignore) the given row.
+     * 
+     * @param rowIndex
+     *            the row to check
+     * @return true, if the row should be interpreted as non-existant (hides
+     *         extra spacing)
+     */
+    private boolean hiddenEmptyRow(int rowIndex) {
+        return hideEmptyRowsAndColumns && !rowHasComponentsOrRowSpan(rowIndex)
+                && !explicitRowRatios.contains(rowIndex);
+    }
+
+    /**
+     * Checks if it is ok to hide (or ignore) the given column.
+     * 
+     * @param columnIndex
+     *            the column to check
+     * @return true, if the column should be interpreted as non-existant (hides
+     *         extra spacing)
+     */
+    private boolean hiddenEmptyColumn(int columnIndex) {
+        return hideEmptyRowsAndColumns
+                && !colHasComponentsOrColSpan(columnIndex)
+                && !explicitColRatios.contains(columnIndex);
     }
 
     private int calcRowUsedSpace() {
         int usedSpace = minRowHeights[0];
         int verticalSpacing = getVerticalSpacing();
         for (int i = 1; i < minRowHeights.length; i++) {
-            if (rowHasComponentsOrRowSpan(i) || minRowHeights[i] > 0
-                    || explicitRowRatios.contains(i)) {
+            if (minRowHeights[i] > 0 || !hiddenEmptyRow(i)) {
                 usedSpace += verticalSpacing + minRowHeights[i];
             }
         }
@@ -233,16 +255,10 @@ public class VGridLayout extends ComplexPanel {
     private int[] calcColumnExpandRatio() {
         int[] actualExpandRatio = new int[minColumnWidths.length];
         for (int i = 0; i < minColumnWidths.length; i++) {
-            if (colHasComponentsOrColSpan(i)) {
+            if (!hiddenEmptyColumn(i)) {
                 actualExpandRatio[i] = colExpandRatioArray[i];
             } else {
-                // Should not do this if this has explicitly been
-                // expanded
-                if (explicitColRatios.contains(i)) {
-                    actualExpandRatio[i] = colExpandRatioArray[i];
-                } else {
-                    actualExpandRatio[i] = 0;
-                }
+                actualExpandRatio[i] = 0;
             }
         }
         return actualExpandRatio;
@@ -255,8 +271,7 @@ public class VGridLayout extends ComplexPanel {
         int usedSpace = minColumnWidths[0];
         int horizontalSpacing = getHorizontalSpacing();
         for (int i = 1; i < minColumnWidths.length; i++) {
-            if (colHasComponentsOrColSpan(i) || minColumnWidths[i] > 0
-                    || explicitColRatios.contains(i)) {
+            if (minColumnWidths[i] > 0 || !hiddenEmptyColumn(i)) {
                 usedSpace += horizontalSpacing + minColumnWidths[i];
             }
         }
