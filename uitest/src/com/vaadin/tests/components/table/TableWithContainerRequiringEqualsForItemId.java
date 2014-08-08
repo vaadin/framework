@@ -4,7 +4,8 @@ import java.util.Date;
 
 import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -12,7 +13,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.Reindeer;
 
-public class TableWithContainerRequiringEqualsForItemId extends TestBase {
+public class TableWithContainerRequiringEqualsForItemId extends AbstractTestUI {
 
     private MyEntityContainer container = new MyEntityContainer();
     private Log log = new Log(10);
@@ -44,14 +45,14 @@ public class TableWithContainerRequiringEqualsForItemId extends TestBase {
     }
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         Table t = new Table("Table with 1000 item");
         t.addGeneratedColumn("Actions", new Table.ColumnGenerator() {
             @Override
             public Component generateCell(final Table source,
                     final Object itemId, final Object columnId) {
                 Button tripFolderLink = new Button("Button" + itemId);
-                tripFolderLink.addListener(new Button.ClickListener() {
+                tripFolderLink.addClickListener(new Button.ClickListener() {
                     @Override
                     public void buttonClick(final ClickEvent event) {
                         log.log("Button " + event.getButton().getCaption()
@@ -69,11 +70,10 @@ public class TableWithContainerRequiringEqualsForItemId extends TestBase {
                     * 1000L));
             myEntity.setId(i);
             container.addBean(myEntity);
-            // entityProvider.addEntity(myEntity);
         }
 
         t.setContainerDataSource(container);
-        t.setVisibleColumns(new String[] { "id", "created", "name", "Actions" });
+        t.setVisibleColumns(new Object[] { "id", "created", "name", "Actions" });
 
         addComponent(t);
         addComponent(log);
@@ -83,7 +83,7 @@ public class TableWithContainerRequiringEqualsForItemId extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Test that verifies that Table works correctly with containers which do not return the same instance of the itemId object but instead requires an itemId.equals(otherItemId) check";
     }
 
