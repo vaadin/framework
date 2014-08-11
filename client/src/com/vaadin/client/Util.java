@@ -1405,6 +1405,37 @@ public class Util {
     }
 
     /**
+     * Sets the selection range of an input element.
+     * 
+     * We need this JSNI function to set selection range so that we can use the
+     * optional direction attribute to set the anchor to the end and the focus
+     * to the start. This makes Firefox work the same way as other browsers
+     * (#13477)
+     * 
+     * @param elem
+     *            the html input element.
+     * @param pos
+     *            the index of the first selected character.
+     * @param length
+     *            the selection length.
+     * @param direction
+     *            a string indicating the direction in which the selection was
+     *            performed. This may be "forward" or "backward", or "none" if
+     *            the direction is unknown or irrelevant.
+     * 
+     * @since
+     */
+    public native static void setSelectionRange(Element elem, int pos,
+            int length, String direction)
+    /*-{
+       try {
+           elem.setSelectionRange(pos, pos + length, direction);
+       } catch (e) {
+          // Firefox throws exception if TextBox is not visible, even if attached
+       }
+    }-*/;
+
+    /**
      * Wrap a css size value and its unit and translate back and forth to the
      * string representation.<br/>
      * Eg. 50%, 123px, ...
@@ -1556,7 +1587,8 @@ public class Util {
          * @return true if the two sizes are equals, otherwise false.
          */
         public static boolean equals(String cssSize1, String cssSize2) {
-            return CssSize.fromString(cssSize1).equals(CssSize.fromString(cssSize2));
+            return CssSize.fromString(cssSize1).equals(
+                    CssSize.fromString(cssSize2));
         }
 
     }
