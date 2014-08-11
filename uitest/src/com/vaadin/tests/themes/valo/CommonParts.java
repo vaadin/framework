@@ -131,9 +131,11 @@ public class CommonParts extends VerticalLayout implements View {
         spinnerDesc.setCaption("Spinner");
         content.addComponent(spinnerDesc);
 
-        Label spinner = new Label();
-        spinner.addStyleName("spinner");
-        content.addComponent(spinner);
+        if (!ValoThemeUI.isTestMode()) {
+            Label spinner = new Label();
+            spinner.addStyleName("spinner");
+            content.addComponent(spinner);
+        }
 
         return p;
     }

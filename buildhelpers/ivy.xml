@@ -18,7 +18,6 @@
         <conf name="build" />
         <conf name="build-provided" />
         <conf name="ide" visibility="private" />
-        <conf name="test" />
     </configurations>
     <publications>
         <artifact type="jar" />

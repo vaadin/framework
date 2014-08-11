@@ -61,6 +61,8 @@ import com.vaadin.ui.themes.ValoTheme;
 @PreserveOnRefresh
 public class ValoThemeUI extends UI {
 
+    private boolean testMode = false;
+
     private static LinkedHashMap<String, String> themeVariants = new LinkedHashMap<String, String>();
     static {
         themeVariants.put("tests-valo", "Default");
@@ -77,11 +79,17 @@ public class ValoThemeUI extends UI {
     ComponentContainer viewDisplay = root.getContentContainer();
     CssLayout menu = new CssLayout();
     CssLayout menuItemsLayout = new CssLayout();
+    {
+        menu.setId("testMenu");
+    }
     private Navigator navigator;
     private LinkedHashMap<String, String> menuItems = new LinkedHashMap<String, String>();
 
     @Override
     protected void init(VaadinRequest request) {
+        if (request.getParameter("test") != null) {
+            testMode = true;
+        }
         // Show .v-app-loading valo-menu-badge
         // try {
         // Thread.sleep(2000);
@@ -157,6 +165,10 @@ public class ValoThemeUI extends UI {
             }
         });
 
+    }
+
+    static boolean isTestMode() {
+        return ((ValoThemeUI) getCurrent()).testMode;
     }
 
     Component buildTestMenu() {
@@ -398,7 +410,7 @@ public class ValoThemeUI extends UI {
                     // ((Hierarchical) container).setChildrenAllowed(id, false);
                     ((Hierarchical) container).setParent(id, i);
 
-                    for (int k = 1; k < 5; k++) {
+                    for (int k = 1; k < 6; k++) {
                         String id2 = id + " -> " + k;
                         child = container.addItem(id2);
                         child.getItemProperty(CAPTION_PROPERTY).setValue(

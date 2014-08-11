@@ -47,7 +47,7 @@ public class Forms extends VerticalLayout implements View {
         setSpacing(true);
         setMargin(true);
 
-        Label title = new Label("Form");
+        Label title = new Label("Forms");
         title.addStyleName("h1");
         addComponent(title);
 
