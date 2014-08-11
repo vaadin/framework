@@ -1057,11 +1057,33 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         @Override
         public void setSelectionRange(int pos, int length) {
             if (textInputEnabled) {
-                super.setSelectionRange(pos, length);
+                /*
+                 * set selection range with a backwards direction: anchor at the
+                 * back, focus at the front. This means that items that are too
+                 * long to display will display from the start and not the end
+                 * even on Firefox.
+                 * 
+                 * We need the JSNI function to set selection range so that we
+                 * can use the optional direction attribute to set the anchor to
+                 * the end and the focus to the start. This makes Firefox work
+                 * the same way as other browsers (#13477)
+                 */
+                Util.setSelectionRange(getElement(), pos, length, "backward");
+
             } else {
-                super.setSelectionRange(0, getValue().length());
+                /*
+                 * Setting the selectionrange for an uneditable textbox leads to
+                 * unwanted behaviour when the width of the textbox is narrower
+                 * than the width of the entry: the end of the entry is shown
+                 * instead of the beginning. (see #13477)
+                 * 
+                 * To avoid this, we set the caret to the beginning of the line.
+                 */
+
+                super.setSelectionRange(0, 0);
             }
         }
+
     }
 
     @Deprecated
@@ -1456,9 +1478,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     private void setText(final String text) {
         /**
-         * To leave caret in the beginning of the line.
-         * SetSelectionRange wouldn't work on IE
-         * (see #13477)
+         * To leave caret in the beginning of the line. SetSelectionRange
+         * wouldn't work on IE (see #13477)
          */
         Direction previousDirection = tb.getDirection();
         tb.setDirection(Direction.RTL);
