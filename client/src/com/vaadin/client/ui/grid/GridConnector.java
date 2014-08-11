@@ -290,14 +290,14 @@ public class GridConnector extends AbstractHasComponentsConnector {
         for (RowState rowState : state.rows) {
             StaticRow<?> row = section.appendRow();
 
-            int diff = 1;
+            int selectionOffset = 1;
             if (getWidget().getSelectionModel() instanceof SelectionModel.None) {
-                diff = 0;
+                selectionOffset = 0;
             }
 
-            assert rowState.cells.size() == getWidget().getColumnCount() - diff;
+            assert rowState.cells.size() == getWidget().getColumnCount() - selectionOffset;
 
-            int i = 0;
+            int i = 0 + selectionOffset;
             for (CellState cellState : rowState.cells) {
                 StaticCell cell = row.getCell(i++);
                 switch (cellState.type) {
@@ -321,7 +321,7 @@ public class GridConnector extends AbstractHasComponentsConnector {
                 GridColumn<?, ?>[] columns = new GridColumn<?, ?>[group.size()];
                 i = 0;
                 for (Integer colIndex : group) {
-                    columns[i++] = getWidget().getColumn(diff + colIndex);
+                    columns[i++] = getWidget().getColumn(selectionOffset + colIndex);
                 }
                 row.join(columns);
             }
