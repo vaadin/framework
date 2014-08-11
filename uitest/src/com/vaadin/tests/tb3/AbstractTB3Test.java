@@ -238,6 +238,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
                 WebDriver dr = TestBench.createDriver(new RemoteWebDriver(
                         new URL(getHubURL()), capabilities));
                 setDriver(dr);
+                return;
             } catch (Exception e) {
                 System.err.println("Browser startup for " + capabilities
                         + " failed on attempt " + i + ": " + e.getMessage());

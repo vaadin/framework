@@ -1,9 +1,35 @@
 @mixin valotest {
   @include valo;
 
-  .valo-menu .v-checkbox {
-    margin: round($v-unit-size/2);
-    font-weight: 400;
+  #themeSelect {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    right: 0;
+    padding: 0 10px;
+    background-color: darken($v-app-background-color, 5%);
+    background-color: rgba(darken($v-app-background-color, 5%), .9);
+    color: valo-font-color($v-app-background-color);
+    border-radius: 0 0 0 $v-border-radius;
+
+    &:before {
+      content: "Theme:";
+    }
+
+    select {
+      background: transparent;
+      color: inherit;
+      border: none;
+      display: inline-block;
+    }
+  }
+
+  .v-ui {
+    @include width-range($max: 800px) {
+      #themeSelect {
+        top: $v-unit-size;
+      }
+    }
   }
 
   $color1: hsl(220, 5%, 38%);

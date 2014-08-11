@@ -47,9 +47,9 @@
                                 $shadow: $shadow,
 
                                 $states: $states);
-  //display: block; // Fixes extra white-space under the textarea element
   height: auto;
   resize: none;
+  white-space: pre-wrap; // Restore default, because .v-widget sets it to normal
 
   .v-ie8 &,
   .v-ie9 & {

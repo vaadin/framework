@@ -36,13 +36,14 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
+import com.vaadin.server.Responsive;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -53,6 +54,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.themes.ValoTheme;
 
 @Theme("tests-valo")
 @Title("Valo Theme Test")
@@ -74,6 +76,7 @@ public class ValoThemeUI extends UI {
     ValoMenuLayout root = new ValoMenuLayout();
     ComponentContainer viewDisplay = root.getContentContainer();
     CssLayout menu = new CssLayout();
+    CssLayout menuItemsLayout = new CssLayout();
     private Navigator navigator;
     private LinkedHashMap<String, String> menuItems = new LinkedHashMap<String, String>();
 
@@ -86,11 +89,12 @@ public class ValoThemeUI extends UI {
         // e.printStackTrace();
         // }
 
+        Responsive.makeResponsive(this);
+
         getPage().setTitle("Valo Theme Test");
         setContent(root);
         root.setWidth("100%");
 
-        root.addMenu(buildTestMenu());
         root.addMenu(buildMenu());
 
         navigator = new Navigator(this, viewDisplay);
@@ -131,13 +135,14 @@ public class ValoThemeUI extends UI {
 
             @Override
             public void afterViewChange(ViewChangeEvent event) {
-                for (Iterator<Component> it = menu.iterator(); it.hasNext();) {
+                for (Iterator<Component> it = menuItemsLayout.iterator(); it
+                        .hasNext();) {
                     it.next().removeStyleName("selected");
                 }
                 for (Entry<String, String> item : menuItems.entrySet()) {
                     if (event.getViewName().equals(item.getKey())) {
-                        for (Iterator<Component> it = menu.iterator(); it
-                                .hasNext();) {
+                        for (Iterator<Component> it = menuItemsLayout
+                                .iterator(); it.hasNext();) {
                             Component c = it.next();
                             if (c.getCaption() != null
                                     && c.getCaption().startsWith(
@@ -216,30 +221,43 @@ public class ValoThemeUI extends UI {
         menu.addComponent(top);
         menu.addComponent(createThemeSelect());
 
-        Label title = new Label("Vaadin<br><strong>Valo Theme Styles</strong>",
+        Button showMenu = new Button("Menu", new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                if (menu.getStyleName().contains("valo-menu-visible")) {
+                    menu.removeStyleName("valo-menu-visible");
+                } else {
+                    menu.addStyleName("valo-menu-visible");
+                }
+            }
+        });
+        showMenu.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        showMenu.addStyleName(ValoTheme.BUTTON_SMALL);
+        showMenu.addStyleName("valo-menu-toggle");
+        showMenu.setIcon(FontAwesome.LIST);
+        menu.addComponent(showMenu);
+
+        Label title = new Label("<h3>Vaadin <strong>Valo Theme</strong></h3>",
                 ContentMode.HTML);
         title.setSizeUndefined();
         top.addComponent(title);
         top.setExpandRatio(title, 1);
 
         MenuBar settings = new MenuBar();
-        MenuItem settingsItem = settings.addItem("", FontAwesome.COG, null);
-        settingsItem.setStyleName("icon-only");
+        settings.addStyleName("user-menu");
+        StringGenerator sg = new StringGenerator();
+        MenuItem settingsItem = settings.addItem(
+                sg.nextString(true) + " " + sg.nextString(true)
+                        + sg.nextString(false), new ThemeResource(
+                        "../tests-valo/img/profile-pic-300px.jpg"), null);
         settingsItem.addItem("Edit Profile", null);
         settingsItem.addItem("Preferences", null);
         settingsItem.addSeparator();
         settingsItem.addItem("Sign Out", null);
-        top.addComponent(settings);
+        menu.addComponent(settings);
 
-        final CheckBox enabled = new CheckBox("Enabled", true);
-        enabled.setDescription("Enable or disable the components on the right side");
-        menu.addComponent(enabled);
-        enabled.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                viewDisplay.setEnabled(enabled.getValue());
-            }
-        });
+        menuItemsLayout.setPrimaryStyleName("valo-menuitems");
+        menu.addComponent(menuItemsLayout);
 
         Label label = null;
         int count = -1;
@@ -249,7 +267,7 @@ public class ValoThemeUI extends UI {
                 label.setPrimaryStyleName("valo-menu-subtitle");
                 label.addStyleName("h4");
                 label.setSizeUndefined();
-                menu.addComponent(label);
+                menuItemsLayout.addComponent(label);
             }
             if (item.getKey().equals("panels")) {
                 label.setValue(label.getValue()
@@ -260,7 +278,7 @@ public class ValoThemeUI extends UI {
                 label.setPrimaryStyleName("valo-menu-subtitle");
                 label.addStyleName("h4");
                 label.setSizeUndefined();
-                menu.addComponent(label);
+                menuItemsLayout.addComponent(label);
             }
             if (item.getKey().equals("calendar")) {
                 label.setValue(label.getValue()
@@ -271,7 +289,7 @@ public class ValoThemeUI extends UI {
                 label.setPrimaryStyleName("valo-menu-subtitle");
                 label.addStyleName("h4");
                 label.setSizeUndefined();
-                menu.addComponent(label);
+                menuItemsLayout.addComponent(label);
             }
             Button b = new Button(item.getValue(), new ClickListener() {
                 @Override
@@ -286,7 +304,7 @@ public class ValoThemeUI extends UI {
             b.setHtmlContentAllowed(true);
             b.setPrimaryStyleName("valo-menu-item");
             b.setIcon(testIcon.get());
-            menu.addComponent(b);
+            menuItemsLayout.addComponent(b);
             count++;
         }
         label.setValue(label.getValue() + " <span class=\"valo-menu-badge\">"

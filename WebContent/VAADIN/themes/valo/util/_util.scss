@@ -25,3 +25,17 @@
   -webkit-touch-callout: none;
   cursor: pointer;
 }
+
+
+
+@mixin width-range($min: 0, $max: null) {
+  &[width-range~="#{$min}-#{$max}"] {
+    @content;
+  }
+}
+
+@mixin height-range($min: 0, $max: null) {
+  &[height-range~="#{$min}-#{$max}"] {
+    @content;
+  }
+}
