@@ -233,6 +233,15 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      */
     private void setupRemoteDriver(DesiredCapabilities capabilities)
             throws Exception {
+        if (BrowserUtil.isIE(capabilities)) {
+            capabilities.setCapability(
+                    InternetExplorerDriver.REQUIRE_WINDOW_FOCUS,
+                    requireWindowFocusForIE());
+            capabilities.setCapability(
+                    InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING,
+                    usePersistentHoverForIE());
+        }
+
         for (int i = 1; i <= BROWSER_INIT_ATTEMPTS; i++) {
             try {
                 WebDriver dr = TestBench.createDriver(new RemoteWebDriver(
@@ -1126,6 +1135,35 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
 
     private WebElement getDebugLogButton() {
         return findElement(By.xpath("//button[@title='Debug message log']"));
+    }
+
+    /**
+     * Should the "require window focus" be enabled for Internet Explorer.
+     * RequireWindowFocus makes tests more stable but seems to be broken with
+     * certain commands such as sendKeys. Therefore it is not enabled by default
+     * for all tests
+     * 
+     * @return true, to use the "require window focus" feature, false otherwise
+     */
+    protected boolean requireWindowFocusForIE() {
+        return false;
+    }
+
+    /**
+     * Should the "enable persistent hover" be enabled for Internet Explorer.
+     * 
+     * Persistent hovering causes continuous firing of mouse over events at the
+     * last location the mouse cursor has been moved to. This is to avoid
+     * problems where the real mouse cursor is inside the browser window and
+     * Internet Explorer uses that location for some undefined operation
+     * (http://
+     * jimevansmusic.blogspot.fi/2012/06/whats-wrong-with-internet-explorer
+     * .html)
+     * 
+     * @return true, to use the "persistent hover" feature, false otherwise
+     */
+    protected boolean usePersistentHoverForIE() {
+        return true;
     }
 
 }
