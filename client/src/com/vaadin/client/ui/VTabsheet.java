@@ -1280,6 +1280,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         if (event.getSource() instanceof Tab) {
             int keycode = event.getNativeEvent().getKeyCode();
 
+            // Scroll throw the tabs.
             if (!event.isAnyModifierKeyDown()) {
                 if (keycode == getPreviousTabKey()) {
                     selectPreviousTab();
@@ -1294,6 +1295,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                     }
                 } else if (keycode == getSelectTabKey()) {
                     loadTabSheet(focusedTabIndex);
+
+                    // Prevent the page from scrolling when hitting space
+                    // (select key) to select the current tab.
+                    event.preventDefault();
                 }
             }
         }
@@ -1307,8 +1312,17 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         return KeyCodes.KEY_LEFT;
     }
 
+    /**
+     * Gets the key to activate the selected tab when navigating using
+     * previous/next (left/right) keys.
+     * 
+     * @return the key to activate the selected tab.
+     * 
+     * @see #getNextTabKey()
+     * @see #getPreviousTabKey()
+     */
     protected int getSelectTabKey() {
-        return 32; // Space key
+        return KeyCodes.KEY_SPACE;
     }
 
     /**
