@@ -27,9 +27,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.ClientConnector;
@@ -42,6 +39,10 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.UI;
+
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.impl.JsonUtil;
 
 /**
  * Serializes pending server-side changes to UI state to JSON. This includes
@@ -70,11 +71,9 @@ public class UidlWriter implements Serializable {
      * 
      * @throws IOException
      *             If the writing fails.
-     * @throws JSONException
-     *             If the JSON serialization fails.
      */
     public void write(UI ui, Writer writer, boolean repaintAll, boolean async)
-            throws IOException, JSONException {
+            throws IOException {
         VaadinSession session = ui.getSession();
         VaadinService service = session.getService();
 
@@ -282,13 +281,13 @@ public class UidlWriter implements Serializable {
             // Include script dependencies in output if there are any
             if (!scriptDependencies.isEmpty()) {
                 writer.write(", \"scriptDependencies\": "
-                        + new JSONArray(scriptDependencies).toString());
+                        + JsonUtil.stringify(toJsonArray(scriptDependencies)));
             }
 
             // Include style dependencies in output if there are any
             if (!styleDependencies.isEmpty()) {
                 writer.write(", \"styleDependencies\": "
-                        + new JSONArray(styleDependencies).toString());
+                        + JsonUtil.stringify(toJsonArray(styleDependencies)));
             }
 
             session.getDragAndDropService().printJSONResponse(writer);
@@ -304,6 +303,15 @@ public class UidlWriter implements Serializable {
             uiConnectorTracker.setWritingResponse(false);
             uiConnectorTracker.cleanConnectorMap();
         }
+    }
+
+    private JsonArray toJsonArray(List<String> list) {
+        JsonArray result = Json.createArray();
+        for (int i = 0; i < list.size(); i++) {
+            result.set(i, list.get(i));
+        }
+
+        return result;
     }
 
     /**

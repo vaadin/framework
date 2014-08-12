@@ -21,13 +21,15 @@ import java.io.Serializable;
 import java.io.Writer;
 import java.util.Collection;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.ui.UI;
+
+import elemental.json.Json;
+import elemental.json.JsonException;
+import elemental.json.JsonObject;
+import elemental.json.impl.JsonUtil;
 
 /**
  * Serializes connector type mappings to JSON.
@@ -56,18 +58,18 @@ public class ConnectorTypeWriter implements Serializable {
         Collection<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
 
-        JSONObject connectorTypes = new JSONObject();
+        JsonObject connectorTypes = Json.createObject();
         for (ClientConnector connector : dirtyVisibleConnectors) {
             String connectorType = target.getTag(connector);
             try {
                 connectorTypes.put(connector.getConnectorId(), connectorType);
-            } catch (JSONException e) {
+            } catch (JsonException e) {
                 throw new PaintException(
                         "Failed to send connector type for connector "
                                 + connector.getConnectorId() + ": "
                                 + e.getMessage(), e);
             }
         }
-        writer.write(connectorTypes.toString());
+        writer.write(JsonUtil.stringify(connectorTypes));
     }
 }

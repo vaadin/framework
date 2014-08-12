@@ -25,9 +25,6 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceURL;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.vaadin.server.BootstrapHandler;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.VaadinPortlet;
@@ -39,6 +36,7 @@ import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
+import elemental.json.JsonObject;
 
 public class PortletBootstrapHandler extends BootstrapHandler {
     @Override
@@ -71,7 +69,7 @@ public class PortletBootstrapHandler extends BootstrapHandler {
 
     @Override
     protected void appendMainScriptTagContents(BootstrapContext context,
-            StringBuilder builder) throws JSONException, IOException {
+            StringBuilder builder) throws IOException {
         // fixed base theme to use - all portal pages with Vaadin
         // applications will load this exactly once
         String portalTheme = ((VaadinPortletRequest) context.getRequest())
@@ -94,9 +92,9 @@ public class PortletBootstrapHandler extends BootstrapHandler {
     }
 
     @Override
-    protected JSONObject getApplicationParameters(BootstrapContext context)
-            throws JSONException, PaintException {
-        JSONObject parameters = super.getApplicationParameters(context);
+    protected JsonObject getApplicationParameters(BootstrapContext context)
+            throws PaintException {
+        JsonObject parameters = super.getApplicationParameters(context);
         VaadinPortletResponse response = (VaadinPortletResponse) context
                 .getResponse();
         VaadinPortletRequest request = (VaadinPortletRequest) context

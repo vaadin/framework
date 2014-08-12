@@ -15,8 +15,8 @@ package com.vaadin.server;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,13 +24,14 @@ import java.util.Map;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.vaadin.server.JsonCodec.BeanProperty;
 import com.vaadin.shared.communication.UidlValue;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
+
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.JsonException;
+import elemental.json.JsonValue;
 
 /**
  * Tests for {@link JsonCodec}
@@ -39,7 +40,7 @@ import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
  * @since 7.0
  * 
  */
-public class JSONSerializerTest extends TestCase {
+public class JsonSerializerTest extends TestCase {
     HashMap<String, AbstractSplitPanelState> stringToStateMap;
     HashMap<AbstractSplitPanelState, String> stateToStringMap;
 
@@ -56,7 +57,7 @@ public class JSONSerializerTest extends TestCase {
         stringToStateMap.put("string - state 1", s);
         stringToStateMap.put("String - state 2", s2);
 
-        Object encodedMap = JsonCodec.encode(stringToStateMap, null, mapType,
+        JsonValue encodedMap = JsonCodec.encode(stringToStateMap, null, mapType,
                 null).getEncodedValue();
 
         ensureDecodedCorrectly(stringToStateMap, encodedMap, mapType);
@@ -73,15 +74,16 @@ public class JSONSerializerTest extends TestCase {
         stateToStringMap.put(s, "string - state 1");
         stateToStringMap.put(s2, "String - state 2");
 
-        Object encodedMap = JsonCodec.encode(stateToStringMap, null, mapType,
+        JsonValue encodedMap = JsonCodec.encode(stateToStringMap, null, mapType,
                 null).getEncodedValue();
 
         ensureDecodedCorrectly(stateToStringMap, encodedMap, mapType);
     }
 
-    public void testNullLegacyValue() throws JSONException {
-        JSONArray inputArray = new JSONArray(
-                Arrays.asList("n", JSONObject.NULL));
+    public void testNullLegacyValue() throws JsonException {
+        JsonArray inputArray = Json.createArray();
+        inputArray.set(0, "n");
+        inputArray.set(1, Json.createNull());
         UidlValue decodedObject = (UidlValue) JsonCodec.decodeInternalType(
                 UidlValue.class, true, inputArray, null);
         assertNull(decodedObject.getValue());
@@ -89,17 +91,19 @@ public class JSONSerializerTest extends TestCase {
 
     public void testNullTypeOtherValue() {
         try {
-            JSONArray inputArray = new JSONArray(Arrays.asList("n", "a"));
+            JsonArray inputArray = Json.createArray();
+            inputArray.set(0, "n");
+            inputArray.set(1, "a");
             UidlValue decodedObject = (UidlValue) JsonCodec.decodeInternalType(
                     UidlValue.class, true, inputArray, null);
 
-            throw new AssertionFailedError("No JSONException thrown");
-        } catch (JSONException e) {
+            throw new AssertionFailedError("No JsonException thrown");
+        } catch (JsonException e) {
             // Should throw exception
         }
     }
 
-    private void ensureDecodedCorrectly(Object original, Object encoded,
+    private void ensureDecodedCorrectly(Object original, JsonValue encoded,
             Type type) throws Exception {
         Object serverSideDecoded = JsonCodec.decodeInternalOrCustomType(type,
                 encoded, null);

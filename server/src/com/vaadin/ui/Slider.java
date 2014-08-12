@@ -16,8 +16,6 @@
 
 package com.vaadin.ui;
 
-import org.json.JSONException;
-
 import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.shared.ui.slider.SliderServerRpc;
 import com.vaadin.shared.ui.slider.SliderState;
@@ -42,12 +40,8 @@ public class Slider extends AbstractField<Double> {
              * 
              * See #12133.
              */
-            try {
-                getUI().getConnectorTracker().getDiffState(Slider.this)
-                        .put("value", value);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
+            getUI().getConnectorTracker().getDiffState(Slider.this)
+                    .put("value", value);
 
             try {
                 setValue(value, true);

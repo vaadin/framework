@@ -23,8 +23,6 @@ import java.net.URL;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.io.IOUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.server.VaadinRequest;
@@ -32,6 +30,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.JavaScriptFunction;
+import elemental.json.JsonArray;
 
 // Load vaadinPush.js so that jQueryVaadin is defined 
 @JavaScript("vaadin://vaadinPush.debug.js")
@@ -58,7 +57,7 @@ public class TrackMessageSizeUI extends AbstractTestUIWithLog {
         getPage().getJavaScript().addFunction("logToServer",
                 new JavaScriptFunction() {
                     @Override
-                    public void call(JSONArray arguments) throws JSONException {
+                    public void call(JsonArray arguments) {
                         String message = arguments.getString(0);
                         log(message);
                     }

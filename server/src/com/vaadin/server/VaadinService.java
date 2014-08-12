@@ -48,9 +48,6 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.VaadinSession.FutureAccess;
@@ -66,6 +63,11 @@ import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
+
+import elemental.json.Json;
+import elemental.json.JsonException;
+import elemental.json.JsonObject;
+import elemental.json.impl.JsonUtil;
 
 /**
  * Provide deployment specific settings that are required outside terminal
@@ -1574,22 +1576,22 @@ public abstract class VaadinService implements Serializable {
                 message += "<br/><br/>" + details;
             }
 
-            JSONObject appError = new JSONObject();
+            JsonObject appError = Json.createObject();
             appError.put("caption", caption);
             appError.put("message", message);
             appError.put("url", url);
 
-            JSONObject meta = new JSONObject();
+            JsonObject meta = Json.createObject();
             meta.put("appError", appError);
 
-            JSONObject json = new JSONObject();
-            json.put("changes", new JSONObject());
-            json.put("resources", new JSONObject());
-            json.put("locales", new JSONObject());
+            JsonObject json = Json.createObject();
+            json.put("changes", Json.createObject());
+            json.put("resources", Json.createObject());
+            json.put("locales", Json.createObject());
             json.put("meta", meta);
             json.put(ApplicationConstants.SERVER_SYNC_ID, -1);
-            returnString = json.toString();
-        } catch (JSONException e) {
+            returnString = JsonUtil.stringify(json);
+        } catch (JsonException e) {
             getLogger().log(Level.WARNING,
                     "Error creating critical notification JSON message", e);
         }

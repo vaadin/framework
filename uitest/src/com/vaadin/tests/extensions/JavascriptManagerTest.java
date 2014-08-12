@@ -16,15 +16,14 @@
 
 package com.vaadin.tests.extensions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.JavaScriptFunction;
+
+import elemental.json.JsonArray;
+import elemental.json.JsonNull;
 
 public class JavascriptManagerTest extends AbstractTestUI {
 
@@ -36,14 +35,14 @@ public class JavascriptManagerTest extends AbstractTestUI {
         final JavaScript js = JavaScript.getCurrent();
         js.addFunction("testing.doTest", new JavaScriptFunction() {
             @Override
-            public void call(JSONArray arguments) throws JSONException {
+            public void call(JsonArray arguments) {
                 log.log("Got " + arguments.length() + " arguments");
-                log.log("Argument 1 as a number: " + arguments.getInt(0));
+                log.log("Argument 1 as a number: " + (int) arguments.getNumber(0));
                 log.log("Argument 2 as a string: " + arguments.getString(1));
                 log.log("Argument 3.p as a boolean: "
-                        + arguments.getJSONObject(2).getBoolean("p"));
+                        + arguments.getObject(2).getBoolean("p"));
                 log.log("Argument 4 is JSONObject.NULL: "
-                        + (arguments.get(3) == JSONObject.NULL));
+                        + (arguments.get(3) instanceof JsonNull));
                 js.removeFunction("testing.doTest");
             }
         });

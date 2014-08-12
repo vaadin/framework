@@ -18,29 +18,31 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 
-public class EncodeResult implements Serializable {
-    private final Object encodedValue;
-    private final Object diff;
+import elemental.json.JsonValue;
 
-    public EncodeResult(Object encodedValue) {
+public class EncodeResult implements Serializable {
+    private final JsonValue encodedValue;
+    private final JsonValue diff;
+
+    public EncodeResult(JsonValue encodedValue) {
         this(encodedValue, null);
     }
 
-    public EncodeResult(Object encodedValue, Object diff) {
+    public EncodeResult(JsonValue encodedValue, JsonValue diff) {
         this.encodedValue = encodedValue;
         this.diff = diff;
     }
 
-    public Object getEncodedValue() {
+    public JsonValue getEncodedValue() {
         return encodedValue;
     }
 
-    public Object getDiff() {
+    public JsonValue getDiff() {
         return diff;
     }
 
-    public Object getDiffOrValue() {
-        Object diff = getDiff();
+    public JsonValue getDiffOrValue() {
+        JsonValue diff = getDiff();
         if (diff != null) {
             return diff;
         } else {

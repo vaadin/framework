@@ -20,13 +20,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptFunction;
 import com.vaadin.ui.Notification;
+import elemental.json.JsonArray;
 
 @JavaScript({
         "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
@@ -42,9 +40,9 @@ public class Flot extends AbstractJavaScriptComponent {
         });
         addFunction("onPlotClick", new JavaScriptFunction() {
             @Override
-            public void call(JSONArray arguments) throws JSONException {
-                int seriesIndex = arguments.getInt(0);
-                int dataIndex = arguments.getInt(1);
+            public void call(JsonArray arguments) {
+                int seriesIndex = (int) arguments.getNumber(0);
+                int dataIndex = (int) arguments.getNumber(1);
                 Notification.show("Clicked on [" + seriesIndex + ", "
                         + dataIndex + "]");
             }

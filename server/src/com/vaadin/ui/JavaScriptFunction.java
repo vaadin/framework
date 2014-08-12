@@ -18,14 +18,12 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import com.vaadin.server.AbstractJavaScriptExtension;
+import elemental.json.JsonArray;
 
 /**
  * Defines a method that is called by a client-side JavaScript function. When
- * the corresponding JavaScript function is called, the {@link #call(JSONArray)}
+ * the corresponding JavaScript function is called, the {@link #call(JsonArray)}
  * method is invoked.
  * 
  * @see JavaScript#addFunction(String, JavaScriptCallback)
@@ -46,8 +44,6 @@ public interface JavaScriptFunction extends Serializable {
      * @param arguments
      *            an array with JSON representations of the arguments with which
      *            the JavaScript function was called.
-     * @throws JSONException
-     *             if the arguments can not be interpreted
      */
-    public void call(JSONArray arguments) throws JSONException;
+    public void call(JsonArray arguments);
 }

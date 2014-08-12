@@ -21,22 +21,23 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 import junit.framework.TestCase;
-
-import org.json.JSONArray;
 
 import com.vaadin.server.ClientMethodInvocation;
 import com.vaadin.server.JavaScriptCallbackHelper;
 import com.vaadin.ui.JavaScript.JavaScriptCallbackRpc;
 import com.vaadin.util.ReflectTools;
 
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.impl.JsonUtil;
+
 public class TestClientMethodSerialization extends TestCase {
 
     private static final Method JAVASCRIPT_CALLBACK_METHOD = ReflectTools
             .findMethod(JavaScriptCallbackRpc.class, "call", String.class,
-                    JSONArray.class);
+                    JsonArray.class);
 
     private static final Method BASIC_PARAMS_CALL_METHOD = ReflectTools
             .findMethod(TestClientMethodSerialization.class,
@@ -60,15 +61,17 @@ public class TestClientMethodSerialization extends TestCase {
      */
     public void testClientMethodSerialization_WithJSONArray_ContentStaysSame()
             throws Exception {
-        JSONArray originalArray = new JSONArray(Arrays.asList(
-                "callbackParameter1", "callBackParameter2", "12345"));
+        JsonArray originalArray = Json.createArray();
+        originalArray.set(0, "callbackParameter1");
+        originalArray.set(1, "callBackParameter2");
+        originalArray.set(2, "12345");
         ClientMethodInvocation original = new ClientMethodInvocation(null,
                 "interfaceName", JAVASCRIPT_CALLBACK_METHOD, new Object[] {
                         "callBackMethodName", originalArray });
 
         ClientMethodInvocation copy = (ClientMethodInvocation) serializeAndDeserialize(original);
-        JSONArray copyArray = (JSONArray) copy.getParameters()[1];
-        assertEquals(originalArray.toString(), copyArray.toString());
+        JsonArray copyArray = (JsonArray) copy.getParameters()[1];
+        assertEquals(JsonUtil.stringify(originalArray), JsonUtil.stringify(copyArray));
     }
 
     public void testClientMethodSerialization_WithBasicParams_NoChanges()

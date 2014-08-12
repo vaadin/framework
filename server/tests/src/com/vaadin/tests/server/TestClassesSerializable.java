@@ -51,7 +51,7 @@ public class TestClassesSerializable extends TestCase {
             "com\\.vaadin\\.server\\.communication\\.PushRequestHandler.*",
             "com\\.vaadin\\.server\\.communication\\.PushHandler.*", // PushHandler
             "com\\.vaadin\\.server\\.communication\\.DateSerializer", //
-            "com\\.vaadin\\.server\\.communication\\.JSONSerializer", //
+            "com\\.vaadin\\.server\\.communication\\.JsonSerializer", //
             // and its inner classes do not need to be serializable
             "com\\.vaadin\\.util\\.SerializerHelper", // fully static
             // class level filtering, also affecting nested classes and

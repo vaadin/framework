@@ -27,9 +27,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.vaadin.server.ClientConnector.ConnectorErrorEvent;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JavaScriptConnectorState;
@@ -39,6 +36,9 @@ import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.SelectiveRenderer;
 import com.vaadin.ui.UI;
+
+import elemental.json.JsonObject;
+import elemental.json.JsonValue;
 
 /**
  * This is a common base class for the server-side implementations of the
@@ -85,12 +85,11 @@ public class LegacyCommunicationManager implements Serializable {
      * @deprecated As of 7.1. See #11411.
      */
     @Deprecated
-    public static JSONObject encodeState(ClientConnector connector,
-            SharedState state) throws JSONException {
+    public static JsonObject encodeState(ClientConnector connector, SharedState state) {
         UI uI = connector.getUI();
         ConnectorTracker connectorTracker = uI.getConnectorTracker();
         Class<? extends SharedState> stateType = connector.getStateType();
-        Object diffState = connectorTracker.getDiffState(connector);
+        JsonValue diffState = connectorTracker.getDiffState(connector);
         boolean supportsDiffState = !JavaScriptConnectorState.class
                 .isAssignableFrom(stateType);
         if (diffState == null && supportsDiffState) {
@@ -113,9 +112,9 @@ public class LegacyCommunicationManager implements Serializable {
                 stateType, uI.getConnectorTracker());
         if (supportsDiffState) {
             connectorTracker.setDiffState(connector,
-                    (JSONObject) encodeResult.getEncodedValue());
+                    (JsonObject) encodeResult.getEncodedValue());
         }
-        return (JSONObject) encodeResult.getDiff();
+        return (JsonObject) encodeResult.getDiff();
     }
 
     /**

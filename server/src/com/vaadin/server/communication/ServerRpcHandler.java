@@ -28,10 +28,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.LegacyCommunicationManager;
@@ -52,6 +48,12 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.UI;
 
+import elemental.json.JsonArray;
+import elemental.json.JsonException;
+import elemental.json.JsonObject;
+import elemental.json.JsonValue;
+import elemental.json.impl.JsonUtil;
+
 /**
  * Handles a client-to-server message containing serialized {@link ServerRpc
  * server RPC} invocations.
@@ -71,28 +73,31 @@ public class ServerRpcHandler implements Serializable {
     public static class RpcRequest implements Serializable {
 
         private final String csrfToken;
-        private final JSONArray invocations;
+        private final JsonArray invocations;
         private final int syncId;
-        private final JSONObject json;
+        private final JsonObject json;
 
-        public RpcRequest(String jsonString, VaadinRequest request)
-                throws JSONException {
-            json = new JSONObject(jsonString);
+        public RpcRequest(String jsonString, VaadinRequest request) {
+            json = JsonUtil.parse(jsonString);
 
-            String csrfToken = json.optString(ApplicationConstants.CSRF_TOKEN);
-            if (csrfToken.equals("")) {
-                csrfToken = ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE;
+            JsonValue token = json.get(ApplicationConstants.CSRF_TOKEN);
+            if (token == null) {
+                this.csrfToken = ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE;
+            } else {
+                String csrfToken = token.asString();
+                if (csrfToken.equals("")) {
+                    csrfToken = ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE;
+                }
+                this.csrfToken = csrfToken;
             }
-            this.csrfToken = csrfToken;
 
             if (request.getService().getDeploymentConfiguration()
                     .isSyncIdCheckEnabled()) {
-                syncId = json.getInt(ApplicationConstants.SERVER_SYNC_ID);
+                syncId = (int) json.getNumber(ApplicationConstants.SERVER_SYNC_ID);
             } else {
                 syncId = -1;
             }
-            invocations = json
-                    .getJSONArray(ApplicationConstants.RPC_INVOCATIONS);
+            invocations = json.getArray(ApplicationConstants.RPC_INVOCATIONS);
         }
 
         /**
@@ -110,7 +115,7 @@ public class ServerRpcHandler implements Serializable {
          * @return the data describing which RPC should be made, and all their
          *         data
          */
-        public JSONArray getRpcInvocationsData() {
+        public JsonArray getRpcInvocationsData() {
             return invocations;
         }
 
@@ -134,7 +139,7 @@ public class ServerRpcHandler implements Serializable {
          * @return the raw JSON object that was received from the client
          *
          */
-        public JSONObject getRawJson() {
+        public JsonObject getRawJson() {
             return json;
         }
     }
@@ -155,11 +160,9 @@ public class ServerRpcHandler implements Serializable {
      * @throws InvalidUIDLSecurityKeyException
      *             If the received security key does not match the one stored in
      *             the session.
-     * @throws JSONException
-     *             If deserializing the JSON fails.
      */
     public void handleRpc(UI ui, Reader reader, VaadinRequest request)
-            throws IOException, InvalidUIDLSecurityKeyException, JSONException {
+            throws IOException, InvalidUIDLSecurityKeyException {
         ui.getSession().setLastRequestTimestamp(System.currentTimeMillis());
 
         String changeMessage = getMessage(reader);
@@ -205,7 +208,7 @@ public class ServerRpcHandler implements Serializable {
      *            requested RPC calls.
      */
     private void handleInvocations(UI uI, int lastSyncIdSeenByClient,
-            JSONArray invocationsData) {
+            JsonArray invocationsData) {
         // TODO PUSH Refactor so that this is not needed
         LegacyCommunicationManager manager = uI.getSession()
                 .getCommunicationManager();
@@ -314,7 +317,7 @@ public class ServerRpcHandler implements Serializable {
                     }
                 }
             }
-        } catch (JSONException e) {
+        } catch (JsonException e) {
             getLogger().warning(
                     "Unable to parse RPC call from the client: "
                             + e.getMessage());
@@ -334,11 +337,10 @@ public class ServerRpcHandler implements Serializable {
      *            the most recent sync id the client has seen at the time the
      *            request was sent
      * @return list of MethodInvocation to perform
-     * @throws JSONException
      */
     private List<MethodInvocation> parseInvocations(
-            ConnectorTracker connectorTracker, JSONArray invocationsJson,
-            int lastSyncIdSeenByClient) throws JSONException {
+            ConnectorTracker connectorTracker, JsonArray invocationsJson,
+            int lastSyncIdSeenByClient) {
         int invocationCount = invocationsJson.length();
         ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>(
                 invocationCount);
@@ -347,7 +349,7 @@ public class ServerRpcHandler implements Serializable {
         // parse JSON to MethodInvocations
         for (int i = 0; i < invocationCount; ++i) {
 
-            JSONArray invocationJson = invocationsJson.getJSONArray(i);
+            JsonArray invocationJson = invocationsJson.getArray(i);
 
             MethodInvocation invocation = parseInvocation(invocationJson,
                     previousInvocation, connectorTracker,
@@ -363,17 +365,15 @@ public class ServerRpcHandler implements Serializable {
         return invocations;
     }
 
-    private MethodInvocation parseInvocation(JSONArray invocationJson,
+    private MethodInvocation parseInvocation(JsonArray invocationJson,
             MethodInvocation previousInvocation,
-            ConnectorTracker connectorTracker, long lastSyncIdSeenByClient)
-            throws JSONException {
+            ConnectorTracker connectorTracker, long lastSyncIdSeenByClient) {
         String connectorId = invocationJson.getString(0);
         String interfaceName = invocationJson.getString(1);
         String methodName = invocationJson.getString(2);
 
         if (connectorTracker.getConnector(connectorId) == null
-                && !connectorId
-                        .equals(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID)) {
+                && !connectorId.equals(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID)) {
 
             if (!connectorTracker.connectorWasPresentAsRequestWasSent(
                     connectorId, lastSyncIdSeenByClient)) {
@@ -393,7 +393,7 @@ public class ServerRpcHandler implements Serializable {
             return null;
         }
 
-        JSONArray parametersJson = invocationJson.getJSONArray(3);
+        JsonArray parametersJson = invocationJson.getArray(3);
 
         if (LegacyChangeVariablesInvocation.isLegacyVariableChange(
                 interfaceName, methodName)) {
@@ -415,10 +415,9 @@ public class ServerRpcHandler implements Serializable {
     private LegacyChangeVariablesInvocation parseLegacyChangeVariablesInvocation(
             String connectorId, String interfaceName, String methodName,
             LegacyChangeVariablesInvocation previousInvocation,
-            JSONArray parametersJson, ConnectorTracker connectorTracker)
-            throws JSONException {
+            JsonArray parametersJson, ConnectorTracker connectorTracker) {
         if (parametersJson.length() != 2) {
-            throw new JSONException(
+            throw new JsonException(
                     "Invalid parameters in legacy change variables call. Expected 2, was "
                             + parametersJson.length());
         }
@@ -440,8 +439,8 @@ public class ServerRpcHandler implements Serializable {
 
     private ServerRpcMethodInvocation parseServerRpcInvocation(
             String connectorId, String interfaceName, String methodName,
-            JSONArray parametersJson, ConnectorTracker connectorTracker)
-            throws JSONException {
+            JsonArray parametersJson, ConnectorTracker connectorTracker)
+            throws JsonException {
         ClientConnector connector = connectorTracker.getConnector(connectorId);
 
         ServerRpcManager<?> rpcManager = connector.getRpcManager(interfaceName);
@@ -471,7 +470,7 @@ public class ServerRpcHandler implements Serializable {
                 .getGenericParameterTypes();
 
         for (int j = 0; j < parametersJson.length(); ++j) {
-            Object parameterValue = parametersJson.get(j);
+            JsonValue parameterValue = parametersJson.get(j);
             Type parameterType = declaredRpcMethodParameterTypes[j];
             parameters[j] = JsonCodec.decodeInternalOrCustomType(parameterType,
                     parameterValue, connectorTracker);

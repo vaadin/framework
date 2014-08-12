@@ -19,6 +19,8 @@ import java.lang.reflect.Type;
 import java.util.Date;
 
 import com.vaadin.ui.ConnectorTracker;
+import elemental.json.Json;
+import elemental.json.JsonValue;
 
 /**
  * Server side serializer/deserializer for java.util.Date
@@ -26,17 +28,17 @@ import com.vaadin.ui.ConnectorTracker;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class DateSerializer implements JSONSerializer<Date> {
+public class DateSerializer implements JsonSerializer<Date> {
 
     @Override
-    public Date deserialize(Type type, Object jsonValue,
+    public Date deserialize(Type type, JsonValue jsonValue,
             ConnectorTracker connectorTracker) {
-        return new Date(Long.valueOf(String.valueOf(jsonValue)));
+        return new Date((long) jsonValue.asNumber());
     }
 
     @Override
-    public Object serialize(Date value, ConnectorTracker connectorTracker) {
-        return value.getTime();
+    public JsonValue serialize(Date value, ConnectorTracker connectorTracker) {
+        return Json.create(value.getTime());
     }
 
 }
