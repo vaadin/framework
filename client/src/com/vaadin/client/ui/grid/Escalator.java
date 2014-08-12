@@ -39,6 +39,9 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.TableCellElement;
+import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
@@ -1063,7 +1066,7 @@ public class Escalator extends Widget {
          * The table section element ({@code <thead>}, {@code <tbody>} or
          * {@code <tfoot>}) the rows (i.e. {@code <tr>} tags) are contained in.
          */
-        protected final Element root;
+        protected final TableSectionElement root;
 
         /** The height of the combined rows in the DOM. */
         protected double heightOfSection = -1;
@@ -1085,13 +1088,14 @@ public class Escalator extends Widget {
          *             {@link #removeRowPosition(Element)} instead.
          */
         @Deprecated
-        private final Map<Element, Integer> rowTopPositionMap = new HashMap<Element, Integer>();
+        private final Map<TableRowElement, Integer> rowTopPositionMap = new HashMap<TableRowElement, Integer>();
 
         private boolean defaultRowHeightShouldBeAutodetected = true;
 
         private int defaultRowHeight = INITIAL_DEFAULT_ROW_HEIGHT;
 
-        public AbstractRowContainer(final Element rowContainerElement) {
+        public AbstractRowContainer(
+                final TableSectionElement rowContainerElement) {
             root = rowContainerElement;
         }
 
@@ -1194,7 +1198,7 @@ public class Escalator extends Widget {
          * @param tr
          *            the row element to remove.
          */
-        protected void paintRemoveRow(final Element tr,
+        protected void paintRemoveRow(final TableRowElement tr,
                 final int logicalRowIndex) {
 
             flyweightRow.setup(tr, logicalRowIndex,
@@ -1282,11 +1286,11 @@ public class Escalator extends Widget {
          *            the number of rows to insert
          * @return a list of the added row elements
          */
-        protected List<Element> paintInsertRows(final int visualIndex,
+        protected List<TableRowElement> paintInsertRows(final int visualIndex,
                 final int numberOfRows) {
             assert isAttached() : "Can't paint rows if Escalator is not attached";
 
-            final List<Element> addedRows = new ArrayList<Element>();
+            final List<TableRowElement> addedRows = new ArrayList<TableRowElement>();
 
             if (numberOfRows < 1) {
                 return addedRows;
@@ -1303,15 +1307,15 @@ public class Escalator extends Widget {
 
             for (int row = visualIndex; row < visualIndex + numberOfRows; row++) {
                 final int rowHeight = getDefaultRowHeight();
-                final Element tr = DOM.createTR();
+                final TableRowElement tr = TableRowElement.as(DOM.createTR());
                 addedRows.add(tr);
                 tr.addClassName(getStylePrimaryName() + "-row");
 
                 for (int col = 0; col < columnConfiguration.getColumnCount(); col++) {
                     final int colWidth = columnConfiguration
                             .getColumnWidthActual(col);
-                    final Element cellElem = createCellElement(rowHeight,
-                            colWidth);
+                    final TableCellElement cellElem = createCellElement(
+                            rowHeight, colWidth);
                     tr.appendChild(cellElem);
 
                     // Set stylename and position if new cell is frozen
@@ -1346,8 +1350,8 @@ public class Escalator extends Widget {
          *            the logical index of the inserted row
          * @return the inserted row to be used as the new reference
          */
-        protected Node paintInsertRow(Node referenceRow, final Element tr,
-                int logicalRowIndex) {
+        protected Node paintInsertRow(Node referenceRow,
+                final TableRowElement tr, int logicalRowIndex) {
             flyweightRow.setup(tr, logicalRowIndex,
                     columnConfiguration.getCalculatedColumnWidths());
 
@@ -1431,7 +1435,7 @@ public class Escalator extends Widget {
                  * refreshRowPositions() as needed
                  */
                 for (int row = index; row < index + numberOfRows; row++) {
-                    final Node tr = getTrByVisualIndex(row);
+                    final TableRowElement tr = getTrByVisualIndex(row);
                     refreshRow(tr, row);
                 }
             }
@@ -1439,8 +1443,8 @@ public class Escalator extends Widget {
             Profiler.leave("Escalator.AbstractRowContainer.refreshRows");
         }
 
-        void refreshRow(final Node tr, final int logicalRowIndex) {
-            flyweightRow.setup((Element) tr, logicalRowIndex,
+        void refreshRow(final TableRowElement tr, final int logicalRowIndex) {
+            flyweightRow.setup(tr, logicalRowIndex,
                     columnConfiguration.getCalculatedColumnWidths());
             updater.update(flyweightRow, flyweightRow.getCells());
 
@@ -1462,8 +1466,10 @@ public class Escalator extends Widget {
          * @return a set-up empty cell element
          */
         @SuppressWarnings("hiding")
-        public Element createCellElement(final int height, final int width) {
-            final Element cellElem = DOM.createElement(getCellElementTagName());
+        public TableCellElement createCellElement(final int height,
+                final int width) {
+            final TableCellElement cellElem = TableCellElement.as(DOM
+                    .createElement(getCellElementTagName()));
             cellElem.getStyle().setHeight(height, Unit.PX);
             cellElem.getStyle().setWidth(width, Unit.PX);
             cellElem.addClassName(getStylePrimaryName() + "-cell");
@@ -1471,7 +1477,7 @@ public class Escalator extends Widget {
         }
 
         @Override
-        public Element getRowElement(int index) {
+        public TableRowElement getRowElement(int index) {
             return getTrByVisualIndex(index);
         }
 
@@ -1484,7 +1490,7 @@ public class Escalator extends Widget {
          * @throws IndexOutOfBoundsException
          *             if {@code index} is not valid within {@link #root}
          */
-        protected abstract Element getTrByVisualIndex(int index)
+        protected abstract TableRowElement getTrByVisualIndex(int index)
                 throws IndexOutOfBoundsException;
 
         protected void paintRemoveColumns(final int offset,
@@ -1493,7 +1499,7 @@ public class Escalator extends Widget {
             final NodeList<Node> childNodes = root.getChildNodes();
             for (int visualRowIndex = 0; visualRowIndex < childNodes
                     .getLength(); visualRowIndex++) {
-                final Element tr = getTrByVisualIndex(visualRowIndex);
+                final TableRowElement tr = getTrByVisualIndex(visualRowIndex);
 
                 flyweightRow.setup(tr, visualRowIndex,
                         columnConfiguration.getCalculatedColumnWidths());
@@ -1561,7 +1567,7 @@ public class Escalator extends Widget {
             final NodeList<Node> childNodes = root.getChildNodes();
 
             for (int row = 0; row < childNodes.getLength(); row++) {
-                final Element tr = getTrByVisualIndex(row);
+                final TableRowElement tr = getTrByVisualIndex(row);
                 paintInsertCells(tr, row, offset, numberOfColumns);
             }
             reapplyRowWidths();
@@ -1619,8 +1625,8 @@ public class Escalator extends Widget {
          * @param numberOfCells
          *            the number of cells to insert
          */
-        private void paintInsertCells(final Element tr, int logicalRowIndex,
-                final int offset, final int numberOfCells) {
+        private void paintInsertCells(final TableRowElement tr,
+                int logicalRowIndex, final int offset, final int numberOfCells) {
 
             assert Document.get().isOrHasChild(tr) : "The row must be attached to the document";
 
@@ -1634,7 +1640,8 @@ public class Escalator extends Widget {
             for (FlyweightCell cell : cells) {
                 final int colWidth = columnConfiguration
                         .getColumnWidthActual(cell.getColumn());
-                final Element cellElem = createCellElement(rowHeight, colWidth);
+                final TableCellElement cellElem = createCellElement(rowHeight,
+                        colWidth);
                 cell.setElement(cellElem);
             }
 
@@ -1657,12 +1664,12 @@ public class Escalator extends Widget {
         }
 
         public void setColumnFrozen(int column, boolean frozen) {
-            final NodeList<Node> childNodes = root.getChildNodes();
+            final NodeList<TableRowElement> childRows = root.getRows();
 
-            for (int row = 0; row < childNodes.getLength(); row++) {
-                final Element tr = childNodes.getItem(row).cast();
+            for (int row = 0; row < childRows.getLength(); row++) {
+                final TableRowElement tr = childRows.getItem(row);
 
-                Element cell = (Element) tr.getChild(column);
+                TableCellElement cell = tr.getCells().getItem(column);
                 if (frozen) {
                     cell.addClassName("frozen");
                 } else {
@@ -1677,12 +1684,12 @@ public class Escalator extends Widget {
         }
 
         public void updateFreezePosition(int column, double scrollLeft) {
-            final NodeList<Node> childNodes = root.getChildNodes();
+            final NodeList<TableRowElement> childRows = root.getRows();
 
-            for (int row = 0; row < childNodes.getLength(); row++) {
-                final Element tr = childNodes.getItem(row).cast();
+            for (int row = 0; row < childRows.getLength(); row++) {
+                final TableRowElement tr = childRows.getItem(row);
 
-                Element cell = (Element) tr.getChild(column);
+                TableCellElement cell = tr.getCells().getItem(column);
                 position.set(cell, scrollLeft, 0);
             }
         }
@@ -1696,16 +1703,17 @@ public class Escalator extends Widget {
          * @return the pixel width of the widest element in the indicated column
          */
         public int calculateMaxColWidth(int index) {
-            Element row = root.getFirstChildElement();
+            TableRowElement row = TableRowElement.as(root
+                    .getFirstChildElement());
             int maxWidth = 0;
             while (row != null) {
-                final Element cell = (Element) row.getChild(index);
+                final TableCellElement cell = row.getCells().getItem(index);
                 final boolean isVisible = !cell.getStyle().getDisplay()
                         .equals(Display.NONE.getCssName());
                 if (isVisible) {
                     maxWidth = Math.max(maxWidth, cell.getScrollWidth());
                 }
-                row = row.getNextSiblingElement();
+                row = TableRowElement.as(row.getNextSiblingElement());
             }
             return maxWidth;
         }
@@ -1789,19 +1797,16 @@ public class Escalator extends Widget {
             this.primaryStyleName = primaryStyleName;
 
             // Update already rendered rows and cells
-            Node row = root.getFirstChild();
+            TableRowElement row = root.getRows().getItem(0);
             while (row != null) {
-                Element rowElement = row.cast();
-                UIObject.setStylePrimaryName(rowElement, primaryStyleName
-                        + "-row");
-                Node cell = row.getFirstChild();
+                UIObject.setStylePrimaryName(row, primaryStyleName + "-row");
+                TableCellElement cell = row.getCells().getItem(0);
                 while (cell != null) {
-                    Element cellElement = cell.cast();
-                    UIObject.setStylePrimaryName(cellElement, primaryStyleName
+                    UIObject.setStylePrimaryName(cell, primaryStyleName
                             + "-cell");
-                    cell = cell.getNextSibling();
+                    cell = TableCellElement.as(cell.getNextSiblingElement());
                 }
-                row = row.getNextSibling();
+                row = TableRowElement.as(row.getNextSiblingElement());
             }
         }
 
@@ -1843,8 +1848,9 @@ public class Escalator extends Widget {
          */
         protected abstract void reapplyDefaultRowHeights();
 
-        protected void reapplyRowHeight(final Element tr, final int heightPx) {
-            Element cellElem = tr.getFirstChildElement().cast();
+        protected void reapplyRowHeight(final TableRowElement tr,
+                final int heightPx) {
+            Element cellElem = tr.getFirstChildElement();
             while (cellElem != null) {
                 cellElem.getStyle().setHeight(heightPx, Unit.PX);
                 cellElem = cellElem.getNextSiblingElement();
@@ -1857,17 +1863,18 @@ public class Escalator extends Widget {
         }
 
         @SuppressWarnings("boxing")
-        protected void setRowPosition(final Element tr, final int x, final int y) {
+        protected void setRowPosition(final TableRowElement tr, final int x,
+                final int y) {
             position.set(tr, x, y);
             rowTopPositionMap.put(tr, y);
         }
 
         @SuppressWarnings("boxing")
-        protected int getRowTop(final Element tr) {
+        protected int getRowTop(final TableRowElement tr) {
             return rowTopPositionMap.get(tr);
         }
 
-        protected void removeRowPosition(Element tr) {
+        protected void removeRowPosition(TableRowElement tr) {
             rowTopPositionMap.remove(tr);
         }
 
@@ -1903,7 +1910,7 @@ public class Escalator extends Widget {
         }
 
         @Override
-        public Cell getCell(Element element) {
+        public Cell getCell(final Element element) {
             if (element == null) {
                 throw new IllegalArgumentException("Element cannot be null");
             }
@@ -1922,48 +1929,51 @@ public class Escalator extends Widget {
              * Ensure element is the cell element by iterating up the DOM
              * hierarchy until reaching cell element.
              */
-            while (element.getParentElement().getParentElement() != root) {
-                element = element.getParentElement();
+            Element cellElementCandidate = element;
+            while (cellElementCandidate.getParentElement().getParentElement() != root) {
+                cellElementCandidate = cellElementCandidate.getParentElement();
             }
+            final TableCellElement cellElement = TableCellElement
+                    .as(cellElementCandidate);
 
             // Find dom column
             int domColumnIndex = -1;
-            for (Element e = element; e != null; e = e
+            for (Element e = cellElement; e != null; e = e
                     .getPreviousSiblingElement()) {
                 domColumnIndex++;
             }
 
             // Find dom row
             int domRowIndex = -1;
-            for (Element e = element.getParentElement(); e != null; e = e
+            for (Element e = cellElement.getParentElement(); e != null; e = e
                     .getPreviousSiblingElement()) {
                 domRowIndex++;
             }
 
-            return new Cell(domRowIndex, domColumnIndex, element);
+            return new Cell(domRowIndex, domColumnIndex, cellElement);
         }
     }
 
     private abstract class AbstractStaticRowContainer extends
             AbstractRowContainer {
-        public AbstractStaticRowContainer(final Element headElement) {
+        public AbstractStaticRowContainer(final TableSectionElement headElement) {
             super(headElement);
         }
 
         @Override
         protected void paintRemoveRows(final int index, final int numberOfRows) {
             for (int i = index; i < index + numberOfRows; i++) {
-                final Element tr = (Element) root.getChild(index);
+                final TableRowElement tr = root.getRows().getItem(index);
                 paintRemoveRow(tr, index);
             }
             recalculateSectionHeight();
         }
 
         @Override
-        protected Element getTrByVisualIndex(final int index)
+        protected TableRowElement getTrByVisualIndex(final int index)
                 throws IndexOutOfBoundsException {
             if (index >= 0 && index < root.getChildCount()) {
-                return (Element) root.getChild(index);
+                return root.getRows().getItem(index);
             } else {
                 throw new IndexOutOfBoundsException("No such visual index: "
                         + index);
@@ -1992,10 +2002,10 @@ public class Escalator extends Widget {
 
             Profiler.enter("Escalator.AbstractStaticRowContainer.reapplyDefaultRowHeights");
 
-            Element tr = root.getFirstChildElement().cast();
+            TableRowElement tr = root.getRows().getItem(0);
             while (tr != null) {
                 reapplyRowHeight(tr, getDefaultRowHeight());
-                tr = tr.getNextSiblingElement();
+                tr = TableRowElement.as(tr.getNextSiblingElement());
             }
 
             /*
@@ -2036,7 +2046,7 @@ public class Escalator extends Widget {
     }
 
     private class HeaderRowContainer extends AbstractStaticRowContainer {
-        public HeaderRowContainer(final Element headElement) {
+        public HeaderRowContainer(final TableSectionElement headElement) {
             super(headElement);
         }
 
@@ -2060,7 +2070,7 @@ public class Escalator extends Widget {
     }
 
     private class FooterRowContainer extends AbstractStaticRowContainer {
-        public FooterRowContainer(final Element footElement) {
+        public FooterRowContainer(final TableSectionElement footElement) {
             super(footElement);
         }
 
@@ -2102,7 +2112,7 @@ public class Escalator extends Widget {
          * 
          * @see #sortDomElements()
          */
-        private final LinkedList<Element> visualRowOrder = new LinkedList<Element>();
+        private final LinkedList<TableRowElement> visualRowOrder = new LinkedList<TableRowElement>();
 
         /**
          * The logical index of the topmost row.
@@ -2192,7 +2202,7 @@ public class Escalator extends Widget {
 
         private DeferredDomSorter domSorter = new DeferredDomSorter();
 
-        public BodyRowContainer(final Element bodyElement) {
+        public BodyRowContainer(final TableSectionElement bodyElement) {
             super(bodyElement);
         }
 
@@ -2352,7 +2362,7 @@ public class Escalator extends Widget {
         }
 
         @Override
-        protected List<Element> paintInsertRows(final int index,
+        protected List<TableRowElement> paintInsertRows(final int index,
                 final int numberOfRows) {
             if (numberOfRows == 0) {
                 return Collections.emptyList();
@@ -2366,7 +2376,7 @@ public class Escalator extends Widget {
              * This also would lead to the fact that paintInsertRows wouldn't
              * need to return anything.
              */
-            final List<Element> addedRows = fillAndPopulateEscalatorRowsIfNeeded(
+            final List<TableRowElement> addedRows = fillAndPopulateEscalatorRowsIfNeeded(
                     index, numberOfRows);
 
             /*
@@ -2436,10 +2446,10 @@ public class Escalator extends Widget {
                 // move the surrounding rows to their correct places.
                 int rowTop = (unupdatedLogicalStart + (end - start))
                         * getDefaultRowHeight();
-                final ListIterator<Element> i = visualRowOrder
+                final ListIterator<TableRowElement> i = visualRowOrder
                         .listIterator(visualTargetIndex + (end - start));
                 while (i.hasNext()) {
-                    final Element tr = i.next();
+                    final TableRowElement tr = i.next();
                     setRowPosition(tr, 0, rowTop);
                     /*
                      * FIXME [[rowheight]]: coded to work only with default row
@@ -2533,22 +2543,22 @@ public class Escalator extends Widget {
                  * it's faster to just move idx[9] to the beginning.
                  */
 
-                final List<Element> removedRows = new ArrayList<Element>(
+                final List<TableRowElement> removedRows = new ArrayList<TableRowElement>(
                         visualSourceRange.length());
                 for (int i = 0; i < visualSourceRange.length(); i++) {
-                    final Element tr = visualRowOrder.remove(visualSourceRange
-                            .getStart());
+                    final TableRowElement tr = visualRowOrder
+                            .remove(visualSourceRange.getStart());
                     removedRows.add(tr);
                 }
                 visualRowOrder.addAll(adjustedVisualTargetIndex, removedRows);
             }
 
             { // Refresh the contents of the affected rows
-                final ListIterator<Element> iter = visualRowOrder
+                final ListIterator<TableRowElement> iter = visualRowOrder
                         .listIterator(adjustedVisualTargetIndex);
                 for (int logicalIndex = logicalTargetIndex; logicalIndex < logicalTargetIndex
                         + visualSourceRange.length(); logicalIndex++) {
-                    final Element tr = iter.next();
+                    final TableRowElement tr = iter.next();
                     refreshRow(tr, logicalIndex);
                 }
             }
@@ -2560,10 +2570,10 @@ public class Escalator extends Widget {
                  */
                 int newRowTop = logicalTargetIndex * getDefaultRowHeight();
 
-                final ListIterator<Element> iter = visualRowOrder
+                final ListIterator<TableRowElement> iter = visualRowOrder
                         .listIterator(adjustedVisualTargetIndex);
                 for (int i = 0; i < visualSourceRange.length(); i++) {
-                    final Element tr = iter.next();
+                    final TableRowElement tr = iter.next();
                     setRowPosition(tr, 0, newRowTop);
                     /*
                      * FIXME [[rowheight]]: coded to work only with default row
@@ -2601,7 +2611,7 @@ public class Escalator extends Widget {
              */
             final int rowTopPos = (int) yDelta
                     - ((int) yDelta % getDefaultRowHeight());
-            for (final Element tr : visualRowOrder) {
+            for (final TableRowElement tr : visualRowOrder) {
                 setRowPosition(tr, 0, getRowTop(tr) + rowTopPos);
             }
             setBodyScrollPosition(tBodyScrollLeft, tBodyScrollTop + yDelta);
@@ -2622,7 +2632,7 @@ public class Escalator extends Widget {
          *            the number of rows to add at <code>index</code>
          * @return a list of the added rows
          */
-        private List<Element> fillAndPopulateEscalatorRowsIfNeeded(
+        private List<TableRowElement> fillAndPopulateEscalatorRowsIfNeeded(
                 final int index, final int numberOfRows) {
 
             final int escalatorRowsStillFit = getMaxEscalatorRowCapacity()
@@ -2632,8 +2642,8 @@ public class Escalator extends Widget {
 
             if (escalatorRowsNeeded > 0) {
 
-                final List<Element> addedRows = super.paintInsertRows(index,
-                        escalatorRowsNeeded);
+                final List<TableRowElement> addedRows = super.paintInsertRows(
+                        index, escalatorRowsNeeded);
                 visualRowOrder.addAll(index, addedRows);
 
                 /*
@@ -2652,7 +2662,7 @@ public class Escalator extends Widget {
                 /* Move the other rows away from above the added escalator rows */
                 for (int i = index + addedRows.size(); i < visualRowOrder
                         .size(); i++) {
-                    final Element tr = visualRowOrder.get(i);
+                    final TableRowElement tr = visualRowOrder.get(i);
                     /*
                      * FIXME [[rowheight]]: coded to work only with default row
                      * heights - will not work with variable row heights
@@ -2662,7 +2672,7 @@ public class Escalator extends Widget {
 
                 return addedRows;
             } else {
-                return new ArrayList<Element>();
+                return new ArrayList<TableRowElement>();
             }
         }
 
@@ -2770,7 +2780,7 @@ public class Escalator extends Widget {
                         - getRowCount();
                 if (escalatorRowsToRemove > 0) {
                     for (int i = 0; i < escalatorRowsToRemove; i++) {
-                        final Element tr = visualRowOrder
+                        final TableRowElement tr = visualRowOrder
                                 .remove(removedVisualInside.getStart());
 
                         paintRemoveRow(tr, index);
@@ -2792,7 +2802,7 @@ public class Escalator extends Widget {
                      */
                     final int dirtyRowsStart = removedLogicalInside.getStart();
                     for (int i = dirtyRowsStart; i < escalatorRowCount; i++) {
-                        final Element tr = visualRowOrder.get(i);
+                        final TableRowElement tr = visualRowOrder.get(i);
                         /*
                          * FIXME [[rowheight]]: coded to work only with default
                          * row heights - will not work with variable row heights
@@ -2810,7 +2820,7 @@ public class Escalator extends Widget {
                             - rowsToUpdateDataOn);
                     final int end = escalatorRowCount;
                     for (int i = start; i < end; i++) {
-                        final Element tr = visualRowOrder.get(i);
+                        final TableRowElement tr = visualRowOrder.get(i);
                         refreshRow(tr, i);
                     }
                 }
@@ -2915,13 +2925,13 @@ public class Escalator extends Widget {
                         double newTop = getRowTop(visualRowOrder
                                 .get(removedVisualInside.getStart()));
                         for (int i = 0; i < removedVisualInside.length(); i++) {
-                            final Element tr = visualRowOrder
+                            final TableRowElement tr = visualRowOrder
                                     .remove(removedVisualInside.getStart());
                             visualRowOrder.addLast(tr);
                         }
 
                         for (int i = removedVisualInside.getStart(); i < escalatorRowCount; i++) {
-                            final Element tr = visualRowOrder.get(i);
+                            final TableRowElement tr = visualRowOrder.get(i);
                             setRowPosition(tr, 0, (int) newTop);
 
                             /*
@@ -3030,7 +3040,7 @@ public class Escalator extends Widget {
                     logicalTargetIndex);
 
             // move the surrounding rows to their correct places.
-            final ListIterator<Element> iterator = visualRowOrder
+            final ListIterator<TableRowElement> iterator = visualRowOrder
                     .listIterator(removedVisualInside.getStart());
 
             /*
@@ -3041,7 +3051,7 @@ public class Escalator extends Widget {
                     * getDefaultRowHeight();
             for (int i = removedVisualInside.getStart(); i < escalatorRowCount
                     - removedVisualInside.length(); i++) {
-                final Element tr = iterator.next();
+                final TableRowElement tr = iterator.next();
                 setRowPosition(tr, 0, rowTop);
                 /*
                  * FIXME [[rowheight]]: coded to work only with default row
@@ -3067,7 +3077,7 @@ public class Escalator extends Widget {
                     logicalTargetIndex);
 
             // move the surrounding rows to their correct places.
-            final ListIterator<Element> iterator = visualRowOrder
+            final ListIterator<TableRowElement> iterator = visualRowOrder
                     .listIterator(removedVisualInside.getEnd());
             /*
              * FIXME [[rowheight]]: coded to work only with default row heights
@@ -3076,7 +3086,7 @@ public class Escalator extends Widget {
             int rowTop = removedLogicalInside.getStart()
                     * getDefaultRowHeight();
             while (iterator.hasNext()) {
-                final Element tr = iterator.next();
+                final TableRowElement tr = iterator.next();
                 setRowPosition(tr, 0, rowTop);
                 /*
                  * FIXME [[rowheight]]: coded to work only with default row
@@ -3178,7 +3188,7 @@ public class Escalator extends Widget {
         }
 
         @Override
-        protected Element getTrByVisualIndex(final int index)
+        protected TableRowElement getTrByVisualIndex(final int index)
                 throws IndexOutOfBoundsException {
             if (index >= 0 && index < visualRowOrder.size()) {
                 return visualRowOrder.get(index);
@@ -3189,7 +3199,7 @@ public class Escalator extends Widget {
         }
 
         @Override
-        public Element getRowElement(int index) {
+        public TableRowElement getRowElement(int index) {
             if (index < 0 || index >= getRowCount()) {
                 throw new IndexOutOfBoundsException("No such logical index: "
                         + index);
@@ -3275,7 +3285,7 @@ public class Escalator extends Widget {
                 final boolean contentWillFit = nextLastLogicalIndex < getRowCount()
                         - neededEscalatorRowsDiff;
                 if (contentWillFit) {
-                    final List<Element> addedRows = fillAndPopulateEscalatorRowsIfNeeded(
+                    final List<TableRowElement> addedRows = fillAndPopulateEscalatorRowsIfNeeded(
                             index, neededEscalatorRowsDiff);
 
                     /*
@@ -3328,7 +3338,7 @@ public class Escalator extends Widget {
             else if (neededEscalatorRowsDiff < 0) {
                 // needs less
 
-                final ListIterator<Element> iter = visualRowOrder
+                final ListIterator<TableRowElement> iter = visualRowOrder
                         .listIterator(visualRowOrder.size());
                 for (int i = 0; i < -neededEscalatorRowsDiff; i++) {
                     final Element last = iter.previous();
@@ -3397,7 +3407,7 @@ public class Escalator extends Widget {
 
             /* step 1: resize and reposition rows */
             for (int i = 0; i < visualRowOrder.size(); i++) {
-                Element tr = visualRowOrder.get(i);
+                TableRowElement tr = visualRowOrder.get(i);
                 reapplyRowHeight(tr, getDefaultRowHeight());
 
                 final int logicalIndex = getTopRowLogicalIndex() + i;
@@ -3451,7 +3461,7 @@ public class Escalator extends Widget {
              * its parents are) removed from the document. Therefore, we sort
              * everything around that row instead.
              */
-            final Element activeRow = getEscalatorRowWithFocus();
+            final TableRowElement activeRow = getEscalatorRowWithFocus();
 
             if (activeRow != null) {
                 assert activeRow.getParentElement() == root : "Trying to sort around a row that doesn't exist in body";
@@ -3483,10 +3493,10 @@ public class Escalator extends Widget {
              */
             boolean insertFirst = (activeRow == null);
 
-            final ListIterator<Element> i = visualRowOrder
+            final ListIterator<TableRowElement> i = visualRowOrder
                     .listIterator(visualRowOrder.size());
             while (i.hasPrevious()) {
-                Element tr = i.previous();
+                TableRowElement tr = i.previous();
 
                 if (tr == activeRow) {
                     insertFirst = true;
@@ -3506,8 +3516,8 @@ public class Escalator extends Widget {
          * @return The escalator row that contains a focused DOM element, or
          *         <code>null</code> if focus is outside of a body row.
          */
-        private Element getEscalatorRowWithFocus() {
-            Element activeRow = null;
+        private TableRowElement getEscalatorRowWithFocus() {
+            TableRowElement activeRow = null;
 
             final Element activeElement = Util.getFocusedElement();
 
@@ -3519,8 +3529,8 @@ public class Escalator extends Widget {
                      * You never know if there's several tables embedded in a
                      * cell... We'll take the deepest one.
                      */
-                    if (e.getTagName().equalsIgnoreCase("TR")) {
-                        activeRow = e;
+                    if (TableRowElement.is(e)) {
+                        activeRow = TableRowElement.as(e);
                     }
                     e = e.getParentElement();
                 }
@@ -3848,11 +3858,14 @@ public class Escalator extends Widget {
     private FlyweightRow flyweightRow = new FlyweightRow();
 
     /** The {@code <thead/>} tag. */
-    private final Element headElem = DOM.createTHead();
+    private final TableSectionElement headElem = TableSectionElement.as(DOM
+            .createTHead());
     /** The {@code <tbody/>} tag. */
-    private final Element bodyElem = DOM.createTBody();
+    private final TableSectionElement bodyElem = TableSectionElement.as(DOM
+            .createTBody());
     /** The {@code <tfoot/>} tag. */
-    private final Element footElem = DOM.createTFoot();
+    private final TableSectionElement footElem = TableSectionElement.as(DOM
+            .createTFoot());
 
     /**
      * TODO: investigate whether this field is now unnecessary, as

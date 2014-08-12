@@ -30,7 +30,6 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -807,8 +806,6 @@ public class Grid<T> extends Composite implements
              */
             private void sort(Cell cell, SortDirection direction,
                     boolean multisort) {
-                TableCellElement th = TableCellElement.as(cell.getElement());
-
                 // Apply primary sorting on clicked column
                 GridColumn<?, ?> columnInstance = grid
                         .getColumnFromVisibleIndex(cell.getColumn());

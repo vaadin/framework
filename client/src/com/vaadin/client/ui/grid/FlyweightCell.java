@@ -20,6 +20,7 @@ import java.util.List;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.TableCellElement;
 import com.vaadin.client.ui.grid.FlyweightRow.CellIterator;
 
 /**
@@ -41,7 +42,7 @@ public class FlyweightCell {
     private final int column;
     private final FlyweightRow row;
 
-    private Element element = null;
+    private TableCellElement element = null;
     private CellIterator currentIterator = null;
 
     public FlyweightCell(final FlyweightRow row, final int column) {
@@ -90,7 +91,7 @@ public class FlyweightCell {
      * @param element
      *            the element corresponding to this cell, cannot be null
      */
-    void setElement(Element element) {
+    void setElement(TableCellElement element) {
         assert element != null;
         assertSetup();
         this.element = element;
@@ -100,7 +101,8 @@ public class FlyweightCell {
         currentIterator = iterator;
 
         if (iterator.areCellsAttached()) {
-            final Element e = (Element) row.getElement().getChild(column);
+            final TableCellElement e = row.getElement().getCells()
+                    .getItem(column);
             e.setPropertyInt(COLSPAN_ATTR, 1);
             e.getStyle().setWidth(row.getColumnWidth(column), Unit.PX);
             e.getStyle().clearDisplay();

@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.TableRowElement;
 
 /**
  * An internal implementation of the {@link Row} interface.
@@ -139,11 +139,11 @@ class FlyweightRow implements Row {
     private static final int BLANK = Integer.MIN_VALUE;
 
     private int row;
-    private Element element;
+    private TableRowElement element;
     private int[] columnWidths = null;
     private final List<FlyweightCell> cells = new ArrayList<FlyweightCell>();
 
-    void setup(final Element e, final int row, int[] columnWidths) {
+    void setup(final TableRowElement e, final int row, int[] columnWidths) {
         element = e;
         this.row = row;
         this.columnWidths = columnWidths;
@@ -179,7 +179,7 @@ class FlyweightRow implements Row {
     }
 
     @Override
-    public Element getElement() {
+    public TableRowElement getElement() {
         assertSetup();
         return element;
     }

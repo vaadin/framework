@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.ui.grid;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.TableCellElement;
 
 /**
  * Describes a cell
@@ -35,7 +35,7 @@ public class Cell {
 
     private final int column;
 
-    private final Element element;
+    private final TableCellElement element;
 
     /**
      * Constructs a new {@link Cell}.
@@ -47,7 +47,7 @@ public class Cell {
      * @param element
      *            The cell element
      */
-    public Cell(int row, int column, Element element) {
+    public Cell(int row, int column, TableCellElement element) {
         super();
         this.row = row;
         this.column = column;
@@ -78,7 +78,7 @@ public class Cell {
      * 
      * @return the cell element
      */
-    public Element getElement() {
+    public TableCellElement getElement() {
         return element;
     }
 
