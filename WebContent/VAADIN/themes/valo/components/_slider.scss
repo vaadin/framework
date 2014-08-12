@@ -8,7 +8,7 @@ $_valo-slider-base-margin-vertical: round(($v-unit-size - $v-slider-track-size)/
 $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 
 
-@mixin valo-slider ($primary-stylename: v-slider) {
+@mixin valo-slider ($primary-stylename: v-slider, $include-additional-styles: contains($v-included-additional-styles, slider)) {
 
   // Round to an even number
   $v-slider-track-size: $v-slider-track-size + $v-slider-track-size%2;
@@ -171,6 +171,13 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
         margin-top: round($v-slider-handle-width/-2);
         margin-left: round(($v-slider-handle-height - $v-slider-track-size)/-2);
       }
+    }
+  }
+
+
+  @if $include-additional-styles {
+    .#{$primary-stylename}-no-indicator {
+      @include valo-slider-no-indicator;
     }
   }
 

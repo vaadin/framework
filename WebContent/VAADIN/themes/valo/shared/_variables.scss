@@ -1,65 +1,6 @@
-// @category  Common
-
 // Color functions are used to calculate default font color
 @import "../util/color";
 
-
-// List of components to include in the theme compilation. The list can be modified to make
-// the compiled theme smaller by removing unused components from the list.
-//
-// @usage
-// // Remove the Calendar component styles from the output
-// $v-included-components: remove($v-included-components, calendar);
-$v-included-components:
-    absolutelayout,
-    accordion,
-    button,
-    calendar,
-    checkbox,
-    colorpicker,
-    combobox,
-    csslayout,
-    customcomponent,
-    customlayout,
-    datefield,
-    dragwrapper,
-    form,
-    formlayout,
-    grid,
-    gridlayout,
-    label,
-    link,
-    menubar,
-    nativebutton,
-    nativeselect,
-    notification,
-    optiongroup,
-    orderedlayout,
-    panel,
-    popupview,
-    progressbar,
-    slider,
-    splitpanel,
-    table,
-    tabsheet,
-    textfield,
-    textarea,
-    richtextarea,
-    tree,
-    treetable,
-    twincolselect,
-    upload,
-    window !default;
-
-
-// Checks if a given component is included in the compilation. Used by the collection mixins that
-// include all components, like valo-components and valo-components.
-// @param     $component-name {String} the name of the component to check
-// @param     $is-included {list} (Optional) the list of components which is checked
-// @return    {Boolean} true if the component is included in the compilation, false if not
-@function v-is-included ($component-name, $is-included: $v-included-components) {
-  @return contains($is-included, $component-name);
-}
 
 
 // A static text that is shown while the application JavaScript is loaded and started
@@ -116,12 +57,80 @@ $v-default-field-width            : $v-unit-size * 5                            
 
 $v-error-indicator-color          : #ed473b                                     !default;
 $v-required-field-indicator-color : $v-error-indicator-color                    !default;
+$v-friendly-color                 : #2c9720                                     !default;
+
+
+$v-scaling-factor--small          : 0.8                                         !default;
+$v-scaling-factor--large          : 1.2                                         !default;
+
+$v-unit-size--small               : round($v-unit-size * $v-scaling-factor--small) !default;
+$v-unit-size--large               : round($v-unit-size * $v-scaling-factor--large) !default;
+
+$v-font-size--small               : round($v-font-size * $v-scaling-factor--small) !default;
+$v-font-size--large               : round($v-font-size * $v-scaling-factor--large) !default;
 
 
 
+// List of components to include in the theme compilation. The list can be modified to make
+// the compiled theme smaller by removing unused components from the list.
+//
+// @usage
+// // Remove the Calendar component styles from the output
+// $v-included-components: remove($v-included-components, calendar);
+$v-included-components:
+    absolutelayout,
+    accordion,
+    button,
+    calendar,
+    checkbox,
+    colorpicker,
+    combobox,
+    csslayout,
+    customcomponent,
+    customlayout,
+    datefield,
+    dragwrapper,
+    form,
+    formlayout,
+    grid,
+    gridlayout,
+    label,
+    link,
+    menubar,
+    nativebutton,
+    nativeselect,
+    notification,
+    optiongroup,
+    orderedlayout,
+    panel,
+    popupview,
+    progressbar,
+    slider,
+    splitpanel,
+    table,
+    tabsheet,
+    textfield,
+    textarea,
+    richtextarea,
+    tree,
+    treetable,
+    twincolselect,
+    upload,
+    window,
+    valo-menu !default;
 
-$valo-include-common-stylenames   : true                                        !default;
 
+$v-included-additional-styles: $v-included-components !default;
+
+
+// Checks if a given component is included in the compilation. Used by the collection mixins that
+// include all components, like valo-components and valo-components.
+// @param     $component-name {String} the name of the component to check
+// @param     $is-included {list} (Optional) the list of components which is checked
+// @return    {Boolean} true if the component is included in the compilation, false if not
+@function v-is-included ($component-name, $is-included: $v-included-components) {
+  @return contains($is-included, $component-name);
+}
 
 
 

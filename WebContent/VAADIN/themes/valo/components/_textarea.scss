@@ -1,4 +1,4 @@
-@mixin valo-textarea ($primary-stylename: v-textarea) {
+@mixin valo-textarea ($primary-stylename: v-textarea, $include-additional-styles: contains($v-included-additional-styles, textarea)) {
 
   .#{$primary-stylename} {
     @include valo-textarea-style;
@@ -11,6 +11,31 @@
 
   .#{$primary-stylename}-error {
     @include valo-textfield-error-style;
+  }
+
+
+  @if $include-additional-styles {
+    .#{$primary-stylename}-borderless {
+      @include valo-textfield-borderless-style;
+    }
+
+    .#{$primary-stylename}-small {
+      @include valo-textarea-style($unit-size: $v-unit-size--small, $states: normal, $background-color: null, $border: null, $bevel: null, $shadow: null);
+      font-size: $v-font-size--small;
+    }
+
+    .#{$primary-stylename}-large {
+      @include valo-textarea-style($unit-size: $v-unit-size--large, $states: normal, $background-color: null, $border: null, $bevel: null, $shadow: null);
+      font-size: $v-font-size--large;
+    }
+
+    .#{$primary-stylename}-align-right {
+      text-align: right;
+    }
+
+    .#{$primary-stylename}-align-center {
+      text-align: center;
+    }
   }
 
 }

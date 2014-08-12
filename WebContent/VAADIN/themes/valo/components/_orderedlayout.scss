@@ -140,7 +140,7 @@
 
 
 
-@mixin valo-orderedlayout {
+@mixin valo-orderedlayout ($include-additional-styles: contains($v-included-additional-styles, orderedlayout)) {
 
   .v-margin-top {
     padding-top: $v-layout-margin-top;
@@ -163,10 +163,28 @@
     height: $v-layout-spacing-vertical;
   }
 
+  @if $include-additional-styles {
+    .v-verticallayout-well,
+    .v-horizontallayout-well {
+      @include valo-panel-well-style;
+      @include valo-panel-adjust-content-margins;
+    }
+
+    .v-verticallayout-card,
+    .v-horizontallayout-card {
+      @include valo-panel-style;
+      @include valo-panel-adjust-content-margins;
+    }
+
+    .v-horizontallayout-wrapping {
+      @include valo-horizontallayout-wrapping-style;
+    }
+  }
+
 }
 
 
-@mixin valo-horizontallayout--wrapping {
+@mixin valo-horizontallayout-wrapping-style {
     white-space: normal !important;
 
     & > .v-spacing + .v-slot,

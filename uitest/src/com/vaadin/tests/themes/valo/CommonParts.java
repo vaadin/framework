@@ -240,6 +240,7 @@ public class CommonParts extends VerticalLayout implements View {
                 };
 
                 style.setCaption("Additional style");
+                style.addItem("Dark", styleCommand).setCheckable(true);
                 style.addItem("Success", styleCommand).setCheckable(true);
                 style.addItem("Failure", styleCommand).setCheckable(true);
                 style.addItem("Bar", styleCommand).setCheckable(true);

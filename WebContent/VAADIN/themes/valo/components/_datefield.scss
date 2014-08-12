@@ -1,4 +1,4 @@
-@mixin valo-datefield ($primary-stylename: v-datefield) {
+@mixin valo-datefield ($primary-stylename: v-datefield, $include-additional-styles: contains($v-included-additional-styles, datefield)) {
 
   .#{$primary-stylename} {
     position: relative;
@@ -34,11 +34,41 @@
     width: round($v-font-size * 6.5);
   }
 
-  .v-datefield-popup {
+  .#{$primary-stylename}-popup {
     @include valo-datefield-popup-style;
   }
 
   @include valo-datefield-calendarpanel-style;
+
+
+  @if $include-additional-styles {
+    .#{$primary-stylename}-borderless {
+      .#{$primary-stylename}-textfield {
+        @include valo-textfield-borderless-style;
+      }
+      .#{$primary-stylename}-button {
+        border: none;
+      }
+    }
+
+    .#{$primary-stylename}-align-right input {
+      text-align: right;
+    }
+
+    .#{$primary-stylename}-align-center input {
+      text-align: center;
+    }
+
+    .#{$primary-stylename}-small {
+      @include valo-datefield-style($unit-size: $v-unit-size--small, $bevel: null, $shadow: null, $border: null, $background-color: null, $states: normal);
+      font-size: $v-font-size--small;
+    }
+
+    .#{$primary-stylename}-large {
+      @include valo-datefield-style($unit-size: $v-unit-size--large, $bevel: null, $shadow: null, $border: null, $background-color: null, $states: normal);
+      font-size: $v-font-size--large;
+    }
+  }
 
 }
 
@@ -64,7 +94,8 @@
     $border            : $v-textfield-border,
     $border-radius     : $v-textfield-border-radius,
     $background-color  : $v-textfield-background-color,
-    $primary-stylename : v-datefield
+    $primary-stylename : v-datefield,
+    $states            : normal focus disabled
   ) {
 
   height: $unit-size;
@@ -72,7 +103,7 @@
 
   .#{$primary-stylename}-textfield {
     @include box-sizing(border-box);
-    @include valo-textfield-style($bevel: $bevel, $shadow: $shadow, $unit-size: $unit-size, $border: $border, $border-radius: $border-radius, $background-color: $background-color) ;
+    @include valo-textfield-style($bevel: $bevel, $shadow: $shadow, $unit-size: $unit-size, $border: $border, $border-radius: $border-radius, $background-color: $background-color, $states: $states) ;
     padding-left: $unit-size * 1.2;
     width: 100%;
     height: 100%;
@@ -319,7 +350,7 @@
     @include valo-datefield-calendarpanel-month-style;
   }
 
-  .v-datefield-year td.v-datefield-calendarpanel-month {
+  .#{$primary-stylename}-year td.#{$primary-stylename}-month {
     width: round($v-unit-size * 2);
   }
 
@@ -350,12 +381,12 @@
     background: $v-app-background-color;
   }
 
-  td.v-datefield-calendarpanel-time {
+  td.#{$primary-stylename}-time {
     width: 100%;
     font-size: ceil($v-font-size * 0.86);
 
     .v-label {
-      display: inline-block;
+      display: inline;
       margin: 0 0.1em;
       font-weight: 400;
     }

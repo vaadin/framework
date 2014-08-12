@@ -1,11 +1,28 @@
-@mixin valo-optiongroup ($primary-stylename: v-optiongroup) {
+@mixin valo-optiongroup ($primary-stylename: v-select-optiongroup, $include-additional-styles: contains($v-included-additional-styles, optiongroup)) {
 
   .v-radiobutton {
     @include valo-radiobutton-style;
   }
 
-  .v-select-optiongroup {
+  .#{$primary-stylename} {
     @include valo-optiongroup-style;
+  }
+
+
+  @if $include-additional-styles {
+    .#{$primary-stylename}-small {
+      @include valo-optiongroup-style($unit-size: $v-unit-size--small);
+      font-size: $v-font-size--small;
+    }
+
+    .#{$primary-stylename}-large {
+      @include valo-optiongroup-style($unit-size: $v-unit-size--large);
+      font-size: $v-font-size--large;
+    }
+
+    .#{$primary-stylename}-horizontal {
+      @include valo-optiongroup-horizontal;
+    }
   }
 
 }

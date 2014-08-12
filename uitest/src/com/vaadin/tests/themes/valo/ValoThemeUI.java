@@ -395,8 +395,34 @@ public class ValoThemeUI extends UI {
                             sg.nextString(true) + " " + sg.nextString(false));
                     child.getItemProperty(ICON_PROPERTY).setValue(
                             testIcon.get());
-                    ((Hierarchical) container).setChildrenAllowed(id, false);
+                    // ((Hierarchical) container).setChildrenAllowed(id, false);
                     ((Hierarchical) container).setParent(id, i);
+
+                    for (int k = 1; k < 5; k++) {
+                        String id2 = id + " -> " + k;
+                        child = container.addItem(id2);
+                        child.getItemProperty(CAPTION_PROPERTY).setValue(
+                                sg.nextString(true) + " "
+                                        + sg.nextString(false));
+                        child.getItemProperty(ICON_PROPERTY).setValue(
+                                testIcon.get());
+                        // ((Hierarchical) container)
+                        // .setChildrenAllowed(id, false);
+                        ((Hierarchical) container).setParent(id2, id);
+
+                        for (int l = 1; l < 5; l++) {
+                            String id3 = id2 + " -> " + l;
+                            child = container.addItem(id3);
+                            child.getItemProperty(CAPTION_PROPERTY).setValue(
+                                    sg.nextString(true) + " "
+                                            + sg.nextString(false));
+                            child.getItemProperty(ICON_PROPERTY).setValue(
+                                    testIcon.get());
+                            // ((Hierarchical) container)
+                            // .setChildrenAllowed(id, false);
+                            ((Hierarchical) container).setParent(id3, id2);
+                        }
+                    }
                 }
             }
         }

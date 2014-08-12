@@ -1,11 +1,11 @@
 $v-notification-title-color: $v-focus-color !default;
 
 
-@mixin valo-notification ($primary-stylename: v-Notification) {
+@mixin valo-notification ($primary-stylename: v-Notification, $include-additional-styles: contains($v-included-additional-styles, notification)) {
 
   // Positional offsets
 
-  .v-Notification {
+  .#{$primary-stylename} {
     &.v-position-top {
       top: $v-layout-spacing-vertical;
     }
@@ -123,6 +123,78 @@ $v-notification-title-color: $v-focus-color !default;
   .#{$primary-stylename}.error {
     @include valo-notification-error-style;
   }
+
+
+  @if $include-additional-styles {
+    .#{$primary-stylename}.dark {
+      @include valo-notification-dark-style;
+    }
+
+    .#{$primary-stylename}.bar {
+      @include valo-notification-bar-style;
+    }
+
+    .#{$primary-stylename}.small {
+      @include valo-notification-small-style;
+    }
+
+    .#{$primary-stylename}.closable {
+      @include valo-notification-closable-style;
+
+      &.dark,
+      &.error,
+      &.system {
+        &:after {
+          color: #fff;
+          border-color: #fff;
+          border-color: rgba(255,255,255,.3);
+        }
+        &:active:after {
+          background-color: #fff;
+          color: #000;
+        }
+      }
+
+      &.tray:after {
+        top: round($v-unit-size/2.3);
+        margin-top: 0;
+      }
+    }
+
+    .#{$primary-stylename}.success,
+    .#{$primary-stylename}.failure {
+      background: #fff;
+      color: #555;
+      border: 2px solid $v-friendly-color;
+
+      h1 {
+        color: $v-friendly-color;
+        font-weight: $v-font-weight + 100;
+
+        &:before {
+          font-family: FontAwesome;
+          content: "\f00c";
+          margin-right: .5em;
+        }
+      }
+
+      &.bar {
+        margin: -2px !important;
+      }
+    }
+
+    .#{$primary-stylename}.failure {
+      border-color: $v-error-indicator-color;
+
+      h1 {
+        color: $v-error-indicator-color;
+
+        &:before {
+          content: "\f05e";
+        }
+      }
+    }
+  }
 }
 
 
@@ -201,11 +273,11 @@ $v-notification-title-color: $v-focus-color !default;
     top: 0;
 
     @if $v-animations-enabled {
-      &.v-Notification-animate-in {
+      &[class*="animate-in"] {
         @include animation(valo-placeholder-animate-in 200ms, valo-anim-slide-in-down 200ms);
       }
 
-      &.v-Notification-animate-out {
+      &[class*="animate-out"] {
         @include animation(valo-placeholder-animate-out 200ms, valo-anim-slide-out-up 200ms);
       }
     }
@@ -215,18 +287,18 @@ $v-notification-title-color: $v-focus-color !default;
     bottom: 0;
 
     @if $v-animations-enabled {
-      &.v-Notification-animate-in {
+      &[class*="animate-in"] {
         @include animation(valo-placeholder-animate-in 200ms, valo-anim-slide-in-up 200ms);
       }
 
-      &.v-Notification-animate-out {
+      &[class*="animate-out"] {
         @include animation(valo-placeholder-animate-out 200ms, valo-anim-slide-out-down 200ms);
       }
     }
   }
 }
 
-@mixin valo-notification-system-style {
+@mixin valo-notification-dark-style {
   background-color: #444;
   background-color: rgba(#444, .9);
   font-weight: $v-font-weight + 100;
@@ -240,6 +312,10 @@ $v-notification-title-color: $v-focus-color !default;
   p {
     color: #e6e6e6;
   }
+}
+
+@mixin valo-notification-system-style {
+  @include valo-notification-dark-style;
 
   // No need to underline the "click here" text, let's imply that the whole banner is clickable
   u {
