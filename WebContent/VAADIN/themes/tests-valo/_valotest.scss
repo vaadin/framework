@@ -141,4 +141,8 @@
   .v-accordion-item-color1 .v-accordion-item-caption {
     @include valo-accordion-item-caption-style($background-color: $color2);
   }
+
+  .v-menubar-color1 {
+    @include valo-menubar-style($background-color: $v-selection-color, $unit-size: null);
+  }
 }
