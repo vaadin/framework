@@ -102,6 +102,11 @@ public class Labels extends VerticalLayout implements View {
         label.addStyleName("light");
         right.addComponent(label);
 
+        label = new Label(
+                "Colored type for highlighted text. Etiam at risus et justo dignissim congue. Donec congue lacinia dui, a porttitor lectus condimentum laoreet. Nunc eu.");
+        label.addStyleName("colored");
+        right.addComponent(label);
+
         label = new Label("A label for success");
         label.addStyleName("success");
         right.addComponent(label);

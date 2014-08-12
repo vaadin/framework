@@ -186,6 +186,11 @@ public class ValoTheme {
     public static final String LABEL_BOLD = "bold";
 
     /**
+     * Colored text. Can be combined with any other Label style.
+     */
+    public static final String LABEL_COLORED = "colored";
+
+    /**
      * Success badge style. Adds a border around the label and an icon next to
      * the text. Suitable for UI notifications that need to in the direct
      * context of some component. Can be combined with any other Label style.

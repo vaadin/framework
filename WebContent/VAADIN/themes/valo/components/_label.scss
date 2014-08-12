@@ -1,6 +1,7 @@
 $v-font-weight--header:   $v-font-weight - 100 !default;
 $v-line-height--header:   1.1             !default;
 $v-font-family--header:   null            !default;
+$v-font-color--colored:   $v-selection-color !default;
 
 $v-font-size--h1:         2.4em           !default;
 $v-font-size--h2:         1.6em           !default;
@@ -103,6 +104,10 @@ $v-letter-spacing--h4:    0               !default;
 
 
   @if $include-additional-styles {
+
+    .#{$primary-stylename}-colored {
+      color: $v-font-color--colored;
+    }
 
     .#{$primary-stylename}-large {
       font-size: $v-font-size--large;
