@@ -26,13 +26,6 @@ import com.google.gwt.dom.client.Element;
  */
 public interface Row {
     /**
-     * Gets the escalator containing the row.
-     * 
-     * @return the escalator containing the row
-     */
-    public Escalator getEscalator();
-
-    /**
      * Gets the row index.
      * 
      * @return the row index

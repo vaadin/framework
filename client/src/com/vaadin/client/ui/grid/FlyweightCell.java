@@ -44,13 +44,9 @@ public class FlyweightCell {
     private Element element = null;
     private CellIterator currentIterator = null;
 
-    private final Escalator escalator;
-
-    public FlyweightCell(final FlyweightRow row, final int column,
-            Escalator escalator) {
+    public FlyweightCell(final FlyweightRow row, final int column) {
         this.row = row;
         this.column = column;
-        this.escalator = escalator;
     }
 
     /**

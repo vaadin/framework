@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Node;
 
 /**
  * An internal implementation of the {@link Row} interface.
@@ -142,17 +141,7 @@ class FlyweightRow implements Row {
     private int row;
     private Element element;
     private int[] columnWidths = null;
-    private final Escalator escalator;
     private final List<FlyweightCell> cells = new ArrayList<FlyweightCell>();
-
-    public FlyweightRow(final Escalator escalator) {
-        this.escalator = escalator;
-    }
-
-    @Override
-    public Escalator getEscalator() {
-        return escalator;
-    }
 
     void setup(final Element e, final int row, int[] columnWidths) {
         element = e;
@@ -198,7 +187,7 @@ class FlyweightRow implements Row {
     void addCells(final int index, final int numberOfColumns) {
         for (int i = 0; i < numberOfColumns; i++) {
             final int col = index + i;
-            cells.add(col, new FlyweightCell(this, col, escalator));
+            cells.add(col, new FlyweightCell(this, col));
         }
         updateRestOfCells(index + numberOfColumns);
     }
@@ -213,7 +202,7 @@ class FlyweightRow implements Row {
     private void updateRestOfCells(final int startPos) {
         // update the column number for the cells to the right
         for (int col = startPos; col < cells.size(); col++) {
-            cells.set(col, new FlyweightCell(this, col, escalator));
+            cells.set(col, new FlyweightCell(this, col));
         }
     }
 
@@ -258,9 +247,9 @@ class FlyweightRow implements Row {
     }
 
     /**
-     * Returns a subrange of unattached flyweight cells. Unattached cells do
-     * not have {@link FlyweightCell#getElement() elements} associated. Note
-     * that FlyweightRow does not keep track of whether cells in actuality have
+     * Returns a subrange of unattached flyweight cells. Unattached cells do not
+     * have {@link FlyweightCell#getElement() elements} associated. Note that
+     * FlyweightRow does not keep track of whether cells in actuality have
      * corresponding DOM elements or not; it is the caller's responsibility to
      * invoke this method with correct parameters.
      * <p>

@@ -3845,7 +3845,7 @@ public class Escalator extends Widget {
     private static final String DEFAULT_WIDTH = "500.0px";
     private static final String DEFAULT_HEIGHT = "400.0px";
 
-    private FlyweightRow flyweightRow = new FlyweightRow(this);
+    private FlyweightRow flyweightRow = new FlyweightRow();
 
     /** The {@code <thead/>} tag. */
     private final Element headElem = DOM.createTHead();
