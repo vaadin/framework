@@ -1,5 +1,5 @@
 $v-textfield-background-color: if(is-dark-color($v-app-background-color), darken($v-app-background-color, 4%), lighten($v-app-background-color, 8%)) !default;
-$v-textfield-background-color--readonly: $v-app-background-color;
+$v-textfield-background-color--readonly: darkest-color($v-app-background-color, darken($v-textfield-background-color, 2%));
 $v-textfield-bevel: inset 0 1px 0 v-shade !default;
 $v-textfield-shadow: 0 1px 0 (v-tint 2) !default;
 $v-textfield-font-weight: 400 !default;
