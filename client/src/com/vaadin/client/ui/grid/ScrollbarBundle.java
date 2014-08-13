@@ -24,6 +24,9 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.Timer;
 
 /**
  * An element-like bundle representing a configurable and visual scrollbar in
@@ -35,6 +38,22 @@ import com.google.gwt.user.client.DOM;
  * @see HorizontalScrollbarBundle
  */
 abstract class ScrollbarBundle {
+
+    private class TemporaryResizer extends Object {
+        private static final int TEMPORARY_RESIZE_DELAY = 1000;
+
+        private final Timer timer = new Timer() {
+            @Override
+            public void run() {
+                internalSetScrollbarThickness(1);
+            }
+        };
+
+        public void show() {
+            internalSetScrollbarThickness(OSX_INVISIBLE_SCROLLBAR_FAKE_SIZE_PX);
+            timer.schedule(TEMPORARY_RESIZE_DELAY);
+        }
+    }
 
     /**
      * A means to listen to when the scrollbar handle in a
@@ -248,8 +267,17 @@ abstract class ScrollbarBundle {
     @Deprecated
     private HandlerManager handlerManager;
 
+    private TemporaryResizer invisibleScrollbarTemporaryResizer = new TemporaryResizer();
+
     private ScrollbarBundle() {
         root.appendChild(scrollSizeElement);
+        Event.sinkEvents(root, Event.ONSCROLL);
+        Event.setEventListener(root, new EventListener() {
+            @Override
+            public void onBrowserEvent(Event event) {
+                invisibleScrollbarTemporaryResizer.show();
+            }
+        });
     }
 
     protected abstract int internalGetScrollSize();
@@ -352,6 +380,10 @@ abstract class ScrollbarBundle {
         scrollPos = Math.max(0, Math.min(maxScrollPos, truncate(px)));
 
         if (!pixelValuesEqual(oldScrollPos, scrollPos)) {
+            if (isInvisibleScrollbar) {
+                invisibleScrollbarTemporaryResizer.show();
+            }
+
             /*
              * This is where the value needs to be converted into an integer no
              * matter how we flip it, since GWT expects an integer value.
@@ -485,8 +517,7 @@ abstract class ScrollbarBundle {
      */
     public final void setScrollbarThickness(int px) {
         isInvisibleScrollbar = (px == 0);
-        internalSetScrollbarThickness(px != 0 ? Math.max(0, px)
-                : OSX_INVISIBLE_SCROLLBAR_FAKE_SIZE_PX);
+        internalSetScrollbarThickness(Math.max(1, px));
     }
 
     /**
