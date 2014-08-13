@@ -36,6 +36,7 @@ public class BackspaceKeyWithModalOpened extends AbstractTestUI {
     public static final String BTN_NEXT_ID = "btn_next";
     public static final String BTN_OPEN_MODAL_ID = "btn_open_modal";
     public static final String TEXT_FIELD_IN_MODAL = "txt_in_modal";
+    public static final String MODAL_ID = "modal_window";
 
     private Navigator navigator;
 
@@ -66,6 +67,7 @@ public class BackspaceKeyWithModalOpened extends AbstractTestUI {
                         @Override
                         public void buttonClick(ClickEvent event) {
                             Window window = new Window("Caption");
+                            window.setId(MODAL_ID);
 
                             VerticalLayout layout = new VerticalLayout();
                             layout.setWidth("300px");

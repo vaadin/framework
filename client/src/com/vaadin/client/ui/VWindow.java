@@ -16,6 +16,8 @@
 
 package com.vaadin.client.ui;
 
+import static com.vaadin.client.Util.isFocusedElementEditable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -177,8 +179,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     // Prevents leaving the window with the Tab key when true
     private boolean doTabStop;
-
-    private boolean hasFocus;
 
     /**
      * If centered (via UIDL), the window should stay in the centered -mode
@@ -420,6 +420,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 Id.of(headerText));
 
         // Handlers to Prevent tab to leave the window
+        // and backspace to cause browser navigation
         topEventBlocker = new NativePreviewHandler() {
             @Override
             public void onPreviewNativeEvent(NativePreviewEvent event) {
@@ -427,6 +428,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 if (nativeEvent.getEventTarget().cast() == topTabStop
                         && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
                         && nativeEvent.getShiftKey()) {
+                    nativeEvent.preventDefault();
+                }
+                if (nativeEvent.getEventTarget().cast() == topTabStop
+                        && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
                     nativeEvent.preventDefault();
                 }
             }
@@ -439,6 +444,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 if (nativeEvent.getEventTarget().cast() == bottomTabStop
                         && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
                         && !nativeEvent.getShiftKey()) {
+                    nativeEvent.preventDefault();
+                }
+                if (nativeEvent.getEventTarget().cast() == bottomTabStop
+                        && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
                     nativeEvent.preventDefault();
                 }
             }
@@ -1302,10 +1311,11 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void onKeyDown(KeyDownEvent event) {
-        if (hasFocus && event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE) {
+        if (vaadinModality
+                && event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE
+                && !isFocusedElementEditable()) {
             event.preventDefault();
         }
-
         if (shortcutHandler != null) {
             shortcutHandler
                     .handleKeyboardEvent(Event.as(event.getNativeEvent()));
@@ -1322,8 +1332,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void onBlur(BlurEvent event) {
-        hasFocus = false;
-
         if (client.hasEventListeners(this, EventId.BLUR)) {
             client.updateVariable(id, EventId.BLUR, "", true);
         }
@@ -1331,8 +1339,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void onFocus(FocusEvent event) {
-        hasFocus = true;
-
         if (client.hasEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(id, EventId.FOCUS, "", true);
         }

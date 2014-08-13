@@ -1262,6 +1262,25 @@ public class Util {
     }
 
     /**
+     * Gets currently focused element and checks if it's editable
+     * 
+     * @return true if focused element is editable
+     */
+    public static boolean isFocusedElementEditable() {
+        Element focusedElement = Util.getFocusedElement();
+        if (focusedElement != null) {
+            String tagName = focusedElement.getTagName();
+            String contenteditable = focusedElement
+                    .getAttribute("contenteditable");
+
+            return "textarea".equalsIgnoreCase(tagName)
+                    || "input".equalsIgnoreCase(tagName)
+                    || "true".equalsIgnoreCase(contenteditable);
+        }
+        return false;
+    }
+
+    /**
      * Kind of stronger version of isAttached(). In addition to std isAttached,
      * this method checks that this widget nor any of its parents is hidden. Can
      * be e.g used to check whether component should react to some events or
