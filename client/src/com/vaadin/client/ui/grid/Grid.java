@@ -1036,6 +1036,136 @@ public class Grid<T> extends Composite implements
         }
     }
 
+    protected class BodyUpdater implements EscalatorUpdater {
+
+        @Override
+        public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
+            for (FlyweightCell cell : cellsToAttach) {
+                Renderer<?> renderer = findRenderer(cell);
+                if (renderer instanceof ComplexRenderer) {
+                    ((ComplexRenderer<?>) renderer).init(cell);
+                }
+            }
+        }
+
+        @Override
+        public void postAttach(Row row, Iterable<FlyweightCell> attachedCells) {
+            for (FlyweightCell cell : attachedCells) {
+                Renderer<?> renderer = findRenderer(cell);
+                if (renderer instanceof WidgetRenderer) {
+                    WidgetRenderer<?, ?> widgetRenderer = (WidgetRenderer<?, ?>) renderer;
+
+                    Widget widget = widgetRenderer.createWidget();
+                    assert widget != null : "WidgetRenderer.createWidget() returned null. It should return a widget.";
+                    assert widget.getParent() == null : "WidgetRenderer.createWidget() returned a widget which already is attached.";
+                    assert cell.getElement().getChildCount() == 0 : "Cell content should be empty when adding Widget";
+
+                    // Physical attach
+                    cell.getElement().appendChild(widget.getElement());
+
+                    // Logical attach
+                    setParent(widget, Grid.this);
+                }
+            }
+        }
+
+        @Override
+        public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
+            int rowIndex = row.getRow();
+            Element rowElement = row.getElement();
+            T rowData = dataSource.getRow(rowIndex);
+
+            boolean hasData = rowData != null;
+
+            // Assign stylename for rows with data
+            boolean usedToHaveData = rowElement
+                    .hasClassName(rowHasDataStyleName);
+
+            if (usedToHaveData != hasData) {
+                setStyleName(rowElement, rowHasDataStyleName, hasData);
+            }
+
+            // Assign stylename for selected rows
+            if (hasData) {
+                setStyleName(rowElement, rowSelectedStyleName,
+                        isSelected(rowData));
+            } else if (usedToHaveData) {
+                setStyleName(rowElement, rowSelectedStyleName, false);
+            }
+
+            activeCellHandler.updateActiveRowStyle(row);
+
+            for (FlyweightCell cell : cellsToUpdate) {
+                GridColumn<?, T> column = getColumnFromVisibleIndex(cell
+                        .getColumn());
+
+                assert column != null : "Column was not found from cell ("
+                        + cell.getColumn() + "," + cell.getRow() + ")";
+
+                activeCellHandler.updateActiveCellStyle(cell,
+                        escalator.getBody());
+
+                Renderer renderer = column.getRenderer();
+
+                // Hide cell content if needed
+                if (renderer instanceof ComplexRenderer) {
+                    ComplexRenderer clxRenderer = (ComplexRenderer) renderer;
+                    if (hasData) {
+                        if (!usedToHaveData) {
+                            // Prepare cell for rendering
+                            clxRenderer.setContentVisible(cell, true);
+                        }
+
+                        Object value = column.getValue(rowData);
+                        clxRenderer.render(cell, value);
+
+                    } else {
+                        // Prepare cell for no data
+                        clxRenderer.setContentVisible(cell, false);
+                    }
+
+                } else if (hasData) {
+                    // Simple renderers just render
+                    Object value = column.getValue(rowData);
+                    renderer.render(cell, value);
+
+                } else {
+                    // Clear cell if there is no data
+                    cell.getElement().removeAllChildren();
+                }
+            }
+        }
+
+        @Override
+        public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
+            for (FlyweightCell cell : cellsToDetach) {
+                Renderer renderer = findRenderer(cell);
+                if (renderer instanceof WidgetRenderer) {
+                    Widget w = Util.findWidget(cell.getElement()
+                            .getFirstChildElement(), Widget.class);
+                    if (w != null) {
+
+                        // Logical detach
+                        setParent(w, null);
+
+                        // Physical detach
+                        cell.getElement().removeChild(w.getElement());
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void postDetach(Row row, Iterable<FlyweightCell> detachedCells) {
+            for (FlyweightCell cell : detachedCells) {
+                Renderer renderer = findRenderer(cell);
+                if (renderer instanceof ComplexRenderer) {
+                    ((ComplexRenderer) renderer).destroy(cell);
+                }
+            }
+        }
+    }
+
     protected class StaticSectionUpdater implements EscalatorUpdater {
 
         private GridStaticSection<?> section;
@@ -1226,156 +1356,42 @@ public class Grid<T> extends Composite implements
     }
 
     /**
-     * Creates the header updater that updates the escalator header rows from
-     * the column and column group rows.
+     * Creates the escalator updater used to update the header rows in this
+     * grid. The updater is invoked when header rows or columns are added or
+     * removed, or the content of existing header cells is changed.
      * 
-     * @return the updater that updates the data in the escalator.
+     * @return the new header updater instance
+     * 
+     * @see GridHeader
+     * @see Grid#getHeader()
      */
-    private EscalatorUpdater createHeaderUpdater() {
+    protected EscalatorUpdater createHeaderUpdater() {
         return new StaticSectionUpdater(header, escalator.getHeader());
     }
 
-    private EscalatorUpdater createBodyUpdater() {
-        return new EscalatorUpdater() {
-
-            @Override
-            public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
-                for (FlyweightCell cell : cellsToAttach) {
-                    Renderer<?> renderer = findRenderer(cell);
-                    if (renderer instanceof ComplexRenderer) {
-                        ((ComplexRenderer<?>) renderer).init(cell);
-                    }
-                }
-            }
-
-            @Override
-            public void postAttach(Row row,
-                    Iterable<FlyweightCell> attachedCells) {
-                for (FlyweightCell cell : attachedCells) {
-                    Renderer<?> renderer = findRenderer(cell);
-                    if (renderer instanceof WidgetRenderer) {
-                        WidgetRenderer<?, ?> widgetRenderer = (WidgetRenderer<?, ?>) renderer;
-
-                        Widget widget = widgetRenderer.createWidget();
-                        assert widget != null : "WidgetRenderer.createWidget() returned null. It should return a widget.";
-                        assert widget.getParent() == null : "WidgetRenderer.createWidget() returned a widget which already is attached.";
-                        assert cell.getElement().getChildCount() == 0 : "Cell content should be empty when adding Widget";
-
-                        // Physical attach
-                        cell.getElement().appendChild(widget.getElement());
-
-                        // Logical attach
-                        setParent(widget, Grid.this);
-                    }
-                }
-            }
-
-            @Override
-            public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
-                int rowIndex = row.getRow();
-                Element rowElement = row.getElement();
-                T rowData = dataSource.getRow(rowIndex);
-
-                boolean hasData = rowData != null;
-
-                // Assign stylename for rows with data
-                boolean usedToHaveData = rowElement
-                        .hasClassName(rowHasDataStyleName);
-
-                if (usedToHaveData != hasData) {
-                    setStyleName(rowElement, rowHasDataStyleName, hasData);
-                }
-
-                // Assign stylename for selected rows
-                if (hasData) {
-                    setStyleName(rowElement, rowSelectedStyleName,
-                            isSelected(rowData));
-                } else if (usedToHaveData) {
-                    setStyleName(rowElement, rowSelectedStyleName, false);
-                }
-
-                activeCellHandler.updateActiveRowStyle(row);
-
-                for (FlyweightCell cell : cellsToUpdate) {
-                    GridColumn<?, T> column = getColumnFromVisibleIndex(cell
-                            .getColumn());
-
-                    assert column != null : "Column was not found from cell ("
-                            + cell.getColumn() + "," + cell.getRow() + ")";
-
-                    activeCellHandler.updateActiveCellStyle(cell,
-                            escalator.getBody());
-
-                    Renderer renderer = column.getRenderer();
-
-                    // Hide cell content if needed
-                    if (renderer instanceof ComplexRenderer) {
-                        ComplexRenderer clxRenderer = (ComplexRenderer) renderer;
-                        if (hasData) {
-                            if (!usedToHaveData) {
-                                // Prepare cell for rendering
-                                clxRenderer.setContentVisible(cell, true);
-                            }
-
-                            Object value = column.getValue(rowData);
-                            clxRenderer.render(cell, value);
-
-                        } else {
-                            // Prepare cell for no data
-                            clxRenderer.setContentVisible(cell, false);
-                        }
-
-                    } else if (hasData) {
-                        // Simple renderers just render
-                        Object value = column.getValue(rowData);
-                        renderer.render(cell, value);
-
-                    } else {
-                        // Clear cell if there is no data
-                        cell.getElement().removeAllChildren();
-                    }
-                }
-            }
-
-            @Override
-            public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
-                for (FlyweightCell cell : cellsToDetach) {
-                    Renderer renderer = findRenderer(cell);
-                    if (renderer instanceof WidgetRenderer) {
-                        Widget w = Util.findWidget(cell.getElement()
-                                .getFirstChildElement(), Widget.class);
-                        if (w != null) {
-
-                            // Logical detach
-                            setParent(w, null);
-
-                            // Physical detach
-                            cell.getElement().removeChild(w.getElement());
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void postDetach(Row row,
-                    Iterable<FlyweightCell> detachedCells) {
-                for (FlyweightCell cell : detachedCells) {
-                    Renderer renderer = findRenderer(cell);
-                    if (renderer instanceof ComplexRenderer) {
-                        ((ComplexRenderer) renderer).destroy(cell);
-                    }
-                }
-            }
-        };
+    /**
+     * Creates the escalator updater used to update the body rows in this grid.
+     * The updater is invoked when body rows or columns are added or removed,
+     * the content of body cells is changed, or the body is scrolled to expose
+     * previously hidden content.
+     *
+     * @return the new body updater instance
+     */
+    protected EscalatorUpdater createBodyUpdater() {
+        return new BodyUpdater();
     }
 
     /**
-     * Creates the footer updater that updates the escalator footer rows from
-     * the column and column group rows.
+     * Creates the escalator updater used to update the footer rows in this
+     * grid. The updater is invoked when header rows or columns are added or
+     * removed, or the content of existing header cells is changed.
      * 
-     * @return the updater that updates the data in the escalator.
+     * @return the new footer updater instance
+     * 
+     * @see GridFooter
+     * @see #getFooter()
      */
-    private EscalatorUpdater createFooterUpdater() {
+    protected EscalatorUpdater createFooterUpdater() {
         return new StaticSectionUpdater(footer, escalator.getFooter());
     }
 
