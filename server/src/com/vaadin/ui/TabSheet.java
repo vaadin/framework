@@ -193,6 +193,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     @Override
     public void removeComponent(Component component) {
         if (component != null && components.contains(component)) {
+
+            int componentIndex = components.indexOf(component);
+
             super.removeComponent(component);
             keyMapper.remove(component);
             components.remove(component);
@@ -206,6 +209,24 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                 if (components.isEmpty()) {
                     setSelected(null);
                 } else {
+
+                    int newSelectedIndex = selectedTabIndexAfterTabRemove(componentIndex);
+
+                    // Make sure the component actually exists, in case someone
+                    // override it and provide a non existing component.
+                    if (0 <= newSelectedIndex
+                            && newSelectedIndex < components.size()) {
+
+                        Component newSelectedComponent = components
+                                .get(newSelectedIndex);
+
+                        // Select only if the tab is enabled.
+                        Tab newSelectedTab = tabs.get(newSelectedComponent);
+                        if (newSelectedTab.isEnabled()) {
+                            setSelected(newSelectedComponent);
+                        }
+                    }
+
                     // select the first enabled and visible tab, if any
                     updateSelection();
                     fireSelectedTabChange();
@@ -213,6 +234,40 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             }
             markAsDirty();
         }
+    }
+
+    /**
+     * Called when a selected tab is removed to specify the new tab to select.
+     * Can be overridden to provide another algorithm that calculates the new
+     * selection.
+     * 
+     * Current implementation will choose the first enabled tab to the right of
+     * the removed tab if it's not the last one, otherwise will choose the
+     * closer enabled tab to the left.
+     * 
+     * @since
+     * @param removedTabIndex
+     *            the index of the selected tab which was just remove.
+     * @return the index of the tab to be selected or -1 if there are no more
+     *         enabled tabs to select.
+     */
+    protected int selectedTabIndexAfterTabRemove(int removedTabIndex) {
+
+        for (int i = removedTabIndex; i < components.size(); i++) {
+            Tab tab = getTab(i);
+            if (tab.isEnabled()) {
+                return i;
+            }
+        }
+
+        for (int i = removedTabIndex - 1; i >= 0; i--) {
+            Tab tab = getTab(i);
+            if (tab.isEnabled()) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     /**
