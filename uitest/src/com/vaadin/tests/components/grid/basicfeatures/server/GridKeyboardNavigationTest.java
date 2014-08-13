@@ -24,7 +24,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.tests.components.grid.GridElement;
-import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public class GridKeyboardNavigationTest extends GridBasicFeaturesTest {
@@ -169,4 +169,57 @@ public class GridKeyboardNavigationTest extends GridBasicFeaturesTest {
         assertTrue("Footer cell 0, 2 is not active", grid.getFooterCell(0, 2)
                 .isActive());
     }
+
+    @Test
+    public void testHomeEnd() throws Exception {
+        openTestURL();
+
+        getGridElement().getCell(100, 2).click();
+
+        new Actions(getDriver()).sendKeys(Keys.HOME).perform();
+        assertTrue("First row is not visible", getGridElement().getCell(0, 2)
+                .isDisplayed());
+
+        new Actions(getDriver()).sendKeys(Keys.END).perform();
+        assertTrue("Last row cell not visible",
+                getGridElement().getCell(GridBasicFeatures.ROWS - 1, 2)
+                        .isDisplayed());
+    }
+
+    @Test
+    public void testPageUpPageDown() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Size", "HeightMode Row");
+
+        getGridElement().getCell(5, 2).click();
+
+        new Actions(getDriver()).sendKeys(Keys.PAGE_DOWN).perform();
+        assertTrue("Row 5 did not remain active", getGridElement()
+                .getCell(5, 2).isActive());
+        assertTrue("Row 20 did not become visible",
+                getGridElement().getCell(20, 2).isDisplayed());
+
+        new Actions(getDriver()).sendKeys(Keys.PAGE_DOWN).perform();
+        assertTrue("Row 5 did not remain active", getGridElement()
+                .getCell(5, 2).isActive());
+        assertTrue("Row 40 did not become visible",
+                getGridElement().getCell(40, 2).isDisplayed());
+
+        getGridElement().getCell(50, 2).click();
+
+        new Actions(getDriver()).sendKeys(Keys.PAGE_UP).perform();
+        assertTrue("Row 50 did not remain active",
+                getGridElement().getCell(50, 2).isActive());
+        assertTrue("Row 20 did not become visible",
+                getGridElement().getCell(20, 2).isDisplayed());
+
+        new Actions(getDriver()).sendKeys(Keys.PAGE_UP).perform();
+        assertTrue("Row 50 did not remain active",
+                getGridElement().getCell(50, 2).isActive());
+        assertTrue("Row 0 did not become visible",
+                getGridElement().getCell(0, 2).isDisplayed());
+
+    }
+
 }

@@ -454,31 +454,6 @@ public class Grid<T> extends Composite implements
 
         }
 
-        private int getLastVisibleRowIndex() {
-            int lastRowIndex = escalator.getVisibleRowRange().getEnd();
-            int footerTop = escalator.getFooter().getElement().getAbsoluteTop();
-            Element lastRow;
-
-            do {
-                lastRow = escalator.getBody().getRowElement(--lastRowIndex);
-            } while (lastRow.getAbsoluteBottom() > footerTop);
-
-            return lastRowIndex;
-        }
-
-        private int getFirstVisibleRowIndex() {
-            int firstRowIndex = escalator.getVisibleRowRange().getStart();
-            int headerBottom = escalator.getHeader().getElement()
-                    .getAbsoluteBottom();
-            Element firstRow = escalator.getBody().getRowElement(firstRowIndex);
-
-            while (firstRow.getAbsoluteTop() < headerBottom) {
-                firstRow = escalator.getBody().getRowElement(++firstRowIndex);
-            }
-
-            return firstRowIndex;
-        }
-
         private RowContainer getPreviousContainer(RowContainer current) {
             if (current == escalator.getFooter()) {
                 current = escalator.getBody();
@@ -1984,7 +1959,57 @@ public class Grid<T> extends Composite implements
                     && (Util.getFocusedElement() == getElement() || cell != null)) {
                 activeCellHandler.handleNavigationEvent(event, cell);
             }
+
+            handleGridNavigation(event, cell);
         }
+    }
+
+    private void handleGridNavigation(Event event, Cell cell) {
+        if (!event.getType().equals(BrowserEvents.KEYDOWN)) {
+            // Only handle key downs
+            return;
+        }
+
+        int newRow = -1;
+        RowContainer container = escalator.getBody();
+        switch (event.getKeyCode()) {
+        case KeyCodes.KEY_HOME:
+            if (container.getRowCount() > 0) {
+                newRow = 0;
+            }
+            break;
+        case KeyCodes.KEY_END:
+            if (container.getRowCount() > 0) {
+                newRow = container.getRowCount() - 1;
+            }
+            break;
+        case KeyCodes.KEY_PAGEUP: {
+            Range range = escalator.getVisibleRowRange();
+            if (!range.isEmpty()) {
+                int firstIndex = getFirstVisibleRowIndex();
+                newRow = firstIndex - range.length();
+                if (newRow < 0) {
+                    newRow = 0;
+                }
+            }
+            break;
+        }
+        case KeyCodes.KEY_PAGEDOWN: {
+            Range range = escalator.getVisibleRowRange();
+            if (!range.isEmpty()) {
+                int lastIndex = getLastVisibleRowIndex();
+                newRow = lastIndex + range.length();
+                if (newRow >= container.getRowCount()) {
+                    newRow = container.getRowCount() - 1;
+                }
+            }
+            break;
+        }
+        default:
+            return;
+        }
+
+        scrollToRow(newRow);
     }
 
     private Point rowEventTouchStartingPoint;
@@ -2515,5 +2540,30 @@ public class Grid<T> extends Composite implements
         refreshHeader();
         fireEvent(new SortEvent<T>(this,
                 Collections.unmodifiableList(sortOrder), originator));
+    }
+
+    private int getLastVisibleRowIndex() {
+        int lastRowIndex = escalator.getVisibleRowRange().getEnd();
+        int footerTop = escalator.getFooter().getElement().getAbsoluteTop();
+        Element lastRow;
+
+        do {
+            lastRow = escalator.getBody().getRowElement(--lastRowIndex);
+        } while (lastRow.getAbsoluteBottom() > footerTop);
+
+        return lastRowIndex;
+    }
+
+    private int getFirstVisibleRowIndex() {
+        int firstRowIndex = escalator.getVisibleRowRange().getStart();
+        int headerBottom = escalator.getHeader().getElement()
+                .getAbsoluteBottom();
+        Element firstRow = escalator.getBody().getRowElement(firstRowIndex);
+
+        while (firstRow.getAbsoluteTop() < headerBottom) {
+            firstRow = escalator.getBody().getRowElement(++firstRowIndex);
+        }
+
+        return firstRowIndex;
     }
 }
