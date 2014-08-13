@@ -16,7 +16,7 @@
 
 package com.vaadin.client.ui.grid;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.TableRowElement;
 
 /**
  * A representation of a row in an {@link Escalator}.
@@ -44,5 +44,5 @@ public interface Row {
      * 
      * @return the root element of the row
      */
-    public Element getElement();
+    public TableRowElement getElement();
 }

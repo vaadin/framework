@@ -25,8 +25,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
+import com.vaadin.client.ui.VLabel;
+import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Grid;
+import com.vaadin.client.ui.grid.Grid.AbstractGridKeyEvent;
 import com.vaadin.client.ui.grid.Grid.SelectionMode;
 import com.vaadin.client.ui.grid.GridColumn;
 import com.vaadin.client.ui.grid.GridFooter;
@@ -36,6 +39,18 @@ import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.Renderer;
 import com.vaadin.client.ui.grid.datasources.ListDataSource;
 import com.vaadin.client.ui.grid.datasources.ListSorter;
+import com.vaadin.client.ui.grid.keyevents.BodyKeyDownHandler;
+import com.vaadin.client.ui.grid.keyevents.BodyKeyPressHandler;
+import com.vaadin.client.ui.grid.keyevents.BodyKeyUpHandler;
+import com.vaadin.client.ui.grid.keyevents.FooterKeyDownHandler;
+import com.vaadin.client.ui.grid.keyevents.FooterKeyPressHandler;
+import com.vaadin.client.ui.grid.keyevents.FooterKeyUpHandler;
+import com.vaadin.client.ui.grid.keyevents.GridKeyDownEvent;
+import com.vaadin.client.ui.grid.keyevents.GridKeyPressEvent;
+import com.vaadin.client.ui.grid.keyevents.GridKeyUpEvent;
+import com.vaadin.client.ui.grid.keyevents.HeaderKeyDownHandler;
+import com.vaadin.client.ui.grid.keyevents.HeaderKeyPressHandler;
+import com.vaadin.client.ui.grid.keyevents.HeaderKeyUpHandler;
 import com.vaadin.client.ui.grid.renderers.DateRenderer;
 import com.vaadin.client.ui.grid.renderers.HtmlRenderer;
 import com.vaadin.client.ui.grid.renderers.NumberRenderer;
@@ -236,7 +251,9 @@ public class GridBasicClientFeaturesWidget extends
         createFooterMenu();
 
         grid.getElement().getStyle().setZIndex(0);
-        add(grid);
+        addNorth(grid, 400);
+
+        createKeyHandlers();
     }
 
     private void createStateMenu() {
@@ -602,7 +619,7 @@ public class GridBasicClientFeaturesWidget extends
     }
 
     /**
-     * Creates a a renderer for a {@link Renderers}
+     * Creates a renderer for a {@link Renderers}
      */
     @SuppressWarnings("rawtypes")
     private final Renderer createRenderer(Renderers renderer) {
@@ -628,5 +645,111 @@ public class GridBasicClientFeaturesWidget extends
         default:
             return new TextRenderer();
         }
+    }
+
+    /**
+     * Creates a collection of handlers for all the grid key events
+     */
+    private void createKeyHandlers() {
+        final List<VLabel> labels = new ArrayList<VLabel>();
+        for (int i = 0; i < 9; ++i) {
+            VLabel tmp = new VLabel();
+            addNorth(tmp, 20);
+            labels.add(tmp);
+        }
+
+        // Key Down Events
+        grid.addKeyDownHandler(new BodyKeyDownHandler<List<Data>>() {
+            private final VLabel label = labels.get(0);
+
+            @Override
+            public void onKeyDown(GridKeyDownEvent<List<Data>> event) {
+                updateLabel(label, event);
+            }
+        });
+
+        grid.addKeyDownHandler(new HeaderKeyDownHandler<List<Data>>() {
+            private final VLabel label = labels.get(1);
+
+            @Override
+            public void onKeyDown(GridKeyDownEvent<List<Data>> event) {
+                updateLabel(label, event);
+            }
+        });
+
+        grid.addKeyDownHandler(new FooterKeyDownHandler<List<Data>>() {
+            private final VLabel label = labels.get(2);
+
+            @Override
+            public void onKeyDown(GridKeyDownEvent<List<Data>> event) {
+                updateLabel(label, event);
+            }
+        });
+
+        // Key Up Events
+        grid.addKeyUpHandler(new BodyKeyUpHandler<List<Data>>() {
+            private final VLabel label = labels.get(3);
+
+            @Override
+            public void onKeyUp(GridKeyUpEvent<List<Data>> event) {
+                updateLabel(label, event);
+            }
+        });
+
+        grid.addKeyUpHandler(new HeaderKeyUpHandler<List<Data>>() {
+            private final VLabel label = labels.get(4);
+
+            @Override
+            public void onKeyUp(GridKeyUpEvent<List<Data>> event) {
+                updateLabel(label, event);
+            }
+        });
+
+        grid.addKeyUpHandler(new FooterKeyUpHandler<List<Data>>() {
+            private final VLabel label = labels.get(5);
+
+            @Override
+            public void onKeyUp(GridKeyUpEvent<List<Data>> event) {
+                updateLabel(label, event);
+            }
+        });
+
+        // Key Press Events
+        grid.addKeyPressHandler(new BodyKeyPressHandler<List<Data>>() {
+            private final VLabel label = labels.get(6);
+
+            @Override
+            public void onKeyPress(GridKeyPressEvent<List<Data>> event) {
+                updateLabel(label, event);
+            }
+        });
+
+        grid.addKeyPressHandler(new HeaderKeyPressHandler<List<Data>>() {
+            private final VLabel label = labels.get(7);
+
+            @Override
+            public void onKeyPress(GridKeyPressEvent<List<Data>> event) {
+                updateLabel(label, event);
+            }
+        });
+
+        grid.addKeyPressHandler(new FooterKeyPressHandler<List<Data>>() {
+            private final VLabel label = labels.get(8);
+
+            @Override
+            public void onKeyPress(GridKeyPressEvent<List<Data>> event) {
+                updateLabel(label, event);
+            }
+        });
+
+    }
+
+    private void updateLabel(VLabel label,
+            AbstractGridKeyEvent<List<Data>, ?> event) {
+        String type = event.getNativeEvent().getType();
+        Cell active = event.getActiveCell();
+        String coords = "(" + active.getRow() + ", " + active.getColumn() + ")";
+        String keyCode = "" + event.getNativeKeyCode();
+        label.setText(coords + " " + type + " " + keyCode);
     }
 }

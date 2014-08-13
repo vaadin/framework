@@ -17,7 +17,6 @@ package com.vaadin.client.ui.grid;
 
 import java.util.List;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableCellElement;
@@ -70,7 +69,7 @@ public class FlyweightCell {
      * Returns the element of the cell. Can be either a <code>TD</code> element
      * or a <code>TH</code> element.
      */
-    public Element getElement() {
+    public TableCellElement getElement() {
         assertSetup();
         return element;
     }

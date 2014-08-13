@@ -33,7 +33,9 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableCellElement;
+import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.Touch;
+import com.google.gwt.event.dom.client.KeyCodeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.touch.client.Point;
@@ -50,6 +52,22 @@ import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.grid.GridFooter.FooterRow;
 import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.GridStaticSection.StaticCell;
+import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler;
+import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyDownHandler;
+import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyPressHandler;
+import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyUpHandler;
+import com.vaadin.client.ui.grid.keyevents.BodyKeyDownHandler;
+import com.vaadin.client.ui.grid.keyevents.BodyKeyPressHandler;
+import com.vaadin.client.ui.grid.keyevents.BodyKeyUpHandler;
+import com.vaadin.client.ui.grid.keyevents.FooterKeyDownHandler;
+import com.vaadin.client.ui.grid.keyevents.FooterKeyPressHandler;
+import com.vaadin.client.ui.grid.keyevents.FooterKeyUpHandler;
+import com.vaadin.client.ui.grid.keyevents.GridKeyDownEvent;
+import com.vaadin.client.ui.grid.keyevents.GridKeyPressEvent;
+import com.vaadin.client.ui.grid.keyevents.GridKeyUpEvent;
+import com.vaadin.client.ui.grid.keyevents.HeaderKeyDownHandler;
+import com.vaadin.client.ui.grid.keyevents.HeaderKeyPressHandler;
+import com.vaadin.client.ui.grid.keyevents.HeaderKeyUpHandler;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
 import com.vaadin.client.ui.grid.selection.HasSelectionChangeHandlers;
@@ -105,6 +123,68 @@ import com.vaadin.shared.ui.grid.SortDirection;
 public class Grid<T> extends Composite implements
         HasSelectionChangeHandlers<T>, SubPartAware {
 
+    public static abstract class AbstractGridKeyEvent<T, HANDLER extends AbstractGridKeyEventHandler>
+            extends KeyCodeEvent<HANDLER> {
+
+        /**
+         * Enum describing different section of Grid.
+         */
+        public enum GridSection {
+            HEADER, BODY, FOOTER
+        }
+
+        private Grid<T> grid;
+        protected Cell activeCell;
+        protected GridSection activeSection;
+        private final Type<HANDLER> associatedType = new Type<HANDLER>(
+                getBrowserEventType(), this);
+
+        public AbstractGridKeyEvent(Grid<T> grid) {
+            this.grid = grid;
+        }
+
+        protected abstract String getBrowserEventType();
+
+        /**
+         * Gets the Grid instance for this event.
+         * 
+         * @return grid
+         */
+        public Grid<T> getGrid() {
+            return grid;
+        }
+
+        /**
+         * Gets the active cell for this event.
+         * 
+         * @return active cell
+         */
+        public Cell getActiveCell() {
+            return activeCell;
+        }
+
+        @Override
+        protected void dispatch(HANDLER handler) {
+            activeCell = grid.activeCellHandler.getActiveCell();
+            activeSection = GridSection.FOOTER;
+            final RowContainer container = grid.activeCellHandler.container;
+            if (container == grid.escalator.getHeader()) {
+                activeSection = GridSection.HEADER;
+            } else if (container == grid.escalator.getBody()) {
+                activeSection = GridSection.BODY;
+            }
+        }
+
+        @Override
+        public Type<HANDLER> getAssociatedType() {
+            return associatedType;
+        }
+    }
+
+    private GridKeyDownEvent<T> keyDown = new GridKeyDownEvent<T>(this);
+    private GridKeyUpEvent<T> keyUp = new GridKeyUpEvent<T>(this);
+    private GridKeyPressEvent<T> keyPress = new GridKeyPressEvent<T>(this);
+
     private class ActiveCellHandler {
 
         private RowContainer container = escalator.getBody();
@@ -113,11 +193,15 @@ public class Grid<T> extends Composite implements
         private int lastActiveBodyRow = 0;
         private int lastActiveHeaderRow = 0;
         private int lastActiveFooterRow = 0;
-        private Element cellWithActiveStyle = null;
-        private Element rowWithActiveStyle = null;
+        private TableCellElement cellWithActiveStyle = null;
+        private TableRowElement rowWithActiveStyle = null;
 
         public ActiveCellHandler() {
             sinkEvents(getNavigationEvents());
+        }
+
+        private Cell getActiveCell() {
+            return new Cell(activeRow, activeColumn, cellWithActiveStyle);
         }
 
         /**
@@ -594,7 +678,7 @@ public class Grid<T> extends Composite implements
      */
     private SelectionModel<T> selectionModel;
 
-    private final ActiveCellHandler activeCellHandler;
+    protected final ActiveCellHandler activeCellHandler;
 
     private final LazySorter lazySorter = new LazySorter();
 
@@ -1199,8 +1283,10 @@ public class Grid<T> extends Composite implements
             }
         });
 
-        // Sink header events
+        // Sink header events and key events
         sinkEvents(getHeader().getConsumedEvents());
+        sinkEvents(Arrays.asList(BrowserEvents.KEYDOWN, BrowserEvents.KEYUP,
+                BrowserEvents.KEYPRESS));
     }
 
     @Override
@@ -2354,6 +2440,66 @@ public class Grid<T> extends Composite implements
             }
         });
         return addHandler(handler, DataAvailableEvent.TYPE);
+    }
+
+    /**
+     * Register a KeyDown handler to this Grid. If the handler is a
+     * HeaderKeyDownHandler, it will be fired only when a header cell is active.
+     * The same goes for body and footer with their respective handlers.
+     * 
+     * @param handler
+     *            the key handler to register
+     * @return the registration for the event
+     */
+    public <HANDLER extends GridKeyDownHandler<T>> HandlerRegistration addKeyDownHandler(
+            HANDLER handler) {
+        if (handler instanceof BodyKeyDownHandler
+                || handler instanceof HeaderKeyDownHandler
+                || handler instanceof FooterKeyDownHandler) {
+            return addHandler(handler, keyDown.getAssociatedType());
+        }
+        throw new IllegalArgumentException(
+                "Handler not a valid extension of GridKeyDownHandler");
+    }
+
+    /**
+     * Register a KeyUp handler to this Grid. If the handler is a
+     * HeaderKeyUpHandler, it will be fired only when a header cell is active.
+     * The same goes for body and footer with their respective handlers.
+     * 
+     * @param handler
+     *            the key handler to register
+     * @return the registration for the event
+     */
+    public <HANDLER extends GridKeyUpHandler<T>> HandlerRegistration addKeyUpHandler(
+            HANDLER handler) {
+        if (handler instanceof BodyKeyUpHandler
+                || handler instanceof HeaderKeyUpHandler
+                || handler instanceof FooterKeyUpHandler) {
+            return addHandler(handler, keyUp.getAssociatedType());
+        }
+        throw new IllegalArgumentException(
+                "Handler not a valid extension of GridKeyUpHandler");
+    }
+
+    /**
+     * Register a KeyPress handler to this Grid. If the handler is a
+     * HeaderKeyPressHandler, it will be fired only when a header cell is
+     * active. The same goes for body and footer with their respective handlers.
+     * 
+     * @param handler
+     *            the key handler to register
+     * @return the registration for the event
+     */
+    public <HANDLER extends GridKeyPressHandler<T>> HandlerRegistration addKeyPressHandler(
+            HANDLER handler) {
+        if (handler instanceof BodyKeyPressHandler
+                || handler instanceof HeaderKeyPressHandler
+                || handler instanceof FooterKeyPressHandler) {
+            return addHandler(handler, keyPress.getAssociatedType());
+        }
+        throw new IllegalArgumentException(
+                "Handler not a valid extension of GridKeyPressHandler");
     }
 
     /**
