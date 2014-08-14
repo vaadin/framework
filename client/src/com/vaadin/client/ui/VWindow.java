@@ -245,6 +245,20 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
          * state.
          */
         setTabStopEnabled(doTabStop);
+
+        // Fix for #14413. Any pseudo elements inside these elements are not
+        // visible on initial render unless we shake the DOM.
+        if (BrowserInfo.get().isIE8()) {
+            closeBox.getStyle().setDisplay(Display.NONE);
+            maximizeRestoreBox.getStyle().setDisplay(Display.NONE);
+            Scheduler.get().scheduleFinally(new Command() {
+                @Override
+                public void execute() {
+                    closeBox.getStyle().clearDisplay();
+                    maximizeRestoreBox.getStyle().clearDisplay();
+                }
+            });
+        }
     }
 
     @Override
