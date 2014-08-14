@@ -68,7 +68,7 @@
     <property-provider name="modernie"><![CDATA[
       {
         var ua = $wnd.navigator.userAgent;
-        if (ua.indexOf('IE') == -1 && ua.indexOf('Trident') != -1) { return 'yes'; }
+        if (ua.indexOf('MSIE') == -1 && ua.indexOf('Trident') != -1) { return 'yes'; }
         return 'none';
       }
     ]]></property-provider>
