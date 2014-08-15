@@ -33,6 +33,5 @@ public interface SelectConnectorListener {
      * @param element
      *            selected element of the connector or null if unknown
      */
-    public void select(ServerConnector connector,
-            Element element);
+    public void select(ServerConnector connector, Element element);
 }

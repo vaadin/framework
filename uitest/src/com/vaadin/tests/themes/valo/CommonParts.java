@@ -131,9 +131,11 @@ public class CommonParts extends VerticalLayout implements View {
         spinnerDesc.setCaption("Spinner");
         content.addComponent(spinnerDesc);
 
-        Label spinner = new Label();
-        spinner.addStyleName("spinner");
-        content.addComponent(spinner);
+        if (!ValoThemeUI.isTestMode()) {
+            Label spinner = new Label();
+            spinner.addStyleName("spinner");
+            content.addComponent(spinner);
+        }
 
         return p;
     }
@@ -240,6 +242,7 @@ public class CommonParts extends VerticalLayout implements View {
                 };
 
                 style.setCaption("Additional style");
+                style.addItem("Dark", styleCommand).setCheckable(true);
                 style.addItem("Success", styleCommand).setCheckable(true);
                 style.addItem("Failure", styleCommand).setCheckable(true);
                 style.addItem("Bar", styleCommand).setCheckable(true);

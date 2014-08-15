@@ -45,12 +45,12 @@ public class Trees extends VerticalLayout implements View {
         Tree tree = new Tree();
         tree.setSelectable(true);
         tree.setMultiSelect(true);
-        Container generateContainer = ValoThemeTest.generateContainer(10, true);
+        Container generateContainer = ValoThemeUI.generateContainer(10, true);
         tree.setContainerDataSource(generateContainer);
         tree.setDragMode(TreeDragMode.NODE);
         row.addComponent(tree);
-        tree.setItemCaptionPropertyId(ValoThemeTest.CAPTION_PROPERTY);
-        tree.setItemIconPropertyId(ValoThemeTest.ICON_PROPERTY);
+        tree.setItemCaptionPropertyId(ValoThemeUI.CAPTION_PROPERTY);
+        tree.setItemIconPropertyId(ValoThemeUI.ICON_PROPERTY);
         tree.expandItem(generateContainer.getItemIds().iterator().next());
 
         tree.setDropHandler(new DropHandler() {
@@ -66,7 +66,7 @@ public class Trees extends VerticalLayout implements View {
         });
 
         // Add actions (context menu)
-        tree.addActionHandler(ValoThemeTest.getActionHandler());
+        tree.addActionHandler(ValoThemeUI.getActionHandler());
     }
 
     @Override

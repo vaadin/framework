@@ -1,15 +1,22 @@
 package com.vaadin.tests.components.button;
 
 import com.vaadin.data.Item;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Table;
 
-public class ButtonUndefinedWidth extends TestBase {
+/**
+ * Test UI for buttons with undefined width.
+ *
+ * @since 7.2
+ * @author Vaadin Ltd
+ */
+public class ButtonUndefinedWidth extends AbstractTestUI {
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Both the button outside the table and inside the table should be only as wide as necessary. There should be empty space in the table to the right of the button.";
     }
 
@@ -18,8 +25,9 @@ public class ButtonUndefinedWidth extends TestBase {
         return 3257;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         Button b = new Button("Undefined wide");
         addComponent(b);
         NativeButton b2 = new NativeButton("Undefined wide");
@@ -36,5 +44,4 @@ public class ButtonUndefinedWidth extends TestBase {
 
         addComponent(t);
     }
-
 }

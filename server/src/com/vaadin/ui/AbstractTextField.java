@@ -147,6 +147,18 @@ public abstract class AbstractTextField extends AbstractField<String> implements
 
         try {
 
+            // Sets the height set by the user when resize the <textarea>.
+            String newHeight = (String) variables.get("height");
+            if (newHeight != null) {
+                setHeight(newHeight);
+            }
+
+            // Sets the width set by the user when resize the <textarea>.
+            String newWidth = (String) variables.get("width");
+            if (newWidth != null) {
+                setWidth(newWidth);
+            }
+
             if (variables.containsKey(TextFieldConstants.VAR_CURSOR)) {
                 Integer object = (Integer) variables
                         .get(TextFieldConstants.VAR_CURSOR);

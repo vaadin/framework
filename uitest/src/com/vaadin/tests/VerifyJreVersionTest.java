@@ -21,9 +21,9 @@ import static org.hamcrest.core.Is.is;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class VerifyJreVersionTest extends MultiBrowserTest {
+public class VerifyJreVersionTest extends SingleBrowserTest {
 
     @Test
     public void verifyJreVersion() {

@@ -28,6 +28,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
 
     private static final String IE10_WINDOWS_8 = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)";
     private static final String IE11_WINDOWS_7 = "Mozilla/5.0 (Windows NT 6.1; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; rv:11.0) like Gecko";
+    private static final String IE11_WINDOWS_PHONE_8_1_UPDATE = "Mozilla/5.0 (Mobile; Windows Phone 8.1; Android 4.0; ARM; Trident/7.0; Touch; rv:11.0; IEMobile/11.0; NOKIA; Lumia 920) Like iPhone OS 7_0_3 Mac OS X AppleWebKit/537 (KHTML, like Gecko) Mobile Safari/537";
 
     // "Version/" was added in 10.00
     private static final String OPERA964_WINDOWS = "Opera/9.64(Windows NT 5.1; U; en) Presto/2.1.1";
@@ -388,6 +389,16 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
 
     public void testIE11() {
         VBrowserDetails bd = new VBrowserDetails(IE11_WINDOWS_7);
+        assertTrident(bd);
+        assertEngineVersion(bd, 7);
+        assertIE(bd);
+        assertBrowserMajorVersion(bd, 11);
+        assertBrowserMinorVersion(bd, 0);
+        assertWindows(bd);
+    }
+
+    public void testIE11WindowsPhone81Update() {
+        VBrowserDetails bd = new VBrowserDetails(IE11_WINDOWS_PHONE_8_1_UPDATE);
         assertTrident(bd);
         assertEngineVersion(bd, 7);
         assertIE(bd);

@@ -38,6 +38,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -74,6 +75,9 @@ import com.vaadin.client.ui.VOverlay;
 public class MenuBar extends Widget implements PopupListener {
 
     private final Element body;
+    private final Element table;
+    private final Element outer;
+
     private final ArrayList<MenuItem> items = new ArrayList<MenuItem>();
     private MenuBar parentMenu;
     private PopupPanel popup;
@@ -98,7 +102,7 @@ public class MenuBar extends Widget implements PopupListener {
     public MenuBar(boolean vertical) {
         super();
 
-        final Element table = DOM.createTable();
+        table = DOM.createTable();
         body = DOM.createTBody();
         DOM.appendChild(table, body);
 
@@ -109,7 +113,7 @@ public class MenuBar extends Widget implements PopupListener {
 
         this.vertical = vertical;
 
-        final Element outer = DOM.createDiv();
+        outer = DOM.createDiv();
         DOM.appendChild(outer, table);
         setElement(outer);
 
@@ -324,6 +328,37 @@ public class MenuBar extends Widget implements PopupListener {
         return selectedItem;
     }
 
+    /**
+     * Gets the first item from the menu or null if no items.
+     * 
+     * @since
+     * @return the first item from the menu or null if no items.
+     */
+    public MenuItem getFirstItem() {
+        return items != null && items.size() > 0 ? items.get(0) : null;
+    }
+
+    /**
+     * Gest the last item from the menu or null if no items.
+     * 
+     * @since
+     * @return the last item from the menu or null if no items.
+     */
+    public MenuItem getLastItem() {
+        return items != null && items.size() > 0 ? items.get(items.size() - 1)
+                : null;
+    }
+
+    /**
+     * Gets the index of the selected item.
+     * 
+     * @since
+     * @return the index of the selected item.
+     */
+    public int getSelectedIndex() {
+        return items != null ? items.indexOf(getSelectedItem()) : -1;
+    }
+
     @Override
     protected void onDetach() {
         // When the menu is detached, make sure to close all of its children.
@@ -468,6 +503,7 @@ public class MenuBar extends Widget implements PopupListener {
 
     public void selectItem(MenuItem item) {
         if (item == selectedItem) {
+            scrollItemIntoView(item);
             return;
         }
 
@@ -480,6 +516,74 @@ public class MenuBar extends Widget implements PopupListener {
         }
 
         selectedItem = item;
+
+        scrollItemIntoView(item);
+    }
+
+    /*
+     * Scroll the specified item into view.
+     */
+    private void scrollItemIntoView(MenuItem item) {
+        if (item != null) {
+            item.getElement().scrollIntoView();
+        }
+    }
+
+    /**
+     * Scroll the selected item into view.
+     * 
+     * @since
+     */
+    public void scrollSelectionIntoView() {
+        scrollItemIntoView(selectedItem);
+    }
+
+    /**
+     * Sets the menu scroll enabled or disabled.
+     * 
+     * @since
+     * @param enabled
+     *            the enabled state of the scroll.
+     */
+    public void setScrollEnabled(boolean enabled) {
+        if (enabled) {
+            if (vertical) {
+                outer.getStyle().setOverflowY(Overflow.AUTO);
+            } else {
+                outer.getStyle().setOverflowX(Overflow.AUTO);
+            }
+
+        } else {
+            if (vertical) {
+                outer.getStyle().clearOverflowY();
+            } else {
+                outer.getStyle().clearOverflowX();
+            }
+        }
+    }
+
+    /**
+     * Gets whether the scroll is activate for this menu.
+     * 
+     * @since
+     * @return true if the scroll is active, otherwise false.
+     */
+    public boolean isScrollActive() {
+        // Element element = getElement();
+        // return element.getOffsetHeight() > DOM.getChild(element, 0)
+        // .getOffsetHeight();
+        int outerHeight = outer.getOffsetHeight();
+        int tableHeight = table.getOffsetHeight();
+        return outerHeight < tableHeight;
+    }
+
+    /**
+     * Gets the preferred height of the menu.
+     * 
+     * @since
+     */
+    protected int getPreferredHeight() {
+        return table.getOffsetHeight();
     }
 
     /**

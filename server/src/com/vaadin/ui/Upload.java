@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,16 +35,16 @@ import com.vaadin.util.ReflectTools;
 
 /**
  * Component for uploading files from client to server.
- * 
+ *
  * <p>
  * The visible component consists of a file name input box and a browse button
  * and an upload submit button to start uploading.
- * 
+ *
  * <p>
  * The Upload component needs a java.io.OutputStream to write the uploaded data.
  * You need to implement the Upload.Receiver interface and return the output
  * stream in the receiveUpload() method.
- * 
+ *
  * <p>
  * You can get an event regarding starting (StartedEvent), progress
  * (ProgressEvent), and finishing (FinishedEvent) of upload by implementing
@@ -52,22 +52,22 @@ import com.vaadin.util.ReflectTools;
  * FinishedListener is called for both failed and succeeded uploads. If you wish
  * to separate between these two cases, you can use SucceededListener
  * (SucceededEvenet) and FailedListener (FailedEvent).
- * 
+ *
  * <p>
  * The upload component does not itself show upload progress, but you can use
  * the ProgressIndicator for providing progress feedback by implementing
  * ProgressListener and updating the indicator in updateProgress().
- * 
+ *
  * <p>
  * Setting upload component immediate initiates the upload as soon as a file is
  * selected, instead of the common pattern of file selection field and upload
  * button.
- * 
+ *
  * <p>
  * Note! Because of browser dependent implementations of <input type="file">
  * element, setting size for Upload component is not supported. For some
  * browsers setting size may work to some extend.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -112,7 +112,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Creates a new instance of Upload.
-     * 
+     *
      * The receiver must be set before performing an upload.
      */
     public Upload() {
@@ -132,7 +132,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Invoked when the value of a variable has changed.
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
@@ -150,7 +150,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Paints the content of this component.
-     * 
+     *
      * @param target
      *            Target to paint the content on.
      * @throws PaintException
@@ -189,7 +189,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     /**
      * Interface that must be implemented by the upload receivers to provide the
      * Upload component an output stream to write the uploaded data.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -197,7 +197,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Invoked when a new upload arrives.
-         * 
+         *
          * @param filename
          *            the desired filename of the upload, usually as specified
          *            by the client.
@@ -242,7 +242,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * of whether the reception was successful or failed. If you wish to
      * distinguish between the two cases, use either SucceededEvent or
      * FailedEvent, which are both subclasses of the FinishedEvent.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -264,7 +264,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
         private final String filename;
 
         /**
-         * 
+         *
          * @param source
          *            the source of the file.
          * @param filename
@@ -284,7 +284,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Uploads where the event occurred.
-         * 
+         *
          * @return the Source of the event.
          */
         public Upload getUpload() {
@@ -293,7 +293,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Gets the file name.
-         * 
+         *
          * @return the filename.
          */
         public String getFilename() {
@@ -302,7 +302,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Gets the MIME Type of the file.
-         * 
+         *
          * @return the MIME type.
          */
         public String getMIMEType() {
@@ -311,7 +311,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Gets the length of the file.
-         * 
+         *
          * @return the length.
          */
         public long getLength() {
@@ -323,7 +323,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     /**
      * Upload.FailedEvent event is sent when the upload is received, but the
      * reception is interrupted for some reason.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -332,7 +332,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
         private Exception reason = null;
 
         /**
-         * 
+         *
          * @param source
          * @param filename
          * @param MIMEType
@@ -346,7 +346,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
         }
 
         /**
-         * 
+         *
          * @param source
          * @param filename
          * @param MIMEType
@@ -360,7 +360,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Gets the exception that caused the failure.
-         * 
+         *
          * @return the exception that caused the failure, null if n/a
          */
         public Exception getReason() {
@@ -375,7 +375,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     public static class NoOutputStreamEvent extends FailedEvent {
 
         /**
-         * 
+         *
          * @param source
          * @param filename
          * @param MIMEType
@@ -393,7 +393,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     public static class NoInputStreamEvent extends FailedEvent {
 
         /**
-         * 
+         *
          * @param source
          * @param filename
          * @param MIMEType
@@ -409,14 +409,14 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     /**
      * Upload.SucceededEvent event is sent when the upload is received
      * successfully.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
     public static class SucceededEvent extends FinishedEvent {
 
         /**
-         * 
+         *
          * @param source
          * @param filename
          * @param MIMEType
@@ -431,7 +431,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Upload.StartedEvent event is sent when the upload is started to received.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 5.0
      */
@@ -445,7 +445,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
         private final long length;
 
         /**
-         * 
+         *
          * @param source
          * @param filename
          * @param MIMEType
@@ -461,7 +461,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Uploads where the event occurred.
-         * 
+         *
          * @return the Source of the event.
          */
         public Upload getUpload() {
@@ -470,7 +470,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Gets the file name.
-         * 
+         *
          * @return the filename.
          */
         public String getFilename() {
@@ -479,7 +479,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Gets the MIME Type of the file.
-         * 
+         *
          * @return the MIME type.
          */
         public String getMIMEType() {
@@ -498,7 +498,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     /**
      * Upload.ChangeEvent event is sent when the value (filename) of the upload
      * changes.
-     * 
+     *
      * @since 7.2
      */
     public static class ChangeEvent extends Component.Event {
@@ -512,7 +512,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Uploads where the event occurred.
-         * 
+         *
          * @return the Source of the event.
          */
         @Override
@@ -522,7 +522,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Gets the file name.
-         * 
+         *
          * @return the filename.
          */
         public String getFilename() {
@@ -533,7 +533,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Receives the events when the upload starts.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 5.0
      */
@@ -541,7 +541,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Upload has started.
-         * 
+         *
          * @param event
          *            the Upload started event.
          */
@@ -550,7 +550,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Receives the events when the uploads are ready.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -558,7 +558,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Upload has finished.
-         * 
+         *
          * @param event
          *            the Upload finished event.
          */
@@ -567,7 +567,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Receives events when the uploads are finished, but unsuccessful.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -575,7 +575,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Upload has finished unsuccessfully.
-         * 
+         *
          * @param event
          *            the Upload failed event.
          */
@@ -584,7 +584,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Receives events when the uploads are successfully finished.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -592,7 +592,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * Upload successfull..
-         * 
+         *
          * @param event
          *            the Upload successfull event.
          */
@@ -601,7 +601,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Listener for {@link ChangeEvent}
-     * 
+     *
      * @since 7.2
      */
     public interface ChangeListener extends Serializable {
@@ -611,7 +611,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
         /**
          * A file has been selected but upload has not yet started.
-         * 
+         *
          * @param event
          *            the change event
          */
@@ -620,7 +620,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Adds the upload started event listener.
-     * 
+     *
      * @param listener
      *            the Listener to be added.
      */
@@ -639,7 +639,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Removes the upload started event listener.
-     * 
+     *
      * @param listener
      *            the Listener to be removed.
      */
@@ -658,7 +658,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Adds the upload received event listener.
-     * 
+     *
      * @param listener
      *            the Listener to be added.
      */
@@ -677,7 +677,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Removes the upload received event listener.
-     * 
+     *
      * @param listener
      *            the Listener to be removed.
      */
@@ -696,7 +696,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Adds the upload interrupted event listener.
-     * 
+     *
      * @param listener
      *            the Listener to be added.
      */
@@ -715,7 +715,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Removes the upload interrupted event listener.
-     * 
+     *
      * @param listener
      *            the Listener to be removed.
      */
@@ -734,7 +734,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Adds the upload success event listener.
-     * 
+     *
      * @param listener
      *            the Listener to be added.
      */
@@ -753,7 +753,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Removes the upload success event listener.
-     * 
+     *
      * @param listener
      *            the Listener to be removed.
      */
@@ -771,10 +771,10 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
-     * Adds the upload success event listener.
-     * 
+     * Adds the upload progress event listener.
+     *
      * @param listener
-     *            the Listener to be added.
+     *            the progress listener to be added
      */
     public void addProgressListener(ProgressListener listener) {
         if (progressListeners == null) {
@@ -793,10 +793,10 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
-     * Removes the upload success event listener.
-     * 
+     * Removes the upload progress event listener.
+     *
      * @param listener
-     *            the Listener to be removed.
+     *            the progress listener to be removed
      */
     public void removeProgressListener(ProgressListener listener) {
         if (progressListeners != null) {
@@ -806,7 +806,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Adds a filename change event listener
-     * 
+     *
      * @param listener
      *            the Listener to add
      */
@@ -817,7 +817,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Removes a filename change event listener
-     * 
+     *
      * @param listener
      *            the listener to be removed
      */
@@ -836,7 +836,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Emit upload received event.
-     * 
+     *
      * @param filename
      * @param MIMEType
      * @param length
@@ -848,7 +848,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Emits the upload failed event.
-     * 
+     *
      * @param filename
      * @param MIMEType
      * @param length
@@ -877,11 +877,11 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Emits the upload success event.
-     * 
+     *
      * @param filename
      * @param MIMEType
      * @param length
-     * 
+     *
      */
     protected void fireUploadSuccess(String filename, String MIMEType,
             long length) {
@@ -890,12 +890,12 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Emits the progress event.
-     * 
+     *
      * @param totalBytes
      *            bytes received so far
      * @param contentLength
      *            actual size of the file being uploaded, if known
-     * 
+     *
      */
     protected void fireUpdateProgress(long totalBytes, long contentLength) {
         // this is implemented differently than other listeners to maintain
@@ -911,7 +911,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Returns the current receiver.
-     * 
+     *
      * @return the StreamVariable.
      */
     public Receiver getReceiver() {
@@ -920,7 +920,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Sets the receiver.
-     * 
+     *
      * @param receiver
      *            the receiver to set.
      */
@@ -938,7 +938,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Gets the Tabulator index of this Focusable component.
-     * 
+     *
      * @see com.vaadin.ui.Component.Focusable#getTabIndex()
      */
     @Override
@@ -948,7 +948,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Sets the Tabulator index of this Focusable component.
-     * 
+     *
      * @see com.vaadin.ui.Component.Focusable#setTabIndex(int)
      */
     @Override
@@ -959,7 +959,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     /**
      * Go into upload state. This is to prevent double uploading on same
      * component.
-     * 
+     *
      * Warning: this is an internal method used by the framework and should not
      * be used by user of the Upload component. Using it results in the Upload
      * component going in wrong state and not working. It is currently public
@@ -986,7 +986,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Go into state where new uploading can begin.
-     * 
+     *
      * Warning: this is an internal method used by the framework and should not
      * be used by user of the Upload component.
      */
@@ -1003,7 +1003,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Gets read bytes of the file currently being uploaded.
-     * 
+     *
      * @return bytes
      */
     public long getBytesRead() {
@@ -1013,7 +1013,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     /**
      * Returns size of file currently being uploaded. Value sane only during
      * upload.
-     * 
+     *
      * @return size in bytes
      */
     public long getUploadSize() {
@@ -1026,7 +1026,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     public interface ProgressListener extends Serializable {
         /**
          * Updates progress to listener
-         * 
+         *
          * @param readBytes
          *            bytes transferred
          * @param contentLength
@@ -1055,12 +1055,12 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * {@link #setImmediate(boolean)}, the file choose (html input with type
      * "file") is hidden and only the button with this text is shown.
      * <p>
-     * 
+     *
      * <p>
      * <strong>Note</strong> the string given is set as is to the button. HTML
      * formatting is not stripped. Be sure to properly validate your value
      * according to your needs.
-     * 
+     *
      * @param buttonCaption
      *            text for upload components button.
      */

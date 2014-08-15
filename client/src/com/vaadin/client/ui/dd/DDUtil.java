@@ -58,8 +58,7 @@ public class DDUtil {
     }
 
     public static HorizontalDropLocation getHorizontalDropLocation(
-            Element element, NativeEvent event,
-            double leftRightRatio) {
+            Element element, NativeEvent event, double leftRightRatio) {
         int clientX = Util.getTouchOrMouseClientX(event);
 
         // Event coordinates are relative to the viewport, element absolute

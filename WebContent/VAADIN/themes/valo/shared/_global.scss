@@ -1,17 +1,19 @@
 @import "loading-indicator";
 @import "contextmenu";
 @import "overlay";
-@import "notification";
 @import "tooltip";
-
-
-$v-app-background-color: $v-background-color !default;
 
 
 // Include global styles only once
 $valo-global-included: false !default;
+
 @mixin valo-global {
   @if $valo-global-included == false {
+
+    // Version info for the debug window
+    .v-vaadin-version:after {
+      content: "@version@";
+    }
 
     // Core widget styles come before any other component (and are always included),
     // so that it has the least specificity
@@ -304,7 +306,6 @@ $valo-shared-pathPrefix: null;
     font: inherit;
     font-weight: 400;
     line-height: inherit;
-    color: inherit;
     padding: round($v-unit-size/8);
     margin: 0;
     border-radius: $v-border-radius;

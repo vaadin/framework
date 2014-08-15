@@ -16,19 +16,36 @@
 
 package com.vaadin.tests.tb3;
 
+import static com.vaadin.tests.tb3.TB3Runner.localWebDriverIsUsed;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
-import com.vaadin.testbench.TestBenchElement;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHttpEntityEnclosingRequest;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Platform;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
@@ -36,6 +53,7 @@ import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -45,12 +63,12 @@ import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UIProvider;
 import com.vaadin.testbench.TestBench;
+import com.vaadin.testbench.TestBenchDriverProxy;
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 import com.vaadin.ui.UI;
-
-import static com.vaadin.tests.tb3.TB3Runner.localWebDriverIsUsed;
 
 /**
  * Base class for TestBench 3+ tests. All TB3+ tests in the project should
@@ -85,6 +103,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      */
     private static final int BROWSER_TIMEOUT_IN_MS = 30 * 1000;
 
+    private static final int BROWSER_INIT_ATTEMPTS = 5;
+
     private DesiredCapabilities desiredCapabilities;
 
     private boolean debug = false;
@@ -93,6 +113,11 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     {
         // Default browser to run on unless setDesiredCapabilities is called
         desiredCapabilities = Browser.FIREFOX.getDesiredCapabilities();
+    }
+
+    static {
+        com.vaadin.testbench.Parameters
+                .setScreenshotComparisonCursorDetection(true);
     }
 
     /**
@@ -120,9 +145,13 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     protected void setupDriver() throws Exception {
         DesiredCapabilities capabilities;
 
-        RunLocally runLocally = getClass().getAnnotation(RunLocally.class);
-        if (runLocally != null) {
-            capabilities = runLocally.value().getDesiredCapabilities();
+        Browser runLocallyBrowser = getRunLocallyBrowser();
+        if (runLocallyBrowser != null) {
+            if (System.getenv().containsKey("TEAMCITY_VERSION")) {
+                throw new RuntimeException(
+                        "@RunLocally is not supported for tests run on the build server");
+            }
+            capabilities = runLocallyBrowser.getDesiredCapabilities();
             setupLocalDriver(capabilities);
         } else {
             capabilities = getDesiredCapabilities();
@@ -130,9 +159,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
             if (localWebDriverIsUsed()) {
                 setupLocalDriver(capabilities);
             } else {
-                WebDriver dr = TestBench.createDriver(new RemoteWebDriver(
-                        new URL(getHubURL()), capabilities));
-                setDriver(dr);
+                setupRemoteDriver(capabilities);
             }
         }
 
@@ -152,8 +179,18 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
 
     }
 
+    protected Browser getRunLocallyBrowser() {
+        RunLocally runLocally = getClass().getAnnotation(RunLocally.class);
+        if (runLocally != null) {
+            return runLocally.value();
+        } else {
+            return null;
+        }
+    }
+
     protected WebElement getTooltipElement() {
-        return getDriver().findElement(com.vaadin.testbench.By.className("v-tooltip-text"));
+        return getDriver().findElement(
+                com.vaadin.testbench.By.className("v-tooltip-text"));
     }
 
     protected Coordinates getCoordinates(TestBenchElement element) {
@@ -205,12 +242,63 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
             DesiredCapabilities desiredCapabilities);
 
     /**
+     * Creates a {@link WebDriver} instance used for running the test remotely.
+     * 
+     * @since
+     * @param capabilities
+     *            the type of browser needed
+     * @throws Exception
+     */
+    private void setupRemoteDriver(DesiredCapabilities capabilities)
+            throws Exception {
+        if (BrowserUtil.isIE(capabilities)) {
+            capabilities.setCapability(
+                    InternetExplorerDriver.REQUIRE_WINDOW_FOCUS,
+                    requireWindowFocusForIE());
+            capabilities.setCapability(
+                    InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING,
+                    usePersistentHoverForIE());
+        }
+
+        for (int i = 1; i <= BROWSER_INIT_ATTEMPTS; i++) {
+            try {
+                WebDriver dr = TestBench.createDriver(new RemoteWebDriver(
+                        new URL(getHubURL()), capabilities));
+                setDriver(dr);
+                return;
+            } catch (Exception e) {
+                System.err.println("Browser startup for " + capabilities
+                        + " failed on attempt " + i + ": " + e.getMessage());
+                if (i == BROWSER_INIT_ATTEMPTS) {
+                    throw e;
+                }
+            }
+        }
+
+    }
+
+    /**
      * Opens the given test (defined by {@link #getTestUrl()}, optionally with
      * debug window and/or push (depending on {@link #isDebug()} and
      * {@link #isPush()}.
      */
     protected void openTestURL() {
-        driver.get(getTestUrl());
+        openTestURL("");
+    }
+
+    /**
+     * Opens the given test (defined by {@link #getTestUrl()}, optionally with
+     * debug window and/or push (depending on {@link #isDebug()} and
+     * {@link #isPush()}.
+     */
+    protected void openTestURL(String extraParameters) {
+        String url = getTestUrl();
+        if (url.contains("?")) {
+            url = url + "&" + extraParameters;
+        } else {
+            url = url + "?" + extraParameters;
+        }
+        driver.get(url);
     }
 
     /**
@@ -328,13 +416,25 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @return Focused element or null
      */
     protected WebElement getFocusedElement() {
-        Object focusedElement = ((JavascriptExecutor) getDriver())
-                .executeScript("return document.activeElement");
+        Object focusedElement = executeScript("return document.activeElement");
         if (null != focusedElement) {
             return (WebElement) focusedElement;
         } else {
             return null;
         }
+    }
+
+    /**
+     * Executes the given Javascript
+     * 
+     * @param script
+     *            the script to execute
+     * @return whatever
+     *         {@link org.openqa.selenium.JavascriptExecutor#executeScript(String, Object...)}
+     *         returns
+     */
+    protected Object executeScript(String script) {
+        return ((JavascriptExecutor) getDriver()).executeScript(script);
     }
 
     /**
@@ -383,7 +483,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @param condition
      *            the condition to wait for to become true
      */
-    protected void waitUntil(ExpectedCondition<Boolean> condition) {
+    protected <T> void waitUntil(ExpectedCondition<T> condition) {
         waitUntil(condition, 10);
     }
 
@@ -395,7 +495,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @param condition
      *            the condition to wait for to become true
      */
-    protected void waitUntil(ExpectedCondition<Boolean> condition,
+    protected <T> void waitUntil(ExpectedCondition<T> condition,
             long timeoutInSeconds) {
         new WebDriverWait(driver, timeoutInSeconds).until(condition);
     }
@@ -408,7 +508,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @param condition
      *            the condition to wait for to become false
      */
-    protected void waitUntilNot(ExpectedCondition<Boolean> condition) {
+    protected <T> void waitUntilNot(ExpectedCondition<T> condition) {
         waitUntilNot(condition, 10);
     }
 
@@ -420,14 +520,42 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @param condition
      *            the condition to wait for to become false
      */
-    protected void waitUntilNot(ExpectedCondition<Boolean> condition,
+    protected <T> void waitUntilNot(ExpectedCondition<T> condition,
             long timeoutInSeconds) {
         waitUntil(ExpectedConditions.not(condition), timeoutInSeconds);
     }
 
-    protected void waitForElementToBePresent(By by) {
-        waitUntil(ExpectedConditions.not(ExpectedConditions
-                .invisibilityOfElementLocated(by)));
+    protected void waitForElementPresent(final By by) {
+        waitUntil(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    protected void waitForElementVisible(final By by) {
+        waitUntil(ExpectedConditions.visibilityOfElementLocated(by));
+    }
+
+    /**
+     * Checks if the given element has the given class name.
+     * 
+     * Matches only full class names, i.e. has ("foo") does not match
+     * class="foobar"
+     * 
+     * @param element
+     * @param className
+     * @return
+     */
+    protected boolean hasCssClass(WebElement element, String className) {
+        String classes = element.getAttribute("class");
+        if (classes == null || classes.isEmpty()) {
+            return (className == null || className.isEmpty());
+        }
+
+        for (String cls : classes.split(" ")) {
+            if (className.equals(cls)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -804,6 +932,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         public static DesiredCapabilities ie(int version) {
             DesiredCapabilities c = DesiredCapabilities.internetExplorer();
             c.setVersion("" + version);
+            c.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION,
+                    true);
             return c;
         }
 
@@ -1023,6 +1153,95 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
 
     private WebElement getDebugLogButton() {
         return findElement(By.xpath("//button[@title='Debug message log']"));
+    }
+
+    /**
+     * Should the "require window focus" be enabled for Internet Explorer.
+     * RequireWindowFocus makes tests more stable but seems to be broken with
+     * certain commands such as sendKeys. Therefore it is not enabled by default
+     * for all tests
+     * 
+     * @return true, to use the "require window focus" feature, false otherwise
+     */
+    protected boolean requireWindowFocusForIE() {
+        return false;
+    }
+
+    /**
+     * Should the "enable persistent hover" be enabled for Internet Explorer.
+     * 
+     * Persistent hovering causes continuous firing of mouse over events at the
+     * last location the mouse cursor has been moved to. This is to avoid
+     * problems where the real mouse cursor is inside the browser window and
+     * Internet Explorer uses that location for some undefined operation
+     * (http://
+     * jimevansmusic.blogspot.fi/2012/06/whats-wrong-with-internet-explorer
+     * .html)
+     * 
+     * @return true, to use the "persistent hover" feature, false otherwise
+     */
+    protected boolean usePersistentHoverForIE() {
+        return true;
+    }
+
+    // FIXME: Remove this once TB4 getRemoteControlName works properly
+    private RemoteWebDriver getRemoteDriver() {
+        WebDriver d = getDriver();
+        if (d instanceof TestBenchDriverProxy) {
+            try {
+                Field f = TestBenchDriverProxy.class
+                        .getDeclaredField("actualDriver");
+                f.setAccessible(true);
+                return (RemoteWebDriver) f.get(d);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (d instanceof RemoteWebDriver) {
+            return (RemoteWebDriver) d;
+        }
+
+        return null;
+
+    }
+
+    // FIXME: Remove this once TB4 getRemoteControlName works properly
+    protected String getRemoteControlName() {
+        try {
+            RemoteWebDriver d = getRemoteDriver();
+            if (d == null) {
+                return null;
+            }
+            HttpCommandExecutor ce = (HttpCommandExecutor) d
+                    .getCommandExecutor();
+            String hostName = ce.getAddressOfRemoteServer().getHost();
+            int port = ce.getAddressOfRemoteServer().getPort();
+            HttpHost host = new HttpHost(hostName, port);
+            DefaultHttpClient client = new DefaultHttpClient();
+            URL sessionURL = new URL("http://" + hostName + ":" + port
+                    + "/grid/api/testsession?session=" + d.getSessionId());
+            BasicHttpEntityEnclosingRequest r = new BasicHttpEntityEnclosingRequest(
+                    "POST", sessionURL.toExternalForm());
+            HttpResponse response = client.execute(host, r);
+            JSONObject object = extractObject(response);
+            URL myURL = new URL(object.getString("proxyId"));
+            if ((myURL.getHost() != null) && (myURL.getPort() != -1)) {
+                return myURL.getHost();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static JSONObject extractObject(HttpResponse resp)
+            throws IOException, JSONException {
+        InputStream contents = resp.getEntity().getContent();
+        StringWriter writer = new StringWriter();
+        IOUtils.copy(contents, writer, "UTF8");
+        JSONObject objToReturn = new JSONObject(writer.toString());
+        return objToReturn;
     }
 
 }

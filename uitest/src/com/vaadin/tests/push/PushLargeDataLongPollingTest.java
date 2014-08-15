@@ -42,7 +42,7 @@ public class PushLargeDataLongPollingTest extends MultiBrowserTest {
 
     private void push() throws InterruptedException {
         // Wait for startButton to be present
-        waitForElementToBePresent(vaadinLocatorById("startButton"));
+        waitForElementVisible(vaadinLocatorById("startButton"));
 
         String logRow0Id = "Log_row_0";
         By logRow0 = vaadinLocatorById(logRow0Id);

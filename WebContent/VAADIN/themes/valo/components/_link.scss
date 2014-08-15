@@ -3,7 +3,7 @@ $v-link-text-decoration: underline !default;
 $v-link-cursor: pointer !default;
 
 
-@mixin valo-link ($primary-stylename: v-link) {
+@mixin valo-link ($primary-stylename: v-link, $include-additional-styles: contains($v-included-additional-styles, link)) {
   .#{$primary-stylename} {
     @include valo-link-style;
 
@@ -18,6 +18,16 @@ $v-link-cursor: pointer !default;
 
     .v-icon {
       cursor: inherit;
+    }
+  }
+
+  @if $include-additional-styles {
+    .#{$primary-stylename}-small {
+      font-size: $v-font-size--small;
+    }
+
+    .#{$primary-stylename}-large {
+      font-size: $v-font-size--large;
     }
   }
 }

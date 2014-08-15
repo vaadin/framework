@@ -302,11 +302,11 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
 
     }-*/;
 
-    private String currentWidthRanges;
-    private String currentHeightRanges;
+    private String currentWidthRanges = "";
+    private String currentHeightRanges = "";
 
     @Override
-    public void onElementResize(ElementResizeEvent event) {
+    public void onElementResize(final ElementResizeEvent event) {
         int width = event.getLayoutManager().getOuterWidth(event.getElement());
         int height = event.getLayoutManager()
                 .getOuterHeight(event.getElement());
@@ -314,6 +314,9 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
         com.google.gwt.user.client.Element element = target.getWidget()
                 .getElement();
         boolean forceRedraw = false;
+
+        String oldWidthRanges = currentWidthRanges;
+        String oldHeightRanges = currentHeightRanges;
 
         // Loop through breakpoints and see which one applies to this width
         currentWidthRanges = resolveBreakpoint("width", width,
@@ -341,6 +344,14 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
 
         if (forceRedraw) {
             forceRedrawIfIE8(element);
+        }
+
+        // If a new breakpoint is triggered, ensure all sizes are updated in
+        // case some new styles are applied
+        if (!currentWidthRanges.equals(oldWidthRanges)
+                || !currentHeightRanges.equals(oldHeightRanges)) {
+            event.getLayoutManager().setNeedsMeasureRecursively(
+                    ResponsiveConnector.this.target);
         }
     }
 

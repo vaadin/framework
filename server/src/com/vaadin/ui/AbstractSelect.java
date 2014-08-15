@@ -759,7 +759,9 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      */
     @Override
     public int size() {
-        return items.size();
+        int size = items.size();
+        assert size >= 0;
+        return size;
     }
 
     /**

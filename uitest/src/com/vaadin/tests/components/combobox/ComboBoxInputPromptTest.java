@@ -40,13 +40,16 @@ public class ComboBoxInputPromptTest extends MultiBrowserTest {
         ComboBoxElement disabledComboBox = getComboBoxWithCaption("Disabled");
         ComboBoxElement readOnlyComboBox = getComboBoxWithCaption("Read-only");
 
-        assertThat(getInputPromptValue(normalComboBox), is("Normal input prompt"));
+        assertThat(getInputPromptValue(normalComboBox),
+                is("Normal input prompt"));
         assertThat(getInputPromptValue(disabledComboBox), isEmptyString());
         assertThat(getInputPromptValue(readOnlyComboBox), isEmptyString());
 
         toggleDisabledAndReadonly();
-        assertThat(getInputPromptValue(disabledComboBox), is("Disabled input prompt"));
-        assertThat(getInputPromptValue(readOnlyComboBox), is("Read-only input prompt"));
+        assertThat(getInputPromptValue(disabledComboBox),
+                is("Disabled input prompt"));
+        assertThat(getInputPromptValue(readOnlyComboBox),
+                is("Read-only input prompt"));
 
         toggleDisabledAndReadonly();
         assertThat(getInputPromptValue(disabledComboBox), isEmptyString());

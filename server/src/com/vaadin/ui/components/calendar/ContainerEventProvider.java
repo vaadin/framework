@@ -262,6 +262,7 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
     private int[] getFirstAndLastEventIndex(Date start, Date end) {
         int startIndex = 0;
         int size = container.size();
+        assert size >= 0;
         int endIndex = size - 1;
 
         if (start != null) {

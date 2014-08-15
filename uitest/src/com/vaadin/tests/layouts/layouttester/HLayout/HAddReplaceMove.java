@@ -19,7 +19,6 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.tests.layouts.layouttester.BaseAddReplaceMove;
 import com.vaadin.ui.HorizontalLayout;
 
-
 public class HAddReplaceMove extends BaseAddReplaceMove {
 
     /**

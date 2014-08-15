@@ -124,7 +124,9 @@ public class Heartbeat {
 
             @Override
             public void onError(Request request, Throwable exception) {
-                getLogger().severe("Exception sending heartbeat: " + exception.getMessage());
+                getLogger().severe(
+                        "Exception sending heartbeat: "
+                                + exception.getMessage());
                 // Notify network observers about response status
                 connection.fireEvent(new ConnectionStatusEvent(0));
                 // Don't break the loop

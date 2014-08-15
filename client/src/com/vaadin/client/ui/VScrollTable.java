@@ -47,8 +47,6 @@ import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ContextMenuEvent;
-import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -80,6 +78,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
+import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.StyleConstants;
@@ -126,7 +125,138 @@ import com.vaadin.shared.ui.table.TableConstants;
  */
 public class VScrollTable extends FlowPanel implements HasWidgets,
         ScrollHandler, VHasDropHandler, FocusHandler, BlurHandler, Focusable,
-        ActionOwner, SubPartAware {
+        ActionOwner, SubPartAware, DeferredWorker {
+
+    /**
+     * Simple interface for parts of the table capable of owning a context menu.
+     *
+     * @since 7.2
+     * @author Vaadin Ltd
+     */
+    private interface ContextMenuOwner {
+        public void showContextMenu(Event event);
+    }
+
+    /**
+     * Handles showing context menu on "long press" from a touch screen.
+     *
+     * @since 7.2
+     * @author Vaadin Ltd
+     */
+    private class TouchContextProvider {
+        private static final int TOUCH_CONTEXT_MENU_TIMEOUT = 500;
+        private Timer contextTouchTimeout;
+
+        private Event touchStart;
+        private int touchStartY;
+        private int touchStartX;
+
+        private ContextMenuOwner target;
+
+        /**
+         * Initializes a handler for a certain context menu owner.
+         *
+         * @param target
+         *            the owner of the context menu
+         */
+        public TouchContextProvider(ContextMenuOwner target) {
+            this.target = target;
+        }
+
+        /**
+         * Cancels the current context touch timeout.
+         */
+        public void cancel() {
+            if (contextTouchTimeout != null) {
+                contextTouchTimeout.cancel();
+                contextTouchTimeout = null;
+            }
+            touchStart = null;
+        }
+
+        /**
+         * A function to handle touch context events in a table.
+         *
+         * @param event
+         *            browser event to handle
+         */
+        public void handleTouchEvent(final Event event) {
+            int type = event.getTypeInt();
+
+            switch (type) {
+            case Event.ONCONTEXTMENU:
+                target.showContextMenu(event);
+                break;
+            case Event.ONTOUCHSTART:
+                // save position to fields, touches in events are same
+                // instance during the operation.
+                touchStart = event;
+
+                Touch touch = event.getChangedTouches().get(0);
+                touchStartX = touch.getClientX();
+                touchStartY = touch.getClientY();
+
+                if (contextTouchTimeout == null) {
+                    contextTouchTimeout = new Timer() {
+
+                        @Override
+                        public void run() {
+                            if (touchStart != null) {
+                                // Open the context menu if finger
+                                // is held in place long enough.
+                                target.showContextMenu(touchStart);
+                                event.preventDefault();
+                                touchStart = null;
+                            }
+                        }
+                    };
+                }
+                contextTouchTimeout.schedule(TOUCH_CONTEXT_MENU_TIMEOUT);
+                break;
+            case Event.ONTOUCHCANCEL:
+            case Event.ONTOUCHEND:
+                cancel();
+                break;
+            case Event.ONTOUCHMOVE:
+                if (isSignificantMove(event)) {
+                    // Moved finger before the context menu timer
+                    // expired, so let the browser handle the event.
+                    cancel();
+                }
+            }
+        }
+
+        /**
+         * Calculates how many pixels away the user's finger has traveled. This
+         * reduces the chance of small non-intentional movements from canceling
+         * the long press detection.
+         *
+         * @param event
+         *            the Event for which to check the move distance
+         * @return true if this is considered an intentional move by the user
+         */
+        protected boolean isSignificantMove(Event event) {
+            if (touchStart == null) {
+                // no touch start
+                return false;
+            }
+
+            // Calculate the distance between touch start and the current touch
+            // position
+            Touch touch = event.getChangedTouches().get(0);
+            int deltaX = touch.getClientX() - touchStartX;
+            int deltaY = touch.getClientY() - touchStartY;
+            int delta = deltaX * deltaX + deltaY * deltaY;
+
+            // Compare to the square of the significant move threshold to remove
+            // the need for a square root
+            if (delta > TouchScrollDelegate.SIGNIFICANT_MOVE_THRESHOLD
+                    * TouchScrollDelegate.SIGNIFICANT_MOVE_THRESHOLD) {
+                return true;
+            }
+            return false;
+        }
+    }
 
     public static final String STYLENAME = "v-table";
 
@@ -194,6 +324,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean immediate;
+
+    private boolean updatedReqRows = true;
 
     private boolean nullSelectionAllowed = true;
 
@@ -369,8 +501,49 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     /** For internal use only. May be removed or replaced in the future. */
     public final TableFooter tFoot = new TableFooter();
 
+    /** Handles context menu for table body */
+    private ContextMenuOwner contextMenuOwner = new ContextMenuOwner() {
+
+        @Override
+        public void showContextMenu(Event event) {
+            int left = Util.getTouchOrMouseClientX(event);
+            int top = Util.getTouchOrMouseClientY(event);
+            boolean menuShown = handleBodyContextMenu(left, top);
+            if (menuShown) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+        }
+    };
+
+    /** Handles touch events to display a context menu for table body */
+    private TouchContextProvider touchContextProvider = new TouchContextProvider(
+            contextMenuOwner);
+
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * Overwrites onBrowserEvent function on FocusableScrollPanel to give event
+     * access to touchContextProvider. Has to be public to give TableConnector
+     * access to the scrollBodyPanel field.
+     *
+     * @since 7.2
+     * @author Vaadin Ltd
+     */
+    public class FocusableScrollContextPanel extends FocusableScrollPanel {
+        @Override
+        public void onBrowserEvent(Event event) {
+            super.onBrowserEvent(event);
+            touchContextProvider.handleTouchEvent(event);
+        };
+
+        public FocusableScrollContextPanel(boolean useFakeFocusElement) {
+            super(useFakeFocusElement);
+        }
+    }
+
     /** For internal use only. May be removed or replaced in the future. */
-    public final FocusableScrollPanel scrollBodyPanel = new FocusableScrollPanel(
+    public final FocusableScrollContextPanel scrollBodyPanel = new FocusableScrollContextPanel(
             true);
 
     private KeyPressHandler navKeyPressHandler = new KeyPressHandler() {
@@ -588,6 +761,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private boolean hadScrollBars = false;
 
+    private HandlerRegistration addCloseHandler;
+
     public VScrollTable() {
         setMultiSelectMode(MULTISELECT_MODE_DEFAULT);
 
@@ -608,16 +783,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
         scrollBodyPanel.addKeyUpHandler(navKeyUpHandler);
 
-        scrollBodyPanel.sinkEvents(Event.TOUCHEVENTS);
-
-        scrollBodyPanel.sinkEvents(Event.ONCONTEXTMENU);
-        scrollBodyPanel.addDomHandler(new ContextMenuHandler() {
-
-            @Override
-            public void onContextMenu(ContextMenuEvent event) {
-                handleBodyContextMenu(event);
-            }
-        }, ContextMenuEvent.getType());
+        scrollBodyPanel.sinkEvents(Event.TOUCHEVENTS | Event.ONCONTEXTMENU);
 
         setStyleName(STYLENAME);
 
@@ -669,28 +835,33 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         this.client = client;
         // Add a handler to clear saved context menu details when the menu
         // closes. See #8526.
-        client.getContextMenu().addCloseHandler(new CloseHandler<PopupPanel>() {
+        addCloseHandler = client.getContextMenu().addCloseHandler(
+                new CloseHandler<PopupPanel>() {
 
-            @Override
-            public void onClose(CloseEvent<PopupPanel> event) {
-                contextMenu = null;
-            }
-        });
+                    @Override
+                    public void onClose(CloseEvent<PopupPanel> event) {
+                        contextMenu = null;
+                    }
+                });
     }
 
-    private void handleBodyContextMenu(ContextMenuEvent event) {
+    /**
+     * Handles a context menu event on table body.
+     *
+     * @param left
+     *            left position of the context menu
+     * @param top
+     *            top position of the context menu
+     * @return true if a context menu was shown, otherwise false
+     */
+    private boolean handleBodyContextMenu(int left, int top) {
         if (enabled && bodyActionKeys != null) {
-            int left = Util.getTouchOrMouseClientX(event.getNativeEvent());
-            int top = Util.getTouchOrMouseClientY(event.getNativeEvent());
             top += Window.getScrollTop();
             left += Window.getScrollLeft();
             client.getContextMenu().showAt(this, left, top);
-
-            // Only prevent browser context menu if there are action handlers
-            // registered
-            event.stopPropagation();
-            event.preventDefault();
+            return true;
         }
+        return false;
     }
 
     /**
@@ -1174,7 +1345,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         @Override
         public void execute() {
-            if (firstvisible > 0) {
+            if (firstvisible >= 0) {
                 firstRowInViewPort = firstvisible;
                 if (firstvisibleOnLastPage > -1) {
                     scrollBodyPanel
@@ -2248,13 +2419,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * Ensures the column alignments are correct at initial loading. <br/>
          * (child components widths are correct)
          */
-        Scheduler.get().scheduleDeferred(new Command() {
-
-            @Override
-            public void execute() {
-                Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
-            }
-        });
+        Util.runWebkitOverflowAutoFixDeferred(scrollBodyPanel.getElement());
 
         hadScrollBars = willHaveScrollbarz;
     }
@@ -2394,6 +2559,27 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             if (client.hasActiveRequest() || navKeyDown) {
                 // if client connection is busy, don't bother loading it more
                 VConsole.log("Postponed rowfetch");
+                schedule(250);
+            } else if (!updatedReqRows && allRenderedRowsAreNew()) {
+
+                /*
+                 * If all rows are new, there might have been a server-side call
+                 * to Table.setCurrentPageFirstItemIndex(int) In this case,
+                 * scrolling event takes way too late, and all the rows from
+                 * previous viewport to this one were requested.
+                 * 
+                 * This should prevent requesting unneeded rows by updating
+                 * reqFirstRow and reqRows before needing them. See (#14135)
+                 */
+
+                setReqFirstRow((firstRowInViewPort - (int) (pageLength * cache_rate)));
+                int last = firstRowInViewPort + (int) (cache_rate * pageLength)
+                        + pageLength - 1;
+                if (last >= totalRows) {
+                    last = totalRows - 1;
+                }
+                setReqRows(last - getReqFirstRow() + 1);
+                updatedReqRows = true;
                 schedule(250);
             } else {
 
@@ -5115,7 +5301,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             return -1;
         }
 
-        public class VScrollTableRow extends Panel implements ActionOwner {
+        public class VScrollTableRow extends Panel implements ActionOwner,
+                ContextMenuOwner {
 
             private static final int TOUCHSCROLL_TIMEOUT = 100;
             private static final int DRAGMODE_MULTIROW = 2;
@@ -5133,6 +5320,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             private Timer dragTouchTimeout;
             private int touchStartY;
             private int touchStartX;
+
+            private TouchContextProvider touchContextProvider = new TouchContextProvider(
+                    this);
+
             private TooltipInfo tooltipInfo = null;
             private Map<TableCellElement, TooltipInfo> cellToolTips = new HashMap<TableCellElement, TooltipInfo>();
             private boolean isDragging = false;
@@ -5588,6 +5779,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 boolean touchEventHandled = false;
 
                 if (enabled && hasNativeTouchScrolling) {
+                    touchContextProvider.handleTouchEvent(event);
+
                     final Element targetTdOrTr = getEventTargetTdOrTr(event);
                     final int type = event.getTypeInt();
 
@@ -5848,9 +6041,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                             Util.simulateClickFromTouchEvent(touchStart, this);
                             touchStart = null;
                         }
-                        if (contextTouchTimeout != null) {
-                            contextTouchTimeout.cancel();
-                        }
+                        touchContextProvider.cancel();
                         break;
                     case Event.ONTOUCHMOVE:
                         if (isSignificantMove(event)) {
@@ -5865,9 +6056,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                                             .getActiveScrollDelegate() == null)) {
                                 startRowDrag(touchStart, type, targetTdOrTr);
                             }
-                            if (contextTouchTimeout != null) {
-                                contextTouchTimeout.cancel();
-                            }
+                            touchContextProvider.cancel();
                             /*
                              * Avoid clicks and drags by clearing touch start
                              * flag.
@@ -6103,6 +6292,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 return getTdOrTr(eventTarget);
             }
 
+            @Override
             public void showContextMenu(Event event) {
                 if (enabled && actionKeys != null) {
                     // Show context menu if there are registered action handlers
@@ -6717,13 +6907,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     Util.notifyParentOfSizeChange(VScrollTable.this, rendering);
                 }
             }
-            Scheduler.get().scheduleDeferred(new Command() {
 
-                @Override
-                public void execute() {
-                    Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
-                }
-            });
+            Util.runWebkitOverflowAutoFixDeferred(scrollBodyPanel.getElement());
 
             forceRealignColumnHeaders();
         }
@@ -6860,13 +7045,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // We must run the fix as a deferred command to prevent it from
             // overwriting the scroll position with an outdated value, see
             // #7607.
-            Scheduler.get().scheduleDeferred(new Command() {
-
-                @Override
-                public void execute() {
-                    Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
-                }
-            });
+            Util.runWebkitOverflowAutoFixDeferred(scrollBodyPanel.getElement());
         }
 
         triggerLazyColumnAdjustment(false);
@@ -7011,8 +7190,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             return;
         }
 
-        if (firstRowInViewPort - pageLength * cache_rate > lastRendered
-                || firstRowInViewPort + pageLength + pageLength * cache_rate < firstRendered) {
+        if (allRenderedRowsAreNew()) {
             // need a totally new set of rows
             rowRequestHandler
                     .setReqFirstRow((firstRowInViewPort - (int) (pageLength * cache_rate)));
@@ -7023,6 +7201,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
             rowRequestHandler.setReqRows(last
                     - rowRequestHandler.getReqFirstRow() + 1);
+            updatedReqRows = false;
             rowRequestHandler.deferRowFetch();
             return;
         }
@@ -7043,6 +7222,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     * cache_rate) - lastRendered);
             rowRequestHandler.triggerRowFetch(lastRendered + 1, reqRows);
         }
+    }
+
+    private boolean allRenderedRowsAreNew() {
+        int firstRowInViewPort = calcFirstRowInViewPort();
+        int firstRendered = scrollBody.getFirstRendered();
+        int lastRendered = scrollBody.getLastRendered();
+        return (firstRowInViewPort - pageLength * cache_rate > lastRendered || firstRowInViewPort
+                + pageLength + pageLength * cache_rate < firstRendered);
     }
 
     protected int calcFirstRowInViewPort() {
@@ -7928,5 +8115,22 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
         // Nothing found.
         return null;
+    }
+
+    /**
+     * @since
+     */
+    public void onUnregister() {
+        if (addCloseHandler != null) {
+            addCloseHandler.removeHandler();
+        }
+    }
+
+    /*
+     * Return true if component need to perform some work and false otherwise.
+     */
+    @Override
+    public boolean isWorkPending() {
+        return lazyAdjustColumnWidths.isRunning();
     }
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,7 +21,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
@@ -50,6 +49,17 @@ public class TableConnector extends AbstractHasComponentsConnector implements
     protected void init() {
         super.init();
         getWidget().init(getConnection());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ui.AbstractComponentConnector#onUnregister()
+     */
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+        getWidget().onUnregister();
     }
 
     /*
@@ -111,7 +121,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
 
         int previousTotalRows = getWidget().totalRows;
         getWidget().updateTotalRows(uidl);
-        boolean totalRowsChanged = (getWidget().totalRows != previousTotalRows);
+        boolean totalRowsHaveChanged = (getWidget().totalRows != previousTotalRows);
 
         getWidget().updateDragMode(uidl);
 
@@ -189,7 +199,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
                     if (getWidget().headerChangedDuringUpdate) {
                         getWidget().triggerLazyColumnAdjustment(true);
                     } else if (!getWidget().isScrollPositionVisible()
-                            || totalRowsChanged
+                            || totalRowsHaveChanged
                             || getWidget().lastRenderedHeight != getWidget().scrollBody
                                     .getOffsetHeight()) {
                         // webkits may still bug with their disturbing scrollbar
@@ -199,13 +209,8 @@ public class TableConnector extends AbstractHasComponentsConnector implements
                         // by changing overflows as the length of the contents
                         // *shouldn't* have changed (unless the number of rows
                         // or the height of the widget has also changed)
-                        Scheduler.get().scheduleDeferred(new Command() {
-                            @Override
-                            public void execute() {
-                                Util.runWebkitOverflowAutoFix(getWidget().scrollBodyPanel
-                                        .getElement());
-                            }
-                        });
+                        Util.runWebkitOverflowAutoFixDeferred(getWidget().scrollBodyPanel
+                                .getElement());
                     }
                 } else {
                     getWidget().initializeRows(uidl, rowData);
@@ -379,7 +384,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
     /**
      * Shows a saved row context menu if the row for the context menu is still
      * visible. Does nothing if a context menu has not been saved.
-     * 
+     *
      * @param savedContextMenu
      */
     public void showSavedContextMenu(ContextMenuDetails savedContextMenu) {

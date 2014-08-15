@@ -1,4 +1,5 @@
 $v-textfield-background-color: if(is-dark-color($v-app-background-color), darken($v-app-background-color, 4%), lighten($v-app-background-color, 8%)) !default;
+$v-textfield-background-color--readonly: $v-app-background-color;
 $v-textfield-bevel: inset 0 1px 0 v-shade !default;
 $v-textfield-shadow: 0 1px 0 (v-tint 2) !default;
 $v-textfield-font-weight: 400 !default;
@@ -8,8 +9,51 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 
 
+@mixin valo-textfield ($primary-stylename: v-textfield, $include-additional-styles: contains($v-included-additional-styles, textfield)) {
+
+  .#{$primary-stylename} {
+    @include valo-textfield-style;
+    width: $v-default-field-width;
+  }
+
+  .#{$primary-stylename}-readonly {
+    @include valo-textfield-readonly-style;
+  }
+
+  .#{$primary-stylename}-error {
+    @include valo-textfield-error-style;
+  }
 
 
+  @if $include-additional-styles {
+    .#{$primary-stylename}-borderless {
+      @include valo-textfield-borderless-style;
+    }
+
+    .#{$primary-stylename}-small {
+      @include valo-textfield-style($unit-size: $v-unit-size--small, $states: normal, $background-color: null, $border: null, $gradient: null, $bevel: null, $shadow: null);
+      font-size: $v-font-size--small;
+    }
+
+    .#{$primary-stylename}-large {
+      @include valo-textfield-style($unit-size: $v-unit-size--large, $states: normal, $background-color: null, $border: null, $gradient: null, $bevel: null, $shadow: null);
+      font-size: $v-font-size--large;
+    }
+
+    @include valo-textfield-inline-icon($stylenames: inline-icon);
+    @include valo-textfield-inline-icon($stylenames: inline-icon small, $unit-size: $v-unit-size--small, $font-size: $v-font-size--small);
+    @include valo-textfield-inline-icon($stylenames: inline-icon large, $unit-size: $v-unit-size--large, $font-size: $v-font-size--large);
+
+    .#{$primary-stylename}-align-right {
+      text-align: right;
+    }
+
+    .#{$primary-stylename}-align-center {
+      text-align: center;
+    }
+  }
+
+}
 
 
 
@@ -94,8 +138,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
   }
 
   // TODO allow parent selector to be used in interpolation
-  &.v-textfield-prompt,
-  &.v-textarea-prompt {
+  &[class*="prompt"] {
     @include valo-textfield-prompt-style($background-color);
   }
 
@@ -134,29 +177,13 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 
 @mixin valo-textfield-readonly-style {
-  background: transparent;
+  background: $v-textfield-background-color--readonly;
+  color: valo-font-color($v-textfield-background-color--readonly)
   @include box-shadow(none);
   &:focus {
-    @include valo-focus-style($include-box-shadow: true);
+    box-shadow: none;
+    border-color: first-color(valo-border($v-textfield-border, $v-textfield-background-color--readonly));
   }
-}
-
-
-@mixin valo-textfield ($primary-stylename: v-textfield) {
-
-  .#{$primary-stylename} {
-    @include valo-textfield-style;
-    width: $v-default-field-width;
-  }
-
-  .#{$primary-stylename}-readonly {
-    @include valo-textfield-readonly-style;
-  }
-
-  .#{$primary-stylename}-error {
-    @include valo-textfield-error-style;
-  }
-
 }
 
 

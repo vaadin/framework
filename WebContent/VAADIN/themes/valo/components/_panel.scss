@@ -1,10 +1,11 @@
 $v-panel-background-color: scale-color(lighten($v-app-background-color, 5%), $saturation: -5%) !default;
 $v-panel-border: $v-border !default;
 
-@mixin valo-panel ($primary-stylename: v-panel) {
+@mixin valo-panel ($primary-stylename: v-panel, $include-additional-styles: contains($v-included-additional-styles, panel)) {
 
   .#{$primary-stylename} {
     @include valo-panel-style;
+    overflow: visible !important;
   }
 
   .#{$primary-stylename}-caption {
@@ -17,6 +18,34 @@ $v-panel-border: $v-border !default;
     width: 100%;
     height: 100%;
     @include valo-panel-adjust-content-margins;
+  }
+
+
+  @if $include-additional-styles {
+    .#{$primary-stylename}-borderless {
+      @include valo-panel-borderless-style;
+    }
+
+    .#{$primary-stylename}-well {
+      @include valo-panel-well-style;
+    }
+
+    .#{$primary-stylename}-scroll-divider {
+      @include valo-panel-scroll-divider-style;
+    }
+
+    .#{$primary-stylename}-caption.v-horizontallayout {
+      height: auto !important;
+      line-height: 0;
+
+      .v-slot {
+        vertical-align: middle;
+      }
+
+      .v-label {
+        line-height: $v-unit-size;
+      }
+    }
   }
 
 }
@@ -41,7 +70,7 @@ $v-panel-border: $v-border !default;
 
 @mixin valo-panel-caption-style (
     $background-color : $v-background-color,
-    $bevel            : first($v-bevel),
+    $bevel            : $v-bevel,
     $gradient         : valo-gradient-style($v-gradient) valo-gradient-opacity($v-gradient)/4,
     $border           : $v-panel-border
   ) {
@@ -49,18 +78,43 @@ $v-panel-border: $v-border !default;
   padding: 0 round($v-unit-size/3);
   line-height: $v-unit-size - first-number($v-border);
   $bg: $background-color;
-  border-bottom: valo-border($border: $border, $color: $bg, $strength: 0.5);
+
+  $shadow: null;
+  @if color-luminance($background-color) < color-luminance($v-background-color) - 10 {
+    $border-style: valo-border($border: $border, $color: $bg, $strength: 0.7);
+    $shadow: 0 0 0 first-number($border-style) first-color($border-style);
+    border-bottom: none;
+    margin-bottom: first-number($border-style);
+
+    .v-ie8 & {
+      outline: first-number($border-style) solid first-color($border-style);
+    }
+  } @else {
+    border-bottom: valo-border($border: $border, $color: $v-background-color, $strength: 0.7);
+  }
   @include valo-gradient($color: $bg, $gradient: $gradient);
   color: valo-font-color($bg);
   font-weight: $v-caption-font-weight;
   font-size: $v-caption-font-size;
-  @include box-shadow(valo-bevel-and-shadow($background-color: $bg, $bevel: $bevel, $gradient: $gradient));
+  @include box-shadow(valo-bevel-and-shadow($background-color: $bg, $bevel: $bevel, $shadow: $shadow, $gradient: $gradient));
   text-shadow: valo-text-shadow(valo-font-color($bg), $bg, $v-bevel);
 }
 
 
 
-@mixin valo-panel-well-style ($shadow: (0 1px 0 0 v-tint, join(inset, $v-shadow))) {
+@mixin valo-panel-well-style ($shadow: false) {
+  @if $shadow == false {
+    $new-shadow: ();
+    @if list-of-lists($v-shadow) {
+      @each $part in $v-shadow {
+        $new-part: join(inset, $part);
+        $new-shadow: $new-shadow, $new-part;
+      }
+    } @else {
+      $new-shadow: join(inset, $v-shadow);
+    }
+    $shadow: 0 1px 0 0 v-tint, $new-shadow;
+  }
   $bg: scale-color(adjust-color($v-background-color, $lightness: -2%), $saturation: -1.5%);
   background: $bg;
   color: valo-font-color($bg);
@@ -68,7 +122,7 @@ $v-panel-border: $v-border !default;
   border-radius: $v-border-radius;
   border: valo-border();
 
-  > div > .v-panel-caption {
+  > div > [class*="-caption"] {
     background: transparent;
     @include box-shadow(none);
   }
@@ -83,7 +137,7 @@ $v-panel-border: $v-border !default;
   border-radius: 0;
   @include box-shadow(none);
 
-  > div > .v-panel-caption {
+  > div > [class*="-caption"] {
     background: transparent;
     @include box-shadow(none);
     color: inherit;
@@ -96,7 +150,7 @@ $v-panel-border: $v-border !default;
 
 
 @mixin valo-panel-scroll-divider-style ($border-width: max(1px, first-number($v-panel-border))) {
-  > .v-panel-captionwrap {
+  > [class*="-captionwrap"] {
     position: relative;
     z-index: 2;
 
@@ -111,7 +165,7 @@ $v-panel-border: $v-border !default;
     }
   }
 
-  > .v-panel-content {
+  > [class*="-content"] {
     &:before {
       content: "";
       position: absolute;

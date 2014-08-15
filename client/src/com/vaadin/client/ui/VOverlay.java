@@ -444,7 +444,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * A "thread local" of sorts, set temporarily so that VOverlayImpl knows
      * which VOverlay is using it, so that it can be attached to the correct
      * overlay container.
-     *
+     * 
      * TODO this is a strange pattern that we should get rid of when possible.
      */
     protected static VOverlay current;
@@ -655,6 +655,12 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
                     container.insertBefore(shimElement, getElement());
                 }
             }
+        }
+        // Fix for #14173
+        // IE9 and IE10 have a bug, when resize an a element with box-shadow.
+        // IE9 and IE10 need explicit update to remove extra box-shadows
+        if (BrowserInfo.get().isIE9() || BrowserInfo.get().isIE10()) {
+            Util.forceIERedraw(getElement());
         }
     }
 
@@ -875,7 +881,9 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             container.setId(id);
             String styles = ac.getUIConnector().getWidget().getParent()
                     .getStyleName();
-            container.addClassName(styles);
+            if (styles != null && !styles.equals("")) {
+                container.addClassName(styles);
+            }
             container.addClassName(CLASSNAME_CONTAINER);
             RootPanel.get().getElement().appendChild(container);
         }
@@ -965,7 +973,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.google.gwt.user.client.ui.PopupPanel#hide()
      */
     @Override
@@ -975,7 +983,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.google.gwt.user.client.ui.PopupPanel#hide(boolean)
      */
     @Override

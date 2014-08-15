@@ -1,0 +1,20 @@
+$v-app-loading-text: "Dark & Flat Valo";
+
+$v-background-color: #000;
+$v-focus-color: #ffa500;
+$v-font-size: 15px;
+$v-font-weight: 600;
+$v-unit-size: 42px;
+$v-bevel: false;
+$v-shadow: false;
+$v-gradient: false;
+$v-textfield-bevel: false;
+$v-textfield-shadow: false;
+$v-border-radius: 0;
+$v-border: 2px solid v-tone;
+$v-overlay-shadow: 0 0 0 2px (v-tint 10);
+$v-focus-style: $v-focus-color;
+$v-font-family: "Lato", sans-serif;
+$v-font-weight--header: 600;
+
+@import "../valo/valo";

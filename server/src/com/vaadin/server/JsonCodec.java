@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -56,7 +56,7 @@ import com.vaadin.ui.ConnectorTracker;
 /**
  * Decoder for converting RPC parameters and other values from JSON in transfer
  * between the client and the server and vice versa.
- * 
+ *
  * @since 7.0
  */
 public class JsonCodec implements Serializable {
@@ -119,9 +119,9 @@ public class JsonCodec implements Serializable {
 
         public static Collection<FieldProperty> find(Class<?> type)
                 throws IntrospectionException {
-            Collection<FieldProperty> properties = new ArrayList<FieldProperty>();
-
             Field[] fields = type.getFields();
+            Collection<FieldProperty> properties = new ArrayList<FieldProperty>(
+                    fields.length);
             for (Field field : fields) {
                 if (!Modifier.isStatic(field.getModifiers())) {
                     properties.add(new FieldProperty(field));
@@ -341,7 +341,7 @@ public class JsonCodec implements Serializable {
      * using the declared type. Otherwise only internal types are allowed in
      * collections.
      * </p>
-     * 
+     *
      * @param targetType
      *            The type that should be returned by this method
      * @param valueAndType
@@ -471,13 +471,13 @@ public class JsonCodec implements Serializable {
     private static Map<Object, Object> decodeObjectMap(Type keyType,
             Type valueType, JSONArray jsonMap, ConnectorTracker connectorTracker)
             throws JSONException {
-        Map<Object, Object> map = new HashMap<Object, Object>();
 
         JSONArray keys = jsonMap.getJSONArray(0);
         JSONArray values = jsonMap.getJSONArray(1);
 
         assert (keys.length() == values.length());
 
+        Map<Object, Object> map = new HashMap<Object, Object>(keys.length() * 2);
         for (int i = 0; i < keys.length(); i++) {
             Object key = decodeInternalOrCustomType(keyType, keys.get(i),
                     connectorTracker);
@@ -580,8 +580,9 @@ public class JsonCodec implements Serializable {
     private static List<Object> decodeList(Type targetType,
             boolean restrictToInternalTypes, JSONArray jsonArray,
             ConnectorTracker connectorTracker) throws JSONException {
-        List<Object> list = new ArrayList<Object>();
-        for (int i = 0; i < jsonArray.length(); ++i) {
+        int arrayLength = jsonArray.length();
+        List<Object> list = new ArrayList<Object>(arrayLength);
+        for (int i = 0; i < arrayLength; ++i) {
             // each entry always has two elements: type and value
             Object encodedValue = jsonArray.get(i);
             Object decodedChild = decodeParametrizedType(targetType,
@@ -754,7 +755,7 @@ public class JsonCodec implements Serializable {
 
     /**
      * Compares the value with the reference. If they match, returns true.
-     * 
+     *
      * @param fieldValue
      * @param referenceValue
      * @return

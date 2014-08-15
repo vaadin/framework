@@ -42,7 +42,8 @@ public class VaadinPortletRequestTests {
 
     @Test
     public void defaultValueForPortletPreferenceIsNull() {
-        when(preferences.getValue(anyString(), isNull(String.class))).thenReturn(null);
+        when(preferences.getValue(anyString(), isNull(String.class)))
+                .thenReturn(null);
 
         String value = sut.getPortletPreference("foo");
 

@@ -4,7 +4,6 @@ import java.text.DateFormatSymbols;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
 import com.vaadin.annotations.Theme;
@@ -51,6 +50,7 @@ import com.vaadin.ui.components.calendar.event.BasicEventProvider;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
 import com.vaadin.ui.components.calendar.handler.BasicWeekClickHandler;
+import com.vaadin.ui.themes.ValoTheme;
 
 /** Calendar component test application */
 @Theme("valo-test")
@@ -108,7 +108,7 @@ public class CalendarTest extends GridLayout implements View {
 
     private Button applyEventButton;
 
-    private Mode viewMode = Mode.MONTH;
+    private Mode viewMode = Mode.WEEK;
 
     private BasicEventProvider dataSource;
 
@@ -152,50 +152,9 @@ public class CalendarTest extends GridLayout implements View {
         setSpacing(true);
 
         // handleURLParams(request.getParameterMap());
+        testBench = ValoThemeUI.isTestMode();
 
         initContent();
-    }
-
-    private void handleURLParams(Map<String, String[]> parameters) {
-        testBench = parameters.containsKey("testBench")
-                || parameters.containsKey("?testBench");
-
-        if (parameters.containsKey("width")) {
-            calendarWidth = parameters.get("width")[0];
-        }
-
-        if (parameters.containsKey("height")) {
-            calendarHeight = parameters.get("height")[0];
-        }
-
-        if (parameters.containsKey("firstDay")) {
-            firstDay = Integer.parseInt(parameters.get("firstDay")[0]);
-        }
-
-        if (parameters.containsKey("lastDay")) {
-            lastDay = Integer.parseInt(parameters.get("lastDay")[0]);
-        }
-
-        if (parameters.containsKey("firstHour")) {
-            firstHour = Integer.parseInt(parameters.get("firstHour")[0]);
-        }
-
-        if (parameters.containsKey("lastHour")) {
-            lastHour = Integer.parseInt(parameters.get("lastHour")[0]);
-        }
-
-        if (parameters.containsKey("locale")) {
-            String localeArray[] = parameters.get("locale")[0].split("_");
-            defaultLocale = new Locale(localeArray[0], localeArray[1]);
-            setLocale(defaultLocale);
-        }
-
-        if (parameters.containsKey(("secondsResolution"))) {
-            useSecondResolution = true;
-        }
-
-        showWeeklyView = parameters.containsKey("weekly");
-
     }
 
     public void initContent() {
@@ -365,6 +324,9 @@ public class CalendarTest extends GridLayout implements View {
                 Alignment.MIDDLE_LEFT);
         controlPanel.setComponentAlignment(addNewEvent, Alignment.MIDDLE_LEFT);
 
+        Label viewCaption = new Label("Calendar");
+        viewCaption.setStyleName(ValoTheme.LABEL_H1);
+        addComponent(viewCaption);
         addComponent(controlPanel);
         addComponent(hl);
         addComponent(calendarComponent);
@@ -645,6 +607,11 @@ public class CalendarTest extends GridLayout implements View {
         calendar.setTime(today);
         calendarComponent.getInternalCalendar().setTime(today);
 
+        // Calendar getStartDate (and getEndDate) has some strange logic which
+        // returns Monday of the current internal time if no start date has been
+        // set
+        calendarComponent.setStartDate(calendarComponent.getStartDate());
+        calendarComponent.setEndDate(calendarComponent.getEndDate());
         int rollAmount = calendar.get(GregorianCalendar.DAY_OF_MONTH) - 1;
         calendar.add(GregorianCalendar.DAY_OF_MONTH, -rollAmount);
         currentMonthsFirstDate = calendar.getTime();

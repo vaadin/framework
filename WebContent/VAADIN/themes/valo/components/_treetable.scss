@@ -8,6 +8,10 @@
       padding-right: 0;
     }
 
+    [class*="cell-wrapper"] {
+      min-height: $v-font-size;
+    }
+
     [class*="caption-container"] {
       padding-left: $v-table-cell-padding-horizontal;
     }
@@ -33,9 +37,10 @@
   .#{$primary-stylename}-treespacer {
     display: inline-block;
     position: absolute;
-    width: round($v-unit-size/2);
+    width: round($v-unit-size/2) !important;
     margin-left: round($v-unit-size/-2) - round($v-table-cell-padding-horizontal/2);
     text-align: center;
+    cursor: pointer;
   }
 
   .#{$primary-stylename}-node-closed:before {

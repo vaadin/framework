@@ -9,7 +9,8 @@ import java.io.IOException;
 
 import static org.junit.Assert.*;
 
-public class MoveComponentsFromGridLayoutToInnerLayoutTest extends MultiBrowserTest {
+public class MoveComponentsFromGridLayoutToInnerLayoutTest extends
+        MultiBrowserTest {
 
     @Test
     public void buttonIsMovedInsideInnerLayout() throws IOException {

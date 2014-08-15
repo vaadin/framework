@@ -99,3 +99,18 @@
 .v-csslayout-width-and-height[height-range~="500px-"][width-range~="600px-"] {
 	background: red;
 }
+
+/* Styles for ResponsiveLayoutUpdate test */
+.layout-update .change-width {
+  white-space: normal;
+  background: #ddd;
+}
+.layout-update[width-range="0-599px"] .change-width {
+  width: 200px;
+  height: 200px;
+}
+
+.layout-update[width-range="600px-"] .change-width {
+  width: 300px;
+  height: 300px;
+}

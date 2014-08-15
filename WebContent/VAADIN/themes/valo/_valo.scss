@@ -44,10 +44,6 @@
 @import "components/all";
 
 
-// Import common additional style names for components (optional)
-@import "optional/common-stylenames";
-
-
 // Include global styles directly, without a theme name prefix (this is done only once)
 @include valo-global;
 
@@ -56,12 +52,4 @@
 @mixin valo {
   @include valo-common;
   @include valo-components;
-
-  @if v-is-included(notification) {
-    @include valo-notification;
-  }
-
-  @if $valo-include-common-stylenames {
-  	@include valo-common-stylenames;
-  }
 }

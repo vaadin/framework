@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,6 +18,7 @@ package com.vaadin.server.communication;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,9 +71,10 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
             AtmosphereRequest req = resource.getRequest();
 
             if (req.getMethod().equalsIgnoreCase("GET")) {
-                callWithUi(resource, establishCallback);
+                callWithUi(resource, establishCallback, false);
             } else if (req.getMethod().equalsIgnoreCase("POST")) {
-                callWithUi(resource, receiveCallback);
+                callWithUi(resource, receiveCallback,
+                        resource.transport() == TRANSPORT.WEBSOCKET);
             }
         }
 
@@ -199,18 +201,27 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
      *            the atmosphere resource for the current request
      * @param callback
      *            the push callback to call when a UI is found and locked
+     * @param websocket
+     *            true if this is a websocket message (as opposed to a HTTP
+     *            request)
      */
     private void callWithUi(final AtmosphereResource resource,
-            final PushEventCallback callback) {
+            final PushEventCallback callback, boolean websocket) {
         AtmosphereRequest req = resource.getRequest();
         VaadinServletRequest vaadinRequest = new VaadinServletRequest(req,
                 service);
         VaadinSession session = null;
 
-        service.requestStart(vaadinRequest, null);
+        if (websocket) {
+            // For any HTTP request we have already started the request in the
+            // servlet
+            service.requestStart(vaadinRequest, null);
+        }
         try {
             try {
                 session = service.findVaadinSession(vaadinRequest);
+                assert VaadinSession.getCurrent() == session;
+
             } catch (ServiceException e) {
                 getLogger().log(Level.SEVERE,
                         "Could not get session. This should never happen", e);
@@ -231,9 +242,9 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
             UI ui = null;
             session.lock();
             try {
-                VaadinSession.setCurrent(session);
-                // Sets UI.currentInstance
                 ui = service.findUI(vaadinRequest);
+                assert UI.getCurrent() == ui;
+
                 if (ui == null) {
                     sendNotificationAndDisconnect(resource,
                             UidlRequestHandler.getUINotFoundErrorJSON(service,
@@ -276,7 +287,9 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
             }
         } finally {
             try {
-                service.requestEnd(vaadinRequest, null, session);
+                if (websocket) {
+                    service.requestEnd(vaadinRequest, null, session);
+                }
             } catch (Exception e) {
                 getLogger().log(Level.WARNING, "Error while ending request", e);
 
@@ -355,9 +368,31 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
             // Sets UI.currentInstance
             ui = service.findUI(vaadinRequest);
             if (ui == null) {
-                getLogger().log(Level.SEVERE,
-                        "Could not get UI. This should never happen");
-                return;
+                /*
+                 * UI not found, could be because FF has asynchronously closed
+                 * the websocket connection and Atmosphere has already done
+                 * cleanup of the request attributes.
+                 * 
+                 * In that case, we still have a chance of finding the right UI
+                 * by iterating through the UIs in the session looking for one
+                 * using the same AtmosphereResource.
+                 */
+                ui = findUiUsingResource(resource, session.getUIs());
+
+                if (ui == null) {
+                    getLogger()
+                            .log(Level.SEVERE,
+                                    "Could not get UI. This should never happen,"
+                                            + " except when reloading in Firefox -"
+                                            + " see http://dev.vaadin.com/ticket/14251.");
+                    return;
+                } else {
+                    getLogger()
+                            .log(Level.INFO,
+                                    "No UI was found based on data in the request,"
+                                            + " but a slower lookup based on the AtmosphereResource succeeded."
+                                            + " See http://dev.vaadin.com/ticket/14251 for more details.");
+                }
             }
 
             PushMode pushMode = ui.getPushConfiguration().getPushMode();
@@ -407,6 +442,19 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
                 // can't call ErrorHandler, we (hopefully) don't have a lock
             }
         }
+    }
+
+    private static UI findUiUsingResource(AtmosphereResource resource,
+            Collection<UI> uIs) {
+        for (UI ui : uIs) {
+            PushConnection pushConnection = ui.getPushConnection();
+            if (pushConnection instanceof AtmospherePushConnection) {
+                if (((AtmospherePushConnection) pushConnection).getResource() == resource) {
+                    return ui;
+                }
+            }
+        }
+        return null;
     }
 
     /**

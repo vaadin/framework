@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui.themes;
 
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Table.ColumnHeaderMode;
 
@@ -184,6 +185,18 @@ public class ValoTheme {
      * context of some component. Can be combined with any other Label style.
      */
     public static final String LABEL_FAILURE = "failure";
+
+    /**
+     * Spinner style. Add this style name to an empty Label to create a spinner.
+     * 
+     * <h4>Example</h4>
+     * 
+     * <pre>
+     * Label spinner = new Label();
+     * spinner.addStyleName(ValoTheme.LABEL_SPINNER);
+     * </pre>
+     */
+    public static final String LABEL_SPINNER = "spinner";
 
     /***************************************************************************
      * 
@@ -456,6 +469,12 @@ public class ValoTheme {
      * style.
      */
     public static final String OPTIONGROUP_LARGE = "large";
+
+    /**
+     * Display the options horizontally in a row (by default the items are
+     * stacked vertically).
+     */
+    public static final String OPTIONGROUP_HORIZONTAL = "horizontal";
 
     /***************************************************************************
      * 
@@ -738,7 +757,7 @@ public class ValoTheme {
     /**
      * Removes the borders and background from any direct child field components
      * (TextField, TextArea, DateField, ComboBox) in the layout. Reduces the
-     * spacing between the form rows adds separator lines between them.
+     * spacing between the form rows and adds separator lines between them.
      */
     public static final String FORMLAYOUT_LIGHT = "light";
 
@@ -762,6 +781,31 @@ public class ValoTheme {
      */
     public static final String LAYOUT_WELL = "well";
 
+    /**
+     * Make a HorizontalLayout wrap contained components to a new line when the
+     * isn't enough space.
+     */
+    public static final String LAYOUT_HORIZONTAL_WRAPPING = "wrapping";
+
+    /**
+     * Add this style name to a CssLayout to create a grouped set of components,
+     * i.e. a row of components which are joined seamlessly together.
+     * 
+     * <h4>Example</h4>
+     * 
+     * <pre>
+     * CssLayout group = new CssLayout();
+     * group.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+     * 
+     * TextField field = new TextField();
+     * group.addComponent(field);
+     * 
+     * Button button = new Button(&quot;Action&quot;);
+     * group.addComponent(button);
+     * </pre>
+     */
+    public static final String LAYOUT_COMPONENT_GROUP = "v-component-group";
+
     /***************************************************************************
      * 
      * Valo menu styles
@@ -769,8 +813,25 @@ public class ValoTheme {
      **************************************************************************/
 
     /**
-     * Set the primary style name of a CssLayout to this, and add any number of
-     * layouts with the {@link #MENU_PART} style inside it.
+     * <p>
+     * Set the <em><b>primary</b></em> style name of a CssLayout to this, and
+     * add any number of layouts with the {@link #MENU_PART} style inside it.
+     * </p>
+     * 
+     * <p>
+     * The menu style is used to create a sidebar navigation menu for the
+     * application, usually action as the main navigation for the different
+     * sections of the application. It usually consists of at least a number of
+     * {@link #MENU_ITEM}s, and possibly some {@link #MENU_SUBTITLE}s and a
+     * {@link #MENU_TITLE}.
+     * </p>
+     * 
+     * <h4>Example</h4>
+     * 
+     * <pre>
+     * CssLayout menuArea = new CssLayout();
+     * menuArea.setPrimaryStyleName(ValoTheme.MENU_ROOT);
+     * </pre>
      */
     public static final String MENU_ROOT = "valo-menu";
 
@@ -778,31 +839,124 @@ public class ValoTheme {
      * Add this style name to any layout and place it inside a layout with the
      * {@link #MENU_ROOT} style to build a menu component. Use the additional
      * MENU styles for individual components inside the layout.
+     * 
+     * <h4>Example</h4>
+     * 
+     * <pre>
+     * CssLayout menu = new CssLayout();
+     * menu.addStyleName(ValoTheme.MENU_PART);
+     * </pre>
      */
     public static final String MENU_PART = "valo-menu-part";
 
     /**
-     * TODO
+     * Add this style name to any layout with the {@link #MENU_PART} style name
+     * to make any menu items inside the menu emphasize the icons more than the
+     * captions. Useful on narrower viewport widths, since the menu width is
+     * decreased quite dramatically, making more space for the content of the
+     * application.
+     * 
+     * <h4>Example</h4>
+     * 
+     * <pre>
+     * CssLayout menu = new CssLayout();
+     * menu.addStyleName(ValoTheme.MENU_PART);
+     * menu.addStyleName(ValoTheme.MENU_PART_LARGE_ICONS);
+     * </pre>
+     */
+    public static final String MENU_PART_LARGE_ICONS = "large-icons";
+
+    /**
+     * <p>
+     * Add this style name to any layout to make a header area for a menu
+     * (intended to be placed in side a {@link #MENU_PART} layout). You can add
+     * any components inside it, but usually you would place a Label inside.
+     * </p>
+     * 
+     * <p>
+     * Any MenuBar component that you place inside this layout will match the
+     * style of the title, allowing an easy way to add a toolbar to the title
+     * layout.
+     * </p>
      */
     public static final String MENU_TITLE = "valo-menu-title";
 
     /**
-     * TODO
+     * Set the <em><b>primary</b></em> style name of a Label or a Button to this
+     * style name to create a section divider in a menu.
      */
     public static final String MENU_SUBTITLE = "valo-menu-subtitle";
 
     /**
-     * TODO
+     * <p>
+     * Set the <em><b>primary</b></em> style name of a Button to this style name
+     * to create a clickable menu item in the menu.
+     * </p>
+     * 
+     * <h4>Selected item</h4>
+     * <p>
+     * Add an additional style name <b><code>selected</code></b> to it to make
+     * it the selected item in the menu.
+     * </p>
+     * 
+     * <h4>Example</h4>
+     * 
+     * <pre>
+     * Button item = new Button();
+     * item.setPrimaryStyleName(ValoTheme.MENU_ITEM);
+     * item.addStyleName(&quot;selected&quot;);
+     * </pre>
      */
-    public static final String MENU_ITEM = "valo-menu-title";
+    public static final String MENU_ITEM = "valo-menu-item";
 
     /**
-     * TODO
+     * Add a SPAN element with this style name inside a {@link #MENU_SUBTITLE}
+     * or {@link #MENU_ITEM} to add an additional badge indicator to the
+     * subtitle/item. The Label/Button needs to allow HTML content in order to
+     * use this style name.
+     * 
+     * <h4>Examples</h4>
+     * 
+     * <pre>
+     * Button item = new Button();
+     * item.setPrimaryStyleName(ValoTheme.MENU_ITEM);
+     * item.setHtmlContentAllowed(true);
+     * item.setCaption(&quot;Item Caption &lt;span class=\&quot;&quot; + ValoTheme.MENU_BADGE
+     *         + &quot;\&quot;&gt;Badge text&lt;/span&gt;&quot;);
+     * </pre>
+     * 
+     * <pre>
+     * Label item = new Label();
+     * item.setPrimaryStyleName(ValoTheme.MENU_ITEM);
+     * item.setContentMode(ContentMode.HTML);
+     * item.setCaption(&quot;Item Caption &lt;span class=\&quot;&quot; + ValoTheme.MENU_BADGE
+     *         + &quot;\&quot;&gt;Badge text&lt;/span&gt;&quot;);
+     * </pre>
      */
     public static final String MENU_BADGE = "valo-menu-badge";
 
     /**
-     * TODO
+     * <p>
+     * Set the <em><b>primary</b></em> style name of a Label or a Button to this
+     * style name to create an application logo. The logo is designed to be
+     * placed inside a {@link #MENU_PART} layout.
+     * </p>
+     * 
+     * <p>
+     * The text content of the logo should be very short, since the logo area
+     * only shows approximately three letters. Using one of the
+     * {@link FontAwesome} icons is a good way to quickly create a logo for your
+     * application.
+     * </p>
+     * </p>
+     * 
+     * <h4>Example</h4>
+     * 
+     * <pre>
+     * Label logo = new Label(FontAwesome.ROCKET.getHtml(), ContentMode.HTML);
+     * logo.setSizeUndefined();
+     * logo.setPrimaryStyleName(ValoTheme.MENU_LOGO);
+     * </pre>
      */
     public static final String MENU_LOGO = "valo-menu-logo";
 

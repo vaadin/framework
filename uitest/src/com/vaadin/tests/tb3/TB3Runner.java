@@ -17,8 +17,10 @@
 package com.vaadin.tests.tb3;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -26,6 +28,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -34,10 +38,12 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.HttpCommandExecutor;
+import org.openqa.selenium.remote.internal.HttpClientFactory;
 
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.AbstractTB3Test.BrowserUtil;
-import com.vaadin.tests.tb3.AbstractTB3Test.RunLocally;
+import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 
 /**
  * This runner is loosely based on FactoryTestRunner by Ted Young
@@ -48,6 +54,13 @@ import com.vaadin.tests.tb3.AbstractTB3Test.RunLocally;
  * @since 7.1
  */
 public class TB3Runner extends BlockJUnit4ClassRunner {
+
+    /**
+     * Socket timeout for HTTP connections to the grid hub. The connection is
+     * closed after 30 minutes of inactivity to avoid builds hanging for up to
+     * three hours per connection if the test client crashes/hangs.
+     */
+    private static final int SOCKET_TIMEOUT = 30 * 60 * 1000;
 
     /**
      * This is the total limit of actual JUnit test instances run in parallel
@@ -67,12 +80,34 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
             MAX_CONCURRENT_TESTS = 50;
         }
         service = Executors.newFixedThreadPool(MAX_CONCURRENT_TESTS);
+
+        // reduce socket timeout to avoid tests hanging for three hours
+        try {
+            Field field = HttpCommandExecutor.class
+                    .getDeclaredField("httpClientFactory");
+            assert (Modifier.isStatic(field.getModifiers()));
+            field.setAccessible(true);
+            field.set(null, new HttpClientFactory() {
+                @Override
+                public HttpParams getHttpParams() {
+                    HttpParams params = super.getHttpParams();
+                    // fifteen minute timeout
+                    HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT);
+                    return params;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(
+                    "Changing socket timeout for TestBench failed", e);
+        }
     }
 
     protected static boolean localWebDriverIsUsed() {
         String useLocalWebDriver = System.getProperty("useLocalWebDriver");
 
-        return useLocalWebDriver != null && useLocalWebDriver.toLowerCase().equals("true");
+        return useLocalWebDriver != null
+                && useLocalWebDriver.toLowerCase().equals("true");
     }
 
     public TB3Runner(Class<?> klass) throws InitializationError {
@@ -185,17 +220,17 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
     /*
      * Returns a list of desired browser capabilities according to browsers
      * defined in the test class, filtered by possible filter parameters. Use
-     * {@code @RunLocally} annotation to override all capabilities.
+     * {@code @RunLocally} annotation or com.vaadin.testbench.runLocally
+     * property to override all capabilities.
      */
     private Collection<DesiredCapabilities> getDesiredCapabilities(
             AbstractTB3Test testClassInstance) {
         Collection<DesiredCapabilities> desiredCapabilites = getFilteredCapabilities(testClassInstance);
 
-        if (isRunLocally(testClassInstance)) {
+        Browser runLocallyBrowser = testClassInstance.getRunLocallyBrowser();
+        if (runLocallyBrowser != null) {
             desiredCapabilites = new ArrayList<DesiredCapabilities>();
-            desiredCapabilites.add(testClassInstance.getClass()
-                    .getAnnotation(RunLocally.class).value()
-                    .getDesiredCapabilities());
+            desiredCapabilites.add(runLocallyBrowser.getDesiredCapabilities());
         }
 
         return desiredCapabilites;
@@ -235,10 +270,6 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
 
         }
         return filteredCapabilities;
-    }
-
-    private boolean isRunLocally(AbstractTB3Test testClassInstance) {
-        return testClassInstance.getClass().getAnnotation(RunLocally.class) != null;
     }
 
     private AbstractTB3Test getTestClassInstance()

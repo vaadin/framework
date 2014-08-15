@@ -1,4 +1,4 @@
-@mixin valo-combobox ($primary-stylename: v-filterselect) {
+@mixin valo-combobox ($primary-stylename: v-filterselect, $include-additional-styles: contains($v-included-additional-styles, combobox)) {
 
   .#{$primary-stylename} {
     position: relative;
@@ -59,6 +59,35 @@
     }
   }
 
+
+  @if $include-additional-styles {
+    .#{$primary-stylename}-borderless {
+      .#{$primary-stylename}-input {
+        @include valo-textfield-borderless-style;
+      }
+      .#{$primary-stylename}-button {
+        border: none;
+      }
+    }
+
+    .#{$primary-stylename}-align-right input {
+      text-align: right;
+    }
+
+    .#{$primary-stylename}-align-center input {
+      text-align: center;
+    }
+
+    .#{$primary-stylename}-small {
+      @include valo-combobox-style($unit-size: $v-unit-size--small, $bevel: null, $shadow: null, $gradient: null, $border: null, $border-radius: null, $background-color: null, $states: normal);
+      font-size: $v-font-size--small;
+    }
+
+    .#{$primary-stylename}-large {
+      @include valo-combobox-style($unit-size: $v-unit-size--large, $bevel: null, $shadow: null, $gradient: null, $border: null, $border-radius: null, $background-color: null, $states: normal);
+      font-size: $v-font-size--large;
+    }
+  }
 }
 
 
@@ -81,7 +110,8 @@
     $bevel: $v-textfield-bevel,
     $shadow: $v-textfield-shadow,
 
-    $primary-stylename: v-filterselect
+    $primary-stylename: v-filterselect,
+    $states: normal focus disabled
   ) {
 
     height: $unit-size;
@@ -98,7 +128,8 @@
           $background-color: $background-color,
           $font-color: $font-color,
           $font-size: $font-size,
-          $font-weight: $font-weight);
+          $font-weight: $font-weight,
+          $states: $states);
   }
 
   .v-icon + .#{$primary-stylename}-input {
@@ -172,7 +203,9 @@
 
     $gradient: none,
     $bevel: $v-bevel,
-    $shadow: $v-shadow
+    $shadow: $v-shadow,
+
+    $states: normal focus disabled
 ) {
   @include box-sizing(border-box);
   @include valo-textfield-style($unit-size: $unit-size,
@@ -185,7 +218,8 @@
                                 $border-radius: $border-radius,
                                 $gradient: $gradient,
                                 $bevel: $bevel,
-                                $shadow: $shadow);
+                                $shadow: $shadow,
+                                $states: $states);
   width: 100% !important; // Need to override calculated inline style which is sometimes added
   height: 100%;
   padding-right: round($unit-size * 1.2);

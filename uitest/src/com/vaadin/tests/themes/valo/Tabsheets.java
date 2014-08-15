@@ -149,12 +149,15 @@ public class Tabsheets extends VerticalLayout implements View {
 
     static TabSheet getTabSheet(boolean caption, String style,
             boolean closable, boolean scrolling, boolean icon, boolean disable) {
+        TestIcon testIcon = new TestIcon(60);
+
         TabSheet ts = new TabSheet();
         ts.addStyleName(style);
+        StringGenerator sg = new StringGenerator();
 
         for (int i = 1; i <= (scrolling ? 10 : 3); i++) {
-            String tabcaption = caption ? ValoThemeTest.nextString(true) + " "
-                    + ValoThemeTest.nextString(false) : null;
+            String tabcaption = caption ? sg.nextString(true) + " "
+                    + sg.nextString(false) : null;
 
             VerticalLayout content = new VerticalLayout();
             content.setMargin(true);
@@ -174,7 +177,7 @@ public class Tabsheets extends VerticalLayout implements View {
             }
 
             if (icon) {
-                t.setIcon(TestIcon.get(false));
+                t.setIcon(testIcon.get(false));
             }
         }
 

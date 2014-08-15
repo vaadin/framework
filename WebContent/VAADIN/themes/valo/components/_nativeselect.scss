@@ -23,6 +23,7 @@
 @mixin valo-nativeselect-select-style {
   border: valo-border();
   @include valo-gradient;
+  color: valo-font-color($v-background-color);
 
   &:focus {
     outline: none;

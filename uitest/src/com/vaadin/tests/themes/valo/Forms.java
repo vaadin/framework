@@ -47,7 +47,7 @@ public class Forms extends VerticalLayout implements View {
         setSpacing(true);
         setMargin(true);
 
-        Label title = new Label("Form");
+        Label title = new Label("Forms");
         title.addStyleName("h1");
         addComponent(title);
 
@@ -60,10 +60,10 @@ public class Forms extends VerticalLayout implements View {
         Label section = new Label("Personal Info");
         section.addStyleName("h2");
         form.addComponent(section);
+        StringGenerator sg = new StringGenerator();
 
         TextField name = new TextField("Name");
-        name.setValue(ValoThemeTest.nextString(true) + " "
-                + ValoThemeTest.nextString(true));
+        name.setValue(sg.nextString(true) + " " + sg.nextString(true));
         name.setWidth("50%");
         form.addComponent(name);
 
@@ -72,8 +72,7 @@ public class Forms extends VerticalLayout implements View {
         form.addComponent(birthday);
 
         TextField username = new TextField("Username");
-        username.setValue(ValoThemeTest.nextString(false)
-                + ValoThemeTest.nextString(false));
+        username.setValue(sg.nextString(false) + sg.nextString(false));
         username.setRequired(true);
         form.addComponent(username);
 
@@ -89,15 +88,14 @@ public class Forms extends VerticalLayout implements View {
         form.addComponent(section);
 
         TextField email = new TextField("Email");
-        email.setValue(ValoThemeTest.nextString(false) + "@"
-                + ValoThemeTest.nextString(false) + ".com");
+        email.setValue(sg.nextString(false) + "@" + sg.nextString(false)
+                + ".com");
         email.setWidth("50%");
         email.setRequired(true);
         form.addComponent(email);
 
         TextField location = new TextField("Location");
-        location.setValue(ValoThemeTest.nextString(true) + ", "
-                + ValoThemeTest.nextString(true));
+        location.setValue(sg.nextString(true) + ", " + sg.nextString(true));
         location.setWidth("50%");
         location.setComponentError(new UserError("This address doesn't exist"));
         form.addComponent(location);

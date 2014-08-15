@@ -40,7 +40,7 @@ public class PushLargeDataWebsocketTest extends WebsocketTest {
 
     private void push() throws Exception {
         // Wait for startButton to be present
-        waitForElementToBePresent(vaadinLocatorById("startButton"));
+        waitForElementVisible(vaadinLocatorById("startButton"));
 
         String logRow0Id = "Log_row_0";
         By logRow0 = vaadinLocatorById(logRow0Id);
