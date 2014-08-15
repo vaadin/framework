@@ -25,9 +25,10 @@ import com.vaadin.ui.Table.ColumnHeaderMode;
  * </p>
  * 
  * <p>
- * These styles are only available if the Valo theme (or any of it's variants)
- * is built with the <code>$valo-include-common-stylenames</code> Sass variable
- * set to <code>true</code>.
+ * These styles are only available if the
+ * <code>$v-included-additional-styles</code> Sass list variable contains the
+ * name of the component for that additional style name (e.g.
+ * <code>button, textfield, table</code>).
  * </p>
  * 
  * <p>
@@ -149,6 +150,12 @@ public class ValoTheme {
     public static final String LABEL_NO_MARGIN = "no-margin";
 
     /**
+     * Tiny font size. Suitable for additional/supplementary UI text. Can be
+     * combined with any other Label style.
+     */
+    public static final String LABEL_TINY = "tiny";
+
+    /**
      * Small font size. Suitable for additional/supplementary UI text. Can be
      * combined with any other Label style.
      */
@@ -159,6 +166,12 @@ public class ValoTheme {
      * combined with any other Label style.
      */
     public static final String LABEL_LARGE = "large";
+
+    /**
+     * Huge font size. Suitable for important/prominent UI text. Can be combined
+     * with any other Label style.
+     */
+    public static final String LABEL_HUGE = "huge";
 
     /**
      * Lighter font weight. Suitable for additional/supplementary UI text. Can
@@ -252,6 +265,11 @@ public class ValoTheme {
     public static final String BUTTON_LINK = "link";
 
     /**
+     * Tiny size button. Can be combined with any other Button style.
+     */
+    public static final String BUTTON_TINY = "tiny";
+
+    /**
      * Small size button. Can be combined with any other Button style.
      */
     public static final String BUTTON_SMALL = "small";
@@ -260,6 +278,11 @@ public class ValoTheme {
      * Large size button. Can be combined with any other Button style.
      */
     public static final String BUTTON_LARGE = "large";
+
+    /**
+     * Huge size button. Can be combined with any other Button style.
+     */
+    public static final String BUTTON_HUGE = "huge";
 
     /**
      * Align the icon to the right side of the button caption. Can be combined
@@ -301,6 +324,11 @@ public class ValoTheme {
      **************************************************************************/
 
     /**
+     * Tiny size text field. Can be combined with any other TextField style.
+     */
+    public static final String TEXTFIELD_TINY = "tiny";
+
+    /**
      * Small size text field. Can be combined with any other TextField style.
      */
     public static final String TEXTFIELD_SMALL = "small";
@@ -309,6 +337,11 @@ public class ValoTheme {
      * Large size text field. Can be combined with any other TextField style.
      */
     public static final String TEXTFIELD_LARGE = "large";
+
+    /**
+     * Huge size text field. Can be combined with any other TextField style.
+     */
+    public static final String TEXTFIELD_HUGE = "huge";
 
     /**
      * Removes the border and background from the text field. Can be combined
@@ -341,6 +374,11 @@ public class ValoTheme {
      **************************************************************************/
 
     /**
+     * Tiny size text area. Can be combined with any other TextArea style.
+     */
+    public static final String TEXTAREA_TINY = "tiny";
+
+    /**
      * Small size text area. Can be combined with any other TextArea style.
      */
     public static final String TEXTAREA_SMALL = "small";
@@ -349,6 +387,11 @@ public class ValoTheme {
      * Large size text area. Can be combined with any other TextArea style.
      */
     public static final String TEXTAREA_LARGE = "large";
+
+    /**
+     * Huge size text area. Can be combined with any other TextArea style.
+     */
+    public static final String TEXTAREA_HUGE = "huge";
 
     /**
      * Removes the border and background from the text area. Can be combined
@@ -375,6 +418,11 @@ public class ValoTheme {
      **************************************************************************/
 
     /**
+     * Tiny size date field. Can be combined with any other DateField style.
+     */
+    public static final String DATEFIELD_TINY = "tiny";
+
+    /**
      * Small size date field. Can be combined with any other DateField style.
      */
     public static final String DATEFIELD_SMALL = "small";
@@ -383,6 +431,11 @@ public class ValoTheme {
      * Large size date field. Can be combined with any other DateField style.
      */
     public static final String DATEFIELD_LARGE = "large";
+
+    /**
+     * Huge size date field. Can be combined with any other DateField style.
+     */
+    public static final String DATEFIELD_HUGE = "huge";
 
     /**
      * Removes the border and background from the date field. Can be combined
@@ -409,6 +462,11 @@ public class ValoTheme {
      **************************************************************************/
 
     /**
+     * Tiny size combo box. Can be combined with any other ComboBox style.
+     */
+    public static final String COMBOBOX_TINY = "tiny";
+
+    /**
      * Small size combo box. Can be combined with any other ComboBox style.
      */
     public static final String COMBOBOX_SMALL = "small";
@@ -417,6 +475,11 @@ public class ValoTheme {
      * Large size combo box. Can be combined with any other ComboBox style.
      */
     public static final String COMBOBOX_LARGE = "large";
+
+    /**
+     * Huge size combo box. Can be combined with any other ComboBox style.
+     */
+    public static final String COMBOBOX_HUGE = "huge";
 
     /**
      * Removes the border and background from the combo box. Can be combined

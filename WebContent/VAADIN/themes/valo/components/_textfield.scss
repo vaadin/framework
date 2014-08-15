@@ -30,6 +30,11 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
       @include valo-textfield-borderless-style;
     }
 
+    .#{$primary-stylename}-tiny {
+      @include valo-textfield-style($unit-size: $v-unit-size--tiny, $states: normal, $background-color: null, $border: null, $gradient: null, $bevel: null, $shadow: null);
+      font-size: $v-font-size--tiny;
+    }
+
     .#{$primary-stylename}-small {
       @include valo-textfield-style($unit-size: $v-unit-size--small, $states: normal, $background-color: null, $border: null, $gradient: null, $bevel: null, $shadow: null);
       font-size: $v-font-size--small;
@@ -40,9 +45,16 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
       font-size: $v-font-size--large;
     }
 
+    .#{$primary-stylename}-huge {
+      @include valo-textfield-style($unit-size: $v-unit-size--huge, $states: normal, $background-color: null, $border: null, $gradient: null, $bevel: null, $shadow: null);
+      font-size: $v-font-size--huge;
+    }
+
     @include valo-textfield-inline-icon($stylenames: inline-icon);
+    @include valo-textfield-inline-icon($stylenames: inline-icon tiny, $unit-size: $v-unit-size--tiny, $font-size: $v-font-size--tiny);
     @include valo-textfield-inline-icon($stylenames: inline-icon small, $unit-size: $v-unit-size--small, $font-size: $v-font-size--small);
     @include valo-textfield-inline-icon($stylenames: inline-icon large, $unit-size: $v-unit-size--large, $font-size: $v-font-size--large);
+    @include valo-textfield-inline-icon($stylenames: inline-icon huge, $unit-size: $v-unit-size--huge, $font-size: $v-font-size--huge);
 
     .#{$primary-stylename}-align-right {
       text-align: right;

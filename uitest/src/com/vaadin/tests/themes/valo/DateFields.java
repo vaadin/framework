@@ -172,6 +172,18 @@ public class DateFields extends VerticalLayout implements View {
         date.setDateFormat("E dd/MM/yyyy");
         row.addComponent(date);
 
+        date = new DateField("Tiny");
+        date.setValue(new Date());
+        date.setResolution(Resolution.DAY);
+        date.addStyleName("tiny");
+        row.addComponent(date);
+
+        date = new DateField("Huge");
+        date.setValue(new Date());
+        date.setResolution(Resolution.DAY);
+        date.addStyleName("huge");
+        row.addComponent(date);
+
         date = new InlineDateField("Date picker");
         setDate(date);
         row.addComponent(date);

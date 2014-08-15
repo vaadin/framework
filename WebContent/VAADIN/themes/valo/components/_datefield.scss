@@ -59,6 +59,11 @@
       text-align: center;
     }
 
+    .#{$primary-stylename}-tiny {
+      @include valo-datefield-style($unit-size: $v-unit-size--tiny, $bevel: null, $shadow: null, $border: null, $background-color: null, $states: normal);
+      font-size: $v-font-size--tiny;
+    }
+
     .#{$primary-stylename}-small {
       @include valo-datefield-style($unit-size: $v-unit-size--small, $bevel: null, $shadow: null, $border: null, $background-color: null, $states: normal);
       font-size: $v-font-size--small;
@@ -67,6 +72,11 @@
     .#{$primary-stylename}-large {
       @include valo-datefield-style($unit-size: $v-unit-size--large, $bevel: null, $shadow: null, $border: null, $background-color: null, $states: normal);
       font-size: $v-font-size--large;
+    }
+
+    .#{$primary-stylename}-huge {
+      @include valo-datefield-style($unit-size: $v-unit-size--huge, $bevel: null, $shadow: null, $border: null, $background-color: null, $states: normal);
+      font-size: $v-font-size--huge;
     }
   }
 

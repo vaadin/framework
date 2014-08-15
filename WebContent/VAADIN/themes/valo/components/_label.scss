@@ -112,6 +112,14 @@ $v-letter-spacing--h4:    0               !default;
       font-size: $v-font-size--small;
     }
 
+    .#{$primary-stylename}-tiny {
+      font-size: $v-font-size--tiny;
+    }
+
+    .#{$primary-stylename}-huge {
+      font-size: $v-font-size--huge;
+    }
+
     .#{$primary-stylename}-bold {
       font-weight: $v-font-weight + 200;
     }
