@@ -128,13 +128,17 @@
     <target name="compile-widgetset" depends="resolve">
         <property name="module" value="${widgetset}" />
         <property name="module.output.dir" location="WebContent/VAADIN/widgetsets" />
+        <property name="logLevel" value="TRACE" />
         <property name="style" value="PRETTY" />
         <property name="localWorkers" value="2" />
+        <!-- Whether assertions should be compiled into the widgetset. 
+             Either "-ea" to enable or "" to disable. -->
+        <property name="assertions" value="-ea" />
         <property name="extraParams" value="" />
 
         <mkdir dir="${module.output.dir}" />
 
-        <echo>Compiling ${module} to ${module.output.dir} with parameters -logLevel TRACE -style ${style} -localWorkers ${localWorkers} -strict ${extraParams}</echo>
+        <echo>Compiling ${module} to ${module.output.dir} with parameters -logLevel ${logLevel} -style ${style} -localWorkers ${localWorkers} ${assertions} -strict ${extraParams}</echo>
 
         <!--<ivy:resolve log="download-only" inline="true" organisation="javax.validation" module="validation-api" 
             revision="1.0.0.GA"/> -->
@@ -144,14 +148,14 @@
             <arg value="-workDir" />
             <arg value="${work.dir}" />
             <arg value="-logLevel" />
-            <arg value="TRACE" />
+            <arg value="${logLevel}" />
             <arg value="-war" />
             <arg value="${module.output.dir}" />
             <arg value="-style" />
             <arg value="${style}" />
-
             <arg value="-localWorkers" />
             <arg value="${localWorkers}" />
+            <arg line="${assertions}" />
             <arg value="-strict" />
             <arg line="${extraParams}" />
             <arg value="${module}" />
