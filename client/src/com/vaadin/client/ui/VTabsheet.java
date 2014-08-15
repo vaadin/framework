@@ -1295,40 +1295,79 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         return tb.getTab(activeTabIndex);
     }
 
+    @Override
+    public void setConnector(AbstractComponentConnector connector) {
+        super.setConnector(connector);
+
+        focusBlurManager.connector = connector;
+    }
+
     /*
      * The focus and blur manager instance.
      */
     private FocusBlurManager focusBlurManager = new FocusBlurManager();
 
     /*
-     * Manage the TabSheet component blur event.
+     * Generate the correct focus/blur events for the main TabSheet component
+     * (#14304).
+     * 
+     * The TabSheet must fire one focus event when the user clicks on the tab
+     * bar (i.e. inner TabBar class) containing the Tabs or when the focus is
+     * provided to the TabSheet by any means. Also one blur event should be
+     * fired only when the user leaves the tab bar. After the user focus on the
+     * tab bar and before leaving it, no matter how many times he's pressing the
+     * Tabs or the scroll buttons, the TabSheet component should not fire any of
+     * those blur/focus events.
+     * 
+     * The only focusable elements contained in the tab bar are the Tabs (see
+     * inner class Tab). The reason is the accessibility support.
+     * 
+     * Having this in mind, the chosen solution path for our problem is to match
+     * a sequence of focus/blur events on the tabs, choose only the first focus
+     * and last blur events and pass only those further to the main component.
+     * Any consecutive blur/focus events on 2 Tabs must be ignored.
+     * 
+     * Because in a blur event we don't know whether or not a focus will follow,
+     * we just defer a command initiated on the blur event to wait and see if
+     * any focus will appear. The command will be executed after the next focus,
+     * so if no focus was triggered in the mean while it'll submit the blur
+     * event to the main component, otherwise it'll do nothing, so the main
+     * component will not generate the blur..
      */
-    private class FocusBlurManager implements FocusedTabProvider {
+    private static class FocusBlurManager {
 
         // The real tab with focus on it. If the focus goes to another element
         // in the page this will be null.
         private Tab focusedTab;
 
-        @Override
-        public Tab getFocusedTab() {
+        /*
+         * Gets the focused tab.
+         */
+        private Tab getFocusedTab() {
             return focusedTab;
         }
 
-        @Override
-        public void setFocusedTab(Tab focusedTab) {
+        /*
+         * Sets the local field tracking the focused tab.
+         */
+        private void setFocusedTab(Tab focusedTab) {
             this.focusedTab = focusedTab;
         }
 
+        /*
+         * The ultimate focus/blur event dispatcher.
+         */
+        private AbstractComponentConnector connector;
+
         /**
-         * Process the focus event no matter where it occurs on the tab bar.
-         * We've added this method
+         * Delegate method for the onFocus event occurring on Tab.
          *
          * @since
          * @param newFocusTab
          *            the new focused tab.
-         * @see #blur(Tab)
+         * @see #onBlur(Tab)
          */
-        public void focus(Tab newFocusTab) {
+        public void onFocus(Tab newFocusTab) {
 
             if (connector.hasEventListener(EventId.FOCUS)) {
 
@@ -1339,26 +1378,20 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 }
             }
 
-            removeBlurSchedule();
+            cancelLastBlurSchedule();
 
             setFocusedTab(newFocusTab);
-
-            if (focusedTab.hasTooltip()) {
-                focusedTab.setAssistiveDescription(getVTooltip().getUniqueId());
-                getVTooltip().showAssistive(focusedTab.getTooltipInfo());
-            }
-
         }
 
         /**
-         * Process the blur event for the current focusedTab.
+         * Delegate method for the onBlur event occurring on Tab.
          *
          * @param blurSource
          *            the source of the blur.
          *
-         * @see #focus(Tab)
+         * @see #onFocus(Tab)
          */
-        public void blur(Tab blurSource) {
+        public void onBlur(Tab blurSource) {
             if (focusedTab != null && focusedTab == blurSource) {
 
                 if (connector.hasEventListener(EventId.BLUR)) {
@@ -1372,149 +1405,131 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
          */
         private BlurCommand blurCommand;
 
-        /**
+        /*
+         * Execute the final blur command.
+         */
+        private class BlurCommand implements Command {
+
+            /*
+             * The blur source.
+             */
+            private Tab blurSource;
+
+            /**
+             * Create the blur command using the blur source.
+             *
+             * @param blurSource
+             *            the source.
+             * @param focusedTabProvider
+             *            provides the current focused tab.
+             */
+            public BlurCommand(Tab blurSource) {
+                this.blurSource = blurSource;
+            }
+
+            /**
+             * Stop the command from being executed.
+             *
+             * @since
+             */
+            public void stopSchedule() {
+                blurSource = null;
+            }
+
+            /**
+             * Schedule the command for a deferred execution.
+             *
+             * @since
+             */
+            public void scheduleDeferred() {
+                Scheduler.get().scheduleDeferred(this);
+            }
+
+            @Override
+            public void execute() {
+
+                Tab focusedTab = getFocusedTab();
+
+                if (blurSource == null) {
+                    return;
+                }
+
+                // The focus didn't change since this blur triggered, so
+                // the new focused element is not a tab.
+                if (focusedTab == blurSource) {
+
+                    // We're certain there's no focus anymore.
+                    focusedTab.removeAssistiveDescription();
+                    setFocusedTab(null);
+
+                    connector.getRpcProxy(FocusAndBlurServerRpc.class).blur();
+                }
+
+                // Call this to set it to null and be consistent.
+                cancelLastBlurSchedule();
+            }
+        }
+
+        /*
          * Schedule a new blur event for a deferred execution.
          */
-        public void scheduleBlur(Tab blurSource) {
+        private void scheduleBlur(Tab blurSource) {
 
-            if (cancelNextBlurSchedule) {
+            if (nextBlurScheduleCancelled) {
 
                 // This will set the stopNextBlurCommand back to false as well.
-                removeBlurSchedule();
+                cancelLastBlurSchedule();
 
-                // Leave this though to make things clear for the developer.
-                cancelNextBlurSchedule = false;
+                // Reset the status.
+                nextBlurScheduleCancelled = false;
                 return;
             }
 
-            removeBlurSchedule();
+            cancelLastBlurSchedule();
 
-            blurCommand = new BlurCommand(blurSource, this);
+            blurCommand = new BlurCommand(blurSource);
             blurCommand.scheduleDeferred();
         }
 
         /**
-         * Remove the last blur command from execution.
+         * Remove the last blur deferred command from execution.
          */
-        public void removeBlurSchedule() {
+        public void cancelLastBlurSchedule() {
             if (blurCommand != null) {
                 blurCommand.stopSchedule();
                 blurCommand = null;
             }
 
-            // Maybe this is not the best place to reset this, but we really
-            // want to make sure it'll reset at any time when something
-            // interact with the blur manager. Might change it later.
-            cancelNextBlurSchedule = false;
+            // We really want to make sure this flag gets reseted at any time
+            // when something interact with the blur manager and ther's no blur
+            // command scheduled (as we just canceled it).
+            nextBlurScheduleCancelled = false;
         }
 
         /**
-         * Cancel the next possible scheduled execution.
+         * Cancel the next scheduled execution. This method must be called only
+         * from an event occurring before the onBlur event. It's the case of IE
+         * which doesn't trigger the focus event, so we're using this approach
+         * to cancel the next blur event prior it's execution, calling the
+         * method from mouse down event.
          */
         public void cancelNextBlurSchedule() {
 
             // Make sure there's still no other command to be executed.
-            removeBlurSchedule();
+            cancelLastBlurSchedule();
 
-            cancelNextBlurSchedule = true;
+            nextBlurScheduleCancelled = true;
         }
-
-        // Stupid workaround...
-        private boolean cancelNextBlurSchedule = false;
-
-    }
-
-    /*
-     * Wraps the focused tab.
-     */
-    private interface FocusedTabProvider {
-
-        /**
-         * Gets the focused Tab.
-         *
-         * @return the focused Tab.
-         */
-        Tab getFocusedTab();
-
-        /**
-         * Sets the focused Tab.
-         *
-         * @param focusedTab
-         *            the focused Tab.
-         */
-        void setFocusedTab(Tab focusedTab);
-
-    }
-
-    /*
-     * Execute the final blur command.
-     */
-    private class BlurCommand implements Command {
 
         /*
-         * The blur source.
+         * Flag that the next deferred command won't get executed. This is
+         * useful in case of IE where the user focus event don't fire and we're
+         * using the mouse down event to track the focus. But the mouse down
+         * event triggers before the blur, so we need to cancel the deferred
+         * execution in advance.
          */
-        private Tab blurSource;
+        private boolean nextBlurScheduleCancelled = false;
 
-        /*
-         * Provide the current focused Tab.
-         */
-        private FocusedTabProvider focusedTabProvider;
-
-        /**
-         * Create the blur command using the blur source.
-         *
-         * @param blurSource
-         *            the source.
-         * @param focusedTabProvider
-         *            provides the current focused tab.
-         */
-        public BlurCommand(Tab blurSource, FocusedTabProvider focusedTabProvider) {
-            this.blurSource = blurSource;
-            this.focusedTabProvider = focusedTabProvider;
-        }
-
-        /**
-         * Stop the command from being executed.
-         *
-         * @since
-         */
-        public void stopSchedule() {
-            blurSource = null;
-        }
-
-        /**
-         * Schedule the command for a deferred execution.
-         *
-         * @since
-         */
-        public void scheduleDeferred() {
-            Scheduler.get().scheduleDeferred(this);
-        }
-
-        @Override
-        public void execute() {
-
-            Tab focusedTab = focusedTabProvider.getFocusedTab();
-
-            if (blurSource == null) {
-                return;
-            }
-
-            // The focus didn't change since this blur triggered, so
-            // the new focused element is not a tab.
-            if (focusedTab == blurSource) {
-
-                // We're certain there's no focus anymore.
-                focusedTab.removeAssistiveDescription();
-                focusedTabProvider.setFocusedTab(null);
-
-                connector.getRpcProxy(FocusAndBlurServerRpc.class).blur();
-            }
-
-            // Call this to set it to null and be consistent.
-            focusBlurManager.removeBlurSchedule();
-        }
     }
 
     @Override
@@ -1572,7 +1587,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             Object blurSource = event.getSource();
 
             if (blurSource instanceof Tab) {
-                focusBlurManager.blur((Tab) blurSource);
+                focusBlurManager.onBlur((Tab) blurSource);
             }
         }
 
@@ -1580,7 +1595,15 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         public void onFocus(FocusEvent event) {
 
             if (event.getSource() instanceof Tab) {
-                focusBlurManager.focus((Tab) event.getSource());
+                Tab focusSource = (Tab) event.getSource();
+                focusBlurManager.onFocus(focusSource);
+
+                if (focusSource.hasTooltip()) {
+                    focusSource.setAssistiveDescription(getVTooltip()
+                            .getUniqueId());
+                    getVTooltip().showAssistive(focusSource.getTooltipInfo());
+                }
+
             }
         }
 
@@ -1589,7 +1612,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
             // IE doesn't trigger focus when click, so we need to make sure
             // the previous blur deferred command will get killed.
-            focusBlurManager.removeBlurSchedule();
+            focusBlurManager.cancelLastBlurSchedule();
 
             TabCaption caption = (TabCaption) event.getSource();
             Element targetElement = event.getNativeEvent().getEventTarget()
