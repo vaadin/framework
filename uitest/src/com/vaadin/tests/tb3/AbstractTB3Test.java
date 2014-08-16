@@ -156,11 +156,25 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         } else {
             capabilities = getDesiredCapabilities();
 
-            if (localWebDriverIsUsed()) {
-                setupLocalDriver(capabilities);
-            } else {
-                setupRemoteDriver(capabilities);
+            for (int i = 1; i <= BROWSER_INIT_ATTEMPTS; i++) {
+                try {
+                    if (localWebDriverIsUsed()) {
+                        setupLocalDriver(capabilities);
+                    } else {
+                        setupRemoteDriver(capabilities);
+                    }
+                    break;
+                } catch (Exception e) {
+                    System.err
+                            .println("Browser startup for " + capabilities
+                                    + " failed on attempt " + i + ": "
+                                    + e.getMessage());
+                    if (i == BROWSER_INIT_ATTEMPTS) {
+                        throw e;
+                    }
+                }
             }
+
         }
 
         int w = SCREENSHOT_WIDTH;
@@ -260,21 +274,9 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
                     usePersistentHoverForIE());
         }
 
-        for (int i = 1; i <= BROWSER_INIT_ATTEMPTS; i++) {
-            try {
-                WebDriver dr = TestBench.createDriver(new RemoteWebDriver(
-                        new URL(getHubURL()), capabilities));
-                setDriver(dr);
-                return;
-            } catch (Exception e) {
-                System.err.println("Browser startup for " + capabilities
-                        + " failed on attempt " + i + ": " + e.getMessage());
-                if (i == BROWSER_INIT_ATTEMPTS) {
-                    throw e;
-                }
-            }
-        }
-
+        WebDriver dr = TestBench.createDriver(new RemoteWebDriver(new URL(
+                getHubURL()), capabilities));
+        setDriver(dr);
     }
 
     /**
