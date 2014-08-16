@@ -173,13 +173,13 @@ public class DateFields extends VerticalLayout implements View {
         row.addComponent(date);
 
         date = new DateField("Tiny");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName("tiny");
         row.addComponent(date);
 
         date = new DateField("Huge");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName("huge");
         row.addComponent(date);
