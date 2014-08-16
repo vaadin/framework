@@ -15,7 +15,4 @@
         larger. -->
     <collapse-all-properties />
 
-    <!-- Workaround for http://dev.vaadin.com/ticket/14051 -->
-    <set-property name="compiler.useSymbolMaps" value="true" />
-
 </module>
