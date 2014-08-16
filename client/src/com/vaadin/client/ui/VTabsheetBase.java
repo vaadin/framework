@@ -22,13 +22,14 @@ import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.shared.ui.tabsheet.TabState;
 
-public abstract class VTabsheetBase extends ComplexPanel {
+public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
 
     /** For internal use only. May be removed or replaced in the future. */
     protected ApplicationConnection client;
@@ -145,6 +146,7 @@ public abstract class VTabsheetBase extends ComplexPanel {
     }
 
     /** For internal use only. May be removed or replaced in the future. */
+    @Override
     public void setEnabled(boolean enabled) {
         disabled = !enabled;
     }
@@ -161,4 +163,9 @@ public abstract class VTabsheetBase extends ComplexPanel {
 
     /** For internal use only. May be removed or replaced in the future. */
     public abstract void selectTab(int index);
+
+    @Override
+    public boolean isEnabled() {
+        return !disabled;
+    }
 }
