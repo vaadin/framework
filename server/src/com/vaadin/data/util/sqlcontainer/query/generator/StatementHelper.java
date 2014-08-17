@@ -119,30 +119,34 @@ public class StatementHelper implements Serializable {
 
     private void handleNullValue(int i, PreparedStatement pstmt)
             throws SQLException {
-        if (BigDecimal.class.equals(dataTypes.get(i))) {
-            pstmt.setBigDecimal(i + 1, null);
-        } else if (Boolean.class.equals(dataTypes.get(i))) {
-            pstmt.setNull(i + 1, Types.BOOLEAN);
-        } else if (Byte.class.equals(dataTypes.get(i))) {
-            pstmt.setNull(i + 1, Types.SMALLINT);
-        } else if (Date.class.equals(dataTypes.get(i))) {
-            pstmt.setDate(i + 1, null);
-        } else if (Double.class.equals(dataTypes.get(i))) {
-            pstmt.setNull(i + 1, Types.DOUBLE);
-        } else if (Float.class.equals(dataTypes.get(i))) {
-            pstmt.setNull(i + 1, Types.FLOAT);
-        } else if (Integer.class.equals(dataTypes.get(i))) {
-            pstmt.setNull(i + 1, Types.INTEGER);
-        } else if (Long.class.equals(dataTypes.get(i))) {
-            pstmt.setNull(i + 1, Types.BIGINT);
-        } else if (Short.class.equals(dataTypes.get(i))) {
-            pstmt.setNull(i + 1, Types.SMALLINT);
-        } else if (String.class.equals(dataTypes.get(i))) {
-            pstmt.setString(i + 1, null);
-        } else if (Time.class.equals(dataTypes.get(i))) {
-            pstmt.setTime(i + 1, null);
-        } else if (Timestamp.class.equals(dataTypes.get(i))) {
-            pstmt.setTimestamp(i + 1, null);
+        Class<?> dataType = dataTypes.get(i);
+        int index = i + 1;
+        if (BigDecimal.class.equals(dataType)) {
+            pstmt.setBigDecimal(index, null);
+        } else if (Boolean.class.equals(dataType)) {
+            pstmt.setNull(index, Types.BOOLEAN);
+        } else if (Byte.class.equals(dataType)) {
+            pstmt.setNull(index, Types.SMALLINT);
+        } else if (Date.class.equals(dataType)) {
+            pstmt.setDate(index, null);
+        } else if (Double.class.equals(dataType)) {
+            pstmt.setNull(index, Types.DOUBLE);
+        } else if (Float.class.equals(dataType)) {
+            pstmt.setNull(index, Types.FLOAT);
+        } else if (Integer.class.equals(dataType)) {
+            pstmt.setNull(index, Types.INTEGER);
+        } else if (Long.class.equals(dataType)) {
+            pstmt.setNull(index, Types.BIGINT);
+        } else if (Short.class.equals(dataType)) {
+            pstmt.setNull(index, Types.SMALLINT);
+        } else if (String.class.equals(dataType)) {
+            pstmt.setString(index, null);
+        } else if (Time.class.equals(dataType)) {
+            pstmt.setTime(index, null);
+        } else if (Timestamp.class.equals(dataType)) {
+            pstmt.setTimestamp(index, null);
+        } else if (byte[].class.equals(dataType)) {
+            pstmt.setBytes(index, null);
         } else {
 
             if (handleUnrecognizedTypeNullValue(i, pstmt, dataTypes)) {
@@ -150,7 +154,7 @@ public class StatementHelper implements Serializable {
             }
 
             throw new SQLException("Data type not supported by SQLContainer: "
-                    + parameters.get(i).getClass().toString());
+                    + dataType.getClass().toString());
         }
     }
 
