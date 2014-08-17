@@ -18,6 +18,7 @@ package com.vaadin.tests.themes.valo;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
@@ -53,6 +54,62 @@ public class MenuBars extends VerticalLayout implements View {
         menuBar.addStyleName("borderless");
         menuBar.addStyleName("small");
         addComponent(menuBar);
+
+        Label h2 = new Label("Drop Down Button");
+        h2.addStyleName("h2");
+        addComponent(h2);
+
+        HorizontalLayout wrap = new HorizontalLayout();
+        wrap.addStyleName("wrapping");
+        wrap.setSpacing(true);
+        addComponent(wrap);
+
+        wrap.addComponent(getMenuButton("Normal", false));
+
+        MenuBar split = getMenuButton("Small", false);
+        split.addStyleName("small");
+        wrap.addComponent(split);
+
+        split = getMenuButton("Borderless", false);
+        split.addStyleName("borderless");
+        wrap.addComponent(split);
+
+        split = getMenuButton("Themed", false);
+        split.addStyleName("color1");
+        wrap.addComponent(split);
+
+        split = getMenuButton("Small", false);
+        split.addStyleName("color1");
+        split.addStyleName("small");
+        wrap.addComponent(split);
+
+        h2 = new Label("Split Button");
+        h2.addStyleName("h2");
+        addComponent(h2);
+
+        wrap = new HorizontalLayout();
+        wrap.addStyleName("wrapping");
+        wrap.setSpacing(true);
+        addComponent(wrap);
+
+        wrap.addComponent(getMenuButton("Normal", true));
+
+        split = getMenuButton("Small", true);
+        split.addStyleName("small");
+        wrap.addComponent(split);
+
+        split = getMenuButton("Borderless", true);
+        split.addStyleName("borderless");
+        wrap.addComponent(split);
+
+        split = getMenuButton("Themed", true);
+        split.addStyleName("color1");
+        wrap.addComponent(split);
+
+        split = getMenuButton("Small", true);
+        split.addStyleName("color1");
+        split.addStyleName("small");
+        wrap.addComponent(split);
     }
 
     static MenuBar getMenuBar() {
@@ -178,6 +235,20 @@ public class MenuBars extends VerticalLayout implements View {
         redo.setStyleName("icon-only");
 
         return menubar;
+    }
+
+    static MenuBar getMenuButton(String caption, boolean splitButton) {
+        MenuBar split = new MenuBar();
+        MenuBar.MenuItem dropdown = split.addItem(caption, null);
+        if (splitButton) {
+            dropdown = split.addItem("", null);
+        }
+        dropdown.addItem("Another Action", null);
+        dropdown.addItem("Secondary Action", null);
+        dropdown.addSeparator();
+        dropdown.addItem("Last Action", null);
+
+        return split;
     }
 
     @Override

@@ -45,12 +45,20 @@
       @include valo-link-style;
     }
 
+    .#{$primary-stylename}-tiny {
+      @include valo-button-style($unit-size: $v-unit-size--tiny, $bevel: null, $shadow: null, $background-color: null, $font-size: $v-font-size--tiny, $font-weight: null);
+    }
+
     .#{$primary-stylename}-small {
       @include valo-button-style($unit-size: $v-unit-size--small, $bevel: null, $shadow: null, $background-color: null, $font-size: $v-font-size--small, $font-weight: null);
     }
 
     .#{$primary-stylename}-large {
       @include valo-button-style($unit-size: $v-unit-size--large, $bevel: null, $shadow: null, $background-color: null, $font-size: $v-font-size--large, $font-weight: null);
+    }
+
+    .#{$primary-stylename}-huge {
+      @include valo-button-style($unit-size: $v-unit-size--huge, $bevel: null, $shadow: null, $background-color: null, $font-size: $v-font-size--huge, $font-weight: null);
     }
 
     .#{$primary-stylename}-icon-align-right {
@@ -65,12 +73,20 @@
       width: $v-unit-size;
       padding: 0;
 
+      &.#{$primary-stylename}-tiny {
+        width: $v-unit-size--tiny;
+      }
+
       &.#{$primary-stylename}-small {
         width: $v-unit-size--small;
       }
 
       &.#{$primary-stylename}-large {
         width: $v-unit-size--large;
+      }
+
+      &.#{$primary-stylename}-huge {
+        width: $v-unit-size--huge;
       }
 
       .#{$primary-stylename}-caption {

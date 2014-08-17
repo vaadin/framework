@@ -60,14 +60,20 @@ $v-required-field-indicator-color : $v-error-indicator-color                    
 $v-friendly-color                 : #2c9720                                     !default;
 
 
-$v-scaling-factor--small          : 0.8                                         !default;
+$v-scaling-factor--tiny           : 0.75                                        !default;
+$v-scaling-factor--small          : 0.85                                        !default;
 $v-scaling-factor--large          : 1.2                                         !default;
+$v-scaling-factor--huge           : 1.6                                         !default;
 
+$v-unit-size--tiny                : round($v-unit-size * $v-scaling-factor--tiny)  !default;
 $v-unit-size--small               : round($v-unit-size * $v-scaling-factor--small) !default;
 $v-unit-size--large               : round($v-unit-size * $v-scaling-factor--large) !default;
+$v-unit-size--huge                : round($v-unit-size * $v-scaling-factor--huge)  !default;
 
-$v-font-size--small               : round($v-font-size * $v-scaling-factor--small) !default;
-$v-font-size--large               : round($v-font-size * $v-scaling-factor--large) !default;
+$v-font-size--tiny                : ceil($v-font-size * $v-scaling-factor--tiny)  !default;
+$v-font-size--small               : ceil($v-font-size * $v-scaling-factor--small) !default;
+$v-font-size--large               : ceil($v-font-size * $v-scaling-factor--large) !default;
+$v-font-size--huge                : ceil($v-font-size * $v-scaling-factor--huge)  !default;
 
 
 

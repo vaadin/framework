@@ -218,7 +218,8 @@ $v-tree-expand-animation-enabled: false !default;
   // Drag'n'drop styles
 
   .#{$primary-stylename}-node-drag-top:before,
-  .#{$primary-stylename}-node-drag-bottom:after {
+  .#{$primary-stylename}-node-drag-bottom:after,
+  .#{$primary-stylename}-node-drag-bottom.#{$primary-stylename}-node-dragfolder.#{$primary-stylename}-node-expanded > .#{$primary-stylename}-node-children:before {
     content: "\2022";
     display: block;
     position: absolute;
@@ -230,6 +231,12 @@ $v-tree-expand-animation-enabled: false !default;
     color: $v-focus-color;
     text-indent: round($v-font-size/-4);
     text-shadow: 0 0 1px $v-background-color, 0 0 1px $v-background-color;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .#{$primary-stylename}-node-drag-bottom.#{$primary-stylename}-node-dragfolder.#{$primary-stylename}-node-expanded:after {
+    content: none;
   }
 
   .#{$primary-stylename}-node-caption-drag-center {

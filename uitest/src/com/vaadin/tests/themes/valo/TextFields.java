@@ -182,6 +182,16 @@ public class TextFields extends VerticalLayout implements View {
         pwf.setIcon(FontAwesome.LOCK);
         row.addComponent(pwf);
 
+        tf = new TextField("Tiny");
+        tf.setValue("Field value");
+        tf.addStyleName("tiny");
+        row.addComponent(tf);
+
+        tf = new TextField("Huge");
+        tf.setValue("Field value");
+        tf.addStyleName("huge");
+        row.addComponent(tf);
+
         h1 = new Label("Text Areas");
         h1.addStyleName("h1");
         addComponent(h1);
@@ -240,6 +250,16 @@ public class TextFields extends VerticalLayout implements View {
         ta = new TextArea("Centered");
         ta.addStyleName("align-center");
         ta.setValue("Field value, spanning multiple lines of text");
+        row.addComponent(ta);
+
+        ta = new TextArea("Tiny");
+        ta.addStyleName("tiny");
+        ta.setInputPrompt("Write your comment…");
+        row.addComponent(ta);
+
+        ta = new TextArea("Huge");
+        ta.addStyleName("huge");
+        ta.setInputPrompt("Write your comment…");
         row.addComponent(ta);
 
         RichTextArea rta = new RichTextArea();
