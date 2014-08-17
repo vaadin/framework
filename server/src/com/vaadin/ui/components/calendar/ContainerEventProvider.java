@@ -61,6 +61,7 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
     public static final String STARTDATE_PROPERTY = "start";
     public static final String ENDDATE_PROPERTY = "end";
     public static final String STYLENAME_PROPERTY = "styleName";
+    public static final String ALL_DAY_PROPERTY = "allDay";
 
     /**
      * Internal class to keep the container index which item this event
@@ -106,6 +107,7 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
     private Object startDateProperty = STARTDATE_PROPERTY;
     private Object endDateProperty = ENDDATE_PROPERTY;
     private Object styleNameProperty = STYLENAME_PROPERTY;
+    private Object allDayProperty = ALL_DAY_PROPERTY;
 
     /**
      * Constructor
@@ -226,6 +228,11 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
                     && item.getItemPropertyIds().contains(styleNameProperty)) {
                 basicEvent.setStyleName(String.valueOf(item.getItemProperty(
                         styleNameProperty).getValue()));
+            }
+            if (allDayProperty != null
+                    && item.getItemPropertyIds().contains(allDayProperty)) {
+                basicEvent.setAllDay((Boolean) item.getItemProperty(
+                        allDayProperty).getValue());
             }
             event = basicEvent;
         }
@@ -431,6 +438,20 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
      */
     public void setStyleNameProperty(Object styleNameProperty) {
         this.styleNameProperty = styleNameProperty;
+    }
+
+    /**
+     * Set the all day property for the event
+     */
+    public void setAllDayProperty(Object allDayProperty) {
+        this.allDayProperty = allDayProperty;
+    }
+
+    /**
+     * Get the all day property for the event
+     */
+    public Object getAllDayProperty() {
+        return allDayProperty;
     }
 
     /*
