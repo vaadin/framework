@@ -48,6 +48,16 @@ public class DateTimeServiceTest extends TestCase {
         isoWeekNumbers.put(getDate(2010, 1, 4), 1);
         isoWeekNumbers.put(getDate(2010, 1, 5), 1);
         isoWeekNumbers.put(getDate(2010, 10, 10), 40);
+        isoWeekNumbers.put(getDate(2015, 3, 24), 13);
+        isoWeekNumbers.put(getDate(2015, 3, 31), 14);
+        isoWeekNumbers.put(getDate(2015, 10, 13), 42);
+        isoWeekNumbers.put(getDate(2015, 10, 20), 43);
+        isoWeekNumbers.put(getDate(2015, 10, 27), 44);
+        isoWeekNumbers.put(getDate(2026, 3, 24), 13);
+        isoWeekNumbers.put(getDate(2026, 3, 31), 14);
+        isoWeekNumbers.put(getDate(2026, 10, 13), 42);
+        isoWeekNumbers.put(getDate(2026, 10, 20), 43);
+        isoWeekNumbers.put(getDate(2026, 10, 27), 44);
 
     }
 

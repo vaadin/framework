@@ -281,7 +281,11 @@ public class DateTimeService {
 
         Date firstOfJanuary = new Date(nearestThursday.getYear(), 0, 1);
         long timeDiff = nearestThursday.getTime() - firstOfJanuary.getTime();
-        int daysSinceFirstOfJanuary = (int) (timeDiff / MILLISECONDS_PER_DAY);
+
+        // Rounding the result, as the division doesn't result in an integer
+        // when the given date is inside daylight saving time period.
+        int daysSinceFirstOfJanuary = (int) Math.round((double) timeDiff
+                / MILLISECONDS_PER_DAY);
 
         int weekNumber = (daysSinceFirstOfJanuary) / 7 + 1;
 
