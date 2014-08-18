@@ -257,6 +257,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     private final GridHeader header = new GridHeader(this);
     private final GridFooter footer = new GridFooter(this);
 
+    private EditorRow editorRow;
+
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
             .findMethod(SelectionChangeListener.class, "selectionChange",
                     SelectionChangeEvent.class);
@@ -419,6 +421,15 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         }
 
         datasource = container;
+
+        /*
+         * This is null when this method is called the first time in the
+         * constructor
+         */
+        if (editorRow != null) {
+            editorRow.detach();
+        }
+        editorRow = new EditorRow(datasource);
 
         //
         // Adjust sort order
@@ -1302,6 +1313,16 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             }
         }
 
+        componentList.addAll(getEditorRow().getFields());
         return componentList.iterator();
+    }
+
+    /**
+     * Gets the editor row configuration object.
+     * 
+     * @return the editor row configuration object
+     */
+    public EditorRow getEditorRow() {
+        return editorRow;
     }
 }
