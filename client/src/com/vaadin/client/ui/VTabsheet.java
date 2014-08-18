@@ -1359,7 +1359,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         /**
          * Delegate method for the onFocus event occurring on Tab.
          *
-         * @since
+         * @since 7.2.6
          * @param newFocusTab
          *            the new focused tab.
          * @see #onBlur(Tab)
