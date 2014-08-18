@@ -271,13 +271,6 @@ abstract class ScrollbarBundle {
 
     private ScrollbarBundle() {
         root.appendChild(scrollSizeElement);
-        Event.sinkEvents(root, Event.ONSCROLL);
-        Event.setEventListener(root, new EventListener() {
-            @Override
-            public void onBrowserEvent(Event event) {
-                invisibleScrollbarTemporaryResizer.show();
-            }
-        });
     }
 
     protected abstract int internalGetScrollSize();
@@ -517,6 +510,20 @@ abstract class ScrollbarBundle {
      */
     public final void setScrollbarThickness(int px) {
         isInvisibleScrollbar = (px == 0);
+
+        if (isInvisibleScrollbar) {
+            Event.sinkEvents(root, Event.ONSCROLL);
+            Event.setEventListener(root, new EventListener() {
+                @Override
+                public void onBrowserEvent(Event event) {
+                    invisibleScrollbarTemporaryResizer.show();
+                }
+            });
+        } else {
+            Event.sinkEvents(root, 0);
+            Event.setEventListener(root, null);
+        }
+
         internalSetScrollbarThickness(Math.max(1, px));
     }
 
