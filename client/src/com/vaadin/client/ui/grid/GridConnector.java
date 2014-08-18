@@ -224,8 +224,8 @@ public class GridConnector extends AbstractHasComponentsConnector {
                 if (!Arrays.equals(columnIds, getState().sortColumns)
                         || !Arrays.equals(directions, getState().sortDirs)) {
                     // Report back to server if changed
-                    getRpcProxy(GridServerRpc.class)
-                            .sort(columnIds, directions);
+                    getRpcProxy(GridServerRpc.class).sort(columnIds,
+                            directions, event.getOriginator());
                 }
             }
         });

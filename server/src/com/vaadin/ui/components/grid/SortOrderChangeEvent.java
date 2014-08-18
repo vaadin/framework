@@ -17,6 +17,7 @@ package com.vaadin.ui.components.grid;
 
 import java.util.List;
 
+import com.vaadin.shared.ui.grid.SortEventOriginator;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.components.grid.sort.SortOrder;
 
@@ -31,6 +32,7 @@ import com.vaadin.ui.components.grid.sort.SortOrder;
 public class SortOrderChangeEvent extends Component.Event {
 
     private final List<SortOrder> sortOrder;
+    private final SortEventOriginator originator;
 
     /**
      * Creates a new sort order change event for a grid and a sort order list.
@@ -39,10 +41,15 @@ public class SortOrderChangeEvent extends Component.Event {
      *            the grid from which the event originates
      * @param sortOrder
      *            the new sort order list
+     * @param wasInitiatedByUser
+     *            should be set to true if this event results from end-user
+     *            interaction instead of an API call or side effect
      */
-    public SortOrderChangeEvent(Grid grid, List<SortOrder> sortOrder) {
+    public SortOrderChangeEvent(Grid grid, List<SortOrder> sortOrder,
+            SortEventOriginator originator) {
         super(grid);
         this.sortOrder = sortOrder;
+        this.originator = originator;
     }
 
     /**
@@ -52,6 +59,18 @@ public class SortOrderChangeEvent extends Component.Event {
      */
     public List<SortOrder> getSortOrder() {
         return sortOrder;
+    }
+
+    /**
+     * Gets a value describing the originator of this event, i.e. what actions
+     * resulted in this event being fired.
+     * 
+     * @return a sort event originator value
+     * 
+     * @see SortEventOriginator
+     */
+    public SortEventOriginator getOriginator() {
+        return originator;
     }
 
 }

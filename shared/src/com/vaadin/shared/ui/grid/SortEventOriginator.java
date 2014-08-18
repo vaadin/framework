@@ -15,19 +15,27 @@
  */
 package com.vaadin.shared.ui.grid;
 
-import java.util.List;
-
-import com.vaadin.shared.communication.ServerRpc;
-
 /**
- * Client-to-server RPC interface for the Grid component
+ * Identifier for the originator of a sort event or sort order change event.
  * 
  * @since
  * @author Vaadin Ltd
  */
-public interface GridServerRpc extends ServerRpc {
-    void selectionChange(List<String> newSelection);
+public enum SortEventOriginator {
 
-    void sort(String[] columnIds, SortDirection[] directions,
-            SortEventOriginator originator);
+    /**
+     * This event was the result of an API call.
+     */
+    API,
+
+    /**
+     * This event was the result of a user interacting with the UI.
+     */
+    USER,
+
+    /**
+     * This event resulted as a side-effect of an internal event.
+     */
+    INTERNAL
+
 }

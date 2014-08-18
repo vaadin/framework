@@ -20,6 +20,7 @@ import java.util.List;
 import com.google.gwt.event.shared.GwtEvent;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.grid.Grid;
+import com.vaadin.shared.ui.grid.SortEventOriginator;
 
 /**
  * A sort event, fired by the Grid when it needs its data source to provide data
@@ -34,6 +35,7 @@ public class SortEvent<T> extends GwtEvent<SortEventHandler<?>> {
 
     private final Grid<T> grid;
     private final List<SortOrder> order;
+    private final SortEventOriginator originator;
 
     /**
      * Creates a new Sort Event. All provided parameters are final, and passed
@@ -41,14 +43,16 @@ public class SortEvent<T> extends GwtEvent<SortEventHandler<?>> {
      *
      * @param grid
      *            a grid reference
-     * @param datasource
-     *            a reference to the grid's data source
      * @param order
      *            an array dictating the desired sort order of the data source
+     * @param originator
+     *            a value indicating where this event originated from
      */
-    public SortEvent(Grid<T> grid, List<SortOrder> order) {
+    public SortEvent(Grid<T> grid, List<SortOrder> order,
+            SortEventOriginator originator) {
         this.grid = grid;
         this.order = order;
+        this.originator = originator;
     }
 
     @Override
@@ -101,6 +105,18 @@ public class SortEvent<T> extends GwtEvent<SortEventHandler<?>> {
      */
     public List<SortOrder> getOrder() {
         return order;
+    }
+
+    /**
+     * Gets a value describing the originator of this event, i.e. what actions
+     * resulted in this event being fired.
+     * 
+     * @return a sort event originator value
+     * 
+     * @see SortEventOriginator
+     */
+    public SortEventOriginator getOriginator() {
+        return originator;
     }
 
     @SuppressWarnings("unchecked")

@@ -42,6 +42,11 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         // First cells for first 3 rows are (9, 0), (99, 0) and (999, 0)
         sortBy("Column 9, DESC");
 
+        // Verify that programmatic sorting calls are identified as originating
+        // from API
+        assertEquals("3. Sort order: [Column 9 DESCENDING] by API",
+                getLogRow(0));
+
         assertTrue("Column 9 should have the sort-desc stylename", grid
                 .getHeaderCell(0, 9).getAttribute("class")
                 .contains("sort-desc"));
@@ -119,14 +124,17 @@ public class GridSortingTest extends GridBasicFeaturesTest {
                     "(" + row + ", 0)", grid.getCell(i, 0).getText());
         }
 
-        assertEquals("2. Sort order: [Column 9 ASCENDING]", getLogRow(2));
-        assertEquals("4. Sort order: [Column 9 DESCENDING]", getLogRow(0));
+        assertEquals("2. Sort order: [Column 9 ASCENDING] by USER",
+                getLogRow(2));
+        assertEquals("4. Sort order: [Column 9 DESCENDING] by USER",
+                getLogRow(0));
 
         // Column 10 is random numbers from Random with seed 13334
         // Click header to sort ascending
         grid.getHeaderCell(0, 10).click();
 
-        assertEquals("6. Sort order: [Column 10 ASCENDING]", getLogRow(0));
+        assertEquals("6. Sort order: [Column 10 ASCENDING] by USER",
+                getLogRow(0));
 
         // Not cleaning up correctly causes exceptions when scrolling.
         grid.scrollToRow(50);
@@ -153,8 +161,10 @@ public class GridSortingTest extends GridBasicFeaturesTest {
                     grid.getCell(GridBasicFeatures.ROWS - (i + 1), 0).getText());
         }
 
-        assertEquals("9. Sort order: [Column 7 ASCENDING]", getLogRow(3));
-        assertEquals("11. Sort order: [Column 7 DESCENDING]", getLogRow(1));
+        assertEquals("9. Sort order: [Column 7 ASCENDING] by USER",
+                getLogRow(3));
+        assertEquals("11. Sort order: [Column 7 DESCENDING] by USER",
+                getLogRow(1));
     }
 
     @Test

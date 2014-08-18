@@ -87,6 +87,7 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SortDirection;
+import com.vaadin.shared.ui.grid.SortEventOriginator;
 
 /**
  * A data grid view that supports columns and lazy loading of data rows from a
@@ -622,8 +623,8 @@ public class Grid<T> extends Composite implements
                 }
             }
 
-            // Perform sorting
-            Grid.this.sort(sorting);
+            // Perform sorting; indicate originator as user
+            Grid.this.setSortOrder(sorting.build(), SortEventOriginator.USER);
         }
     }
 
@@ -2376,11 +2377,16 @@ public class Grid<T> extends Composite implements
      *            a sort order list. If set to null, the sort order is cleared.
      */
     public void setSortOrder(List<SortOrder> order) {
+        setSortOrder(order, SortEventOriginator.API);
+    }
+
+    private void setSortOrder(List<SortOrder> order,
+            SortEventOriginator originator) {
         sortOrder.clear();
         if (order != null) {
             sortOrder.addAll(order);
         }
-        sort();
+        sort(originator);
     }
 
     /**
@@ -2505,9 +2511,9 @@ public class Grid<T> extends Composite implements
     /**
      * Apply sorting to data source.
      */
-    private void sort() {
+    private void sort(SortEventOriginator originator) {
         refreshHeader();
         fireEvent(new SortEvent<T>(this,
-                Collections.unmodifiableList(sortOrder)));
+                Collections.unmodifiableList(sortOrder), originator));
     }
 }

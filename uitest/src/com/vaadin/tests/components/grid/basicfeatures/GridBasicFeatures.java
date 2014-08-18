@@ -168,7 +168,24 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         grid.addSortOrderChangeListener(new SortOrderChangeListener() {
             @Override
             public void sortOrderChange(SortOrderChangeEvent event) {
-                log("Sort order: " + event.getSortOrder());
+
+                String origin;
+                switch (event.getOriginator()) {
+                case API:
+                    origin = "API";
+                    break;
+                case INTERNAL:
+                    origin = "INTERNAL";
+                    break;
+                case USER:
+                    origin = "USER";
+                    break;
+                default:
+                    origin = "!!! ERROR !!!";
+                    break;
+                }
+
+                log("Sort order: " + event.getSortOrder() + " by " + origin);
             }
         });
 
