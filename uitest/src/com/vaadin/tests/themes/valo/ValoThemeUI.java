@@ -89,6 +89,16 @@ public class ValoThemeUI extends UI {
     protected void init(VaadinRequest request) {
         if (request.getParameter("test") != null) {
             testMode = true;
+
+            if (browserCantRenderFontsConsistently()) {
+                getPage().getStyles().add(
+                        ".v-app.v-app.v-app {font-family: Sans-Serif;}");
+            }
+        }
+
+        if (getPage().getWebBrowser().isIE()
+                && getPage().getWebBrowser().getBrowserMajorVersion() == 9) {
+            menu.setWidth("320px");
         }
         // Show .v-app-loading valo-menu-badge
         // try {
@@ -97,7 +107,9 @@ public class ValoThemeUI extends UI {
         // e.printStackTrace();
         // }
 
-        Responsive.makeResponsive(this);
+        if (!testMode) {
+            Responsive.makeResponsive(this);
+        }
 
         getPage().setTitle("Valo Theme Test");
         setContent(root);
@@ -165,6 +177,19 @@ public class ValoThemeUI extends UI {
             }
         });
 
+    }
+
+    private boolean browserCantRenderFontsConsistently() {
+        // PhantomJS renders font correctly about 50% of the time, so
+        // disable it to have consistent screenshots
+        // https://github.com/ariya/phantomjs/issues/10592
+
+        // IE8 also has randomness in its font rendering...
+
+        return getPage().getWebBrowser().getBrowserApplication()
+                .contains("PhantomJS")
+                || (getPage().getWebBrowser().isIE() && getPage()
+                        .getWebBrowser().getBrowserMajorVersion() <= 9);
     }
 
     static boolean isTestMode() {
