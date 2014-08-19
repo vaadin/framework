@@ -27,6 +27,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableElement;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -36,10 +37,17 @@ import com.vaadin.client.Util;
 import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.grid.Cell;
+import com.vaadin.client.ui.grid.DataAvailableEvent;
+import com.vaadin.client.ui.grid.DataAvailableHandler;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Grid;
+import com.vaadin.client.ui.grid.keyevents.BodyKeyDownHandler;
+import com.vaadin.client.ui.grid.keyevents.BodyKeyUpHandler;
+import com.vaadin.client.ui.grid.keyevents.GridKeyDownEvent;
+import com.vaadin.client.ui.grid.keyevents.GridKeyUpEvent;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.selection.SelectionModel.Multi.Batched;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 
 /* This class will probably not survive the final merge of all selection functionality. */
 public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
@@ -576,15 +584,74 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         }
     }
 
+    private class SpaceKeyDownSelectHandler implements BodyKeyDownHandler<T> {
+
+        private HandlerRegistration scrollHandler = null;
+        private boolean spaceDown = false;
+
+        @Override
+        public void onKeyDown(GridKeyDownEvent<T> event) {
+            if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE || spaceDown) {
+                return;
+            }
+
+            spaceDown = true;
+            Cell active = event.getActiveCell();
+            final int rowIndex = active.getRow();
+
+            if (scrollHandler != null) {
+                scrollHandler.removeHandler();
+                scrollHandler = null;
+            }
+
+            scrollHandler = grid
+                    .addDataAvailableHandler(new DataAvailableHandler() {
+
+                        @Override
+                        public void onDataAvailable(DataAvailableEvent event) {
+                            if (event.getAvailableRows().contains(rowIndex)) {
+                                setSelected(rowIndex, !isSelected(rowIndex));
+                                scrollHandler.removeHandler();
+                                scrollHandler = null;
+                            }
+                        }
+                    });
+            grid.scrollToRow(rowIndex, ScrollDestination.ANY);
+        }
+
+    }
+
     private static final String LOGICAL_ROW_PROPERTY_INT = "vEscalatorLogicalRow";
 
     private final Grid<T> grid;
     private HandlerRegistration nativePreviewHandlerRegistration;
+    private final SpaceKeyDownSelectHandler handler = new SpaceKeyDownSelectHandler();
+    private HandlerRegistration spaceDown;
+    private HandlerRegistration spaceUp;
 
     private final AutoScrollHandler autoScrollHandler = new AutoScrollHandler();
 
     public MultiSelectionRenderer(final Grid<T> grid) {
         this.grid = grid;
+        spaceDown = grid.addKeyDownHandler(handler);
+        spaceUp = grid.addKeyUpHandler(new BodyKeyUpHandler<T>() {
+
+            @Override
+            public void onKeyUp(GridKeyUpEvent<T> event) {
+                if (event.getNativeKeyCode() == KeyCodes.KEY_SPACE) {
+                    handler.spaceDown = false;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void destroy() {
+        spaceDown.removeHandler();
+        spaceUp.removeHandler();
+        if (nativePreviewHandlerRegistration != null) {
+            removeNativeHandler();
+        }
     }
 
     @Override

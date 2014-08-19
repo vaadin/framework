@@ -142,4 +142,12 @@ public abstract class ComplexRenderer<T> implements Renderer<T> {
     public boolean onActivate() {
         return false;
     }
+
+    /**
+     * Called when the renderer is deemed to be destroyed and no longer used by
+     * the Grid.
+     */
+    public void destroy() {
+        // Implement if needed
+    }
 }

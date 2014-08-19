@@ -2222,6 +2222,11 @@ public class Grid<T> extends Composite implements
             throw new IllegalArgumentException("Selection model can't be null");
         }
 
+        if (selectColumnRenderer != null
+                && selectColumnRenderer instanceof ComplexRenderer) {
+            ((ComplexRenderer<?>) selectColumnRenderer).destroy();
+        }
+
         this.selectionModel = selectionModel;
         selectionModel.setGrid(this);
         setSelectColumnRenderer(this.selectionModel

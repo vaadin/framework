@@ -19,6 +19,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.tests.components.grid.GridElement;
@@ -121,6 +123,32 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         toggleFirstRowSelection();
         assertFalse("Row 595 was still selected.", getRow(595).isSelected());
         assertTrue("First row was not selected.", getRow(0).isSelected());
+    }
+
+    @Test
+    public void testKeyboardSelection() {
+        openTestURL();
+        setSelectionModelMulti();
+
+        GridElement grid = getGridElement();
+        grid.getCell(3, 1).click();
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+
+        assertTrue("Grid row 3 was not selected with space key.", grid
+                .getRow(3).isSelected());
+
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+
+        assertTrue("Grid row 3 was not deselected with space key.", !grid
+                .getRow(3).isSelected());
+
+        grid.scrollToRow(500);
+
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+
+        assertTrue("Grid row 3 was not selected with space key.", grid
+                .getRow(3).isSelected());
+
     }
 
     private void setSelectionModelMulti() {
