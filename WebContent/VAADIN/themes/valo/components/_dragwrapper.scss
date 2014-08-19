@@ -3,7 +3,6 @@
   [draggable=true] {
     -khtml-user-drag: element;
     -webkit-user-drag: element;
-    @include user-select(none);
   }
 
   .#{$primary-stylename}.v-active-drag-source {

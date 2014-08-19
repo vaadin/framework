@@ -21,6 +21,10 @@ $v-letter-spacing--h4:    0               !default;
 
 @mixin valo-label ($primary-stylename: v-label, $include-additional-styles: contains($v-included-additional-styles, label)) {
 
+  .#{$primary-stylename} {
+    @include user-select(text);
+  }
+
   .#{$primary-stylename}-undef-w {
     white-space: nowrap;
   }

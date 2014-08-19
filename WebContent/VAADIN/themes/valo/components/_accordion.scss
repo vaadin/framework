@@ -85,7 +85,6 @@
     }
     border-bottom-color: first-color(valo-border($color: $v-panel-background-color));
     cursor: pointer;
-    @include user-select(none);;
 
     &:hover:before,
     &:active:before {
