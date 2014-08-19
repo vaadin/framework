@@ -17,8 +17,12 @@ package com.vaadin.client.ui.draganddropwrapper;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
@@ -81,6 +85,25 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
 
             getWidget().dragStartMode = uidl
                     .getIntAttribute(DragAndDropWrapperConstants.DRAG_START_MODE);
+
+            String dragImageComponentConnectorId = uidl
+                    .getStringAttribute(DragAndDropWrapperConstants.DRAG_START_COMPONENT_ATTRIBUTE);
+
+            ComponentConnector connector = null;
+            if (dragImageComponentConnectorId != null) {
+                connector = (ComponentConnector) ConnectorMap.get(client)
+                        .getConnector(dragImageComponentConnectorId);
+
+                if (connector == null) {
+                    getLogger().log(
+                            Level.WARNING,
+                            "DragAndDropWrapper drag image component"
+                                    + " connector now found. Make sure the"
+                                    + " component is attached.");
+                } else {
+                    getWidget().setDragAndDropWidget(connector.getWidget());
+                }
+            }
             getWidget().initDragStartMode();
             getWidget().html5DataFlavors = uidl
                     .getMapAttribute(DragAndDropWrapperConstants.HTML5_DATA_FLAVORS);
@@ -95,4 +118,7 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
         return (VDragAndDropWrapper) super.getWidget();
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(DragAndDropWrapperConnector.class.getName());
+    }
 }

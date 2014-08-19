@@ -254,7 +254,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Shows the popup where the user can see the filtered options
-         *
+         * 
          * @param currentSuggestions
          *            The filtered suggestions
          * @param currentPage
@@ -345,7 +345,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Should the next page button be visible to the user?
-         *
+         * 
          * @param active
          */
         private void setNextButtonActive(boolean active) {
@@ -365,7 +365,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Should the previous page button be visible to the user
-         *
+         * 
          * @param active
          */
         private void setPrevButtonActive(boolean active) {
@@ -554,7 +554,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * amount of items are visible at a time and a scrollbar or buttons are
          * visible to change page. If paging is turned of then all options are
          * rendered into the popup menu.
-         *
+         * 
          * @param paging
          *            Should the paging be turned on?
          */
@@ -679,7 +679,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Was the popup just closed?
-         *
+         * 
          * @return true if popup was just closed
          */
         public boolean isJustClosed() {
@@ -708,7 +708,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Updates style names in suggestion popup to help theme building.
-         *
+         * 
          * @param uidl
          *            UIDL for the whole combo box
          * @param componentState
@@ -799,7 +799,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Sets the suggestions rendered in the menu
-         *
+         * 
          * @param suggestions
          *            The suggestions to be rendered in the menu
          */
@@ -1057,11 +1057,33 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         @Override
         public void setSelectionRange(int pos, int length) {
             if (textInputEnabled) {
-                super.setSelectionRange(pos, length);
+                /*
+                 * set selection range with a backwards direction: anchor at the
+                 * back, focus at the front. This means that items that are too
+                 * long to display will display from the start and not the end
+                 * even on Firefox.
+                 * 
+                 * We need the JSNI function to set selection range so that we
+                 * can use the optional direction attribute to set the anchor to
+                 * the end and the focus to the start. This makes Firefox work
+                 * the same way as other browsers (#13477)
+                 */
+                Util.setSelectionRange(getElement(), pos, length, "backward");
+
             } else {
-                super.setSelectionRange(0, getValue().length());
+                /*
+                 * Setting the selectionrange for an uneditable textbox leads to
+                 * unwanted behaviour when the width of the textbox is narrower
+                 * than the width of the entry: the end of the entry is shown
+                 * instead of the beginning. (see #13477)
+                 * 
+                 * To avoid this, we set the caret to the beginning of the line.
+                 */
+
+                super.setSelectionRange(0, 0);
             }
         }
+
     }
 
     @Deprecated
@@ -1456,9 +1478,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     private void setText(final String text) {
         /**
-         * To leave caret in the beginning of the line.
-         * SetSelectionRange wouldn't work on IE
-         * (see #13477)
+         * To leave caret in the beginning of the line. SetSelectionRange
+         * wouldn't work on IE (see #13477)
          */
         Direction previousDirection = tb.getDirection();
         tb.setDirection(Direction.RTL);
@@ -1763,10 +1784,14 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 if (!allowNewItem) {
                     /*
                      * New items are not allowed: If there is only one
-                     * suggestion, select that. Otherwise do nothing.
+                     * suggestion, select that. If there is more than one
+                     * suggestion Enter key should work as Escape key. Otherwise
+                     * do nothing.
                      */
                     if (currentSuggestions.size() == 1) {
                         onSuggestionSelected(currentSuggestions.get(0));
+                    } else if (currentSuggestions.size() > 1) {
+                        reset();
                     }
                 } else {
                     // Handle addition of new items.

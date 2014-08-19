@@ -26,6 +26,7 @@ import java.net.URLConnection;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
@@ -465,7 +466,8 @@ public final class CvalChecker {
 
                 if (url != null) {
                     try {
-                        key = IOUtils.toString(url.openStream());
+                        key = readKeyFromFile(url,
+                                computeMajorVersion(productVersion));
                         if (key != null && !(key = key.trim()).isEmpty()) {
                             return key;
                         }
@@ -478,6 +480,22 @@ public final class CvalChecker {
         }
         throw new InvalidCvalException(productName, productVersion,
                 productTitle, null, null);
+    }
+
+    String readKeyFromFile(URL url, int majorVersion) throws IOException {
+        String majorVersionStr = String.valueOf(majorVersion);
+        List<String> lines = IOUtils.readLines(url.openStream());
+        String defaultKey = null;
+        for (String line : lines) {
+            String[] parts = line.split("\\s*=\\s*");
+            if (parts.length < 2) {
+                defaultKey = parts[0].trim();
+            }
+            if (parts[0].equals(majorVersionStr)) {
+                return parts[1].trim();
+            }
+        }
+        return defaultKey;
     }
 
     static String getErrorMessage(String key, Object... pars) {

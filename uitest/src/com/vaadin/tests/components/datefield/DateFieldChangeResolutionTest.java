@@ -99,7 +99,10 @@ public class DateFieldChangeResolutionTest extends MultiBrowserTest {
     }
 
     private void checkHeaderAndBody(Resolution resolution,
-            boolean textFieldIsEmpty) {
+            boolean textFieldIsEmpty) throws Exception {
+        // Popup date field has all kinds of strange timers on the
+        // client side
+        sleep(100);
         // Open the popup calendar, perform checks and close the popup.
         openPopupDateField();
         if (resolution.getCalendarField() >= Resolution.MONTH

@@ -47,7 +47,7 @@ public class Forms extends VerticalLayout implements View {
         setSpacing(true);
         setMargin(true);
 
-        Label title = new Label("Form");
+        Label title = new Label("Forms");
         title.addStyleName("h1");
         addComponent(title);
 
@@ -59,6 +59,7 @@ public class Forms extends VerticalLayout implements View {
 
         Label section = new Label("Personal Info");
         section.addStyleName("h2");
+        section.addStyleName("colored");
         form.addComponent(section);
         StringGenerator sg = new StringGenerator();
 
@@ -85,6 +86,7 @@ public class Forms extends VerticalLayout implements View {
 
         section = new Label("Contact Info");
         section.addStyleName("h3");
+        section.addStyleName("colored");
         form.addComponent(section);
 
         TextField email = new TextField("Email");
@@ -125,6 +127,7 @@ public class Forms extends VerticalLayout implements View {
 
         section = new Label("Additional Info");
         section.addStyleName("h4");
+        section.addStyleName("colored");
         form.addComponent(section);
 
         TextField website = new TextField("Website");

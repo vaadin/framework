@@ -45,6 +45,10 @@ public class Labels extends VerticalLayout implements View {
         left.setMargin(new MarginInfo(false, true, false, false));
         split.addComponent(left);
 
+        Label huge = new Label("Huge type for display text.");
+        huge.addStyleName("huge");
+        left.addComponent(huge);
+
         Label large = new Label(
                 "Large type for introductory text. Etiam at risus et justo dignissim congue. Donec congue lacinia dui, a porttitor lectus condimentum laoreet. Nunc eu.");
         large.addStyleName("large");
@@ -67,6 +71,10 @@ public class Labels extends VerticalLayout implements View {
                 "Small type for additional text. Etiam at risus et justo dignissim congue. Donec congue lacinia dui, a porttitor lectus condimentum laoreet. Nunc eu.");
         small.addStyleName("small");
         left.addComponent(small);
+
+        Label tiny = new Label("Tiny type for minor text.");
+        tiny.addStyleName("tiny");
+        left.addComponent(tiny);
 
         Label h4 = new Label("Section Title");
         h4.addStyleName("h4");
@@ -92,6 +100,11 @@ public class Labels extends VerticalLayout implements View {
         label = new Label(
                 "Light type for subtle text. Etiam at risus et justo dignissim congue. Donec congue lacinia dui, a porttitor lectus condimentum laoreet. Nunc eu.");
         label.addStyleName("light");
+        right.addComponent(label);
+
+        label = new Label(
+                "Colored type for highlighted text. Etiam at risus et justo dignissim congue. Donec congue lacinia dui, a porttitor lectus condimentum laoreet. Nunc eu.");
+        label.addStyleName("colored");
         right.addComponent(label);
 
         label = new Label("A label for success");

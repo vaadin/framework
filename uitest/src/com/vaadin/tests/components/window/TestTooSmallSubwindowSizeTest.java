@@ -13,18 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.draganddropwrapper;
+package com.vaadin.tests.components.window;
 
-import java.io.Serializable;
+import java.io.IOException;
 
-@Deprecated
-public class DragAndDropWrapperConstants implements Serializable {
+import org.junit.Test;
 
-    @Deprecated
-    public static final String HTML5_DATA_FLAVORS = "html5-data-flavors";
-    @Deprecated
-    public static final String DRAG_START_MODE = "dragStartMode";
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
-    public static final String DRAG_START_COMPONENT_ATTRIBUTE = "dragStartComponent";
+/**
+ * Tests that the styles work correctly in tiny subwindows that have more
+ * content than can fit.
+ * 
+ * @author Vaadin Ltd
+ */
+public class TestTooSmallSubwindowSizeTest extends MultiBrowserTest {
 
+    @Test
+    public void testSubwindowStyles() throws IOException {
+        openTestURL();
+
+        compareScreen("initial");
+    }
 }

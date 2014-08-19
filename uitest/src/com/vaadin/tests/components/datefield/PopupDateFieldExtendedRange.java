@@ -3,20 +3,21 @@ package com.vaadin.tests.components.datefield;
 import java.util.Calendar;
 import java.util.Locale;
 
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.PopupDateField;
 
 @SuppressWarnings("serial")
-public class PopupDateFieldExtendedRange extends TestBase {
+public class PopupDateFieldExtendedRange extends AbstractTestUI {
 
     private Calendar date = Calendar.getInstance();
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         date.set(2011, 0, 1);
 
         getLayout().setSpacing(true);
@@ -52,7 +53,7 @@ public class PopupDateFieldExtendedRange extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Show a few days of the preceding and following months in the datefield popup";
     }
 
@@ -63,7 +64,7 @@ public class PopupDateFieldExtendedRange extends TestBase {
 
     private PopupDateField makeDateField() {
         PopupDateField pdf = new PopupDateField();
-        pdf.setResolution(DateField.RESOLUTION_DAY);
+        pdf.setResolution(Resolution.DAY);
         pdf.setValue(date.getTime());
         return pdf;
     }

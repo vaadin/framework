@@ -114,7 +114,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
      * @return true if the event was handled as a drag start event
      */
     private boolean startDrag(NativeEvent event) {
-        if (dragStartMode == WRAPPER || dragStartMode == COMPONENT) {
+        if (dragStartMode == WRAPPER || dragStartMode == COMPONENT
+                || dragStartMode == COMPONENT_OTHER) {
             VTransferable transferable = new VTransferable();
             transferable.setDragSource(getConnector());
 
@@ -130,6 +131,10 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
             if (dragStartMode == WRAPPER) {
                 dragEvent.createDragImage(getElement(), true);
+            } else if (dragStartMode == COMPONENT_OTHER
+                    && getDragImageWidget() != null) {
+                dragEvent.createDragImage(getDragImageWidget().getElement(),
+                        true);
             } else {
                 dragEvent.createDragImage(widget.getElement(), true);
             }
@@ -142,6 +147,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     protected final static int COMPONENT = 1;
     protected final static int WRAPPER = 2;
     protected final static int HTML5 = 3;
+    protected final static int COMPONENT_OTHER = 4;
 
     /** For internal use only. May be removed or replaced in the future. */
     public int dragStartMode;
@@ -458,6 +464,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
      * Flag used by html5 dd
      */
     private boolean currentlyValid;
+    private Widget dragImageWidget;
 
     private static final String OVER_STYLE = "v-ddwrapper-over";
 
@@ -659,6 +666,24 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         // TODO build (to be an example) an emphasis mode where drag image
         // is fitted before or after the content
         notifySizePotentiallyChanged();
+    }
+
+    /**
+     * Set the widget that will be used as the drag image when using
+     * DragStartMode {@link COMPONENT_OTHER} .
+     * 
+     * @param widget
+     */
+    public void setDragAndDropWidget(Widget widget) {
+        dragImageWidget = widget;
+    }
+
+    /**
+     * @return the widget used as drag image. Returns <code>null</code> if no
+     *         widget is set.
+     */
+    public Widget getDragImageWidget() {
+        return dragImageWidget;
     }
 
 }

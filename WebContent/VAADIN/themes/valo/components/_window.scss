@@ -125,7 +125,6 @@ $v-window-modality-curtain-background-color: #222 !default;
     line-height: $v-unit-size - 3px;
     text-align: center;
     cursor: pointer;
-    font-family: FontAwesome;
     font-size: round($v-font-size * 1.3);
     color: valo-font-color($v-window-background-color, .4);
 

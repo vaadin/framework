@@ -35,8 +35,6 @@ public class ComboboxScrollableWindowTest extends MultiBrowserTest {
     @Test
     public void testWindowScrollbars() throws Exception {
         openTestURL();
-        com.vaadin.testbench.Parameters
-                .setScreenshotComparisonCursorDetection(true);
 
         WebElement window = driver.findElement(By.id(WINDOW_ID));
         WebElement scrollableElement = window.findElement(By

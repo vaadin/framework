@@ -2,13 +2,14 @@ package com.vaadin.tests.components.treetable;
 
 import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.TreeTable;
 
-public class TreeTablePartialUpdatesPageLength0 extends TestBase {
+public class TreeTablePartialUpdatesPageLength0 extends AbstractTestUI {
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         setTheme("reindeer-tests");
         TreeTable tt = new TreeTable();
         tt.addStyleName("table-equal-rowheight");
@@ -20,6 +21,7 @@ public class TreeTablePartialUpdatesPageLength0 extends TestBase {
         tt.getParent().getParent().setHeight(null);
     }
 
+    @SuppressWarnings("unchecked")
     private Hierarchical makeHierarchicalContainer() {
         HierarchicalContainer hc = new HierarchicalContainer();
         hc.addContainerProperty("p1", String.class, "");
@@ -47,6 +49,7 @@ public class TreeTablePartialUpdatesPageLength0 extends TestBase {
         return hc;
     }
 
+    @SuppressWarnings("unchecked")
     private void addNodesToRoot(HierarchicalContainer hc, Object root, int count) {
         for (int ix = 0; ix < count; ix++) {
             Object id = hc.addItem();
@@ -56,7 +59,7 @@ public class TreeTablePartialUpdatesPageLength0 extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "";
     }
 

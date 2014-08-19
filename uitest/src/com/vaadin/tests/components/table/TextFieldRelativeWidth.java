@@ -1,19 +1,19 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
-public class TextFieldRelativeWidth extends TestBase {
+public class TextFieldRelativeWidth extends AbstractTestUI {
 
     @Override
-    public void setup() {
+    public void setup(VaadinRequest request) {
         TextField tf = new TextField("test", "testing");
         tf.setWidth("100%");
 
@@ -30,15 +30,12 @@ public class TextFieldRelativeWidth extends TestBase {
         private Button addButton = new Button("Add new row", this);
 
         private String inputPrompt;
-
         private String inputPromptChild;
-
         private int nextItemIndex = 1;
 
-        private static final long serialVersionUID = 3326806911297977454L;
-
+        @SuppressWarnings("unchecked")
         public EditTable() {
-            setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
+            setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
             inputPrompt = "";
             setPageLength(100);
             setHeight("100%");
@@ -51,20 +48,9 @@ public class TextFieldRelativeWidth extends TestBase {
             i.getItemProperty("text").setValue(addButton);
             setImmediate(true);
             setSelectable(true);
-            addListener(new Property.ValueChangeListener() {
-                private static final long serialVersionUID = 448896474865195605L;
-
-                @Override
-                public void valueChange(
-                        com.vaadin.data.Property.ValueChangeEvent event) {
-                    // IndexedContainer idc = (IndexedContainer)
-                    // getContainerDataSource();
-
-                }
-
-            });
         }
 
+        @SuppressWarnings("unchecked")
         public void addNewRow() {
             IndexedContainer idc = (IndexedContainer) getContainerDataSource();
             int size = idc.size();
@@ -87,8 +73,6 @@ public class TextFieldRelativeWidth extends TestBase {
             if (inputPromptChild != null && inputPromptChild.length() > 0) {
                 tf.setInputPrompt(inputPromptChild);
             }
-            // tf.setRows(1);
-            // tf.setHeight("45px");
             tf.setWidth("100%");
             tf.addStyleName("childtf");
             newItem.getItemProperty("text").setValue(tf);
@@ -119,7 +103,7 @@ public class TextFieldRelativeWidth extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "The table has 3 columns. The second column is expanded and contains 100% wide textfields. These should fill the available space. The third column is empty.";
     }
 

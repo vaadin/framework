@@ -31,6 +31,7 @@ public class DragStartModesTest extends MultiBrowserTest {
         WebElement dropTarget = vaadinElement("/VVerticalLayout[0]/VVerticalLayout[0]/VLabel[0]");
         dragToTarget("COMPONENT", dropTarget);
         dragToTarget("WRAPPER", dropTarget);
+        dragToTarget("COMPONENT_OTHER", dropTarget);
     }
 
     private void dragToTarget(String dragMode, WebElement dropTarget)

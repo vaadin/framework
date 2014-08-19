@@ -1,24 +1,8 @@
 @mixin valo-menubar ($primary-stylename: v-menubar, $include-additional-styles: contains($v-included-additional-styles, menubar)) {
 
   .#{$primary-stylename} {
-    @include valo-button-static-style($states: normal, $vertical-centering: false);
-    @include valo-button-style($states: normal, $cursor: default);
-    padding: 0;
-    text-align: left;
-    overflow: hidden;
-
-    &:focus:not(.v-disabled) {
-      @include valo-button-focus-style($border-fallback: none, $include-box-shadow: false);
-      $box-shadow: valo-bevel-and-shadow($bevel: $v-bevel, $shadow: $v-shadow, $gradient: $v-gradient);
-      @if type-of($v-focus-style) == list {
-        $box-shadow: $box-shadow, $v-focus-style;
-      }
-      @include box-shadow($box-shadow);
-    }
-
-    &.v-disabled {
-      @include opacity($v-disabled-opacity);
-    }
+    @include valo-button-static-style($states: normal focus disabled, $vertical-centering: false);
+    @include valo-menubar-style;
   }
 
   .#{$primary-stylename}:active:after {
@@ -60,6 +44,20 @@
 
   .#{$primary-stylename} .#{$primary-stylename}-submenu-indicator {
     display: none;
+
+    + .#{$primary-stylename}-menuitem-caption:after {
+      font-family: FontAwesome;
+      content: "\f078";
+      font-size: 0.7em;
+      vertical-align: .15em;
+      margin: 0 -.2em 0 .5em;
+      // IE filters are not supported on pseudo elements
+      opacity: .5;
+    }
+
+    + .#{$primary-stylename}-menuitem-caption:empty:after {
+      margin-left: -.2em;
+    }
   }
 
   .#{$primary-stylename}-popup {
@@ -70,10 +68,10 @@
     }
   }
 
-  
+
   @if $include-additional-styles {
     .#{$primary-stylename}-small {
-      @include valo-menubar-small-style($unit-size: $v-unit-size--small);
+      @include valo-menubar-style($background-color: null, $unit-size: $v-unit-size--small);
       font-size: $v-font-size--small;
     }
 
@@ -87,6 +85,27 @@
 
 
 
+@mixin valo-menubar-style ($primary-stylename: v-menubar, $background-color: $v-background-color, $unit-size: $v-unit-size) {
+  @include valo-button-style($states: normal focus, $cursor: default, $background-color: $background-color, $unit-size: $unit-size);
+  padding: 0;
+  text-align: left;
+
+  @if $unit-size {
+    line-height: $unit-size - first-number($v-border) * 2 - 1px;
+
+    > .#{$primary-stylename}-menuitem {
+      padding: 0 round($unit-size/2.6);
+
+      &[class*="-icon-only"] {
+        width: $unit-size;
+      }
+    }
+  }
+}
+
+
+
+
 @mixin valo-menubar-menuitem-style {
   $border-width: first-number($v-border);
   position: relative;
@@ -95,31 +114,37 @@
   @include box-sizing(border-box);
   @include valo-button-style($states: normal, $border-radius: 0, $shadow: null, $font-color: inherit, $cursor: pointer);
   background: transparent;
+  @include box-shadow(none);
   border-width: 0 $border-width 0 0;
+  border-color: inherit;
   height: 100%;
+  line-height: inherit;
   vertical-align: top;
-  line-height: $v-unit-size - $border-width*2 - 1px;
   text-align: center;
 
   @if $border-width == 0 {
     margin-right: 1px;
   }
 
-  $br: $v-border-radius - $border-width - 1px;
+  $br: max(0, $v-border-radius - $border-width);
   &:first-child {
     border-left-width: 0;
-    border-radius: $br 0 0 $br;
+    @if $v-border-radius > 0 {
+      border-radius: $br 0 0 $br;
+    }
   }
 
   &:last-child {
-    border-radius: 0 $br $br 0;
-    margin-right: -$border-width;
+    @if $v-border-radius > 0 {
+      border-radius: 0 $br $br 0;
+    }
+    border-right-width: 0;
   }
 
   &:first-child:last-child {
-    border-radius: $br;
-    border-right-width: 0;
-    margin-right: 0;
+    @if $v-border-radius > 0 {
+      border-radius: $br;
+    }
   }
 
   &:before {
@@ -253,20 +278,6 @@
 }
 
 
-
-@mixin valo-menubar-small-style ($primary-stylename: v-menubar, $unit-size: round($v-unit-size * 0.8)) {
-  height: $unit-size;
-
-  .#{$primary-stylename}-menuitem {
-    line-height: $unit-size - first-number($v-border)*2;
-    padding: 0 round($unit-size/2.5);
-
-    &[class*="-icon-only"] {
-      width: $unit-size;
-    }
-  }
-}
-
 @mixin valo-menubar-borderless-style ($primary-stylename: v-menubar) {
   border: none;
   border-radius: 0;
@@ -275,9 +286,8 @@
   background: transparent;
   color: inherit;
 
-  &:not(.v-disabled):focus {
-    border: none;
-    @include box-shadow(none);
+  &:focus:after {
+    display: none;
   }
 
   .#{$primary-stylename}-menuitem {
@@ -294,7 +304,8 @@
     }
 
     &:first-child,
-    &:last-child {
+    &:last-child,
+    &:first-child:last-child {
       border-radius: $v-border-radius;
     }
 

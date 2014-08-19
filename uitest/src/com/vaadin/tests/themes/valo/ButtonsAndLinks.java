@@ -136,6 +136,14 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
         button = new Button("Three");
         group.addComponent(button);
 
+        button = new Button("Tiny");
+        button.addStyleName("tiny");
+        row.addComponent(button);
+
+        button = new Button("Huge");
+        button.addStyleName("huge");
+        row.addComponent(button);
+
         NativeButton nbutton = new NativeButton("Native");
         row.addComponent(nbutton);
 

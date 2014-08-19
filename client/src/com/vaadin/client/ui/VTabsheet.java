@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,9 +42,12 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.HasMouseDownHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -74,7 +77,9 @@ import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
 import com.vaadin.shared.ui.tabsheet.TabsheetState;
 
 public class VTabsheet extends VTabsheetBase implements Focusable,
-        FocusHandler, BlurHandler, KeyDownHandler, SubPartAware {
+        SubPartAware,
+        // TODO: These listeners are due to be removed in 7.3
+        FocusHandler, BlurHandler, KeyDownHandler {
 
     private static class VCloseEvent {
         private Tab tab;
@@ -95,10 +100,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Representation of a single "tab" shown in the TabBar
-     * 
+     *
      */
     public static class Tab extends SimplePanel implements HasFocusHandlers,
-            HasBlurHandlers, HasKeyDownHandlers {
+            HasBlurHandlers, HasMouseDownHandlers, HasKeyDownHandlers {
         private static final String TD_CLASSNAME = CLASSNAME + "-tabitemcell";
         private static final String TD_FIRST_CLASSNAME = TD_CLASSNAME
                 + "-first";
@@ -152,10 +157,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
             Roles.getTabRole().setAriaLabelledbyProperty(getElement(),
                     Id.of(tabCaption.getElement()));
-
-            addFocusHandler(getTabsheet());
-            addBlurHandler(getTabsheet());
-            addKeyDownHandler(getTabsheet());
         }
 
         public boolean isHiddenOnServer() {
@@ -197,7 +198,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         /**
          * Toggles the style names for the Tab
-         * 
+         *
          * @param selected
          *            true if the Tab is selected
          * @param first
@@ -279,6 +280,11 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         @Override
         public HandlerRegistration addBlurHandler(BlurHandler handler) {
             return addDomHandler(handler, BlurEvent.getType());
+        }
+
+        @Override
+        public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
+            return addDomHandler(handler, MouseDownEvent.getType());
         }
 
         @Override
@@ -420,8 +426,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     }
 
-    static class TabBar extends ComplexPanel implements ClickHandler,
-            VCloseHandler {
+    static class TabBar extends ComplexPanel implements VCloseHandler {
 
         private final Element tr = DOM.createTR();
 
@@ -443,6 +448,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             setStyleName(spacerTd, CLASSNAME + "-spacertd");
             DOM.appendChild(tr, spacerTd);
             DOM.appendChild(spacerTd, DOM.createDiv());
+
             setElement(el);
         }
 
@@ -460,10 +466,20 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             return DOM.asOld(tr);
         }
 
+        /**
+         * Gets the number of tabs from the tab bar.
+         *
+         * @return the number of tabs from the tab bar.
+         */
         public int getTabCount() {
             return getWidgetCount();
         }
 
+        /**
+         * Adds a tab to the tab bar.
+         *
+         * @return the added tab.
+         */
         public Tab addTab() {
             Tab t = new Tab(this);
             int tabIndex = getTabCount();
@@ -476,31 +492,18 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 t.setStyleNames(false, true);
             }
 
-            t.addClickHandler(this);
+            getTabsheet().selectionHandler.registerTab(t);
+
             t.setCloseHandler(this);
 
             return t;
         }
 
-        @Override
-        public void onClick(ClickEvent event) {
-            TabCaption caption = (TabCaption) event.getSource();
-            Element targetElement = event.getNativeEvent().getEventTarget()
-                    .cast();
-            // the tab should not be focused if the close button was clicked
-            if (targetElement == caption.getCloseButton()) {
-                return;
-            }
-
-            int index = getWidgetIndex(caption.getParent());
-
-            navigateTab(getTabsheet().focusedTabIndex, index);
-            getTabsheet().focusedTabIndex = index;
-            getTabsheet().focusedTab = getTab(index);
-            getTabsheet().focus();
-            getTabsheet().loadTabSheet(index);
-        }
-
+        /**
+         * Gets the tab sheet instance where the tab bar is attached to.
+         *
+         * @return the tab sheet instance where the tab bar is attached to.
+         */
         public VTabsheet getTabsheet() {
             return tabsheet;
         }
@@ -538,7 +541,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             getTab(tabsheet.activeTabIndex).recalculateCaptionWidth();
         }
 
-        public void navigateTab(int fromIndex, int toIndex) {
+        public Tab navigateTab(int fromIndex, int toIndex) {
             Tab newNavigated = getTab(toIndex);
             if (newNavigated == null) {
                 throw new IllegalArgumentException(
@@ -553,6 +556,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 oldNavigated.setStyleNames(oldNavigated.equals(selected),
                         isFirstVisibleTab(fromIndex), false);
             }
+
+            return newNavigated;
         }
 
         public void removeTab(int i) {
@@ -580,7 +585,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         /**
          * Returns the index of the first visible tab
-         * 
+         *
          * @return
          */
         private int getFirstVisibleTab() {
@@ -589,7 +594,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         /**
          * Find the next visible tab. Returns -1 if none is found.
-         * 
+         *
          * @param i
          * @return
          */
@@ -608,7 +613,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         /**
          * Find the previous visible tab. Returns -1 if none is found.
-         * 
+         *
          * @param i
          * @return
          */
@@ -663,7 +668,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     /** For internal use only. May be removed or replaced in the future. */
     // tabbar and 'scroller' container
     public final Element tabs;
-    Tab focusedTab;
+
     /**
      * The tabindex property (position in the browser's focus cycle.) Named like
      * this to avoid confusion with activeTabIndex.
@@ -697,9 +702,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     private String currentStyle;
 
-    /** For internal use only. May be removed or replaced in the future. */
-    private int focusedTabIndex = 0;
-
     /**
      * @return Whether the tab could be selected or not.
      */
@@ -720,11 +722,13 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Load the content of a tab of the provided index.
-     * 
+     *
      * @param index
      *            of the tab to load
+     *
+     * @return true if the specified sheet gets loaded, otherwise false.
      */
-    public void loadTabSheet(int tabIndex) {
+    public boolean loadTabSheet(int tabIndex) {
         if (activeTabIndex != tabIndex && canSelectTab(tabIndex)) {
             tb.selectTab(tabIndex);
 
@@ -741,12 +745,16 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             waitingForResponse = true;
 
             tb.getTab(tabIndex).focus(); // move keyboard focus to active tab
+
+            return true;
         }
+
+        return false;
     }
 
     /**
      * Returns the currently displayed widget in the tab panel.
-     * 
+     *
      * @since 7.2
      * @return currently displayed content widget
      */
@@ -756,7 +764,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Returns the client to server RPC proxy for the tabsheet.
-     * 
+     *
      * @since 7.2
      * @return RPC proxy
      */
@@ -766,10 +774,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * For internal use only.
-     * 
+     *
      * Avoid using this method directly and use appropriate superclass methods
      * where applicable.
-     * 
+     *
      * @deprecated since 7.2 - use more specific methods instead (getRpcProxy(),
      *             getConnectorForWidget(Widget) etc.)
      * @return ApplicationConnection
@@ -799,9 +807,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     public VTabsheet() {
         super(CLASSNAME);
 
-        addHandler(this, FocusEvent.getType());
-        addHandler(this, BlurEvent.getType());
-
         // Tab scrolling
         getElement().getStyle().setOverflow(Overflow.HIDDEN);
         tabs = DOM.createDiv();
@@ -812,18 +817,21 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         Roles.getTablistRole().setAriaHiddenState(scroller, true);
 
         DOM.setElementProperty(scroller, "className", SCROLLER_CLASSNAME);
+
         scrollerPrev = DOM.createButton();
         scrollerPrev.setTabIndex(-1);
         DOM.setElementProperty(scrollerPrev, "className", SCROLLER_CLASSNAME
                 + "Prev");
         Roles.getTablistRole().setAriaHiddenState(scrollerPrev, true);
-        DOM.sinkEvents(scrollerPrev, Event.ONCLICK);
+        DOM.sinkEvents(scrollerPrev, Event.ONCLICK | Event.ONMOUSEDOWN);
+
         scrollerNext = DOM.createButton();
         scrollerNext.setTabIndex(-1);
         DOM.setElementProperty(scrollerNext, "className", SCROLLER_CLASSNAME
                 + "Next");
         Roles.getTablistRole().setAriaHiddenState(scrollerNext, true);
-        DOM.sinkEvents(scrollerNext, Event.ONCLICK);
+        DOM.sinkEvents(scrollerNext, Event.ONCLICK | Event.ONMOUSEDOWN);
+
         DOM.appendChild(getElement(), tabs);
 
         // Tabs
@@ -856,35 +864,68 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     @Override
     public void onBrowserEvent(Event event) {
-        if (event.getTypeInt() == Event.ONCLICK) {
-            // Tab scrolling
-            if (isScrolledTabs() && DOM.eventGetTarget(event) == scrollerPrev) {
-                int newFirstIndex = tb.scrollLeft(scrollerIndex);
-                if (newFirstIndex != -1) {
-                    scrollerIndex = newFirstIndex;
-                    updateTabScroller();
-                }
-                event.stopPropagation();
-                return;
-            } else if (isClippedTabs()
-                    && DOM.eventGetTarget(event) == scrollerNext) {
-                int newFirstIndex = tb.scrollRight(scrollerIndex);
+        com.google.gwt.dom.client.Element eventTarget = DOM
+                .eventGetTarget(event);
 
-                if (newFirstIndex != -1) {
-                    scrollerIndex = newFirstIndex;
-                    updateTabScroller();
-                }
+        if (event.getTypeInt() == Event.ONCLICK) {
+
+            // Tab scrolling
+            if (eventTarget == scrollerPrev || eventTarget == scrollerNext) {
+                scrollAccordingToScrollTarget(eventTarget);
+
                 event.stopPropagation();
+            }
+
+        } else if (event.getTypeInt() == Event.ONMOUSEDOWN) {
+
+            if (eventTarget == scrollerPrev || eventTarget == scrollerNext) {
+                // In case the focus was previously on a Tab, we need to cancel
+                // the upcoming blur on the Tab which will follow this mouse
+                // down event.
+                focusBlurManager.cancelNextBlurSchedule();
+
                 return;
             }
         }
+
         super.onBrowserEvent(event);
+    }
+
+    /*
+     * Scroll the tab bar according to the last scrollTarget (the scroll button
+     * pressed).
+     */
+    private void scrollAccordingToScrollTarget(
+            com.google.gwt.dom.client.Element scrollTarget) {
+        if (scrollTarget == null) {
+            return;
+        }
+
+        int newFirstIndex = -1;
+
+        // Scroll left.
+        if (isScrolledTabs() && scrollTarget == scrollerPrev) {
+            newFirstIndex = tb.scrollLeft(scrollerIndex);
+
+            // Scroll right.
+        } else if (isClippedTabs() && scrollTarget == scrollerNext) {
+            newFirstIndex = tb.scrollRight(scrollerIndex);
+        }
+
+        if (newFirstIndex != -1) {
+            scrollerIndex = newFirstIndex;
+            updateTabScroller();
+        }
+
+        // For this to work well, make sure the method gets called only from
+        // user events.
+        selectionHandler.focusTabAtIndex(scrollerIndex);
     }
 
     /**
      * Checks if the tab with the selected index has been scrolled out of the
      * view (on the left side).
-     * 
+     *
      * @param index
      * @return
      */
@@ -1016,7 +1057,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Renders the widget content for a tab sheet.
-     * 
+     *
      * @param newWidget
      */
     public void renderContent(Widget newWidget) {
@@ -1239,64 +1280,467 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     }
 
     @Override
-    public void onBlur(BlurEvent event) {
-        getVTooltip().hideTooltip();
+    public void focus() {
+        getActiveTab().focus();
+    }
 
-        if (focusedTab != null && focusedTab == event.getSource()) {
-            focusedTab.removeAssistiveDescription();
-            focusedTab = null;
-            if (connector.hasEventListener(EventId.BLUR)) {
-                connector.getRpcProxy(FocusAndBlurServerRpc.class).blur();
+    public void blur() {
+        getActiveTab().blur();
+    }
+
+    /*
+     * Gets the active tab.
+     */
+    private Tab getActiveTab() {
+        return tb.getTab(activeTabIndex);
+    }
+
+    @Override
+    public void setConnector(AbstractComponentConnector connector) {
+        super.setConnector(connector);
+
+        focusBlurManager.connector = connector;
+    }
+
+    /*
+     * The focus and blur manager instance.
+     */
+    private FocusBlurManager focusBlurManager = new FocusBlurManager();
+
+    /*
+     * Generate the correct focus/blur events for the main TabSheet component
+     * (#14304).
+     * 
+     * The TabSheet must fire one focus event when the user clicks on the tab
+     * bar (i.e. inner TabBar class) containing the Tabs or when the focus is
+     * provided to the TabSheet by any means. Also one blur event should be
+     * fired only when the user leaves the tab bar. After the user focus on the
+     * tab bar and before leaving it, no matter how many times he's pressing the
+     * Tabs or the scroll buttons, the TabSheet component should not fire any of
+     * those blur/focus events.
+     * 
+     * The only focusable elements contained in the tab bar are the Tabs (see
+     * inner class Tab). The reason is the accessibility support.
+     * 
+     * Having this in mind, the chosen solution path for our problem is to match
+     * a sequence of focus/blur events on the tabs, choose only the first focus
+     * and last blur events and pass only those further to the main component.
+     * Any consecutive blur/focus events on 2 Tabs must be ignored.
+     * 
+     * Because in a blur event we don't know whether or not a focus will follow,
+     * we just defer a command initiated on the blur event to wait and see if
+     * any focus will appear. The command will be executed after the next focus,
+     * so if no focus was triggered in the mean while it'll submit the blur
+     * event to the main component, otherwise it'll do nothing, so the main
+     * component will not generate the blur..
+     */
+    private static class FocusBlurManager {
+
+        // The real tab with focus on it. If the focus goes to another element
+        // in the page this will be null.
+        private Tab focusedTab;
+
+        /*
+         * Gets the focused tab.
+         */
+        private Tab getFocusedTab() {
+            return focusedTab;
+        }
+
+        /*
+         * Sets the local field tracking the focused tab.
+         */
+        private void setFocusedTab(Tab focusedTab) {
+            this.focusedTab = focusedTab;
+        }
+
+        /*
+         * The ultimate focus/blur event dispatcher.
+         */
+        private AbstractComponentConnector connector;
+
+        /**
+         * Delegate method for the onFocus event occurring on Tab.
+         *
+         * @since
+         * @param newFocusTab
+         *            the new focused tab.
+         * @see #onBlur(Tab)
+         */
+        public void onFocus(Tab newFocusTab) {
+
+            if (connector.hasEventListener(EventId.FOCUS)) {
+
+                // Send the focus event only first time when we focus on any
+                // tab. The focused tab will be reseted on the last blur.
+                if (focusedTab == null) {
+                    connector.getRpcProxy(FocusAndBlurServerRpc.class).focus();
+                }
+            }
+
+            cancelLastBlurSchedule();
+
+            setFocusedTab(newFocusTab);
+        }
+
+        /**
+         * Delegate method for the onBlur event occurring on Tab.
+         *
+         * @param blurSource
+         *            the source of the blur.
+         *
+         * @see #onFocus(Tab)
+         */
+        public void onBlur(Tab blurSource) {
+            if (focusedTab != null && focusedTab == blurSource) {
+
+                if (connector.hasEventListener(EventId.BLUR)) {
+                    scheduleBlur(focusedTab);
+                }
             }
         }
+
+        /*
+         * The last blur command to be executed.
+         */
+        private BlurCommand blurCommand;
+
+        /*
+         * Execute the final blur command.
+         */
+        private class BlurCommand implements Command {
+
+            /*
+             * The blur source.
+             */
+            private Tab blurSource;
+
+            /**
+             * Create the blur command using the blur source.
+             *
+             * @param blurSource
+             *            the source.
+             * @param focusedTabProvider
+             *            provides the current focused tab.
+             */
+            public BlurCommand(Tab blurSource) {
+                this.blurSource = blurSource;
+            }
+
+            /**
+             * Stop the command from being executed.
+             *
+             * @since
+             */
+            public void stopSchedule() {
+                blurSource = null;
+            }
+
+            /**
+             * Schedule the command for a deferred execution.
+             *
+             * @since
+             */
+            public void scheduleDeferred() {
+                Scheduler.get().scheduleDeferred(this);
+            }
+
+            @Override
+            public void execute() {
+
+                Tab focusedTab = getFocusedTab();
+
+                if (blurSource == null) {
+                    return;
+                }
+
+                // The focus didn't change since this blur triggered, so
+                // the new focused element is not a tab.
+                if (focusedTab == blurSource) {
+
+                    // We're certain there's no focus anymore.
+                    focusedTab.removeAssistiveDescription();
+                    setFocusedTab(null);
+
+                    connector.getRpcProxy(FocusAndBlurServerRpc.class).blur();
+                }
+
+                // Call this to set it to null and be consistent.
+                cancelLastBlurSchedule();
+            }
+        }
+
+        /*
+         * Schedule a new blur event for a deferred execution.
+         */
+        private void scheduleBlur(Tab blurSource) {
+
+            if (nextBlurScheduleCancelled) {
+
+                // This will set the stopNextBlurCommand back to false as well.
+                cancelLastBlurSchedule();
+
+                // Reset the status.
+                nextBlurScheduleCancelled = false;
+                return;
+            }
+
+            cancelLastBlurSchedule();
+
+            blurCommand = new BlurCommand(blurSource);
+            blurCommand.scheduleDeferred();
+        }
+
+        /**
+         * Remove the last blur deferred command from execution.
+         */
+        public void cancelLastBlurSchedule() {
+            if (blurCommand != null) {
+                blurCommand.stopSchedule();
+                blurCommand = null;
+            }
+
+            // We really want to make sure this flag gets reseted at any time
+            // when something interact with the blur manager and ther's no blur
+            // command scheduled (as we just canceled it).
+            nextBlurScheduleCancelled = false;
+        }
+
+        /**
+         * Cancel the next scheduled execution. This method must be called only
+         * from an event occurring before the onBlur event. It's the case of IE
+         * which doesn't trigger the focus event, so we're using this approach
+         * to cancel the next blur event prior it's execution, calling the
+         * method from mouse down event.
+         */
+        public void cancelNextBlurSchedule() {
+
+            // Make sure there's still no other command to be executed.
+            cancelLastBlurSchedule();
+
+            nextBlurScheduleCancelled = true;
+        }
+
+        /*
+         * Flag that the next deferred command won't get executed. This is
+         * useful in case of IE where the user focus event don't fire and we're
+         * using the mouse down event to track the focus. But the mouse down
+         * event triggers before the blur, so we need to cancel the deferred
+         * execution in advance.
+         */
+        private boolean nextBlurScheduleCancelled = false;
+
+    }
+
+    @Override
+    public void onBlur(BlurEvent event) {
+        selectionHandler.onBlur(event);
     }
 
     @Override
     public void onFocus(FocusEvent event) {
-        if (focusedTab == null && event.getSource() instanceof Tab) {
-            focusedTab = (Tab) event.getSource();
-            if (connector.hasEventListener(EventId.FOCUS)) {
-                connector.getRpcProxy(FocusAndBlurServerRpc.class).focus();
-            }
-
-            if (focusedTab.hasTooltip()) {
-                focusedTab.setAssistiveDescription(getVTooltip().getUniqueId());
-                getVTooltip().showAssistive(focusedTab.getTooltipInfo());
-            }
-        }
-    }
-
-    @Override
-    public void focus() {
-        tb.getTab(activeTabIndex).focus();
-    }
-
-    public void blur() {
-        tb.getTab(activeTabIndex).blur();
+        selectionHandler.onFocus(event);
     }
 
     @Override
     public void onKeyDown(KeyDownEvent event) {
-        if (event.getSource() instanceof Tab) {
-            int keycode = event.getNativeEvent().getKeyCode();
+        selectionHandler.onKeyDown(event);
+    }
 
-            if (!event.isAnyModifierKeyDown()) {
-                if (keycode == getPreviousTabKey()) {
-                    selectPreviousTab();
-                    event.stopPropagation();
-                } else if (keycode == getNextTabKey()) {
-                    selectNextTab();
-                    event.stopPropagation();
-                } else if (keycode == getCloseTabKey()) {
-                    Tab tab = tb.getTab(activeTabIndex);
-                    if (tab.isClosable()) {
-                        tab.onClose();
+    /*
+     * The tabs selection handler instance.
+     */
+    private final TabSelectionHandler selectionHandler = new TabSelectionHandler();
+
+    /*
+     * Handle the events for selecting the tabs.
+     */
+    private class TabSelectionHandler implements FocusHandler, BlurHandler,
+            KeyDownHandler, ClickHandler, MouseDownHandler {
+
+        /** For internal use only. May be removed or replaced in the future. */
+        // The current visible focused index.
+        private int focusedTabIndex = 0;
+
+        /**
+         * Register the tab to the selection handler.
+         *
+         * @param tab
+         *            the tab to register.
+         */
+        public void registerTab(Tab tab) {
+
+            // TODO: change VTabsheet.this to this in 7.3
+            tab.addBlurHandler(VTabsheet.this);
+            tab.addFocusHandler(VTabsheet.this);
+            tab.addKeyDownHandler(VTabsheet.this);
+
+            tab.addClickHandler(this);
+            tab.addMouseDownHandler(this);
+        }
+
+        @Override
+        public void onBlur(final BlurEvent event) {
+
+            getVTooltip().hideTooltip();
+
+            Object blurSource = event.getSource();
+
+            if (blurSource instanceof Tab) {
+                focusBlurManager.onBlur((Tab) blurSource);
+            }
+        }
+
+        @Override
+        public void onFocus(FocusEvent event) {
+
+            if (event.getSource() instanceof Tab) {
+                Tab focusSource = (Tab) event.getSource();
+                focusBlurManager.onFocus(focusSource);
+
+                if (focusSource.hasTooltip()) {
+                    focusSource.setAssistiveDescription(getVTooltip()
+                            .getUniqueId());
+                    getVTooltip().showAssistive(focusSource.getTooltipInfo());
+                }
+
+            }
+        }
+
+        @Override
+        public void onClick(ClickEvent event) {
+
+            // IE doesn't trigger focus when click, so we need to make sure
+            // the previous blur deferred command will get killed.
+            focusBlurManager.cancelLastBlurSchedule();
+
+            TabCaption caption = (TabCaption) event.getSource();
+            Element targetElement = event.getNativeEvent().getEventTarget()
+                    .cast();
+            // the tab should not be focused if the close button was clicked
+            if (targetElement == caption.getCloseButton()) {
+                return;
+            }
+
+            int index = tb.getWidgetIndex(caption.getParent());
+
+            tb.navigateTab(focusedTabIndex, index);
+
+            focusedTabIndex = index;
+
+            if (!loadTabSheet(index)) {
+
+                // This needs to be called at the end, as the activeTabIndex
+                // is set in the loadTabSheet.
+                focus();
+            }
+        }
+
+        @Override
+        public void onMouseDown(MouseDownEvent event) {
+
+            if (event.getSource() instanceof Tab) {
+
+                // IE doesn't trigger focus when click, so we need to make sure
+                // the
+                // next blur deferred command will get killed.
+                focusBlurManager.cancelNextBlurSchedule();
+            }
+        }
+
+        @Override
+        public void onKeyDown(KeyDownEvent event) {
+            if (event.getSource() instanceof Tab) {
+                int keycode = event.getNativeEvent().getKeyCode();
+
+                if (!event.isAnyModifierKeyDown()) {
+                    if (keycode == getPreviousTabKey()) {
+                        selectPreviousTab();
+                        event.stopPropagation();
+
+                    } else if (keycode == getNextTabKey()) {
+                        selectNextTab();
+                        event.stopPropagation();
+
+                    } else if (keycode == getCloseTabKey()) {
+                        Tab tab = tb.getTab(activeTabIndex);
+                        if (tab.isClosable()) {
+                            tab.onClose();
+                        }
+
+                    } else if (keycode == getSelectTabKey()) {
+                        loadTabSheet(focusedTabIndex);
+
+                        // Prevent the page from scrolling when hitting space
+                        // (select key) to select the current tab.
+                        event.preventDefault();
                     }
-                } else if (keycode == getSelectTabKey()) {
-                    loadTabSheet(focusedTabIndex);
                 }
             }
         }
+
+        /*
+         * Left arrow key selection.
+         */
+        private void selectPreviousTab() {
+            int newTabIndex = focusedTabIndex;
+            // Find the previous visible and enabled tab if any.
+            do {
+                newTabIndex--;
+            } while (newTabIndex >= 0 && !canSelectTab(newTabIndex));
+
+            if (newTabIndex >= 0) {
+                keySelectTab(newTabIndex);
+            }
+        }
+
+        /*
+         * Right arrow key selection.
+         */
+        private void selectNextTab() {
+            int newTabIndex = focusedTabIndex;
+            // Find the next visible and enabled tab if any.
+            do {
+                newTabIndex++;
+            } while (newTabIndex < getTabCount() && !canSelectTab(newTabIndex));
+
+            if (newTabIndex < getTabCount()) {
+                keySelectTab(newTabIndex);
+            }
+        }
+
+        /*
+         * Select the specified tab using left/right key.
+         */
+        private void keySelectTab(int newTabIndex) {
+            Tab tab = tb.getTab(newTabIndex);
+            if (tab == null) {
+                return;
+            }
+
+            // Focus the tab, otherwise the selected one will loose focus and
+            // TabSheet will get blurred.
+            focusTabAtIndex(newTabIndex);
+
+            tb.navigateTab(focusedTabIndex, newTabIndex);
+
+            focusedTabIndex = newTabIndex;
+        }
+
+        /**
+         * Focus the specified tab. Make sure to call this only from user
+         * events, otherwise will break things.
+         *
+         * @param tabIndex
+         *            the index of the tab to set.
+         */
+        void focusTabAtIndex(int tabIndex) {
+            Tab tabToFocus = tb.getTab(tabIndex);
+            if (tabToFocus != null) {
+                tabToFocus.focus();
+            }
+        }
+
     }
 
     /**
@@ -1307,8 +1751,17 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         return KeyCodes.KEY_LEFT;
     }
 
+    /**
+     * Gets the key to activate the selected tab when navigating using
+     * previous/next (left/right) keys.
+     * 
+     * @return the key to activate the selected tab.
+     * 
+     * @see #getNextTabKey()
+     * @see #getPreviousTabKey()
+     */
     protected int getSelectTabKey() {
-        return 32; // Space key
+        return KeyCodes.KEY_SPACE;
     }
 
     /**
@@ -1327,57 +1780,23 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         return KeyCodes.KEY_DELETE;
     }
 
-    private void selectPreviousTab() {
-        int newTabIndex = focusedTabIndex;
-        // Find the previous visible and enabled tab if any.
-        do {
-            newTabIndex--;
-        } while (newTabIndex >= 0 && !canSelectTab(newTabIndex));
-
-        if (newTabIndex >= 0) {
-            tb.navigateTab(focusedTabIndex, newTabIndex);
-            focusedTabIndex = newTabIndex;
-
-            // If this TabSheet already has focus, set the new selected tab
-            // as focused.
-            if (focusedTab != null) {
-                focusedTab = tb.getTab(focusedTabIndex);
-                focusedTab.focus();
-            }
-        }
-    }
-
-    private void selectNextTab() {
-        int newTabIndex = focusedTabIndex;
-        // Find the next visible and enabled tab if any.
-        do {
-            newTabIndex++;
-        } while (newTabIndex < getTabCount() && !canSelectTab(newTabIndex));
-
-        if (newTabIndex < getTabCount()) {
-
-            tb.navigateTab(focusedTabIndex, newTabIndex);
-            focusedTabIndex = newTabIndex;
-
-            // If this TabSheet already has focus, set the new selected tab
-            // as focused.
-            if (focusedTab != null) {
-                focusedTab = tb.getTab(focusedTabIndex);
-                focusedTab.focus();
-            }
-        }
-    }
-
     private void scrollIntoView(Tab tab) {
+
         if (!tab.isHiddenOnServer()) {
-            if (isClipped(tab)) {
-                while (isClipped(tab) && scrollerIndex != -1) {
-                    scrollerIndex = tb.scrollRight(scrollerIndex);
-                }
-                updateTabScroller();
-            } else if (!tab.isVisible()) {
+
+            // Check for visibility first as clipped tabs to the right are
+            // always visible.
+            // On IE8 a tab with false visibility would have the bounds of the
+            // full TabBar.
+            if (!tab.isVisible()) {
                 while (!tab.isVisible()) {
                     scrollerIndex = tb.scrollLeft(scrollerIndex);
+                }
+                updateTabScroller();
+
+            } else if (isClipped(tab)) {
+                while (isClipped(tab) && scrollerIndex != -1) {
+                    scrollerIndex = tb.scrollRight(scrollerIndex);
                 }
                 updateTabScroller();
             }
@@ -1386,7 +1805,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Makes tab bar visible.
-     * 
+     *
      * @since 7.2
      */
     public void showTabs() {
@@ -1397,7 +1816,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     /**
      * Makes tab bar invisible.
-     * 
+     *
      * @since 7.2
      */
     public void hideTabs() {

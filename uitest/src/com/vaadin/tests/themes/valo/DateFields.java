@@ -46,16 +46,16 @@ public class DateFields extends VerticalLayout implements View {
         addComponent(row);
 
         DateField date = new DateField("Default resolution");
-        date.setValue(new Date());
+        setDate(date);
         row.addComponent(date);
 
         date = new DateField("Error");
-        date.setValue(new Date());
+        setDate(date);
         date.setComponentError(new UserError("Fix it, now!"));
         row.addComponent(date);
 
         date = new DateField("Error, borderless");
-        date.setValue(new Date());
+        setDate(date);
         date.setComponentError(new UserError("Fix it, now!"));
         date.addStyleName("borderless");
         row.addComponent(date);
@@ -77,108 +77,130 @@ public class DateFields extends VerticalLayout implements View {
         group.addComponent(today);
 
         date = new DateField("Default resolution, explicit size");
-        date.setValue(new Date());
+        setDate(date);
         row.addComponent(date);
         date.setWidth("260px");
         date.setHeight("60px");
 
         date = new DateField("Second resolution");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.SECOND);
         row.addComponent(date);
 
         date = new DateField("Minute resolution");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.MINUTE);
         row.addComponent(date);
 
         date = new DateField("Hour resolution");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.HOUR);
         row.addComponent(date);
 
         date = new DateField("Disabled");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.HOUR);
         date.setEnabled(false);
         row.addComponent(date);
 
         date = new DateField("Day resolution");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.DAY);
         row.addComponent(date);
 
         date = new DateField("Month resolution");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.MONTH);
         row.addComponent(date);
 
         date = new DateField("Year resolution");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.YEAR);
         row.addComponent(date);
 
         date = new DateField("Custom color");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName("color1");
         row.addComponent(date);
 
         date = new DateField("Custom color");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName("color2");
         row.addComponent(date);
 
         date = new DateField("Custom color");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName("color3");
         row.addComponent(date);
 
         date = new DateField("Small");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName("small");
         row.addComponent(date);
 
         date = new DateField("Large");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName("large");
         row.addComponent(date);
 
         date = new DateField("Borderless");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName("borderless");
         row.addComponent(date);
 
         date = new DateField("Week numbers");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.DAY);
         date.setLocale(new Locale("fi", "fi"));
         date.setShowISOWeekNumbers(true);
         row.addComponent(date);
 
         date = new DateField("US locale");
-        date.setValue(new Date());
+        setDate(date);
         date.setResolution(Resolution.SECOND);
         date.setLocale(new Locale("en", "US"));
         row.addComponent(date);
 
         date = new DateField("Custom format");
-        date.setValue(new Date());
+        setDate(date);
         date.setDateFormat("E dd/MM/yyyy");
         row.addComponent(date);
 
+        date = new DateField("Tiny");
+        setDate(date);
+        date.setResolution(Resolution.DAY);
+        date.addStyleName("tiny");
+        row.addComponent(date);
+
+        date = new DateField("Huge");
+        setDate(date);
+        date.setResolution(Resolution.DAY);
+        date.addStyleName("huge");
+        row.addComponent(date);
+
         date = new InlineDateField("Date picker");
+        setDate(date);
         row.addComponent(date);
 
         date = new InlineDateField("Date picker with week numbers");
+        setDate(date);
         date.setLocale(new Locale("fi", "fi"));
         date.setShowISOWeekNumbers(true);
         row.addComponent(date);
+    }
+
+    private void setDate(DateField date) {
+        if (ValoThemeUI.isTestMode()) {
+            date.setValue(new Date(2014 - 1900, 5, 7));
+        } else {
+            date.setValue(new Date());
+        }
     }
 
     @Override

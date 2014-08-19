@@ -68,19 +68,19 @@ public class VBrowserDetails implements Serializable {
         isGecko = userAgent.indexOf("gecko") != -1
                 && userAgent.indexOf("webkit") == -1
                 && userAgent.indexOf("trident/") == -1;
-        isWebKit = userAgent.indexOf("applewebkit") != -1;
         isPresto = userAgent.indexOf(" presto/") != -1;
         isTrident = userAgent.indexOf("trident/") != -1;
+        isWebKit = !isTrident && userAgent.indexOf("applewebkit") != -1;
 
         // browser name
         isChrome = userAgent.indexOf(" chrome/") != -1;
-        isSafari = !isChrome && userAgent.indexOf("safari") != -1;
         isOpera = userAgent.indexOf("opera") != -1;
         isIE = userAgent.indexOf("msie") != -1 && !isOpera
                 && (userAgent.indexOf("webtv") == -1);
         // IE 11 no longer contains MSIE in the user agent
         isIE = isIE || isTrident;
 
+        isSafari = !isChrome && !isIE && userAgent.indexOf("safari") != -1;
         isFirefox = userAgent.indexOf(" firefox/") != -1;
 
         // chromeframe

@@ -71,6 +71,27 @@
             <antcall target="compile-theme" inheritRefs="true">
                 <param name="theme" value="valo" />
             </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+                <param name="theme" value="tests-valo" />
+            </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+                <param name="theme" value="tests-valo-dark" />
+            </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+                <param name="theme" value="tests-valo-metro" />
+            </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+                <param name="theme" value="tests-valo-flat" />
+            </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+                <param name="theme" value="tests-valo-flatdark" />
+            </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+                <param name="theme" value="tests-valo-facebook" />
+            </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+                <param name="theme" value="tests-valo-blueprint" />
+            </antcall>
         </parallel>
     </target>
 

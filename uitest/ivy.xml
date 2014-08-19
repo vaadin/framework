@@ -15,6 +15,7 @@
         <conf name="build-provided" visibility="private" />
         <conf name="ide" visibility="private" />
         <conf name="jetty-run" visibility="private" />
+        <conf name="compile-theme" visibility="private" />
     </configurations>
     <publications>
         <artifact type="war" ext="war" />
@@ -99,6 +100,13 @@
         <!-- This should be removed once tests have been updated to use lang3 -->
         <dependency org="commons-lang" name="commons-lang"
             rev="2.6" conf="build,ide -> default" />
+
+       <dependency org="com.vaadin" name="vaadin-sass-compiler"
+            rev="${vaadin.sass.version}" conf="compile-theme->default" />
+
+        <dependency org="com.vaadin" name="vaadin-buildhelpers"
+                    rev="${vaadin.version}" conf="compile-theme->build" />
+
     </dependencies>
 
 </ivy-module>
