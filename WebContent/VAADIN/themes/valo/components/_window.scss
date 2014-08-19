@@ -96,6 +96,8 @@ $v-window-modality-curtain-background-color: #222 !default;
       height: 0;
       $_bg: $v-window-background-color;
       border-top: $scroll-divider-width solid first-color(valo-border($strength: 0.5));
+      $border-color: first-color(valo-border($strength: 1));
+      border-color: rgba($border-color, .5);
     }
   }
 

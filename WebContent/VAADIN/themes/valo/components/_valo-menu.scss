@@ -87,7 +87,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
       img.v-icon {
         width: round($v-unit-size * 1.5);
         height: round($v-unit-size * 1.5);
-        border-radius: ceil($v-unit-size * 1.5 / 2);
+        border-radius: ceil($v-unit-size * 1.5 / 2 + first-number($v-border));
         box-shadow: valo-bevel-and-shadow($bevel: null, $shadow: $v-shadow);
         display: block;
         margin: 0 auto .3em;
