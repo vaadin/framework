@@ -393,7 +393,7 @@ public class VNotification extends VOverlay {
         int type = DOM.eventGetType(event);
         // "modal"
         if (infiniteDelay || temporaryStyle == STYLE_SYSTEM) {
-            if (type == Event.ONCLICK) {
+            if (type == Event.ONCLICK || type == Event.ONTOUCHEND) {
                 if (DOM.isOrHasChild(getElement(), DOM.eventGetTarget(event))) {
                     hide();
                     return false;
@@ -512,7 +512,7 @@ public class VNotification extends VOverlay {
         notification.setWaiAriaRole(null);
         notification.setDelay(delayMsec);
 
-        if (BrowserInfo.get().isTouchDevice()) {
+        if (!notification.infiniteDelay && BrowserInfo.get().isTouchDevice()) {
             new Timer() {
                 @Override
                 public void run() {

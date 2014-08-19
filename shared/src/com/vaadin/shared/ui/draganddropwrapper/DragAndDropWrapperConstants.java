@@ -25,4 +25,6 @@ public class DragAndDropWrapperConstants implements Serializable {
     @Deprecated
     public static final String DRAG_START_MODE = "dragStartMode";
 
+    public static final String DRAG_START_COMPONENT_ATTRIBUTE = "dragStartComponent";
+
 }

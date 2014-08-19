@@ -16,14 +16,16 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Item;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 
-public class SortLabelsInTable extends TestBase {
+public class SortLabelsInTable extends AbstractTestUI {
 
+    @SuppressWarnings("unchecked")
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         Table t = new Table("A table with a text column and a Label column");
         t.addContainerProperty("text", String.class, null);
         t.addContainerProperty("label", Label.class, null);
@@ -37,9 +39,8 @@ public class SortLabelsInTable extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+    protected String getTestDescription() {
+        return "Tests that Labels are sorted in the same way than Strings are.";
     }
 
     @Override
