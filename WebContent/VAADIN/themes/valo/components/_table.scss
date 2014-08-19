@@ -153,10 +153,10 @@ $v-table-background-color: null !default;
     width: $v-table-resizer-width;
     cursor: e-resize;
     cursor: col-resize;
-    position: absolute;
-    top: 0;
+    position: relative;
     right: round($v-table-resizer-width / -2);
     z-index: 1;
+    margin-left: -$v-table-resizer-width;
   }
 
   .#{$primary-stylename}-cell-content {
@@ -248,8 +248,7 @@ $v-table-background-color: null !default;
     width: $v-table-sort-indicator-width;
     height: $v-table-row-height;
     line-height: $v-table-row-height;
-    position: absolute;
-    right: 0;
+    margin-left: -$v-table-sort-indicator-width;
   }
 
   .#{$primary-stylename}-header-cell-asc .#{$primary-stylename}-sort-indicator:before,
@@ -295,13 +294,16 @@ $v-table-background-color: null !default;
   .#{$primary-stylename}-focus-slot-right {
     border-right: $v-table-border-width + 2px solid $v-focus-color;
     right: -$v-table-border-width - 1px;
+    margin-left: -$v-table-resizer-width - $v-table-border-width - 2px;
   }
 
   .#{$primary-stylename}-focus-slot-left {
+    float: left;
     border-left: $v-table-border-width + 2px solid $v-focus-color;
     left: -$v-table-border-width;
     right: auto;
     margin-left: 0 !important;
+    margin-right: -$v-table-resizer-width - $v-table-border-width - 2px;
   }
 
   .#{$primary-stylename}-column-selector {
