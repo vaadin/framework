@@ -49,6 +49,7 @@ import com.vaadin.client.Util;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SubPartAware;
+import com.vaadin.client.ui.grid.EditorRow.State;
 import com.vaadin.client.ui.grid.GridFooter.FooterRow;
 import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.GridStaticSection.StaticCell;
@@ -665,6 +666,8 @@ public class Grid<T> extends Composite implements
 
     private final LazySorter lazySorter = new LazySorter();
 
+    private final EditorRow<T> editorRow = GWT.create(EditorRow.class);
+
     /**
      * Enumeration for easy setting of selection mode.
      */
@@ -937,7 +940,7 @@ public class Grid<T> extends Composite implements
         @Override
         public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
             int rowIndex = row.getRow();
-            Element rowElement = row.getElement();
+            TableRowElement rowElement = row.getElement();
             T rowData = dataSource.getRow(rowIndex);
 
             boolean hasData = rowData != null;
@@ -972,8 +975,8 @@ public class Grid<T> extends Composite implements
 
                 Renderer renderer = column.getRenderer();
 
-                // Hide cell content if needed
                 if (renderer instanceof ComplexRenderer) {
+                    // Hide cell content if needed
                     ComplexRenderer clxRenderer = (ComplexRenderer) renderer;
                     if (hasData) {
                         if (!usedToHaveData) {
@@ -997,6 +1000,13 @@ public class Grid<T> extends Composite implements
                 } else {
                     // Clear cell if there is no data
                     cell.getElement().removeAllChildren();
+                }
+            }
+
+            if (rowIndex == editorRow.getRow()) {
+                if (editorRow.getState() == State.ACTIVATING) {
+                    editorRow.setState(State.ACTIVE);
+                    editorRow.showOverlay(rowElement);
                 }
             }
         }
@@ -1225,6 +1235,8 @@ public class Grid<T> extends Composite implements
 
         footer.setGrid(this);
 
+        editorRow.setGrid(this);
+
         setSelectionMode(SelectionMode.SINGLE);
 
         escalator.addScrollHandler(new ScrollHandler() {
@@ -1267,6 +1279,8 @@ public class Grid<T> extends Composite implements
     public void setStylePrimaryName(String style) {
         super.setStylePrimaryName(style);
         escalator.setStylePrimaryName(style);
+        editorRow.setStylePrimaryName(style);
+
         rowHasDataStyleName = getStylePrimaryName() + "-row-has-data";
         rowSelectedStyleName = getStylePrimaryName() + "-row-selected";
         cellActiveStyleName = getStylePrimaryName() + "-cell-active";
@@ -1580,6 +1594,14 @@ public class Grid<T> extends Composite implements
      */
     public GridFooter getFooter() {
         return footer;
+    }
+
+    public EditorRow<T> getEditorRow() {
+        return editorRow;
+    }
+
+    protected Escalator getEscalator() {
+        return escalator;
     }
 
     /**
@@ -1930,45 +1952,90 @@ public class Grid<T> extends Composite implements
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
-        EventTarget target = event.getEventTarget();
-        if (Element.is(target)) {
-            Element e = Element.as(target);
-            RowContainer container = escalator.findRowContainer(e);
-            Cell cell = null;
-            if (container != null) {
-                cell = container.getCell(e);
-                if (cell != null) {
-                    // FIXME getFromVisibleIndex???
-                    GridColumn<?, T> gridColumn = columns.get(cell.getColumn());
 
-                    if (container == escalator.getHeader()) {
-                        if (getHeader().getRow(cell.getRow()).isDefault()) {
-                            handleDefaultRowEvent(cell, event);
-                        }
-                    } else if (container == escalator.getFooter()) {
-                        // NOP
-                    } else if (gridColumn.getRenderer() instanceof ComplexRenderer) {
-                        ComplexRenderer<?> cplxRenderer = (ComplexRenderer<?>) gridColumn
-                                .getRenderer();
-                        if (cplxRenderer.getConsumedEvents().contains(
-                                event.getType())) {
-                            if (cplxRenderer.onBrowserEvent(cell, event)) {
-                                return;
-                            }
-                        }
+        EventTarget target = event.getEventTarget();
+
+        if (!Element.is(target)) {
+            return;
+        }
+
+        Element e = Element.as(target);
+        RowContainer container = escalator.findRowContainer(e);
+        Cell cell = container != null ? container.getCell(e) : null;
+
+        if (doEditorRowEvent(event, container, cell)) {
+            return;
+        }
+
+        if (container == escalator.getHeader()) {
+            if (getHeader().getRow(cell.getRow()).isDefault()) {
+                handleDefaultRowEvent(cell, event);
+            }
+        }
+
+        if (doRendererEvent(event, container, cell)) {
+            return;
+        }
+
+        if (doActiveCellEvent(event, container, cell)) {
+            return;
+        }
+    }
+
+    private boolean doEditorRowEvent(Event event, RowContainer container,
+            Cell cell) {
+        if (editorRow.getState() != State.INACTIVE) {
+            if (event.getTypeInt() == Event.ONKEYDOWN
+                    && event.getKeyCode() == EditorRow.KEYCODE_HIDE) {
+                editorRow.cancel();
+            }
+            return true;
+        }
+        if (editorRow.isEnabled()) {
+            if (event.getTypeInt() == Event.ONDBLCLICK) {
+                if (container == escalator.getBody() && cell != null) {
+                    editorRow.editRow(cell.getRow());
+                    return true;
+                }
+            } else if (event.getTypeInt() == Event.ONKEYDOWN
+                    && event.getKeyCode() == EditorRow.KEYCODE_SHOW) {
+                editorRow.editRow(activeCellHandler.activeRow);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean doRendererEvent(Event event, RowContainer container,
+            Cell cell) {
+
+        if (container == escalator.getBody() && cell != null) {
+            GridColumn<?, T> gridColumn = getColumnFromVisibleIndex(cell
+                    .getColumn());
+
+            if (gridColumn.getRenderer() instanceof ComplexRenderer) {
+                ComplexRenderer<?> cplxRenderer = (ComplexRenderer<?>) gridColumn
+                        .getRenderer();
+                if (cplxRenderer.getConsumedEvents().contains(event.getType())) {
+                    if (cplxRenderer.onBrowserEvent(cell, event)) {
+                        return true;
                     }
                 }
             }
-
-            Collection<String> navigation = activeCellHandler
-                    .getNavigationEvents();
-            if (navigation.contains(event.getType())
-                    && (Util.getFocusedElement() == getElement() || cell != null)) {
-                activeCellHandler.handleNavigationEvent(event, cell);
-            }
-
-            handleGridNavigation(event, cell);
         }
+        return false;
+    }
+
+    private boolean doActiveCellEvent(Event event, RowContainer container,
+            Cell cell) {
+        Collection<String> navigation = activeCellHandler.getNavigationEvents();
+        if (navigation.contains(event.getType())
+                && (Util.getFocusedElement() == getElement() || cell != null)) {
+            activeCellHandler.handleNavigationEvent(event, cell);
+        }
+        handleGridNavigation(event, cell);
+
+        return false;
     }
 
     private void handleGridNavigation(Event event, Cell cell) {

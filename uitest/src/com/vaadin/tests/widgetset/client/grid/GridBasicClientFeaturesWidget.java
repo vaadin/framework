@@ -337,6 +337,27 @@ public class GridBasicClientFeaturesWidget extends
             }
         }, primaryStyleNamePath);
 
+        addMenuCommand("Enabled", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.getEditorRow()
+                        .setEnabled(!grid.getEditorRow().isEnabled());
+            }
+        }, "Component", "State", "Editor row");
+
+        addMenuCommand("Edit row 5", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.getEditorRow().editRow(5);
+            }
+        }, "Component", "State", "Editor row");
+
+        addMenuCommand("Edit row 100", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.getEditorRow().editRow(100);
+            }
+        }, "Component", "State", "Editor row");
     }
 
     private void createColumnsMenu() {

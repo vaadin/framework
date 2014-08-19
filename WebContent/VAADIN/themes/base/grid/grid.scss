@@ -35,4 +35,16 @@
 	.#{$primaryStyleName}-row-selected > td {
 		background: lightblue;
 	}
+
+	.#{$primaryStyleName}-editor-row {
+
+		position: absolute;
+		background: #EEE;
+		box-shadow: 0 0 5px;
+
+		& > div {
+			position: absolute;
+			border: 1px solid #CCC;
+		}
+	}
 }

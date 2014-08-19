@@ -1058,7 +1058,7 @@ public class Escalator extends Widget {
         }
     }
 
-    private abstract class AbstractRowContainer implements RowContainer {
+    protected abstract class AbstractRowContainer implements RowContainer {
 
         private EscalatorUpdater updater = EscalatorUpdater.NULL;
 

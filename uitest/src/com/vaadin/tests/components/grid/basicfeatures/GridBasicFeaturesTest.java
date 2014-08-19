@@ -90,6 +90,15 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         return footerCells;
     }
 
+    protected WebElement getEditorRow() {
+        List<WebElement> elems = getGridElement().findElements(
+                By.className("v-grid-editor-row"));
+
+        assertLessThanOrEqual("number of editor rows", elems.size(), 1);
+
+        return elems.isEmpty() ? null : elems.get(0);
+    }
+
     private Object executeScript(String script, WebElement element) {
         final WebDriver driver = getDriver();
         if (driver instanceof JavascriptExecutor) {
