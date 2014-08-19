@@ -3,7 +3,6 @@ $v-table-border-width: first-number($v-border) !default;
 $v-table-border-color: null !default;
 $v-table-border-radius: 0 !default;
 $v-table-cell-padding-horizontal: round($v-unit-size/3) !default;
-//$v-table-cell-padding-horizontal-edge: round($v-unit-size/2.5) !default;
 $v-table-resizer-width: round($v-unit-size/4.5) !default;
 $v-table-sort-indicator-width: round($v-unit-size/2) !default;
 $v-table-header-font-size: round($v-font-size * 0.86) !default;
@@ -178,14 +177,23 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-cell-wrapper {
     line-height: 1;
-    min-height: $v-table-row-height;
-    $vertical-padding: round(($v-table-row-height - $v-font-size)/2);
-    padding: $vertical-padding $v-table-cell-padding-horizontal;
+    padding: 0 $v-table-cell-padding-horizontal;
     @include box-sizing(border-box);
     margin-right: 0 !important;
 
     > .v-widget {
-      margin: round($vertical-padding / -2) round($v-table-cell-padding-horizontal / -2);
+      // Leave some breathing room around the table cell and the widget
+      margin: round($v-table-cell-padding-horizontal / 4) round($v-table-cell-padding-horizontal / -2);
+
+      &.v-label,
+      &.v-checkbox,
+      &.v-select-optiongroup {
+        margin: 0;
+      }
+      &.v-progressbar {
+        margin-left: 0;
+        margin-right: 0;
+      }
     }
   }
 
@@ -220,7 +228,9 @@ $v-table-background-color: null !default;
 
     @include valo-gradient($v-selection-color);
     background-origin: border-box;
-    color: valo-font-color($v-selection-color, 0.9);
+    $font-color: valo-font-color($v-selection-color, 0.9);
+    color: $font-color;
+    text-shadow: valo-text-shadow($font-color: $font-color, $background-color: $v-selection-color);
 
     + .v-selected {
       $gradient-end: first(last(valo-gradient-color-stops($v-selection-color)));
@@ -501,7 +511,7 @@ $v-table-background-color: null !default;
 
     .#{$primary-stylename}-compact,
     .#{$primary-stylename}-small {
-      @include valo-table-spacing-style($row-height: round($v-table-row-height * $v-scaling-factor--small), $cell-padding-horizontal: round($v-table-cell-padding-horizontal / 2));
+      @include valo-table-spacing-style($row-height: $v-unit-size--small, $cell-padding-horizontal: round($v-table-cell-padding-horizontal / 2));
     }
 
     .#{$primary-stylename}-small {
@@ -640,11 +650,21 @@ $v-table-background-color: null !default;
   }
 
   .#{$primary-stylename}-cell-wrapper {
-    padding: $vertical-padding $cell-padding-horizontal;
-    min-height: $row-height;
+    padding-left: $cell-padding-horizontal;
+    padding-right: $cell-padding-horizontal;
 
     > .v-widget {
-      margin: round($vertical-padding / -2) round($cell-padding-horizontal / -2);
+      margin: round($cell-padding-horizontal / 4) round($cell-padding-horizontal / -2);
+
+      &.v-label,
+      &.v-checkbox,
+      &.v-select-optiongroup {
+        margin: 0;
+      }
+      &.v-progressbar {
+        margin-left: 0;
+        margin-right: 0;
+      }
     }
   }
 

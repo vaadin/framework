@@ -44,6 +44,7 @@
 
     label {
       @include valo-tappable;
+      display: inline-block;
     }
   }
 
