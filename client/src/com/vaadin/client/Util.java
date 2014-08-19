@@ -476,7 +476,7 @@ public class Util {
     /**
      * Defers the execution of {@link #runWebkitOverflowAutoFix(Element)}
      * 
-     * @since
+     * @since 7.2.6
      * @param elem
      *            with overflow auto
      */
@@ -963,7 +963,7 @@ public class Util {
      * necessary in cases where IE "forgets" to update child elements when they
      * resize.
      *
-     * @since
+     * @since 7.3
      * @param e
      *            The element to perform the hack on
      */
@@ -1438,7 +1438,7 @@ public class Util {
      *            performed. This may be "forward" or "backward", or "none" if
      *            the direction is unknown or irrelevant.
      * 
-     * @since
+     * @since 7.3
      */
     public native static void setSelectionRange(Element elem, int pos,
             int length, String direction)
@@ -1455,7 +1455,7 @@ public class Util {
      * string representation.<br/>
      * Eg. 50%, 123px, ...
      *
-     * @since
+     * @since 7.2.6
      * @author Vaadin Ltd
      */
     @SuppressWarnings("serial")
@@ -1474,7 +1474,6 @@ public class Util {
         /**
          * Gets the unit value by its type.
          *
-         * @since
          * @param type
          *            the type of the unit as found in the style.
          * @return the unit value.
@@ -1532,7 +1531,6 @@ public class Util {
         /**
          * Creates a {@link CssSize} using a value and its measurement unit.
          *
-         * @since
          * @param value
          *            the value.
          * @param unit
@@ -1594,7 +1592,6 @@ public class Util {
         /**
          * Check whether the two sizes are equals.
          *
-         * @since
          * @param cssSize1
          *            the first size to compare.
          * @param cssSize2

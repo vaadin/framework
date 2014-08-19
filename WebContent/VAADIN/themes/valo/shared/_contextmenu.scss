@@ -10,6 +10,7 @@
 
   .v-contextmenu .gwt-MenuItem {
     @include valo-selection-item-style;
+    display: block; // Firefox 24 needs this to make position: relative; work
   }
 
   .v-contextmenu .gwt-MenuItem-selected {

@@ -20,6 +20,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.CssLayoutElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.TreeElement;
@@ -127,6 +128,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
     public void tables() throws Exception {
         openTestURL("test");
         open("Tables");
+        check("Components in Cells");
         compareScreen("tables");
     }
 
@@ -156,6 +158,64 @@ public class ValoThemeUITest extends MultiBrowserTest {
         openTestURL("test");
         open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
         compareScreen("tabs");
+
+    }
+
+    @Test
+    public void tabsClosable() throws Exception {
+        openTestURL("test");
+        open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
+        check("Closable");
+        check("Disable tabs");
+        check("Overflow");
+        compareScreen("tabs-closable-disabled");
+    }
+
+    @Test
+    public void tabsAlignRight() throws Exception {
+        openTestURL("test");
+        open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
+        check("Right-aligned tabs");
+        compareScreen("tabs-align-right");
+    }
+
+    /**
+     * workaround for http://dev.vaadin.com/ticket/13763
+     */
+    private void check(String caption) {
+        WebElement cb = $(CheckBoxElement.class).caption(caption).first()
+                .findElement(By.xpath("input"));
+        if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+            testBenchElement(cb).click(0, 0);
+        } else {
+            cb.click();
+        }
+    }
+
+    @Test
+    public void tabsAlignCenter() throws Exception {
+        openTestURL("test");
+        open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
+        check("Centered tabs");
+        compareScreen("tabs-align-center");
+    }
+
+    @Test
+    public void tabsIconsOnTop() throws Exception {
+        openTestURL("test");
+        open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
+        check("Icons on top");
+        compareScreen("tabs-icons-on-top");
+    }
+
+    @Test
+    public void tabsEqualCompactPadded() throws Exception {
+        openTestURL("test");
+        open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
+        check("Equal-width tabs");
+        check("Padded tabbar");
+        check("Compact");
+        compareScreen("tabs-equal-compact-padded");
     }
 
     @Test

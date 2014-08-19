@@ -35,8 +35,12 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
       font-size: $v-font-size--tiny;
     }
 
+    .#{$primary-stylename}-compact,
     .#{$primary-stylename}-small {
       @include valo-textfield-style($unit-size: $v-unit-size--small, $states: normal, $background-color: null, $border: null, $gradient: null, $bevel: null, $shadow: null);
+    }
+
+    .#{$primary-stylename}-small {
       font-size: $v-font-size--small;
     }
 
@@ -52,6 +56,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
     @include valo-textfield-inline-icon($stylenames: inline-icon);
     @include valo-textfield-inline-icon($stylenames: inline-icon tiny, $unit-size: $v-unit-size--tiny, $font-size: $v-font-size--tiny);
+    @include valo-textfield-inline-icon($stylenames: inline-icon compact, $unit-size: $v-unit-size--small);
     @include valo-textfield-inline-icon($stylenames: inline-icon small, $unit-size: $v-unit-size--small, $font-size: $v-font-size--small);
     @include valo-textfield-inline-icon($stylenames: inline-icon large, $unit-size: $v-unit-size--large, $font-size: $v-font-size--large);
     @include valo-textfield-inline-icon($stylenames: inline-icon huge, $unit-size: $v-unit-size--huge, $font-size: $v-font-size--huge);
@@ -158,7 +163,10 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 
 @mixin valo-textfield-prompt-style ($background-color: $v-textfield-background-color) {
-  @if type-of($background-color) == color {
+  @if $background-color ==  transparent {
+    color: inherit;
+    @include opacity(.5);
+  } @else if type-of($background-color) == color {
     $font-color: valo-font-color($background-color);
     $font-color: mix($background-color, $font-color);
     @if is-dark-color($background-color) and saturation($background-color) > 50% {
@@ -205,14 +213,19 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
   border-radius: 0;
   background: $background-color;
   @include box-shadow(none);
-  @if $background-color == transparent {
-    color: inherit;
-  } @else if type-of($background-color) == color {
-    color: valo-font-color($background-color);
+
+  $font-color: inherit;
+  @if $background-color != transparent and type-of($background-color) == color {
+    $font-color: valo-font-color($background-color);
   }
+  color: $font-color;
 
   &:focus {
     @include box-shadow(none);
+  }
+
+  &[class*="prompt"] {
+    @include valo-textfield-prompt-style($background-color);
   }
 }
 

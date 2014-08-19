@@ -8118,7 +8118,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     }
 
     /**
-     * @since
+     * @since 7.2.6
      */
     public void onUnregister() {
         if (addCloseHandler != null) {

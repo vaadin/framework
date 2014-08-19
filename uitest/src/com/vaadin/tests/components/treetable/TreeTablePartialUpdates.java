@@ -2,19 +2,21 @@ package com.vaadin.tests.components.treetable;
 
 import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.TreeTable;
 
-public class TreeTablePartialUpdates extends TestBase {
+public class TreeTablePartialUpdates extends AbstractTestUI {
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         TreeTable tt = new TreeTable();
         tt.setContainerDataSource(makeHierarchicalContainer());
         tt.setWidth("300px");
         addComponent(tt);
     }
 
+    @SuppressWarnings("unchecked")
     private Hierarchical makeHierarchicalContainer() {
         HierarchicalContainer hc = new HierarchicalContainer();
         hc.addContainerProperty("p1", String.class, "");
@@ -42,6 +44,7 @@ public class TreeTablePartialUpdates extends TestBase {
         return hc;
     }
 
+    @SuppressWarnings("unchecked")
     private void addNodesToRoot(HierarchicalContainer hc, Object root, int count) {
         for (int ix = 0; ix < count; ix++) {
             Object id = hc.addItem();
@@ -51,8 +54,8 @@ public class TreeTablePartialUpdates extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
-        return "";
+    protected String getTestDescription() {
+        return "Tests partial updates and how they affect cached rows and scroll position.";
     }
 
     @Override

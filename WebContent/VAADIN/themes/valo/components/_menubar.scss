@@ -91,7 +91,7 @@
   text-align: left;
 
   @if $unit-size {
-    line-height: $unit-size - first-number($v-border) * 2 - 1px;
+    line-height: $unit-size - first-number($v-border) * 2;
 
     > .#{$primary-stylename}-menuitem {
       padding: 0 round($unit-size/2.6);

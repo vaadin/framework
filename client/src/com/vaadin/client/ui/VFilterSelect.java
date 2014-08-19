@@ -421,7 +421,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         /**
          * Select the first item of the suggestions list popup.
          * 
-         * @since
+         * @since 7.2.6
          */
         public void selectFirstItem() {
             debug("VFS.SP: selectFirstItem()");
@@ -431,7 +431,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         /**
          * Select the last item of the suggestions list popup.
          * 
-         * @since
+         * @since 7.2.6
          */
         public void selectLastItem() {
             debug("VFS.SP: selectLastItem()");
@@ -1031,6 +1031,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * menu currently displays the last page with less items then the
          * maximum visibility (in which case the scroll is not active, but the
          * scroll is active for any other page in general).
+         * 
+         * @since 7.2.6
          */
         @Override
         public boolean isScrollActive() {
