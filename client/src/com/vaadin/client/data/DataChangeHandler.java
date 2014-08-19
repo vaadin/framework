@@ -56,4 +56,15 @@ public interface DataChangeHandler {
      *            the number of added rows
      */
     public void dataAdded(int firstRowIndex, int numberOfRows);
+
+    /**
+     * Called when rows requested with
+     * {@link DataSource#ensureAvailability(int, int)} rows are available.
+     * 
+     * @param firstRowIndex
+     *            the index of the first available row
+     * @param numberOfRows
+     *            the number of available rows
+     */
+    public void dataAvailable(int firstRowIndex, int numberOfRows);
 }

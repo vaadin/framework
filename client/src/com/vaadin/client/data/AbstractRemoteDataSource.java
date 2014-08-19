@@ -274,6 +274,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         if (dataChangeHandler != null && !cached.isEmpty()) {
             // Push currently cached data to the implementation
             dataChangeHandler.dataUpdated(cached.getStart(), cached.length());
+            dataChangeHandler.dataAvailable(cached.getStart(), cached.length());
         }
     }
 
@@ -332,6 +333,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                     cached = newUsefulData;
                 }
             }
+            dataChangeHandler.dataAvailable(cached.getStart(), cached.length());
 
             updatePinnedRows(rowData);
         }

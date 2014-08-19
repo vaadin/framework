@@ -133,6 +133,9 @@ public interface DataSource<T> {
      * This method triggers lazy loading of data if necessary. The change
      * handler registered using {@link #setDataChangeHandler(DataChangeHandler)}
      * is informed when new data has been loaded.
+     * <p>
+     * After any possible lazy loading and updates are done, the change handler
+     * is informed that new data is available.
      * 
      * @param firstRowIndex
      *            the index of the first needed row

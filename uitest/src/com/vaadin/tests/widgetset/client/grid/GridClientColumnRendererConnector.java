@@ -84,6 +84,8 @@ public class GridClientColumnRendererConnector extends
                     DelayedDataSource.this.firstRowIndex = firstRowIndex;
                     DelayedDataSource.this.numberOfRows = numberOfRows;
                     dataChangeHandler.dataUpdated(firstRowIndex, numberOfRows);
+                    dataChangeHandler
+                            .dataAvailable(firstRowIndex, numberOfRows);
                 }
             }.schedule(latency);
         }

@@ -25,6 +25,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
@@ -560,6 +562,11 @@ public class Grid<T> extends Composite implements
      * on initialization, but not after that.
      */
     private DataSource<T> dataSource;
+
+    /**
+     * Currently available row range in DataSource.
+     */
+    private Range currentDataAvailable = Range.withLength(0, 0);
 
     /**
      * The last column frozen counter from the left
@@ -1569,6 +1576,13 @@ public class Grid<T> extends Composite implements
             public void dataAdded(int firstIndex, int numberOfItems) {
                 escalator.getBody().insertRows(firstIndex, numberOfItems);
             }
+
+            @Override
+            public void dataAvailable(int firstIndex, int numberOfItems) {
+                currentDataAvailable = Range.withLength(firstIndex,
+                        numberOfItems);
+                fireEvent(new DataAvailableEvent(currentDataAvailable));
+            }
         });
 
         int previousRowCount = escalator.getBody().getRowCount();
@@ -2315,6 +2329,31 @@ public class Grid<T> extends Composite implements
      */
     public HandlerRegistration addSortHandler(SortEventHandler<T> handler) {
         return addHandler(handler, SortEvent.getType());
+    }
+
+    /**
+     * Register a GWT event handler for a data available event. This handler
+     * gets called whenever the {@link DataSource} for this Grid has new data
+     * available.
+     * <p>
+     * This handle will be fired with the current available data after
+     * registration is done.
+     * 
+     * @param handler
+     *            a data available event handler
+     * @return the registartion for the event
+     */
+    public HandlerRegistration addDataAvailableHandler(
+            final DataAvailableHandler handler) {
+        // Deferred call to handler with current row range
+        Scheduler.get().scheduleFinally(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                handler.onDataAvailable(new DataAvailableEvent(
+                        currentDataAvailable));
+            }
+        });
+        return addHandler(handler, DataAvailableEvent.TYPE);
     }
 
     /**

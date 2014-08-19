@@ -32,23 +32,23 @@ import com.vaadin.shared.util.SharedUtil;
  * A simple list based on an in-memory data source for simply adding a list of
  * row pojos to the grid. Based on a wrapped list instance which supports adding
  * and removing of items.
- *
+ * 
  * <p>
  * Usage:
- *
+ * 
  * <pre>
  * ListDataSource&lt;Integer&gt; ds = new ListDataSource&lt;Integer&gt;(1, 2, 3, 4);
- *
+ * 
  * // Add item to the data source
  * ds.asList().add(5);
- *
+ * 
  * // Remove item from the data source
  * ds.asList().remove(3);
- *
+ * 
  * // Add multiple items
  * ds.asList().addAll(Arrays.asList(5, 6, 7));
  * </pre>
- *
+ * 
  * @since
  * @author Vaadin Ltd
  */
@@ -202,6 +202,7 @@ public class ListDataSource<T> implements DataSource<T> {
                     // Have to update the whole list as the removal does not
                     // have to be a continuous range
                     changeHandler.dataUpdated(0, ds.size());
+                    changeHandler.dataAvailable(0, ds.size());
                 }
                 return true;
             }
@@ -215,6 +216,7 @@ public class ListDataSource<T> implements DataSource<T> {
                     // Have to update the whole list as the retain does not
                     // have to be a continuous range
                     changeHandler.dataUpdated(0, ds.size());
+                    changeHandler.dataAvailable(0, ds.size());
                 }
                 return true;
             }
@@ -344,8 +346,8 @@ public class ListDataSource<T> implements DataSource<T> {
      * data source after the data source has been constructed. To add or remove
      * items to the data source after it has been constructed use
      * {@link ListDataSource#asList()}.
-     *
-     *
+     * 
+     * 
      * @param datasource
      *            The list to use for providing the data to the grid
      */
@@ -361,7 +363,7 @@ public class ListDataSource<T> implements DataSource<T> {
      * Constructs a data source with a set of rows. You can dynamically add and
      * remove rows from the data source via the list you get from
      * {@link ListDataSource#asList()}
-     *
+     * 
      * @param rows
      *            The rows to initially add to the data source
      */
@@ -380,6 +382,7 @@ public class ListDataSource<T> implements DataSource<T> {
             throw new IllegalStateException(
                     "Trying to fetch rows outside of array");
         }
+        changeHandler.dataAvailable(firstRowIndex, numberOfRows);
     }
 
     @Override
@@ -403,7 +406,7 @@ public class ListDataSource<T> implements DataSource<T> {
      * <p>
      * Note: The list is not the same list as passed into the data source via
      * the constructor.
-     *
+     * 
      * @return Returns a list implementation that wraps the real list that backs
      *         the data source and provides events for the data source
      *         listeners.
@@ -421,7 +424,7 @@ public class ListDataSource<T> implements DataSource<T> {
 
     /**
      * Sort entire container according to a {@link Comparator}.
-     *
+     * 
      * @param comparator
      *            a comparator object, which compares two data source entries
      *            (beans/pojos)
