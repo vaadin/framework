@@ -236,10 +236,8 @@
 @mixin valo-datefield-popup-style {
   @include valo-overlay-style;
 
-  @include user-select(none);
-
-   margin-top: ceil($v-unit-size/8) !important;
-   cursor: default;
+  margin-top: ceil($v-unit-size/8) !important;
+  cursor: default;
   width: auto;
 
    table {

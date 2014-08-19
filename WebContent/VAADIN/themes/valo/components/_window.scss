@@ -102,7 +102,6 @@ $v-window-modality-curtain-background-color: #222 !default;
   }
 
   .#{$primary-stylename}-header {
-    @include user-select(none);
     cursor: move;
     line-height: $v-unit-size - 1px;
     padding-left: round($v-unit-size/3);

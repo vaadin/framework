@@ -95,6 +95,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
   @if contains($states, normal) {
     @include appearance(none);
+    @include user-select(text);
     margin: 0;
     font: inherit;
     font-size: $font-size;

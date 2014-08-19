@@ -199,6 +199,7 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-body {
     border: $v-table-border-width solid $border-color;
+    @include user-select(text);
   }
 
   .#{$primary-stylename}-table {

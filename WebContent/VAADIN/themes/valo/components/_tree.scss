@@ -29,7 +29,6 @@ $v-tree-expand-animation-enabled: false !default;
   .#{$primary-stylename} {
     position: relative;
     white-space: nowrap;
-    @include user-select(none);
 
     &:focus {
       outline: none;

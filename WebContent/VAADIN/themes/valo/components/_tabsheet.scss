@@ -161,7 +161,6 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 @mixin valo-tabsheet-tabcontainer-style ($primary-stylename: v-tabsheet) {
   position: relative;
-  @include user-select(none);
   @include box-sizing(border-box);
 
   &:before {

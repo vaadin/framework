@@ -35,6 +35,24 @@ $valo-global-included: false !default;
       -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
       -webkit-text-size-adjust: 100%;
+
+      // Disable text selection by default
+      @include user-select(none);
+
+      // Enable text selection for certain elements
+      input[type="text"],
+      .v-slot > .v-caption,
+      .v-gridlayout-slot > .v-caption,
+      .v-has-caption > .v-caption,
+      .v-formlayout-captioncell > .v-caption,
+      .v-csslayout > .v-caption {
+        @include user-select(text);
+      }
+
+      // Removes clear button from input fields introduced by IE10
+      input::-ms-clear {
+        display: none;
+      }
     }
 
     .v-ui {
@@ -54,11 +72,6 @@ $valo-global-included: false !default;
     .v-overlay-container {
       width: 0;
       height: 0;
-    }
-
-    // Removes clear button from input fields introduced by IE10
-    input::-ms-clear {
-      display: none;
     }
 
     .v-drag-element {
@@ -105,6 +118,7 @@ $valo-global-included: false !default;
 
     .v-icon {
       cursor: inherit;
+      @include user-select(none);
     }
 
     .v-icon,
