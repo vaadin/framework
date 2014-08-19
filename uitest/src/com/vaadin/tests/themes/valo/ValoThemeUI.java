@@ -71,6 +71,7 @@ public class ValoThemeUI extends UI {
         themeVariants.put("tests-valo-facebook", "Facebook");
         themeVariants.put("tests-valo-flatdark", "Flat dark");
         themeVariants.put("tests-valo-flat", "Flat");
+        themeVariants.put("tests-valo-light", "Light");
         themeVariants.put("tests-valo-metro", "Metro");
     }
     private TestIcon testIcon = new TestIcon(100);

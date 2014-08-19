@@ -181,7 +181,9 @@ $v-selection-item-selection-color: $v-selection-color !default;
 
 @mixin valo-selection-item-selected-style {
   @include valo-gradient($v-selection-item-selection-color);
-  color: valo-font-color($v-selection-item-selection-color, 0.9);
+  $font-color: valo-font-color($v-selection-item-selection-color, 0.9);
+  color: $font-color;
+  text-shadow: valo-text-shadow($font-color: $font-color, $background-color: $v-selection-item-selection-color);
 }
 
 

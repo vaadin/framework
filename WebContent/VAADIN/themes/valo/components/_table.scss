@@ -221,7 +221,6 @@ $v-table-background-color: null !default;
     @include valo-gradient($v-selection-color);
     background-origin: border-box;
     color: valo-font-color($v-selection-color, 0.9);
-    text-shadow: valo-button-text-shadow($v-selection-color, $v-bevel-depth);
 
     + .v-selected {
       $gradient-end: first(last(valo-gradient-color-stops($v-selection-color)));
