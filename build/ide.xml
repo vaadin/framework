@@ -92,6 +92,9 @@
             <antcall target="compile-theme" inheritRefs="true">
                 <param name="theme" value="tests-valo-blueprint" />
             </antcall>
+            <antcall target="compile-theme" inheritRefs="true">
+              <param name="theme" value="tests-valo-light" />
+            </antcall>
         </parallel>
     </target>
 

@@ -1,0 +1,24 @@
+$v-app-loading-text: "Light Valo";
+
+$v-background-color: hsl(0, 0, 99.5%);
+$v-app-background-color: #fff;
+$v-focus-color: hsl(218, 80%, 60%);
+$v-border: 1px solid (v-shade 0.6);
+$v-border-radius: 3px;
+$v-bevel: inset 0 1px 0 v-tint;
+$v-textfield-bevel: false;
+$v-gradient: v-linear 3%;
+$v-shadow: false;
+$valo-menu-background-color: hsl(218, 20%, 98%);
+$v-friendly-color: hsl(163, 61%, 41%);
+$v-error-indicator-color: hsl(349, 66%, 56%);
+
+
+@import "../valo/valo";
+
+.tests-valo-light .valo-menu .valo-menu-title {
+  background: $v-app-background-color;
+  color: $v-selection-color;
+  text-shadow: none;
+  border-color: first-color(valo-border($color: $v-app-background-color, $strength: 0.5));
+}

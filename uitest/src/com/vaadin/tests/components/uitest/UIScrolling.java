@@ -1,18 +1,19 @@
 package com.vaadin.tests.components.uitest;
 
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
-public class UIScrollTest extends TestBase {
+public class UIScrolling extends AbstractTestUI {
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         // Set layout to high enough to get scroll.
         getLayout().setHeight("2250px");
-        addComponent(new Button("scoll to 1000px", new Button.ClickListener() {
+        addComponent(new Button("scroll to 1000px", new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -32,7 +33,7 @@ public class UIScrollTest extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Windows can be programmatically scrolled";
     }
 

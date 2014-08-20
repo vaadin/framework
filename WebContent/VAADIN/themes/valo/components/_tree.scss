@@ -176,8 +176,9 @@ $v-tree-expand-animation-enabled: false !default;
 
 
   .#{$primary-stylename}-node-selected {
-    color: valo-font-color($v-selection-color, 0.9);
-    text-shadow: valo-button-text-shadow($v-selection-color, $v-bevel-depth);
+    $font-color: valo-font-color($v-selection-color, 0.9);
+    color: $font-color;
+    text-shadow: valo-text-shadow($font-color: $font-color, $background-color: $v-selection-item-selection-color);
 
     &:after {
       opacity: 1;

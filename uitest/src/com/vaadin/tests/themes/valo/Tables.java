@@ -26,9 +26,14 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.OptionGroup;
+import com.vaadin.ui.ProgressBar;
+import com.vaadin.ui.Slider;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.ColumnGenerator;
@@ -56,8 +61,9 @@ public class Tables extends VerticalLayout implements View {
     CheckBox compact = new CheckBox("Compact");
     CheckBox small = new CheckBox("Small");
     CheckBox rowIndex = new CheckBox("Row index", false);
-    CheckBox rowIcon = new CheckBox("Row icon", true);
+    CheckBox rowIcon = new CheckBox("Row icon", false);
     CheckBox rowCaption = new CheckBox("Row caption", false);
+    CheckBox componentsInCells = new CheckBox("Components in Cells", false);
 
     Table table;
 
@@ -76,7 +82,7 @@ public class Tables extends VerticalLayout implements View {
 
         wrap.addComponents(hierarchical, footer, sized, expandRatios, stripes,
                 verticalLines, horizontalLines, borderless, headers, compact,
-                small, rowIndex, rowCaption, rowIcon);
+                small, rowIndex, rowCaption, rowIcon, componentsInCells);
 
         ValueChangeListener update = new ValueChangeListener() {
             @Override
@@ -105,7 +111,7 @@ public class Tables extends VerticalLayout implements View {
                         borderless.getValue(), headers.getValue(),
                         compact.getValue(), small.getValue(),
                         rowIndex.getValue(), rowCaption.getValue(),
-                        rowIcon.getValue());
+                        rowIcon.getValue(), componentsInCells.getValue());
             }
         };
 
@@ -123,6 +129,7 @@ public class Tables extends VerticalLayout implements View {
         rowIndex.addValueChangeListener(update);
         rowCaption.addValueChangeListener(update);
         rowIcon.addValueChangeListener(update);
+        componentsInCells.addValueChangeListener(update);
 
         footer.setValue(false);
 
@@ -132,7 +139,7 @@ public class Tables extends VerticalLayout implements View {
             boolean expandRatios, boolean stripes, boolean verticalLines,
             boolean horizontalLines, boolean borderless, boolean headers,
             boolean compact, boolean small, boolean rowIndex,
-            boolean rowCaption, boolean rowIcon) {
+            boolean rowCaption, boolean rowIcon, boolean componentsInRows) {
         table.setSelectable(true);
         table.setMultiSelect(true);
         table.setSortEnabled(true);
@@ -156,32 +163,137 @@ public class Tables extends VerticalLayout implements View {
         table.setColumnAlignment(ValoThemeUI.INDEX_PROPERTY, Align.CENTER);
 
         table.removeContainerProperty("textfield");
-        table.addContainerProperty("textfield", TextField.class, null);
-
         table.removeGeneratedColumn("textfield");
-        table.addGeneratedColumn("textfield", new ColumnGenerator() {
-            @Override
-            public Object generateCell(Table source, Object itemId,
-                    Object columnId) {
-                TextField tf = new TextField();
-                tf.setInputPrompt("Type here…");
-                return tf;
-            }
-        });
-
         table.removeContainerProperty("button");
-        table.addContainerProperty("button", Button.class, null);
-
         table.removeGeneratedColumn("button");
-        table.addGeneratedColumn("button", new ColumnGenerator() {
-            @Override
-            public Object generateCell(Table source, Object itemId,
-                    Object columnId) {
-                Button b = new Button("Button");
-                return b;
-            }
-        });
+        table.removeContainerProperty("label");
+        table.removeGeneratedColumn("label");
+        table.removeContainerProperty("checkbox");
+        table.removeGeneratedColumn("checkbox");
+        table.removeContainerProperty("datefield");
+        table.removeGeneratedColumn("datefield");
+        table.removeContainerProperty("combobox");
+        table.removeGeneratedColumn("combobox");
+        table.removeContainerProperty("optiongroup");
+        table.removeGeneratedColumn("optiongroup");
+        table.removeContainerProperty("slider");
+        table.removeGeneratedColumn("slider");
+        table.removeContainerProperty("progress");
+        table.removeGeneratedColumn("progress");
 
+        if (componentsInRows) {
+            table.addContainerProperty("textfield", TextField.class, null);
+            table.addGeneratedColumn("textfield", new ColumnGenerator() {
+                @Override
+                public Object generateCell(Table source, Object itemId,
+                        Object columnId) {
+                    TextField tf = new TextField();
+                    tf.setInputPrompt("Type here…");
+                    // tf.addStyleName("compact");
+                    if ((Integer) itemId % 2 == 0) {
+                        tf.addStyleName("borderless");
+                    }
+                    return tf;
+                }
+            });
+
+            table.addContainerProperty("datefield", TextField.class, null);
+            table.addGeneratedColumn("datefield", new ColumnGenerator() {
+                @Override
+                public Object generateCell(Table source, Object itemId,
+                        Object columnId) {
+                    DateField tf = new DateField();
+                    tf.addStyleName("compact");
+                    if ((Integer) itemId % 2 == 0) {
+                        tf.addStyleName("borderless");
+                    }
+                    return tf;
+                }
+            });
+
+            table.addContainerProperty("combobox", TextField.class, null);
+            table.addGeneratedColumn("combobox", new ColumnGenerator() {
+                @Override
+                public Object generateCell(Table source, Object itemId,
+                        Object columnId) {
+                    ComboBox tf = new ComboBox();
+                    tf.setInputPrompt("Select");
+                    tf.addStyleName("compact");
+                    if ((Integer) itemId % 2 == 0) {
+                        tf.addStyleName("borderless");
+                    }
+                    return tf;
+                }
+            });
+
+            table.addContainerProperty("button", Button.class, null);
+            table.addGeneratedColumn("button", new ColumnGenerator() {
+                @Override
+                public Object generateCell(Table source, Object itemId,
+                        Object columnId) {
+                    Button b = new Button("Button");
+                    b.addStyleName("small");
+                    return b;
+                }
+            });
+
+            table.addContainerProperty("label", TextField.class, null);
+            table.addGeneratedColumn("label", new ColumnGenerator() {
+                @Override
+                public Object generateCell(Table source, Object itemId,
+                        Object columnId) {
+                    Label label = new Label("Label component");
+                    label.setSizeUndefined();
+                    label.addStyleName("bold");
+                    return label;
+                }
+            });
+
+            table.addContainerProperty("checkbox", TextField.class, null);
+            table.addGeneratedColumn("checkbox", new ColumnGenerator() {
+                @Override
+                public Object generateCell(Table source, Object itemId,
+                        Object columnId) {
+                    CheckBox cb = new CheckBox(null, true);
+                    return cb;
+                }
+            });
+
+            table.addContainerProperty("optiongroup", TextField.class, null);
+            table.addGeneratedColumn("optiongroup", new ColumnGenerator() {
+                @Override
+                public Object generateCell(Table source, Object itemId,
+                        Object columnId) {
+                    OptionGroup op = new OptionGroup();
+                    op.addItem("Male");
+                    op.addItem("Female");
+                    op.addStyleName("horizontal");
+                    return op;
+                }
+            });
+
+            table.addContainerProperty("slider", TextField.class, null);
+            table.addGeneratedColumn("slider", new ColumnGenerator() {
+                @Override
+                public Object generateCell(Table source, Object itemId,
+                        Object columnId) {
+                    Slider s = new Slider();
+                    s.setValue(30.0);
+                    return s;
+                }
+            });
+
+            table.addContainerProperty("progress", TextField.class, null);
+            table.addGeneratedColumn("progress", new ColumnGenerator() {
+                @Override
+                public Object generateCell(Table source, Object itemId,
+                        Object columnId) {
+                    ProgressBar bar = new ProgressBar();
+                    bar.setValue(0.7f);
+                    return bar;
+                }
+            });
+        }
         table.setFooterVisible(footer);
         if (footer) {
             table.setColumnFooter(ValoThemeUI.CAPTION_PROPERTY, "caption");

@@ -4,17 +4,18 @@ import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 
-public class LabelEmbeddedClickThroughForTable extends TestBase {
+public class LabelEmbeddedClickThroughForTable extends AbstractTestUI {
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Clicking on a Label or Embedded inside a Table should select the row in the same way that clicking on a text selects the row.";
     }
 
@@ -23,8 +24,9 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
         return 2688;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         Table table = new Table();
         table.setHeight("500px");
         table.setSelectable(true);
@@ -48,13 +50,13 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
         item.getItemProperty("Column 3")
                 .setValue(
                         new Label(
-                                "<a style=\"color: blue\" href=\"javascript:false\">Label A</a>",
+                                "<a style=\"color: blue\" href=\"javascript:false\">Label B</a>",
                                 ContentMode.HTML));
         item.getItemProperty("Column 4").setValue(
                 new Embedded("", new ThemeResource(
                         "../runo/icons/32/cancel.png")));
 
-        table.addListener(new ItemClickListener() {
+        table.addItemClickListener(new ItemClickListener() {
 
             @Override
             public void itemClick(ItemClickEvent event) {

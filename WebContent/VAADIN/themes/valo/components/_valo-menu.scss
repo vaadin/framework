@@ -87,10 +87,11 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
       img.v-icon {
         width: round($v-unit-size * 1.5);
         height: round($v-unit-size * 1.5);
-        border-radius: ceil($v-unit-size * 1.5 / 2);
+        border-radius: ceil($v-unit-size * 1.5 / 2 + first-number($v-border));
         box-shadow: valo-bevel-and-shadow($bevel: null, $shadow: $v-shadow);
         display: block;
         margin: 0 auto .3em;
+        border: valo-border();
       }
     }
 
@@ -101,10 +102,6 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
 
   .valo-menu-subtitle {
     @include valo-menu-subtitle-style($bg);
-
-    .valo-menu-badge {
-      color: mix(valo-font-color($bg), $v-selection-color);
-    }
   }
 
   .valo-menuitems {
@@ -177,9 +174,11 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
         padding: 0;
         height: $v-unit-size;
         color: valo-font-color($v-selection-color, 0.5);
+        max-width: 30%;
 
         .v-menubar-menuitem {
           line-height: $v-unit-size - 1px;
+          white-space: nowrap;
         }
 
         img.v-icon {
@@ -188,6 +187,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
           width: round($v-unit-size / 2);
           height: round($v-unit-size / 2);
           border-radius: ceil($v-unit-size / 4);
+          border: none;
         }
       }
 
@@ -228,7 +228,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
 
 @mixin valo-menu-style ($bg: $valo-menu-background-color) {
   height: 100%;
-  @include linear-gradient(to left, (scale-color($bg, $lightness: valo-gradient-opacity()*-1) 0%, $bg round($v-unit-size/4)), $fallback: $bg);
+  @include linear-gradient(to left, (darken($bg, valo-gradient-opacity() / 2) 0%, $bg round($v-unit-size/4)), $fallback: $bg);
   color: valo-font-color($bg, 0.5);
   font-size: round($v-font-size * 0.9);
   line-height: round($v-unit-size * 0.8);
@@ -256,6 +256,10 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
   color: valo-font-color($bg, 0.33);
   margin: round($v-unit-size/5) 0 round($v-unit-size/5) round($v-unit-size/2);
   border-bottom: valo-border($color: $bg, $strength: 0.5, $border: first-number($v-border) solid v-tone);
+
+  [class*="badge"] {
+    color: mix(valo-font-color($bg), $v-selection-color);
+  }
 }
 
 
@@ -286,6 +290,14 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
     overflow: hidden;
   }
 
+  [class*="badge"] {
+    @if abs($diff) < 50 {
+      color: mix(valo-font-color($bg), $v-selection-color);
+    } @else {
+      color: $active-color;
+    }
+  }
+  
   &.selected {
     background: if(is-dark-color($bg), darken($bg, 3%), lighten($bg, 5%));
 

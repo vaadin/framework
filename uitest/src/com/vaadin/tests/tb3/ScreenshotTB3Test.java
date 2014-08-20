@@ -180,9 +180,20 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      *         given reference image fails.
      */
     private File getErrorFileFromReference(File referenceFile) {
-        return new File(referenceFile.getAbsolutePath().replace(
-                getScreenshotReferenceDirectory(),
-                getScreenshotErrorDirectory()));
+
+        String absolutePath = referenceFile.getAbsolutePath();
+        String screenshotReferenceDirectory = getScreenshotReferenceDirectory();
+        String screenshotErrorDirectory = getScreenshotErrorDirectory();
+        // We throw an exception to safeguard against accidental reference
+        // deletion. See (#14446)
+        if (!absolutePath.contains(screenshotReferenceDirectory)) {
+            throw new IllegalStateException(
+                    "Reference screenshot not in reference directory. Screenshot path: '"
+                            + absolutePath + "', directory path: '"
+                            + screenshotReferenceDirectory + "'");
+        }
+        return new File(absolutePath.replace(screenshotReferenceDirectory,
+                screenshotErrorDirectory));
     }
 
     /**
@@ -248,11 +259,23 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     protected abstract String getScreenshotDirectory();
 
     /**
+     * @return the base directory of 'reference' and 'errors' screenshots with a
+     *         trailing file separator
+     */
+    private String getScreenshotDirectoryWithTrailingSeparator() {
+        String screenshotDirectory = getScreenshotDirectory();
+        if (!screenshotDirectory.endsWith(File.separator)) {
+            screenshotDirectory += File.separator;
+        }
+        return screenshotDirectory;
+    }
+
+    /**
      * @return the directory where reference images are stored (the 'reference'
      *         folder inside the screenshot directory)
      */
     private String getScreenshotReferenceDirectory() {
-        return getScreenshotDirectory() + "/reference";
+        return getScreenshotDirectoryWithTrailingSeparator() + "reference";
     }
 
     /**
@@ -260,7 +283,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      *         (the 'errors' folder inside the screenshot directory)
      */
     private String getScreenshotErrorDirectory() {
-        return getScreenshotDirectory() + "/errors";
+        return getScreenshotDirectoryWithTrailingSeparator() + "errors";
     }
 
     /**
@@ -366,7 +389,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
         }
 
         // WindowMaximizeRestoreTest_Windows_InternetExplorer_8_window-1-moved-maximized-restored.png
-        return getScreenshotReferenceDirectory() + "/"
+        return getScreenshotReferenceDirectory() + File.separator
                 + getScreenshotBaseName() + "_" + uniqueBrowserIdentifier + "_"
                 + identifier + ".png";
     }
@@ -399,13 +422,12 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
             errorDirectory.mkdirs();
         }
 
-        final String errorBase = getScreenshotErrorBaseName()
-                .replace("\\", "/");
+        final String errorBase = getScreenshotErrorBaseName();
         File[] files = errorDirectory.listFiles(new FileFilter() {
 
             @Override
             public boolean accept(File pathname) {
-                String thisFile = pathname.getAbsolutePath().replace("\\", "/");
+                String thisFile = pathname.getAbsolutePath();
                 if (thisFile.startsWith(errorBase)) {
                     return true;
                 }

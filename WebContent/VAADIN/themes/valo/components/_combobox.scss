@@ -67,6 +67,11 @@
       }
       .#{$primary-stylename}-button {
         border: none;
+        color: inherit;
+        @include opacity(.5);
+      }
+      &.#{$primary-stylename}-prompt .#{$primary-stylename}-input {
+        @include valo-textfield-prompt-style(transparent);
       }
     }
 
@@ -83,8 +88,12 @@
       font-size: $v-font-size--tiny;
     }
 
+    .#{$primary-stylename}-compact,
     .#{$primary-stylename}-small {
       @include valo-combobox-style($unit-size: $v-unit-size--small, $bevel: null, $shadow: null, $gradient: null, $border: null, $border-radius: null, $background-color: null, $states: normal);
+    }
+
+    .#{$primary-stylename}-small {
       font-size: $v-font-size--small;
     }
 

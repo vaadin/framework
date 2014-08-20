@@ -72,7 +72,7 @@ public class ValoMiscTests extends UI {
         table.setWidth("100%");
         table.setContainerDataSource(ValoThemeUI.generateContainer(200, true));
         Tables.configure(table, true, false, false, true, true, true, false,
-                true, false, false, false, false, false);
+                true, false, false, false, false, false, false);
         layout.addComponent(table);
 
     }

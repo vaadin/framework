@@ -331,7 +331,7 @@ public class MenuBar extends Widget implements PopupListener {
     /**
      * Gets the first item from the menu or null if no items.
      * 
-     * @since
+     * @since 7.2.6
      * @return the first item from the menu or null if no items.
      */
     public MenuItem getFirstItem() {
@@ -341,7 +341,7 @@ public class MenuBar extends Widget implements PopupListener {
     /**
      * Gest the last item from the menu or null if no items.
      * 
-     * @since
+     * @since 7.2.6
      * @return the last item from the menu or null if no items.
      */
     public MenuItem getLastItem() {
@@ -352,7 +352,7 @@ public class MenuBar extends Widget implements PopupListener {
     /**
      * Gets the index of the selected item.
      * 
-     * @since
+     * @since 7.2.6
      * @return the index of the selected item.
      */
     public int getSelectedIndex() {
@@ -532,7 +532,7 @@ public class MenuBar extends Widget implements PopupListener {
     /**
      * Scroll the selected item into view.
      * 
-     * @since
+     * @since 7.2.6
      */
     public void scrollSelectionIntoView() {
         scrollItemIntoView(selectedItem);
@@ -541,7 +541,7 @@ public class MenuBar extends Widget implements PopupListener {
     /**
      * Sets the menu scroll enabled or disabled.
      * 
-     * @since
+     * @since 7.2.6
      * @param enabled
      *            the enabled state of the scroll.
      */
@@ -565,7 +565,7 @@ public class MenuBar extends Widget implements PopupListener {
     /**
      * Gets whether the scroll is activate for this menu.
      * 
-     * @since
+     * @since 7.2.6
      * @return true if the scroll is active, otherwise false.
      */
     public boolean isScrollActive() {
@@ -580,7 +580,7 @@ public class MenuBar extends Widget implements PopupListener {
     /**
      * Gets the preferred height of the menu.
      * 
-     * @since
+     * @since 7.2.6
      */
     protected int getPreferredHeight() {
         return table.getOffsetHeight();

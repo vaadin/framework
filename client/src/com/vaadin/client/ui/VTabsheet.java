@@ -76,10 +76,7 @@ import com.vaadin.shared.ui.tabsheet.TabState;
 import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
 import com.vaadin.shared.ui.tabsheet.TabsheetState;
 
-public class VTabsheet extends VTabsheetBase implements Focusable,
-        SubPartAware,
-        // TODO: These listeners are due to be removed in 7.3
-        FocusHandler, BlurHandler, KeyDownHandler {
+public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware {
 
     private static class VCloseEvent {
         private Tab tab;
@@ -1362,7 +1359,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         /**
          * Delegate method for the onFocus event occurring on Tab.
          *
-         * @since
+         * @since 7.2.6
          * @param newFocusTab
          *            the new focused tab.
          * @see #onBlur(Tab)
@@ -1532,21 +1529,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     }
 
-    @Override
-    public void onBlur(BlurEvent event) {
-        selectionHandler.onBlur(event);
-    }
-
-    @Override
-    public void onFocus(FocusEvent event) {
-        selectionHandler.onFocus(event);
-    }
-
-    @Override
-    public void onKeyDown(KeyDownEvent event) {
-        selectionHandler.onKeyDown(event);
-    }
-
     /*
      * The tabs selection handler instance.
      */
@@ -1570,11 +1552,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
          */
         public void registerTab(Tab tab) {
 
-            // TODO: change VTabsheet.this to this in 7.3
-            tab.addBlurHandler(VTabsheet.this);
-            tab.addFocusHandler(VTabsheet.this);
-            tab.addKeyDownHandler(VTabsheet.this);
-
+            tab.addBlurHandler(this);
+            tab.addFocusHandler(this);
+            tab.addKeyDownHandler(this);
             tab.addClickHandler(this);
             tab.addMouseDownHandler(this);
         }

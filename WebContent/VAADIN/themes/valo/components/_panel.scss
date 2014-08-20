@@ -162,6 +162,8 @@ $v-panel-border: $v-border !default;
       left: 0;
       height: 0;
       border-top: $border-width solid first-color(valo-border($color: $v-app-background-color, $strength: 0.5));
+      $border-color: first-color(valo-border($color: $v-app-background-color, $strength: 1));
+      border-color: rgba($border-color, .5);
     }
   }
 
