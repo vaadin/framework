@@ -1,13 +1,14 @@
 package com.vaadin.tests.components.combobox;
 
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.combobox.FilteringMode;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.ComboBox;
 
-public class ComboBoxValueInput extends TestBase {
+public class ComboBoxValueInput extends AbstractTestUI {
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         (getLayout()).setSpacing(true);
 
         ComboBox cb = getComboBox("A combobox", false);
@@ -38,7 +39,7 @@ public class ComboBoxValueInput extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A combobox should always show the selected value when it is not focused. Entering a text when nothing is selected and blurring the combobox should reset the value. The same should happen when a value is selected";
     }
 
