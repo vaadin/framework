@@ -208,12 +208,10 @@ public class VCustomLayout extends ComplexPanel {
 
     /** Collect locations from template */
     private void scanForLocations(Element elem) {
-
-        final String location = elem.getAttribute("location");
-        if (!"".equals(location)) {
+        if (elem.hasAttribute("location")) {
+            final String location = elem.getAttribute("location");
             locationToElement.put(location, elem);
             elem.setInnerHTML("");
-
         } else {
             final int len = DOM.getChildCount(elem);
             for (int i = 0; i < len; i++) {
