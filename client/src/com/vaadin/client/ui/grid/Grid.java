@@ -722,18 +722,6 @@ public class Grid<T> extends Composite implements
         private boolean visible = true;
 
         /**
-         * The text displayed in the header of the column
-         */
-        @Deprecated
-        private String header;
-
-        /**
-         * Text displayed in the column footer
-         */
-        @Deprecated
-        private String footer;
-
-        /**
          * Width of column in pixels
          */
         private int width = 100;
