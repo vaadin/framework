@@ -91,8 +91,8 @@ public class ServerRpcHandler implements Serializable {
             } else {
                 syncId = -1;
             }
-            invocations = new JSONArray(
-                    json.getString(ApplicationConstants.RPC_INVOCATIONS));
+            invocations = json
+                    .getJSONArray(ApplicationConstants.RPC_INVOCATIONS);
         }
 
         /**
