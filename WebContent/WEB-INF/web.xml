@@ -67,6 +67,11 @@
     </servlet>
 
     <servlet>
+        <servlet-name>VaadinStaticFiles</servlet-name>
+        <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+        <async-supported>false</async-supported>
+    </servlet>
+    <servlet>
         <servlet-name>VaadinApplicationRunner</servlet-name>
         <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
         <!-- Non-default values for testing purposes -->
@@ -98,11 +103,9 @@
     </servlet>
 
     <servlet>
-        <!-- 
-            This servlet is a separate instance for the sole purpose of 
+        <!-- This servlet is a separate instance for the sole purpose of 
             testing #12446 (com.vaadin.tests.components.ui.TimeoutRedirectResetsOnActivity) 
-            because it modifies the VaadinService timeout parameters 
-        -->
+            because it modifies the VaadinService timeout parameters -->
         <servlet-name>VaadinApplicationRunnerWithTimeoutRedirect</servlet-name>
         <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
         <init-param>
@@ -110,7 +113,7 @@
             <param-value>false</param-value>
         </init-param>
     </servlet>
-    
+
     <servlet>
         <servlet-name>VaadinApplicationRunnerWithPush</servlet-name>
         <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
@@ -179,7 +182,7 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>VaadinApplicationRunner</servlet-name>
+        <servlet-name>VaadinStaticFiles</servlet-name>
         <url-pattern>/VAADIN/*</url-pattern>
     </servlet-mapping>
 
