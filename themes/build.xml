@@ -18,6 +18,8 @@
     <union id="jar.includes">
         <fileset dir="${result.dir}">
             <include name="VAADIN/themes/**" />
+            <exclude name="VAADIN/themes/*-tests*/**" />
+            <exclude name="VAADIN/themes/tests-*/**" />
         </fileset>
     </union>
 
