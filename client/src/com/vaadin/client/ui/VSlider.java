@@ -22,7 +22,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -122,7 +121,6 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         // Hide initially
         smaller.getStyle().setDisplay(Display.NONE);
         bigger.getStyle().setDisplay(Display.NONE);
-        handle.getStyle().setVisibility(Visibility.HIDDEN);
 
         sinkEvents(Event.MOUSEEVENTS | Event.ONMOUSEWHEEL | Event.KEYEVENTS
                 | Event.FOCUSEVENTS | Event.TOUCHEVENTS);
@@ -254,9 +252,6 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
         // clear unnecessary opposite handle attribute
         handle.getStyle().clearProperty(oppositeHandleAttribute);
-
-        // Restore visibility
-        handle.getStyle().setVisibility(Visibility.VISIBLE);
     }
 
     @Override
