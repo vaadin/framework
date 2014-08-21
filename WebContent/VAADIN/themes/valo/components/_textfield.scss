@@ -199,7 +199,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 
 @mixin valo-textfield-readonly-style {
   background: $v-textfield-background-color--readonly;
-  color: valo-font-color($v-textfield-background-color--readonly)
+  color: valo-font-color($v-textfield-background-color--readonly);
   @include box-shadow(none);
   &:focus {
     box-shadow: none;
