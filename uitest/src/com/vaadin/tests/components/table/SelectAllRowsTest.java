@@ -35,14 +35,9 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class SelectAllRowsTest extends MultiBrowserTest {
 
-    private final static String TABLE_ROW = "v-table-row";
-
     @Override
-    protected DesiredCapabilities getDesiredCapabilities() {
-        DesiredCapabilities cap = new DesiredCapabilities(
-                super.getDesiredCapabilities());
-        cap.setCapability("requireWindowFocus", true);
-        return cap;
+    protected boolean requireWindowFocusForIE() {
+        return true;
     }
 
     @Override

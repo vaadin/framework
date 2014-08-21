@@ -266,12 +266,15 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     private void setupRemoteDriver(DesiredCapabilities capabilities)
             throws Exception {
         if (BrowserUtil.isIE(capabilities)) {
-            capabilities.setCapability(
-                    InternetExplorerDriver.REQUIRE_WINDOW_FOCUS,
-                    requireWindowFocusForIE());
-            capabilities.setCapability(
-                    InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING,
-                    usePersistentHoverForIE());
+            if (requireWindowFocusForIE()) {
+                capabilities.setCapability(
+                        InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
+            }
+            if (!usePersistentHoverForIE()) {
+                capabilities.setCapability(
+                        InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING,
+                        false);
+            }
         }
 
         WebDriver dr = TestBench.createDriver(new RemoteWebDriver(new URL(
@@ -383,7 +386,10 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @param desiredCapabilities
      */
     public void setDesiredCapabilities(DesiredCapabilities desiredCapabilities) {
-        this.desiredCapabilities = desiredCapabilities;
+        // Make a copy as the desired capabilities can come from a shared,
+        // static resource. This will cause all kinds of problems if some test
+        // modifies the capabilities
+        this.desiredCapabilities = new DesiredCapabilities(desiredCapabilities);
     }
 
     /**
@@ -958,10 +964,25 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
          * Checks if the given capabilities refer to Internet Explorer 8
          * 
          * @param capabilities
+         * @param version
          * @return true if the capabilities refer to IE8, false otherwise
          */
         public static boolean isIE8(DesiredCapabilities capabilities) {
-            return isIE(capabilities) && "8".equals(capabilities.getVersion());
+            return isIE(8, capabilities);
+        }
+
+        /**
+         * Checks if the given capabilities refer to Internet Explorer of the
+         * given version
+         * 
+         * @param capabilities
+         * @param version
+         * @return true if the capabilities refer to IE of the given version,
+         *         false otherwise
+         */
+        public static boolean isIE(int version, DesiredCapabilities capabilities) {
+            return isIE(capabilities)
+                    && ("" + version).equals(capabilities.getVersion());
         }
 
         /**
