@@ -522,6 +522,7 @@
   color: valo-font-color($v-selection-color);
   @include valo-gradient($v-selection-color);
   border: none;
+  font-weight: max(600, $v-font-weight + 100);
 }
 
 
