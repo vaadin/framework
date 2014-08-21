@@ -79,7 +79,7 @@ $v-letter-spacing--h4:    0               !default;
    > h4
    > .#{$primary-stylename}-h1,
    > .#{$primary-stylename}-h2,
-   > .#{$primary-stylename}-h3
+   > .#{$primary-stylename}-h3,
    > .#{$primary-stylename}-h4 {
       &:first-child {
         margin-top: $v-font-size;
@@ -91,7 +91,7 @@ $v-letter-spacing--h4:    0               !default;
   .v-verticallayout > div > .v-slot:first-child {
     h1, .#{$primary-stylename}-h1,
     h2, .#{$primary-stylename}-h2,
-    h3, .#{$primary-stylename}-h3
+    h3, .#{$primary-stylename}-h3,
     h4, .#{$primary-stylename}-h4 {
       margin-top: $v-font-size;
     }

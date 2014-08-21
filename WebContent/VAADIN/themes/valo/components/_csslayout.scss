@@ -14,7 +14,7 @@ $v-component-group-spacing: null !default;
     }
 
     .#{$primary-stylename}-v-component-group {
-      @include valo-component-group($primary-stylename);
+      @include valo-component-group;
     }
   }
 }
