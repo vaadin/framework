@@ -31,7 +31,6 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.Touch;
@@ -1963,26 +1962,28 @@ public class Grid<T> extends Composite implements
         RowContainer container = escalator.findRowContainer(e);
         Cell cell = container != null ? container.getCell(e) : null;
 
-        if (doEditorRowEvent(event, container, cell)) {
+        if (handleEditorRowEvent(event, container, cell)) {
             return;
         }
 
-        if (container == escalator.getHeader()) {
-            if (getHeader().getRow(cell.getRow()).isDefault()) {
-                handleDefaultRowEvent(cell, event);
-            }
-        }
-
-        if (doRendererEvent(event, container, cell)) {
+        if (handleHeaderDefaultRowEvent(event, container, cell)) {
             return;
         }
 
-        if (doActiveCellEvent(event, container, cell)) {
+        if (handleRendererEvent(event, container, cell)) {
+            return;
+        }
+
+        if (handleNavigationEvent(event, container, cell)) {
+            return;
+        }
+
+        if (handleActiveCellEvent(event, container, cell)) {
             return;
         }
     }
 
-    private boolean doEditorRowEvent(Event event, RowContainer container,
+    private boolean handleEditorRowEvent(Event event, RowContainer container,
             Cell cell) {
         if (editorRow.getState() != State.INACTIVE) {
             if (event.getTypeInt() == Event.ONKEYDOWN
@@ -2006,7 +2007,7 @@ public class Grid<T> extends Composite implements
         return false;
     }
 
-    private boolean doRendererEvent(Event event, RowContainer container,
+    private boolean handleRendererEvent(Event event, RowContainer container,
             Cell cell) {
 
         if (container == escalator.getBody() && cell != null) {
@@ -2026,22 +2027,21 @@ public class Grid<T> extends Composite implements
         return false;
     }
 
-    private boolean doActiveCellEvent(Event event, RowContainer container,
+    private boolean handleActiveCellEvent(Event event, RowContainer container,
             Cell cell) {
         Collection<String> navigation = activeCellHandler.getNavigationEvents();
         if (navigation.contains(event.getType())
                 && (Util.getFocusedElement() == getElement() || cell != null)) {
             activeCellHandler.handleNavigationEvent(event, cell);
         }
-        handleGridNavigation(event, cell);
-
         return false;
     }
 
-    private void handleGridNavigation(Event event, Cell cell) {
+    private boolean handleNavigationEvent(Event event, RowContainer unused,
+            Cell cell) {
         if (!event.getType().equals(BrowserEvents.KEYDOWN)) {
             // Only handle key downs
-            return;
+            return false;
         }
 
         int newRow = -1;
@@ -2080,15 +2080,24 @@ public class Grid<T> extends Composite implements
             break;
         }
         default:
-            return;
+            return false;
         }
 
         scrollToRow(newRow);
+
+        return true;
     }
 
     private Point rowEventTouchStartingPoint;
 
-    private boolean handleDefaultRowEvent(final Cell cell, NativeEvent event) {
+    private boolean handleHeaderDefaultRowEvent(Event event, RowContainer container,
+            final Cell cell) {
+        if (container != escalator.getHeader()) {
+            return false;
+        }
+        if (!getHeader().getRow(cell.getRow()).isDefault()) {
+            return false;
+        }
         if (!getColumn(cell.getColumn()).isSortable()) {
             // Only handle sorting events if the column is sortable
             return false;
