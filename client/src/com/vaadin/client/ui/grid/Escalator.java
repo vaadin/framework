@@ -2002,10 +2002,10 @@ public class Escalator extends Widget {
 
             Profiler.enter("Escalator.AbstractStaticRowContainer.reapplyDefaultRowHeights");
 
-            TableRowElement tr = root.getRows().getItem(0);
+            Element tr = root.getRows().getItem(0);
             while (tr != null) {
-                reapplyRowHeight(tr, getDefaultRowHeight());
-                tr = TableRowElement.as(tr.getNextSiblingElement());
+                reapplyRowHeight(TableRowElement.as(tr), getDefaultRowHeight());
+                tr = tr.getNextSiblingElement();
             }
 
             /*
