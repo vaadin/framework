@@ -82,10 +82,10 @@ public class EditorRow<T> {
         boolean rowVisible = grid.getEscalator().getVisibleRowRange()
                 .contains(rowIndex);
 
-        if (!rowVisible) {
-            grid.scrollToRow(rowIndex, ScrollDestination.MIDDLE);
+        if (rowVisible) {
+            show();
         } else {
-            grid.getEscalator().getBody().refreshRows(rowIndex, 1);
+            grid.scrollToRow(rowIndex, ScrollDestination.MIDDLE);
         }
     }
 
@@ -96,14 +96,16 @@ public class EditorRow<T> {
      *             if this editor row is not in edit mode
      */
     public void cancel() {
+        if (!enabled) {
+            throw new IllegalStateException(
+                    "Cannot cancel edit: EditorRow is not enabled");
+        }
         if (state == State.INACTIVE) {
             throw new IllegalStateException(
                     "Cannot cancel edit: EditorRow is not in edit mode");
         }
-        state = State.INACTIVE;
         hideOverlay();
-
-        grid.getEscalator().getBody().refreshRows(rowIndex, 1);
+        state = State.INACTIVE;
     }
 
     public boolean isEnabled() {
@@ -127,8 +129,27 @@ public class EditorRow<T> {
         this.enabled = enabled;
     }
 
-    protected void setGrid(Grid<T> grid) {
+    protected void show() {
+        if (state == State.ACTIVATING) {
+            state = State.ACTIVE;
+            showOverlay(grid.getEscalator().getBody().getRowElement(rowIndex));
+        }
+    }
+
+    protected void setGrid(final Grid<T> grid) {
+        assert grid != null : "Grid cannot be null";
+        assert this.grid == null : "Can only attach EditorRow to Grid once";
+
         this.grid = grid;
+
+        grid.addDataAvailableHandler(new DataAvailableHandler() {
+            @Override
+            public void onDataAvailable(DataAvailableEvent event) {
+                if (event.getAvailableRows().contains(rowIndex)) {
+                    show();
+                }
+            }
+        });
     }
 
     protected State getState() {

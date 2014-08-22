@@ -17,20 +17,28 @@ package com.vaadin.tests.components.grid.basicfeatures.client;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 
 public class GridEditorRowTest extends GridBasicClientFeaturesTest {
 
-    @Test
-    public void testEditorRowOpening() throws Exception {
+    @Before
+    public void setUp() {
         openTestURL();
-
         selectMenuPath("Component", "State", "Editor row", "Enabled");
+    }
 
+    @Test
+    public void testProgrammaticOpening() throws Exception {
         selectMenuPath("Component", "State", "Editor row", "Edit row 5");
+        assertNotNull(getEditorRow());
+    }
 
+    @Test
+    public void testProgrammaticOpeningWithScroll() throws Exception {
+        selectMenuPath("Component", "State", "Editor row", "Edit row 100");
         assertNotNull(getEditorRow());
     }
 }

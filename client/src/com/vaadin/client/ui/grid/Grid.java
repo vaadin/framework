@@ -1001,13 +1001,6 @@ public class Grid<T> extends Composite implements
                     cell.getElement().removeAllChildren();
                 }
             }
-
-            if (rowIndex == editorRow.getRow()) {
-                if (editorRow.getState() == State.ACTIVATING) {
-                    editorRow.setState(State.ACTIVE);
-                    editorRow.showOverlay(rowElement);
-                }
-            }
         }
 
         @Override

@@ -17,6 +17,7 @@
 package com.vaadin.client.ui.grid;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.TableRowElement;
 
 /**
  * A representation of the rows in each of the sections (header, body and
@@ -182,8 +183,8 @@ public interface RowContainer {
      * @throws IllegalStateException
      *             if {@code index} is currently not available in the DOM
      */
-    public Element getRowElement(int index) throws IndexOutOfBoundsException,
-            IllegalStateException;
+    public TableRowElement getRowElement(int index)
+            throws IndexOutOfBoundsException, IllegalStateException;
 
     /**
      * Returns the root element of RowContainer
