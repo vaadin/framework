@@ -42,6 +42,7 @@
 
 # /WebContent/VAADIN/themes/valo/
 /WebContent/VAADIN/themes/valo/styles.css
+/WebContent/VAADIN/themes/tests-valo*/styles.css
 
 # /WebContent/VAADIN/widgetsets/
 /WebContent/VAADIN/widgetsets
