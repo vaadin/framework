@@ -37,6 +37,8 @@ public class TypeDataStore {
             .create();
     private final FastStringMap<JsArrayString> delegateToWidgetProperties = FastStringMap
             .create();
+    private final FastStringMap<Type> presentationTypes = FastStringMap
+            .create();
 
     /**
      * Maps connector class -> state property name -> hander method data
@@ -135,6 +137,10 @@ public class TypeDataStore {
         return get().delegateToWidgetProperties.get(type.getBaseTypeName());
     }
 
+    public static Type getPresentationType(Class<?> type) {
+        return get().presentationTypes.get(getType(type).getBaseTypeName());
+    }
+
     public void setDelegateToWidget(Class<?> clazz, String propertyName,
             String delegateValue) {
         Type type = getType(clazz);
@@ -148,6 +154,11 @@ public class TypeDataStore {
                     typeProperties);
         }
         typeProperties.push(propertyName);
+    }
+
+    public void setPresentationType(Class<?> type, Class<?> presentationType) {
+        presentationTypes.put(getType(type).getBaseTypeName(),
+                getType(presentationType));
     }
 
     public void setReturnType(Class<?> type, String methodName, Type returnType) {
