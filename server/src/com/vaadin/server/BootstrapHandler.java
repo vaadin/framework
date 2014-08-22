@@ -375,14 +375,6 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         String vaadinLocation = vaadinService.getStaticFileLocation(request)
                 + "/VAADIN/";
 
-        fragmentNodes
-                .add(new Element(Tag.valueOf("iframe"), "")
-                        .attr("tabIndex", "-1")
-                        .attr("id", "__gwt_historyFrame")
-                        .attr("style",
-                                "position:absolute;width:0;height:0;border:0;overflow:hidden")
-                        .attr("src", "javascript:false"));
-
         if (context.getPushMode().isEnabled()) {
             // Load client-side dependencies for push support
             String pushJS = vaadinLocation;
