@@ -118,4 +118,65 @@ public class BetweenTest {
         Between b2 = new Between("bar", 0, 1);
         Assert.assertFalse(b1.equals(b2));
     }
+
+    @Test
+    public void hashCode_nullStartValue_shouldBeEqual() {
+        Between b1 = new Between("foo", null, 2);
+        Between b2 = new Between("foo", null, 2);
+        Assert.assertEquals(b1.hashCode(), b2.hashCode());
+    }
+
+    @Test
+    public void hashCode_nullEndValue_shouldBeEqual() {
+        Between b1 = new Between("foo", 0, null);
+        Between b2 = new Between("foo", 0, null);
+        Assert.assertEquals(b1.hashCode(), b2.hashCode());
+    }
+
+    @Test
+    public void hashCode_nullPropertyId_shouldBeEqual() {
+        Between b1 = new Between(null, 0, 2);
+        Between b2 = new Between(null, 0, 2);
+        Assert.assertEquals(b1.hashCode(), b2.hashCode());
+    }
+
+    @Test
+    public void passesFilter_nullValue_filterIsPassed() {
+        String id = "id";
+        Between between = new Between(id, null, null);
+        Assert.assertTrue(between.passesFilter(id,
+                itemWithPropertyValue(id, null)));
+    }
+
+    @Test
+    public void passesFilter_nullStartValue_filterIsPassed() {
+        String id = "id";
+        Between between = new Between(id, null, 2);
+        Assert.assertTrue(between
+                .passesFilter(id, itemWithPropertyValue(id, 1)));
+    }
+
+    @Test
+    public void passesFilter_nullEndValue_filterIsPassed() {
+        String id = "id";
+        Between between = new Between(id, 0, null);
+        Assert.assertTrue(between
+                .passesFilter(id, itemWithPropertyValue(id, 1)));
+    }
+
+    @Test
+    public void passesFilter_nullStartValueAndEndValue_filterIsPassed() {
+        String id = "id";
+        Between between = new Between(id, null, null);
+        Assert.assertTrue(between
+                .passesFilter(id, itemWithPropertyValue(id, 1)));
+    }
+
+    @Test
+    public void passesFilter_nullStartValueAndEndValueAndValueIsNotComparable_filterIsNotPassed() {
+        String id = "id";
+        Between between = new Between(id, null, null);
+        Assert.assertFalse(between.passesFilter(id,
+                itemWithPropertyValue(id, new Object())));
+    }
 }
