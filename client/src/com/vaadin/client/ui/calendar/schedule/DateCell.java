@@ -18,7 +18,6 @@ package com.vaadin.client.ui.calendar.schedule;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -203,6 +202,8 @@ public class DateCell extends FocusableComplexPanel implements
 
             width = getOffsetWidth()
                     - Util.measureHorizontalBorder(getElement());
+            // Update moveWidth for any DateCellDayEvent child
+            updateEventCellsWidth();
             recalculateEventWidths();
         } else {
             removeStyleDependentName("Hsized");
@@ -221,6 +222,8 @@ public class DateCell extends FocusableComplexPanel implements
             // recalc heights&size for events. all other height sizes come
             // from css
             startingSlotHeight = slotElements[0].getOffsetHeight();
+            // Update slotHeight for each DateCellDayEvent child
+            updateEventCellsHeight();
             recalculateEventPositions();
 
             if (isToday()) {
@@ -327,14 +330,7 @@ public class DateCell extends FocusableComplexPanel implements
                     .setHeight(slotElementHeights[i], Unit.PX);
         }
 
-        Iterator<Widget> it = iterator();
-        while (it.hasNext()) {
-            Widget child = it.next();
-            if (child instanceof DateCellDayEvent) {
-                ((DateCellDayEvent) child).setSlotHeightInPX(getSlotHeight());
-            }
-
-        }
+        updateEventCellsHeight();
     }
 
     public int getSlotHeight() {
@@ -836,6 +832,22 @@ public class DateCell extends FocusableComplexPanel implements
             event.stopPropagation();
             weekgrid.getCalendar().getMouseEventListener()
                     .contextMenu(event, DateCell.this);
+        }
+    }
+
+    private void updateEventCellsWidth() {
+        for (Widget widget : getChildren()) {
+            if (widget instanceof DateCellDayEvent) {
+                ((DateCellDayEvent) widget).setMoveWidth(width);
+            }
+        }
+    }
+
+    private void updateEventCellsHeight() {
+        for (Widget widget : getChildren()) {
+            if (widget instanceof DateCellDayEvent) {
+                ((DateCellDayEvent) widget).setSlotHeightInPX(getSlotHeight());
+            }
         }
     }
 }
