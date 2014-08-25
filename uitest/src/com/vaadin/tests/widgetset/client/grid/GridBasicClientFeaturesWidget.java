@@ -27,8 +27,11 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.VLabel;
 import com.vaadin.client.ui.grid.Cell;
+import com.vaadin.client.ui.grid.EditorRowHandler;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.Grid.AbstractGridKeyEvent;
@@ -152,6 +155,14 @@ public class GridBasicClientFeaturesWidget extends
         grid.getElement().setId("testComponent");
         grid.setDataSource(ds);
         grid.setSelectionMode(SelectionMode.NONE);
+        grid.getEditorRow().setHandler(new EditorRowHandler<List<Data>>() {
+            @Override
+            public Widget getWidget(GridColumn<?, List<Data>> column) {
+                TextBox tb = new TextBox();
+                tb.setText("Column " + grid.getColumns().indexOf(column));
+                return tb;
+            }
+        });
 
         sorter = new ListSorter<List<Data>>(grid);
 

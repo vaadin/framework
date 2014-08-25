@@ -15,16 +15,22 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures.client;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 
 public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
 
@@ -70,5 +76,20 @@ public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
         getGridElement().getCell(5, 0).click();
         new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
         assertNull(getEditorRow());
+    }
+
+    @Test
+    public void testWidgetBinding() throws Exception {
+        selectMenuPath("Component", "State", "Editor row", "Edit row 100");
+        WebElement editorRow = getEditorRow();
+
+        List<WebElement> widgets = editorRow.findElements(By
+                .className("gwt-TextBox"));
+
+        assertEquals(GridBasicFeatures.COLUMNS, widgets.size());
+
+        for (int i = 0; i < GridBasicFeatures.COLUMNS; ++i) {
+            assertEquals("Column " + i, widgets.get(i).getAttribute("value"));
+        }
     }
 }

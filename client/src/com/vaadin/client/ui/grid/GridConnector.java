@@ -30,12 +30,14 @@ import java.util.logging.Logger;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.data.RpcDataSourceConnector.RpcDataSource;
+import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.GridStaticSection.StaticCell;
@@ -87,6 +89,8 @@ public class GridConnector extends AbstractHasComponentsConnector {
 
         private AbstractRendererConnector<Object> rendererConnector;
 
+        private AbstractFieldConnector editorConnector;
+
         public CustomGridColumn(String id,
                 AbstractRendererConnector<Object> rendererConnector) {
             super(rendererConnector.getRenderer());
@@ -116,6 +120,14 @@ public class GridConnector extends AbstractHasComponentsConnector {
             return rendererConnector;
         }
 
+        private AbstractFieldConnector getEditorConnector() {
+            return editorConnector;
+        }
+
+        private void setEditorConnector(AbstractFieldConnector editorConnector) {
+            this.editorConnector = editorConnector;
+        }
+
         private int resolveCurrentIndexFromState() {
             List<GridColumnState> columns = getState().columns;
             int numColumns = columns.size();
@@ -125,6 +137,18 @@ public class GridConnector extends AbstractHasComponentsConnector {
                 }
             }
             return -1;
+        }
+    }
+
+    private class CustomEditorRowHandler implements
+            EditorRowHandler<JSONObject> {
+
+        @Override
+        public Widget getWidget(GridColumn<?, JSONObject> column) {
+            assert column != null;
+            AbstractFieldConnector c = ((CustomGridColumn) column)
+                    .getEditorConnector();
+            return c != null ? c.getWidget() : null;
         }
     }
 
@@ -229,6 +253,8 @@ public class GridConnector extends AbstractHasComponentsConnector {
                 }
             }
         });
+
+        getWidget().getEditorRow().setHandler(new CustomEditorRowHandler());
     }
 
     @Override
@@ -362,12 +388,13 @@ public class GridConnector extends AbstractHasComponentsConnector {
                 getWidgetColumnIndex(columnIndex));
 
         GridColumnState columnState = getState().columns.get(columnIndex);
-        updateColumnFromState(column, columnState);
 
         assert column instanceof CustomGridColumn : "column at index "
                 + columnIndex + " is not a "
                 + CustomGridColumn.class.getSimpleName() + ", but a "
                 + column.getClass().getSimpleName();
+
+        updateColumnFromState((CustomGridColumn) column, columnState);
 
         if (columnState.rendererConnector != ((CustomGridColumn) column)
                 .getRendererConnector()) {
@@ -432,11 +459,12 @@ public class GridConnector extends AbstractHasComponentsConnector {
      * @param state
      *            The state to get the data from
      */
-    private static void updateColumnFromState(GridColumn<?, JSONObject> column,
+    private static void updateColumnFromState(CustomGridColumn column,
             GridColumnState state) {
         column.setVisible(state.visible);
         column.setWidth(state.width);
         column.setSortable(state.sortable);
+        column.setEditorConnector((AbstractFieldConnector) state.editorConnector);
     }
 
     /**

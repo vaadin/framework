@@ -1571,7 +1571,7 @@ public class Grid<T> extends Composite implements
         }
     }
 
-    private int findVisibleColumnIndex(GridColumn<?, T> column) {
+    protected int findVisibleColumnIndex(GridColumn<?, T> column) {
         int idx = 0;
         for (GridColumn<?, T> c : columns) {
             if (c == column) {
@@ -1583,7 +1583,7 @@ public class Grid<T> extends Composite implements
         return -1;
     }
 
-    private GridColumn<?, T> getColumnFromVisibleIndex(int index) {
+    protected GridColumn<?, T> getColumnFromVisibleIndex(int index) {
         int idx = -1;
         for (GridColumn<?, T> c : columns) {
             if (c.isVisible()) {
@@ -2436,7 +2436,7 @@ public class Grid<T> extends Composite implements
      * @param parent
      *            The parent to set
      */
-    private static native final void setParent(Widget widget, Widget parent)
+    static native final void setParent(Widget widget, Widget parent)
     /*-{
         widget.@com.google.gwt.user.client.ui.Widget::setParent(Lcom/google/gwt/user/client/ui/Widget;)(parent);
     }-*/;

@@ -15,6 +15,9 @@
  */
 package com.vaadin.client.ui.grid;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
@@ -23,6 +26,7 @@ import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.grid.Escalator.AbstractRowContainer;
 import com.vaadin.client.ui.grid.ScrollbarBundle.Direction;
 import com.vaadin.shared.ui.grid.ScrollDestination;
@@ -43,9 +47,13 @@ public class EditorRow<T> {
         INACTIVE, ACTIVATING, ACTIVE, COMMITTING
     }
 
+    private Grid<T> grid;
+
+    private EditorRowHandler<T> handler;
+
     private DivElement editorOverlay = DivElement.as(DOM.createDiv());
 
-    private Grid<T> grid;
+    private List<Widget> editorWidgets = new ArrayList<Widget>();
 
     private boolean enabled = false;
     private State state = State.INACTIVE;
@@ -110,6 +118,34 @@ public class EditorRow<T> {
         state = State.INACTIVE;
     }
 
+    /**
+     * Returns the handler responsible for binding data and editor widgets to
+     * this editor row.
+     * 
+     * @return the editor row handler or null if not set
+     */
+    public EditorRowHandler<T> getHandler() {
+        return handler;
+    }
+
+    /**
+     * Sets the handler responsible for binding data and editor widgets to this
+     * editor row.
+     * 
+     * @param rowHandler
+     *            the new editor row handler
+     * 
+     * @throws IllegalStateException
+     *             if this editor row is currently in edit mode
+     */
+    public void setHandler(EditorRowHandler<T> rowHandler) {
+        if (state != State.INACTIVE) {
+            throw new IllegalStateException(
+                    "Cannot set EditorRowHandler: EditorRow is currently in edit mode");
+        }
+        this.handler = rowHandler;
+    }
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -122,11 +158,16 @@ public class EditorRow<T> {
      * 
      * @throws IllegalStateException
      *             if in edit mode and trying to disable
+     * @throws IllegalStateException
+     *             if the editor row handler is not set
      */
     public void setEnabled(boolean enabled) {
         if (enabled == false && state != State.INACTIVE) {
             throw new IllegalStateException(
                     "Cannot disable: EditorRow is in edit mode");
+        } else if (enabled == true && getHandler() == null) {
+            throw new IllegalStateException(
+                    "Cannot enable: EditorRowHandler not set");
         }
         this.enabled = enabled;
     }
@@ -184,15 +225,30 @@ public class EditorRow<T> {
         setBounds(editorOverlay, tr.getOffsetLeft(), rowTop + bodyTop
                 - wrapperTop, tr.getOffsetWidth(), tr.getOffsetHeight());
 
+        tableWrapper.appendChild(editorOverlay);
+
         for (int i = 0; i < tr.getCells().getLength(); i++) {
             Element cell = createCell(tr.getCells().getItem(i));
-            editorOverlay.appendChild(cell);
-        }
 
-        tableWrapper.appendChild(editorOverlay);
+            editorOverlay.appendChild(cell);
+
+            Widget editor = getHandler().getWidget(
+                    grid.getColumnFromVisibleIndex(i));
+            if (editor != null) {
+                editorWidgets.add(editor);
+                cell.appendChild(editor.getElement());
+                Grid.setParent(editor, grid);
+            }
+        }
     }
 
     protected void hideOverlay() {
+        for (Widget w : editorWidgets) {
+            Grid.setParent(w, null);
+        }
+        editorWidgets.clear();
+
+        editorOverlay.removeAllChildren();
         editorOverlay.removeFromParent();
     }
 

@@ -56,7 +56,16 @@ public class GridColumnState implements Serializable {
      */
     public int width = 100;
 
+    /**
+     * The connector for the renderer used to render the cells in this column.
+     */
     public Connector rendererConnector;
+
+    /**
+     * The connector for the field used to edit cells in this column when the
+     * editor row is active.
+     */
+    public Connector editorConnector;
 
     /**
      * Are sorting indicators shown for a column. Default is false.
