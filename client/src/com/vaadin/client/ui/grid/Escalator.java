@@ -4623,4 +4623,49 @@ public class Escalator extends Widget {
         }
         return null;
     }
+
+    /**
+     * Sets whether a scroll direction is locked or not.
+     * <p>
+     * If a direction is locked, the escalator will refuse to scroll in that
+     * direction.
+     * 
+     * @param direction
+     *            the orientation of the scroll to set the lock status
+     * @param locked
+     *            <code>true</code> to lock, <code>false</code> to unlock
+     */
+    public void setScrollLocked(ScrollbarBundle.Direction direction,
+            boolean locked) {
+        switch (direction) {
+        case HORIZONTAL:
+            horizontalScrollbar.setLocked(locked);
+            break;
+        case VERTICAL:
+            verticalScrollbar.setLocked(locked);
+            break;
+        default:
+            throw new UnsupportedOperationException("Unexpected value: "
+                    + direction);
+        }
+    }
+
+    /**
+     * Checks whether or not an direction is locked for scrolling.
+     * 
+     * @param direction
+     *            the direction of the scroll of which to check the lock status
+     * @return <code>true</code> iff the direction is locked
+     */
+    public boolean isScrollLocked(ScrollbarBundle.Direction direction) {
+        switch (direction) {
+        case HORIZONTAL:
+            return horizontalScrollbar.isLocked();
+        case VERTICAL:
+            return verticalScrollbar.isLocked();
+        default:
+            throw new UnsupportedOperationException("Unexpected value: "
+                    + direction);
+        }
+    }
 }

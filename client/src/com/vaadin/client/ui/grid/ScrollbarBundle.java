@@ -39,6 +39,13 @@ import com.google.gwt.user.client.Timer;
  */
 abstract class ScrollbarBundle {
 
+    /**
+     * The orientation of the scrollbar.
+     */
+    public enum Direction {
+        VERTICAL, HORIZONTAL;
+    }
+
     private class TemporaryResizer extends Object {
         private static final int TEMPORARY_RESIZE_DELAY = 1000;
 
@@ -188,6 +195,11 @@ abstract class ScrollbarBundle {
                 root.getStyle().clearOverflowY();
             }
         }
+
+        @Override
+        public Direction getDirection() {
+            return Direction.VERTICAL;
+        }
     }
 
     /**
@@ -252,6 +264,11 @@ abstract class ScrollbarBundle {
                 root.getStyle().clearOverflowX();
             }
         }
+
+        @Override
+        public Direction getDirection() {
+            return Direction.HORIZONTAL;
+        }
     }
 
     protected final Element root = DOM.createDiv();
@@ -262,6 +279,8 @@ abstract class ScrollbarBundle {
     private double maxScrollPos = 0;
 
     private boolean scrollHandleIsVisible = false;
+
+    private boolean isLocked = false;
 
     /** @deprecarted access via {@link #getHandlerManager()} instead. */
     @Deprecated
@@ -369,6 +388,10 @@ abstract class ScrollbarBundle {
      *            the new scroll position in pixels
      */
     public final void setScrollPos(double px) {
+        if (isLocked()) {
+            return;
+        }
+
         double oldScrollPos = scrollPos;
         scrollPos = Math.max(0, Math.min(maxScrollPos, truncate(px)));
 
@@ -577,7 +600,13 @@ abstract class ScrollbarBundle {
      * the DOM.
      */
     private final void updateScrollPosFromDom() {
-        scrollPos = internalGetScrollPos();
+        int newScrollPos = internalGetScrollPos();
+        if (!isLocked()) {
+            scrollPos = newScrollPos;
+        } else if (scrollPos != newScrollPos) {
+            // we need to actually undo the setting of the scroll.
+            internalSetScrollPos(toInt32(scrollPos));
+        }
     }
 
     protected HandlerManager getHandlerManager() {
@@ -636,4 +665,33 @@ abstract class ScrollbarBundle {
     private static boolean pixelValuesEqual(final double num1, final double num2) {
         return Math.abs(num1 - num2) <= PIXEL_EPSILON;
     }
+
+    /**
+     * Locks or unlocks the scrollbar bundle.
+     * <p>
+     * A locked scrollbar bundle will refuse to scroll, both programmatically
+     * and via user-triggered events.
+     * 
+     * @param isLocked
+     *            <code>true</code> to lock, <code>false</code> to unlock
+     */
+    public void setLocked(boolean isLocked) {
+        this.isLocked = isLocked;
+    }
+
+    /**
+     * Checks whether the scrollbar bundle is locked or not.
+     * 
+     * @return <code>true</code> iff the scrollbar bundle is locked
+     */
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    /**
+     * Returns the scroll direction of this scrollbar bundle.
+     * 
+     * @return the scroll direction of this scrollbar bundle
+     */
+    public abstract Direction getDirection();
 }
