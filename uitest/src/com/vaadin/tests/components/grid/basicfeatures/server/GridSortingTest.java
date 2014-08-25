@@ -191,6 +191,75 @@ public class GridSortingTest extends GridBasicFeaturesTest {
 
     }
 
+    private void sendKeys(CharSequence... seq) {
+        new Actions(getDriver()).sendKeys(seq).perform();
+    }
+
+    private void holdKey(Keys key) {
+        new Actions(getDriver()).keyDown(key).perform();
+    }
+
+    private void releaseKey(Keys key) {
+        new Actions(getDriver()).keyUp(key).perform();
+    }
+
+    private void assertLog(String expected) {
+        assertEquals(expected, getLogRow(0));
+    }
+
+    @Test
+    public void testKeyboardMultiColumnSorting() throws InterruptedException {
+        openTestURL();
+
+        //
+        // NOTE: This is a work-around to get the focus to the first header
+        // cell.
+        // We can't use element.focus() because TestBench (or, rather, Selenium
+        // beneath it) has rather interesting bugs regarding focus handling.
+        //
+        getGridElement().getCell(0, 0).click();
+        sendKeys(Keys.ARROW_UP);
+
+        // Sort ASCENDING on first column
+        sendKeys(Keys.ENTER);
+        assertLog("2. Sort order: [Column 0 ASCENDING] by USER");
+
+        // Move to next column
+        sendKeys(Keys.RIGHT);
+
+        // Add this column to the existing sorting group
+        holdKey(Keys.SHIFT);
+        sendKeys(Keys.ENTER);
+        releaseKey(Keys.SHIFT);
+        assertLog("4. Sort order: [Column 0 ASCENDING, Column 1 ASCENDING] by USER");
+
+        // Move to next column
+        sendKeys(Keys.RIGHT);
+
+        // Add a third column to the sorting group
+        holdKey(Keys.SHIFT);
+        sendKeys(Keys.ENTER);
+        releaseKey(Keys.SHIFT);
+        assertLog("6. Sort order: [Column 0 ASCENDING, Column 1 ASCENDING, Column 2 ASCENDING] by USER");
+
+        // Move back to the second column
+        sendKeys(Keys.LEFT);
+
+        // Change sort direction of the second column to DESCENDING
+        holdKey(Keys.SHIFT);
+        sendKeys(Keys.ENTER);
+        releaseKey(Keys.SHIFT);
+        assertLog("8. Sort order: [Column 0 ASCENDING, Column 1 DESCENDING, Column 2 ASCENDING] by USER");
+
+        // Move back to the third column
+        sendKeys(Keys.RIGHT);
+
+        // Reset sorting to third column, ASCENDING
+        sendKeys(Keys.ENTER);
+        assertLog("10. Sort order: [Column 2 ASCENDING] by USER");
+
+    }
+
     private void sortBy(String column) {
         selectMenuPath("Component", "State", "Sort by column", column);
     }

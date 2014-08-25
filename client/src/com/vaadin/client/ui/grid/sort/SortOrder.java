@@ -32,6 +32,17 @@ public class SortOrder {
     private final SortDirection direction;
 
     /**
+     * Create a sort order descriptor with a default sorting direction value of
+     * {@link SortDirection#ASCENDING}.
+     * 
+     * @param column
+     *            a grid column descriptor object
+     */
+    public SortOrder(GridColumn<?, ?> column) {
+        this(column, SortDirection.ASCENDING);
+    }
+
+    /**
      * Create a sort order descriptor.
      * 
      * @param column
@@ -68,5 +79,14 @@ public class SortOrder {
      */
     public SortDirection getDirection() {
         return direction;
+    }
+
+    /**
+     * Returns a new SortOrder object with the sort direction reversed.
+     * 
+     * @return a new sort order object
+     */
+    public SortOrder getOpposite() {
+        return new SortOrder(column, direction.getOpposite());
     }
 }

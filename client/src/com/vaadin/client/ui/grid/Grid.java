@@ -1265,6 +1265,50 @@ public class Grid<T> extends Composite implements
         sinkEvents(getHeader().getConsumedEvents());
         sinkEvents(Arrays.asList(BrowserEvents.KEYDOWN, BrowserEvents.KEYUP,
                 BrowserEvents.KEYPRESS));
+
+        // Make ENTER and SHIFT+ENTER in the header perform sorting
+        addKeyUpHandler(new HeaderKeyUpHandler() {
+            @Override
+            public void onKeyUp(GridKeyUpEvent event) {
+                if (event.getNativeKeyCode() != KeyCodes.KEY_ENTER) {
+                    return;
+                }
+
+                final Cell cell = event.getActiveCell();
+                final GridColumn<?, T> column = columns.get(cell.getColumn());
+
+                // If SHIFT is down, we modify multi-sorting order
+                if (event.isShiftKeyDown() && sortOrder != null) {
+
+                    final SortOrder so = getSortOrder(column);
+
+                    if (so != null) {
+                        // Flip sort direction in-place
+                        final int idx = sortOrder.indexOf(so);
+                        sortOrder.set(idx, so.getOpposite());
+                    } else {
+                        // Add a new sort rule to the end of the list
+                        sortOrder.add(new SortOrder(column));
+                    }
+
+                } else {
+                    if (sortOrder.size() == 1
+                            && sortOrder.get(0).getColumn() == column) {
+
+                        // Reverse the sort order and re-sort
+                        sortOrder.set(0, sortOrder.get(0).getOpposite());
+                    } else {
+
+                        // Manually re-set the sorting order
+                        sortOrder.clear();
+                        sortOrder.add(new SortOrder(column));
+                    }
+                }
+
+                // We've modified the sort order, re-sort it now.
+                setSortOrder(sortOrder, SortEventOriginator.USER);
+            }
+        });
     }
 
     @Override
@@ -2083,8 +2127,8 @@ public class Grid<T> extends Composite implements
 
     private Point rowEventTouchStartingPoint;
 
-    private boolean handleHeaderDefaultRowEvent(Event event, RowContainer container,
-            final Cell cell) {
+    private boolean handleHeaderDefaultRowEvent(Event event,
+            RowContainer container, final Cell cell) {
         if (container != escalator.getHeader()) {
             return false;
         }
@@ -2488,9 +2532,11 @@ public class Grid<T> extends Composite implements
 
     private void setSortOrder(List<SortOrder> order,
             SortEventOriginator originator) {
-        sortOrder.clear();
-        if (order != null) {
-            sortOrder.addAll(order);
+        if (order != sortOrder) {
+            sortOrder.clear();
+            if (order != null) {
+                sortOrder.addAll(order);
+            }
         }
         sort(originator);
     }

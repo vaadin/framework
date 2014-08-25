@@ -28,10 +28,27 @@ public enum SortDirection implements Serializable {
     /**
      * Ascending (e.g. A-Z, 1..9) sort order
      */
-    ASCENDING,
+    ASCENDING {
+        @Override
+        public SortDirection getOpposite() {
+            return DESCENDING;
+        }
+    },
 
     /**
      * Descending (e.g. Z-A, 9..1) sort order
      */
-    DESCENDING
+    DESCENDING {
+        @Override
+        public SortDirection getOpposite() {
+            return ASCENDING;
+        }
+    };
+
+    /**
+     * Get the sort direction that is the direct opposite to this one.
+     * 
+     * @return a sort direction value
+     */
+    public abstract SortDirection getOpposite();
 }
