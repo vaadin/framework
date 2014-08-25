@@ -2,8 +2,8 @@ package com.vaadin.tests.layouts;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
-import com.vaadin.tests.components.AbstractTestCase;
-import com.vaadin.tests.util.Log;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -12,36 +12,22 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class TestLayoutClickListeners extends AbstractTestCase {
-
-    private Log log = new Log(5).setNumberLogRows(false);
+public class TestLayoutClickListeners extends AbstractTestUIWithLog {
 
     @Override
-    public void init() {
-        LegacyWindow w = new LegacyWindow("main window");
-        setMainWindow(w);
-        setTheme("tests-tickets");
-
+    protected void setup(VaadinRequest request) {
         HorizontalLayout layoutsLayout = new HorizontalLayout();
         layoutsLayout.setSpacing(true);
-        w.setContent(layoutsLayout);
+        addComponent(layoutsLayout);
 
         layoutsLayout.addComponent(createClickableGridLayout());
         layoutsLayout.addComponent(createClickableVerticalLayout());
         layoutsLayout.addComponent(createClickableAbsoluteLayout());
         layoutsLayout.addComponent(createClickableCSSLayout());
-
-        VerticalLayout mainLayout = new VerticalLayout();
-        mainLayout.setMargin(true);
-        mainLayout.setSpacing(true);
-        w.setContent(mainLayout);
-        mainLayout.addComponent(log);
-        mainLayout.addComponent(layoutsLayout);
     }
 
     private Component createClickableAbsoluteLayout() {
@@ -62,12 +48,12 @@ public class TestLayoutClickListeners extends AbstractTestCase {
                     @Override
                     public void buttonClick(
                             com.vaadin.ui.Button.ClickEvent event) {
-                        log.log("Button " + event.getButton().getCaption()
+                        log("Button " + event.getButton().getCaption()
                                 + " was clicked");
 
                     }
                 }));
-        al.addListener(new LayoutClickListener() {
+        al.addLayoutClickListener(new LayoutClickListener() {
 
             @Override
             public void layoutClick(LayoutClickEvent event) {
@@ -96,12 +82,12 @@ public class TestLayoutClickListeners extends AbstractTestCase {
                     @Override
                     public void buttonClick(
                             com.vaadin.ui.Button.ClickEvent event) {
-                        log.log("Button " + event.getButton().getCaption()
+                        log("Button " + event.getButton().getCaption()
                                 + " was clicked");
 
                     }
                 }));
-        cl.addListener(new LayoutClickListener() {
+        cl.addLayoutClickListener(new LayoutClickListener() {
 
             @Override
             public void layoutClick(LayoutClickEvent event) {
@@ -126,7 +112,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
         largeTextarea.setHeight("99%");
         gl.addComponent(largeTextarea, 0, 3, 3, 3);
 
-        gl.addListener(new LayoutClickListener() {
+        gl.addLayoutClickListener(new LayoutClickListener() {
 
             @Override
             public void layoutClick(LayoutClickEvent event) {
@@ -151,10 +137,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
         if (event.isDoubleClick()) {
             type = "double-click";
         }
-        log.log(layout + ": " + button + " " + type + " on " + target);
-        // + ", coordinates relative to the layout ("
-        // + event.getRelativeX() + ", " + event.getRelativeY() + ")");
-
+        log(layout + ": " + button + " " + type + " on " + target);
     }
 
     private Layout createClickableVerticalLayout() {
@@ -162,7 +145,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
         VerticalLayout gl = new VerticalLayout();
         addContent(gl, 5);
 
-        gl.addListener(new LayoutClickListener() {
+        gl.addLayoutClickListener(new LayoutClickListener() {
 
             @Override
             public void layoutClick(LayoutClickEvent event) {
@@ -196,7 +179,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "All layouts have click listeners attached and the events are shown in the event log at the top";
     }
 
@@ -204,5 +187,4 @@ public class TestLayoutClickListeners extends AbstractTestCase {
     protected Integer getTicketNumber() {
         return 3541;
     }
-
 }
