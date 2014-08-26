@@ -16,6 +16,7 @@
 package com.vaadin.client.ui.grid.renderers;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -70,14 +71,13 @@ public abstract class ComplexRenderer<T> implements Renderer<T> {
      * Returns the events that the renderer should consume. These are also the
      * events that the Grid will pass to
      * {@link #onBrowserEvent(Cell, NativeEvent)} when they occur.
-     * <code>null</code> if no events are consumed
      * 
-     * @return the consumed events, or null if no events are consumed
+     * @return a list of consumed events
      * 
      * @see com.google.gwt.dom.client.BrowserEvents
      */
     public Collection<String> getConsumedEvents() {
-        return null;
+        return Collections.emptyList();
     }
 
     /**
@@ -136,10 +136,12 @@ public abstract class ComplexRenderer<T> implements Renderer<T> {
      * Called when the cell is "activated" by pressing <code>enter</code>,
      * double clicking or performing a double tap on the cell.
      * 
+     * @param cell
+     *            the activated cell
      * @return <code>true</code> if event was handled and should not be
      *         interpreted as a generic gesture by Grid.
      */
-    public boolean onActivate() {
+    public boolean onActivate(Cell cell) {
         return false;
     }
 

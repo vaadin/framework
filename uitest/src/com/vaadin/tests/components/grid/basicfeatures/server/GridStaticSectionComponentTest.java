@@ -35,8 +35,7 @@ public class GridStaticSectionComponentTest extends GridBasicFeaturesTest {
 
         getGridElement().$(ButtonElement.class).first().click();
 
-        // Clicking also triggers sorting
-        assertEquals("2. Button clicked!", getLogRow(2));
+        assertEquals("2. Button clicked!", getLogRow(0));
     }
 
     @Test

@@ -372,8 +372,9 @@ public class Grid<T> extends Composite implements
          * Handle events that can change the currently active cell.
          */
         public void handleNavigationEvent(Event event, Cell cell) {
-            if (event.getType().equals(BrowserEvents.CLICK) && cell != null) {
+            if (event.getType().equals(BrowserEvents.CLICK)) {
                 setActiveCell(cell);
+                // Grid should have focus when clicked.
                 getElement().focus();
             } else if (event.getType().equals(BrowserEvents.KEYDOWN)) {
                 int newRow = activeRow;
@@ -1261,7 +1262,7 @@ public class Grid<T> extends Composite implements
         // Sink header events and key events
         sinkEvents(getHeader().getConsumedEvents());
         sinkEvents(Arrays.asList(BrowserEvents.KEYDOWN, BrowserEvents.KEYUP,
-                BrowserEvents.KEYPRESS));
+                BrowserEvents.KEYPRESS, BrowserEvents.DBLCLICK));
 
         // Make ENTER and SHIFT+ENTER in the header perform sorting
         addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
@@ -1994,26 +1995,35 @@ public class Grid<T> extends Composite implements
 
         Element e = Element.as(target);
         RowContainer container = escalator.findRowContainer(e);
-        Cell cell = container != null ? container.getCell(e) : null;
-
-        if (handleEditorRowEvent(event, container, cell)) {
-            return;
+        Cell cell;
+        boolean isGrid = Util.findWidget(e, null) == this;
+        if (container == null) {
+            cell = activeCellHandler.getActiveCell();
+            container = activeCellHandler.container;
+        } else {
+            cell = container.getCell(e);
         }
 
-        if (handleHeaderDefaultRowEvent(event, container, cell)) {
-            return;
-        }
+        if (isGrid) {
+            if (handleEditorRowEvent(event, container, cell)) {
+                return;
+            }
 
-        if (handleRendererEvent(event, container, cell)) {
-            return;
-        }
+            if (handleHeaderDefaultRowEvent(event, container, cell)) {
+                return;
+            }
 
-        if (handleNavigationEvent(event, container, cell)) {
-            return;
-        }
+            if (handleRendererEvent(event, container, cell)) {
+                return;
+            }
 
-        if (handleActiveCellEvent(event, container, cell)) {
-            return;
+            if (handleNavigationEvent(event, container, cell)) {
+                return;
+            }
+
+            if (handleActiveCellEvent(event, container, cell)) {
+                return;
+            }
         }
     }
 
@@ -2047,6 +2057,10 @@ public class Grid<T> extends Composite implements
         if (container == escalator.getBody() && cell != null) {
             GridColumn<?, T> gridColumn = getColumnFromVisibleIndex(cell
                     .getColumn());
+            boolean enterKey = event.getType().equals(BrowserEvents.KEYDOWN)
+                    && event.getKeyCode() == KeyCodes.KEY_ENTER;
+            boolean doubleClick = event.getType()
+                    .equals(BrowserEvents.DBLCLICK);
 
             if (gridColumn.getRenderer() instanceof ComplexRenderer) {
                 ComplexRenderer<?> cplxRenderer = (ComplexRenderer<?>) gridColumn
@@ -2056,6 +2070,11 @@ public class Grid<T> extends Composite implements
                         return true;
                     }
                 }
+
+                // Calls onActivate if KeyDown and Enter or double click
+                if ((enterKey || doubleClick) && cplxRenderer.onActivate(cell)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -2064,8 +2083,7 @@ public class Grid<T> extends Composite implements
     private boolean handleActiveCellEvent(Event event, RowContainer container,
             Cell cell) {
         Collection<String> navigation = activeCellHandler.getNavigationEvents();
-        if (navigation.contains(event.getType())
-                && (Util.getFocusedElement() == getElement() || cell != null)) {
+        if (navigation.contains(event.getType())) {
             activeCellHandler.handleNavigationEvent(event, cell);
         }
         return false;
@@ -2152,6 +2170,8 @@ public class Grid<T> extends Composite implements
             lazySorter.setMultisort(true);
             lazySorter.schedule(GridConstants.LONG_TAP_DELAY);
 
+            return true;
+
         } else if (BrowserEvents.TOUCHMOVE.equals(event.getType())) {
             if (event.getTouches().length() > 1) {
                 return false;
@@ -2172,8 +2192,10 @@ public class Grid<T> extends Composite implements
                 lazySorter.cancel();
             }
 
+            return true;
+
         } else if (BrowserEvents.TOUCHEND.equals(event.getType())) {
-            if (event.getTouches().length() > 0) {
+            if (event.getTouches().length() > 1) {
                 return false;
             }
 
@@ -2184,24 +2206,27 @@ public class Grid<T> extends Composite implements
                 lazySorter.run();
             }
 
+            return true;
+
         } else if (BrowserEvents.TOUCHCANCEL.equals(event.getType())) {
-            if (event.getChangedTouches().length() > 1) {
+            if (event.getTouches().length() > 1) {
                 return false;
             }
 
             lazySorter.cancel();
+
+            return true;
 
         } else if (BrowserEvents.CLICK.equals(event.getType())) {
             lazySorter.setCellReference(cell);
             lazySorter.setMultisort(event.getShiftKey());
             lazySorter.run();
 
-            // Active cell handling is also monitoring the click
-            // event so we allow event to propagate for it
+            // Click events should go onward to active cell logic
+            return false;
+        } else {
             return false;
         }
-
-        return true;
     }
 
     @Override

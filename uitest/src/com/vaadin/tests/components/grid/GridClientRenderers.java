@@ -21,7 +21,9 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
@@ -31,6 +33,7 @@ import com.vaadin.testbench.elements.NativeButtonElement;
 import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.elements.ServerClass;
 import com.vaadin.tests.annotations.TestCategory;
+import com.vaadin.tests.components.grid.GridElement.GridCellElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.widgetset.client.grid.GridClientColumnRendererConnector.Renderers;
 import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
@@ -246,6 +249,24 @@ public class GridClientRenderers extends MultiBrowserTest {
                 assertTrue("Grid sorted", false);
             }
         }
+    }
+
+    @Test
+    public void testComplexRendererOnActivate() {
+        openTestURL();
+
+        GridCellElement cell = getGrid().getCell(3, 1);
+        cell.click();
+        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+
+        assertEquals("onActivate was not called on KeyDown Enter.",
+                "Activated!", cell.getText());
+
+        cell = getGrid().getCell(4, 1);
+        cell.click();
+        new Actions(getDriver()).moveToElement(cell).doubleClick().perform();
+        assertEquals("onActivate was not called on double click.",
+                "Activated!", cell.getText());
     }
 
     private GridElement getGrid() {

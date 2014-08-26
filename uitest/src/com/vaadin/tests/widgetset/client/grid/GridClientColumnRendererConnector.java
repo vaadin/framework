@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.GridColumn;
@@ -330,6 +331,12 @@ public class GridClientColumnRendererConnector extends
                             .setBackgroundColor(hasData ? "green" : "red");
 
                     super.setContentVisible(cell, hasData);
+                }
+
+                @Override
+                public boolean onActivate(Cell cell) {
+                    cell.getElement().setInnerHTML("<span>Activated!</span>");
+                    return true;
                 }
             };
 
