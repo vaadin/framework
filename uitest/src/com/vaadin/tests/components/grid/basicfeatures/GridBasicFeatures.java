@@ -561,9 +561,27 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     public void execute(Grid c, String value, Object data) {
                         Item item = ds.addItemAt(0, new Object());
                         for (int i = 0; i < COLUMNS; i++) {
-                            item.getItemProperty(getColumnProperty(i))
-                                    .setValue("newcell: " + i);
+                            Class<?> type = ds.getType(getColumnProperty(i));
+                            if (String.class.isAssignableFrom(type)) {
+                                Property<String> itemProperty = getProperty(
+                                        item, i);
+                                itemProperty.setValue("newcell: " + i);
+                            } else if (Integer.class.isAssignableFrom(type)) {
+                                Property<Integer> itemProperty = getProperty(
+                                        item, i);
+                                itemProperty.setValue(Integer.valueOf(i));
+                            } else {
+                                // let the default value be taken implicitly.
+                            }
                         }
+                    }
+
+                    private <T extends Object> Property<T> getProperty(
+                            Item item, int i) {
+                        @SuppressWarnings("unchecked")
+                        Property<T> itemProperty = item
+                                .getItemProperty(getColumnProperty(i));
+                        return itemProperty;
                     }
                 }, null);
 
