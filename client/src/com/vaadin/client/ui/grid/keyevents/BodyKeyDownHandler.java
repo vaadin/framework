@@ -24,5 +24,5 @@ import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyDo
  * @since
  * @author Vaadin Ltd
  */
-public interface BodyKeyDownHandler<T> extends GridKeyDownHandler<T> {
+public interface BodyKeyDownHandler extends GridKeyDownHandler {
 }

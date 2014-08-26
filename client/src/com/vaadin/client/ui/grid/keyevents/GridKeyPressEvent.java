@@ -26,15 +26,15 @@ import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyPr
  * @since
  * @author Vaadin Ltd
  */
-public class GridKeyPressEvent<T> extends
-        AbstractGridKeyEvent<T, GridKeyPressHandler<T>> {
+public class GridKeyPressEvent extends
+        AbstractGridKeyEvent<GridKeyPressHandler> {
 
-    public GridKeyPressEvent(Grid<T> grid) {
+    public GridKeyPressEvent(Grid<?> grid) {
         super(grid);
     }
 
     @Override
-    protected void dispatch(GridKeyPressHandler<T> handler) {
+    protected void dispatch(GridKeyPressHandler handler) {
         super.dispatch(handler);
         if ((activeSection == GridSection.BODY && handler instanceof BodyKeyPressHandler)
                 || (activeSection == GridSection.HEADER && handler instanceof HeaderKeyPressHandler)

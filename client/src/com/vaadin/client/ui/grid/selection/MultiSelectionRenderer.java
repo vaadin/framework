@@ -584,13 +584,13 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         }
     }
 
-    private class SpaceKeyDownSelectHandler implements BodyKeyDownHandler<T> {
+    private class SpaceKeyDownSelectHandler implements BodyKeyDownHandler {
 
         private HandlerRegistration scrollHandler = null;
         private boolean spaceDown = false;
 
         @Override
-        public void onKeyDown(GridKeyDownEvent<T> event) {
+        public void onKeyDown(GridKeyDownEvent event) {
             if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE || spaceDown) {
                 return;
             }
@@ -634,10 +634,10 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
     public MultiSelectionRenderer(final Grid<T> grid) {
         this.grid = grid;
         spaceDown = grid.addKeyDownHandler(handler);
-        spaceUp = grid.addKeyUpHandler(new BodyKeyUpHandler<T>() {
+        spaceUp = grid.addKeyUpHandler(new BodyKeyUpHandler() {
 
             @Override
-            public void onKeyUp(GridKeyUpEvent<T> event) {
+            public void onKeyUp(GridKeyUpEvent event) {
                 if (event.getNativeKeyCode() == KeyCodes.KEY_SPACE) {
                     handler.spaceDown = false;
                 }

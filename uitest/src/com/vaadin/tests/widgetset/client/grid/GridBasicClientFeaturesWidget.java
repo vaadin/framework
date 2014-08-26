@@ -659,93 +659,92 @@ public class GridBasicClientFeaturesWidget extends
         }
 
         // Key Down Events
-        grid.addKeyDownHandler(new BodyKeyDownHandler<List<Data>>() {
+        grid.addKeyDownHandler(new BodyKeyDownHandler() {
             private final VLabel label = labels.get(0);
 
             @Override
-            public void onKeyDown(GridKeyDownEvent<List<Data>> event) {
+            public void onKeyDown(GridKeyDownEvent event) {
                 updateLabel(label, event);
             }
         });
 
-        grid.addKeyDownHandler(new HeaderKeyDownHandler<List<Data>>() {
+        grid.addKeyDownHandler(new HeaderKeyDownHandler() {
             private final VLabel label = labels.get(1);
 
             @Override
-            public void onKeyDown(GridKeyDownEvent<List<Data>> event) {
+            public void onKeyDown(GridKeyDownEvent event) {
                 updateLabel(label, event);
             }
         });
 
-        grid.addKeyDownHandler(new FooterKeyDownHandler<List<Data>>() {
+        grid.addKeyDownHandler(new FooterKeyDownHandler() {
             private final VLabel label = labels.get(2);
 
             @Override
-            public void onKeyDown(GridKeyDownEvent<List<Data>> event) {
+            public void onKeyDown(GridKeyDownEvent event) {
                 updateLabel(label, event);
             }
         });
 
         // Key Up Events
-        grid.addKeyUpHandler(new BodyKeyUpHandler<List<Data>>() {
+        grid.addKeyUpHandler(new BodyKeyUpHandler() {
             private final VLabel label = labels.get(3);
 
             @Override
-            public void onKeyUp(GridKeyUpEvent<List<Data>> event) {
+            public void onKeyUp(GridKeyUpEvent event) {
                 updateLabel(label, event);
             }
         });
 
-        grid.addKeyUpHandler(new HeaderKeyUpHandler<List<Data>>() {
+        grid.addKeyUpHandler(new HeaderKeyUpHandler() {
             private final VLabel label = labels.get(4);
 
             @Override
-            public void onKeyUp(GridKeyUpEvent<List<Data>> event) {
+            public void onKeyUp(GridKeyUpEvent event) {
                 updateLabel(label, event);
             }
         });
 
-        grid.addKeyUpHandler(new FooterKeyUpHandler<List<Data>>() {
+        grid.addKeyUpHandler(new FooterKeyUpHandler() {
             private final VLabel label = labels.get(5);
 
             @Override
-            public void onKeyUp(GridKeyUpEvent<List<Data>> event) {
+            public void onKeyUp(GridKeyUpEvent event) {
                 updateLabel(label, event);
             }
         });
 
         // Key Press Events
-        grid.addKeyPressHandler(new BodyKeyPressHandler<List<Data>>() {
+        grid.addKeyPressHandler(new BodyKeyPressHandler() {
             private final VLabel label = labels.get(6);
 
             @Override
-            public void onKeyPress(GridKeyPressEvent<List<Data>> event) {
+            public void onKeyPress(GridKeyPressEvent event) {
                 updateLabel(label, event);
             }
         });
 
-        grid.addKeyPressHandler(new HeaderKeyPressHandler<List<Data>>() {
+        grid.addKeyPressHandler(new HeaderKeyPressHandler() {
             private final VLabel label = labels.get(7);
 
             @Override
-            public void onKeyPress(GridKeyPressEvent<List<Data>> event) {
+            public void onKeyPress(GridKeyPressEvent event) {
                 updateLabel(label, event);
             }
         });
 
-        grid.addKeyPressHandler(new FooterKeyPressHandler<List<Data>>() {
+        grid.addKeyPressHandler(new FooterKeyPressHandler() {
             private final VLabel label = labels.get(8);
 
             @Override
-            public void onKeyPress(GridKeyPressEvent<List<Data>> event) {
+            public void onKeyPress(GridKeyPressEvent event) {
                 updateLabel(label, event);
             }
         });
 
     }
 
-    private void updateLabel(VLabel label,
-            AbstractGridKeyEvent<List<Data>, ?> event) {
+    private void updateLabel(VLabel label, AbstractGridKeyEvent<?> event) {
         String type = event.getNativeEvent().getType();
         Cell active = event.getActiveCell();
         String coords = "(" + active.getRow() + ", " + active.getColumn() + ")";

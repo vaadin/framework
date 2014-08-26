@@ -124,7 +124,7 @@ import com.vaadin.shared.ui.grid.SortEventOriginator;
 public class Grid<T> extends Composite implements
         HasSelectionChangeHandlers<T>, SubPartAware {
 
-    public static abstract class AbstractGridKeyEvent<T, HANDLER extends AbstractGridKeyEventHandler>
+    public static abstract class AbstractGridKeyEvent<HANDLER extends AbstractGridKeyEventHandler>
             extends KeyCodeEvent<HANDLER> {
 
         /**
@@ -134,13 +134,13 @@ public class Grid<T> extends Composite implements
             HEADER, BODY, FOOTER
         }
 
-        private Grid<T> grid;
+        private Grid<?> grid;
         protected Cell activeCell;
         protected GridSection activeSection;
         private final Type<HANDLER> associatedType = new Type<HANDLER>(
                 getBrowserEventType(), this);
 
-        public AbstractGridKeyEvent(Grid<T> grid) {
+        public AbstractGridKeyEvent(Grid<?> grid) {
             this.grid = grid;
         }
 
@@ -151,7 +151,7 @@ public class Grid<T> extends Composite implements
          * 
          * @return grid
          */
-        public Grid<T> getGrid() {
+        public Grid<?> getGrid() {
             return grid;
         }
 
@@ -182,9 +182,9 @@ public class Grid<T> extends Composite implements
         }
     }
 
-    private GridKeyDownEvent<T> keyDown = new GridKeyDownEvent<T>(this);
-    private GridKeyUpEvent<T> keyUp = new GridKeyUpEvent<T>(this);
-    private GridKeyPressEvent<T> keyPress = new GridKeyPressEvent<T>(this);
+    private GridKeyDownEvent keyDown = new GridKeyDownEvent(this);
+    private GridKeyUpEvent keyUp = new GridKeyUpEvent(this);
+    private GridKeyPressEvent keyPress = new GridKeyPressEvent(this);
 
     private class ActiveCellHandler {
 
@@ -2475,7 +2475,7 @@ public class Grid<T> extends Composite implements
      *            the key handler to register
      * @return the registration for the event
      */
-    public <HANDLER extends GridKeyDownHandler<T>> HandlerRegistration addKeyDownHandler(
+    public <HANDLER extends GridKeyDownHandler> HandlerRegistration addKeyDownHandler(
             HANDLER handler) {
         if (handler instanceof BodyKeyDownHandler
                 || handler instanceof HeaderKeyDownHandler
@@ -2495,7 +2495,7 @@ public class Grid<T> extends Composite implements
      *            the key handler to register
      * @return the registration for the event
      */
-    public <HANDLER extends GridKeyUpHandler<T>> HandlerRegistration addKeyUpHandler(
+    public <HANDLER extends GridKeyUpHandler> HandlerRegistration addKeyUpHandler(
             HANDLER handler) {
         if (handler instanceof BodyKeyUpHandler
                 || handler instanceof HeaderKeyUpHandler
@@ -2515,7 +2515,7 @@ public class Grid<T> extends Composite implements
      *            the key handler to register
      * @return the registration for the event
      */
-    public <HANDLER extends GridKeyPressHandler<T>> HandlerRegistration addKeyPressHandler(
+    public <HANDLER extends GridKeyPressHandler> HandlerRegistration addKeyPressHandler(
             HANDLER handler) {
         if (handler instanceof BodyKeyPressHandler
                 || handler instanceof HeaderKeyPressHandler

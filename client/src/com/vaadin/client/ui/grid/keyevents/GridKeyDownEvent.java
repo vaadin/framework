@@ -26,15 +26,14 @@ import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyDo
  * @since
  * @author Vaadin Ltd
  */
-public class GridKeyDownEvent<T> extends
-        AbstractGridKeyEvent<T, GridKeyDownHandler<T>> {
+public class GridKeyDownEvent extends AbstractGridKeyEvent<GridKeyDownHandler> {
 
-    public GridKeyDownEvent(Grid<T> grid) {
+    public GridKeyDownEvent(Grid<?> grid) {
         super(grid);
     }
 
     @Override
-    protected void dispatch(GridKeyDownHandler<T> handler) {
+    protected void dispatch(GridKeyDownHandler handler) {
         super.dispatch(handler);
         if ((activeSection == GridSection.BODY && handler instanceof BodyKeyDownHandler)
                 || (activeSection == GridSection.HEADER && handler instanceof HeaderKeyDownHandler)

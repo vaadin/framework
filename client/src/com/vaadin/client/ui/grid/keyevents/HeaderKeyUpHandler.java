@@ -24,5 +24,5 @@ import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyUp
  * @since
  * @author Vaadin Ltd
  */
-public interface HeaderKeyUpHandler<T> extends GridKeyUpHandler<T> {
+public interface HeaderKeyUpHandler extends GridKeyUpHandler {
 }

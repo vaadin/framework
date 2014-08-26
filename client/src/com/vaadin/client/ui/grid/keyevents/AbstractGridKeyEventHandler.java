@@ -16,6 +16,7 @@
 package com.vaadin.client.ui.grid.keyevents;
 
 import com.google.gwt.event.shared.EventHandler;
+import com.vaadin.client.ui.grid.Grid.AbstractGridKeyEvent;
 
 /**
  * Base interface of all handlers for {@link AbstractGridKeyEvent}s.
@@ -25,19 +26,19 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public abstract interface AbstractGridKeyEventHandler extends EventHandler {
 
-    public abstract interface GridKeyDownHandler<T> extends
+    public abstract interface GridKeyDownHandler extends
             AbstractGridKeyEventHandler {
-        public void onKeyDown(GridKeyDownEvent<T> event);
+        public void onKeyDown(GridKeyDownEvent event);
     }
 
-    public abstract interface GridKeyUpHandler<T> extends
+    public abstract interface GridKeyUpHandler extends
             AbstractGridKeyEventHandler {
-        public void onKeyUp(GridKeyUpEvent<T> event);
+        public void onKeyUp(GridKeyUpEvent event);
     }
 
-    public abstract interface GridKeyPressHandler<T> extends
+    public abstract interface GridKeyPressHandler extends
             AbstractGridKeyEventHandler {
-        public void onKeyPress(GridKeyPressEvent<T> event);
+        public void onKeyPress(GridKeyPressEvent event);
     }
 
 }
