@@ -111,7 +111,7 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         }
     }
 
-    private WebElement getGridVerticalScrollbar() {
+    protected WebElement getGridVerticalScrollbar() {
         return getDriver()
                 .findElement(
                         By.xpath("//div[contains(@class, \"v-grid-scroller-vertical\")]"));

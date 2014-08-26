@@ -18,6 +18,7 @@ package com.vaadin.tests.components.grid.basicfeatures.server;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -206,6 +207,28 @@ public class GridStructureTest extends GridBasicFeaturesTest {
 
         assertEquals(0, getGridElement().findElement(By.tagName("tbody"))
                 .findElements(By.tagName("tr")).size());
+    }
+
+    @Test
+    public void testVerticalScrollBarVisibilityWhenEnoughRows()
+            throws Exception {
+        openTestURL();
+
+        assertTrue(verticalScrollbarIsPresent());
+
+        selectMenuPath("Component", "Body rows", "Remove all rows");
+        assertFalse(verticalScrollbarIsPresent());
+
+        selectMenuPath("Component", "Body rows", "Add 18 rows");
+        assertFalse(verticalScrollbarIsPresent());
+
+        selectMenuPath("Component", "Body rows", "Add first row");
+        assertTrue(verticalScrollbarIsPresent());
+    }
+
+    private boolean verticalScrollbarIsPresent() {
+        return "scroll".equals(getGridVerticalScrollbar().getCssValue(
+                "overflow-y"));
     }
 
     private void assertPrimaryStylename(String stylename) {

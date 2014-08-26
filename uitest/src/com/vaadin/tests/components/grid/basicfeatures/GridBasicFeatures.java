@@ -537,35 +537,43 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     protected void createRowActions() {
         createCategory("Body rows", null);
 
-        createClickAction("Add first row", "Body rows",
+        final Command<Grid, String> newRowCommand = new Command<Grid, String>() {
+            @Override
+            public void execute(Grid c, String value, Object data) {
+                Item item = ds.addItemAt(0, new Object());
+                for (int i = 0; i < COLUMNS; i++) {
+                    Class<?> type = ds.getType(getColumnProperty(i));
+                    if (String.class.isAssignableFrom(type)) {
+                        Property<String> itemProperty = getProperty(item, i);
+                        itemProperty.setValue("newcell: " + i);
+                    } else if (Integer.class.isAssignableFrom(type)) {
+                        Property<Integer> itemProperty = getProperty(item, i);
+                        itemProperty.setValue(Integer.valueOf(i));
+                    } else {
+                        // let the default value be taken implicitly.
+                    }
+                }
+            }
+
+            private <T extends Object> Property<T> getProperty(Item item, int i) {
+                @SuppressWarnings("unchecked")
+                Property<T> itemProperty = item
+                        .getItemProperty(getColumnProperty(i));
+                return itemProperty;
+            }
+        };
+
+        createClickAction("Add 18 rows", "Body rows",
                 new Command<Grid, String>() {
                     @Override
                     public void execute(Grid c, String value, Object data) {
-                        Item item = ds.addItemAt(0, new Object());
-                        for (int i = 0; i < COLUMNS; i++) {
-                            Class<?> type = ds.getType(getColumnProperty(i));
-                            if (String.class.isAssignableFrom(type)) {
-                                Property<String> itemProperty = getProperty(
-                                        item, i);
-                                itemProperty.setValue("newcell: " + i);
-                            } else if (Integer.class.isAssignableFrom(type)) {
-                                Property<Integer> itemProperty = getProperty(
-                                        item, i);
-                                itemProperty.setValue(Integer.valueOf(i));
-                            } else {
-                                // let the default value be taken implicitly.
-                            }
+                        for (int i = 0; i < 18; i++) {
+                            newRowCommand.execute(c, value, data);
                         }
                     }
-
-                    private <T extends Object> Property<T> getProperty(
-                            Item item, int i) {
-                        @SuppressWarnings("unchecked")
-                        Property<T> itemProperty = item
-                                .getItemProperty(getColumnProperty(i));
-                        return itemProperty;
-                    }
                 }, null);
+
+        createClickAction("Add first row", "Body rows", newRowCommand, null);
 
         createClickAction("Remove first row", "Body rows",
                 new Command<Grid, String>() {
