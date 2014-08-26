@@ -494,7 +494,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         // the user
         root.getElement().setInnerHTML("");
 
+        // Activate the initial theme by only adding the class name. Not calling
+        // activateTheme here as it will also cause a full layout and updates to
+        // the overlay container which has not yet been created at this point
         activeTheme = applicationConnection.getConfiguration().getThemeName();
+        root.addStyleName(activeTheme);
 
         root.add(getWidget());
 
