@@ -64,8 +64,6 @@ public class GridColspans extends AbstractTestUI {
         footerRow.join("streetAddress", "zipCode", "city").setText("Address");
         footer.appendRow().join(dataSource.getContainerPropertyIds().toArray())
                 .setText("All the stuff");
-
-        footer.setVisible(true);
     }
 
     @Override

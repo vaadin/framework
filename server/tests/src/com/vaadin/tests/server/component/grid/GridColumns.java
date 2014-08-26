@@ -185,16 +185,16 @@ public class GridColumns {
     @Test
     public void testFooterVisibility() throws Exception {
 
-        assertFalse(grid.getFooter().isVisible());
-        assertFalse(state.footer.visible);
-
-        grid.getFooter().setVisible(true);
         assertTrue(grid.getFooter().isVisible());
         assertTrue(state.footer.visible);
 
         grid.getFooter().setVisible(false);
         assertFalse(grid.getFooter().isVisible());
         assertFalse(state.footer.visible);
+
+        grid.getFooter().setVisible(true);
+        assertTrue(grid.getFooter().isVisible());
+        assertTrue(state.footer.visible);
     }
 
     @Test

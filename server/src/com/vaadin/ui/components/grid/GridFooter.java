@@ -50,7 +50,6 @@ public class GridFooter extends GridStaticSection<GridFooter.FooterRow> {
     protected GridFooter(Grid grid) {
         this.grid = grid;
         grid.getState(true).footer = footerState;
-        setVisible(false);
     }
 
     @Override
