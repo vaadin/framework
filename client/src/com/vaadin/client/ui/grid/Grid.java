@@ -298,7 +298,12 @@ public class Grid<T> extends Composite implements
             if (container == escalator.getBody()) {
                 scrollToRow(activeRow);
             }
-            escalator.scrollToColumn(activeColumn, ScrollDestination.ANY, 10);
+
+            if (activeColumn >= escalator.getColumnConfiguration()
+                    .getFrozenColumnCount()) {
+                escalator.scrollToColumn(activeColumn, ScrollDestination.ANY,
+                        10);
+            }
 
             if (this.container == container) {
                 if (container != escalator.getBody()) {
