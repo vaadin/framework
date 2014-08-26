@@ -1135,10 +1135,10 @@ public class ApplicationConnection implements HasHandlers {
             }
         } else {
             cssLoaded = true;
-            handleReceivedJSONMessage(new Date(), jsonText, json);
             if (cssWaits >= MAX_CSS_WAITS) {
-                VConsole.error("CSS files may have not loaded properly.");
+                getLogger().severe("CSS files may have not loaded properly.");
             }
+            handleReceivedJSONMessage(new Date(), jsonText, json);
         }
     }
 
