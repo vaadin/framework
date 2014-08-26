@@ -77,10 +77,20 @@ public class VaadinServlet extends HttpServlet implements Constants {
             long newest = 0;
             for (String uri : sourceUris) {
                 File file = new File(uri);
-                if (!file.exists()) {
-                    return -1;
-                } else {
+                if (file.exists()) {
                     newest = Math.max(newest, file.lastModified());
+                } else if (!uri.startsWith("VAADIN/")) {
+                    /*
+                     * Ignore missing files starting with VAADIN/ since those
+                     * are fetched from the classpath, report problem and abort
+                     * for other files.
+                     */
+                    getLogger()
+                            .log(Level.WARNING,
+                                    "Could not resolve timestamp for {0}, Scss on the fly caching will be disabled",
+                                    uri);
+                    // -1 means this cache entry will never be valid
+                    return -1;
                 }
             }
 
