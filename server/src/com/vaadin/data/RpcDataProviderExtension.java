@@ -148,7 +148,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 if (!itemIdToKey.containsKey(itemId)) {
                     itemIdToKey.put(itemId, nextKey());
                 }
-                indexToItemId.put(ii, itemId);
+                indexToItemId.forcePut(ii, itemId);
             }
         }
 
