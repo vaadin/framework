@@ -47,4 +47,26 @@ public class GridKeyPressEvent extends
         return BrowserEvents.KEYPRESS;
     }
 
+    /**
+     * Gets the char code for this event.
+     * 
+     * @return the char code
+     */
+    public char getCharCode() {
+        return (char) getUnicodeCharCode();
+    }
+
+    /**
+     * Gets the Unicode char code (code point) for this event.
+     * 
+     * @return the Unicode char code
+     */
+    public int getUnicodeCharCode() {
+        return getNativeEvent().getCharCode();
+    }
+
+    @Override
+    public String toDebugString() {
+        return super.toDebugString() + "[" + getCharCode() + "]";
+    }
 }

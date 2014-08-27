@@ -36,7 +36,6 @@ import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.EditorRowHandler;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Grid;
-import com.vaadin.client.ui.grid.Grid.AbstractGridKeyEvent;
 import com.vaadin.client.ui.grid.Grid.SelectionMode;
 import com.vaadin.client.ui.grid.GridColumn;
 import com.vaadin.client.ui.grid.GridFooter;
@@ -841,7 +840,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyDown(GridKeyDownEvent event) {
-                updateLabel(label, event);
+                Cell active = event.getActiveCell();
+                updateLabel(label, event.toDebugString(), active.getRow(),
+                        active.getColumn());
             }
         });
 
@@ -850,7 +851,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyDown(GridKeyDownEvent event) {
-                updateLabel(label, event);
+                Cell active = event.getActiveCell();
+                updateLabel(label, event.toDebugString(), active.getRow(),
+                        active.getColumn());
             }
         });
 
@@ -859,7 +862,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyDown(GridKeyDownEvent event) {
-                updateLabel(label, event);
+                Cell active = event.getActiveCell();
+                updateLabel(label, event.toDebugString(), active.getRow(),
+                        active.getColumn());
             }
         });
 
@@ -869,7 +874,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyUp(GridKeyUpEvent event) {
-                updateLabel(label, event);
+                Cell active = event.getActiveCell();
+                updateLabel(label, event.toDebugString(), active.getRow(),
+                        active.getColumn());
             }
         });
 
@@ -878,7 +885,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyUp(GridKeyUpEvent event) {
-                updateLabel(label, event);
+                Cell active = event.getActiveCell();
+                updateLabel(label, event.toDebugString(), active.getRow(),
+                        active.getColumn());
             }
         });
 
@@ -887,7 +896,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyUp(GridKeyUpEvent event) {
-                updateLabel(label, event);
+                Cell active = event.getActiveCell();
+                updateLabel(label, event.toDebugString(), active.getRow(),
+                        active.getColumn());
             }
         });
 
@@ -897,7 +908,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyPress(GridKeyPressEvent event) {
-                updateLabel(label, event);
+                Cell active = event.getActiveCell();
+                updateLabel(label, event.toDebugString(), active.getRow(),
+                        active.getColumn());
             }
         });
 
@@ -906,7 +919,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyPress(GridKeyPressEvent event) {
-                updateLabel(label, event);
+                Cell active = event.getActiveCell();
+                updateLabel(label, event.toDebugString(), active.getRow(),
+                        active.getColumn());
             }
         });
 
@@ -915,17 +930,16 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyPress(GridKeyPressEvent event) {
-                updateLabel(label, event);
+                Cell active = event.getActiveCell();
+                updateLabel(label, event.toDebugString(), active.getRow(),
+                        active.getColumn());
             }
         });
 
     }
 
-    private void updateLabel(VLabel label, AbstractGridKeyEvent<?> event) {
-        String type = event.getNativeEvent().getType();
-        Cell active = event.getActiveCell();
-        String coords = "(" + active.getRow() + ", " + active.getColumn() + ")";
-        String keyCode = "" + event.getNativeKeyCode();
-        label.setText(coords + " " + type + " " + keyCode);
+    private void updateLabel(VLabel label, String output, int row, int col) {
+        String coords = "(" + row + ", " + col + ")";
+        label.setText(coords + " " + output);
     }
 }

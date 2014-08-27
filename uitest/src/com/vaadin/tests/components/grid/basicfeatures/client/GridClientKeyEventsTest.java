@@ -32,8 +32,7 @@ import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTes
 
 public class GridClientKeyEventsTest extends GridBasicClientFeaturesTest {
 
-    private List<String> eventOrder = Arrays.asList("keydown", "keyup",
-            "keypress");
+    private List<String> eventOrder = Arrays.asList("Down", "Up", "Press");
 
     @Test
     public void testBodyKeyEvents() throws IOException {
@@ -41,11 +40,13 @@ public class GridClientKeyEventsTest extends GridBasicClientFeaturesTest {
 
         getGridElement().getCell(2, 2).click();
 
-        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+        new Actions(getDriver()).sendKeys("a").perform();
 
         for (int i = 0; i < 3; ++i) {
-            assertEquals("Body key event handler was not called.", "(2, 2) "
-                    + eventOrder.get(i) + " 13",
+            assertEquals("Body key event handler was not called.",
+                    "(2, 2) event: GridKey" + eventOrder.get(i) + "Event:["
+                            + (eventOrder.get(i).equals("Press") ? "a" : 65)
+                            + "]",
                     findElements(By.className("v-label")).get(i * 3).getText());
 
             assertTrue("Header key event handler got called unexpectedly.",
@@ -64,11 +65,13 @@ public class GridClientKeyEventsTest extends GridBasicClientFeaturesTest {
 
         getGridElement().getHeaderCell(0, 2).click();
 
-        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+        new Actions(getDriver()).sendKeys("a").perform();
 
         for (int i = 0; i < 3; ++i) {
-            assertEquals("Header key event handler was not called.", "(0, 2) "
-                    + eventOrder.get(i) + " 13",
+            assertEquals("Header key event handler was not called.",
+                    "(0, 2) event: GridKey" + eventOrder.get(i) + "Event:["
+                            + (eventOrder.get(i).equals("Press") ? "a" : 65)
+                            + "]",
                     findElements(By.className("v-label")).get(i * 3 + 1)
                             .getText());
 
@@ -88,11 +91,13 @@ public class GridClientKeyEventsTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Footer", "Append row");
         getGridElement().getFooterCell(0, 2).click();
 
-        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+        new Actions(getDriver()).sendKeys("a").perform();
 
         for (int i = 0; i < 3; ++i) {
-            assertEquals("Footer key event handler was not called.", "(0, 2) "
-                    + eventOrder.get(i) + " 13",
+            assertEquals("Footer key event handler was not called.",
+                    "(0, 2) event: GridKey" + eventOrder.get(i) + "Event:["
+                            + (eventOrder.get(i).equals("Press") ? "a" : 65)
+                            + "]",
                     findElements(By.className("v-label")).get(i * 3 + 2)
                             .getText());
 

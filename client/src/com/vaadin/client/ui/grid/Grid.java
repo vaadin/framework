@@ -34,8 +34,8 @@ import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.Touch;
-import com.google.gwt.event.dom.client.KeyCodeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.DOM;
@@ -125,7 +125,7 @@ public class Grid<T> extends ResizeComposite implements
         HasSelectionChangeHandlers<T>, SubPartAware, DeferredWorker {
 
     public static abstract class AbstractGridKeyEvent<HANDLER extends AbstractGridKeyEventHandler>
-            extends KeyCodeEvent<HANDLER> {
+            extends KeyEvent<HANDLER> {
 
         /**
          * Enum describing different section of Grid.

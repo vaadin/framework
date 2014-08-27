@@ -16,6 +16,7 @@
 package com.vaadin.client.ui.grid.events;
 
 import com.google.gwt.dom.client.BrowserEvents;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.Grid.AbstractGridKeyEvent;
 import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler.GridKeyUpHandler;
@@ -46,4 +47,73 @@ public class GridKeyUpEvent extends AbstractGridKeyEvent<GridKeyUpHandler> {
         return BrowserEvents.KEYUP;
     }
 
+    /**
+     * Does the key code represent an arrow key?
+     * 
+     * @param keyCode
+     *            the key code
+     * @return if it is an arrow key code
+     */
+    public static boolean isArrow(int keyCode) {
+        switch (keyCode) {
+        case KeyCodes.KEY_DOWN:
+        case KeyCodes.KEY_RIGHT:
+        case KeyCodes.KEY_UP:
+        case KeyCodes.KEY_LEFT:
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    /**
+     * Gets the native key code. These key codes are enumerated in the
+     * {@link KeyCodes} class.
+     * 
+     * @return the key code
+     */
+    public int getNativeKeyCode() {
+        return getNativeEvent().getKeyCode();
+    }
+
+    /**
+     * Is this a key down arrow?
+     * 
+     * @return whether this is a down arrow key event
+     */
+    public boolean isDownArrow() {
+        return getNativeKeyCode() == KeyCodes.KEY_DOWN;
+    }
+
+    /**
+     * Is this a left arrow?
+     * 
+     * @return whether this is a left arrow key event
+     */
+    public boolean isLeftArrow() {
+        return getNativeKeyCode() == KeyCodes.KEY_LEFT;
+    }
+
+    /**
+     * Is this a right arrow?
+     * 
+     * @return whether this is a right arrow key event
+     */
+    public boolean isRightArrow() {
+        return getNativeKeyCode() == KeyCodes.KEY_RIGHT;
+    }
+
+    /**
+     * Is this a up arrow?
+     * 
+     * @return whether this is a right arrow key event
+     */
+    public boolean isUpArrow() {
+        return getNativeKeyCode() == KeyCodes.KEY_UP;
+    }
+
+    @Override
+    public String toDebugString() {
+        return super.toDebugString() + "[" + getNativeKeyCode() + "]";
+    }
 }
