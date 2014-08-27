@@ -24,6 +24,7 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.vaadin.client.ui.grid.Escalator.AbstractRowContainer;
+import com.vaadin.client.ui.grid.ScrollbarBundle.Direction;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 
 /**
@@ -105,6 +106,7 @@ public class EditorRow<T> {
                     "Cannot cancel edit: EditorRow is not in edit mode");
         }
         hideOverlay();
+        grid.getEscalator().setScrollLocked(Direction.VERTICAL, false);
         state = State.INACTIVE;
     }
 
@@ -132,6 +134,7 @@ public class EditorRow<T> {
     protected void show() {
         if (state == State.ACTIVATING) {
             state = State.ACTIVE;
+            grid.getEscalator().setScrollLocked(Direction.VERTICAL, true);
             showOverlay(grid.getEscalator().getBody().getRowElement(rowIndex));
         }
     }

@@ -19,6 +19,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.NoSuchElementException;
 
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 
@@ -40,5 +41,11 @@ public class GridEditorRowTest extends GridBasicClientFeaturesTest {
     public void testProgrammaticOpeningWithScroll() throws Exception {
         selectMenuPath("Component", "State", "Editor row", "Edit row 100");
         assertNotNull(getEditorRow());
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testVerticalScrollLocking() throws Exception {
+        selectMenuPath("Component", "State", "Editor row", "Edit row 5");
+        getGridElement().getCell(200, 0);
     }
 }
