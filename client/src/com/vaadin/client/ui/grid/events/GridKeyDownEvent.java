@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.grid.keyevents;
+package com.vaadin.client.ui.grid.events;
 
 import com.google.gwt.dom.client.BrowserEvents;
 import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.Grid.AbstractGridKeyEvent;
-import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyDownHandler;
+import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler.GridKeyDownHandler;
 
 /**
  * Represents native key down event in Grid.

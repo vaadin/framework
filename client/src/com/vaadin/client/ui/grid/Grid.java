@@ -52,22 +52,24 @@ import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.grid.GridFooter.FooterRow;
 import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.GridStaticSection.StaticCell;
-import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler;
-import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyDownHandler;
-import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyPressHandler;
-import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyUpHandler;
-import com.vaadin.client.ui.grid.keyevents.BodyKeyDownHandler;
-import com.vaadin.client.ui.grid.keyevents.BodyKeyPressHandler;
-import com.vaadin.client.ui.grid.keyevents.BodyKeyUpHandler;
-import com.vaadin.client.ui.grid.keyevents.FooterKeyDownHandler;
-import com.vaadin.client.ui.grid.keyevents.FooterKeyPressHandler;
-import com.vaadin.client.ui.grid.keyevents.FooterKeyUpHandler;
-import com.vaadin.client.ui.grid.keyevents.GridKeyDownEvent;
-import com.vaadin.client.ui.grid.keyevents.GridKeyPressEvent;
-import com.vaadin.client.ui.grid.keyevents.GridKeyUpEvent;
-import com.vaadin.client.ui.grid.keyevents.HeaderKeyDownHandler;
-import com.vaadin.client.ui.grid.keyevents.HeaderKeyPressHandler;
-import com.vaadin.client.ui.grid.keyevents.HeaderKeyUpHandler;
+import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler;
+import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler.GridKeyDownHandler;
+import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler.GridKeyPressHandler;
+import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler.GridKeyUpHandler;
+import com.vaadin.client.ui.grid.events.BodyKeyDownHandler;
+import com.vaadin.client.ui.grid.events.BodyKeyPressHandler;
+import com.vaadin.client.ui.grid.events.BodyKeyUpHandler;
+import com.vaadin.client.ui.grid.events.FooterKeyDownHandler;
+import com.vaadin.client.ui.grid.events.FooterKeyPressHandler;
+import com.vaadin.client.ui.grid.events.FooterKeyUpHandler;
+import com.vaadin.client.ui.grid.events.GridKeyDownEvent;
+import com.vaadin.client.ui.grid.events.GridKeyPressEvent;
+import com.vaadin.client.ui.grid.events.GridKeyUpEvent;
+import com.vaadin.client.ui.grid.events.HeaderKeyDownHandler;
+import com.vaadin.client.ui.grid.events.HeaderKeyPressHandler;
+import com.vaadin.client.ui.grid.events.HeaderKeyUpHandler;
+import com.vaadin.client.ui.grid.events.ScrollEvent;
+import com.vaadin.client.ui.grid.events.ScrollHandler;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
 import com.vaadin.client.ui.grid.selection.HasSelectionChangeHandlers;
@@ -1225,6 +1227,13 @@ public class Grid<T> extends Composite implements
 
         setSelectionMode(SelectionMode.SINGLE);
 
+        escalator.addScrollHandler(new ScrollHandler() {
+            @Override
+            public void onScroll(ScrollEvent event) {
+                fireEvent(new ScrollEvent());
+            }
+        });
+
         escalator
                 .addRowVisibilityChangeHandler(new RowVisibilityChangeHandler() {
                     @Override
@@ -1812,6 +1821,15 @@ public class Grid<T> extends Composite implements
      */
     public double getScrollTop() {
         return escalator.getScrollTop();
+    }
+
+    /**
+     * Gets the horizontal scroll offset
+     * 
+     * @return the number of pixels this grid is scrolled to the right
+     */
+    public double getScrollLeft() {
+        return escalator.getScrollLeft();
     }
 
     private static final Logger getLogger() {
@@ -2559,5 +2577,16 @@ public class Grid<T> extends Composite implements
         }
 
         return firstRowIndex;
+    }
+
+    /**
+     * Adds a scroll handler to this grid
+     * 
+     * @param handler
+     *            the scroll handler to add
+     * @return a handler registration for the registered scroll handler
+     */
+    public HandlerRegistration addScrollHandler(ScrollHandler handler) {
+        return addHandler(handler, ScrollEvent.TYPE);
     }
 }

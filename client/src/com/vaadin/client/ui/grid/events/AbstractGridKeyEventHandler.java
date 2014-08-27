@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.grid.keyevents;
+package com.vaadin.client.ui.grid.events;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.vaadin.client.ui.grid.Grid.AbstractGridKeyEvent;

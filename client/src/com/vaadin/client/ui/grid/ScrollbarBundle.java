@@ -16,6 +16,8 @@
 
 package com.vaadin.client.ui.grid;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
@@ -27,6 +29,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
+import com.vaadin.client.ui.grid.events.ScrollEvent;
+import com.vaadin.client.ui.grid.events.ScrollHandler;
 
 /**
  * An element-like bundle representing a configurable and visual scrollbar in
@@ -38,6 +42,41 @@ import com.google.gwt.user.client.Timer;
  * @see HorizontalScrollbarBundle
  */
 abstract class ScrollbarBundle {
+
+    private class ScrollEventFirer {
+        private final ScheduledCommand fireEventCommand = new ScheduledCommand() {
+            @Override
+            public void execute() {
+                if (!pixelValuesEqual(startScrollPos, getScrollPos())) {
+                    getHandlerManager().fireEvent(new ScrollEvent());
+                }
+                reset();
+            }
+        };
+
+        private boolean isBeingFired;
+        private double startScrollPos;
+
+        public ScrollEventFirer() {
+            reset();
+        }
+
+        public void scheduleEvent() {
+            if (!isBeingFired) {
+                /*
+                 * We'll gather all the scroll events, and only fire once, once
+                 * everything has calmed down.
+                 */
+                Scheduler.get().scheduleDeferred(fireEventCommand);
+                isBeingFired = true;
+            }
+        }
+
+        private void reset() {
+            isBeingFired = false;
+            startScrollPos = getScrollPos();
+        }
+    }
 
     /**
      * The orientation of the scrollbar.
@@ -288,6 +327,8 @@ abstract class ScrollbarBundle {
 
     private TemporaryResizer invisibleScrollbarTemporaryResizer = new TemporaryResizer();
 
+    private final ScrollEventFirer scrollEventFirer = new ScrollEventFirer();
+
     private ScrollbarBundle() {
         root.appendChild(scrollSizeElement);
     }
@@ -409,6 +450,8 @@ abstract class ScrollbarBundle {
              * only facilitating future virtual scrollbars.
              */
             internalSetScrollPos(toInt32(scrollPos));
+
+            scrollEventFirer.scheduleEvent();
         }
     }
 
@@ -603,6 +646,7 @@ abstract class ScrollbarBundle {
         int newScrollPos = internalGetScrollPos();
         if (!isLocked()) {
             scrollPos = newScrollPos;
+            scrollEventFirer.scheduleEvent();
         } else if (scrollPos != newScrollPos) {
             // we need to actually undo the setting of the scroll.
             internalSetScrollPos(toInt32(scrollPos));
@@ -694,4 +738,15 @@ abstract class ScrollbarBundle {
      * @return the scroll direction of this scrollbar bundle
      */
     public abstract Direction getDirection();
+
+    /**
+     * Adds a scroll handler to the scrollbar bundle.
+     * 
+     * @param handler
+     *            the handler to add
+     * @return the registration object for the handler registration
+     */
+    public HandlerRegistration addScrollHandler(final ScrollHandler handler) {
+        return getHandlerManager().addHandler(ScrollEvent.TYPE, handler);
+    }
 }

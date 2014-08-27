@@ -57,6 +57,8 @@ import com.vaadin.client.ui.grid.PositionFunction.TranslatePosition;
 import com.vaadin.client.ui.grid.PositionFunction.WebkitTranslate3DPosition;
 import com.vaadin.client.ui.grid.ScrollbarBundle.HorizontalScrollbarBundle;
 import com.vaadin.client.ui.grid.ScrollbarBundle.VerticalScrollbarBundle;
+import com.vaadin.client.ui.grid.events.ScrollEvent;
+import com.vaadin.client.ui.grid.events.ScrollHandler;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
@@ -3950,11 +3952,20 @@ public class Escalator extends Widget {
         final Element root = DOM.createDiv();
         setElement(root);
 
+        ScrollHandler scrollHandler = new ScrollHandler() {
+            @Override
+            public void onScroll(ScrollEvent event) {
+                fireEvent(new ScrollEvent());
+            }
+        };
+
         root.appendChild(verticalScrollbar.getElement());
+        verticalScrollbar.addScrollHandler(scrollHandler);
         verticalScrollbar.getElement().setTabIndex(-1);
         verticalScrollbar.setScrollbarThickness(Util.getNativeScrollbarSize());
 
         root.appendChild(horizontalScrollbar.getElement());
+        horizontalScrollbar.addScrollHandler(scrollHandler);
         horizontalScrollbar.getElement().setTabIndex(-1);
         horizontalScrollbar
                 .setScrollbarThickness(Util.getNativeScrollbarSize());
@@ -4667,5 +4678,16 @@ public class Escalator extends Widget {
             throw new UnsupportedOperationException("Unexpected value: "
                     + direction);
         }
+    }
+
+    /**
+     * Adds a scroll handler to this escalator
+     * 
+     * @param handler
+     *            the scroll handler to add
+     * @return a handler registration for the registered scroll handler
+     */
+    public HandlerRegistration addScrollHandler(ScrollHandler handler) {
+        return addHandler(handler, ScrollEvent.TYPE);
     }
 }

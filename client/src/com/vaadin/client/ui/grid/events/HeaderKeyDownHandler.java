@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.grid.keyevents;
+package com.vaadin.client.ui.grid.events;
 
-import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyDownHandler;
+import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler.GridKeyDownHandler;
 
 /**
  * Handler for {@link GridKeyDownEvent}s that happen when active cell is in the

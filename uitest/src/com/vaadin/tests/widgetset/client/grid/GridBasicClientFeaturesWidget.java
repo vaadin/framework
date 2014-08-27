@@ -23,8 +23,10 @@ import java.util.Random;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
 import com.vaadin.client.ui.VLabel;
 import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.FlyweightCell;
@@ -39,18 +41,20 @@ import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.Renderer;
 import com.vaadin.client.ui.grid.datasources.ListDataSource;
 import com.vaadin.client.ui.grid.datasources.ListSorter;
-import com.vaadin.client.ui.grid.keyevents.BodyKeyDownHandler;
-import com.vaadin.client.ui.grid.keyevents.BodyKeyPressHandler;
-import com.vaadin.client.ui.grid.keyevents.BodyKeyUpHandler;
-import com.vaadin.client.ui.grid.keyevents.FooterKeyDownHandler;
-import com.vaadin.client.ui.grid.keyevents.FooterKeyPressHandler;
-import com.vaadin.client.ui.grid.keyevents.FooterKeyUpHandler;
-import com.vaadin.client.ui.grid.keyevents.GridKeyDownEvent;
-import com.vaadin.client.ui.grid.keyevents.GridKeyPressEvent;
-import com.vaadin.client.ui.grid.keyevents.GridKeyUpEvent;
-import com.vaadin.client.ui.grid.keyevents.HeaderKeyDownHandler;
-import com.vaadin.client.ui.grid.keyevents.HeaderKeyPressHandler;
-import com.vaadin.client.ui.grid.keyevents.HeaderKeyUpHandler;
+import com.vaadin.client.ui.grid.events.BodyKeyDownHandler;
+import com.vaadin.client.ui.grid.events.BodyKeyPressHandler;
+import com.vaadin.client.ui.grid.events.BodyKeyUpHandler;
+import com.vaadin.client.ui.grid.events.FooterKeyDownHandler;
+import com.vaadin.client.ui.grid.events.FooterKeyPressHandler;
+import com.vaadin.client.ui.grid.events.FooterKeyUpHandler;
+import com.vaadin.client.ui.grid.events.GridKeyDownEvent;
+import com.vaadin.client.ui.grid.events.GridKeyPressEvent;
+import com.vaadin.client.ui.grid.events.GridKeyUpEvent;
+import com.vaadin.client.ui.grid.events.HeaderKeyDownHandler;
+import com.vaadin.client.ui.grid.events.HeaderKeyPressHandler;
+import com.vaadin.client.ui.grid.events.HeaderKeyUpHandler;
+import com.vaadin.client.ui.grid.events.ScrollEvent;
+import com.vaadin.client.ui.grid.events.ScrollHandler;
 import com.vaadin.client.ui.grid.renderers.DateRenderer;
 import com.vaadin.client.ui.grid.renderers.HtmlRenderer;
 import com.vaadin.client.ui.grid.renderers.NumberRenderer;
@@ -249,11 +253,38 @@ public class GridBasicClientFeaturesWidget extends
         createColumnsMenu();
         createHeaderMenu();
         createFooterMenu();
+        createInternalsMenu();
 
         grid.getElement().getStyle().setZIndex(0);
         addNorth(grid, 400);
 
         createKeyHandlers();
+    }
+
+    private void createInternalsMenu() {
+        String[] listenersPath = { "Component", "Internals", "Listeners" };
+        final Label label = new Label();
+        addSouth(label, 20);
+
+        addMenuCommand("Add scroll listener", new ScheduledCommand() {
+            private HandlerRegistration scrollHandler = null;
+
+            @Override
+            public void execute() {
+                if (scrollHandler != null) {
+                    return;
+                }
+                scrollHandler = grid.addScrollHandler(new ScrollHandler() {
+                    @Override
+                    public void onScroll(ScrollEvent event) {
+                        @SuppressWarnings("hiding")
+                        final Grid<?> grid = (Grid<?>) event.getSource();
+                        label.setText("scrollTop: " + grid.getScrollTop()
+                                + ", scrollLeft: " + grid.getScrollLeft());
+                    }
+                });
+            }
+        }, listenersPath);
     }
 
     private void createStateMenu() {

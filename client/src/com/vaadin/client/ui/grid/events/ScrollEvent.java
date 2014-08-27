@@ -13,16 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.grid.keyevents;
+package com.vaadin.client.ui.grid.events;
 
-import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyPressHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Handler for {@link GridKeyPressEvent}s that happen when active cell is in the
- * footer of the Grid.
+ * An event that signifies that a scrollbar bundle has been scrolled
  * 
- * @since
  * @author Vaadin Ltd
  */
-public interface FooterKeyPressHandler extends GridKeyPressHandler {
+public class ScrollEvent extends GwtEvent<ScrollHandler> {
+
+    /** The type of this event */
+    public static final Type<ScrollHandler> TYPE = new Type<ScrollHandler>();
+
+    @Override
+    public Type<ScrollHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    @Override
+    protected void dispatch(final ScrollHandler handler) {
+        handler.onScroll(this);
+    }
 }

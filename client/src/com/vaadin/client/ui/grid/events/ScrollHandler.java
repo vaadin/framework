@@ -13,16 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.grid.keyevents;
+package com.vaadin.client.ui.grid.events;
 
-import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyDownHandler;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link GridKeyDownEvent}s that happen when active cell is in the
- * body of the Grid.
+ * A handler that gets called whenever a scrollbar bundle is scrolled
  * 
- * @since
  * @author Vaadin Ltd
  */
-public interface BodyKeyDownHandler extends GridKeyDownHandler {
+public interface ScrollHandler extends EventHandler {
+    /**
+     * A callback method that is called once a scrollbar bundle has been
+     * scrolled.
+     * 
+     * @param event
+     *            the scroll event
+     */
+    public void onScroll(ScrollEvent event);
 }

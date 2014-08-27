@@ -13,16 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.grid.keyevents;
+package com.vaadin.client.ui.grid.events;
 
-import com.vaadin.client.ui.grid.keyevents.AbstractGridKeyEventHandler.GridKeyUpHandler;
+import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler.GridKeyUpHandler;
 
 /**
  * Handler for {@link GridKeyUpEvent}s that happen when active cell is in the
- * footer of the Grid.
+ * header of the Grid.
  * 
  * @since
  * @author Vaadin Ltd
  */
-public interface FooterKeyUpHandler extends GridKeyUpHandler {
+public interface HeaderKeyUpHandler extends GridKeyUpHandler {
 }
