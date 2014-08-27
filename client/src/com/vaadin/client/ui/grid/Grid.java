@@ -1158,8 +1158,6 @@ public class Grid<T> extends Composite implements
 
                         // Logical attach
                         setParent(widget, Grid.this);
-
-                        getLogger().info("Attached widget " + widget);
                     }
                 }
             }
@@ -1185,8 +1183,6 @@ public class Grid<T> extends Composite implements
 
                         // Physical detach
                         widget.getElement().removeFromParent();
-
-                        getLogger().info("Detached widget " + widget);
                     }
                 }
             }
