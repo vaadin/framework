@@ -357,6 +357,17 @@ public class GridBasicClientFeaturesWidget extends
                             !grid.getColumn(index).isSortable());
                 }
             }, "Component", "Columns", "Column " + i);
+            addMenuCommand("Frozen", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    GridColumn<?, List<Data>> column = grid.getColumn(index);
+                    if (column.equals(grid.getLastFrozenColumn())) {
+                        grid.setLastFrozenColumn(null);
+                    } else {
+                        grid.setLastFrozenColumn(column);
+                    }
+                }
+            }, "Component", "Columns", "Column " + i);
 
             addMenuCommand("auto", new ScheduledCommand() {
                 @Override

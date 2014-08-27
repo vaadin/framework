@@ -16,6 +16,8 @@
 package com.vaadin.tests.components.grid.basicfeatures.client;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -56,4 +58,20 @@ public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest 
         assertEquals(100, width);
     }
 
+    @Test
+    public void testFrozenColumns() {
+        openTestURL();
+
+        assertFalse(cellIsFrozen(0, 0));
+        assertFalse(cellIsFrozen(0, 1));
+
+        selectMenuPath("Component", "Columns", "Column 0", "Frozen");
+
+        assertTrue(cellIsFrozen(1, 0));
+        assertFalse(cellIsFrozen(1, 1));
+    }
+
+    private boolean cellIsFrozen(int row, int col) {
+        return getGridElement().getCell(row, col).isFrozen();
+    }
 }

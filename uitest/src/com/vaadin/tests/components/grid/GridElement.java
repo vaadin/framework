@@ -40,6 +40,7 @@ public class GridElement extends AbstractComponentElement {
 
         private String ACTIVE_CLASS_NAME = "-cell-active";
         private String ACTIVE_HEADER_CLASS_NAME = "-header-active";
+        private String FROZEN_CLASS_NAME = "frozen";
 
         public boolean isActive() {
             return getAttribute("class").contains(ACTIVE_CLASS_NAME);
@@ -47,6 +48,10 @@ public class GridElement extends AbstractComponentElement {
 
         public boolean isActiveHeader() {
             return getAttribute("class").contains(ACTIVE_HEADER_CLASS_NAME);
+        }
+
+        public boolean isFrozen() {
+            return getAttribute("class").contains(FROZEN_CLASS_NAME);
         }
     }
 
