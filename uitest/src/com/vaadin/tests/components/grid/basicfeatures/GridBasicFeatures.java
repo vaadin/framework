@@ -18,7 +18,6 @@ package com.vaadin.tests.components.grid.basicfeatures;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -386,10 +385,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         @Override
                         public void execute(Grid grid, Boolean value,
                                 Object columnIndex) {
-                            Object propertyId = (new ArrayList(grid
-                                    .getContainerDatasource()
-                                    .getContainerPropertyIds())
-                                    .get((Integer) columnIndex));
+                            Object propertyId = getColumnProperty((Integer) columnIndex);
                             GridColumn column = grid.getColumn(propertyId);
                             column.setVisible(!column.isVisible());
                         }
@@ -403,6 +399,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             grid.getContainerDatasource()
                                     .removeContainerProperty(
                                             getColumnProperty((Integer) data));
+                            removeCategory("Column " + data);
                         }
                     }, null, c);
 
@@ -421,10 +418,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         @Override
                         public void execute(Grid grid, Boolean value,
                                 Object columnIndex) {
-                            Object propertyId = (new ArrayList(grid
-                                    .getContainerDatasource()
-                                    .getContainerPropertyIds())
-                                    .get((Integer) columnIndex));
+                            Object propertyId = getColumnProperty((Integer) columnIndex);
                             GridColumn column = grid.getColumn(propertyId);
                             column.setSortable(value);
                         }
@@ -438,10 +432,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         @Override
                         public void execute(Grid grid, Integer value,
                                 Object columnIndex) {
-                            Object propertyId = (new ArrayList(grid
-                                    .getContainerDatasource()
-                                    .getContainerPropertyIds())
-                                    .get((Integer) columnIndex));
+                            Object propertyId = getColumnProperty((Integer) columnIndex);
                             GridColumn column = grid.getColumn(propertyId);
                             column.setWidthUndefined();
                         }
@@ -454,10 +445,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             @Override
                             public void execute(Grid grid, Integer value,
                                     Object columnIndex) {
-                                Object propertyId = (new ArrayList(grid
-                                        .getContainerDatasource()
-                                        .getContainerPropertyIds())
-                                        .get((Integer) columnIndex));
+                                Object propertyId = getColumnProperty((Integer) columnIndex);
                                 GridColumn column = grid.getColumn(propertyId);
                                 column.setWidth(value);
                             }
@@ -475,10 +463,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         @Override
                         public void execute(Grid grid,
                                 GridStaticCellType value, Object columnIndex) {
-                            final Object propertyId = (new ArrayList(grid
-                                    .getContainerDatasource()
-                                    .getContainerPropertyIds())
-                                    .get((Integer) columnIndex));
+                            final Object propertyId = getColumnProperty((Integer) columnIndex);
                             final HeaderCell cell = grid.getHeader()
                                     .getDefaultRow().getCell(propertyId);
                             switch (value) {
@@ -516,10 +501,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         @Override
                         public void execute(Grid grid,
                                 GridStaticCellType value, Object columnIndex) {
-                            final Object propertyId = (new ArrayList(grid
-                                    .getContainerDatasource()
-                                    .getContainerPropertyIds())
-                                    .get((Integer) columnIndex));
+                            final Object propertyId = getColumnProperty((Integer) columnIndex);
                             final FooterCell cell = grid.getFooter().getRow(0)
                                     .getCell(propertyId);
                             switch (value) {
