@@ -3611,8 +3611,15 @@ public class Escalator extends Widget {
                     horizontalScrollbar.setScrollPos(newScrollLeft);
                 }
 
+                boolean scrollbarWasNeeded = horizontalScrollbar
+                        .getOffsetSize() < horizontalScrollbar.getScrollSize();
                 // this needs to be after the scroll position adjustment above.
                 scroller.recalculateScrollbarsForVirtualViewport();
+                boolean scrollbarIsStillNeeded = horizontalScrollbar
+                        .getOffsetSize() < horizontalScrollbar.getScrollSize();
+                if (scrollbarWasNeeded && !scrollbarIsStillNeeded) {
+                    body.verifyEscalatorCount();
+                }
             }
         }
 
@@ -3678,12 +3685,19 @@ public class Escalator extends Widget {
             }
 
             if (hasColumnAndRowData()) {
+                // this needs to be before the scrollbar adjustment.
+                boolean scrollbarWasNeeded = horizontalScrollbar
+                        .getOffsetSize() < horizontalScrollbar.getScrollSize();
+                scroller.recalculateScrollbarsForVirtualViewport();
+                boolean scrollbarIsNowNeeded = horizontalScrollbar
+                        .getOffsetSize() < horizontalScrollbar.getScrollSize();
+                if (!scrollbarWasNeeded && scrollbarIsNowNeeded) {
+                    body.verifyEscalatorCount();
+                }
+
                 header.paintInsertColumns(index, numberOfColumns, frozen);
                 body.paintInsertColumns(index, numberOfColumns, frozen);
                 footer.paintInsertColumns(index, numberOfColumns, frozen);
-
-                // this needs to be before the scrollbar adjustment.
-                scroller.recalculateScrollbarsForVirtualViewport();
 
                 int pixelsToInsertedColumn = columnConfiguration
                         .getCalculatedColumnsWidth(Range.withLength(0, index));
