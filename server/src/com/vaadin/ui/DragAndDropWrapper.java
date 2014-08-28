@@ -132,6 +132,15 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         }
 
         /**
+         * @return details about the actual event that caused the event details.
+         *         Practically mouse move or mouse up.
+         */
+        public MouseEventDetails getMouseEvent() {
+            return MouseEventDetails
+                    .deSerialize((String) getData("mouseEvent"));
+        }
+
+        /**
          * @return a detail about the drags vertical position over the wrapper.
          */
         public VerticalDropLocation getVerticalDropLocation() {
