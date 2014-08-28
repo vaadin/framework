@@ -1457,7 +1457,7 @@ public class Calendar extends AbstractComponent implements
     @Override
     public TargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
-        Map<String, Object> serverVariables = new HashMap<String, Object>(1);
+        Map<String, Object> serverVariables = new HashMap<String, Object>();
 
         if (clientVariables.containsKey("dropSlotIndex")) {
             int slotIndex = (Integer) clientVariables.get("dropSlotIndex");
@@ -1477,6 +1477,7 @@ public class Calendar extends AbstractComponent implements
             currentCalendar.add(java.util.Calendar.DATE, dayIndex);
             serverVariables.put("dropDay", currentCalendar.getTime());
         }
+        serverVariables.put("mouseEvent", clientVariables.get("mouseEvent"));
 
         CalendarTargetDetails td = new CalendarTargetDetails(serverVariables,
                 this);
