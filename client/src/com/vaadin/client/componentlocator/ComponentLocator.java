@@ -108,7 +108,10 @@ public class ComponentLocator {
      *         String locator could not be created.
      */
     public String getPathForElement(Element targetElement) {
-        return getPathForElement(DOM.asOld(targetElement));
+        if (targetElement != null) {
+            return getPathForElement(DOM.asOld(targetElement));
+        }
+        return null;
     }
 
     /**
