@@ -1496,8 +1496,7 @@ public class Escalator extends Widget {
                 throws IndexOutOfBoundsException;
 
         protected void paintRemoveColumns(final int offset,
-                final int numberOfColumns,
-                final List<ColumnConfigurationImpl.Column> removedColumns) {
+                final int numberOfColumns) {
             final NodeList<Node> childNodes = root.getChildNodes();
             for (int visualRowIndex = 0; visualRowIndex < childNodes
                     .getLength(); visualRowIndex++) {
@@ -1533,25 +1532,6 @@ public class Escalator extends Widget {
             }
             reapplyRowWidths();
 
-            final int firstRemovedColumnLeft = columnConfiguration
-                    .getCalculatedColumnsWidth(Range.withLength(0, offset));
-            final boolean columnsWereRemovedFromLeftOfTheViewport = scroller.lastScrollLeft > firstRemovedColumnLeft;
-
-            if (columnsWereRemovedFromLeftOfTheViewport) {
-                int removedColumnsPxAmount = 0;
-                for (ColumnConfigurationImpl.Column removedColumn : removedColumns) {
-                    removedColumnsPxAmount += removedColumn
-                            .getCalculatedWidth();
-                }
-                final int leftByDiff = (int) (scroller.lastScrollLeft - removedColumnsPxAmount);
-                final int newScrollLeft = Math.max(firstRemovedColumnLeft,
-                        leftByDiff);
-                horizontalScrollbar.setScrollPos(newScrollLeft);
-            }
-
-            // this needs to be after the scroll position adjustment above.
-            scroller.recalculateScrollbarsForVirtualViewport();
-
             /*
              * Because we might remove columns where affected by colspans, it's
              * easiest to simply redraw everything when columns are modified.
@@ -1578,21 +1558,6 @@ public class Escalator extends Widget {
                 for (int col = offset; col < offset + numberOfColumns; col++) {
                     setColumnFrozen(col, true);
                 }
-            }
-
-            // this needs to be before the scrollbar adjustment.
-            scroller.recalculateScrollbarsForVirtualViewport();
-
-            int pixelsToInsertedColumn = columnConfiguration
-                    .getCalculatedColumnsWidth(Range.withLength(0, offset));
-            final boolean columnsWereAddedToTheLeftOfViewport = scroller.lastScrollLeft > pixelsToInsertedColumn;
-
-            if (columnsWereAddedToTheLeftOfViewport) {
-                int insertedColumnsWidth = columnConfiguration
-                        .getCalculatedColumnsWidth(Range.withLength(offset,
-                                numberOfColumns));
-                horizontalScrollbar.setScrollPos(scroller.lastScrollLeft
-                        + insertedColumnsWidth);
             }
 
             /*
@@ -3627,9 +3592,27 @@ public class Escalator extends Widget {
 
             if (hasSomethingInDom()) {
                 for (final AbstractRowContainer rowContainer : rowContainers) {
-                    rowContainer.paintRemoveColumns(index, numberOfColumns,
-                            removedColumns);
+                    rowContainer.paintRemoveColumns(index, numberOfColumns);
                 }
+
+                final int firstRemovedColumnLeft = columnConfiguration
+                        .getCalculatedColumnsWidth(Range.withLength(0, index));
+                final boolean columnsWereRemovedFromLeftOfTheViewport = scroller.lastScrollLeft > firstRemovedColumnLeft;
+
+                if (columnsWereRemovedFromLeftOfTheViewport) {
+                    int removedColumnsPxAmount = 0;
+                    for (ColumnConfigurationImpl.Column removedColumn : removedColumns) {
+                        removedColumnsPxAmount += removedColumn
+                                .getCalculatedWidth();
+                    }
+                    final int leftByDiff = (int) (scroller.lastScrollLeft - removedColumnsPxAmount);
+                    final int newScrollLeft = Math.max(firstRemovedColumnLeft,
+                            leftByDiff);
+                    horizontalScrollbar.setScrollPos(newScrollLeft);
+                }
+
+                // this needs to be after the scroll position adjustment above.
+                scroller.recalculateScrollbarsForVirtualViewport();
             }
         }
 
@@ -3698,6 +3681,21 @@ public class Escalator extends Widget {
                 for (final AbstractRowContainer rowContainer : rowContainers) {
                     rowContainer.paintInsertColumns(index, numberOfColumns,
                             frozen);
+                }
+
+                // this needs to be before the scrollbar adjustment.
+                scroller.recalculateScrollbarsForVirtualViewport();
+
+                int pixelsToInsertedColumn = columnConfiguration
+                        .getCalculatedColumnsWidth(Range.withLength(0, index));
+                final boolean columnsWereAddedToTheLeftOfViewport = scroller.lastScrollLeft > pixelsToInsertedColumn;
+
+                if (columnsWereAddedToTheLeftOfViewport) {
+                    int insertedColumnsWidth = columnConfiguration
+                            .getCalculatedColumnsWidth(Range.withLength(index,
+                                    numberOfColumns));
+                    horizontalScrollbar.setScrollPos(scroller.lastScrollLeft
+                            + insertedColumnsWidth);
                 }
             }
         }
