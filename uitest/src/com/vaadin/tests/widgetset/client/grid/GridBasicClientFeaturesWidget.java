@@ -711,7 +711,7 @@ public class GridBasicClientFeaturesWidget extends
         }
 
         // Key Down Events
-        grid.addKeyDownHandler(new BodyKeyDownHandler() {
+        grid.addBodyKeyDownHandler(new BodyKeyDownHandler() {
             private final VLabel label = labels.get(0);
 
             @Override
@@ -720,7 +720,7 @@ public class GridBasicClientFeaturesWidget extends
             }
         });
 
-        grid.addKeyDownHandler(new HeaderKeyDownHandler() {
+        grid.addHeaderKeyDownHandler(new HeaderKeyDownHandler() {
             private final VLabel label = labels.get(1);
 
             @Override
@@ -729,7 +729,7 @@ public class GridBasicClientFeaturesWidget extends
             }
         });
 
-        grid.addKeyDownHandler(new FooterKeyDownHandler() {
+        grid.addFooterKeyDownHandler(new FooterKeyDownHandler() {
             private final VLabel label = labels.get(2);
 
             @Override
@@ -739,7 +739,7 @@ public class GridBasicClientFeaturesWidget extends
         });
 
         // Key Up Events
-        grid.addKeyUpHandler(new BodyKeyUpHandler() {
+        grid.addBodyKeyUpHandler(new BodyKeyUpHandler() {
             private final VLabel label = labels.get(3);
 
             @Override
@@ -748,7 +748,7 @@ public class GridBasicClientFeaturesWidget extends
             }
         });
 
-        grid.addKeyUpHandler(new HeaderKeyUpHandler() {
+        grid.addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
             private final VLabel label = labels.get(4);
 
             @Override
@@ -757,7 +757,7 @@ public class GridBasicClientFeaturesWidget extends
             }
         });
 
-        grid.addKeyUpHandler(new FooterKeyUpHandler() {
+        grid.addFooterKeyUpHandler(new FooterKeyUpHandler() {
             private final VLabel label = labels.get(5);
 
             @Override
@@ -767,7 +767,7 @@ public class GridBasicClientFeaturesWidget extends
         });
 
         // Key Press Events
-        grid.addKeyPressHandler(new BodyKeyPressHandler() {
+        grid.addBodyKeyPressHandler(new BodyKeyPressHandler() {
             private final VLabel label = labels.get(6);
 
             @Override
@@ -776,7 +776,7 @@ public class GridBasicClientFeaturesWidget extends
             }
         });
 
-        grid.addKeyPressHandler(new HeaderKeyPressHandler() {
+        grid.addHeaderKeyPressHandler(new HeaderKeyPressHandler() {
             private final VLabel label = labels.get(7);
 
             @Override
@@ -785,7 +785,7 @@ public class GridBasicClientFeaturesWidget extends
             }
         });
 
-        grid.addKeyPressHandler(new FooterKeyPressHandler() {
+        grid.addFooterKeyPressHandler(new FooterKeyPressHandler() {
             private final VLabel label = labels.get(8);
 
             @Override

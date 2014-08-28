@@ -636,8 +636,8 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
 
     public MultiSelectionRenderer(final Grid<T> grid) {
         this.grid = grid;
-        spaceDown = grid.addKeyDownHandler(handler);
-        spaceUp = grid.addKeyUpHandler(new BodyKeyUpHandler() {
+        spaceDown = grid.addBodyKeyDownHandler(handler);
+        spaceUp = grid.addBodyKeyUpHandler(new BodyKeyUpHandler() {
 
             @Override
             public void onKeyUp(GridKeyUpEvent event) {

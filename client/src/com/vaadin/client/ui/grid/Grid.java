@@ -53,9 +53,6 @@ import com.vaadin.client.ui.grid.GridFooter.FooterRow;
 import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.GridStaticSection.StaticCell;
 import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler;
-import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler.GridKeyDownHandler;
-import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler.GridKeyPressHandler;
-import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler.GridKeyUpHandler;
 import com.vaadin.client.ui.grid.events.BodyKeyDownHandler;
 import com.vaadin.client.ui.grid.events.BodyKeyPressHandler;
 import com.vaadin.client.ui.grid.events.BodyKeyUpHandler;
@@ -2601,63 +2598,125 @@ public class Grid<T> extends Composite implements
     }
 
     /**
-     * Register a KeyDown handler to this Grid. If the handler is a
-     * HeaderKeyDownHandler, it will be fired only when a header cell is active.
-     * The same goes for body and footer with their respective handlers.
+     * Register a BodyKeyDownHandler to this Grid. The event for this handler is
+     * fired when a KeyDown event occurs while active cell is in the Body of
+     * this Grid.
      * 
      * @param handler
      *            the key handler to register
      * @return the registration for the event
      */
-    public <HANDLER extends GridKeyDownHandler> HandlerRegistration addKeyDownHandler(
-            HANDLER handler) {
-        if (handler instanceof BodyKeyDownHandler
-                || handler instanceof HeaderKeyDownHandler
-                || handler instanceof FooterKeyDownHandler) {
-            return addHandler(handler, keyDown.getAssociatedType());
-        }
-        throw new IllegalArgumentException(
-                "Handler not a valid extension of GridKeyDownHandler");
+    public HandlerRegistration addBodyKeyDownHandler(BodyKeyDownHandler handler) {
+        return addHandler(handler, keyDown.getAssociatedType());
     }
 
     /**
-     * Register a KeyUp handler to this Grid. If the handler is a
-     * HeaderKeyUpHandler, it will be fired only when a header cell is active.
-     * The same goes for body and footer with their respective handlers.
+     * Register a BodyKeyUpHandler to this Grid. The event for this handler is
+     * fired when a KeyUp event occurs while active cell is in the Body of this
+     * Grid.
      * 
      * @param handler
      *            the key handler to register
      * @return the registration for the event
      */
-    public <HANDLER extends GridKeyUpHandler> HandlerRegistration addKeyUpHandler(
-            HANDLER handler) {
-        if (handler instanceof BodyKeyUpHandler
-                || handler instanceof HeaderKeyUpHandler
-                || handler instanceof FooterKeyUpHandler) {
-            return addHandler(handler, keyUp.getAssociatedType());
-        }
-        throw new IllegalArgumentException(
-                "Handler not a valid extension of GridKeyUpHandler");
+    public HandlerRegistration addBodyKeyUpHandler(BodyKeyUpHandler handler) {
+        return addHandler(handler, keyUp.getAssociatedType());
     }
 
     /**
-     * Register a KeyPress handler to this Grid. If the handler is a
-     * HeaderKeyPressHandler, it will be fired only when a header cell is
-     * active. The same goes for body and footer with their respective handlers.
+     * Register a BodyKeyPressHandler to this Grid. The event for this handler
+     * is fired when a KeyPress event occurs while active cell is in the Body of
+     * this Grid.
      * 
      * @param handler
      *            the key handler to register
      * @return the registration for the event
      */
-    public <HANDLER extends GridKeyPressHandler> HandlerRegistration addKeyPressHandler(
-            HANDLER handler) {
-        if (handler instanceof BodyKeyPressHandler
-                || handler instanceof HeaderKeyPressHandler
-                || handler instanceof FooterKeyPressHandler) {
-            return addHandler(handler, keyPress.getAssociatedType());
-        }
-        throw new IllegalArgumentException(
-                "Handler not a valid extension of GridKeyPressHandler");
+    public HandlerRegistration addBodyKeyPressHandler(
+            BodyKeyPressHandler handler) {
+        return addHandler(handler, keyPress.getAssociatedType());
+    }
+
+    /**
+     * Register a HeaderKeyDownHandler to this Grid. The event for this handler
+     * is fired when a KeyDown event occurs while active cell is in the Header
+     * of this Grid.
+     * 
+     * @param handler
+     *            the key handler to register
+     * @return the registration for the event
+     */
+    public HandlerRegistration addHeaderKeyDownHandler(
+            HeaderKeyDownHandler handler) {
+        return addHandler(handler, keyDown.getAssociatedType());
+    }
+
+    /**
+     * Register a HeaderKeyUpHandler to this Grid. The event for this handler is
+     * fired when a KeyUp event occurs while active cell is in the Header of
+     * this Grid.
+     * 
+     * @param handler
+     *            the key handler to register
+     * @return the registration for the event
+     */
+    public HandlerRegistration addHeaderKeyUpHandler(HeaderKeyUpHandler handler) {
+        return addHandler(handler, keyUp.getAssociatedType());
+    }
+
+    /**
+     * Register a HeaderKeyPressHandler to this Grid. The event for this handler
+     * is fired when a KeyPress event occurs while active cell is in the Header
+     * of this Grid.
+     * 
+     * @param handler
+     *            the key handler to register
+     * @return the registration for the event
+     */
+    public HandlerRegistration addHeaderKeyPressHandler(
+            HeaderKeyPressHandler handler) {
+        return addHandler(handler, keyPress.getAssociatedType());
+    }
+
+    /**
+     * Register a FooterKeyDownHandler to this Grid. The event for this handler
+     * is fired when a KeyDown event occurs while active cell is in the Footer
+     * of this Grid.
+     * 
+     * @param handler
+     *            the key handler to register
+     * @return the registration for the event
+     */
+    public HandlerRegistration addFooterKeyDownHandler(
+            FooterKeyDownHandler handler) {
+        return addHandler(handler, keyDown.getAssociatedType());
+    }
+
+    /**
+     * Register a FooterKeyUpHandler to this Grid. The event for this handler is
+     * fired when a KeyUp event occurs while active cell is in the Footer of
+     * this Grid.
+     * 
+     * @param handler
+     *            the key handler to register
+     * @return the registration for the event
+     */
+    public HandlerRegistration addFooterKeyUpHandler(FooterKeyUpHandler handler) {
+        return addHandler(handler, keyUp.getAssociatedType());
+    }
+
+    /**
+     * Register a FooterKeyPressHandler to this Grid. The event for this handler
+     * is fired when a KeyPress event occurs while active cell is in the Footer
+     * of this Grid.
+     * 
+     * @param handler
+     *            the key handler to register
+     * @return the registration for the event
+     */
+    public HandlerRegistration addFooterKeyPressHandler(
+            FooterKeyPressHandler handler) {
+        return addHandler(handler, keyPress.getAssociatedType());
     }
 
     /**
