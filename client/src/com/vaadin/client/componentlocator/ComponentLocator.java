@@ -36,6 +36,7 @@ import com.vaadin.client.ApplicationConnection;
 public class ComponentLocator {
 
     private final List<LocatorStrategy> locatorStrategies;
+    private final LocatorStrategy legacyLocatorStrategy;
 
     /**
      * Reference to ApplicationConnection instance.
@@ -51,8 +52,9 @@ public class ComponentLocator {
      */
     public ComponentLocator(ApplicationConnection client) {
         this.client = client;
+        legacyLocatorStrategy = new LegacyLocatorStrategy(client);
         locatorStrategies = Arrays.asList(new VaadinFinderLocatorStrategy(
-                client), new LegacyLocatorStrategy(client));
+                client), legacyLocatorStrategy);
     }
 
     /**
@@ -107,6 +109,24 @@ public class ComponentLocator {
      */
     public String getPathForElement(Element targetElement) {
         return getPathForElement(DOM.asOld(targetElement));
+    }
+
+    /**
+     * Returns a String locator which uniquely identifies the target element.
+     * The returned locator is in a legacy format that is suitable for Vaadin
+     * TestBench Recorder. For non-legacy format, use
+     * {@link #getPathForElement(com.google.gwt.user.client.Element)} instead.
+     * 
+     * 
+     * @since
+     * @param targetElement
+     *            The element to generate a path for.
+     * @return A String locator that identifies the target element or null if a
+     *         String locator could not be created.
+     */
+    public String getLegacyPathForElement(Element targetElement) {
+        return legacyLocatorStrategy
+                .getPathForElement(DOM.asOld(targetElement));
     }
 
     /**
