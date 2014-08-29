@@ -1,6 +1,20 @@
+/**
+ * The amount of spacing between different widgets in a component group.
+ * If null, a computed value is used ($v-border size * -1, or 1px if $v-border size is 0)
+ * 
+ * @group csslayout
+ */
 $v-component-group-spacing: null !default;
 
 
+/**
+ * Outputs the additional styles for the CssLayout component. Does not produce any other output.
+ * 
+ * @param {string} $primary-stylename (v-csslayout) - the primary style name for the selectors
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ *
+ * @group csslayout
+ */
 @mixin valo-csslayout ($primary-stylename: v-csslayout, $include-additional-styles: contains($v-included-additional-styles, csslayout)){
   @if $include-additional-styles {
     .#{$primary-stylename}-well {
@@ -20,6 +34,18 @@ $v-component-group-spacing: null !default;
 }
 
 
+/**
+ * Outputs the styles for a horizontal component group. The target component is 
+ * expected to be a CssLayout, which is a single DIV element with child components 
+ * directly inside.
+ * 
+ * @group csslayout
+ * 
+ * @example scss
+ * .my-csslayout {
+ *   @include valo-component-group;
+ * }
+ */
 @mixin valo-component-group {
   white-space: nowrap;
   position: relative;

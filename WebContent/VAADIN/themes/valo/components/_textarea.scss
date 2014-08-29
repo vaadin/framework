@@ -1,3 +1,11 @@
+/**
+ * Outputs the selectors and properties for the TextArea component.
+ *
+ * @param {string} $primary-stylename (v-textarea) - the primary style name for the selectors
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ *
+ * @group textarea
+ */
 @mixin valo-textarea ($primary-stylename: v-textarea, $include-additional-styles: contains($v-included-additional-styles, textarea)) {
 
   .#{$primary-stylename} {
@@ -51,13 +59,30 @@
 }
 
 
+/**
+ * Outputs the styles for a text area variant.
+ *
+ * @param {size} $unit-size ($v-unit-size) - The sizing of the text area, which corresponds its height
+ * @param {size | list} $padding (null) - The padding of the text area. Computed from other parameters by default.
+ * @param {color} $font-color (null) - The font color of the text area. Computed from the $background-color by default.
+ * @param {number} $font-weight (max(400, $v-font-weight)) - The font weight of the text area
+ * @param {size} $font-size (null) - The font size of the text area. Inherited from the parent by default.
+ * @param {color} $background-color ($v-textfield-background-color) - The background color of the text area
+ * @param {list} $border ($v-textfield-border) - The border of the text area
+ * @param {size} $border-radius ($v-textfield-border-radius) - The border-radius of the text area
+ * @param {list} $bevel ($v-textfield-bevel) - Box-shadow value according to $v-bevel documentation
+ * @param {list} $shadow ($v-textfield-shadow) - Box-shadow value according to $v-shadow documentation
+ * @param {list} $states (normal focus disabled) - The text area states for which to output corresponding styles
+ *
+ * @group textfield
+ */
 @mixin valo-textarea-style (
     $unit-size        : $v-unit-size,
-    $padding          : round($v-unit-size/6), // Computed by default
+    $padding          : round($v-unit-size/6),
 
-    $font-color       : null, // Computed by default
-    $font-weight      : max(400, $v-font-weight), // Inherited by default
-    $font-size        : null, // Inherited by default
+    $font-color       : null,
+    $font-weight      : max(400, $v-font-weight),
+    $font-size        : null,
 
     $background-color : $v-textfield-background-color,
     $border           : $v-textfield-border,
@@ -71,8 +96,8 @@
 
   @include valo-textfield-style($unit-size: $unit-size, $padding: $padding,
                                 $font-color: $font-color,
-                                $font-weight: $font-weight, // Inherited by default
-                                $font-size: $font-size, // Inherited by default
+                                $font-weight: $font-weight,
+                                $font-size: $font-size,
 
                                 $background-color: $background-color,
                                 $border: $border,
