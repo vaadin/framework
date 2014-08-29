@@ -97,7 +97,7 @@ $v-panel-border: $v-border !default;
   font-weight: $v-caption-font-weight;
   font-size: $v-caption-font-size;
   @include box-shadow(valo-bevel-and-shadow($background-color: $bg, $bevel: $bevel, $shadow: $shadow, $gradient: $gradient));
-  text-shadow: valo-text-shadow(valo-font-color($bg), $bg, $v-bevel);
+  text-shadow: valo-text-shadow(valo-font-color($bg), $bg);
 }
 
 

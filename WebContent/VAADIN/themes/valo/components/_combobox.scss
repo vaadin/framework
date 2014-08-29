@@ -333,9 +333,13 @@
 
   .#{$primary-stylename}-suggestmenu {
     @include valo-selection-overlay-style($animate-in: false, $animate-out: false);
-    box-sizing: border-box;
+    @include box-sizing(border-box);
     position: relative;
     z-index: 1;
+
+    &[style*="height"] {
+      @include box-sizing(content-box);
+    }
   }
 
    margin-top: ceil($v-unit-size/8) !important;
@@ -371,7 +375,7 @@
     pointer-events: none;
 
     @if $v-animations-enabled {
-       @include animation(valo-anim-slide-in-down 200ms 80ms backwards);
+       @include animation(valo-animate-in-slide-down 200ms 80ms backwards);
     }
 
     > * {
@@ -396,9 +400,24 @@
 
     color: valo-font-color($v-background-color);
 
+    &:after {
+      // Extend click target when hovering over (popup width might change between pages)
+      content: "";
+      position: absolute;
+      display: block;
+      border-radius: 50%;
+    }
+
     &:hover {
       @include opacity(1);
       background: rgba($v-background-color, .5);
+
+      &:after {
+        top: -10px;
+        bottom: -10px;
+        left: -20px;
+        right: -20px;
+      }
     }
 
     span {

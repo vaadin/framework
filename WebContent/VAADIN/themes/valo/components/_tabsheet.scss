@@ -77,7 +77,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
   @if $v-tabsheet-content-animation-enabled {
     .#{$primary-stylename}-tabsheetpanel > .v-scrollable > .v-widget {
-      @include valo-anim-fade-in(300ms);
+      @include valo-animate-in-fade(300ms);
     }
 
     $spinner-size: round($v-unit-size/2);
@@ -85,37 +85,17 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
     .#{$primary-stylename}-deco {
       @include valo-spinner($size: $spinner-size);
-      height: 0 !important;
-      border-style: none;
-      display: block;
+      display: none;
       position: absolute;
-      z-index: -1;
+      z-index: 1;
       bottom: 50%;
       margin-bottom: round($v-unit-size/-2) - $spinner-size/2;
       left: 50%;
       margin-left: $spinner-size/-2;
-      opacity: 0;
-
-      .v-ie8 & {
-        min-height: 0;
-      }
     }
 
     .#{$primary-stylename}-loading .#{$primary-stylename}-deco {
-      @include transition(opacity 200ms 200ms);
-      opacity: 1;
-      z-index: 1;
-      height: $spinner-size !important;
-      border-style: solid;
-
-      .v-ie8 &,
-      .v-ie9 & {
-        border-style: none;
-      }
-
-      .v-ie8 & {
-        min-height: 30px;
-      }
+      display: block;
     }
   }
 
@@ -168,7 +148,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     position: absolute;
     height: 0;
     // iOS panics with background color, creating black line artifacts
-    border-top: max(1px, first-number($v-border)) solid first-color(valo-border($strength: 0.5));
+    border-top: max(1px, first-number($v-border)) solid first-color(valo-border($color: $v-app-background-color, $strength: 0.5));
     bottom: 0;
     left: 0;
     right: 0;
@@ -387,7 +367,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
       &:hover {
         background-color: darken($v-app-background-color, 3%);
-        border-bottom-color: first-color(valo-border($strength: 0.5));
+        border-bottom-color: first-color(valo-border($color: $v-app-background-color, $strength: 0.5));
       }
     }
 
@@ -398,13 +378,13 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
     @if $frame-inactive-tabs {
       .#{$primary-stylename}-tabitem .v-caption {
-        border-color: first-color(valo-border($strength: 0.5));
+        border-color: first-color(valo-border($color: $v-app-background-color, $strength: 0.5));
       }
     }
 
     .#{$primary-stylename}-tabitem-selected .v-caption {
       background: $v-panel-background-color;
-      border-color: first-color(valo-border($strength: 0.5));
+      border-color: first-color(valo-border($color: $v-app-background-color, $strength: 0.5));
       border-bottom: none;
       padding-bottom: first-number($v-border);
     }
@@ -429,7 +409,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     }
 
     @if $outer-frame {
-      border: valo-border($strength: 0.5);
+      border: valo-border($color: $v-app-background-color, $strength: 0.5);
       border-top: none;
     }
   }
@@ -437,7 +417,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
   &.padded-tabbar {
     > .#{$primary-stylename}-tabcontainer {
       @if $outer-frame {
-        border: valo-border($strength: 0.5);
+        border: valo-border($color: $v-app-background-color, $strength: 0.5);
         border-bottom: none;
       }
 

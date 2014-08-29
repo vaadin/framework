@@ -27,6 +27,6 @@
 
   &:focus {
     outline: none;
-    @include valo-focus-style($include-box-shadow: true);
+    @include valo-focus-style;
   }
 }

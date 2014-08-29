@@ -156,6 +156,10 @@
       background: transparent;
       border: none;
       color: inherit;
+
+      &:focus {
+        box-shadow: none;
+      }
     }
 
     > .v-textfield-prompt,

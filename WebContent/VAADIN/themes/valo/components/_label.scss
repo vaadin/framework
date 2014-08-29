@@ -34,7 +34,7 @@ $v-letter-spacing--h4:    0               !default;
   h3, .#{$primary-stylename}-h3 {
     line-height: $v-line-height--header;
     font-weight: $v-font-weight--header;
-    color: valo-header-color($v-app-background-color);
+    color: valo-font-color($v-app-background-color, 0.92);
   }
 
   h1, .#{$primary-stylename}-h1 {
@@ -65,7 +65,7 @@ $v-letter-spacing--h4:    0               !default;
     line-height: $v-line-height--header;
     font-weight: $v-font-weight + 200;
     font-size: $v-font-size--small;
-    color: valo-header-color($v-app-background-color, $contrast: 0.12);
+    color: valo-font-color($v-app-background-color, 0.74);
     text-transform: uppercase;
     letter-spacing: $v-letter-spacing--h4;
     margin-top: 2.4em;
