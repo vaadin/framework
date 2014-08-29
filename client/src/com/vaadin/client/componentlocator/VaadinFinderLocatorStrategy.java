@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -32,6 +33,7 @@ import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.VNotification;
+import com.vaadin.client.ui.ui.UIConnector;
 
 /**
  * The VaadinFinder locator strategy implements an XPath-like syntax for
@@ -311,8 +313,9 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
         } else {
 
+            final UIConnector uiConnector = client.getUIConnector();
             elements.addAll(eliminateDuplicates(getElementsByPathStartingAtConnector(
-                    path, client.getUIConnector())));
+                    path, uiConnector, Document.get().getBody())));
         }
 
         for (SelectorPredicate p : postFilters) {
@@ -369,8 +372,9 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             path = path.substring(1, path.lastIndexOf(')'));
         }
 
+        final ComponentConnector searchRoot = Util.findPaintable(client, root);
         List<Element> elements = getElementsByPathStartingAtConnector(path,
-                Util.findPaintable(client, root));
+                searchRoot, root);
 
         for (SelectorPredicate p : postFilters) {
             // Post filtering supports only indexes and follows instruction
@@ -438,7 +442,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      *         found.
      */
     private List<Element> getElementsByPathStartingAtConnector(String path,
-            ComponentConnector root) {
+            ComponentConnector root, Element actualRoot) {
         String[] pathComponents = path.split(SUBPART_SEPARATOR);
         List<ComponentConnector> connectors;
         if (pathComponents[0].length() > 0) {
@@ -450,16 +454,20 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
         List<Element> output = new ArrayList<Element>();
         if (null != connectors && !connectors.isEmpty()) {
-            if (pathComponents.length > 1) {
-                // We have subparts
-                for (ComponentConnector connector : connectors) {
+            for (ComponentConnector connector : connectors) {
+                if (!actualRoot
+                        .isOrHasChild(connector.getWidget().getElement())) {
+                    // Filter out widgets that are not children of actual root
+                    continue;
+                }
+
+                if (pathComponents.length > 1) {
+                    // We have SubParts
                     if (connector.getWidget() instanceof SubPartAware) {
                         output.add(((SubPartAware) connector.getWidget())
                                 .getSubPartElement(pathComponents[1]));
                     }
-                }
-            } else {
-                for (ComponentConnector connector : connectors) {
+                } else {
                     output.add(connector.getWidget().getElement());
                 }
             }
