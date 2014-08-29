@@ -205,7 +205,7 @@ $v-window-modality-curtain-background-color: #222 !default;
       @include valo-panel-adjust-content-margins;
 
       > .v-formlayout {
-        @include valo-formlayout-margins($all: round($v-unit-size/3));
+        @include valo-formlayout-margin(round($v-unit-size/3));
       }
 
       position: relative;
