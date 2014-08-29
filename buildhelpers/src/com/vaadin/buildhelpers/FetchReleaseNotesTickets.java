@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -33,12 +34,26 @@ public class FetchReleaseNotesTickets {
             + "</tr>"; //
 
     public static void main(String[] args) throws IOException {
-        String versions = System.getProperty("vaadin.version");
-        if (versions == null || versions.equals("")) {
+        String versionsProperty = System.getProperty("vaadin.version");
+        if (versionsProperty == null || versionsProperty.equals("")) {
             usage();
         }
         String milestone = "";
-        for (String version : versions.split(" ")) {
+
+        List<String> versions = new ArrayList<String>();
+        for (String version : versionsProperty.split(" ")) {
+            if (version.endsWith(".0") || version.matches(".*\\.rc\\d+")) {
+                // Find all prerelease versions for final or rc
+
+                // Strip potential rc prefix
+                version = version.replaceAll("\\.rc\\d+$", "");
+                versions.addAll(findPrereleaseVersions(version));
+            } else {
+                versions.add(version);
+            }
+        }
+
+        for (String version : versions) {
             if (!milestone.equals("")) {
                 milestone += "&amp;";
             }
@@ -46,6 +61,22 @@ public class FetchReleaseNotesTickets {
         }
 
         printMilestone(milestone);
+    }
+
+    private static List<String> findPrereleaseVersions(String baseVersion) {
+        List<String> versions = new ArrayList<String>();
+
+        for (int i = 0; i < 50; i++) {
+            versions.add(baseVersion + ".alpha" + i);
+        }
+        for (int i = 0; i < 10; i++) {
+            versions.add(baseVersion + ".beta" + i);
+        }
+        for (int i = 0; i < 10; i++) {
+            versions.add(baseVersion + ".rc" + i);
+        }
+
+        return versions;
     }
 
     private static void printMilestone(String milestone)
