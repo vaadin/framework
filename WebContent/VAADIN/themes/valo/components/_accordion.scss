@@ -1,3 +1,10 @@
+/**
+ * Outputs the selectors and properties for the Accordion component.
+ *
+ * @param {string} $primary-stylename (v-accordion) - the primary style name for the selectors
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ * @group accordion
+ */
 @mixin valo-accordion ($primary-stylename: v-accordion, $include-additional-styles: contains($v-included-additional-styles, accordion)) {
   .#{$primary-stylename} {
     @include valo-accordion-style;
@@ -22,7 +29,9 @@
       border-radius: 0;
       @include box-shadow(none);
 
-      > .#{$primary-stylename}-item {
+      > .#{$primary-stylename}-item,
+      > .#{$primary-stylename}-item > div > .v-caption,
+      > .#{$primary-stylename}-item > .#{$primary-stylename}-item-content {
         border-radius: 0;
       }
     }
@@ -31,7 +40,10 @@
 }
 
 
-
+/**
+ * Outputs the styles for the Accordion component root element.
+ * @group accordion
+ */
 @mixin valo-accordion-style {
   @include valo-panel-style;
   $grad-style: valo-gradient-style($v-gradient);
@@ -41,50 +53,64 @@
 }
 
 
+/**
+ * Outputs the styles for an individual Accordion item root element.
+ * @group accordion
+ */
 @mixin valo-accordion-item-style {
+  $_br: $v-border-radius - first-number($v-border);
   position: relative;
-  overflow: hidden;
 
   @if $v-border-radius > 0 {
-    $_br: $v-border-radius - first-number($v-border);
-
     &:first-child {
-      border-radius: $_br $_br 0 0;
-
-      .v-caption {
-        border-radius: inherit;
-      }
+      border-top-left-radius: $_br;
+      border-top-right-radius: $_br;
     }
 
     &:last-child {
-      border-radius: 0 0 $_br $_br;
+      border-bottom-left-radius: $_br;
+      border-bottom-right-radius: $_br;
 
-      .v-caption {
-        border-radius: 0;
+      [class*="item-content"] {
+        border-radius: inherit;
       }
     }
   }
 
-  &:last-child:not([class*="item-open"]) .v-caption {
+  &[class*="item-open"]:last-child > div > .v-caption {
+    border-radius: 0;
+  }
+
+  &:not([class*="item-open"]):last-child > div > .v-caption {
     border-bottom: none;
+    margin-bottom: 0;
   }
 
   &[class*="item-open"] + [class*="item"] {
-    border-top: valo-border($color: $v-panel-background-color, $strength: 0.7);
+    border-top: valo-border($border: $v-panel-border, $color: $v-panel-background-color, $strength: 0.7);
   }
 }
 
 
-
+/**
+ * Outputs the styles for an individual Accordion item's caption element.
+ *
+ * @param {color} $background-color (null) - the background color of the caption. Other styles (such as font and border colors, gradients and bevels) adapt to the background color automatically.
+ * @group accordion
+ */
 @mixin valo-accordion-item-caption-style ($background-color: null) {
-  .v-caption {
+  border-radius: inherit;
+
+  > .v-caption {
     @include valo-panel-caption-style($background-color: $background-color or $v-background-color);
     display: block;
     @if $background-color == null {
       background: transparent;
     }
     border-bottom-color: first-color(valo-border($color: $v-panel-background-color));
+    border-radius: inherit;
     cursor: pointer;
+    position: relative;
 
     &:hover:before,
     &:active:before {
@@ -94,6 +120,7 @@
       right: 0;
       bottom: 0;
       left: 0;
+      border-radius: inherit;
     }
 
     @if $v-hover-styles-enabled {
@@ -110,11 +137,11 @@
 }
 
 
+/**
+ * Outputs the styles for an individual Accordion item's content element.
+ * @group accordion
+ */
 @mixin valo-accordion-item-content-style {
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  right: 0;
   @include box-shadow(valo-bevel-and-shadow($shadow: join(inset, $v-shadow), $shadow-opacity: $v-shadow-opacity/2));
   background-color: $v-panel-background-color;
   @include box-sizing(border-box);

@@ -1,3 +1,11 @@
+/**
+ * Cross-browser opacity.
+ *
+ * @param {number} $value - opacity value from 0 to 1
+ * @param {bool} $important (false) - should the property value be declared with !important
+ *
+ * @group util
+ */
 @mixin opacity ($value, $important: false) {
   $importantValue: null;
   @if $important {
@@ -14,7 +22,14 @@
   }
 }
 
-// -webkit-box-shadow still needed for Android 2.3 and 3.0, as well as iOS 5
+/**
+ * Cross-browser box-shadow.
+ * -webkit-box-shadow is still needed for Android 2.3 and 3.0, as well as iOS 5
+ *
+ * @param {list} $shadows - Any valid CSS box-shadow value
+ *
+ * @group util
+ */
 @mixin box-shadow ($shadows...) {
   @include prefixer(box-shadow, $shadows, webkit spec);
 }
