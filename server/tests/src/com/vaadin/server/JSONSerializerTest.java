@@ -40,7 +40,7 @@ import elemental.json.JsonValue;
  * @since 7.0
  * 
  */
-public class JsonSerializerTest extends TestCase {
+public class JSONSerializerTest extends TestCase {
     HashMap<String, AbstractSplitPanelState> stringToStateMap;
     HashMap<AbstractSplitPanelState, String> stateToStringMap;
 

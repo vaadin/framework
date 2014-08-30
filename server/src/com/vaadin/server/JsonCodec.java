@@ -40,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import com.vaadin.server.communication.DateSerializer;
-import com.vaadin.server.communication.JsonSerializer;
+import com.vaadin.server.communication.JSONSerializer;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.UidlValue;
@@ -212,7 +212,7 @@ public class JsonCodec implements Serializable {
      */
     private static Map<String, Class<?>> transportTypeToType = new HashMap<String, Class<?>>();
 
-    private static Map<Class<?>, JsonSerializer<?>> customSerializers = new HashMap<Class<?>, JsonSerializer<?>>();
+    private static Map<Class<?>, JSONSerializer<?>> customSerializers = new HashMap<Class<?>, JSONSerializer<?>>();
     static {
         customSerializers.put(Date.class, new DateSerializer());
     }
@@ -907,7 +907,7 @@ public class JsonCodec implements Serializable {
 
     private static JsonValue serializeJson(Object value,
             ConnectorTracker connectorTracker) {
-        JsonSerializer serializer = customSerializers.get(value.getClass());
+        JSONSerializer serializer = customSerializers.get(value.getClass());
         return serializer.serialize(value, connectorTracker);
     }
 

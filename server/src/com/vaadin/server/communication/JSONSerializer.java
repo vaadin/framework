@@ -29,7 +29,7 @@ import elemental.json.JsonValue;
  * symmetric so they can be chained and produce the original result (or an equal
  * result).
  * <p>
- * Each {@link JsonSerializer} implementation can handle an object of a single
+ * Each {@link JSONSerializer} implementation can handle an object of a single
  * type.
  * <p>
  * This is the server side interface, see
@@ -38,7 +38,7 @@ import elemental.json.JsonValue;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public interface JsonSerializer<T> {
+public interface JSONSerializer<T> {
     /**
      * Creates and deserializes an object received from the client. Must be
      * compatible with {@link #serialize(Object, ConnectorTracker)} and also
