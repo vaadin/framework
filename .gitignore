@@ -40,6 +40,10 @@
 /WebContent/VAADIN/themes/runo/common/img/ajax-loader-red.gif
 /WebContent/VAADIN/themes/runo/common/img/ajax-loader-yellow.gif
 
+# /WebContent/VAADIN/themes/valo/
+/WebContent/VAADIN/themes/valo/styles.css
+/WebContent/VAADIN/themes/tests-valo*/styles.css
+
 # /WebContent/VAADIN/widgetsets/
 /WebContent/VAADIN/widgetsets
 /WebContent/VAADIN/gwt-unitCache*
