@@ -77,9 +77,6 @@
             <antcall target="compile-theme" inheritRefs="true">
                 <param name="theme" value="liferay" />
             </antcall>
-            <antcall target="compile-theme" inheritRefs="true">
-                <param name="theme" value="valo" />
-            </antcall>
         </parallel>
     </target>
 
