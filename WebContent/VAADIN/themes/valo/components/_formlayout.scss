@@ -14,7 +14,6 @@
   .#{$primary-stylename} > table {
     border-spacing: 0;
     position: relative;
-    padding: 0 $v-layout-spacing-horizontal;
   }
 
   .#{$primary-stylename}.v-has-width > table,
