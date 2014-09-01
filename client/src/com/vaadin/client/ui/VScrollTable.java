@@ -133,7 +133,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Simple interface for parts of the table capable of owning a context menu.
-     *
+     * 
      * @since 7.2
      * @author Vaadin Ltd
      */
@@ -143,7 +143,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Handles showing context menu on "long press" from a touch screen.
-     *
+     * 
      * @since 7.2
      * @author Vaadin Ltd
      */
@@ -159,7 +159,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Initializes a handler for a certain context menu owner.
-         *
+         * 
          * @param target
          *            the owner of the context menu
          */
@@ -180,7 +180,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * A function to handle touch context events in a table.
-         *
+         * 
          * @param event
          *            browser event to handle
          */
@@ -234,7 +234,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * Calculates how many pixels away the user's finger has traveled. This
          * reduces the chance of small non-intentional movements from canceling
          * the long press detection.
-         *
+         * 
          * @param event
          *            the Event for which to check the move distance
          * @return true if this is considered an intentional move by the user
@@ -526,11 +526,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * For internal use only. May be removed or replaced in the future.
-     *
+     * 
      * Overwrites onBrowserEvent function on FocusableScrollPanel to give event
      * access to touchContextProvider. Has to be public to give TableConnector
      * access to the scrollBodyPanel field.
-     *
+     * 
      * @since 7.2
      * @author Vaadin Ltd
      */
@@ -896,7 +896,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Handles a context menu event on table body.
-     *
+     * 
      * @param left
      *            left position of the context menu
      * @param top
@@ -1302,19 +1302,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         selected = true;
                         keyboardSelectionOverRowFetchInProgress = true;
                     }
-                    if (selected) {
-
-                        if (focusedRow == null
-                                || !selectedRowKeys.contains(focusedRow
-                                        .getKey())) {
-                            /*
-                             * The focus is no longer on a selected row. Move
-                             * focus to the selected row. (#10522)
-                             */
-
-                            setRowFocus(row);
-                        }
+                    if (selected && selectedKeys.size() == 1) {
+                        /*
+                         * If a single item is selected, move focus to the
+                         * selected row. (#10522)
+                         */
+                        setRowFocus(row);
                     }
+
                     if (selected != row.isSelected()) {
                         row.toggleSelection();
 
@@ -7520,7 +7515,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
 
         if (row != null) {
-
             // Apply focus style to new selection
             row.addStyleName(getStylePrimaryName() + "-focus");
 
@@ -7534,14 +7528,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // Set new focused row
             focusedRow = row;
 
-            /*
-             * Don't scroll to the focused row when in multiselect mode.
-             * (#13341)
-             */
-
-            if (isSingleSelectMode()) {
-                ensureRowIsVisible(row);
-            }
+            ensureRowIsVisible(row);
 
             return true;
         }
@@ -7561,6 +7548,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // get odd scrolling here.
             return;
         }
+        /*
+         * FIXME The next line doesn't always do what expected, because if the
+         * row is not in the DOM it won't scroll to it.
+         */
         Util.scrollIntoViewVertically(row.getElement());
     }
 
@@ -8015,7 +8006,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     public void lazyRevertFocusToRow(final VScrollTableRow currentlyFocusedRow) {
         Scheduler.get().scheduleFinally(new ScheduledCommand() {
-
             @Override
             public void execute() {
                 if (currentlyFocusedRow != null) {
