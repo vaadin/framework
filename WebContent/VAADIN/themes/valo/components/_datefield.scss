@@ -202,26 +202,30 @@
   @include valo-tappable;
   -webkit-appearance: none;
   background: transparent;
-  @if $border {
-    // Only override border if we are actually setting some border
-    border: none;
-  }
   padding: 0;
   position: absolute;
   z-index: 10;
-  top: $border-width;
-  bottom: $border-width;
-  left: $border-width;
   width: $unit-size;
   line-height: $unit-size - ($border-width*2);
   text-align: center;
-  cursor: pointer;
   font: inherit;
   outline: none;
   margin: 0;
 
+  @if $border and $border != none {
+    top: $border-width;
+    bottom: $border-width;
+    left: $border-width;
+  }
+
+  @if $border {
+    border: none;
+  }
+
   @if type-of($background-color) == color {
-    border-right: valo-border($color: $background-color, $border: $v-textfield-border, $strength: 0.5);
+    @if $border {
+      border-right: valo-border($color: $background-color, $border: $v-textfield-border, $strength: 0.5);
+    }
     color: mix($background-color, valo-font-color($background-color));
 
     &:hover {
