@@ -344,12 +344,15 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         public void stop() {
             running = false;
 
-            // split into two lines because of Java generics not playing nice.
-            @SuppressWarnings("unchecked")
-            Collection<T> emptySet = (Collection<T>) Collections.emptySet();
-            remoteDataSource.transactionPin(emptySet);
-            remoteDataSource = null;
-            batchedSelectionModel = null;
+            if (remoteDataSource != null) {
+                // split into two lines because of Java generics not playing
+                // nice.
+                @SuppressWarnings("unchecked")
+                Collection<T> emptySet = (Collection<T>) Collections.emptySet();
+                remoteDataSource.transactionPin(emptySet);
+                remoteDataSource = null;
+                batchedSelectionModel = null;
+            }
 
             if (handle != null) {
                 handle.cancel();
