@@ -883,7 +883,17 @@ public class Grid<T> extends Composite implements
                 return;
             }
 
-            this.visible = visible;
+            /*
+             * We need to guarantee that both insertColumns and removeColumns
+             * have this particular column accessible. Therefore, if we're
+             * turning the column visible, it's set before the other logic.
+             * Analogously, if we're turning the column invisible, we do that
+             * only after the logic has been performed.
+             */
+
+            if (visible) {
+                this.visible = true;
+            }
 
             if (grid != null) {
                 int index = findIndexOfColumn();
@@ -895,7 +905,13 @@ public class Grid<T> extends Composite implements
                 } else {
                     conf.removeColumns(index, 1);
                 }
+            }
 
+            if (!visible) {
+                this.visible = false;
+            }
+
+            if (grid != null) {
                 for (HeaderRow row : grid.getHeader().getRows()) {
                     row.calculateColspans();
                 }
