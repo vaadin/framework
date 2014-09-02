@@ -1467,7 +1467,6 @@ public class Escalator extends Widget {
          * 
          * @return a set-up empty cell element
          */
-        @SuppressWarnings("hiding")
         public TableCellElement createCellElement(final int height,
                 final int width) {
             final TableCellElement cellElem = TableCellElement.as(DOM
@@ -1497,58 +1496,31 @@ public class Escalator extends Widget {
 
         protected void paintRemoveColumns(final int offset,
                 final int numberOfColumns) {
-            final NodeList<Node> childNodes = root.getChildNodes();
-            for (int visualRowIndex = 0; visualRowIndex < childNodes
-                    .getLength(); visualRowIndex++) {
-                final TableRowElement tr = getTrByVisualIndex(visualRowIndex);
-
-                flyweightRow.setup(tr, visualRowIndex,
+            for (int i = 0; i < root.getChildCount(); i++) {
+                TableRowElement row = getTrByVisualIndex(i);
+                flyweightRow.setup(row, i,
                         columnConfiguration.getCalculatedColumnWidths());
 
-                Iterable<FlyweightCell> cells = flyweightRow.getCells(offset,
-                        numberOfColumns);
+                Iterable<FlyweightCell> attachedCells = flyweightRow.getCells(
+                        offset, numberOfColumns);
+                getEscalatorUpdater().preDetach(flyweightRow, attachedCells);
 
-                getEscalatorUpdater().preDetach(flyweightRow, cells);
-
-                for (FlyweightCell cell : cells) {
-                    Element cellElement = cell.getElement();
-                    cellElement.removeFromParent();
+                for (int j = 0; j < numberOfColumns; j++) {
+                    row.getCells().getItem(offset).removeFromParent();
                 }
 
-                /**
-                 * We need a new iterable that does not try to reset the cell
-                 * elements from the tr as they're not attached anymore. Instead
-                 * the cells simply retain the now-unattached elements that were
-                 * assigned on the above iteration.
-                 * 
-                 * TODO a cleaner solution, eg. an iterable that only associates
-                 * the elements once
-                 */
-                cells = flyweightRow
+                Iterable<FlyweightCell> detachedCells = flyweightRow
                         .getUnattachedCells(offset, numberOfColumns);
-                getEscalatorUpdater().postDetach(flyweightRow, cells);
+                getEscalatorUpdater().postDetach(flyweightRow, detachedCells);
 
                 assert flyweightRow.teardown();
-            }
-            reapplyRowWidths();
-
-            /*
-             * Because we might remove columns where affected by colspans, it's
-             * easiest to simply redraw everything when columns are modified.
-             * 
-             * Yes, this is a TODO [[optimize]].
-             */
-            if (getRowCount() > 0
-                    && getColumnConfiguration().getColumnCount() > 0) {
-                refreshRows(0, getRowCount());
             }
         }
 
         protected void paintInsertColumns(final int offset,
                 final int numberOfColumns, boolean frozen) {
-            final NodeList<Node> childNodes = root.getChildNodes();
 
-            for (int row = 0; row < childNodes.getLength(); row++) {
+            for (int row = 0; row < root.getChildCount(); row++) {
                 final TableRowElement tr = getTrByVisualIndex(row);
                 paintInsertCells(tr, row, offset, numberOfColumns);
             }
@@ -1566,8 +1538,7 @@ public class Escalator extends Widget {
              * 
              * Yes, this is a TODO [[optimize]].
              */
-            if (getRowCount() > 0
-                    && getColumnConfiguration().getColumnCount() > 1) {
+            if (getRowCount() > 0) {
                 refreshRows(0, getRowCount());
             }
         }
@@ -1695,7 +1666,6 @@ public class Escalator extends Widget {
                 Element cell = row.getFirstChildElement();
                 int columnIndex = 0;
                 while (cell != null) {
-                    @SuppressWarnings("hiding")
                     final int width = getCalculatedColumnWidthWithColspan(cell,
                             columnIndex);
 
@@ -3562,12 +3532,24 @@ public class Escalator extends Widget {
          */
         @Override
         public void removeColumns(final int index, final int numberOfColumns) {
+            // Validate
             assertArgumentsAreValidAndWithinRange(index, numberOfColumns);
 
-            flyweightRow.removeCells(index, numberOfColumns);
+            // Move the horizontal scrollbar to the left, if removed columns are
+            // to the left of the viewport
+            removeColumnsAdjustScrollbar(index, numberOfColumns);
 
-            // Cope with removing frozen columns
-            if (index < frozenColumns) {
+            // Remove from DOM
+            header.paintRemoveColumns(index, numberOfColumns);
+            body.paintRemoveColumns(index, numberOfColumns);
+            footer.paintRemoveColumns(index, numberOfColumns);
+
+            // Remove from bookkeeping
+            flyweightRow.removeCells(index, numberOfColumns);
+            columns.subList(index, index + numberOfColumns).clear();
+
+            // Adjust frozen columns
+            if (index < getFrozenColumnCount()) {
                 if (index + numberOfColumns < frozenColumns) {
                     /*
                      * Last removed column was frozen, meaning that all removed
@@ -3585,42 +3567,53 @@ public class Escalator extends Widget {
                 }
             }
 
-            List<Column> removedColumns = new ArrayList<Column>();
-            for (int i = 0; i < numberOfColumns; i++) {
-                removedColumns.add(columns.remove(index));
+            scroller.recalculateScrollbarsForVirtualViewport();
+            body.verifyEscalatorCount();
+
+            if (getColumnConfiguration().getColumnCount() > 0) {
+                readjustRows(header);
+                readjustRows(body);
+                readjustRows(footer);
+            }
+        }
+
+        private void readjustRows(AbstractRowContainer container) {
+            if (container.getRowCount() > 0) {
+                container.reapplyRowWidths();
+
+                /*
+                 * Because we might remove columns where affected by colspans,
+                 * it's easiest to simply redraw everything when columns are
+                 * modified.
+                 */
+                container.refreshRows(0, container.getRowCount());
+            }
+        }
+
+        private void removeColumnsAdjustScrollbar(int index, int numberOfColumns) {
+            if (horizontalScrollbar.getOffsetSize() >= horizontalScrollbar
+                    .getScrollSize()) {
+                return;
             }
 
-            if (hasSomethingInDom()) {
-                header.paintRemoveColumns(index, numberOfColumns);
-                body.paintRemoveColumns(index, numberOfColumns);
-                footer.paintRemoveColumns(index, numberOfColumns);
+            double leftPosOfFirstColumnToRemove = getCalculatedColumnsWidth(Range
+                    .between(0, index));
+            double widthOfColumnsToRemove = getCalculatedColumnsWidth(Range
+                    .withLength(index, numberOfColumns));
 
-                final int firstRemovedColumnLeft = columnConfiguration
-                        .getCalculatedColumnsWidth(Range.withLength(0, index));
-                final boolean columnsWereRemovedFromLeftOfTheViewport = scroller.lastScrollLeft > firstRemovedColumnLeft;
+            double scrollLeft = horizontalScrollbar.getScrollPos();
 
-                if (columnsWereRemovedFromLeftOfTheViewport) {
-                    int removedColumnsPxAmount = 0;
-                    for (ColumnConfigurationImpl.Column removedColumn : removedColumns) {
-                        removedColumnsPxAmount += removedColumn
-                                .getCalculatedWidth();
-                    }
-                    final int leftByDiff = (int) (scroller.lastScrollLeft - removedColumnsPxAmount);
-                    final int newScrollLeft = Math.max(firstRemovedColumnLeft,
-                            leftByDiff);
-                    horizontalScrollbar.setScrollPos(newScrollLeft);
-                }
-
-                boolean scrollbarWasNeeded = horizontalScrollbar
-                        .getOffsetSize() < horizontalScrollbar.getScrollSize();
-                // this needs to be after the scroll position adjustment above.
-                scroller.recalculateScrollbarsForVirtualViewport();
-                boolean scrollbarIsStillNeeded = horizontalScrollbar
-                        .getOffsetSize() < horizontalScrollbar.getScrollSize();
-                if (scrollbarWasNeeded && !scrollbarIsStillNeeded) {
-                    body.verifyEscalatorCount();
-                }
+            if (scrollLeft <= leftPosOfFirstColumnToRemove) {
+                /*
+                 * viewport is scrolled to the left of the first removed column,
+                 * so there's no need to adjust anything
+                 */
+                return;
             }
+
+            double adjustedScrollLeft = Math.max(leftPosOfFirstColumnToRemove,
+                    scrollLeft - widthOfColumnsToRemove);
+            horizontalScrollbar.setScrollPos(adjustedScrollLeft);
         }
 
         /**
@@ -3660,6 +3653,7 @@ public class Escalator extends Widget {
          */
         @Override
         public void insertColumns(final int index, final int numberOfColumns) {
+            // Validate
             if (index < 0 || index > getColumnCount()) {
                 throw new IndexOutOfBoundsException("The given index(" + index
                         + ") was outside of the current number of columns (0.."
@@ -3672,44 +3666,44 @@ public class Escalator extends Widget {
                                 + numberOfColumns);
             }
 
+            // Add to bookkeeping
             flyweightRow.addCells(index, numberOfColumns);
-
             for (int i = 0; i < numberOfColumns; i++) {
                 columns.add(index, new Column());
             }
 
-            // Either all or none of the new columns are frozen
+            // Adjust frozen columns
             boolean frozen = index < frozenColumns;
             if (frozen) {
                 frozenColumns += numberOfColumns;
             }
 
-            if (hasColumnAndRowData()) {
-                // this needs to be before the scrollbar adjustment.
-                boolean scrollbarWasNeeded = horizontalScrollbar
-                        .getOffsetSize() < horizontalScrollbar.getScrollSize();
-                scroller.recalculateScrollbarsForVirtualViewport();
-                boolean scrollbarIsNowNeeded = horizontalScrollbar
-                        .getOffsetSize() < horizontalScrollbar.getScrollSize();
-                if (!scrollbarWasNeeded && scrollbarIsNowNeeded) {
-                    body.verifyEscalatorCount();
-                }
+            // this needs to be before the scrollbar adjustment.
+            boolean scrollbarWasNeeded = horizontalScrollbar.getOffsetSize() < horizontalScrollbar
+                    .getScrollSize();
+            scroller.recalculateScrollbarsForVirtualViewport();
+            boolean scrollbarIsNowNeeded = horizontalScrollbar.getOffsetSize() < horizontalScrollbar
+                    .getScrollSize();
+            if (!scrollbarWasNeeded && scrollbarIsNowNeeded) {
+                body.verifyEscalatorCount();
+            }
 
-                header.paintInsertColumns(index, numberOfColumns, frozen);
-                body.paintInsertColumns(index, numberOfColumns, frozen);
-                footer.paintInsertColumns(index, numberOfColumns, frozen);
+            // Add to DOM
+            header.paintInsertColumns(index, numberOfColumns, frozen);
+            body.paintInsertColumns(index, numberOfColumns, frozen);
+            footer.paintInsertColumns(index, numberOfColumns, frozen);
 
-                int pixelsToInsertedColumn = columnConfiguration
-                        .getCalculatedColumnsWidth(Range.withLength(0, index));
-                final boolean columnsWereAddedToTheLeftOfViewport = scroller.lastScrollLeft > pixelsToInsertedColumn;
+            // Adjust scrollbar
+            int pixelsToInsertedColumn = columnConfiguration
+                    .getCalculatedColumnsWidth(Range.withLength(0, index));
+            final boolean columnsWereAddedToTheLeftOfViewport = scroller.lastScrollLeft > pixelsToInsertedColumn;
 
-                if (columnsWereAddedToTheLeftOfViewport) {
-                    int insertedColumnsWidth = columnConfiguration
-                            .getCalculatedColumnsWidth(Range.withLength(index,
-                                    numberOfColumns));
-                    horizontalScrollbar.setScrollPos(scroller.lastScrollLeft
-                            + insertedColumnsWidth);
-                }
+            if (columnsWereAddedToTheLeftOfViewport) {
+                int insertedColumnsWidth = columnConfiguration
+                        .getCalculatedColumnsWidth(Range.withLength(index,
+                                numberOfColumns));
+                horizontalScrollbar.setScrollPos(scroller.lastScrollLeft
+                        + insertedColumnsWidth);
             }
         }
 

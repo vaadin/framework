@@ -193,9 +193,7 @@ class FlyweightRow implements Row {
     }
 
     void removeCells(final int index, final int numberOfColumns) {
-        for (int i = 0; i < numberOfColumns; i++) {
-            cells.remove(index);
-        }
+        cells.subList(index, index + numberOfColumns).clear();
         updateRestOfCells(index);
     }
 
@@ -237,6 +235,7 @@ class FlyweightRow implements Row {
      */
     Iterable<FlyweightCell> getCells(final int offset, final int numberOfCells) {
         assertSetup();
+        assert offset >= 0 && offset + numberOfCells <= cells.size() : "Invalid range of cells";
         return new Iterable<FlyweightCell>() {
             @Override
             public Iterator<FlyweightCell> iterator() {
