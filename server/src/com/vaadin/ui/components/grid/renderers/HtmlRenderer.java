@@ -17,6 +17,9 @@ package com.vaadin.ui.components.grid.renderers;
 
 import com.vaadin.ui.components.grid.AbstractRenderer;
 
+import elemental.json.Json;
+import elemental.json.JsonValue;
+
 /**
  * A renderer for presenting HTML content.
  * 
@@ -32,7 +35,7 @@ public class HtmlRenderer extends AbstractRenderer<String> {
     }
 
     @Override
-    public String encode(String value) {
-        return value;
+    public JsonValue encode(String value) {
+        return Json.create(value);
     }
 }

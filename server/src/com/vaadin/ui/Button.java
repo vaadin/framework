@@ -19,8 +19,6 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
-import org.json.JSONException;
-
 import com.vaadin.event.Action;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -63,12 +61,8 @@ public class Button extends AbstractComponent implements
             // Makes sure the enabled=false state is noticed at once - otherwise
             // a following setEnabled(true) call might have no effect. see
             // ticket #10030
-            try {
-                getUI().getConnectorTracker().getDiffState(Button.this)
-                        .put("enabled", false);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
+            getUI().getConnectorTracker().getDiffState(Button.this)
+                    .put("enabled", false);
         }
     };
 

@@ -25,6 +25,6 @@
       <dependency org="com.vaadin.external.gwt" name="gwt-dev" rev="${gwt.version}" conf="gwt-dev,ide->default" />
       <dependency org="com.vaadin.external.gwt" name="gwt-user" rev="${gwt.version}" conf="gwt-user,ide->default" />
       <dependency org="com.vaadin.external.gwt" name="gwt-codeserver" rev="${gwt.version}" conf="gwt-codeserver,ide->default" />
-      <dependency org="com.vaadin.external.gwt" name="gwt-elemental" rev="${gwt.version}" conf="gwt-elemental->default" />
+      <dependency org="com.vaadin.external.gwt" name="gwt-elemental" rev="${gwt.version}" conf="gwt-elemental,ide->default" />
     </dependencies>
 </ivy-module>

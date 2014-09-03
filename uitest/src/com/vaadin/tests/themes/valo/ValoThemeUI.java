@@ -175,6 +175,7 @@ public class ValoThemeUI extends UI {
                         break;
                     }
                 }
+                menu.removeStyleName("valo-menu-visible");
             }
         });
 

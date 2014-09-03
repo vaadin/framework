@@ -15,11 +15,12 @@
  */
 package com.vaadin.tests.components.grid;
 
-import org.json.JSONObject;
-
 import com.vaadin.tests.widgetset.client.grid.RowAwareRendererConnector.RowAwareRendererRpc;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.components.grid.AbstractRenderer;
+
+import elemental.json.Json;
+import elemental.json.JsonValue;
 
 public class RowAwareRenderer extends AbstractRenderer<Void> {
     public RowAwareRenderer(final Label debugLabel) {
@@ -34,8 +35,8 @@ public class RowAwareRenderer extends AbstractRenderer<Void> {
     }
 
     @Override
-    public Object encode(Void value) {
-        return JSONObject.NULL;
+    public JsonValue encode(Void value) {
+        return Json.createNull();
     }
 
 }

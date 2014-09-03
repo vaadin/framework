@@ -1,6 +1,27 @@
+/**
+ * A list of colors for custom event colors. Can be an empty list of you don't 
+ * need any custom event colors.
+ * 
+ * @example javascript
+ * // Java code
+ * // 'event' is an instance of EditableCalendarEvent
+ * event.setStyleName("color1"); // 1st color in the list
+ * event.setStyleName("color2"); // 2nd color in the list
+ * // etc.
+ * 
+ * @group calendar
+ */
 $v-calendar-event-colors: #00ace0, #2d9f19, #d18100, #ce3812, #2d55cd !default;
 
 
+/**
+ * Outputs the global selectors and properties for the Calendar component - styles which are 
+ * considered mandatory for the component to work properly.
+ *
+ * @param {string} $primary-stylename (v-calendar) - the primary style name for the selectors
+ *
+ * @group calendar
+ */
 @mixin valo-calendar-global ($primary-stylename: v-calendar) {
   .#{$primary-stylename}-month-day-scrollable {
     overflow-y: scroll;
@@ -103,12 +124,13 @@ $v-calendar-event-colors: #00ace0, #2d9f19, #d18100, #ce3812, #2d55cd !default;
 }
 
 
-
-
-
-
-
-
+/**
+ * Outputs the selectors and properties for the Calendar component.
+ *
+ * @param {string} $primary-stylename (v-calendar) - the primary style name for the selectors
+ *
+ * @group calendar
+ */
 @mixin valo-calendar ($primary-stylename: v-calendar) {
 
 
@@ -525,12 +547,23 @@ $v-calendar-event-colors: #00ace0, #2d9f19, #d18100, #ce3812, #2d55cd !default;
 }
 
 
+/**
+ * Outputs the styles for the previous button.
+ * 
+ * @group calendar
+ */
 @mixin valo-calendar-prev-style {
   &:before {
     @include valo-tabsheet-scroller-prev-icon-style;
   }
 }
 
+
+/**
+ * Outputs the styles for the next button.
+ * 
+ * @group calendar
+ */
 @mixin valo-calendar-next-style {
   &:before {
     @include valo-tabsheet-scroller-next-icon-style;

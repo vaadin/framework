@@ -30,13 +30,13 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
+import elemental.json.JsonObject;
+import elemental.json.impl.JsonUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -1247,7 +1247,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
             BasicHttpEntityEnclosingRequest r = new BasicHttpEntityEnclosingRequest(
                     "POST", sessionURL.toExternalForm());
             HttpResponse response = client.execute(host, r);
-            JSONObject object = extractObject(response);
+            JsonObject object = extractObject(response);
             URL myURL = new URL(object.getString("proxyId"));
             if ((myURL.getHost() != null) && (myURL.getPort() != -1)) {
                 return myURL.getHost();
@@ -1258,13 +1258,11 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         return null;
     }
 
-    private static JSONObject extractObject(HttpResponse resp)
-            throws IOException, JSONException {
+    private static JsonObject extractObject(HttpResponse resp) throws IOException {
         InputStream contents = resp.getEntity().getContent();
         StringWriter writer = new StringWriter();
         IOUtils.copy(contents, writer, "UTF8");
-        JSONObject objToReturn = new JSONObject(writer.toString());
-        return objToReturn;
+        return JsonUtil.parse(writer.toString());
     }
 
 }

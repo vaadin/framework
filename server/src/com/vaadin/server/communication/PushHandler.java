@@ -29,7 +29,6 @@ import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.atmosphere.cpr.AtmosphereResourceEventListenerAdapter;
 import org.atmosphere.handler.AbstractReflectorAtmosphereHandler;
-import org.json.JSONException;
 
 import com.vaadin.server.ErrorEvent;
 import com.vaadin.server.ErrorHandler;
@@ -46,6 +45,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
+import elemental.json.JsonException;
 
 /**
  * Establishes bidirectional ("push") communication channels
@@ -173,7 +173,7 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter {
             try {
                 new ServerRpcHandler().handleRpc(ui, reader, vaadinRequest);
                 connection.push(false);
-            } catch (JSONException e) {
+            } catch (JsonException e) {
                 getLogger().log(Level.SEVERE, "Error writing JSON to response",
                         e);
                 // Refresh on client side

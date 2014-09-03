@@ -16,6 +16,7 @@
 package com.vaadin.shared.ui.tabsheet;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.shared.AbstractComponentState;
 
@@ -32,7 +33,7 @@ public class TabsheetState extends AbstractComponentState {
      */
     public int tabIndex;
 
-    public ArrayList<TabState> tabs = new ArrayList<TabState>();
+    public List<TabState> tabs = new ArrayList<TabState>();
 
     /** true to show the tab bar, false to only show the contained component */
     public boolean tabsVisible = true;

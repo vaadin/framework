@@ -31,9 +31,10 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
+import elemental.json.JsonException;
+import elemental.json.JsonObject;
+import elemental.json.impl.JsonUtil;
 import org.apache.commons.io.IOUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * This class is able to validate the vaadin CVAL license.
@@ -58,9 +59,9 @@ public final class CvalChecker {
     public static class CvalInfo {
 
         public static class Product {
-            private JSONObject o;
+            private JsonObject o;
 
-            public Product(JSONObject o) {
+            public Product(JsonObject o) {
                 this.o = o;
             }
 
@@ -74,40 +75,32 @@ public final class CvalChecker {
         }
 
         @SuppressWarnings("unchecked")
-        private static <T> T get(JSONObject o, String k, Class<T> clz) {
+        private static <T> T get(JsonObject o, String k, Class<T> clz) {
             Object ret = null;
             try {
                 if (clz == String.class) {
                     ret = o.getString(k);
-                } else if (clz == JSONObject.class) {
-                    ret = o.getJSONObject(k);
+                } else if (clz == JsonObject.class) {
+                    ret = o.getObject(k);
                 } else if (clz == Integer.class) {
-                    ret = o.getInt(k);
+                    ret = Integer.valueOf((int) o.getNumber(k));
                 } else if (clz == Date.class) {
-                    ret = new Date(o.getLong(k));
+                    ret = new Date((long) o.getNumber(k));
                 } else if (clz == Boolean.class) {
                     ret = o.getBoolean(k);
                 }
-            } catch (JSONException e) {
+            } catch (JsonException e) {
             }
             return (T) ret;
         }
 
-        private static <T> T put(JSONObject o, String k, Object v) {
-            try {
-                o.put(k, v);
-            } catch (JSONException e) {
-            }
-            return null;
-        }
-
-        private JSONObject o;
+        private JsonObject o;
 
         private Product product;
 
-        public CvalInfo(JSONObject o) {
+        public CvalInfo(JsonObject o) {
             this.o = o;
-            product = new Product(get(o, "product", JSONObject.class));
+            product = new Product(get(o, "product", JsonObject.class));
         }
 
         public Boolean getExpired() {
@@ -139,11 +132,11 @@ public final class CvalChecker {
         }
 
         public void setExpiredEpoch(Date expiredEpoch) {
-            put(o, "expiredEpoch", expiredEpoch.getTime());
+            o.put("expiredEpoch", expiredEpoch.getTime());
         }
 
         public void setMessage(String msg) {
-            put(o, "message", msg);
+            o.put("message", msg);
         }
 
         @Override
@@ -327,9 +320,9 @@ public final class CvalChecker {
             return null;
         }
         try {
-            JSONObject o = new JSONObject(json);
+            JsonObject o = JsonUtil.parse(json);
             return new CvalInfo(o);
-        } catch (JSONException e) {
+        } catch (JsonException e) {
             return null;
         }
     }

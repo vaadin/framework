@@ -19,14 +19,14 @@ package com.vaadin.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Page;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.extension.javascriptmanager.ExecuteJavaScriptRpc;
 import com.vaadin.shared.extension.javascriptmanager.JavaScriptManagerState;
+
+import elemental.json.JsonArray;
+import elemental.json.JsonException;
 
 /**
  * Provides access to JavaScript functionality in the web browser. To get an
@@ -43,7 +43,7 @@ public class JavaScript extends AbstractExtension {
     // Can not be defined in client package as this JSONArray is not available
     // in GWT
     public interface JavaScriptCallbackRpc extends ServerRpc {
-        public void call(String name, JSONArray arguments);
+        public void call(String name, JsonArray arguments);
     }
 
     /**
@@ -54,12 +54,12 @@ public class JavaScript extends AbstractExtension {
     public JavaScript() {
         registerRpc(new JavaScriptCallbackRpc() {
             @Override
-            public void call(String name, JSONArray arguments) {
+            public void call(String name, JsonArray arguments) {
                 JavaScriptFunction function = functions.get(name);
                 // TODO handle situation if name is not registered
                 try {
                     function.call(arguments);
-                } catch (JSONException e) {
+                } catch (JsonException e) {
                     throw new IllegalArgumentException(e);
                 }
             }

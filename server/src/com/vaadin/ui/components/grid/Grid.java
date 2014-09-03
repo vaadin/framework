@@ -27,9 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.google.gwt.thirdparty.guava.common.collect.Sets.SetView;
 import com.vaadin.data.Container;
@@ -67,6 +64,9 @@ import com.vaadin.ui.components.grid.selection.SingleSelectionModel;
 import com.vaadin.ui.components.grid.sort.Sort;
 import com.vaadin.ui.components.grid.sort.SortOrder;
 import com.vaadin.util.ReflectTools;
+
+import elemental.json.Json;
+import elemental.json.JsonArray;
 
 /**
  * A grid component for displaying tabular data.
@@ -303,19 +303,18 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                     ignoreSelectionClientSync--;
                     markAsDirty = false;
 
-                    try {
-
-                        /*
-                         * Make sure that the diffstate is aware of the
-                         * "undirty" modification, so that the diffs are
-                         * calculated correctly the next time we actually want
-                         * to send the selection state to the client.
-                         */
-                        getUI().getConnectorTracker().getDiffState(Grid.this)
-                                .put("selectedKeys", new JSONArray(keys));
-                    } catch (JSONException e) {
-                        throw new RuntimeException("Internal error", e);
+                    /*
+                     * Make sure that the diffstate is aware of the "undirty"
+                     * modification, so that the diffs are calculated correctly
+                     * the next time we actually want to send the selection
+                     * state to the client.
+                     */
+                    JsonArray jsonKeys = Json.createArray();
+                    for (int i = 0; i < keys.size(); ++i) {
+                        jsonKeys.set(i, keys.get(i));
                     }
+                    getUI().getConnectorTracker().getDiffState(Grid.this)
+                            .put("selectedKeys", jsonKeys);
                 }
 
                 getState(markAsDirty).selectedKeys = keys;

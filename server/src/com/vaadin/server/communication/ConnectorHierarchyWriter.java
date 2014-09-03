@@ -21,15 +21,17 @@ import java.io.Serializable;
 import java.io.Writer;
 import java.util.Collection;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.PaintException;
 import com.vaadin.ui.UI;
+
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.JsonException;
+import elemental.json.JsonObject;
+import elemental.json.impl.JsonUtil;
 
 /**
  * Serializes a connector hierarchy to JSON.
@@ -55,27 +57,27 @@ public class ConnectorHierarchyWriter implements Serializable {
         Collection<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
 
-        JSONObject hierarchyInfo = new JSONObject();
+        JsonObject hierarchyInfo = Json.createObject();
         for (ClientConnector connector : dirtyVisibleConnectors) {
             String connectorId = connector.getConnectorId();
-            JSONArray children = new JSONArray();
+            JsonArray children = Json.createArray();
 
             for (ClientConnector child : AbstractClientConnector
                     .getAllChildrenIterable(connector)) {
                 if (LegacyCommunicationManager
                         .isConnectorVisibleToClient(child)) {
-                    children.put(child.getConnectorId());
+                    children.set(children.length(), child.getConnectorId());
                 }
             }
             try {
                 hierarchyInfo.put(connectorId, children);
-            } catch (JSONException e) {
+            } catch (JsonException e) {
                 throw new PaintException(
                         "Failed to send hierarchy information about "
                                 + connectorId + " to the client: "
                                 + e.getMessage(), e);
             }
         }
-        writer.write(hierarchyInfo.toString());
+        writer.write(JsonUtil.stringify(hierarchyInfo));
     }
 }

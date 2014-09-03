@@ -21,13 +21,15 @@ import java.io.Serializable;
 import java.io.Writer;
 import java.util.Collection;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.PaintException;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.ui.UI;
+
+import elemental.json.Json;
+import elemental.json.JsonException;
+import elemental.json.JsonObject;
+import elemental.json.impl.JsonUtil;
 
 /**
  * Serializes {@link SharedState shared state} changes to JSON.
@@ -53,16 +55,16 @@ public class SharedStateWriter implements Serializable {
         Collection<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
 
-        JSONObject sharedStates = new JSONObject();
+        JsonObject sharedStates = Json.createObject();
         for (ClientConnector connector : dirtyVisibleConnectors) {
             // encode and send shared state
             try {
-                JSONObject stateJson = connector.encodeState();
+                JsonObject stateJson = connector.encodeState();
 
-                if (stateJson != null && stateJson.length() != 0) {
+                if (stateJson != null && stateJson.keys().length != 0) {
                     sharedStates.put(connector.getConnectorId(), stateJson);
                 }
-            } catch (JSONException e) {
+            } catch (JsonException e) {
                 throw new PaintException(
                         "Failed to serialize shared state for connector "
                                 + connector.getClass().getName() + " ("
@@ -70,6 +72,6 @@ public class SharedStateWriter implements Serializable {
                                 + e.getMessage(), e);
             }
         }
-        writer.write(sharedStates.toString());
+        writer.write(JsonUtil.stringify(sharedStates));
     }
 }

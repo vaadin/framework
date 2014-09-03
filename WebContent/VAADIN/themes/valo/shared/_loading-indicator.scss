@@ -1,5 +1,3 @@
-// TODO make fallbacks for IE 8 & 9
-
 @-webkit-keyframes v-rotate-360 {
    to {-webkit-transform: rotate(360deg);}
 }
@@ -13,9 +11,16 @@
    to {transform: rotate(360deg);}
 }
 
-
-@mixin valo-spinner ($size: 24px, $thickness: 2px, $color: null, $speed: 500ms) {
-  $color: $color or $v-focus-color;
+/**
+ * Creates a spinner to be used as a loading indicator. On browsers which do not
+ * support CSS animations, an animated GIF image is used as a fallback.
+ *
+ * @param {size} $size (24px) - the diameter of the spinner, in pixels. Should be divisible by 2, increased by 1px if not
+ * @param {size} $thickness (2px) - the thickness or width of the border of the spinner
+ * @param {color} $color ($v-focus-color) - the color of the border of the spinner
+ * @param {time} $speed (500ms) - the speed of the spinning animation
+ */
+@mixin valo-spinner ($size: 24px, $thickness: 2px, $color: $v-focus-color, $speed: 500ms) {
   // Make size divisible by 2, so that the rotation won't jiggle
   $size: round($size) + round($size) % 2;
   height: $size !important;
@@ -59,9 +64,25 @@
 
 
 
-
+/**
+ * The color of the main loading indicator bar.
+ * @type color
+ */
 $v-loading-indicator-color: $v-focus-color !default;
+
+/**
+ * The height of the main loading indicator bar.
+ *
+ * @type size
+ */
 $v-loading-indicator-bar-height: ceil($v-unit-size/10) !default;
+
+/**
+ * The height of the main loading indicator bar when the request to the server
+ * is taking longer than usual and the user is notified that they should wait.
+ *
+ * @type size
+ */
 $v-loading-indicator-bar-height--wait: ceil($v-unit-size/6) !default;
 
 
@@ -89,7 +110,11 @@ $v-loading-indicator-bar-height--wait: ceil($v-unit-size/6) !default;
 }
 
 
-
+/*
+ * Outputs the necessary styles to create the main loading indicator bar.
+ *
+ * @access private
+ */
 @mixin valo-loading-bar {
 
   .v-loading-indicator {

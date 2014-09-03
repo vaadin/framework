@@ -75,6 +75,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
     @include valo-menubar-borderless-style;
     margin: round($v-unit-size/2) round($v-unit-size/5);
     display: block;
+    overflow: hidden;
     text-align: center;
     height: auto;
     color: inherit;
@@ -83,6 +84,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
       color: inherit;
       white-space: normal;
       line-height: 1.4;
+      margin: 0;
 
       img.v-icon {
         width: round($v-unit-size * 1.5);
@@ -92,6 +94,13 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
         display: block;
         margin: 0 auto .3em;
         border: valo-border();
+      }
+
+      &:after {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
       }
     }
 
@@ -148,6 +157,10 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
 
       .valo-menu {
         border-right: none;
+      }
+
+      .valo-menu-part {
+        overflow: visible;
       }
 
       .valo-menu-toggle {
@@ -271,7 +284,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
   padding: 0 round($v-unit-size) 0 round($v-unit-size/2);
   cursor: pointer;
   position: relative;
-  text-shadow: valo-text-shadow($font-color: $font-color, $background-color: $bg, $offset: -2px);
+  text-shadow: valo-text-shadow($font-color: $font-color, $background-color: $bg, $offset: 2px);
   @include transition(background-color 300ms, color 60ms);
 
   $diff: color-luminance($bg) - color-luminance($v-selection-color);
@@ -297,7 +310,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
       color: $active-color;
     }
   }
-  
+
   &.selected {
     background: if(is-dark-color($bg), darken($bg, 3%), lighten($bg, 5%));
 

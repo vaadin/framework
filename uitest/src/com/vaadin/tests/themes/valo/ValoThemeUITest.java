@@ -276,6 +276,9 @@ public class ValoThemeUITest extends MultiBrowserTest {
                     + getRemoteControlName());
 
             open(link, caption, tries - 1);
+        } else {
+            // Done opening, scroll left panel to the top again for consistency
+            scrollTo(0, 0);
         }
     }
 

@@ -36,6 +36,9 @@ import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.GridColumn;
 import com.vaadin.ui.components.grid.renderers.TextRenderer;
 
+import elemental.json.Json;
+import elemental.json.JsonValue;
+
 public class RendererTest {
 
     private static class TestBean {
@@ -48,8 +51,9 @@ public class RendererTest {
 
     private static class TestRenderer extends TextRenderer {
         @Override
-        public Object encode(String value) {
-            return "renderer(" + super.encode(value) + ")";
+        public JsonValue encode(String value) {
+            return Json.create("renderer(" + super.encode(value).asString()
+                    + ")");
         }
     }
 
@@ -156,13 +160,13 @@ public class RendererTest {
 
     @Test
     public void testEncoding() throws Exception {
-        assertEquals("42", render(foo, 42));
+        assertEquals("42", render(foo, 42).asString());
         foo.setRenderer(renderer());
-        assertEquals("renderer(42)", render(foo, 42));
+        assertEquals("renderer(42)", render(foo, 42).asString());
 
-        assertEquals("2.72", render(bar, "2.72"));
+        assertEquals("2.72", render(bar, "2.72").asString());
         bar.setRenderer(new TestRenderer());
-        assertEquals("renderer(2.72)", render(bar, "2.72"));
+        assertEquals("renderer(2.72)", render(bar, "2.72").asString());
     }
 
     @Test(expected = ConversionException.class)
@@ -175,12 +179,13 @@ public class RendererTest {
         baz.setRenderer(renderer(), converter());
         bah.setRenderer(renderer(), converter());
 
-        assertEquals("renderer(TestBean(42))", render(baz, new TestBean()));
+        assertEquals("renderer(TestBean(42))", render(baz, new TestBean())
+                .asString());
         assertEquals("renderer(ExtendedBean(42, 3.14))",
-                render(baz, new ExtendedBean()));
+                render(baz, new ExtendedBean()).asString());
 
         assertEquals("renderer(ExtendedBean(42, 3.14))",
-                render(bah, new ExtendedBean()));
+                render(bah, new ExtendedBean()).asString());
     }
 
     private TestConverter converter() {
@@ -191,7 +196,7 @@ public class RendererTest {
         return new TestRenderer();
     }
 
-    private Object render(GridColumn column, Object value) {
+    private JsonValue render(GridColumn column, Object value) {
         return RpcDataProviderExtension.encodeValue(value,
                 column.getRenderer(), column.getConverter(), grid.getLocale());
     }

@@ -1,15 +1,26 @@
-@function contains($list, $var, $recursive: false) {
+/**
+ * Checks if a list contains a certain value.
+ * 
+ * @param {list} $list - the list to check
+ * @param {value} $var - the value to search for
+ * @param {bool} $recursive (false) - should any contained lists be checked for the value
+ * 
+ * @return {bool} true if the value is found from the list, false otherwise
+ * 
+ * @group lists
+ */
+@function contains($list, $value, $recursive: false) {
   @if $recursive == false {
-    @return (false != index($list, $var));
+    @return (false != index($list, $value));
   }
 
   $ret: false;
   @each $item in $list {
     @if type-of($item) == list and $recursive {
-      @if contains($item, $var, true) {
+      @if contains($item, $value, true) {
         @return true;
       }
-    } @else if $item == $var {
+    } @else if $item == $value {
       @return true;
     }
   }
@@ -18,6 +29,15 @@
 }
 
 
+/**
+ * Check whether a list contains nested lists.
+ * 
+ * @param {list} $list - the list to check
+ * 
+ * @return {bool} true of the list contains other nested lists, false otherwise
+ * 
+ * @group lists
+ */
 @function list-of-lists($list) {
   @each $part in $list {
     @if type-of($part) != list {
@@ -28,26 +48,72 @@
 }
 
 
+/**
+ * Get the first color value from a list.
+ * 
+ * @param {list} $list - a list which should contain a color value
+ * 
+ * @return {color} The first color encountered in the list
+ * 
+ * @group lists
+ */
 @function first-color($list) {
   @return first-of-type($list, color);
 }
 
 
+/**
+ * Get the first number value from a list.
+ * 
+ * @param {list} $list - a list which should contain a number value
+ * 
+ * @return {number} The first number encountered in the list
+ * 
+ * @group lists
+ */
 @function first-number($list) {
   @return first-of-type($list, number);
 }
 
 
+/**
+ * Get the first string value from a list.
+ * 
+ * @param {list} $list - a list which should contain a string value
+ * 
+ * @return {string} The first string encountered in the list
+ * 
+ * @group lists
+ */
 @function first-string($list) {
   @return first-of-type($list, string);
 }
 
 
+/**
+ * Get the first contained list from the list passed as the parameter.
+ * 
+ * @param {list} $list - a list which should contain a nested list
+ * 
+ * @return {list} The first list encountered in the list passed as the parameter
+ * 
+ * @group lists
+ */
 @function first-list($list) {
   @return first-of-type($list, list);
 }
 
 
+/**
+ * Get the first value of a certain type from a list.
+ * 
+ * @param {list} $list - a list which should contain a value of the certain type
+ * @param {string} $type - the type of value to search for
+ * 
+ * @return {value} The first item of the certain type encountered in the list
+ * 
+ * @group lists
+ */
 @function first-of-type($list, $type) {
   @each $item in $list {
     @if type-of($item) == $type {
@@ -63,6 +129,15 @@
 }
 
 
+/**
+ * Flatten nested lists to one list, while maintaining the original list separators.
+ * 
+ * @param {list} $list - the list to flatten
+ * 
+ * @return {list} the same list with all nested lists flattened
+ * 
+ * @group lists
+ */
 @function flatten-list($list) {
   $ret: ();
   @each $item in $list {

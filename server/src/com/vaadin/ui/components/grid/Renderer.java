@@ -18,6 +18,8 @@ package com.vaadin.ui.components.grid;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.Extension;
 
+import elemental.json.JsonValue;
+
 /**
  * A ClientConnector for controlling client-side
  * {@link com.vaadin.client.ui.grid.Renderer Grid renderers}. Renderers
@@ -41,17 +43,13 @@ public interface Renderer<T> extends Extension {
     Class<T> getPresentationType();
 
     /**
-     * Encodes the given value into a form that can be transferred to the
-     * client. The type of the returned value must be one of the types that are
-     * accepted by <a href=
-     * "http://www.json.org/javadoc/org/json/JSONObject.html#put%28java.lang.String,%20java.lang.Object%29"
-     * >{@code org.json.JSONObject#put(String, Object)}</a>.
+     * Encodes the given value into a {@link JsonValue}.
      * 
      * @param value
      *            the value to encode
      * @return an encoded form of the given value
      */
-    Object encode(T value);
+    JsonValue encode(T value);
 
     /**
      * This method is inherited from Extension but should never be called

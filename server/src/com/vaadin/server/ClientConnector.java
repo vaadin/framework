@@ -20,15 +20,13 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.ui.UI;
 import com.vaadin.util.ReflectTools;
+import elemental.json.JsonObject;
 
 /**
  * Interface implemented by all connectors that are capable of communicating
@@ -279,10 +277,9 @@ public interface ClientConnector extends Connector {
      * .
      * 
      * @return a JSON object with the encoded connector state
-     * @throws JSONException
      *             if the state can not be encoded
      */
-    public JSONObject encodeState() throws JSONException;
+    public JsonObject encodeState() ;
 
     /**
      * Handle a request directed to this connector. This can be used by

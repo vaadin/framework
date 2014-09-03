@@ -25,6 +25,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
@@ -66,6 +68,8 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -129,7 +133,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Simple interface for parts of the table capable of owning a context menu.
-     *
+     * 
      * @since 7.2
      * @author Vaadin Ltd
      */
@@ -139,7 +143,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Handles showing context menu on "long press" from a touch screen.
-     *
+     * 
      * @since 7.2
      * @author Vaadin Ltd
      */
@@ -155,7 +159,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * Initializes a handler for a certain context menu owner.
-         *
+         * 
          * @param target
          *            the owner of the context menu
          */
@@ -176,7 +180,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         /**
          * A function to handle touch context events in a table.
-         *
+         * 
          * @param event
          *            browser event to handle
          */
@@ -230,7 +234,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * Calculates how many pixels away the user's finger has traveled. This
          * reduces the chance of small non-intentional movements from canceling
          * the long press detection.
-         *
+         * 
          * @param event
          *            the Event for which to check the move distance
          * @return true if this is considered an intentional move by the user
@@ -522,11 +526,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * For internal use only. May be removed or replaced in the future.
-     *
+     * 
      * Overwrites onBrowserEvent function on FocusableScrollPanel to give event
      * access to touchContextProvider. Has to be public to give TableConnector
      * access to the scrollBodyPanel field.
-     *
+     * 
      * @since 7.2
      * @author Vaadin Ltd
      */
@@ -763,6 +767,51 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private HandlerRegistration addCloseHandler;
 
+    /**
+     * Changes to manage mouseDown and mouseUp
+     */
+    /**
+     * The element where the last mouse down event was registered.
+     */
+    private Element lastMouseDownTarget;
+
+    /**
+     * Set to true by {@link #mouseUpPreviewHandler} if it gets a mouseup at the
+     * same element as {@link #lastMouseDownTarget}.
+     */
+    private boolean mouseUpPreviewMatched = false;
+
+    private HandlerRegistration mouseUpEventPreviewRegistration;
+
+    /**
+     * Previews events after a mousedown to detect where the following mouseup
+     * hits.
+     */
+    private final NativePreviewHandler mouseUpPreviewHandler = new NativePreviewHandler() {
+
+        @Override
+        public void onPreviewNativeEvent(NativePreviewEvent event) {
+            if (event.getTypeInt() == Event.ONMOUSEUP) {
+                mouseUpEventPreviewRegistration.removeHandler();
+
+                // Event's reported target not always correct if event
+                // capture is in use
+                Element elementUnderMouse = Util.getElementUnderMouse(event
+                        .getNativeEvent());
+                if (lastMouseDownTarget != null
+                        && lastMouseDownTarget.isOrHasChild(elementUnderMouse)) {
+                    mouseUpPreviewMatched = true;
+                } else {
+                    getLogger().log(
+                            Level.FINEST,
+                            "Ignoring mouseup from " + elementUnderMouse
+                                    + " when mousedown was on "
+                                    + lastMouseDownTarget);
+                }
+            }
+        }
+    };
+
     public VScrollTable() {
         setMultiSelectMode(MULTISELECT_MODE_DEFAULT);
 
@@ -847,7 +896,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /**
      * Handles a context menu event on table body.
-     *
+     * 
      * @param left
      *            left position of the context menu
      * @param top
@@ -1253,19 +1302,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         selected = true;
                         keyboardSelectionOverRowFetchInProgress = true;
                     }
-                    if (selected) {
-
-                        if (focusedRow == null
-                                || !selectedRowKeys.contains(focusedRow
-                                        .getKey())) {
-                            /*
-                             * The focus is no longer on a selected row. Move
-                             * focus to the selected row. (#10522)
-                             */
-
-                            setRowFocus(row);
-                        }
+                    if (selected && selectedKeys.size() == 1) {
+                        /*
+                         * If a single item is selected, move focus to the
+                         * selected row. (#10522)
+                         */
+                        setRowFocus(row);
                     }
+
                     if (selected != row.isSelected()) {
                         row.toggleSelection();
 
@@ -5922,114 +5966,134 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         }
                         break;
                     case Event.ONMOUSEUP:
-                        if (targetCellOrRowFound) {
-                            /*
-                             * Queue here, send at the same time as the
-                             * corresponding value change event - see #7127
-                             */
-                            boolean clickEventSent = handleClickEvent(event,
-                                    targetTdOrTr, false);
+                        /*
+                         * Only fire a click if the mouseup hits the same
+                         * element as the corresponding mousedown. This is first
+                         * checked in the event preview but we can't fire the
+                         * event there as the event might get canceled before it
+                         * gets here.
+                         */
+                        if (mouseUpPreviewMatched
+                                && lastMouseDownTarget != null
+                                && lastMouseDownTarget == getElementTdOrTr(Util
+                                        .getElementUnderMouse(event))) {
+                            // "Click" with left, right or middle button
 
-                            if (event.getButton() == Event.BUTTON_LEFT
-                                    && isSelectable()) {
+                            if (targetCellOrRowFound) {
+                                /*
+                                 * Queue here, send at the same time as the
+                                 * corresponding value change event - see #7127
+                                 */
+                                boolean clickEventSent = handleClickEvent(
+                                        event, targetTdOrTr, false);
 
-                                // Ctrl+Shift click
-                                if ((event.getCtrlKey() || event.getMetaKey())
-                                        && event.getShiftKey()
-                                        && isMultiSelectModeDefault()) {
-                                    toggleShiftSelection(false);
-                                    setRowFocus(this);
+                                if (event.getButton() == Event.BUTTON_LEFT
+                                        && isSelectable()) {
 
-                                    // Ctrl click
-                                } else if ((event.getCtrlKey() || event
-                                        .getMetaKey())
-                                        && isMultiSelectModeDefault()) {
-                                    boolean wasSelected = isSelected();
-                                    toggleSelection();
-                                    setRowFocus(this);
-                                    /*
-                                     * next possible range select must start on
-                                     * this row
-                                     */
-                                    selectionRangeStart = this;
-                                    if (wasSelected) {
-                                        removeRowFromUnsentSelectionRanges(this);
-                                    }
+                                    // Ctrl+Shift click
+                                    if ((event.getCtrlKey() || event
+                                            .getMetaKey())
+                                            && event.getShiftKey()
+                                            && isMultiSelectModeDefault()) {
+                                        toggleShiftSelection(false);
+                                        setRowFocus(this);
 
-                                } else if ((event.getCtrlKey() || event
-                                        .getMetaKey()) && isSingleSelectMode()) {
-                                    // Ctrl (or meta) click (Single selection)
-                                    if (!isSelected()
-                                            || (isSelected() && nullSelectionAllowed)) {
-
-                                        if (!isSelected()) {
-                                            deselectAll();
+                                        // Ctrl click
+                                    } else if ((event.getCtrlKey() || event
+                                            .getMetaKey())
+                                            && isMultiSelectModeDefault()) {
+                                        boolean wasSelected = isSelected();
+                                        toggleSelection();
+                                        setRowFocus(this);
+                                        /*
+                                         * next possible range select must start
+                                         * on this row
+                                         */
+                                        selectionRangeStart = this;
+                                        if (wasSelected) {
+                                            removeRowFromUnsentSelectionRanges(this);
                                         }
 
-                                        toggleSelection();
+                                    } else if ((event.getCtrlKey() || event
+                                            .getMetaKey())
+                                            && isSingleSelectMode()) {
+                                        // Ctrl (or meta) click (Single
+                                        // selection)
+                                        if (!isSelected()
+                                                || (isSelected() && nullSelectionAllowed)) {
+
+                                            if (!isSelected()) {
+                                                deselectAll();
+                                            }
+
+                                            toggleSelection();
+                                            setRowFocus(this);
+                                        }
+
+                                    } else if (event.getShiftKey()
+                                            && isMultiSelectModeDefault()) {
+                                        // Shift click
+                                        toggleShiftSelection(true);
+
+                                    } else {
+                                        // click
+                                        boolean currentlyJustThisRowSelected = selectedRowKeys
+                                                .size() == 1
+                                                && selectedRowKeys
+                                                        .contains(getKey());
+
+                                        if (!currentlyJustThisRowSelected) {
+                                            if (isSingleSelectMode()
+                                                    || isMultiSelectModeDefault()) {
+                                                /*
+                                                 * For default multi select mode
+                                                 * (ctrl/shift) and for single
+                                                 * select mode we need to clear
+                                                 * the previous selection before
+                                                 * selecting a new one when the
+                                                 * user clicks on a row. Only in
+                                                 * multiselect/simple mode the
+                                                 * old selection should remain
+                                                 * after a normal click.
+                                                 */
+                                                deselectAll();
+                                            }
+                                            toggleSelection();
+                                        } else if ((isSingleSelectMode() || isMultiSelectModeSimple())
+                                                && nullSelectionAllowed) {
+                                            toggleSelection();
+                                        }/*
+                                          * else NOP to avoid excessive server
+                                          * visits (selection is removed with
+                                          * CTRL/META click)
+                                          */
+
+                                        selectionRangeStart = this;
                                         setRowFocus(this);
                                     }
 
-                                } else if (event.getShiftKey()
-                                        && isMultiSelectModeDefault()) {
-                                    // Shift click
-                                    toggleShiftSelection(true);
-
-                                } else {
-                                    // click
-                                    boolean currentlyJustThisRowSelected = selectedRowKeys
-                                            .size() == 1
-                                            && selectedRowKeys
-                                                    .contains(getKey());
-
-                                    if (!currentlyJustThisRowSelected) {
-                                        if (isSingleSelectMode()
-                                                || isMultiSelectModeDefault()) {
-                                            /*
-                                             * For default multi select mode
-                                             * (ctrl/shift) and for single
-                                             * select mode we need to clear the
-                                             * previous selection before
-                                             * selecting a new one when the user
-                                             * clicks on a row. Only in
-                                             * multiselect/simple mode the old
-                                             * selection should remain after a
-                                             * normal click.
-                                             */
-                                            deselectAll();
-                                        }
-                                        toggleSelection();
-                                    } else if ((isSingleSelectMode() || isMultiSelectModeSimple())
-                                            && nullSelectionAllowed) {
-                                        toggleSelection();
-                                    }/*
-                                      * else NOP to avoid excessive server
-                                      * visits (selection is removed with
-                                      * CTRL/META click)
-                                      */
-
-                                    selectionRangeStart = this;
-                                    setRowFocus(this);
+                                    // Remove IE text selection hack
+                                    if (BrowserInfo.get().isIE()) {
+                                        ((Element) event.getEventTarget()
+                                                .cast()).setPropertyJSO(
+                                                "onselectstart", null);
+                                    }
+                                    // Queue value change
+                                    sendSelectedRows(false);
                                 }
-
-                                // Remove IE text selection hack
-                                if (BrowserInfo.get().isIE()) {
-                                    ((Element) event.getEventTarget().cast())
-                                            .setPropertyJSO("onselectstart",
-                                                    null);
+                                /*
+                                 * Send queued click and value change events if
+                                 * any If a click event is sent, send value
+                                 * change with it regardless of the immediate
+                                 * flag, see #7127
+                                 */
+                                if (immediate || clickEventSent) {
+                                    client.sendPendingVariableChanges();
                                 }
-                                // Queue value change
-                                sendSelectedRows(false);
-                            }
-                            /*
-                             * Send queued click and value change events if any
-                             * If a click event is sent, send value change with
-                             * it regardless of the immediate flag, see #7127
-                             */
-                            if (immediate || clickEventSent) {
-                                client.sendPendingVariableChanges();
                             }
                         }
+                        mouseUpPreviewMatched = false;
+                        lastMouseDownTarget = null;
                         break;
                     case Event.ONTOUCHEND:
                     case Event.ONTOUCHCANCEL:
@@ -6135,6 +6199,17 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         }
                         break;
                     case Event.ONMOUSEDOWN:
+                        /*
+                         * When getting a mousedown event, we must detect where
+                         * the corresponding mouseup event if it's on a
+                         * different part of the page.
+                         */
+                        lastMouseDownTarget = getElementTdOrTr(Util
+                                .getElementUnderMouse(event));
+                        mouseUpPreviewMatched = false;
+                        mouseUpEventPreviewRegistration = Event
+                                .addNativePreviewHandler(mouseUpPreviewHandler);
+
                         if (targetCellOrRowFound) {
                             setRowFocus(this);
                             ensureFocus();
@@ -6269,7 +6344,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
              */
             private Element getEventTargetTdOrTr(Event event) {
                 final Element eventTarget = event.getEventTarget().cast();
-                Widget widget = Util.findWidget(eventTarget, null);
+                return getElementTdOrTr(eventTarget);
+            }
+
+            private Element getElementTdOrTr(Element element) {
+
+                Widget widget = Util.findWidget(element, null);
 
                 if (widget != this) {
                     /*
@@ -6289,7 +6369,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         return null;
                     }
                 }
-                return getTdOrTr(eventTarget);
+                return getTdOrTr(element);
             }
 
             @Override
@@ -7435,7 +7515,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
 
         if (row != null) {
-
             // Apply focus style to new selection
             row.addStyleName(getStylePrimaryName() + "-focus");
 
@@ -7449,14 +7528,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // Set new focused row
             focusedRow = row;
 
-            /*
-             * Don't scroll to the focused row when in multiselect mode.
-             * (#13341)
-             */
-
-            if (isSingleSelectMode()) {
-                ensureRowIsVisible(row);
-            }
+            ensureRowIsVisible(row);
 
             return true;
         }
@@ -7476,6 +7548,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // get odd scrolling here.
             return;
         }
+        /*
+         * FIXME The next line doesn't always do what expected, because if the
+         * row is not in the DOM it won't scroll to it.
+         */
         Util.scrollIntoViewVertically(row.getElement());
     }
 
@@ -7930,7 +8006,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     public void lazyRevertFocusToRow(final VScrollTableRow currentlyFocusedRow) {
         Scheduler.get().scheduleFinally(new ScheduledCommand() {
-
             @Override
             public void execute() {
                 if (currentlyFocusedRow != null) {
@@ -8132,5 +8207,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     @Override
     public boolean isWorkPending() {
         return lazyAdjustColumnWidths.isRunning();
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VScrollTable.class.getName());
     }
 }

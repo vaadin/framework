@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -72,8 +73,24 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      */
     @Override
     public String getPathForElement(Element targetElement) {
-        if (targetElement == null) {
-            return "";
+        Element oldTarget = targetElement;
+        Widget targetWidget = Util.findPaintable(client, targetElement)
+                .getWidget();
+        targetElement = targetWidget.getElement();
+
+        // Find SubPart name if needed.
+        String subPart = null;
+        boolean hasSubParts = targetWidget instanceof SubPartAware;
+        if (oldTarget != targetElement) {
+            if (hasSubParts) {
+                subPart = ((SubPartAware) targetWidget).getSubPartName(DOM
+                        .asOld(oldTarget));
+            }
+
+            if (!hasSubParts || subPart == null) {
+                // Couldn't find SubPart name for element.
+                return null;
+            }
         }
 
         List<ConnectorPath> hierarchy = getConnectorHierarchyForElement(targetElement);
@@ -102,7 +119,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             return null;
         }
 
-        return getBestSelector(generateQueries(path), targetElement);
+        return getBestSelector(generateQueries(path), targetElement, subPart);
     }
 
     /**
@@ -114,9 +131,12 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      *            List of selectors
      * @param target
      *            Target element
+     * @param subPart
+     *            sub part selector string for actual target
      * @return Best selector string formatted with a post filter
      */
-    private String getBestSelector(List<String> selectors, Element target) {
+    private String getBestSelector(List<String> selectors, Element target,
+            String subPart) {
         // The last selector gives us smallest list index for target element.
         String bestSelector = selectors.get(selectors.size() - 1);
         int min = getElementsByPath(bestSelector).indexOf(target);
@@ -141,7 +161,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
             }
         }
-        return "(" + bestSelector + ")[" + min + "]";
+        return "(" + bestSelector + (subPart != null ? "#" + subPart : "")
+                + ")[" + min + "]";
 
     }
 

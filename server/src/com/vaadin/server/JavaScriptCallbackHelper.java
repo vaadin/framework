@@ -18,20 +18,19 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import com.vaadin.shared.JavaScriptConnectorState;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScript.JavaScriptCallbackRpc;
 import com.vaadin.ui.JavaScriptFunction;
 import com.vaadin.util.ReflectTools;
+
+import elemental.json.JsonArray;
+import elemental.json.JsonException;
 
 /**
  * Internal helper class used to implement functionality common to
@@ -47,7 +46,7 @@ import com.vaadin.util.ReflectTools;
 public class JavaScriptCallbackHelper implements Serializable {
 
     private static final Method CALL_METHOD = ReflectTools.findMethod(
-            JavaScriptCallbackRpc.class, "call", String.class, JSONArray.class);
+            JavaScriptCallbackRpc.class, "call", String.class, JsonArray.class);
     private AbstractClientConnector connector;
 
     private Map<String, JavaScriptFunction> callbacks = new HashMap<String, JavaScriptFunction>();
@@ -75,11 +74,11 @@ public class JavaScriptCallbackHelper implements Serializable {
         if (javascriptCallbackRpc == null) {
             javascriptCallbackRpc = new JavaScriptCallbackRpc() {
                 @Override
-                public void call(String name, JSONArray arguments) {
+                public void call(String name, JsonArray arguments) {
                     JavaScriptFunction callback = callbacks.get(name);
                     try {
                         callback.call(arguments);
-                    } catch (JSONException e) {
+                    } catch (JsonException e) {
                         throw new IllegalArgumentException(e);
                     }
                 }
@@ -95,7 +94,7 @@ public class JavaScriptCallbackHelper implements Serializable {
                             + name
                             + " on the client because a callback with the same name is registered on the server.");
         }
-        JSONArray args = new JSONArray(Arrays.asList(arguments));
+        JsonArray args = (JsonArray) JsonCodec.encode(arguments, null, Object[].class, null).getEncodedValue();
         connector.addMethodInvocationToQueue(
                 JavaScriptCallbackRpc.class.getName(), CALL_METHOD,
                 new Object[] { name, args });

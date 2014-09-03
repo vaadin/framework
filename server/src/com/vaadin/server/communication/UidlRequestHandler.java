@@ -22,8 +22,6 @@ import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.json.JSONException;
-
 import com.vaadin.server.Constants;
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
 import com.vaadin.server.ServletPortletHelper;
@@ -38,6 +36,7 @@ import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.ui.UI;
+import elemental.json.JsonException;
 
 /**
  * Processes a UIDL request from the client.
@@ -97,7 +96,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
             }
 
             writeUidl(request, response, uI, stringWriter, repaintAll);
-        } catch (JSONException e) {
+        } catch (JsonException e) {
             getLogger().log(Level.SEVERE, "Error writing JSON to response", e);
             // Refresh on client side
             response.getWriter().write(
@@ -144,8 +143,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
     }
 
     private void writeUidl(VaadinRequest request, VaadinResponse response,
-            UI ui, Writer writer, boolean repaintAll) throws IOException,
-            JSONException {
+            UI ui, Writer writer, boolean repaintAll) throws IOException {
         openJsonMessage(writer, response);
 
         new UidlWriter().write(ui, writer, repaintAll, false);
