@@ -208,7 +208,7 @@ public class GridSortingTest extends GridBasicFeaturesTest {
     }
 
     @Test
-    public void testKeyboardMultiColumnSorting() throws InterruptedException {
+    public void testKeyboardSorting() {
         openTestURL();
 
         //
@@ -254,9 +254,16 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         // Move back to the third column
         sendKeys(Keys.RIGHT);
 
-        // Reset sorting to third column, ASCENDING
+        // Set sorting to third column, ASCENDING
         sendKeys(Keys.ENTER);
         assertLog("10. Sort order: [Column 2 ASCENDING] by USER");
+
+        // Move to the fourth column
+        sendKeys(Keys.RIGHT);
+
+        // Make sure that single-column sorting also works as expected
+        sendKeys(Keys.ENTER);
+        assertLog("12. Sort order: [Column 3 ASCENDING] by USER");
 
     }
 
