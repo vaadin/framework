@@ -15,10 +15,11 @@
  */
 package com.vaadin.tests.components.grid;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import com.vaadin.ui.components.grid.AbstractRenderer;
+
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.JsonValue;
 
 public class IntArrayRenderer extends AbstractRenderer<int[]> {
     public IntArrayRenderer() {
@@ -26,11 +27,11 @@ public class IntArrayRenderer extends AbstractRenderer<int[]> {
     }
 
     @Override
-    public Object encode(int[] value) {
-        try {
-            return new JSONArray(value);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
+    public JsonValue encode(int[] value) {
+        JsonArray valueArray = Json.createArray();
+        for (int i = 0; i < value.length; ++i) {
+            valueArray.set(i, value[i]);
         }
+        return valueArray;
     }
 }

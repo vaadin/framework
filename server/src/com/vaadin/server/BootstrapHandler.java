@@ -30,8 +30,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.DocumentType;
@@ -43,6 +41,11 @@ import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
+
+import elemental.json.Json;
+import elemental.json.JsonException;
+import elemental.json.JsonObject;
+import elemental.json.impl.JsonUtil;
 
 /**
  *
@@ -191,7 +194,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             String html = getBootstrapHtml(context);
 
             writeBootstrapPage(response, html);
-        } catch (JSONException e) {
+        } catch (JsonException e) {
             writeError(response, e);
         }
 
@@ -340,10 +343,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
      * @param context
      *
      * @throws IOException
-     * @throws JSONException
      */
-    private void setupMainDiv(BootstrapContext context) throws IOException,
-            JSONException {
+    private void setupMainDiv(BootstrapContext context) throws IOException {
         String style = getMainDivStyle(context);
 
         /*- Add classnames;
@@ -375,14 +376,6 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         String vaadinLocation = vaadinService.getStaticFileLocation(request)
                 + "/VAADIN/";
 
-        fragmentNodes
-                .add(new Element(Tag.valueOf("iframe"), "")
-                        .attr("tabIndex", "-1")
-                        .attr("id", "__gwt_historyFrame")
-                        .attr("style",
-                                "position:absolute;width:0;height:0;border:0;overflow:hidden")
-                        .attr("src", "javascript:false"));
-
         if (context.getPushMode().isEnabled()) {
             // Load client-side dependencies for push support
             String pushJS = vaadinLocation;
@@ -407,8 +400,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         StringBuilder builder = new StringBuilder();
         builder.append("//<![CDATA[\n");
         builder.append("if (!window.vaadin) alert("
-                + JSONObject.quote("Failed to load the bootstrap javascript: "
-                        + bootstrapLocation) + ");\n");
+                + JsonUtil.quote("Failed to load the bootstrap javascript: "
+                + bootstrapLocation) + ");\n");
 
         appendMainScriptTagContents(context, builder);
 
@@ -420,8 +413,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
     }
 
     protected void appendMainScriptTagContents(BootstrapContext context,
-            StringBuilder builder) throws JSONException, IOException {
-        JSONObject appConfig = getApplicationParameters(context);
+            StringBuilder builder) throws IOException {
+        JsonObject appConfig = getApplicationParameters(context);
 
         boolean isDebug = !context.getSession().getConfiguration()
                 .isProductionMode();
@@ -446,21 +439,21 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
     }
 
     private static void appendJsonObject(StringBuilder builder,
-            JSONObject jsonObject, boolean isDebug) throws JSONException {
+            JsonObject jsonObject, boolean isDebug) {
         if (isDebug) {
-            builder.append(jsonObject.toString(4));
+            builder.append(JsonUtil.stringify(jsonObject, 4));
         } else {
-            builder.append(jsonObject.toString());
+            builder.append(JsonUtil.stringify(jsonObject));
         }
     }
 
-    protected JSONObject getApplicationParameters(BootstrapContext context)
-            throws JSONException, PaintException {
+    protected JsonObject getApplicationParameters(BootstrapContext context)
+            throws PaintException {
         VaadinRequest request = context.getRequest();
         VaadinSession session = context.getSession();
         VaadinService vaadinService = request.getService();
 
-        JSONObject appConfig = new JSONObject();
+        JsonObject appConfig = Json.createObject();
 
         String themeName = context.getThemeName();
         if (themeName != null) {
@@ -473,7 +466,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             appConfig.put("extraParams", "&" + IGNORE_RESTART_PARAM + "=1");
         }
 
-        JSONObject versionInfo = new JSONObject();
+        JsonObject versionInfo = Json.createObject();
         versionInfo.put("vaadinVersion", Version.getFullVersion());
         appConfig.put("versionInfo", versionInfo);
 
@@ -487,30 +480,42 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                 request);
         if (systemMessages != null) {
             // Write the CommunicationError -message to client
-            JSONObject comErrMsg = new JSONObject();
+            JsonObject comErrMsg = Json.createObject();
             comErrMsg.put("caption",
                     systemMessages.getCommunicationErrorCaption());
             comErrMsg.put("message",
                     systemMessages.getCommunicationErrorMessage());
-            comErrMsg.put("url", systemMessages.getCommunicationErrorURL());
+            if (systemMessages.getCommunicationErrorURL() == null) {
+                comErrMsg.put("url", Json.createNull());
+            } else {
+                comErrMsg.put("url", systemMessages.getCommunicationErrorURL());
+            }
 
             appConfig.put("comErrMsg", comErrMsg);
 
-            JSONObject authErrMsg = new JSONObject();
+            JsonObject authErrMsg = Json.createObject();
             authErrMsg.put("caption",
                     systemMessages.getAuthenticationErrorCaption());
             authErrMsg.put("message",
                     systemMessages.getAuthenticationErrorMessage());
-            authErrMsg.put("url", systemMessages.getAuthenticationErrorURL());
+            if (systemMessages.getAuthenticationErrorURL() == null) {
+                authErrMsg.put("url", Json.createNull());
+            } else {
+                authErrMsg.put("url", systemMessages.getAuthenticationErrorURL());
+            }
 
             appConfig.put("authErrMsg", authErrMsg);
 
-            JSONObject sessExpMsg = new JSONObject();
+            JsonObject sessExpMsg = Json.createObject();
             sessExpMsg
                     .put("caption", systemMessages.getSessionExpiredCaption());
             sessExpMsg
                     .put("message", systemMessages.getSessionExpiredMessage());
-            sessExpMsg.put("url", systemMessages.getSessionExpiredURL());
+            if (systemMessages.getSessionExpiredURL() == null) {
+                sessExpMsg.put("url", Json.createNull());
+            } else {
+                sessExpMsg.put("url", systemMessages.getSessionExpiredURL());
+            }
 
             appConfig.put("sessExpMsg", sessExpMsg);
         }

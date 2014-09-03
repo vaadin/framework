@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.server.ConnectorResource;
 import com.vaadin.server.DownloadStream;
@@ -39,6 +36,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.JavaScriptFunction;
+import elemental.json.JsonArray;
 
 public class BasicJavaScriptComponent extends AbstractTestUI {
 
@@ -78,15 +76,15 @@ public class BasicJavaScriptComponent extends AbstractTestUI {
             });
             addFunction("messageToServer", new JavaScriptFunction() {
                 @Override
-                public void call(JSONArray arguments) throws JSONException {
+                public void call(JsonArray arguments) {
                     log.log("Got callback message: " + arguments.getString(0));
                 }
             });
 
             addFunction("reportParentIds", new JavaScriptFunction() {
                 @Override
-                public void call(JSONArray arguments) throws JSONException {
-                    JSONArray parentIds = arguments.getJSONArray(0);
+                public void call(JsonArray arguments) {
+                    JsonArray parentIds = arguments.getArray(0);
                     if (!parentIds.getString(0).equals(getConnectorId())) {
                         log.log("Connector ids doesn't match");
                     }

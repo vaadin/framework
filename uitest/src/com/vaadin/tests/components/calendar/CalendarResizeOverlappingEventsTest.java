@@ -24,15 +24,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.DndActionsTest;
 
 /**
  * 
  * @author Vaadin Ltd
  */
-public class CalendarResizeOverlappingEventsTest extends MultiBrowserTest {
+public class CalendarResizeOverlappingEventsTest extends DndActionsTest {
 
     private int noOverlapWidth;
     private int oneOverlapWidth;
@@ -100,23 +99,7 @@ public class CalendarResizeOverlappingEventsTest extends MultiBrowserTest {
     }
 
     private void dragAndDrop(WebElement element, int yOffset) {
-        /*
-         * Selenium doesn't properly drag and drop items in IE8. It tries to
-         * start dragging an element from a position above the element itself.
-         */
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            Actions action = new Actions(getDriver());
-            action.moveToElement(element);
-            action.moveByOffset(0, 1);
-            action.clickAndHold();
-            action.moveByOffset(0, yOffset);
-            action.release();
-            action.build().perform();
-        } else {
-            Actions action = new Actions(getDriver());
-            action.dragAndDropBy(element, 0, yOffset);
-            action.build().perform();
-        }
+        dragAndDrop(element, 0, yOffset);
     }
 
     private void initParams() {

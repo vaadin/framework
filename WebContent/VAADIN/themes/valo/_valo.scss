@@ -48,7 +48,11 @@
 @include valo-global;
 
 
-// The main theme mixin
+/**
+ * The main Valo theme mixin, which outputs all the selectors and properties to produce 
+ * the variation specified by global variables. Should not be included multiple times 
+ * per compilation.
+ */
 @mixin valo {
   @include valo-common;
   @include valo-components;

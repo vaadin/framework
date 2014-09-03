@@ -1,3 +1,9 @@
+/**
+ * Outputs the context menu selectors and styles, which is used by Table and Tree for instance.
+ * 
+ * @requires {mixin} valo-selection-item-style
+ * @requires {mixin} valo-selection-item-selected-style
+ */
 @mixin valo-contextmenu {
 
   .v-contextmenu {

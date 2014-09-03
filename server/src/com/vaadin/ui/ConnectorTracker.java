@@ -30,15 +30,16 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.DragAndDropService;
 import com.vaadin.server.GlobalResourceHandler;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.StreamVariable;
+
+import elemental.json.Json;
+import elemental.json.JsonException;
+import elemental.json.JsonObject;
 
 /**
  * A class which takes care of book keeping of {@link ClientConnector}s for a
@@ -76,7 +77,7 @@ public class ConnectorTracker implements Serializable {
     private boolean writingResponse = false;
 
     private UI uI;
-    private transient Map<ClientConnector, JSONObject> diffStates = new HashMap<ClientConnector, JSONObject>();
+    private transient Map<ClientConnector, JsonObject> diffStates = new HashMap<ClientConnector, JsonObject>();
 
     /** Maps connectorIds to a map of named StreamVariables */
     private Map<String, Map<String, StreamVariable>> pidToNameToStreamVariable;
@@ -556,12 +557,12 @@ public class ConnectorTracker implements Serializable {
         return dirtyVisibleConnectors;
     }
 
-    public JSONObject getDiffState(ClientConnector connector) {
+    public JsonObject getDiffState(ClientConnector connector) {
         assert getConnector(connector.getConnectorId()) == connector;
         return diffStates.get(connector);
     }
 
-    public void setDiffState(ClientConnector connector, JSONObject diffState) {
+    public void setDiffState(ClientConnector connector, JsonObject diffState) {
         assert getConnector(connector.getConnectorId()) == connector;
         diffStates.put(connector, diffState);
     }
@@ -621,11 +622,11 @@ public class ConnectorTracker implements Serializable {
         this.writingResponse = writingResponse;
     }
 
-    /* Special serialization to JSONObjects which are not serializable */
+    /* Special serialization to JsonObjects which are not serializable */
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        // Convert JSONObjects in diff state to String representation as
-        // JSONObject is not serializable
+        // Convert JsonObjects in diff state to String representation as
+        // JsonObject is not serializable
         HashMap<ClientConnector, String> stringDiffStates = new HashMap<ClientConnector, String>(
                 diffStates.size() * 2);
         for (ClientConnector key : diffStates.keySet()) {
@@ -634,23 +635,23 @@ public class ConnectorTracker implements Serializable {
         out.writeObject(stringDiffStates);
     }
 
-    /* Special serialization to JSONObjects which are not serializable */
+    /* Special serialization to JsonObjects which are not serializable */
     private void readObject(java.io.ObjectInputStream in) throws IOException,
             ClassNotFoundException {
         in.defaultReadObject();
 
-        // Read String versions of JSONObjects and parse into JSONObjects as
-        // JSONObject is not serializable
-        diffStates = new HashMap<ClientConnector, JSONObject>();
+        // Read String versions of JsonObjects and parse into JsonObjects as
+        // JsonObject is not serializable
+        diffStates = new HashMap<ClientConnector, JsonObject>();
         @SuppressWarnings("unchecked")
         HashMap<ClientConnector, String> stringDiffStates = (HashMap<ClientConnector, String>) in
                 .readObject();
-        diffStates = new HashMap<ClientConnector, JSONObject>(
+        diffStates = new HashMap<ClientConnector, JsonObject>(
                 stringDiffStates.size() * 2);
         for (ClientConnector key : stringDiffStates.keySet()) {
             try {
-                diffStates.put(key, new JSONObject(stringDiffStates.get(key)));
-            } catch (JSONException e) {
+                diffStates.put(key, Json.parse(stringDiffStates.get(key)));
+            } catch (JsonException e) {
                 throw new IOException(e);
             }
         }

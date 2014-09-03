@@ -19,8 +19,6 @@ package com.vaadin.tests.components.table;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.json.JSONObject;
-
 import com.vaadin.annotations.Push;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.StreamVariable;
@@ -30,6 +28,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.Table;
+import elemental.json.JsonObject;
 
 @Push
 public class TableRemovedQuicklySendsInvalidRpcCalls extends AbstractTestUI {
@@ -125,12 +124,12 @@ public class TableRemovedQuicklySendsInvalidRpcCalls extends AbstractTestUI {
         }
 
         @Override
-        public JSONObject getDiffState(ClientConnector connector) {
+        public JsonObject getDiffState(ClientConnector connector) {
             return tracker.getDiffState(connector);
         }
 
         @Override
-        public void setDiffState(ClientConnector connector, JSONObject diffState) {
+        public void setDiffState(ClientConnector connector, JsonObject diffState) {
             tracker.setDiffState(connector, diffState);
         }
 

@@ -18,13 +18,14 @@ package com.vaadin.server.communication;
 import java.lang.reflect.Type;
 
 import com.vaadin.ui.ConnectorTracker;
+import elemental.json.JsonValue;
 
 /**
  * Implementors of this interface knows how to serialize an Object of a given
  * type to JSON and how to deserialize the JSON back into an object.
  * <p>
  * The {@link #serialize(Object, ConnectorTracker)} and
- * {@link #deserialize(Type, Object, ConnectorTracker)} methods must be
+ * {@link #deserialize(Type, JsonValue, ConnectorTracker)} methods must be
  * symmetric so they can be chained and produce the original result (or an equal
  * result).
  * <p>
@@ -42,10 +43,7 @@ public interface JSONSerializer<T> {
      * Creates and deserializes an object received from the client. Must be
      * compatible with {@link #serialize(Object, ConnectorTracker)} and also
      * with the client side com.vaadin.client.communication.JSONSerializer.
-     * <p>
-     * The json parameter is of type Object as org.json JSON classes have no
-     * other common super class
-     * 
+     *
      * @param type
      *            The expected return type
      * @param jsonValue
@@ -54,11 +52,11 @@ public interface JSONSerializer<T> {
      *            the connector tracker instance for the UI
      * @return A deserialized object
      */
-    T deserialize(Type type, Object jsonValue, ConnectorTracker connectorTracker);
+    T deserialize(Type type, JsonValue jsonValue, ConnectorTracker connectorTracker);
 
     /**
      * Serialize the given object into JSON. Must be compatible with
-     * {@link #deserialize(Object, connectorTracker)} and the client side
+     * {@link #deserialize(Type, JsonValue, ConnectorTracker)} and the client side
      * com.vaadin.client.communication.JSONSerializer
      * 
      * @param value
@@ -67,6 +65,6 @@ public interface JSONSerializer<T> {
      *            The connector tracker instance for the UI
      * @return A JSON serialized version of the object
      */
-    Object serialize(T value, ConnectorTracker connectorTracker);
+    JsonValue serialize(T value, ConnectorTracker connectorTracker);
 
 }

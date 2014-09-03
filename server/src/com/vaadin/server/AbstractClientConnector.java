@@ -32,9 +32,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
 import com.vaadin.shared.communication.ClientRpc;
@@ -46,6 +43,7 @@ import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.UI;
+import elemental.json.JsonObject;
 
 /**
  * An abstract base class for ClientConnector implementations. This class
@@ -243,7 +241,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
     }
 
     @Override
-    public JSONObject encodeState() throws JSONException {
+    public JsonObject encodeState() {
         return LegacyCommunicationManager.encodeState(this, getState(false));
     }
 

@@ -1,8 +1,5 @@
 package com.vaadin.tests.minitutorials.v7a3;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.JavaScript;
@@ -12,6 +9,9 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.UI;
 
+import elemental.json.JsonArray;
+import elemental.json.JsonException;
+
 public class JSAPIUI extends UI {
     @Override
     public void init(VaadinRequest request) {
@@ -19,7 +19,7 @@ public class JSAPIUI extends UI {
         JavaScript.getCurrent().addFunction("com.example.api.notify",
                 new JavaScriptFunction() {
                     @Override
-                    public void call(JSONArray arguments) throws JSONException {
+                    public void call(JsonArray arguments) {
                         try {
                             String caption = arguments.getString(0);
                             if (arguments.length() == 1) {
@@ -28,10 +28,10 @@ public class JSAPIUI extends UI {
                             } else {
                                 // type should be in [1]
                                 Notification.show(caption,
-                                        Type.values()[arguments.getInt(1)]);
+                                        Type.values()[((int) arguments.getNumber(1))]);
                             }
 
-                        } catch (JSONException e) {
+                        } catch (JsonException e) {
                             // We'll log in the console, you might not want to
                             JavaScript.getCurrent().execute(
                                     "console.error('" + e.getMessage() + "')");

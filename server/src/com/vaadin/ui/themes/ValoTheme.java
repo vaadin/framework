@@ -566,7 +566,7 @@ public class ValoTheme {
      * Make the progress bar indicator appear as a dot which progresses over the
      * progress bar track (instead of a growing bar).
      */
-    public static final String PROBRESSBAR_POINT = "point";
+    public static final String PROGRESSBAR_POINT = "point";
 
     /***************************************************************************
      * 

@@ -23,8 +23,9 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import elemental.json.JsonArray;
+import elemental.json.JsonException;
+import elemental.json.impl.JsonUtil;
 
 /**
  * Internal class for keeping track of pending server to client method
@@ -107,8 +108,8 @@ public class ClientMethodInvocation implements Serializable,
             Type type = parameterTypes[i];
             if (type instanceof Class<?>) {
                 Class<?> clazz = (Class<?>) type;
-                if (JSONArray.class.isAssignableFrom(clazz)) {
-                    parameters[i] = ((JSONArray) parameters[i]).toString();
+                if (JsonArray.class.isAssignableFrom(clazz)) {
+                    parameters[i] = JsonUtil.stringify((JsonArray) parameters[i]);
                 }
             }
         }
@@ -124,10 +125,10 @@ public class ClientMethodInvocation implements Serializable,
             Type type = parameterTypes[i];
             if (type instanceof Class<?>) {
                 Class<?> clazz = (Class<?>) type;
-                if (JSONArray.class.isAssignableFrom(clazz)) {
+                if (JsonArray.class.isAssignableFrom(clazz)) {
                     try {
-                        parameters[i] = new JSONArray(((String) parameters[i]));
-                    } catch (JSONException e) {
+                        parameters[i] = JsonUtil.<JsonArray>parse((String) parameters[i]);
+                    } catch (JsonException e) {
                         throw new IOException(e);
                     }
                 }

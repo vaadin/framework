@@ -16,9 +16,6 @@
 
 package com.vaadin.tests.extensions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.AbstractJavaScriptExtension;
@@ -31,6 +28,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.JavaScriptFunction;
 import com.vaadin.ui.Notification;
+import elemental.json.JsonArray;
 
 public class SimpleJavaScriptExtensionTest extends AbstractTestUI {
 
@@ -71,7 +69,7 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestUI {
             });
             addFunction("greetToServer", new JavaScriptFunction() {
                 @Override
-                public void call(JSONArray arguments) throws JSONException {
+                public void call(JsonArray arguments) {
                     Notification.show(getState().getPrefix()
                             + arguments.getString(0));
                 }

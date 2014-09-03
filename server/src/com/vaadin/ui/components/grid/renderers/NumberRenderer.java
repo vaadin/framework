@@ -20,6 +20,9 @@ import java.util.Locale;
 
 import com.vaadin.ui.components.grid.AbstractRenderer;
 
+import elemental.json.Json;
+import elemental.json.JsonValue;
+
 /**
  * A renderer for presenting number values.
  * 
@@ -131,11 +134,11 @@ public class NumberRenderer extends AbstractRenderer<Number> {
     }
 
     @Override
-    public String encode(Number value) {
+    public JsonValue encode(Number value) {
         if (formatString != null && locale != null) {
-            return String.format(locale, formatString, value);
+            return Json.create(String.format(locale, formatString, value));
         } else if (numberFormat != null) {
-            return numberFormat.format(value);
+            return Json.create(numberFormat.format(value));
         } else {
             throw new IllegalStateException(String.format("Internal bug: "
                     + "%s is in an illegal state: "

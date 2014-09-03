@@ -42,13 +42,33 @@
 @import "valo-menu";
 
 
+/**
+ * Outputs all the selectors and properties for all individual components to produce 
+ * the variation specified by global variables.
+ * 
+ * This mixin can be called multiple times for a theme, if you for instance wish to 
+ * generate alternative color versions of the components.
+ * 
+ * @example scss
+ * .my-theme {
+ *   // The default color variation
+ *   @include valo;
+ *   
+ *   .sidebar {
+ *     // For the sidebar context, we generate a darker variant of all components
+ *      $v-background-color: #696969;
+ *      background-color: $v-background-color;
+ *      @include valo-components;
+ *   }
+ * }
+ */
 @mixin valo-components {
 
   @if v-is-included(absolutelayout) {
     @include valo-absolutelayout;
   }
 
-  @if v-is-included(orderedlayout) {
+  @if v-is-included(orderedlayout) or v-is-included(verticallayout) or v-is-included(horizontallayout) {
     @include valo-orderedlayout;
   }
 

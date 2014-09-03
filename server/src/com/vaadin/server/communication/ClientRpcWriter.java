@@ -24,9 +24,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ClientMethodInvocation;
 import com.vaadin.server.EncodeResult;
@@ -34,6 +31,12 @@ import com.vaadin.server.JsonCodec;
 import com.vaadin.server.PaintException;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.ui.UI;
+
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.JsonException;
+import elemental.json.JsonValue;
+import elemental.json.impl.JsonUtil;
 
 /**
  * Serializes {@link ClientRpc client RPC} invocations to JSON.
@@ -59,18 +62,18 @@ public class ClientRpcWriter implements Serializable {
         Collection<ClientMethodInvocation> pendingInvocations = collectPendingRpcCalls(ui
                 .getConnectorTracker().getDirtyVisibleConnectors());
 
-        JSONArray rpcCalls = new JSONArray();
+        JsonArray rpcCalls = Json.createArray();
         for (ClientMethodInvocation invocation : pendingInvocations) {
             // add invocation to rpcCalls
             try {
-                JSONArray invocationJson = new JSONArray();
-                invocationJson.put(invocation.getConnector().getConnectorId());
-                invocationJson.put(invocation.getInterfaceName());
-                invocationJson.put(invocation.getMethodName());
-                JSONArray paramJson = new JSONArray();
+                JsonArray invocationJson = Json.createArray();
+                invocationJson.set(0, invocation.getConnector().getConnectorId());
+                invocationJson.set(1, invocation.getInterfaceName());
+                invocationJson.set(2, invocation.getMethodName());
+                JsonArray paramJson = Json.createArray();
                 for (int i = 0; i < invocation.getParameterTypes().length; ++i) {
                     Type parameterType = invocation.getParameterTypes()[i];
-                    Object referenceParameter = null;
+                    JsonValue referenceParameter = null;
                     // TODO Use default values for RPC parameter types
                     // if (!JsonCodec.isInternalType(parameterType)) {
                     // try {
@@ -84,11 +87,11 @@ public class ClientRpcWriter implements Serializable {
                     EncodeResult encodeResult = JsonCodec.encode(
                             invocation.getParameters()[i], referenceParameter,
                             parameterType, ui.getConnectorTracker());
-                    paramJson.put(encodeResult.getEncodedValue());
+                    paramJson.set(i, encodeResult.getEncodedValue());
                 }
-                invocationJson.put(paramJson);
-                rpcCalls.put(invocationJson);
-            } catch (JSONException e) {
+                invocationJson.set(3, paramJson);
+                rpcCalls.set(rpcCalls.length(), invocationJson);
+            } catch (JsonException e) {
                 throw new PaintException(
                         "Failed to serialize RPC method call parameters for connector "
                                 + invocation.getConnector().getConnectorId()
@@ -97,7 +100,7 @@ public class ClientRpcWriter implements Serializable {
                                 + e.getMessage(), e);
             }
         }
-        writer.write(rpcCalls.toString());
+        writer.write(JsonUtil.stringify(rpcCalls));
     }
 
     /**

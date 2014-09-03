@@ -19,17 +19,12 @@ package com.vaadin.data;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.google.gwt.thirdparty.guava.common.collect.BiMap;
 import com.google.gwt.thirdparty.guava.common.collect.HashBiMap;
@@ -55,6 +50,11 @@ import com.vaadin.ui.components.grid.GridColumn;
 import com.vaadin.ui.components.grid.Renderer;
 import com.vaadin.ui.components.grid.selection.SelectionChangeEvent;
 import com.vaadin.ui.components.grid.selection.SelectionChangeListener;
+
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.JsonObject;
+import elemental.json.JsonValue;
 
 /**
  * Provides Vaadin server-side container data source to a
@@ -704,43 +704,36 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     private void pushRows(int firstRow, List<?> itemIds) {
         Collection<?> propertyIds = container.getContainerPropertyIds();
-        JSONArray rows = new JSONArray();
-        for (Object itemId : itemIds) {
-            rows.put(getRowData(propertyIds, itemId));
+        JsonArray rows = Json.createArray();
+        for (int i = 0; i < itemIds.size(); ++i) {
+            rows.set(i, getRowData(propertyIds, itemIds.get(i)));
         }
-        String jsonString = rows.toString();
-        getRpcProxy(DataProviderRpc.class).setRowData(firstRow, jsonString);
+        getRpcProxy(DataProviderRpc.class).setRowData(firstRow, rows.toJson());
     }
 
-    private JSONObject getRowData(Collection<?> propertyIds, Object itemId) {
+    private JsonValue getRowData(Collection<?> propertyIds, Object itemId) {
         Item item = container.getItem(itemId);
-        String[] row = new String[propertyIds.size()];
 
-        JSONArray rowData = new JSONArray();
+        JsonArray rowData = Json.createArray();
 
         Grid grid = getGrid();
-        try {
-            for (Object propertyId : propertyIds) {
-                GridColumn column = grid.getColumn(propertyId);
 
-                Object propertyValue = item.getItemProperty(propertyId)
-                        .getValue();
-                Object encodedValue = encodeValue(propertyValue,
-                        column.getRenderer(), column.getConverter(),
-                        grid.getLocale());
+        int i = 0;
+        for (Object propertyId : propertyIds) {
+            GridColumn column = grid.getColumn(propertyId);
 
-                rowData.put(encodedValue);
-            }
+            Object propertyValue = item.getItemProperty(propertyId).getValue();
+            JsonValue encodedValue = encodeValue(propertyValue,
+                    column.getRenderer(), column.getConverter(),
+                    grid.getLocale());
 
-            final JSONObject rowObject = new JSONObject();
-            rowObject.put(GridState.JSONKEY_DATA, rowData);
-            rowObject.put(GridState.JSONKEY_ROWKEY, keyMapper.getKey(itemId));
-            return rowObject;
-        } catch (final JSONException e) {
-            throw new RuntimeException("Grid was unable to serialize "
-                    + "data for row (this should've been caught "
-                    + "eariler by other Grid logic)", e);
+            rowData.set(i++, encodedValue);
         }
+
+        final JsonObject rowObject = Json.createObject();
+        rowObject.put(GridState.JSONKEY_DATA, rowData);
+        rowObject.put(GridState.JSONKEY_ROWKEY, keyMapper.getKey(itemId));
+        return rowObject;
     }
 
     @Override
@@ -809,10 +802,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * roundtrip.
          */
         Object itemId = container.getIdByIndex(index);
-        JSONObject row = getRowData(container.getContainerPropertyIds(), itemId);
-        JSONArray rowArray = new JSONArray(Collections.singleton(row));
-        String jsonString = rowArray.toString();
-        getRpcProxy(DataProviderRpc.class).setRowData(index, jsonString);
+        JsonValue row = getRowData(container.getContainerPropertyIds(), itemId);
+        JsonArray rowArray = Json.createArray();
+        rowArray.set(0, row);
+        getRpcProxy(DataProviderRpc.class).setRowData(index, rowArray.toJson());
     }
 
     @Override
@@ -888,7 +881,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *            the locale to use in conversion
      * @return an encoded value ready to be sent to the client
      */
-    public static <T> Object encodeValue(Object modelValue,
+    public static <T> JsonValue encodeValue(Object modelValue,
             Renderer<T> renderer, Converter<?, ?> converter, Locale locale) {
         Class<T> presentationType = renderer.getPresentationType();
         T presentationValue;
@@ -913,24 +906,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
                     safeConverter.getPresentationType(), locale);
         }
 
-        Object encodedValue = renderer.encode(presentationValue);
+        JsonValue encodedValue = renderer.encode(presentationValue);
 
-        /*
-         * because this is a relatively heavy operation, we'll hide this behind
-         * an assert so that the check will be removed in production mode
-         */
-        assert jsonSupports(encodedValue) : "org.json.JSONObject does not know how to serialize objects of type "
-                + encodedValue.getClass().getName();
         return encodedValue;
-    }
-
-    private static boolean jsonSupports(Object encodedValue) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.accumulate("test", encodedValue);
-        } catch (JSONException e) {
-            return false;
-        }
-        return true;
     }
 }

@@ -16,8 +16,6 @@
 
 package com.vaadin.ui;
 
-import org.json.JSONException;
-
 import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -47,12 +45,8 @@ public class CheckBox extends AbstractField<Boolean> {
              * 
              * See #11028, #10030.
              */
-            try {
-                getUI().getConnectorTracker().getDiffState(CheckBox.this)
-                        .put("checked", checked);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
+            getUI().getConnectorTracker().getDiffState(CheckBox.this)
+                    .put("checked", checked);
 
             final Boolean oldValue = getValue();
             final Boolean newValue = checked;

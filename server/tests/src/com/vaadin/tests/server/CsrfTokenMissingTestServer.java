@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
-import org.json.JSONException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +36,7 @@ import com.vaadin.server.communication.ServerRpcHandler.RpcRequest;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.tests.util.MockDeploymentConfiguration;
+import elemental.json.JsonException;
 
 /**
  * Test the actual csrf token validation by the server.
@@ -141,7 +141,7 @@ public class CsrfTokenMissingTestServer {
     private RpcRequest createRequest() {
         try {
             return new RpcRequest(getPayload(), vaadinRequest);
-        } catch (JSONException e) {
+        } catch (JsonException e) {
             LOGGER.log(Level.SEVERE, "", e);
 
             Assert.assertTrue(false);

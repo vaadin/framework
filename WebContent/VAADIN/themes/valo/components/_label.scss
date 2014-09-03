@@ -1,24 +1,110 @@
-$v-font-weight--header:   $v-font-weight - 100 !default;
-$v-line-height--header:   1.1             !default;
-$v-font-family--header:   null            !default;
-$v-font-color--colored:   $v-selection-color !default;
+/**
+ * The font weight for headers.
+ * 
+ * @group label
+ */
+$v-font-weight--header: $v-font-weight - 100 !default;
 
-$v-font-size--h1:         2.4em           !default;
-$v-font-size--h2:         1.6em           !default;
-$v-font-size--h3:         1.2em           !default;
-$v-font-size--large:      1.2em           !default;
-$v-font-size--small:      0.87em          !default;
+/**
+ * The line height for headers.
+ * 
+ * @group label
+ */
+$v-line-height--header: 1.1 !default;
 
-$v-font-family--h1:       $v-font-family--header   !default;
-$v-font-family--h2:       $v-font-family--header   !default;
-$v-font-family--h3:       $v-font-family--header   !default;
+/**
+ * The font family for headers.
+ * 
+ * @group label
+ */
+$v-font-family--header: null !default;
 
-$v-letter-spacing--h1:    -0.03em         !default;
-$v-letter-spacing--h2:    -0.02em         !default;
-$v-letter-spacing--h3:    0               !default;
-$v-letter-spacing--h4:    0               !default;
+/**
+ * The font color for colored style labels.
+ * 
+ * @group label
+ */
+$v-font-color--colored: $v-selection-color !default;
+
+/**
+ * The font size for 1st level headers.
+ * 
+ * @group label
+ */
+$v-font-size--h1: 2.4em !default;
+
+/**
+ * The font size for 2nd level headers.
+ * 
+ * @group label
+ */
+$v-font-size--h2: 1.6em !default;
+
+/**
+ * The font size for 3rd level headers.
+ * 
+ * @group label
+ */
+$v-font-size--h3: 1.2em !default;
+
+/**
+ * The font family for 1st level headers.
+ * 
+ * @group label
+ */
+$v-font-family--h1: $v-font-family--header !default;
+
+/**
+ * The font family for 2nd level headers.
+ * 
+ * @group label
+ */
+$v-font-family--h2: $v-font-family--header !default;
+
+/**
+ * The font family for 3rd level headers.
+ * 
+ * @group label
+ */
+$v-font-family--h3: $v-font-family--header !default;
+
+/**
+ * The letter spacing for 1st level headers.
+ * 
+ * @group label
+ */
+$v-letter-spacing--h1: -0.03em !default;
+
+/**
+ * The letter spacing for 2nd level headers.
+ * 
+ * @group label
+ */
+$v-letter-spacing--h2: -0.02em !default;
+
+/**
+ * The letter spacing for 3rd level headers.
+ * 
+ * @group label
+ */
+$v-letter-spacing--h3: 0 !default;
+
+/**
+ * The letter spacing for 4th level headers.
+ * 
+ * @group label
+ */
+$v-letter-spacing--h4: 0 !default;
 
 
+/**
+ * Outputs the selectors and styles for the Label component.
+ * 
+ * @param {string} $primary-stylename (v-label) - the primary style name for the selectors
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ *
+ * @group label
+ */
 @mixin valo-label ($primary-stylename: v-label, $include-additional-styles: contains($v-included-additional-styles, label)) {
 
   .#{$primary-stylename} {
@@ -34,7 +120,7 @@ $v-letter-spacing--h4:    0               !default;
   h3, .#{$primary-stylename}-h3 {
     line-height: $v-line-height--header;
     font-weight: $v-font-weight--header;
-    color: valo-header-color($v-app-background-color);
+    color: valo-font-color($v-app-background-color, 0.92);
   }
 
   h1, .#{$primary-stylename}-h1 {
@@ -65,7 +151,7 @@ $v-letter-spacing--h4:    0               !default;
     line-height: $v-line-height--header;
     font-weight: $v-font-weight + 200;
     font-size: $v-font-size--small;
-    color: valo-header-color($v-app-background-color, $contrast: 0.12);
+    color: valo-font-color($v-app-background-color, 0.74);
     text-transform: uppercase;
     letter-spacing: $v-letter-spacing--h4;
     margin-top: 2.4em;

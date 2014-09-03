@@ -182,12 +182,24 @@
             <include name="com/google/gwt/user/client/rpc/IsSerializable.*" />
 
         </fileset>
+        <!-- GWT Elemental -->
+        <fileset dir="${gwt.elemental.jar.files}">
+            <include name="elemental/util/Array*" />
+            <include name="elemental/util/Can*" />
+            <include name="elemental/util/Map*" />
+            <include name="elemental/json/**" />
+        </fileset>
     </union>
 
     <union id="server.gwt.includes">
         <fileset dir="${gwt.user.jar.files}">
             <!-- Server files from gwt-user -->
             <include name="com/google/gwt/*/server/**" />
+        </fileset>
+        <!-- GWT Elemental -->
+        <fileset dir="${gwt.elemental.jar.files}">
+            <exclude name="META-INF/**" />
+            <exclude name="super/**" />
         </fileset>
     </union>
 </project>

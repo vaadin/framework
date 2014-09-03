@@ -35,7 +35,6 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 
 public class VSlider extends SimpleFocusablePanel implements Field,
@@ -329,13 +328,11 @@ public class VSlider extends SimpleFocusablePanel implements Field,
                 DOM.eventPreventDefault(event); // prevent selecting text
                 DOM.eventCancelBubble(event, true);
                 event.stopPropagation();
-                VConsole.log("Slider move start");
             }
             break;
         case Event.ONMOUSEMOVE:
         case Event.ONTOUCHMOVE:
             if (dragging) {
-                VConsole.log("Slider move");
                 setValueByEvent(event, false);
                 updateFeedbackPosition();
                 event.stopPropagation();
@@ -345,7 +342,6 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             feedbackPopup.hide();
         case Event.ONMOUSEUP:
             // feedbackPopup.hide();
-            VConsole.log("Slider move end");
             dragging = false;
             handle.setClassName(getStylePrimaryName() + "-handle");
             DOM.releaseCapture(getElement());

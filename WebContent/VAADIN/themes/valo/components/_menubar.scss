@@ -283,6 +283,7 @@
   border-radius: 0;
   padding: first-number($v-border);
   @include box-shadow(none);
+  text-shadow: none;
   background: transparent;
   color: inherit;
 
@@ -296,7 +297,6 @@
     margin-right: max(1px, first-number($v-border));
     border-radius: $v-border-radius;
     color: $v-selection-color;
-    text-shadow: valo-text-shadow($font-color: $v-selection-color, $offset: -1px);
     padding: 0 round($v-unit-size/3);
 
     @if $v-animations-enabled {

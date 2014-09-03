@@ -23,9 +23,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.server.LegacyApplicationUIProvider;
 import com.vaadin.server.SynchronizedRequestHandler;
@@ -42,6 +39,11 @@ import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
+
+import elemental.json.Json;
+import elemental.json.JsonException;
+import elemental.json.JsonObject;
+import elemental.json.impl.JsonUtil;
 
 /**
  * Handles an initial request from the client to initialize a {@link UI}.
@@ -75,13 +77,13 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
 
             session.getCommunicationManager().repaintAll(uI);
 
-            JSONObject params = new JSONObject();
+            JsonObject params = Json.createObject();
             params.put(UIConstants.UI_ID_PARAMETER, uI.getUIId());
             String initialUIDL = getInitialUidl(request, uI);
             params.put("uidl", initialUIDL);
 
-            stringWriter.write(params.toString());
-        } catch (JSONException e) {
+            stringWriter.write(JsonUtil.stringify(params));
+        } catch (JsonException e) {
             throw new IOException("Error producing initial UIDL", e);
         } finally {
             stringWriter.close();
@@ -278,12 +280,10 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
      * @param uI
      *            the UI for which the UIDL should be generated
      * @return a string with the initial UIDL message
-     * @throws JSONException
-     *             if an exception occurs while encoding output
      * @throws IOException
      */
     protected String getInitialUidl(VaadinRequest request, UI uI)
-            throws JSONException, IOException {
+            throws IOException {
         StringWriter writer = new StringWriter();
         try {
             writer.write("{");
