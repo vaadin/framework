@@ -21,6 +21,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.VUpload;
 import com.vaadin.shared.EventId;
@@ -89,6 +90,13 @@ public class UploadConnector extends AbstractComponentConnector implements
             getWidget().enableUpload();
             getWidget().ensureTargetFrame();
         }
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        getWidget().disableTitle(hasTooltip());
     }
 
     @Override

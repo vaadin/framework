@@ -312,6 +312,26 @@ public class VUpload extends SimplePanel {
         Scheduler.get().scheduleDeferred(startUploadCmd);
     }
 
+    public void disableTitle(boolean disable) {
+        if (disable) {
+            // Disable title attribute for upload element.
+            if (BrowserInfo.get().isChrome()) {
+                // In Chrome title has to be set to " " to make it invisible
+                fu.setTitle(" ");
+            } else if (BrowserInfo.get().isFirefox()) {
+                // In FF title has to be set to empty string to make it
+                // invisible
+                // Method setTitle removes title attribute when it's an empty
+                // string, so setAttribute() should be used here
+                fu.getElement().setAttribute("title", "");
+            }
+            // For other browsers absent title doesn't show default tooltip for
+            // input element
+        } else {
+            fu.setTitle(null);
+        }
+    }
+
     @Override
     protected void onAttach() {
         super.onAttach();
@@ -357,4 +377,5 @@ public class VUpload extends SimplePanel {
             synthesizedFrame = null;
         }
     }
+
 }
