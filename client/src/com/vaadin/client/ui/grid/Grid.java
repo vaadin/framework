@@ -288,6 +288,7 @@ public class Grid<T> extends Composite implements
         private void setActiveCell(int row, int column, RowContainer container) {
             if (row == activeRow && activeCellRange.contains(column)
                     && container == this.container) {
+                refreshRow(activeRow);
                 return;
             }
 
@@ -507,6 +508,54 @@ public class Grid<T> extends Composite implements
          */
         public void offsetRangeBy(int offset) {
             activeCellRange = activeCellRange.offsetBy(offset);
+        }
+
+        /*
+         * Informs ActiveCellHandler that certain range of rows has been added.
+         * ActiveCellHandler will fix indices accordingly.
+         * 
+         * @param added a range of added rows
+         */
+        public void rowsAdded(Range added) {
+            if (added.getStart() <= activeRow) {
+                setActiveCell(activeRow + added.length(),
+                        activeCellRange.getStart(), container);
+            }
+        }
+
+        /**
+         * Informs ActiveCellHandler that certain range of rows has been
+         * removed. ActiveCellHandler will fix indices accordingly.
+         * 
+         * @param removed
+         *            a range of removed rows
+         */
+        public void rowsRemoved(Range removed) {
+            int activeColumn = activeCellRange.getStart();
+            if (container != escalator.getBody()) {
+                return;
+            } else if (!removed.contains(activeRow)) {
+                if (removed.getStart() > activeRow) {
+                    return;
+                }
+                setActiveCell(activeRow - removed.length(), activeColumn,
+                        container);
+            } else {
+                if (container.getRowCount() > removed.getEnd()) {
+                    setActiveCell(removed.getStart(), activeColumn, container);
+                } else if (removed.getStart() > 0) {
+                    setActiveCell(removed.getStart() - 1, activeColumn,
+                            container);
+                } else {
+                    if (escalator.getHeader().getRowCount() > 0) {
+                        setActiveCell(lastActiveHeaderRow, activeColumn,
+                                escalator.getHeader());
+                    } else if (escalator.getFooter().getRowCount() > 0) {
+                        setActiveCell(lastActiveFooterRow, activeColumn,
+                                escalator.getFooter());
+                    }
+                }
+            }
         }
     }
 
@@ -1707,11 +1756,15 @@ public class Grid<T> extends Composite implements
             @Override
             public void dataRemoved(int firstIndex, int numberOfItems) {
                 escalator.getBody().removeRows(firstIndex, numberOfItems);
+                Range removed = Range.withLength(firstIndex, numberOfItems);
+                activeCellHandler.rowsRemoved(removed);
             }
 
             @Override
             public void dataAdded(int firstIndex, int numberOfItems) {
                 escalator.getBody().insertRows(firstIndex, numberOfItems);
+                Range added = Range.withLength(firstIndex, numberOfItems);
+                activeCellHandler.rowsAdded(added);
             }
 
             @Override
