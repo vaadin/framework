@@ -235,6 +235,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         }
 
         private void updateFromState(TabState tabState) {
+            tabCaption.setCaptionAsHtml(getTabsheet().isTabCaptionsAsHtml());
             tabCaption.update(tabState);
             // Apply the styleName set for the tab
             String newStyleName = tabState.styleName;

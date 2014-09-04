@@ -344,6 +344,7 @@ public class VAccordion extends VTabsheetBase {
 
         public void updateCaption(TabState tabState) {
             // TODO need to call this because the caption does not have an owner
+            caption.setCaptionAsHtml(isTabCaptionsAsHtml());
             caption.updateCaptionWithoutOwner(
                     tabState.caption,
                     !tabState.enabled,
