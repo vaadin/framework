@@ -178,6 +178,7 @@ public class EscalatorBasicClientFeaturesWidget extends
         escalator = getTestedWidget();
         ((EscalatorProxy) escalator).setDebugLabel(debugLabel);
         addNorth(debugLabel, 200);
+        debugLabel.getElement().setId("log");
 
         final RowContainer header = escalator.getHeader();
         header.setEscalatorUpdater(data.createHeaderUpdater());

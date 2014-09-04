@@ -228,8 +228,8 @@ public class EscalatorProxy extends Escalator {
         debugLabel.setHTML( //
                 "Columns: " + columns + "<br>" + //
                         "Header rows: " + headers + "<br>" + //
-                        "Body rows:" + bodys + "<br>" + //
-                        "Footer rows:" + footers + "<br>" + //
+                        "Body rows: " + bodys + "<br>" + //
+                        "Footer rows: " + footers + "<br>" + //
                         logString);
     }
 
