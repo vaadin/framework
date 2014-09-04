@@ -274,21 +274,25 @@ public class CalendarEvent {
      * @return
      */
     public long getRangeInMinutesForDay(Date targetDay) {
+        long rangeInMinutesForDay = 0;
+        // we must take into account that here can be not only 1 and 2 days, but
+        // 1, 2, 3, 4... days first and last days - special cases all another
+        // days between first and last - have range "ALL DAY"
         if (isTimeOnDifferentDays()) {
-            // Time range is on different days. Calculate the second day's
-            // range.
-            long range = (getEndTime().getTime() - getEnd().getTime())
-                    / DateConstants.MINUTEINMILLIS;
-
-            if (getEnd().compareTo(targetDay) != 0) {
-                // Calculate first day's range.
-                return getRangeInMinutes() - range;
+            if (targetDay.compareTo(getStart()) == 0) { // for first day
+                rangeInMinutesForDay = DateConstants.DAYINMINUTES
+                        - (getStartTime().getTime() - getStart().getTime())
+                        / DateConstants.MINUTEINMILLIS;
+            } else if (targetDay.compareTo(getEnd()) == 0) { // for last day
+                rangeInMinutesForDay = (getEndTime().getTime() - getEnd()
+                        .getTime()) / DateConstants.MINUTEINMILLIS;
+            } else { // for in-between days
+                rangeInMinutesForDay = DateConstants.DAYINMINUTES;
             }
-
-            return range;
-        } else {
-            return getRangeInMinutes();
+        } else { // simple case - period is in one day
+            rangeInMinutesForDay = getRangeInMinutes();
         }
+        return rangeInMinutesForDay;
     }
 
     /**
@@ -298,16 +302,18 @@ public class CalendarEvent {
      */
     @SuppressWarnings("deprecation")
     public boolean isTimeOnDifferentDays() {
-        if (getEndTime().getTime() - getStart().getTime() > DateConstants.DAYINMILLIS) {
-            return true;
-        }
+        boolean isSeveralDays = false;
 
-        if (getStart().compareTo(getEnd()) != 0) {
-            if (getEndTime().getHours() == 0 && getEndTime().getMinutes() == 0) {
-                return false;
+        // if difference between start and end times is more than day - of
+        // course it is not one day, but several days
+        if (getEndTime().getTime() - getStartTime().getTime() > DateConstants.DAYINMILLIS) {
+            isSeveralDays = true;
+        } else { // if difference <= day -> there can be different cases
+            if (getStart().compareTo(getEnd()) != 0
+                    && getEndTime().compareTo(getEnd()) != 0) {
+                isSeveralDays = true;
             }
-            return true;
         }
-        return false;
+        return isSeveralDays;
     }
 }
