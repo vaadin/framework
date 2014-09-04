@@ -161,6 +161,8 @@ public class PopupDateFieldConnector extends TextualDateConnector {
 
         getWidget().setDescriptionForAssistiveDevices(
                 getState().descriptionForAssistiveDevices);
+
+        getWidget().setTextFieldTabIndex();
     }
 
     @Override
