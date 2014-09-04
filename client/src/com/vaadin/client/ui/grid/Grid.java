@@ -189,7 +189,7 @@ public class Grid<T> extends Composite implements
 
         private RowContainer container = escalator.getBody();
         private int activeRow = 0;
-        private int activeColumn = 0;
+        private Range activeCellRange = Range.withLength(0, 1);
         private int lastActiveBodyRow = 0;
         private int lastActiveHeaderRow = 0;
         private int lastActiveFooterRow = 0;
@@ -201,7 +201,8 @@ public class Grid<T> extends Composite implements
         }
 
         private Cell getActiveCell() {
-            return new Cell(activeRow, activeColumn, cellWithActiveStyle);
+            return new Cell(activeRow, activeCellRange.getStart(),
+                    cellWithActiveStyle);
         }
 
         /**
@@ -213,7 +214,7 @@ public class Grid<T> extends Composite implements
             int cellColumn = cell.getColumn();
             int colSpan = cell.getColSpan();
             boolean columnActive = Range.withLength(cellColumn, colSpan)
-                    .contains(activeColumn);
+                    .intersects(activeCellRange);
 
             if (cellContainer == container) {
                 // Cell is in the current container
@@ -226,6 +227,7 @@ public class Grid<T> extends Composite implements
                                     cellActiveStyleName, false);
                         }
                         cellWithActiveStyle = cell.getElement();
+
                         // Add active style to correct cell.
                         setStyleName(cellWithActiveStyle, cellActiveStyleName,
                                 true);
@@ -284,43 +286,46 @@ public class Grid<T> extends Composite implements
          *            new container
          */
         private void setActiveCell(int row, int column, RowContainer container) {
-            if (row == activeRow && column == activeColumn
+            if (row == activeRow && activeCellRange.contains(column)
                     && container == this.container) {
                 return;
             }
 
             int oldRow = activeRow;
-            int oldColumn = activeColumn;
             activeRow = row;
-            activeColumn = column;
+            Range oldRange = activeCellRange;
 
             if (container == escalator.getBody()) {
                 scrollToRow(activeRow);
+                activeCellRange = Range.withLength(column, 1);
+            } else {
+                int i = 0;
+                Element cell = container.getRowElement(activeRow)
+                        .getFirstChildElement();
+                do {
+                    int colSpan = cell
+                            .getPropertyInt(FlyweightCell.COLSPAN_ATTR);
+                    Range cellRange = Range.withLength(i, colSpan);
+                    if (cellRange.contains(column)) {
+                        activeCellRange = cellRange;
+                        break;
+                    }
+                    cell = cell.getNextSiblingElement();
+                    ++i;
+                } while (cell != null);
             }
 
-            if (activeColumn >= escalator.getColumnConfiguration()
+            if (column >= escalator.getColumnConfiguration()
                     .getFrozenColumnCount()) {
-                escalator.scrollToColumn(activeColumn, ScrollDestination.ANY,
-                        10);
+                escalator.scrollToColumn(column, ScrollDestination.ANY, 10);
             }
 
             if (this.container == container) {
-                if (container != escalator.getBody()) {
-                    if (oldColumn == activeColumn && oldRow != activeRow) {
-                        refreshRow(oldRow);
-                    } else if (oldColumn != activeColumn) {
-                        refreshHeader();
-                        refreshFooter();
-                    }
+                if (oldRange.equals(activeCellRange) && oldRow != activeRow) {
+                    refreshRow(oldRow);
                 } else {
-                    if (oldRow != activeRow) {
-                        refreshRow(oldRow);
-                    }
-
-                    if (oldColumn != activeColumn) {
-                        refreshHeader();
-                        refreshFooter();
-                    }
+                    refreshHeader();
+                    refreshFooter();
                 }
             } else {
                 RowContainer oldContainer = this.container;
@@ -334,7 +339,7 @@ public class Grid<T> extends Composite implements
                     lastActiveFooterRow = oldRow;
                 }
 
-                if (oldColumn != activeColumn) {
+                if (!oldRange.equals(activeCellRange)) {
                     refreshHeader();
                     refreshFooter();
                     if (oldContainer == escalator.getBody()) {
@@ -378,21 +383,28 @@ public class Grid<T> extends Composite implements
                 getElement().focus();
             } else if (event.getType().equals(BrowserEvents.KEYDOWN)) {
                 int newRow = activeRow;
-                int newColumn = activeColumn;
                 RowContainer newContainer = container;
+                int newColumn = activeCellRange.getStart();
 
                 switch (event.getKeyCode()) {
                 case KeyCodes.KEY_DOWN:
-                    newRow += 1;
+                    ++newRow;
                     break;
                 case KeyCodes.KEY_UP:
-                    newRow -= 1;
+                    --newRow;
                     break;
                 case KeyCodes.KEY_RIGHT:
-                    newColumn += 1;
+                    if (activeCellRange.getEnd() >= getVisibleColumnIndices()
+                            .size()) {
+                        return;
+                    }
+                    ++newColumn;
                     break;
                 case KeyCodes.KEY_LEFT:
-                    newColumn -= 1;
+                    if (newColumn == 0) {
+                        return;
+                    }
+                    --newColumn;
                     break;
                 case KeyCodes.KEY_TAB:
                     if (event.getShiftKey()) {
@@ -445,12 +457,6 @@ public class Grid<T> extends Composite implements
                     return;
                 }
 
-                if (newColumn < 0) {
-                    newColumn = 0;
-                } else if (newColumn >= getColumnCount()) {
-                    newColumn = getColumnCount() - 1;
-                }
-
                 event.preventDefault();
                 event.stopPropagation();
 
@@ -491,6 +497,16 @@ public class Grid<T> extends Composite implements
 
         private void refreshRow(int row) {
             container.refreshRows(row, 1);
+        }
+
+        /**
+         * Offset active cell range by given integer.
+         * 
+         * @param offset
+         *            offset for fixing active cell range
+         */
+        public void offsetRangeBy(int offset) {
+            activeCellRange = activeCellRange.offsetBy(offset);
         }
     }
 
@@ -1193,16 +1209,6 @@ public class Grid<T> extends Composite implements
         @Override
         public void postDetach(Row row, Iterable<FlyweightCell> detachedCells) {
         }
-
-        private List<Integer> getVisibleColumnIndices() {
-            List<Integer> indices = new ArrayList<Integer>(getColumnCount());
-            for (int i = 0; i < getColumnCount(); i++) {
-                if (getColumn(i).isVisible()) {
-                    indices.add(i);
-                }
-            }
-            return indices;
-        }
     };
 
     /**
@@ -1609,6 +1615,21 @@ public class Grid<T> extends Composite implements
             throw new IllegalStateException("Column not found.");
         }
         return columns.get(index);
+    }
+
+    /**
+     * Returns a list of column indices that are currently visible.
+     * 
+     * @return a list of indices
+     */
+    private List<Integer> getVisibleColumnIndices() {
+        List<Integer> indices = new ArrayList<Integer>(getColumnCount());
+        for (int i = 0; i < getColumnCount(); i++) {
+            if (getColumn(i).isVisible()) {
+                indices.add(i);
+            }
+        }
+        return indices;
     }
 
     /**
@@ -2328,13 +2349,13 @@ public class Grid<T> extends Composite implements
 
         if (this.selectColumnRenderer != null) {
             removeColumnSkipSelectionColumnCheck(selectionColumn);
-            --activeCellHandler.activeColumn;
+            activeCellHandler.offsetRangeBy(-1);
         }
 
         this.selectColumnRenderer = selectColumnRenderer;
 
         if (selectColumnRenderer != null) {
-            ++activeCellHandler.activeColumn;
+            activeCellHandler.offsetRangeBy(1);
             selectionColumn = new SelectionColumn(selectColumnRenderer);
 
             // FIXME: this needs to be done elsewhere, requires design...
