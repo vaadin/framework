@@ -18,6 +18,9 @@ package com.vaadin.tests.themes.valo;
 import java.util.Date;
 import java.util.Locale;
 
+import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.data.util.PropertysetItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.UserError;
@@ -27,6 +30,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Label;
@@ -193,13 +197,29 @@ public class DateFields extends VerticalLayout implements View {
         date.setLocale(new Locale("fi", "fi"));
         date.setShowISOWeekNumbers(true);
         row.addComponent(date);
+
+        PropertysetItem item = new PropertysetItem();
+        item.addItemProperty("date", new ObjectProperty<Date>(getDefaultDate()));
+
+        FormLayout form = new FormLayout();
+
+        FieldGroup binder = new FieldGroup(item);
+        form.addComponent(binder.buildAndBind(
+                "Picker in read-only field group", "date"));
+        binder.setReadOnly(true);
+
+        row.addComponent(form);
     }
 
     private void setDate(DateField date) {
+        date.setValue(getDefaultDate());
+    }
+
+    private Date getDefaultDate() {
         if (ValoThemeUI.isTestMode()) {
-            date.setValue(new Date(2014 - 1900, 5, 7));
+            return new Date(2014 - 1900, 5, 7);
         } else {
-            date.setValue(new Date());
+            return new Date();
         }
     }
 
@@ -208,5 +228,4 @@ public class DateFields extends VerticalLayout implements View {
         // TODO Auto-generated method stub
 
     }
-
 }
