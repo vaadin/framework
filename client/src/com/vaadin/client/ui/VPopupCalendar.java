@@ -240,7 +240,23 @@ public class VPopupCalendar extends VTextualDate implements Field,
      */
     public void setTextFieldEnabled(boolean textFieldEnabled) {
         this.textFieldEnabled = textFieldEnabled;
-        text.setEnabled(textFieldEnabled);
+        // IE has a non input disabled themeing that can not be overridden so we
+        // must fake the functionality using readonly and unselectable
+        if (BrowserInfo.get().isIE()) {
+            if (!textFieldEnabled) {
+                text.getElement().setAttribute("unselectable", "on");
+                text.getElement().setAttribute("readonly", "");
+                text.setTabIndex(-2);
+            } else if (textFieldEnabled
+                    && text.getElement().hasAttribute("unselectable")) {
+                text.getElement().removeAttribute("unselectable");
+                text.getElement().removeAttribute("readonly");
+                text.setTabIndex(0);
+            }
+        } else {
+            text.setEnabled(textFieldEnabled);
+        }
+
         if (textFieldEnabled) {
             calendarToggle.setTabIndex(-1);
             Roles.getButtonRole().setAriaHiddenState(
@@ -252,6 +268,20 @@ public class VPopupCalendar extends VTextualDate implements Field,
         }
 
         handleAriaAttributes();
+    }
+
+    /**
+     * Set correct tab index for disabled text field in IE as the value set in
+     * setTextFieldEnabled(...) gets overridden in
+     * TextualDateConnection.updateFromUIDL(...)
+     * 
+     * @since
+     */
+    public void setTextFieldTabIndex() {
+        if (BrowserInfo.get().isIE() && !textFieldEnabled) {
+            // index needs to be -2 because FocusWidget updates -1 to 0 onAttach
+            text.setTabIndex(-2);
+        }
     }
 
     @Override
@@ -426,10 +456,10 @@ public class VPopupCalendar extends VTextualDate implements Field,
     public void onClose(CloseEvent<PopupPanel> event) {
         if (event.getSource() == popup) {
             buildDate();
-            if (!BrowserInfo.get().isTouchDevice()) {
+            if (!BrowserInfo.get().isTouchDevice() && textFieldEnabled) {
                 /*
                  * Move focus to textbox, unless on touch device (avoids opening
-                 * virtual keyboard).
+                 * virtual keyboard) or if textField is disabled.
                  */
                 focus();
             }
@@ -494,7 +524,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
         }
 
         // superclass sets the text field independently when building date
-        text.setEnabled(isEnabled() && isTextFieldEnabled());
+        setTextFieldEnabled(isEnabled() && isTextFieldEnabled());
     }
 
     /**
