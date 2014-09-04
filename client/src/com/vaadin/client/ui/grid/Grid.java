@@ -1264,7 +1264,7 @@ public class Grid<T> extends Composite implements
                 BrowserEvents.KEYPRESS));
 
         // Make ENTER and SHIFT+ENTER in the header perform sorting
-        addKeyUpHandler(new HeaderKeyUpHandler() {
+        addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
             @Override
             public void onKeyUp(GridKeyUpEvent event) {
                 if (event.getNativeKeyCode() != KeyCodes.KEY_ENTER) {
