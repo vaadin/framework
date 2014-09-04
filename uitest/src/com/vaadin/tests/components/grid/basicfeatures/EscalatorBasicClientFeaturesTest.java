@@ -19,6 +19,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -37,6 +38,12 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String HEADER_ROWS = "Header Rows";
     protected static final String BODY_ROWS = "Body Rows";
     protected static final String FOOTER_ROWS = "Footer Rows";
+
+    protected static final String GENERAL = "General";
+    protected static final String POPULATE_COLUMN_ROW = "Populate Escalator (columns, then rows)";
+    protected static final String POPULATE_ROW_COLUMN = "Populate Escalator (rows, then columns)";
+    protected static final String CLEAR_COLUMN_ROW = "Clear (columns, then rows)";
+    protected static final String CLEAR_ROW_COLUMN = "Clear (rows, then columns)";
 
     @Override
     protected Class<?> getUIClass() {
@@ -124,5 +131,18 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
         WebElement log = getDriver().findElement(By.cssSelector("#log"));
         assertTrue("log did not contain: " + substring,
                 log.getText().contains(substring));
+    }
+
+    protected void scrollVerticallyTo(int px) {
+        executeScript("arguments[0].scrollTop = " + px, getVeticalScrollbar());
+    }
+
+    private WebElement getVeticalScrollbar() {
+        return getEscalator().findElement(
+                By.className("v-escalator-scroller-vertical"));
+    }
+
+    protected Object executeScript(String script, Object... args) {
+        return ((JavascriptExecutor) getDriver()).executeScript(script, args);
     }
 }
