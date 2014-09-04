@@ -719,9 +719,11 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * The application developer can also use this method to define the current
      * UI outside the normal request handling, e.g. when initiating custom
      * background threads.
-     * </p>
+     * <p>
+     * The UI is stored using a weak reference to avoid leaking memory in case
+     * it is not explicitly cleared.
      * 
-     * @param uI
+     * @param ui
      *            the UI to register as the current UI
      * 
      * @see #getCurrent()
@@ -735,6 +737,9 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * Gets the currently used UI. The current UI is automatically defined when
      * processing requests to the server. In other cases, (e.g. from background
      * threads), the current UI is not automatically defined.
+     * <p>
+     * The UI is stored using a weak reference to avoid leaking memory in case
+     * it is not explicitly cleared.
      * 
      * @return the current UI instance if available, otherwise <code>null</code>
      * 
