@@ -154,14 +154,14 @@
     @include valo-textfield-prompt-style($background-color);
   }
 
-  [class$="button"] {
+  [class*="button"] {
     @include valo-datefield-button-style($unit-size: $unit-size, $bevel: $bevel, $background-color: $background-color, $border-radius: $border-radius, $border: $border);
   }
 
   &.v-disabled {
     @include opacity($v-disabled-opacity);
 
-    [class$="button"] {
+    [class*="button"] {
       cursor: default;
       pointer-events: none;
       &:active:after {
@@ -175,7 +175,7 @@
       @include valo-textfield-readonly-style;
     }
 
-    [class$="button"] {
+    [class*="button"] {
       cursor: default;
       pointer-events: none;
       &:active:after {
