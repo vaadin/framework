@@ -118,8 +118,8 @@ public abstract class CustomField<T> extends AbstractField<T> implements
     }
 
     @Override
-    public void setWidth(float height, Unit unit) {
-        super.setWidth(height, unit);
+    public void setWidth(float width, Unit unit) {
+        super.setWidth(width, unit);
         markAsDirtyRecursive();
     }
 
