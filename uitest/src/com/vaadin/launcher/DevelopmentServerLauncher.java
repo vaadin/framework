@@ -48,6 +48,7 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.ssl.SslSocketConnector;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.Scanner;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -270,6 +271,19 @@ public class DevelopmentServerLauncher {
                 scanner.setScanDirs(classFolders);
                 scanner.start();
                 server.getContainer().addBean(scanner);
+            }
+        }
+
+        // Read web.xml to find all configured servlets
+        webappcontext.start();
+
+        // Reconfigure all servlets to avoid startup delay
+        for (ServletHolder servletHolder : webappcontext.getServletHandler()
+                .getServlets()) {
+            if (servletHolder
+                    .getInitParameter("org.atmosphere.cpr.scanClassPath") == null) {
+                servletHolder.setInitParameter(
+                        "org.atmosphere.cpr.scanClassPath", "false");
             }
         }
 
