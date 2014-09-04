@@ -33,9 +33,5 @@ public class ButtonState extends TabIndexState {
     }
     public boolean disableOnClick = false;
     public int clickShortcutKeyCode = 0;
-    /**
-     * If caption should be rendered in HTML
-     */
-    public boolean htmlContentAllowed = false;
     public String iconAltText = "";
 }

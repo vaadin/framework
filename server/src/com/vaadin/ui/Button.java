@@ -642,7 +642,7 @@ public class Button extends AbstractComponent implements
 
     /**
      * Set whether the caption text is rendered as HTML or not. You might need
-     * to retheme button to allow higher content than the original text style.
+     * to re-theme button to allow higher content than the original text style.
      * 
      * If set to true, the captions are passed to the browser as html and the
      * developer is responsible for ensuring no harmful html is used. If set to
@@ -653,7 +653,7 @@ public class Button extends AbstractComponent implements
      *            <code>false</code> otherwise
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
-        getState().htmlContentAllowed = htmlContentAllowed;
+        getState().captionAsHtml = htmlContentAllowed;
     }
 
     /**
@@ -663,7 +663,7 @@ public class Button extends AbstractComponent implements
      *         <code>false</code> otherwise
      */
     public boolean isHtmlContentAllowed() {
-        return getState(false).htmlContentAllowed;
+        return getState(false).captionAsHtml;
     }
 
     /*
@@ -711,6 +711,7 @@ public class Button extends AbstractComponent implements
         result.add("icon-alternate-text");
         result.add("click-shortcut");
         result.add("html-content-allowed");
+        result.add("caption-as-html");
         return result;
     }
 

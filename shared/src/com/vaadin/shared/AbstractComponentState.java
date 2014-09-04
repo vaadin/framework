@@ -44,4 +44,5 @@ public class AbstractComponentState extends SharedState {
     // TODO this could be an object with more information, but currently the UI
     // only uses the message
     public String errorMessage = null;
+    public boolean captionAsHtml = false;
 }

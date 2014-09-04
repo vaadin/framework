@@ -18,6 +18,7 @@ package com.vaadin.client.ui.colorpicker;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.ui.VColorPickerArea;
 import com.vaadin.shared.ui.Connect;
@@ -55,11 +56,7 @@ public class ColorPickerAreaConnector extends AbstractColorPickerConnector {
 
     @Override
     protected void setCaption(String caption) {
-        if (getState().htmlContentAllowed) {
-            getWidget().setHTML(caption);
-        } else {
-            getWidget().setText(caption);
-        }
+        VCaption.setCaptionText(getWidget(), getState());
     }
 
     @Override

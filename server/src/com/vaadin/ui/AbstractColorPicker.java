@@ -455,9 +455,11 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
      * @param htmlContentAllowed
      *            <code>true</code> if caption is rendered as HTML,
      *            <code>false</code> otherwise
+     * @deprecated as of , use {@link #setCaptionAsHtml(boolean)} instead
      */
+    @Deprecated
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
-        getState().htmlContentAllowed = htmlContentAllowed;
+        setCaptionAsHtml(htmlContentAllowed);
     }
 
     /**
@@ -465,8 +467,10 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
      * 
      * @return <code>true</code> if the caption text is to be rendered as HTML,
      *         <code>false</code> otherwise
+     * @deprecated as of , use {@link #isCaptionAsHtml()} instead
      */
+    @Deprecated
     public boolean isHtmlContentAllowed() {
-        return getState(false).htmlContentAllowed;
+        return isCaptionAsHtml();
     }
 }

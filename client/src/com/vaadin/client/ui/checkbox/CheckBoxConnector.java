@@ -27,6 +27,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.EventHelper;
 import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.VCaption;
 import com.vaadin.client.VTooltip;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
@@ -109,7 +110,8 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
         }
 
         // Set text
-        getWidget().setText(getState().caption);
+        VCaption.setCaptionText(getWidget(), getState());
+
         getWidget().setValue(getState().checked);
         getWidget().immediate = getState().immediate;
     }
