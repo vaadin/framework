@@ -512,6 +512,18 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             return (Tab) super.getWidget(index);
         }
 
+        private int getTabIndex(String tabId) {
+            if (tabId == null) {
+                return -1;
+            }
+            for (int i = 0; i < getTabCount(); i++) {
+                if (tabId.equals(getTab(i).id)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
         public void selectTab(int index) {
             final Tab newSelected = getTab(index);
             final Tab oldSelected = selected;
@@ -572,8 +584,40 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             if (tab == selected) {
                 selected = null;
             }
-
             // FIXME: Shouldn't something be selected instead?
+
+            int scrollerIndexCandidate = getTabIndex(getTabsheet().scrollerPositionTabId);
+            if (scrollerIndexCandidate < 0) {
+                // The tab with id scrollerPositionTabId has been removed
+                scrollerIndexCandidate = getTabsheet().scrollerIndex;
+            }
+            scrollerIndexCandidate = selectNewShownTab(scrollerIndexCandidate);
+            if (scrollerIndexCandidate >= 0
+                    && scrollerIndexCandidate < getTabCount()) {
+                getTabsheet().scrollIntoView(getTab(scrollerIndexCandidate));
+            }
+        }
+
+        private int selectNewShownTab(int oldPosition) {
+            // After removing a tab, find a new scroll position. In most
+            // cases the scroll position does not change, but if the tab
+            // at the scroll position was removed, need to find a nearby
+            // tab that is visible.
+            for (int i = oldPosition; i < getTabCount(); i++) {
+                Tab tab = getTab(i);
+                if (!tab.isHiddenOnServer()) {
+                    return i;
+                }
+            }
+
+            for (int i = oldPosition - 1; i >= 0; i--) {
+                Tab tab = getTab(i);
+                if (!tab.isHiddenOnServer()) {
+                    return i;
+                }
+            }
+
+            return -1;
         }
 
         private boolean isFirstVisibleTab(int index) {
@@ -685,6 +729,14 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
      * The index of the first visible tab (when scrolled)
      */
     private int scrollerIndex = 0;
+    /**
+     * The id of the tab at position scrollerIndex. This is used for keeping the
+     * scroll position unchanged when a tab is removed from the server side and
+     * the removed tab lies to the left of the current scroll position. For other
+     * cases scrollerIndex alone would be sufficient. Since the tab at the current
+     * scroll position can be removed, scrollerIndex is required in addition to this variable.
+     */
+    private String scrollerPositionTabId;
 
     final TabBar tb = new TabBar(this);
     /** For internal use only. May be removed or replaced in the future. */
@@ -911,6 +963,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
 
         if (newFirstIndex != -1) {
             scrollerIndex = newFirstIndex;
+            scrollerPositionTabId = tb.getTab(scrollerIndex).id;
             updateTabScroller();
         }
 
@@ -1206,6 +1259,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
     /** For internal use only. May be removed or replaced in the future. */
     public void showAllTabs() {
         scrollerIndex = tb.getFirstVisibleTab();
+        scrollerPositionTabId = scrollerIndex < 0 ? null : tb
+                .getTab(scrollerIndex).id;
         for (int i = 0; i < tb.getTabCount(); i++) {
             Tab t = tb.getTab(i);
             if (!t.isHiddenOnServer()) {
@@ -1780,12 +1835,18 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
                 }
                 updateTabScroller();
             }
+            if (scrollerIndex >= 0 && scrollerIndex < tb.getTabCount()) {
+                scrollerPositionTabId = tb.getTab(scrollerIndex).id;
+            }
+            else{
+                scrollerPositionTabId = null;
+            }
         }
     }
 
     /**
      * Makes tab bar visible.
-     *
+     * 
      * @since 7.2
      */
     public void showTabs() {
