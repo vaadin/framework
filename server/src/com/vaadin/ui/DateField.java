@@ -153,6 +153,13 @@ public class DateField extends AbstractField<Date> implements
 
     private DateRangeValidator currentRangeValidator;
 
+    /**
+     * Determines whether the ValueChangeEvent should be fired. Used to prevent
+     * firing the event when UI has invalid string until uiHasValidDateString
+     * flag is set
+     */
+    private boolean preventValueChangeEvent = false;
+
     static {
         variableNameForResolution.put(Resolution.SECOND, "sec");
         variableNameForResolution.put(Resolution.MINUTE, "min");
@@ -543,13 +550,21 @@ public class DateField extends AbstractField<Date> implements
 
                     /*
                      * Datefield now contains some text that could't be parsed
-                     * into date.
+                     * into date. ValueChangeEvent is fired after the value is
+                     * changed and the flags are set
                      */
                     if (oldDate != null) {
                         /*
-                         * Set the logic value to null.
+                         * Set the logic value to null without firing the
+                         * ValueChangeEvent
                          */
-                        setValue(null);
+                        preventValueChangeEvent = true;
+                        try {
+                            setValue(null);
+                        } finally {
+                            preventValueChangeEvent = false;
+                        }
+
                         /*
                          * Reset the dateString (overridden to null by setValue)
                          */
@@ -569,6 +584,13 @@ public class DateField extends AbstractField<Date> implements
                      * not want to cause the client side value to change.
                      */
                     uiHasValidDateString = false;
+
+                    /*
+                     * If value was changed fire the ValueChangeEvent
+                     */
+                    if (oldDate != null) {
+                        fireValueChange(false);
+                    }
 
                     /*
                      * Because of our custom implementation of isValid(), that
@@ -600,6 +622,16 @@ public class DateField extends AbstractField<Date> implements
 
         if (variables.containsKey(BlurEvent.EVENT_ID)) {
             fireEvent(new BlurEvent(this));
+        }
+    }
+
+    /*
+     * only fires the event if preventValueChangeEvent flag is false
+     */
+    @Override
+    protected void fireValueChange(boolean repaintIsNotNeeded) {
+        if (!preventValueChangeEvent) {
+            super.fireValueChange(repaintIsNotNeeded);
         }
     }
 
