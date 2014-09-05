@@ -27,11 +27,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import elemental.json.JsonObject;
-import elemental.json.impl.JsonUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -66,9 +65,14 @@ import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchDriverProxy;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.TestBenchTestCase;
+import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.elements.VerticalLayoutElement;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
 import com.vaadin.ui.UI;
+
+import elemental.json.JsonObject;
+import elemental.json.impl.JsonUtil;
 
 /**
  * Base class for TestBench 3+ tests. All TB3+ tests in the project should
@@ -1258,7 +1262,32 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         return null;
     }
 
-    private static JsonObject extractObject(HttpResponse resp) throws IOException {
+    protected boolean logContainsText(String string) {
+        List<String> logs = getLogs();
+
+        for (String text : logs) {
+            if (text.contains(string)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected List<String> getLogs() {
+        VerticalLayoutElement log = $(VerticalLayoutElement.class).id("Log");
+        List<LabelElement> logLabels = log.$(LabelElement.class).all();
+        List<String> logTexts = new ArrayList<String>();
+
+        for (LabelElement label : logLabels) {
+            logTexts.add(label.getText());
+        }
+
+        return logTexts;
+    }
+
+    private static JsonObject extractObject(HttpResponse resp)
+            throws IOException {
         InputStream contents = resp.getEntity().getContent();
         StringWriter writer = new StringWriter();
         IOUtils.copy(contents, writer, "UTF8");

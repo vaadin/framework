@@ -160,13 +160,6 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     private boolean selectionHasChanged = false;
 
-    /*
-     * to fix #14388. The cause of defect #14388: event 'clickEvent' is sent to
-     * server before updating of "selected" variable, but should be send after
-     * it
-     */
-    private boolean sendClickEventNow = false;
-
     /** For internal use only. May be removed or replaced in the future. */
     public String[] bodyActionKeys;
 
@@ -478,15 +471,9 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         Command command = new Command() {
             @Override
             public void execute() {
-                /*
-                 * we should send selection to server immediately in 2 cases: 1)
-                 * 'immediate' property of Tree is true 2) sendClickEventNow is
-                 * true
-                 */
                 client.updateVariable(paintableId, "selected",
                         selectedIds.toArray(new String[selectedIds.size()]),
-                        sendClickEventNow || immediate);
-                sendClickEventNow = false;
+                        immediate);
                 selectionHasChanged = false;
             }
         };
@@ -844,7 +831,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     // server. We do not want to send the event if there is a
                     // selection event happening after this. In all other cases
                     // we want to send it immediately.
-                    sendClickEventNow = true;
+                    boolean sendClickEventNow = true;
 
                     if (details.getButton() == MouseButton.LEFT && immediate
                             && selectable) {
@@ -862,13 +849,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     }
 
                     client.updateVariable(paintableId, "clickedKey", key, false);
-
-                    /*
-                     * in any case event should not be send immediately here -
-                     * send after updating of "selected" variable
-                     */
                     client.updateVariable(paintableId, "clickEvent",
-                            details.toString(), false);
+                            details.toString(), sendClickEventNow);
                 }
             });
         }
