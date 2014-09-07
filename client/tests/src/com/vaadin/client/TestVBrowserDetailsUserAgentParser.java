@@ -85,6 +85,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         // assertBrowserMinorVersion(bd, 1);
         assertEngineVersion(bd, 536f);
         assertIOS(bd, 6, 1);
+        assertIPhone(bd);
     }
 
     public void testIPhoneIOS5() {
@@ -95,6 +96,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertBrowserMinorVersion(bd, 1);
         assertEngineVersion(bd, 534f);
         assertIOS(bd, 5, 1);
+        assertIPhone(bd);
     }
 
     public void testIPhoneIOS4() {
@@ -105,6 +107,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertBrowserMinorVersion(bd, 0);
         assertEngineVersion(bd, 532f);
         assertIOS(bd, 4, 0);
+        assertIPhone(bd);
     }
 
     public void testIPadIOS4() {
@@ -115,6 +118,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertBrowserMinorVersion(bd, 0);
         assertEngineVersion(bd, 533f);
         assertIOS(bd, 4, 3);
+        assertIPad(bd);
     }
 
     public void testAndroid21() {
@@ -537,6 +541,16 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
 
         assertOSMajorVersion(browserDetails, majorVersion);
         assertOSMinorVersion(browserDetails, minorVersion);
+    }
+
+    private void assertIPhone(VBrowserDetails browserDetails) {
+        assertTrue(browserDetails.isIPhone());
+        assertFalse(browserDetails.isIPad());
+    }
+
+    private void assertIPad(VBrowserDetails browserDetails) {
+        assertFalse(browserDetails.isIPhone());
+        assertTrue(browserDetails.isIPad());
     }
 
     private void assertWindows(VBrowserDetails browserDetails) {
