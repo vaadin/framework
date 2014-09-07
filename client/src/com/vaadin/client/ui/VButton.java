@@ -351,9 +351,16 @@ public class VButton extends FocusWidget implements ClickHandler {
 
         disallowNextClick = false;
 
-        // Mouse coordinates are not always available (e.g., when the click is
+        // Screen coordinates are not always available (e.g., when the click is
         // caused by a keyboard event).
-        NativeEvent evt = Document.get().createClickEvent(1, 0, 0, 0, 0, false,
+        // Set (x,y) client coordinates to the middle of the button
+        int x = getElement().getAbsoluteLeft() - getElement().getScrollLeft()
+                - getElement().getOwnerDocument().getScrollLeft()
+                + Util.getRequiredWidth(getElement()) / 2;
+        int y = getElement().getAbsoluteTop() - getElement().getScrollTop()
+                - getElement().getOwnerDocument().getScrollTop()
+                + Util.getRequiredHeight(getElement()) / 2;
+        NativeEvent evt = Document.get().createClickEvent(1, 0, 0, x, y, false,
                 false, false, false);
         getElement().dispatchEvent(evt);
     }
