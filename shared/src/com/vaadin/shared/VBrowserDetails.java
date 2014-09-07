@@ -43,6 +43,8 @@ public class VBrowserDetails implements Serializable {
     private boolean isIE = false;
 
     private boolean isWindowsPhone;
+    private boolean isIPad;
+    private boolean isIPhone;
 
     private OperatingSystem os = OperatingSystem.UNKNOWN;
 
@@ -176,8 +178,9 @@ public class VBrowserDetails implements Serializable {
         } else if (userAgent.contains("macintosh")
                 || userAgent.contains("mac osx")
                 || userAgent.contains("mac os x")) {
-            if (userAgent.contains("ipad") || userAgent.contains("ipod")
-                    || userAgent.contains("iphone")) {
+            isIPad = userAgent.contains("ipad");
+            isIPhone = userAgent.contains("iphone");
+            if (isIPad || userAgent.contains("ipod") || isIPhone) {
                 os = OperatingSystem.IOS;
                 parseIOSVersion(userAgent);
             } else {
@@ -471,6 +474,24 @@ public class VBrowserDetails implements Serializable {
      */
     public boolean isIOS() {
         return os == OperatingSystem.IOS;
+    }
+
+    /**
+     * Tests if the browser is run on iPhone.
+     * 
+     * @return
+     */
+    public boolean isIPhone() {
+        return isIPhone;
+    }
+
+    /**
+     * Tests if the browser is run on iPad.
+     * 
+     * @return
+     */
+    public boolean isIPad() {
+        return isIPad;
     }
 
     /**
