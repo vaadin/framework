@@ -2,6 +2,8 @@ package com.vaadin.client;
 
 import junit.framework.TestCase;
 
+import org.junit.Assert;
+
 import com.vaadin.shared.VBrowserDetails;
 
 public class TestVBrowserDetailsUserAgentParser extends TestCase {
@@ -404,7 +406,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertIE(bd);
         assertBrowserMajorVersion(bd, 11);
         assertBrowserMinorVersion(bd, 0);
-        assertWindows(bd);
+        assertWindows(bd, true);
     }
 
     /*
@@ -538,11 +540,17 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
     }
 
     private void assertWindows(VBrowserDetails browserDetails) {
+        assertWindows(browserDetails, false);
+    }
+
+    private void assertWindows(VBrowserDetails browserDetails,
+            boolean isWindowsPhone) {
         assertFalse(browserDetails.isLinux());
         assertTrue(browserDetails.isWindows());
         assertFalse(browserDetails.isMacOSX());
         assertFalse(browserDetails.isIOS());
         assertFalse(browserDetails.isAndroid());
+        Assert.assertEquals(isWindowsPhone, browserDetails.isWindowsPhone());
     }
 
     private void assertLinux(VBrowserDetails browserDetails) {
