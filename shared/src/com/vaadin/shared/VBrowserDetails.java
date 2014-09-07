@@ -42,6 +42,8 @@ public class VBrowserDetails implements Serializable {
     private boolean isOpera = false;
     private boolean isIE = false;
 
+    private boolean isWindowsPhone;
+
     private OperatingSystem os = OperatingSystem.UNKNOWN;
 
     public enum OperatingSystem {
@@ -162,6 +164,7 @@ public class VBrowserDetails implements Serializable {
         // Operating system
         if (userAgent.contains("windows ")) {
             os = OperatingSystem.WINDOWS;
+            isWindowsPhone = userAgent.contains("windows phone");
         } else if (userAgent.contains("linux")) {
             if (userAgent.contains("android")) {
                 os = OperatingSystem.ANDROID;
@@ -422,6 +425,15 @@ public class VBrowserDetails implements Serializable {
      */
     public boolean isWindows() {
         return os == OperatingSystem.WINDOWS;
+    }
+
+    /**
+     * Tests if the browser is run on Windows Phone.
+     * 
+     * @return true if run on Windows Phone, false otherwise
+     */
+    public boolean isWindowsPhone() {
+        return isWindowsPhone;
     }
 
     /**
