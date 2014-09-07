@@ -590,8 +590,10 @@ public class VMenuBar extends SimpleFocusablePanel implements
             popup.setOwner(this);
         } else {
             VMenuBar parent = parentMenu;
+            popup.addAutoHidePartner(parent.getSelected().getElement());
             while (parent.getParentMenu() != null) {
                 parent = parent.getParentMenu();
+                popup.addAutoHidePartner(parent.getSelected().getElement());
             }
             popup.setOwner(parent);
         }
