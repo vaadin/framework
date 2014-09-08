@@ -975,7 +975,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     /**
      * Interrupts the upload currently being received. The interruption will be
-     * done by the receiving tread so this method will return immediately and
+     * done by the receiving thread so this method will return immediately and
      * the actual interrupt will happen a bit later.
      */
     public void interruptUpload() {
