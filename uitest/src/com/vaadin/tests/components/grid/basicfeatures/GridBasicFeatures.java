@@ -200,6 +200,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         createRowActions();
 
+        createEditorRowActions();
+
         addHeightActions();
 
         return grid;
@@ -643,6 +645,16 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         ds.removeAllItems();
                     }
                 }, null);
+    }
+
+    protected void createEditorRowActions() {
+        createBooleanAction("Enabled", "Editor row", false,
+                new Command<Grid, Boolean>() {
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        c.getEditorRow().setEnabled(value);
+                    }
+                });
     }
 
     @SuppressWarnings("boxing")

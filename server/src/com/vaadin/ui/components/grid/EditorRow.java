@@ -37,24 +37,21 @@ import com.vaadin.ui.Field;
  * @see Grid
  */
 public class EditorRow implements Serializable {
-    private final Container container;
+    private Grid grid;
 
-    private boolean isEnabled;
     private FieldGroup fieldGroup = new FieldGroup();
     private Object editedItemId = null;
-
-    private boolean isDetached = false;
 
     private HashSet<Object> uneditableProperties = new HashSet<Object>();
 
     /**
-     * Constructs a new editor row bound to a particular container.
+     * Constructs a new editor row for the given grid component.
      * 
-     * @param container
-     *            the container this editor row is bound to
+     * @param grid
+     *            the grid this editor row is attached to
      */
-    EditorRow(Container container) {
-        this.container = container;
+    EditorRow(Grid grid) {
+        this.grid = grid;
     }
 
     /**
@@ -66,7 +63,7 @@ public class EditorRow implements Serializable {
      */
     public boolean isEnabled() {
         checkDetached();
-        return isEnabled;
+        return grid.getState(false).editorRowEnabled;
     }
 
     /**
@@ -86,7 +83,9 @@ public class EditorRow implements Serializable {
                     + "while an item (" + getEditedItemId()
                     + ") is being edited.");
         }
-        this.isEnabled = isEnabled;
+        if (isEnabled() != isEnabled) {
+            grid.getState().editorRowEnabled = isEnabled;
+        }
     }
 
     /**
@@ -109,7 +108,8 @@ public class EditorRow implements Serializable {
         checkDetached();
         this.fieldGroup = fieldGroup;
         if (editedItemId != null) {
-            this.fieldGroup.setItemDataSource(container.getItem(editedItemId));
+            this.fieldGroup.setItemDataSource(getContainer().getItem(
+                    editedItemId));
         }
     }
 
@@ -272,7 +272,7 @@ public class EditorRow implements Serializable {
      */
     void detach() {
         checkDetached();
-        isDetached = true;
+        grid = null;
     }
 
     /**
@@ -295,7 +295,7 @@ public class EditorRow implements Serializable {
                     + getClass().getSimpleName() + " is not enabled");
         }
 
-        Item item = container.getItem(itemId);
+        Item item = getContainer().getItem(itemId);
         if (item == null) {
             throw new IllegalArgumentException("Item with id " + itemId
                     + " not found in current container");
@@ -326,7 +326,6 @@ public class EditorRow implements Serializable {
      */
     Collection<Field<?>> getFields() {
         checkDetached();
-
         /*
          * Maybe this isn't the best idea, however. Maybe the components should
          * always be transferred over the wire, to increase up-front load-time
@@ -346,7 +345,7 @@ public class EditorRow implements Serializable {
          * might not read-only.
          */
         ArrayList<Field<?>> fields = new ArrayList<Field<?>>();
-        for (Object propertyId : container.getContainerPropertyIds()) {
+        for (Object propertyId : getContainer().getContainerPropertyIds()) {
             Field<?> field = getField(propertyId);
             if (field != null) {
                 fields.add(field);
@@ -356,8 +355,12 @@ public class EditorRow implements Serializable {
         return fields;
     }
 
+    private Container getContainer() {
+        return grid.getContainerDatasource();
+    }
+
     private void checkDetached() throws IllegalStateException {
-        if (isDetached) {
+        if (grid == null) {
             throw new IllegalStateException("The method cannot be "
                     + "processed as this " + getClass().getSimpleName()
                     + " has become detached.");
@@ -365,7 +368,7 @@ public class EditorRow implements Serializable {
     }
 
     private void checkPropertyExists(Object propertyId) {
-        if (!container.getContainerPropertyIds().contains(propertyId)) {
+        if (!getContainer().getContainerPropertyIds().contains(propertyId)) {
             throw new IllegalArgumentException("Property with id " + propertyId
                     + " is not in the current Container");
         }

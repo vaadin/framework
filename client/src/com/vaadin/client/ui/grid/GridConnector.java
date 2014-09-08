@@ -281,6 +281,10 @@ public class GridConnector extends AbstractHasComponentsConnector {
                 getWidget().setLastFrozenColumn(null);
             }
         }
+
+        if (stateChangeEvent.hasPropertyChanged("editorRowEnabled")) {
+            getWidget().getEditorRow().setEnabled(getState().editorRowEnabled);
+        }
     }
 
     private void updateSectionFromState(GridStaticSection<?> section,

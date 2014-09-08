@@ -428,7 +428,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         if (editorRow != null) {
             editorRow.detach();
         }
-        editorRow = new EditorRow(datasource);
+        editorRow = new EditorRow(this);
 
         //
         // Adjust sort order

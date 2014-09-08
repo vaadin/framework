@@ -253,6 +253,7 @@ public class GridBasicClientFeaturesWidget extends
         createColumnsMenu();
         createHeaderMenu();
         createFooterMenu();
+        createEditorRowMenu();
         createInternalsMenu();
 
         grid.getElement().getStyle().setZIndex(0);
@@ -336,28 +337,6 @@ public class GridBasicClientFeaturesWidget extends
 
             }
         }, primaryStyleNamePath);
-
-        addMenuCommand("Enabled", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                grid.getEditorRow()
-                        .setEnabled(!grid.getEditorRow().isEnabled());
-            }
-        }, "Component", "State", "Editor row");
-
-        addMenuCommand("Edit row 5", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                grid.getEditorRow().editRow(5);
-            }
-        }, "Component", "State", "Editor row");
-
-        addMenuCommand("Edit row 100", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                grid.getEditorRow().editRow(100);
-            }
-        }, "Component", "State", "Editor row");
     }
 
     private void createColumnsMenu() {
@@ -633,6 +612,30 @@ public class GridBasicClientFeaturesWidget extends
                 footer.removeRow(footer.getRowCount() - 1);
             }
         }, menuPath);
+    }
+
+    private void createEditorRowMenu() {
+        addMenuCommand("Enabled", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.getEditorRow()
+                        .setEnabled(!grid.getEditorRow().isEnabled());
+            }
+        }, "Component", "Editor row");
+
+        addMenuCommand("Edit row 5", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.getEditorRow().editRow(5);
+            }
+        }, "Component", "Editor row");
+
+        addMenuCommand("Edit row 100", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.getEditorRow().editRow(100);
+            }
+        }, "Component", "Editor row");
     }
 
     private void configureFooterRow(final FooterRow row) {

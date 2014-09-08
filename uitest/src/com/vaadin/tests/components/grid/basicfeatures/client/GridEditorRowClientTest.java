@@ -21,16 +21,35 @@ import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 
-public class GridEditorRowTest extends GridBasicFeaturesTest {
+public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
 
     @Before
     public void setUp() {
         openTestURL();
         selectMenuPath("Component", "Editor row", "Enabled");
+    }
+
+    @Test
+    public void testProgrammaticOpening() {
+        selectMenuPath("Component", "Editor row", "Edit row 5");
+        assertNotNull(getEditorRow());
+    }
+
+    @Test
+    public void testProgrammaticOpeningWithScroll() {
+        selectMenuPath("Component", "Editor row", "Edit row 100");
+        assertNotNull(getEditorRow());
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testVerticalScrollLocking() {
+        selectMenuPath("Component", "Editor row", "Edit row 5");
+        getGridElement().getCell(200, 0);
     }
 
     @Test

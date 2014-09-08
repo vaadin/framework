@@ -127,4 +127,7 @@ public class GridState extends AbstractComponentState {
 
     /** Directions for each sorted column */
     public SortDirection[] sortDirs = new SortDirection[0];
+
+    /** The enabled state of the editor row */
+    public boolean editorRowEnabled = false;
 }
