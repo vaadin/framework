@@ -1,3 +1,9 @@
+/**
+ *
+ *
+ *
+ * @group orderedlayout
+ */
 @mixin valo-orderedlayout-global {
 
   div.v-layout.v-horizontal.v-widget {
@@ -140,6 +146,13 @@
 
 
 
+/**
+ *
+ *
+ * @param {bool} $include-additional-styles - 
+ *
+ * @group orderedlayout
+ */
 @mixin valo-orderedlayout ($include-additional-styles: contains($v-included-additional-styles, orderedlayout) or contains($v-included-additional-styles, verticallayout) or contains($v-included-additional-styles, horizontallayout)) {
 
   .v-margin-top {
@@ -184,6 +197,12 @@
 }
 
 
+/**
+ *
+ *
+ *
+ * @group orderedlayout
+ */
 @mixin valo-horizontallayout-wrapping-style {
     white-space: normal !important;
 

@@ -475,6 +475,12 @@
   }
 }
 
+/**
+ *
+ *
+ *
+ * @group combobox
+ */
 @mixin valo-combobox-no-input-style {
   cursor: pointer;
   text-shadow: valo-text-shadow();

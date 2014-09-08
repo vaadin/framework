@@ -1,15 +1,66 @@
+/**
+ *
+ * @group table
+ */
 $v-table-row-height: $v-unit-size !default;
+
+/**
+ *
+ * @group table
+ */
 $v-table-border-width: first-number($v-border) !default;
+
+/**
+ *
+ * @group table
+ */
 $v-table-border-color: null !default;
+
+/**
+ *
+ * @group table
+ */
 $v-table-border-radius: 0 !default;
+
+/**
+ *
+ * @group table
+ */
 $v-table-cell-padding-horizontal: round($v-unit-size/3) !default;
+
+/**
+ *
+ * @group table
+ */
 $v-table-resizer-width: round($v-unit-size/4.5) !default;
+
+/**
+ *
+ * @group table
+ */
 $v-table-sort-indicator-width: round($v-unit-size/2) !default;
+
+/**
+ *
+ * @group table
+ */
 $v-table-header-font-size: round($v-font-size * 0.86) !default;
+
+/**
+ *
+ * @group table
+ */
 $v-table-background-color: null !default;
 
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-table) - 
+ *
+ * @group table
+ */
 @mixin valo-table-global ($primary-stylename: v-table) {
 
   .#{$primary-stylename}-header table,
@@ -51,6 +102,15 @@ $v-table-background-color: null !default;
 
 
 
+/**
+ *
+ *
+ * @param {color} $context ($v-background-color) - 
+ *
+ * @return {color} - 
+ *
+ * @group table
+ */
 @function valo-table-background-color($context: $v-background-color) {
   @if is-dark-color($context) {
     @return darken($context, 2%);
@@ -59,6 +119,14 @@ $v-table-background-color: null !default;
 }
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-table) - 
+ * @param {bool} $include-additional-styles - 
+ *
+ * @group table
+ */
 @mixin valo-table ($primary-stylename: v-table, $include-additional-styles: contains($v-included-additional-styles, table)) {
 
   $background-color: $v-table-background-color or valo-table-background-color();
@@ -529,21 +597,45 @@ $v-table-background-color: null !default;
 
 
 
+/**
+ *
+ *
+ *
+ * @group table
+ */
 @mixin valo-table-sort-asc-icon-style {
   content: '\f0dd';
   font-family: FontAwesome;
 }
 
+/**
+ *
+ *
+ *
+ * @group table
+ */
 @mixin valo-table-sort-desc-icon-style {
   content: '\f0de';
   font-family: FontAwesome;
 }
 
+/**
+ *
+ *
+ *
+ * @group table
+ */
 @mixin valo-table-column-selector-icon-style {
   font-family: FontAwesome;
   content: "\f013";
 }
 
+/**
+ *
+ *
+ *
+ * @group table
+ */
 @mixin valo-table-column-visible-icon-style {
   content: "\f00c";
   font-family: FontAwesome;
@@ -552,6 +644,13 @@ $v-table-background-color: null !default;
 
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-table) - 
+ *
+ * @group table
+ */
 @mixin valo-table-no-stripes-style ($primary-stylename: v-table) {
   .#{$primary-stylename}-row,
   .#{$primary-stylename}-row-odd {
@@ -560,6 +659,13 @@ $v-table-background-color: null !default;
 }
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-table) - 
+ *
+ * @group table
+ */
 @mixin valo-table-no-vertical-lines-style ($primary-stylename: v-table) {
   .#{$primary-stylename}-cell-content {
     border-left: none;
@@ -574,6 +680,13 @@ $v-table-background-color: null !default;
 }
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-table) - 
+ *
+ * @group table
+ */
 @mixin valo-table-no-horizontal-lines-style ($primary-stylename: v-table) {
   .#{$primary-stylename}-cell-content {
     border-top: none;
@@ -582,6 +695,13 @@ $v-table-background-color: null !default;
 }
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-table) - 
+ *
+ * @group table
+ */
 @mixin valo-table-no-header-style ($primary-stylename: v-table) {
   .#{$primary-stylename}-header-wrap {
     display: none;
@@ -589,6 +709,13 @@ $v-table-background-color: null !default;
 }
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-table) - 
+ *
+ * @group table
+ */
 @mixin valo-table-borderless-style ($primary-stylename: v-table) {
   .#{$primary-stylename}-header-wrap,
   .#{$primary-stylename}-footer-wrap,

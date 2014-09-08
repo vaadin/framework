@@ -1,13 +1,54 @@
+/**
+ *
+ * @group slider
+ */
 $v-slider-track-size: round($v-unit-size/8) !default;
+
+/**
+ *
+ * @group slider
+ */
 $v-slider-track-border-radius: null !default;
+
+/**
+ *
+ * @group slider
+ */
 $v-slider-handle-width: round($v-unit-size/1.8) !default;
+
+/**
+ *
+ * @group slider
+ */
 $v-slider-handle-height: round($v-unit-size/1.8) !default;
+
+/**
+ *
+ * @group slider
+ */
 $v-slider-handle-border-radius: ceil($v-slider-handle-width/2) !default;
 
+/**
+ *
+ * @group slider
+ */
 $_valo-slider-base-margin-vertical: round(($v-unit-size - $v-slider-track-size)/2);
+
+/**
+ *
+ * @group slider
+ */
 $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-slider) - 
+ * @param {bool} $include-additional-styles - 
+ *
+ * @group slider
+ */
 @mixin valo-slider ($primary-stylename: v-slider, $include-additional-styles: contains($v-included-additional-styles, slider)) {
 
   // Round to an even number
@@ -185,6 +226,14 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-slider) - 
+ * @param {color} $background-color ($v-background-color) - 
+ *
+ * @group slider
+ */
 @mixin valo-slider-track-style ($primary-stylename: v-slider, $background-color: $v-background-color) {
   .#{$primary-stylename}-base {
     @include valo-progressbar-track-style($background-color: $background-color);
@@ -199,6 +248,15 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
   }
 }
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-slider) - 
+ * @param {color} $background-color ($v-selection-color) - 
+ * @param {list} $border ($v-border) - 
+ *
+ * @group slider
+ */
 @mixin valo-slider-indicator-style ($primary-stylename: v-slider, $background-color: $v-selection-color, $border: $v-border) {
   .#{$primary-stylename}-base {
     &:before {
@@ -220,6 +278,13 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 }
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-slider) - 
+ *
+ * @group slider
+ */
 @mixin valo-slider-no-indicator ($primary-stylename: v-slider) {
   .#{$primary-stylename}-base:before,
   .#{$primary-stylename}-base:after {
@@ -228,6 +293,14 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 }
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-slider) - 
+ * @param {color} $background-color ($v-background-color) - 
+ *
+ * @group slider
+ */
 @mixin valo-slider-handle-style ($primary-stylename: v-slider, $background-color: $v-background-color) {
   .#{$primary-stylename}-handle {
     &:before {
@@ -242,6 +315,14 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 }
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-slider) - 
+ * @param {number} $tick-count (5) - 
+ *
+ * @group slider
+ */
 @mixin valo-slider-ticks ($primary-stylename: v-slider, $tick-count: 5) {
   $tick-size: max(1px, first-number($v-border));
   $tick-color: first-color(valo-border($strength: 0.7));

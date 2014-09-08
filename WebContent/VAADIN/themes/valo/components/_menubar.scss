@@ -1,3 +1,11 @@
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-menubar) - 
+ * @param {bool} $include-additional-styles - 
+ *
+ * @group menubar
+ */
 @mixin valo-menubar ($primary-stylename: v-menubar, $include-additional-styles: contains($v-included-additional-styles, menubar)) {
 
   .#{$primary-stylename} {
@@ -85,6 +93,15 @@
 
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-menubar) - 
+ * @param {color} $background-color ($v-background-color) - 
+ * @param {size} $unit-size ($v-unit-size) - 
+ *
+ * @group menubar
+ */
 @mixin valo-menubar-style ($primary-stylename: v-menubar, $background-color: $v-background-color, $unit-size: $v-unit-size) {
   @include valo-button-style($states: normal focus, $cursor: default, $background-color: $background-color, $unit-size: $unit-size);
   padding: 0;
@@ -106,6 +123,12 @@
 
 
 
+/**
+ *
+ *
+ *
+ * @group menubar
+ */
 @mixin valo-menubar-menuitem-style {
   $border-width: first-number($v-border);
   position: relative;
@@ -193,6 +216,13 @@
 
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-menubar) - 
+ *
+ * @group menubar
+ */
 @mixin valo-menubar-popup-style ($primary-stylename: v-menubar) {
   @include valo-selection-overlay-style;
 
@@ -252,18 +282,37 @@
 
 
 
+/**
+ *
+ *
+ *
+ * @group menubar
+ */
 @mixin valo-menubar-submenu-indicator-style {
   font-family: FontAwesome;
   content: "\f054";
   line-height: $v-selection-item-height + 2px;
 }
 
+/**
+ *
+ *
+ *
+ * @group menubar
+ */
 @mixin valo-menubar-checked-icon-style {
   content: "\f00c";
   font-family: FontAwesome;
 }
 
 
+/**
+ *
+ *
+ * @param {list} $background-color - 
+ *
+ * @group menubar
+ */
 @mixin valo-menubar-menuitem-checked-style ($background-color: if(color-luminance($v-background-color) < 10, scale-color($v-background-color, $lightness: 10%, $saturation: -5%), scale-color($v-background-color, $lightness: -5%, $saturation: -5%))) {
   $grad: valo-gradient-style($v-gradient) valo-gradient-opacity($v-gradient)/4;
   @include box-shadow(none);
@@ -271,6 +320,13 @@
   color: valo-font-color($background-color, 0.9);
 }
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-menubar) - 
+ *
+ * @group menubar
+ */
 @mixin valo-menubar-menuitem-checked ($background-color, $primary-stylename: v-menubar) {
   .#{$primary-stylename}-menuitem-checked {
     @include valo-menubar-menuitem-checked-style($background-color: $background-color);
@@ -278,6 +334,13 @@
 }
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-menubar) - 
+ *
+ * @group menubar
+ */
 @mixin valo-menubar-borderless-style ($primary-stylename: v-menubar) {
   border: none;
   border-radius: 0;

@@ -1,5 +1,12 @@
 @import "escalator";
 
+/**
+ *
+ *
+ * @param {string} $primary-styleName (v-grid) - 
+ *
+ * @group grid
+ */
 @mixin valo-grid($primary-styleName : v-grid) {
   @include valo-escalator($primary-styleName);
 }

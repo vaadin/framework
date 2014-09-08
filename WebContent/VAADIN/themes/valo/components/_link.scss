@@ -1,8 +1,30 @@
+/**
+ *
+ * @group link
+ */
 $v-link-font-color: $v-focus-color !default;
+
+/**
+ *
+ * @group link
+ */
 $v-link-text-decoration: underline !default;
+
+/**
+ *
+ * @group link
+ */
 $v-link-cursor: pointer !default;
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-link) - 
+ * @param {bool} $include-additional-styles - 
+ *
+ * @group link
+ */
 @mixin valo-link ($primary-stylename: v-link, $include-additional-styles: contains($v-included-additional-styles, link)) {
   .#{$primary-stylename} {
     @include valo-link-style;
@@ -33,6 +55,12 @@ $v-link-cursor: pointer !default;
 }
 
 
+/**
+ *
+ *
+ *
+ * @group link
+ */
 @mixin valo-link-style {
   cursor: $v-link-cursor;
   color: $v-link-font-color;
