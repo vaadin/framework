@@ -1,8 +1,31 @@
+/**
+ * @group window
+ */
 $v-window-background-color: $v-panel-background-color !default;
+
+/**
+ * @group window
+ */
 $v-window-border-radius: $v-border-radius !default;
+
+/**
+ * @group window
+ */
 $v-window-shadow: 0 2px 10px (v-shade 2), 0 16px 80px -6px (v-shade 3), last($v-overlay-shadow) !default;
+
+/**
+ * @group window
+ */
 $v-window-animate-in: valo-animate-in-fade 140ms !default;
+
+/**
+ * @group window
+ */
 $v-window-animate-out: valo-animate-out-scale-down-fade 100ms !default;
+
+/**
+ * @group window
+ */
 $v-window-modality-curtain-background-color: #222 !default;
 
 
@@ -21,6 +44,13 @@ $v-window-modality-curtain-background-color: #222 !default;
 }
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-window) - 
+ *
+ * @group window
+ */
 @mixin valo-window ($primary-stylename: v-window) {
 
   .#{$primary-stylename} {
@@ -345,6 +375,12 @@ $v-window-modality-curtain-background-color: #222 !default;
 }
 
 
+/**
+ *
+ *
+ *
+ * @group window
+ */
 @mixin valo-window-close-icon-style {
   &:before {
     // times cross
@@ -352,12 +388,24 @@ $v-window-modality-curtain-background-color: #222 !default;
   }
 }
 
+/**
+ *
+ *
+ *
+ * @group window
+ */
 @mixin valo-window-maximize-icon-style {
   &:before {
     content: "+";
   }
 }
 
+/**
+ *
+ *
+ *
+ * @group window
+ */
 @mixin valo-window-restore-icon-style {
   &:before {
     // en-dash

@@ -1,3 +1,10 @@
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-select) - 
+ *
+ * @group nativeselect
+ */
 @mixin valo-nativeselect ($primary-stylename: v-select) {
   .#{$primary-stylename} select {
     @include valo-nativeselect-select-style;
@@ -20,6 +27,12 @@
 
 
 
+/**
+ *
+ *
+ *
+ * @group nativeselect
+ */
 @mixin valo-nativeselect-select-style {
   border: valo-border();
   @include valo-gradient;

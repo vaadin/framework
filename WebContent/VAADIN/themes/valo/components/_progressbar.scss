@@ -1,6 +1,17 @@
+/**
+ *
+ * @group progressbar
+ */
 $v-progressbar-border-radius: $v-border-radius !default;
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-progressbar) - 
+ *
+ * @group progressbar
+ */
 @mixin valo-progressbar ($primary-stylename: v-progressbar) {
 
   .#{$primary-stylename}-wrapper {
@@ -44,6 +55,13 @@ $v-progressbar-border-radius: $v-border-radius !default;
 }
 
 
+/**
+ *
+ *
+ * @param {color} $background-color ($v-background-color) - 
+ *
+ * @group progressbar
+ */
 @mixin valo-progressbar-track-style ($background-color: $v-background-color) {
   border-radius: $v-progressbar-border-radius;
   height: round($v-unit-size/4);
@@ -53,6 +71,14 @@ $v-progressbar-border-radius: $v-border-radius !default;
 }
 
 
+/**
+ *
+ *
+ * @param {color} $background-color ($v-selection-color) - 
+ * @param {string} $border ($v-border) - 
+ *
+ * @group progressbar
+ */
 @mixin valo-progressbar-indicator-style ($background-color: $v-selection-color, $border: $v-border) {
   border-radius: $v-progressbar-border-radius;
   height: inherit;

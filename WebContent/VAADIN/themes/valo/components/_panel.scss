@@ -1,6 +1,23 @@
+/**
+ *
+ * @group panel
+ */
 $v-panel-background-color: scale-color(lighten($v-app-background-color, 5%), $saturation: -5%) !default;
-$v-panel-border: $v-border !default;
 
+/**
+ *
+ * @group panel
+ */
+ $v-panel-border: $v-border !default;
+
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-panel) - 
+ * @param {bool} $include-additional-styles - 
+ *
+ * @group panel
+ */
 @mixin valo-panel ($primary-stylename: v-panel, $include-additional-styles: contains($v-included-additional-styles, panel)) {
 
   .#{$primary-stylename} {
@@ -52,13 +69,18 @@ $v-panel-border: $v-border !default;
 
 
 
-@mixin valo-panel-style (
-    $primary-stylename: v-panel,
-    $background-color : $v-panel-background-color,
-    $shadow           : $v-shadow,
-    $border           : $v-panel-border,
-    $border-radius    : $v-border-radius
-  ) {
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-panel) - 
+ * @param {color} $background-color ($v-panel-background-color) - 
+ * @param {list} $shadow ($v-shadow) - 
+ * @param {list} $border ($v-panel-border) - 
+ * @param {string} $border-radius ($v-border-radius) - 
+ *
+ * @group panel
+ */
+@mixin valo-panel-style ($primary-stylename: v-panel, $background-color : $v-panel-background-color, $shadow : $v-shadow,  $border : $v-panel-border, $border-radius    : $v-border-radius  ) {
   background: $background-color;
   color: valo-font-color($background-color);
   border-radius: $border-radius;
@@ -68,12 +90,17 @@ $v-panel-border: $v-border !default;
 
 
 
-@mixin valo-panel-caption-style (
-    $background-color : $v-background-color,
-    $bevel            : $v-bevel,
-    $gradient         : valo-gradient-style($v-gradient) valo-gradient-opacity($v-gradient)/4,
-    $border           : $v-panel-border
-  ) {
+/**
+ *
+ *
+ * @param {color} $background-color ($v-background-color) - 
+ * @param {list} $bevel ($v-bevel) - 
+ * @param {list} $gradient (valo-gradient-style($v-gradient) valo-gradient-opacity($v-gradient)/4) - 
+ * @param {list} $border ($v-panel-border) - 
+ *
+ * @group panel
+ */
+@mixin valo-panel-caption-style ( $background-color : $v-background-color,  $bevel  : $v-bevel, $gradient : valo-gradient-style($v-gradient) valo-gradient-opacity($v-gradient)/4, $border   : $v-panel-border ) {
   @include box-sizing(border-box);
   padding: 0 round($v-unit-size/3);
   line-height: $v-unit-size - first-number($v-border);
@@ -102,6 +129,13 @@ $v-panel-border: $v-border !default;
 
 
 
+/**
+ *
+ *
+ * @param {list} $shadow (false) - 
+ *
+ * @group panel
+ */
 @mixin valo-panel-well-style ($shadow: false) {
   @if $shadow == false {
     $new-shadow: ();
@@ -130,6 +164,12 @@ $v-panel-border: $v-border !default;
 
 
 
+/**
+ *
+ *
+ *
+ * @group panel
+ */
 @mixin valo-panel-borderless-style {
   background: transparent;
   color: inherit;
@@ -149,6 +189,13 @@ $v-panel-border: $v-border !default;
 
 
 
+/**
+ *
+ *
+ * @param {size} $border-width (max(1px, first-number($v-panel-border))) - 
+ *
+ * @group panel
+ */
 @mixin valo-panel-scroll-divider-style ($border-width: max(1px, first-number($v-panel-border))) {
   > [class*="-captionwrap"] {
     position: relative;
@@ -183,6 +230,12 @@ $v-panel-border: $v-border !default;
 
 
 
+/**
+ *
+ *
+ *
+ * @group panel
+ */
 @mixin valo-panel-adjust-content-margins {
   > .v-margin-top {
     padding-top: round($v-unit-size/3);

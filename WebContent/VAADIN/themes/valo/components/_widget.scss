@@ -1,5 +1,6 @@
-//
-// @mixin valo-widget-style
+/**
+ *
+ */
 @mixin valo-widget-style {
   // Baseline expectations for all Vaadin widgets
   @include box-sizing(border-box);
@@ -12,7 +13,9 @@
   white-space: normal;
 }
 
-
+/**
+ *
+ */
 @mixin valo-widget {
   .v-widget {
     @include valo-widget-style;

@@ -1,3 +1,10 @@
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-upload) - 
+ *
+ * @group upload
+ */
 @mixin valo-upload ($primary-stylename: v-upload) {
   .#{$primary-stylename} .v-button {
     @include valo-widget-style;

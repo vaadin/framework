@@ -1,3 +1,11 @@
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-splitpanel) - 
+ * @param {bool} $include-additional-styles - 
+ *
+ * @group splitpanel
+ */
 @mixin valo-splitpanel($primary-stylename : v-splitpanel, $include-additional-styles: contains($v-included-additional-styles, splitpanel)) {
   .#{$primary-stylename}-horizontal {
     @include valo-splitpanel-style($primary-stylename: $primary-stylename, $orientation: horizontal);
@@ -21,6 +29,13 @@
 
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-splitpanel) - 
+ *
+ * @group splitpanel
+ */
 @mixin valo-splitpanel-global ($primary-stylename : v-splitpanel) {
   .#{$primary-stylename}-vertical,
   .#{$primary-stylename}-horizontal {
@@ -99,7 +114,18 @@
 
 
 
-
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-splitpanel) - 
+ * @param {size} $splitter-size (max(1px, first-number($v-border)) - 
+ * @param {list} $splitter-active-size (round($v-unit-size/3)) - 
+ * @param {bool} $splitter-handle-visible (false) - 
+ * @param {list} $splitter-shadow (none) - 
+ * @param {list} $orientation (vertical horizontal) - 
+ *
+ * @group splitpanel
+ */
 @mixin valo-splitpanel-style(
     $primary-stylename : v-splitpanel,
     $splitter-size: max(1px, first-number($v-border)),
@@ -171,6 +197,14 @@
 
 
 
+/**
+ *
+ *
+ * @param {bool} $horizontal (false) - 
+ * @param {bool} $include-common (true) - 
+ *
+ * @group splitpanel
+ */
 @mixin valo-splitpanel-splitter-handle-style ($horizontal: false, $include-common: true) {
   @if $include-common {
     content: "";

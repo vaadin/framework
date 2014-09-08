@@ -1,5 +1,16 @@
+/**
+ *
+ * @group richtextarea
+ */
 $valo-richtextarea-use-font-awesome: true !default;
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-richtextarea) - 
+ *
+ * @group richtextarea
+ */
 @mixin valo-richtextarea ($primary-stylename: v-richtextarea) {
   .#{$primary-stylename} {
     @include valo-textfield-style($states: normal, $padding: 0);

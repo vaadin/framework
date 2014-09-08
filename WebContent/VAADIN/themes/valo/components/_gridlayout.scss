@@ -1,3 +1,10 @@
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-gridlayout) - 
+ *
+ * @group gridlayout
+ */
 @mixin valo-gridlayout-global ($primary-stylename: v-gridlayout) {
   .#{$primary-stylename} {
     position: relative;
@@ -20,6 +27,13 @@
 }
 
 
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-gridlayout) - 
+ *
+ * @group gridlayout
+ */
 @mixin valo-gridlayout($primary-stylename : v-gridlayout) {
 
   .#{$primary-stylename}-margin-top {

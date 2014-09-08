@@ -1,3 +1,10 @@
+/**
+ *
+ *
+ * @param {string} $primary-stylename (v-treetable) - 
+ *
+ * @group treetable
+ */
 @mixin valo-treetable ($primary-stylename: v-treetable) {
   .#{$primary-stylename} {
     [class*="caption-container"],
