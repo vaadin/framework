@@ -3591,9 +3591,9 @@ public class Escalator extends Widget {
             }
 
             if (hasSomethingInDom()) {
-                for (final AbstractRowContainer rowContainer : rowContainers) {
-                    rowContainer.paintRemoveColumns(index, numberOfColumns);
-                }
+                header.paintRemoveColumns(index, numberOfColumns);
+                body.paintRemoveColumns(index, numberOfColumns);
+                footer.paintRemoveColumns(index, numberOfColumns);
 
                 final int firstRemovedColumnLeft = columnConfiguration
                         .getCalculatedColumnsWidth(Range.withLength(0, index));
@@ -3678,10 +3678,9 @@ public class Escalator extends Widget {
             }
 
             if (hasColumnAndRowData()) {
-                for (final AbstractRowContainer rowContainer : rowContainers) {
-                    rowContainer.paintInsertColumns(index, numberOfColumns,
-                            frozen);
-                }
+                header.paintInsertColumns(index, numberOfColumns, frozen);
+                body.paintInsertColumns(index, numberOfColumns, frozen);
+                footer.paintInsertColumns(index, numberOfColumns, frozen);
 
                 // this needs to be before the scrollbar adjustment.
                 scroller.recalculateScrollbarsForVirtualViewport();
@@ -3893,9 +3892,6 @@ public class Escalator extends Widget {
     private final FooterRowContainer footer = new FooterRowContainer(footElem);
 
     private final Scroller scroller = new Scroller();
-
-    private final AbstractRowContainer[] rowContainers = new AbstractRowContainer[] {
-            header, body, footer };
 
     private final ColumnConfigurationImpl columnConfiguration = new ColumnConfigurationImpl();
     private final Element tableWrapper;
@@ -4318,9 +4314,10 @@ public class Escalator extends Widget {
         Profiler.enter("Escalator.recalculateElementSizes");
         widthOfEscalator = getPreciseWidth(getElement());
         heightOfEscalator = getPreciseHeight(getElement());
-        for (final AbstractRowContainer rowContainer : rowContainers) {
-            rowContainer.recalculateSectionHeight();
-        }
+
+        header.recalculateSectionHeight();
+        body.recalculateSectionHeight();
+        footer.recalculateSectionHeight();
 
         scroller.recalculateScrollbarsForVirtualViewport();
         body.verifyEscalatorCount();
