@@ -44,6 +44,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasVisibility;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Util;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
@@ -121,7 +122,7 @@ import com.vaadin.shared.ui.grid.SortEventOriginator;
  * @author Vaadin Ltd
  */
 public class Grid<T> extends Composite implements
-        HasSelectionChangeHandlers<T>, SubPartAware {
+        HasSelectionChangeHandlers<T>, SubPartAware, DeferredWorker {
 
     public static abstract class AbstractGridKeyEvent<HANDLER extends AbstractGridKeyEventHandler>
             extends KeyCodeEvent<HANDLER> {
@@ -764,6 +765,8 @@ public class Grid<T> extends Composite implements
 
     private final EditorRow<T> editorRow = GWT.create(EditorRow.class);
 
+    private boolean dataIsBeingFetched = false;
+
     /**
      * Enumeration for easy setting of selection mode.
      */
@@ -1345,6 +1348,7 @@ public class Grid<T> extends Composite implements
                     public void onRowVisibilityChange(
                             RowVisibilityChangeEvent event) {
                         if (dataSource != null) {
+                            dataIsBeingFetched = true;
                             dataSource.ensureAvailability(
                                     event.getFirstVisibleRow(),
                                     event.getVisibleRowCount());
@@ -1376,6 +1380,13 @@ public class Grid<T> extends Composite implements
                 }
 
                 sorter.sort(event.getActiveCell(), event.isShiftKeyDown());
+            }
+        });
+
+        addDataAvailableHandler(new DataAvailableHandler() {
+            @Override
+            public void onDataAvailable(DataAvailableEvent event) {
+                dataIsBeingFetched = false;
             }
         });
     }
@@ -2873,5 +2884,10 @@ public class Grid<T> extends Composite implements
      */
     public HandlerRegistration addScrollHandler(ScrollHandler handler) {
         return addHandler(handler, ScrollEvent.TYPE);
+    }
+
+    @Override
+    public boolean isWorkPending() {
+        return escalator.isWorkPending() || dataIsBeingFetched;
     }
 }

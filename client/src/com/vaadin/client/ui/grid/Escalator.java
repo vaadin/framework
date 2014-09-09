@@ -48,6 +48,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.grid.Escalator.JsniUtil.TouchHandlerBundle;
@@ -248,7 +249,7 @@ abstract class JsniWorkaround {
  * @since
  * @author Vaadin Ltd
  */
-public class Escalator extends Widget {
+public class Escalator extends Widget implements DeferredWorker {
 
     // todo comments legend
     /*
@@ -2099,6 +2100,8 @@ public class Escalator extends Widget {
                     if (!domWasSorted) {
                         animationHandle = AnimationScheduler.get()
                                 .requestAnimationFrame(this);
+                    } else {
+                        waiting = false;
                     }
                 }
             };
@@ -2107,7 +2110,11 @@ public class Escalator extends Widget {
             private double startTime;
             private AnimationHandle animationHandle;
 
+            /** <code>true</code> if a sort is scheduled */
+            public boolean waiting = false;
+
             public void reschedule() {
+                waiting = true;
                 resetConditions();
                 animationHandle = AnimationScheduler.get()
                         .requestAnimationFrame(frameCounter);
@@ -4692,5 +4699,10 @@ public class Escalator extends Widget {
      */
     public HandlerRegistration addScrollHandler(ScrollHandler handler) {
         return addHandler(handler, ScrollEvent.TYPE);
+    }
+
+    @Override
+    public boolean isWorkPending() {
+        return body.domSorter.waiting;
     }
 }
