@@ -140,12 +140,12 @@ public class GridClientColumnRendererConnector extends
         // Add a column to display the data in
         GridColumn<String, String> c = createColumnWithRenderer(Renderers.TEXT_RENDERER);
         grid.addColumn(c);
-        grid.getHeader().getDefaultRow().getCell(0).setText("Column 1");
+        grid.getHeader().getDefaultRow().getCell(c).setText("Column 1");
 
         // Add another column with a custom complex renderer
         c = createColumnWithRenderer(Renderers.CPLX_RENDERER);
         grid.addColumn(c);
-        grid.getHeader().getDefaultRow().getCell(1).setText("Column 2");
+        grid.getHeader().getDefaultRow().getCell(c).setText("Column 2");
 
         // Add method for testing sort event firing
         grid.addSortHandler(new SortEventHandler<String>() {
@@ -156,10 +156,9 @@ public class GridClientColumnRendererConnector extends
                 String text = "Client-side sort event received<br>"
                         + "Columns: " + event.getOrder().size() + ", order: ";
                 for (SortOrder order : event.getOrder()) {
-                    int colIdx = getWidget().getColumns().indexOf(
-                            order.getColumn());
                     String columnHeader = getWidget().getHeader()
-                            .getDefaultRow().getCell(colIdx).getText();
+                            .getDefaultRow().getCell(order.getColumn())
+                            .getText();
                     text += columnHeader + ": "
                             + order.getDirection().toString();
                 }
@@ -174,24 +173,20 @@ public class GridClientColumnRendererConnector extends
                     @Override
                     public void addColumn(Renderers renderer) {
 
+                        GridColumn<?, String> column;
                         if (renderer == Renderers.NUMBER_RENDERER) {
-                            GridColumn<Number, String> numberColumn = createNumberColumnWithRenderer(renderer);
-                            getWidget().addColumn(numberColumn);
-
+                            column = createNumberColumnWithRenderer(renderer);
                         } else if (renderer == Renderers.DATE_RENDERER) {
-                            GridColumn<Date, String> dateColumn = createDateColumnWithRenderer(renderer);
-                            getWidget().addColumn(dateColumn);
-
+                            column = createDateColumnWithRenderer(renderer);
                         } else {
-                            GridColumn<String, String> column = createColumnWithRenderer(renderer);
-                            getWidget().addColumn(column);
+                            column = createColumnWithRenderer(renderer);
                         }
+                        getWidget().addColumn(column);
 
-                        int idx = getWidget().getColumnCount() - 1;
                         getWidget()
                                 .getHeader()
                                 .getDefaultRow()
-                                .getCell(idx)
+                                .getCell(column)
                                 .setText(
                                         "Column "
                                                 + String.valueOf(getWidget()

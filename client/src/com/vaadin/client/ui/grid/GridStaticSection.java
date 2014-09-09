@@ -18,8 +18,10 @@ package com.vaadin.client.ui.grid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
@@ -185,80 +187,63 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      */
     abstract static class StaticRow<CELLTYPE extends StaticCell> {
 
-        private List<CELLTYPE> cells = new ArrayList<CELLTYPE>();
+        private Map<GridColumn<?, ?>, CELLTYPE> cells = new HashMap<GridColumn<?, ?>, CELLTYPE>();
 
         private GridStaticSection<?> section;
 
-        private Collection<List<CELLTYPE>> cellGroups = new HashSet<List<CELLTYPE>>();
+        private Collection<List<GridColumn<?, ?>>> cellGroups = new HashSet<List<GridColumn<?, ?>>>();
 
         /**
-         * Returns the cell at the given position in this row.
+         * Returns the cell on given GridColumn.
          * 
-         * @param index
-         *            the position of the cell
-         * @return the cell at the index
-         * @throws IndexOutOfBoundsException
-         *             if the index is out of bounds
+         * @param column
+         *            the column in grid
+         * @return the cell on given column, null if not found
          */
-        public CELLTYPE getCell(int index) {
-            return cells.get(index);
-        }
-
-        /**
-         * Merges cells in a row
-         * 
-         * @param cells
-         *            The cells to be merged
-         * @return The first cell of the merged cells
-         */
-        protected CELLTYPE join(List<CELLTYPE> cells) {
-            assert cells.size() > 1 : "You cannot merge less than 2 cells together";
-
-            // Ensure no cell is already grouped
-            for (CELLTYPE cell : cells) {
-                if (getCellGroupForCell(cell) != null) {
-                    throw new IllegalStateException("Cell " + cell.getText()
-                            + " is already grouped.");
-                }
-            }
-
-            // Ensure continuous range
-            int firstCellIndex = this.cells.indexOf(cells.get(0));
-            for (int i = 0; i < cells.size(); i++) {
-                if (this.cells.get(firstCellIndex + i) != cells.get(i)) {
-                    throw new IllegalStateException(
-                            "Cell range must be a continous range");
-                }
-            }
-
-            // Create a new group
-            cellGroups.add(new ArrayList<CELLTYPE>(cells));
-
-            // Calculates colspans, triggers refresh on section implicitly
-            calculateColspans();
-
-            // Returns first cell of group
-            return cells.get(0);
+        public CELLTYPE getCell(GridColumn<?, ?> column) {
+            return cells.get(column);
         }
 
         /**
          * Merges columns cells in a row
          * 
          * @param columns
-         *            The columns which header should be merged
-         * @return The remaining visible cell after the merge
+         *            the columns which header should be merged
+         * @return the remaining visible cell after the merge, or the cell on
+         *         first column if all are hidden
          */
         public CELLTYPE join(GridColumn<?, ?>... columns) {
-            assert columns.length > 1 : "You cannot merge less than 2 columns together";
-
-            // Convert columns to cells
-            List<CELLTYPE> cells = new ArrayList<CELLTYPE>();
-            for (GridColumn<?, ?> c : columns) {
-                int index = getSection().getGrid().getColumns().indexOf(c);
-                cells.add(this.cells.get(index));
+            if (columns.length <= 1) {
+                throw new IllegalArgumentException(
+                        "You can't merge less than 2 columns together.");
             }
 
-            return join(cells);
+            final List<?> columnList = section.grid.getColumns();
+            int firstIndex = columnList.indexOf(columns[0]);
+            int i = 0;
+            for (GridColumn<?, ?> column : columns) {
+                if (!cells.containsKey(column)) {
+                    throw new IllegalArgumentException(
+                            "Given column does not exists on row " + column);
+                } else if (getCellGroupForColumn(column) != null) {
+                    throw new IllegalStateException(
+                            "Column is already in a group.");
+                } else if (!column.equals(columnList.get(firstIndex + (i++)))) {
+                    throw new IllegalStateException(
+                            "Columns are in invalid order or not in a continuous range");
+                }
+            }
+
+            cellGroups.add(Arrays.asList(columns));
+
+            calculateColspans();
+
+            for (i = 0; i < columns.length; ++i) {
+                if (columns[i].isVisible()) {
+                    return getCell(columns[i]);
+                }
+            }
+            return getCell(columns[0]);
         }
 
         /**
@@ -266,15 +251,41 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          * 
          * @param cells
          *            The cells to merge. Must be from the same row.
-         * @return The remaining visible cell after the merge
+         * @return The remaining visible cell after the merge, or the first cell
+         *         if all columns are hidden
          */
         public CELLTYPE join(CELLTYPE... cells) {
-            return join(Arrays.asList(cells));
+            if (cells.length <= 1) {
+                throw new IllegalArgumentException(
+                        "You can't merge less than 2 cells together.");
+            }
+
+            GridColumn<?, ?>[] columns = new GridColumn<?, ?>[cells.length];
+
+            int j = 0;
+            for (GridColumn<?, ?> column : this.cells.keySet()) {
+                CELLTYPE cell = this.cells.get(column);
+                if (!this.cells.containsValue(cells[j])) {
+                    throw new IllegalArgumentException(
+                            "Given cell does not exists on row");
+                } else if (cell.equals(cells[j])) {
+                    columns[j++] = column;
+                    if (j == cells.length) {
+                        break;
+                    }
+                } else if (j > 0) {
+                    throw new IllegalStateException(
+                            "Cells are in invalid order or not in a continuous range.");
+                }
+            }
+
+            return join(columns);
         }
 
-        private List<CELLTYPE> getCellGroupForCell(CELLTYPE cell) {
-            for (List<CELLTYPE> group : cellGroups) {
-                if (group.contains(cell)) {
+        private List<GridColumn<?, ?>> getCellGroupForColumn(
+                GridColumn<?, ?> column) {
+            for (List<GridColumn<?, ?>> group : cellGroups) {
+                if (group.contains(column)) {
                     return group;
                 }
             }
@@ -284,12 +295,12 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
         void calculateColspans() {
 
             // Reset all cells
-            for (CELLTYPE cell : cells) {
+            for (CELLTYPE cell : this.cells.values()) {
                 cell.setColspan(1);
             }
 
             // Set colspan for grouped cells
-            for (List<CELLTYPE> group : cellGroups) {
+            for (List<GridColumn<?, ?>> group : cellGroups) {
 
                 int firstVisibleColumnInGroup = -1;
                 int lastVisibleColumnInGroup = -1;
@@ -306,11 +317,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
                  * visible cell and how many cells are hidden in between.
                  */
                 for (int i = 0; i < group.size(); i++) {
-                    CELLTYPE cell = group.get(i);
-                    int cellIndex = this.cells.indexOf(cell);
-                    boolean columnVisible = getSection().getGrid()
-                            .getColumn(cellIndex).isVisible();
-                    if (columnVisible) {
+                    if (group.get(i).isVisible()) {
                         lastVisibleColumnInGroup = i;
                         if (firstVisibleColumnInGroup == -1) {
                             firstVisibleColumnInGroup = i;
@@ -330,22 +337,23 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
                 /*
                  * Assign colspan to first cell in group.
                  */
-                CELLTYPE firstVisibleCell = group
+                GridColumn<?, ?> firstVisibleColumn = group
                         .get(firstVisibleColumnInGroup);
+                CELLTYPE firstVisibleCell = getCell(firstVisibleColumn);
                 firstVisibleCell.setColspan(lastVisibleColumnInGroup
                         - firstVisibleColumnInGroup - hiddenInsideGroup + 1);
             }
 
         }
 
-        protected void addCell(int index) {
+        protected void addCell(GridColumn<?, ?> column) {
             CELLTYPE cell = createCell();
             cell.setSection(getSection());
-            cells.add(index, cell);
+            cells.put(column, cell);
         }
 
-        protected void removeCell(int index) {
-            cells.remove(index);
+        protected void removeCell(GridColumn<?, ?> column) {
+            cells.remove(column);
         }
 
         protected abstract CELLTYPE createCell();
@@ -415,7 +423,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
         ROWTYPE row = createRow();
         row.setSection(this);
         for (int i = 0; i < getGrid().getColumnCount(); ++i) {
-            row.addCell(i);
+            row.addCell(grid.getColumn(i));
         }
         rows.add(index, row);
 
@@ -509,15 +517,15 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
         return isVisible() ? getRowCount() : 0;
     }
 
-    protected void addColumn(GridColumn<?, ?> column, int index) {
+    protected void addColumn(GridColumn<?, ?> column) {
         for (ROWTYPE row : rows) {
-            row.addCell(index);
+            row.addCell(column);
         }
     }
 
-    protected void removeColumn(int index) {
+    protected void removeColumn(GridColumn<?, ?> column) {
         for (ROWTYPE row : rows) {
-            row.removeCell(index);
+            row.removeCell(column);
         }
     }
 

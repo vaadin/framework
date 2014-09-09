@@ -403,8 +403,7 @@ public class Grid<T> extends Composite implements
                     --newRow;
                     break;
                 case KeyCodes.KEY_RIGHT:
-                    if (activeCellRange.getEnd() >= getVisibleColumnIndices()
-                            .size()) {
+                    if (activeCellRange.getEnd() >= getVisibleColumns().size()) {
                         return;
                     }
                     ++newColumn;
@@ -1163,13 +1162,11 @@ public class Grid<T> extends Composite implements
         public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
             GridStaticSection.StaticRow<?> staticRow = section.getRow(row
                     .getRow());
-
-            final List<Integer> columnIndices = getVisibleColumnIndices();
+            final List<GridColumn<?, T>> columns = getVisibleColumns();
 
             for (FlyweightCell cell : cellsToUpdate) {
-
-                int index = columnIndices.get(cell.getColumn());
-                final StaticCell metadata = staticRow.getCell(index);
+                final StaticCell metadata = staticRow.getCell(columns.get(cell
+                        .getColumn()));
 
                 // Decorate default row with sorting indicators
                 if (staticRow instanceof HeaderRow) {
@@ -1256,11 +1253,11 @@ public class Grid<T> extends Composite implements
         public void postAttach(Row row, Iterable<FlyweightCell> attachedCells) {
             GridStaticSection.StaticRow<?> gridRow = section.getRow(row
                     .getRow());
-            List<Integer> columnIndices = getVisibleColumnIndices();
+            List<GridColumn<?, T>> columns = getVisibleColumns();
 
             for (FlyweightCell cell : attachedCells) {
-                int index = columnIndices.get(cell.getColumn());
-                StaticCell metadata = gridRow.getCell(index);
+                StaticCell metadata = gridRow.getCell(columns.get(cell
+                        .getColumn()));
                 /*
                  * If the cell contains widgets that are not currently attach
                  * then attach them now.
@@ -1286,10 +1283,10 @@ public class Grid<T> extends Composite implements
             if (section.getRowCount() > row.getRow()) {
                 GridStaticSection.StaticRow<?> gridRow = section.getRow(row
                         .getRow());
-                List<Integer> columnIndices = getVisibleColumnIndices();
+                List<GridColumn<?, T>> columns = getVisibleColumns();
                 for (FlyweightCell cell : cellsToDetach) {
-                    int index = columnIndices.get(cell.getColumn());
-                    StaticCell metadata = gridRow.getCell(index);
+                    StaticCell metadata = gridRow.getCell(columns.get(cell
+                            .getColumn()));
 
                     if (GridStaticCellType.WIDGET.equals(metadata.getType())
                             && metadata.getWidget().isAttached()) {
@@ -1529,8 +1526,8 @@ public class Grid<T> extends Composite implements
         // Register column with grid
         columns.add(index, column);
 
-        header.addColumn(column, index);
-        footer.addColumn(column, index);
+        header.addColumn(column);
+        footer.addColumn(column);
 
         // Register this grid instance with the column
         ((AbstractGridColumn<?, T>) column).setGrid(this);
@@ -1631,8 +1628,8 @@ public class Grid<T> extends Composite implements
         int visibleIndex = findVisibleColumnIndex(column);
         columns.remove(columnIndex);
 
-        header.removeColumn(columnIndex);
-        footer.removeColumn(columnIndex);
+        header.removeColumn(column);
+        footer.removeColumn(column);
 
         // de-register column with grid
         ((AbstractGridColumn<?, T>) column).setGrid(null);
@@ -1686,18 +1683,18 @@ public class Grid<T> extends Composite implements
     }
 
     /**
-     * Returns a list of column indices that are currently visible.
+     * Returns a list of columns that are currently visible.
      * 
-     * @return a list of indices
+     * @return a list of columns
      */
-    private List<Integer> getVisibleColumnIndices() {
-        List<Integer> indices = new ArrayList<Integer>(getColumnCount());
-        for (int i = 0; i < getColumnCount(); i++) {
-            if (getColumn(i).isVisible()) {
-                indices.add(i);
+    protected List<GridColumn<?, T>> getVisibleColumns() {
+        List<GridColumn<?, T>> visible = new ArrayList<GridColumn<?, T>>();
+        for (GridColumn<?, T> column : getColumns()) {
+            if (column.isVisible()) {
+                visible.add(column);
             }
         }
-        return indices;
+        return visible;
     }
 
     /**

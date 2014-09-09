@@ -40,8 +40,6 @@ import com.vaadin.client.data.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
-import com.vaadin.client.ui.grid.GridStaticSection.StaticCell;
-import com.vaadin.client.ui.grid.GridStaticSection.StaticRow;
 import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
 import com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel;
 import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
@@ -333,7 +331,7 @@ public class GridConnector extends AbstractHasComponentsConnector {
         }
 
         for (RowState rowState : state.rows) {
-            StaticRow<?> row = section.appendRow();
+            GridStaticSection.StaticRow<?> row = section.appendRow();
 
             int selectionOffset = 1;
             if (getWidget().getSelectionModel() instanceof SelectionModel.None) {
@@ -345,7 +343,8 @@ public class GridConnector extends AbstractHasComponentsConnector {
 
             int i = 0 + selectionOffset;
             for (CellState cellState : rowState.cells) {
-                StaticCell cell = row.getCell(i++);
+                GridStaticSection.StaticCell cell = row.getCell(getWidget()
+                        .getColumn(i++));
                 switch (cellState.type) {
                 case TEXT:
                     cell.setText(cellState.text);

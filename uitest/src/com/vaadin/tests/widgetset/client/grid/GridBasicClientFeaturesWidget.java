@@ -388,24 +388,22 @@ public class GridBasicClientFeaturesWidget extends
 
         for (int i = 0; i < COLUMNS; i++) {
             final int index = i;
+            final GridColumn<?, List<Data>> column = grid.getColumn(index);
             addMenuCommand("Visible", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    grid.getColumn(index).setVisible(
-                            !grid.getColumn(index).isVisible());
+                    column.setVisible(!column.isVisible());
                 }
             }, "Component", "Columns", "Column " + i);
             addMenuCommand("Sortable", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    grid.getColumn(index).setSortable(
-                            !grid.getColumn(index).isSortable());
+                    column.setSortable(!column.isSortable());
                 }
             }, "Component", "Columns", "Column " + i);
             addMenuCommand("Frozen", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    GridColumn<?, List<Data>> column = grid.getColumn(index);
                     if (column.equals(grid.getLastFrozenColumn())) {
                         grid.setLastFrozenColumn(null);
                     } else {
@@ -417,19 +415,19 @@ public class GridBasicClientFeaturesWidget extends
             addMenuCommand("auto", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    grid.getColumn(index).setWidth(-1);
+                    column.setWidth(-1);
                 }
             }, "Component", "Columns", "Column " + i, "Width");
             addMenuCommand("50px", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    grid.getColumn(index).setWidth(50);
+                    column.setWidth(50);
                 }
             }, "Component", "Columns", "Column " + i, "Width");
             addMenuCommand("200px", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    grid.getColumn(index).setWidth(200);
+                    column.setWidth(200);
                 }
             }, "Component", "Columns", "Column " + i, "Width");
 
@@ -437,14 +435,14 @@ public class GridBasicClientFeaturesWidget extends
             addMenuCommand("Text Header", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    grid.getHeader().getRow(0).getCell(index)
+                    grid.getHeader().getRow(0).getCell(column)
                             .setText("Text Header");
                 }
             }, "Component", "Columns", "Column " + i, "Header Type");
             addMenuCommand("HTML Header", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    grid.getHeader().getRow(0).getCell(index)
+                    grid.getHeader().getRow(0).getCell(column)
                             .setHtml("<b>HTML Header</b>");
                 }
             }, "Component", "Columns", "Column " + i, "Header Type");
@@ -459,7 +457,8 @@ public class GridBasicClientFeaturesWidget extends
                             button.setText("Clicked");
                         }
                     });
-                    grid.getHeader().getRow(0).getCell(index).setWidget(button);
+                    grid.getHeader().getRow(0).getCell(column)
+                            .setWidget(button);
                 }
             }, "Component", "Columns", "Column " + i, "Header Type");
 
@@ -467,14 +466,14 @@ public class GridBasicClientFeaturesWidget extends
             addMenuCommand("Text Footer", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    grid.getFooter().getRow(0).getCell(index)
+                    grid.getFooter().getRow(0).getCell(column)
                             .setText("Text Footer");
                 }
             }, "Component", "Columns", "Column " + i, "Footer Type");
             addMenuCommand("HTML Footer", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    grid.getFooter().getRow(0).getCell(index)
+                    grid.getFooter().getRow(0).getCell(column)
                             .setHtml("<b>HTML Footer</b>");
                 }
             }, "Component", "Columns", "Column " + i, "Footer Type");
@@ -489,7 +488,8 @@ public class GridBasicClientFeaturesWidget extends
                             button.setText("Clicked");
                         }
                     });
-                    grid.getFooter().getRow(0).getCell(index).setWidget(button);
+                    grid.getFooter().getRow(0).getCell(column)
+                            .setWidget(button);
                 }
             }, "Component", "Columns", "Column " + i, "Footer Type");
         }
@@ -504,11 +504,12 @@ public class GridBasicClientFeaturesWidget extends
 
             // Lets use some different cell types
             if (i % 3 == 0) {
-                row.getCell(i).setText(caption);
+                row.getCell(grid.getColumn(i)).setText(caption);
             } else if (i % 2 == 0) {
-                row.getCell(i).setHtml("<b>" + caption + "</b>");
+                row.getCell(grid.getColumn(i))
+                        .setHtml("<b>" + caption + "</b>");
             } else {
-                row.getCell(i).setWidget(new HTML(caption));
+                row.getCell(grid.getColumn(i)).setWidget(new HTML(caption));
             }
         }
         headerCounter++;
@@ -520,11 +521,12 @@ public class GridBasicClientFeaturesWidget extends
 
             // Lets use some different cell types
             if (i % 3 == 0) {
-                row.getCell(i).setText(caption);
+                row.getCell(grid.getColumn(i)).setText(caption);
             } else if (i % 2 == 0) {
-                row.getCell(i).setHtml("<b>" + caption + "</b>");
+                row.getCell(grid.getColumn(i))
+                        .setHtml("<b>" + caption + "</b>");
             } else {
-                row.getCell(i).setWidget(new HTML(caption));
+                row.getCell(grid.getColumn(i)).setWidget(new HTML(caption));
             }
         }
         footerCounter++;
@@ -597,7 +599,8 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void execute() {
-                row.join(row.getCell(0), row.getCell(1));
+                row.join(row.getCell(grid.getColumn(0)),
+                        row.getCell(grid.getColumn(1)));
 
             }
         }, menuPath);
@@ -712,7 +715,8 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void execute() {
-                row.join(row.getCell(0), row.getCell(1));
+                row.join(row.getCell(grid.getColumn(0)),
+                        row.getCell(grid.getColumn(1)));
 
             }
         }, menuPath);
