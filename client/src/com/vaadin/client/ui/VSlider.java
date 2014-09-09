@@ -191,37 +191,44 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         // clear unnecessary opposite style attribute
         base.getStyle().clearProperty(oppositeStyleAttribute);
 
-        if (!getElement().hasParentElement()) {
-            return;
-        }
-
-        final Element p = getElement().getParentElement();
-        if (p.getPropertyInt(domProperty) > 50) {
-            if (isVertical()) {
-                setHeight();
-            } else {
-                base.getStyle().clearProperty(styleAttribute);
-            }
-        } else {
-            // Set minimum size and adjust after all components have
-            // (supposedly) been drawn completely.
-            base.getStyle().setPropertyPx(styleAttribute, MIN_SIZE);
-            Scheduler.get().scheduleDeferred(new Command() {
-
-                @Override
-                public void execute() {
-                    final Element p = getElement().getParentElement();
-                    if (p.getPropertyInt(domProperty) > (MIN_SIZE + 5)) {
-                        if (isVertical()) {
-                            setHeight();
-                        } else {
-                            base.getStyle().clearProperty(styleAttribute);
-                        }
-                        // Ensure correct position
-                        setValue(value, false);
-                    }
+        /*
+         * To resolve defect #13681 we should not return from method buildBase()
+         * if slider has no parentElement, because such operations as
+         * buildHandle() and setValues(), which are needed for Slider, are
+         * called at the end of method buildBase(). And these methods will not
+         * be called if there is no parentElement. So, instead of returning from
+         * method buildBase() if there is no parentElement "if condition" is
+         * applied to call code for parentElement only in case it exists.
+         */
+        if (getElement().hasParentElement()) {
+            final Element p = getElement().getParentElement();
+            if (p.getPropertyInt(domProperty) > MIN_SIZE) {
+                if (isVertical()) {
+                    setHeight();
+                } else {
+                    base.getStyle().clearProperty(styleAttribute);
                 }
-            });
+            } else {
+                // Set minimum size and adjust after all components have
+                // (supposedly) been drawn completely.
+                base.getStyle().setPropertyPx(styleAttribute, MIN_SIZE);
+                Scheduler.get().scheduleDeferred(new Command() {
+
+                    @Override
+                    public void execute() {
+                        final Element p = getElement().getParentElement();
+                        if (p.getPropertyInt(domProperty) > (MIN_SIZE + 5)) {
+                            if (isVertical()) {
+                                setHeight();
+                            } else {
+                                base.getStyle().clearProperty(styleAttribute);
+                            }
+                            // Ensure correct position
+                            setValue(value, false);
+                        }
+                    }
+                });
+            }
         }
 
         if (!isVertical()) {
