@@ -18,6 +18,7 @@ package com.vaadin.tools;
 
 import static java.lang.Integer.parseInt;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -451,12 +452,12 @@ public final class CvalChecker {
 
         try {
             String dotLicenseName = "." + licenseName;
-            String userHome = "file://" + System.getProperty("user.home") + "/";
-            for (URL url : new URL[] { new URL(userHome + dotLicenseName),
-                    new URL(userHome + licenseName),
+            String userHome = System.getProperty("user.home");
+            for (URL url : new URL[] {
+                    new File(userHome, dotLicenseName).toURI().toURL(),
+                    new File(userHome, licenseName).toURI().toURL(),
                     URL.class.getResource("/" + dotLicenseName),
                     URL.class.getResource("/" + licenseName) }) {
-
                 if (url != null) {
                     try {
                         key = readKeyFromFile(url,
