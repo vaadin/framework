@@ -41,9 +41,14 @@ public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
     }
 
     @Test
-    public void testProgrammaticOpening() {
+    public void testProgrammaticOpeningClosing() {
         selectMenuPath("Component", "Editor row", "Edit row 5");
         assertNotNull(getEditorRow());
+
+        selectMenuPath("Component", "Editor row", "Cancel edit");
+        assertNull(getEditorRow());
+        assertEquals("Row 5 edit cancelled",
+                findElement(By.className("editor-row-log")).getText());
     }
 
     @Test
@@ -69,6 +74,8 @@ public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
 
         new Actions(getDriver()).sendKeys(Keys.ESCAPE).perform();
         assertNull(getEditorRow());
+        assertEquals("Row 4 edit cancelled",
+                findElement(By.className("editor-row-log")).getText());
 
         // Disable editor row
         selectMenuPath("Component", "Editor row", "Enabled");
@@ -88,8 +95,11 @@ public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
 
         assertEquals(GridBasicFeatures.COLUMNS, widgets.size());
 
-        for (int i = 0; i < GridBasicFeatures.COLUMNS; ++i) {
-            assertEquals("Column " + i, widgets.get(i).getAttribute("value"));
-        }
+        assertEquals("(100, 0)", widgets.get(0).getAttribute("value"));
+        assertEquals("(100, 1)", widgets.get(1).getAttribute("value"));
+        assertEquals("(100, 2)", widgets.get(2).getAttribute("value"));
+
+        assertEquals("100", widgets.get(7).getAttribute("value"));
+        assertEquals("<b>100</b>", widgets.get(9).getAttribute("value"));
     }
 }

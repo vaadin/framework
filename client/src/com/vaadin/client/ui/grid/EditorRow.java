@@ -27,6 +27,8 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ui.grid.EditorRowHandler.EditorRowRequest;
+import com.vaadin.client.ui.grid.EditorRowHandler.EditorRowRequest.RequestCallback;
 import com.vaadin.client.ui.grid.Escalator.AbstractRowContainer;
 import com.vaadin.client.ui.grid.ScrollbarBundle.Direction;
 import com.vaadin.shared.ui.grid.ScrollDestination;
@@ -88,10 +90,7 @@ public class EditorRow<T> {
 
         state = State.ACTIVATING;
 
-        boolean rowVisible = grid.getEscalator().getVisibleRowRange()
-                .contains(rowIndex);
-
-        if (rowVisible) {
+        if (grid.getEscalator().getVisibleRowRange().contains(rowIndex)) {
             show();
         } else {
             grid.scrollToRow(rowIndex, ScrollDestination.MIDDLE);
@@ -115,6 +114,7 @@ public class EditorRow<T> {
         }
         hideOverlay();
         grid.getEscalator().setScrollLocked(Direction.VERTICAL, false);
+        handler.cancel(new EditorRowRequest(rowIndex, null));
         state = State.INACTIVE;
     }
 
@@ -174,9 +174,17 @@ public class EditorRow<T> {
 
     protected void show() {
         if (state == State.ACTIVATING) {
-            state = State.ACTIVE;
+            handler.bind(new EditorRowRequest(rowIndex, new RequestCallback() {
+                @Override
+                public void onResponse(EditorRowRequest request) {
+                    if (state == State.ACTIVATING) {
+                        state = State.ACTIVE;
+                        showOverlay(grid.getEscalator().getBody()
+                                .getRowElement(request.getRowIndex()));
+                    }
+                }
+            }));
             grid.getEscalator().setScrollLocked(Direction.VERTICAL, true);
-            showOverlay(grid.getEscalator().getBody().getRowElement(rowIndex));
         }
     }
 

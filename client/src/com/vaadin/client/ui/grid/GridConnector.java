@@ -150,6 +150,18 @@ public class GridConnector extends AbstractHasComponentsConnector {
                     .getEditorConnector();
             return c != null ? c.getWidget() : null;
         }
+
+        @Override
+        public void bind(EditorRowRequest request) {
+            // TODO no-op until Vaadin comms implemented
+            request.invokeCallback();
+        }
+
+        @Override
+        public void cancel(EditorRowRequest request) {
+            // TODO no-op until Vaadin comms implemented
+            request.invokeCallback();
+        }
     }
 
     /**

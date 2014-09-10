@@ -17,7 +17,9 @@ package com.vaadin.tests.widgetset.client.grid;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -28,7 +30,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.VLabel;
 import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.EditorRowHandler;
@@ -75,6 +76,46 @@ public class GridBasicClientFeaturesWidget extends
 
     public static enum Renderers {
         TEXT_RENDERER, HTML_RENDERER, NUMBER_RENDERER, DATE_RENDERER;
+    }
+
+    private class TestEditorRowHandler implements EditorRowHandler<List<Data>> {
+
+        private Map<GridColumn<?, ?>, TextBox> widgets = new HashMap<GridColumn<?, ?>, TextBox>();
+
+        private Label log = new Label();
+
+        {
+            log.addStyleName("editor-row-log");
+            addSouth(log, 20);
+        }
+
+        @Override
+        public void bind(EditorRowRequest request) {
+            List<Data> rowData = ds.getRow(request.getRowIndex());
+
+            for (int i = 0; i < grid.getColumnCount(); i++) {
+                GridColumn<?, List<Data>> col = grid.getColumn(i);
+                getWidget(col).setText(rowData.get(i).value.toString());
+            }
+
+            request.invokeCallback();
+        }
+
+        @Override
+        public void cancel(EditorRowRequest request) {
+            log.setText("Row " + request.getRowIndex() + " edit cancelled");
+            request.invokeCallback();
+        }
+
+        @Override
+        public TextBox getWidget(GridColumn<?, List<Data>> column) {
+            TextBox w = widgets.get(column);
+            if (w == null) {
+                w = new TextBox();
+                widgets.put(column, w);
+            }
+            return w;
+        }
     }
 
     private static final int MANUALLY_FORMATTED_COLUMNS = 5;
@@ -155,14 +196,7 @@ public class GridBasicClientFeaturesWidget extends
         grid.getElement().setId("testComponent");
         grid.setDataSource(ds);
         grid.setSelectionMode(SelectionMode.NONE);
-        grid.getEditorRow().setHandler(new EditorRowHandler<List<Data>>() {
-            @Override
-            public Widget getWidget(GridColumn<?, List<Data>> column) {
-                TextBox tb = new TextBox();
-                tb.setText("Column " + grid.getColumns().indexOf(column));
-                return tb;
-            }
-        });
+        grid.getEditorRow().setHandler(new TestEditorRowHandler());
 
         sorter = new ListSorter<List<Data>>(grid);
 
@@ -658,6 +692,14 @@ public class GridBasicClientFeaturesWidget extends
                 grid.getEditorRow().editRow(100);
             }
         }, "Component", "Editor row");
+
+        addMenuCommand("Cancel edit", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.getEditorRow().cancel();
+            }
+        }, "Component", "Editor row");
+
     }
 
     private void configureFooterRow(final FooterRow row) {
