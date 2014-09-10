@@ -26,6 +26,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.Command;
@@ -66,28 +68,64 @@ import com.vaadin.shared.ui.dd.VerticalDropLocation;
 public class VDragAndDropWrapper extends VCustomComponent implements
         VHasDropHandler {
 
+    /**
+     * Minimum pixel delta is used to detect click from drag. #12838
+     */
+    private static final int MIN_PX_DELTA = 4;
     private static final String CLASSNAME = "v-ddwrapper";
     protected static final String DRAGGABLE = "draggable";
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean hasTooltip = false;
+    private int startX = 0;
+    private int startY = 0;
 
     public VDragAndDropWrapper() {
         super();
-
         hookHtml5Events(getElement());
         setStyleName(CLASSNAME);
+
         addDomHandler(new MouseDownHandler() {
 
             @Override
-            public void onMouseDown(MouseDownEvent event) {
+            public void onMouseDown(final MouseDownEvent event) {
                 if (getConnector().isEnabled()
                         && event.getNativeEvent().getButton() == Event.BUTTON_LEFT
                         && startDrag(event.getNativeEvent())) {
                     event.preventDefault(); // prevent text selection
+                    startX = event.getClientX();
+                    startY = event.getClientY();
                 }
             }
         }, MouseDownEvent.getType());
+
+        addDomHandler(new MouseUpHandler() {
+
+            @Override
+            public void onMouseUp(final MouseUpEvent event) {
+                final int deltaX = Math.abs(event.getClientX() - startX);
+                final int deltaY = Math.abs(event.getClientY() - startY);
+                if ((deltaX + deltaY) < MIN_PX_DELTA) {
+                    setFocusOnLastElement(event);
+                }
+            }
+
+            private void setFocusOnLastElement(final MouseUpEvent event) {
+                Element el = event.getRelativeElement();
+                getLastChildElement(el).focus();
+            }
+
+            private Element getLastChildElement(Element el) {
+                do {
+                    if (el == null) {
+                        break;
+                    }
+                    el = el.getFirstChildElement();
+                } while (el.getFirstChildElement() != null);
+                return el;
+            }
+
+        }, MouseUpEvent.getType());
 
         addDomHandler(new TouchStartHandler() {
 
