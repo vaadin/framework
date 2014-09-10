@@ -50,6 +50,9 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String CLEAR_ROW_COLUMN = "Clear (rows, then columns)";
 
     protected static final String FEATURES = "Features";
+    protected static final String FROZEN_COLUMNS = "Frozen columns";
+    protected static final String FREEZE_1_COLUMN = "Freeze 1 column";
+    protected static final String FREEZE_0_COLUMNS = "Freeze 0 columns";
     protected static final String COLUMN_SPANNING = "Column spanning";
     protected static final String COLSPAN_NORMAL = "Apply normal colspan";
     protected static final String COLSPAN_NONE = "Apply no colspan";
@@ -173,6 +176,16 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     private WebElement getVeticalScrollbar() {
         return getEscalator().findElement(
                 By.className("v-escalator-scroller-vertical"));
+    }
+
+    protected void scrollHorizontallyTo(int px) {
+        executeScript("arguments[0].scrollLeft = " + px,
+                getHorizontalScrollbar());
+    }
+
+    private WebElement getHorizontalScrollbar() {
+        return getEscalator().findElement(
+                By.className("v-escalator-scroller-horizontal"));
     }
 
     protected Object executeScript(String script, Object... args) {
