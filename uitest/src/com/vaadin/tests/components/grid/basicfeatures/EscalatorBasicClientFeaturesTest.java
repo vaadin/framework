@@ -45,6 +45,11 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String CLEAR_COLUMN_ROW = "Clear (columns, then rows)";
     protected static final String CLEAR_ROW_COLUMN = "Clear (rows, then columns)";
 
+    protected static final String FEATURES = "Features";
+    protected static final String COLUMN_SPANNING = "Column spanning";
+    protected static final String COLSPAN_NORMAL = "Apply normal colspan";
+    protected static final String COLSPAN_NONE = "Apply no colspan";
+
     @Override
     protected Class<?> getUIClass() {
         return EscalatorBasicClientFeatures.class;
