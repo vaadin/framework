@@ -16,9 +16,7 @@
 package com.vaadin.ui.components.grid;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 
 import com.vaadin.data.Container;
@@ -78,7 +76,7 @@ public class EditorRow implements Serializable {
      */
     public void setEnabled(boolean isEnabled) throws IllegalStateException {
         checkDetached();
-        if (getEditedItemId() != null) {
+        if (isEditing()) {
             throw new IllegalStateException("Cannot disable the editor row "
                     + "while an item (" + getEditedItemId()
                     + ") is being edited.");
@@ -107,7 +105,7 @@ public class EditorRow implements Serializable {
     public void setFieldGroup(FieldGroup fieldGroup) {
         checkDetached();
         this.fieldGroup = fieldGroup;
-        if (editedItemId != null) {
+        if (isEditing()) {
             this.fieldGroup.setItemDataSource(getContainer().getItem(
                     editedItemId));
         }
@@ -171,33 +169,21 @@ public class EditorRow implements Serializable {
     }
 
     /**
-     * Gets the field component that represents a property.
+     * Gets the field component that represents a property. If the property is
+     * not yet bound to a field, null is returned.
      * <p>
-     * If the property is not yet bound to a field, it will be bound during this
-     * call. Otherwise the previously bound field will be used.
+     * When {@link #editItem(Object) editItem} is called, fields are
+     * automatically created and bound to any unbound properties.
      * 
      * @param propertyId
      *            the property id of the property for which to find the field
+     * @return the bound field or null if not bound
+     * 
      * @see #setPropertyUneditable(Object)
      */
     public Field<?> getField(Object propertyId) {
         checkDetached();
-
-        final Field<?> field;
-        if (fieldGroup.getUnboundPropertyIds().contains(propertyId)) {
-            field = fieldGroup.buildAndBind(propertyId);
-        } else {
-            field = fieldGroup.getField(propertyId);
-        }
-
-        if (field != null) {
-            boolean readonly = fieldGroup.isReadOnly()
-                    || field.getPropertyDataSource().isReadOnly()
-                    || !isPropertyEditable(propertyId);
-            field.setReadOnly(readonly);
-        }
-
-        return field;
+        return fieldGroup.getField(propertyId);
     }
 
     /**
@@ -218,6 +204,9 @@ public class EditorRow implements Serializable {
     public void setPropertyEditable(Object propertyId, boolean editable) {
         checkDetached();
         checkPropertyExists(propertyId);
+        if (getField(propertyId) != null) {
+            getField(propertyId).setReadOnly(!editable);
+        }
         if (editable) {
             uneditableProperties.remove(propertyId);
         } else {
@@ -272,6 +261,16 @@ public class EditorRow implements Serializable {
      */
     void detach() {
         checkDetached();
+        if (isEditing()) {
+            /*
+             * Simply force cancel the editing; throwing here would just make
+             * Grid.setContainerDataSource semantics more complicated.
+             */
+            cancel();
+        }
+        for (Field<?> editor : getFields()) {
+            editor.setParent(null);
+        }
         grid = null;
     }
 
@@ -290,6 +289,13 @@ public class EditorRow implements Serializable {
             IllegalArgumentException {
         checkDetached();
 
+        internalEditItem(itemId);
+
+        grid.getEditorRowRpc().bind(
+                grid.getContainerDatasource().indexOfId(itemId));
+    }
+
+    protected void internalEditItem(Object itemId) {
         if (!isEnabled()) {
             throw new IllegalStateException("This "
                     + getClass().getSimpleName() + " is not enabled");
@@ -303,6 +309,52 @@ public class EditorRow implements Serializable {
 
         fieldGroup.setItemDataSource(item);
         editedItemId = itemId;
+
+        for (Object propertyId : item.getItemPropertyIds()) {
+
+            final Field<?> editor;
+            if (fieldGroup.getUnboundPropertyIds().contains(propertyId)) {
+                editor = fieldGroup.buildAndBind(propertyId);
+            } else {
+                editor = fieldGroup.getField(propertyId);
+            }
+
+            grid.getColumn(propertyId).getState().editorConnector = editor;
+
+            if (editor != null) {
+                editor.setReadOnly(!isPropertyEditable(propertyId));
+
+                if (editor.getParent() != grid) {
+                    assert editor.getParent() == null;
+                    editor.setParent(grid);
+                }
+            }
+        }
+    }
+
+    /**
+     * Cancels the currently active edit if any.
+     */
+    public void cancel() {
+        checkDetached();
+        if (isEditing()) {
+            grid.getEditorRowRpc().cancel(
+                    grid.getContainerDatasource().indexOfId(editedItemId));
+            internalCancel();
+        }
+    }
+
+    protected void internalCancel() {
+        editedItemId = null;
+    }
+
+    /**
+     * Returns whether this editor row is currently editing an item.
+     *
+     * @return true iff this editor row is editing an item
+     */
+    public boolean isEditing() {
+        return editedItemId != null;
     }
 
     /**
@@ -317,42 +369,19 @@ public class EditorRow implements Serializable {
     }
 
     /**
-     * Gets a collection of all fields represented by this editor row.
+     * Gets a collection of all fields bound to this editor row.
      * <p>
      * All non-editable fields (either readonly or uneditable) are in read-only
      * mode.
+     * <p>
+     * When {@link #editItem(Object) editItem} is called, fields are
+     * automatically created and bound to any unbound properties.
      * 
-     * @return a collection of all the fields represented by this editor row
+     * @return a collection of all the fields bound to this editor row
      */
     Collection<Field<?>> getFields() {
         checkDetached();
-        /*
-         * Maybe this isn't the best idea, however. Maybe the components should
-         * always be transferred over the wire, to increase up-front load-time
-         * and decrease on-demand load-time.
-         */
-        if (!isEnabled()) {
-            return Collections.emptySet();
-        }
-
-        for (Object propertyId : fieldGroup.getUnboundPropertyIds()) {
-            fieldGroup.buildAndBind(propertyId);
-        }
-
-        /*
-         * We'll collect this ourselves instead of asking fieldGroup.getFields()
-         * because we might have marked something as uneditable even though it
-         * might not read-only.
-         */
-        ArrayList<Field<?>> fields = new ArrayList<Field<?>>();
-        for (Object propertyId : getContainer().getContainerPropertyIds()) {
-            Field<?> field = getField(propertyId);
-            if (field != null) {
-                fields.add(field);
-            }
-        }
-
-        return fields;
+        return fieldGroup.getFields();
     }
 
     private Container getContainer() {

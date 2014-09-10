@@ -109,6 +109,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     item.getItemProperty(getColumnProperty(col)).setValue(
                             "(" + row + ", " + col + ")");
                 }
+                item.getItemProperty(getColumnProperty(1)).setReadOnly(true);
+
                 item.getItemProperty(getColumnProperty(col++)).setValue(
                         Integer.valueOf(row));
                 item.getItemProperty(getColumnProperty(col++)).setValue(
@@ -189,6 +191,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         });
 
         grid.setSelectionMode(SelectionMode.NONE);
+
+        grid.getEditorRow().setPropertyEditable(getColumnProperty(3), false);
 
         createGridActions();
 
@@ -655,6 +659,31 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         c.getEditorRow().setEnabled(value);
                     }
                 });
+
+        createClickAction("Edit item 5", "Editor row",
+                new Command<Grid, String>() {
+                    @Override
+                    public void execute(Grid c, String value, Object data) {
+                        c.getEditorRow().editItem(5);
+                    }
+                }, null);
+
+        createClickAction("Edit item 100", "Editor row",
+                new Command<Grid, String>() {
+                    @Override
+                    public void execute(Grid c, String value, Object data) {
+                        c.getEditorRow().editItem(100);
+                    }
+                }, null);
+
+        createClickAction("Cancel edit", "Editor row",
+                new Command<Grid, String>() {
+                    @Override
+                    public void execute(Grid c, String value, Object data) {
+                        c.getEditorRow().cancel();
+                    }
+                }, null);
+
     }
 
     @SuppressWarnings("boxing")

@@ -52,6 +52,8 @@ import com.vaadin.client.ui.grid.sort.SortEvent;
 import com.vaadin.client.ui.grid.sort.SortEventHandler;
 import com.vaadin.client.ui.grid.sort.SortOrder;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.EditorRowClientRpc;
+import com.vaadin.shared.ui.grid.EditorRowServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
@@ -138,8 +140,73 @@ public class GridConnector extends AbstractHasComponentsConnector {
         }
     }
 
+    /*
+     * An editor row handler using Vaadin RPC to manage the editor row state.
+     */
     private class CustomEditorRowHandler implements
             EditorRowHandler<JSONObject> {
+
+        private EditorRowServerRpc rpc = getRpcProxy(EditorRowServerRpc.class);
+
+        private EditorRowRequest currentRequest = null;
+        private boolean serverInitiated = false;
+
+        public CustomEditorRowHandler() {
+            registerRpc(EditorRowClientRpc.class, new EditorRowClientRpc() {
+
+                @Override
+                public void bind(int rowIndex) {
+                    serverInitiated = true;
+                    GridConnector.this.getWidget().getEditorRow()
+                            .editRow(rowIndex);
+                }
+
+                @Override
+                public void cancel(int rowIndex) {
+                    serverInitiated = true;
+                    GridConnector.this.getWidget().getEditorRow().cancel();
+                }
+
+                @Override
+                public void confirmBind() {
+                    endRequest();
+                }
+            });
+        }
+
+        @Override
+        public void bind(EditorRowRequest request) {
+            int index = request.getRowIndex();
+
+            if (serverInitiated) {
+                /*
+                 * EditorRow is calling us as a result of an RPC from the
+                 * server, so no need to do another roundtrip.
+                 */
+                serverInitiated = false;
+                request.invokeCallback();
+            } else {
+                /*
+                 * The clientside wanted to open the editor row, so inform the
+                 * server and proceed only when confirmation is received.
+                 */
+                startRequest(request);
+                rpc.bind(index);
+            }
+        }
+
+        @Override
+        public void cancel(EditorRowRequest request) {
+            /*
+             * Tell the server to cancel unless it was the server that told us
+             * to cancel. Cancels don't need a confirmation.
+             */
+            if (serverInitiated) {
+                serverInitiated = false;
+            } else {
+                rpc.cancel(request.getRowIndex());
+            }
+        }
 
         @Override
         public Widget getWidget(GridColumn<?, JSONObject> column) {
@@ -155,16 +222,16 @@ public class GridConnector extends AbstractHasComponentsConnector {
             }
         }
 
-        @Override
-        public void bind(EditorRowRequest request) {
-            // TODO no-op until Vaadin comms implemented
-            request.invokeCallback();
+        private void startRequest(EditorRowRequest request) {
+            assert request != null;
+            assert currentRequest == null;
+            currentRequest = request;
         }
 
-        @Override
-        public void cancel(EditorRowRequest request) {
-            // TODO no-op until Vaadin comms implemented
-            request.invokeCallback();
+        private void endRequest() {
+            assert currentRequest != null;
+            currentRequest.invokeCallback();
+            currentRequest = null;
         }
     }
 

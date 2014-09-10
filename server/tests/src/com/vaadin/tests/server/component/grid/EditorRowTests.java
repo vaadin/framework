@@ -22,11 +22,16 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import org.easymock.EasyMock;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.server.MockVaadinSession;
+import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.components.grid.EditorRow;
@@ -55,6 +60,19 @@ public class EditorRowTests {
 
         grid = new Grid(container);
         row = grid.getEditorRow();
+
+        // VaadinSession needed for ConverterFactory
+        VaadinService mockService = EasyMock
+                .createNiceMock(VaadinService.class);
+        VaadinSession session = new MockVaadinSession(mockService);
+        VaadinSession.setCurrent(session);
+        session.lock();
+    }
+
+    @After
+    public void tearDown() {
+        VaadinSession.getCurrent().unlock();
+        VaadinSession.setCurrent(null);
     }
 
     @Test
@@ -188,10 +206,11 @@ public class EditorRowTests {
 
     @Test
     public void customBinding() {
-        startEdit();
-
         TextField textField = new TextField();
         row.bind(PROPERTY_NAME, textField);
+
+        startEdit();
+
         assertSame(textField, row.getField(PROPERTY_NAME));
     }
 

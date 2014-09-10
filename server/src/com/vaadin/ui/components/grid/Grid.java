@@ -37,6 +37,8 @@ import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
 import com.vaadin.server.KeyMapper;
+import com.vaadin.shared.ui.grid.EditorRowClientRpc;
+import com.vaadin.shared.ui.grid.EditorRowServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
@@ -49,7 +51,7 @@ import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.shared.ui.grid.SortEventOriginator;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HasComponents;
+import com.vaadin.ui.SelectiveRenderer;
 import com.vaadin.ui.components.grid.GridFooter.FooterCell;
 import com.vaadin.ui.components.grid.GridFooter.FooterRow;
 import com.vaadin.ui.components.grid.GridHeader.HeaderCell;
@@ -131,7 +133,7 @@ import elemental.json.JsonArray;
  * @author Vaadin Ltd
  */
 public class Grid extends AbstractComponent implements SelectionChangeNotifier,
-        HasComponents {
+        SelectiveRenderer {
 
     /**
      * Selection modes representing built-in {@link SelectionModel
@@ -387,6 +389,21 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 }
 
                 setSortOrder(order, originator);
+            }
+        });
+
+        registerRpc(new EditorRowServerRpc() {
+
+            @Override
+            public void bind(int rowIndex) {
+                getEditorRow().internalEditItem(
+                        datasource.getIdByIndex(rowIndex));
+                getEditorRowRpc().confirmBind();
+            }
+
+            @Override
+            public void cancel(int rowIndex) {
+                getEditorRow().internalCancel();
             }
         });
     }
@@ -1316,6 +1333,18 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         return componentList.iterator();
     }
 
+    @Override
+    public boolean isRendered(Component childComponent) {
+        if (getEditorRow().getFields().contains(childComponent)) {
+            // Only render editor row fields if the editor is open
+            return getEditorRow().isEditing();
+        } else {
+            // TODO Header and footer components should also only be rendered if
+            // the header/footer is visible
+            return true;
+        }
+    }
+
     /**
      * Gets the editor row configuration object.
      * 
@@ -1323,5 +1352,9 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      */
     public EditorRow getEditorRow() {
         return editorRow;
+    }
+
+    EditorRowClientRpc getEditorRowRpc() {
+        return getRpcProxy(EditorRowClientRpc.class);
     }
 }
