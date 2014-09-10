@@ -23,7 +23,7 @@
     </union>
 
     <target name="jar">
-        <property name="server.osgi.import" value="javax.servlet;version=&quot;2.4.0&quot;,javax.servlet.http;version=&quot;2.4.0&quot;,javax.validation;version=&quot;1.0.0.GA&quot;;resolution:=optional,org.jsoup;version=&quot;1.6.3&quot;,org.jsoup.parser;version=&quot;1.6.3&quot;,org.jsoup.nodes;version=&quot;1.6.3&quot;,org.jsoup.helper;version=&quot;1.6.3&quot;,org.jsoup.safety;version=&quot;1.6.3&quot;,org.json;version=&quot;0.0.20080701&quot;" />
+        <property name="server.osgi.import" value="javax.servlet;version=&quot;2.4.0&quot;,javax.servlet.http;version=&quot;2.4.0&quot;,javax.validation;version=&quot;1.0.0.GA&quot;;resolution:=optional,org.jsoup;version=&quot;1.6.3&quot;,org.jsoup.parser;version=&quot;1.6.3&quot;,org.jsoup.nodes;version=&quot;1.6.3&quot;,org.jsoup.helper;version=&quot;1.6.3&quot;,org.jsoup.safety;version=&quot;1.6.3&quot;,org.json;version=&quot;0.0.20131108.vaadin1&quot;" />
         <property name="server.osgi.require" value="com.vaadin.shared;bundle-version=&quot;${vaadin.version}&quot;,com.vaadin.push;bundle-version=&quot;${vaadin.version}&quot;;resolution:=optional,com.vaadin.sass-compiler;bundle-version=&quot;${vaadin.sass.version}&quot;;resolution:=optional" />
         <antcall target="common.jar">
             <param name="require-bundle" value="${server.osgi.require}" />
