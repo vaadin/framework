@@ -371,7 +371,7 @@ public class ConnectorTracker implements Serializable {
             for (ClientConnector child : children) {
                 stack.add(child);
 
-                if (child.getParent() != connector) {
+                if (!connector.equals(child.getParent())) {
                     noErrors = false;
                     getLogger()
                             .log(Level.WARNING,

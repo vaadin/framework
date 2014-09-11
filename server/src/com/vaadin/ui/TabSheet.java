@@ -1174,7 +1174,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         @Override
         public Component getComponent() {
             for (Map.Entry<Component, Tab> entry : tabs.entrySet()) {
-                if (entry.getValue() == this) {
+                if (equals(entry.getValue())) {
                     return entry.getKey();
                 }
             }

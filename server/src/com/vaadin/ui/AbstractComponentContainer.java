@@ -220,7 +220,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      */
     @Override
     public void removeComponent(Component c) {
-        if (c.getParent() == this) {
+        if (equals(c.getParent())) {
             c.setParent(null);
             fireComponentDetachEvent(c);
         }

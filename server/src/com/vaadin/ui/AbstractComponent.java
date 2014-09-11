@@ -462,7 +462,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     public void setParent(HasComponents parent) {
         // If the parent is not changed, don't do anything
-        if (parent == this.parent) {
+        if (parent == null ? this.parent == null : parent.equals(this.parent)) {
             return;
         }
 
@@ -1005,7 +1005,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (content instanceof HasComponents) {
             for (Component parent = this; parent != null; parent = parent
                     .getParent()) {
-                if (parent == content) {
+                if (parent.equals(content)) {
                     return true;
                 }
             }

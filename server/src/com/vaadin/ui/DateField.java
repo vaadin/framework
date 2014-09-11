@@ -723,7 +723,7 @@ public class DateField extends AbstractField<Date> implements
                 Collection<?> visibleItemProperties = f.getItemPropertyIds();
                 for (Object fieldId : visibleItemProperties) {
                     Field<?> field = f.getField(fieldId);
-                    if (field == this) {
+                    if (equals(field)) {
                         /*
                          * this datefield is logically in a form. Do the same
                          * thing as form does in its value change listener that

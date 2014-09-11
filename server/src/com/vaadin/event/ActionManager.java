@@ -78,7 +78,10 @@ public class ActionManager implements Action.Container, Action.Handler,
 
     public <T extends Component & Container & VariableOwner> void setViewer(
             T viewer) {
-        if (viewer == this.viewer) {
+        // This somewhat complicated check exists to make sure that proxies are
+        // handled correctly
+        if (this.viewer == viewer
+                || (this.viewer != null && this.viewer.equals(viewer))) {
             return;
         }
         if (this.viewer != null) {
@@ -113,7 +116,7 @@ public class ActionManager implements Action.Container, Action.Handler,
 
     @Override
     public void addActionHandler(Handler actionHandler) {
-        if (actionHandler == this) {
+        if (equals(actionHandler)) {
             // don't add the actionHandler to itself
             return;
         }

@@ -134,7 +134,7 @@ public abstract class AbstractSingleComponentContainer extends
             // do not set the same content twice
             return;
         }
-        if (oldContent != null && oldContent.getParent() == this) {
+        if (oldContent != null && equals(oldContent.getParent())) {
             oldContent.setParent(null);
             fireComponentDetachEvent(oldContent);
         }

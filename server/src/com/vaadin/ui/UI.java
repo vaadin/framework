@@ -319,9 +319,9 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
         if (pendingFocus != null) {
             // ensure focused component is still attached to this main window
-            if (pendingFocus.getUI() == this
-                    || (pendingFocus.getUI() != null && pendingFocus.getUI()
-                            .getParent() == this)) {
+            if (equals(pendingFocus.getUI())
+                    || (pendingFocus.getUI() != null && equals(pendingFocus
+                            .getUI().getParent()))) {
                 target.addAttribute("focused", pendingFocus);
             }
             pendingFocus = null;

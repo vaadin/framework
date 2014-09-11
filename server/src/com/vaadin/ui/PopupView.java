@@ -152,7 +152,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
                 }
                 visibleComponent.setParent(this);
             } else {
-                if (visibleComponent.getParent() == this) {
+                if (equals(visibleComponent.getParent())) {
                     visibleComponent.setParent(null);
                 }
                 visibleComponent = null;

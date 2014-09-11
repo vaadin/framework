@@ -135,7 +135,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     public void addComponentAsFirst(Component c) {
         // If c is already in this, we must remove it before proceeding
         // see ticket #7668
-        if (c.getParent() == this) {
+        if (equals(c.getParent())) {
             removeComponent(c);
         }
         components.addFirst(c);
@@ -160,7 +160,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     public void addComponent(Component c, int index) {
         // If c is already in this, we must remove it before proceeding
         // see ticket #7668
-        if (c.getParent() == this) {
+        if (equals(c.getParent())) {
             // When c is removed, all components after it are shifted down
             if (index > getComponentIndex(c)) {
                 index--;
