@@ -66,18 +66,18 @@
         <repository>
             <id>vaadin-releases</id>
             <name>Vaadin release repository</name>
-            <url>http://oss.sonatype.org/content/repositories/vaadin-releases/</url>
+            <url>https://oss.sonatype.org/content/repositories/vaadin-releases/</url>
         </repository>
         <snapshotRepository>
             <id>vaadin-snapshots</id>
             <name>Vaadin snapshot repository</name>
-            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
     <repositories>
         <repository>
             <id>vaadin-snapshots</id>
-            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
@@ -87,7 +87,7 @@
         </repository>
         <repository>
             <id>vaadin-releases</id>
-            <url>http://oss.sonatype.org/content/repositories/vaadin-releases/</url>
+            <url>https://oss.sonatype.org/content/repositories/vaadin-releases/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
