@@ -15,18 +15,14 @@
  */
 package com.vaadin.tests.widgetset.client.grid;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.gwt.core.client.Duration;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.TableRowElement;
-import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.ColumnConfiguration;
 import com.vaadin.client.ui.grid.Escalator;
 import com.vaadin.client.ui.grid.EscalatorUpdater;
 import com.vaadin.client.ui.grid.RowContainer;
+import com.vaadin.tests.widgetset.client.grid.EscalatorBasicClientFeaturesWidget.LogWidget;
 
 public class EscalatorProxy extends Escalator {
     private class ColumnConfigurationProxy implements ColumnConfiguration {
@@ -40,16 +36,16 @@ public class EscalatorProxy extends Escalator {
         public void removeColumns(int index, int numberOfColumns)
                 throws IndexOutOfBoundsException, IllegalArgumentException {
             columnConfiguration.removeColumns(index, numberOfColumns);
-            log("removeColumns " + index + ", " + numberOfColumns);
-            updateDebugLabel();
+            logWidget.log("removeColumns " + index + ", " + numberOfColumns);
+            logWidget.updateDebugLabel();
         }
 
         @Override
         public void insertColumns(int index, int numberOfColumns)
                 throws IndexOutOfBoundsException, IllegalArgumentException {
             columnConfiguration.insertColumns(index, numberOfColumns);
-            log("insertColumns " + index + ", " + numberOfColumns);
-            updateDebugLabel();
+            logWidget.log("insertColumns " + index + ", " + numberOfColumns);
+            logWidget.updateDebugLabel();
         }
 
         @Override
@@ -108,26 +104,26 @@ public class EscalatorProxy extends Escalator {
         public void removeRows(int index, int numberOfRows)
                 throws IndexOutOfBoundsException, IllegalArgumentException {
             rowContainer.removeRows(index, numberOfRows);
-            log(rowContainer.getClass().getSimpleName() + " removeRows "
-                    + index + ", " + numberOfRows);
-            updateDebugLabel();
+            logWidget.log(rowContainer.getClass().getSimpleName()
+                    + " removeRows " + index + ", " + numberOfRows);
+            logWidget.updateDebugLabel();
         }
 
         @Override
         public void insertRows(int index, int numberOfRows)
                 throws IndexOutOfBoundsException, IllegalArgumentException {
             rowContainer.insertRows(index, numberOfRows);
-            log(rowContainer.getClass().getSimpleName() + " insertRows "
-                    + index + ", " + numberOfRows);
-            updateDebugLabel();
+            logWidget.log(rowContainer.getClass().getSimpleName()
+                    + " insertRows " + index + ", " + numberOfRows);
+            logWidget.updateDebugLabel();
         }
 
         @Override
         public void refreshRows(int index, int numberOfRows)
                 throws IndexOutOfBoundsException, IllegalArgumentException {
             rowContainer.refreshRows(index, numberOfRows);
-            log(rowContainer.getClass().getSimpleName() + " refreshRows "
-                    + index + ", " + numberOfRows);
+            logWidget.log(rowContainer.getClass().getSimpleName()
+                    + " refreshRows " + index + ", " + numberOfRows);
         }
 
         @Override
@@ -163,14 +159,11 @@ public class EscalatorProxy extends Escalator {
 
     }
 
-    private static final int MAX_LOG = 9;
-
     private RowContainer headerProxy = null;
     private RowContainer bodyProxy = null;
     private RowContainer footerProxy = null;
     private ColumnConfiguration columnProxy = null;
-    private HTML debugLabel;
-    private List<String> logs = new ArrayList<String>();
+    private LogWidget logWidget;
 
     @Override
     public RowContainer getHeader() {
@@ -205,35 +198,9 @@ public class EscalatorProxy extends Escalator {
         return columnProxy;
     }
 
-    public void setDebugLabel(HTML debugLabel) {
-        this.debugLabel = debugLabel;
-        updateDebugLabel();
+    public void setLogWidget(LogWidget logWidget) {
+        this.logWidget = logWidget;
+        logWidget.updateDebugLabel();
     }
 
-    public void updateDebugLabel() {
-        int headers = super.getHeader().getRowCount();
-        int bodys = super.getBody().getRowCount();
-        int footers = super.getFooter().getRowCount();
-        int columns = super.getColumnConfiguration().getColumnCount();
-
-        while (logs.size() > MAX_LOG) {
-            logs.remove(0);
-        }
-
-        String logString = "<hr>";
-        for (String log : logs) {
-            logString += log + "<br>";
-        }
-
-        debugLabel.setHTML( //
-                "Columns: " + columns + "<br>" + //
-                        "Header rows: " + headers + "<br>" + //
-                        "Body rows: " + bodys + "<br>" + //
-                        "Footer rows: " + footers + "<br>" + //
-                        logString);
-    }
-
-    public void log(String string) {
-        logs.add((Duration.currentTimeMillis() % 10000) + ": " + string);
-    }
 }

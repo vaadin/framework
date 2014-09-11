@@ -3,7 +3,9 @@ package com.vaadin.tests.widgetset.client.grid;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ui.grid.Escalator;
 import com.vaadin.client.ui.grid.EscalatorUpdater;
@@ -13,6 +15,50 @@ import com.vaadin.client.ui.grid.RowContainer;
 
 public class EscalatorBasicClientFeaturesWidget extends
         PureGWTTestApplication<Escalator> {
+
+    public static class LogWidget extends Composite {
+
+        private static final int MAX_LOG = 9;
+
+        private final HTML html = new HTML();
+        private final List<String> logs = new ArrayList<String>();
+        private Escalator escalator;
+
+        public LogWidget() {
+            initWidget(html);
+            getElement().setId("log");
+        }
+
+        public void setEscalator(Escalator escalator) {
+            this.escalator = escalator;
+        }
+
+        public void updateDebugLabel() {
+            int headers = escalator.getHeader().getRowCount();
+            int bodys = escalator.getBody().getRowCount();
+            int footers = escalator.getFooter().getRowCount();
+            int columns = escalator.getColumnConfiguration().getColumnCount();
+
+            while (logs.size() > MAX_LOG) {
+                logs.remove(0);
+            }
+
+            String logString = "<hr>";
+            for (String log : logs) {
+                logString += log + "<br>";
+            }
+
+            html.setHTML("Columns: " + columns + "<br>" + //
+                    "Header rows: " + headers + "<br>" + //
+                    "Body rows: " + bodys + "<br>" + //
+                    "Footer rows: " + footers + "<br>" + //
+                    logString);
+        }
+
+        public void log(String string) {
+            logs.add((Duration.currentTimeMillis() % 10000) + ": " + string);
+        }
+    }
 
     private static final String COLUMNS_AND_ROWS_MENU = "Columns and Rows";
     private static final String GENERAL_MENU = "General";
@@ -163,22 +209,23 @@ public class EscalatorBasicClientFeaturesWidget extends
         }
     }
 
-    private final Escalator escalator;
+    protected final Escalator escalator;
     private final Data data = new Data();
-    private final HTML debugLabel = new HTML();
 
     private enum Colspan {
         NONE, NORMAL, CRAZY;
     }
 
     private Colspan colspan = Colspan.NONE;
+    private final LogWidget logWidget = new LogWidget();
 
     public EscalatorBasicClientFeaturesWidget() {
         super(new EscalatorProxy());
         escalator = getTestedWidget();
-        ((EscalatorProxy) escalator).setDebugLabel(debugLabel);
-        addNorth(debugLabel, 200);
-        debugLabel.getElement().setId("log");
+        logWidget.setEscalator(escalator);
+
+        ((EscalatorProxy) escalator).setLogWidget(logWidget);
+        addNorth(logWidget, 200);
 
         final RowContainer header = escalator.getHeader();
         header.setEscalatorUpdater(data.createHeaderUpdater());
