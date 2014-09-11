@@ -43,6 +43,7 @@ import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.UI;
+
 import elemental.json.JsonObject;
 
 /**
@@ -547,7 +548,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      */
     protected void addExtension(Extension extension) {
         ClientConnector previousParent = extension.getParent();
-        if (previousParent == this) {
+        if (equals(previousParent)) {
             // Nothing to do, already attached
             return;
         } else if (previousParent != null) {
@@ -996,5 +997,33 @@ public abstract class AbstractClientConnector implements ClientConnector,
     @Override
     public void setErrorHandler(ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
+    }
+
+    private AbstractClientConnector getInstance() {
+        // returns the underlying instance regardless of proxies
+        return this;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AbstractClientConnector) {
+            return super.equals(((AbstractClientConnector) obj).getInstance());
+        }
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

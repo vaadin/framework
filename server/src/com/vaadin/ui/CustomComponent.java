@@ -107,7 +107,7 @@ public class CustomComponent extends AbstractComponent implements HasComponents 
      */
     protected void setCompositionRoot(Component compositionRoot) {
         if (compositionRoot != root) {
-            if (root != null && root.getParent() == this) {
+            if (root != null && equals(root.getParent())) {
                 // remove old component
                 root.setParent(null);
             }

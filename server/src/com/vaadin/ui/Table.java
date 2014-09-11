@@ -2386,7 +2386,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 "Registered {0}: {1}",
                 new Object[] { component.getClass().getSimpleName(),
                         component.getCaption() });
-        if (component.getParent() != this) {
+        if (!equals(component.getParent())) {
             component.setParent(this);
         }
         visibleComponents.add(component);
@@ -4199,7 +4199,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
-        if (event.getProperty() == this
+        if (equals(event.getProperty())
                 || event.getProperty() == getPropertyDataSource()) {
             super.valueChange(event);
         } else {
