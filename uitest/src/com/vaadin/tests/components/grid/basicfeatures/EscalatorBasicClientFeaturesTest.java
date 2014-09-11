@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -34,6 +36,8 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String COLUMNS = "Columns";
     protected static final String ADD_ONE_COLUMN_TO_BEGINNING = "Add one column to beginning";
     protected static final String ADD_ONE_ROW_TO_BEGINNING = "Add one row to beginning";
+    protected static final String REMOVE_ONE_COLUMN_FROM_BEGINNING = "Remove one column from beginning";
+    protected static final String REMOVE_ONE_ROW_FROM_BEGINNING = "Remove one row from beginning";
 
     protected static final String HEADER_ROWS = "Header Rows";
     protected static final String BODY_ROWS = "Body Rows";
@@ -133,9 +137,33 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     }
 
     protected void assertLogContains(String substring) {
+        assertTrue("log should've contained, but didn't: " + substring,
+                getLogText().contains(substring));
+    }
+
+    protected void assertLogDoesNotContain(String substring) {
+        assertFalse("log shouldn't have contained, but did: " + substring,
+                getLogText().contains(substring));
+    }
+
+    private String getLogText() {
         WebElement log = getDriver().findElement(By.cssSelector("#log"));
-        assertTrue("log did not contain: " + substring,
-                log.getText().contains(substring));
+        return log.getText();
+    }
+
+    protected void assertLogContainsInOrder(String... substrings) {
+        String log = getLogText();
+        int cursor = 0;
+        for (String substring : substrings) {
+            String remainingLog = log.substring(cursor, log.length());
+            int substringIndex = remainingLog.indexOf(substring);
+            if (substringIndex == -1) {
+                fail("substring \"" + substring
+                        + "\" was not found in order from log.");
+            }
+
+            cursor += substringIndex + substring.length();
+        }
     }
 
     protected void scrollVerticallyTo(int px) {

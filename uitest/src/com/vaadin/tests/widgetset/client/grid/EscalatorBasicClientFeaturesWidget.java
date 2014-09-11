@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ui.grid.Escalator;
@@ -57,6 +58,59 @@ public class EscalatorBasicClientFeaturesWidget extends
 
         public void log(String string) {
             logs.add((Duration.currentTimeMillis() % 10000) + ": " + string);
+        }
+    }
+
+    public static class UpdaterLifetimeWidget extends
+            EscalatorBasicClientFeaturesWidget {
+
+        private final EscalatorUpdater debugUpdater = new EscalatorUpdater() {
+            @Override
+            public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
+                log("preAttach", cellsToAttach);
+            }
+
+            @Override
+            public void postAttach(Row row,
+                    Iterable<FlyweightCell> attachedCells) {
+                log("postAttach", attachedCells);
+            }
+
+            @Override
+            public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
+                log("update", cellsToUpdate);
+            }
+
+            @Override
+            public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
+                log("preDetach", cellsToDetach);
+            }
+
+            @Override
+            public void postDetach(Row row,
+                    Iterable<FlyweightCell> detachedCells) {
+                log("postDetach", detachedCells);
+            }
+
+            private void log(String methodName, Iterable<FlyweightCell> cells) {
+                if (!cells.iterator().hasNext()) {
+                    return;
+                }
+
+                TableCellElement cellElement = cells.iterator().next()
+                        .getElement();
+                boolean isAttached = cellElement.getParentElement() != null
+                        && cellElement.getParentElement().getParentElement() != null;
+                logWidget.log(methodName + ": elementIsAttached == "
+                        + isAttached);
+            }
+        };
+
+        public UpdaterLifetimeWidget() {
+            super();
+            escalator.getHeader().setEscalatorUpdater(debugUpdater);
+            escalator.getBody().setEscalatorUpdater(debugUpdater);
+            escalator.getFooter().setEscalatorUpdater(debugUpdater);
         }
     }
 
@@ -217,7 +271,7 @@ public class EscalatorBasicClientFeaturesWidget extends
     }
 
     private Colspan colspan = Colspan.NONE;
-    private final LogWidget logWidget = new LogWidget();
+    protected final LogWidget logWidget = new LogWidget();
 
     public EscalatorBasicClientFeaturesWidget() {
         super(new EscalatorProxy());
