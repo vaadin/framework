@@ -16,7 +16,9 @@
 package com.vaadin.client.ui;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -1531,11 +1533,50 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
     @Override
     public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
-        int index = Integer
-                .parseInt(subPart.substring(SUBPART_PREFIX.length()));
-        CustomMenuItem item = getItems().get(index);
+        if (subPart.startsWith(SUBPART_PREFIX)) {
+            int index = Integer.parseInt(subPart.substring(SUBPART_PREFIX
+                    .length()));
+            CustomMenuItem item = getItems().get(index);
 
-        return item.getElement();
+            return item.getElement();
+        } else {
+            Queue<CustomMenuItem> submenuItems = new LinkedList<CustomMenuItem>();
+            for (CustomMenuItem item : getItems()) {
+                if (isItemNamed(item, subPart)) {
+                    return item.getElement();
+                }
+                if (item.getSubMenu() != null) {
+                    submenuItems.addAll(item.getSubMenu().getItems());
+                }
+            }
+            while (!submenuItems.isEmpty()) {
+                CustomMenuItem item = submenuItems.poll();
+                if (!item.isSeparator() && isItemNamed(item, subPart)) {
+                    return item.getElement();
+                }
+                if (item.getSubMenu() != null && item.getSubMenu().menuVisible) {
+                    submenuItems.addAll(item.getSubMenu().getItems());
+                }
+
+            }
+            return null;
+        }
+    }
+
+    private boolean isItemNamed(CustomMenuItem item, String name) {
+        Element lastChildElement = getLastChildElement(item);
+        if (lastChildElement.getInnerText().equals(name)) {
+            return true;
+        }
+        return false;
+    }
+
+    private Element getLastChildElement(CustomMenuItem item) {
+        Element lastChildElement = item.getElement().getFirstChildElement();
+        while (lastChildElement.getNextSiblingElement() != null) {
+            lastChildElement = lastChildElement.getNextSiblingElement();
+        }
+        return lastChildElement;
     }
 
     @Override
