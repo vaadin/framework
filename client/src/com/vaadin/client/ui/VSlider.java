@@ -38,7 +38,7 @@ import com.vaadin.client.Util;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 
 public class VSlider extends SimpleFocusablePanel implements Field,
-        HasValue<Double> {
+        HasValue<Double>, SubPartAware {
 
     public static final String CLASSNAME = "v-slider";
 
@@ -649,5 +649,22 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         if (fireEvents) {
             fireValueChanged();
         }
+    }
+
+    @Override
+    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+        if (subPart.equals("popup")) {
+            feedbackPopup.show();
+            return feedbackPopup.getElement();
+        }
+        return null;
+    }
+
+    @Override
+    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+        if (feedbackPopup.getElement().isOrHasChild(subElement)) {
+            return "popup";
+        }
+        return null;
     }
 }
