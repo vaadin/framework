@@ -32,6 +32,8 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
@@ -598,11 +600,20 @@ public class ApplicationConfiguration implements EntryPoint {
         }
     }
 
+    private boolean vaadinBootstrapLoaded() {
+        Element window = ScriptInjector.TOP_WINDOW.cast();
+        return window.getPropertyJSO("vaadin") != null;
+    }
+
     @Override
     public void onModuleLoad() {
 
-        // Don't run twice if the module has been inherited several times.
-        if (moduleLoaded) {
+        // Don't run twice if the module has been inherited several times,
+        // and don't continue if vaadinBootstrap was not executed.
+        if (moduleLoaded || !vaadinBootstrapLoaded()) {
+            getLogger()
+                    .log(Level.WARNING,
+                            "vaadinBootstrap.js was not loaded, skipping vaadin application configuration.");
             return;
         }
         moduleLoaded = true;
