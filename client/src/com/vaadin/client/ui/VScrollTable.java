@@ -6439,6 +6439,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 VScrollTableRow startRow = selectionRangeStart;
                 if (startRow == null) {
                     startRow = focusedRow;
+                    selectionRangeStart = focusedRow;
                     // If start row is null then we have a multipage selection
                     // from
                     // above
