@@ -25,6 +25,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.grid.EditorRowHandler.EditorRowRequest;
@@ -32,6 +33,8 @@ import com.vaadin.client.ui.grid.EditorRowHandler.EditorRowRequest.RequestCallba
 import com.vaadin.client.ui.grid.Escalator.AbstractRowContainer;
 import com.vaadin.client.ui.grid.Grid.SelectionColumn;
 import com.vaadin.client.ui.grid.ScrollbarBundle.Direction;
+import com.vaadin.client.ui.grid.events.ScrollEvent;
+import com.vaadin.client.ui.grid.events.ScrollHandler;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 
 /**
@@ -62,6 +65,8 @@ public class EditorRow<T> {
     private State state = State.INACTIVE;
     private int rowIndex = -1;
     private String styleName = null;
+
+    private HandlerRegistration scrollHandler;
 
     public int getRow() {
         return rowIndex;
@@ -234,6 +239,15 @@ public class EditorRow<T> {
         setBounds(editorOverlay, tr.getOffsetLeft(), rowTop + bodyTop
                 - wrapperTop, tr.getOffsetWidth(), tr.getOffsetHeight());
 
+        updateHorizontalScrollPosition();
+
+        scrollHandler = grid.addScrollHandler(new ScrollHandler() {
+            @Override
+            public void onScroll(ScrollEvent event) {
+                updateHorizontalScrollPosition();
+            }
+        });
+
         tableWrapper.appendChild(editorOverlay);
 
         for (int i = 0; i < tr.getCells().getLength(); i++) {
@@ -263,6 +277,8 @@ public class EditorRow<T> {
 
         editorOverlay.removeAllChildren();
         editorOverlay.removeFromParent();
+
+        scrollHandler.removeHandler();
     }
 
     protected void setStylePrimaryName(String primaryName) {
@@ -296,5 +312,9 @@ public class EditorRow<T> {
         style.setTop(top, Unit.PX);
         style.setWidth(width, Unit.PX);
         style.setHeight(height, Unit.PX);
+    }
+
+    private void updateHorizontalScrollPosition() {
+        editorOverlay.getStyle().setLeft(-grid.getScrollLeft(), Unit.PX);
     }
 }
