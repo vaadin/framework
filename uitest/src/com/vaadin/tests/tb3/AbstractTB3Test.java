@@ -30,7 +30,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import com.vaadin.testbench.elements.TableElement;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -228,6 +230,25 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         driver.findElement(
                 By.xpath("//button[@class='v-debugwindow-button' and @title='Clear log']"))
                 .click();
+    }
+
+    protected void waitUntilRowIsVisible(final TableElement table, final int row) {
+        waitUntil(new ExpectedCondition<Object>() {
+            @Override
+            public Object apply(WebDriver input) {
+                try {
+                   return table.getCell(row, 0) != null;
+                } catch (NoSuchElementException e) {
+                    return false;
+                }
+            }
+        });
+    }
+
+    protected void scrollTable(TableElement table, int rows, int rowToWait) {
+        testBenchElement(table.findElement(By.className("v-scrollable"))).scroll(rows * 30);
+
+        waitUntilRowIsVisible(table, rowToWait);
     }
 
     @Retention(RetentionPolicy.RUNTIME)
