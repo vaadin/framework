@@ -547,7 +547,11 @@ public class ApplicationConfiguration implements EntryPoint {
 
     String getUnknownServerClassNameByTag(int tag) {
         if (unknownComponents != null) {
-            return unknownComponents.get(tag);
+            String className = unknownComponents.get(tag);
+            if (className == null) {
+                className = "unknown class with id " + tag;
+            }
+            return className;
         }
         return null;
     }
