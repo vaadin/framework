@@ -22,7 +22,6 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.VerticalLayout;
 
 public class SelectAllRows extends AbstractTestUI {
 
@@ -33,10 +32,6 @@ public class SelectAllRows extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
-        layout.setSpacing(true);
-        setContent(layout);
 
         final Table table = new Table();
         table.setId(TABLE);
@@ -44,16 +39,16 @@ public class SelectAllRows extends AbstractTestUI {
         table.setMultiSelect(true);
         table.setSelectable(true);
         table.addContainerProperty("row", String.class, null);
-        layout.addComponent(table);
+        addComponent(table);
 
         Button button = new Button("Count");
         button.setId(COUNT_SELECTED_BUTTON);
-        layout.addComponent(button);
+        addComponent(button);
 
         final Label label = new Label();
         label.setId(COUNT_OF_SELECTED_ROWS_LABEL);
         label.setCaption("Selected count:");
-        layout.addComponent(label);
+        addComponent(label);
 
         button.addClickListener(new Button.ClickListener() {
 

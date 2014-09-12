@@ -15,9 +15,6 @@
  */
 package com.vaadin.tests.components.table;
 
-import static com.vaadin.tests.components.table.SelectAllRows.COUNT_OF_SELECTED_ROWS_LABEL;
-import static com.vaadin.tests.components.table.SelectAllRows.COUNT_SELECTED_BUTTON;
-import static com.vaadin.tests.components.table.SelectAllRows.TABLE;
 import static com.vaadin.tests.components.table.SelectAllRows.TOTAL_NUMBER_OF_ROWS;
 import static org.junit.Assert.assertEquals;
 
@@ -27,12 +24,24 @@ import java.util.List;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+/**
+ * Test to see if all items of the table can be selected by selecting first row,
+ * press shift then select last (#13008)
+ * 
+ * @author Vaadin Ltd
+ */
 public class SelectAllRowsTest extends MultiBrowserTest {
 
     @Override
@@ -54,56 +63,58 @@ public class SelectAllRowsTest extends MultiBrowserTest {
     public void testAllRowsAreSelected() {
         openTestURL();
 
-        selectAllRowsInTable();
-        int selectedRows = countSelectedItems();
-
-        assertEquals(TOTAL_NUMBER_OF_ROWS, selectedRows);
-    }
-
-    private int countSelectedItems() {
-        WebElement countButton = vaadinElementById(COUNT_SELECTED_BUTTON);
-        countButton.click();
-        WebElement countOfSelectedRows = vaadinElementById(COUNT_OF_SELECTED_ROWS_LABEL);
-        String count = countOfSelectedRows.getText();
-        return Integer.parseInt(count);
-    }
-
-    private void selectAllRowsInTable() {
         clickFirstRow();
         scrollTableToBottom();
-        new Actions(getDriver()).keyDown(Keys.SHIFT).click(getLastRow())
+        clickLastRow();
+
+        assertEquals(TOTAL_NUMBER_OF_ROWS, countSelectedItems());
+    }
+
+    protected void clickFirstRow() {
+        getVisibleTableRows().get(0).click();
+    }
+
+    private void clickLastRow() {
+        List<WebElement> rows = getVisibleTableRows();
+        shiftClickElement(rows.get(rows.size() - 1));
+    }
+
+    protected void shiftClickElement(WebElement element) {
+        new Actions(getDriver()).keyDown(Keys.SHIFT).click(element)
                 .keyUp(Keys.SHIFT).perform();
     }
 
-    private WebElement getLastRow() {
-        List<WebElement> rows = allVisibleTableRows();
-        WebElement lastRow = rows.get(rows.size() - 1);
-        return lastRow;
+    private int countSelectedItems() {
+        $(ButtonElement.class).first().click();
+        String count = $(LabelElement.class).get(1).getText();
+        return Integer.parseInt(count);
     }
 
-    private void clickFirstRow() {
-        WebElement firstRow = allVisibleTableRows().get(0);
-        firstRow.click();
+    private TableElement getTable() {
+        return $(TableElement.class).first();
     }
 
     private void scrollTableToBottom() {
-        WebElement table = vaadinElementById(TABLE);
-        testBenchElement(table.findElement(By.className("v-scrollable")))
+        testBenchElement(getTable().findElement(By.className("v-scrollable")))
                 .scroll(TOTAL_NUMBER_OF_ROWS * 30);
-
-        // Wait for scrolling to complete. Otherwise, clicking last row will
-        // fail with Chrome
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        waitUntilRowIsVisible(TOTAL_NUMBER_OF_ROWS - 1);
     }
 
-    private List<WebElement> allVisibleTableRows() {
-        WebElement table = vaadinElementById(TABLE);
-        List<WebElement> rows = table.findElements(By
-                .cssSelector(".v-table-table tr"));
-        return rows;
+    private void waitUntilRowIsVisible(final int row) {
+        waitUntil(new ExpectedCondition<Object>() {
+            @Override
+            public Object apply(WebDriver input) {
+                try {
+                    return getTable().getCell(row, 0) != null;
+                } catch (NoSuchElementException e) {
+                    return false;
+                }
+            }
+        });
     }
+
+    protected List<WebElement> getVisibleTableRows() {
+        return getTable().findElements(By.cssSelector(".v-table-table tr"));
+    }
+
 }
