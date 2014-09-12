@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Random;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -96,9 +97,8 @@ public class GridBasicClientFeaturesWidget extends
 
             boolean hasSelectionColumn = !(grid.getSelectionModel() instanceof None);
             for (int i = 0; i < rowData.size(); i++) {
-                int gridColumnIndex = hasSelectionColumn ? i + 1 : i;
-                GridColumn<?, List<Data>> col = grid.getColumn(gridColumnIndex);
-                getWidget(col).setText(rowData.get(i).value.toString());
+                int columnIndex = hasSelectionColumn ? i + 1 : i;
+                getWidget(columnIndex).setText(rowData.get(i).value.toString());
             }
 
             request.invokeCallback();
@@ -111,6 +111,33 @@ public class GridBasicClientFeaturesWidget extends
         }
 
         @Override
+        public void commit(EditorRowRequest request) {
+            log.setText("Row " + request.getRowIndex() + " edit committed");
+            List<Data> rowData = ds.getRow(request.getRowIndex());
+
+            int i = 0;
+            for (; i < COLUMNS - MANUALLY_FORMATTED_COLUMNS; i++) {
+                rowData.get(i).value = getWidget(i).getText();
+            }
+
+            rowData.get(i).value = Integer.valueOf(getWidget(i++).getText());
+            rowData.get(i).value = new Date(getWidget(i++).getText());
+            rowData.get(i).value = getWidget(i++).getText();
+            rowData.get(i).value = Integer.valueOf(getWidget(i++).getText());
+            rowData.get(i).value = Integer.valueOf(getWidget(i++).getText());
+
+            // notify data source of changes
+            ds.asList().set(request.getRowIndex(), rowData);
+
+            request.invokeCallback();
+        }
+
+        @Override
+        public void discard(EditorRowRequest request) {
+            bind(request);
+        }
+
+        @Override
         public TextBox getWidget(GridColumn<?, List<Data>> column) {
             if (grid.getColumns().indexOf(column) == 0
                     && !(grid.getSelectionModel() instanceof None)) {
@@ -120,9 +147,14 @@ public class GridBasicClientFeaturesWidget extends
             TextBox w = widgets.get(column);
             if (w == null) {
                 w = new TextBox();
+                w.getElement().getStyle().setMargin(0, Unit.PX);
                 widgets.put(column, w);
             }
             return w;
+        }
+
+        private TextBox getWidget(int i) {
+            return getWidget(grid.getColumn(i));
         }
     }
 
@@ -701,6 +733,20 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void execute() {
                 grid.getEditorRow().editRow(100);
+            }
+        }, "Component", "Editor row");
+
+        addMenuCommand("Commit", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.getEditorRow().commit();
+            }
+        }, "Component", "Editor row");
+
+        addMenuCommand("Discard", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.getEditorRow().discard();
             }
         }, "Component", "Editor row");
 

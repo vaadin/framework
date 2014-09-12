@@ -233,6 +233,18 @@ public class GridConnector extends AbstractHasComponentsConnector {
             currentRequest.invokeCallback();
             currentRequest = null;
         }
+
+        @Override
+        public void commit(EditorRowRequest request) {
+            // TODO no-op until Vaadin comms implemented
+            request.invokeCallback();
+        }
+
+        @Override
+        public void discard(EditorRowRequest request) {
+            // TODO no-op until Vaadin comms implemented
+            request.invokeCallback();
+        }
     }
 
     /**

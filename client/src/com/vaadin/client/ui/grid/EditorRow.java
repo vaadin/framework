@@ -24,9 +24,12 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.grid.EditorRowHandler.EditorRowRequest;
 import com.vaadin.client.ui.grid.EditorRowHandler.EditorRowRequest.RequestCallback;
@@ -79,8 +82,9 @@ public class EditorRow<T> {
      *            the index of the row to be edited
      * 
      * @throws IllegalStateException
-     *             if this editor row is not enabled or if it is already in edit
-     *             mode
+     *             if this editor row is not enabled
+     * @throws IllegalStateException
+     *             if this editor row is already in edit mode
      */
     public void editRow(int rowIndex) {
         if (!enabled) {
@@ -104,8 +108,11 @@ public class EditorRow<T> {
     }
 
     /**
-     * Cancels the currently active edit and hides the editor.
+     * Cancels the currently active edit and hides the editor. Any changes that
+     * are not {@link #commit() committed} are lost.
      * 
+     * @throws IllegalStateException
+     *             if this editor row is not enabled
      * @throws IllegalStateException
      *             if this editor row is not in edit mode
      */
@@ -122,6 +129,56 @@ public class EditorRow<T> {
         grid.getEscalator().setScrollLocked(Direction.VERTICAL, false);
         handler.cancel(new EditorRowRequest(rowIndex, null));
         state = State.INACTIVE;
+    }
+
+    /**
+     * Commits any unsaved changes to the data source.
+     * 
+     * @throws IllegalStateException
+     *             if this editor row is not enabled
+     * @throws IllegalStateException
+     *             if this editor row is not in edit mode
+     */
+    public void commit() {
+        if (!enabled) {
+            throw new IllegalStateException(
+                    "Cannot commit: EditorRow is not enabled");
+        }
+        if (state != State.ACTIVE) {
+            throw new IllegalStateException(
+                    "Cannot commit: EditorRow is not in edit mode");
+        }
+
+        state = State.COMMITTING;
+
+        handler.commit(new EditorRowRequest(rowIndex, new RequestCallback() {
+            @Override
+            public void onResponse(EditorRowRequest request) {
+                if (state == State.COMMITTING) {
+                    state = State.ACTIVE;
+                }
+            }
+        }));
+    }
+
+    /**
+     * Reloads row values from the data source, discarding any unsaved changes.
+     * 
+     * @throws IllegalStateException
+     *             if this editor row is not enabled
+     * @throws IllegalStateException
+     *             if this editor row is not in edit mode
+     */
+    public void discard() {
+        if (!enabled) {
+            throw new IllegalStateException(
+                    "Cannot discard: EditorRow is not enabled");
+        }
+        if (state != State.ACTIVE) {
+            throw new IllegalStateException(
+                    "Cannot discard: EditorRow is not in edit mode");
+        }
+        handler.discard(new EditorRowRequest(rowIndex, null));
     }
 
     /**
@@ -263,10 +320,35 @@ public class EditorRow<T> {
             Widget editor = getHandler().getWidget(column);
             if (editor != null) {
                 editorWidgets.add(editor);
-                cell.appendChild(editor.getElement());
-                Grid.setParent(editor, grid);
+                attachWidget(editor, cell);
             }
         }
+
+        Button save = new Button();
+        save.setText("Save");
+        save.setStyleName("v-editor-row-save");
+        save.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO should have a mechanism for handling failed commits
+                commit();
+                cancel();
+            }
+        });
+        setBounds(save.getElement(), 0, tr.getOffsetHeight() + 5, 50, 25);
+        attachWidget(save, editorOverlay);
+
+        Button cancel = new Button();
+        cancel.setText("Cancel");
+        cancel.setStyleName("v-editor-row-cancel");
+        cancel.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                cancel();
+            }
+        });
+        setBounds(cancel.getElement(), 55, tr.getOffsetHeight() + 5, 50, 25);
+        attachWidget(cancel, editorOverlay);
     }
 
     protected void hideOverlay() {
@@ -303,6 +385,11 @@ public class EditorRow<T> {
         setBounds(cell, td.getOffsetLeft(), td.getOffsetTop(),
                 td.getOffsetWidth(), td.getOffsetHeight());
         return cell;
+    }
+
+    private void attachWidget(Widget w, Element parent) {
+        parent.appendChild(w.getElement());
+        Grid.setParent(w, grid);
     }
 
     private static void setBounds(Element e, int left, int top, int width,

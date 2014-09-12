@@ -89,7 +89,7 @@ public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void testWidgetBinding() throws Exception {
-        selectMenuPath("Component", "State", "Editor row", "Edit row 100");
+        selectMenuPath("Component", "Editor row", "Edit row 100");
         WebElement editorRow = getEditorRow();
 
         List<WebElement> widgets = editorRow.findElements(By
@@ -118,5 +118,37 @@ public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
                 .get(0).getAttribute("innerHTML").isEmpty());
         assertFalse("normal column cell shoul've had contents", selectorDivs
                 .get(1).getAttribute("innerHTML").isEmpty());
+    }
+
+    @Test
+    public void testCommit() {
+        selectMenuPath("Component", "Editor row", "Edit row 100");
+
+        List<WebElement> widgets = getEditorRow().findElements(
+                By.className("gwt-TextBox"));
+
+        widgets.get(0).sendKeys(" changed");
+
+        WebElement saveButton = getEditorRow().findElement(
+                By.className("v-editor-row-save"));
+
+        saveButton.click();
+
+        assertEquals("(100, 0) changed", getGridElement().getCell(100, 0)
+                .getText());
+    }
+
+    @Test
+    public void testDiscard() {
+        selectMenuPath("Component", "Editor row", "Edit row 100");
+
+        List<WebElement> widgets = getEditorRow().findElements(
+                By.className("gwt-TextBox"));
+
+        widgets.get(0).sendKeys(" changed");
+
+        selectMenuPath("Component", "Editor row", "Discard");
+
+        assertEquals("(100, 0)", getGridElement().getCell(100, 0).getText());
     }
 }

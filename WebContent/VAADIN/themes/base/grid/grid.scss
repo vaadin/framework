@@ -39,12 +39,19 @@
 	.#{$primaryStyleName}-editor-row {
 
 		position: absolute;
+		overflow-y: visible;
 		background: #EEE;
 		box-shadow: 0 0 5px;
 
 		& > div {
 			position: absolute;
+			box-sizing: border-box;
 			border: 1px solid #CCC;
+		}
+
+		.v-editor-row-save,
+		.v-editor-row-cancel {
+			position: absolute;
 		}
 	}
 }

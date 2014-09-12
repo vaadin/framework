@@ -34,6 +34,8 @@ public interface EditorRowHandler<T> {
      * A request class for handling asynchronous data binding. The request is
      * callback-based to facilitate usage with remote or otherwise asynchronous
      * data sources.
+     * <p>
+     * TODO Should have a mechanism for signaling a failed request to the caller
      */
     public static class EditorRowRequest {
 
@@ -110,6 +112,28 @@ public interface EditorRowHandler<T> {
      * @see EditorRow#cancel()
      */
     public void cancel(EditorRowRequest request);
+
+    /**
+     * Commits changes in the currently active edit to the data source. Called
+     * by the editor row when changes are saved.
+     * 
+     * @param request
+     *            the commit request
+     */
+    public void commit(EditorRowRequest request);
+
+    /**
+     * Discards any unsaved changes and reloads editor content from the data
+     * source.
+     * <p>
+     * Implementation note: This method may simply call
+     * {@link #bind(EditorRowRequest) bind} if no other processing needs to be
+     * done.
+     * 
+     * @param request
+     *            the discard request
+     */
+    public void discard(EditorRowRequest request);
 
     /**
      * Returns a widget instance that is used to edit the values in the given
