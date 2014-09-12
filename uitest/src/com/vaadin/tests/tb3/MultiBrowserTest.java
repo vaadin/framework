@@ -50,6 +50,18 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
         return browsers;
     }
 
+
+    protected List<DesiredCapabilities> getBrowsersSupportingShiftClick() {
+        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(getAllBrowsers());
+
+        //IE supports shift click only when require window focus is true
+        browsers.remove(Browser.FIREFOX.getDesiredCapabilities());
+        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
+
+        return browsers;
+    }
+
+
     public enum Browser {
         FIREFOX(BrowserUtil.firefox(24)), CHROME(BrowserUtil.chrome(33)), SAFARI(
                 BrowserUtil.safari(7)), IE8(BrowserUtil.ie(8)), IE9(BrowserUtil

@@ -3,29 +3,23 @@ package com.vaadin.tests.components.table;
 import java.util.Collection;
 
 import com.vaadin.data.Property;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
-public class LongMultiselect extends TestBase {
+public class LongMultiselect extends AbstractTestUI {
 
     private enum ItemProperty {
         COLUMN1, COLUMN2
     }
 
     @Override
-    protected void setup() {
-        VerticalLayout layout = generateLayout();
-        addComponent(layout);
-        layout.setSizeFull();
-    }
-
-    private VerticalLayout generateLayout() {
-        VerticalLayout layout = new VerticalLayout();
-
+    protected void setup(VaadinRequest request) {
         final Table table = new Table("Ticket #8264 table");
-        layout.addComponent(table);
+        addComponent(table);
+
         table.setWidth("200px");
         table.setHeight("170px");
         table.setSelectable(true);
@@ -40,7 +34,7 @@ public class LongMultiselect extends TestBase {
         }
 
         // Add action button
-        layout.addComponent(new Button("Do It", new Button.ClickListener() {
+        addComponent(new Button("Do It", new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 // Set ItemProperty.COLUMN2 for all selected values of table
@@ -57,11 +51,10 @@ public class LongMultiselect extends TestBase {
             }
         }));
 
-        return layout;
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Multiselecting 94 rows (from \"item 5\" to \"item 98\") and modifying second column of each row selected (press Do It). This should work (update the 2nd column) and not cause JS exception.";
     }
 
