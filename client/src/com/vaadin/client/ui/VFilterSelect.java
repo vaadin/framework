@@ -1142,6 +1142,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     private class IconWidget extends Widget {
         IconWidget(Icon icon) {
             setElement(icon.getElement());
+            addDomHandler(VFilterSelect.this, ClickEvent.getType());
         }
     }
 
