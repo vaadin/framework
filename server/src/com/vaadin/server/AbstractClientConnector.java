@@ -999,11 +999,6 @@ public abstract class AbstractClientConnector implements ClientConnector,
         this.errorHandler = errorHandler;
     }
 
-    private AbstractClientConnector getInstance() {
-        // returns the underlying instance regardless of proxies
-        return this;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -1011,10 +1006,34 @@ public abstract class AbstractClientConnector implements ClientConnector,
      */
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        /*
+         * This equals method must return true when we're comparing an object to
+         * its proxy. This happens a lot with CDI (and possibly Spring) when
+         * we're injecting Components. See #14639
+         */
         if (obj instanceof AbstractClientConnector) {
-            return super.equals(((AbstractClientConnector) obj).getInstance());
+            AbstractClientConnector connector = (AbstractClientConnector) obj;
+            return connector.isThis(this);
         }
         return false;
+    }
+
+    /**
+     * For internal use only, may be changed or removed in future versions.
+     * <p>
+     * This method must be protected, because otherwise it will not be redefined
+     * by the proxy to actually be called on the underlying instance.
+     * <p>
+     * See #14639
+     * 
+     * @deprecated only defined for framework hacks, do not use.
+     */
+    @Deprecated
+    protected boolean isThis(Object that) {
+        return this == that;
     }
 
     /*
