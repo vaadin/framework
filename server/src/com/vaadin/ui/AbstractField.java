@@ -1402,7 +1402,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                         valueLocale);
                 T newinternalValue = convertFromModel(convertedValue);
                 if (!SharedUtil.equals(getInternalValue(), newinternalValue)) {
-                    setConvertedValue(convertedValue);
+                    setInternalValue(newinternalValue);
+                    fireValueChange(false);
                 }
             }
         }
