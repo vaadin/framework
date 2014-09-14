@@ -244,6 +244,11 @@ public class VDragEvent {
     public void createDragImage(com.google.gwt.user.client.Element element,
             boolean alignImageToEvent) {
         Element cloneNode = (Element) element.cloneNode(true);
+
+        // Set size explicitly for cloned node to avoid stretching #14617.
+        cloneNode.getStyle().setWidth(element.getOffsetWidth(), Unit.PX);
+        cloneNode.getStyle().setHeight(element.getOffsetHeight(), Unit.PX);
+
         syncContent(element, cloneNode);
         if (BrowserInfo.get().isIE()) {
             if (cloneNode.getTagName().toLowerCase().equals("tr")) {
