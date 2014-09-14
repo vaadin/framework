@@ -890,17 +890,21 @@ public class Calendar extends AbstractComponent implements
      * @see #isEventClickAllowed()
      */
     protected boolean isClientChangeAllowed() {
-        return !isReadOnly() && isEnabled();
+        return !isReadOnly();
     }
 
     /**
-     * Is the user allowed to trigger click events
+     * Is the user allowed to trigger click events. Returns {@code true} by
+     * default. Subclass can override this method to disallow firing event
+     * clicks got from the client side.
      * 
      * @return true if the client is allowed to click events
      * @see #isClientChangeAllowed()
+     * @deprecated Override {@link #fireEventClick(Integer)} instead.
      */
+    @Deprecated
     protected boolean isEventClickAllowed() {
-        return isEnabled();
+        return true;
     }
 
     /**

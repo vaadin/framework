@@ -1064,7 +1064,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
             for (Object id : itemPropertyIds) {
                 if (id != null) {
                     Field<?> field = getField(id);
-                    if (field.isEnabled() && !field.isReadOnly()) {
+                    if (field.isConnectorEnabled() && !field.isReadOnly()) {
                         return field;
                     }
                 }
