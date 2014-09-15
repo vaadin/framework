@@ -15,17 +15,21 @@
  */
 package com.vaadin.data.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.shared.ui.grid.SortDirection;
+import com.vaadin.ui.components.grid.sort.SortOrder;
 
 /**
  * Container supporting generated properties.
@@ -33,10 +37,12 @@ import com.vaadin.data.Property;
  * @since
  * @author Vaadin Ltd
  */
-public class GeneratedPropertyContainer implements Container.Indexed {
+public class GeneratedPropertyContainer implements Container.Indexed,
+        Container.Sortable {
 
-    private Container.Indexed wrappedContainer;
+    private final Container.Indexed wrappedContainer;
     private final Map<Object, PropertyValueGenerator<?>> propertyGenerators;
+    private Sortable sortableContainer = null;
 
     /**
      * Property implementation for generated properties
@@ -138,6 +144,9 @@ public class GeneratedPropertyContainer implements Container.Indexed {
     public GeneratedPropertyContainer(Container.Indexed container) {
         wrappedContainer = container;
         propertyGenerators = new HashMap<Object, PropertyValueGenerator<?>>();
+        if (wrappedContainer instanceof Sortable) {
+            sortableContainer = (Sortable) wrappedContainer;
+        }
     }
 
     /* Functions related to generated properties */
@@ -197,6 +206,77 @@ public class GeneratedPropertyContainer implements Container.Indexed {
         } else {
             return new HashSet<T>(collection);
         }
+    }
+
+    /* Sorting functionality */
+
+    @Override
+    public void sort(Object[] propertyId, boolean[] ascending) {
+        if (sortableContainer == null) {
+            new UnsupportedOperationException(
+                    "Wrapped container is not Sortable");
+        }
+
+        if (propertyId.length == 0) {
+            sortableContainer.sort(propertyId, ascending);
+            return;
+        }
+
+        List<Object> actualSortProperties = new ArrayList<Object>();
+        List<Boolean> actualSortDirections = new ArrayList<Boolean>();
+
+        for (int i = 0; i < propertyId.length; ++i) {
+            Object property = propertyId[i];
+            SortDirection direction;
+            boolean isAscending = i < ascending.length ? ascending[i] : true;
+            if (isAscending) {
+                direction = SortDirection.ASCENDING;
+            } else {
+                direction = SortDirection.DESCENDING;
+            }
+
+            if (propertyGenerators.containsKey(property)) {
+                for (SortOrder s : propertyGenerators.get(property)
+                        .getSortProperties(new SortOrder(property, direction))) {
+                    actualSortProperties.add(s.getPropertyId());
+                    actualSortDirections
+                            .add(s.getDirection() == SortDirection.ASCENDING);
+                }
+            } else {
+                actualSortProperties.add(property);
+                actualSortDirections.add(isAscending);
+            }
+        }
+
+        boolean[] actualAscending = new boolean[actualSortDirections.size()];
+        for (int i = 0; i < actualAscending.length; ++i) {
+            actualAscending[i] = actualSortDirections.get(i);
+        }
+
+        sortableContainer.sort(actualSortProperties.toArray(), actualAscending);
+    }
+
+    @Override
+    public Collection<?> getSortableContainerPropertyIds() {
+        if (sortableContainer == null) {
+            new UnsupportedOperationException(
+                    "Wrapped container is not Sortable");
+        }
+
+        Set<Object> sortablePropertySet = new HashSet<Object>(
+                sortableContainer.getSortableContainerPropertyIds());
+        for (Entry<?, PropertyValueGenerator<?>> entry : propertyGenerators
+                .entrySet()) {
+            Object property = entry.getKey();
+            SortOrder order = new SortOrder(property, SortDirection.ASCENDING);
+            if (entry.getValue().getSortProperties(order).length > 0) {
+                sortablePropertySet.add(property);
+            } else {
+                sortablePropertySet.remove(property);
+            }
+        }
+
+        return sortablePropertySet;
     }
 
     /* Item related overrides */
