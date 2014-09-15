@@ -275,7 +275,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
      * setTextFieldEnabled(...) gets overridden in
      * TextualDateConnection.updateFromUIDL(...)
      * 
-     * @since
+     * @since 7.3.1
      */
     public void setTextFieldTabIndex() {
         if (BrowserInfo.get().isIE() && !textFieldEnabled) {

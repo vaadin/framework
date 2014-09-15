@@ -312,6 +312,7 @@ public class VUpload extends SimplePanel {
         Scheduler.get().scheduleDeferred(startUploadCmd);
     }
 
+    /** For internal use only. May be removed or replaced in the future. */
     public void disableTitle(boolean disable) {
         if (disable) {
             // Disable title attribute for upload element.
