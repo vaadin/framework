@@ -68,7 +68,7 @@ import com.vaadin.shared.ui.table.TableConstants;
  * <code>Table</code> is used for representing data or components in a pageable
  * and selectable table.
  * </p>
- *
+ * 
  * <p>
  * Scalability of the Table is largely dictated by the container. A table does
  * not have a limit for the number of items and is just as fast with hundreds of
@@ -76,11 +76,11 @@ import com.vaadin.shared.ui.table.TableConstants;
  * scrolling however limits the number of rows to around 500000, depending on
  * the browser and the pixel height of rows.
  * </p>
- *
+ * 
  * <p>
  * Components in a Table will not have their caption nor icon rendered.
  * </p>
- *
+ * 
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -421,6 +421,63 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     private Object currentPageFirstItemId = null;
 
+    /*
+     * This class stores the hashcode and scroll position of the previous
+     * container so that the scroll position can be restored if the same
+     * container is removed and then re-added. This resolves #14581.
+     */
+    protected static class ScrollPositionRepairOnReAddAllRowsData implements
+            Serializable {
+
+        private static final long serialVersionUID = 1L;
+        // current page first item index (to repair scroll position)
+        private int itemIndex;
+        /*
+         * hashCode() of container before it was cleared via
+         * container.removeAllItems();
+         */
+        private int containerHashCode;
+
+        public ScrollPositionRepairOnReAddAllRowsData() {
+            itemIndex = -1;
+            containerHashCode = -1;
+        }
+
+        public int getItemId() {
+            return itemIndex;
+        }
+
+        public void setItemId(int itemId) {
+            itemIndex = itemId;
+        }
+
+        public void resetItemId() {
+            itemIndex = -1;
+        }
+
+        public void setContainerData(Container container) {
+            if (container != null) {
+                containerHashCode = container.hashCode();
+            } else {
+                containerHashCode = -1;
+            }
+        }
+
+        public boolean needRepairScrollPosition(Container newContainer) {
+            return (itemIndex != -1) && isTheSameContainer(newContainer);
+        }
+
+        private boolean isTheSameContainer(Container newContainer) {
+            boolean theSame = false;
+            if (newContainer != null) {
+                theSame = (newContainer.hashCode() == containerHashCode);
+            }
+            return theSame;
+        }
+    }
+
+    private final ScrollPositionRepairOnReAddAllRowsData scrollRepairOnReAdding = new ScrollPositionRepairOnReAddAllRowsData();
+
     /**
      * Index of the first item on the current page.
      */
@@ -583,7 +640,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Creates a new empty table with caption.
-     *
+     * 
      * @param caption
      */
     public Table(String caption) {
@@ -593,7 +650,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Creates a new table with caption and connect it to a Container.
-     *
+     * 
      * @param caption
      * @param dataSource
      */
@@ -607,11 +664,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the array of visible column id:s, including generated columns.
-     *
+     * 
      * <p>
      * The columns are show in the order of their appearance in this array.
      * </p>
-     *
+     * 
      * @return an array of currently visible propertyIds and generated column
      *         ids.
      */
@@ -624,11 +681,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sets the array of visible column property id:s.
-     *
+     * 
      * <p>
      * The columns are show in the order of their appearance in this array.
      * </p>
-     *
+     * 
      * @param visibleColumns
      *            the Array of shown property id:s.
      */
@@ -690,7 +747,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the headers of the columns.
-     *
+     * 
      * <p>
      * The headers match the property id:s given my the set visible column
      * headers. The table must be set in either
@@ -699,7 +756,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * headers. In the defaults mode any nulls in the headers array are replaced
      * with id.toString().
      * </p>
-     *
+     * 
      * @return the Array of column headers.
      */
     public String[] getColumnHeaders() {
@@ -717,7 +774,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sets the headers of the columns.
-     *
+     * 
      * <p>
      * The headers match the property id:s given my the set visible column
      * headers. The table must be set in either
@@ -726,7 +783,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * headers. In the defaults mode any nulls in the headers array are replaced
      * with id.toString() outputs when rendering.
      * </p>
-     *
+     * 
      * @param columnHeaders
      *            the Array of column headers that match the
      *            {@link #getVisibleColumns()} method.
@@ -750,7 +807,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the icons of the columns.
-     *
+     * 
      * <p>
      * The icons in headers match the property id:s given my the set visible
      * column headers. The table must be set in either
@@ -758,7 +815,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the headers
      * with icons.
      * </p>
-     *
+     * 
      * @return the Array of icons that match the {@link #getVisibleColumns()}.
      */
     public Resource[] getColumnIcons() {
@@ -777,7 +834,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sets the icons of the columns.
-     *
+     * 
      * <p>
      * The icons in headers match the property id:s given my the set visible
      * column headers. The table must be set in either
@@ -785,7 +842,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the headers
      * with icons.
      * </p>
-     *
+     * 
      * @param columnIcons
      *            the Array of icons that match the {@link #getVisibleColumns()}
      *            .
@@ -809,7 +866,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the array of column alignments.
-     *
+     * 
      * <p>
      * The items in the array must match the properties identified by
      * {@link #getVisibleColumns()}. The possible values for the alignments
@@ -822,7 +879,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * The alignments default to {@link Align#LEFT}: any null values are
      * rendered as align lefts.
      * </p>
-     *
+     * 
      * @return the Column alignments array.
      */
     public Align[] getColumnAlignments() {
@@ -841,7 +898,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sets the column alignments.
-     *
+     * 
      * <p>
      * The amount of items in the array must match the amount of properties
      * identified by {@link #getVisibleColumns()}. The possible values for the
@@ -853,7 +910,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * </ul>
      * The alignments default to {@link Align#LEFT}
      * </p>
-     *
+     * 
      * @param columnAlignments
      *            the Column alignments array.
      */
@@ -882,11 +939,11 @@ public class Table extends AbstractSelect implements Action.Container,
      * Sets columns width (in pixels). Theme may not necessary respect very
      * small or very big values. Setting width to -1 (default) means that theme
      * will make decision of width.
-     *
+     * 
      * <p>
      * Column can either have a fixed width or expand ratio. The latter one set
      * is used. See @link {@link #setColumnExpandRatio(Object, float)}.
-     *
+     * 
      * @param propertyId
      *            colunmns property id
      * @param width
@@ -920,27 +977,27 @@ public class Table extends AbstractSelect implements Action.Container,
      * naturally. Excess space is the space that is not used by columns with
      * explicit width (see {@link #setColumnWidth(Object, int)}) or with natural
      * width (no width nor expand ratio).
-     *
+     * 
      * <p>
      * By default (without expand ratios) the excess space is divided
      * proportionally to columns natural widths.
-     *
+     * 
      * <p>
      * Only expand ratios of visible columns are used in final calculations.
-     *
+     * 
      * <p>
      * Column can either have a fixed width or expand ratio. The latter one set
      * is used.
-     *
+     * 
      * <p>
      * A column with expand ratio is considered to be minimum width by default
      * (if no excess space exists). The minimum width is defined by terminal
      * implementation.
-     *
+     * 
      * <p>
      * If terminal implementation supports re-sizable columns the column becomes
      * fixed width column if users resizes the column.
-     *
+     * 
      * @param propertyId
      *            columns property id
      * @param expandRatio
@@ -969,7 +1026,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Gets the column expand ratio for a columnd. See
      * {@link #setColumnExpandRatio(Object, float)}
-     *
+     * 
      * @param propertyId
      *            columns property id
      * @return the expandRatio used to divide excess space for this column
@@ -984,7 +1041,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the pixel width of column
-     *
+     * 
      * @param propertyId
      * @return width of column or -1 when value not set
      */
@@ -1003,11 +1060,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the page length.
-     *
+     * 
      * <p>
      * Setting page length 0 disables paging.
      * </p>
-     *
+     * 
      * @return the Length of one page.
      */
     public int getPageLength() {
@@ -1016,16 +1073,16 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sets the page length.
-     *
+     * 
      * <p>
      * Setting page length 0 disables paging. The page length defaults to 15.
      * </p>
-     *
+     * 
      * <p>
      * If Table has width set ({@link #setWidth(float, int)} ) the client side
      * may update the page length automatically the correct value.
      * </p>
-     *
+     * 
      * @param pageLength
      *            the length of one page.
      */
@@ -1039,18 +1096,18 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * This method adjusts a possible caching mechanism of table implementation.
-     *
+     * 
      * <p>
      * Table component may fetch and render some rows outside visible area. With
      * complex tables (for example containing layouts and components), the
      * client side may become unresponsive. Setting the value lower, UI will
      * become more responsive. With higher values scrolling in client will hit
      * server less frequently.
-     *
+     * 
      * <p>
      * The amount of cached rows will be cacheRate multiplied with pageLength (
      * {@link #setPageLength(int)} both below and above visible area..
-     *
+     * 
      * @param cacheRate
      *            a value over 0 (fastest rendering time). Higher value will
      *            cache more rows on server (smoother scrolling). Default value
@@ -1069,7 +1126,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * @see #setCacheRate(double)
-     *
+     * 
      * @return the current cache rate value
      */
     public double getCacheRate() {
@@ -1078,7 +1135,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Getter for property currentPageFirstItem.
-     *
+     * 
      * @return the Value of property currentPageFirstItem.
      */
     public Object getCurrentPageFirstItemId() {
@@ -1106,14 +1163,14 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Returns the item ID for the item represented by the index given. Assumes
      * that the current container implements {@link Container.Indexed}.
-     *
+     * 
      * See {@link Container.Indexed#getIdByIndex(int)} for more information
      * about the exceptions that can be thrown.
-     *
+     * 
      * @param index
      *            the index for which the item ID should be fetched
      * @return the item ID for the given index
-     *
+     * 
      * @throws ClassCastException
      *             if container does not implement {@link Container.Indexed}
      * @throws IndexOutOfBoundsException
@@ -1126,7 +1183,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Setter for property currentPageFirstItemId.
-     *
+     * 
      * @param currentPageFirstItemId
      *            the New value of property currentPageFirstItemId.
      */
@@ -1183,7 +1240,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the icon Resource for the specified column.
-     *
+     * 
      * @param propertyId
      *            the propertyId indentifying the column.
      * @return the icon for the specified column; null if the column has no icon
@@ -1198,7 +1255,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * <p>
      * Throws IllegalArgumentException if the specified column is not visible.
      * </p>
-     *
+     * 
      * @param propertyId
      *            the propertyId identifying the column.
      * @param icon
@@ -1217,7 +1274,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the header for the specified column.
-     *
+     * 
      * @param propertyId
      *            the propertyId identifying the column.
      * @return the header for the specified column if it has one.
@@ -1238,7 +1295,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sets the column header for the specified column;
-     *
+     * 
      * @param propertyId
      *            the propertyId identifying the column.
      * @param header
@@ -1257,7 +1314,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the specified column's alignment.
-     *
+     * 
      * @param propertyId
      *            the propertyID identifying the column.
      * @return the specified column's alignment if it as one; {@link Align#LEFT}
@@ -1270,13 +1327,13 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sets the specified column's alignment.
-     *
+     * 
      * <p>
      * Throws IllegalArgumentException if the alignment is not one of the
      * following: {@link Align#LEFT}, {@link Align#CENTER} or
      * {@link Align#RIGHT}
      * </p>
-     *
+     * 
      * @param propertyId
      *            the propertyID identifying the column.
      * @param alignment
@@ -1296,7 +1353,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Checks if the specified column is collapsed.
-     *
+     * 
      * @param propertyId
      *            the propertyID identifying the column.
      * @return true if the column is collapsed; false otherwise;
@@ -1308,8 +1365,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sets whether the specified column is collapsed or not.
-     *
-     *
+     * 
+     * 
      * @param propertyId
      *            the propertyID identifying the column.
      * @param collapsed
@@ -1338,7 +1395,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Checks if column collapsing is allowed.
-     *
+     * 
      * @return true if columns can be collapsed; false otherwise.
      */
     public boolean isColumnCollapsingAllowed() {
@@ -1347,7 +1404,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sets whether column collapsing is allowed or not.
-     *
+     * 
      * @param collapsingAllowed
      *            specifies whether column collapsing is allowed.
      */
@@ -1369,7 +1426,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * {@link #setColumnCollapsed(Object, boolean) setColumnCollapsed()}) if
      * {@link #isColumnCollapsingAllowed()} is true. By default all columns are
      * collapsible.
-     *
+     * 
      * @param propertyId
      *            the propertyID identifying the column.
      * @param collapsible
@@ -1391,7 +1448,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * UI or with {@link #setColumnCollapsed(Object, boolean)
      * setColumnCollapsed()}) if {@link #isColumnCollapsingAllowed()} is also
      * true.
-     *
+     * 
      * @return true if the column can be collapsed; false otherwise.
      */
     public boolean isColumnCollapsible(Object propertyId) {
@@ -1400,7 +1457,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Checks if column reordering is allowed.
-     *
+     * 
      * @return true if columns can be reordered; false otherwise.
      */
     public boolean isColumnReorderingAllowed() {
@@ -1409,7 +1466,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sets whether column reordering is allowed or not.
-     *
+     * 
      * @param columnReorderingAllowed
      *            specifies whether column reordering is allowed.
      */
@@ -1453,7 +1510,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Getter for property currentPageFirstItem.
-     *
+     * 
      * @return the Value of property currentPageFirstItem.
      */
     public int getCurrentPageFirstItemIndex() {
@@ -1576,6 +1633,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 newIndex = currentPageFirstItemIndex = size - 1;
             }
         }
+
         if (needsPageBufferReset) {
             // Assures the visual refresh
             refreshRowCache();
@@ -1584,7 +1642,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Setter for property currentPageFirstItem.
-     *
+     * 
      * @param newIndex
      *            the New value of property currentPageFirstItem.
      */
@@ -1594,11 +1652,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Getter for property selectable.
-     *
+     * 
      * <p>
      * The table is not selectable by default.
      * </p>
-     *
+     * 
      * @return the Value of property selectable.
      */
     public boolean isSelectable() {
@@ -1607,11 +1665,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Setter for property selectable.
-     *
+     * 
      * <p>
      * The table is not selectable by default.
      * </p>
-     *
+     * 
      * @param selectable
      *            the New value of property selectable.
      */
@@ -1624,7 +1682,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Getter for property columnHeaderMode.
-     *
+     * 
      * @return the Value of property columnHeaderMode.
      */
     public ColumnHeaderMode getColumnHeaderMode() {
@@ -1633,7 +1691,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Setter for property columnHeaderMode.
-     *
+     * 
      * @param columnHeaderMode
      *            the New value of property columnHeaderMode.
      */
@@ -1742,7 +1800,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * occurred exception is set as the cause of this exception. All occurred
      * exceptions can be accessed using {@link #getCauses()}.
      * </p>
-     *
+     * 
      */
     public static class CacheUpdateException extends RuntimeException {
         private Throwable[] causes;
@@ -1766,7 +1824,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Returns the cause(s) for this exception
-         *
+         * 
          * @return the exception(s) which caused this exception
          */
         public Throwable[] getCauses() {
@@ -1822,11 +1880,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Requests that the Table should be repainted as soon as possible.
-     *
+     * 
      * Note that a {@code Table} does not necessarily repaint its contents when
      * this method has been called. See {@link #refreshRowCache()} for forcing
      * an update of the contents.
-     *
+     * 
      * @deprecated As of 7.0, use {@link #markAsDirty()} instead
      */
 
@@ -1838,7 +1896,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Requests that the Table should be repainted as soon as possible.
-     *
+     * 
      * Note that a {@code Table} does not necessarily repaint its contents when
      * this method has been called. See {@link #refreshRowCache()} for forcing
      * an update of the contents.
@@ -2125,9 +2183,9 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Render rows with index "firstIndex" to "firstIndex+rows-1" to a new
      * buffer.
-     *
+     * 
      * Reuses values from the current page buffer if the rows are found there.
-     *
+     * 
      * @param firstIndex
      * @param rows
      * @param replaceListeners
@@ -2236,7 +2294,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Update a cache array for a row, register any relevant listeners etc.
-     *
+     * 
      * This is an internal method extracted from
      * {@link #getVisibleCellsNoCache(int, int, boolean)} and should be removed
      * when the Table is rewritten.
@@ -2454,7 +2512,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Helper method to remove listeners and maintain correct component
      * hierarchy. Detaches properties and components if those are no more
      * rendered in client.
-     *
+     * 
      * @param oldListenedProperties
      *            set of properties that where listened in last render
      * @param oldVisibleComponents
@@ -2490,12 +2548,12 @@ public class Table extends AbstractSelect implements Action.Container,
      * if it is a field, it needs to be detached from its property data source
      * in order to allow garbage collection to take care of removing the unused
      * component from memory.
-     *
+     * 
      * Override this method and getPropertyValue(Object, Object, Property) with
      * custom logic if you need to deal with buffered fields.
-     *
+     * 
      * @see #getPropertyValue(Object, Object, Property)
-     *
+     * 
      * @param oldVisibleComponents
      *            a set of components that should be unregistered.
      */
@@ -2546,7 +2604,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * </ul>
      * The default value is {@link #ROW_HEADER_MODE_HIDDEN}
      * </p>
-     *
+     * 
      * @param mode
      *            the One of the modes listed above.
      */
@@ -2565,7 +2623,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the row header mode.
-     *
+     * 
      * @return the Row header mode.
      * @see #setRowHeaderMode(int)
      */
@@ -2576,7 +2634,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Adds the new row to table and fill the visible cells (except generated
      * columns) with given values.
-     *
+     * 
      * @param cells
      *            the Object array that is used for filling the visible cells
      *            new row. The types must be settable to visible column property
@@ -2645,7 +2703,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * <p>
      * <i>Note that calling this method is not cheap so avoid calling it
      * unnecessarily.</i>
-     *
+     * 
      * @since 6.7.2
      */
     public void refreshRowCache() {
@@ -2666,7 +2724,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Keeps propertyValueConverters if the corresponding id exists in the new
      * data source and is of a compatible type.
      * </p>
-     *
+     * 
      * @param newDataSource
      *            the new data source.
      */
@@ -2674,6 +2732,11 @@ public class Table extends AbstractSelect implements Action.Container,
     public void setContainerDataSource(Container newDataSource) {
         if (newDataSource == null) {
             newDataSource = new IndexedContainer();
+        }
+
+        if (scrollRepairOnReAdding != null) {
+            // this is important if container is set for table after filling
+            scrollRepairOnReAdding.setContainerData(newDataSource);
         }
         Collection<Object> generated;
         if (columnGenerators != null) {
@@ -2704,11 +2767,11 @@ public class Table extends AbstractSelect implements Action.Container,
      * Keeps propertyValueConverters if the corresponding id exists in the new
      * data source and is of a compatible type.
      * </p>
-     *
+     * 
      * @see Table#setContainerDataSource(Container)
      * @see Table#setVisibleColumns(Object[])
      * @see Table#setConverter(Object, Converter<String, ?>)
-     *
+     * 
      * @param newDataSource
      *            the new data source.
      * @param visibleIds
@@ -2783,7 +2846,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Checks if class b can be safely assigned to class a.
-     *
+     * 
      * @param a
      * @param b
      * @return
@@ -2797,7 +2860,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets items ids from a range of key values
-     *
+     * 
      * @param startRowKey
      *            The start key
      * @param endRowKey
@@ -2818,7 +2881,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Handles selection if selection is a multiselection
-     *
+     * 
      * @param variables
      *            The variables
      */
@@ -2897,7 +2960,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Invoked when the value of a variable has changed.
-     *
+     * 
      * @see com.vaadin.ui.Select#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
@@ -3099,7 +3162,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Handles click event
-     *
+     * 
      * @param variables
      */
     private void handleClickEvent(Map<String, Object> variables) {
@@ -3153,7 +3216,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Handles the column resize event sent by the client.
-     *
+     * 
      * @param variables
      */
     private void handleColumnResizeEvent(Map<String, Object> variables) {
@@ -3212,7 +3275,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Go to mode where content updates are not done. This is due we want to
      * bypass expensive content for some reason (like when we know we may have
      * other content changes on their way).
-     *
+     * 
      * @return true if content refresh flag was enabled prior this call
      */
     protected boolean disableContentRefreshing() {
@@ -3223,7 +3286,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Go to mode where content content refreshing has effect.
-     *
+     * 
      * @param refreshContent
      *            true if content refresh needs to be done
      */
@@ -3423,7 +3486,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Subclass and override this to enable partial row updates and additions,
      * which bypass the normal caching mechanism. This is useful for e.g.
      * TreeTable.
-     *
+     * 
      * @return true if this update is a partial row update, false if not. For
      *         plain Table it is always false.
      */
@@ -3435,7 +3498,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Subclass and override this to enable partial row additions, bypassing the
      * normal caching mechanism. This is useful for e.g. TreeTable, where
      * expanding a node should only fetch and add the items inside of that node.
-     *
+     * 
      * @return The index of the first added item. For plain Table it is always
      *         0.
      */
@@ -3447,7 +3510,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Subclass and override this to enable partial row additions, bypassing the
      * normal caching mechanism. This is useful for e.g. TreeTable, where
      * expanding a node should only fetch and add the items inside of that node.
-     *
+     * 
      * @return the number of rows to be added, starting at the index returned by
      *         {@link #getFirstAddedItemIndex()}. For plain Table it is always
      *         0.
@@ -3460,11 +3523,11 @@ public class Table extends AbstractSelect implements Action.Container,
      * Subclass and override this to enable removing of rows, bypassing the
      * normal caching and lazy loading mechanism. This is useful for e.g.
      * TreeTable, when you need to hide certain rows as a node is collapsed.
-     *
+     * 
      * This should return true if the rows pointed to by
      * {@link #getFirstAddedItemIndex()} and {@link #getAddedRowCount()} should
      * be hidden instead of added.
-     *
+     * 
      * @return whether the rows to add (see {@link #getFirstAddedItemIndex()}
      *         and {@link #getAddedRowCount()}) should be added or hidden. For
      *         plain Table it is always false.
@@ -3478,7 +3541,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * normal caching and lazy loading mechanism. This is useful for updating
      * the state of certain rows, e.g. in the TreeTable the collapsed state of a
      * single node is updated using this mechanism.
-     *
+     * 
      * @return the index of the first item to be updated. For plain Table it is
      *         always 0.
      */
@@ -3491,7 +3554,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * normal caching and lazy loading mechanism. This is useful for updating
      * the state of certain rows, e.g. in the TreeTable the collapsed state of a
      * single node is updated using this mechanism.
-     *
+     * 
      * @return the number of rows to update, starting at the index returned by
      *         {@link #getFirstUpdatedItemIndex()}. For plain table it is always
      *         0.
@@ -4005,7 +4068,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * A method where extended Table implementations may add their custom
      * attributes for rows.
-     *
+     * 
      * @param target
      * @param itemId
      */
@@ -4016,7 +4079,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the cached visible table contents.
-     *
+     * 
      * @return the cached visible table contents.
      */
     private Object[][] getVisibleCells() {
@@ -4028,11 +4091,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the value of property.
-     *
+     * 
      * By default if the table is editable the fieldFactory is used to create
      * editors for table cells. Otherwise formatPropertyValue is used to format
      * the value representation.
-     *
+     * 
      * @param rowId
      *            the Id of the row (same as item Id).
      * @param colId
@@ -4064,7 +4127,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * default behavior is to bind property straight to Field. If
      * Property.Viewer type property (e.g. PropertyFormatter) is already set for
      * field, the property is bound to that Property.Viewer.
-     *
+     * 
      * @param rowId
      * @param colId
      * @param property
@@ -4089,7 +4152,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Formats table cell property values. By default the property.toString()
      * and return a empty string for null properties.
-     *
+     * 
      * @param rowId
      *            the Id of the row (same as item Id).
      * @param colId
@@ -4124,7 +4187,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Registers a new action handler for this container
-     *
+     * 
      * @see com.vaadin.event.Action.Container#addActionHandler(Action.Handler)
      */
 
@@ -4152,7 +4215,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Removes a previously registered action handler for the contents of this
      * container.
-     *
+     * 
      * @see com.vaadin.event.Action.Container#removeActionHandler(Action.Handler)
      */
 
@@ -4191,9 +4254,9 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Notifies this listener that the Property's value has changed.
-     *
+     * 
      * Also listens changes in rendered items to refresh content area.
-     *
+     * 
      * @see com.vaadin.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
      */
 
@@ -4224,7 +4287,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Notifies the component that it is connected to an application.
-     *
+     * 
      * @see com.vaadin.ui.Component#attach()
      */
 
@@ -4237,7 +4300,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Notifies the component that it is detached from the application
-     *
+     * 
      * @see com.vaadin.ui.Component#detach()
      */
 
@@ -4248,7 +4311,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Removes all Items from the Container.
-     *
+     * 
      * @see com.vaadin.data.Container#removeAllItems()
      */
 
@@ -4261,7 +4324,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Removes the Item identified by <code>ItemId</code> from the Container.
-     *
+     * 
      * @see com.vaadin.data.Container#removeItem(Object)
      */
 
@@ -4280,7 +4343,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Removes a Property specified by the given Property ID from the Container.
-     *
+     * 
      * @see com.vaadin.data.Container#removeContainerProperty(Object)
      */
 
@@ -4302,7 +4365,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Adds a new property to the table and show it as a visible column.
-     *
+     * 
      * @param propertyId
      *            the Id of the proprty.
      * @param type
@@ -4337,7 +4400,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Adds a new property to the table and show it as a visible column.
-     *
+     * 
      * @param propertyId
      *            the Id of the proprty
      * @param type
@@ -4393,7 +4456,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Also note that getVisibleColumns() will return the generated columns,
      * while getContainerPropertyIds() will not.
      * </p>
-     *
+     * 
      * @param id
      *            the id of the column to be added
      * @param generatedColumn
@@ -4422,7 +4485,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Returns the ColumnGenerator used to generate the given column.
-     *
+     * 
      * @param columnId
      *            The id of the generated column
      * @return The ColumnGenerator used for the given columnId or null.
@@ -4434,7 +4497,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Removes a generated column previously added with addGeneratedColumn.
-     *
+     * 
      * @param columnId
      *            id of the generated column to remove
      * @return true if the column could be removed (existed in the Table)
@@ -4465,7 +4528,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * architecture. Using {@link #getCurrentPageFirstItemId()} combined with
      * {@link #getPageLength()} may produce good enough estimates in some
      * situations.
-     *
+     * 
      * @see com.vaadin.ui.Select#getVisibleItemIds()
      */
 
@@ -4489,7 +4552,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Container datasource item set change. Table must flush its buffers on
      * change.
-     *
+     * 
      * @see com.vaadin.data.Container.ItemSetChangeListener#containerItemSetChange(com.vaadin.data.Container.ItemSetChangeEvent)
      */
 
@@ -4505,16 +4568,29 @@ public class Table extends AbstractSelect implements Action.Container,
         // avoid getting invalid keys back (#8584)
         keyMapperReset = true;
 
+        int currentFirstItemIndex = getCurrentPageFirstItemIndex();
+
+        if (event.getContainer().size() == 0) {
+            scrollRepairOnReAdding.setItemId(getCurrentPageFirstItemIndex());
+        } else {
+            if (scrollRepairOnReAdding.needRepairScrollPosition(event
+                    .getContainer())) {
+                currentFirstItemIndex = scrollRepairOnReAdding.getItemId();
+            }
+            scrollRepairOnReAdding.resetItemId();
+            scrollRepairOnReAdding.setContainerData(event.getContainer());
+        }
+
         // ensure that page still has first item in page, ignore buffer refresh
         // (forced in this method)
-        setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex(), false);
+        setCurrentPageFirstItemIndex(currentFirstItemIndex, false);
         refreshRowCache();
     }
 
     /**
      * Container datasource property set change. Table must flush its buffers on
      * change.
-     *
+     * 
      * @see com.vaadin.data.Container.PropertySetChangeListener#containerPropertySetChange(com.vaadin.data.Container.PropertySetChangeEvent)
      */
 
@@ -4560,7 +4636,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Adding new items is not supported.
-     *
+     * 
      * @throws UnsupportedOperationException
      *             if set to true.
      * @see com.vaadin.ui.Select#setNewItemsAllowed(boolean)
@@ -4576,7 +4652,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the ID of the Item following the Item that corresponds to itemId.
-     *
+     * 
      * @see com.vaadin.data.Container.Ordered#nextItemId(java.lang.Object)
      */
 
@@ -4588,7 +4664,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Gets the ID of the Item preceding the Item that corresponds to the
      * itemId.
-     *
+     * 
      * @see com.vaadin.data.Container.Ordered#prevItemId(java.lang.Object)
      */
 
@@ -4599,7 +4675,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the ID of the first Item in the Container.
-     *
+     * 
      * @see com.vaadin.data.Container.Ordered#firstItemId()
      */
 
@@ -4610,7 +4686,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the ID of the last Item in the Container.
-     *
+     * 
      * @see com.vaadin.data.Container.Ordered#lastItemId()
      */
 
@@ -4622,7 +4698,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Tests if the Item corresponding to the given Item ID is the first Item in
      * the Container.
-     *
+     * 
      * @see com.vaadin.data.Container.Ordered#isFirstId(java.lang.Object)
      */
 
@@ -4634,7 +4710,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Tests if the Item corresponding to the given Item ID is the last Item in
      * the Container.
-     *
+     * 
      * @see com.vaadin.data.Container.Ordered#isLastId(java.lang.Object)
      */
 
@@ -4645,7 +4721,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Adds new item after the given item.
-     *
+     * 
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
      */
 
@@ -4662,7 +4738,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Adds new item after the given item.
-     *
+     * 
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
      *      java.lang.Object)
      */
@@ -4680,10 +4756,10 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sets the TableFieldFactory that is used to create editor for table cells.
-     *
+     * 
      * The TableFieldFactory is only used if the Table is editable. By default
      * the DefaultFieldFactory is used.
-     *
+     * 
      * @param fieldFactory
      *            the field factory to set.
      * @see #isEditable
@@ -4698,9 +4774,9 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the TableFieldFactory that is used to create editor for table cells.
-     *
+     * 
      * The FieldFactory is only used if the Table is editable.
-     *
+     * 
      * @return TableFieldFactory used to create the Field instances.
      * @see #isEditable
      */
@@ -4710,18 +4786,18 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Is table editable.
-     *
+     * 
      * If table is editable a editor of type Field is created for each table
      * cell. The assigned FieldFactory is used to create the instances.
-     *
+     * 
      * To provide custom editors for table cells create a class implementins the
      * FieldFactory interface, and assign it to table, and set the editable
      * property to true.
-     *
+     * 
      * @return true if table is editable, false oterwise.
      * @see Field
      * @see FieldFactory
-     *
+     * 
      */
     public boolean isEditable() {
         return editable;
@@ -4729,19 +4805,19 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sets the editable property.
-     *
+     * 
      * If table is editable a editor of type Field is created for each table
      * cell. The assigned FieldFactory is used to create the instances.
-     *
+     * 
      * To provide custom editors for table cells create a class implementins the
      * FieldFactory interface, and assign it to table, and set the editable
      * property to true.
-     *
+     * 
      * @param editable
      *            true if table should be editable by user.
      * @see Field
      * @see FieldFactory
-     *
+     * 
      */
     public void setEditable(boolean editable) {
         this.editable = editable;
@@ -4752,13 +4828,13 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sorts the table.
-     *
+     * 
      * @throws UnsupportedOperationException
      *             if the container data source does not implement
      *             Container.Sortable
      * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
      *      boolean[])
-     *
+     * 
      */
 
     @Override
@@ -4790,7 +4866,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sorts the table by currently selected sorting column.
-     *
+     * 
      * @throws UnsupportedOperationException
      *             if the container data source does not implement
      *             Container.Sortable
@@ -4810,7 +4886,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * returns. Disabling sorting causes this method to always return an empty
      * collection.
      * </p>
-     *
+     * 
      * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
      */
 
@@ -4826,7 +4902,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the currently sorted column property ID.
-     *
+     * 
      * @return the Container property id of the currently sorted column.
      */
     public Object getSortContainerPropertyId() {
@@ -4835,7 +4911,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sets the currently sorted column property id.
-     *
+     * 
      * @param propertyId
      *            the Container property id of the currently sorted column.
      */
@@ -4846,7 +4922,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Internal method to set currently sorted column property id. With doSort
      * flag actual sorting may be bypassed.
-     *
+     * 
      * @param propertyId
      * @param doSort
      */
@@ -4867,7 +4943,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Is the table currently sorted in ascending order.
-     *
+     * 
      * @return <code>true</code> if ascending, <code>false</code> if descending.
      */
     public boolean isSortAscending() {
@@ -4876,7 +4952,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Sets the table in ascending order.
-     *
+     * 
      * @param ascending
      *            <code>true</code> if ascending, <code>false</code> if
      *            descending.
@@ -4888,7 +4964,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Internal method to set sort ascending. With doSort flag actual sort can
      * be bypassed.
-     *
+     * 
      * @param ascending
      * @param doSort
      */
@@ -4906,10 +4982,10 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Is sorting disabled altogether.
-     *
+     * 
      * True iff no sortable columns are given even in the case where data source
      * would support this.
-     *
+     * 
      * @return True iff sorting is disabled.
      * @deprecated As of 7.0, use {@link #isSortEnabled()} instead
      */
@@ -4920,7 +4996,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Checks if sorting is enabled.
-     *
+     * 
      * @return true if sorting by the user is allowed, false otherwise
      */
     public boolean isSortEnabled() {
@@ -4929,7 +5005,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Disables the sorting by the user altogether.
-     *
+     * 
      * @param sortDisabled
      *            True iff sorting is disabled.
      * @deprecated As of 7.0, use {@link #setSortEnabled(boolean)} instead
@@ -4945,7 +5021,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Setting this to false disallows sorting by the user. It is still possible
      * to call {@link #sort()}.
      * </p>
-     *
+     * 
      * @param sortEnabled
      *            true to allow the user to sort the table, false to disallow it
      */
@@ -4960,14 +5036,14 @@ public class Table extends AbstractSelect implements Action.Container,
      * Used to create "generated columns"; columns that exist only in the Table,
      * not in the underlying Container. Implement this interface and pass it to
      * Table.addGeneratedColumn along with an id for the column to be generated.
-     *
+     * 
      */
     public interface ColumnGenerator extends Serializable {
 
         /**
          * Called by Table when a cell in a generated column needs to be
          * generated.
-         *
+         * 
          * @param source
          *            the source Table
          * @param itemId
@@ -4985,7 +5061,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Set cell style generator for Table.
-     *
+     * 
      * @param cellStyleGenerator
      *            New cell style generator or null to remove generator.
      */
@@ -4999,7 +5075,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Get the current cell style generator.
-     *
+     * 
      */
     public CellStyleGenerator getCellStyleGenerator() {
         return cellStyleGenerator;
@@ -5016,7 +5092,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Called by Table when a cell (and row) is painted.
-         *
+         * 
          * @param source
          *            the source Table
          * @param itemId
@@ -5079,7 +5155,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Sets the drag start mode of the Table. Drag start mode controls how Table
      * behaves as a drag source.
-     *
+     * 
      * @param newDragMode
      */
     public void setDragMode(TableDragMode newDragMode) {
@@ -5098,9 +5174,9 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Concrete implementation of {@link DataBoundTransferable} for data
      * transferred from a table.
-     *
+     * 
      * @see {@link DataBoundTransferable}.
-     *
+     * 
      * @since 6.3
      */
     public class TableTransferable extends DataBoundTransferable {
@@ -5162,7 +5238,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Note, that on some clients the mode may not be respected. E.g. on touch
      * based devices CTRL/SHIFT base selection method is invalid, so touch based
      * browsers always use the {@link MultiSelectMode#SIMPLE}.
-     *
+     * 
      * @param mode
      *            The select mode of the table
      */
@@ -5173,7 +5249,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Returns the select mode in which multi-select is used.
-     *
+     * 
      * @return The multi select mode
      */
     public MultiSelectMode getMultiSelectMode() {
@@ -5185,7 +5261,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * from server once per drag and drop operation. Developer must override one
      * method that decides on which rows the currently dragged data can be
      * dropped.
-     *
+     * 
      * <p>
      * Initially pretty much no data is sent to client. On first required
      * criterion check (per drag request) the client side data structure is
@@ -5302,7 +5378,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Gets the property id of the column which header was pressed
-         *
+         * 
          * @return The column propety id
          */
         public Object getPropertyId() {
@@ -5336,7 +5412,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Constructor
-         *
+         * 
          * @param source
          *            The source of the component
          * @param propertyId
@@ -5352,7 +5428,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Gets the property id of the column which header was pressed
-         *
+         * 
          * @return The column propety id
          */
         public Object getPropertyId() {
@@ -5368,7 +5444,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Called when a user clicks a header column cell
-         *
+         * 
          * @param event
          *            The event which contains information about the column and
          *            the mouse click event
@@ -5384,7 +5460,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Called when a user clicks a footer column cell
-         *
+         * 
          * @param event
          *            The event which contains information about the column and
          *            the mouse click event
@@ -5399,7 +5475,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * The listener will receive events which contain information about which
      * column was clicked and some details about the mouse event.
      * </p>
-     *
+     * 
      * @param listener
      *            The handler which should handle the header click events.
      */
@@ -5420,7 +5496,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Removes a header click listener
-     *
+     * 
      * @param listener
      *            The listener to remove.
      */
@@ -5445,7 +5521,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * The listener will receive events which contain information about which
      * column was clicked and some details about the mouse event.
      * </p>
-     *
+     * 
      * @param listener
      *            The handler which should handle the footer click events.
      */
@@ -5466,7 +5542,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Removes a footer click listener
-     *
+     * 
      * @param listener
      *            The listener to remove.
      */
@@ -5486,7 +5562,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the footer caption beneath the rows
-     *
+     * 
      * @param propertyId
      *            The propertyId of the column *
      * @return The caption of the footer or NULL if not set
@@ -5498,10 +5574,10 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Sets the column footer caption. The column footer caption is the text
      * displayed beneath the column if footers have been set visible.
-     *
+     * 
      * @param propertyId
      *            The properyId of the column
-     *
+     * 
      * @param footer
      *            The caption of the footer
      */
@@ -5521,7 +5597,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * The footer can be used to add column related data like sums to the bottom
      * of the Table using setColumnFooter(Object propertyId, String footer).
      * </p>
-     *
+     * 
      * @param visible
      *            Should the footer be visible
      */
@@ -5534,7 +5610,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Is the footer currently visible?
-     *
+     * 
      * @return Returns true if visible else false
      */
     public boolean isFooterVisible() {
@@ -5566,7 +5642,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Constructor
-         *
+         * 
          * @param source
          *            The source of the event
          * @param propertyId
@@ -5586,7 +5662,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Get the column property id of the column that was resized.
-         *
+         * 
          * @return The column property id
          */
         public Object getPropertyId() {
@@ -5595,7 +5671,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Get the width in pixels of the column before the resize event
-         *
+         * 
          * @return Width in pixels
          */
         public int getPreviousWidth() {
@@ -5604,7 +5680,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Get the width in pixels of the column after the resize event
-         *
+         * 
          * @return Width in pixels
          */
         public int getCurrentWidth() {
@@ -5619,7 +5695,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * This method is triggered when the column has been resized
-         *
+         * 
          * @param event
          *            The event which contains the column property id, the
          *            previous width of the column and the current width of the
@@ -5631,7 +5707,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Adds a column resize listener to the Table. A column resize listener is
      * called when a user resizes a columns width.
-     *
+     * 
      * @param listener
      *            The listener to attach to the Table
      */
@@ -5652,7 +5728,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Removes a column resize listener from the Table.
-     *
+     * 
      * @param listener
      *            The listener to remove
      */
@@ -5689,7 +5765,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Constructor
-         *
+         * 
          * @param source
          *            The source of the event
          */
@@ -5706,7 +5782,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * This method is triggered when the column has been reordered
-         *
+         * 
          * @param event
          */
         public void columnReorder(ColumnReorderEvent event);
@@ -5715,7 +5791,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Adds a column reorder listener to the Table. A column reorder listener is
      * called when a user reorders columns.
-     *
+     * 
      * @param listener
      *            The listener to attach to the Table
      */
@@ -5735,7 +5811,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Removes a column reorder listener from the Table.
-     *
+     * 
      * @param listener
      *            The listener to remove
      */
@@ -5756,7 +5832,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Set the item description generator which generates tooltips for cells and
      * rows in the Table
-     *
+     * 
      * @param generator
      *            The generator to use or null to disable
      */
@@ -5781,7 +5857,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Row generators can be used to replace certain items in a table with a
      * generated string. The generator is called each time the table is
      * rendered, which means that new strings can be generated each time.
-     *
+     * 
      * Row generators can be used for e.g. summary rows or grouping of items.
      */
     public interface RowGenerator extends Serializable {
@@ -5807,7 +5883,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * For custom styling of a generated row you can combine a RowGenerator
          * with a CellStyleGenerator.
          * <p>
-         *
+         * 
          * @param table
          *            The Table that is being painted
          * @param itemId
@@ -5826,7 +5902,7 @@ public class Table extends AbstractSelect implements Action.Container,
         /**
          * Creates a new generated row. If only one string is passed in, columns
          * are automatically spanned.
-         *
+         * 
          * @param text
          */
         public GeneratedRow(String... text) {
@@ -5861,7 +5937,7 @@ public class Table extends AbstractSelect implements Action.Container,
         /**
          * If set to true, all strings passed to {@link #setText(String...)}
          * will be rendered as HTML.
-         *
+         * 
          * @param htmlContentAllowed
          */
         public void setHtmlContentAllowed(boolean htmlContentAllowed) {
@@ -5875,7 +5951,7 @@ public class Table extends AbstractSelect implements Action.Container,
         /**
          * If set to true, only one string will be rendered, spanning the entire
          * row.
-         *
+         * 
          * @param spanColumns
          */
         public void setSpanColumns(boolean spanColumns) {
@@ -5886,7 +5962,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Assigns a row generator to the table. The row generator will be able to
      * replace rows in the table when it is rendered.
-     *
+     * 
      * @param generator
      *            the new row generator
      */
@@ -5908,7 +5984,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * The converter is used to format the the data for the given property id
      * before displaying it in the table.
      * </p>
-     *
+     * 
      * @param propertyId
      *            The propertyId to format using the converter
      * @param converter
@@ -5933,7 +6009,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Checks if there is a converter set explicitly for the given property id.
-     *
+     * 
      * @param propertyId
      *            The propertyId to check
      * @return true if a converter has been set for the property id, false
@@ -5945,7 +6021,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Returns the converter used to format the given propertyId.
-     *
+     * 
      * @param propertyId
      *            The propertyId to check
      * @return The converter used to format the propertyId or null if no
