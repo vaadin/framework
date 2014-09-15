@@ -33,11 +33,10 @@ public class GridKeyDownEvent extends AbstractGridKeyEvent<GridKeyDownHandler> {
     }
 
     @Override
-    protected void dispatch(GridKeyDownHandler handler) {
-        super.dispatch(handler);
-        if ((activeSection == GridSection.BODY && handler instanceof BodyKeyDownHandler)
-                || (activeSection == GridSection.HEADER && handler instanceof HeaderKeyDownHandler)
-                || (activeSection == GridSection.FOOTER && handler instanceof FooterKeyDownHandler)) {
+    protected void doDispatch(GridKeyDownHandler handler, GridSection section) {
+        if ((section == GridSection.BODY && handler instanceof BodyKeyDownHandler)
+                || (section == GridSection.HEADER && handler instanceof HeaderKeyDownHandler)
+                || (section == GridSection.FOOTER && handler instanceof FooterKeyDownHandler)) {
             handler.onKeyDown(this);
         }
     }

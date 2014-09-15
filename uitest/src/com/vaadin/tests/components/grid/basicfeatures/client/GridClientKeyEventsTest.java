@@ -27,6 +27,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
+import com.vaadin.tests.components.grid.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 
 public class GridClientKeyEventsTest extends GridBasicClientFeaturesTest {
@@ -98,6 +99,24 @@ public class GridClientKeyEventsTest extends GridBasicClientFeaturesTest {
             assertTrue("Body key event handler got called unexpectedly.",
                     findElements(By.className("v-label")).get(i * 3).getText()
                             .isEmpty());
+            assertTrue("Header key event handler got called unexpectedly.",
+                    findElements(By.className("v-label")).get(i * 3 + 1)
+                            .getText().isEmpty());
+
+        }
+    }
+
+    @Test
+    public void testNoKeyEventsFromWidget() {
+        openTestURL();
+
+        selectMenuPath("Component", "Columns", "Column 2", "Header Type",
+                "Widget Header");
+        GridCellElement header = getGridElement().getHeaderCell(0, 2);
+        header.findElement(By.tagName("button")).click();
+        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+
+        for (int i = 0; i < 3; ++i) {
             assertTrue("Header key event handler got called unexpectedly.",
                     findElements(By.className("v-label")).get(i * 3 + 1)
                             .getText().isEmpty());

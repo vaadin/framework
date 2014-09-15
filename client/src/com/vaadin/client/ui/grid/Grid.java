@@ -135,7 +135,6 @@ public class Grid<T> extends Composite implements
 
         private Grid<?> grid;
         protected Cell activeCell;
-        protected GridSection activeSection;
         private final Type<HANDLER> associatedType = new Type<HANDLER>(
                 getBrowserEventType(), this);
 
@@ -165,15 +164,24 @@ public class Grid<T> extends Composite implements
 
         @Override
         protected void dispatch(HANDLER handler) {
-            activeCell = grid.activeCellHandler.getActiveCell();
-            activeSection = GridSection.FOOTER;
-            final RowContainer container = grid.activeCellHandler.container;
-            if (container == grid.escalator.getHeader()) {
-                activeSection = GridSection.HEADER;
-            } else if (container == grid.escalator.getBody()) {
-                activeSection = GridSection.BODY;
+            EventTarget target = getNativeEvent().getEventTarget();
+            if (Element.is(target)
+                    && Util.findWidget(Element.as(target), null) == grid) {
+
+                activeCell = grid.activeCellHandler.getActiveCell();
+                GridSection section = GridSection.FOOTER;
+                final RowContainer container = grid.activeCellHandler.container;
+                if (container == grid.escalator.getHeader()) {
+                    section = GridSection.HEADER;
+                } else if (container == grid.escalator.getBody()) {
+                    section = GridSection.BODY;
+                }
+
+                doDispatch(handler, section);
             }
         }
+
+        protected abstract void doDispatch(HANDLER handler, GridSection seciton);
 
         @Override
         public Type<HANDLER> getAssociatedType() {

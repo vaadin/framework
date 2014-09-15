@@ -34,11 +34,10 @@ public class GridKeyPressEvent extends
     }
 
     @Override
-    protected void dispatch(GridKeyPressHandler handler) {
-        super.dispatch(handler);
-        if ((activeSection == GridSection.BODY && handler instanceof BodyKeyPressHandler)
-                || (activeSection == GridSection.HEADER && handler instanceof HeaderKeyPressHandler)
-                || (activeSection == GridSection.FOOTER && handler instanceof FooterKeyPressHandler)) {
+    protected void doDispatch(GridKeyPressHandler handler, GridSection section) {
+        if ((section == GridSection.BODY && handler instanceof BodyKeyPressHandler)
+                || (section == GridSection.HEADER && handler instanceof HeaderKeyPressHandler)
+                || (section == GridSection.FOOTER && handler instanceof FooterKeyPressHandler)) {
             handler.onKeyPress(this);
         }
     }
