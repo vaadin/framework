@@ -18,17 +18,22 @@ package com.vaadin.data.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.filter.Compare;
+import com.vaadin.data.util.filter.UnsupportedFilterException;
 import com.vaadin.ui.components.grid.sort.SortOrder;
 
 public class GeneratedPropertyContainerTest {
 
     GeneratedPropertyContainer container;
+    private static double MILES_CONVERSION = 0.6214d;
 
     @Before
     public void setUp() {
@@ -88,7 +93,7 @@ public class GeneratedPropertyContainerTest {
                 .getItemProperty("baz").getValue());
 
         container.sort(new Object[] { "baz" }, new boolean[] { false });
-        assertEquals("foo 9", container.getItem(container.getIdByIndex(0))
+        assertEquals("foo 10", container.getItem(container.getIdByIndex(0))
                 .getItemProperty("baz").getValue());
     }
 
@@ -116,16 +121,81 @@ public class GeneratedPropertyContainerTest {
         assertFalse(container.getSortableContainerPropertyIds().contains("bar"));
     }
 
+    @Test
+    public void testFilterByMiles() {
+        container.addGeneratedProperty("miles",
+                new PropertyValueGenerator<Double>() {
+
+                    @Override
+                    public Double getValue(Item item, Object itemId,
+                            Object propertyId) {
+                        return (Double) item.getItemProperty("km").getValue()
+                                * MILES_CONVERSION;
+                    }
+
+                    @Override
+                    public Class<Double> getType() {
+                        return Double.class;
+                    }
+
+                    @Override
+                    public Filter modifyFilter(Filter filter)
+                            throws UnsupportedFilterException {
+                        if (filter instanceof Compare.LessOrEqual) {
+                            Double value = (Double) ((Compare.LessOrEqual) filter)
+                                    .getValue();
+                            value = value / MILES_CONVERSION;
+                            return new Compare.LessOrEqual("km", value);
+                        }
+                        return super.modifyFilter(filter);
+                    }
+                });
+
+        for (Object itemId : container.getItemIds()) {
+            Item item = container.getItem(itemId);
+            Double km = (Double) item.getItemProperty("km").getValue();
+            Double miles = (Double) item.getItemProperty("miles").getValue();
+            assertTrue(miles.equals(km * MILES_CONVERSION));
+        }
+
+        Filter filter = new Compare.LessOrEqual("miles", MILES_CONVERSION);
+        container.addContainerFilter(filter);
+        for (Object itemId : container.getItemIds()) {
+            Item item = container.getItem(itemId);
+            assertTrue("Item did not pass original filter.",
+                    filter.passesFilter(itemId, item));
+        }
+
+        assertTrue(container.getContainerFilters().contains(filter));
+        container.removeContainerFilter(filter);
+        assertFalse(container.getContainerFilters().contains(filter));
+
+        boolean allPass = true;
+        for (Object itemId : container.getItemIds()) {
+            Item item = container.getItem(itemId);
+            if (!filter.passesFilter(itemId, item)) {
+                allPass = false;
+            }
+        }
+
+        if (allPass) {
+            fail("Removing filter did not introduce any previous filtered items");
+        }
+    }
+
     private Indexed createContainer() {
         Indexed container = new IndexedContainer();
         container.addContainerProperty("foo", String.class, "foo");
         container.addContainerProperty("bar", Integer.class, 0);
+        // km contains double values from 0.0 to 2.0
+        container.addContainerProperty("km", Double.class, 0);
 
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i <= 10; ++i) {
             Object itemId = container.addItem();
             Item item = container.getItem(itemId);
             item.getItemProperty("foo").setValue("foo");
             item.getItemProperty("bar").setValue(i);
+            item.getItemProperty("km").setValue(i / 5.0d);
         }
 
         return container;

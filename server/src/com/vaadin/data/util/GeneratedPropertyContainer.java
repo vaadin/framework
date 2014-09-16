@@ -17,6 +17,7 @@ package com.vaadin.data.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +29,7 @@ import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.filter.UnsupportedFilterException;
 import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.ui.components.grid.sort.SortOrder;
 
@@ -38,11 +40,13 @@ import com.vaadin.ui.components.grid.sort.SortOrder;
  * @author Vaadin Ltd
  */
 public class GeneratedPropertyContainer implements Container.Indexed,
-        Container.Sortable {
+        Container.Sortable, Container.Filterable {
 
     private final Container.Indexed wrappedContainer;
     private final Map<Object, PropertyValueGenerator<?>> propertyGenerators;
+    private final Map<Filter, List<Filter>> activeFilters;
     private Sortable sortableContainer = null;
+    private Filterable filterableContainer = null;
 
     /**
      * Property implementation for generated properties
@@ -147,6 +151,12 @@ public class GeneratedPropertyContainer implements Container.Indexed,
         if (wrappedContainer instanceof Sortable) {
             sortableContainer = (Sortable) wrappedContainer;
         }
+        if (wrappedContainer instanceof Filterable) {
+            activeFilters = new HashMap<Filter, List<Filter>>();
+            filterableContainer = (Filterable) wrappedContainer;
+        } else {
+            activeFilters = null;
+        }
     }
 
     /* Functions related to generated properties */
@@ -208,6 +218,73 @@ public class GeneratedPropertyContainer implements Container.Indexed,
         }
     }
 
+    /* Filtering functionality */
+
+    @Override
+    public void addContainerFilter(Filter filter)
+            throws UnsupportedFilterException {
+        if (filterableContainer == null) {
+            throw new UnsupportedOperationException(
+                    "Wrapped container is not filterable");
+        }
+
+        List<Filter> addedFilters = new ArrayList<Filter>();
+        for (Entry<?, PropertyValueGenerator<?>> entry : propertyGenerators
+                .entrySet()) {
+            Object property = entry.getKey();
+            if (filter.appliesToProperty(property)) {
+                // Have generated property modify filter to fit the original
+                // data in the container.
+                Filter modifiedFilter = entry.getValue().modifyFilter(filter);
+                filterableContainer.addContainerFilter(modifiedFilter);
+                // Keep track of added filters
+                addedFilters.add(modifiedFilter);
+            }
+        }
+
+        if (addedFilters.isEmpty()) {
+            // No generated property modified this filter, use it as is
+            addedFilters.add(filter);
+            filterableContainer.addContainerFilter(filter);
+        }
+        // Map filter to actually added filters
+        activeFilters.put(filter, addedFilters);
+    }
+
+    @Override
+    public void removeContainerFilter(Filter filter) {
+        if (filterableContainer == null) {
+            throw new UnsupportedOperationException(
+                    "Wrapped container is not filterable");
+        }
+
+        if (activeFilters.containsKey(filter)) {
+            for (Filter f : activeFilters.get(filter)) {
+                filterableContainer.removeContainerFilter(f);
+            }
+            activeFilters.remove(filter);
+        }
+    }
+
+    @Override
+    public void removeAllContainerFilters() {
+        if (filterableContainer == null) {
+            throw new UnsupportedOperationException(
+                    "Wrapped container is not filterable");
+        }
+        filterableContainer.removeAllContainerFilters();
+        activeFilters.clear();
+    }
+
+    @Override
+    public Collection<Filter> getContainerFilters() {
+        if (filterableContainer == null) {
+            throw new UnsupportedOperationException(
+                    "Wrapped container is not filterable");
+        }
+        return Collections.unmodifiableSet(activeFilters.keySet());
+    }
+
     /* Sorting functionality */
 
     @Override
@@ -236,6 +313,9 @@ public class GeneratedPropertyContainer implements Container.Indexed,
             }
 
             if (propertyGenerators.containsKey(property)) {
+                // Sorting by a generated property. Generated property should
+                // modify sort orders to work with original properties in the
+                // container.
                 for (SortOrder s : propertyGenerators.get(property)
                         .getSortProperties(new SortOrder(property, direction))) {
                     actualSortProperties.add(s.getPropertyId());
