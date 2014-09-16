@@ -6989,8 +6989,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 }
             }
 
-            Util.runWebkitOverflowAutoFixDeferred(scrollBodyPanel.getElement());
-
             forceRealignColumnHeaders();
         }
 
@@ -7118,15 +7116,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         if (initializedAndAttached) {
             updatePageLength();
-        }
-        if (!rendering) {
-            // Webkit may sometimes get an odd rendering bug (white space
-            // between header and body), see bug #3875. Running
-            // overflow hack here to shake body element a bit.
-            // We must run the fix as a deferred command to prevent it from
-            // overwriting the scroll position with an outdated value, see
-            // #7607.
-            Util.runWebkitOverflowAutoFixDeferred(scrollBodyPanel.getElement());
         }
 
         triggerLazyColumnAdjustment(false);
