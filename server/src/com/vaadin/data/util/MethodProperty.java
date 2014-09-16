@@ -16,6 +16,8 @@
 
 package com.vaadin.data.util;
 
+import static com.vaadin.util.ReflectTools.convertPrimitiveType;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -549,30 +551,6 @@ public class MethodProperty<T> extends AbstractProperty<T> {
             }
         }
         return getMethod;
-    }
-
-    static Class<?> convertPrimitiveType(Class<?> type) {
-        // Gets the return type from get method
-        if (type.isPrimitive()) {
-            if (type.equals(Boolean.TYPE)) {
-                type = Boolean.class;
-            } else if (type.equals(Integer.TYPE)) {
-                type = Integer.class;
-            } else if (type.equals(Float.TYPE)) {
-                type = Float.class;
-            } else if (type.equals(Double.TYPE)) {
-                type = Double.class;
-            } else if (type.equals(Byte.TYPE)) {
-                type = Byte.class;
-            } else if (type.equals(Character.TYPE)) {
-                type = Character.class;
-            } else if (type.equals(Short.TYPE)) {
-                type = Short.class;
-            } else if (type.equals(Long.TYPE)) {
-                type = Long.class;
-            }
-        }
-        return type;
     }
 
     /**

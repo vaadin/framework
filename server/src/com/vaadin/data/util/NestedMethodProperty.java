@@ -15,6 +15,8 @@
  */
 package com.vaadin.data.util;
 
+import static com.vaadin.util.ReflectTools.convertPrimitiveType;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -173,8 +175,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
         } catch (final NoSuchMethodException skipped) {
         }
 
-        this.type = (Class<? extends T>) MethodProperty
-                .convertPrimitiveType(type);
+        this.type = (Class<? extends T>) convertPrimitiveType(type);
         this.propertyName = propertyName;
         this.getMethods = getMethods;
         this.setMethod = setMethod;

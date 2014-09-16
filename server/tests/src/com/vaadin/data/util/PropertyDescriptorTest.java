@@ -69,4 +69,12 @@ public class PropertyDescriptorTest extends TestCase {
         Assert.assertNull(property.getValue());
     }
 
+    public void testMethodPropertyDescriptorWithPrimitivePropertyType()
+            throws Exception {
+        MethodPropertyDescriptor<Person> pd = new MethodPropertyDescriptor<Person>(
+                "age", int.class, Person.class.getMethod("getAge"),
+                Person.class.getMethod("setAge", int.class));
+
+        Assert.assertEquals(Integer.class, pd.getPropertyType());
+    }
 }

@@ -57,10 +57,17 @@ public class NestedMethodPropertyTest extends TestCase {
     public static class Person implements Serializable {
         private String name;
         private Address address;
+        private int age;
 
         public Person(String name, Address address) {
             this.name = name;
             this.address = address;
+        }
+
+        public Person(String name, Address address, int age) {
+            this.name = name;
+            this.address = address;
+            this.age = age;
         }
 
         public void setName(String name) {
@@ -77,6 +84,14 @@ public class NestedMethodPropertyTest extends TestCase {
 
         public Address getAddress() {
             return address;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        public void setAge(int age) {
+            this.age = age;
         }
     }
 

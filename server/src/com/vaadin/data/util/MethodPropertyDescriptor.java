@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.data.Property;
+import com.vaadin.util.ReflectTools;
 import com.vaadin.util.SerializerHelper;
 
 /**
@@ -57,7 +58,7 @@ public class MethodPropertyDescriptor<BT> implements
     public MethodPropertyDescriptor(String name, Class<?> propertyType,
             Method readMethod, Method writeMethod) {
         this.name = name;
-        this.propertyType = propertyType;
+        this.propertyType = ReflectTools.convertPrimitiveType(propertyType);
         this.readMethod = readMethod;
         this.writeMethod = writeMethod;
     }
@@ -98,7 +99,7 @@ public class MethodPropertyDescriptor<BT> implements
             @SuppressWarnings("unchecked")
             // business assumption; type parameters not checked at runtime
             Class<BT> class1 = (Class<BT>) SerializerHelper.readClass(in);
-            propertyType = class1;
+            propertyType = ReflectTools.convertPrimitiveType(class1);
 
             String name = (String) in.readObject();
             Class<?> writeMethodClass = SerializerHelper.readClass(in);
