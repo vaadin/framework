@@ -45,7 +45,6 @@ import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
 import com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel;
 import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
 import com.vaadin.client.ui.grid.selection.SelectionChangeHandler;
-import com.vaadin.client.ui.grid.selection.SelectionModel;
 import com.vaadin.client.ui.grid.selection.SelectionModelMulti;
 import com.vaadin.client.ui.grid.selection.SelectionModelNone;
 import com.vaadin.client.ui.grid.selection.SelectionModelSingle;
@@ -422,18 +421,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         for (RowState rowState : state.rows) {
             GridStaticSection.StaticRow<?> row = section.appendRow();
 
-            int selectionOffset = 1;
-            if (getWidget().getSelectionModel() instanceof SelectionModel.None) {
-                selectionOffset = 0;
-            }
-
-            assert rowState.cells.size() == getWidget().getColumnCount()
-                    - selectionOffset;
-
-            int i = 0 + selectionOffset;
             for (CellState cellState : rowState.cells) {
-                GridStaticSection.StaticCell cell = row.getCell(getWidget()
-                        .getColumn(i++));
+                CustomGridColumn column = columnIdToColumn
+                        .get(cellState.columnId);
+                GridStaticSection.StaticCell cell = row.getCell(column);
                 switch (cellState.type) {
                 case TEXT:
                     cell.setText(cellState.text);
@@ -451,12 +442,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 }
             }
 
-            for (List<Integer> group : rowState.cellGroups) {
+            for (List<String> group : rowState.cellGroups) {
                 GridColumn<?, ?>[] columns = new GridColumn<?, ?>[group.size()];
-                i = 0;
-                for (Integer colIndex : group) {
-                    columns[i++] = getWidget().getColumn(
-                            selectionOffset + colIndex);
+                for (int i = 0; i < group.size(); ++i) {
+                    columns[i] = columnIdToColumn.get(group.get(i));
                 }
                 row.join(columns);
             }

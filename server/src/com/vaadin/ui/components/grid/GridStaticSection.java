@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
@@ -63,6 +64,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
 
         protected void addCell(Object propertyId) {
             CELLTYPE cell = createCell();
+            cell.setColumnId(section.grid.getColumn(propertyId).getState().id);
             cells.put(propertyId, cell);
             rowState.cells.add(cell.getCellState());
         }
@@ -90,62 +92,6 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
         }
 
         /**
-         * Merges cells in a row
-         * 
-         * @param cells
-         *            The cells to be merged
-         * @return The first cell of the merged cells
-         */
-        protected CELLTYPE join(List<CELLTYPE> cells) {
-            assert cells.size() > 1 : "You cannot merge less than 2 cells together";
-
-            // Ensure no cell is already grouped
-            for (CELLTYPE cell : cells) {
-                if (getCellGroupForCell(cell) != null) {
-                    throw new IllegalStateException("Cell " + cell.getText()
-                            + " is already grouped.");
-                }
-            }
-
-            // Ensure continuous range
-            Iterator<CELLTYPE> cellIterator = this.cells.values().iterator();
-            CELLTYPE current = null;
-            int firstIndex = 0;
-
-            while (cellIterator.hasNext()) {
-                current = cellIterator.next();
-                if (current == cells.get(0)) {
-                    break;
-                }
-                firstIndex++;
-            }
-
-            for (int i = 1; i < cells.size(); ++i) {
-                current = cellIterator.next();
-
-                if (current != cells.get(i)) {
-                    throw new IllegalStateException(
-                            "Cell range must be a continous range");
-                }
-            }
-
-            // Create a new group
-            final ArrayList<CELLTYPE> cellGroup = new ArrayList<CELLTYPE>(cells);
-            cellGroups.add(cellGroup);
-
-            // Add group to state
-            List<Integer> stateGroup = new ArrayList<Integer>();
-            for (int i = 0; i < cells.size(); ++i) {
-                stateGroup.add(firstIndex + i);
-            }
-            rowState.cellGroups.add(stateGroup);
-            section.markAsDirty();
-
-            // Returns first cell of group
-            return cells.get(0);
-        }
-
-        /**
          * Merges columns cells in a row
          * 
          * @param properties
@@ -153,6 +99,8 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          * @return The remaining visible cell after the merge
          */
         public CELLTYPE join(Object... properties) {
+            assert properties.length > 1 : "You need to merge at least 2 properties";
+
             List<CELLTYPE> cells = new ArrayList<CELLTYPE>();
             for (int i = 0; i < properties.length; ++i) {
                 cells.add(getCell(properties[i]));
@@ -169,7 +117,58 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
          * @return The remaining visible cell after the merge
          */
         public CELLTYPE join(CELLTYPE... cells) {
+            assert cells.length > 1 : "You need to merge at least 2 cells";
+
             return join(Arrays.asList(cells));
+        }
+
+        protected CELLTYPE join(List<CELLTYPE> cells) {
+            for (CELLTYPE cell : cells) {
+                if (getCellGroupForCell(cell) != null) {
+                    throw new IllegalArgumentException("Cell already merged");
+                } else if (!this.cells.containsValue(cell)) {
+                    throw new IllegalArgumentException(
+                            "Cell does not exist on this row");
+                }
+            }
+
+            if (cellsInContinuousRange(cells)) {
+                List<String> columnGroup = new ArrayList<String>();
+                for (CELLTYPE cell : cells) {
+                    columnGroup.add(cell.getColumnId());
+                }
+                rowState.cellGroups.add(columnGroup);
+                cellGroups.add(cells);
+                return cells.get(0);
+            } else {
+                throw new IllegalArgumentException(
+                        "Cells are in invalid order or not in a contiunous range");
+            }
+        }
+
+        private boolean cellsInContinuousRange(List<CELLTYPE> mergeCells) {
+            Iterator<CELLTYPE> mergeCellIterator = mergeCells.iterator();
+            CELLTYPE mergeCell = mergeCellIterator.next();
+            boolean firstFound = false;
+            for (Entry<Object, CELLTYPE> entry : cells.entrySet()) {
+                // Go through all the cells until first to be merged is found
+                CELLTYPE currentCell = entry.getValue();
+                if (currentCell == mergeCell) {
+                    if (!mergeCellIterator.hasNext()) {
+                        // All the cells to be merged are found and they
+                        // were in continuous range
+                        return true;
+                    }
+                    mergeCell = mergeCellIterator.next();
+                    firstFound = true;
+                } else if (firstFound) {
+                    // We found the first cell already, but at least one cell
+                    // was not in a continuous range.
+                    return false;
+                }
+            }
+
+            return false;
         }
 
         private List<CELLTYPE> getCellGroupForCell(CELLTYPE cell) {
@@ -192,6 +191,14 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
 
         protected StaticCell(StaticRow<?> row) {
             this.row = row;
+        }
+
+        private void setColumnId(String id) {
+            cellState.columnId = id;
+        }
+
+        private String getColumnId() {
+            return cellState.columnId;
         }
 
         /**

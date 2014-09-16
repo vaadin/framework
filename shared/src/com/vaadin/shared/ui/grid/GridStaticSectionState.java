@@ -37,6 +37,8 @@ public class GridStaticSectionState implements Serializable {
         public Connector connector = null;
 
         public GridStaticCellType type = GridStaticCellType.TEXT;
+
+        public String columnId;
     }
 
     public static class RowState implements Serializable {
@@ -44,7 +46,7 @@ public class GridStaticSectionState implements Serializable {
 
         public boolean defaultRow = false;
 
-        public List<List<Integer>> cellGroups = new ArrayList<List<Integer>>();
+        public List<List<String>> cellGroups = new ArrayList<List<String>>();
     }
 
     public List<RowState> rows = new ArrayList<RowState>();

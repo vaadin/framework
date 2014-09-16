@@ -88,7 +88,7 @@ public class GridStaticSection {
                 mergeRow.getCell("zipCode"));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testJoinHeaderCellsIncorrectly() {
         final GridHeader section = grid.getHeader();
         HeaderRow mergeRow = section.prependRow();

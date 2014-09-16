@@ -590,6 +590,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
         GridColumnState columnState = new GridColumnState();
         columnState.id = columnKeys.key(datasourcePropertyId);
+
+        GridColumn column = new GridColumn(this, columnState);
+        columns.put(datasourcePropertyId, column);
+
         getState().columns.add(columnState);
 
         for (int i = 0; i < getHeader().getRowCount(); ++i) {
@@ -600,8 +604,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             getFooter().getRow(i).addCell(datasourcePropertyId);
         }
 
-        GridColumn column = new GridColumn(this, columnState);
-        columns.put(datasourcePropertyId, column);
         column.setHeaderCaption(String.valueOf(datasourcePropertyId));
 
         return column;
