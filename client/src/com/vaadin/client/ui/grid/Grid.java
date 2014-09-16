@@ -406,7 +406,7 @@ public class Grid<T> extends Composite implements
                     if (activeCellRange.getEnd() >= getVisibleColumns().size()) {
                         return;
                     }
-                    ++newColumn;
+                    newColumn = activeCellRange.getEnd();
                     break;
                 case KeyCodes.KEY_LEFT:
                     if (newColumn == 0) {
