@@ -41,8 +41,8 @@ import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasVisibility;
+import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Util;
@@ -121,7 +121,7 @@ import com.vaadin.shared.ui.grid.SortEventOriginator;
  * @since
  * @author Vaadin Ltd
  */
-public class Grid<T> extends Composite implements
+public class Grid<T> extends ResizeComposite implements
         HasSelectionChangeHandlers<T>, SubPartAware, DeferredWorker {
 
     public static abstract class AbstractGridKeyEvent<HANDLER extends AbstractGridKeyEventHandler>

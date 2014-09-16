@@ -31,6 +31,7 @@ import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -46,6 +47,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.DeferredWorker;
@@ -249,7 +251,7 @@ abstract class JsniWorkaround {
  * @since
  * @author Vaadin Ltd
  */
-public class Escalator extends Widget implements DeferredWorker {
+public class Escalator extends Widget implements RequiresResize, DeferredWorker {
 
     // todo comments legend
     /*
@@ -3928,6 +3930,15 @@ public class Escalator extends Widget implements DeferredWorker {
 
     private HeightMode heightMode = HeightMode.CSS;
 
+    private boolean layoutIsScheduled = false;
+    private ScheduledCommand layoutCommand = new ScheduledCommand() {
+        @Override
+        public void execute() {
+            recalculateElementSizes();
+            layoutIsScheduled = false;
+        }
+    };
+
     private static native double getPreciseWidth(Element element)
     /*-{
         if (element.getBoundingClientRect) {
@@ -4149,8 +4160,12 @@ public class Escalator extends Widget implements DeferredWorker {
 
     @Override
     public void setWidth(final String width) {
-        super.setWidth(width != null && !width.isEmpty() ? width
-                : DEFAULT_WIDTH);
+        if (width != null && !width.isEmpty()) {
+            super.setWidth(width);
+        } else {
+            super.setWidth(DEFAULT_WIDTH);
+        }
+
         recalculateElementSizes();
     }
 
@@ -4169,7 +4184,12 @@ public class Escalator extends Widget implements DeferredWorker {
          * listening mechanisms are implemented
          */
 
-        heightByCss = height;
+        if (height != null && !height.isEmpty()) {
+            heightByCss = height;
+        } else {
+            heightByCss = DEFAULT_HEIGHT;
+        }
+
         if (getHeightMode() == HeightMode.CSS) {
             setHeightInternal(height);
         }
@@ -4178,8 +4198,12 @@ public class Escalator extends Widget implements DeferredWorker {
     private void setHeightInternal(final String height) {
         final int escalatorRowsBefore = body.visualRowOrder.size();
 
-        super.setHeight(height != null && !height.isEmpty() ? height
-                : DEFAULT_HEIGHT);
+        if (height != null && !height.isEmpty()) {
+            super.setHeight(height);
+        } else {
+            super.setHeight(DEFAULT_HEIGHT);
+        }
+
         recalculateElementSizes();
 
         if (escalatorRowsBefore != body.visualRowOrder.size()) {
@@ -4704,5 +4728,13 @@ public class Escalator extends Widget implements DeferredWorker {
     @Override
     public boolean isWorkPending() {
         return body.domSorter.waiting;
+    }
+
+    @Override
+    public void onResize() {
+        if (isAttached() && !layoutIsScheduled) {
+            layoutIsScheduled = true;
+            Scheduler.get().scheduleDeferred(layoutCommand);
+        }
     }
 }

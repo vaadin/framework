@@ -87,12 +87,6 @@ public class GridState extends AbstractComponentState {
      */
     public static final String JSONKEY_ROWKEY = "k";
 
-    {
-        // FIXME Grid currently does not support undefined size
-        width = "400px";
-        height = "400px";
-    }
-
     /**
      * Columns in grid. Column order implicitly deferred from list order.
      */

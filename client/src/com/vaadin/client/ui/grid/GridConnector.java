@@ -39,6 +39,7 @@ import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.data.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
+import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
 import com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel;
@@ -77,7 +78,8 @@ import com.vaadin.shared.ui.grid.SortDirection;
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.components.grid.Grid.class)
-public class GridConnector extends AbstractHasComponentsConnector {
+public class GridConnector extends AbstractHasComponentsConnector implements
+        SimpleManagedLayout {
 
     /**
      * Custom implementation of the custom grid column using a JSONObject to
@@ -350,6 +352,8 @@ public class GridConnector extends AbstractHasComponentsConnector {
         });
 
         getWidget().getEditorRow().setHandler(new CustomEditorRowHandler());
+        getLayoutManager().registerDependency(this, getWidget().getElement());
+        layout();
     }
 
     @Override
@@ -736,5 +740,10 @@ public class GridConnector extends AbstractHasComponentsConnector {
     @Override
     public void onConnectorHierarchyChange(
             ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
+    }
+
+    @Override
+    public void layout() {
+        getWidget().onResize();
     }
 }
