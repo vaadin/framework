@@ -16,8 +16,10 @@
 package com.vaadin.tests.components.grid.basicfeatures.client;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -101,5 +103,20 @@ public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
 
         assertEquals("100", widgets.get(7).getAttribute("value"));
         assertEquals("<b>100</b>", widgets.get(9).getAttribute("value"));
+    }
+
+    @Test
+    public void testWithSelectionColumn() throws Exception {
+        selectMenuPath("Component", "State", "Selection mode", "multi");
+        selectMenuPath("Component", "State", "Editor row", "Edit row 5");
+
+        WebElement editorRow = getEditorRow();
+        List<WebElement> selectorDivs = editorRow.findElements(By
+                .cssSelector("div"));
+
+        assertTrue("selector column cell should've been empty", selectorDivs
+                .get(0).getAttribute("innerHTML").isEmpty());
+        assertFalse("normal column cell shoul've had contents", selectorDivs
+                .get(1).getAttribute("innerHTML").isEmpty());
     }
 }

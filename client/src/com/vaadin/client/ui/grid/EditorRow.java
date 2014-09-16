@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.grid.EditorRowHandler.EditorRowRequest;
 import com.vaadin.client.ui.grid.EditorRowHandler.EditorRowRequest.RequestCallback;
 import com.vaadin.client.ui.grid.Escalator.AbstractRowContainer;
+import com.vaadin.client.ui.grid.Grid.SelectionColumn;
 import com.vaadin.client.ui.grid.ScrollbarBundle.Direction;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 
@@ -240,8 +241,12 @@ public class EditorRow<T> {
 
             editorOverlay.appendChild(cell);
 
-            Widget editor = getHandler().getWidget(
-                    grid.getColumnFromVisibleIndex(i));
+            GridColumn<?, T> column = grid.getColumnFromVisibleIndex(i);
+            if (column instanceof SelectionColumn) {
+                continue;
+            }
+
+            Widget editor = getHandler().getWidget(column);
             if (editor != null) {
                 editorWidgets.add(editor);
                 cell.appendChild(editor.getElement());

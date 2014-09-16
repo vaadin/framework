@@ -63,6 +63,7 @@ import com.vaadin.client.ui.grid.renderers.DateRenderer;
 import com.vaadin.client.ui.grid.renderers.HtmlRenderer;
 import com.vaadin.client.ui.grid.renderers.NumberRenderer;
 import com.vaadin.client.ui.grid.renderers.TextRenderer;
+import com.vaadin.client.ui.grid.selection.SelectionModel.None;
 import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget.Data;
 
 /**
@@ -93,8 +94,10 @@ public class GridBasicClientFeaturesWidget extends
         public void bind(EditorRowRequest request) {
             List<Data> rowData = ds.getRow(request.getRowIndex());
 
-            for (int i = 0; i < grid.getColumnCount(); i++) {
-                GridColumn<?, List<Data>> col = grid.getColumn(i);
+            boolean hasSelectionColumn = !(grid.getSelectionModel() instanceof None);
+            for (int i = 0; i < rowData.size(); i++) {
+                int gridColumnIndex = hasSelectionColumn ? i + 1 : i;
+                GridColumn<?, List<Data>> col = grid.getColumn(gridColumnIndex);
                 getWidget(col).setText(rowData.get(i).value.toString());
             }
 
@@ -109,6 +112,11 @@ public class GridBasicClientFeaturesWidget extends
 
         @Override
         public TextBox getWidget(GridColumn<?, List<Data>> column) {
+            if (grid.getColumns().indexOf(column) == 0
+                    && !(grid.getSelectionModel() instanceof None)) {
+                return null;
+            }
+
             TextBox w = widgets.get(column);
             if (w == null) {
                 w = new TextBox();

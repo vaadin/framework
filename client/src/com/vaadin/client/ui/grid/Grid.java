@@ -566,14 +566,14 @@ public class Grid<T> extends Composite implements
         }
     }
 
-    private class SelectionColumn extends GridColumn<Boolean, T> {
+    public final class SelectionColumn extends GridColumn<Boolean, T> {
         private boolean initDone = false;
 
-        public SelectionColumn(final Renderer<Boolean> selectColumnRenderer) {
+        SelectionColumn(final Renderer<Boolean> selectColumnRenderer) {
             super(selectColumnRenderer);
         }
 
-        public void initDone() {
+        void initDone() {
             initDone = true;
         }
 

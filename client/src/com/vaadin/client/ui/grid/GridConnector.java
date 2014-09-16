@@ -144,9 +144,15 @@ public class GridConnector extends AbstractHasComponentsConnector {
         @Override
         public Widget getWidget(GridColumn<?, JSONObject> column) {
             assert column != null;
-            AbstractFieldConnector c = ((CustomGridColumn) column)
-                    .getEditorConnector();
-            return c != null ? c.getWidget() : null;
+
+            if (column instanceof CustomGridColumn) {
+                AbstractFieldConnector c = ((CustomGridColumn) column)
+                        .getEditorConnector();
+                return c != null ? c.getWidget() : null;
+            } else {
+                throw new IllegalStateException("Unexpected column type: "
+                        + column.getClass().getName());
+            }
         }
 
         @Override
