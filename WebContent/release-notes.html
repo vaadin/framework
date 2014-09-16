@@ -67,7 +67,7 @@
         <h2 id="overview">Overview of Vaadin @version@ Release</h2>
 
         <p>
-            Vaadin @version@ is a minor release that includes a
+            Vaadin @version@ is a maintenance release that includes a
             number of new features and bug fixes, as listed in the <a
                 href="#enhancements">list of enhancements</a> and <a
                 href="#changelog">change log</a> below.
@@ -97,9 +97,9 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Valo is a brand new built-in theme for Vaadin. It leverages 
-                the Sass CSS preprocessor heavily, 
-                providing a variety of ways to customize the look and feel of your theme. 
+            <li>Valo is a brand new built-in theme for Vaadin. It leverages
+                the Sass CSS preprocessor heavily,
+                providing a variety of ways to customize the look and feel of your theme.
                 See <a href="https://vaadin.com/wiki/-/wiki/Main/Valo+theme+-+Getting+started">the Valo theme tutorial</a> or <a href="https://vaadin.com/book/-/page/themes.valo.html">the Valo theme section</a> in Book of Vaadin for information on how to get started.</li>
             <li>Support for changing theme on the fly</li>
         </ul>
@@ -107,10 +107,10 @@
         <h3 id="incompatible">Incompatible or behavior-altering changes in @version-minor@</h3>
         <ul>
             <li>
-                <p>The shadow of all overlays (VOverlay) are now implemented with CSS box-shadow in all browsers except Internet Explorer 8 (<a href="http://dev.vaadin.com/ticket/9303">#9303</a>). 
+                <p>The shadow of all overlays (VOverlay) are now implemented with CSS box-shadow in all browsers except Internet Explorer 8 (<a href="http://dev.vaadin.com/ticket/9303">#9303</a>).
                 In IE8 the old image-based implementation is still used.
                 </p><p>
-                The image-based shadow implementation is also deprecated, so if you have any custom shadow implementations in your themes or add-ons, 
+                The image-based shadow implementation is also deprecated, so if you have any custom shadow implementations in your themes or add-ons,
                 please update them accordingly to use CSS box-shadow instead.
                 </p><p>
                 Note that the CSS-based implementation is visually not 100% identical to the old implementation. This should not cause issues except
@@ -134,9 +134,9 @@
             <li><p>It is currently not possible to specify <tt>font-size</tt>
                 as <tt>em</tt> or <tt>%</tt>, or layout component sizes
                 with <tt>em</tt> (<a
-                href="http://dev.vaadin.com/ticket/10634">#10634</a>).</p><p>This 
-                does not apply to Valo, but using em sizes to size layouts is discouraged, 
-                because it results in fractional component sizes in many cases, which 
+                href="http://dev.vaadin.com/ticket/10634">#10634</a>).</p><p>This
+                does not apply to Valo, but using em sizes to size layouts is discouraged,
+                because it results in fractional component sizes in many cases, which
                 might cause unwanted 1px gaps between components.</p>
             </li>
             <li>Push is currently not supported in portals (See <a
