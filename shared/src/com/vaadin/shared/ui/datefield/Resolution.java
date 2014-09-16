@@ -16,7 +16,6 @@
 package com.vaadin.shared.ui.datefield;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -26,8 +25,9 @@ import java.util.List;
  * @since 7.0
  */
 public enum Resolution {
-    SECOND(Calendar.SECOND), MINUTE(Calendar.MINUTE), HOUR(Calendar.HOUR_OF_DAY), DAY(
-            Calendar.DAY_OF_MONTH), MONTH(Calendar.MONTH), YEAR(Calendar.YEAR);
+    // Values from Calendar.SECOND etc. Set as ints to avoid Calendar dependency
+    // (does not exist on the client side)
+    SECOND(13), MINUTE(12), HOUR(11), DAY(5), MONTH(2), YEAR(1);
 
     private int calendarField;
 
@@ -36,7 +36,7 @@ public enum Resolution {
     }
 
     /**
-     * Returns the field in {@link Calendar} that corresponds to this
+     * Returns the field in java.util.Calendar that corresponds to this
      * resolution.
      * 
      * @return one of the field numbers used by Calendar
