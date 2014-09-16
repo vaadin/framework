@@ -56,17 +56,17 @@
 
     <target name="copy-theme">
         <fail unless="theme" message="You must give the theme name to copy n the 'theme' parameter" />
-        <property name="theme.source.dir" location="../WebContent/VAADIN/themes" />
+        <property name="theme.source.dir" location="../WebContent/VAADIN/themes/${theme}/" />
 
-        <copy todir="${theme.result.dir}">
+        <copy todir="${theme.result.dir}/${theme}">
             <fileset dir="${theme.source.dir}">
-                <include name="${theme}/**/*.scss" />
+                <include name="**/*.scss" />
             </fileset>
             <filterset refid="filter-vaadin.version" />
         </copy>
-        <copy todir="${theme.result.dir}">
+        <copy todir="${theme.result.dir}/${theme}">
             <fileset dir="${theme.source.dir}">
-                <exclude name="${theme}/**/*.scss" />
+                <exclude name="**/*.scss" />
             </fileset>
         </copy>
     </target>
