@@ -198,19 +198,6 @@ public class TableConnector extends AbstractHasComponentsConnector implements
                             uidl.getIntAttribute("rows"));
                     if (getWidget().headerChangedDuringUpdate) {
                         getWidget().triggerLazyColumnAdjustment(true);
-                    } else if (!getWidget().isScrollPositionVisible()
-                            || totalRowsHaveChanged
-                            || getWidget().lastRenderedHeight != getWidget().scrollBody
-                                    .getOffsetHeight()) {
-                        // webkits may still bug with their disturbing scrollbar
-                        // bug, see #3457
-                        // Run overflow fix for the scrollable area
-                        // #6698 - If there's a scroll going on, don't abort it
-                        // by changing overflows as the length of the contents
-                        // *shouldn't* have changed (unless the number of rows
-                        // or the height of the widget has also changed)
-                        Util.runWebkitOverflowAutoFixDeferred(getWidget().scrollBodyPanel
-                                .getElement());
                     }
                 } else {
                     getWidget().initializeRows(uidl, rowData);
