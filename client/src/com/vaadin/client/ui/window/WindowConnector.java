@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
@@ -289,8 +290,37 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             // emptied during the following hierarchy update (we need to keep
             // the contents visible for the duration of a possible
             // 'out-animation')
-            windowClone = getWidget().getElement().getFirstChild()
-                    .cloneNode(true);
+
+            // Fix for #14645 - as soon as we clone audio and video tags with
+            // autoplay attribute, they start playing immediately in background,
+            // so we have to clear them before cloning. And we can't just erase
+            // them, because there are corresponding player widgets to animate
+            Node content = getWidget().getElement().getFirstChild();
+            toggleAutoPlay(content);
+            windowClone = content.cloneNode(true);
+            toggleAutoPlay(content);
+        }
+    }
+
+    private void toggleAutoPlay(Node node) {
+        if (node instanceof Element) {
+            Element el = (Element) node;
+            if ("audio".equalsIgnoreCase(el.getTagName())
+                    || "video".equalsIgnoreCase(el.getTagName())) {
+                if (el.hasAttribute("autoplay")) {
+                    el.removeAttribute("autoplay");
+                    el.setAttribute("_autoplay", "");
+                } else if (el.hasAttribute("_autoplay")) {
+                    el.removeAttribute("_autoplay");
+                    el.setAttribute("autoplay", "");
+                }
+            }
+        }
+        if (node.hasChildNodes()) {
+            NodeList<Node> nl = node.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                toggleAutoPlay(nl.getItem(i));
+            }
         }
     }
 
