@@ -28,6 +28,7 @@ import java.util.Random;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -718,7 +719,23 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         c.getEditorRow().editItem(100);
                     }
                 }, null);
-
+        createClickAction("Commit", "Editor row", new Command<Grid, String>() {
+            @Override
+            public void execute(Grid c, String value, Object data) {
+                try {
+                    c.getEditorRow().commit();
+                } catch (CommitException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }, null);
+        createClickAction("Discard", "Editor row", new Command<Grid, String>() {
+            @Override
+            public void execute(Grid c, String value, Object data) {
+                c.getEditorRow().discard();
+            }
+        }, null);
         createClickAction("Cancel edit", "Editor row",
                 new Command<Grid, String>() {
                     @Override
@@ -726,7 +743,6 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         c.getEditorRow().cancel();
                     }
                 }, null);
-
     }
 
     @SuppressWarnings("boxing")

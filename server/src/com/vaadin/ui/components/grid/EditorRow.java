@@ -25,6 +25,9 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.BindException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroupFieldFactory;
+import com.vaadin.server.ClientConnector;
+import com.vaadin.server.ErrorEvent;
+import com.vaadin.server.ErrorHandler;
 import com.vaadin.ui.Field;
 
 /**
@@ -38,6 +41,9 @@ public class EditorRow implements Serializable {
     private Grid grid;
 
     private FieldGroup fieldGroup = new FieldGroup();
+
+    private ErrorHandler errorHandler;
+
     private Object editedItemId = null;
 
     private HashSet<Object> uneditableProperties = new HashSet<Object>();
@@ -109,6 +115,34 @@ public class EditorRow implements Serializable {
             this.fieldGroup.setItemDataSource(getContainer().getItem(
                     editedItemId));
         }
+    }
+
+    /**
+     * Returns the error handler of this editor row.
+     * 
+     * @return the error handler or null if there is no dedicated error handler
+     * 
+     * @see #setErrorHandler(ErrorHandler)
+     * @see ClientConnector#getErrorHandler()
+     */
+    public ErrorHandler getErrorHandler() {
+        return errorHandler;
+    }
+
+    /**
+     * Sets the error handler for this editor row. The error handler is invoked
+     * for exceptions thrown while processing client requests; specifically when
+     * {@link #commit()} triggered by the client throws a CommitException. If
+     * the error handler is not set, one is looked up via Grid.
+     *
+     * @param errorHandler
+     *            the error handler to use
+     * 
+     * @see ClientConnector#setErrorHandler(ErrorHandler)
+     * @see ErrorEvent#findErrorHandler(ClientConnector)
+     */
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
     }
 
     /**

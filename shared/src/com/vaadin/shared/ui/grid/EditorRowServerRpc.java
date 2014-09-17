@@ -37,6 +37,25 @@ public interface EditorRowServerRpc extends ServerRpc {
     void bind(int rowIndex);
 
     /**
+     * Asks the server to commit unsaved changes in the editor row to the data
+     * source. When a commit request is sent, it must be acknowledged with a
+     * {@link EditorRowClientRpc#confirmCommit() confirm call}.
+     * 
+     * @param rowIndex
+     *            the index of the edited row
+     */
+    void commit(int rowIndex);
+
+    /**
+     * Asks the server to replace any unsaved changes with values from the data
+     * source.
+     * 
+     * @param rowIndex
+     *            the index of the edited row
+     */
+    void discard(int rowIndex);
+
+    /**
      * Tells the server to cancel editing. When sending a cancel request, the
      * client does not need to wait for confirmation by the server before hiding
      * the editor row.

@@ -116,4 +116,38 @@ public class GridEditorRowTest extends GridBasicFeaturesTest {
         assertEquals("(100, 2)", widgets.get(2).getAttribute("value"));
         assertEquals("<b>100</b>", widgets.get(9).getAttribute("value"));
     }
+
+    @Test
+    public void testCommit() {
+        selectMenuPath("Component", "Editor row", "Edit item 100");
+
+        List<WebElement> widgets = getEditorRow().findElements(
+                By.className("v-textfield"));
+
+        widgets.get(0).click();
+
+        widgets.get(0).sendKeys(" changed");
+
+        WebElement saveButton = getEditorRow().findElement(
+                By.className("v-editor-row-save"));
+
+        saveButton.click();
+
+        assertEquals("(100, 0) changed", getGridElement().getCell(100, 0)
+                .getText());
+    }
+
+    @Test
+    public void testDiscard() {
+        selectMenuPath("Component", "Editor row", "Edit item 100");
+
+        List<WebElement> widgets = getEditorRow().findElements(
+                By.className("v-textfield"));
+
+        widgets.get(0).sendKeys(" changed");
+
+        selectMenuPath("Component", "Editor row", "Discard");
+
+        assertEquals("(100, 0)", getGridElement().getCell(100, 0).getText());
+    }
 }

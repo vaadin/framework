@@ -38,6 +38,7 @@ import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.EditorRowClientRpc;
 import com.vaadin.shared.ui.grid.EditorRowServerRpc;
@@ -417,14 +418,51 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
             @Override
             public void bind(int rowIndex) {
-                getEditorRow().internalEditItem(
-                        datasource.getIdByIndex(rowIndex));
-                getEditorRowRpc().confirmBind();
+                try {
+                    getEditorRow().internalEditItem(
+                            datasource.getIdByIndex(rowIndex));
+                    getEditorRowRpc().confirmBind();
+                } catch (Exception e) {
+                    handleError(e);
+                }
             }
 
             @Override
             public void cancel(int rowIndex) {
-                getEditorRow().internalCancel();
+                try {
+                    // For future proofing even though cannot currently fail
+                    getEditorRow().internalCancel();
+                } catch (Exception e) {
+                    handleError(e);
+                }
+            }
+
+            @Override
+            public void commit(int rowIndex) {
+                try {
+                    getEditorRow().commit();
+                    getEditorRowRpc().confirmCommit();
+                } catch (Exception e) {
+                    handleError(e);
+                }
+            }
+
+            @Override
+            public void discard(int rowIndex) {
+                try {
+                    getEditorRow().discard();
+                } catch (Exception e) {
+                    handleError(e);
+                }
+            }
+
+            private void handleError(Exception e) {
+                ErrorHandler handler = getEditorRow().getErrorHandler();
+                if (handler == null) {
+                    handler = com.vaadin.server.ErrorEvent
+                            .findErrorHandler(Grid.this);
+                }
+                handler.error(new ConnectorErrorEvent(Grid.this, e));
             }
         });
     }

@@ -150,6 +150,12 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 }
 
                 @Override
+                public void discard(int rowIndex) {
+                    serverInitiated = true;
+                    GridConnector.this.getWidget().getEditorRow().discard();
+                }
+
+                @Override
                 public void cancel(int rowIndex) {
                     serverInitiated = true;
                     GridConnector.this.getWidget().getEditorRow().cancel();
@@ -159,39 +165,43 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 public void confirmBind() {
                     endRequest();
                 }
+
+                @Override
+                public void confirmCommit() {
+                    endRequest();
+                }
             });
         }
 
         @Override
         public void bind(EditorRowRequest request) {
-            int index = request.getRowIndex();
-
-            if (serverInitiated) {
-                /*
-                 * EditorRow is calling us as a result of an RPC from the
-                 * server, so no need to do another roundtrip.
-                 */
-                serverInitiated = false;
-                request.invokeCallback();
-            } else {
-                /*
-                 * The clientside wanted to open the editor row, so inform the
-                 * server and proceed only when confirmation is received.
-                 */
+            if (!handleServerInitiated(request)) {
                 startRequest(request);
-                rpc.bind(index);
+                rpc.bind(request.getRowIndex());
+            }
+        }
+
+        @Override
+        public void commit(EditorRowRequest request) {
+            if (!handleServerInitiated(request)) {
+                startRequest(request);
+                rpc.commit(request.getRowIndex());
+            }
+        }
+
+        @Override
+        public void discard(EditorRowRequest request) {
+            if (!handleServerInitiated(request)) {
+                startRequest(request);
+                rpc.discard(request.getRowIndex());
             }
         }
 
         @Override
         public void cancel(EditorRowRequest request) {
-            /*
-             * Tell the server to cancel unless it was the server that told us
-             * to cancel. Cancels don't need a confirmation.
-             */
-            if (serverInitiated) {
-                serverInitiated = false;
-            } else {
+            if (!handleServerInitiated(request)) {
+                // No startRequest as we don't get (or need)
+                // a confirmation from the server
                 rpc.cancel(request.getRowIndex());
             }
         }
@@ -210,9 +220,30 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
         }
 
-        private void startRequest(EditorRowRequest request) {
+        /**
+         * Used to handle the case where EditorRow calls us because it was
+         * invoked by the server via RPC and not by the client. In that case, we
+         * simply synchronously complete the request.
+         * 
+         * @param request
+         *            the request object
+         * @return true if the request was originally triggered by the server,
+         *         false otherwise
+         */
+        private boolean handleServerInitiated(EditorRowRequest request) {
             assert request != null;
             assert currentRequest == null;
+
+            if (serverInitiated) {
+                serverInitiated = false;
+                request.invokeCallback();
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        private void startRequest(EditorRowRequest request) {
             currentRequest = request;
         }
 
@@ -220,18 +251,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             assert currentRequest != null;
             currentRequest.invokeCallback();
             currentRequest = null;
-        }
-
-        @Override
-        public void commit(EditorRowRequest request) {
-            // TODO no-op until Vaadin comms implemented
-            request.invokeCallback();
-        }
-
-        @Override
-        public void discard(EditorRowRequest request) {
-            // TODO no-op until Vaadin comms implemented
-            request.invokeCallback();
         }
     }
 
