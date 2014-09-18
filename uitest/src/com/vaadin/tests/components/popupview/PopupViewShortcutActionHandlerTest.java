@@ -15,20 +15,12 @@
  */
 package com.vaadin.tests.components.popupview;
 
-import java.util.Collections;
-import java.util.List;
-
+import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-
-import com.vaadin.testbench.TestBench;
-import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Check availability of shortcut action listener in the popup view.
@@ -51,29 +43,4 @@ public class PopupViewShortcutActionHandlerTest extends MultiBrowserTest {
                         + " shortcut action handling.",
                 isElementPresent(By.className("shortcut-result")));
     }
-
-    @Override
-    protected void setupDriver() throws Exception {
-        System.setProperty("phantomjs.binary.path",
-                "C:\\tmp\\phantom\\phantomjs.exe");
-        WebDriver dr = TestBench.createDriver(new PhantomJSDriver());
-        setDriver(dr);
-    }
-
-    @Override
-    protected String getScreenshotDirectory() {
-        return "C:\\tmp\\a";
-    }
-
-    @Override
-    protected void openTestURL() {
-        driver.get("http://localhost:8080/vaadin/run/PopupViewShortcutActionHandler");
-    }
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singletonList(Browser.FIREFOX
-                .getDesiredCapabilities());
-    }
-
 }
