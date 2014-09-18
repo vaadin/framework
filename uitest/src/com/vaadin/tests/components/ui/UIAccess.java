@@ -168,7 +168,7 @@ public class UIAccess extends AbstractTestUIWithLog {
                             }
                         });
                         future.cancel(false);
-                        log("future was cancled, should not start");
+                        log("future was cancelled, should not start");
                     }
                 }));
         addComponent(new Button("Cancel running future",
