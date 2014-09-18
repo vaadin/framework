@@ -58,6 +58,16 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
         browsers.remove(Browser.FIREFOX.getDesiredCapabilities());
         browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
 
+		return browsers;
+	}
+
+    protected List<DesiredCapabilities> getIEBrowsersOnly() {
+        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>();
+        browsers.add(Browser.IE8.getDesiredCapabilities());
+        browsers.add(Browser.IE9.getDesiredCapabilities());
+        browsers.add(Browser.IE10.getDesiredCapabilities());
+        browsers.add(Browser.IE11.getDesiredCapabilities());
+
         return browsers;
     }
 
