@@ -122,7 +122,7 @@ public class TestLayoutClickListenersTest extends MultiBrowserTest {
 
         // Drag from the third label to a text field in this layout
         new Actions(getDriver())
-                .moveToElement(layout.$(LabelElement.class).first(), 40, 8)
+                .moveToElement(layout.$(LabelElement.class).get(2), 40, 8)
                 .clickAndHold()
                 .moveToElement(layout.$(TextFieldElement.class).get(3), 46, 33)
                 .release().perform();
