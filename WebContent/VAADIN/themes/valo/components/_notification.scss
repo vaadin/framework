@@ -33,14 +33,14 @@ $v-notification-title-color: $v-focus-color !default;
   @if $v-animations-enabled {
 
     .#{$primary-stylename}-animate-in {
-      @include animation(valo-animate-in-fade 180ms);
+      @include animation(valo-animate-in-fade 180ms 10ms backwards);
 
       &.v-position-top {
-        @include animation(valo-animate-in-slide-down 400ms);
+        @include animation(valo-animate-in-slide-down 400ms 10ms backwards);
       }
 
       &.v-position-bottom {
-        @include animation(valo-animate-in-slide-up 400ms);
+        @include animation(valo-animate-in-slide-up 400ms 10ms backwards);
       }
     }
 
@@ -277,7 +277,7 @@ $v-notification-title-color: $v-focus-color !default;
 
     @if $v-animations-enabled {
       &[class*="animate-in"] {
-        @include animation(valo-animate-in-slide-down 300ms);
+        @include animation(valo-animate-in-slide-down 300ms 10ms backwards);
       }
 
       &[class*="animate-out"] {
@@ -291,7 +291,7 @@ $v-notification-title-color: $v-focus-color !default;
 
     @if $v-animations-enabled {
       &[class*="animate-in"] {
-        @include animation(valo-animate-in-slide-up 300ms);
+        @include animation(valo-animate-in-slide-up 300ms 10ms backwards);
       }
 
       &[class*="animate-out"] {
