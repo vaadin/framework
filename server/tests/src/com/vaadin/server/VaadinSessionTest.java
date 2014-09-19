@@ -15,7 +15,9 @@
  */
 package com.vaadin.server;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.ServletConfig;
@@ -30,6 +32,7 @@ import org.junit.Test;
 
 import com.vaadin.server.ClientConnector.DetachEvent;
 import com.vaadin.server.ClientConnector.DetachListener;
+import com.vaadin.server.communication.UIInitHandler;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
@@ -43,9 +46,11 @@ public class VaadinSessionTest {
     private WrappedSession mockWrappedSession;
     private VaadinServletRequest vaadinRequest;
     private UI ui;
+    private Lock httpSessionLock;
 
     @Before
     public void setup() throws Exception {
+        httpSessionLock = new ReentrantLock();
         mockServletConfig = new MockServletConfig();
         mockServlet = new VaadinServlet();
         mockServlet.init(mockServletConfig);
@@ -60,11 +65,30 @@ public class VaadinSessionTest {
 
             @Override
             public Object getAttribute(String name) {
-                String lockAttribute = mockService.getServiceName() + ".lock";
-                if (lockAttribute.equals(name)) {
-                    return lock;
+                Object res;
+                try {
+                    Thread.sleep(100); // for deadlock testing
+                    org.junit.Assert.assertTrue("Deadlock detected",
+                            httpSessionLock.tryLock(5, TimeUnit.SECONDS)); // simulates
+                                                                           // servlet
+                                                                           // container's
+                                                                           // session
+                                                                           // locking
+                    String lockAttribute = mockService.getServiceName()
+                            + ".lock";
+                    if (lockAttribute.equals(name)) {
+                        res = lock;
+                    } else if ("com.vaadin.server.VaadinSession.Mock Servlet"
+                            .equals(name)) {
+                        res = session;
+                    } else {
+                        res = super.getAttribute(name);
+                    }
+                    httpSessionLock.unlock();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
-                return super.getAttribute(name);
+                return res;
             }
         };
 
@@ -91,12 +115,26 @@ public class VaadinSessionTest {
                 EasyMock.createMock(HttpServletRequest.class), mockService) {
             @Override
             public String getParameter(String name) {
-                if ("theme".equals(name)) {
+                if ("theme".equals(name) || "restartApplication".equals(name)
+                        || "ignoreRestart".equals(name)
+                        || "closeApplication".equals(name)) {
                     return null;
+                } else if (UIInitHandler.BROWSER_DETAILS_PARAMETER.equals(name)) {
+                    return "1";
                 }
-
                 return super.getParameter(name);
             }
+
+            @Override
+            public String getMethod() {
+                return "POST";
+            }
+
+            @Override
+            public WrappedSession getWrappedSession(boolean allowSessionCreation) {
+                return mockWrappedSession;
+            }
+
         };
 
         ui.doInit(vaadinRequest, session.getNextUIid(), null);
@@ -106,8 +144,43 @@ public class VaadinSessionTest {
 
     }
 
+    /**
+     * This reproduces #14452 situation with deadlock - see diagram
+     */
     @Test
-    public void threadLocalsAfterUnderlyingSessionTimeout() {
+    public void testInvalidationDeadlock() {
+
+        // this simulates servlet container's session invalidation from another
+        // thread
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(150); // delay selected so that VaadinSession
+                                       // will be already locked by the main
+                                       // thread
+                                       // when we get here
+                    httpSessionLock.lock();// simulating servlet container's
+                                           // session lock
+                    mockService.fireSessionDestroy(session);
+                    httpSessionLock.unlock();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
+
+        try {
+            mockService.findVaadinSession(vaadinRequest);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Test
+    public void threadLocalsAfterUnderlyingSessionTimeout()
+            throws InterruptedException {
 
         final AtomicBoolean detachCalled = new AtomicBoolean(false);
         ui.addDetachListener(new DetachListener() {
@@ -123,11 +196,17 @@ public class VaadinSessionTest {
         });
 
         session.valueUnbound(EasyMock.createMock(HttpSessionBindingEvent.class));
+        mockService.runPendingAccessTasks(session); // as soon as we changed
+                                                    // session.accessSynchronously
+                                                    // to session.access in
+                                                    // VaadinService.fireSessionDestroy,
+                                                    // we need to run the
+                                                    // pending task ourselves
         Assert.assertTrue(detachCalled.get());
     }
 
     @Test
-    public void threadLocalsAfterSessionDestroy() {
+    public void threadLocalsAfterSessionDestroy() throws InterruptedException {
         final AtomicBoolean detachCalled = new AtomicBoolean(false);
         ui.addDetachListener(new DetachListener() {
             @Override
@@ -143,6 +222,12 @@ public class VaadinSessionTest {
         CurrentInstance.clearAll();
         session.close();
         mockService.cleanupSession(session);
+        mockService.runPendingAccessTasks(session); // as soon as we changed
+                                                    // session.accessSynchronously
+                                                    // to session.access in
+                                                    // VaadinService.fireSessionDestroy,
+                                                    // we need to run the
+                                                    // pending task ourselves
         Assert.assertTrue(detachCalled.get());
     }
 
