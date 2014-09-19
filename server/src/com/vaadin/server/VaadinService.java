@@ -446,7 +446,7 @@ public abstract class VaadinService implements Serializable {
      */
     public void fireSessionDestroy(VaadinSession vaadinSession) {
         final VaadinSession session = vaadinSession;
-        session.accessSynchronously(new Runnable() {
+        session.access(new Runnable() {
             @Override
             public void run() {
                 if (session.getState() == State.CLOSED) {
