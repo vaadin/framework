@@ -7518,7 +7518,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // Set new focused row
             focusedRow = row;
 
-            ensureRowIsVisible(row);
+            if (hasFocus) {
+                ensureRowIsVisible(row);
+            }
 
             return true;
         }
