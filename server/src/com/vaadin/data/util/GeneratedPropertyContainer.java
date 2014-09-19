@@ -39,8 +39,9 @@ import com.vaadin.ui.components.grid.sort.SortOrder;
  * @since
  * @author Vaadin Ltd
  */
-public class GeneratedPropertyContainer implements Container.Indexed,
-        Container.Sortable, Container.Filterable {
+public class GeneratedPropertyContainer extends AbstractContainer implements
+        Container.Indexed, Container.Sortable, Container.Filterable,
+        Container.PropertySetChangeNotifier, Container.ItemSetChangeNotifier {
 
     private final Container.Indexed wrappedContainer;
     private final Map<Object, PropertyValueGenerator<?>> propertyGenerators;
@@ -148,14 +149,42 @@ public class GeneratedPropertyContainer implements Container.Indexed,
     public GeneratedPropertyContainer(Container.Indexed container) {
         wrappedContainer = container;
         propertyGenerators = new HashMap<Object, PropertyValueGenerator<?>>();
+
         if (wrappedContainer instanceof Sortable) {
             sortableContainer = (Sortable) wrappedContainer;
         }
+
         if (wrappedContainer instanceof Filterable) {
             activeFilters = new HashMap<Filter, List<Filter>>();
             filterableContainer = (Filterable) wrappedContainer;
         } else {
             activeFilters = null;
+        }
+
+        // ItemSetChangeEvents
+        if (wrappedContainer instanceof ItemSetChangeNotifier) {
+            ((ItemSetChangeNotifier) wrappedContainer)
+                    .addItemSetChangeListener(new ItemSetChangeListener() {
+
+                        @Override
+                        public void containerItemSetChange(
+                                ItemSetChangeEvent event) {
+                            fireItemSetChange();
+                        }
+                    });
+        }
+
+        // PropertySetChangeEvents
+        if (wrappedContainer instanceof PropertySetChangeNotifier) {
+            ((PropertySetChangeNotifier) wrappedContainer)
+                    .addPropertySetChangeListener(new PropertySetChangeListener() {
+
+                        @Override
+                        public void containerPropertySetChange(
+                                PropertySetChangeEvent event) {
+                            fireContainerPropertySetChange();
+                        }
+                    });
         }
     }
 
@@ -174,7 +203,7 @@ public class GeneratedPropertyContainer implements Container.Indexed,
     public void addGeneratedProperty(Object propertyId,
             PropertyValueGenerator<?> generator) {
         propertyGenerators.put(propertyId, generator);
-        // TODO: Fire event
+        fireContainerPropertySetChange();
     }
 
     /**
@@ -187,7 +216,7 @@ public class GeneratedPropertyContainer implements Container.Indexed,
     public void removeGeneratedProperty(Object propertyId) {
         if (propertyGenerators.containsKey(propertyId)) {
             propertyGenerators.remove(propertyId);
-            // TODO: Fire event
+            fireContainerPropertySetChange();
         }
     }
 
@@ -216,6 +245,49 @@ public class GeneratedPropertyContainer implements Container.Indexed,
         } else {
             return new HashSet<T>(collection);
         }
+    }
+
+    /* Listener functionality */
+
+    @Override
+    public void addItemSetChangeListener(ItemSetChangeListener listener) {
+        super.addItemSetChangeListener(listener);
+    }
+
+    @Override
+    public void addListener(ItemSetChangeListener listener) {
+        super.addListener(listener);
+    }
+
+    @Override
+    public void removeItemSetChangeListener(ItemSetChangeListener listener) {
+        super.removeItemSetChangeListener(listener);
+    }
+
+    @Override
+    public void removeListener(ItemSetChangeListener listener) {
+        super.removeListener(listener);
+    }
+
+    @Override
+    public void addPropertySetChangeListener(PropertySetChangeListener listener) {
+        super.addPropertySetChangeListener(listener);
+    }
+
+    @Override
+    public void addListener(PropertySetChangeListener listener) {
+        super.addListener(listener);
+    }
+
+    @Override
+    public void removePropertySetChangeListener(
+            PropertySetChangeListener listener) {
+        super.removePropertySetChangeListener(listener);
+    }
+
+    @Override
+    public void removeListener(PropertySetChangeListener listener) {
+        super.removeListener(listener);
     }
 
     /* Filtering functionality */

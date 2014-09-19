@@ -25,6 +25,10 @@ import org.junit.Test;
 
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Container.Indexed;
+import com.vaadin.data.Container.ItemSetChangeEvent;
+import com.vaadin.data.Container.ItemSetChangeListener;
+import com.vaadin.data.Container.PropertySetChangeEvent;
+import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
@@ -34,6 +38,41 @@ public class GeneratedPropertyContainerTest {
 
     GeneratedPropertyContainer container;
     private static double MILES_CONVERSION = 0.6214d;
+
+    private class GeneratedPropertyListener implements
+            PropertySetChangeListener {
+
+        private int callCount = 0;
+
+        public int getCallCount() {
+            return callCount;
+        }
+
+        @Override
+        public void containerPropertySetChange(PropertySetChangeEvent event) {
+            ++callCount;
+            assertEquals(
+                    "Container for event was not GeneratedPropertyContainer",
+                    event.getContainer(), container);
+        }
+    }
+
+    private class GeneratedItemSetListener implements ItemSetChangeListener {
+
+        private int callCount = 0;
+
+        public int getCallCount() {
+            return callCount;
+        }
+
+        @Override
+        public void containerItemSetChange(ItemSetChangeEvent event) {
+            ++callCount;
+            assertEquals(
+                    "Container for event was not GeneratedPropertyContainer",
+                    event.getContainer(), container);
+        }
+    }
 
     @Before
     public void setUp() {
@@ -181,6 +220,50 @@ public class GeneratedPropertyContainerTest {
         if (allPass) {
             fail("Removing filter did not introduce any previous filtered items");
         }
+    }
+
+    @Test
+    public void testPropertySetChangeNotifier() {
+        GeneratedPropertyListener listener = new GeneratedPropertyListener();
+        GeneratedPropertyListener removedListener = new GeneratedPropertyListener();
+        container.addPropertySetChangeListener(listener);
+        container.addPropertySetChangeListener(removedListener);
+
+        container.addGeneratedProperty("foo",
+                new PropertyValueGenerator<String>() {
+
+                    @Override
+                    public String getValue(Item item, Object itemId,
+                            Object propertyId) {
+                        return "";
+                    }
+
+                    @Override
+                    public Class<String> getType() {
+                        return String.class;
+                    }
+                });
+        container.addContainerProperty("baz", String.class, "");
+        container.removePropertySetChangeListener(removedListener);
+        container.removeGeneratedProperty("foo");
+
+        assertEquals("Listener was not called correctly.", 3,
+                listener.getCallCount());
+        assertEquals("Removed listener was not called correctly.", 2,
+                removedListener.getCallCount());
+    }
+
+    @Test
+    public void testItemSetChangeNotifier() {
+        GeneratedItemSetListener listener = new GeneratedItemSetListener();
+        container.addItemSetChangeListener(listener);
+
+        container.sort(new Object[] { "foo" }, new boolean[] { true });
+        container.sort(new Object[] { "foo" }, new boolean[] { false });
+
+        assertEquals("Listener was not called correctly.", 2,
+                listener.getCallCount());
+
     }
 
     private Indexed createContainer() {
