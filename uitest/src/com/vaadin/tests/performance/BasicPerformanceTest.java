@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.util.TestUtils;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -17,6 +18,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 public class BasicPerformanceTest extends UI {
+
+    private int updateOneCount = 0;
 
     private final VerticalLayout contentLayout = new VerticalLayout();
 
@@ -64,7 +67,7 @@ public class BasicPerformanceTest extends UI {
         TestUtils.installPerformanceReporting(performanceReportArea);
 
         VerticalLayout leftBar = new VerticalLayout();
-        leftBar.setSizeUndefined();
+        leftBar.setWidth("250px");
         leftBar.addComponent(new Label("This is the left bar"));
         leftBar.addComponent(performanceReportArea);
         leftBar.addComponent(reportPerformanceButton);
@@ -123,6 +126,26 @@ public class BasicPerformanceTest extends UI {
                             }
                         }
                         updatePerformanceReporting("Update labels", 100, 100);
+                    }
+                }));
+
+        leftBar.addComponent(new Button("Update one label",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        Component child = contentLayout.getComponent(0);
+                        if (child instanceof Panel) {
+                            Panel panel = (Panel) child;
+                            child = panel.getContent();
+                        }
+
+                        AbstractOrderedLayout layout = (AbstractOrderedLayout) ((AbstractOrderedLayout) child)
+                                .getComponent(0);
+                        Label label = (Label) layout.getComponent(0);
+
+                        label.setValue("New value " + updateOneCount++);
+
+                        updatePerformanceReporting("Update one", 10, 10);
                     }
                 }));
 

@@ -135,6 +135,11 @@ public class ApplicationConnection implements HasHandlers {
          * Needed to know where captions might need to get updated
          */
         private FastStringSet parentChangedIds = FastStringSet.create();
+
+        /**
+         * Connectors for which the parent has been set to null
+         */
+        private FastStringSet detachedConnectorIds = FastStringSet.create();
     }
 
     public static final String MODIFIED_CLASSNAME = "v-modified";
@@ -1624,7 +1629,7 @@ public class ApplicationConnection implements HasHandlers {
                             json.getValueMap("dd"));
                 }
 
-                unregisterRemovedConnectors();
+                unregisterRemovedConnectors(connectorHierarchyUpdateResult.detachedConnectorIds);
 
                 VConsole.log("handleUIDLMessage: "
                         + (Duration.currentTimeMillis() - processUidlStart)
@@ -1722,7 +1727,7 @@ public class ApplicationConnection implements HasHandlers {
                 sendHierarchyChangeEvents(connectorHierarchyUpdateResult.events);
 
                 // Unregister all the old connectors that have now been removed
-                unregisterRemovedConnectors();
+                unregisterRemovedConnectors(connectorHierarchyUpdateResult.detachedConnectorIds);
 
                 getLayoutManager().cleanMeasuredSizes();
             }
@@ -1877,47 +1882,63 @@ public class ApplicationConnection implements HasHandlers {
                 Profiler.leave("sendStateChangeEvents");
             }
 
-            private void unregisterRemovedConnectors() {
-                Profiler.enter("unregisterRemovedConnectors");
+            private void verifyConnectorHierarchy() {
+                Profiler.enter("verifyConnectorHierarchy - this is only performed in debug mode");
 
-                int unregistered = 0;
                 JsArrayObject<ServerConnector> currentConnectors = connectorMap
                         .getConnectorsAsJsArray();
                 int size = currentConnectors.size();
                 for (int i = 0; i < size; i++) {
                     ServerConnector c = currentConnectors.get(i);
                     if (c.getParent() != null) {
-                        // only do this check if debug mode is active
-                        if (ApplicationConfiguration.isDebugMode()) {
-                            Profiler.enter("unregisterRemovedConnectors check parent - this is only performed in debug mode");
-                            // this is slow for large layouts, 25-30% of total
-                            // time for some operations even on modern browsers
-                            if (!c.getParent().getChildren().contains(c)) {
-                                VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
-                            }
-                            Profiler.leave("unregisterRemovedConnectors check parent - this is only performed in debug mode");
+                        if (!c.getParent().getChildren().contains(c)) {
+                            VConsole.error("ERROR: Connector "
+                                    + c.getConnectorId()
+                                    + " is connected to a parent but the parent ("
+                                    + c.getParent().getConnectorId()
+                                    + ") does not contain the connector");
                         }
                     } else if (c == getUIConnector()) {
-                        // UIConnector for this connection, leave as-is
+                        // UIConnector for this connection, ignore
                     } else if (c instanceof WindowConnector
                             && getUIConnector().hasSubWindow(
                                     (WindowConnector) c)) {
-                        // Sub window attached to this UIConnector, leave
-                        // as-is
+                        // Sub window attached to this UIConnector, ignore
                     } else {
                         // The connector has been detached from the
-                        // hierarchy, unregister it and any possible
-                        // children. The UIConnector should never be
-                        // unregistered even though it has no parent.
-                        Profiler.enter("unregisterRemovedConnectors unregisterConnector");
-                        connectorMap.unregisterConnector(c);
-                        Profiler.leave("unregisterRemovedConnectors unregisterConnector");
-                        unregistered++;
+                        // hierarchy but was not unregistered.
+                        VConsole.error("ERROR: Connector "
+                                + c.getConnectorId()
+                                + " is not attached to a parent but has not been unregistered");
                     }
 
                 }
 
-                VConsole.log("* Unregistered " + unregistered + " connectors");
+                Profiler.leave("verifyConnectorHierarchy - this is only performed in debug mode");
+            }
+
+            private void unregisterRemovedConnectors(
+                    FastStringSet detachedConnectors) {
+                Profiler.enter("unregisterRemovedConnectors");
+
+                JsArrayString detachedArray = detachedConnectors.dump();
+                for (int i = 0; i < detachedArray.length(); i++) {
+                    ServerConnector connector = connectorMap
+                            .getConnector(detachedArray.get(i));
+
+                    Profiler.enter("unregisterRemovedConnectors unregisterConnector");
+                    connectorMap.unregisterConnector(connector);
+                    Profiler.leave("unregisterRemovedConnectors unregisterConnector");
+                }
+
+                if (ApplicationConfiguration.isDebugMode()) {
+                    // Do some extra checking if we're in debug mode (i.e. debug
+                    // window is open)
+                    verifyConnectorHierarchy();
+                }
+
+                VConsole.log("* Unregistered " + detachedArray.length()
+                        + " connectors");
                 Profiler.leave("unregisterRemovedConnectors");
             }
 
@@ -2327,7 +2348,8 @@ public class ApplicationConnection implements HasHandlers {
                 for (int i = 0; i < maybeDetachedArray.length(); i++) {
                     ServerConnector removed = connectorMap
                             .getConnector(maybeDetachedArray.get(i));
-                    recursivelyDetach(removed, result.events);
+                    recursivelyDetach(removed, result.events,
+                            result.detachedConnectorIds);
                 }
 
                 Profiler.leave("updateConnectorHierarchy detach removed connectors");
@@ -2339,7 +2361,9 @@ public class ApplicationConnection implements HasHandlers {
             }
 
             private void recursivelyDetach(ServerConnector connector,
-                    JsArrayObject<ConnectorHierarchyChangeEvent> events) {
+                    JsArrayObject<ConnectorHierarchyChangeEvent> events,
+                    FastStringSet detachedConnectors) {
+                detachedConnectors.add(connector.getConnectorId());
 
                 /*
                  * Reset state in an attempt to keep it consistent with the
@@ -2400,7 +2424,7 @@ public class ApplicationConnection implements HasHandlers {
                     if (child.getParent() != connector) {
                         continue;
                     }
-                    recursivelyDetach(child, events);
+                    recursivelyDetach(child, events, detachedConnectors);
                 }
                 Profiler.leave("ApplicationConnection recursivelyDetach perform detach");
 
