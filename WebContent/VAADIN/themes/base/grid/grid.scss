@@ -1,0 +1,57 @@
+@mixin base-grid($primaryStyleName : v-grid) {
+	@include base-escalator($primaryStyleName);
+
+	.#{$primaryStyleName} {
+
+		th {
+			position: relative;
+		}
+
+		th.sort-asc:after {
+			content: "\25B2" attr(sort-order);
+			position: absolute;
+			right: 5px;
+		}
+
+		th.sort-desc:after {
+			content: "\25BC" attr(sort-order);
+			position: absolute;
+			right: 5px;
+		}
+
+		.#{$primaryStyleName}-cell-active {
+			border-color: blue;
+		}
+
+		.#{$primaryStyleName}-header-active {
+			background: lightgray;
+		}
+
+		.#{$primaryStyleName}-row-active > td {
+			background: rgb(244,244,244);
+		}
+	}
+
+	.#{$primaryStyleName}-row-selected > td {
+		background: lightblue;
+	}
+
+	.#{$primaryStyleName}-editor-row {
+
+		position: absolute;
+		overflow-y: visible;
+		background: #EEE;
+		box-shadow: 0 0 5px;
+
+		& > div {
+			position: absolute;
+			box-sizing: border-box;
+			border: 1px solid #CCC;
+		}
+
+		.v-editor-row-save,
+		.v-editor-row-cancel {
+			position: absolute;
+		}
+	}
+}

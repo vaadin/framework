@@ -4,6 +4,8 @@
     <!-- Inherit the DefaultWidgetSet -->
     <inherits name="com.vaadin.DefaultWidgetSet" />
 
+    <inherits name="com.google.gwt.user.theme.standard.Standard" />
+
     <replace-with class="com.vaadin.tests.widgetset.client.CustomUIConnector">
         <when-type-is class="com.vaadin.client.ui.ui.UIConnector" />
     </replace-with>
