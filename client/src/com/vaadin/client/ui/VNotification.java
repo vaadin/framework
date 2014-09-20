@@ -27,6 +27,7 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -386,6 +387,20 @@ public class VNotification extends VOverlay {
     @Override
     public void onBrowserEvent(Event event) {
         hide();
+    }
+
+    @Override
+    /*
+     * Fix for #14689: {@link #onEventPreview(Event)} method is deprecated and
+     * it's called now only for the very first handler (see super impl). We need
+     * it to work for any handler. So let's call old {@link
+     * #onEventPreview(Event)} method explicitly with updated logic for {@link
+     * #onPreviewNativeEvent(Event)}.
+     */
+    protected void onPreviewNativeEvent(NativePreviewEvent event) {
+        if (!onEventPreview(Event.as(event.getNativeEvent()))) {
+            event.cancel();
+        }
     }
 
     @Override
