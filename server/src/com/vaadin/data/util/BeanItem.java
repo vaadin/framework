@@ -16,12 +16,8 @@
 
 package com.vaadin.data.util;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -189,7 +185,8 @@ public class BeanItem<BT> extends PropertysetItem {
 
         // Try to introspect, if it fails, we just have an empty Item
         try {
-            List<PropertyDescriptor> propertyDescriptors = getBeanPropertyDescriptor(beanClass);
+            List<PropertyDescriptor> propertyDescriptors = BeanUtil
+                    .getBeanPropertyDescriptor(beanClass);
 
             // Add all the bean properties as MethodProperties to this Item
             // later entries on the list overwrite earlier ones
@@ -207,106 +204,6 @@ public class BeanItem<BT> extends PropertysetItem {
         }
 
         return pdMap;
-    }
-
-    /**
-     * Returns the property descriptors of a class or an interface.
-     * 
-     * For an interface, superinterfaces are also iterated as Introspector does
-     * not take them into account (Oracle Java bug 4275879), but in that case,
-     * both the setter and the getter for a property must be in the same
-     * interface and should not be overridden in subinterfaces for the discovery
-     * to work correctly.
-     * 
-     * For interfaces, the iteration is depth first and the properties of
-     * superinterfaces are returned before those of their subinterfaces.
-     * 
-     * @param beanClass
-     * @return
-     * @throws IntrospectionException
-     */
-    private static List<PropertyDescriptor> getBeanPropertyDescriptor(
-            final Class<?> beanClass) throws IntrospectionException {
-        // Oracle bug 4275879: Introspector does not consider superinterfaces of
-        // an interface
-        if (beanClass.isInterface()) {
-            List<PropertyDescriptor> propertyDescriptors = new ArrayList<PropertyDescriptor>();
-
-            for (Class<?> cls : beanClass.getInterfaces()) {
-                propertyDescriptors.addAll(getBeanPropertyDescriptor(cls));
-            }
-
-            BeanInfo info = Introspector.getBeanInfo(beanClass);
-            propertyDescriptors.addAll(getPropertyDescriptors(info));
-
-            return propertyDescriptors;
-        } else {
-            BeanInfo info = Introspector.getBeanInfo(beanClass);
-            return getPropertyDescriptors(info);
-        }
-    }
-
-    // Workaround for Java6 bug JDK-6788525. Do nothing for JDK7+.
-    private static List<PropertyDescriptor> getPropertyDescriptors(
-            BeanInfo beanInfo) {
-        PropertyDescriptor[] descriptors = beanInfo.getPropertyDescriptors();
-        List<PropertyDescriptor> result = new ArrayList<PropertyDescriptor>(
-                descriptors.length);
-        for (PropertyDescriptor descriptor : descriptors) {
-            try {
-                Method readMethod = getMethodFromBridge(descriptor
-                        .getReadMethod());
-                if (readMethod != null) {
-                    Method writeMethod = getMethodFromBridge(
-                            descriptor.getWriteMethod(),
-                            readMethod.getReturnType());
-                    if (writeMethod == null) {
-                        writeMethod = descriptor.getWriteMethod();
-                    }
-                    PropertyDescriptor descr = new PropertyDescriptor(
-                            descriptor.getName(), readMethod, writeMethod);
-                    result.add(descr);
-                } else {
-                    result.add(descriptor);
-                }
-            } catch (SecurityException ignore) {
-                // handle next descriptor
-            } catch (IntrospectionException e) {
-                result.add(descriptor);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Return not bridged method for bridge {@code bridgeMethod} method. If
-     * method {@code bridgeMethod} is not bridge method then return null.
-     */
-    private static Method getMethodFromBridge(Method bridgeMethod)
-            throws SecurityException {
-        if (bridgeMethod == null) {
-            return null;
-        }
-        return getMethodFromBridge(bridgeMethod,
-                bridgeMethod.getParameterTypes());
-    }
-
-    /**
-     * Return not bridged method for bridge {@code bridgeMethod} method and
-     * declared {@code paramTypes}. If method {@code bridgeMethod} is not bridge
-     * method then return null.
-     */
-    private static Method getMethodFromBridge(Method bridgeMethod,
-            Class<?>... paramTypes) throws SecurityException {
-        if (bridgeMethod == null || !bridgeMethod.isBridge()) {
-            return null;
-        }
-        try {
-            return bridgeMethod.getDeclaringClass().getMethod(
-                    bridgeMethod.getName(), paramTypes);
-        } catch (NoSuchMethodException e) {
-            return null;
-        }
     }
 
     /**
