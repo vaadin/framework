@@ -68,7 +68,8 @@ public class FieldGroup implements Serializable {
     /**
      * The field factory used by builder methods.
      */
-    private FieldGroupFieldFactory fieldFactory = new DefaultFieldGroupFieldFactory();
+    private FieldGroupFieldFactory fieldFactory = DefaultFieldGroupFieldFactory
+            .get();
 
     /**
      * Constructs a field binder. Use {@link #setItemDataSource(Item)} to set a
