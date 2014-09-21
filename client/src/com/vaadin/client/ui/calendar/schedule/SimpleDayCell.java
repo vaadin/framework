@@ -74,8 +74,15 @@ public class SimpleDayCell extends FocusableFlowPanel implements
     private int startY = -1;
     private int startYrelative;
     private int startXrelative;
-    private Date startDateFrom;
-    private Date startDateTo;
+    // "from" date of date which is source of Dnd
+    private Date dndSourceDateFrom;
+    // "to" date of date which is source of Dnd
+    private Date dndSourceDateTo;
+    // "from" time of date which is source of Dnd
+    private Date dndSourceStartDateTime;
+    // "to" time of date which is source of Dnd
+    private Date dndSourceEndDateTime;
+
     private int prevDayDiff = 0;
     private int prevWeekDiff = 0;
     private HandlerRegistration moveRegistration;
@@ -392,8 +399,7 @@ public class SimpleDayCell extends FocusableFlowPanel implements
             prevDayDiff = 0;
             prevWeekDiff = 0;
 
-            if (!mel.isTimeSpecificEvent()
-                    && (xDiff < -3 || xDiff > 3 || yDiff < -3 || yDiff > 3)) {
+            if (xDiff < -3 || xDiff > 3 || yDiff < -3 || yDiff > 3) {
                 eventMoved(moveEvent);
 
             } else if (calendar.getEventClickListener() != null) {
@@ -528,18 +534,45 @@ public class SimpleDayCell extends FocusableFlowPanel implements
 
         Date from = e.getStart();
         Date to = e.getEnd();
-        long duration = to.getTime() - from.getTime();
 
         long daysMs = dayDiff * DateConstants.DAYINMILLIS;
         long weeksMs = weekDiff * DateConstants.WEEKINMILLIS;
-        from.setTime(startDateFrom.getTime() + weeksMs + daysMs);
-        to.setTime((from.getTime() + duration));
+
+        setDates(e, from, to, weeksMs + daysMs, false);
         e.setStart(from);
         e.setEnd(to);
-        e.setStartTime(new Date(from.getTime()));
-        e.setEndTime(new Date(to.getTime()));
+        if (w.isTimeSpecificEvent()) {
+            Date start = new Date();
+            Date end = new Date();
+            setDates(e, start, end, weeksMs + daysMs, true);
+            e.setStartTime(start);
+            e.setEndTime(end);
+        } else {
+            e.setStartTime(new Date(from.getTime()));
+            e.setEndTime(new Date(to.getTime()));
+        }
 
         updateDragPosition(w, dayDiff, weekDiff);
+    }
+
+    private void setDates(CalendarEvent e, Date start, Date end, long shift,
+            boolean isDateTime) {
+        Date currentStart;
+        Date currentEnd;
+        if (isDateTime) {
+            currentStart = e.getStartTime();
+            currentEnd = e.getEndTime();
+        } else {
+            currentStart = e.getStart();
+            currentEnd = e.getEnd();
+        }
+        long duration = currentEnd.getTime() - currentStart.getTime();
+        if (isDateTime) {
+            start.setTime(dndSourceStartDateTime.getTime() + shift);
+        } else {
+            start.setTime(dndSourceDateFrom.getTime() + shift);
+        }
+        end.setTime((start.getTime() + duration));
     }
 
     private void eventMoved(CalendarEvent e) {
@@ -551,10 +584,6 @@ public class SimpleDayCell extends FocusableFlowPanel implements
 
     public void startCalendarEventDrag(MouseDownEvent event,
             final MonthEventLabel w) {
-        if (w.isTimeSpecificEvent()) {
-            return;
-        }
-
         moveRegistration = addMouseMoveHandler(this);
         startX = event.getClientX();
         startY = event.getClientY();
@@ -564,8 +593,11 @@ public class SimpleDayCell extends FocusableFlowPanel implements
                 % getWidth();
 
         CalendarEvent e = getEventByWidget(w);
-        startDateFrom = (Date) e.getStart().clone();
-        startDateTo = (Date) e.getEnd().clone();
+        dndSourceDateFrom = (Date) e.getStart().clone();
+        dndSourceDateTo = (Date) e.getEnd().clone();
+
+        dndSourceStartDateTime = (Date) e.getStartTime().clone();
+        dndSourceEndDateTime = (Date) e.getEndTime().clone();
 
         Event.setCapture(getElement());
         keyDownHandler = addKeyDownHandler(new KeyDownHandler() {
@@ -591,8 +623,10 @@ public class SimpleDayCell extends FocusableFlowPanel implements
                 moveEvent = getEventByWidget(w);
             }
 
-            moveEvent.setStart(startDateFrom);
-            moveEvent.setEnd(startDateTo);
+            moveEvent.setStart(dndSourceDateFrom);
+            moveEvent.setEnd(dndSourceDateTo);
+            moveEvent.setStartTime(dndSourceStartDateTime);
+            moveEvent.setEndTime(dndSourceEndDateTime);
             calendar.updateEventToMonthGrid(moveEvent);
 
             // reset drag-related properties
