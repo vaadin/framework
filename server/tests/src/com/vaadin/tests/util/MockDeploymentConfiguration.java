@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.AbstractDeploymentConfiguration;
 import com.vaadin.shared.communication.PushMode;
 
-public class MockDeploymentConfiguration implements DeploymentConfiguration {
+public class MockDeploymentConfiguration extends
+        AbstractDeploymentConfiguration {
 
     private boolean productionMode = false;
     private boolean xsrfProtectionEnabled = true;

@@ -130,8 +130,7 @@ public class ServletPortletHelper implements Serializable {
     public static void initDefaultUIProvider(VaadinSession session,
             VaadinService vaadinService) throws ServiceException {
         String uiProperty = vaadinService.getDeploymentConfiguration()
-                .getApplicationOrSystemProperty(VaadinSession.UI_PARAMETER,
-                        null);
+                .getUIClassName();
 
         // Add provider for UI parameter first to give it lower priority
         // (providers are FILO)
@@ -141,8 +140,7 @@ public class ServletPortletHelper implements Serializable {
         }
 
         String uiProviderProperty = vaadinService.getDeploymentConfiguration()
-                .getApplicationOrSystemProperty(
-                        Constants.SERVLET_PARAMETER_UI_PROVIDER, null);
+                .getUIProviderClassName();
         // Then add custom UI provider if defined
         if (uiProviderProperty != null) {
             UIProvider uiProvider = getUIProvider(uiProviderProperty,

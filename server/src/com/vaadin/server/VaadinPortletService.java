@@ -124,9 +124,7 @@ public class VaadinPortletService extends VaadinService {
     @Override
     public String getConfiguredWidgetset(VaadinRequest request) {
 
-        String widgetset = getDeploymentConfiguration()
-                .getApplicationOrSystemProperty(
-                        VaadinPortlet.PARAMETER_WIDGETSET, null);
+        String widgetset = getDeploymentConfiguration().getWidgetset(null);
 
         if (widgetset == null) {
             widgetset = getParameter(request,
