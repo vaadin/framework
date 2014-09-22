@@ -35,18 +35,6 @@ public class GridColumnState implements Serializable {
     public String id;
 
     /**
-     * Header caption for the column
-     */
-    @Deprecated
-    public String header;
-
-    /**
-     * Footer caption for the column
-     */
-    @Deprecated
-    public String footer;
-
-    /**
      * Has the column been hidden. By default the column is visible.
      */
     public boolean visible = true;

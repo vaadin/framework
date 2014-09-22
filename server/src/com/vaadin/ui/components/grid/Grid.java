@@ -513,9 +513,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                             .getSortableContainerPropertyIds().contains(
                                     propertyId));
                 }
-
-                // Add by default property id as column header
-                row.getCell(propertyId).setText(String.valueOf(propertyId));
             }
         }
     }
@@ -605,6 +602,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
         GridColumn column = new GridColumn(this, columnState);
         columns.put(datasourcePropertyId, column);
+        column.setHeaderCaption(String.valueOf(datasourcePropertyId));
 
         return column;
     }

@@ -22,8 +22,8 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.grid.GridColumnState;
-import com.vaadin.shared.ui.grid.GridStaticSectionState.CellState;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.components.grid.GridHeader.HeaderRow;
 import com.vaadin.ui.components.grid.renderers.TextRenderer;
 
 /**
@@ -87,10 +87,14 @@ public class GridColumn implements Serializable {
      * @throws IllegalStateException
      *             if the column no longer is attached to the grid
      */
-    @Deprecated
     public String getHeaderCaption() throws IllegalStateException {
         checkColumnIsAttached();
-        return state.header;
+        HeaderRow row = grid.getHeader().getDefaultRow();
+        if (row != null) {
+            return row.getCell(grid.getPropertyIdByColumnId(state.id))
+                    .getText();
+        }
+        return null;
     }
 
     /**
@@ -102,46 +106,13 @@ public class GridColumn implements Serializable {
      * @throws IllegalStateException
      *             if the column is no longer attached to any grid
      */
-    @Deprecated
     public void setHeaderCaption(String caption) throws IllegalStateException {
         checkColumnIsAttached();
-        state.header = caption;
-    }
-
-    /**
-     * Returns the caption of the footer. By default the captions are
-     * <code>null</code>.
-     * 
-     * @return the text in the footer
-     * @throws IllegalStateException
-     *             if the column is no longer attached to any grid
-     */
-    @Deprecated
-    public String getFooterCaption() throws IllegalStateException {
-        checkColumnIsAttached();
-        return getFooterCellState().text;
-    }
-
-    /**
-     * Sets the caption of the footer.
-     * 
-     * @param caption
-     *            the text to show in the caption
-     * 
-     * @throws IllegalStateException
-     *             if the column is no longer attached to any grid
-     */
-    @Deprecated
-    public void setFooterCaption(String caption) throws IllegalStateException {
-        checkColumnIsAttached();
-        getFooterCellState().text = caption;
-        state.footer = caption;
-        grid.markAsDirty();
-    }
-
-    private CellState getFooterCellState() {
-        int index = grid.getState().columns.indexOf(state);
-        return grid.getState().footer.rows.get(0).cells.get(index);
+        HeaderRow row = grid.getHeader().getDefaultRow();
+        if (row != null) {
+            row.getCell(grid.getPropertyIdByColumnId(state.id))
+                    .setText(caption);
+        }
     }
 
     /**

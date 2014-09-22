@@ -79,13 +79,11 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
         }
 
         /**
-         * Returns the cell at the given position in this row.
+         * Returns the cell for the given property id on this row.
          * 
          * @param propertyId
-         *            the itemId of column
-         * @return the cell on given column
-         * @throws IndexOutOfBoundsException
-         *             if the index is out of bounds
+         *            the property id of the column
+         * @return the cell for the given property or null if not found
          */
         public CELLTYPE getCell(Object propertyId) {
             return cells.get(propertyId);

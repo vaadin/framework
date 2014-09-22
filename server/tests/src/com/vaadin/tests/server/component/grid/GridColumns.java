@@ -91,8 +91,8 @@ public class GridColumns {
 
         column.setHeaderCaption("CustomHeader");
         assertEquals("CustomHeader", column.getHeaderCaption());
-        assertEquals(column.getHeaderCaption(),
-                getColumnState("column1").header);
+        assertEquals(column.getHeaderCaption(), grid.getHeader()
+                .getDefaultRow().getCell("column1").getText());
 
         column.setVisible(false);
         assertFalse(column.isVisible());
@@ -129,13 +129,6 @@ public class GridColumns {
         try {
             column.setHeaderCaption("asd");
 
-            fail("Succeeded in modifying a detached column");
-        } catch (IllegalStateException ise) {
-            // Detached state should throw exception
-        }
-
-        try {
-            column.setFooterCaption("asd");
             fail("Succeeded in modifying a detached column");
         } catch (IllegalStateException ise) {
             // Detached state should throw exception
