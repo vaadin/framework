@@ -190,6 +190,7 @@ public class DateFields extends VerticalLayout implements View {
 
         date = new InlineDateField("Date picker");
         setDate(date);
+        setDateRange(date);
         row.addComponent(date);
 
         date = new InlineDateField("Date picker with week numbers");
@@ -209,6 +210,14 @@ public class DateFields extends VerticalLayout implements View {
         binder.setReadOnly(true);
 
         row.addComponent(form);
+    }
+
+    private void setDateRange(DateField date) {
+        date.setRangeStart(getDefaultDate());
+
+        Date endDate = getDefaultDate();
+        endDate.setMonth(endDate.getMonth() + 1);
+        date.setRangeEnd(endDate);
     }
 
     private void setDate(DateField date) {

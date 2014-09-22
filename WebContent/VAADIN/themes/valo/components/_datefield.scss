@@ -337,7 +337,10 @@
     @include valo-datefield-calendarpanel-day-focused-style;
   }
 
-
+  .#{$primary-stylename}-day.#{$primary-stylename}-day-outside-range,
+  .#{$primary-stylename}-day.#{$primary-stylename}-day-outside-range:hover {
+    @include valo-datefield-calendarpanel-outside-range-style;
+  }
 
   .#{$primary-stylename}-weekdays {
     height: round($v-unit-size * 0.7);
@@ -349,13 +352,12 @@
     }
   }
 
-
   .#{$primary-stylename}-header {
     white-space: nowrap;
   }
 
-  td[class$="year"],
-  td[class$="month"] {
+  td[class*="year"],
+  td[class*="month"] {
     button {
       @include appearance(none);
       border: none;
@@ -381,10 +383,16 @@
         }
       }
 
-      &:hover {
-        @include opacity(1);
-        &:before {
-          color: $v-focus-color;
+      &:hover:before {
+        color: $v-focus-color;
+      }
+
+      &.outside-range {
+        cursor: default;
+        @include opacity(.3);
+
+        &:hover:before {
+          color: mix($v-background-color, valo-font-color($v-background-color));
         }
       }
     }
@@ -500,6 +508,15 @@
   background: transparent;
 }
 
+/**
+ * Outputs the styles for an individual day element, which are outside available range.
+ *
+ * @group datefield
+ */
+@mixin valo-datefield-calendarpanel-outside-range-style {
+  color: mix(valo-font-color($v-background-color), $v-background-color);
+  cursor: not-allowed;
+}
 
 /**
  * Outputs the styles for todays day element in a calendar panel.
