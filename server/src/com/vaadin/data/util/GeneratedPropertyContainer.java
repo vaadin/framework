@@ -15,6 +15,7 @@
  */
 package com.vaadin.data.util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -141,6 +142,71 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
     };
 
     /**
+     * Base implementation for item add or remove events. This is used when an
+     * event is fired from wrapped container and needs to be reconstructed to
+     * act like it actually came from this container.
+     */
+    protected abstract class GeneratedItemAddOrRemoveEvent implements
+            Serializable {
+
+        private Object firstItemId;
+        private int firstIndex;
+        private int count;
+
+        protected GeneratedItemAddOrRemoveEvent(Object itemId, int first,
+                int count) {
+            firstItemId = itemId;
+            firstIndex = first;
+            this.count = count;
+        }
+
+        public Container getContainer() {
+            return GeneratedPropertyContainer.this;
+        }
+
+        public Object getFirstItemId() {
+            return firstItemId;
+        }
+
+        public int getFirstIndex() {
+            return firstIndex;
+        }
+
+        public int getAffectedItemsCount() {
+            return count;
+        }
+    };
+
+    protected class GeneratedItemRemoveEvent extends
+            GeneratedItemAddOrRemoveEvent implements ItemRemoveEvent {
+
+        protected GeneratedItemRemoveEvent(ItemRemoveEvent event) {
+            super(event.getFirstItemId(), event.getFirstIndex(), event
+                    .getRemovedItemsCount());
+        }
+
+        @Override
+        public int getRemovedItemsCount() {
+            return super.getAffectedItemsCount();
+        }
+    }
+
+    protected class GeneratedItemAddEvent extends GeneratedItemAddOrRemoveEvent
+            implements ItemAddEvent {
+
+        protected GeneratedItemAddEvent(ItemAddEvent event) {
+            super(event.getFirstItemId(), event.getFirstIndex(), event
+                    .getAddedItemsCount());
+        }
+
+        @Override
+        public int getAddedItemsCount() {
+            return super.getAffectedItemsCount();
+        }
+
+    }
+
+    /**
      * Constructor for GeneratedPropertyContainer.
      * 
      * @param container
@@ -169,7 +235,17 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
                         @Override
                         public void containerItemSetChange(
                                 ItemSetChangeEvent event) {
-                            fireItemSetChange();
+                            if (event instanceof ItemAddEvent) {
+                                final ItemAddEvent addEvent = (ItemAddEvent) event;
+                                fireItemSetChange(new GeneratedItemAddEvent(
+                                        addEvent));
+                            } else if (event instanceof ItemRemoveEvent) {
+                                final ItemRemoveEvent removeEvent = (ItemRemoveEvent) event;
+                                fireItemSetChange(new GeneratedItemRemoveEvent(
+                                        removeEvent));
+                            } else {
+                                fireItemSetChange();
+                            }
                         }
                     });
         }
