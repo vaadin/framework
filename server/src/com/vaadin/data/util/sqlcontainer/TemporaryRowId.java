@@ -29,7 +29,7 @@ public class TemporaryRowId extends RowId {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof TemporaryRowId)) {
+        if (obj == null || !(TemporaryRowId.class.equals(obj.getClass()))) {
             return false;
         }
         Object[] compId = ((TemporaryRowId) obj).getId();

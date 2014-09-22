@@ -26,18 +26,23 @@ public class ReadOnlyRowId extends RowId {
 
     @Override
     public int hashCode() {
-        return rowNum.hashCode();
+        return getRowNum();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof ReadOnlyRowId)) {
+        if (obj == null || !(ReadOnlyRowId.class.equals(obj.getClass()))) {
             return false;
         }
-        return rowNum.equals(((ReadOnlyRowId) obj).rowNum);
+        return getRowNum() == (((ReadOnlyRowId) obj).getRowNum());
     }
 
     public int getRowNum() {
         return rowNum;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(getRowNum());
     }
 }

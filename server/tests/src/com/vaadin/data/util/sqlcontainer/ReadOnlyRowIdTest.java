@@ -44,4 +44,12 @@ public class ReadOnlyRowIdTest {
         ReadOnlyRowId rid2 = new ReadOnlyRowId(42);
         Assert.assertFalse(rid.equals(rid2));
     }
+
+    @Test
+    public void toString_rowNumberIsReturned() {
+        int i = 1;
+        ReadOnlyRowId rowId = new ReadOnlyRowId(i);
+        Assert.assertEquals("Unexpected toString value", String.valueOf(i),
+                rowId.toString());
+    }
 }
