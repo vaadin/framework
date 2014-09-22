@@ -15,8 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.number.IsCloseTo.closeTo;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -58,9 +58,10 @@ public class TableRepairsScrollPositionOnReAddingAllRowsTest extends
         row = $(TableElement.class).first().getCell(49, 0);
         int newRowLocation = row.getLocation().getY();
 
+        // ranged check because IE9 consistently misses the mark by 1 pixel
         assertThat(
                 "Scroll position should be the same as before Re-Adding all rows",
-                rowLocation == newRowLocation, is(true));
+                (double) newRowLocation, closeTo(rowLocation, 1));
     }
 
     private void scrollUp() {
