@@ -37,6 +37,7 @@ import com.vaadin.ui.components.grid.sort.SortOrder;
 public class GeneratedPropertyContainerTest {
 
     GeneratedPropertyContainer container;
+    Indexed wrappedContainer;
     private static double MILES_CONVERSION = 0.6214d;
 
     private class GeneratedPropertyListener implements
@@ -243,7 +244,9 @@ public class GeneratedPropertyContainerTest {
                         return String.class;
                     }
                 });
-        container.addContainerProperty("baz", String.class, "");
+
+        // Adding property to wrapped container should cause an event
+        wrappedContainer.addContainerProperty("baz", String.class, "");
         container.removePropertySetChangeListener(removedListener);
         container.removeGeneratedProperty("foo");
 
@@ -266,22 +269,38 @@ public class GeneratedPropertyContainerTest {
 
     }
 
+    @Test
+    public void testRemoveProperty() {
+        container.removeContainerProperty("foo");
+        assertFalse("Container contained removed property", container
+                .getContainerPropertyIds().contains("foo"));
+        assertTrue("Wrapped container did not contain removed property",
+                wrappedContainer.getContainerPropertyIds().contains("foo"));
+
+        assertFalse(container.getItem(container.firstItemId())
+                .getItemPropertyIds().contains("foo"));
+
+        container.addContainerProperty("foo", null, null);
+        assertTrue("Container did not contain returned property", container
+                .getContainerPropertyIds().contains("foo"));
+    }
+
     private Indexed createContainer() {
-        Indexed container = new IndexedContainer();
-        container.addContainerProperty("foo", String.class, "foo");
-        container.addContainerProperty("bar", Integer.class, 0);
+        wrappedContainer = new IndexedContainer();
+        wrappedContainer.addContainerProperty("foo", String.class, "foo");
+        wrappedContainer.addContainerProperty("bar", Integer.class, 0);
         // km contains double values from 0.0 to 2.0
-        container.addContainerProperty("km", Double.class, 0);
+        wrappedContainer.addContainerProperty("km", Double.class, 0);
 
         for (int i = 0; i <= 10; ++i) {
-            Object itemId = container.addItem();
-            Item item = container.getItem(itemId);
+            Object itemId = wrappedContainer.addItem();
+            Item item = wrappedContainer.getItem(itemId);
             item.getItemProperty("foo").setValue("foo");
             item.getItemProperty("bar").setValue(i);
             item.getItemProperty("km").setValue(i / 5.0d);
         }
 
-        return container;
+        return wrappedContainer;
     }
 
 }

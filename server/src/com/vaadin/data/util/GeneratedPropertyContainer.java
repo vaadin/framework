@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -35,7 +36,26 @@ import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.ui.components.grid.sort.SortOrder;
 
 /**
- * Container supporting generated properties.
+ * Container wrapper that adds support for generated properties. This container
+ * only supports adding new generated properties. Adding new normal properties
+ * should be done for the wrapped container.
+ * 
+ * <p>
+ * Removing properties from this container does not remove anything from the
+ * wrapped container but instead only hides them from the results. These
+ * properties can be returned to this container by calling
+ * {@link #addContainerProperty(Object, Class, Object)} with same property id
+ * which was removed.
+ * 
+ * <p>
+ * If wrapped container is Filterable and/or Sortable it should only be handled
+ * through this container as generated properties need to be handled in a
+ * specific way when sorting/filtering.
+ * 
+ * <p>
+ * Items returned by this container do not support adding or removing
+ * properties. Generated properties are always read-only. Trying to make them
+ * editable throws an exception.
  * 
  * @since
  * @author Vaadin Ltd
@@ -49,6 +69,9 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
     private final Map<Filter, List<Filter>> activeFilters;
     private Sortable sortableContainer = null;
     private Filterable filterableContainer = null;
+
+    /* Removed properties which are hidden but not actually removed */
+    private final Set<Object> removedProperties = new HashSet<Object>();
 
     /**
      * Property implementation for generated properties
@@ -102,11 +125,10 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
     /**
      * Item implementation for generated properties.
      */
-    protected static class GeneratedPropertyItem implements Item {
+    protected class GeneratedPropertyItem implements Item {
 
-        private Map<Object, Property<?>> generatedProperties = new HashMap<Object, Property<?>>();
-        Item wrappedItem;
-        Object itemId;
+        private Item wrappedItem;
+        private Object itemId;
 
         protected GeneratedPropertyItem(Object itemId, Item item) {
             this.itemId = itemId;
@@ -115,29 +137,33 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
 
         @Override
         public Property getItemProperty(Object id) {
-            if (generatedProperties.containsKey(id)) {
-                return generatedProperties.get(id);
+            if (propertyGenerators.containsKey(id)) {
+                return createProperty(this, id, itemId,
+                        propertyGenerators.get(id));
             }
             return wrappedItem.getItemProperty(id);
         }
 
         @Override
         public Collection<?> getItemPropertyIds() {
-            return Sets.union(asSet(wrappedItem.getItemPropertyIds()),
-                    asSet(generatedProperties.keySet()));
+            Set<?> wrappedProperties = asSet(wrappedItem.getItemPropertyIds());
+            return Sets.union(
+                    Sets.difference(wrappedProperties, removedProperties),
+                    propertyGenerators.keySet());
         }
 
         @Override
         public boolean addItemProperty(Object id, Property property)
                 throws UnsupportedOperationException {
-            generatedProperties.put(id, property);
-            return true;
+            throw new UnsupportedOperationException(
+                    "GeneratedPropertyItem does not support adding properties");
         }
 
         @Override
         public boolean removeItemProperty(Object id)
                 throws UnsupportedOperationException {
-            return generatedProperties.remove(id) != null;
+            throw new UnsupportedOperationException(
+                    "GeneratedPropertyItem does not support removing properties");
         }
     };
 
@@ -298,15 +324,7 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
 
     private Item createGeneratedPropertyItem(final Object itemId,
             final Item item) {
-        Item generatedItem = new GeneratedPropertyItem(itemId, item);
-
-        for (Object propertyId : propertyGenerators.keySet()) {
-            generatedItem.addItemProperty(
-                    propertyId,
-                    createProperty(item, propertyId, itemId,
-                            propertyGenerators.get(propertyId)));
-        }
-        return generatedItem;
+        return new GeneratedPropertyItem(itemId, item);
     }
 
     private <T> Property<T> createProperty(final Item item,
@@ -315,11 +333,11 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
         return new GeneratedProperty<T>(item, propertyId, itemId, generator);
     }
 
-    private static <T> Set<T> asSet(Collection<T> collection) {
-        if (collection instanceof Set) {
-            return (Set<T>) collection;
+    private static <T> LinkedHashSet<T> asSet(Collection<T> collection) {
+        if (collection instanceof LinkedHashSet) {
+            return (LinkedHashSet<T>) collection;
         } else {
-            return new HashSet<T>(collection);
+            return new LinkedHashSet<T>(collection);
         }
     }
 
@@ -537,20 +555,62 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
 
     /* Property related overrides */
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public Property getContainerProperty(Object itemId, Object propertyId) {
+    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         if (propertyGenerators.keySet().contains(propertyId)) {
             return getItem(itemId).getItemProperty(propertyId);
-        } else {
+        } else if (!removedProperties.contains(propertyId)) {
             return wrappedContainer.getContainerProperty(itemId, propertyId);
         }
+        return null;
     }
 
+    /**
+     * Returns a list of propety ids available in this container. This
+     * collection will contain properties for generated properties. Removed
+     * properties will not show unless there is a generated property overriding
+     * those.
+     */
     @Override
     public Collection<?> getContainerPropertyIds() {
-        return Sets.union(asSet(wrappedContainer.getContainerPropertyIds()),
-                asSet(propertyGenerators.keySet()));
+        Set<?> wrappedProperties = asSet(wrappedContainer
+                .getContainerPropertyIds());
+        return Sets.union(
+                Sets.difference(wrappedProperties, removedProperties),
+                propertyGenerators.keySet());
+    }
+
+    /**
+     * Adds a previously removed property back to GeneratedPropertyContainer.
+     * Adding a property that is not previously removed causes an
+     * UnsupportedOperationException.
+     */
+    @Override
+    public boolean addContainerProperty(Object propertyId, Class<?> type,
+            Object defaultValue) throws UnsupportedOperationException {
+        if (!removedProperties.contains(propertyId)) {
+            throw new UnsupportedOperationException(
+                    "GeneratedPropertyContainer does not support adding properties.");
+        }
+        removedProperties.remove(propertyId);
+        fireContainerPropertySetChange();
+        return true;
+    }
+
+    /**
+     * Marks the given property as hidden. This property from wrapped container
+     * will be removed from {@link #getContainerPropertyIds()} and is no longer
+     * be available in Items retrieved from this container.
+     */
+    @Override
+    public boolean removeContainerProperty(Object propertyId)
+            throws UnsupportedOperationException {
+        if (wrappedContainer.getContainerPropertyIds().contains(propertyId)
+                && removedProperties.add(propertyId)) {
+            fireContainerPropertySetChange();
+            return true;
+        }
+        return false;
     }
 
     /* Type related overrides */
@@ -626,19 +686,6 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
         return wrappedContainer.removeItem(itemId);
-    }
-
-    @Override
-    public boolean addContainerProperty(Object propertyId, Class<?> type,
-            Object defaultValue) throws UnsupportedOperationException {
-        return wrappedContainer.addContainerProperty(propertyId, type,
-                defaultValue);
-    }
-
-    @Override
-    public boolean removeContainerProperty(Object propertyId)
-            throws UnsupportedOperationException {
-        return wrappedContainer.removeContainerProperty(propertyId);
     }
 
     @Override
