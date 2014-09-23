@@ -17,6 +17,9 @@ package com.vaadin.ui.components.grid;
 
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.server.JsonCodec;
+
+import elemental.json.JsonValue;
 
 /**
  * An abstract base class for server-side Grid renderers.
@@ -63,6 +66,30 @@ public abstract class AbstractRenderer<T> extends AbstractExtension implements
     @Override
     public Class<T> getPresentationType() {
         return presentationType;
+    }
+
+    @Override
+    public JsonValue encode(T value) {
+        return JsonCodec.encode(doEncode(value), null, getPresentationType(),
+                getUI().getConnectorTracker()).getEncodedValue();
+    }
+
+    /**
+     * Encodes the given value to an intermediate representation that can be
+     * serialized to JSON by Vaadin. The default implementation simply returns
+     * the value as is.
+     * <p>
+     * This is a helper method intended to be overridden if the value must be
+     * processed somehow but doing the JSON serialization manually is not
+     * desired. For instance, a {@code Renderer<Date>} could return a formatted
+     * string from {@code doEncode}.
+     * 
+     * @param value
+     *            the value to be encoded
+     * @return a value that can be serialized by Vaadin
+     */
+    protected Object doEncode(T value) {
+        return value;
     }
 
     /**

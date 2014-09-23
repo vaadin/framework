@@ -21,6 +21,7 @@ import static org.junit.Assert.assertSame;
 
 import java.util.Locale;
 
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,11 +33,12 @@ import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
+import com.vaadin.ui.ConnectorTracker;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.GridColumn;
 import com.vaadin.ui.components.grid.renderers.TextRenderer;
 
-import elemental.json.Json;
 import elemental.json.JsonValue;
 
 public class RendererTest {
@@ -51,9 +53,8 @@ public class RendererTest {
 
     private static class TestRenderer extends TextRenderer {
         @Override
-        public JsonValue encode(String value) {
-            return Json.create("renderer(" + super.encode(value).asString()
-                    + ")");
+        protected String doEncode(String value) {
+            return "renderer(" + super.doEncode(value) + ")";
         }
     }
 
@@ -114,7 +115,13 @@ public class RendererTest {
         item.getItemProperty("baz").setValue(new TestBean());
         item.getItemProperty("bah").setValue(new ExtendedBean());
 
+        UI ui = EasyMock.createNiceMock(UI.class);
+        ConnectorTracker ct = EasyMock.createNiceMock(ConnectorTracker.class);
+        EasyMock.expect(ui.getConnectorTracker()).andReturn(ct).anyTimes();
+        EasyMock.replay(ui, ct);
+
         grid = new Grid(c);
+        grid.setParent(ui);
 
         foo = grid.getColumn("foo");
         bar = grid.getColumn("bar");

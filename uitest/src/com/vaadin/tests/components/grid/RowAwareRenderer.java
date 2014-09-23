@@ -19,9 +19,6 @@ import com.vaadin.tests.widgetset.client.grid.RowAwareRendererConnector.RowAware
 import com.vaadin.ui.Label;
 import com.vaadin.ui.components.grid.AbstractRenderer;
 
-import elemental.json.Json;
-import elemental.json.JsonValue;
-
 public class RowAwareRenderer extends AbstractRenderer<Void> {
     public RowAwareRenderer(final Label debugLabel) {
         super(Void.class);
@@ -35,8 +32,7 @@ public class RowAwareRenderer extends AbstractRenderer<Void> {
     }
 
     @Override
-    public JsonValue encode(Void value) {
-        return Json.createNull();
+    protected Object doEncode(Void value) {
+        return null;
     }
-
 }

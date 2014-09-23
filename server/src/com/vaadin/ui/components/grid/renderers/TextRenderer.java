@@ -17,9 +17,6 @@ package com.vaadin.ui.components.grid.renderers;
 
 import com.vaadin.ui.components.grid.AbstractRenderer;
 
-import elemental.json.Json;
-import elemental.json.JsonValue;
-
 /**
  * A renderer for presenting simple plain-text string values.
  * 
@@ -33,10 +30,5 @@ public class TextRenderer extends AbstractRenderer<String> {
      */
     public TextRenderer() {
         super(String.class);
-    }
-
-    @Override
-    public JsonValue encode(String value) {
-        return Json.create(value);
     }
 }
