@@ -47,26 +47,26 @@ public class ExtraWindowShownWaiAriaTest extends MultiBrowserTest {
         assertFalse(buttons.isEmpty());
 
         // open alert dialog
-        buttons.get(0).click();
+        ButtonElement button = buttons.get(0);
+        button.click();
 
         // ensure dialog opened
-        List<WindowElement> windows = $(WindowElement.class).all();
-        assertFalse(windows.isEmpty());
+        waitForElementPresent(By.className("v-window"));
+        WindowElement window = $(WindowElement.class).first();
 
         // ensure correct attributes
-        assertEquals("alertdialog", windows.get(0).getAttribute("role"));
+        assertEquals("alertdialog", window.getAttribute("role"));
 
-        WebElement header = windows.get(0).findElement(
-                By.className("v-window-header"));
+        WebElement header = window.findElement(By.className("v-window-header"));
         assertEquals(header.getAttribute("id"),
-                windows.get(0).getAttribute("aria-labelledby"));
+                window.getAttribute("aria-labelledby"));
 
-        WebElement label = windows.get(0).findElement(By.className("v-label"));
+        WebElement label = window.findElement(By.className("v-label"));
         assertEquals(label.getAttribute("id"),
-                windows.get(0).getAttribute("aria-describedby"));
+                window.getAttribute("aria-describedby"));
 
-        List<WebElement> wButtons = windows.get(0).findElements(
-                By.className("v-button"));
+        List<WebElement> wButtons = window.findElements(By
+                .className("v-button"));
         assertEquals("button", wButtons.get(0).getAttribute("role"));
         assertEquals("button", wButtons.get(1).getAttribute("role"));
 
@@ -74,7 +74,7 @@ public class ExtraWindowShownWaiAriaTest extends MultiBrowserTest {
         wButtons.get(0).click();
 
         // ensure dialog closed
-        windows = $(WindowElement.class).all();
+        List<WindowElement> windows = $(WindowElement.class).all();
         assertTrue(windows.isEmpty());
 
         // check additional description (second checkbox on the page)
@@ -87,19 +87,20 @@ public class ExtraWindowShownWaiAriaTest extends MultiBrowserTest {
         assertEquals("true", input.getAttribute("checked"));
 
         // open alert dialog
-        buttons = $(ButtonElement.class).all();
-        buttons.get(0).click();
+        button = $(ButtonElement.class).first();
+        button.click();
+
+        waitForElementPresent(By.className("v-window"));
 
         // ensure correct attributes
-        windows = $(WindowElement.class).all();
-        List<WebElement> labels = windows.get(0).findElements(
-                By.className("v-label"));
+        window = $(WindowElement.class).first();
+        List<WebElement> labels = window.findElements(By.className("v-label"));
         assertEquals(labels.get(0).getAttribute("id") + " "
-                + labels.get(1).getAttribute("id"), windows.get(0)
-                .getAttribute("aria-describedby"));
+                + labels.get(1).getAttribute("id"),
+                window.getAttribute("aria-describedby"));
 
         // close dialog
-        wButtons = windows.get(0).findElements(By.className("v-button"));
+        wButtons = window.findElements(By.className("v-button"));
         wButtons.get(0).click();
 
         // ensure dialog closed
@@ -112,12 +113,14 @@ public class ExtraWindowShownWaiAriaTest extends MultiBrowserTest {
         textFields.get(1).sendKeys(" - do ASAP");
 
         // open alert dialog
-        buttons = $(ButtonElement.class).all();
-        buttons.get(0).click();
+        button = $(ButtonElement.class).first();
+        button.click();
+
+        waitForElementPresent(By.className("v-window"));
 
         // ensure the assistive spans have been added to the header
-        windows = $(WindowElement.class).all();
-        header = windows.get(0).findElement(By.className("v-window-header"));
+        window = $(WindowElement.class).first();
+        header = window.findElement(By.className("v-window-header"));
         List<WebElement> assistiveElements = header.findElements(By
                 .className("v-assistive-device-only"));
         assertEquals("Important",
