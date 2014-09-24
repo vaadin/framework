@@ -162,7 +162,11 @@ public class VaadinPortletService extends VaadinService {
         String staticFileLocation = getParameter(request,
                 Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH, "/html");
 
-        return trimTrailingSlashes(staticFileLocation);
+        if (Constants.PORTLET_CONTEXT.equals(staticFileLocation)) {
+            return request.getContextPath();
+        } else{
+            return trimTrailingSlashes(staticFileLocation);
+        }
     }
 
     private PortletContext getPortletContext() {

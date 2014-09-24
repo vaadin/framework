@@ -162,4 +162,6 @@ public interface Constants {
     static final String PORTAL_PARAMETER_VAADIN_WIDGETSET = "vaadin.widgetset";
     static final String PORTAL_PARAMETER_VAADIN_RESOURCE_PATH = "vaadin.resources.path";
     static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
+
+    static final String PORTLET_CONTEXT = "PORTLET_CONTEXT";
 }
