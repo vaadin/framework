@@ -1202,6 +1202,21 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#clear()
+     */
+    @Override
+    public void clear() {
+        for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
+            Field<?> f = i.next();
+            if (f instanceof AbstractField) {
+                ((AbstractField<?>) f).clear();
+            }
+        }
+    }
+
     /**
      * Adding validators directly to form is not supported.
      * 

@@ -1513,6 +1513,19 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
+     * Clear the value of the field.
+     * <p>
+     * The field value is typically reset to the initial value of the field but
+     * this is not mandatory. Calling {@link #isEmpty()} on a cleared field must
+     * always returns true.
+     * 
+     * @since
+     */
+    public void clear() {
+        setValue(null);
+    }
+
+    /**
      * Is automatic, visible validation enabled?
      * 
      * If automatic validation is enabled, any validators connected to this
