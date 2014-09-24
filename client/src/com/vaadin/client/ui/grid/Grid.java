@@ -1500,6 +1500,19 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
+     * Adds columns as the last columns in the grid.
+     * 
+     * @param columns
+     *            the columns to add
+     */
+    public void addColumns(GridColumn<?, T>... columns) {
+        int count = getColumnCount();
+        for (GridColumn<?, T> column : columns) {
+            addColumn(column, count++);
+        }
+    }
+
+    /**
      * Adds a column as the last column in the grid.
      * 
      * @param column
