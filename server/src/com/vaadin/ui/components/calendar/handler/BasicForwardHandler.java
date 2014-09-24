@@ -45,6 +45,7 @@ public class BasicForwardHandler implements ForwardHandler {
 
         // calculate amount to move forward
         int durationInDays = (int) (((end.getTime()) - start.getTime()) / DateConstants.DAYINMILLIS);
+        // for week view durationInDays = 7, for day view durationInDays = 1
         durationInDays++;
 
         // set new start and end times
@@ -56,6 +57,21 @@ public class BasicForwardHandler implements ForwardHandler {
         javaCalendar.setTime(end);
         javaCalendar.add(java.util.Calendar.DATE, durationInDays);
         Date newEnd = javaCalendar.getTime();
+
+        if (start.equals(end)) { // day view
+            int firstDay = event.getComponent().getFirstVisibleDayOfWeek();
+            int lastDay = event.getComponent().getLastVisibleDayOfWeek();
+            int dayOfWeek = javaCalendar.get(Calendar.DAY_OF_WEEK);
+
+            // we suppose that 7 >= lastDay >= firstDay >= 1
+            while (!(firstDay <= dayOfWeek && dayOfWeek <= lastDay)) {
+                javaCalendar.add(java.util.Calendar.DATE, 1);
+                dayOfWeek = javaCalendar.get(Calendar.DAY_OF_WEEK);
+            }
+
+            newStart = javaCalendar.getTime();
+            newEnd = javaCalendar.getTime();
+        }
 
         setDates(event, newStart, newEnd);
     }
