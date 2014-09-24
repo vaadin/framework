@@ -262,72 +262,95 @@ public class GridBasicClientFeaturesWidget extends
             };
 
             column.setWidth(50 + c * 25);
+            column.setHeader("Header (0," + c + ")");
 
             grid.addColumn(column);
-
         }
 
         // Integer row number
         {
             final int c = col++;
-            grid.addColumn(new GridColumn<Integer, List<Data>>(
+            GridColumn<Integer, List<Data>> column = new GridColumn<Integer, List<Data>>(
                     createRenderer(Renderers.NUMBER_RENDERER)) {
                 @Override
                 public Integer getValue(List<Data> row) {
                     return (Integer) row.get(c).value;
                 }
-            });
+            };
+            grid.addColumn(column);
+            column.setHeader("Header (0," + c + ")");
         }
 
         // Some date
         {
             final int c = col++;
-            grid.addColumn(new GridColumn<Date, List<Data>>(
+            GridColumn<Date, List<Data>> column = new GridColumn<Date, List<Data>>(
                     createRenderer(Renderers.DATE_RENDERER)) {
                 @Override
                 public Date getValue(List<Data> row) {
                     return (Date) row.get(c).value;
                 }
-            });
+            };
+            grid.addColumn(column);
+            column.setHeader("Header (0," + c + ")");
         }
 
         // Row number as a HTML string
         {
             final int c = col++;
-            grid.addColumn(new GridColumn<String, List<Data>>(
+            GridColumn<String, List<Data>> column = new GridColumn<String, List<Data>>(
                     createRenderer(Renderers.HTML_RENDERER)) {
                 @Override
                 public String getValue(List<Data> row) {
                     return (String) row.get(c).value;
                 }
-            });
+            };
+            grid.addColumn(column);
+            column.setHeader("Header (0," + c + ")");
         }
 
         // Random integer value
         {
             final int c = col++;
-            grid.addColumn(new GridColumn<Integer, List<Data>>(
+            GridColumn<Integer, List<Data>> column = new GridColumn<Integer, List<Data>>(
                     createRenderer(Renderers.NUMBER_RENDERER)) {
                 @Override
                 public Integer getValue(List<Data> row) {
                     return (Integer) row.get(c).value;
                 }
-            });
+            };
+            grid.addColumn(column);
+            column.setHeader("Header (0," + c + ")");
         }
 
         // Random integer value between 0 and 5
         {
             final int c = col++;
-            grid.addColumn(new GridColumn<Integer, List<Data>>(
+            GridColumn<Integer, List<Data>> column = new GridColumn<Integer, List<Data>>(
                     createRenderer(Renderers.NUMBER_RENDERER)) {
                 @Override
                 public Integer getValue(List<Data> row) {
                     return (Integer) row.get(c).value;
                 }
-            });
+            };
+            grid.addColumn(column);
+            column.setHeader("Header (0," + c + ")");
         }
 
-        setHeaderTexts(grid.getHeader().getRow(0));
+        HeaderRow row = grid.getHeader().getDefaultRow();
+        for (int i = 0; i < col; ++i) {
+            String caption = "Header (0," + i + ")";
+            GridColumn<?, ?> column = grid.getColumn(i);
+            // Lets use some different cell types
+            if (i % 3 == 0) {
+                // No-op
+            } else if (i % 2 == 0) {
+                row.getCell(column).setHtml("<b>" + caption + "</b>");
+            } else {
+                row.getCell(column).setWidget(new HTML(caption));
+            }
+        }
+        ++headerCounter;
 
         //
         // Populate the menu
@@ -474,8 +497,7 @@ public class GridBasicClientFeaturesWidget extends
             addMenuCommand("Text Header", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    grid.getHeader().getRow(0).getCell(column)
-                            .setText("Text Header");
+                    column.setHeader("Text Header");
                 }
             }, "Component", "Columns", "Column " + i, "Header Type");
             addMenuCommand("HTML Header", new ScheduledCommand() {

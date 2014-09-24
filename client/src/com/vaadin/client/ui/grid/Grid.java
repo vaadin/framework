@@ -842,6 +842,8 @@ public class Grid<T> extends ResizeComposite implements
 
         private boolean sortable = false;
 
+        private String headerText = "";
+
         /**
          * Constructs a new column with a custom renderer.
          * 
@@ -868,6 +870,31 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             this.grid = grid;
+            if (grid != null) {
+                updateHeader();
+            }
+        }
+
+        /**
+         * Sets a header caption for this column.
+         * 
+         * @param caption
+         *            caption text for header
+         */
+        public void setHeader(String caption) {
+            if (!headerText.equals(caption)) {
+                headerText = caption;
+                if (grid != null) {
+                    updateHeader();
+                }
+            }
+        }
+
+        private void updateHeader() {
+            HeaderRow row = grid.getHeader().getDefaultRow();
+            if (row != null) {
+                row.getCell((GridColumn<?, ?>) this).setText(headerText);
+            }
         }
 
         /**
