@@ -444,16 +444,13 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         private void selectItem(final MenuItem newSelectedItem) {
             menu.selectItem(newSelectedItem);
 
-            String text = newSelectedItem != null ? newSelectedItem.getText()
-                    : "";
-
             // Set the icon.
             FilterSelectSuggestion suggestion = (FilterSelectSuggestion) newSelectedItem
                     .getCommand();
             setSelectedItemIcon(suggestion.getIconUri());
 
             // Set the text.
-            setText(text);
+            setText(suggestion.getReplacementString());
 
             menu.updateKeyboardSelectedItem();
         }
