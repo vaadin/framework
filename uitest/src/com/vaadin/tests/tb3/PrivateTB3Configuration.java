@@ -49,6 +49,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     private static final String RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.runLocally";
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
     private static final String PORT_PROPERTY = "com.vaadin.testbench.deployment.port";
+    private static final String DEPLOYMENT_PROPERTY = "com.vaadin.testbench.deployment.url";
     private static final Properties properties = new Properties();
     private static final File propertiesFile = new File("work",
             "eclipse-run-selected-test.properties");
@@ -94,6 +95,15 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     @Override
     protected String getHubHostname() {
         return "tb3-hub.intra.itmill.com";
+    }
+
+    @Override
+    protected String getBaseURL() {
+        String url = getProperty(DEPLOYMENT_PROPERTY);
+        if (url == null || url.trim().isEmpty()) {
+            return super.getBaseURL();
+        }
+        return url;
     }
 
     @Override
@@ -180,7 +190,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.vaadin.tests.tb3.AbstractTB3Test#setupLocalDriver()
      */
     @Override
