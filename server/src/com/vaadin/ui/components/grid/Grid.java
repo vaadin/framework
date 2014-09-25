@@ -214,6 +214,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 }
             }
             for (Object columnId : removedColumns) {
+                header.removeColumn(columnId);
+                footer.removeColumn(columnId);
                 GridColumn column = columns.remove(columnId);
                 columnKeys.remove(columnId);
                 getState().columns.remove(column.getState());
@@ -595,14 +597,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         columns.put(datasourcePropertyId, column);
 
         getState().columns.add(columnState);
-
-        for (int i = 0; i < getHeader().getRowCount(); ++i) {
-            getHeader().getRow(i).addCell(datasourcePropertyId);
-        }
-
-        for (int i = 0; i < getFooter().getRowCount(); ++i) {
-            getFooter().getRow(i).addCell(datasourcePropertyId);
-        }
+        header.addColumn(datasourcePropertyId);
+        footer.addColumn(datasourcePropertyId);
 
         column.setHeaderCaption(String.valueOf(datasourcePropertyId));
 

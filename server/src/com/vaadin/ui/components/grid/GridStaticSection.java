@@ -69,6 +69,33 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
             rowState.cells.add(cell.getCellState());
         }
 
+        protected void removeCell(Object propertyId) {
+            CELLTYPE cell = cells.remove(propertyId);
+            if (cell != null) {
+                List<CELLTYPE> cellGroupForCell = getCellGroupForCell(cell);
+                if (cellGroupForCell != null) {
+                    removeCellFromGroup(cell, cellGroupForCell);
+                }
+                rowState.cells.remove(cell.getCellState());
+            }
+        }
+
+        private void removeCellFromGroup(CELLTYPE cell, List<CELLTYPE> cellGroup) {
+            String columnId = cell.getColumnId();
+            for (List<String> group : rowState.cellGroups) {
+                if (group.contains(columnId)) {
+                    if (group.size() > 2) {
+                        cellGroup.remove(cell);
+                        group.remove(columnId);
+                    } else {
+                        rowState.cellGroups.remove(group);
+                        cellGroups.remove(cellGroup);
+                    }
+                    return;
+                }
+            }
+        }
+
         /**
          * Creates and returns a new instance of the cell type.
          * 
@@ -426,5 +453,29 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      */
     protected void markAsDirty() {
         grid.markAsDirty();
+    }
+
+    /**
+     * Removes a column for given property id from the section.
+     * 
+     * @param propertyId
+     *            property to be removed
+     */
+    protected void removeColumn(Object propertyId) {
+        for (ROWTYPE row : rows) {
+            row.removeCell(propertyId);
+        }
+    }
+
+    /**
+     * Adds a column for given property id to the section.
+     * 
+     * @param propertyId
+     *            property to be added
+     */
+    protected void addColumn(Object propertyId) {
+        for (ROWTYPE row : rows) {
+            row.addCell(propertyId);
+        }
     }
 }
