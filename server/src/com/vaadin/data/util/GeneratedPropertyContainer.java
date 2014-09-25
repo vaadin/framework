@@ -138,7 +138,7 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
         @Override
         public Property getItemProperty(Object id) {
             if (propertyGenerators.containsKey(id)) {
-                return createProperty(this, id, itemId,
+                return createProperty(wrappedItem, id, itemId,
                         propertyGenerators.get(id));
             }
             return wrappedItem.getItemProperty(id);
