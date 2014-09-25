@@ -1847,6 +1847,28 @@ public class Grid<T> extends ResizeComposite implements
                         numberOfItems);
                 fireEvent(new DataAvailableEvent(currentDataAvailable));
             }
+
+            @Override
+            public void resetDataAndSize(int newSize) {
+                RowContainer body = escalator.getBody();
+
+                /*
+                 * Because the data has simply changed and we don't really know
+                 * what, we'll simply remove everything and redraw everything.
+                 */
+
+                double prevScroll = escalator.getScrollTop();
+                body.removeRows(0, body.getRowCount());
+                body.insertRows(0, newSize);
+
+                /*
+                 * If data was removed or inserted above the scroll top, the
+                 * scroll position is kept locked, leading to data
+                 * "sliding under us". But we can't do anything about that,
+                 * since simply _something_ happened.
+                 */
+                escalator.setScrollTop(prevScroll);
+            }
         });
 
         int previousRowCount = escalator.getBody().getRowCount();

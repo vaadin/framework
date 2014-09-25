@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
@@ -208,6 +209,28 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         createEditorRowActions();
 
         addHeightActions();
+
+        createClickAction("Column 1 starts with \"(23\"", "Filter",
+                new Command<Grid, Void>() {
+                    @Override
+                    public void execute(Grid grid, Void value, Object data) {
+                        ds.addContainerFilter(new Filter() {
+
+                            @Override
+                            public boolean passesFilter(Object itemId, Item item)
+                                    throws UnsupportedOperationException {
+                                return item.getItemProperty("Column 1")
+                                        .getValue().toString()
+                                        .startsWith("(23");
+                            }
+
+                            @Override
+                            public boolean appliesToProperty(Object propertyId) {
+                                return propertyId.equals("Column 1");
+                            }
+                        });
+                    }
+                }, null);
 
         return grid;
     }

@@ -20,14 +20,17 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.tests.components.grid.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.GridElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
@@ -228,6 +231,29 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Body rows", "Add first row");
         assertTrue(verticalScrollbarIsPresent());
     }
+
+    @Test
+    public void testBareItemSetChange() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Filter", "Column 1 starts with \"(23\"");
+
+        boolean foundElements = false;
+        for (int row = 0; row < 100; row++) {
+            try {
+                GridCellElement cell = getGridElement().getCell(row, 1);
+                foundElements = true;
+                assertTrue("Unexpected cell contents. "
+                        + "Did the ItemSetChange work after all?", cell
+                        .getText().startsWith("(23"));
+            } catch (NoSuchElementException e) {
+                assertTrue("No rows were found", foundElements);
+                return;
+            }
+        }
+        fail("unexpected amount of rows post-filter. Did the ItemSetChange work after all?");
+    }
+
 
     @Test
     public void testRemoveLastColumn() {

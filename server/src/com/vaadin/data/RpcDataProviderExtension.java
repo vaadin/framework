@@ -567,6 +567,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     private final ActiveRowHandler activeRowHandler = new ActiveRowHandler();
 
+    private DataProviderRpc rpc;
+
     private final ItemSetChangeListener itemListener = new ItemSetChangeListener() {
         @Override
         public void containerItemSetChange(ItemSetChangeEvent event) {
@@ -586,17 +588,49 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
 
             else {
-                Range visibleRows = activeRowHandler.activeRange;
-                List<?> itemIds = container.getItemIds(visibleRows.getStart(),
-                        visibleRows.length());
 
-                keyMapper.removeActiveRows(keyMapper.activeRange);
-                keyMapper.addActiveRows(visibleRows, visibleRows.getStart(),
-                        itemIds);
+                /*
+                 * Clear everything we have in view, and let the client
+                 * re-request for whatever it needs.
+                 * 
+                 * Why this shortcut? Well, since anything could've happened, we
+                 * don't know what has happened. There are a lot of use-cases we
+                 * can cover at once with this carte blanche operation:
+                 * 
+                 * 1) Grid is scrolled somewhere in the middle and all the
+                 * rows-inview are removed. We need a new pageful.
+                 * 
+                 * 2) Grid is scrolled somewhere in the middle and none of the
+                 * visible rows are removed. We need no new rows.
+                 * 
+                 * 3) Grid is scrolled all the way to the bottom, and the last
+                 * rows are being removed. Grid needs to scroll up and request
+                 * for more rows at the top.
+                 * 
+                 * 4) Grid is scrolled pretty much to the bottom, and the last
+                 * rows are being removed. Grid needs to be aware that some
+                 * scrolling is needed, but not to compensate for all the
+                 * removed rows. And it also needs to request for some more rows
+                 * to the top.
+                 * 
+                 * 5) Some ranges of rows are removed from view. We need to
+                 * collapse the gaps with existing rows and load the missing
+                 * rows.
+                 * 
+                 * 6) The ultimate use case! Grid has 1.5 pages of rows and
+                 * scrolled a bit down. One page of rows is removed. We need to
+                 * make sure that new rows are loaded, but not all old slots are
+                 * occupied, since the page can't be filled with new row data.
+                 * It also needs to be scrolled to the top.
+                 * 
+                 * So, it's easier (and safer) to do the simple thing instead of
+                 * taking all the corner cases into account.
+                 */
 
-                pushRows(visibleRows.getStart(), itemIds);
-                activeRowHandler.setActiveRows(visibleRows.getStart(),
-                        visibleRows.length());
+                activeRowHandler.activeRange = Range.withLength(0, 0);
+                activeRowHandler.valueChangeListeners.clear();
+                rpc.resetDataAndSize(event.getContainer().size());
+                getState().containerSize = event.getContainer().size();
             }
         }
     };
@@ -613,6 +647,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     public RpcDataProviderExtension(Indexed container) {
         this.container = container;
+        rpc = getRpcProxy(DataProviderRpc.class);
 
         registerRpc(new DataRequestRpc() {
             private Collection<String> allTemporarilyPinnedKeys = new ArrayList<String>();
@@ -711,7 +746,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         for (int i = 0; i < itemIds.size(); ++i) {
             rows.set(i, getRowData(propertyIds, itemIds.get(i)));
         }
-        getRpcProxy(DataProviderRpc.class).setRowData(firstRow, rows.toJson());
+        rpc.setRowData(firstRow, rows.toJson());
     }
 
     private JsonValue getRowData(Collection<?> propertyIds, Object itemId) {
@@ -766,7 +801,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private void insertRowData(int index, int count) {
         getState().containerSize += count;
-        getRpcProxy(DataProviderRpc.class).insertRowData(index, count);
+        rpc.insertRowData(index, count);
 
         activeRowHandler.insertRows(index, count);
     }
@@ -783,7 +818,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private void removeRowData(int firstIndex, int count) {
         getState().containerSize -= count;
-        getRpcProxy(DataProviderRpc.class).removeRowData(firstIndex, count);
+        rpc.removeRowData(firstIndex, count);
 
         for (int i = 0; i < count; i++) {
             Object itemId = keyMapper.itemIdAtIndex(firstIndex + i);
@@ -809,7 +844,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         JsonValue row = getRowData(container.getContainerPropertyIds(), itemId);
         JsonArray rowArray = Json.createArray();
         rowArray.set(0, row);
-        getRpcProxy(DataProviderRpc.class).setRowData(index, rowArray.toJson());
+        rpc.setRowData(index, rowArray.toJson());
     }
 
     @Override

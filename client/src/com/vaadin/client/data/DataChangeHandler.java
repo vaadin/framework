@@ -67,4 +67,16 @@ public interface DataChangeHandler {
      *            the number of available rows
      */
     public void dataAvailable(int firstRowIndex, int numberOfRows);
+
+    /**
+     * Resets all data and defines a new size for the data.
+     * <p>
+     * This should be used in the cases where the data has changed in some
+     * unverifiable way. I.e. "something happened". This will lead to a
+     * re-rendering of the current Grid viewport
+     * 
+     * @param estimatedNewDataSize
+     *            the estimated size of the new data set
+     */
+    public void resetDataAndSize(int estimatedNewDataSize);
 }

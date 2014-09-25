@@ -142,6 +142,11 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
             public void insertRowData(int firstRow, int count) {
                 dataSource.insertRowData(firstRow, count);
             }
+
+            @Override
+            public void resetDataAndSize(int size) {
+                dataSource.resetDataAndSize(size);
+            }
         });
     }
 

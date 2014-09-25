@@ -550,4 +550,10 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         }
         temporarilyPinnedRows = rows;
     }
+
+    protected void resetDataAndSize(int newSize) {
+        dropFromCache(getCachedRange());
+        cached = Range.withLength(0, 0);
+        dataChangeHandler.resetDataAndSize(newSize);
+    }
 }
