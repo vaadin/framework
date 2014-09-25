@@ -32,6 +32,11 @@ import com.vaadin.client.ui.grid.FlyweightCell;
 public abstract class WidgetRenderer<T, W extends Widget> extends
         ComplexRenderer<T> {
 
+    @Override
+    public void init(FlyweightCell cell) {
+        // Implement if needed
+    }
+
     /**
      * Creates a widget to attach to a cell. The widgets will be attached to the
      * cell after the cell element has been attached to DOM.

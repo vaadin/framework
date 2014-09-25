@@ -50,9 +50,7 @@ public abstract class ComplexRenderer<T> implements Renderer<T> {
      *            the method as the cell install will change. See
      *            {@link FlyweightCell}
      */
-    public void init(FlyweightCell cell) {
-        // Implement if needed
-    }
+    public abstract void init(FlyweightCell cell);
 
     /**
      * Called after the cell is deemed to be destroyed and no longer used by the

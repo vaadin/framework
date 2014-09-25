@@ -658,18 +658,18 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
     }
 
     @Override
-    public void render(final FlyweightCell cell, final Boolean data) {
-        /*
-         * FIXME: Once https://dev.vaadin.com/review/#/c/3670/ is merged
-         * (init/destroy), split this method. Also, remove all event preview
-         * handlers on detach, to avoid hanging events.
-         */
-
+    public void init(FlyweightCell cell) {
         final InputElement checkbox = InputElement.as(DOM.createInputCheck());
-        checkbox.setChecked(data.booleanValue());
-        checkbox.setPropertyInt(LOGICAL_ROW_PROPERTY_INT, cell.getRow());
         cell.getElement().removeAllChildren();
         cell.getElement().appendChild(checkbox);
+    }
+
+    @Override
+    public void render(final FlyweightCell cell, final Boolean data) {
+        InputElement checkbox = InputElement.as(cell.getElement()
+                .getFirstChildElement());
+        checkbox.setChecked(data.booleanValue());
+        checkbox.setPropertyInt(LOGICAL_ROW_PROPERTY_INT, cell.getRow());
     }
 
     @Override

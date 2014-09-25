@@ -312,6 +312,10 @@ public class GridClientColumnRendererConnector extends
             return new ComplexRenderer<String>() {
 
                 @Override
+                public void init(FlyweightCell cell) {
+                }
+
+                @Override
                 public void render(FlyweightCell cell, String data) {
                     cell.getElement().setInnerHTML("<span>" + data + "</span>");
                     cell.getElement().getStyle().clearBackgroundColor();
