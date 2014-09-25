@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.data.util.converter.StringToEnumConverter;
 import com.vaadin.shared.ui.ui.NotificationRole;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
@@ -57,7 +58,8 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
         postfix.clear();
         postfix.sendKeys("- press ESC to close");
 
-        type.selectByText(NotificationRole.ALERT.toString());
+        type.selectByText(StringToEnumConverter.enumToString(
+                NotificationRole.ALERT, null));
 
         show.click();
         waitForElementPresent(By.className("v-Notification"));
@@ -83,7 +85,8 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
         } catch (Exception e) {
         }
 
-        type.selectByText("STATUS");
+        type.selectByText(StringToEnumConverter.enumToString(
+                NotificationRole.STATUS, null));
 
         show.click();
         waitForElementPresent(By.className("v-Notification"));
