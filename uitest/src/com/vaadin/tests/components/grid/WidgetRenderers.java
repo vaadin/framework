@@ -15,11 +15,15 @@
  */
 package com.vaadin.tests.components.grid;
 
+import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.Grid.SelectionMode;
+import com.vaadin.ui.components.grid.renderers.ButtonRenderer;
+import com.vaadin.ui.components.grid.renderers.ButtonRenderer.RendererClickEvent;
+import com.vaadin.ui.components.grid.renderers.ButtonRenderer.RendererClickListener;
 import com.vaadin.ui.components.grid.renderers.ProgressBarRenderer;
 
 public class WidgetRenderers extends AbstractTestUI {
@@ -27,11 +31,16 @@ public class WidgetRenderers extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         IndexedContainer container = new IndexedContainer();
+
         container.addContainerProperty(ProgressBarRenderer.class, Double.class,
                 null);
+        container
+                .addContainerProperty(ButtonRenderer.class, String.class, null);
 
-        container.getItem(container.addItem())
-                .getItemProperty(ProgressBarRenderer.class).setValue(0.5);
+        final Item item = container.getItem(container.addItem());
+
+        item.getItemProperty(ProgressBarRenderer.class).setValue(0.3);
+        item.getItemProperty(ButtonRenderer.class).setValue("Click");
 
         Grid grid = new Grid(container);
         grid.setId("test-grid");
@@ -40,12 +49,21 @@ public class WidgetRenderers extends AbstractTestUI {
         grid.getColumn(ProgressBarRenderer.class).setRenderer(
                 new ProgressBarRenderer());
 
+        grid.getColumn(ButtonRenderer.class).setRenderer(
+                new ButtonRenderer(new RendererClickListener() {
+                    @Override
+                    public void click(RendererClickEvent event) {
+                        item.getItemProperty(ButtonRenderer.class).setValue(
+                                "Clicked!");
+                    }
+                }));
+
         addComponent(grid);
     }
 
     @Override
     protected String getTestDescription() {
-        return "Tests the working of widget-based renderers";
+        return "Tests the functionality of widget-based renderers";
     }
 
     @Override

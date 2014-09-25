@@ -2197,6 +2197,19 @@ public class Grid<T> extends ResizeComposite implements
         }
     }
 
+    /**
+     * Returns the cell the given element belongs to. For internal use only.
+     *
+     * @param e
+     *            a cell element or the descendant of one
+     * @return the cell or null if no such cell
+     */
+    public Cell findCell(Element e) {
+        RowContainer container = escalator.findRowContainer(e);
+        return container != null ? container.getCell(e) : null;
+
+    }
+
     private boolean handleEditorRowEvent(Event event, RowContainer container,
             Cell cell) {
         if (editorRow.getState() != State.INACTIVE) {

@@ -15,9 +15,14 @@
  */
 package com.vaadin.client.ui.grid.renderers;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.Util;
+import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.FlyweightCell;
+import com.vaadin.client.ui.grid.Grid;
 
 /**
  * A renderer for rendering widgets into cells.
@@ -48,7 +53,7 @@ public abstract class WidgetRenderer<T, W extends Widget> extends
 
     @Override
     public void render(FlyweightCell cell, T data) {
-        W w = Util.findWidget(cell.getElement().getFirstChildElement(), null);
+        W w = getWidget(cell.getElement());
         assert w != null : "Widget not found in cell (" + cell.getColumn()
                 + "," + cell.getRow() + ")";
         render(cell, data, w);
@@ -69,4 +74,27 @@ public abstract class WidgetRenderer<T, W extends Widget> extends
      */
     public abstract void render(FlyweightCell cell, T data, W widget);
 
+    protected W getWidget(Element e) {
+        return Util.findWidget(e.getFirstChildElement(), null);
+    }
+
+    /**
+     * Returns the cell instance corresponding to the element that the given
+     * event originates from. If the event does not originate from a grid cell,
+     * returns null.
+     *
+     * @param event
+     *            the event
+     * @return the cell or null if no such cell
+     */
+    protected static Cell getCell(NativeEvent event) {
+        EventTarget target = event.getEventTarget();
+        if (!Element.is(target)) {
+            return null;
+        }
+
+        Element elem = Element.as(target);
+        Grid<?> grid = Util.findWidget(elem, Grid.class);
+        return grid.findCell(elem);
+    }
 }

@@ -15,11 +15,14 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
+import com.vaadin.tests.components.grid.GridElement.GridCellElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -34,7 +37,23 @@ public class WidgetRenderersTest extends MultiBrowserTest {
     public void testProgressBarRenderer() {
         openTestURL();
 
-        assertTrue($(GridElement.class).first().getCell(0, 0)
-                .isElementPresent(By.className("v-progressbar")));
+        assertTrue(getGridCell(0, 0).isElementPresent(
+                By.className("v-progressbar")));
+    }
+
+    @Test
+    public void testButtonRenderer() {
+        openTestURL();
+
+        WebElement button = getGridCell(0, 1).findElement(
+                By.className("gwt-Button"));
+
+        button.click();
+
+        assertEquals("Clicked!", button.getText());
+    }
+
+    GridCellElement getGridCell(int row, int col) {
+        return $(GridElement.class).first().getCell(row, col);
     }
 }
