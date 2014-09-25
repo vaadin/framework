@@ -43,6 +43,8 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String BODY_ROWS = "Body Rows";
     protected static final String FOOTER_ROWS = "Footer Rows";
 
+    protected static final String REMOVE_ALL_INSERT_SCROLL = "Remove all, insert 30 and scroll 40px";
+
     protected static final String GENERAL = "General";
     protected static final String POPULATE_COLUMN_ROW = "Populate Escalator (columns, then rows)";
     protected static final String POPULATE_ROW_COLUMN = "Populate Escalator (rows, then columns)";
@@ -190,5 +192,9 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
 
     protected Object executeScript(String script, Object... args) {
         return ((JavascriptExecutor) getDriver()).executeScript(script, args);
+    }
+
+    protected void populate() {
+        selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
     }
 }

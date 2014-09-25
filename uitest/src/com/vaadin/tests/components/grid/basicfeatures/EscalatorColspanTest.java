@@ -84,8 +84,4 @@ public class EscalatorColspanTest extends EscalatorBasicClientFeaturesTest {
             return Integer.parseInt(attribute);
         }
     }
-
-    private void populate() {
-        selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
-    }
 }

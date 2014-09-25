@@ -718,8 +718,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 } else {
                     $wnd.console.error("unexpected scroll target: "+target);
                 }
-
-                esc.@com.vaadin.client.ui.grid.Escalator::onScroll()();
             });
         }-*/;
 
@@ -808,10 +806,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          * Logical scrolling event handler for the entire widget.
          */
         public void onScroll() {
-            if (internalScrollEventCalls > 0) {
-                internalScrollEventCalls--;
-                return;
-            }
 
             final double scrollTop = verticalScrollbar.getScrollPos();
             final double scrollLeft = horizontalScrollbar.getScrollPos();
@@ -2548,7 +2542,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 return;
             }
 
-            internalScrollEventCalls++;
             verticalScrollbar.setScrollPosByDelta(yDelta);
 
             /*
@@ -2908,7 +2901,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                          * effects in the escalator.
                          */
                         scroller.onScroll();
-                        internalScrollEventCalls++;
 
                         /*
                          * Move the bottommost (n+1:th) escalator row to top,
@@ -3277,7 +3269,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                             neededEscalatorRowsDiff);
                     setScrollTop(oldScrollTop);
                     scroller.onScroll();
-                    internalScrollEventCalls++;
                 }
             }
 
@@ -3373,7 +3364,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             double scrollRatio = verticalScrollbar.getScrollPos()
                     / verticalScrollbar.getScrollSize();
             scroller.recalculateScrollbarsForVirtualViewport();
-            internalScrollEventCalls++;
             verticalScrollbar.setScrollPos((int) (getDefaultRowHeight()
                     * getRowCount() * scrollRatio));
             setBodyScrollPosition(horizontalScrollbar.getScrollPos(),
@@ -3915,8 +3905,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
     private PositionFunction position;
 
-    private int internalScrollEventCalls = 0;
-
     /** The cached width of the escalator, in pixels. */
     private double widthOfEscalator;
     /** The cached height of the escalator, in pixels. */
@@ -3975,6 +3963,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         ScrollHandler scrollHandler = new ScrollHandler() {
             @Override
             public void onScroll(ScrollEvent event) {
+                scroller.onScroll();
                 fireEvent(new ScrollEvent());
             }
         };
@@ -4361,20 +4350,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         scroller.recalculateScrollbarsForVirtualViewport();
         body.verifyEscalatorCount();
         Profiler.leave("Escalator.recalculateElementSizes");
-    }
-
-    /**
-     * A routing method for {@link Scroller#onScroll()}.
-     * <p>
-     * This is a workaround for GWT and JSNI unable to properly handle inner
-     * classes, so instead we call the outer class' method, which calls the
-     * inner class' respective method.
-     * <p>
-     * Ideally, this method would not exist, and {@link Scroller#onScroll()}
-     * would be called directly.
-     */
-    private void onScroll() {
-        scroller.onScroll();
     }
 
     /**

@@ -25,7 +25,8 @@ import java.util.regex.Pattern;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-public class EscalatorColumnFreezingTest extends EscalatorBasicClientFeaturesTest {
+public class EscalatorColumnFreezingTest extends
+        EscalatorBasicClientFeaturesTest {
 
     private final static Pattern TRANSFORM_PATTERN = Pattern.compile(// @formatter:off
             // any start of the string
@@ -86,10 +87,6 @@ public class EscalatorColumnFreezingTest extends EscalatorBasicClientFeaturesTes
         WebElement bodyCell = getBodyCell(0, 0);
         assertFalse(isFrozen(bodyCell));
         assertEquals(NO_FREEZE, getFrozenScrollCompensation(bodyCell));
-    }
-
-    private void populate() {
-        selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
     }
 
     private static boolean isFrozen(WebElement cell) {

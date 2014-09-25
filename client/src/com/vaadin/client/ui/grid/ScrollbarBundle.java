@@ -74,19 +74,12 @@ abstract class ScrollbarBundle {
                  */
                 updateScrollPosFromDom();
 
-                if (!pixelValuesEqual(startScrollPos, getScrollPos())) {
-                    getHandlerManager().fireEvent(new ScrollEvent());
-                }
-                reset();
+                getHandlerManager().fireEvent(new ScrollEvent());
+                isBeingFired = false;
             }
         };
 
         private boolean isBeingFired;
-        private double startScrollPos;
-
-        public ScrollEventFirer() {
-            reset();
-        }
 
         public void scheduleEvent() {
             if (!isBeingFired) {
@@ -97,11 +90,6 @@ abstract class ScrollbarBundle {
                 Scheduler.get().scheduleDeferred(fireEventCommand);
                 isBeingFired = true;
             }
-        }
-
-        private void reset() {
-            isBeingFired = false;
-            startScrollPos = getScrollPos();
         }
     }
 
@@ -477,12 +465,6 @@ abstract class ScrollbarBundle {
              * only facilitating future virtual scrollbars.
              */
             internalSetScrollPos(toInt32(scrollPos));
-
-            /*
-             * TODO it looks like this call isn't strictly required, as long as
-             * the updateScrollPosFromDom() is called correctly.
-             */
-            scrollEventFirer.scheduleEvent();
         }
     }
 

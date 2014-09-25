@@ -203,4 +203,10 @@ public class EscalatorProxy extends Escalator {
         logWidget.updateDebugLabel();
     }
 
+    @Override
+    public void setScrollTop(double scrollTop) {
+        logWidget.log("setScrollTop " + scrollTop);
+        logWidget.updateDebugLabel();
+        super.setScrollTop(scrollTop);
+    }
 }

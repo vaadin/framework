@@ -481,6 +481,16 @@ public class EscalatorBasicClientFeaturesWidget extends
                         .getRowCount() - 50, 50);
             }
         }, menupath);
+        addMenuCommand("Remove all, insert 30 and scroll 40px",
+                new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        removeRows(escalator.getBody(), 0, escalator.getBody()
+                                .getRowCount());
+                        insertRows(escalator.getBody(), 0, 30);
+                        escalator.setScrollTop(40);
+                    }
+                }, menupath);
     }
 
     private void createRowsMenu(final RowContainer container, String[] menupath) {
