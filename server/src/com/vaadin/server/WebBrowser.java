@@ -264,6 +264,7 @@ public class WebBrowser implements Serializable {
      * @return true if the user is using Windows Phone, false if the user is not
      *         using Windows Phone or if no information on the browser is
      *         present
+     * @since 7.3.2
      */
     public boolean isWindowsPhone() {
         return browserDetails.isWindowsPhone();
