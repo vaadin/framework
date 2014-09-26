@@ -18,16 +18,13 @@ package com.vaadin.tests.components.combobox;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyString;
-import static org.junit.Assert.assertEquals;
 
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.tests.tb3.AbstractTB3Test;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ComboBoxInputPromptTest extends MultiBrowserTest {
