@@ -28,6 +28,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public class GridStructureTest extends GridBasicFeaturesTest {
@@ -224,6 +226,20 @@ public class GridStructureTest extends GridBasicFeaturesTest {
 
         selectMenuPath("Component", "Body rows", "Add first row");
         assertTrue(verticalScrollbarIsPresent());
+    }
+
+    @Test
+    public void testRemoveLastColumn() {
+        setDebug(true);
+        openTestURL();
+
+        String columnName = "Column " + (GridBasicFeatures.COLUMNS - 1);
+        assertTrue(columnName + " was not present in DOM",
+                isElementPresent(By.xpath("//th[text()='" + columnName + "']")));
+        selectMenuPath("Component", "Columns", columnName, "Remove");
+        assertFalse(isElementPresent(NotificationElement.class));
+        assertFalse(columnName + " was still present in DOM",
+                isElementPresent(By.xpath("//th[text()='" + columnName + "']")));
     }
 
     private boolean verticalScrollbarIsPresent() {

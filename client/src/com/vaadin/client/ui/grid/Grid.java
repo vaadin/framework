@@ -1677,13 +1677,6 @@ public class Grid<T> extends ResizeComposite implements
     private void removeColumnSkipSelectionColumnCheck(GridColumn<?, T> column) {
         int columnIndex = columns.indexOf(column);
         int visibleIndex = findVisibleColumnIndex(column);
-        columns.remove(columnIndex);
-
-        header.removeColumn(column);
-        footer.removeColumn(column);
-
-        // de-register column with grid
-        ((AbstractGridColumn<?, T>) column).setGrid(null);
 
         if (column.isVisible()) {
             ColumnConfiguration conf = escalator.getColumnConfiguration();
@@ -1695,6 +1688,16 @@ public class Grid<T> extends ResizeComposite implements
         } else {
             refreshFrozenColumns();
         }
+
+        header.removeColumn(column);
+        footer.removeColumn(column);
+
+        // de-register column with grid
+        ((AbstractGridColumn<?, T>) column).setGrid(null);
+
+        columns.remove(columnIndex);
+
+        refreshBody();
     }
 
     /**

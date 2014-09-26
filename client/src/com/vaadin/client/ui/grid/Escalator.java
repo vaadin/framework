@@ -3591,9 +3591,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 container.reapplyRowWidths();
 
                 /*
-                 * Because we might remove columns where affected by colspans,
-                 * it's easiest to simply redraw everything when columns are
-                 * modified.
+                 * FIXME: Because we might remove columns where affected by
+                 * colspans, it's easiest to simply redraw everything when
+                 * columns are modified.
                  */
                 container.refreshRows(0, container.getRowCount());
             }
