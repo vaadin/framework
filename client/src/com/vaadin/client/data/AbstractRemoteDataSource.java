@@ -144,8 +144,6 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     private DataChangeHandler dataChangeHandler;
 
-    private Range availableDataRange = Range.between(0, 0);
-
     private CacheStrategy cacheStrategy = new CacheStrategy.DefaultCacheStrategy();
 
     private final ScheduledCommand coverageChecker = new ScheduledCommand() {
@@ -159,17 +157,6 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     private Map<Object, Integer> pinnedCounts = new HashMap<Object, Integer>();
     private Map<Object, RowHandleImpl> pinnedRows = new HashMap<Object, RowHandleImpl>();
     protected Collection<T> temporarilyPinnedRows = Collections.emptySet();
-
-    /**
-     * Sets the number of rows in the data source.
-     * 
-     * @param size
-     *            the number of available rows
-     */
-    protected void setSize(int size) {
-        // TODO update dataChangeHandler if size changes
-        availableDataRange = Range.withLength(0, size);
-    }
 
     private void ensureCoverageCheck() {
         if (!coverageCheckPending) {
@@ -256,11 +243,6 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      *            the number of rows to fetch
      */
     protected abstract void requestRows(int firstRowIndex, int numberOfRows);
-
-    @Override
-    public int size() {
-        return availableDataRange.length();
-    }
 
     @Override
     public T getRow(int rowIndex) {
@@ -395,7 +377,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                     .length());
             cached = remainsBefore.combineWith(transposedRemainsAfter);
         }
-        setSize(size() - count);
+
         dataChangeHandler.dataRemoved(firstRowIndex, count);
         checkCacheCoverage();
 
@@ -441,7 +423,6 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             }
         }
 
-        setSize(size() + count);
         dataChangeHandler.dataAdded(firstRowIndex, count);
         checkCacheCoverage();
 
@@ -480,6 +461,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     }
 
     private Range getMinCacheRange() {
+        Range availableDataRange = Range.withLength(0, size());
         Range minCacheRange = cacheStrategy.getMinCacheRange(
                 requestedAvailability, cached, availableDataRange);
 
@@ -489,6 +471,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     }
 
     private Range getMaxCacheRange() {
+        Range availableDataRange = Range.withLength(0, size());
         Range maxCacheRange = cacheStrategy.getMaxCacheRange(
                 requestedAvailability, cached, availableDataRange);
 

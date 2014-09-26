@@ -99,13 +99,17 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
                         .releaseTemporarilyPinnedKeys();
             }
         }
+
+        @Override
+        public int size() {
+            return getState().containerSize;
+        }
     }
 
     private final RpcDataSource dataSource = new RpcDataSource();
 
     @Override
     protected void extend(ServerConnector target) {
-        dataSource.setSize(getState().containerSize);
         ((GridConnector) target).setDataSource(dataSource);
 
         registerRpc(DataProviderRpc.class, new DataProviderRpc() {
@@ -141,11 +145,6 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
         });
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.client.ui.AbstractConnector#getState()
-     */
     @Override
     public DataProviderState getState() {
         return (DataProviderState) super.getState();
