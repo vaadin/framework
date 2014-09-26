@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.google.gwt.thirdparty.guava.common.collect.Sets.SetView;
@@ -238,6 +239,16 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                     .get(getState(false).lastFrozenColumnId);
             if (!columns.containsKey(frozenPropertyId)) {
                 setLastFrozenPropertyId(null);
+            }
+
+            // Update sortable columns
+            if (event.getContainer() instanceof Sortable) {
+                Collection<?> sortableProperties = ((Sortable) event
+                        .getContainer()).getSortableContainerPropertyIds();
+                for (Entry<Object, GridColumn> columnEntry : columns.entrySet()) {
+                    columnEntry.getValue().setSortable(
+                            sortableProperties.contains(columnEntry.getKey()));
+                }
             }
         }
     };

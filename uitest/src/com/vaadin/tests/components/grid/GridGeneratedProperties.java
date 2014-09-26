@@ -106,6 +106,21 @@ public class GridGeneratedProperties extends AbstractTestUI {
                     public Class<String> getType() {
                         return String.class;
                     }
+                });
+        container.removeContainerProperty("bar");
+        container.addGeneratedProperty("baz",
+                new PropertyValueGenerator<Integer>() {
+
+                    @Override
+                    public Integer getValue(Item item, Object itemId,
+                            Object propertyId) {
+                        return (Integer) item.getItemProperty("bar").getValue();
+                    }
+
+                    @Override
+                    public Class<Integer> getType() {
+                        return Integer.class;
+                    }
 
                     @Override
                     public SortOrder[] getSortProperties(SortOrder order) {
@@ -113,7 +128,6 @@ public class GridGeneratedProperties extends AbstractTestUI {
                                 .toArray(new SortOrder[1]);
                     }
                 });
-        container.removeContainerProperty("bar");
 
         addComponent(filterButton);
     }

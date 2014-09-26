@@ -35,20 +35,35 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
     }
 
     @Test
-    public void testSortingGeneratedPropertyColumns() {
+    public void testUnsortableGeneratedProperty() {
         openTestURL();
         GridElement grid = $(GridElement.class).first();
+
+        // Overwritten foo property should not be sortable
         GridCellElement fooHeader = grid.getHeaderCell(0, 1);
         fooHeader.click();
-        assertTrue(fooHeader.getAttribute("class").contains("sort-asc"));
-        fooHeader.click();
-        assertTrue(fooHeader.getAttribute("class").contains("sort-desc"));
-        GridCellElement kmHeader = grid.getHeaderCell(0, 2);
-        kmHeader.click();
-        assertTrue(kmHeader.getAttribute("class").contains("sort-asc"));
-        assertFalse(fooHeader.getAttribute("class").contains("sort"));
-        grid.getHeaderCell(0, 3).click();
-        assertTrue(kmHeader.getAttribute("class").contains("sort-asc"));
-        assertFalse(fooHeader.getAttribute("class").contains("sort"));
+        assertFalse("Column foo was unexpectedly sorted.", fooHeader
+                .getAttribute("class").contains("sort"));
+
+        // Generated property miles is not sortable
+        GridCellElement milesHeader = grid.getHeaderCell(0, 3);
+        milesHeader.click();
+        assertFalse("Column miles was unexpectedly sorted.", milesHeader
+                .getAttribute("class").contains("sort"));
+    }
+
+    @Test
+    public void testSortableGeneratedProperty() {
+        openTestURL();
+        GridElement grid = $(GridElement.class).first();
+
+        // Generated property baz is sortable
+        GridCellElement bazHeader = grid.getHeaderCell(0, 4);
+        bazHeader.click();
+        assertTrue("Column baz was not sorted ascending", bazHeader
+                .getAttribute("class").contains("sort-asc"));
+        bazHeader.click();
+        assertTrue("Column baz was not sorted descending", bazHeader
+                .getAttribute("class").contains("sort-desc"));
     }
 }
