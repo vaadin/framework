@@ -479,7 +479,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         }
 
         datasourceExtension = new RpcDataProviderExtension(container);
-        datasourceExtension.extend(this);
+        datasourceExtension.extend(this, columnKeys);
 
         /*
          * selectionModel == null when the invocation comes from the

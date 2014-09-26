@@ -40,6 +40,7 @@ import com.vaadin.data.Property.ValueChangeNotifier;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataProviderState;
 import com.vaadin.shared.data.DataRequestRpc;
@@ -602,6 +603,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     private final DataProviderKeyMapper keyMapper = new DataProviderKeyMapper();
 
+    private KeyMapper<Object> columnKeys;
+
     /**
      * Creates a new data provider using the given container.
      * 
@@ -714,7 +717,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     private JsonValue getRowData(Collection<?> propertyIds, Object itemId) {
         Item item = container.getItem(itemId);
 
-        JsonArray rowData = Json.createArray();
+        JsonObject rowData = Json.createObject();
 
         Grid grid = getGrid();
 
@@ -727,7 +730,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
                     column.getRenderer(), column.getConverter(),
                     grid.getLocale());
 
-            rowData.set(i++, encodedValue);
+            rowData.put(columnKeys.key(propertyId), encodedValue);
         }
 
         final JsonObject rowObject = Json.createObject();
@@ -747,7 +750,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * @param component
      *            the remote data grid component to extend
      */
-    public void extend(Grid component) {
+    public void extend(Grid component, KeyMapper<Object> columnKeys) {
+        this.columnKeys = columnKeys;
         super.extend(component);
     }
 

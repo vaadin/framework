@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Widget;
@@ -102,12 +101,11 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         @Override
         public Object getValue(final JSONObject obj) {
             final JSONValue rowData = obj.get(GridState.JSONKEY_DATA);
-            final JSONArray rowDataArray = rowData.isArray();
-            assert rowDataArray != null : "Was unable to parse JSON into an array: "
+            final JSONObject rowDataObject = rowData.isObject();
+            assert rowDataObject != null : "Was unable to parse JSON into an array: "
                     + rowData;
 
-            final int columnIndex = resolveCurrentIndexFromState();
-            final JSONValue columnValue = rowDataArray.get(columnIndex);
+            final JSONValue columnValue = rowDataObject.get(id);
             return rendererConnector.decode(columnValue);
         }
 
@@ -127,17 +125,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         private void setEditorConnector(AbstractFieldConnector editorConnector) {
             this.editorConnector = editorConnector;
-        }
-
-        private int resolveCurrentIndexFromState() {
-            List<GridColumnState> columns = getState().columns;
-            int numColumns = columns.size();
-            for (int index = 0; index < numColumns; index++) {
-                if (columns.get(index).id.equals(id)) {
-                    return index;
-                }
-            }
-            return -1;
         }
     }
 
