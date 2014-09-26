@@ -431,6 +431,7 @@ public class VBrowserDetails implements Serializable {
      * Tests if the browser is run on Windows Phone.
      * 
      * @return true if run on Windows Phone, false otherwise
+     * @since 7.3.2
      */
     public boolean isWindowsPhone() {
         return isWindowsPhone;
