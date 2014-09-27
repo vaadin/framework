@@ -15,10 +15,8 @@
  */
 package com.vaadin.tests.themes;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.junit.Assert;
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -26,8 +24,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import java.io.IOException;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ThemeChangeOnTheFlyTest extends MultiBrowserTest {
 
@@ -100,9 +101,8 @@ public class ThemeChangeOnTheFlyTest extends MultiBrowserTest {
             @Override
             public Boolean apply(WebDriver input) {
                 String rootClass = rootDiv.getAttribute("class").trim();
-                String expected = "v-app " + theme;
-                expected = expected.trim();
-                return rootClass.equals(expected);
+
+                return rootClass.contains(theme);
             }
         }, 30);
     }
@@ -110,12 +110,9 @@ public class ThemeChangeOnTheFlyTest extends MultiBrowserTest {
     private void assertOverlayTheme(String theme) {
         final WebElement overlayContainerDiv = findElement(By
                 .xpath("//div[contains(@class,'v-overlay-container')]"));
-        String expected = "v-app v-overlay-container " + theme;
-        expected = expected.trim();
-
         String overlayClass = overlayContainerDiv.getAttribute("class").trim();
 
-        Assert.assertEquals(expected, overlayClass);
+        assertThat(overlayClass, containsString(theme));
     }
 
 }
