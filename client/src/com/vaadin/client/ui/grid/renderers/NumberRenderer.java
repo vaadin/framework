@@ -31,7 +31,15 @@ import com.vaadin.client.ui.grid.Renderer;
  */
 public class NumberRenderer<T extends Number> implements Renderer<T> {
 
-    private NumberFormat format = NumberFormat.getDecimalFormat();
+    private NumberFormat format;
+
+    public NumberRenderer() {
+        this(NumberFormat.getDecimalFormat());
+    }
+
+    public NumberRenderer(NumberFormat format) {
+        setFormat(format);
+    }
 
     /**
      * Gets the number format that the number should be formatted in.
