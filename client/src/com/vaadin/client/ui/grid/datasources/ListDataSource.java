@@ -391,7 +391,7 @@ public class ListDataSource<T> implements DataSource<T> {
     }
 
     @Override
-    public int getEstimatedSize() {
+    public int size() {
         return ds.size();
     }
 

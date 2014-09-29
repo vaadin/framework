@@ -159,11 +159,11 @@ public interface DataSource<T> {
     public T getRow(int rowIndex);
 
     /**
-     * Returns the current best guess for the number of rows in the container.
+     * Returns the number of rows in the data source.
      * 
-     * @return the current estimation of the container size
+     * @return the current size of the data source
      */
-    public int getEstimatedSize();
+    public int size();
 
     /**
      * Sets a data change handler to inform when data is updated, added or

@@ -1854,9 +1854,9 @@ public class Grid<T> extends ResizeComposite implements
             escalator.getBody().removeRows(0, previousRowCount);
         }
 
-        int estimatedSize = dataSource.getEstimatedSize();
-        if (estimatedSize > 0) {
-            escalator.getBody().insertRows(0, estimatedSize);
+        int size = dataSource.size();
+        if (size > 0) {
+            escalator.getBody().insertRows(0, size);
         }
 
     }

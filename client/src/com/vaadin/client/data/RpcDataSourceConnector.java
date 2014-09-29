@@ -105,7 +105,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
     @Override
     protected void extend(ServerConnector target) {
-        dataSource.setEstimatedSize(getState().containerSize);
+        dataSource.setSize(getState().containerSize);
         ((GridConnector) target).setDataSource(dataSource);
 
         registerRpc(DataProviderRpc.class, new DataProviderRpc() {

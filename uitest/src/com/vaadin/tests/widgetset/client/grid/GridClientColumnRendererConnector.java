@@ -101,8 +101,8 @@ public class GridClientColumnRendererConnector extends
         }
 
         @Override
-        public int getEstimatedSize() {
-            return ds.getEstimatedSize();
+        public int size() {
+            return ds.size();
         }
 
         @Override

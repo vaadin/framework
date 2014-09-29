@@ -34,7 +34,7 @@ public class ListDataSourceTest {
 
         ListDataSource<Integer> ds = new ListDataSource<Integer>(0, 1, 2, 3);
 
-        assertEquals(4, ds.getEstimatedSize());
+        assertEquals(4, ds.size());
         assertEquals(0, (int) ds.getRow(0));
         assertEquals(1, (int) ds.getRow(1));
         assertEquals(2, (int) ds.getRow(2));
@@ -42,7 +42,7 @@ public class ListDataSourceTest {
 
         ds = new ListDataSource<Integer>(Arrays.asList(0, 1, 2, 3));
 
-        assertEquals(4, ds.getEstimatedSize());
+        assertEquals(4, ds.size());
         assertEquals(0, (int) ds.getRow(0));
         assertEquals(1, (int) ds.getRow(1));
         assertEquals(2, (int) ds.getRow(2));
@@ -65,7 +65,7 @@ public class ListDataSourceTest {
 
         ds.asList().add(4);
 
-        assertEquals(5, ds.getEstimatedSize());
+        assertEquals(5, ds.size());
         assertEquals(0, (int) ds.getRow(0));
         assertEquals(1, (int) ds.getRow(1));
         assertEquals(2, (int) ds.getRow(2));
@@ -89,7 +89,7 @@ public class ListDataSourceTest {
 
         ds.asList().addAll(Arrays.asList(4, 5, 6));
 
-        assertEquals(7, ds.getEstimatedSize());
+        assertEquals(7, ds.size());
         assertEquals(0, (int) ds.getRow(0));
         assertEquals(1, (int) ds.getRow(1));
         assertEquals(2, (int) ds.getRow(2));
@@ -115,7 +115,7 @@ public class ListDataSourceTest {
 
         ds.asList().remove(2);
 
-        assertEquals(3, ds.getEstimatedSize());
+        assertEquals(3, ds.size());
         assertEquals(0, (int) ds.getRow(0));
         assertEquals(1, (int) ds.getRow(1));
         assertEquals(3, (int) ds.getRow(2));
@@ -137,7 +137,7 @@ public class ListDataSourceTest {
 
         ds.asList().removeAll(Arrays.asList(0, 2, 3));
 
-        assertEquals(1, ds.getEstimatedSize());
+        assertEquals(1, ds.size());
         assertEquals(1, (int) ds.getRow(0));
     }
 
@@ -157,7 +157,7 @@ public class ListDataSourceTest {
 
         ds.asList().clear();
 
-        assertEquals(0, ds.getEstimatedSize());
+        assertEquals(0, ds.size());
     }
 
     @Test(expected = IllegalStateException.class)
