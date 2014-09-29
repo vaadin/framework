@@ -62,7 +62,30 @@ public class BeanItem<BT> extends PropertysetItem {
      * 
      */
     public BeanItem(BT bean) {
-        this(bean, getPropertyDescriptors((Class<BT>) bean.getClass()));
+        this(bean, (Class<BT>) bean.getClass());
+    }
+
+    /**
+     * <p>
+     * Creates a new instance of <code>BeanItem</code> and adds all properties
+     * of a Java Bean to it. The properties are identified by their respective
+     * bean names.
+     * </p>
+     * 
+     * <p>
+     * Note : This version only supports introspectable bean properties and
+     * their getter and setter methods. Stand-alone <code>is</code> and
+     * <code>are</code> methods are not supported.
+     * </p>
+     * 
+     * @param bean
+     *            the Java Bean to copy properties from.
+     * @param beanClass
+     *            class of the {@code bean}
+     * 
+     */
+    public BeanItem(BT bean, Class<BT> beanClass) {
+        this(bean, getPropertyDescriptors(beanClass));
     }
 
     /**

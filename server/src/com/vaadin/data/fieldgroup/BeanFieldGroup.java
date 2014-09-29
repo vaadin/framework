@@ -130,16 +130,17 @@ public class BeanFieldGroup<T> extends FieldGroup {
      *            The bean to use as data source.
      */
     public void setItemDataSource(T bean) {
-        setItemDataSource(new BeanItem(bean));
+        setItemDataSource(new BeanItem<T>(bean, beanType));
     }
 
     @Override
     public void setItemDataSource(Item item) {
-        if (!(item instanceof BeanItem)) {
+        if (item == null || (item instanceof BeanItem)) {
+            super.setItemDataSource(item);
+        } else {
             throw new RuntimeException(getClass().getSimpleName()
                     + " only supports BeanItems as item data source");
         }
-        super.setItemDataSource(item);
     }
 
     @Override

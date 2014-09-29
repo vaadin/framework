@@ -2,12 +2,16 @@ package com.vaadin.tests.server.component.fieldgroup;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collection;
+
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.data.Item;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 
@@ -131,6 +135,33 @@ public class BeanFieldGroupTest {
         com.vaadin.ui.Field<?> helloField = bfg.buildAndBind("Hello string",
                 "nestedBean.hello");
         assertEquals(bean.nestedBean.hello, helloField.getValue().toString());
+    }
+
+    @Test
+    public void setDataSource_nullBean_nullBeanIsSetInDataSource() {
+        BeanFieldGroup<MyBean> group = new BeanFieldGroup<MyBean>(MyBean.class);
+
+        group.setItemDataSource((MyBean) null);
+
+        BeanItem<MyBean> dataSource = group.getItemDataSource();
+        Assert.assertNotNull("Data source is null for null bean", dataSource);
+
+        Collection<?> itemPropertyIds = dataSource.getItemPropertyIds();
+        Assert.assertEquals("Unexpected number of properties", 3,
+                itemPropertyIds.size());
+        for (Object id : itemPropertyIds) {
+            Assert.assertNull("Value for property " + id + " is not null",
+                    dataSource.getItemProperty(id).getValue());
+        }
+    }
+
+    @Test
+    public void setDataSource_nullItem_nullDataSourceIsSet() {
+        BeanFieldGroup<MyBean> group = new BeanFieldGroup<MyBean>(MyBean.class);
+
+        group.setItemDataSource((Item) null);
+        BeanItem<MyBean> dataSource = group.getItemDataSource();
+        Assert.assertNull("Group returns not null data source", dataSource);
     }
 
 }
