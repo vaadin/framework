@@ -181,9 +181,13 @@ public abstract class AbstractTestUI extends UI {
         getLayout().replaceComponent(oldComponent, newComponent);
     }
 
-    protected abstract String getTestDescription();
+    protected String getTestDescription() {
+        return null;
+    };
 
-    protected abstract Integer getTicketNumber();
+    protected Integer getTicketNumber() {
+        return null;
+    };
 
     protected WebBrowser getBrowser() {
         return getSession().getBrowser();
