@@ -1,12 +1,171 @@
-@import "escalator";
+@import "../../base/escalator/escalator";
 
-/**
- *
- *
- * @param {string} $primary-styleName (v-grid) - 
- *
- * @group grid
- */
-@mixin valo-grid($primary-styleName : v-grid) {
-  @include valo-escalator($primary-styleName);
+@mixin valo-grid {
+	
+	@include base-escalator(v-grid);
+	
+	/* BASE GRID */
+	.v-grid {
+		th {
+			position: relative;
+		}
+		
+		th.sort-asc:after {
+			content: "\25B2" attr(sort-order);
+			/*
+			position: absolute;
+			right: 5px;
+			*/
+			
+			font-size: 9px;
+			float: right;
+			line-height: 14px;
+		}
+
+		th.sort-desc:after {
+			content: "\25BC" attr(sort-order);
+			/*
+			position: absolute;
+			right: 5px;
+			*/
+			
+			font-size: 9px;
+			float: right;
+			line-height: 14px;
+		}
+
+		/*.v-grid-cell-active {
+			border-color: blue;
+		}
+
+		.v-grid-header-active {
+			background: lightgray;
+		}
+
+		.v-grid-row-active > td {
+			background: rgb(244,244,244);
+		}*/
+	}
+	
+	.v-grid-row-selected > td {
+		background: lightblue;
+	}
+
+
+
+
+
+	/* CUSTOM STYLES */
+	
+	/* Common styles; empty area before horizontal scroll */
+	.v-grid:after {
+		@include header-style;
+		content: "";
+		width: 100%;
+		height: 15px;
+		position: absolute;
+		bottom: 0;
+		border-left: 1px solid #d4d4d4;
+		border-bottom: 1px solid #d4d4d4;
+		border-right: 1px solid #d4d4d4;
+		box-sizing: border-box;
+	}
+	
+	/* Common styles; all but first column cells have left border */
+	.v-grid-row {
+		th, td {
+			background: none;
+			border-left: none;
+			border-right: 1px solid #d4d4d4;
+			border-top: none;
+			border-bottom: none;
+		}
+		
+		th:last-child, td:last-child {
+			border-right: none;
+		}
+	}
+
+	/* Common styles; clear the float and change display value for all cells */
+	.v-grid-cell {
+		float: none;
+		display: inline-block;
+		
+		&.frozen {
+			box-shadow: 2px 0 2px rgba(0,0,0,0.1);
+		}
+		&.v-grid-cell-active {
+			box-shadow: inset 2px 2px 0px #77aeee, inset -2px -2px 0px #77aeee;
+		}
+	}
+	
+	/* Common styles: main border, moved from .v-grid due to scroll div widths */
+	.v-grid-tablewrapper {
+		border: 1px solid #d4d4d4;
+		box-sizing: border-box;
+	}
+	
+	/* Grid header */
+	.v-grid-header {
+		.v-grid-cell {
+			@include header-style;
+			border-bottom: 1px solid #d4d4d4;
+		}
+		
+		th {
+			@include header-text;
+		}
+	}
+	
+	/* Grid footer */
+	.v-grid-footer {
+		.v-grid-cell {
+			@include header-style;
+			border-top: 1px solid #d4d4d4;
+		}
+		
+		td {
+			@include header-text;
+		}
+	}
+	
+	/* Grid body */
+	.v-grid-body {
+		
+		.v-grid-cell {
+			padding: 11px 12px 12px 12px;
+			line-height: 1;
+		}
+		
+		.v-grid-row {
+			border-bottom: 1px solid #d4d4d4;
+			
+			&:nth-child(odd) td {
+				background: white;
+			}
+		
+			&:nth-child(even) td {
+				background: #f5f5f5;
+			}
+			
+			&.v-grid-row-active td {
+				background: #166ed5;
+				color: white;
+				border-color: #1d69b4;
+			}
+		}
+	}
+}
+
+@mixin header-style {
+	background-color: #fafafa;
+	background-image: -webkit-linear-gradient(top, #fafafa 2%, #efefef 98%);
+	background-image: linear-gradient(to bottom,#fafafa 2%, #efefef 98%);
+}
+
+@mixin header-text {
+	font-weight: 300;
+	font-size: 14px;
+	line-height: 1;
+	padding: 12px 12px 11px 12px;
 }
