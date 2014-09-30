@@ -274,3 +274,8 @@ input::-ms-clear {
 	width: 10px;
 	overflow: hidden;
 }
+/* fix for #14681 - mobile safari 8 sometimes displayed text cursor on that element */
+.v-radiobutton {
+	-webkit-user-select: none;
+}
+
