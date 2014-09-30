@@ -36,6 +36,7 @@ import com.vaadin.data.Container.PropertySetChangeNotifier;
 import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.EditorRowClientRpc;
 import com.vaadin.shared.ui.grid.EditorRowServerRpc;
@@ -270,6 +271,13 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     private static final Method SORT_ORDER_CHANGE_METHOD = ReflectTools
             .findMethod(SortOrderChangeListener.class, "sortOrderChange",
                     SortOrderChangeEvent.class);
+
+    /**
+     * Creates a new Grid with a new {@link IndexedContainer} as the datasource.
+     */
+    public Grid() {
+        this(new IndexedContainer());
+    }
 
     /**
      * Creates a new Grid using the given datasource.
