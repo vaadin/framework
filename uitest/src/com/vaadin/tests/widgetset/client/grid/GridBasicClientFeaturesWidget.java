@@ -835,7 +835,7 @@ public class GridBasicClientFeaturesWidget extends
             };
 
         case NUMBER_RENDERER:
-            return new NumberRenderer<Integer>();
+            return new NumberRenderer();
 
         case DATE_RENDERER:
             return new DateRenderer();

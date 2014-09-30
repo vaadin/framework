@@ -29,7 +29,7 @@ import com.vaadin.client.ui.grid.Renderer;
  * @param <T>
  *            The number type to render.
  */
-public class NumberRenderer<T extends Number> implements Renderer<T> {
+public class NumberRenderer implements Renderer<Number> {
 
     private NumberFormat format;
 

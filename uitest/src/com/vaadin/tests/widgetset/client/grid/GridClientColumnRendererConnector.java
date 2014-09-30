@@ -303,7 +303,7 @@ public class GridClientColumnRendererConnector extends
             };
 
         case NUMBER_RENDERER:
-            return new NumberRenderer<Long>();
+            return new NumberRenderer();
 
         case DATE_RENDERER:
             return new DateRenderer();
