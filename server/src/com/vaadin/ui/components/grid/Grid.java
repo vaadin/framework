@@ -616,6 +616,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         columns.put(datasourcePropertyId, column);
 
         getState().columns.add(columnState);
+        getState().columnOrder.add(columnState.id);
         header.addColumn(datasourcePropertyId);
         footer.addColumn(datasourcePropertyId);
 
@@ -625,10 +626,42 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     }
 
     /**
+     * Sets a new column order for the grid. All columns which are not ordered
+     * here will remain in the order they were before as the last columns of
+     * grid.
+     * 
+     * @param propertyIds
+     *            properties in the order columns should be
+     */
+    public void setColumnOrder(Object... propertyIds) {
+        List<String> columnOrder = new ArrayList<String>();
+        for (Object propertyId : propertyIds) {
+            if (columns.containsKey(propertyId)) {
+                columnOrder.add(columnKeys.key(propertyId));
+            } else {
+                throw new IllegalArgumentException(
+                        "Grid does not contain column for property "
+                                + String.valueOf(propertyId));
+            }
+        }
+
+        List<String> stateColumnOrder = getState().columnOrder;
+        if (stateColumnOrder.size() != columnOrder.size()) {
+            stateColumnOrder.removeAll(columnOrder);
+            columnOrder.addAll(stateColumnOrder);
+        }
+        getState().columnOrder = columnOrder;
+    }
+
+    /**
      * Sets (or unsets) the rightmost frozen column in the grid.
      * <p>
      * All columns up to and including the given column will be frozen in place
      * when the grid is scrolled sideways.
+     * <p>
+     * Reordering columns in the grid while there is a frozen column will make
+     * all columns frozen that are before the frozen column. ie. If you move the
+     * frozen column to be last, all columns will be frozen.
      * 
      * @param lastFrozenColumn
      *            the rightmost column to freeze, or <code>null</code> to not

@@ -88,9 +88,14 @@ public class GridState extends AbstractComponentState {
     public static final String JSONKEY_ROWKEY = "k";
 
     /**
-     * Columns in grid. Column order implicitly deferred from list order.
+     * Columns in grid.
      */
     public List<GridColumnState> columns = new ArrayList<GridColumnState>();
+
+    /**
+     * Column order in grid.
+     */
+    public List<String> columnOrder = new ArrayList<String>();
 
     public GridStaticSectionState header = new GridStaticSectionState();
 

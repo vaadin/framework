@@ -29,6 +29,7 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.tests.components.grid.GridElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
@@ -240,6 +241,28 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         assertFalse(isElementPresent(NotificationElement.class));
         assertFalse(columnName + " was still present in DOM",
                 isElementPresent(By.xpath("//th[text()='" + columnName + "']")));
+    }
+
+    @Test
+    public void testReverseColumns() {
+        openTestURL();
+
+        String[] gridData = new String[GridBasicFeatures.COLUMNS];
+        GridElement grid = getGridElement();
+        for (int i = 0; i < gridData.length; ++i) {
+            gridData[i] = grid.getCell(0, i).getAttribute("innerHTML");
+        }
+
+        selectMenuPath("Component", "State", "Reverse Grid Columns");
+
+        // Compare with reversed order
+        for (int i = 0; i < gridData.length; ++i) {
+            final int column = gridData.length - 1 - i;
+            final String newText = grid.getCell(0, column).getAttribute(
+                    "innerHTML");
+            assertEquals("Grid contained unexpected values. (0, " + column
+                    + ")", gridData[i], newText);
+        }
     }
 
     private boolean verticalScrollbarIsPresent() {

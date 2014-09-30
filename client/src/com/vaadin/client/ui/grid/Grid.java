@@ -720,7 +720,7 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * List of columns in the grid. Order defines the visible order.
      */
-    private final List<GridColumn<?, T>> columns = new ArrayList<GridColumn<?, T>>();
+    private List<GridColumn<?, T>> columns = new ArrayList<GridColumn<?, T>>();
 
     /**
      * The datasource currently in use. <em>Note:</em> it is <code>null</code>
@@ -1018,6 +1018,10 @@ public class Grid<T> extends ResizeComposite implements
          */
         public int getWidth() {
             return width;
+        }
+
+        void reapplyWidth() {
+            setWidth(width);
         }
 
         /**
@@ -2932,5 +2936,46 @@ public class Grid<T> extends ResizeComposite implements
     @Override
     public boolean isWorkPending() {
         return escalator.isWorkPending() || dataIsBeingFetched;
+    }
+
+    /**
+     * Sets a new column order for the grid. All columns which are not ordered
+     * here will remain in the order they were before as the last columns of
+     * grid.
+     * 
+     * @param orderedColumns
+     *            array of columns in wanted order
+     */
+    public void setColumnOrder(GridColumn<?, T>... orderedColumns) {
+        List<GridColumn<?, T>> newOrder = new ArrayList<GridColumn<?, T>>();
+        if (selectionColumn != null) {
+            newOrder.add(selectionColumn);
+        }
+
+        int i = 0;
+        for (GridColumn<?, T> column : orderedColumns) {
+            if (columns.contains(column)) {
+                newOrder.add(column);
+                ++i;
+            } else {
+                throw new IllegalArgumentException("Given column at index " + i
+                        + " does not exist in Grid");
+            }
+        }
+
+        if (columns.size() != newOrder.size()) {
+            columns.removeAll(newOrder);
+            newOrder.addAll(columns);
+        }
+        columns = newOrder;
+
+        // Update column widths.
+        for (GridColumn<?, T> column : columns) {
+            column.reapplyWidth();
+        }
+
+        refreshHeader();
+        refreshBody();
+        refreshFooter();
     }
 }

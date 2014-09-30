@@ -242,6 +242,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
     private AbstractRowHandleSelectionModel<JSONObject> selectionModel = createSelectionModel(SharedSelectionMode.NONE);
     private Set<String> selectedKeys = new LinkedHashSet<String>();
+    private List<String> columnOrder = new ArrayList<String>();
 
     /**
      * updateFromState is set to true when {@link #updateSelectionFromState()}
@@ -349,27 +350,21 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         // Column updates
         if (stateChangeEvent.hasPropertyChanged("columns")) {
 
-            int totalColumns = getState().columns.size();
-
             // Remove old columns
             purgeRemovedColumns();
 
-            int currentColumns = getWidget().getColumnCount();
-            if (getWidget().getSelectionModel().getSelectionColumnRenderer() != null) {
-                currentColumns--;
-            }
-
             // Add new columns
-            for (int columnIndex = currentColumns; columnIndex < totalColumns; columnIndex++) {
-                addColumnFromStateChangeEvent(columnIndex);
+            for (GridColumnState state : getState().columns) {
+                if (!columnIdToColumn.containsKey(state.id)) {
+                    addColumnFromStateChangeEvent(state);
+                }
+                updateColumnFromState(columnIdToColumn.get(state.id), state);
             }
+        }
 
-            // Update old columns
-            for (int columnIndex = 0; columnIndex < currentColumns; columnIndex++) {
-                // FIXME Currently updating all column header / footers when a
-                // change in made in one column. When the framework supports
-                // quering a specific item in a list then it should do so here.
-                updateColumnFromStateChangeEvent(columnIndex);
+        if (stateChangeEvent.hasPropertyChanged("columnOrder")) {
+            if (orderNeedsUpdate(getState().columnOrder)) {
+                updateColumnOrderFromState(getState().columnOrder);
             }
         }
 
@@ -396,6 +391,29 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         if (stateChangeEvent.hasPropertyChanged("editorRowEnabled")) {
             getWidget().getEditorRow().setEnabled(getState().editorRowEnabled);
         }
+    }
+
+    private void updateColumnOrderFromState(List<String> stateColumnOrder) {
+        CustomGridColumn[] columns = new CustomGridColumn[stateColumnOrder
+                .size()];
+        int i = 0;
+        for (String id : stateColumnOrder) {
+            columns[i++] = columnIdToColumn.get(id);
+        }
+        getWidget().setColumnOrder(columns);
+        columnOrder = stateColumnOrder;
+    }
+
+    private boolean orderNeedsUpdate(List<String> stateColumnOrder) {
+        if (stateColumnOrder.size() == columnOrder.size()) {
+            for (int i = 0; i < columnOrder.size(); ++i) {
+                if (!stateColumnOrder.get(i).equals(columnOrder.get(i))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
     }
 
     private void updateSectionFromState(GridStaticSection<?> section,
@@ -453,27 +471,12 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      * @param columnIndex
      *            The index of the column to update
      */
-    private void updateColumnFromStateChangeEvent(final int columnIndex) {
-        /*
-         * We use the widget column index here instead of the given column
-         * index. SharedState contains information only about the explicitly
-         * defined columns, while the widget counts the selection column as an
-         * explicit one.
-         */
-        GridColumn<?, JSONObject> column = getWidget().getColumn(
-                getWidgetColumnIndex(columnIndex));
+    private void updateColumnFromStateChangeEvent(GridColumnState columnState) {
+        CustomGridColumn column = columnIdToColumn.get(columnState.id);
 
-        GridColumnState columnState = getState().columns.get(columnIndex);
+        updateColumnFromState(column, columnState);
 
-        assert column instanceof CustomGridColumn : "column at index "
-                + columnIndex + " is not a "
-                + CustomGridColumn.class.getSimpleName() + ", but a "
-                + column.getClass().getSimpleName();
-
-        updateColumnFromState((CustomGridColumn) column, columnState);
-
-        if (columnState.rendererConnector != ((CustomGridColumn) column)
-                .getRendererConnector()) {
+        if (columnState.rendererConnector != column.getRendererConnector()) {
             throw new UnsupportedOperationException(
                     "Changing column renderer after initialization is currently unsupported");
         }
@@ -485,32 +488,17 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      * @param columnIndex
      *            The index of the column, according to how it
      */
-    private void addColumnFromStateChangeEvent(int columnIndex) {
-        GridColumnState state = getState().columns.get(columnIndex);
+    private void addColumnFromStateChangeEvent(GridColumnState state) {
         @SuppressWarnings("unchecked")
         CustomGridColumn column = new CustomGridColumn(state.id,
                 ((AbstractRendererConnector<Object>) state.rendererConnector));
         columnIdToColumn.put(state.id, column);
 
         /*
-         * Adds a column to grid, and registers Grid with the column.
-         * 
-         * We use the widget column index here instead of the given column
-         * index. SharedState contains information only about the explicitly
-         * defined columns, while the widget counts the selection column as an
-         * explicit one.
+         * Add column to grid. Reordering is handled as a separate problem.
          */
-        getWidget().addColumn(column, getWidgetColumnIndex(columnIndex));
-
-        /*
-         * Have to update state _after_ the column has been added to the grid as
-         * then, and only then, the column will call the grid which in turn will
-         * call the escalator's refreshRow methods on header/footer/body and
-         * visually refresh the row. If this is done in the reverse order the
-         * first column state update will be lost as no grid instance is
-         * present.
-         */
-        updateColumnFromState(column, state);
+        getWidget().addColumn(column);
+        columnOrder.add(state.id);
     }
 
     /**
@@ -564,6 +552,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 CustomGridColumn column = columnIdToColumn.get(id);
                 columnIdIterator.remove();
                 getWidget().removeColumn(column);
+                columnOrder.remove(id);
             }
         }
     }

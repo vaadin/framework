@@ -18,6 +18,7 @@ package com.vaadin.tests.components.grid.basicfeatures;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -253,6 +254,25 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     public void execute(Grid grid, List<SortOrder> sortOrder,
                             Object data) {
                         grid.setSortOrder(sortOrder);
+                    }
+                });
+
+        createBooleanAction("Reverse Grid Columns", "State", false,
+                new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        List<Object> ids = new ArrayList<Object>();
+                        ids.addAll(ds.getContainerPropertyIds());
+                        if (!value) {
+                            c.setColumnOrder(ids.toArray());
+                        } else {
+                            Object[] idsArray = new Object[ids.size()];
+                            for (int i = 0; i < ids.size(); ++i) {
+                                idsArray[i] = ids.get((ids.size() - 1) - i);
+                            }
+                            c.setColumnOrder(idsArray);
+                        }
                     }
                 });
     }

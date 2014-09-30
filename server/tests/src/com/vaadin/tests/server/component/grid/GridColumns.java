@@ -24,6 +24,8 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -202,6 +204,35 @@ public class GridColumns {
 
         grid.getContainerDatasource().removeContainerProperty(propertyId);
         assertNull(grid.getLastFrozenPropertyId());
+    }
+
+    @Test
+    public void testReorderColumns() {
+        Set<?> containerProperties = new LinkedHashSet<Object>(grid
+                .getContainerDatasource().getContainerPropertyIds());
+        Object[] properties = new Object[] { "column3", "column2", "column6" };
+        grid.setColumnOrder(properties);
+
+        int i = 0;
+        // Test sorted columns are first in order
+        for (Object property : properties) {
+            containerProperties.remove(property);
+            assertEquals(columnIdMapper.key(property),
+                    state.columnOrder.get(i++));
+        }
+
+        // Test remaining columns are in original order
+        for (Object property : containerProperties) {
+            assertEquals(columnIdMapper.key(property),
+                    state.columnOrder.get(i++));
+        }
+
+        try {
+            grid.setColumnOrder("foo", "bar", "baz");
+            fail("Grid allowed sorting with non-existent properties");
+        } catch (IllegalArgumentException e) {
+            // All ok
+        }
     }
 
     private GridColumnState getColumnState(Object propertyId) {
