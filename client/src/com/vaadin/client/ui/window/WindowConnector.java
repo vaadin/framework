@@ -28,6 +28,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.ApplicationConnection;
@@ -291,37 +292,51 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             // the contents visible for the duration of a possible
             // 'out-animation')
 
-            // Fix for #14645 - as soon as we clone audio and video tags with
-            // autoplay attribute, they start playing immediately in background,
-            // so we have to clear them before cloning. And we can't just erase
-            // them, because there are corresponding player widgets to animate
-            Node content = getWidget().getElement().getFirstChild();
-            toggleAutoPlay(content);
-            windowClone = content.cloneNode(true);
-            toggleAutoPlay(content);
+            // Fix for #14645 and #14785 - as soon as we clone audio and video
+            // tags, they start fetching data, and playing immediately in
+            // background, in case autoplay attribute is present. Therefore we
+            // have to replace them with stubs in the clone. And we can't just
+            // erase them, because there are corresponding player widgets to
+            // animate
+            windowClone = cloneNodeFilteringMedia(getWidget().getElement()
+                    .getFirstChild());
         }
     }
 
-    private void toggleAutoPlay(Node node) {
+    private Node cloneNodeFilteringMedia(Node node) {
         if (node instanceof Element) {
-            Element el = (Element) node;
-            if ("audio".equalsIgnoreCase(el.getTagName())
-                    || "video".equalsIgnoreCase(el.getTagName())) {
-                if (el.hasAttribute("autoplay")) {
-                    el.removeAttribute("autoplay");
-                    el.setAttribute("_autoplay", "");
-                } else if (el.hasAttribute("_autoplay")) {
-                    el.removeAttribute("_autoplay");
-                    el.setAttribute("autoplay", "");
+            Element old = (Element) node;
+            if ("audio".equalsIgnoreCase(old.getTagName())
+                    || "video".equalsIgnoreCase(old.getTagName())) {
+                if (!old.hasAttribute("controls")
+                        && "audio".equalsIgnoreCase(old.getTagName())) {
+                    return null; // nothing to animate, so we won't add this to
+                                 // the clone
                 }
+                Element newEl = DOM.createElement(old.getTagName());
+                if (old.hasAttribute("controls")) {
+                    newEl.setAttribute("controls", old.getAttribute("controls"));
+                }
+                if (old.hasAttribute("style")) {
+                    newEl.setAttribute("style", old.getAttribute("style"));
+                }
+                if (old.hasAttribute("class")) {
+                    newEl.setAttribute("class", old.getAttribute("class"));
+                }
+                return newEl;
             }
         }
+        Node res = node.cloneNode(false);
         if (node.hasChildNodes()) {
             NodeList<Node> nl = node.getChildNodes();
             for (int i = 0; i < nl.getLength(); i++) {
-                toggleAutoPlay(nl.getItem(i));
+                Node clone = cloneNodeFilteringMedia(nl.getItem(i));
+                if (clone != null) {
+                    res.appendChild(clone);
+                }
             }
         }
+        return res;
     }
 
     @Override
