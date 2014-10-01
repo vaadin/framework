@@ -1360,7 +1360,7 @@ public class Grid<T> extends ResizeComposite implements
 
         editorRow.setGrid(this);
 
-        setSelectionMode(SelectionMode.SINGLE);
+        setSelectionMode(SelectionMode.MULTI);
 
         escalator.addScrollHandler(new ScrollHandler() {
             @Override
