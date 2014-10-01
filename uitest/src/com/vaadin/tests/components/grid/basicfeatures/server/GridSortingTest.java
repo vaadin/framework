@@ -128,7 +128,6 @@ public class GridSortingTest extends GridBasicFeaturesTest {
 
         // Sorting by column 9 is sorting by row index that is represented as a
         // String.
-        // First cells for first 3 rows are (9, 0), (99, 0) and (999, 0)
 
         // Click header twice to sort descending
         grid.getHeaderCell(0, 9).click();
@@ -136,12 +135,14 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         grid.getHeaderCell(0, 9).click();
         assertColumnsAreSortedAs(_(9, 1, SortDirection.DESCENDING));
 
+        // First cells for first 3 rows are (9, 0), (99, 0) and (999, 0)
         String row = "";
         for (int i = 0; i < 3; ++i) {
             row += "9";
-            assertEquals(
-                    "Grid is not sorted by Column 9 using descending direction.",
-                    "(" + row + ", 0)", grid.getCell(i, 0).getText());
+            String expected = "(" + row + ", 0)";
+            String actual = grid.getCell(i, 0).getText();
+            assertEquals("Grid is not sorted by Column 9"
+                    + " using descending direction.", expected, actual);
         }
 
         // Column 10 is random numbers from Random with seed 13334

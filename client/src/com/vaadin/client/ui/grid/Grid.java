@@ -1889,7 +1889,7 @@ public class Grid<T> extends ResizeComposite implements
      * @throws IllegalArgumentException
      *             if <code>dataSource</code> is <code>null</code>
      */
-    public void setDataSource(DataSource<T> dataSource)
+    public void setDataSource(final DataSource<T> dataSource)
             throws IllegalArgumentException {
         if (dataSource == null) {
             throw new IllegalArgumentException("dataSource can't be null.");
@@ -1932,23 +1932,19 @@ public class Grid<T> extends ResizeComposite implements
             @Override
             public void resetDataAndSize(int newSize) {
                 RowContainer body = escalator.getBody();
+                int oldSize = body.getRowCount();
 
-                /*
-                 * Because the data has simply changed and we don't really know
-                 * what, we'll simply remove everything and redraw everything.
-                 */
+                if (newSize > oldSize) {
+                    body.insertRows(oldSize, newSize - oldSize);
+                } else if (newSize < oldSize) {
+                    body.removeRows(newSize, oldSize - newSize);
+                }
 
-                double prevScroll = escalator.getScrollTop();
-                body.removeRows(0, body.getRowCount());
-                body.insertRows(0, newSize);
+                Range visibleRowRange = escalator.getVisibleRowRange();
+                dataSource.ensureAvailability(visibleRowRange.getStart(),
+                        visibleRowRange.length());
 
-                /*
-                 * If data was removed or inserted above the scroll top, the
-                 * scroll position is kept locked, leading to data
-                 * "sliding under us". But we can't do anything about that,
-                 * since simply _something_ happened.
-                 */
-                escalator.setScrollTop(prevScroll);
+                assert body.getRowCount() == newSize;
             }
         });
 

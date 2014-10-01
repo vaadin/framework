@@ -399,6 +399,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             cached = remainsBefore.combineWith(transposedRemainsAfter);
         }
 
+        assertDataChangeHandlerIsInjected();
         dataChangeHandler.dataRemoved(firstRowIndex, count);
         checkCacheCoverage();
 
@@ -445,6 +446,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             }
         }
 
+        assertDataChangeHandlerIsInjected();
         dataChangeHandler.dataAdded(firstRowIndex, count);
         checkCacheCoverage();
 
@@ -586,6 +588,15 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     protected void resetDataAndSize(int newSize) {
         dropFromCache(getCachedRange());
         cached = Range.withLength(0, 0);
+        assertDataChangeHandlerIsInjected();
         dataChangeHandler.resetDataAndSize(newSize);
+    }
+
+    private void assertDataChangeHandlerIsInjected() {
+        assert dataChangeHandler != null : "The dataChangeHandler was "
+                + "called before it was injected. Maybe you tried "
+                + "to manipulate the data in the DataSource's "
+                + "constructor instead of in overriding onAttach() "
+                + "and doing it there?";
     }
 }
