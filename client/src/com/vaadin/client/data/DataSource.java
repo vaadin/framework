@@ -84,6 +84,15 @@ public interface DataSource<T> {
         public abstract void unpin() throws IllegalStateException;
 
         /**
+         * Informs the DataSource that the row data represented by this
+         * RowHandle has been updated. DataChangeHandler for the DataSource
+         * should be informed that parts of data have been updated.
+         * 
+         * @see DataChangeHandler#dataUpdated(int, int)
+         */
+        public abstract void updateRow();
+
+        /**
          * An explicit override for {@link Object#equals(Object)}. This method
          * should be functionally equivalent to a properly implemented equals
          * method.

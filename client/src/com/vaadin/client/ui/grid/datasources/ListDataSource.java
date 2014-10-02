@@ -105,6 +105,11 @@ public class ListDataSource<T> implements DataSource<T> {
         protected int hashCodeExplicit() {
             return row.hashCode();
         }
+
+        @Override
+        public void updateRow() {
+            changeHandler.dataUpdated(ds.indexOf(getRow()), 1);
+        }
     }
 
     /**

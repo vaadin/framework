@@ -27,10 +27,13 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
+import com.vaadin.client.data.DataSource;
+import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.ui.VLabel;
 import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.EditorRowHandler;
@@ -444,6 +447,35 @@ public class GridBasicClientFeaturesWidget extends
 
             }
         }, primaryStyleNamePath);
+
+        addMenuCommand("Edit and refresh Row 0", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                DataSource<List<Data>> ds = grid.getDataSource();
+                RowHandle<List<Data>> rowHandle = ds.getHandle(ds.getRow(0));
+                rowHandle.getRow().get(0).value = "Foo";
+                rowHandle.updateRow();
+            }
+        }, "Component", "State");
+
+        addMenuCommand("Delayed edit of Row 0", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                DataSource<List<Data>> ds = grid.getDataSource();
+                final RowHandle<List<Data>> rowHandle = ds.getHandle(ds
+                        .getRow(0));
+
+                new Timer() {
+                    @Override
+                    public void run() {
+                        rowHandle.getRow().get(0).value = "Bar";
+                        rowHandle.updateRow();
+                    }
+
+                }.schedule(1500);
+            }
+        }, "Component", "State");
+
     }
 
     private void createColumnsMenu() {

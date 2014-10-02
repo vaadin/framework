@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
@@ -123,6 +124,17 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         @Override
         protected int hashCodeExplicit() {
             return key.hashCode();
+        }
+
+        @Override
+        public void updateRow() {
+            // TODO: Optimize this by introducing a bidirectional cache
+            for (Entry<Integer, T> cacheEntry : rowCache.entrySet()) {
+                if (cacheEntry.getValue().equals(getRow())) {
+                    dataChangeHandler.dataUpdated(cacheEntry.getKey(), 1);
+                    return;
+                }
+            }
         }
     }
 
