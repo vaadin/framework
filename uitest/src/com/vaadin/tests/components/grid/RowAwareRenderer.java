@@ -30,9 +30,4 @@ public class RowAwareRenderer extends AbstractRenderer<Void> {
             }
         });
     }
-
-    @Override
-    protected Object doEncode(Void value) {
-        return null;
-    }
 }

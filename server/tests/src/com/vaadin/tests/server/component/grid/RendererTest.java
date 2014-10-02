@@ -53,8 +53,8 @@ public class RendererTest {
 
     private static class TestRenderer extends TextRenderer {
         @Override
-        protected String doEncode(String value) {
-            return "renderer(" + super.doEncode(value) + ")";
+        public JsonValue encode(String value) {
+            return super.encode("renderer(" + value + ")");
         }
     }
 

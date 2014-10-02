@@ -70,26 +70,27 @@ public abstract class AbstractRenderer<T> extends AbstractExtension implements
 
     @Override
     public JsonValue encode(T value) {
-        return JsonCodec.encode(doEncode(value), null, getPresentationType(),
-                getUI().getConnectorTracker()).getEncodedValue();
+        return encode(value, getPresentationType());
     }
 
     /**
-     * Encodes the given value to an intermediate representation that can be
-     * serialized to JSON by Vaadin. The default implementation simply returns
-     * the value as is.
+     * Encodes the given value to JSON.
      * <p>
-     * This is a helper method intended to be overridden if the value must be
-     * processed somehow but doing the JSON serialization manually is not
-     * desired. For instance, a {@code Renderer<Date>} could return a formatted
-     * string from {@code doEncode}.
+     * This is a helper method that can be invoked by an {@link #encode(Object)
+     * encode(T)} override if serializing a value of type other than
+     * {@link #getPresentationType() the presentation type} is desired. For
+     * instance, a {@code Renderer<Date>} could first turn a date value into a
+     * formatted string and return {@code encode(dateString, String.class)}.
      * 
      * @param value
      *            the value to be encoded
-     * @return a value that can be serialized by Vaadin
+     * @param type
+     *            the type of the value
+     * @return a JSON representation of the given value
      */
-    protected Object doEncode(T value) {
-        return value;
+    protected <U> JsonValue encode(U value, Class<U> type) {
+        return JsonCodec.encode(value, null, type,
+                getUI().getConnectorTracker()).getEncodedValue();
     }
 
     /**

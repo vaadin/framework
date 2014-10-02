@@ -47,7 +47,7 @@ public interface Renderer<T> extends Extension {
      * 
      * @param value
      *            the value to encode
-     * @return an encoded form of the given value
+     * @return a JSON representation of the given value
      */
     JsonValue encode(T value);
 

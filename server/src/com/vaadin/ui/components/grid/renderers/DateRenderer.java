@@ -21,6 +21,8 @@ import java.util.Locale;
 
 import com.vaadin.ui.components.grid.AbstractRenderer;
 
+import elemental.json.JsonValue;
+
 /**
  * A renderer for presenting date values.
  * 
@@ -130,12 +132,14 @@ public class DateRenderer extends AbstractRenderer<Date> {
     }
 
     @Override
-    protected String doEncode(Date value) {
+    public JsonValue encode(Date value) {
+        String dateString;
         if (dateFormat != null) {
-            return dateFormat.format(value);
+            dateString = dateFormat.format(value);
         } else {
-            return String.format(locale, formatString, value);
+            dateString = String.format(locale, formatString, value);
         }
+        return encode(dateString, String.class);
     }
 
     @Override

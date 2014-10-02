@@ -17,6 +17,8 @@ package com.vaadin.ui.components.grid.renderers;
 
 import com.vaadin.ui.components.grid.AbstractRenderer;
 
+import elemental.json.JsonValue;
+
 /**
  * A renderer that represents a double values as a graphical progress bar.
  * 
@@ -33,7 +35,10 @@ public class ProgressBarRenderer extends AbstractRenderer<Double> {
     }
 
     @Override
-    protected Object doEncode(Double value) {
-        return value != null ? Math.max(Math.min(value, 1), 0) : null;
+    public JsonValue encode(Double value) {
+        if (value != null) {
+            value = Math.max(Math.min(value, 1), 0);
+        }
+        return super.encode(value);
     }
 }
