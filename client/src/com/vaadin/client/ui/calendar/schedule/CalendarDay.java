@@ -27,14 +27,16 @@ public class CalendarDay {
     private String localizedDateFormat;
     private int dayOfWeek;
     private int week;
+    private int yearOfWeek;
 
     public CalendarDay(String date, String localizedDateFormat, int dayOfWeek,
-            int week) {
+            int week, int yearOfWeek) {
         super();
         this.date = date;
         this.localizedDateFormat = localizedDateFormat;
         this.dayOfWeek = dayOfWeek;
         this.week = week;
+        this.yearOfWeek = yearOfWeek;
     }
 
     public String getDate() {
@@ -51,5 +53,9 @@ public class CalendarDay {
 
     public int getWeek() {
         return week;
+    }
+
+    public int getYearOfWeek() {
+        return yearOfWeek;
     }
 }

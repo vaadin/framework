@@ -44,6 +44,7 @@ public class CalendarState extends AbstractComponentState {
         public String localizedDateFormat;
         public int dayOfWeek;
         public int week;
+        public int yearOfWeek;
     }
 
     public static class Action implements java.io.Serializable {

@@ -516,7 +516,8 @@ public class Calendar extends AbstractComponent implements
             day.date = df_date.format(date);
             day.localizedDateFormat = weeklyCaptionFormatter.format(date);
             day.dayOfWeek = getDowByLocale(currentCalendar);
-            day.week = currentCalendar.get(java.util.Calendar.WEEK_OF_YEAR);
+            day.week = getWeek(currentCalendar);
+            day.yearOfWeek = getYearOfWeek(currentCalendar);
 
             days.add(day);
 
@@ -558,6 +559,23 @@ public class Calendar extends AbstractComponent implements
         }
         state.days = days;
         state.actions = createActionsList(actionMap);
+    }
+
+    private int getWeek(java.util.Calendar calendar) {
+        return calendar.get(java.util.Calendar.WEEK_OF_YEAR);
+    }
+
+    private int getYearOfWeek(java.util.Calendar calendar) {
+        // Would use calendar.getWeekYear() but it's only available since 1.7.
+        int week = getWeek(calendar);
+        int month = calendar.get(java.util.Calendar.MONTH);
+        int year = calendar.get(java.util.Calendar.YEAR);
+
+        if (week == 1 && month == java.util.Calendar.DECEMBER) {
+            return year + 1;
+        }
+
+        return year;
     }
 
     private void setActionsForEachHalfHour(
@@ -1768,7 +1786,7 @@ public class Calendar extends AbstractComponent implements
                 String[] splitted = event.split("w");
                 if (splitted.length == 2) {
                     try {
-                        int yr = 1900 + Integer.parseInt(splitted[0]);
+                        int yr = Integer.parseInt(splitted[0]);
                         int week = Integer.parseInt(splitted[1]);
                         fireWeekClick(week, yr);
                     } catch (NumberFormatException e) {
