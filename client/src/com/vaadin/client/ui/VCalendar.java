@@ -588,7 +588,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
             int x = pos - (y * columns);
             if (x == 0 && daysCount > 7) {
                 // Add week to weekToolbar for navigation
-                weekToolbar.addWeek(week, d.getYear());
+                weekToolbar.addWeek(week, day.getYearOfWeek());
             }
             final SimpleDayCell cell = new SimpleDayCell(this, y, x);
             cell.setMonthGrid(monthGrid);
