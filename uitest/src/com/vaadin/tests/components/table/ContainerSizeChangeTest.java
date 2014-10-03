@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.table;
 
+import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -18,9 +19,6 @@ import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ContainerSizeChangeTest extends MultiBrowserTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void tableShouldLoadCorrectItems() throws IOException,
@@ -52,11 +50,12 @@ public class ContainerSizeChangeTest extends MultiBrowserTest {
     }
 
     private void assertRowDoesNotExist(TableElement table, int rowIndex) {
-        // This is a really crappy way to workaround JUnit's limitation to
-        // provide a proper assert.throws method...
-        thrown.expect(NoSuchElementException.class);
-        table.getCell(rowIndex, 0);
+        try {
+            table.getCell(rowIndex, 0);
 
-        Assert.fail(String.format("Row %s should not exists.", rowIndex));
+            fail(String.format("Row %s should not exists.", rowIndex));
+        } catch (NoSuchElementException e) {
+
+        }
     }
 }
