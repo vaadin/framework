@@ -485,14 +485,14 @@ public class Page implements Serializable {
     }
 
     private void addListener(Class<?> eventType, Object target, Method method) {
-        if (eventRouter == null) {
+        if (!hasEventRouter()) {
             eventRouter = new EventRouter();
         }
         eventRouter.addListener(eventType, target, method);
     }
 
     private void removeListener(Class<?> eventType, Object target, Method method) {
-        if (eventRouter != null) {
+        if (hasEventRouter()) {
             eventRouter.removeListener(eventType, target, method);
         }
     }
@@ -599,7 +599,7 @@ public class Page implements Serializable {
     }
 
     private void fireEvent(EventObject event) {
-        if (eventRouter != null) {
+        if (hasEventRouter()) {
             eventRouter.fireEvent(event);
         }
     }
@@ -776,8 +776,8 @@ public class Page implements Serializable {
             BrowserWindowResizeListener resizeListener) {
         removeListener(BrowserWindowResizeEvent.class, resizeListener,
                 BROWSER_RESIZE_METHOD);
-        getState(true).hasResizeListeners = eventRouter
-                .hasListeners(BrowserWindowResizeEvent.class);
+        getState(true).hasResizeListeners = hasEventRouter()
+                && eventRouter.hasListeners(BrowserWindowResizeEvent.class);
     }
 
     /**
@@ -1242,4 +1242,7 @@ public class Page implements Serializable {
         return state;
     }
 
+    private boolean hasEventRouter() {
+        return eventRouter != null;
+    }
 }
