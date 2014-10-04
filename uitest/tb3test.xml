@@ -8,6 +8,7 @@
     <property name="categories.include" value="" />
     <property name="categories.exclude" value="" />
     <property name="useLocalWebDriver" value="false" />
+    <property name="com.vaadin.testbench.max.retries" value="0" />
 
     <ivy:resolve file="${tb3test.dir}/ivy.xml" conf="build, build-provided" />
     <ivy:cachepath pathid="classpath.tb3.lib" conf="build, build-provided" />
@@ -39,6 +40,7 @@
             <jvmarg value="-Dcategories.include=${categories.include}" />
             <jvmarg value="-Dcategories.exclude=${categories.exclude}" />
             <jvmarg value="-DuseLocalWebDriver=${useLocalWebDriver}" />
+            <jvmarg value="-Dcom.vaadin.testbench.max.retries=${com.vaadin.testbench.max.retries}" />
             <test name="${junit.test.suite}" todir="${report.dir}" />
         </junit>
 

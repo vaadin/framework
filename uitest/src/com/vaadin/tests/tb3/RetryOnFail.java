@@ -19,20 +19,7 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-/**
- * <strong>ALWAYS</strong> declare the reason for using this test rule in a
- * test.
- * 
- * <p>
- * Violators and abusers of this rule will be punished.
- * </p>
- * 
- * @since 7.1.14
- * @author Vaadin Ltd
- */
 public class RetryOnFail implements TestRule {
-    private int retryCount = 1;
-
     @Override
     public Statement apply(Statement base, Description description) {
         return statement(base, description);
@@ -44,6 +31,7 @@ public class RetryOnFail implements TestRule {
             @Override
             public void evaluate() throws Throwable {
                 Throwable caughtThrowable = null;
+                int retryCount = getRetryCount();
 
                 for (int i = 0; i <= retryCount; i++) {
                     try {
@@ -59,6 +47,16 @@ public class RetryOnFail implements TestRule {
                     }
                 }
                 throw caughtThrowable;
+            }
+
+            private int getRetryCount() {
+                String retryCount = System.getProperty("com.vaadin.testbench.max.retries");
+
+                if(retryCount != null && retryCount != "") {
+                    return Integer.parseInt(retryCount);
+                }
+
+                return 4;
             }
         };
     }

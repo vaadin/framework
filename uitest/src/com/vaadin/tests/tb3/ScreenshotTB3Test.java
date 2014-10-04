@@ -68,13 +68,15 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      * Contains a list of screenshot identifiers for which
      * {@link #compareScreen(String)} has failed during the test
      */
-    private List<String> screenshotFailures = new ArrayList<String>();
+    private List<String> screenshotFailures;
 
     /**
      * Defines TestBench screen comparison parameters before each test run
      */
     @Before
     public void setupScreenComparisonParameters() {
+        screenshotFailures = new ArrayList<String>();
+
         Parameters.setScreenshotErrorDirectory(getScreenshotErrorDirectory());
         Parameters
                 .setScreenshotReferenceDirectory(getScreenshotReferenceDirectory());
