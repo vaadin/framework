@@ -191,7 +191,15 @@ $v-table-background-color: null !default;
   .#{$primary-stylename}-caption-container {
     overflow: hidden;
     line-height: 1;
+    min-height: $v-table-row-height;
     @include box-sizing(border-box);
+
+    .v-ie8 & {
+      // IE8 has issues with border-box and min-height
+      // -> custom calculations to subtract vertical padding from row height.
+      $vertical-padding: round(($v-table-row-height - $v-table-header-font-size)/2);
+      min-height: $v-table-row-height - ($vertical-padding - $v-table-border-width) - $vertical-padding;
+    }
   }
 
   .#{$primary-stylename}-footer-container {
