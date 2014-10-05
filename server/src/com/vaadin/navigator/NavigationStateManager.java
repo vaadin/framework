@@ -56,6 +56,8 @@ public interface NavigationStateManager extends Serializable {
      * Sets the Navigator used with this state manager. The state manager should
      * notify the provided navigator of user-triggered navigation state changes
      * by invoking <code>navigator.navigateTo(getState())</code>.
+     * {@code navigator} parameter value could be null if previously set
+     * navigator is destroyed.
      * <p>
      * This method should only be called by a Navigator.
      */

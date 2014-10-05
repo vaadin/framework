@@ -113,11 +113,15 @@ public class Navigator implements Serializable {
          */
         public UriFragmentManager(Page page) {
             this.page = page;
-            page.addUriFragmentChangedListener(this);
         }
 
         @Override
         public void setNavigator(Navigator navigator) {
+            if (this.navigator == null && navigator != null) {
+                page.addUriFragmentChangedListener(this);
+            } else if (this.navigator != null && navigator == null) {
+                page.removeUriFragmentChangedListener(this);
+            }
             this.navigator = navigator;
         }
 
@@ -979,5 +983,14 @@ public class Navigator implements Serializable {
      */
     public void removeViewChangeListener(ViewChangeListener listener) {
         listeners.remove(listener);
+    }
+
+    /**
+     * Destroys the navigator and cleans it up. The method detaches the
+     * navigator from UI and removes all view change listeners.
+     */
+    public void destroy() {
+        stateManager.setNavigator(null);
+        ui.setNavigator(null);
     }
 }

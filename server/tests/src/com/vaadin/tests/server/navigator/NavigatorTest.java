@@ -23,14 +23,19 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IArgumentMatcher;
 import org.easymock.IMocksControl;
+import org.junit.Assert;
 
 import com.vaadin.navigator.NavigationStateManager;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.Navigator.UriFragmentManager;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.navigator.ViewProvider;
+import com.vaadin.server.Page;
+import com.vaadin.server.Page.UriFragmentChangedEvent;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView2;
 import com.vaadin.ui.Component;
@@ -84,6 +89,10 @@ public class NavigatorTest extends TestCase {
             super(createMockUI(), new NullFragmentManager(), new TestDisplay());
         }
 
+        public TestNavigator(UI ui) {
+            super(ui, EasyMock.createMock(ViewDisplay.class));
+        }
+
         public View getView(String viewAndParameters) {
             try {
                 navigateTo(viewAndParameters);
@@ -91,6 +100,11 @@ public class NavigatorTest extends TestCase {
                 // ignore
             }
             return ((TestDisplay) getDisplay()).getCurrentView();
+        }
+
+        @Override
+        protected NavigationStateManager getStateManager() {
+            return super.getStateManager();
         }
     }
 
@@ -181,6 +195,55 @@ public class NavigatorTest extends TestCase {
         }
     }
 
+    private static class TestUI extends UI {
+
+        TestUI(Page page) {
+            this.page = page;
+        }
+
+        @Override
+        protected void init(VaadinRequest request) {
+        }
+
+        @Override
+        public Page getPage() {
+            return page;
+        }
+
+        private Page page;
+    }
+
+    private static class TestPage extends Page {
+
+        public TestPage() {
+            super(null, null);
+        }
+
+        @Override
+        public void addUriFragmentChangedListener(
+                UriFragmentChangedListener listener) {
+            addUriFragmentCalled = true;
+        }
+
+        @Override
+        public void removeUriFragmentChangedListener(
+                UriFragmentChangedListener listener) {
+            removeUriFragmentCalled = true;
+        }
+
+        boolean addUriFragmentCalled() {
+            return addUriFragmentCalled;
+        }
+
+        boolean removeUriFragmentCalled() {
+            return removeUriFragmentCalled;
+        }
+
+        private boolean addUriFragmentCalled;
+
+        private boolean removeUriFragmentCalled;
+    }
+
     public static ViewChangeEvent eventParametersEqual(final String expected) {
         EasyMock.reportMatcher(new IArgumentMatcher() {
             @Override
@@ -208,6 +271,35 @@ public class NavigatorTest extends TestCase {
     private static Navigator createNavigator(NavigationStateManager manager,
             ViewDisplay display) {
         return new Navigator(createMockUI(), manager, display);
+    }
+
+    public void testDestroy_unsetNavigatorInUIAndUriFragmentManager() {
+        TestPage page = new TestPage();
+        UI ui = new TestUI(page);
+
+        TestNavigator navigator = new TestNavigator(ui);
+        Assert.assertTrue("Add URI fragment Page method has not been called",
+                page.addUriFragmentCalled());
+        Assert.assertFalse("Unexpected remove URI fragment Page method call",
+                page.removeUriFragmentCalled());
+        Assert.assertNotNull("Navigator is null in UI", ui.getNavigator());
+
+        navigator.destroy();
+        Assert.assertTrue(
+                "Remove URI fragment Page method has not been called after destroy",
+                page.removeUriFragmentCalled());
+        Assert.assertNull("Navigator is not null in UI after destroy",
+                ui.getNavigator());
+        UriFragmentManager manager = (UriFragmentManager) navigator
+                .getStateManager();
+        try {
+            manager.uriFragmentChanged(EasyMock
+                    .createMock(UriFragmentChangedEvent.class));
+            Assert.assertTrue(
+                    "Expected null pointer exception after call uriFragmentChanged "
+                            + "for destroyed navigator", false);
+        } catch (NullPointerException e) {
+        }
     }
 
     public void testBasicNavigation() {
