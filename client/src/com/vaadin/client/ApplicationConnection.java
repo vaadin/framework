@@ -141,6 +141,8 @@ public class ApplicationConnection implements HasHandlers {
 
     public static final String DISABLED_CLASSNAME = "v-disabled";
 
+    public static final String REQUIRED_CLASSNAME = "v-required";
+
     public static final String REQUIRED_CLASSNAME_EXT = "-required";
 
     public static final String ERROR_CLASSNAME_EXT = "-error";
