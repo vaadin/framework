@@ -57,5 +57,8 @@ public abstract class AbstractFieldConnector extends AbstractComponentConnector 
         // add / remove error style name to Fields
         setWidgetStyleNameWithPrefix(getWidget().getStylePrimaryName(),
                 ApplicationConnection.REQUIRED_CLASSNAME_EXT, isRequired());
+
+        getWidget().setStyleName(ApplicationConnection.REQUIRED_CLASSNAME,
+                isRequired());
     }
 }
