@@ -195,31 +195,28 @@ public class GridKeyboardNavigationTest extends GridBasicFeaturesTest {
         getGridElement().getCell(5, 2).click();
 
         new Actions(getDriver()).sendKeys(Keys.PAGE_DOWN).perform();
-        assertTrue("Row 5 did not remain active", getGridElement()
-                .getCell(5, 2).isActive());
         assertTrue("Row 20 did not become visible",
-                getGridElement().getCell(20, 2).isDisplayed());
+                isElementPresent(By.xpath("//td[text() = '(20, 2)']")));
 
         new Actions(getDriver()).sendKeys(Keys.PAGE_DOWN).perform();
-        assertTrue("Row 5 did not remain active", getGridElement()
+        assertTrue("Row 30 did not become visible",
+                isElementPresent(By.xpath("//td[text() = '(30, 2)']")));
+
+        assertTrue("Original active cell is no longer active", getGridElement()
                 .getCell(5, 2).isActive());
-        assertTrue("Row 40 did not become visible",
-                getGridElement().getCell(40, 2).isDisplayed());
 
         getGridElement().getCell(50, 2).click();
 
         new Actions(getDriver()).sendKeys(Keys.PAGE_UP).perform();
-        assertTrue("Row 50 did not remain active",
-                getGridElement().getCell(50, 2).isActive());
-        assertTrue("Row 20 did not become visible",
-                getGridElement().getCell(20, 2).isDisplayed());
+        assertTrue("Row 31 did not become visible",
+                isElementPresent(By.xpath("//td[text() = '(31, 2)']")));
 
         new Actions(getDriver()).sendKeys(Keys.PAGE_UP).perform();
-        assertTrue("Row 50 did not remain active",
-                getGridElement().getCell(50, 2).isActive());
-        assertTrue("Row 0 did not become visible",
-                getGridElement().getCell(0, 2).isDisplayed());
+        assertTrue("Row 21 did not become visible",
+                isElementPresent(By.xpath("//td[text() = '(21, 2)']")));
 
+        assertTrue("Original active cell is no longer active", getGridElement()
+                .getCell(50, 2).isActive());
     }
 
 }

@@ -204,6 +204,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                         .partitionWith(cached);
                 handleMissingRows(missingCachePartition[0]);
                 handleMissingRows(missingCachePartition[2]);
+            } else {
+                dataChangeHandler.dataAvailable(cached.getStart(),
+                        cached.length());
             }
         }
 
