@@ -435,8 +435,14 @@ public class FieldGroup implements Serializable {
             return;
         }
         for (Field<?> f : fieldToPropertyId.keySet()) {
-            ((Property.Transactional<?>) f.getPropertyDataSource())
-                    .startTransaction();
+            Property.Transactional<?> property = (Property.Transactional<?>) f
+                    .getPropertyDataSource();
+            if (property == null) {
+                throw new CommitException("Property \""
+                        + fieldToPropertyId.get(f)
+                        + "\" not bound to datasource.");
+            }
+            property.startTransaction();
         }
         try {
             firePreCommitEvent();
