@@ -121,6 +121,12 @@ $valo-global-included: false !default;
       -webkit-overflow-scrolling: none;
     }
 
+    //fix for #14813 - unable to scroll on iOS devices
+    .v-webkit.v-ios .v-browserframe {
+      -webkit-overflow-scrolling: touch;
+      overflow:auto;
+    }
+
     .v-assistive-device-only {
       position: absolute;
       top: -2000px;
