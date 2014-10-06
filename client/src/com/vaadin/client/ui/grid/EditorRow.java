@@ -353,7 +353,7 @@ public class EditorRow<T> {
 
     protected void hideOverlay() {
         for (Widget w : editorWidgets) {
-            Grid.setParent(w, null);
+            GridUtil.setParent(w, null);
         }
         editorWidgets.clear();
 
@@ -389,7 +389,7 @@ public class EditorRow<T> {
 
     private void attachWidget(Widget w, Element parent) {
         parent.appendChild(w.getElement());
-        Grid.setParent(w, grid);
+        GridUtil.setParent(w, grid);
     }
 
     private static void setBounds(Element e, int left, int top, int width,

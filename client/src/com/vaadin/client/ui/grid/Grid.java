@@ -1078,7 +1078,7 @@ public class Grid<T> extends ResizeComposite implements
                     cell.getElement().appendChild(widget.getElement());
 
                     // Logical attach
-                    setParent(widget, Grid.this);
+                    GridUtil.setParent(widget, Grid.this);
                 }
             }
         }
@@ -1160,7 +1160,7 @@ public class Grid<T> extends ResizeComposite implements
                     if (w != null) {
 
                         // Logical detach
-                        setParent(w, null);
+                        GridUtil.setParent(w, null);
 
                         // Physical detach
                         cell.getElement().removeChild(w.getElement());
@@ -1306,7 +1306,7 @@ public class Grid<T> extends ResizeComposite implements
                         cellElement.appendChild(widget.getElement());
 
                         // Logical attach
-                        setParent(widget, Grid.this);
+                        GridUtil.setParent(widget, Grid.this);
                     }
                 }
             }
@@ -1328,7 +1328,7 @@ public class Grid<T> extends ResizeComposite implements
                         Widget widget = metadata.getWidget();
 
                         // Logical detach
-                        setParent(widget, null);
+                        GridUtil.setParent(widget, null);
 
                         // Physical detach
                         widget.getElement().removeFromParent();
@@ -2197,19 +2197,6 @@ public class Grid<T> extends ResizeComposite implements
         }
     }
 
-    /**
-     * Returns the cell the given element belongs to. For internal use only.
-     *
-     * @param e
-     *            a cell element or the descendant of one
-     * @return the cell or null if no such cell
-     */
-    public Cell findCell(Element e) {
-        RowContainer container = escalator.findRowContainer(e);
-        return container != null ? container.getCell(e) : null;
-
-    }
-
     private boolean handleEditorRowEvent(Event event, RowContainer container,
             Cell cell) {
         if (editorRow.getState() != State.INACTIVE) {
@@ -2525,19 +2512,6 @@ public class Grid<T> extends ResizeComposite implements
             refreshBody();
         }
     }
-
-    /**
-     * Accesses the package private method Widget#setParent()
-     * 
-     * @param widget
-     *            The widget to access
-     * @param parent
-     *            The parent to set
-     */
-    static native final void setParent(Widget widget, Widget parent)
-    /*-{
-        widget.@com.google.gwt.user.client.ui.Widget::setParent(Lcom/google/gwt/user/client/ui/Widget;)(parent);
-    }-*/;
 
     /**
      * Sets the current selection model.

@@ -23,6 +23,7 @@ import com.vaadin.client.Util;
 import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Grid;
+import com.vaadin.client.ui.grid.GridUtil;
 
 /**
  * A renderer for rendering widgets into cells.
@@ -95,6 +96,6 @@ public abstract class WidgetRenderer<T, W extends Widget> extends
 
         Element elem = Element.as(target);
         Grid<?> grid = Util.findWidget(elem, Grid.class);
-        return grid.findCell(elem);
+        return GridUtil.findCell(grid, elem);
     }
 }
