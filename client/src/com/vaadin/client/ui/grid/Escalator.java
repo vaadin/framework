@@ -1219,7 +1219,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
         }
 
-        private void assertArgumentsAreValidAndWithinRange(final int index,
+        protected void assertArgumentsAreValidAndWithinRange(final int index,
                 final int numberOfRows) throws IllegalArgumentException,
                 IndexOutOfBoundsException {
             if (numberOfRows < 1) {
@@ -1412,35 +1412,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          * @see #hasColumnAndRowData()
          */
         @Override
-        public void refreshRows(final int index, final int numberOfRows) {
-            Profiler.enter("Escalator.AbstractRowContainer.refreshRows");
-
-            assertArgumentsAreValidAndWithinRange(index, numberOfRows);
-
-            if (!isAttached()) {
-                return;
-            }
-
-            /*
-             * TODO [[rowheight]]: even if no rows are evaluated in the current
-             * viewport, the heights of some unrendered rows might change in a
-             * refresh. This would cause the scrollbar to be adjusted (in
-             * scrollHeight and/or scrollTop). Do we want to take this into
-             * account?
-             */
-            if (hasColumnAndRowData()) {
-                /*
-                 * TODO [[rowheight]]: nudge rows down with
-                 * refreshRowPositions() as needed
-                 */
-                for (int row = index; row < index + numberOfRows; row++) {
-                    final TableRowElement tr = getTrByVisualIndex(row);
-                    refreshRow(tr, row);
-                }
-            }
-
-            Profiler.leave("Escalator.AbstractRowContainer.refreshRows");
-        }
+        // overridden because of JavaDoc
+        public abstract void refreshRows(final int index, final int numberOfRows);
 
         void refreshRow(final TableRowElement tr, final int logicalRowIndex) {
             flyweightRow.setup(tr, logicalRowIndex,
@@ -1977,6 +1950,37 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          * A table section is either header, body or footer.
          */
         protected abstract void sectionHeightCalculated();
+
+        @Override
+        public void refreshRows(final int index, final int numberOfRows) {
+            Profiler.enter("Escalator.AbstractStaticRowContainer.refreshRows");
+
+            assertArgumentsAreValidAndWithinRange(index, numberOfRows);
+
+            if (!isAttached()) {
+                return;
+            }
+
+            /*
+             * TODO [[rowheight]]: even if no rows are evaluated in the current
+             * viewport, the heights of some unrendered rows might change in a
+             * refresh. This would cause the scrollbar to be adjusted (in
+             * scrollHeight and/or scrollTop). Do we want to take this into
+             * account?
+             */
+            if (hasColumnAndRowData()) {
+                /*
+                 * TODO [[rowheight]]: nudge rows down with
+                 * refreshRowPositions() as needed
+                 */
+                for (int row = index; row < index + numberOfRows; row++) {
+                    final TableRowElement tr = getTrByVisualIndex(row);
+                    refreshRow(tr, row);
+                }
+            }
+
+            Profiler.leave("Escalator.AbstractStaticRowContainer.refreshRows");
+        }
     }
 
     private class HeaderRowContainer extends AbstractStaticRowContainer {
