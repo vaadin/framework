@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -27,7 +28,7 @@ public abstract class BaseAddReplaceMoveTest extends MultiBrowserTest {
     @Test
     public void LayoutAlignment() throws IOException, InterruptedException {
         openTestURL();
-        sleep(500);
+        waitForElementPresent(By.className("v-table"));
         compareScreen("initial");
         String[] states = { "add", "replace", "move", "remove" };
         List<ButtonElement> buttons = $(ButtonElement.class).all();
@@ -35,7 +36,7 @@ public abstract class BaseAddReplaceMoveTest extends MultiBrowserTest {
         // go through all buttons click them and see result
         for (ButtonElement btn : buttons) {
             btn.click();
-            sleep(500);
+            waitForElementPresent(By.className("v-table"));
             compareScreen(states[index]);
             index++;
         }
