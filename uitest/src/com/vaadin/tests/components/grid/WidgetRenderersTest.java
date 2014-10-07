@@ -53,6 +53,17 @@ public class WidgetRenderersTest extends MultiBrowserTest {
         assertEquals("Clicked!", button.getText());
     }
 
+    @Test
+    public void testImageRenderer() {
+        openTestURL();
+
+        WebElement image = getGridCell(0, 2).findElement(
+                By.className("gwt-Image"));
+
+        assertTrue(image.getAttribute("src").endsWith("window/img/resize.png"));
+
+    }
+
     GridCellElement getGridCell(int row, int col) {
         return $(GridElement.class).first().getCell(row, col);
     }

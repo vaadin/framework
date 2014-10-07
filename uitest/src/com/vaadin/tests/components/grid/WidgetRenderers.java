@@ -17,6 +17,8 @@ package com.vaadin.tests.components.grid;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.components.grid.Grid;
@@ -24,6 +26,7 @@ import com.vaadin.ui.components.grid.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.renderers.ButtonRenderer;
 import com.vaadin.ui.components.grid.renderers.ButtonRenderer.RendererClickEvent;
 import com.vaadin.ui.components.grid.renderers.ButtonRenderer.RendererClickListener;
+import com.vaadin.ui.components.grid.renderers.ImageRenderer;
 import com.vaadin.ui.components.grid.renderers.ProgressBarRenderer;
 
 public class WidgetRenderers extends AbstractTestUI {
@@ -36,13 +39,18 @@ public class WidgetRenderers extends AbstractTestUI {
                 null);
         container
                 .addContainerProperty(ButtonRenderer.class, String.class, null);
+        container.addContainerProperty(ImageRenderer.class, Resource.class,
+                null);
 
         final Item item = container.getItem(container.addItem());
 
         item.getItemProperty(ProgressBarRenderer.class).setValue(0.3);
         item.getItemProperty(ButtonRenderer.class).setValue("Click");
+        item.getItemProperty(ImageRenderer.class).setValue(
+                new ThemeResource("window/img/resize.png"));
 
         Grid grid = new Grid(container);
+
         grid.setId("test-grid");
         grid.setSelectionMode(SelectionMode.NONE);
 
@@ -57,6 +65,8 @@ public class WidgetRenderers extends AbstractTestUI {
                                 "Clicked!");
                     }
                 }));
+
+        grid.getColumn(ImageRenderer.class).setRenderer(new ImageRenderer());
 
         addComponent(grid);
     }
