@@ -440,4 +440,9 @@ public class ListDataSource<T> implements DataSource<T> {
             changeHandler.dataUpdated(0, ds.size());
         }
     }
+
+    @Override
+    public int indexOf(T row) {
+        return ds.indexOf(row);
+    }
 }

@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
@@ -128,12 +127,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         @Override
         public void updateRow() {
-            // TODO: Optimize this by introducing a bidirectional cache
-            for (Entry<Integer, T> cacheEntry : rowCache.entrySet()) {
-                if (cacheEntry.getValue().equals(getRow())) {
-                    dataChangeHandler.dataUpdated(cacheEntry.getKey(), 1);
-                    return;
-                }
+            int index = indexOf(row);
+            if (index >= 0) {
+                dataChangeHandler.dataUpdated(index, 1);
             }
         }
     }
@@ -152,7 +148,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     private Range cached = Range.between(0, 0);
 
-    private final HashMap<Integer, T> rowCache = new HashMap<Integer, T>();
+    private final HashMap<Integer, T> indexToRowMap = new HashMap<Integer, T>();
+    private final HashMap<Object, Integer> keyToIndexMap = new HashMap<Object, Integer>();
 
     private DataChangeHandler dataChangeHandler;
 
@@ -203,7 +200,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
              * Simple case: no overlap between cached data and needed data.
              * Clear the cache and request new data
              */
-            rowCache.clear();
+            indexToRowMap.clear();
+            keyToIndexMap.clear();
             cached = Range.between(0, 0);
 
             handleMissingRows(getMaxCacheRange());
@@ -234,7 +232,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     private void dropFromCache(Range range) {
         for (int i = range.getStart(); i < range.getEnd(); i++) {
-            rowCache.remove(Integer.valueOf(i));
+            T removed = indexToRowMap.remove(Integer.valueOf(i));
+            keyToIndexMap.remove(getRowKey(removed));
         }
     }
 
@@ -261,7 +260,16 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     @Override
     public T getRow(int rowIndex) {
-        return rowCache.get(Integer.valueOf(rowIndex));
+        return indexToRowMap.get(Integer.valueOf(rowIndex));
+    }
+
+    @Override
+    public int indexOf(T row) {
+        Object key = getRowKey(row);
+        if (keyToIndexMap.containsKey(key)) {
+            return keyToIndexMap.get(key);
+        }
+        return -1;
     }
 
     @Override
@@ -304,7 +312,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         if (!newUsefulData.isEmpty()) {
             // Update the parts that are actually inside
             for (int i = newUsefulData.getStart(); i < newUsefulData.getEnd(); i++) {
-                rowCache.put(Integer.valueOf(i), rowData.get(i - firstRowIndex));
+                final T row = rowData.get(i - firstRowIndex);
+                indexToRowMap.put(Integer.valueOf(i), row);
+                keyToIndexMap.put(getRowKey(row), Integer.valueOf(i));
             }
 
             if (dataChangeHandler != null) {
@@ -373,13 +383,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     protected void removeRowData(int firstRowIndex, int count) {
         Profiler.enter("AbstractRemoteDataSource.removeRowData");
 
-        // pack the cached data
-        for (int i = 0; i < count; i++) {
-            Integer oldIndex = Integer.valueOf(firstRowIndex + count + i);
-            if (rowCache.containsKey(oldIndex)) {
-                Integer newIndex = Integer.valueOf(firstRowIndex + i);
-                rowCache.put(newIndex, rowCache.remove(oldIndex));
-            }
+        // shift indices to fill the cache correctly
+        for (int i = firstRowIndex + count; i < cached.getEnd(); i++) {
+            moveRowFromIndexToIndex(i, i - count);
         }
 
         Range removedRange = Range.withLength(firstRowIndex, count);
@@ -423,7 +429,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             cached = cached.splitAt(firstRowIndex)[0];
 
             for (int i = firstRowIndex; i < oldCacheEnd; i++) {
-                rowCache.remove(Integer.valueOf(i));
+                T row = indexToRowMap.remove(Integer.valueOf(i));
+                keyToIndexMap.remove(getRowKey(row));
             }
         }
 
@@ -431,10 +438,10 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             Range oldCached = cached;
             cached = cached.offsetBy(count);
 
-            for (int i = 0; i < rowCache.size(); i++) {
-                Integer oldIndex = Integer.valueOf(oldCached.getEnd() - i);
-                Integer newIndex = Integer.valueOf(cached.getEnd() - i);
-                rowCache.put(newIndex, rowCache.remove(oldIndex));
+            for (int i = 0; i < indexToRowMap.size(); i++) {
+                int oldIndex = oldCached.getEnd() - i;
+                int newIndex = cached.getEnd() - i;
+                moveRowFromIndexToIndex(oldIndex, newIndex);
             }
         }
 
@@ -442,6 +449,16 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         checkCacheCoverage();
 
         Profiler.leave("AbstractRemoteDataSource.insertRowData");
+    }
+
+    private void moveRowFromIndexToIndex(int oldIndex, int newIndex) {
+        T row = indexToRowMap.remove(oldIndex);
+        if (indexToRowMap.containsKey(newIndex)) {
+            // Old row is about to be overwritten. Remove it from keyCache.
+            keyToIndexMap.remove(getRowKey(indexToRowMap.get(newIndex)));
+        }
+        indexToRowMap.put(newIndex, row);
+        keyToIndexMap.put(getRowKey(row), newIndex);
     }
 
     /**
@@ -506,7 +523,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         if (pinnedRows.containsKey(key)) {
             return pinnedRows.get(key);
-        } else if (rowCache.containsValue(row)) {
+        } else if (keyToIndexMap.containsKey(key)) {
             return new RowHandleImpl(row, key);
         } else {
             throw new IllegalStateException("The cache of this DataSource "
