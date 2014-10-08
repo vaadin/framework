@@ -183,6 +183,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
     @Override
     protected boolean deselectByHandle(RowHandle<T> handle) {
         if (selectedRows.remove(handle)) {
+
             if (!isBeingBatchSelected()) {
                 handle.unpin();
             } else {
@@ -227,6 +228,11 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
         selectionBatch.clear();
 
         final Collection<T> removed = getDeselectedRowsBatch();
+
+        // unpin deselected rows
+        for (RowHandle<T> handle : deselectionBatch) {
+            handle.unpin();
+        }
         deselectionBatch.clear();
 
         grid.fireEvent(new SelectionChangeEvent<T>(grid, added, removed,

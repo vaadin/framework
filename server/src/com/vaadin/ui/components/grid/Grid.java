@@ -305,9 +305,18 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         addSelectionChangeListener(new SelectionChangeListener() {
             @Override
             public void selectionChange(SelectionChangeEvent event) {
-                for (Object removedItemId : event.getRemoved()) {
-                    getKeyMapper().unpin(removedItemId);
-                }
+                /*
+                 * This listener nor anything else in the server side should
+                 * never unpin anything from KeyMapper. Pinning is mostly a
+                 * client feature and is only used when selecting something from
+                 * the server side. This is to ensure that client has the
+                 * correct key from server when the selected row is first
+                 * loaded.
+                 * 
+                 * Once client has gotten info that it is supposed to select a
+                 * row, it will pin the data from the client side as well and it
+                 * will be unpinned once it gets deselected.
+                 */
 
                 for (Object addedItemId : event.getAdded()) {
                     if (!getKeyMapper().isPinned(addedItemId)) {

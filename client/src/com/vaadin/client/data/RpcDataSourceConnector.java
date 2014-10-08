@@ -17,9 +17,6 @@
 package com.vaadin.client.data;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -50,31 +47,18 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
     public class RpcDataSource extends AbstractRemoteDataSource<JSONObject> {
 
-        private Collection<JSONObject> prevRows = Collections.emptySet();
+        private DataRequestRpc rpcProxy = getRpcProxy(DataRequestRpc.class);
 
         @Override
         protected void requestRows(int firstRowIndex, int numberOfRows) {
             Range cached = getCachedRange();
 
-            Collection<JSONObject> newRows = new ArrayList<JSONObject>(
-                    temporarilyPinnedRows);
-            newRows.removeAll(prevRows);
-
-            List<String> temporarilyPinnedKeys = new ArrayList<String>(
-                    newRows.size());
-            for (JSONObject row : newRows) {
-                temporarilyPinnedKeys.add((String) getRowKey(row));
-            }
-
-            getRpcProxy(DataRequestRpc.class).requestRows(firstRowIndex,
-                    numberOfRows, cached.getStart(), cached.length(),
-                    temporarilyPinnedKeys);
-
-            prevRows = temporarilyPinnedRows;
+            rpcProxy.requestRows(firstRowIndex, numberOfRows,
+                    cached.getStart(), cached.length());
         }
 
         @Override
-        public Object getRowKey(JSONObject row) {
+        public String getRowKey(JSONObject row) {
             JSONString string = row.get(GridState.JSONKEY_ROWKEY).isString();
             if (string != null) {
                 return string.stringValue();
@@ -90,19 +74,30 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
         }
 
         @Override
-        @SuppressWarnings("deprecation")
-        public void transactionPin(Collection<JSONObject> keys) {
-            super.transactionPin(keys);
-            if (keys.isEmpty() && !prevRows.isEmpty()) {
-                prevRows = Collections.emptySet();
-                getRpcProxy(DataRequestRpc.class)
-                        .releaseTemporarilyPinnedKeys();
+        public int size() {
+            return getState().containerSize;
+        }
+
+        @Override
+        protected void pinHandle(RowHandleImpl handle) {
+            // Server only knows if something is pinned or not. No need to pin
+            // multiple times.
+            boolean pinnedBefore = handle.isPinned();
+            super.pinHandle(handle);
+            if (!pinnedBefore) {
+                rpcProxy.setPinned(getRowKey(handle.getRow()), true);
             }
         }
 
         @Override
-        public int size() {
-            return getState().containerSize;
+        protected void unpinHandle(RowHandleImpl handle) {
+            // Row data is no longer available after it has been unpinned.
+            String key = getRowKey(handle.getRow());
+            super.unpinHandle(handle);
+            if (!handle.isPinned()) {
+                rpcProxy.setPinned(key, false);
+            }
+
         }
     }
 

@@ -16,8 +16,7 @@
 
 package com.vaadin.shared.data;
 
-import java.util.List;
-
+import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
@@ -39,17 +38,20 @@ public interface DataRequestRpc extends ServerRpc {
      *            the index of the first cached row
      * @param cacheSize
      *            the number of cached rows
-     * @param temporarilyPinnedKeys
-     *            the keys that should remain pinned, even if some of these
-     *            would fall out of the cache range
      */
     public void requestRows(int firstRowIndex, int numberOfRows,
-            int firstCachedRowIndex, int cacheSize,
-            List<String> temporarilyPinnedKeys);
+            int firstCachedRowIndex, int cacheSize);
 
     /**
-     * Informs the back-end that the temporarily pinned keys in
-     * {@link #requestRows(int, int, int, int, List)} may be released.
+     * Informs the server that an item referenced with a key pinned status has
+     * changed. This is a delayed call that happens along with next rpc call to
+     * server.
+     * 
+     * @param key
+     *            key mapping to item
+     * @param isPinned
+     *            pinned status of referenced item
      */
-    public void releaseTemporarilyPinnedKeys();
+    @Delayed
+    public void setPinned(String key, boolean isPinned);
 }

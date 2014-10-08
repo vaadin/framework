@@ -16,7 +16,6 @@
 package com.vaadin.client.ui.grid.selection;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -34,8 +33,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.vaadin.client.Util;
-import com.vaadin.client.data.AbstractRemoteDataSource;
-import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.DataAvailableEvent;
 import com.vaadin.client.ui.grid.DataAvailableHandler;
@@ -231,9 +228,6 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
 
         private boolean scrollAreaShouldRebound = false;
 
-        private AbstractRemoteDataSource<T> remoteDataSource = null;
-        private Batched<T> batchedSelectionModel = null;
-
         public AutoScrollerAndSelector(final int topBound,
                 final int bottomBound, final int gradientArea,
                 final boolean selectionPaint) {
@@ -258,20 +252,11 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
                 grid.setScrollTop(grid.getScrollTop() + intPixelsToScroll);
             }
 
-            @SuppressWarnings("hiding")
             int logicalRow = getLogicalRowIndex(Util.getElementFromPoint(pageX,
                     pageY));
             if (logicalRow != -1 && logicalRow != this.logicalRow) {
                 this.logicalRow = logicalRow;
                 setSelected(logicalRow, selectionPaint);
-
-                if (remoteDataSource != null && batchedSelectionModel != null) {
-                    Collection<T> pinneds = batchedSelectionModel
-                            .getSelectedRowsBatch();
-                    pinneds.addAll(batchedSelectionModel
-                            .getDeselectedRowsBatch());
-                    remoteDataSource.transactionPin(pinneds);
-                }
             }
 
             reschedule();
@@ -319,40 +304,16 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
             scrollSpeed = ratio * SCROLL_TOP_SPEED_PX_SEC;
         }
 
-        @SuppressWarnings("deprecation")
         public void start(int logicalRowIndex) {
             running = true;
             setSelected(logicalRowIndex, selectionPaint);
             logicalRow = logicalRowIndex;
             reschedule();
-
-            DataSource<T> dataSource = grid.getDataSource();
-            SelectionModel<T> selectionModel = grid.getSelectionModel();
-            if (dataSource instanceof AbstractRemoteDataSource
-                    && selectionModel instanceof Batched) {
-                this.remoteDataSource = (AbstractRemoteDataSource<T>) dataSource;
-                this.batchedSelectionModel = (Batched<T>) selectionModel;
-
-                Collection<T> pinneds = batchedSelectionModel
-                        .getSelectedRowsBatch();
-                pinneds.addAll(batchedSelectionModel.getDeselectedRowsBatch());
-                remoteDataSource.transactionPin(pinneds);
-            }
         }
 
         @SuppressWarnings("deprecation")
         public void stop() {
             running = false;
-
-            if (remoteDataSource != null) {
-                // split into two lines because of Java generics not playing
-                // nice.
-                @SuppressWarnings("unchecked")
-                Collection<T> emptySet = (Collection<T>) Collections.emptySet();
-                remoteDataSource.transactionPin(emptySet);
-                remoteDataSource = null;
-                batchedSelectionModel = null;
-            }
 
             if (handle != null) {
                 handle.cancel();

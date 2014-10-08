@@ -76,32 +76,18 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             }
         }
 
-        private boolean isPinned() {
+        protected boolean isPinned() {
             return pinnedRows.containsKey(key);
         }
 
         @Override
         public void pin() {
-            Integer count = pinnedCounts.get(key);
-            if (count == null) {
-                count = Integer.valueOf(0);
-                pinnedRows.put(key, this);
-            }
-            pinnedCounts.put(key, Integer.valueOf(count.intValue() + 1));
+            pinHandle(this);
         }
 
         @Override
         public void unpin() throws IllegalStateException {
-            final Integer count = pinnedCounts.get(key);
-            if (count == null) {
-                throw new IllegalStateException("Row " + row + " with key "
-                        + key + " was not pinned to begin with");
-            } else if (count.equals(Integer.valueOf(1))) {
-                pinnedRows.remove(key);
-                pinnedCounts.remove(key);
-            } else {
-                pinnedCounts.put(key, Integer.valueOf(count.intValue() - 1));
-            }
+            unpinHandle(this);
         }
 
         @Override
@@ -171,6 +157,48 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         if (!coverageCheckPending) {
             coverageCheckPending = true;
             Scheduler.get().scheduleDeferred(coverageChecker);
+        }
+    }
+
+    /**
+     * Pins a row with given handle. This function can be overridden to do
+     * specific logic related to pinning rows.
+     * 
+     * @param handle
+     *            row handle to pin
+     */
+    protected void pinHandle(RowHandleImpl handle) {
+        Object key = handle.key;
+        Integer count = pinnedCounts.get(key);
+        if (count == null) {
+            count = Integer.valueOf(0);
+            pinnedRows.put(key, handle);
+        }
+        pinnedCounts.put(key, Integer.valueOf(count.intValue() + 1));
+    }
+
+    /**
+     * Unpins a previously pinned row with given handle. This function can be
+     * overridden to do specific logic related to unpinning rows.
+     * 
+     * @param handle
+     *            row handle to unpin
+     * 
+     * @throws IllegalStateException
+     *             if given row handle has not been pinned before
+     */
+    protected void unpinHandle(RowHandleImpl handle)
+            throws IllegalStateException {
+        Object key = handle.key;
+        final Integer count = pinnedCounts.get(key);
+        if (count == null) {
+            throw new IllegalStateException("Row " + handle.getRow()
+                    + " with key " + key + " was not pinned to begin with");
+        } else if (count.equals(Integer.valueOf(1))) {
+            pinnedRows.remove(key);
+            pinnedCounts.remove(key);
+        } else {
+            pinnedCounts.put(key, Integer.valueOf(count.intValue() - 1));
         }
     }
 
@@ -555,35 +583,6 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      *         row object
      */
     abstract public Object getRowKey(T row);
-
-    /**
-     * Marks rows as pinned when fetching new rows.
-     * <p>
-     * This collection of rows are intended to remain pinned if new rows are
-     * fetched from the data source, even if some of the pinned rows would fall
-     * off the cache and become inactive.
-     * <p>
-     * This method does nothing by itself, other than it stores the rows into a
-     * field. The implementation needs to make all the adjustments for itself.
-     * Check {@link RpcDataSourceConnector.RpcDataSource#requestRows(int, int)}
-     * for an implementation example.
-     * 
-     * @param keys
-     *            a collection of rows to keep pinned
-     * 
-     * @see #temporarilyPinnedRows
-     * @see RpcDataSourceConnector.RpcDataSource#requestRows(int, int)
-     * @deprecated You probably don't want to call this method unless you're
-     *             writing a Renderer for a selection model. Even if you are, be
-     *             very aware what this method does and how it behaves.
-     */
-    @Deprecated
-    public void transactionPin(Collection<T> rows) {
-        if (rows == null) {
-            throw new IllegalArgumentException("argument may not be null");
-        }
-        temporarilyPinnedRows = rows;
-    }
 
     protected void resetDataAndSize(int newSize) {
         dropFromCache(getCachedRange());
