@@ -220,8 +220,9 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 header.removeColumn(columnId);
                 footer.removeColumn(columnId);
                 GridColumn column = columns.remove(columnId);
-                columnKeys.remove(columnId);
+                getState().columnOrder.remove(columnKeys.key(columnId));
                 getState().columns.remove(column.getState());
+                columnKeys.remove(columnId);
                 removeExtension(column.getRenderer());
             }
             datasourceExtension.propertiesRemoved(removedColumns);
