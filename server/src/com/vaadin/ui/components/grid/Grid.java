@@ -419,8 +419,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             @Override
             public void bind(int rowIndex) {
                 try {
-                    getEditorRow().internalEditItem(
-                            datasource.getIdByIndex(rowIndex));
+                    Object id = getContainerDatasource().getIdByIndex(rowIndex);
+                    getEditorRow().internalEditItem(id);
                     getEditorRowRpc().confirmBind();
                 } catch (Exception e) {
                     handleError(e);
