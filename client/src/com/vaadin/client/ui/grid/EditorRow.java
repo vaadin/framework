@@ -15,8 +15,8 @@
  */
 package com.vaadin.client.ui.grid;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
@@ -62,7 +62,7 @@ public class EditorRow<T> {
 
     private DivElement editorOverlay = DivElement.as(DOM.createDiv());
 
-    private List<Widget> editorWidgets = new ArrayList<Widget>();
+    private Map<GridColumn<?, T>, Widget> columnToWidget = new HashMap<GridColumn<?, T>, Widget>();
 
     private boolean enabled = false;
     private State state = State.INACTIVE;
@@ -127,7 +127,7 @@ public class EditorRow<T> {
         }
         hideOverlay();
         grid.getEscalator().setScrollLocked(Direction.VERTICAL, false);
-        handler.cancel(new EditorRowRequest(rowIndex, null));
+        handler.cancel(new EditorRowRequest<T>(grid, rowIndex, null));
         state = State.INACTIVE;
     }
 
@@ -151,14 +151,15 @@ public class EditorRow<T> {
 
         state = State.COMMITTING;
 
-        handler.commit(new EditorRowRequest(rowIndex, new RequestCallback() {
-            @Override
-            public void onResponse(EditorRowRequest request) {
-                if (state == State.COMMITTING) {
-                    state = State.ACTIVE;
-                }
-            }
-        }));
+        handler.commit(new EditorRowRequest<T>(grid, rowIndex,
+                new RequestCallback<T>() {
+                    @Override
+                    public void onResponse(EditorRowRequest<T> request) {
+                        if (state == State.COMMITTING) {
+                            state = State.ACTIVE;
+                        }
+                    }
+                }));
     }
 
     /**
@@ -178,7 +179,7 @@ public class EditorRow<T> {
             throw new IllegalStateException(
                     "Cannot discard: EditorRow is not in edit mode");
         }
-        handler.discard(new EditorRowRequest(rowIndex, null));
+        handler.discard(new EditorRowRequest<T>(grid, rowIndex, null));
     }
 
     /**
@@ -237,16 +238,17 @@ public class EditorRow<T> {
 
     protected void show() {
         if (state == State.ACTIVATING) {
-            handler.bind(new EditorRowRequest(rowIndex, new RequestCallback() {
-                @Override
-                public void onResponse(EditorRowRequest request) {
-                    if (state == State.ACTIVATING) {
-                        state = State.ACTIVE;
-                        showOverlay(grid.getEscalator().getBody()
-                                .getRowElement(request.getRowIndex()));
-                    }
-                }
-            }));
+            handler.bind(new EditorRowRequest<T>(grid, rowIndex,
+                    new RequestCallback<T>() {
+                        @Override
+                        public void onResponse(EditorRowRequest<T> request) {
+                            if (state == State.ACTIVATING) {
+                                state = State.ACTIVE;
+                                showOverlay(grid.getEscalator().getBody()
+                                        .getRowElement(request.getRowIndex()));
+                            }
+                        }
+                    }));
             grid.getEscalator().setScrollLocked(Direction.VERTICAL, true);
         }
     }
@@ -273,6 +275,18 @@ public class EditorRow<T> {
 
     protected void setState(State state) {
         this.state = state;
+    }
+
+    /**
+     * Returns the editor widget associated with the given column. If the editor
+     * row is not active, returns null.
+     *
+     * @param column
+     *            the column
+     * @return the widget if the editor row is open, null otherwise
+     */
+    protected Widget getWidget(GridColumn<?, T> column) {
+        return columnToWidget.get(column);
     }
 
     /**
@@ -319,7 +333,7 @@ public class EditorRow<T> {
 
             Widget editor = getHandler().getWidget(column);
             if (editor != null) {
-                editorWidgets.add(editor);
+                columnToWidget.put(column, editor);
                 attachWidget(editor, cell);
             }
         }
@@ -352,10 +366,10 @@ public class EditorRow<T> {
     }
 
     protected void hideOverlay() {
-        for (Widget w : editorWidgets) {
+        for (Widget w : columnToWidget.values()) {
             GridUtil.setParent(w, null);
         }
-        editorWidgets.clear();
+        columnToWidget.clear();
 
         editorOverlay.removeAllChildren();
         editorOverlay.removeFromParent();

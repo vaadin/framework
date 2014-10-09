@@ -37,18 +37,19 @@ public interface EditorRowHandler<T> {
      * <p>
      * TODO Should have a mechanism for signaling a failed request to the caller
      */
-    public static class EditorRowRequest {
+    public static class EditorRowRequest<T> {
 
         /**
          * A callback interface used to notify the caller about completed
          * requests.
          */
-        public interface RequestCallback {
-            public void onResponse(EditorRowRequest request);
+        public interface RequestCallback<T> {
+            public void onResponse(EditorRowRequest<T> request);
         }
 
+        private Grid<T> grid;
         private int rowIndex;
-        private RequestCallback callback;
+        private RequestCallback<T> callback;
 
         /**
          * Creates a new editor row request.
@@ -59,7 +60,9 @@ public interface EditorRowHandler<T> {
          *            the callback invoked when the request is ready, or null if
          *            no need to call back
          */
-        public EditorRowRequest(int rowIndex, RequestCallback callback) {
+        public EditorRowRequest(Grid<T> grid, int rowIndex,
+                RequestCallback<T> callback) {
+            this.grid = grid;
             this.rowIndex = rowIndex;
             this.callback = callback;
         }
@@ -71,6 +74,38 @@ public interface EditorRowHandler<T> {
          */
         public int getRowIndex() {
             return rowIndex;
+        }
+
+        /**
+         * Returns the row data related to the row being requested.
+         *
+         * @return the row data
+         */
+        public T getRow() {
+            return grid.getDataSource().getRow(rowIndex);
+        }
+
+        /**
+         * Returns the grid instance related to this editor row request.
+         * 
+         * @return the grid instance
+         */
+        public Grid<T> getGrid() {
+            return grid;
+        }
+
+        /**
+         * Returns the editor row widget used to edit the values of the given
+         * column.
+         * 
+         * @param column
+         *            the column whose widget to get
+         * @return the widget related to the column
+         */
+        public Widget getWidget(GridColumn<?, T> column) {
+            Widget w = grid.getEditorRow().getWidget(column);
+            assert w != null;
+            return w;
         }
 
         /**
@@ -96,7 +131,7 @@ public interface EditorRowHandler<T> {
      * 
      * @see EditorRow#editRow(int)
      */
-    public void bind(EditorRowRequest request);
+    public void bind(EditorRowRequest<T> request);
 
     /**
      * Cancels a currently active edit if any. Called by the editor row when
@@ -111,7 +146,7 @@ public interface EditorRowHandler<T> {
      * 
      * @see EditorRow#cancel()
      */
-    public void cancel(EditorRowRequest request);
+    public void cancel(EditorRowRequest<T> request);
 
     /**
      * Commits changes in the currently active edit to the data source. Called
@@ -120,7 +155,7 @@ public interface EditorRowHandler<T> {
      * @param request
      *            the commit request
      */
-    public void commit(EditorRowRequest request);
+    public void commit(EditorRowRequest<T> request);
 
     /**
      * Discards any unsaved changes and reloads editor content from the data
@@ -133,7 +168,7 @@ public interface EditorRowHandler<T> {
      * @param request
      *            the discard request
      */
-    public void discard(EditorRowRequest request);
+    public void discard(EditorRowRequest<T> request);
 
     /**
      * Returns a widget instance that is used to edit the values in the given

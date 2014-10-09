@@ -94,7 +94,7 @@ public class GridBasicClientFeaturesWidget extends
         }
 
         @Override
-        public void bind(EditorRowRequest request) {
+        public void bind(EditorRowRequest<List<Data>> request) {
             List<Data> rowData = ds.getRow(request.getRowIndex());
 
             boolean hasSelectionColumn = !(grid.getSelectionModel() instanceof None);
@@ -107,13 +107,13 @@ public class GridBasicClientFeaturesWidget extends
         }
 
         @Override
-        public void cancel(EditorRowRequest request) {
+        public void cancel(EditorRowRequest<List<Data>> request) {
             log.setText("Row " + request.getRowIndex() + " edit cancelled");
             request.invokeCallback();
         }
 
         @Override
-        public void commit(EditorRowRequest request) {
+        public void commit(EditorRowRequest<List<Data>> request) {
             log.setText("Row " + request.getRowIndex() + " edit committed");
             List<Data> rowData = ds.getRow(request.getRowIndex());
 
@@ -135,7 +135,7 @@ public class GridBasicClientFeaturesWidget extends
         }
 
         @Override
-        public void discard(EditorRowRequest request) {
+        public void discard(EditorRowRequest<List<Data>> request) {
             bind(request);
         }
 

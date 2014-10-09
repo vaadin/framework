@@ -136,7 +136,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         private EditorRowServerRpc rpc = getRpcProxy(EditorRowServerRpc.class);
 
-        private EditorRowRequest currentRequest = null;
+        private EditorRowRequest<?> currentRequest = null;
         private boolean serverInitiated = false;
 
         public CustomEditorRowHandler() {
@@ -174,7 +174,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         @Override
-        public void bind(EditorRowRequest request) {
+        public void bind(EditorRowRequest<JSONObject> request) {
             if (!handleServerInitiated(request)) {
                 startRequest(request);
                 rpc.bind(request.getRowIndex());
@@ -182,7 +182,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         @Override
-        public void commit(EditorRowRequest request) {
+        public void commit(EditorRowRequest<JSONObject> request) {
             if (!handleServerInitiated(request)) {
                 startRequest(request);
                 rpc.commit(request.getRowIndex());
@@ -190,7 +190,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         @Override
-        public void discard(EditorRowRequest request) {
+        public void discard(EditorRowRequest<JSONObject> request) {
             if (!handleServerInitiated(request)) {
                 startRequest(request);
                 rpc.discard(request.getRowIndex());
@@ -198,7 +198,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         @Override
-        public void cancel(EditorRowRequest request) {
+        public void cancel(EditorRowRequest<JSONObject> request) {
             if (!handleServerInitiated(request)) {
                 // No startRequest as we don't get (or need)
                 // a confirmation from the server
@@ -230,7 +230,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
          * @return true if the request was originally triggered by the server,
          *         false otherwise
          */
-        private boolean handleServerInitiated(EditorRowRequest request) {
+        private boolean handleServerInitiated(EditorRowRequest<?> request) {
             assert request != null;
             assert currentRequest == null;
 
@@ -243,7 +243,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
         }
 
-        private void startRequest(EditorRowRequest request) {
+        private void startRequest(EditorRowRequest<?> request) {
             currentRequest = request;
         }
 
