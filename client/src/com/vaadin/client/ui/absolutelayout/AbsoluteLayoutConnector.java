@@ -183,8 +183,42 @@ public class AbsoluteLayoutConnector extends
     }
 
     private void setChildWidgetPosition(ComponentConnector child) {
-        getWidget().setWidgetPosition(child.getWidget(),
-                getState().connectorToCssPosition.get(child.getConnectorId()));
+        String position = getState().connectorToCssPosition.get(child
+                .getConnectorId());
+        if (position == null) {
+            position = "";
+        }
+        // make sure relative sizes get displayed correctly
+        String width = child.getState().width;
+        if (width != null && width.endsWith("%")) {
+            position = addDefaultPositionIfMissing(position, "left");
+            position = addDefaultPositionIfMissing(position, "right");
+        }
+        String height = child.getState().height;
+        if (height != null && height.endsWith("%")) {
+            position = addDefaultPositionIfMissing(position, "top");
+            position = addDefaultPositionIfMissing(position, "bottom");
+        }
+        getWidget().setWidgetPosition(child.getWidget(), position);
+    }
+
+    /**
+     * Adds default value of 0.0px for the given property if it's missing from
+     * the position string altogether. If the property value is already set no
+     * changes are needed.
+     * 
+     * @param position
+     *            original position styles
+     * @param property
+     *            the property that needs to have a value
+     * @return updated position, or the original string if no updates were
+     *         needed
+     */
+    private String addDefaultPositionIfMissing(String position, String property) {
+        if (!position.contains(property)) {
+            position = position + property + ":0.0px;";
+        }
+        return position;
     }
 
     /*
