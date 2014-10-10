@@ -821,6 +821,27 @@ public class Grid<T> extends ResizeComposite implements
     static abstract class AbstractGridColumn<C, T> implements HasVisibility {
 
         /**
+         * Default renderer for GridColumns. Renders everything into text
+         * through {@link Object#toString()}.
+         */
+        private final class DefaultTextRenderer implements Renderer<Object> {
+            boolean warned = false;
+            private final String DEFAULT_RENDERER_WARNING = "This column uses a dummy default TextRenderer. "
+                    + "A more suitable renderer should be set using the setRenderer() method.";
+
+            @Override
+            public void render(FlyweightCell cell, Object data) {
+                if (!warned) {
+                    getLogger().warning(
+                            AbstractGridColumn.this.toString() + ": "
+                                    + DEFAULT_RENDERER_WARNING);
+                    warned = true;
+                }
+                cell.getElement().setInnerText(data.toString());
+            }
+        }
+
+        /**
          * the column is associated with
          */
         private Grid<T> grid;
@@ -845,17 +866,24 @@ public class Grid<T> extends ResizeComposite implements
         private String headerText = "";
 
         /**
+         * Constructs a new column with a simple TextRenderer.
+         */
+        public AbstractGridColumn() {
+            setRenderer(new DefaultTextRenderer());
+        }
+
+        /**
          * Constructs a new column with a custom renderer.
          * 
          * @param renderer
          *            The renderer to use for rendering the cells
+         * 
+         * @throws IllegalArgumentException
+         *             if given Renderer is null
          */
-        public AbstractGridColumn(Renderer<? super C> renderer) {
-            if (renderer == null) {
-                throw new IllegalArgumentException("Renderer cannot be null. "
-                        + "(in: " + toString() + ")");
-            }
-            bodyRenderer = renderer;
+        public AbstractGridColumn(Renderer<? super C> renderer)
+                throws IllegalArgumentException {
+            setRenderer(renderer);
         }
 
         /**
@@ -985,6 +1013,27 @@ public class Grid<T> extends ResizeComposite implements
          */
         public Renderer<? super C> getRenderer() {
             return bodyRenderer;
+        }
+
+        /**
+         * Sets a custom {@link Renderer} for this column.
+         * 
+         * @param renderer
+         *            The renderer to use for rendering the cells
+         * 
+         * @throws IllegalArgumentException
+         *             if given Renderer is null
+         */
+        public void setRenderer(Renderer<? super C> renderer)
+                throws IllegalArgumentException {
+            if (renderer == null) {
+                throw new IllegalArgumentException("Renderer cannot be null.");
+            }
+            bodyRenderer = renderer;
+
+            if (grid != null) {
+                grid.refreshBody();
+            }
         }
 
         /**
