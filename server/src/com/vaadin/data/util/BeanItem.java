@@ -214,13 +214,75 @@ public class BeanItem<BT> extends PropertysetItem {
             }
 
             BeanInfo info = Introspector.getBeanInfo(beanClass);
-            propertyDescriptors.addAll(Arrays.asList(info
-                    .getPropertyDescriptors()));
+            propertyDescriptors.addAll(getPropertyDescriptors(info));
 
             return propertyDescriptors;
         } else {
             BeanInfo info = Introspector.getBeanInfo(beanClass);
-            return Arrays.asList(info.getPropertyDescriptors());
+            return getPropertyDescriptors(info);
+        }
+    }
+
+    // Workaround for Java6 bug JDK-6788525. Do nothing for JDK7+.
+    private static List<PropertyDescriptor> getPropertyDescriptors(
+            BeanInfo beanInfo) {
+        PropertyDescriptor[] descriptors = beanInfo.getPropertyDescriptors();
+        List<PropertyDescriptor> result = new ArrayList<PropertyDescriptor>(
+                descriptors.length);
+        for (PropertyDescriptor descriptor : descriptors) {
+            try {
+                Method readMethod = getMethodFromBridge(descriptor
+                        .getReadMethod());
+                if (readMethod != null) {
+                    Method writeMethod = getMethodFromBridge(
+                            descriptor.getWriteMethod(),
+                            readMethod.getReturnType());
+                    if (writeMethod == null) {
+                        writeMethod = descriptor.getWriteMethod();
+                    }
+                    PropertyDescriptor descr = new PropertyDescriptor(
+                            descriptor.getName(), readMethod, writeMethod);
+                    result.add(descr);
+                } else {
+                    result.add(descriptor);
+                }
+            } catch (SecurityException ignore) {
+                // handle next descriptor
+            } catch (IntrospectionException e) {
+                result.add(descriptor);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Return not bridged method for bridge {@code bridgeMethod} method. If
+     * method {@code bridgeMethod} is not bridge method then return null.
+     */
+    private static Method getMethodFromBridge(Method bridgeMethod)
+            throws SecurityException {
+        if (bridgeMethod == null) {
+            return null;
+        }
+        return getMethodFromBridge(bridgeMethod,
+                bridgeMethod.getParameterTypes());
+    }
+
+    /**
+     * Return not bridged method for bridge {@code bridgeMethod} method and
+     * declared {@code paramTypes}. If method {@code bridgeMethod} is not bridge
+     * method then return null.
+     */
+    private static Method getMethodFromBridge(Method bridgeMethod,
+            Class<?>... paramTypes) throws SecurityException {
+        if (bridgeMethod == null || !bridgeMethod.isBridge()) {
+            return null;
+        }
+        try {
+            return bridgeMethod.getDeclaringClass().getMethod(
+                    bridgeMethod.getName(), paramTypes);
+        } catch (NoSuchMethodException e) {
+            return null;
         }
     }
 

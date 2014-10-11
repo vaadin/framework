@@ -13,6 +13,8 @@ import junit.framework.TestCase;
 
 import org.junit.Assert;
 
+import com.vaadin.data.Property;
+
 /**
  * Test BeanItem specific features.
  * 
@@ -120,6 +122,31 @@ public class BeanItemTest extends TestCase {
 
     protected static interface MySuperInterface2 {
         public int getSuper2();
+    }
+
+    protected static class Generic<T> {
+
+        public T getProperty() {
+            return null;
+        }
+
+        public void setProperty(T t) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    protected static class SubClass extends Generic<String> {
+
+        @Override
+        // Has a bridged method
+        public String getProperty() {
+            return "";
+        }
+
+        @Override
+        // Has a bridged method
+        public void setProperty(String t) {
+        }
     }
 
     protected static interface MySubInterface extends MySuperInterface,
@@ -330,5 +357,19 @@ public class BeanItemTest extends TestCase {
         item.removeItemProperty("myname");
         Assert.assertEquals(6, item.getItemPropertyIds().size());
         Assert.assertEquals(null, item.getItemProperty("myname"));
+    }
+
+    public void testOverridenGenericMethods() {
+        BeanItem<SubClass> item = new BeanItem<SubClass>(new SubClass());
+
+        Property<?> property = item.getItemProperty("property");
+        Assert.assertEquals("Unexpected class for property type", String.class,
+                property.getType());
+
+        Assert.assertEquals("Unexpected property value", "",
+                property.getValue());
+
+        // Should not be exception
+        property.setValue(null);
     }
 }
