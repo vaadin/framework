@@ -56,7 +56,7 @@ public class RetryOnFail implements TestRule {
                     return Integer.parseInt(retryCount);
                 }
 
-                return 4;
+                return 0;
             }
         };
     }
