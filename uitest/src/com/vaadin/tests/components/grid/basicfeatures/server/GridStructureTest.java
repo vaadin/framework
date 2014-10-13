@@ -30,9 +30,9 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.tests.components.grid.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.GridElement;
+import com.vaadin.tests.components.grid.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
@@ -52,6 +52,19 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         // Column 1 should now be the first cell
         cells = getGridHeaderRowCells();
         assertEquals("Column 1", cells.get(0).getText());
+    }
+
+    @Test
+    public void testHidingAllColumns() {
+        setDebug(true);
+        openTestURL();
+        for (int i = 0; i < GridBasicFeatures.COLUMNS; ++i) {
+            selectMenuPath("Component", "Columns", "Column " + i, "Visible");
+            assertFalse(isElementPresent(NotificationElement.class));
+        }
+
+        assertEquals("Headers still visible.", 0, getGridHeaderRowCells()
+                .size());
     }
 
     @Test
@@ -253,7 +266,6 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         }
         fail("unexpected amount of rows post-filter. Did the ItemSetChange work after all?");
     }
-
 
     @Test
     public void testRemoveLastColumn() {
