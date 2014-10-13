@@ -53,16 +53,13 @@ public class AccordionRemoveTab extends AbstractTestUI {
         Tab last = tabs.addTab(l);
         last.setCaption("Three");
 
-        Button remove = new Button("Remove First");
-        remove.addClickListener(new Button.ClickListener() {
+        addButton("Remove First", new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
                 tabs.removeComponent(tabs.iterator().next());
             }
         });
-
-        addComponent(remove);
     }
 
     @Override

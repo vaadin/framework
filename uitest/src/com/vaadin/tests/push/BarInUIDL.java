@@ -35,14 +35,12 @@ public class BarInUIDL extends AbstractTestUI {
      */
     @Override
     protected void setup(VaadinRequest request) {
-        Button button = new Button("Click Me");
-        button.addClickListener(new Button.ClickListener() {
+        addButton("Click Me", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 addComponent(new Label("Thank you for clicking | bar"));
             }
         });
-        addComponent(button);
 
     }
 

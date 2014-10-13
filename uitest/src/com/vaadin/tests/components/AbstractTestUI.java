@@ -10,6 +10,7 @@ import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -179,6 +180,12 @@ public abstract class AbstractTestUI extends UI {
 
     public void replaceComponent(Component oldComponent, Component newComponent) {
         getLayout().replaceComponent(oldComponent, newComponent);
+    }
+
+    protected void addButton(String caption, Button.ClickListener listener) {
+        Button button = new Button(caption);
+        button.addClickListener(listener);
+        addComponent(button);
     }
 
     protected String getTestDescription() {

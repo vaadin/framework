@@ -19,7 +19,6 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Table;
@@ -53,15 +52,13 @@ public class LeftColumnAlignment extends AbstractTestUI {
 
         addComponent(table);
 
-        Button button = new Button("Align to Left");
-        button.addClickListener(new ClickListener() {
+        addButton("Align to Left", new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
                 table.setColumnAlignment("name", Align.LEFT);
             }
         });
-        addComponent(button);
     }
 
     @Override

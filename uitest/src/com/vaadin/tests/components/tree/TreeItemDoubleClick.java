@@ -32,8 +32,7 @@ public class TreeItemDoubleClick extends AbstractTestUIWithLog {
 
         addComponent(tree);
 
-        Button button = new Button("Change immediate flag");
-        button.addClickListener(new Button.ClickListener() {
+        addButton("Change immediate flag", new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -43,8 +42,6 @@ public class TreeItemDoubleClick extends AbstractTestUIWithLog {
             }
 
         });
-
-        addComponent(button);
 
     }
 

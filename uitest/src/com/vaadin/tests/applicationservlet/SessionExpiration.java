@@ -17,7 +17,6 @@ package com.vaadin.tests.applicationservlet;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
@@ -26,15 +25,13 @@ public class SessionExpiration extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         getSession().getSession().setMaxInactiveInterval(2);
-        Button b = new Button("Click to avoid expiration");
-        b.addClickListener(new ClickListener() {
+        addButton("Click to avoid expiration", new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
                 log("Clicked");
             }
         });
-        addComponent(b);
     }
 
     @Override

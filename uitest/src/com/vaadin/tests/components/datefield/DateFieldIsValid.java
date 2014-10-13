@@ -7,7 +7,6 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.DateField;
@@ -42,8 +41,7 @@ public class DateFieldIsValid extends AbstractTestUIWithLog {
             }
         });
         addComponent(dateField);
-        Button button = new Button("check dateField");
-        button.addClickListener(new ClickListener() {
+        addButton("check dateField", new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -51,7 +49,6 @@ public class DateFieldIsValid extends AbstractTestUIWithLog {
                         + ", is valid: " + dateField.isValid());
             }
         });
-        addComponent(button);
     }
 
     /**
