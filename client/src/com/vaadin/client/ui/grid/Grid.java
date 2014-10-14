@@ -852,7 +852,8 @@ public class Grid<T> extends ResizeComposite implements
          */
         public AbstractGridColumn(Renderer<? super C> renderer) {
             if (renderer == null) {
-                throw new IllegalArgumentException("Renderer cannot be null.");
+                throw new IllegalArgumentException("Renderer cannot be null. "
+                        + "(in: " + toString() + ")");
             }
             bodyRenderer = renderer;
         }
@@ -865,8 +866,9 @@ public class Grid<T> extends ResizeComposite implements
         private void setGrid(Grid<T> grid) {
             if (this.grid != null && grid != null) {
                 // Trying to replace grid
-                throw new IllegalStateException(
-                        "Column already is attached to grid. Remove the column first from the grid and then add it.");
+                throw new IllegalStateException("Column already is attached "
+                        + "to a grid. Remove the column first from the grid "
+                        + "and then add it. (in: " + toString() + ")");
             }
 
             this.grid = grid;
@@ -1047,6 +1049,33 @@ public class Grid<T> extends ResizeComposite implements
          */
         public boolean isSortable() {
             return sortable;
+        }
+
+        @Override
+        public String toString() {
+            String details = "";
+
+            if (headerText != null && !headerText.isEmpty()) {
+                details += "header:\"" + headerText + "\" ";
+            } else {
+                details += "header:empty ";
+            }
+
+            if (grid != null) {
+                int index = grid.getColumns().indexOf(this);
+                if (index != -1) {
+                    details += "attached:#" + index + " ";
+                } else {
+                    details += "attached:unindexed ";
+                }
+            } else {
+                details += "detached ";
+            }
+
+            details += "visible:" + visible + " ";
+            details += "sortable:" + sortable + " ";
+
+            return getClass().getSimpleName() + "[" + details.trim() + "]";
         }
     }
 
