@@ -143,6 +143,9 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         // context menu is closed
         focusedElement = Util.getFocusedElement();
 
+        // reset height (if it has been previously set explicitly)
+        setHeight("");
+
         setPopupPositionAndShow(new PositionCallback() {
             @Override
             public void setPosition(int offsetWidth, int offsetHeight) {
@@ -158,12 +161,10 @@ public class VContextMenu extends VOverlay implements SubPartAware {
                     }
                 }
                 if (offsetHeight + top > Window.getClientHeight()) {
-                    top = top - offsetHeight;
-                    if (top < 0) {
-                        top = 0;
-
-                        setHeight(Window.getClientHeight() + "px");
-                    }
+                    top = Math.max(0, Window.getClientHeight() - offsetHeight);
+                }
+                if (top == 0) {
+                    setHeight(Window.getClientHeight() + "px");
                 }
                 setPopupPosition(left, top);
 
