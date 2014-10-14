@@ -312,7 +312,7 @@ public class GridColumn implements Serializable {
                         + "as renderer's presentation type "
                         + rendererPresentationType.getName() + " and column's "
                         + "model " + modelType.getName() + " type aren't "
-                        + "directly with each other");
+                        + "directly compatible with each other");
             }
         }
 
