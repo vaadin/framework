@@ -142,7 +142,8 @@ public class GridColumn implements Serializable {
         checkColumnIsAttached();
         if (pixelWidth < 0) {
             throw new IllegalArgumentException(
-                    "Pixel width should be greated than 0");
+                    "Pixel width should be greated than 0 (in " + toString()
+                            + ")");
         }
         state.width = pixelWidth;
         grid.markAsDirty();
@@ -231,7 +232,8 @@ public class GridColumn implements Serializable {
                     "Could not find a converter for converting from the model type "
                             + getModelType()
                             + " to the renderer presentation type "
-                            + renderer.getPresentationType());
+                            + renderer.getPresentationType() + " (in "
+                            + toString() + ")");
         }
     }
 
@@ -251,7 +253,8 @@ public class GridColumn implements Serializable {
             Converter<? extends T, ?> converter) {
         if (renderer.getParent() != null) {
             throw new IllegalArgumentException(
-                    "Cannot set a renderer that is already connected to a grid column");
+                    "Cannot set a renderer that is already connected to a grid column (in "
+                            + toString() + ")");
         }
 
         if (getRenderer() != null) {
@@ -281,7 +284,7 @@ public class GridColumn implements Serializable {
                 throw new IllegalArgumentException("The converter model type "
                         + converter.getModelType()
                         + " is not compatible with the property type "
-                        + modelType);
+                        + modelType + " (in " + toString() + ")");
 
             } else if (!getRenderer().getPresentationType().isAssignableFrom(
                     converter.getPresentationType())) {
@@ -289,7 +292,8 @@ public class GridColumn implements Serializable {
                         "The converter presentation type "
                                 + converter.getPresentationType()
                                 + " is not compatible with the renderer presentation type "
-                                + getRenderer().getPresentationType());
+                                + getRenderer().getPresentationType() + " (in "
+                                + toString() + ")");
             }
         }
 
@@ -312,7 +316,8 @@ public class GridColumn implements Serializable {
                         + "as renderer's presentation type "
                         + rendererPresentationType.getName() + " and column's "
                         + "model " + modelType.getName() + " type aren't "
-                        + "directly compatible with each other");
+                        + "directly compatible with each other (in "
+                        + toString() + ")");
             }
         }
 
@@ -394,5 +399,11 @@ public class GridColumn implements Serializable {
      */
     public boolean isSortable() {
         return state.sortable;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[propertyId:"
+                + grid.getPropertyIdByColumnId(state.id) + "]";
     }
 }
