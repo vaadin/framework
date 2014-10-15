@@ -90,15 +90,6 @@ public class SortEvent<T> extends GwtEvent<SortEventHandler<?>> {
     }
 
     /**
-     * Access the data source of the Grid that fired this event
-     * 
-     * @return a data source instance
-     */
-    public DataSource<T> getDataSource() {
-        return grid.getDataSource();
-    }
-
-    /**
      * Get the sort ordering that is to be applied to the Grid
      * 
      * @return a list of sort order objects
