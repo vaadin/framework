@@ -40,6 +40,24 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  */
 public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
+    protected List<DesiredCapabilities> getBrowsersSupportingWebSocket() {
+        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(getAllBrowsers());
+
+        browsers.remove(Browser.IE8.getDesiredCapabilities());
+        browsers.remove(Browser.IE9.getDesiredCapabilities());
+        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
+
+        return browsers;
+    }
+
+    protected List<DesiredCapabilities> getBrowsersExcludingPhantomJS() {
+        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(getAllBrowsers());
+
+        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
+
+        return browsers;
+    }
+
     protected List<DesiredCapabilities> getBrowsersExcludingIE() {
         List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(getAllBrowsers());
         browsers.remove(Browser.IE8.getDesiredCapabilities());

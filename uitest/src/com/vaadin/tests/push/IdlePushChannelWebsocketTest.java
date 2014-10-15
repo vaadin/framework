@@ -30,6 +30,6 @@ public class IdlePushChannelWebsocketTest extends IdlePushChannelTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return WebsocketTest.getWebsocketBrowsers();
+        return getBrowsersSupportingWebSocket();
     }
 }

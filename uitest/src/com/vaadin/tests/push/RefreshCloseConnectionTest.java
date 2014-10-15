@@ -39,6 +39,6 @@ public class RefreshCloseConnectionTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return WebsocketTest.getWebsocketBrowsers();
+        return getBrowsersSupportingWebSocket();
     }
 }

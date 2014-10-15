@@ -35,30 +35,10 @@ import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
  * @author Vaadin Ltd
  */
 @TestCategory("push")
-public abstract class WebsocketTest extends PrivateTB3Configuration {
-    private static List<DesiredCapabilities> websocketBrowsers = new ArrayList<DesiredCapabilities>();
-    static {
-        websocketBrowsers.addAll(MultiBrowserTest.getAllBrowsers());
-        websocketBrowsers.remove(Browser.IE8.getDesiredCapabilities());
-        websocketBrowsers.remove(Browser.IE9.getDesiredCapabilities());
-        websocketBrowsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-    }
+public abstract class WebsocketTest extends MultiBrowserTest {
 
-    /**
-     * @return All supported browsers which are actively tested and support
-     *         websockets
-     */
-    public static List<DesiredCapabilities> getWebsocketBrowsers() {
-        return Collections.unmodifiableList(websocketBrowsers);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.tests.tb3.AbstractTB3Test#getBrowserToRunOn()
-     */
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return new ArrayList<DesiredCapabilities>(getWebsocketBrowsers());
+        return new ArrayList<DesiredCapabilities>(getBrowsersSupportingWebSocket());
     }
 }
