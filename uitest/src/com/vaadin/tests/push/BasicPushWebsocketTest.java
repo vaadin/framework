@@ -24,6 +24,6 @@ import com.vaadin.tests.tb3.WebsocketTest;
 public class BasicPushWebsocketTest extends BasicPushTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return WebsocketTest.getWebsocketBrowsers();
+        return getBrowsersSupportingWebSocket();
     }
 }
