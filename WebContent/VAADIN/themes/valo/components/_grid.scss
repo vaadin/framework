@@ -1,171 +1,159 @@
 @import "../../base/escalator/escalator";
 
-@mixin valo-grid {
-	
-	@include base-escalator(v-grid);
-	
-	/* BASE GRID */
-	.v-grid {
-		th {
-			position: relative;
-		}
-		
-		th.sort-asc:after {
-			content: "\25B2" attr(sort-order);
-			/*
-			position: absolute;
-			right: 5px;
-			*/
-			
-			font-size: 9px;
-			float: right;
-			line-height: 14px;
-		}
+$primary-stylename: v-grid;
+$grid-background-color: valo-table-background-color();
+$grid-border: valo-border($color: $grid-background-color, $strength: 0.8);
 
-		th.sort-desc:after {
-			content: "\25BC" attr(sort-order);
-			/*
-			position: absolute;
-			right: 5px;
-			*/
-			
-			font-size: 9px;
-			float: right;
-			line-height: 14px;
-		}
+/**
+ *
+ * 
+ * @param {string} $primary-stylename (v-grid) -
+ *
+ * @group grid
+ */ 
+@mixin valo-grid($primary-stylename : v-grid) {
 
-		/*.v-grid-cell-active {
-			border-color: blue;
-		}
+  @include base-escalator($primary-stylename);
 
-		.v-grid-header-active {
-			background: lightgray;
-		}
+  // TODO: check/set scrollbar height
+  $scrollbar-size: 15px;
 
-		.v-grid-row-active > td {
-			background: rgb(244,244,244);
-		}*/
-	}
-	
-	.v-grid-row-selected > td {
-		background: lightblue;
-	}
+  // Base grid.
+  .#{$primary-stylename} {
+    th {
+      position: relative;
+    }
+
+    th.sort-asc:after {
+      content: "\f0dd" attr(sort-order);
+      font-family: FontAwesome;
+      float: right;
+    }
+
+    th.sort-desc:after {
+      content: "\f0de" attr(sort-order);
+      font-family: FontAwesome;
+      float: right;
+    }
+
+    &:after {
+      @include valo-gradient($v-background-color);
+      
+      content: "";
+      width: 100%;
+      height: $scrollbar-size;
+      position: absolute;
+      bottom: 0;
+
+      border: $grid-border;
+      border-top: none;
+
+      @include box-sizing(border-box);
+    }
+  }
+
+  .#{$primary-stylename}-row-selected > td {
+    background: $v-selection-color;
+  }
+
+  // Empty area before horizontal scroll.
 
 
+  // All but first column cells have left border.
+  .#{$primary-stylename}-row {
+    th, td {
+      background: none;
+      border: none;
+      border-left: $grid-border;
 
+      &:first-child {
+        border-left: none; 
+      }
+    }
+  }
 
+  // Clear the float and change display value for all cells.
+  .#{$primary-stylename}-cell {
+    float: none;
+    display: inline-block;
 
-	/* CUSTOM STYLES */
-	
-	/* Common styles; empty area before horizontal scroll */
-	.v-grid:after {
-		@include header-style;
-		content: "";
-		width: 100%;
-		height: 15px;
-		position: absolute;
-		bottom: 0;
-		border-left: 1px solid #d4d4d4;
-		border-bottom: 1px solid #d4d4d4;
-		border-right: 1px solid #d4d4d4;
-		box-sizing: border-box;
-	}
-	
-	/* Common styles; all but first column cells have left border */
-	.v-grid-row {
-		th, td {
-			background: none;
-			border-left: none;
-			border-right: 1px solid #d4d4d4;
-			border-top: none;
-			border-bottom: none;
-		}
-		
-		th:last-child, td:last-child {
-			border-right: none;
-		}
-	}
+    &.frozen {
+      @include box-shadow(2px 0 2px rgba(0,0,0,0.1));
+    }
+    &.#{$primary-stylename}-cell-active {
+      @include box-shadow(inset 2px 2px 0px #77aeee, inset -2px -2px 0px #77aeee);
+    }
+  }
 
-	/* Common styles; clear the float and change display value for all cells */
-	.v-grid-cell {
-		float: none;
-		display: inline-block;
-		
-		&.frozen {
-			box-shadow: 2px 0 2px rgba(0,0,0,0.1);
-		}
-		&.v-grid-cell-active {
-			box-shadow: inset 2px 2px 0px #77aeee, inset -2px -2px 0px #77aeee;
-		}
-	}
-	
-	/* Common styles: main border, moved from .v-grid due to scroll div widths */
-	.v-grid-tablewrapper {
-		border: 1px solid #d4d4d4;
-		box-sizing: border-box;
-	}
-	
-	/* Grid header */
-	.v-grid-header {
-		.v-grid-cell {
-			@include header-style;
-			border-bottom: 1px solid #d4d4d4;
-		}
-		
-		th {
-			@include header-text;
-		}
-	}
-	
-	/* Grid footer */
-	.v-grid-footer {
-		.v-grid-cell {
-			@include header-style;
-			border-top: 1px solid #d4d4d4;
-		}
-		
-		td {
-			@include header-text;
-		}
-	}
-	
-	/* Grid body */
-	.v-grid-body {
-		
-		.v-grid-cell {
-			padding: 11px 12px 12px 12px;
-			line-height: 1;
-		}
-		
-		.v-grid-row {
-			border-bottom: 1px solid #d4d4d4;
-			
-			&:nth-child(odd) td {
-				background: white;
-			}
-		
-			&:nth-child(even) td {
-				background: #f5f5f5;
-			}
-			
-			&.v-grid-row-active td {
-				background: #166ed5;
-				color: white;
-				border-color: #1d69b4;
-			}
-		}
-	}
+  // Main border, moved from .#{$primary-stylename} due to scroll div widths.
+  .#{$primary-stylename}-tablewrapper {
+    border: $grid-border;
+    @include box-sizing(border-box);
+  }
+
+  // Grid header.
+  .#{$primary-stylename}-header {
+    @include valo-grid-header-style;
+  }
+
+  // Grid footer.
+  .#{$primary-stylename}-footer {
+    @include valo-grid-footer-style;
+  }
+
+  // Grid body.
+  .#{$primary-stylename}-body {
+    
+    .#{$primary-stylename}-cell {
+      line-height: 1;
+      $vertical-padding: round(($v-table-row-height - $v-font-size)/2);
+      padding: $vertical-padding $v-table-cell-padding-horizontal;
+    }
+
+    .#{$primary-stylename}-row {
+      border-bottom: $grid-border;
+      
+      &:nth-child(odd) td {
+        $bg-lightness: if(color-luminance($grid-background-color) < 10, 4%, -4%);
+        background-color: scale-color($grid-background-color, $lightness: $bg-lightness);
+      }
+
+      &:nth-child(even) td {
+        background-color: $grid-background-color;
+      }
+
+      &.#{$primary-stylename}-row-active td {
+        @include valo-gradient($v-selection-color);
+        color: $grid-background-color;
+        border-color: adjust-color($v-selection-color, $lightness: -8%, $saturation: -8%);
+      }
+    }
+  }
 }
 
-@mixin header-style {
-	background-color: #fafafa;
-	background-image: -webkit-linear-gradient(top, #fafafa 2%, #efefef 98%);
-	background-image: linear-gradient(to bottom,#fafafa 2%, #efefef 98%);
+@mixin valo-grid-header-style {
+  .#{$primary-stylename}-cell {
+    @include valo-gradient($v-background-color);
+    border-bottom: $grid-border;
+  }
+
+  th {
+    font-weight: inherit;
+    font-size: $v-table-header-font-size;
+    $vertical-padding: round(($v-table-row-height - $v-table-header-font-size)/2);
+    padding: $vertical-padding $v-table-cell-padding-horizontal $vertical-padding - $v-table-border-width;
+    line-height: 1;
+  }
 }
 
-@mixin header-text {
-	font-weight: 300;
-	font-size: 14px;
-	line-height: 1;
-	padding: 12px 12px 11px 12px;
+@mixin valo-grid-footer-style {
+  .#{$primary-stylename}-cell {
+    @include valo-gradient($v-background-color);
+    border-top: $grid-border;
+  }
+
+  td {
+    font-weight: inherit;
+    font-size: $v-table-header-font-size;
+  }
 }
