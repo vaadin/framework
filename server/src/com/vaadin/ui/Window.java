@@ -18,6 +18,9 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -120,6 +123,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         super(caption, content);
         registerRpc(rpc);
         setSizeUndefined();
+        setCloseShortcut(ShortcutAction.KeyCode.ESCAPE);
     }
 
     /* ********************************************************************* */
@@ -806,14 +810,48 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     /*
      * Actions
      */
-    protected CloseShortcut closeShortcut;
+    private LinkedHashSet<CloseShortcut> closeShortcuts = new LinkedHashSet<CloseShortcut>();
+
+    protected Collection<CloseShortcut> getCloseShortcuts() {
+        return Collections.unmodifiableCollection(closeShortcuts);
+    }
 
     /**
-     * Makes is possible to close the window by pressing the given
-     * {@link KeyCode} and (optional) {@link ModifierKey}s.<br/>
+     * Adds a keyboard shortcut for closing the window when user presses the
+     * given {@link KeyCode} and (optional) {@link ModifierKey}s.<br/>
      * Note that this shortcut only reacts while the window has focus, closing
      * itself - if you want to close a window from a UI, use
      * {@link UI#addAction(com.vaadin.event.Action)} of the UI instead.
+     * <p>
+     * If there is a prior CloseShortcut with the same keycode and modifiers,
+     * that gets removed before the new one is added. Prior CloseShortcuts with
+     * differing keycodes or modifiers are not affected.
+     * 
+     * @param keyCode
+     *            the keycode for invoking the shortcut
+     * @param modifiers
+     *            the (optional) modifiers for invoking the shortcut, null for
+     *            none
+     */
+    public void addCloseShortcut(int keyCode, int... modifiers) {
+        // make sure there are no duplicates
+        removeCloseShortcut(keyCode, modifiers);
+        CloseShortcut closeShortcut = new CloseShortcut(this, keyCode,
+                modifiers);
+        closeShortcuts.add(closeShortcut);
+        addAction(closeShortcut);
+    }
+
+    /**
+     * Sets the keyboard shortcut for closing the window when user presses the
+     * given {@link KeyCode} and (optional) {@link ModifierKey}s.<br/>
+     * Note that this shortcut only reacts while the window has focus, closing
+     * itself - if you want to close a window from a UI, use
+     * {@link UI#addAction(com.vaadin.event.Action)} of the UI instead.
+     * <p>
+     * If there are any prior CloseShortcuts when this method is called those
+     * get removed before the new one is added. <b>NOTE: this also removes the
+     * default shortcut that is added for accessibility purposes.</b>
      * 
      * @param keyCode
      *            the keycode for invoking the shortcut
@@ -822,22 +860,61 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      *            none
      */
     public void setCloseShortcut(int keyCode, int... modifiers) {
-        if (closeShortcut != null) {
-            removeAction(closeShortcut);
-        }
-        closeShortcut = new CloseShortcut(this, keyCode, modifiers);
-        addAction(closeShortcut);
+        removeCloseShortcuts();
+        addCloseShortcut(keyCode, modifiers);
     }
 
     /**
-     * Removes the keyboard shortcut previously set with
-     * {@link #setCloseShortcut(int, int...)}.
+     * Removes a keyboard shortcut previously set with
+     * {@link #setCloseShortcut(int, int...)} or
+     * {@link #addCloseShortcut(int, int...)}.
+     * 
+     * @param keyCode
+     *            the keycode for invoking the shortcut
+     * @param modifiers
+     *            the (optional) modifiers for invoking the shortcut, null for
+     *            none
      */
-    public void removeCloseShortcut() {
-        if (closeShortcut != null) {
-            removeAction(closeShortcut);
-            closeShortcut = null;
+    public void removeCloseShortcut(int keyCode, int... modifiers) {
+        for (CloseShortcut closeShortcut : closeShortcuts) {
+            if (closeShortcut.isTriggeredBy(keyCode, modifiers)) {
+                removeAction(closeShortcut);
+                closeShortcuts.remove(closeShortcut);
+                break;
+            }
         }
+    }
+
+    /**
+     * @deprecated use {@link #resetCloseShortcuts()} instead, or
+     *             {@link #removeCloseShortcuts()} if you also want to get rid
+     *             of the default shortcut
+     */
+    @Deprecated
+    public void removeCloseShortcut() {
+        resetCloseShortcuts();
+    }
+
+    /**
+     * Removes all the keyboard shortcuts previously set with
+     * {@link #setCloseShortcut(int, int...)} or
+     * {@link #addCloseShortcut(int, int...)} and re-adds the default shortcut
+     * {@link KeyCode.ESCAPE}.
+     */
+    public void resetCloseShortcuts() {
+        setCloseShortcut(ShortcutAction.KeyCode.ESCAPE);
+    }
+
+    /**
+     * Removes all the keyboard shortcuts previously set with
+     * {@link #setCloseShortcut(int, int...)} or
+     * {@link #addCloseShortcut(int, int...)}.
+     */
+    public void removeCloseShortcuts() {
+        for (CloseShortcut closeShortcut : closeShortcuts) {
+            removeAction(closeShortcut);
+        }
+        closeShortcuts.clear();
     }
 
     /**

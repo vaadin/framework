@@ -17,6 +17,8 @@
 package com.vaadin.event;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -234,6 +236,42 @@ public class ShortcutAction extends Action {
      */
     public int[] getModifiers() {
         return modifiers;
+    }
+
+    /**
+     * Checks whether the shortcut can be triggered with the given combination
+     * of keys.
+     * 
+     * @param keyCode
+     *            potential match for the {@link KeyCode} that this shortcut
+     *            reacts to
+     * @param modifierKeys
+     *            (optional) potential matches for the {@link ModifierKey}s
+     *            required for this shortcut to react
+     * @return <code>true</code> if keyCode and modifierKeys are a match,
+     *         <code>false</code> otherwise
+     */
+    public boolean isTriggeredBy(int keyCode, int... modifierKeys) {
+        boolean result = false;
+        if (keyCode == this.keyCode) {
+            if (modifierKeys == null) {
+                result = (modifiers == null);
+            } else if (modifiers != null) {
+                List<Integer> modifierList = new ArrayList<Integer>();
+                for (int modifier : modifiers) {
+                    modifierList.add(modifier);
+                }
+                for (int modifierKey : modifierKeys) {
+                    if (modifierList.contains(modifierKey)) {
+                        modifierList.remove(modifierKey);
+                    } else {
+                        return false;
+                    }
+                }
+                result = modifierList.isEmpty();
+            }
+        }
+        return result;
     }
 
     /**
