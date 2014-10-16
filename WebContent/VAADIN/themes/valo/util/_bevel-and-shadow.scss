@@ -3,7 +3,7 @@
  *
  * @group style
  *
- * @param {list} $border ($v-border) - CSS border value which can contain any of the color keywords
+ * @param {list} $border ($v-border) - CSS border value which can contain any of the color keywords
  * @param {color} $color ($v-background-color) - the base color to which the color keywords are applied to
  * @param {color} $context (null) - context/surrounding color where the border is expected to appear. The color of the final border is the darker of the two parameters passed to this function.
  * @param {number} $strength (1) - adjustment for the border contrast
@@ -59,7 +59,7 @@
  *
  * @group style
  *
- * @param {list} $border ($v-border) - CSS border value which can contain any of the color keywords
+ * @param {list} $border ($v-border) - CSS border value which can contain any of the color keywords
  * @param {color} $color ($v-background-color) - the base color to which the color keywords are applied to
  * @param {color} $context (null) - context/surrounding color where the border is expected to appear. The color of the final border is the darker of the two parameters passed to this function.
  * @param {number} $strength (1) - adjustment for the border contrast
@@ -88,8 +88,8 @@
  * @param {number} $bevel-depth ($v-bevel-depth) - percentage defining the depth/amount of the bevel effect. Affects the color keywords specified in the $bevel parameter.
  * @param {list} $shadow (null) - box-shadow value according to $v-shadow documentation
  * @param {number} $shadow-opacity ($v-shadow-opacity) - percentage defining the opacity/amount of the shadow effect. Affects the color keywords specified in the $shadow parameter.
- * @param {color} $background-color ($v-background-color) - the base color to which the color keywords are applied to
- * @param {list} $gradient (null) - Valo specific gradient value. See the documentation for $v-gradient. Affects the color keywords specified in the $bevel parameter.
+ * @param {color} $background-color ($v-background-color) - the base color to which the color keywords are applied to
+ * @param {list} $gradient (null) - Valo specific gradient value. See the documentation for $v-gradient. Affects the color keywords specified in the $bevel parameter.
  * @param {bool} $include-focus (false) - should the box-shadow value include $v-focus-style as well (only added if $v-focus-style is a)
  *
  * @return {list} CSS box-shadow value, combined from $bevel and $shadow with all occurences of v-tint, v-shade and v-tone color keywords replaced with the corresponding actual color
@@ -160,7 +160,7 @@
  *
  * @param {list} $list - any CSS list with possible color keywords
  * @param {color} $color - The color to which color keywords are applied to
- * @param {list} $gradient (null) - Valo specific gradient value. See the documentation for $v-gradient. Affects the replacement colors to accommodate the gradient.
+ * @param {list} $gradient (null) - Valo specific gradient value. See the documentation for $v-gradient. Affects the replacement colors to accommodate the gradient.
  *
  * @return {list} The input $list parameter with all occurences of v-tint, v-shade and v-tone color keywords replaced with the corresponding actual color
  */
