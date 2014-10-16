@@ -479,7 +479,8 @@ public class VBrowserDetails implements Serializable {
     /**
      * Tests if the browser is run on iPhone.
      * 
-     * @return
+     * @return true if run on iPhone, false otherwise
+     * @since 7.3.3
      */
     public boolean isIPhone() {
         return isIPhone;
@@ -488,7 +489,8 @@ public class VBrowserDetails implements Serializable {
     /**
      * Tests if the browser is run on iPad.
      * 
-     * @return
+     * @return true if run on iPad, false otherwise
+     * @since 7.3.3
      */
     public boolean isIPad() {
         return isIPad;

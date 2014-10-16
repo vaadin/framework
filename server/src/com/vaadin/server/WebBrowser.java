@@ -295,6 +295,7 @@ public class WebBrowser implements Serializable {
      * 
      * @return true if run on IPhone false if the user is not using IPhone or if
      *         no information on the browser is present
+     * @since 7.3.3
      */
     public boolean isIPhone() {
         return browserDetails.isIPhone();
@@ -305,6 +306,7 @@ public class WebBrowser implements Serializable {
      * 
      * @return true if run on IPad false if the user is not using IPad or if no
      *         information on the browser is present
+     * @since 7.3.3
      */
     public boolean isIPad() {
         return browserDetails.isIPad();
