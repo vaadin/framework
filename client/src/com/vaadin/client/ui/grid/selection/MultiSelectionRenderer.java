@@ -26,6 +26,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableElement;
+import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
@@ -211,14 +212,14 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         /** The handle in which this instance is running. */
         private AnimationHandle handle;
 
-        /** The pointer's pageX coordinate. */
-        private int pageX;
+        /** The pointer's pageX coordinate of the first click. */
+        private int initialPageX = -1;
 
         /** The pointer's pageY coordinate. */
         private int pageY;
 
         /** The logical index of the row that was most recently modified. */
-        private int logicalRow = -1;
+        private int lastModifiedLogicalRow = -1;
 
         /** @see #doScrollAreaChecks(int) */
         private int finalTopBound;
@@ -228,6 +229,9 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
 
         private boolean scrollAreaShouldRebound = false;
 
+        private final int bodyAbsoluteTop;
+        private final int bodyAbsoluteBottom;
+
         public AutoScrollerAndSelector(final int topBound,
                 final int bottomBound, final int gradientArea,
                 final boolean selectionPaint) {
@@ -235,6 +239,9 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
             finalBottomBound = bottomBound;
             this.gradientArea = gradientArea;
             this.selectionPaint = selectionPaint;
+
+            bodyAbsoluteTop = getBodyClientTop();
+            bodyAbsoluteBottom = getBodyClientBottom();
         }
 
         @Override
@@ -252,11 +259,23 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
                 grid.setScrollTop(grid.getScrollTop() + intPixelsToScroll);
             }
 
-            int logicalRow = getLogicalRowIndex(Util.getElementFromPoint(pageX,
-                    pageY));
-            if (logicalRow != -1 && logicalRow != this.logicalRow) {
-                this.logicalRow = logicalRow;
-                setSelected(logicalRow, selectionPaint);
+            int constrainedPageY = Math.max(bodyAbsoluteTop,
+                    Math.min(bodyAbsoluteBottom, pageY));
+            int logicalRow = getLogicalRowIndex(Util.getElementFromPoint(
+                    initialPageX, constrainedPageY));
+
+            int incrementOrDecrement = (logicalRow > lastModifiedLogicalRow) ? 1
+                    : -1;
+
+            /*
+             * Both pageY and initialPageX have their initialized (and
+             * unupdated) values while the cursor hasn't moved since the first
+             * invocation. This will lead to logicalRow being -1, until the
+             * pointer has been moved.
+             */
+            while (logicalRow != -1 && lastModifiedLogicalRow != logicalRow) {
+                lastModifiedLogicalRow += incrementOrDecrement;
+                setSelected(lastModifiedLogicalRow, selectionPaint);
             }
 
             reschedule();
@@ -307,7 +326,7 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         public void start(int logicalRowIndex) {
             running = true;
             setSelected(logicalRowIndex, selectionPaint);
-            logicalRow = logicalRowIndex;
+            lastModifiedLogicalRow = logicalRowIndex;
             reschedule();
         }
 
@@ -332,8 +351,11 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         public void updatePointerCoords(int pageX, int pageY) {
             doScrollAreaChecks(pageY);
             updateScrollSpeed(pageY);
-            this.pageX = pageX;
             this.pageY = pageY;
+
+            if (initialPageX == -1) {
+                initialPageX = pageX;
+            }
         }
 
         /**
@@ -469,25 +491,8 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         }
 
         private void updateScrollBounds() {
-            final Element root = Element.as(grid.getElement());
-            final Element tableWrapper = Element.as(root.getChild(2));
-            final TableElement table = TableElement.as(tableWrapper
-                    .getFirstChildElement());
-            final Element thead = table.getTHead();
-            final Element tfoot = table.getTFoot();
-
-            /*
-             * GWT _does_ have an "Element.getAbsoluteTop()" that takes both the
-             * client top and scroll compensation into account, but they're
-             * calculated wrong for our purposes, so this does something
-             * similar, but only suitable for us.
-             * 
-             * Also, this should be a bit faster, since the scroll compensation
-             * is calculated only once and used in two places.
-             */
-
-            final int topBorder = getClientTop(root) + thead.getOffsetHeight();
-            final int bottomBorder = getClientTop(tfoot);
+            final int topBorder = getBodyClientTop();
+            final int bottomBorder = getBodyClientBottom();
 
             final int scrollCompensation = getScrollCompensation();
             topBound = scrollCompensation + topBorder + SCROLL_AREA_GRADIENT_PX;
@@ -503,17 +508,6 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
                 bottomBound += adjustment / 2;
                 gradientArea -= adjustment / 2;
             }
-        }
-
-        /** Get the "top" of an element in relation to "client" coordinates. */
-        private int getClientTop(final Element e) {
-            Element cursor = e;
-            int top = 0;
-            while (cursor != null) {
-                top += cursor.getOffsetTop();
-                cursor = cursor.getOffsetParent();
-            }
-            return top;
         }
 
         private int getScrollCompensation() {
@@ -679,6 +673,10 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
     }
 
     private int getLogicalRowIndex(final Element target) {
+        if (target == null) {
+            return -1;
+        }
+
         /*
          * We can't simply go backwards until we find a <tr> first element,
          * because of the table-in-table scenario. We need to, unfortunately, go
@@ -701,16 +699,62 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
         return -1;
     }
 
-    private Element getTbodyElement() {
+    private TableElement getTableElement() {
         final Element root = grid.getElement();
         final Element tablewrapper = Element.as(root.getChild(2));
         if (tablewrapper != null) {
-            final TableElement table = TableElement.as(tablewrapper
-                    .getFirstChildElement());
+            return TableElement.as(tablewrapper.getFirstChildElement());
+        } else {
+            return null;
+        }
+    }
+
+    private TableSectionElement getTbodyElement() {
+        TableElement table = getTableElement();
+        if (table != null) {
             return table.getTBodies().getItem(0);
         } else {
             return null;
         }
+    }
+
+    private TableSectionElement getTheadElement() {
+        TableElement table = getTableElement();
+        if (table != null) {
+            return table.getTHead();
+        } else {
+            return null;
+        }
+    }
+
+    private TableSectionElement getTfootElement() {
+        TableElement table = getTableElement();
+        if (table != null) {
+            return table.getTFoot();
+        } else {
+            return null;
+        }
+    }
+
+    /** Get the "top" of an element in relation to "client" coordinates. */
+    @SuppressWarnings("static-method")
+    private int getClientTop(final Element e) {
+        Element cursor = e;
+        int top = 0;
+        while (cursor != null) {
+            top += cursor.getOffsetTop();
+            cursor = cursor.getOffsetParent();
+        }
+        return top;
+    }
+
+    private int getBodyClientBottom() {
+        return getClientTop(getTfootElement()) - 1;
+    }
+
+    private int getBodyClientTop() {
+        return getClientTop(grid.getElement())
+                + getTheadElement().getOffsetHeight();
     }
 
     protected boolean isSelected(final int logicalRow) {
