@@ -442,6 +442,8 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
 
     /**
      * Set the all day property for the event
+     *
+     * @since 7.3.4
      */
     public void setAllDayProperty(Object allDayProperty) {
         this.allDayProperty = allDayProperty;
@@ -449,6 +451,8 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
 
     /**
      * Get the all day property for the event
+     *
+     * @since 7.3.4
      */
     public Object getAllDayProperty() {
         return allDayProperty;
