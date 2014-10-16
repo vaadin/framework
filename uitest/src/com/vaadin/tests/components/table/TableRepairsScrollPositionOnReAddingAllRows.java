@@ -115,11 +115,11 @@ public class TableRepairsScrollPositionOnReAddingAllRows extends AbstractTestUI 
                     }
                 });
 
-        Button buttonReplaceByWholeSubsetPlusOnNew = new Button(
+        Button buttonReplaceByWholeSubsetPlusOneNew = new Button(
                 "Replace rows by whole subset plus one new item");
-        buttonReplaceByWholeSubsetPlusOnNew
-                .setId("buttonReplaceByWholeSubsetPlusOnNew");
-        buttonReplaceByWholeSubsetPlusOnNew
+        buttonReplaceByWholeSubsetPlusOneNew
+                .setId("buttonReplaceByWholeSubsetPlusOneNew");
+        buttonReplaceByWholeSubsetPlusOneNew
                 .addClickListener(new ClickListener() {
 
                     @Override
@@ -136,6 +136,40 @@ public class TableRepairsScrollPositionOnReAddingAllRows extends AbstractTestUI 
                     }
                 });
 
+        Button buttonRemoveAllAddOne = new Button(
+                "Remove all items and add only one new item");
+        buttonRemoveAllAddOne.setId("buttonRemoveAllAddOne");
+        buttonRemoveAllAddOne.addClickListener(new ClickListener() {
+
+            @Override
+            public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
+                cont.removeAllItems();
+                TableItem ti = new TableItem();
+                ti.setName("Item_" + 20);
+                cont.addBean(ti);
+            }
+        });
+
+        // This should be the last test as it changes the table datasource
+        Button buttonReplaceByNewDatasource = new Button(
+                "Remove all items and add new datasource");
+        buttonReplaceByNewDatasource.setId("buttonReplaceByNewDatasource");
+        buttonReplaceByNewDatasource.addClickListener(new ClickListener() {
+
+            @Override
+            public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
+                cont.removeAllItems();
+                BeanItemContainer<TableItem> newContainer = new BeanItemContainer<TableItem>(
+                        TableItem.class);
+                for (int i = 0; i < 50; i++) {
+                    TableItem ti = new TableItem();
+                    ti.setName("Item_" + i);
+                    newContainer.addBean(ti);
+                }
+                table.setContainerDataSource(newContainer);
+            }
+        });
+
         for (int i = 0; i < 80; i++) {
             TableItem ti = new TableItem();
             ti.setName("Item_" + i);
@@ -147,7 +181,9 @@ public class TableRepairsScrollPositionOnReAddingAllRows extends AbstractTestUI 
         getLayout().addComponent(buttonReplaceByAnotherCollectionViaAddAll);
         getLayout().addComponent(buttonReplaceByAnotherCollectionViaAdd);
         getLayout().addComponent(buttonReplaceBySubsetOfSmallerSize);
-        getLayout().addComponent(buttonReplaceByWholeSubsetPlusOnNew);
+        getLayout().addComponent(buttonReplaceByWholeSubsetPlusOneNew);
+        getLayout().addComponent(buttonRemoveAllAddOne);
+        getLayout().addComponent(buttonReplaceByNewDatasource);
         getLayout().addComponent(buttonRestore);
         getLayout().addComponent(table);
     }
