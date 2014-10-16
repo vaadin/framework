@@ -63,7 +63,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
  * Outputs the selectors and properties for the TabSheet component.
  *
  * @param {string} $primary-stylename (v-tabsheet) - the primary style name for the selectors
- * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group tabsheet
  */
@@ -397,7 +397,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 /**
  * Outputs the styles for the framed tabsheet style.
  * 
- * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
+ * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
  * @param {bool} $frame-inactive-tabs (true) - Should inactive tabs be framed as well (the active tab is always framed with this style)
  * @param {bool} $outer-frame (true) - Should the frame contain the whole tabsheet (i.e. tabbar and tab content). If false, works like a "borderless" style.
  * @param {size} $tab-spacing ($v-unit-size/10) - The spacing between tabs
@@ -494,8 +494,8 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 /**
  * Outputs the styles for a tabsheet where the tabs are aligned to the position specified by the parameter in the tabbar.
  * 
- * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
- * @param {string} $align (center) - The alignment of the tabs inside the tabbar. Possible values: left, right, center.
+ * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
+ * @param {string} $align (center) - The alignment of the tabs inside the tabbar. Possible values: left, right, center.
  * 
  * @group tabsheet
  */
@@ -509,7 +509,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 /**
  * Outputs the styles for a tabsheet where all tabs in the tabbar have equal width and span the entire width of the tabbar.
  * 
- * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
+ * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
  * @param {bool} $flex (false) - Should the size of the tabs be proportional to their content, i.e. should the available space in the tabbar be distributed to the tabs in relation to their content sizes.
  * 
  * @group tabsheet
@@ -544,7 +544,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 /**
  * Outputs the styles for a tabsheet where the icons of individual tabs are on top of the tab captions.
  * 
- * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
+ * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
  *  
  * @group tabsheet
  */
@@ -580,7 +580,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
  * Outputs the styles for a tabsheet where only the selected tab has the close button visible. 
  * Note that the other tabs can still be closed programmatically.
  * 
- * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
+ * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
  *  
  * @group tabsheet
  */
@@ -599,7 +599,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
  * Outputs the styles for a tabsheet where the tabbar has increased padding to separate the tabs 
  * inside it from their surrounding container.
  * 
- * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
+ * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
  *  
  * @group tabsheet
  */

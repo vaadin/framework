@@ -2,7 +2,7 @@
  * Outputs the selectors and properties for the Button component.
  *
  * @param {string} $primary-stylename (v-button) - the primary style name for the selectors
- * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group button
  */
@@ -164,7 +164,7 @@
 /**
  * Outputs the styles for a button variant.
  *
- * @param {size} $unit-size ($v-unit-size) - The sizing of the button, which corresponds its height
+ * @param {size} $unit-size ($v-unit-size) - The sizing of the button, which corresponds its height
  * @param {size | list} $padding (null) - The padding of the button. Computed from other parameters by default.
  * @param {color} $font-color (null) - The font color of the button. Computed from the $background-color by default.
  * @param {number} $font-weight ($v-font-weight + 100) - The font weight of the button
@@ -349,7 +349,7 @@
  * Output styles for a borderless button. Expects that the targeted element 
  * already has both valo-button-static-style and valo-button-style included.
  * 
- * @param {color} $font-color (inherit) - The font color of the borderless button
+ * @param {color} $font-color (inherit) - The font color of the borderless button
  * 
  * @group button
  */

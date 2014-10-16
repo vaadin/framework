@@ -5,7 +5,7 @@
  * @param {value} $var - the value to search for
  * @param {bool} $recursive (false) - should any contained lists be checked for the value
  * 
- * @return {bool} true if the value is found from the list, false otherwise
+ * @return {bool} true if the value is found from the list, false otherwise
  * 
  * @group lists
  */
@@ -34,7 +34,7 @@
  * 
  * @param {list} $list - the list to check
  * 
- * @return {bool} true of the list contains other nested lists, false otherwise
+ * @return {bool} true of the list contains other nested lists, false otherwise
  * 
  * @group lists
  */
@@ -132,7 +132,7 @@
 /**
  * Flatten nested lists to one list, while maintaining the original list separators.
  * 
- * @param {list} $list - the list to flatten
+ * @param {list} $list - the list to flatten
  * 
  * @return {list} the same list with all nested lists flattened
  * 

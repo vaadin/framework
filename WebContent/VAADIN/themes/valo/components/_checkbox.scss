@@ -2,7 +2,7 @@
  * Outputs the selectors and properties for the CheckBox component.
  *
  * @param {string} $primary-stylename (v-checkbox) - the primary style name for the selectors
- * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group checkbox
  */
@@ -43,8 +43,8 @@
  * Outputs the styles for a checkbox variant.
  * 
  * @param {color} $background-color ($v-background-color) - The background color of the checkbox
- * @param {size} $unit-size ($v-unit-size) - The sizing of the checkbox. The width and height of the checkbox will be the unit-size divided by 2.
- * @param {color} $selection-color ($v-selection-color) - The color of the checked state icon 
+ * @param {size} $unit-size ($v-unit-size) - The sizing of the checkbox. The width and height of the checkbox will be the unit-size divided by 2.
+ * @param {color} $selection-color ($v-selection-color) - The color of the checked state icon 
  * 
  * @group checkbox
  */
