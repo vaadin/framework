@@ -32,10 +32,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
+import org.apache.commons.io.IOUtils;
+
 import elemental.json.JsonException;
 import elemental.json.JsonObject;
 import elemental.json.impl.JsonUtil;
-import org.apache.commons.io.IOUtils;
 
 /**
  * This class is able to validate the vaadin CVAL license.
@@ -54,8 +55,8 @@ public final class CvalChecker {
      * It is not in a separate f le, so as it is easier to copy into any product
      * which does not depend on vaadin core.
      * 
-     * We are using org.json in order not to use additional dependency like
-     * auto-beans, gson, etc.
+     * We are using elemental.json in order not to use additional dependency
+     * like auto-beans, gson, etc.
      */
     public static class CvalInfo {
 
