@@ -28,6 +28,8 @@ import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.ui.AbstractComponent;
 
 /**
@@ -38,7 +40,7 @@ import com.vaadin.ui.AbstractComponent;
 public class DragAndDropServiceTest {
 
     @Test
-    public void changeVariables_isConnectorEnabledCalled() {
+    public void changeVariables_isSourceConnectorEnabledCalled() {
         final List<Level> levels = new ArrayList<Level>();
         Logger.getLogger(DragAndDropService.class.getName()).addHandler(
                 new StreamHandler() {
@@ -64,8 +66,60 @@ public class DragAndDropServiceTest {
 
         Assert.assertTrue("isConnectorEnabled() method is not called",
                 isConnectorEnabledCalled[0]);
+        Assert.assertTrue("No warning on drop from disabled source",
+                levels.contains(Level.WARNING));
+
+    }
+
+    @Test
+    public void changeVariables_isTargetConnectorEnabledCalled() {
+        final List<Level> levels = new ArrayList<Level>();
+        Logger.getLogger(DragAndDropService.class.getName()).addHandler(
+                new StreamHandler() {
+                    @Override
+                    public void publish(LogRecord record) {
+                        levels.add(record.getLevel());
+                    }
+                });
+        Map<String, Object> variables = new HashMap<String, Object>();
+        TestDropTarget target = new TestDropTarget();
+        variables.put("dhowner", target);
+
+        DragAndDropService service = new DragAndDropService(
+                EasyMock.createMock(VaadinSession.class));
+        service.changeVariables(null, variables);
+
+        Assert.assertTrue("isConnectorEnabled() method is not called",
+                target.isConnectorEnabledCalled());
         Assert.assertTrue("No warning on drop to disabled target",
                 levels.contains(Level.WARNING));
+
+    }
+
+    private static class TestDropTarget extends AbstractComponent implements
+            com.vaadin.event.dd.DropTarget {
+        @Override
+        public boolean isConnectorEnabled() {
+            isConnectorEnabledCalled = true;
+            return false;
+        }
+
+        @Override
+        public DropHandler getDropHandler() {
+            return null;
+        }
+
+        @Override
+        public TargetDetails translateDropTargetDetails(
+                Map<String, Object> clientVariables) {
+            return null;
+        }
+
+        boolean isConnectorEnabledCalled() {
+            return isConnectorEnabledCalled;
+        }
+
+        private boolean isConnectorEnabledCalled;
 
     }
 }

@@ -84,7 +84,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
         DropTarget dropTarget = (DropTarget) owner;
 
-        if (!dropTarget.isEnabled()) {
+        if (!dropTarget.isConnectorEnabled()) {
             getLogger()
                     .warning(
                             "Client dropped on " + owner
