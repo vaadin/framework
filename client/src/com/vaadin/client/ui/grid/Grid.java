@@ -771,6 +771,22 @@ public class Grid<T> extends ResizeComposite implements
     private boolean dataIsBeingFetched = false;
 
     /**
+     * The cell a click event originated from
+     * <p>
+     * This is a workaround to make Chrome work like Firefox. In Chrome,
+     * normally if you start a drag on one cell and release on:
+     * <ul>
+     * <li>that same cell, the click event is that {@code <td>}.
+     * <li>a cell on that same row, the click event is the parent {@code <tr>}.
+     * <li>a cell on another row, the click event is the table section ancestor
+     * ({@code <thead>}, {@code <tbody>} or {@code <tfoot>}).
+     * </ul>
+     * 
+     * @see #onBrowserEvent(Event)
+     */
+    private Cell cellOnPrevMouseDown;
+
+    /**
      * Enumeration for easy setting of selection mode.
      */
     public enum SelectionMode {
@@ -2282,14 +2298,31 @@ public class Grid<T> extends ResizeComposite implements
         RowContainer container = escalator.findRowContainer(e);
         Cell cell;
         boolean isGrid = Util.findWidget(e, null) == this;
+
         if (container == null) {
             // TODO: Add a check to catch mouse click outside of table but
             // inside of grid
             cell = activeCellHandler.getActiveCell();
             container = activeCellHandler.container;
-        } else {
-            cell = container.getCell(e);
         }
+
+        else {
+            cell = container.getCell(e);
+            if (event.getType().equals(BrowserEvents.MOUSEDOWN)) {
+                cellOnPrevMouseDown = cell;
+            } else if (cell == null
+                    && event.getType().equals(BrowserEvents.CLICK)) {
+                /*
+                 * Chrome has an interesting idea on click targets (see
+                 * cellOnPrevMouseDown javadoc). Firefox, on the other hand, has
+                 * the mousedown target as the click target.
+                 */
+                cell = cellOnPrevMouseDown;
+            }
+        }
+
+        assert cell != null : "received " + event.getType()
+                + "-event with a null cell target";
 
         // Editor Row can steal focus from Grid and is still handled
         if (handleEditorRowEvent(event, container, cell)) {
