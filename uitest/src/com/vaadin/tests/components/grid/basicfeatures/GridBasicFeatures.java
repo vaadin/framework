@@ -173,23 +173,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             @Override
             public void sortOrderChange(SortOrderChangeEvent event) {
 
-                String origin;
-                switch (event.getOriginator()) {
-                case API:
-                    origin = "API";
-                    break;
-                case INTERNAL:
-                    origin = "INTERNAL";
-                    break;
-                case USER:
-                    origin = "USER";
-                    break;
-                default:
-                    origin = "!!! ERROR !!!";
-                    break;
-                }
-
-                log("Sort order: " + event.getSortOrder() + " by " + origin);
+                log("SortOrderChangeEvent: isUserOriginated? "
+                        + event.isUserOriginated());
             }
         });
 

@@ -31,11 +31,6 @@ public enum SortEventOriginator {
     /**
      * This event was the result of a user interacting with the UI.
      */
-    USER,
-
-    /**
-     * This event resulted as a side-effect of an internal event.
-     */
-    INTERNAL
+    USER
 
 }

@@ -528,7 +528,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 }
             }
 
-            sort(SortEventOriginator.INTERNAL);
+            sort(SortEventOriginator.API);
         } else {
 
             // If the new container is not sortable, we'll just re-set the sort

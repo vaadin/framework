@@ -62,15 +62,12 @@ public class SortOrderChangeEvent extends Component.Event {
     }
 
     /**
-     * Gets a value describing the originator of this event, i.e. what actions
-     * resulted in this event being fired.
+     * Returns whether this event originated from actions done by the user.
      * 
-     * @return a sort event originator value
-     * 
-     * @see SortEventOriginator
+     * @return true if sort event originated from user interaction
      */
-    public SortEventOriginator getOriginator() {
-        return originator;
+    public boolean isUserOriginated() {
+        return originator == SortEventOriginator.USER;
     }
 
 }

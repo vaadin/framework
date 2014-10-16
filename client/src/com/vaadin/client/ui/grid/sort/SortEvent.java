@@ -25,7 +25,7 @@ import com.vaadin.shared.ui.grid.SortEventOriginator;
 /**
  * A sort event, fired by the Grid when it needs its data source to provide data
  * sorted in a specific manner.
- *
+ * 
  * @since
  * @author Vaadin Ltd
  */
@@ -40,7 +40,7 @@ public class SortEvent<T> extends GwtEvent<SortEventHandler<?>> {
     /**
      * Creates a new Sort Event. All provided parameters are final, and passed
      * on as-is.
-     *
+     * 
      * @param grid
      *            a grid reference
      * @param order
@@ -63,7 +63,7 @@ public class SortEvent<T> extends GwtEvent<SortEventHandler<?>> {
     /**
      * Static access to the GWT event type identifier associated with this Event
      * class
-     *
+     * 
      * @return a type object, uniquely describing this event type.
      */
     public static Type<SortEventHandler<?>> getType() {
@@ -72,7 +72,7 @@ public class SortEvent<T> extends GwtEvent<SortEventHandler<?>> {
 
     /**
      * Get access to the Grid that fired this event
-     *
+     * 
      * @return the grid instance
      */
     @Override
@@ -82,7 +82,7 @@ public class SortEvent<T> extends GwtEvent<SortEventHandler<?>> {
 
     /**
      * Get access to the Grid that fired this event
-     *
+     * 
      * @return the grid instance
      */
     public Grid<T> getGrid() {
@@ -91,7 +91,7 @@ public class SortEvent<T> extends GwtEvent<SortEventHandler<?>> {
 
     /**
      * Access the data source of the Grid that fired this event
-     *
+     * 
      * @return a data source instance
      */
     public DataSource<T> getDataSource() {
@@ -100,11 +100,20 @@ public class SortEvent<T> extends GwtEvent<SortEventHandler<?>> {
 
     /**
      * Get the sort ordering that is to be applied to the Grid
-     *
+     * 
      * @return a list of sort order objects
      */
     public List<SortOrder> getOrder() {
         return order;
+    }
+
+    /**
+     * Returns whether this event originated from actions done by the user.
+     * 
+     * @return true if sort event originated from user interaction
+     */
+    public boolean isUserOriginated() {
+        return originator == SortEventOriginator.USER;
     }
 
     /**
