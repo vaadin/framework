@@ -118,9 +118,7 @@ public class VaadinServletService extends VaadinService {
         VaadinServletRequest servletRequest = (VaadinServletRequest) request;
         String staticFileLocation;
         // if property is defined in configurations, use that
-        staticFileLocation = getDeploymentConfiguration()
-                .getApplicationOrSystemProperty(
-                        VaadinServlet.PARAMETER_VAADIN_RESOURCES, null);
+        staticFileLocation = getDeploymentConfiguration().getResourcesPath();
         if (staticFileLocation != null) {
             return staticFileLocation;
         }
@@ -159,8 +157,7 @@ public class VaadinServletService extends VaadinService {
 
     @Override
     public String getConfiguredWidgetset(VaadinRequest request) {
-        return getDeploymentConfiguration().getApplicationOrSystemProperty(
-                VaadinServlet.PARAMETER_WIDGETSET,
+        return getDeploymentConfiguration().getWidgetset(
                 VaadinServlet.DEFAULT_WIDGETSET);
     }
 

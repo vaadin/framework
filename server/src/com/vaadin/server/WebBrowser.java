@@ -264,6 +264,7 @@ public class WebBrowser implements Serializable {
      * @return true if the user is using Windows Phone, false if the user is not
      *         using Windows Phone or if no information on the browser is
      *         present
+     * @since 7.3.2
      */
     public boolean isWindowsPhone() {
         return browserDetails.isWindowsPhone();
@@ -287,6 +288,26 @@ public class WebBrowser implements Serializable {
      */
     public boolean isIOS() {
         return browserDetails.isIOS();
+    }
+
+    /**
+     * Tests if the browser is run on IPhone.
+     * 
+     * @return true if run on IPhone false if the user is not using IPhone or if
+     *         no information on the browser is present
+     */
+    public boolean isIPhone() {
+        return browserDetails.isIPhone();
+    }
+
+    /**
+     * Tests if the browser is run on IPad.
+     * 
+     * @return true if run on IPad false if the user is not using IPad or if no
+     *         information on the browser is present
+     */
+    public boolean isIPad() {
+        return browserDetails.isIPad();
     }
 
     /**

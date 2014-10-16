@@ -16,6 +16,7 @@
 
 package com.vaadin.ui;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -101,22 +102,20 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     protected void initTemplateContentsFromInputStream(
             InputStream templateStream) throws IOException {
-        InputStreamReader reader = new InputStreamReader(templateStream,
-                "UTF-8");
-        StringBuilder b = new StringBuilder(BUFFER_SIZE);
-
-        char[] cbuf = new char[BUFFER_SIZE];
-        int offset = 0;
-
-        while (true) {
-            int nrRead = reader.read(cbuf, offset, BUFFER_SIZE);
-            b.append(cbuf, 0, nrRead);
-            if (nrRead < BUFFER_SIZE) {
-                break;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                templateStream, "UTF-8"));
+        StringBuilder builder = new StringBuilder(BUFFER_SIZE);
+        try {
+            char[] cbuf = new char[BUFFER_SIZE];
+            int nRead;
+            while ((nRead = reader.read(cbuf, 0, BUFFER_SIZE)) > 0) {
+                builder.append(cbuf, 0, nRead);
             }
+        } finally {
+            reader.close();
         }
 
-        setTemplateContents(b.toString());
+        setTemplateContents(builder.toString());
     }
 
     @Override

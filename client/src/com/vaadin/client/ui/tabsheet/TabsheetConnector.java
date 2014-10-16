@@ -41,6 +41,7 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
                     final String key = getState().tabs.get(i).key;
                     final boolean selected = key.equals(getState().selected);
                     if (selected) {
+                        getWidget().setActiveTabIndex(i);
                         getWidget().selectTab(i);
                         break;
                     }
@@ -92,8 +93,6 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
         }
 
         getWidget().iLayout();
-
-        getWidget().waitingForResponse = false;
     }
 
     @Override

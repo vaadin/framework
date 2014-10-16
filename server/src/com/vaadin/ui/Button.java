@@ -359,7 +359,7 @@ public class Button extends AbstractComponent implements
      * No action is taken is the button is disabled.
      */
     public void click() {
-        if (isEnabled() && !isReadOnly()) {
+        if (isConnectorEnabled() && !isReadOnly()) {
             fireClick();
         }
     }

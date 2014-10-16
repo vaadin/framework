@@ -86,10 +86,7 @@ public class VaadinPortletServiceTests {
     }
 
     private void mockWidgetsetConfiguration(String widgetset) {
-        when(
-                conf.getApplicationOrSystemProperty(
-                        Constants.PARAMETER_WIDGETSET, null)).thenReturn(
-                widgetset);
+        when(conf.getWidgetset(null)).thenReturn(widgetset);
     }
 
     @Test

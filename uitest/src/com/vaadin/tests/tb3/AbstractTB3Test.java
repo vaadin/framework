@@ -40,6 +40,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -94,6 +95,10 @@ import elemental.json.impl.JsonUtil;
  */
 @RunWith(value = TB3Runner.class)
 public abstract class AbstractTB3Test extends TestBenchTestCase {
+
+    @Rule
+    public RetryOnFail retry = new RetryOnFail();
+
     /**
      * Height of the screenshots we want to capture
      */

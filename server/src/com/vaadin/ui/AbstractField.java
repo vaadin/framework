@@ -1402,7 +1402,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                         valueLocale);
                 T newinternalValue = convertFromModel(convertedValue);
                 if (!SharedUtil.equals(getInternalValue(), newinternalValue)) {
-                    setConvertedValue(convertedValue);
+                    setInternalValue(newinternalValue);
+                    fireValueChange(false);
                 }
             }
         }
@@ -1509,6 +1510,19 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     protected boolean isEmpty() {
         return (getFieldValue() == null);
+    }
+
+    /**
+     * Clear the value of the field.
+     * <p>
+     * The field value is typically reset to the initial value of the field but
+     * this is not mandatory. Calling {@link #isEmpty()} on a cleared field must
+     * always returns true.
+     * 
+     * @since
+     */
+    public void clear() {
+        setValue(null);
     }
 
     /**

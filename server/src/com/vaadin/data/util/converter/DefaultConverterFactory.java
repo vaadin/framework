@@ -110,6 +110,8 @@ public class DefaultConverterFactory implements ConverterFactory {
             return new StringToBooleanConverter();
         } else if (Date.class.isAssignableFrom(sourceType)) {
             return new StringToDateConverter();
+        } else if (Enum.class.isAssignableFrom(sourceType)) {
+            return new StringToEnumConverter();
         } else {
             return null;
         }

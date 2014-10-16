@@ -141,6 +141,8 @@ public class ApplicationConnection implements HasHandlers {
 
     public static final String DISABLED_CLASSNAME = "v-disabled";
 
+    public static final String REQUIRED_CLASSNAME = "v-required";
+
     public static final String REQUIRED_CLASSNAME_EXT = "-required";
 
     public static final String ERROR_CLASSNAME_EXT = "-error";
@@ -1455,8 +1457,9 @@ public class ApplicationConnection implements HasHandlers {
         VConsole.log("Handling message from server");
         eventBus.fireEvent(new ResponseHandlingStartedEvent(this));
 
+        final int syncId;
         if (json.containsKey(ApplicationConstants.SERVER_SYNC_ID)) {
-            int syncId = json.getInt(ApplicationConstants.SERVER_SYNC_ID);
+            syncId = json.getInt(ApplicationConstants.SERVER_SYNC_ID);
 
             /*
              * Use sync id unless explicitly set as undefined, as is done by
@@ -1469,6 +1472,7 @@ public class ApplicationConnection implements HasHandlers {
                 lastSeenServerSyncId = syncId;
             }
         } else {
+            syncId = -1;
             VConsole.error("Server response didn't contain a sync id. "
                     + "Please verify that the server is up-to-date and that the response data has not been modified in transmission.");
         }
@@ -1539,6 +1543,8 @@ public class ApplicationConnection implements HasHandlers {
         Command c = new Command() {
             @Override
             public void execute() {
+                assert syncId == -1 || syncId == lastSeenServerSyncId;
+
                 handleUIDLDuration.logDuration(" * Loading widgets completed",
                         10);
 

@@ -38,6 +38,7 @@ import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.dd.DragEventType;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
+
 import elemental.json.JsonObject;
 
 public class DragAndDropService implements VariableOwner, ClientConnector {
@@ -64,7 +65,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
         final Component sourceComponent = (Component) variables
                 .get("component");
-        if (sourceComponent != null && !sourceComponent.isEnabled()) {
+        if (sourceComponent != null && !sourceComponent.isConnectorEnabled()) {
             // source component not supposed to be enabled
             getLogger().warning(
                     "Client dropped from " + sourceComponent
@@ -83,7 +84,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
         DropTarget dropTarget = (DropTarget) owner;
 
-        if (!dropTarget.isEnabled()) {
+        if (!dropTarget.isConnectorEnabled()) {
             getLogger()
                     .warning(
                             "Client dropped on " + owner

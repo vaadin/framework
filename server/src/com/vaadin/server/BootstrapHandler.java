@@ -350,7 +350,6 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         /*- Add classnames;
          *      .v-app
          *      .v-app-loading
-         *      .v-app-<simpleName for app class>
          *- Additionally added from javascript:
          *      <themeName, remove non-alphanum>
          */
@@ -362,6 +361,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         mainDiv.attr("id", context.getAppId());
         mainDiv.addClass("v-app");
         mainDiv.addClass(context.getThemeName());
+        mainDiv.addClass(context.getUIClass().getSimpleName()
+                .toLowerCase(Locale.ENGLISH));
         if (style != null && style.length() != 0) {
             mainDiv.attr("style", style);
         }
@@ -401,7 +402,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         builder.append("//<![CDATA[\n");
         builder.append("if (!window.vaadin) alert("
                 + JsonUtil.quote("Failed to load the bootstrap javascript: "
-                + bootstrapLocation) + ");\n");
+                        + bootstrapLocation) + ");\n");
 
         appendMainScriptTagContents(context, builder);
 
@@ -501,7 +502,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             if (systemMessages.getAuthenticationErrorURL() == null) {
                 authErrMsg.put("url", Json.createNull());
             } else {
-                authErrMsg.put("url", systemMessages.getAuthenticationErrorURL());
+                authErrMsg.put("url",
+                        systemMessages.getAuthenticationErrorURL());
             }
 
             appConfig.put("authErrMsg", authErrMsg);

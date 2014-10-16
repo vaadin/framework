@@ -40,6 +40,14 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  */
 public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
+    protected List<DesiredCapabilities> getBrowsersExcludingPhantomJS() {
+        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(getAllBrowsers());
+
+        browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
+
+        return browsers;
+    }
+
     protected List<DesiredCapabilities> getBrowsersExcludingIE() {
         List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(getAllBrowsers());
         browsers.remove(Browser.IE8.getDesiredCapabilities());
@@ -49,7 +57,6 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
         return browsers;
     }
-
 
     protected List<DesiredCapabilities> getBrowsersSupportingShiftClick() {
         List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(getAllBrowsers());

@@ -36,9 +36,25 @@ import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
+/**
+ * This class contains a basic implementation for {@link FieldGroupFieldFactory}
+ * .The class is singleton, use {@link #get()} method to get reference to the
+ * instance.
+ * 
+ * @author Vaadin Ltd
+ */
 public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
 
+    private static final DefaultFieldGroupFieldFactory INSTANCE = new DefaultFieldGroupFieldFactory();
+
     public static final Object CAPTION_PROPERTY_ID = "Caption";
+
+    protected DefaultFieldGroupFieldFactory() {
+    }
+
+    public static DefaultFieldGroupFieldFactory get() {
+        return INSTANCE;
+    }
 
     @Override
     public <T extends Field> T createField(Class<?> type, Class<T> fieldType) {

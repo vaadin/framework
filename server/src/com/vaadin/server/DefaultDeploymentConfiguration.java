@@ -29,7 +29,8 @@ import com.vaadin.shared.communication.PushMode;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
+public class DefaultDeploymentConfiguration extends
+        AbstractDeploymentConfiguration {
     /**
      * Default value for {@link #getResourceCacheTime()} = {@value} .
      */

@@ -269,6 +269,7 @@ public class AtmospherePushConnection implements PushConnection {
             // the resource is already resumed; this is a bit hacky and should
             // be implemented in a better way in 7.2.
             resource = null;
+            state = State.DISCONNECTED;
             return;
         }
 

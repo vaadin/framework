@@ -99,12 +99,9 @@ public class FetchReleaseNotesTickets {
                 continue;
             }
             String summary = fields[1];
-            if (summary.startsWith("\"") && summary.endsWith("\"")) {
-                // If a summary starts with " and ends with " then all quotes in
-                // the summary are encoded as double quotes
-                summary = summary.substring(1, summary.length() - 1);
-                summary = summary.replace("\"\"", "\"");
-            }
+
+            summary = modifySummaryString(summary);
+
             String badge = "<td></td>";
             if (fields.length >= 8 && !fields[7].equals("")) {
                 badge = "<td class=\"bfp\"><span class=\"bfp\">Priority</span></td>";
@@ -117,6 +114,52 @@ public class FetchReleaseNotesTickets {
                     .replace("@badge@", badge));
         }
         urlStream.close();
+    }
+
+    private static String modifySummaryString(String summary) {
+
+        if (summary.startsWith("\"") && summary.endsWith("\"")) {
+            // If a summary starts with " and ends with " then all quotes in
+            // the summary are encoded as double quotes
+            summary = summary.substring(1, summary.length() - 1);
+            summary = summary.replace("\"\"", "\"");
+        }
+
+        // this is needed for escaping html
+        summary = escapeHtml(summary);
+
+        return summary;
+    }
+
+    /**
+     * @since
+     * @param string
+     *            the string to be html-escaped
+     * @return string in html-escape format
+     */
+    private static String escapeHtml(String string) {
+
+        StringBuffer buf = new StringBuffer(string.length() * 2);
+
+        // we check the string character by character and escape only special
+        // characters
+        for (int i = 0; i < string.length(); ++i) {
+
+            char ch = string.charAt(i);
+            String charString = ch + "";
+
+            if ((charString).matches("[a-zA-Z0-9., ]")) {
+                // character is letter, digit, dot, comma or whitespace
+                buf.append(ch);
+            } else {
+                int charInt = ch;
+                buf.append("&");
+                buf.append("#");
+                buf.append(charInt);
+                buf.append(";");
+            }
+        }
+        return buf.toString();
     }
 
     private static void usage() {

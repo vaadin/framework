@@ -815,17 +815,15 @@ public class DateField extends AbstractField<Date> implements
         // Clone the instance
         final Calendar newCal = (Calendar) calendar.clone();
 
-        // Assigns the current time tom calendar.
-        final Date currentDate = getValue();
-        if (currentDate != null) {
-            newCal.setTime(currentDate);
-        }
-
         final TimeZone currentTimeZone = getTimeZone();
         if (currentTimeZone != null) {
             newCal.setTimeZone(currentTimeZone);
         }
 
+        final Date currentDate = getValue();
+        if (currentDate != null) {
+            newCal.setTime(currentDate);
+        }
         return newCal;
     }
 

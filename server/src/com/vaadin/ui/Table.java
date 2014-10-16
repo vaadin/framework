@@ -422,61 +422,11 @@ public class Table extends AbstractSelect implements Action.Container,
     private Object currentPageFirstItemId = null;
 
     /*
-     * This class stores the hashcode and scroll position of the previous
-     * container so that the scroll position can be restored if the same
-     * container is removed and then re-added. This resolves #14581.
+     * If all rows get removed then scroll position of the previous container
+     * can be restored after re-adding/replacing rows via addAll(). This
+     * resolves #14581.
      */
-    protected static class ScrollPositionRepairOnReAddAllRowsData implements
-            Serializable {
-
-        private static final long serialVersionUID = 1L;
-        // current page first item index (to repair scroll position)
-        private int itemIndex;
-        /*
-         * hashCode() of container before it was cleared via
-         * container.removeAllItems();
-         */
-        private int containerHashCode;
-
-        public ScrollPositionRepairOnReAddAllRowsData() {
-            itemIndex = -1;
-            containerHashCode = -1;
-        }
-
-        public int getItemId() {
-            return itemIndex;
-        }
-
-        public void setItemId(int itemId) {
-            itemIndex = itemId;
-        }
-
-        public void resetItemId() {
-            itemIndex = -1;
-        }
-
-        public void setContainerData(Container container) {
-            if (container != null) {
-                containerHashCode = container.hashCode();
-            } else {
-                containerHashCode = -1;
-            }
-        }
-
-        public boolean needRepairScrollPosition(Container newContainer) {
-            return (itemIndex != -1) && isTheSameContainer(newContainer);
-        }
-
-        private boolean isTheSameContainer(Container newContainer) {
-            boolean theSame = false;
-            if (newContainer != null) {
-                theSame = (newContainer.hashCode() == containerHashCode);
-            }
-            return theSame;
-        }
-    }
-
-    private final ScrollPositionRepairOnReAddAllRowsData scrollRepairOnReAdding = new ScrollPositionRepairOnReAddAllRowsData();
+    private int repairOnReAddAllRowsDataScrollPositionItemIndex = -1;
 
     /**
      * Index of the first item on the current page.
@@ -2734,10 +2684,6 @@ public class Table extends AbstractSelect implements Action.Container,
             newDataSource = new IndexedContainer();
         }
 
-        if (scrollRepairOnReAdding != null) {
-            // this is important if container is set for table after filling
-            scrollRepairOnReAdding.setContainerData(newDataSource);
-        }
         Collection<Object> generated;
         if (columnGenerators != null) {
             generated = columnGenerators.keySet();
@@ -4571,14 +4517,22 @@ public class Table extends AbstractSelect implements Action.Container,
         int currentFirstItemIndex = getCurrentPageFirstItemIndex();
 
         if (event.getContainer().size() == 0) {
-            scrollRepairOnReAdding.setItemId(getCurrentPageFirstItemIndex());
+            repairOnReAddAllRowsDataScrollPositionItemIndex = getCurrentPageFirstItemIndex();
         } else {
-            if (scrollRepairOnReAdding.needRepairScrollPosition(event
-                    .getContainer())) {
-                currentFirstItemIndex = scrollRepairOnReAdding.getItemId();
+            if (repairOnReAddAllRowsDataScrollPositionItemIndex != -1) {
+                currentFirstItemIndex = repairOnReAddAllRowsDataScrollPositionItemIndex;
+                /*
+                 * Reset repairOnReAddAllRowsDataScrollPositionItemIndex.
+                 * 
+                 * Next string should be commented (removed) if we want to have
+                 * possibility to restore scroll position during adding items to
+                 * container one by one via add() but not only addAll(). The
+                 * problem in this case: we cannot track what happened between
+                 * add() and add()... So it is ambiguous where to stop restore
+                 * scroll position.
+                 */
+                repairOnReAddAllRowsDataScrollPositionItemIndex = -1;
             }
-            scrollRepairOnReAdding.resetItemId();
-            scrollRepairOnReAdding.setContainerData(event.getContainer());
         }
 
         // ensure that page still has first item in page, ignore buffer refresh

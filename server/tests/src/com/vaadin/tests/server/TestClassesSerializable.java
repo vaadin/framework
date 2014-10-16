@@ -16,6 +16,7 @@ import java.util.jar.JarFile;
 
 import junit.framework.TestCase;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestClassesSerializable extends TestCase {
@@ -95,15 +96,8 @@ public class TestClassesSerializable extends TestCase {
             if (cls.isAnnotation() || cls.isSynthetic()) {
                 continue;
             }
-            // Don't add classes that have a @Test annotation on any methods
-            boolean testPresent = false;
-            for (Method method : cls.getMethods()) {
-                if (method.isAnnotationPresent(Test.class)) {
-                    testPresent = true;
-                    break;
-                }
-            }
-            if (testPresent) {
+            // Don't add classes that have a @Ignore annotation on the class
+            if (isTestClass(cls)) {
                 continue;
             }
 
@@ -150,6 +144,27 @@ public class TestClassesSerializable extends TestCase {
             fail("Serializable not implemented by the following classes and interfaces: "
                     + nonSerializableString);
         }
+    }
+
+    private boolean isTestClass(Class<?> cls) {
+        // @Ignore is used on test util classes
+        if (cls.isAnnotationPresent(Ignore.class)) {
+            return true;
+        }
+
+        if (cls.getEnclosingClass() != null
+                && isTestClass(cls.getEnclosingClass())) {
+            return true;
+        }
+
+        // Test classes with a @Test annotation on some method
+        for (Method method : cls.getMethods()) {
+            if (method.isAnnotationPresent(Test.class)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -24,15 +24,9 @@ public class DefaultUIProvider extends UIProvider {
     public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
         VaadinRequest request = event.getRequest();
 
-        Object uiClassNameObj = request
-                .getService()
-                .getDeploymentConfiguration()
-                .getApplicationOrSystemProperty(VaadinSession.UI_PARAMETER,
-                        null);
-
-        if (uiClassNameObj instanceof String) {
-            String uiClassName = uiClassNameObj.toString();
-
+        String uiClassName = request.getService().getDeploymentConfiguration()
+                .getUIClassName();
+        if (uiClassName != null) {
             ClassLoader classLoader = request.getService().getClassLoader();
             try {
                 Class<? extends UI> uiClass = Class.forName(uiClassName, true,

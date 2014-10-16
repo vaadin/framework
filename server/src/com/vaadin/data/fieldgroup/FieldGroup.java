@@ -28,6 +28,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
@@ -67,7 +68,8 @@ public class FieldGroup implements Serializable {
     /**
      * The field factory used by builder methods.
      */
-    private FieldGroupFieldFactory fieldFactory = new DefaultFieldGroupFieldFactory();
+    private FieldGroupFieldFactory fieldFactory = DefaultFieldGroupFieldFactory
+            .get();
 
     /**
      * Constructs a field binder. Use {@link #setItemDataSource(Item)} to set a
@@ -435,8 +437,14 @@ public class FieldGroup implements Serializable {
             return;
         }
         for (Field<?> f : fieldToPropertyId.keySet()) {
-            ((Property.Transactional<?>) f.getPropertyDataSource())
-                    .startTransaction();
+            Property.Transactional<?> property = (Property.Transactional<?>) f
+                    .getPropertyDataSource();
+            if (property == null) {
+                throw new CommitException("Property \""
+                        + fieldToPropertyId.get(f)
+                        + "\" not bound to datasource.");
+            }
+            property.startTransaction();
         }
         try {
             firePreCommitEvent();
@@ -1094,5 +1102,19 @@ public class FieldGroup implements Serializable {
             searchClass = searchClass.getSuperclass();
         }
         return memberFieldInOrder;
+    }
+
+    /**
+     * Clears the value of all fields.
+     * 
+     * @since
+     */
+    public void clear() {
+        for (Field<?> f : getFields()) {
+            if (f instanceof AbstractField) {
+                ((AbstractField) f).clear();
+            }
+        }
+
     }
 }

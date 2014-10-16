@@ -24,6 +24,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Calendar;
@@ -207,4 +208,29 @@ public class CalendarBasics {
         assertEquals(23, calendar.getLastVisibleHourOfDay());
     }
 
+    @Test
+    public void isClientChangeAllowed_connectorEnabled() {
+        TestCalendar calendar = new TestCalendar(true);
+        Assert.assertTrue(
+                "Calendar with enabled connector doesn't allow client change",
+                calendar.isClientChangeAllowed());
+    }
+
+    private static class TestCalendar extends Calendar {
+        TestCalendar(boolean connectorEnabled) {
+            isConnectorEnabled = connectorEnabled;
+        }
+
+        @Override
+        public boolean isConnectorEnabled() {
+            return isConnectorEnabled;
+        }
+
+        @Override
+        public boolean isClientChangeAllowed() {
+            return super.isClientChangeAllowed();
+        }
+
+        private final boolean isConnectorEnabled;
+    }
 }

@@ -163,6 +163,38 @@ public interface DeploymentConfiguration extends Serializable {
             String defaultValue);
 
     /**
+     * Gets UI class configuration option value.
+     * 
+     * @return UI class name
+     */
+    public String getUIClassName();
+
+    /**
+     * Gets UI provider class configuration option value.
+     * 
+     * @return UI class name
+     */
+    public String getUIProviderClassName();
+
+    /**
+     * Gets Widgetset configuration option value. {@code defaultValue} is
+     * returned if widgetset parameter is not configured.
+     * 
+     * @return UI class name
+     */
+    public String getWidgetset(String defaultValue);
+
+    /**
+     * Gets resources path configuration option value.
+     */
+    public String getResourcesPath();
+
+    /**
+     * Gets class loader configuration option value.
+     */
+    public String getClassLoaderName();
+
+    /**
      * Returns to legacy Property.toString() mode used. See
      * {@link AbstractProperty#isLegacyToStringEnabled()} for more information.
      * 

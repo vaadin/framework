@@ -95,6 +95,7 @@ public class VButton extends FocusWidget implements ClickHandler {
 
     private HandlerRegistration focusHandlerRegistration;
     private HandlerRegistration blurHandlerRegistration;
+    private long lastClickTime = 0;
 
     public VButton() {
         super(DOM.createDiv());
@@ -163,13 +164,29 @@ public class VButton extends FocusWidget implements ClickHandler {
         int type = DOM.eventGetType(event);
         switch (type) {
         case Event.ONCLICK:
-            // If clicks are currently disallowed, keep it from bubbling or
-            // being passed to the superclass.
-            if (disallowNextClick) {
+            // fix for #14632 - on mobile safari 8, if we press the button long
+            // enough, we might get two click events, so we are suppressing
+            // second if it is too soon
+            boolean isPhantomClickPossible = BrowserInfo.get().isSafari()
+                    && BrowserInfo.get().isTouchDevice()
+                    && BrowserInfo.get().getBrowserMajorVersion() == 8;
+            long clickTime = isPhantomClickPossible ? System
+                    .currentTimeMillis() : 0;
+            // If clicks are currently disallowed or phantom, keep it from
+            // bubbling or being passed to the superclass.
+            if (disallowNextClick || isPhantomClickPossible
+                    && (clickTime - lastClickTime < 100)) { // the maximum
+                                                            // interval observed
+                                                            // for phantom click
+                                                            // is 69, with
+                                                            // majority under
+                                                            // 50, so we select
+                                                            // 100 to be safe
                 event.stopPropagation();
                 disallowNextClick = false;
                 return;
             }
+            lastClickTime = clickTime;
             break;
         case Event.ONMOUSEDOWN:
             if (DOM.isOrHasChild(getElement(), DOM.eventGetTarget(event))) {

@@ -1150,23 +1150,25 @@ public class Upload extends AbstractComponent implements Component.Focusable,
                     fireUploadSuccess(event.getFileName(), event.getMimeType(),
                             event.getContentLength());
                     endUpload();
-                    markAsDirty();
                 }
 
                 @Override
                 public void streamingFailed(StreamingErrorEvent event) {
-                    Exception exception = event.getException();
-                    if (exception instanceof NoInputStreamException) {
-                        fireNoInputStream(event.getFileName(),
-                                event.getMimeType(), 0);
-                    } else if (exception instanceof NoOutputStreamException) {
-                        fireNoOutputStream(event.getFileName(),
-                                event.getMimeType(), 0);
-                    } else {
-                        fireUploadInterrupted(event.getFileName(),
-                                event.getMimeType(), 0, exception);
+                    try {
+                        Exception exception = event.getException();
+                        if (exception instanceof NoInputStreamException) {
+                            fireNoInputStream(event.getFileName(),
+                                    event.getMimeType(), 0);
+                        } else if (exception instanceof NoOutputStreamException) {
+                            fireNoOutputStream(event.getFileName(),
+                                    event.getMimeType(), 0);
+                        } else {
+                            fireUploadInterrupted(event.getFileName(),
+                                    event.getMimeType(), 0, exception);
+                        }
+                    } finally {
+                        endUpload();
                     }
-                    endUpload();
                 }
             };
         }

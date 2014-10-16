@@ -155,7 +155,7 @@ public abstract class VaadinService implements Serializable {
         this.deploymentConfiguration = deploymentConfiguration;
 
         final String classLoaderName = getDeploymentConfiguration()
-                .getApplicationOrSystemProperty("ClassLoader", null);
+                .getClassLoaderName();
         if (classLoaderName != null) {
             try {
                 final Class<?> classLoaderClass = getClass().getClassLoader()
@@ -448,7 +448,7 @@ public abstract class VaadinService implements Serializable {
      */
     public void fireSessionDestroy(VaadinSession vaadinSession) {
         final VaadinSession session = vaadinSession;
-        session.accessSynchronously(new Runnable() {
+        session.access(new Runnable() {
             @Override
             public void run() {
                 if (session.getState() == State.CLOSED) {
