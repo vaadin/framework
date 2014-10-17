@@ -44,14 +44,4 @@
         </any>
     </replace-with>
 
-    <replace-with class="com.vaadin.client.ui.VPopupImpl">
-        <when-type-is
-            class="com.google.gwt.user.client.ui.impl.PopupImplMozilla" />
-        <when-property-is name="user.agent" value="gecko1_8" />
-    </replace-with>
-
-    <replace-with class="com.vaadin.client.ui.VPopupImpl">
-        <when-type-is class="com.google.gwt.user.client.ui.impl.PopupImpl" />
-    </replace-with>
-
 </module>

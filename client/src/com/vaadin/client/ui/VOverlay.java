@@ -79,6 +79,18 @@ import com.vaadin.client.Util;
  */
 public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
+    @Override
+    protected void onAttach() {
+        // Move the overlay to the appropriate overlay container
+        final VOverlay overlay = VOverlay.current;
+        if (overlay != null) {
+            final Element e = overlay.getOverlayContainer();
+            e.appendChild(getElement());
+        }
+
+        super.onAttach();
+    }
+
     public static class PositionAndSize {
         private int left, top, width, height;
 
@@ -1061,4 +1073,5 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             }
         }
     }
+
 }
