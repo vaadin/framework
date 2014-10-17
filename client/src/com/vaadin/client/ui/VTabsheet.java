@@ -694,6 +694,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
 
     private final Element deco;
 
+    /** For internal use only. May be removed or replaced in the future. */
+    public boolean waitingForResponse;
+
     private String currentStyle;
 
     /**
@@ -701,7 +704,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
      */
     private boolean canSelectTab(final int tabIndex) {
         Tab tab = tb.getTab(tabIndex);
-        if (getApplicationConnection() == null || disabled) {
+        if (getApplicationConnection() == null || disabled
+                || waitingForResponse) {
             return false;
         }
         if (!tab.isEnabledOnServer() || tab.isHiddenOnServer()) {
@@ -734,6 +738,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
                     .getStyle().setVisibility(Visibility.HIDDEN);
 
             getRpcProxy().setSelected(tabKeys.get(tabIndex).toString());
+
+            waitingForResponse = true;
 
             tb.getTab(tabIndex).focus(); // move keyboard focus to active tab
 
