@@ -2646,10 +2646,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 return;
             }
 
-            final Range viewportRange = Range.withLength(
-                    getLogicalRowIndex(visualRowOrder.getFirst()),
-                    visualRowOrder.size());
-
+            final Range viewportRange = getVisibleRowRange();
             final Range removedRowsRange = Range
                     .withLength(index, numberOfRows);
 
@@ -2721,12 +2718,12 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 int escalatorRowCount = bodyElem.getChildCount();
 
                 /*
-                 * If we're left with less rows than the number of escalators,
-                 * remove the unused ones.
+                 * remember: the rows have already been subtracted from the row
+                 * count at this point
                  */
-                final int escalatorRowsToRemove = escalatorRowCount
-                        - getRowCount();
-                if (escalatorRowsToRemove > 0) {
+                int rowsLeft = getRowCount();
+                if (rowsLeft < escalatorRowCount) {
+                    int escalatorRowsToRemove = escalatorRowCount - rowsLeft;
                     for (int i = 0; i < escalatorRowsToRemove; i++) {
                         final TableRowElement tr = visualRowOrder
                                 .remove(removedVisualInside.getStart());
@@ -4056,9 +4053,27 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         scroller.detachMousewheelListener(getElement());
         scroller.detachTouchListeners(getElement());
 
+        /*
+         * We can call paintRemoveRows here, because static ranges are simple to
+         * remove.
+         */
         header.paintRemoveRows(0, header.getRowCount());
         footer.paintRemoveRows(0, footer.getRowCount());
-        body.paintRemoveRows(0, body.getRowCount());
+
+        /*
+         * We can't call body.paintRemoveRows since it relies on rowCount to be
+         * updated correctly. Since it isn't, we'll simply and brutally rip out
+         * the DOM elements (in an elegant way, of course).
+         */
+        int rowsToRemove = bodyElem.getChildCount();
+        for (int i = 0; i < rowsToRemove; i++) {
+            int index = rowsToRemove - i - 1;
+            TableRowElement tr = bodyElem.getRows().getItem(index);
+            body.paintRemoveRow(tr, index);
+            body.removeRowPosition(tr);
+        }
+        body.visualRowOrder.clear();
+        body.setTopRowLogicalIndex(0);
 
         super.onUnload();
     }

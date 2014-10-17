@@ -38,6 +38,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String ADD_ONE_ROW_TO_BEGINNING = "Add one row to beginning";
     protected static final String REMOVE_ONE_COLUMN_FROM_BEGINNING = "Remove one column from beginning";
     protected static final String REMOVE_ONE_ROW_FROM_BEGINNING = "Remove one row from beginning";
+    protected static final String ADD_ONE_OF_EACH_ROW = "Add one of each row";
 
     protected static final String HEADER_ROWS = "Header Rows";
     protected static final String BODY_ROWS = "Body Rows";
@@ -46,6 +47,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String REMOVE_ALL_INSERT_SCROLL = "Remove all, insert 30 and scroll 40px";
 
     protected static final String GENERAL = "General";
+    protected static final String DETACH_ESCALATOR = "Detach Escalator";
     protected static final String POPULATE_COLUMN_ROW = "Populate Escalator (columns, then rows)";
     protected static final String POPULATE_ROW_COLUMN = "Populate Escalator (rows, then columns)";
     protected static final String CLEAR_COLUMN_ROW = "Clear (columns, then rows)";
@@ -65,7 +67,11 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     }
 
     protected WebElement getEscalator() {
-        return getDriver().findElement(By.className("v-escalator"));
+        try {
+            return getDriver().findElement(By.className("v-escalator"));
+        } catch (NoSuchElementException e) {
+            return null;
+        }
     }
 
     protected WebElement getHeaderRow(int row) {

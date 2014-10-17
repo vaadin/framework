@@ -368,6 +368,23 @@ public class EscalatorBasicClientFeaturesWidget extends
 
     private void createGeneralMenu() {
         String[] menupath = { GENERAL_MENU };
+
+        addMenuCommand("Detach Escalator", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                escalator.removeFromParent();
+            }
+        }, menupath);
+
+        addMenuCommand("Attach Escalator", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                if (!escalator.isAttached()) {
+                    addNorth(escalator, 500);
+                }
+            }
+        }, menupath);
+
         addMenuCommand("Clear (columns, then rows)", new ScheduledCommand() {
             @Override
             public void execute() {
