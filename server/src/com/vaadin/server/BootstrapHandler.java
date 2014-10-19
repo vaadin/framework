@@ -469,6 +469,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
         JsonObject versionInfo = Json.createObject();
         versionInfo.put("vaadinVersion", Version.getFullVersion());
+        versionInfo.put("atmosphereVersion",
+                org.atmosphere.util.Version.getRawVersion());
         appConfig.put("versionInfo", versionInfo);
 
         appConfig.put("widgetset", context.getWidgetsetName());
