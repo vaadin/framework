@@ -267,32 +267,6 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         return connectorHierarchy;
     }
 
-    private boolean isNotificationExpression(String path) {
-        String[] starts = { "//", "/" };
-
-        String[] frags = { "com.vaadin.ui.Notification.class",
-                "com.vaadin.ui.Notification", "VNotification.class",
-                "VNotification", "Notification.class", "Notification" };
-
-        String[] ends = { "/", "[" };
-
-        for (String s : starts) {
-            for (String f : frags) {
-                if (path.equals(s + f)) {
-                    return true;
-                }
-
-                for (String e : ends) {
-                    if (path.startsWith(s + f + e)) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -305,7 +279,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         }
 
         List<Element> elements = new ArrayList<Element>();
-        if (isNotificationExpression(path)) {
+        if (LocatorUtil.isNotificationElement(path)) {
 
             for (VNotification n : findNotificationsByPath(path)) {
                 elements.add(n.getElement());
@@ -579,11 +553,19 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             ComponentConnector parent, String pathFragment,
             boolean collectRecursively) {
         ArrayList<ComponentConnector> potentialMatches = new ArrayList<ComponentConnector>();
+        String widgetName = getWidgetName(pathFragment);
+        // Special case when searching for UIElement.
+        if (LocatorUtil.isUIElement(pathFragment)) {
+            if (connectorMatchesPathFragment(parent, widgetName)) {
+                potentialMatches.add(parent);
+            }
+        }
         if (parent instanceof HasComponentsConnector) {
+
             List<ComponentConnector> children = ((HasComponentsConnector) parent)
                     .getChildComponents();
             for (ComponentConnector child : children) {
-                String widgetName = getWidgetName(pathFragment);
+
                 if (connectorMatchesPathFragment(child, widgetName)) {
                     potentialMatches.add(child);
                 }
