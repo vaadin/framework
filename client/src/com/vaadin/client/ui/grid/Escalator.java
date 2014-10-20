@@ -3403,11 +3403,11 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
              * its parents are) removed from the document. Therefore, we sort
              * everything around that row instead.
              */
-            final TableRowElement activeRow = getEscalatorRowWithFocus();
+            final TableRowElement focusedRow = getEscalatorRowWithFocus();
 
-            if (activeRow != null) {
-                assert activeRow.getParentElement() == root : "Trying to sort around a row that doesn't exist in body";
-                assert visualRowOrder.contains(activeRow) : "Trying to sort around a row that doesn't exist in visualRowOrder.";
+            if (focusedRow != null) {
+                assert focusedRow.getParentElement() == root : "Trying to sort around a row that doesn't exist in body";
+                assert visualRowOrder.contains(focusedRow) : "Trying to sort around a row that doesn't exist in visualRowOrder.";
             }
 
             /*
@@ -3433,19 +3433,19 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
              * everything underneath that row. Otherwise, all rows are placed as
              * first child.
              */
-            boolean insertFirst = (activeRow == null);
+            boolean insertFirst = (focusedRow == null);
 
             final ListIterator<TableRowElement> i = visualRowOrder
                     .listIterator(visualRowOrder.size());
             while (i.hasPrevious()) {
                 TableRowElement tr = i.previous();
 
-                if (tr == activeRow) {
+                if (tr == focusedRow) {
                     insertFirst = true;
                 } else if (insertFirst) {
                     root.insertFirst(tr);
                 } else {
-                    root.insertAfter(tr, activeRow);
+                    root.insertAfter(tr, focusedRow);
                 }
             }
 
@@ -3459,12 +3459,12 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          *         <code>null</code> if focus is outside of a body row.
          */
         private TableRowElement getEscalatorRowWithFocus() {
-            TableRowElement activeRow = null;
+            TableRowElement rowContainingFocus = null;
 
-            final Element activeElement = Util.getFocusedElement();
+            final Element focusedElement = Util.getFocusedElement();
 
-            if (root.isOrHasChild(activeElement)) {
-                Element e = activeElement;
+            if (root.isOrHasChild(focusedElement)) {
+                Element e = focusedElement;
 
                 while (e != null && e != root) {
                     /*
@@ -3472,13 +3472,13 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                      * cell... We'll take the deepest one.
                      */
                     if (TableRowElement.is(e)) {
-                        activeRow = TableRowElement.as(e);
+                        rowContainingFocus = TableRowElement.as(e);
                     }
                     e = e.getParentElement();
                 }
             }
 
-            return activeRow;
+            return rowContainingFocus;
         }
 
         @Override

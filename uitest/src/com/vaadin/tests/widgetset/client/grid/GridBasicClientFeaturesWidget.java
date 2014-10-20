@@ -894,9 +894,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyDown(GridKeyDownEvent event) {
-                Cell active = event.getActiveCell();
-                updateLabel(label, event.toDebugString(), active.getRow(),
-                        active.getColumn());
+                Cell focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(), focused.getRow(),
+                        focused.getColumn());
             }
         });
 
@@ -905,9 +905,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyDown(GridKeyDownEvent event) {
-                Cell active = event.getActiveCell();
-                updateLabel(label, event.toDebugString(), active.getRow(),
-                        active.getColumn());
+                Cell focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(), focused.getRow(),
+                        focused.getColumn());
             }
         });
 
@@ -916,9 +916,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyDown(GridKeyDownEvent event) {
-                Cell active = event.getActiveCell();
-                updateLabel(label, event.toDebugString(), active.getRow(),
-                        active.getColumn());
+                Cell focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(), focused.getRow(),
+                        focused.getColumn());
             }
         });
 
@@ -928,9 +928,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyUp(GridKeyUpEvent event) {
-                Cell active = event.getActiveCell();
-                updateLabel(label, event.toDebugString(), active.getRow(),
-                        active.getColumn());
+                Cell focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(), focused.getRow(),
+                        focused.getColumn());
             }
         });
 
@@ -939,9 +939,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyUp(GridKeyUpEvent event) {
-                Cell active = event.getActiveCell();
-                updateLabel(label, event.toDebugString(), active.getRow(),
-                        active.getColumn());
+                Cell focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(), focused.getRow(),
+                        focused.getColumn());
             }
         });
 
@@ -950,9 +950,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyUp(GridKeyUpEvent event) {
-                Cell active = event.getActiveCell();
-                updateLabel(label, event.toDebugString(), active.getRow(),
-                        active.getColumn());
+                Cell focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(), focused.getRow(),
+                        focused.getColumn());
             }
         });
 
@@ -962,9 +962,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyPress(GridKeyPressEvent event) {
-                Cell active = event.getActiveCell();
-                updateLabel(label, event.toDebugString(), active.getRow(),
-                        active.getColumn());
+                Cell focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(), focused.getRow(),
+                        focused.getColumn());
             }
         });
 
@@ -973,9 +973,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyPress(GridKeyPressEvent event) {
-                Cell active = event.getActiveCell();
-                updateLabel(label, event.toDebugString(), active.getRow(),
-                        active.getColumn());
+                Cell focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(), focused.getRow(),
+                        focused.getColumn());
             }
         });
 
@@ -984,9 +984,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyPress(GridKeyPressEvent event) {
-                Cell active = event.getActiveCell();
-                updateLabel(label, event.toDebugString(), active.getRow(),
-                        active.getColumn());
+                Cell focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(), focused.getRow(),
+                        focused.getColumn());
             }
         });
 

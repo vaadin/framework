@@ -135,7 +135,7 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         private Grid<?> grid;
-        protected Cell activeCell;
+        protected Cell focusedCell;
         private final Type<HANDLER> associatedType = new Type<HANDLER>(
                 getBrowserEventType(), this);
 
@@ -155,12 +155,12 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Gets the active cell for this event.
+         * Gets the focused cell for this event.
          * 
-         * @return active cell
+         * @return focused cell
          */
-        public Cell getActiveCell() {
-            return activeCell;
+        public Cell getFocusedCell() {
+            return focusedCell;
         }
 
         @Override
@@ -169,9 +169,9 @@ public class Grid<T> extends ResizeComposite implements
             if (Element.is(target)
                     && Util.findWidget(Element.as(target), null) == grid) {
 
-                activeCell = grid.activeCellHandler.getActiveCell();
+                focusedCell = grid.cellFocusHandler.getFocusedCell();
                 GridSection section = GridSection.FOOTER;
-                final RowContainer container = grid.activeCellHandler.container;
+                final RowContainer container = grid.cellFocusHandler.containerWithFocus;
                 if (container == grid.escalator.getHeader()) {
                     section = GridSection.HEADER;
                 } else if (container == grid.escalator.getBody()) {
@@ -194,130 +194,129 @@ public class Grid<T> extends ResizeComposite implements
     private GridKeyUpEvent keyUp = new GridKeyUpEvent(this);
     private GridKeyPressEvent keyPress = new GridKeyPressEvent(this);
 
-    private class ActiveCellHandler {
+    private class CellFocusHandler {
 
-        private RowContainer container = escalator.getBody();
-        private int activeRow = 0;
-        private Range activeCellRange = Range.withLength(0, 1);
-        private int lastActiveBodyRow = 0;
-        private int lastActiveHeaderRow = 0;
-        private int lastActiveFooterRow = 0;
-        private TableCellElement cellWithActiveStyle = null;
-        private TableRowElement rowWithActiveStyle = null;
+        private RowContainer containerWithFocus = escalator.getBody();
+        private int rowWithFocus = 0;
+        private Range cellFocusRange = Range.withLength(0, 1);
+        private int lastFocusedBodyRow = 0;
+        private int lastFocusedHeaderRow = 0;
+        private int lastFocusedFooterRow = 0;
+        private TableCellElement cellWithFocusStyle = null;
+        private TableRowElement rowWithFocusStyle = null;
 
-        public ActiveCellHandler() {
+        public CellFocusHandler() {
             sinkEvents(getNavigationEvents());
         }
 
-        private Cell getActiveCell() {
-            return new Cell(activeRow, activeCellRange.getStart(),
-                    cellWithActiveStyle);
+        private Cell getFocusedCell() {
+            return new Cell(rowWithFocus, cellFocusRange.getStart(),
+                    cellWithFocusStyle);
         }
 
         /**
          * Sets style names for given cell when needed.
          */
-        public void updateActiveCellStyle(FlyweightCell cell,
+        public void updateFocusedCellStyle(FlyweightCell cell,
                 RowContainer cellContainer) {
             int cellRow = cell.getRow();
             int cellColumn = cell.getColumn();
             int colSpan = cell.getColSpan();
-            boolean columnActive = Range.withLength(cellColumn, colSpan)
-                    .intersects(activeCellRange);
+            boolean columnHasFocus = Range.withLength(cellColumn, colSpan)
+                    .intersects(cellFocusRange);
 
-            if (cellContainer == container) {
+            if (cellContainer == containerWithFocus) {
                 // Cell is in the current container
-                if (cellRow == activeRow && columnActive) {
-                    if (cellWithActiveStyle != cell.getElement()) {
-                        // Cell is correct but it does not have active style
-                        if (cellWithActiveStyle != null) {
-                            // Remove old active style
-                            setStyleName(cellWithActiveStyle,
-                                    cellActiveStyleName, false);
+                if (cellRow == rowWithFocus && columnHasFocus) {
+                    if (cellWithFocusStyle != cell.getElement()) {
+                        // Cell is correct but it does not have focused style
+                        if (cellWithFocusStyle != null) {
+                            // Remove old focus style
+                            setStyleName(cellWithFocusStyle,
+                                    cellFocusStyleName, false);
                         }
-                        cellWithActiveStyle = cell.getElement();
+                        cellWithFocusStyle = cell.getElement();
 
-                        // Add active style to correct cell.
-                        setStyleName(cellWithActiveStyle, cellActiveStyleName,
+                        // Add focus style to correct cell.
+                        setStyleName(cellWithFocusStyle, cellFocusStyleName,
                                 true);
                     }
-                } else if (cellWithActiveStyle == cell.getElement()) {
+                } else if (cellWithFocusStyle == cell.getElement()) {
                     // Due to escalator reusing cells, a new cell has the same
-                    // element but is not the active cell.
-                    setStyleName(cellWithActiveStyle, cellActiveStyleName,
-                            false);
-                    cellWithActiveStyle = null;
+                    // element but is not the focused cell.
+                    setStyleName(cellWithFocusStyle, cellFocusStyleName, false);
+                    cellWithFocusStyle = null;
                 }
             }
 
             if (cellContainer == escalator.getHeader()
                     || cellContainer == escalator.getFooter()) {
                 // Correct header and footer column also needs highlighting
-                setStyleName(cell.getElement(), headerFooterActiveStyleName,
-                        columnActive);
+                setStyleName(cell.getElement(), headerFooterFocusStyleName,
+                        columnHasFocus);
             }
         }
 
         /**
-         * Sets active row style name for given row if needed.
+         * Sets focus style for the given row if needed.
          * 
          * @param row
          *            a row object
          */
-        public void updateActiveRowStyle(Row row) {
-            if (activeRow == row.getRow() && container == escalator.getBody()) {
-                if (row.getElement() != rowWithActiveStyle) {
-                    // Row should have active style but does not have it.
-                    if (rowWithActiveStyle != null) {
-                        setStyleName(rowWithActiveStyle, rowActiveStyleName,
+        public void updateFocusedRowStyle(Row row) {
+            if (rowWithFocus == row.getRow()
+                    && containerWithFocus == escalator.getBody()) {
+                if (row.getElement() != rowWithFocusStyle) {
+                    // Row should have focus style but does not have it.
+                    if (rowWithFocusStyle != null) {
+                        setStyleName(rowWithFocusStyle, rowFocusStyleName,
                                 false);
                     }
-                    rowWithActiveStyle = row.getElement();
-                    setStyleName(rowWithActiveStyle, rowActiveStyleName, true);
+                    rowWithFocusStyle = row.getElement();
+                    setStyleName(rowWithFocusStyle, rowFocusStyleName, true);
                 }
-            } else if (rowWithActiveStyle == row.getElement()
-                    || (container != escalator.getBody() && rowWithActiveStyle != null)) {
-                // Remove active style.
-                setStyleName(rowWithActiveStyle, rowActiveStyleName, false);
-                rowWithActiveStyle = null;
+            } else if (rowWithFocusStyle == row.getElement()
+                    || (containerWithFocus != escalator.getBody() && rowWithFocusStyle != null)) {
+                // Remove focus style.
+                setStyleName(rowWithFocusStyle, rowFocusStyleName, false);
+                rowWithFocusStyle = null;
             }
         }
 
         /**
-         * Sets currently active cell to a cell in given container with given
-         * indices.
+         * Sets the currently focused.
          * 
          * @param row
-         *            new active row
+         *            the index of the row having focus
          * @param column
-         *            new active column
+         *            the index of the column having focus
          * @param container
-         *            new container
+         *            the row container having focus
          */
-        private void setActiveCell(int row, int column, RowContainer container) {
-            if (row == activeRow && activeCellRange.contains(column)
-                    && container == this.container) {
-                refreshRow(activeRow);
+        private void setCellFocus(int row, int column, RowContainer container) {
+            if (row == rowWithFocus && cellFocusRange.contains(column)
+                    && container == this.containerWithFocus) {
+                refreshRow(rowWithFocus);
                 return;
             }
 
-            int oldRow = activeRow;
-            activeRow = row;
-            Range oldRange = activeCellRange;
+            int oldRow = rowWithFocus;
+            rowWithFocus = row;
+            Range oldRange = cellFocusRange;
 
             if (container == escalator.getBody()) {
-                scrollToRow(activeRow);
-                activeCellRange = Range.withLength(column, 1);
+                scrollToRow(rowWithFocus);
+                cellFocusRange = Range.withLength(column, 1);
             } else {
                 int i = 0;
-                Element cell = container.getRowElement(activeRow)
+                Element cell = container.getRowElement(rowWithFocus)
                         .getFirstChildElement();
                 do {
                     int colSpan = cell
                             .getPropertyInt(FlyweightCell.COLSPAN_ATTR);
                     Range cellRange = Range.withLength(i, colSpan);
                     if (cellRange.contains(column)) {
-                        activeCellRange = cellRange;
+                        cellFocusRange = cellRange;
                         break;
                     }
                     cell = cell.getNextSiblingElement();
@@ -330,26 +329,26 @@ public class Grid<T> extends ResizeComposite implements
                 escalator.scrollToColumn(column, ScrollDestination.ANY, 10);
             }
 
-            if (this.container == container) {
-                if (oldRange.equals(activeCellRange) && oldRow != activeRow) {
+            if (this.containerWithFocus == container) {
+                if (oldRange.equals(cellFocusRange) && oldRow != rowWithFocus) {
                     refreshRow(oldRow);
                 } else {
                     refreshHeader();
                     refreshFooter();
                 }
             } else {
-                RowContainer oldContainer = this.container;
-                this.container = container;
+                RowContainer oldContainer = this.containerWithFocus;
+                this.containerWithFocus = container;
 
                 if (oldContainer == escalator.getBody()) {
-                    lastActiveBodyRow = oldRow;
+                    lastFocusedBodyRow = oldRow;
                 } else if (oldContainer == escalator.getHeader()) {
-                    lastActiveHeaderRow = oldRow;
+                    lastFocusedHeaderRow = oldRow;
                 } else {
-                    lastActiveFooterRow = oldRow;
+                    lastFocusedFooterRow = oldRow;
                 }
 
-                if (!oldRange.equals(activeCellRange)) {
+                if (!oldRange.equals(cellFocusRange)) {
                     refreshHeader();
                     refreshFooter();
                     if (oldContainer == escalator.getBody()) {
@@ -359,23 +358,26 @@ public class Grid<T> extends ResizeComposite implements
                     oldContainer.refreshRows(oldRow, 1);
                 }
             }
-            refreshRow(activeRow);
+            refreshRow(rowWithFocus);
         }
 
         /**
-         * Sets currently active cell used for keyboard navigation. Note that
-         * active cell is not JavaScript {@code document.activeElement}.
+         * Sets focus on a cell.
+         * 
+         * <p>
+         * <em>Note</em>: cell focus is not the same as JavaScript's
+         * {@code document.activeElement}.
          * 
          * @param cell
          *            a cell object
          */
-        public void setActiveCell(Cell cell) {
-            setActiveCell(cell.getRow(), cell.getColumn(),
+        public void setCellFocus(Cell cell) {
+            setCellFocus(cell.getRow(), cell.getColumn(),
                     escalator.findRowContainer(cell.getElement()));
         }
 
         /**
-         * Gets list of events that can be used for active cell navigation.
+         * Gets list of events that can be used for cell focusing.
          * 
          * @return list of navigation related event types
          */
@@ -384,17 +386,17 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Handle events that can change the currently active cell.
+         * Handle events that can move the cell focus.
          */
         public void handleNavigationEvent(Event event, Cell cell) {
             if (event.getType().equals(BrowserEvents.CLICK)) {
-                setActiveCell(cell);
+                setCellFocus(cell);
                 // Grid should have focus when clicked.
                 getElement().focus();
             } else if (event.getType().equals(BrowserEvents.KEYDOWN)) {
-                int newRow = activeRow;
-                RowContainer newContainer = container;
-                int newColumn = activeCellRange.getStart();
+                int newRow = rowWithFocus;
+                RowContainer newContainer = containerWithFocus;
+                int newColumn = cellFocusRange.getStart();
 
                 switch (event.getKeyCode()) {
                 case KeyCodes.KEY_DOWN:
@@ -404,10 +406,10 @@ public class Grid<T> extends ResizeComposite implements
                     --newRow;
                     break;
                 case KeyCodes.KEY_RIGHT:
-                    if (activeCellRange.getEnd() >= getVisibleColumns().size()) {
+                    if (cellFocusRange.getEnd() >= getVisibleColumns().size()) {
                         return;
                     }
-                    newColumn = activeCellRange.getEnd();
+                    newColumn = cellFocusRange.getEnd();
                     break;
                 case KeyCodes.KEY_LEFT:
                     if (newColumn == 0) {
@@ -417,12 +419,12 @@ public class Grid<T> extends ResizeComposite implements
                     break;
                 case KeyCodes.KEY_TAB:
                     if (event.getShiftKey()) {
-                        newContainer = getPreviousContainer(container);
+                        newContainer = getPreviousContainer(containerWithFocus);
                     } else {
-                        newContainer = getNextContainer(container);
+                        newContainer = getNextContainer(containerWithFocus);
                     }
 
-                    if (newContainer == container) {
+                    if (newContainer == containerWithFocus) {
                         return;
                     }
                     break;
@@ -430,29 +432,29 @@ public class Grid<T> extends ResizeComposite implements
                     return;
                 }
 
-                if (newContainer != container) {
+                if (newContainer != containerWithFocus) {
                     if (newContainer == escalator.getBody()) {
-                        newRow = lastActiveBodyRow;
+                        newRow = lastFocusedBodyRow;
                     } else if (newContainer == escalator.getHeader()) {
-                        newRow = lastActiveHeaderRow;
+                        newRow = lastFocusedHeaderRow;
                     } else {
-                        newRow = lastActiveFooterRow;
+                        newRow = lastFocusedFooterRow;
                     }
                 } else if (newRow < 0) {
                     newContainer = getPreviousContainer(newContainer);
 
-                    if (newContainer == container) {
+                    if (newContainer == containerWithFocus) {
                         newRow = 0;
                     } else if (newContainer == escalator.getBody()) {
                         newRow = getLastVisibleRowIndex();
                     } else {
                         newRow = newContainer.getRowCount() - 1;
                     }
-                } else if (newRow >= container.getRowCount()) {
+                } else if (newRow >= containerWithFocus.getRowCount()) {
                     newContainer = getNextContainer(newContainer);
 
-                    if (newContainer == container) {
-                        newRow = container.getRowCount() - 1;
+                    if (newContainer == containerWithFocus) {
+                        newRow = containerWithFocus.getRowCount() - 1;
                     } else if (newContainer == escalator.getBody()) {
                         newRow = getFirstVisibleRowIndex();
                     } else {
@@ -461,15 +463,17 @@ public class Grid<T> extends ResizeComposite implements
                 }
 
                 if (newContainer.getRowCount() == 0) {
-                    // There are no rows in the container. Can't change the
-                    // active cell.
+                    /*
+                     * There are no rows in the container. Can't change the
+                     * focused cell.
+                     */
                     return;
                 }
 
                 event.preventDefault();
                 event.stopPropagation();
 
-                setActiveCell(newRow, newColumn, newContainer);
+                setCellFocus(newRow, newColumn, newContainer);
             }
 
         }
@@ -505,64 +509,67 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         private void refreshRow(int row) {
-            container.refreshRows(row, 1);
+            containerWithFocus.refreshRows(row, 1);
         }
 
         /**
-         * Offset active cell range by given integer.
+         * Offsets the focused cell's range.
          * 
          * @param offset
-         *            offset for fixing active cell range
+         *            offset for fixing focused cell's range
          */
         public void offsetRangeBy(int offset) {
-            activeCellRange = activeCellRange.offsetBy(offset);
+            cellFocusRange = cellFocusRange.offsetBy(offset);
         }
 
         /**
-         * Informs ActiveCellHandler that certain range of rows has been added
-         * to the Grid body. ActiveCellHandler will fix indices accordingly.
+         * Informs {@link CellFocusHandler} that certain range of rows has been
+         * added to the Grid body. {@link CellFocusHandler} will fix indices
+         * accordingly.
          * 
          * @param added
          *            a range of added rows
          */
         public void rowsAddedToBody(Range added) {
-            boolean bodyIsCurrentlyActive = (container == escalator.getBody());
-            boolean insertionIsAboveActiveCell = (added.getStart() <= activeRow);
-            if (bodyIsCurrentlyActive && insertionIsAboveActiveCell) {
-                setActiveCell(activeRow + added.length(),
-                        activeCellRange.getStart(), container);
+            boolean bodyHasFocus = (containerWithFocus == escalator.getBody());
+            boolean insertionIsAboveFocusedCell = (added.getStart() <= rowWithFocus);
+            if (bodyHasFocus && insertionIsAboveFocusedCell) {
+                setCellFocus(rowWithFocus + added.length(),
+                        cellFocusRange.getStart(), containerWithFocus);
             }
         }
 
         /**
-         * Informs ActiveCellHandler that certain range of rows has been removed
-         * from the Grid body. ActiveCellHandler will fix indices accordingly.
+         * Informs {@link CellFocusHandler} that certain range of rows has been
+         * removed from the Grid body. {@link CellFocusHandler} will fix indices
+         * accordingly.
          * 
          * @param removed
          *            a range of removed rows
          */
         public void rowsRemovedFromBody(Range removed) {
-            int activeColumn = activeCellRange.getStart();
-            if (container != escalator.getBody()) {
+            int focusedColumn = cellFocusRange.getStart();
+            if (containerWithFocus != escalator.getBody()) {
                 return;
-            } else if (!removed.contains(activeRow)) {
-                if (removed.getStart() > activeRow) {
+            } else if (!removed.contains(rowWithFocus)) {
+                if (removed.getStart() > rowWithFocus) {
                     return;
                 }
-                setActiveCell(activeRow - removed.length(), activeColumn,
-                        container);
+                setCellFocus(rowWithFocus - removed.length(), focusedColumn,
+                        containerWithFocus);
             } else {
-                if (container.getRowCount() > removed.getEnd()) {
-                    setActiveCell(removed.getStart(), activeColumn, container);
+                if (containerWithFocus.getRowCount() > removed.getEnd()) {
+                    setCellFocus(removed.getStart(), focusedColumn,
+                            containerWithFocus);
                 } else if (removed.getStart() > 0) {
-                    setActiveCell(removed.getStart() - 1, activeColumn,
-                            container);
+                    setCellFocus(removed.getStart() - 1, focusedColumn,
+                            containerWithFocus);
                 } else {
                     if (escalator.getHeader().getRowCount() > 0) {
-                        setActiveCell(lastActiveHeaderRow, activeColumn,
+                        setCellFocus(lastFocusedHeaderRow, focusedColumn,
                                 escalator.getHeader());
                     } else if (escalator.getFooter().getRowCount() > 0) {
-                        setActiveCell(lastActiveFooterRow, activeColumn,
+                        setCellFocus(lastFocusedFooterRow, focusedColumn,
                                 escalator.getFooter());
                     }
                 }
@@ -753,16 +760,16 @@ public class Grid<T> extends ResizeComposite implements
 
     private String rowHasDataStyleName;
     private String rowSelectedStyleName;
-    private String cellActiveStyleName;
-    private String rowActiveStyleName;
-    private String headerFooterActiveStyleName;
+    private String cellFocusStyleName;
+    private String rowFocusStyleName;
+    private String headerFooterFocusStyleName;
 
     /**
      * Current selection model.
      */
     private SelectionModel<T> selectionModel;
 
-    protected final ActiveCellHandler activeCellHandler;
+    protected final CellFocusHandler cellFocusHandler;
 
     private final UserSorter sorter = new UserSorter();
 
@@ -1244,7 +1251,7 @@ public class Grid<T> extends ResizeComposite implements
                 setStyleName(rowElement, rowSelectedStyleName, false);
             }
 
-            activeCellHandler.updateActiveRowStyle(row);
+            cellFocusHandler.updateFocusedRowStyle(row);
 
             for (FlyweightCell cell : cellsToUpdate) {
                 GridColumn<?, T> column = getColumnFromVisibleIndex(cell
@@ -1253,7 +1260,7 @@ public class Grid<T> extends ResizeComposite implements
                 assert column != null : "Column was not found from cell ("
                         + cell.getColumn() + "," + cell.getRow() + ")";
 
-                activeCellHandler.updateActiveCellStyle(cell,
+                cellFocusHandler.updateFocusedCellStyle(cell,
                         escalator.getBody());
 
                 Renderer renderer = column.getRenderer();
@@ -1361,7 +1368,7 @@ public class Grid<T> extends ResizeComposite implements
                     break;
                 }
 
-                activeCellHandler.updateActiveCellStyle(cell, container);
+                cellFocusHandler.updateFocusedCellStyle(cell, container);
             }
         }
 
@@ -1485,7 +1492,7 @@ public class Grid<T> extends ResizeComposite implements
     public Grid() {
         initWidget(escalator);
         getElement().setTabIndex(0);
-        activeCellHandler = new ActiveCellHandler();
+        cellFocusHandler = new CellFocusHandler();
 
         setStylePrimaryName("v-grid");
 
@@ -1547,7 +1554,7 @@ public class Grid<T> extends ResizeComposite implements
                     return;
                 }
 
-                sorter.sort(event.getActiveCell(), event.isShiftKeyDown());
+                sorter.sort(event.getFocusedCell(), event.isShiftKeyDown());
             }
         });
 
@@ -1567,9 +1574,14 @@ public class Grid<T> extends ResizeComposite implements
 
         rowHasDataStyleName = getStylePrimaryName() + "-row-has-data";
         rowSelectedStyleName = getStylePrimaryName() + "-row-selected";
-        cellActiveStyleName = getStylePrimaryName() + "-cell-active";
-        headerFooterActiveStyleName = getStylePrimaryName() + "-header-active";
-        rowActiveStyleName = getStylePrimaryName() + "-row-active";
+
+        /*
+         * TODO rename CSS "active" to "focused" once Valo theme has been
+         * merged.
+         */
+        cellFocusStyleName = getStylePrimaryName() + "-cell-active";
+        headerFooterFocusStyleName = getStylePrimaryName() + "-header-active";
+        rowFocusStyleName = getStylePrimaryName() + "-row-active";
 
         if (isAttached()) {
             refreshHeader();
@@ -1968,14 +1980,14 @@ public class Grid<T> extends ResizeComposite implements
             public void dataRemoved(int firstIndex, int numberOfItems) {
                 escalator.getBody().removeRows(firstIndex, numberOfItems);
                 Range removed = Range.withLength(firstIndex, numberOfItems);
-                activeCellHandler.rowsRemovedFromBody(removed);
+                cellFocusHandler.rowsRemovedFromBody(removed);
             }
 
             @Override
             public void dataAdded(int firstIndex, int numberOfItems) {
                 escalator.getBody().insertRows(firstIndex, numberOfItems);
                 Range added = Range.withLength(firstIndex, numberOfItems);
-                activeCellHandler.rowsAddedToBody(added);
+                cellFocusHandler.rowsAddedToBody(added);
             }
 
             @Override
@@ -2302,11 +2314,9 @@ public class Grid<T> extends ResizeComposite implements
         if (container == null) {
             // TODO: Add a check to catch mouse click outside of table but
             // inside of grid
-            cell = activeCellHandler.getActiveCell();
-            container = activeCellHandler.container;
-        }
-
-        else {
+            cell = cellFocusHandler.getFocusedCell();
+            container = cellFocusHandler.containerWithFocus;
+        } else {
             cell = container.getCell(e);
             if (event.getType().equals(BrowserEvents.MOUSEDOWN)) {
                 cellOnPrevMouseDown = cell;
@@ -2347,7 +2357,7 @@ public class Grid<T> extends ResizeComposite implements
                 return;
             }
 
-            if (handleActiveCellEvent(event, container, cell)) {
+            if (handleCellFocusEvent(event, container, cell)) {
                 return;
             }
         }
@@ -2372,7 +2382,7 @@ public class Grid<T> extends ResizeComposite implements
                 }
             } else if (event.getTypeInt() == Event.ONKEYDOWN
                     && event.getKeyCode() == EditorRow.KEYCODE_SHOW) {
-                editorRow.editRow(activeCellHandler.activeRow);
+                editorRow.editRow(cellFocusHandler.rowWithFocus);
                 return true;
             }
         }
@@ -2408,11 +2418,11 @@ public class Grid<T> extends ResizeComposite implements
         return false;
     }
 
-    private boolean handleActiveCellEvent(Event event, RowContainer container,
+    private boolean handleCellFocusEvent(Event event, RowContainer container,
             Cell cell) {
-        Collection<String> navigation = activeCellHandler.getNavigationEvents();
+        Collection<String> navigation = cellFocusHandler.getNavigationEvents();
         if (navigation.contains(event.getType())) {
-            activeCellHandler.handleNavigationEvent(event, cell);
+            cellFocusHandler.handleNavigationEvent(event, cell);
         }
         return false;
     }
@@ -2546,7 +2556,7 @@ public class Grid<T> extends ResizeComposite implements
 
             sorter.sort(cell, event.getShiftKey());
 
-            // Click events should go onward to active cell logic
+            // Click events should go onward to cell focus logic
             return false;
         } else {
             return false;
@@ -2652,13 +2662,13 @@ public class Grid<T> extends ResizeComposite implements
 
         if (this.selectColumnRenderer != null) {
             removeColumnSkipSelectionColumnCheck(selectionColumn);
-            activeCellHandler.offsetRangeBy(-1);
+            cellFocusHandler.offsetRangeBy(-1);
         }
 
         this.selectColumnRenderer = selectColumnRenderer;
 
         if (selectColumnRenderer != null) {
-            activeCellHandler.offsetRangeBy(1);
+            cellFocusHandler.offsetRangeBy(1);
             selectionColumn = new SelectionColumn(selectColumnRenderer);
 
             // FIXME: this needs to be done elsewhere, requires design...
@@ -2935,8 +2945,8 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Register a BodyKeyDownHandler to this Grid. The event for this handler is
-     * fired when a KeyDown event occurs while active cell is in the Body of
-     * this Grid.
+     * fired when a KeyDown event occurs while cell focus is in the Body of this
+     * Grid.
      * 
      * @param handler
      *            the key handler to register
@@ -2948,7 +2958,7 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Register a BodyKeyUpHandler to this Grid. The event for this handler is
-     * fired when a KeyUp event occurs while active cell is in the Body of this
+     * fired when a KeyUp event occurs while cell focus is in the Body of this
      * Grid.
      * 
      * @param handler
@@ -2961,7 +2971,7 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Register a BodyKeyPressHandler to this Grid. The event for this handler
-     * is fired when a KeyPress event occurs while active cell is in the Body of
+     * is fired when a KeyPress event occurs while cell focus is in the Body of
      * this Grid.
      * 
      * @param handler
@@ -2975,8 +2985,8 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Register a HeaderKeyDownHandler to this Grid. The event for this handler
-     * is fired when a KeyDown event occurs while active cell is in the Header
-     * of this Grid.
+     * is fired when a KeyDown event occurs while cell focus is in the Header of
+     * this Grid.
      * 
      * @param handler
      *            the key handler to register
@@ -2989,8 +2999,8 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Register a HeaderKeyUpHandler to this Grid. The event for this handler is
-     * fired when a KeyUp event occurs while active cell is in the Header of
-     * this Grid.
+     * fired when a KeyUp event occurs while cell focus is in the Header of this
+     * Grid.
      * 
      * @param handler
      *            the key handler to register
@@ -3002,7 +3012,7 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Register a HeaderKeyPressHandler to this Grid. The event for this handler
-     * is fired when a KeyPress event occurs while active cell is in the Header
+     * is fired when a KeyPress event occurs while cell focus is in the Header
      * of this Grid.
      * 
      * @param handler
@@ -3016,8 +3026,8 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Register a FooterKeyDownHandler to this Grid. The event for this handler
-     * is fired when a KeyDown event occurs while active cell is in the Footer
-     * of this Grid.
+     * is fired when a KeyDown event occurs while cell focus is in the Footer of
+     * this Grid.
      * 
      * @param handler
      *            the key handler to register
@@ -3030,8 +3040,8 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Register a FooterKeyUpHandler to this Grid. The event for this handler is
-     * fired when a KeyUp event occurs while active cell is in the Footer of
-     * this Grid.
+     * fired when a KeyUp event occurs while cell focus is in the Footer of this
+     * Grid.
      * 
      * @param handler
      *            the key handler to register
@@ -3043,7 +3053,7 @@ public class Grid<T> extends ResizeComposite implements
 
     /**
      * Register a FooterKeyPressHandler to this Grid. The event for this handler
-     * is fired when a KeyPress event occurs while active cell is in the Footer
+     * is fired when a KeyPress event occurs while cell focus is in the Footer
      * of this Grid.
      * 
      * @param handler

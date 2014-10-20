@@ -50,7 +50,7 @@ public class GridColspansTest extends MultiBrowserTest {
     }
 
     @Test
-    public void testActiveHeaderColumnsWithNavigation() throws IOException {
+    public void testFocusedHeaderColumnsWithNavigation() throws IOException {
         openTestURL();
 
         GridElement grid = $(GridElement.class).first();
@@ -59,12 +59,12 @@ public class GridColspansTest extends MultiBrowserTest {
         compareScreen("beforeNavigation");
 
         for (int i = 1; i <= 6; ++i) {
-            assertEquals(true, grid.getFooterCell(1, 1).isActiveHeader());
-            assertEquals(i < 3, grid.getFooterCell(0, 1).isActiveHeader());
-            assertEquals(i >= 3, grid.getFooterCell(0, 3).isActiveHeader());
-            assertEquals(true, grid.getHeaderCell(0, 1).isActiveHeader());
-            assertEquals(i < 3, grid.getHeaderCell(1, 1).isActiveHeader());
-            assertEquals(i >= 3, grid.getHeaderCell(1, 3).isActiveHeader());
+            assertEquals(true, grid.getFooterCell(1, 1).isFocusedHeader());
+            assertEquals(i < 3, grid.getFooterCell(0, 1).isFocusedHeader());
+            assertEquals(i >= 3, grid.getFooterCell(0, 3).isFocusedHeader());
+            assertEquals(true, grid.getHeaderCell(0, 1).isFocusedHeader());
+            assertEquals(i < 3, grid.getHeaderCell(1, 1).isFocusedHeader());
+            assertEquals(i >= 3, grid.getHeaderCell(1, 3).isFocusedHeader());
             new Actions(getDriver()).sendKeys(Keys.ARROW_RIGHT).perform();
         }
 

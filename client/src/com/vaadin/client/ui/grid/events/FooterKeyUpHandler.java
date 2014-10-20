@@ -18,8 +18,8 @@ package com.vaadin.client.ui.grid.events;
 import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler.GridKeyUpHandler;
 
 /**
- * Handler for {@link GridKeyUpEvent}s that happen when active cell is in the
- * footer of the Grid.
+ * Handler for {@link GridKeyUpEvent}s that happen when the focused cell is in
+ * the footer of the Grid.
  * 
  * @since
  * @author Vaadin Ltd

@@ -18,8 +18,8 @@ package com.vaadin.client.ui.grid.events;
 import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler.GridKeyPressHandler;
 
 /**
- * Handler for {@link GridKeyPressEvent}s that happen when active cell is in the
- * body of the Grid.
+ * Handler for {@link GridKeyPressEvent}s that happen when the focused cell is
+ * in the body of the Grid.
  * 
  * @since
  * @author Vaadin Ltd

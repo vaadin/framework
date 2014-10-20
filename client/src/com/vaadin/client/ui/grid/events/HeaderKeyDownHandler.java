@@ -18,8 +18,8 @@ package com.vaadin.client.ui.grid.events;
 import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler.GridKeyDownHandler;
 
 /**
- * Handler for {@link GridKeyDownEvent}s that happen when active cell is in the
- * header of the Grid.
+ * Handler for {@link GridKeyDownEvent}s that happen when the focused cell is in
+ * the header of the Grid.
  * 
  * @since
  * @author Vaadin Ltd

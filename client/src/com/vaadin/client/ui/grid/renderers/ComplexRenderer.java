@@ -131,8 +131,8 @@ public abstract class ComplexRenderer<T> implements Renderer<T> {
     }
 
     /**
-     * Called when the cell is "activated" by pressing <code>enter</code>,
-     * double clicking or performing a double tap on the cell.
+     * Called when the cell is activated by pressing <code>enter</code>, double
+     * clicking or performing a double tap on the cell.
      * 
      * @param cell
      *            the activated cell

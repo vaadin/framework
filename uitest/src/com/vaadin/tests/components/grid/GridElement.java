@@ -38,16 +38,18 @@ public class GridElement extends AbstractComponentElement {
 
     public static class GridCellElement extends AbstractElement {
 
-        private String ACTIVE_CLASS_NAME = "-cell-active";
-        private String ACTIVE_HEADER_CLASS_NAME = "-header-active";
+        // TODO static final?
+        // TODO rename "active" to "focused" once Valo CSS is merged
+        private String FOCUSED_CELL_CLASS_NAME = "-cell-active";
+        private String FOCUSED_HEADER_CLASS_NAME = "-header-active";
         private String FROZEN_CLASS_NAME = "frozen";
 
-        public boolean isActive() {
-            return getAttribute("class").contains(ACTIVE_CLASS_NAME);
+        public boolean isFocused() {
+            return getAttribute("class").contains(FOCUSED_CELL_CLASS_NAME);
         }
 
-        public boolean isActiveHeader() {
-            return getAttribute("class").contains(ACTIVE_HEADER_CLASS_NAME);
+        public boolean isFocusedHeader() {
+            return getAttribute("class").contains(FOCUSED_HEADER_CLASS_NAME);
         }
 
         public boolean isFrozen() {
@@ -57,11 +59,13 @@ public class GridElement extends AbstractComponentElement {
 
     public static class GridRowElement extends AbstractElement {
 
-        private String ACTIVE_CLASS_NAME = "-row-active";
+        // TODO static final?
+        // TODO rename "active" to "focused" once Valo CSS is merged
+        private String FOCUSED_CLASS_NAME = "-row-active";
         private String SELECTED_CLASS_NAME = "-row-selected";
 
-        public boolean isActive() {
-            return getAttribute("class").contains(ACTIVE_CLASS_NAME);
+        public boolean isFocused() {
+            return getAttribute("class").contains(FOCUSED_CLASS_NAME);
         }
 
         @Override

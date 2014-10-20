@@ -552,8 +552,8 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
             }
 
             spaceDown = true;
-            Cell active = event.getActiveCell();
-            final int rowIndex = active.getRow();
+            Cell focused = event.getFocusedCell();
+            final int rowIndex = focused.getRow();
 
             if (scrollHandler != null) {
                 scrollHandler.removeHandler();
