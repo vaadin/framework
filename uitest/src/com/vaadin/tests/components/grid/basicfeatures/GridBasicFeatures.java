@@ -572,10 +572,20 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     protected void createRowActions() {
         createCategory("Body rows", null);
 
-        final Command<Grid, String> newRowCommand = new Command<Grid, String>() {
+        class NewRowCommand implements Command<Grid, String> {
+            private final int index;
+
+            public NewRowCommand() {
+                this(0);
+            }
+
+            public NewRowCommand(int index) {
+                this.index = index;
+            }
+
             @Override
             public void execute(Grid c, String value, Object data) {
-                Item item = ds.addItemAt(0, new Object());
+                Item item = ds.addItemAt(index, new Object());
                 for (int i = 0; i < COLUMNS; i++) {
                     Class<?> type = ds.getType(getColumnProperty(i));
                     if (String.class.isAssignableFrom(type)) {
@@ -596,7 +606,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         .getItemProperty(getColumnProperty(i));
                 return itemProperty;
             }
-        };
+        }
+        final NewRowCommand newRowCommand = new NewRowCommand();
 
         createClickAction("Add 18 rows", "Body rows",
                 new Command<Grid, String>() {
@@ -609,6 +620,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 }, null);
 
         createClickAction("Add first row", "Body rows", newRowCommand, null);
+
+        createClickAction("Add second row", "Body rows", new NewRowCommand(1),
+                null);
 
         createClickAction("Remove first row", "Body rows",
                 new Command<Grid, String>() {

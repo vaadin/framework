@@ -219,4 +219,38 @@ public class GridKeyboardNavigationTest extends GridBasicFeaturesTest {
                 .getCell(50, 2).isActive());
     }
 
+    @Test
+    public void testActiveCellOffsetWhileInDifferentSection() {
+        openTestURL();
+        getGridElement().getCell(0, 0).click();
+        new Actions(getDriver()).sendKeys(Keys.UP).perform();
+        assertTrue("Header 0,0 should've become active", getGridElement()
+                .getHeaderCell(0, 0).isActive());
+
+        selectMenuPath("Component", "Body rows", "Add first row");
+        assertTrue("Header 0,0 should've remained active", getGridElement()
+                .getHeaderCell(0, 0).isActive());
+    }
+
+    @Test
+    public void testActiveCellOffsetWhileInSameSectionAndInsertedAbove() {
+        openTestURL();
+        assertTrue("Body 0,0 should've been", getGridElement().getCell(0, 0)
+                .isActive());
+
+        selectMenuPath("Component", "Body rows", "Add first row");
+        assertTrue("Body 1,0 should've become active", getGridElement()
+                .getCell(1, 0).isActive());
+    }
+
+    @Test
+    public void testActiveCellOffsetWhileInSameSectionAndInsertedBelow() {
+        openTestURL();
+        assertTrue("Body 0,0 should've been active",
+                getGridElement().getCell(0, 0).isActive());
+
+        selectMenuPath("Component", "Body rows", "Add second row");
+        assertTrue("Body 0,0 should've remained active", getGridElement()
+                .getCell(0, 0).isActive());
+    }
 }

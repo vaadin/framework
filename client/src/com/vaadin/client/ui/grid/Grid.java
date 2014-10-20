@@ -518,27 +518,30 @@ public class Grid<T> extends ResizeComposite implements
             activeCellRange = activeCellRange.offsetBy(offset);
         }
 
-        /*
-         * Informs ActiveCellHandler that certain range of rows has been added.
-         * ActiveCellHandler will fix indices accordingly.
+        /**
+         * Informs ActiveCellHandler that certain range of rows has been added
+         * to the Grid body. ActiveCellHandler will fix indices accordingly.
          * 
-         * @param added a range of added rows
+         * @param added
+         *            a range of added rows
          */
-        public void rowsAdded(Range added) {
-            if (added.getStart() <= activeRow) {
+        public void rowsAddedToBody(Range added) {
+            boolean bodyIsCurrentlyActive = (container == escalator.getBody());
+            boolean insertionIsAboveActiveCell = (added.getStart() <= activeRow);
+            if (bodyIsCurrentlyActive && insertionIsAboveActiveCell) {
                 setActiveCell(activeRow + added.length(),
                         activeCellRange.getStart(), container);
             }
         }
 
         /**
-         * Informs ActiveCellHandler that certain range of rows has been
-         * removed. ActiveCellHandler will fix indices accordingly.
+         * Informs ActiveCellHandler that certain range of rows has been removed
+         * from the Grid body. ActiveCellHandler will fix indices accordingly.
          * 
          * @param removed
          *            a range of removed rows
          */
-        public void rowsRemoved(Range removed) {
+        public void rowsRemovedFromBody(Range removed) {
             int activeColumn = activeCellRange.getStart();
             if (container != escalator.getBody()) {
                 return;
@@ -1909,14 +1912,14 @@ public class Grid<T> extends ResizeComposite implements
             public void dataRemoved(int firstIndex, int numberOfItems) {
                 escalator.getBody().removeRows(firstIndex, numberOfItems);
                 Range removed = Range.withLength(firstIndex, numberOfItems);
-                activeCellHandler.rowsRemoved(removed);
+                activeCellHandler.rowsRemovedFromBody(removed);
             }
 
             @Override
             public void dataAdded(int firstIndex, int numberOfItems) {
                 escalator.getBody().insertRows(firstIndex, numberOfItems);
                 Range added = Range.withLength(firstIndex, numberOfItems);
-                activeCellHandler.rowsAdded(added);
+                activeCellHandler.rowsAddedToBody(added);
             }
 
             @Override
