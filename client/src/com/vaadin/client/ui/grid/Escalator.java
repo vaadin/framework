@@ -16,7 +16,6 @@
 package com.vaadin.client.ui.grid;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -1285,8 +1284,11 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          *            the number of rows to insert
          * @return a list of the added row elements
          */
-        protected List<TableRowElement> paintInsertRows(final int visualIndex,
-                final int numberOfRows) {
+        protected abstract void paintInsertRows(final int visualIndex,
+                final int numberOfRows);
+
+        protected List<TableRowElement> paintInsertStaticRows(
+                final int visualIndex, final int numberOfRows) {
             assert isAttached() : "Can't paint rows if Escalator is not attached";
 
             final List<TableRowElement> addedRows = new ArrayList<TableRowElement>();
@@ -1981,6 +1983,11 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
             Profiler.leave("Escalator.AbstractStaticRowContainer.refreshRows");
         }
+
+        @Override
+        protected void paintInsertRows(int visualIndex, int numberOfRows) {
+            paintInsertStaticRows(visualIndex, numberOfRows);
+        }
     }
 
     private class HeaderRowContainer extends AbstractStaticRowContainer {
@@ -2306,10 +2313,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         }
 
         @Override
-        protected List<TableRowElement> paintInsertRows(final int index,
-                final int numberOfRows) {
+        protected void paintInsertRows(final int index, final int numberOfRows) {
             if (numberOfRows == 0) {
-                return Collections.emptyList();
+                return;
             }
 
             /*
@@ -2405,7 +2411,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 fireRowVisibilityChangeEvent();
                 sortDomElements();
             }
-            return addedRows;
         }
 
         /**
@@ -2585,7 +2590,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
             if (escalatorRowsNeeded > 0) {
 
-                final List<TableRowElement> addedRows = super.paintInsertRows(
+                final List<TableRowElement> addedRows = paintInsertStaticRows(
                         index, escalatorRowsNeeded);
                 visualRowOrder.addAll(index, addedRows);
 
