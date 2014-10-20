@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.grid;
 
+
 /**
  * Represents a column in the {@link Grid}.
  * 
@@ -36,12 +37,52 @@ public abstract class GridColumn<C, T> extends Grid.AbstractGridColumn<C, T> {
      */
 
     /**
+     * Constructs a new column with a simple TextRenderer.
+     */
+    public GridColumn() {
+        super();
+    }
+
+    /**
+     * Constructs a new column with a simple TextRenderer.
+     * 
+     * @param headerText
+     *            The header text for this column
+     * 
+     * @throws IllegalArgumentException
+     *             if given Renderer is null
+     */
+    public GridColumn(String headerText) throws IllegalArgumentException {
+        super(headerText);
+    }
+
+    /**
      * Constructs a new column with a custom renderer.
      * 
      * @param renderer
      *            The renderer to use for rendering the cells
+     * 
+     * @throws IllegalArgumentException
+     *             if given Renderer is null
      */
-    public GridColumn(Renderer<? super C> renderer) {
+    public GridColumn(Renderer<? super C> renderer)
+            throws IllegalArgumentException {
         super(renderer);
+    }
+
+    /**
+     * Constructs a new column with a custom renderer.
+     * 
+     * @param renderer
+     *            The renderer to use for rendering the cells
+     * @param headerText
+     *            The header text for this column
+     * 
+     * @throws IllegalArgumentException
+     *             if given Renderer or header text is null
+     */
+    public GridColumn(String headerText, Renderer<? super C> renderer)
+            throws IllegalArgumentException {
+        super(headerText, renderer);
     }
 }

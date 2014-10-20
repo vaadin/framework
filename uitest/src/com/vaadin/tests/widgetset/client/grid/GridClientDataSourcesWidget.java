@@ -165,10 +165,8 @@ public class GridClientDataSourcesWidget extends
 
             restishDataSource = new RestishDataSource();
             grid.setDataSource(restishDataSource);
-            grid.addColumn(new GridColumn<String, String[]>(new TextRenderer()) {
-                {
-                    setHeader("column");
-                }
+            grid.addColumn(new GridColumn<String, String[]>("column",
+                    new TextRenderer()) {
 
                 @Override
                 public String getValue(String[] row) {

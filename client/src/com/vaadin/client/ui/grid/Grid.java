@@ -876,6 +876,21 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
+         * Constructs a new column with a simple TextRenderer.
+         * 
+         * @param headerText
+         *            The header text for this column
+         * 
+         * @throws IllegalArgumentException
+         *             if given header text is null
+         */
+        public AbstractGridColumn(String headerText)
+                throws IllegalArgumentException {
+            this();
+            setHeaderText(headerText);
+        }
+
+        /**
          * Constructs a new column with a custom renderer.
          * 
          * @param renderer
@@ -887,6 +902,23 @@ public class Grid<T> extends ResizeComposite implements
         public AbstractGridColumn(Renderer<? super C> renderer)
                 throws IllegalArgumentException {
             setRenderer(renderer);
+        }
+
+        /**
+         * Constructs a new column with a custom renderer.
+         * 
+         * @param renderer
+         *            The renderer to use for rendering the cells
+         * @param headerText
+         *            The header text for this column
+         * 
+         * @throws IllegalArgumentException
+         *             if given Renderer or header text is null
+         */
+        public AbstractGridColumn(String headerText,
+                Renderer<? super C> renderer) throws IllegalArgumentException {
+            this(renderer);
+            setHeaderText(headerText);
         }
 
         /**
@@ -909,14 +941,22 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Sets a header caption for this column.
+         * Sets a header text for this column.
          * 
-         * @param caption
-         *            caption text for header
+         * @param headerText
+         *            The header text for this column
+         * 
+         * @throws IllegalArgumentException
+         *             if given header text is null
          */
-        public void setHeader(String caption) {
-            if (!headerText.equals(caption)) {
-                headerText = caption;
+        public void setHeaderText(String headerText) {
+            if (headerText == null) {
+                throw new IllegalArgumentException(
+                        "Header text cannot be null.");
+            }
+
+            if (!this.headerText.equals(headerText)) {
+                this.headerText = headerText;
                 if (grid != null) {
                     updateHeader();
                 }
