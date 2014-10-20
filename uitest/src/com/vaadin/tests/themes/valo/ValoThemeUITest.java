@@ -172,6 +172,17 @@ public class ValoThemeUITest extends MultiBrowserTest {
     }
 
     @Test
+    public void tabsClosableUnframed() throws Exception {
+        openTestURL("test");
+        open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
+        check("Closable");
+        // Framed option is checked by default so we are actually unchecking
+        check("Framed");
+        check("Overflow");
+        compareScreen("tabs-closable-unframed");
+    }
+
+    @Test
     public void tabsAlignRight() throws Exception {
         openTestURL("test");
         open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
