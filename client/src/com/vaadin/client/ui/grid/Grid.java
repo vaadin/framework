@@ -2236,8 +2236,6 @@ public class Grid<T> extends ResizeComposite implements
 
     @Override
     public void onBrowserEvent(Event event) {
-        super.onBrowserEvent(event);
-
         EventTarget target = event.getEventTarget();
 
         if (!Element.is(target)) {
@@ -2249,17 +2247,25 @@ public class Grid<T> extends ResizeComposite implements
         Cell cell;
         boolean isGrid = Util.findWidget(e, null) == this;
         if (container == null) {
+            // TODO: Add a check to catch mouse click outside of table but
+            // inside of grid
             cell = activeCellHandler.getActiveCell();
             container = activeCellHandler.container;
         } else {
             cell = container.getCell(e);
         }
 
-        if (isGrid) {
-            if (handleEditorRowEvent(event, container, cell)) {
-                return;
-            }
+        // Editor Row can steal focus from Grid and is still handled
+        if (handleEditorRowEvent(event, container, cell)) {
+            return;
+        }
 
+        // Fire GridKeyEvents and pass the event to escalator.
+        super.onBrowserEvent(event);
+
+        if (isGrid) {
+
+            // Sorting through header Click / KeyUp
             if (handleHeaderDefaultRowEvent(event, container, cell)) {
                 return;
             }
@@ -2280,6 +2286,7 @@ public class Grid<T> extends ResizeComposite implements
 
     private boolean handleEditorRowEvent(Event event, RowContainer container,
             Cell cell) {
+
         if (editorRow.getState() != State.INACTIVE) {
             if (event.getTypeInt() == Event.ONKEYDOWN
                     && event.getKeyCode() == EditorRow.KEYCODE_HIDE) {
@@ -2287,9 +2294,10 @@ public class Grid<T> extends ResizeComposite implements
             }
             return true;
         }
-        if (editorRow.isEnabled()) {
+
+        if (container == escalator.getBody() && editorRow.isEnabled()) {
             if (event.getTypeInt() == Event.ONDBLCLICK) {
-                if (container == escalator.getBody() && cell != null) {
+                if (cell != null) {
                     editorRow.editRow(cell.getRow());
                     return true;
                 }
