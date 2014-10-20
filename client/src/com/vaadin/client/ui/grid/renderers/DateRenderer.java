@@ -17,9 +17,9 @@ package com.vaadin.client.ui.grid.renderers;
 
 import java.util.Date;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.i18n.client.TimeZone;
+import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.google.gwt.i18n.shared.DateTimeFormat.PredefinedFormat;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Renderer;
 
@@ -61,7 +61,7 @@ public class DateRenderer implements Renderer<Date> {
      * 
      * @return the format
      * @see <a
-     *      href="http://www.gwtproject.org/javadoc/latest/com/google/gwt/i18n/client/DateTimeFormat.html">GWT
+     *      href="http://www.gwtproject.org/javadoc/latest/com/google/gwt/i18n/shared/DateTimeFormat.html">GWT
      *      documentation on DateTimeFormat</a>
      */
     public DateTimeFormat getFormat() {
@@ -74,7 +74,7 @@ public class DateRenderer implements Renderer<Date> {
      * @param format
      *            the format to set
      * @see <a
-     *      href="http://www.gwtproject.org/javadoc/latest/com/google/gwt/i18n/client/DateTimeFormat.html">GWT
+     *      href="http://www.gwtproject.org/javadoc/latest/com/google/gwt/i18n/shared/DateTimeFormat.html">GWT
      *      documentation on DateTimeFormat</a>
      */
     public void setFormat(DateTimeFormat format) {
