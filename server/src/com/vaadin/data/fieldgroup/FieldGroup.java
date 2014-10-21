@@ -211,7 +211,8 @@ public class FieldGroup implements Serializable {
     public void setReadOnly(boolean fieldsReadOnly) {
         readOnly = fieldsReadOnly;
         for (Field<?> field : getFields()) {
-            if (!field.getPropertyDataSource().isReadOnly()) {
+            if (field.getPropertyDataSource() == null
+                    || !field.getPropertyDataSource().isReadOnly()) {
                 field.setReadOnly(fieldsReadOnly);
             } else {
                 field.setReadOnly(true);
