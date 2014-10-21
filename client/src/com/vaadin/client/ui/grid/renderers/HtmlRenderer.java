@@ -15,7 +15,6 @@
  */
 package com.vaadin.client.ui.grid.renderers;
 
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Renderer;
