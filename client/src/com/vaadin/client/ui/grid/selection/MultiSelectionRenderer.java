@@ -330,7 +330,6 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
             reschedule();
         }
 
-        @SuppressWarnings("deprecation")
         public void stop() {
             running = false;
 
@@ -347,7 +346,6 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
             }
         }
 
-        @SuppressWarnings("hiding")
         public void updatePointerCoords(int pageX, int pageY) {
             doScrollAreaChecks(pageY);
             updateScrollSpeed(pageY);
@@ -566,8 +564,10 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
                     .addDataAvailableHandler(new DataAvailableHandler() {
 
                         @Override
-                        public void onDataAvailable(DataAvailableEvent event) {
-                            if (event.getAvailableRows().contains(rowIndex)) {
+                        public void onDataAvailable(
+                                DataAvailableEvent dataAvailableEvent) {
+                            if (dataAvailableEvent.getAvailableRows().contains(
+                                    rowIndex)) {
                                 setSelected(rowIndex, !isSelected(rowIndex));
                                 scrollHandler.removeHandler();
                                 scrollHandler = null;
@@ -584,15 +584,15 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
     private final Grid<T> grid;
     private HandlerRegistration nativePreviewHandlerRegistration;
     private final SpaceKeyDownSelectHandler handler = new SpaceKeyDownSelectHandler();
-    private HandlerRegistration spaceDown;
-    private HandlerRegistration spaceUp;
+    private HandlerRegistration spaceDownRegistration;
+    private HandlerRegistration spaceUpRegistration;
 
     private final AutoScrollHandler autoScrollHandler = new AutoScrollHandler();
 
     public MultiSelectionRenderer(final Grid<T> grid) {
         this.grid = grid;
-        spaceDown = grid.addBodyKeyDownHandler(handler);
-        spaceUp = grid.addBodyKeyUpHandler(new BodyKeyUpHandler() {
+        spaceDownRegistration = grid.addBodyKeyDownHandler(handler);
+        spaceUpRegistration = grid.addBodyKeyUpHandler(new BodyKeyUpHandler() {
 
             @Override
             public void onKeyUp(GridKeyUpEvent event) {
@@ -605,8 +605,8 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
 
     @Override
     public void destroy() {
-        spaceDown.removeHandler();
-        spaceUp.removeHandler();
+        spaceDownRegistration.removeHandler();
+        spaceUpRegistration.removeHandler();
         if (nativePreviewHandlerRegistration != null) {
             removeNativeHandler();
         }
