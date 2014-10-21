@@ -17,6 +17,7 @@ package com.vaadin.client.componentlocator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import com.google.gwt.dom.client.Document;
@@ -726,19 +727,9 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      */
     private final <T> List<T> eliminateDuplicates(List<T> list) {
 
-        int l = list.size();
-        for (int j = 0; j < l; ++j) {
-            T ref = list.get(j);
-
-            for (int i = j + 1; i < l; ++i) {
-                if (list.get(i) == ref) {
-                    list.remove(i);
-                    --i;
-                    --l;
-                }
-            }
-        }
-
+        LinkedHashSet<T> set = new LinkedHashSet<T>(list);
+        list.clear();
+        list.addAll(set);
         return list;
     }
 
