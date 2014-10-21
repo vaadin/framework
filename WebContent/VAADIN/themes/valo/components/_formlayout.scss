@@ -51,6 +51,8 @@
     > .v-label-h4 {
       position: absolute;
       left: 0;
+      right: 0;
+      width: auto !important;
       margin-top: -0.5em;
       padding-bottom: 0.5em;
       border-bottom: valo-border($color: $v-app-background-color, $strength: 0.5);
@@ -114,8 +116,22 @@
     padding-left: $left;
   }
 
+  [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"] {
+    > .v-label-h2,
+    > .v-label-h3,
+    > .v-label-h4 {
+      left: $left;
+    }
+  }
+
   [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"] {
     padding-right: $right;
+
+    > .v-label-h2,
+    > .v-label-h3,
+    > .v-label-h4 {
+      right: $right;
+    }
   }
 }
 
@@ -150,7 +166,7 @@
     padding: 0;
   }
 
-  > table > tbody > [class*="row"] > td {
+  > table > tbody > tr > td {
     padding-top: 0;
     height: $row-height; // Effectively min-height
     border-bottom: valo-border($color: $v-app-background-color, $strength: 0.3);
@@ -160,7 +176,7 @@
     border-bottom: none;
   }
 
-  > table > tbody > [class*="row"] > [class*="captioncell"] {
+  > table > tbody > tr > [class*="captioncell"] {
     color: valo-font-color($v-background-color, .5);
     text-align: right;
     padding-left: ceil($v-unit-size/3);
@@ -168,6 +184,8 @@
   }
 
   > table > tbody > [class*="row"] > [class*="contentcell"] {
+    padding-right: 0;
+
     > .v-textfield,
     > .v-textarea,
     > .v-filterselect,
@@ -208,6 +226,8 @@
     > .v-label-h3,
     > .v-label-h4 {
       border-bottom: none;
+      left: 0;
+      right: 0;
     }
 
     > .v-label-h3,
