@@ -80,11 +80,11 @@ public class TestStreamVariableMapping extends TestCase {
     private LegacyCommunicationManager createCommunicationManager()
             throws Exception {
         VaadinServlet servlet = new VaadinServlet();
+        servlet.init(new MockServletConfig());
         VaadinServletService vss = new VaadinServletService(servlet,
                 new MockDeploymentConfiguration());
         servlet.init(new MockServletConfig());
         return new LegacyCommunicationManager(
                 new AlwaysLockedVaadinSession(vss));
     }
-
 }

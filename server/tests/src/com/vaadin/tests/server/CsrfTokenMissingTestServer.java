@@ -19,6 +19,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
@@ -27,6 +28,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.server.MockServletConfig;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
@@ -37,6 +39,7 @@ import com.vaadin.server.communication.ServerRpcHandler.RpcRequest;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.tests.util.MockDeploymentConfiguration;
+
 
 /**
  * Test the actual csrf token validation by the server.
@@ -62,10 +65,12 @@ public class CsrfTokenMissingTestServer {
 
     /**
      * Initialize the mock servlet and other stuff for our tests.
+     * 
      */
     @Before
-    public void initMockStuff() throws ServiceException {
+    public void initMockStuff() throws ServiceException, ServletException {
         mockServlet = new VaadinServlet();
+        mockServlet.init(new MockServletConfig());
         mockDeploymentConfiguration = new MockDeploymentConfiguration();
 
         mockService = new VaadinServletService(mockServlet,

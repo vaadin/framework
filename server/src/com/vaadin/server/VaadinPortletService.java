@@ -46,16 +46,6 @@ public class VaadinPortletService extends VaadinService {
             throws ServiceException {
         super(deploymentConfiguration);
         this.portlet = portlet;
-
-        // Set default class loader if not already set
-        if (getClassLoader() == null) {
-            /*
-             * The portlet is most likely to be loaded with a class loader
-             * specific to the application instead of some generic system class
-             * loader that loads the Vaadin classes.
-             */
-            setClassLoader(portlet.getClass().getClassLoader());
-        }
     }
 
     @Override
@@ -164,7 +154,7 @@ public class VaadinPortletService extends VaadinService {
 
         if (Constants.PORTLET_CONTEXT.equals(staticFileLocation)) {
             return request.getContextPath();
-        } else{
+        } else {
             return trimTrailingSlashes(staticFileLocation);
         }
     }

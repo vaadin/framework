@@ -51,16 +51,6 @@ public class VaadinServletService extends VaadinService {
             throws ServiceException {
         super(deploymentConfiguration);
         this.servlet = servlet;
-
-        // Set default class loader if not already set
-        if (getClassLoader() == null) {
-            /*
-             * The servlet is most likely to be loaded with a class loader
-             * specific to the application instead of some generic system class
-             * loader that loads the Vaadin classes.
-             */
-            setClassLoader(servlet.getClass().getClassLoader());
-        }
     }
 
     private static boolean checkAtmosphereSupport() {

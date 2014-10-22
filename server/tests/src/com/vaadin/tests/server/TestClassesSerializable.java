@@ -47,6 +47,8 @@ public class TestClassesSerializable extends TestCase {
             "com\\.vaadin\\.server\\.MockServletConfig", //
             "com\\.vaadin\\.server\\.MockServletContext", //
             "com\\.vaadin\\.server\\.Constants", //
+            "com\\.vaadin\\.server\\.VaadinServiceClassLoaderUtil", //
+            "com\\.vaadin\\.server\\.VaadinServiceClassLoaderUtil\\$GetClassLoaderPrivilegedAction", //
             "com\\.vaadin\\.server\\.communication\\.FileUploadHandler\\$SimpleMultiPartInputStream", //
             "com\\.vaadin\\.server\\.communication\\.PushRequestHandler.*",
             "com\\.vaadin\\.server\\.communication\\.PushHandler.*", // PushHandler
