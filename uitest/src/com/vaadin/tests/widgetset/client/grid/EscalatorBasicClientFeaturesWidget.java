@@ -456,6 +456,13 @@ public class EscalatorBasicClientFeaturesWidget extends
                         .getColumnCount() - 1, 1);
             }
         }, menupath);
+
+        addMenuCommand("Refresh first column", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                escalator.getColumnConfiguration().refreshColumns(0, 1);
+            }
+        }, menupath);
     }
 
     private void createHeaderRowsMenu() {

@@ -109,7 +109,7 @@ public interface RowContainer {
     /**
      * Refreshes a range of rows in the current row container.
      * <p>
-     * The data for the refreshed rows are queried from the current cell
+     * The data for the refreshed rows is queried from the current cell
      * renderer.
      * 
      * @param index

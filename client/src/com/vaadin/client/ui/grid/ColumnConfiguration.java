@@ -30,6 +30,11 @@ public interface ColumnConfiguration {
      * <p>
      * If any of the removed columns were frozen, the number of frozen columns
      * will be reduced by the number of the removed columns that were frozen.
+     * <p>
+     * <em>Note:</em> This method simply removes the given columns, and does not
+     * do much of anything else. Especially if you have column spans, you
+     * probably need to run {@link #refreshColumns(int, int)} or
+     * {@link RowContainer#refreshRows(int, int)}
      * 
      * @param index
      *            the index of the first column to be removed
@@ -61,8 +66,9 @@ public interface ColumnConfiguration {
      * <p>
      * <em>Note:</em> Only the contents of the inserted columns will be
      * rendered. If inserting new columns affects the contents of existing
-     * columns, {@link RowContainer#refreshRows(int, int)} needs to be called as
-     * appropriate.
+     * columns (e.g. you have column spans),
+     * {@link RowContainer#refreshRows(int, int)} or
+     * {@link #refreshColumns(int, int)} needs to be called as appropriate.
      * 
      * @param index
      *            the index of the column before which new columns are inserted,
@@ -142,4 +148,29 @@ public interface ColumnConfiguration {
      *             if <code>index</code> is not a valid column index
      */
     public int getColumnWidthActual(int index) throws IllegalArgumentException;
+
+    /**
+     * Refreshes a range of rows in the current row containers in each Escalator
+     * section.
+     * <p>
+     * The data for the refreshed columns is queried from the current cell
+     * renderer.
+     * 
+     * @param index
+     *            the index of the first row that will be updated
+     * @param numberOfRows
+     *            the number of rows to update, starting from the index
+     * @throws IndexOutOfBoundsException
+     *             if any integer number in the range
+     *             <code>[index..(index+numberOfColumns)]</code> is not an
+     *             existing column index.
+     * @throws IllegalArgumentException
+     *             if {@code numberOfColumns} is less than 1.
+     * @see RowContainer#setEscalatorUpdater(EscalatorUpdater)
+     * @see Escalator#getHeader()
+     * @see Escalator#getBody()
+     * @see Escalator#getFooter()
+     */
+    public void refreshColumns(int index, int numberOfColumns)
+            throws IndexOutOfBoundsException, IllegalArgumentException;
 }

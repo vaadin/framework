@@ -1415,12 +1415,28 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          */
         @Override
         // overridden because of JavaDoc
-        public abstract void refreshRows(final int index, final int numberOfRows);
+        public void refreshRows(final int index, final int numberOfRows) {
+            Range rowRange = Range.withLength(index, numberOfRows);
+            Range colRange = Range.withLength(0, getColumnConfiguration()
+                    .getColumnCount());
+            refreshCells(rowRange, colRange);
+        }
 
-        void refreshRow(final TableRowElement tr, final int logicalRowIndex) {
+        protected abstract void refreshCells(Range logicalRowRange,
+                Range colRange);
+
+        void refreshRow(TableRowElement tr, int logicalRowIndex) {
+            refreshRow(tr, logicalRowIndex, Range.withLength(0,
+                    getColumnConfiguration().getColumnCount()));
+        }
+
+        void refreshRow(final TableRowElement tr, final int logicalRowIndex,
+                Range colRange) {
             flyweightRow.setup(tr, logicalRowIndex,
                     columnConfiguration.getCalculatedColumnWidths());
-            updater.update(flyweightRow, flyweightRow.getCells());
+            Iterable<FlyweightCell> cellsToUpdate = flyweightRow.getCells(
+                    colRange.getStart(), colRange.length());
+            updater.update(flyweightRow, cellsToUpdate);
 
             /*
              * the "assert" guarantees that this code is run only during
@@ -1503,16 +1519,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                     setColumnFrozen(col, true);
                 }
             }
-
-            /*
-             * Because we might insert columns where affected by colspans, it's
-             * easiest to simply redraw everything when columns are modified.
-             * 
-             * Yes, this is a TODO [[optimize]].
-             */
-            if (getRowCount() > 0) {
-                refreshRows(0, getRowCount());
-            }
         }
 
         /**
@@ -1569,6 +1575,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             }
 
             getEscalatorUpdater().postAttach(flyweightRow, cells);
+            getEscalatorUpdater().update(flyweightRow, cells);
 
             assert flyweightRow.teardown();
         }
@@ -1861,6 +1868,14 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
             return new Cell(domRowIndex, domColumnIndex, cellElement);
         }
+
+        void refreshColumns(int index, int numberOfColumns) {
+            if (getRowCount() > 0) {
+                Range rowRange = Range.withLength(0, getRowCount());
+                Range colRange = Range.withLength(index, numberOfColumns);
+                refreshCells(rowRange, colRange);
+            }
+        }
     }
 
     private abstract class AbstractStaticRowContainer extends
@@ -1954,10 +1969,11 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         protected abstract void sectionHeightCalculated();
 
         @Override
-        public void refreshRows(final int index, final int numberOfRows) {
+        protected void refreshCells(Range logicalRowRange, Range colRange) {
             Profiler.enter("Escalator.AbstractStaticRowContainer.refreshRows");
 
-            assertArgumentsAreValidAndWithinRange(index, numberOfRows);
+            assertArgumentsAreValidAndWithinRange(logicalRowRange.getStart(),
+                    logicalRowRange.length());
 
             if (!isAttached()) {
                 return;
@@ -1975,9 +1991,10 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                  * TODO [[rowheight]]: nudge rows down with
                  * refreshRowPositions() as needed
                  */
-                for (int row = index; row < index + numberOfRows; row++) {
+                for (int row = logicalRowRange.getStart(); row < logicalRowRange
+                        .getEnd(); row++) {
                     final TableRowElement tr = getTrByVisualIndex(row);
-                    refreshRow(tr, row);
+                    refreshRow(tr, row, colRange);
                 }
             }
 
@@ -3112,11 +3129,10 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         }
 
         @Override
-        public void refreshRows(final int index, final int numberOfRows) {
+        protected void refreshCells(Range logicalRowRange, Range colRange) {
             Profiler.enter("Escalator.BodyRowContainer.refreshRows");
 
-            final Range visualRange = convertToVisual(Range.withLength(index,
-                    numberOfRows));
+            final Range visualRange = convertToVisual(logicalRowRange);
 
             if (!visualRange.isEmpty()) {
                 final int firstLogicalRowIndex = getLogicalRowIndex(visualRowOrder
@@ -3124,7 +3140,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 for (int rowNumber = visualRange.getStart(); rowNumber < visualRange
                         .getEnd(); rowNumber++) {
                     refreshRow(visualRowOrder.get(rowNumber),
-                            firstLogicalRowIndex + rowNumber);
+                            firstLogicalRowIndex + rowNumber, colRange);
                 }
             }
 
@@ -3576,22 +3592,27 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             body.verifyEscalatorCount();
 
             if (getColumnConfiguration().getColumnCount() > 0) {
-                readjustRows(header);
-                readjustRows(body);
-                readjustRows(footer);
+                reapplyRowWidths(header);
+                reapplyRowWidths(body);
+                reapplyRowWidths(footer);
             }
+
+            /*
+             * Colspans make any kind of automatic clever content re-rendering
+             * impossible: As soon as anything has colspans, removing one might
+             * reveal further colspans, modifying the DOM structure once again,
+             * ending in a cascade of updates. Because we don't know how the
+             * data is updated.
+             * 
+             * So, instead, we don't do anything. The client code is responsible
+             * for re-rendering the content (if so desired). Everything Just
+             * Works (TM) if colspans aren't used.
+             */
         }
 
-        private void readjustRows(AbstractRowContainer container) {
+        private void reapplyRowWidths(AbstractRowContainer container) {
             if (container.getRowCount() > 0) {
                 container.reapplyRowWidths();
-
-                /*
-                 * FIXME: Because we might remove columns where affected by
-                 * colspans, it's easiest to simply redraw everything when
-                 * columns are modified.
-                 */
-                container.refreshRows(0, container.getRowCount());
             }
         }
 
@@ -3710,6 +3731,18 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 horizontalScrollbar.setScrollPos(scroller.lastScrollLeft
                         + insertedColumnsWidth);
             }
+
+            /*
+             * Colspans make any kind of automatic clever content re-rendering
+             * impossible: As soon as anything has colspans, adding one might
+             * affect surrounding colspans, modifying the DOM structure once
+             * again, ending in a cascade of updates. Because we don't know how
+             * the data is updated.
+             * 
+             * So, instead, we don't do anything. The client code is responsible
+             * for re-rendering the content (if so desired). Everything Just
+             * Works (TM) if colspans aren't used.
+             */
         }
 
         @Override
@@ -3839,6 +3872,28 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 }
             }
             return widthsArray;
+        }
+
+        @Override
+        public void refreshColumns(int index, int numberOfColumns)
+                throws IndexOutOfBoundsException, IllegalArgumentException {
+            if (numberOfColumns < 1) {
+                throw new IllegalArgumentException(
+                        "Number of columns must be 1 or greater (was "
+                                + numberOfColumns + ")");
+            }
+
+            if (index < 0 || index + numberOfColumns > getColumnCount()) {
+                throw new IndexOutOfBoundsException("The given "
+                        + "column range (" + index + ".."
+                        + (index + numberOfColumns)
+                        + ") was outside of the current number of columns ("
+                        + getColumnCount() + ")");
+            }
+
+            header.refreshColumns(index, numberOfColumns);
+            body.refreshColumns(index, numberOfColumns);
+            footer.refreshColumns(index, numberOfColumns);
         }
     }
 

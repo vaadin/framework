@@ -80,6 +80,12 @@ public class EscalatorProxy extends Escalator {
                 throws IllegalArgumentException {
             return columnConfiguration.getColumnWidthActual(index);
         }
+
+        @Override
+        public void refreshColumns(int index, int numberOfColumns)
+                throws IndexOutOfBoundsException, IllegalArgumentException {
+            columnConfiguration.refreshColumns(index, numberOfColumns);
+        }
     }
 
     private class RowContainerProxy implements RowContainer {
