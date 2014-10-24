@@ -309,11 +309,10 @@ public class CalendarEvent {
         if (getEndTime().getTime()
                 - getStartTime().getTime() > DateConstants.DAYINMILLIS) {
             isSeveralDays = true;
-        } else { // if difference <= day -> there can be different cases
-            if (getStart().compareTo(getEnd()) != 0
-                    && getEndTime().compareTo(getEnd()) != 0) {
-                isSeveralDays = true;
-            }
+        } else { // if difference <= day ->
+            isSeveralDays = (getStart().compareTo(getEnd()) != 0)
+                    && !((getEndTime().getHours() == 0
+                            && getEndTime().getMinutes() == 0));
         }
         return isSeveralDays;
     }
