@@ -355,6 +355,10 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      * 
      * @throws IndexOutOfBoundsException
      *             if the index is out of bounds
+     * @see #removeRow(StaticRow)
+     * @see #addRowAt(int)
+     * @see #appendRow()
+     * @see #prependRow()
      */
     public ROWTYPE removeRow(int rowIndex) {
         ROWTYPE row = rows.remove(rowIndex);
@@ -372,6 +376,10 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      * 
      * @throws IllegalArgumentException
      *             if the row does not exist in this section
+     * @see #removeRow(int)
+     * @see #addRowAt(int)
+     * @see #appendRow()
+     * @see #prependRow()
      */
     public void removeRow(ROWTYPE row) {
         try {
@@ -397,6 +405,10 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      * Adds a new row at the top of this section.
      * 
      * @return the new row
+     * @see #appendRow()
+     * @see #addRowAt(int)
+     * @see #removeRow(StaticRow)
+     * @see #removeRow(int)
      */
     public ROWTYPE prependRow() {
         return addRowAt(0);
@@ -406,6 +418,10 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      * Adds a new row at the bottom of this section.
      * 
      * @return the new row
+     * @see #prependRow()
+     * @see #addRowAt(int)
+     * @see #removeRow(StaticRow)
+     * @see #removeRow(int)
      */
     public ROWTYPE appendRow() {
         return addRowAt(rows.size());
@@ -420,6 +436,10 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
      * 
      * @throws IndexOutOfBoundsException
      *             if the index is out of bounds
+     * @see #appendRow()
+     * @see #prependRow()
+     * @see #removeRow(StaticRow)
+     * @see #removeRow(int)
      */
     public ROWTYPE addRowAt(int index) {
         ROWTYPE row = createRow();
