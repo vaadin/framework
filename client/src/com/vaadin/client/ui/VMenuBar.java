@@ -1583,7 +1583,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
     /*-{
         var n = element.childNodes.length;
         if(n > 0){
-            return element.childNodes[n - 1].textContent;
+            return element.childNodes[n - 1].nodeValue;
         }
         else{
             return "";
