@@ -133,6 +133,15 @@ public class ValoThemeUITest extends MultiBrowserTest {
     }
 
     @Test
+    public void treeTables() throws Exception {
+        openTestURL("test");
+        open("Tables");
+        check("Hierarchical");
+        check("Footer");
+        compareScreen("treetables");
+    }
+
+    @Test
     public void dragging() throws Exception {
         openTestURL("test");
         open("Drag and Drop", "Dragging Components");
