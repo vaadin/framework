@@ -3630,6 +3630,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         c.setWidth(widthWithoutAddedIndent, true);
                     }
                 } else if (col.hasAttribute("er")) {
+                    c.setUndefinedWidth();
                     c.setExpandRatio(col.getFloatAttribute("er"));
 
                 } else if (recalcWidths) {
