@@ -14,6 +14,12 @@
       padding-left: 0;
       padding-right: 0;
     }
+    
+    [class*="caption-container"],
+    [class*="footer-container"] {
+      $vertical-padding: round(($v-table-row-height - $v-table-header-font-size)/2);
+      min-height: $v-table-row-height - $vertical-padding - ($vertical-padding - $v-table-border-width);
+    }
 
     [class*="cell-wrapper"] {
       min-height: $v-font-size;
