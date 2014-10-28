@@ -116,6 +116,9 @@
             <li>The return type of BootstrapHandler.getWidgetsetForUI() has changed.</li>
             <li>Vaadin shared no longer depends on a custom build of Guava. Any project that depends on Guava as a transitive dependency should use standard Guava.</li>
             <li>Valo theme field error styles now apply to NativeSelect, ListSelect and TwinColSelect as well.</li>
+            <li>The LoginForm component has been rewritten to better support auto-completion of passwords on modern browsers.
+                Its API, look and DOM structure have changed somewhat, so any application level customizations of LoginForm need changes.
+                See also <a href="http://dev.vaadin.com/ticket/8171">#8171</a></li>
             <li>The way we handle GWT dependencies has been completely changed. See <a href="#gwtdep">this section</a> for more details</li>
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
