@@ -67,6 +67,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
     private int columnGroupRows = 0;
     private IndexedContainer ds;
+    private Grid grid;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -186,6 +187,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         createColumnActions();
 
+        createPropertyActions();
+
         createHeaderActions();
 
         createFooterActions();
@@ -218,6 +221,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 }, null);
 
+        this.grid = grid;
         return grid;
     }
 
@@ -567,6 +571,28 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
     private static String getColumnProperty(int c) {
         return "Column " + c;
+    }
+
+    protected void createPropertyActions() {
+        createCategory("Properties", null);
+
+        createBooleanAction("Prepend property", "Properties", false,
+                new Command<Grid, Boolean>() {
+                    private final Object propertyId = new Object();
+
+                    @Override
+                    public void execute(Grid c, Boolean enable, Object data) {
+                        if (enable.booleanValue()) {
+                            ds.addContainerProperty(propertyId, String.class,
+                                    "property value");
+                            grid.getColumn(propertyId).setHeaderCaption(
+                                    "new property");
+                            grid.setColumnOrder(propertyId);
+                        } else {
+                            ds.removeContainerProperty(propertyId);
+                        }
+                    }
+                }, null);
     }
 
     protected void createRowActions() {

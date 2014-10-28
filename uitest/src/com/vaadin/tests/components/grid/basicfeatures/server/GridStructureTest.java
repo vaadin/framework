@@ -19,6 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -301,6 +302,33 @@ public class GridStructureTest extends GridBasicFeaturesTest {
             assertEquals("Grid contained unexpected values. (0, " + column
                     + ")", gridData[i], newText);
         }
+    }
+
+    @Test
+    public void testAddingProperty() {
+        setDebug(true);
+        openTestURL();
+
+        assertNotEquals("property value", getGridElement().getCell(0, 0)
+                .getText());
+        selectMenuPath("Component", "Properties", "Prepend property");
+        assertEquals("property value", getGridElement().getCell(0, 0).getText());
+    }
+
+    @Test
+    public void testRemovingAddedProperty() {
+        openTestURL();
+
+        assertEquals("(0, 0)", getGridElement().getCell(0, 0).getText());
+        assertNotEquals("property value", getGridElement().getCell(0, 0)
+                .getText());
+
+        selectMenuPath("Component", "Properties", "Prepend property");
+        selectMenuPath("Component", "Properties", "Prepend property");
+
+        assertNotEquals("property value", getGridElement().getCell(0, 0)
+                .getText());
+        assertEquals("(0, 0)", getGridElement().getCell(0, 0).getText());
     }
 
     private boolean verticalScrollbarIsPresent() {

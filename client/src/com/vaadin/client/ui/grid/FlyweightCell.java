@@ -102,6 +102,10 @@ public class FlyweightCell {
         if (iterator.areCellsAttached()) {
             final TableCellElement e = row.getElement().getCells()
                     .getItem(column);
+
+            assert e != null : "Cell " + column + " for logical row "
+                    + row.getRow() + " doesn't exist in the DOM!";
+
             e.setPropertyInt(COLSPAN_ATTR, 1);
             e.getStyle().setWidth(row.getColumnWidth(column), Unit.PX);
             e.getStyle().clearDisplay();

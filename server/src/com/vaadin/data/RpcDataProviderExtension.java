@@ -453,6 +453,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
          *            the property ids that have been added to the container
          */
         public void propertiesAdded(Collection<Object> addedPropertyIds) {
+            if (addedPropertyIds.isEmpty()) {
+                return;
+            }
+
             for (int i = activeRange.getStart(); i < activeRange.getEnd(); i++) {
                 final Object itemId = container.getIdByIndex(i);
                 final Item item = container.getItem(itemId);
@@ -468,6 +472,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
                                 .addValueChangeListener(listener);
                     }
                 }
+
+                updateRowData(i);
             }
         }
 

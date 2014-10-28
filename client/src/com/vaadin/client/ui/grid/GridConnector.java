@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Widget;
@@ -106,6 +108,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                     + rowData;
 
             final JSONValue columnValue = rowDataObject.get(id);
+
+            /*
+             * note, Java "null" is different from JSONValue "null" (i.e.
+             * JSONNull).
+             */
+            assert columnValue != null : "Could not find data for column with id "
+                    + id;
             return rendererConnector.decode(columnValue);
         }
 
@@ -363,53 +372,76 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     }
 
     @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+    public void onStateChanged(final StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        // Column updates
-        if (stateChangeEvent.hasPropertyChanged("columns")) {
+        /*
+         * The operations in here have been made deferred.
+         * 
+         * The row data needed to react to column changes comes in the RPC
+         * calls. Since state is always updated before RPCs are called, we need
+         * to be sure that RPC is called before Grid reacts to state changes.
+         * 
+         * Note that there are still some methods annotated with @OnStateChange
+         * that aren't deferred. That's okay, though.
+         */
 
-            // Remove old columns
-            purgeRemovedColumns();
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                // Column updates
+                if (stateChangeEvent.hasPropertyChanged("columns")) {
 
-            // Add new columns
-            for (GridColumnState state : getState().columns) {
-                if (!columnIdToColumn.containsKey(state.id)) {
-                    addColumnFromStateChangeEvent(state);
+                    // Remove old columns
+                    purgeRemovedColumns();
+
+                    // Add new columns
+                    for (GridColumnState state : getState().columns) {
+                        if (!columnIdToColumn.containsKey(state.id)) {
+                            addColumnFromStateChangeEvent(state);
+                        }
+                        updateColumnFromState(columnIdToColumn.get(state.id),
+                                state);
+                    }
                 }
-                updateColumnFromState(columnIdToColumn.get(state.id), state);
+
+                if (stateChangeEvent.hasPropertyChanged("columnOrder")) {
+                    if (orderNeedsUpdate(getState().columnOrder)) {
+                        updateColumnOrderFromState(getState().columnOrder);
+                    }
+                }
+
+                if (stateChangeEvent.hasPropertyChanged("header")) {
+                    updateSectionFromState(getWidget().getHeader(),
+                            getState().header);
+                }
+
+                if (stateChangeEvent.hasPropertyChanged("footer")) {
+                    updateSectionFromState(getWidget().getFooter(),
+                            getState().footer);
+                }
+
+                if (stateChangeEvent.hasPropertyChanged("lastFrozenColumnId")) {
+                    String frozenColId = getState().lastFrozenColumnId;
+                    if (frozenColId != null) {
+                        CustomGridColumn column = columnIdToColumn
+                                .get(frozenColId);
+                        assert column != null : "Column to be frozen could not be found (id:"
+                                + frozenColId + ")";
+                        getWidget().setLastFrozenColumn(column);
+                    } else {
+                        getWidget().setLastFrozenColumn(null);
+                    }
+                }
+
+                if (stateChangeEvent.hasPropertyChanged("editorRowEnabled")) {
+                    getWidget().getEditorRow().setEnabled(
+                            getState().editorRowEnabled);
+                }
+
             }
-        }
+        });
 
-        if (stateChangeEvent.hasPropertyChanged("columnOrder")) {
-            if (orderNeedsUpdate(getState().columnOrder)) {
-                updateColumnOrderFromState(getState().columnOrder);
-            }
-        }
-
-        if (stateChangeEvent.hasPropertyChanged("header")) {
-            updateSectionFromState(getWidget().getHeader(), getState().header);
-        }
-
-        if (stateChangeEvent.hasPropertyChanged("footer")) {
-            updateSectionFromState(getWidget().getFooter(), getState().footer);
-        }
-
-        if (stateChangeEvent.hasPropertyChanged("lastFrozenColumnId")) {
-            String frozenColId = getState().lastFrozenColumnId;
-            if (frozenColId != null) {
-                CustomGridColumn column = columnIdToColumn.get(frozenColId);
-                assert column != null : "Column to be frozen could not be found (id:"
-                        + frozenColId + ")";
-                getWidget().setLastFrozenColumn(column);
-            } else {
-                getWidget().setLastFrozenColumn(null);
-            }
-        }
-
-        if (stateChangeEvent.hasPropertyChanged("editorRowEnabled")) {
-            getWidget().getEditorRow().setEnabled(getState().editorRowEnabled);
-        }
     }
 
     private void updateColumnOrderFromState(List<String> stateColumnOrder) {

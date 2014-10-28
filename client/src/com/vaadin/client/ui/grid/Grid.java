@@ -1849,8 +1849,6 @@ public class Grid<T> extends ResizeComposite implements
         ((AbstractGridColumn<?, T>) column).setGrid(null);
 
         columns.remove(columnIndex);
-
-        refreshBody();
     }
 
     /**
