@@ -1029,7 +1029,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * </p>
      * 
      * <p>
-     * If Table has width set ({@link #setWidth(float, int)} ) the client side
+     * If Table has height set ({@link #setHeight(float, int)} ) the client side
      * may update the page length automatically the correct value.
      * </p>
      * 
