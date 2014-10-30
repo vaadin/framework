@@ -33,6 +33,10 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
@@ -54,7 +58,7 @@ import com.vaadin.shared.ui.menubar.MenuBarConstants;
 
 public class VMenuBar extends SimpleFocusablePanel
         implements CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler,
-        FocusHandler, SubPartAware {
+        FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
 
     // The hierarchy of VMenuBar is a bit weird as VMenuBar is the Paintable,
     // used for the root menu but also used for the sub menus.
@@ -605,6 +609,8 @@ public class VMenuBar extends SimpleFocusablePanel
         popup.setWidget(item.getSubMenu());
         popup.addCloseHandler(this);
         popup.addAutoHidePartner(item.getElement());
+        popup.addDomHandler(this, MouseOutEvent.getType());
+        popup.addDomHandler(this, MouseOverEvent.getType());
 
         // at 0,0 because otherwise IE7 add extra scrollbars (#5547)
         popup.setPopupPosition(0, 0);
@@ -1717,5 +1723,15 @@ public class VMenuBar extends SimpleFocusablePanel
      */
     public CustomMenuItem getMenuItemWithElement(Element element) {
         return getMenuItemWithElement(DOM.asOld(element));
+    }
+
+    @Override
+    public void onMouseOver(MouseOverEvent event) {
+        LazyCloser.cancelClosing();
+    }
+
+    @Override
+    public void onMouseOut(MouseOutEvent event) {
+        LazyCloser.schedule();
     }
 }
