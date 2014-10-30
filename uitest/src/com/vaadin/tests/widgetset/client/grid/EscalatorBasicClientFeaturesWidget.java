@@ -463,6 +463,15 @@ public class EscalatorBasicClientFeaturesWidget extends
                 escalator.getColumnConfiguration().refreshColumns(0, 1);
             }
         }, menupath);
+
+        addMenuCommand("Resize first column to max width",
+                new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        escalator.getColumnConfiguration()
+                                .setColumnWidthToContent(0);
+                    }
+                }, menupath);
     }
 
     private void createHeaderRowsMenu() {

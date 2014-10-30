@@ -39,6 +39,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String REMOVE_ONE_COLUMN_FROM_BEGINNING = "Remove one column from beginning";
     protected static final String REMOVE_ONE_ROW_FROM_BEGINNING = "Remove one row from beginning";
     protected static final String ADD_ONE_OF_EACH_ROW = "Add one of each row";
+    protected static final String RESIZE_FIRST_COLUMN_TO_MAX_WIDTH = "Resize first column to max width";
 
     protected static final String HEADER_ROWS = "Header Rows";
     protected static final String BODY_ROWS = "Body Rows";

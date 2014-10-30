@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures;
 
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -199,5 +200,18 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
         selectMenuPath(GENERAL, CLEAR_ROW_COLUMN);
 
         assertNull(getBodyCell(0, 0));
+    }
+
+    @Test
+    public void testResizeColToFit() {
+        openTestURL();
+        selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
+
+        int originalWidth = getBodyCell(0, 0).getSize().getWidth();
+        selectMenuPath(COLUMNS_AND_ROWS, COLUMNS,
+                RESIZE_FIRST_COLUMN_TO_MAX_WIDTH);
+        int newWidth = getBodyCell(0, 0).getSize().getWidth();
+        assertNotEquals("Column width should've changed", originalWidth,
+                newWidth);
     }
 }

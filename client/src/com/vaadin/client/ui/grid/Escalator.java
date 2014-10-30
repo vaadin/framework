@@ -1869,6 +1869,51 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             return new Cell(domRowIndex, domColumnIndex, cellElement);
         }
 
+        int getMaxCellWidth(int colIndex) throws IllegalArgumentException {
+            int maxCellWidth = -1;
+
+            NodeList<TableRowElement> rows = root.getRows();
+            for (int row = 0; row < rows.getLength(); row++) {
+                TableRowElement rowElement = rows.getItem(row);
+                TableCellElement cellOriginal = rowElement.getCells().getItem(
+                        colIndex);
+
+                if (cellIsPartOfSpan(cellOriginal)) {
+                    throw new IllegalArgumentException("Encountered a column "
+                            + "spanned cell in column " + colIndex + ".");
+                }
+
+                /*
+                 * To get the actual width of the contents, we need to get the
+                 * cell content without any hardcoded height or width.
+                 * 
+                 * But we don't want to modify the existing column, because that
+                 * might trigger some unnecessary listeners and whatnot. So,
+                 * instead, we make a deep clone of that cell, but without any
+                 * explicit dimensions, and measure that instead.
+                 */
+
+                TableCellElement cellClone = TableCellElement
+                        .as((Element) cellOriginal.cloneNode(true));
+                cellClone.getStyle().clearHeight();
+                cellClone.getStyle().clearWidth();
+
+                rowElement.insertBefore(cellClone, cellOriginal);
+                maxCellWidth = Math.max(cellClone.getOffsetWidth(),
+                        maxCellWidth);
+                cellClone.removeFromParent();
+            }
+
+            return maxCellWidth;
+        }
+
+        private boolean cellIsPartOfSpan(TableCellElement cell) {
+            boolean cellHasColspan = cell.getColSpan() > 1;
+            boolean cellIsHidden = Display.NONE.getCssName().equals(
+                    cell.getStyle().getDisplay());
+            return cellHasColspan || cellIsHidden;
+        }
+
         void refreshColumns(int index, int numberOfColumns) {
             if (getRowCount() > 0) {
                 Range rowRange = Range.withLength(0, getRowCount());
@@ -3832,6 +3877,35 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             return columns.get(index).getCalculatedWidth();
         }
 
+        @Override
+        public void setColumnWidthToContent(int index)
+                throws IllegalArgumentException {
+
+            if (index < 0 || index >= getColumnCount()) {
+                throw new IllegalArgumentException(index
+                        + " is not a valid index for a column");
+            }
+
+            int maxWidth = getMaxCellWidth(index);
+
+            if (maxWidth == -1) {
+                return;
+            }
+
+            setCalculatedColumnWidth(index, maxWidth);
+            header.reapplyColumnWidths();
+            footer.reapplyColumnWidths();
+            body.reapplyColumnWidths();
+        }
+
+        private int getMaxCellWidth(int colIndex)
+                throws IllegalArgumentException {
+            int headerWidth = header.getMaxCellWidth(colIndex);
+            int bodyWidth = body.getMaxCellWidth(colIndex);
+            int footerWidth = footer.getMaxCellWidth(colIndex);
+            return Math.max(headerWidth, Math.max(bodyWidth, footerWidth));
+        }
+
         /**
          * Calculates the width of the columns in a given range.
          * 
@@ -3840,8 +3914,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          * @return the total width of the columns in the given
          *         <code>columns</code>
          */
-        int getCalculatedColumnsWidth(@SuppressWarnings("hiding")
-        final Range columns) {
+        int getCalculatedColumnsWidth(final Range columns) {
             /*
              * This is an assert instead of an exception, since this is an
              * internal method.
