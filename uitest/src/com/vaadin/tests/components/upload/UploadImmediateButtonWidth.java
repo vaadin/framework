@@ -20,31 +20,38 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 
+// We're explicitly testing only immediate uploads here because non-immediate
+// width issues still require planning before we can provide a fix.
 public class UploadImmediateButtonWidth extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        VerticalLayout lt = new VerticalLayout();
-        lt.setWidth("500px");
 
-        Upload upload1 = new Upload();
-        upload1.setImmediate(true);
-        upload1.setId("upload1");
-        upload1.setWidth("300px");
-        lt.addComponent(upload1);
+        // Let's use a separate layout without margins to make the
+        // button widths not dependent on the selected theme.
+        VerticalLayout layout = new VerticalLayout();
+        layout.setWidth("500px");
 
-        Upload upload2 = new Upload();
-        upload2.setImmediate(true);
-        upload2.setWidth("50%");
-        upload2.setId("upload2");
-        lt.addComponent(upload2);
+        layout.addComponent(getImmediateUpload("upload1", "300px"));
+        layout.addComponent(getImmediateUpload("upload2", "50%"));
+        layout.addComponent(getImmediateUpload("upload3", ""));
 
-        addComponent(lt);
+        addComponent(layout);
+    }
+
+    private Upload getImmediateUpload(String id, String width) {
+        Upload upload = new Upload();
+
+        upload.setId(id);
+        upload.setWidth(width);
+        upload.setImmediate(true);
+
+        return upload;
     }
 
     @Override
     protected String getTestDescription() {
-        return "Width of immediate upload button should obey setWidth()";
+        return "Width of the upload button should obey setWidth() when using immediate";
     }
 
     @Override

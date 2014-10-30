@@ -1,13 +1,17 @@
 /**
  *
  *
- * @param {string} $primary-stylename (v-upload) - 
+ * @param {string} $primary-stylename (v-upload) -
  *
  * @group upload
  */
 @mixin valo-upload ($primary-stylename: v-upload) {
   .#{$primary-stylename} .v-button {
     @include valo-widget-style;
+  }
+
+  .#{$primary-stylename}-immediate .v-button {
+    width: 100%;
   }
 
   .#{$primary-stylename}-immediate input[type="file"] {

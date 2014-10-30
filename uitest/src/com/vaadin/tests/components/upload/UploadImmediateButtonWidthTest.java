@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.upload;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -23,25 +24,36 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class UploadImmediateButtonWidthTest extends MultiBrowserTest {
+public abstract class UploadImmediateButtonWidthTest extends MultiBrowserTest {
 
-    private void checkButtonWidth(String id, int expectedWidth) {
+    protected abstract String getTheme();
+
+    protected double getButtonWidth(String id) {
         WebElement upload = driver.findElement(By.id(id));
         WebElement button = upload.findElement(By.className("v-button"));
-        assertEquals("width of button " + id + " is incorrect", expectedWidth,
-                button.getSize().getWidth());
+
+        return button.getSize().getWidth();
+    }
+
+    @Override
+    protected Class<?> getUIClass() {
+        return UploadImmediateButtonWidth.class;
+    }
+
+    @Override
+    public void setup() throws Exception {
+        super.setup();
+
+        openTestURL(String.format("theme=%s", getTheme()));
     }
 
     @Test
-    public void buttonWithPixelWidth() {
-        openTestURL();
-        checkButtonWidth("upload1", 300);
+    public void immediateButtonWithPixelWidth() {
+        assertThat(getButtonWidth("upload1"), is(300.0));
     }
 
     @Test
-    public void buttonWithPercentageWidth() {
-        openTestURL();
-        checkButtonWidth("upload2", 250);
+    public void immediateButtonWithPercentageWidth() {
+        assertThat(getButtonWidth("upload2"), is(250.0));
     }
-
 }
