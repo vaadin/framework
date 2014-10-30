@@ -4,12 +4,11 @@
 	white-space: nowrap;
 }
 
-
 .#{$primaryStyleName}-immediate {
 	position: relative;
 	margin: 0;
 	overflow: hidden;
-	.v-button{
+	.v-button {
 		width:100%;
     }
 }
