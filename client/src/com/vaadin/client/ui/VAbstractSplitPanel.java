@@ -199,6 +199,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     private void setOrientation(Orientation orientation) {
         this.orientation = orientation;
+
         if (orientation == Orientation.HORIZONTAL) {
             splitter.getStyle().setHeight(100, Unit.PCT);
             splitter.getStyle().setTop(0, Unit.PX);
@@ -393,107 +394,118 @@ public class VAbstractSplitPanel extends ComplexPanel {
             return;
         }
 
-        int wholeSize;
-        int pixelPosition;
-
         switch (orientation) {
         case HORIZONTAL:
-            wholeSize = DOM.getElementPropertyInt(wrapper, "clientWidth");
-            pixelPosition = DOM.getElementPropertyInt(splitter, "offsetLeft");
-
-            // reposition splitter in case it is out of box
-            if ((pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize)
-                    || (positionReversed && pixelPosition < 0)) {
-                pixelPosition = wholeSize - getSplitterSize();
-                if (pixelPosition < 0) {
-                    pixelPosition = 0;
-                }
-                // Move splitter within bounds, but don't remember the new value
-                setSplitPosition(pixelPosition + "px", false);
-                return;
-            }
-
-            firstContainer.getStyle().setWidth(pixelPosition, Unit.PX);
-            int secondContainerWidth = (wholeSize - pixelPosition - getSplitterSize());
-            if (secondContainerWidth < 0) {
-                secondContainerWidth = 0;
-            }
-            secondContainer.getStyle().setWidth(secondContainerWidth, Unit.PX);
-            secondContainer.getStyle().setLeft(
-                    pixelPosition + getSplitterSize(), Unit.PX);
-
-            LayoutManager layoutManager = LayoutManager.get(client);
-            ConnectorMap connectorMap = ConnectorMap.get(client);
-            if (firstChild != null) {
-                ComponentConnector connector = connectorMap
-                        .getConnector(firstChild);
-                if (connector.isRelativeWidth()) {
-                    layoutManager.reportWidthAssignedToRelative(connector,
-                            pixelPosition);
-                } else {
-                    layoutManager.setNeedsMeasure(connector);
-                }
-            }
-            if (secondChild != null) {
-                ComponentConnector connector = connectorMap
-                        .getConnector(secondChild);
-                if (connector.isRelativeWidth()) {
-                    layoutManager.reportWidthAssignedToRelative(connector,
-                            secondContainerWidth);
-                } else {
-                    layoutManager.setNeedsMeasure(connector);
-                }
-            }
+            horizontalOrientationUpdateSizes();
             break;
         case VERTICAL:
-            wholeSize = DOM.getElementPropertyInt(wrapper, "clientHeight");
-            pixelPosition = DOM.getElementPropertyInt(splitter, "offsetTop");
-
-            // reposition splitter in case it is out of box
-            if ((pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize)
-                    || (positionReversed && pixelPosition < 0)) {
-                pixelPosition = wholeSize - getSplitterSize();
-                if (pixelPosition < 0) {
-                    pixelPosition = 0;
-                }
-                // Move splitter within bounds, but don't remember the new value
-                setSplitPosition(pixelPosition + "px", false);
-                return;
-            }
-
-            firstContainer.getStyle().setHeight(pixelPosition, Unit.PX);
-            int secondContainerHeight = (wholeSize - pixelPosition - getSplitterSize());
-            if (secondContainerHeight < 0) {
-                secondContainerHeight = 0;
-            }
-            secondContainer.getStyle()
-                    .setHeight(secondContainerHeight, Unit.PX);
-            secondContainer.getStyle().setTop(
-                    pixelPosition + getSplitterSize(), Unit.PX);
-
-            layoutManager = LayoutManager.get(client);
-            connectorMap = ConnectorMap.get(client);
-            if (firstChild != null) {
-                ComponentConnector connector = connectorMap
-                        .getConnector(firstChild);
-                if (connector.isRelativeHeight()) {
-                    layoutManager.reportHeightAssignedToRelative(connector,
-                            pixelPosition);
-                } else {
-                    layoutManager.setNeedsMeasure(connector);
-                }
-            }
-            if (secondChild != null) {
-                ComponentConnector connector = connectorMap
-                        .getConnector(secondChild);
-                if (connector.isRelativeHeight()) {
-                    layoutManager.reportHeightAssignedToRelative(connector,
-                            secondContainerHeight);
-                } else {
-                    layoutManager.setNeedsMeasure(connector);
-                }
-            }
+            verticalOrientationUpdateSizes();
             break;
+        }
+    }
+
+    private void verticalOrientationUpdateSizes() {
+        int wholeSize = DOM.getElementPropertyInt(wrapper, "clientHeight");
+        int pixelPosition = DOM.getElementPropertyInt(splitter, "offsetTop");
+
+        // reposition splitter in case it is out of box
+        if ((pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize)
+                || (positionReversed && pixelPosition < 0)) {
+            pixelPosition = wholeSize - getSplitterSize();
+            if (pixelPosition < 0) {
+                pixelPosition = 0;
+            }
+            // Move splitter within bounds, but don't remember the new value
+            setSplitPosition(pixelPosition + "px", false);
+            return;
+        }
+
+        firstContainer.getStyle().setHeight(pixelPosition, Unit.PX);
+        int secondContainerHeight = (wholeSize - pixelPosition - getSplitterSize());
+        if (secondContainerHeight < 0) {
+            secondContainerHeight = 0;
+        }
+        secondContainer.getStyle().setHeight(secondContainerHeight, Unit.PX);
+        secondContainer.getStyle().setTop(pixelPosition + getSplitterSize(),
+                Unit.PX);
+
+        LayoutManager layoutManager = LayoutManager.get(client);
+        ConnectorMap connectorMap = ConnectorMap.get(client);
+        if (firstChild != null) {
+            ComponentConnector connector = connectorMap
+                    .getConnector(firstChild);
+            if (connector.isRelativeHeight()) {
+                layoutManager.reportHeightAssignedToRelative(connector,
+                        pixelPosition);
+            } else {
+                layoutManager.setNeedsMeasure(connector);
+            }
+        }
+        if (secondChild != null) {
+            ComponentConnector connector = connectorMap
+                    .getConnector(secondChild);
+            if (connector.isRelativeHeight()) {
+                layoutManager.reportHeightAssignedToRelative(connector,
+                        secondContainerHeight);
+            } else {
+                layoutManager.setNeedsMeasure(connector);
+            }
+        }
+    }
+
+    private void horizontalOrientationUpdateSizes() {
+        int wholeSize = DOM.getElementPropertyInt(wrapper, "clientWidth");
+        int pixelPosition = DOM.getElementPropertyInt(splitter, "offsetLeft");
+
+        // reposition splitter in case it is out of box
+        if ((pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize)
+                || (positionReversed && pixelPosition < 0)) {
+            pixelPosition = wholeSize - getSplitterSize();
+            if (pixelPosition < 0) {
+                pixelPosition = 0;
+            }
+            // Move splitter within bounds, but don't remember the new value
+            setSplitPosition(pixelPosition + "px", false);
+            return;
+        }
+
+        firstContainer.getStyle().setWidth(pixelPosition, Unit.PX);
+        int secondContainerWidth = (wholeSize - pixelPosition - getSplitterSize());
+        if (secondContainerWidth < 0) {
+            secondContainerWidth = 0;
+        }
+        secondContainer.getStyle().setWidth(secondContainerWidth, Unit.PX);
+        secondContainer.getStyle().setLeft(pixelPosition + getSplitterSize(),
+                Unit.PX);
+
+        LayoutManager layoutManager = LayoutManager.get(client);
+        ConnectorMap connectorMap = ConnectorMap.get(client);
+        if (firstChild != null) {
+            ComponentConnector connector = connectorMap
+                    .getConnector(firstChild);
+            if (connector.isRelativeWidth()) {
+                layoutManager.reportWidthAssignedToRelative(connector,
+                        pixelPosition);
+            } else {
+                layoutManager.setNeedsMeasure(connector);
+            }
+        }
+        if (secondChild != null) {
+            ComponentConnector connector = connectorMap
+                    .getConnector(secondChild);
+            if (connector.isRelativeWidth()) {
+                layoutManager.reportWidthAssignedToRelative(connector,
+                        secondContainerWidth);
+            } else {
+                layoutManager.setNeedsMeasure(connector);
+            }
+        }
+
+        // previous layout pass may have changed the position already, needs to
+        // be reset before calculating which positioning should be used
+        secondContainer.getStyle().setPosition(Position.ABSOLUTE);
+        if (getOffsetHeight() == 0) {
+            secondContainer.getStyle().setPosition(Position.RELATIVE);
         }
     }
 
