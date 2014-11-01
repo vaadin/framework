@@ -612,7 +612,7 @@ $v-table-background-color: null !default;
  * @group table
  */
 @mixin valo-table-sort-asc-icon-style {
-  content: '\f0dd';
+  content: '\f0de';
   font-family: FontAwesome;
 }
 
@@ -623,7 +623,7 @@ $v-table-background-color: null !default;
  * @group table
  */
 @mixin valo-table-sort-desc-icon-style {
-  content: '\f0de';
+  content: '\f0dd';
   font-family: FontAwesome;
 }
 
