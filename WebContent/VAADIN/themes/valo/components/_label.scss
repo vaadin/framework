@@ -183,6 +183,16 @@ $v-letter-spacing--h4: 0 !default;
     }
   }
 
+  .v-verticallayout > .v-slot:first-child .v-formlayout-contentcell,
+  .v-verticallayout > div > .v-slot:first-child .v-formlayout-contentcell {
+    h1, .#{$primary-stylename}-h1,
+    h2, .#{$primary-stylename}-h2,
+    h3, .#{$primary-stylename}-h3,
+    h4, .#{$primary-stylename}-h4 {
+      margin-top: -0.5em;
+    }
+  }
+
   h1, .#{$primary-stylename}-h1,
   h2, .#{$primary-stylename}-h2,
   h3, .#{$primary-stylename}-h3,
