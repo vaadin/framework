@@ -3854,7 +3854,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
-    private boolean rowHeadersAreEnabled() {
+    protected boolean rowHeadersAreEnabled() {
         return getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN;
     }
 

@@ -411,6 +411,14 @@ public class TreeTable extends Table implements Hierarchical {
     }
 
     @Override
+    protected boolean rowHeadersAreEnabled() {
+        if (getRowHeaderMode() == RowHeaderMode.ICON_ONLY) {
+            return false;
+        }
+        return super.rowHeadersAreEnabled();
+    }
+
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
 
