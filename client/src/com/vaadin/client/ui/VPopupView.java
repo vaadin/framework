@@ -442,6 +442,14 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
         return Collections.singleton((Widget) popup).iterator();
     }
 
+    /**
+     * Checks whether there are operations pending for this widget that must be
+     * executed before reaching a steady state.
+     *
+     * @returns <code>true</code> iff there are operations pending which must be
+     *          executed before reaching a steady state
+     * @since 7.3.4
+     */
     @Override
     public boolean isWorkPending() {
         return popupShowInProgress;
