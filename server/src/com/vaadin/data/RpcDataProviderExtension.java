@@ -637,6 +637,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     private KeyMapper<Object> columnKeys;
 
+    /* Has client been initialized */
+    private boolean clientInitialized = false;
+
     /**
      * Creates a new data provider using the given container.
      * 
@@ -685,6 +688,12 @@ public class RpcDataProviderExtension extends AbstractExtension {
                     .addItemSetChangeListener(itemListener);
         }
 
+    }
+
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+        clientInitialized = true;
     }
 
     private void pushRows(int firstRow, List<?> itemIds) {
@@ -748,7 +757,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private void insertRowData(int index, int count) {
         getState().containerSize += count;
-        rpc.insertRowData(index, count);
+        if (clientInitialized) {
+            rpc.insertRowData(index, count);
+        }
 
         activeRowHandler.insertRows(index, count);
     }
@@ -765,7 +776,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private void removeRowData(int firstIndex, int count) {
         getState().containerSize -= count;
-        rpc.removeRowData(firstIndex, count);
+        if (clientInitialized) {
+            rpc.removeRowData(firstIndex, count);
+        }
 
         for (int i = 0; i < count; i++) {
             Object itemId = keyMapper.itemIdAtIndex(firstIndex + i);
