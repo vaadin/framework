@@ -4748,7 +4748,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * FieldFactory interface, and assign it to table, and set the editable
      * property to true.
      * 
-     * @return true if table is editable, false oterwise.
+     * @return true if table is editable, false otherwise.
      * @see Field
      * @see FieldFactory
      * 
