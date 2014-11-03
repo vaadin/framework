@@ -79,6 +79,7 @@ public class LocatorUtil {
     /**
      * Checks if path refers to vaadin UI element com.vaadin.ui.UI.
      * 
+     * @since 7.3.4
      * @param path
      *            to vaadin element
      * @return true if path refers to UI element, false otherwise
@@ -93,6 +94,7 @@ public class LocatorUtil {
      * Checks if path refers to vaadin Notification element
      * com.vaadin.ui.Notification.
      * 
+     * @since 7.3.4
      * @param path
      *            to vaadin element
      * @return true if path refers to Notification element, false otherwise

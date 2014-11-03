@@ -655,6 +655,11 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         }
     }
 
+    /**
+     * Returns the feedback popup if subPart is "popup" and null otherwise.
+     * 
+     * @since 7.3.4
+     */
     @Override
     public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
         if (subPart.equals("popup")) {
@@ -664,6 +669,12 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         return null;
     }
 
+    /**
+     * Returns "popup" if any element is or has a child that corresponds to
+     * subElement.
+     * 
+     * @since 7.3.4
+     */
     @Override
     public String getSubPartName(com.google.gwt.user.client.Element subElement) {
         if (feedbackPopup.getElement().isOrHasChild(subElement)) {
