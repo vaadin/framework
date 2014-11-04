@@ -1176,6 +1176,14 @@ public class Util {
         return JSON.parse(jsonAsString);
     }-*/;
 
+    /**
+     * Round {@code num} up to {@code exp} decimal positions.
+     */
+    public static native double round(double num, int exp)
+    /*-{
+        return +(Math.round(num + "e+" + exp)  + "e-" + exp);
+    }-*/;
+
     private static Logger getLogger() {
         return Logger.getLogger(Util.class.getName());
     }

@@ -30,6 +30,7 @@ import com.vaadin.client.Profiler;
 import com.vaadin.client.Profiler.Node;
 import com.vaadin.client.Profiler.ProfilerResultConsumer;
 import com.vaadin.client.SimpleTree;
+import com.vaadin.client.Util;
 import com.vaadin.client.ValueMap;
 
 /**
@@ -73,7 +74,8 @@ public class ProfilerSection implements Section {
                 }
 
                 SimpleTree root = new SimpleTree(eventCount
-                        + " profiler events using " + totalTime + " ms");
+                        + " profiler events using " + Util.round(totalTime, 3)
+                        + " ms");
                 root.add(drillDownTree);
                 root.add(offendersTree);
                 root.open(false);

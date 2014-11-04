@@ -21,16 +21,18 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Duration;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
-import com.google.gwt.core.shared.GWT;
 
 /**
  * Lightweight profiling tool that can be used to collect profiling data with
@@ -42,6 +44,13 @@ import com.google.gwt.core.shared.GWT;
  * @since 7.0.0
  */
 public class Profiler {
+
+    private static RelativeTimeSupplier RELATIVE_TIME_SUPPLIER;
+
+    private static final String evtGroup = "VaadinProfiler";
+
+    private static ProfilerResultConsumer consumer;
+
     /**
      * Class to include using deferred binding to enable the profiling.
      *
@@ -49,6 +58,7 @@ public class Profiler {
      * @since 7.0.0
      */
     public static class EnabledProfiler extends Profiler {
+
         @Override
         protected boolean isImplEnabled() {
             return true;
@@ -207,8 +217,8 @@ public class Profiler {
             if (getName() == null) {
                 return "";
             }
-            String msg = prefix + " " + getName() + " in " + getTimeSpent()
-                    + " ms.";
+            String msg = prefix + " " + getName() + " in "
+                    + roundToSignificantFigures(getTimeSpent()) + " ms.";
             if (getCount() > 1) {
                 msg += " Invoked "
                         + getCount()
@@ -222,7 +232,8 @@ public class Profiler {
             }
             if (!children.isEmpty()) {
                 double ownTime = getOwnTime();
-                msg += " " + ownTime + " ms spent in own code";
+                msg += " " + roundToSignificantFigures(ownTime)
+                        + " ms spent in own code";
                 if (getCount() > 1) {
                     msg += " ("
                             + roundToSignificantFigures(ownTime / getCount())
@@ -259,10 +270,10 @@ public class Profiler {
 
                 totalNode.time += getOwnTime();
                 totalNode.count += getCount();
-                totalNode.minTime = Math.min(totalNode.minTime,
-                        getMinTimeSpent());
-                totalNode.maxTime = Math.max(totalNode.maxTime,
-                        getMaxTimeSpent());
+                totalNode.minTime = roundToSignificantFigures(Math.min(
+                        totalNode.minTime, getMinTimeSpent()));
+                totalNode.maxTime = roundToSignificantFigures(Math.max(
+                        totalNode.maxTime, getMaxTimeSpent()));
             }
             for (Node node : children.values()) {
                 node.sumUpTotals(totals);
@@ -284,8 +295,6 @@ public class Profiler {
             }
         }
     }
-
-    private static final String evtGroup = "VaadinProfiler";
 
     private static final class GwtStatsEvent extends JavaScriptObject {
         protected GwtStatsEvent() {
@@ -317,6 +326,16 @@ public class Profiler {
             return this.moduleName;
         }-*/;
 
+        private native double getRelativeMillis()
+        /*-{
+            return this.relativeMillis;
+        }-*/;
+
+        private native boolean isExtendedEvent()
+        /*-{
+            return 'relativeMillis' in this;
+        }-*/;
+
         public final String getEventName() {
             String group = getEvtGroup();
             if (evtGroup.equals(group)) {
@@ -326,8 +345,6 @@ public class Profiler {
             }
         }
     }
-
-    private static ProfilerResultConsumer consumer;
 
     /**
      * Checks whether the profiling gathering is enabled.
@@ -369,6 +386,15 @@ public class Profiler {
         }
     }
 
+    /**
+     * Returns time relative to the particular page load time. The value should
+     * not be used directly but rather difference between two values returned by
+     * this method should be used to compare measurements.
+     */
+    public static double getRelativeTimeMillis() {
+        return RELATIVE_TIME_SUPPLIER.getRelativeTime();
+    }
+
     private static native final void logGwtEvent(String name, String type)
     /*-{
         $wnd.__gwtStatsEvent({
@@ -377,7 +403,8 @@ public class Profiler {
             millis: (new Date).getTime(),
             sessionId: undefined,
             subSystem: name,
-            type: type
+            type: type,
+            relativeMillis: @com.vaadin.client.Profiler::getRelativeTimeMillis()()
         });
     }-*/;
 
@@ -412,6 +439,11 @@ public class Profiler {
      * @since 7.0.2
      */
     public static void initialize() {
+        if (hasHighPrecisionTime()) {
+            RELATIVE_TIME_SUPPLIER = new HighResolutionTimeSupplier();
+        } else {
+            RELATIVE_TIME_SUPPLIER = new DefaultRelativeTimeSupplier();
+        }
         if (isEnabled()) {
             ensureLogger();
         } else {
@@ -440,10 +472,12 @@ public class Profiler {
             return;
         }
 
+        Set<Node> extendedTimeNodes = new HashSet<Node>();
         for (int i = 0; i < gwtStatsEvents.length(); i++) {
             GwtStatsEvent gwtStatsEvent = gwtStatsEvents.get(i);
             String eventName = gwtStatsEvent.getEventName();
             String type = gwtStatsEvent.getType();
+            boolean isExtendedEvent = gwtStatsEvent.isExtendedEvent();
             boolean isBeginEvent = "begin".equals(type);
 
             Node stackTop = stack.getLast();
@@ -454,7 +488,11 @@ public class Profiler {
                     && eventName.equals(stack.get(stack.size() - 2).getName())
                     && !isBeginEvent) {
                 // back out of sub event
-                stackTop.leave(gwtStatsEvent.getMillis());
+                if (extendedTimeNodes.contains(stackTop) && isExtendedEvent) {
+                    stackTop.leave(gwtStatsEvent.getRelativeMillis());
+                } else {
+                    stackTop.leave(gwtStatsEvent.getMillis());
+                }
                 stack.removeLast();
                 stackTop = stack.getLast();
 
@@ -470,17 +508,29 @@ public class Profiler {
                     return;
                 }
                 Node previousStackTop = stack.removeLast();
-                previousStackTop.leave(gwtStatsEvent.getMillis());
+                if (extendedTimeNodes.contains(previousStackTop)) {
+                    previousStackTop.leave(gwtStatsEvent.getRelativeMillis());
+                } else {
+                    previousStackTop.leave(gwtStatsEvent.getMillis());
+                }
             } else {
+                double millis = isExtendedEvent ? gwtStatsEvent
+                        .getRelativeMillis() : gwtStatsEvent.getMillis();
                 if (!inEvent) {
-                    stackTop = stackTop.enterChild(eventName,
-                            gwtStatsEvent.getMillis());
+                    stackTop = stackTop.enterChild(eventName, millis);
                     stack.add(stackTop);
+                    if (isExtendedEvent) {
+                        extendedTimeNodes.add(stackTop);
+                    }
                 }
                 if (!isBeginEvent) {
                     // Create sub event
-                    stack.add(stackTop.enterChild(eventName + "." + type,
-                            gwtStatsEvent.getMillis()));
+                    Node subNode = stackTop.enterChild(eventName + "." + type,
+                            millis);
+                    if (isExtendedEvent) {
+                        extendedTimeNodes.add(subNode);
+                    }
+                    stack.add(subNode);
                 }
             }
         }
@@ -636,4 +686,32 @@ public class Profiler {
         return Logger.getLogger(Profiler.class.getName());
     }
 
+    private static native boolean hasHighPrecisionTime()
+    /*-{
+       return $wnd.performance && (typeof $wnd.performance.now == 'function');
+    }-*/;
+
+    private interface RelativeTimeSupplier {
+        double getRelativeTime();
+    }
+
+    private static class DefaultRelativeTimeSupplier implements
+            RelativeTimeSupplier {
+
+        @Override
+        public native double getRelativeTime()
+        /*-{
+            return (new Date).getTime();
+        }-*/;
+    }
+
+    private static class HighResolutionTimeSupplier implements
+            RelativeTimeSupplier {
+
+        @Override
+        public native double getRelativeTime()
+        /*-{
+             return $wnd.performance.now();
+        }-*/;
+    }
 }

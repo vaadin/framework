@@ -1716,12 +1716,13 @@ public class MessageHandler {
         if (jsonText == null) {
             return null;
         }
-        final Date start = new Date();
+        final double start = Profiler.getRelativeTimeMillis();
         try {
             ValueMap json = parseJSONResponse(jsonText);
             getLogger().info(
                     "JSON parsing took "
-                            + (new Date().getTime() - start.getTime()) + "ms");
+                            + Util.round(Profiler.getRelativeTimeMillis()
+                                    - start, 3) + "ms");
             return json;
         } catch (final Exception e) {
             getLogger().severe("Unable to parse JSON: " + jsonText);

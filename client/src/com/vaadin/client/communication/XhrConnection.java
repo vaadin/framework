@@ -15,7 +15,6 @@
  */
 package com.vaadin.client.communication;
 
-import java.util.Date;
 import java.util.logging.Logger;
 
 import com.google.gwt.http.client.Request;
@@ -33,6 +32,8 @@ import com.vaadin.client.ApplicationConnection.RequestStartingEvent;
 import com.vaadin.client.ApplicationConnection.ResponseHandlingEndedEvent;
 import com.vaadin.client.ApplicationConnection.ResponseHandlingStartedEvent;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.Profiler;
+import com.vaadin.client.Util;
 import com.vaadin.client.ValueMap;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
@@ -111,7 +112,7 @@ public class XhrConnection {
     public class XhrResponseHandler implements RequestCallback {
 
         private JsonObject payload;
-        private Date requestStartTime;
+        private double requestStartTime;
 
         public XhrResponseHandler() {
         }
@@ -147,8 +148,8 @@ public class XhrConnection {
 
             getLogger().info(
                     "Server visit took "
-                            + String.valueOf((new Date()).getTime()
-                                    - requestStartTime.getTime()) + "ms");
+                            + Util.round(Profiler.getRelativeTimeMillis()
+                                    - requestStartTime, 3) + "ms");
 
             String contentType = response.getHeader("Content-Type");
             if (contentType == null
@@ -175,12 +176,13 @@ public class XhrConnection {
         }
 
         /**
-         * Sets the time when the request was sent
+         * Sets the relative time (see {@link Profiler#getRelativeTimeMillis()})
+         * when the request was sent.
          * 
          * @param requestStartTime
-         *            the time when the request was sent
+         *            the relative time when the request was sent
          */
-        public void setRequestStartTime(Date requestStartTime) {
+        private void setRequestStartTime(double requestStartTime) {
             this.requestStartTime = requestStartTime;
 
         }
@@ -204,7 +206,7 @@ public class XhrConnection {
 
         XhrResponseHandler responseHandler = createResponseHandler();
         responseHandler.setPayload(payload);
-        responseHandler.setRequestStartTime(new Date());
+        responseHandler.setRequestStartTime(Profiler.getRelativeTimeMillis());
 
         rb.setCallback(responseHandler);
 
