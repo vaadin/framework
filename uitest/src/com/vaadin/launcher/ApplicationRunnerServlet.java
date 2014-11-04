@@ -46,6 +46,9 @@ import com.vaadin.server.LegacyVaadinServlet;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.SessionInitEvent;
 import com.vaadin.server.SessionInitListener;
+import com.vaadin.server.SystemMessages;
+import com.vaadin.server.SystemMessagesInfo;
+import com.vaadin.server.SystemMessagesProvider;
 import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
@@ -60,6 +63,9 @@ import com.vaadin.util.CurrentInstance;
 
 @SuppressWarnings("serial")
 public class ApplicationRunnerServlet extends LegacyVaadinServlet {
+
+    public static String CUSTOM_SYSTEM_MESSAGES_PROPERTY = "custom-"
+            + SystemMessages.class.getName();
 
     /**
      * The name of the application class currently used. Only valid within one
@@ -337,6 +343,34 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                 DeploymentConfiguration.class.getClassLoader(),
                 new Class[] { DeploymentConfiguration.class },
                 new ProxyDeploymentConfiguration(originalConfiguration));
+    }
+
+    @Override
+    protected VaadinServletService createServletService(
+            DeploymentConfiguration deploymentConfiguration)
+            throws ServiceException {
+        VaadinServletService service = super
+                .createServletService(deploymentConfiguration);
+        final SystemMessagesProvider provider = service
+                .getSystemMessagesProvider();
+        service.setSystemMessagesProvider(new SystemMessagesProvider() {
+
+            @Override
+            public SystemMessages getSystemMessages(
+                    SystemMessagesInfo systemMessagesInfo) {
+                if (systemMessagesInfo.getRequest() == null) {
+                    return provider.getSystemMessages(systemMessagesInfo);
+                }
+                Object messages = systemMessagesInfo.getRequest().getAttribute(
+                        CUSTOM_SYSTEM_MESSAGES_PROPERTY);
+                if (messages instanceof SystemMessages) {
+                    return (SystemMessages) messages;
+                }
+                return provider.getSystemMessages(systemMessagesInfo);
+            }
+
+        });
+        return service;
     }
 
     private static DeploymentConfiguration findDeploymentConfiguration(
