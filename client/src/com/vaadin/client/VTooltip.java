@@ -210,6 +210,10 @@ public class VTooltip extends VOverlay {
                         x = Window.getClientWidth() - offsetWidth - MARGIN
                                 + Window.getScrollLeft();
                     }
+                    // Do not allow x to be zero, for otherwise the tooltip does
+                    // not close when the mouse is moved (see isTooltipOpen()).
+                    int minX = Window.getScrollLeft() + MARGIN;
+                    x = Math.max(x, minX);
                     return x;
                 }
 
@@ -245,6 +249,10 @@ public class VTooltip extends VOverlay {
                             y = Window.getScrollTop();
                         }
                     }
+                    // Do not allow y to be zero, for otherwise the tooltip does
+                    // not close when the mouse is moved (see isTooltipOpen()).
+                    int minY = Window.getScrollTop() + MARGIN;
+                    y = Math.max(y, minY);
                     return y;
                 }
             });
