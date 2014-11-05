@@ -68,6 +68,19 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
         return false;
     }
 
+    public void testGetType_existingProperty_typeReturned() {
+        BeanContainer<String, ClassName> container = getContainer();
+        Assert.assertEquals(
+                "Unexpected type is returned for property 'simpleName'",
+                String.class, container.getType("simpleName"));
+    }
+
+    public void testGetType_notExistingProperty_nullReturned() {
+        BeanContainer<String, ClassName> container = getContainer();
+        Assert.assertNull("Not null type is returned for property ''",
+                container.getType(""));
+    }
+
     public void testBasicOperations() {
         testBasicContainerOperations(getContainer());
     }
