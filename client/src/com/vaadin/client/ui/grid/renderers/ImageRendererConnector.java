@@ -15,9 +15,12 @@
  */
 package com.vaadin.client.ui.grid.renderers;
 
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.communication.JsonDecoder;
 import com.vaadin.client.metadata.TypeDataStore;
+import com.vaadin.client.ui.grid.renderers.ClickableRenderer.RendererClickHandler;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.Connect;
 
@@ -28,7 +31,7 @@ import com.vaadin.shared.ui.Connect;
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.components.grid.renderers.ImageRenderer.class)
-public class ImageRendererConnector extends AbstractRendererConnector<String> {
+public class ImageRendererConnector extends ClickableRendererConnector<String> {
 
     @Override
     public ImageRenderer getRenderer() {
@@ -40,5 +43,11 @@ public class ImageRendererConnector extends AbstractRendererConnector<String> {
         return ((URLReference) JsonDecoder.decodeValue(
                 TypeDataStore.getType(URLReference.class), value, null,
                 getConnection())).getURL();
+    }
+
+    @Override
+    protected HandlerRegistration addClickHandler(
+            RendererClickHandler<JSONObject> handler) {
+        return getRenderer().addClickHandler(handler);
     }
 }

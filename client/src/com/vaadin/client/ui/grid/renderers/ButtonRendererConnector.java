@@ -17,11 +17,8 @@ package com.vaadin.client.ui.grid.renderers;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.ui.grid.renderers.ButtonRenderer.RendererClickEvent;
-import com.vaadin.client.ui.grid.renderers.ButtonRenderer.RendererClickHandler;
+import com.vaadin.client.ui.grid.renderers.ClickableRenderer.RendererClickHandler;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
 
 /**
  * A connector for {@link ButtonRenderer}.
@@ -30,32 +27,16 @@ import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.components.grid.renderers.ButtonRenderer.class)
-public class ButtonRendererConnector extends AbstractRendererConnector<String>
-        implements RendererClickHandler<JSONObject> {
-
-    HandlerRegistration clickRegistration;
+public class ButtonRendererConnector extends ClickableRendererConnector<String> {
 
     @Override
-    protected void init() {
-        clickRegistration = getRenderer().addClickHandler(this);
+    public ButtonRenderer getRenderer() {
+        return (ButtonRenderer) super.getRenderer();
     }
 
     @Override
-    public void onUnregister() {
-        clickRegistration.removeHandler();
-    }
-
-    @Override
-    public ButtonRenderer<JSONObject> getRenderer() {
-        return (ButtonRenderer<JSONObject>) super.getRenderer();
-    }
-
-    @Override
-    public void onClick(RendererClickEvent<JSONObject> event) {
-        getRpcProxy(RendererClickRpc.class).click(
-                event.getCell().getRow(),
-                event.getCell().getColumn(),
-                MouseEventDetailsBuilder.buildMouseEventDetails(event
-                        .getNativeEvent()));
+    protected HandlerRegistration addClickHandler(
+            RendererClickHandler<JSONObject> handler) {
+        return getRenderer().addClickHandler(handler);
     }
 }

@@ -15,16 +15,6 @@
  */
 package com.vaadin.ui.components.grid.renderers;
 
-import java.lang.reflect.Method;
-
-import com.vaadin.event.ConnectorEventListener;
-import com.vaadin.event.MouseEvents.ClickEvent;
-import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
-import com.vaadin.ui.components.grid.AbstractRenderer;
-import com.vaadin.ui.components.grid.Grid;
-import com.vaadin.util.ReflectTools;
-
 /**
  * A Renderer that displays a button with a textual caption. The value of the
  * corresponding property is used as the caption. Click listeners can be added
@@ -33,97 +23,23 @@ import com.vaadin.util.ReflectTools;
  * @since
  * @author Vaadin Ltd
  */
-public class ButtonRenderer extends AbstractRenderer<String> {
-
-    /**
-     * An interface for listening to {@link RendererClickEvent renderer click
-     * events}.
-     * 
-     * @see {@link ButtonRenderer#addClickListener(RendererClickListener)}
-     */
-    public interface RendererClickListener extends ConnectorEventListener {
-
-        static final Method CLICK_METHOD = ReflectTools.findMethod(
-                RendererClickListener.class, "click", RendererClickEvent.class);
-
-        /**
-         * Called when a rendered button is clicked.
-         * 
-         * @param event
-         *            the event representing the click
-         */
-        void click(RendererClickEvent event);
-    }
-
-    /**
-     * An event fired when a button rendered by a ButtonRenderer is clicked.
-     */
-    public static class RendererClickEvent extends ClickEvent {
-
-        private Object itemId;
-
-        protected RendererClickEvent(Grid source, Object itemId,
-                MouseEventDetails mouseEventDetails) {
-            super(source, mouseEventDetails);
-            this.itemId = itemId;
-        }
-
-        /**
-         * Returns the item ID of the row where the click event originated.
-         * 
-         * @return the item ID of the clicked row
-         */
-        public Object getItemId() {
-            return itemId;
-        }
-    }
+public class ButtonRenderer extends ClickableRenderer<String> {
 
     /**
      * Creates a new button renderer.
      */
     public ButtonRenderer() {
         super(String.class);
-        registerRpc(new RendererClickRpc() {
-            @Override
-            public void click(int row, int column,
-                    MouseEventDetails mouseDetails) {
-
-                Grid grid = (Grid) getParent();
-
-                Object itemId = grid.getContainerDatasource().getIdByIndex(row);
-
-                fireEvent(new RendererClickEvent(grid, itemId, mouseDetails));
-            }
-        });
     }
 
     /**
      * Creates a new button renderer and adds the given click listener to it.
+     * 
+     * @param listener
+     *            the click listener to register
      */
     public ButtonRenderer(RendererClickListener listener) {
         this();
         addClickListener(listener);
-    }
-
-    /**
-     * Adds a click listener to this button renderer. The listener is invoked
-     * every time one of the buttons rendered by this renderer is clicked.
-     * 
-     * @param listener
-     *            the click listener to be added
-     */
-    public void addClickListener(RendererClickListener listener) {
-        addListener(RendererClickEvent.class, listener,
-                RendererClickListener.CLICK_METHOD);
-    }
-
-    /**
-     * Removes the given click listener from this renderer.
-     * 
-     * @param listener
-     *            the click listener to be removed
-     */
-    public void removeClickListener(RendererClickListener listener) {
-        removeListener(RendererClickEvent.class, listener);
     }
 }

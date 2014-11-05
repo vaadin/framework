@@ -20,16 +20,20 @@ import com.google.gwt.user.client.ui.Image;
 import com.vaadin.client.ui.grid.FlyweightCell;
 
 /**
- * A renderer that renders an image into a cell.
+ * A renderer that renders an image into a cell. Click handlers can be added to
+ * the renderer, invoked every time any of the images rendered by that rendered
+ * is clicked.
  * 
  * @since
  * @author Vaadin Ltd
  */
-public class ImageRenderer extends WidgetRenderer<String, Image> {
+public class ImageRenderer extends ClickableRenderer<String, Image> {
 
     @Override
     public Image createWidget() {
-        return GWT.create(Image.class);
+        Image image = GWT.create(Image.class);
+        image.addClickHandler(this);
+        return image;
     }
 
     @Override

@@ -20,7 +20,6 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.communication.URLReference;
-import com.vaadin.ui.components.grid.AbstractRenderer;
 
 import elemental.json.JsonValue;
 
@@ -34,13 +33,24 @@ import elemental.json.JsonValue;
  * @since
  * @author Vaadin Ltd
  */
-public class ImageRenderer extends AbstractRenderer<Resource> {
+public class ImageRenderer extends ClickableRenderer<Resource> {
 
     /**
      * Creates a new image renderer.
      */
     public ImageRenderer() {
         super(Resource.class);
+    }
+
+    /**
+     * Creates a new image renderer and adds the given click listener to it.
+     * 
+     * @param listener
+     *            the click listener to register
+     */
+    public ImageRenderer(RendererClickListener listener) {
+        this();
+        addClickListener(listener);
     }
 
     @Override

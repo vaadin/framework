@@ -60,8 +60,12 @@ public class WidgetRenderersTest extends MultiBrowserTest {
         WebElement image = getGridCell(0, 2).findElement(
                 By.className("gwt-Image"));
 
-        assertTrue(image.getAttribute("src").endsWith("window/img/resize.png"));
+        assertTrue(image.getAttribute("src").endsWith("window/img/close.png"));
 
+        image.click();
+
+        assertTrue(image.getAttribute("src")
+                .endsWith("window/img/maximize.png"));
     }
 
     GridCellElement getGridCell(int row, int col) {

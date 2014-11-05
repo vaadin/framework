@@ -24,8 +24,8 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.renderers.ButtonRenderer;
-import com.vaadin.ui.components.grid.renderers.ButtonRenderer.RendererClickEvent;
-import com.vaadin.ui.components.grid.renderers.ButtonRenderer.RendererClickListener;
+import com.vaadin.ui.components.grid.renderers.ClickableRenderer.RendererClickEvent;
+import com.vaadin.ui.components.grid.renderers.ClickableRenderer.RendererClickListener;
 import com.vaadin.ui.components.grid.renderers.ImageRenderer;
 import com.vaadin.ui.components.grid.renderers.ProgressBarRenderer;
 
@@ -47,7 +47,7 @@ public class WidgetRenderers extends AbstractTestUI {
         item.getItemProperty(ProgressBarRenderer.class).setValue(0.3);
         item.getItemProperty(ButtonRenderer.class).setValue("Click");
         item.getItemProperty(ImageRenderer.class).setValue(
-                new ThemeResource("window/img/resize.png"));
+                new ThemeResource("window/img/close.png"));
 
         Grid grid = new Grid(container);
 
@@ -66,7 +66,15 @@ public class WidgetRenderers extends AbstractTestUI {
                     }
                 }));
 
-        grid.getColumn(ImageRenderer.class).setRenderer(new ImageRenderer());
+        grid.getColumn(ImageRenderer.class).setRenderer(
+                new ImageRenderer(new RendererClickListener() {
+
+                    @Override
+                    public void click(RendererClickEvent event) {
+                        item.getItemProperty(ImageRenderer.class).setValue(
+                                new ThemeResource("window/img/maximize.png"));
+                    }
+                }));
 
         addComponent(grid);
     }

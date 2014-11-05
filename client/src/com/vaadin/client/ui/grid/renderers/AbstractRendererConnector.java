@@ -37,6 +37,9 @@ import com.vaadin.client.ui.grid.Renderer;
  * {@link com.vaadin.shared.communication.SharedState SharedState} and no RPC
  * interfaces.
  * 
+ * @param <T>
+ *            the presentation type of the renderer
+ * 
  * @since
  * @author Vaadin Ltd
  */
