@@ -532,13 +532,16 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 } else {
                     final Object id = itemIdMapper
                             .get(clientSideSelectedKeys[0]);
-                    if (!isNullSelectionAllowed() && id == null) {
-                        markAsDirty();
-                    } else if (id != null
-                            && id.equals(getNullSelectionItemId())) {
-                        setValue(null, true);
+
+                    if (id != null) {
+                        if (isNullSelectionAllowed()
+                                && id.equals(getNullSelectionItemId())) {
+                            setValue(null, true);
+                        } else {
+                            setValue(id, true);
+                        }
                     } else {
-                        setValue(id, true);
+                        markAsDirty();
                     }
                 }
             }
