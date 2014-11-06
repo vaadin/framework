@@ -276,6 +276,8 @@
   @include valo-overlay-style;
 
   margin-top: ceil($v-unit-size/8) !important;
+  margin-bottom: ceil($v-unit-size/8) !important;
+  margin-right: ceil($v-unit-size/8) !important;
   cursor: default;
   width: auto;
 
