@@ -5392,6 +5392,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             private Map<TableCellElement, TooltipInfo> cellToolTips = new HashMap<TableCellElement, TooltipInfo>();
             private boolean isDragging = false;
             private String rowStyle = null;
+            protected boolean applyZeroWidthFix = true;
 
             private VScrollTableRow(int rowKey) {
                 this.rowKey = rowKey;
@@ -5497,7 +5498,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                      * definition of zero width table cells. Instead, use 1px
                      * and compensate with a negative margin.
                      */
-                    if (width == 0) {
+                    if (applyZeroWidthFix && width == 0) {
                         wrapperWidth = 1;
                         wrapperStyle.setMarginRight(-1, Unit.PX);
                     } else {
