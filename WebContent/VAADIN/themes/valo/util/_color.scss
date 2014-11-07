@@ -32,6 +32,14 @@ $v-luminance-threshold: 150 !default;
 
 
 /**
+ * Contrast default value for valo-font-color function.
+ *
+ * @group color
+ * @type number
+ */
+$v-font-color-contrast: 0.72 !default;
+
+/**
  * Checks whether the color is considered dark or light, according to it's luminance and saturation.
  *
  * @group color
@@ -80,7 +88,7 @@ $v-luminance-threshold: 150 !default;
  *
  * @return {color} a suitable font color for the given background color
  */
-@function valo-font-color ($bg-color, $contrast: 0.72) {
+@function valo-font-color ($bg-color, $contrast: $v-font-color-contrast) {
   @if type-of($bg-color) == color {
     @if is-dark-color($bg-color) {
       @return scale-color($bg-color, $lightness: min(100%, 100% * $contrast), $saturation: max(-100%, -50% * $contrast));
