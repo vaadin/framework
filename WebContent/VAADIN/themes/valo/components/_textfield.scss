@@ -14,7 +14,7 @@ $v-textfield-background-color--readonly: darkest-color($v-app-background-color, 
  * The bevel style for text fields. See the documentation for $v-bevel.
  * @group textfield
  */
-$v-textfield-bevel: inset 0 1px 0 v-shade !default;
+$v-textfield-bevel: if($v-bevel and ($v-bevel != none), inset 0 1px 0 v-shade, $v-bevel) !default;
 
 /**
  * The shadow style for text fields. See the documentation for $v-shadow.
