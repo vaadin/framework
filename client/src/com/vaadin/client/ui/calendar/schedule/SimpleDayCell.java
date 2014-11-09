@@ -436,7 +436,7 @@ public class SimpleDayCell extends FocusableFlowPanel implements
             // event clicks should be allowed even when read-only
             monthEventMouseDown = true;
 
-            if (w instanceof MonthEventLabel) {
+            if (calendar.isEventMoveAllowed()) {
                 startCalendarEventDrag(event, (MonthEventLabel) w);
             }
         } else if (!calendar.isReadOnly()) {
