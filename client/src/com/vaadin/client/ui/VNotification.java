@@ -63,6 +63,9 @@ public class VNotification extends VOverlay {
     private static final String STYLENAME_POSITION_CENTER = "v-position-center";
     private static final String STYLENAME_POSITION_ASSISTIVE = "v-position-assistive";
 
+    private static final String CAPTION = "caption";
+    private static final String DESCRIPTION = "description";
+
     /**
      * Position that is only accessible for assistive devices, invisible for
      * visual users.
@@ -256,11 +259,9 @@ public class VNotification extends VOverlay {
         positionOrSizeUpdated();
         /**
          * Android 4 fails to render notifications correctly without a little
-         * nudge (#8551)
-         * Chrome 41 now requires this too (#17252)
+         * nudge (#8551) Chrome 41 now requires this too (#17252)
          */
-        if (BrowserInfo.get().isAndroid()
-                || isChrome41OrHigher()) {
+        if (BrowserInfo.get().isAndroid() || isChrome41OrHigher()) {
             WidgetUtil.setStyleTemporarily(getElement(), "display", "none");
         }
     }
@@ -501,7 +502,8 @@ public class VNotification extends VOverlay {
                 caption = WidgetUtil.escapeHTML(caption);
                 caption = caption.replaceAll("\\n", "<br />");
             }
-            html += "<h1>" + caption + "</h1>";
+            html += "<h1 class='" + getDependentStyle(client, CAPTION) + "'>"
+                    + caption + "</h1>";
         }
         if (notification
                 .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE)) {
@@ -511,7 +513,8 @@ public class VNotification extends VOverlay {
                 message = WidgetUtil.escapeHTML(message);
                 message = message.replaceAll("\\n", "<br />");
             }
-            html += "<p>" + message + "</p>";
+            html += "<p class='" + getDependentStyle(client, DESCRIPTION)
+                    + "'>" + message + "</p>";
         }
 
         final String style = notification
@@ -527,6 +530,16 @@ public class VNotification extends VOverlay {
                 .getIntAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_DELAY);
         createNotification(delay, client.getUIConnector().getWidget()).show(
                 html, position, style);
+    }
+
+    private static String getDependentStyle(ApplicationConnection client,
+            String style) {
+        VNotification notification = createNotification(-1, client
+                .getUIConnector().getWidget());
+        String styleName = notification.getStyleName();
+        notification.addStyleDependentName(style);
+        String extendedStyle = notification.getStyleName();
+        return extendedStyle.substring(styleName.length()).trim();
     }
 
     public static VNotification createNotification(int delayMsec, Widget owner) {

@@ -78,7 +78,7 @@ $v-notification-title-color: $v-focus-color !default;
     -ms-backface-visibility: hidden;
     backface-visibility: hidden;
 
-    h1 {
+    .#{$primary-stylename}-caption {
       margin: 0;
       display: inline-block;
       text-align: left;
@@ -88,7 +88,7 @@ $v-notification-title-color: $v-focus-color !default;
       letter-spacing: 0;
     }
 
-    p {
+    .#{$primary-stylename}-description {
       margin: 0;
       display: inline-block;
       vertical-align: middle;
@@ -98,11 +98,11 @@ $v-notification-title-color: $v-focus-color !default;
       overflow: auto;
     }
 
-    h1 ~ p {
+    .#{$primary-stylename}-caption ~ .#{$primary-stylename}-description {
       margin-left: round($v-font-size * 1.5);
     }
 
-    .v-icon + h1 {
+    .v-icon + .#{$primary-stylename}-caption {
       margin-left: round($v-font-size);
     }
 
@@ -117,11 +117,11 @@ $v-notification-title-color: $v-focus-color !default;
 
   .#{$primary-stylename}.tray {
     text-align: left;
-    h1 {
+    .#{$primary-stylename}-caption {
       //display: block;
     }
 
-    h1 + p {
+    .#{$primary-stylename}-caption + .#{$primary-stylename}-description {
       display: block;
       margin: .5em 0 0;
     }
@@ -179,7 +179,7 @@ $v-notification-title-color: $v-focus-color !default;
       color: #555;
       border: 2px solid $v-friendly-color;
 
-      h1 {
+      .#{$primary-stylename}-caption {
         color: $v-friendly-color;
         font-weight: $v-font-weight + 100;
 
@@ -198,7 +198,7 @@ $v-notification-title-color: $v-focus-color !default;
     .#{$primary-stylename}.failure {
       border-color: $v-error-indicator-color;
 
-      h1 {
+      .#{$primary-stylename}-caption {
         color: $v-error-indicator-color;
 
         &:before {
@@ -273,12 +273,12 @@ $v-notification-title-color: $v-focus-color !default;
   @include box-shadow(0px 5px 15px 0px rgba(0,0,0,0.15));
   padding: round($v-unit-size/2) round($v-unit-size/1.7);
 
-  h1 {
+  .#{$primary-stylename}-caption {
     color: $v-notification-title-color;
     font-size: round($v-font-size * 1.2);
     line-height: 1;
   }
-  p {
+  .#{$primary-stylename}-description {
     line-height: 1.4;
   }
 }
@@ -298,7 +298,7 @@ $v-notification-title-color: $v-focus-color !default;
   @include box-shadow(0 0 20px 0 rgba(0,0,0,0.25));
   padding: round($v-unit-size/3) round($v-unit-size/2.5);
 
-  p {
+  .#{$primary-stylename}-description {
     max-width: 50em;
   }
 
@@ -343,12 +343,12 @@ $v-notification-title-color: $v-focus-color !default;
   font-weight: $v-font-weight + 100;
   line-height: round($v-font-size * 1.4);
 
-  h1 {
+  .#{$primary-stylename}-caption {
     color: #fff;
     vertical-align: middle;
   }
 
-  p {
+  .#{$primary-stylename}-description {
     color: #e6e6e6;
   }
 }
@@ -385,11 +385,11 @@ $v-notification-title-color: $v-focus-color !default;
 @mixin valo-notification-warning-style {
   background: #FFF3D2;
 
-  h1 {
+  .#{$primary-stylename}-caption {
     color: #AC7C00;
   }
 
-  p {
+  .#{$primary-stylename}-description {
     color: #9D874D;
   }
 }
@@ -405,11 +405,11 @@ $v-notification-title-color: $v-focus-color !default;
   font-weight: $v-font-weight + 100;
   @include box-shadow(0px 5px 15px 0px rgba(0,0,0,0.25));
 
-  h1 {
+  .#{$primary-stylename}-caption {
     color: valo-font-color($v-error-indicator-color, 1);
   }
 
-  p {
+  .#{$primary-stylename}-description {
     color: valo-font-color($v-error-indicator-color, .8);
   }
 }
@@ -423,10 +423,10 @@ $v-notification-title-color: $v-focus-color !default;
 @mixin valo-notification-small-style {
   padding: round($v-unit-size/3.3) round($v-unit-size/2.8);
 
-  h1 {
+  .#{$primary-stylename}-caption {
     font-size: $v-font-size;
   }
-  p {
+  .#{$primary-stylename}-description {
     font-size: round($v-font-size * 0.85);
   }
 }

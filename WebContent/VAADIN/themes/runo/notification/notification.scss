@@ -15,12 +15,12 @@
 	-moz-box-shadow: 0 3px 10px rgba(0,0,0,.3);
 	margin: 10px;
 }
-.#{$primaryStyleName} h1,
-.#{$primaryStyleName} p,
-.#{$primaryStyleName}-error h1,
-.#{$primaryStyleName}-error p,
-.#{$primaryStyleName}-warning h1,
-.#{$primaryStyleName}-warning p {
+.#{$primaryStyleName} .#{$primaryStyleName}-caption,
+.#{$primaryStyleName} .#{$primaryStyleName}-description,
+.#{$primaryStyleName}-error .#{$primaryStyleName}-caption,
+.#{$primaryStyleName}-error .#{$primaryStyleName}-description,
+.#{$primaryStyleName}-warning .#{$primaryStyleName}-caption,
+.#{$primaryStyleName}-warning .#{$primaryStyleName}-description  {
 	display: inline;
 	font-weight: normal;
 	line-height: normal;
@@ -43,7 +43,7 @@
 	-moz-box-shadow: 0 3px 6px rgba(0,0,0,.5);
 	max-width: 17em;
 }
-.#{$primaryStyleName}-tray h1 {
+.#{$primaryStyleName}-tray .#{$primaryStyleName}-caption {
 	display: block;
 	font-weight: bold;
 	font-size: 11.7px;
@@ -55,7 +55,7 @@
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
 }
-.#{$primaryStyleName}-tray p {
+.#{$primaryStyleName}-tray .#{$primaryStyleName}-description {
 	display: block;
 	font-size: 10.4px;
 	line-height: 1.2;
