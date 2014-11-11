@@ -1868,7 +1868,7 @@ public abstract class VaadinService implements Serializable {
      * @throws SecurityException
      *             If current security policy forbids acquiring class loader
      * 
-     * @since
+     * @since 7.3.5
      */
     protected void setDefaultClassLoader() {
         try {
