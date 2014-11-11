@@ -107,6 +107,9 @@
         <dependency org="com.vaadin" name="vaadin-buildhelpers"
                     rev="${vaadin.version}" conf="compile-theme->build" />
 
+        <dependency org="org.eclipse.jgit" name="org.eclipse.jgit" 
+                   rev="3.5.1.201410131835-r" conf="ide,build->default" />
+
     </dependencies>
 
 </ivy-module>
