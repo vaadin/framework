@@ -1153,7 +1153,9 @@ public class Grid<T> extends ResizeComposite implements
         public void setSortable(boolean sortable) {
             if (this.sortable != sortable) {
                 this.sortable = sortable;
-                grid.refreshHeader();
+                if (grid != null) {
+                    grid.refreshHeader();
+                }
             }
         }
 
