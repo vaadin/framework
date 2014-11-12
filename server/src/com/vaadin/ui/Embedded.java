@@ -79,11 +79,6 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
     private int type = TYPE_OBJECT;
 
     /**
-     * Source of the embedded object.
-     */
-    private Resource source = null;
-
-    /**
      * Generic object attributes.
      */
     private String mimeType = null;
@@ -418,7 +413,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      * @return the Resource
      */
     public Resource getSource() {
-        return source;
+        return getResource("src");
     }
 
     /**
@@ -445,8 +440,8 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      *            the source to set.
      */
     public void setSource(Resource source) {
-        if (source != null && !source.equals(this.source)) {
-            this.source = source;
+        if (source != null && !source.equals(getSource())) {
+            setResource("src", source);
             final String mt = source.getMIMEType();
 
             if (mimeType == null) {
