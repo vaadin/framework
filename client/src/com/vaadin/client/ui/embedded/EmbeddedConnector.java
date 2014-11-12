@@ -32,6 +32,7 @@ import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.VTooltip;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.VEmbedded;
@@ -46,9 +47,42 @@ import com.vaadin.ui.Embedded;
 public class EmbeddedConnector extends AbstractComponentConnector implements
         Paintable {
 
+    private Element resourceElement;
+    private ObjectElement objectElement;
+    private String resourceUrl;
+
     @Override
     protected void init() {
         super.init();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        // if theme has changed the resourceUrl may need to be updated
+        updateResourceIfNecessary();
+    }
+
+    private void updateResourceIfNecessary() {
+        if (resourceElement != null || objectElement != null) {
+            String src = getResourceUrl("src");
+            if (src != null && !src.isEmpty()) {
+                if (!src.equals(resourceUrl)) {
+                    setResourceUrl(src);
+                }
+            } else if (resourceUrl != null && !resourceUrl.isEmpty()) {
+                setResourceUrl("");
+            }
+        }
+    }
+
+    private void setResourceUrl(String src) {
+        resourceUrl = src;
+        if (resourceElement != null) {
+            resourceElement.setAttribute("src", src);
+        } else if (objectElement != null) {
+            objectElement.setData(src);
+        }
     }
 
     @Override
@@ -102,8 +136,9 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
                 style.setProperty("width", getState().width);
                 style.setProperty("height", getState().height);
 
-                DOM.setElementProperty(el, "src",
-                        getWidget().getSrc(uidl, client));
+                resourceElement = el;
+                objectElement = null;
+                setResourceUrl(getResourceUrl("src"));
 
                 if (uidl.hasAttribute(EmbeddedConstants.ALTERNATE_TEXT)) {
                     el.setPropertyString(
@@ -133,8 +168,9 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
                     getWidget().browserElement = DOM.getFirstChild(getWidget()
                             .getElement());
                 }
-                DOM.setElementAttribute(getWidget().browserElement, "src",
-                        getWidget().getSrc(uidl, client));
+                resourceElement = getWidget().browserElement;
+                objectElement = null;
+                setResourceUrl(getResourceUrl("src"));
                 clearBrowserElement = false;
             } else {
                 VConsole.error("Unknown Embedded type '" + getWidget().type
@@ -163,15 +199,19 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
                 getWidget().addStyleName(VEmbedded.CLASSNAME + "-svg");
                 String data;
                 Map<String, String> parameters = VEmbedded.getParameters(uidl);
+                ObjectElement obj = Document.get().createObjectElement();
+                resourceElement = null;
                 if (parameters.get("data") == null) {
-                    data = getWidget().getSrc(uidl, client);
+                    objectElement = obj;
+                    data = getResourceUrl("src");
+                    setResourceUrl(data);
                 } else {
+                    objectElement = null;
                     data = "data:image/svg+xml," + parameters.get("data");
+                    obj.setData(data);
                 }
                 getWidget().setHTML("");
-                ObjectElement obj = Document.get().createObjectElement();
                 obj.setType(mime);
-                obj.setData(data);
                 if (!isUndefinedWidth()) {
                     obj.getStyle().setProperty("width", "100%");
                 }
