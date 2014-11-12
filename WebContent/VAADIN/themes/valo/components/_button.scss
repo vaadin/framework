@@ -444,6 +444,8 @@
 
   .v-icon {
     display: block;
+    margin-left: auto;
+    margin-right: auto;
 
     + span:not(:empty) {
       margin-top: ceil($v-unit-size/6);
