@@ -44,6 +44,19 @@ public class AccordionRemoveTabTest extends MultiBrowserTest {
         checkFirstItemHeight("On third tab");
     }
 
+    @Test
+    public void testConsoleErrorOnSwitch() {
+        setDebug(true);
+        openTestURL();
+        WebElement firstItem = driver.findElement(By
+                .className("v-accordion-item-first"));
+        WebElement caption = firstItem.findElement(By
+                .className("v-accordion-item-caption"));
+        caption.click();
+        Assert.assertEquals("Errors present in console", 0,
+                findElements(By.className("SEVERE")).size());
+    }
+
     private void checkFirstItemHeight(String text) {
         WebElement firstItem = driver.findElement(By
                 .className("v-accordion-item-first"));
