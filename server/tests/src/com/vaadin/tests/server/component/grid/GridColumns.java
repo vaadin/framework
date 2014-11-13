@@ -30,6 +30,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.GridColumnState;
@@ -71,6 +72,40 @@ public class GridColumns {
     @Test
     public void testColumnGeneration() throws Exception {
 
+        for (Object propertyId : grid.getContainerDatasource()
+                .getContainerPropertyIds()) {
+
+            // All property ids should get a column
+            GridColumn column = grid.getColumn(propertyId);
+            assertNotNull(column);
+
+            // Property id should be the column header by default
+            assertEquals(propertyId.toString(), grid.getHeader()
+                    .getDefaultRow().getCell(propertyId).getText());
+        }
+    }
+
+    @Test
+    public void testColumnGenerationOnContainerChange() {
+        int colCount = state.columns.size();
+        assertEquals(colCount, state.columnOrder.size());
+
+        // Change old columns so they wouldn't pass the check.
+        for (Object propertyId : grid.getContainerDatasource()
+                .getContainerPropertyIds()) {
+            GridColumn column = grid.getColumn(propertyId);
+            column.setHeaderCaption("Old " + column.getHeaderCaption());
+        }
+
+        // creates a new "view" of the existing container
+        grid.setContainerDataSource(new GeneratedPropertyContainer(grid
+                .getContainerDatasource()));
+
+        // Should still contain the same amount of columns
+        assertEquals(colCount, state.columns.size());
+        assertEquals(colCount, state.columnOrder.size());
+
+        int i = 0;
         for (Object propertyId : grid.getContainerDatasource()
                 .getContainerPropertyIds()) {
 
@@ -244,5 +279,4 @@ public class GridColumns {
         }
         return null;
     }
-
 }

@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.google.gwt.thirdparty.guava.common.collect.Sets.SetView;
@@ -217,13 +218,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 }
             }
             for (Object columnId : removedColumns) {
-                header.removeColumn(columnId);
-                footer.removeColumn(columnId);
-                GridColumn column = columns.remove(columnId);
-                getState().columnOrder.remove(columnKeys.key(columnId));
-                getState().columns.remove(column.getState());
-                columnKeys.remove(columnId);
-                removeExtension(column.getRenderer());
+                removeColumn(columnId);
             }
             datasourceExtension.propertiesRemoved(removedColumns);
 
@@ -545,6 +540,12 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             clearSortOrder();
         }
 
+        // Remove all old columns
+        Set<Object> properties = new HashSet<Object>(columns.keySet());
+        for (Object propertyId : properties) {
+            removeColumn(propertyId);
+        }
+
         datasourceExtension = new RpcDataProviderExtension(container);
         datasourceExtension.extend(this, columnKeys);
 
@@ -567,21 +568,17 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * ValueChangeListeners at this point.
          */
 
-        getState().columns.clear();
         setLastFrozenPropertyId(null);
 
         // Add columns
         HeaderRow row = getHeader().getDefaultRow();
         for (Object propertyId : datasource.getContainerPropertyIds()) {
-            if (!columns.containsKey(propertyId)) {
-                GridColumn column = appendColumn(propertyId);
+            GridColumn column = appendColumn(propertyId);
 
-                // Initial sorting is defined by container
-                if (datasource instanceof Sortable) {
-                    column.setSortable(((Sortable) datasource)
-                            .getSortableContainerPropertyIds().contains(
-                                    propertyId));
-                }
+            // Initial sorting is defined by container
+            if (datasource instanceof Sortable) {
+                column.setSortable(((Sortable) datasource)
+                        .getSortableContainerPropertyIds().contains(propertyId));
             }
         }
     }
@@ -671,6 +668,22 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         column.setHeaderCaption(String.valueOf(datasourcePropertyId));
 
         return column;
+    }
+
+    /**
+     * Removes a column from Grid based on a property id.
+     * 
+     * @param datasourcePropertyId
+     *            The property id of a property in the datasource
+     */
+    private void removeColumn(Object propertyId) {
+        header.removeColumn(propertyId);
+        footer.removeColumn(propertyId);
+        GridColumn column = columns.remove(propertyId);
+        getState().columnOrder.remove(columnKeys.key(propertyId));
+        getState().columns.remove(column.getState());
+        columnKeys.remove(propertyId);
+        removeExtension(column.getRenderer());
     }
 
     /**
