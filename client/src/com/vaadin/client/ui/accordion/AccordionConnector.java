@@ -50,12 +50,13 @@ public class AccordionConnector extends TabsheetBaseConnector implements
             StackItem selectedItem = getWidget().getStackItem(
                     getWidget().selectedItemIndex);
 
-            getWidget().open(getWidget().selectedItemIndex);
-
             ComponentConnector contentConnector = getChildComponents().get(0);
             if (contentConnector != null) {
                 selectedItem.setContent(contentConnector.getWidget());
             }
+
+            getWidget().open(getWidget().selectedItemIndex);
+
         } else if (getWidget().getOpenStackItem() != null) {
             getWidget().close(getWidget().getOpenStackItem());
         }
