@@ -216,7 +216,10 @@ public class FileUploadHandler implements RequestHandler {
         }
     }
 
-    private static final int LF = "\n".getBytes()[0];
+    /**
+     * as per RFC 2045, line delimiters in headers are always CRLF, i.e. 13 10
+     */
+    private static final int LF = 10;
 
     private static final String CRLF = "\r\n";
 
@@ -295,6 +298,9 @@ public class FileUploadHandler implements RequestHandler {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         int readByte = stream.read();
         while (readByte != LF) {
+            if (readByte == -1) {
+                throw new IOException("The multipart stream ended unexpectedly");
+            }
             bout.write(readByte);
             readByte = stream.read();
         }

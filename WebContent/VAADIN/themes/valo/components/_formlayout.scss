@@ -2,7 +2,7 @@
  * Outputs the selectors and properties for the FormLayout component.
  *
  * @param {string} $primary-stylename (v-formlayout) - the primary style name for the selectors
- * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group formlayout
  */
@@ -51,6 +51,8 @@
     > .v-label-h4 {
       position: absolute;
       left: 0;
+      right: 0;
+      width: auto !important;
       margin-top: -0.5em;
       padding-bottom: 0.5em;
       border-bottom: valo-border($color: $v-app-background-color, $strength: 0.5);
@@ -85,17 +87,17 @@
     $right: $margin;
     $bottom: $margin;
     $left: $margin;
-  } @else if length($margin) == 2 {
+  } @else if length($margin) == 2 {
     $top: nth($margin, 1);
     $right: nth($margin, 2);
     $bottom: nth($margin, 1);
     $left: nth($margin, 2);
-  } @else if length($margin) == 3 {
+  } @else if length($margin) == 3 {
     $top: nth($margin, 1);
     $right: nth($margin, 2);
     $bottom: nth($margin, 3);
     $left: nth($margin, 2);
-  } @else if length($margin) == 4 {
+  } @else if length($margin) == 4 {
     $top: nth($margin, 1);
     $right: nth($margin, 2);
     $bottom: nth($margin, 3);
@@ -114,8 +116,22 @@
     padding-left: $left;
   }
 
+  [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"] {
+    > .v-label-h2,
+    > .v-label-h3,
+    > .v-label-h4 {
+      left: $left;
+    }
+  }
+
   [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"] {
     padding-right: $right;
+
+    > .v-label-h2,
+    > .v-label-h3,
+    > .v-label-h4 {
+      right: $right;
+    }
   }
 }
 
@@ -141,7 +157,7 @@
 /**
  * Outputs the styles for a light style form layout. This mixin expects the target to have the normal styles of a form layout applied.
  *
- * @param {size} $row-height ($v-unit-size) - The height of an individual form layout row
+ * @param {size} $row-height ($v-unit-size) - The height of an individual form layout row
  *
  * @group formlayout
  */
@@ -150,7 +166,7 @@
     padding: 0;
   }
 
-  > table > tbody > [class*="row"] > td {
+  > table > tbody > tr > td {
     padding-top: 0;
     height: $row-height; // Effectively min-height
     border-bottom: valo-border($color: $v-app-background-color, $strength: 0.3);
@@ -160,7 +176,7 @@
     border-bottom: none;
   }
 
-  > table > tbody > [class*="row"] > [class*="captioncell"] {
+  > table > tbody > tr > [class*="captioncell"] {
     color: valo-font-color($v-background-color, .5);
     text-align: right;
     padding-left: ceil($v-unit-size/3);
@@ -168,6 +184,8 @@
   }
 
   > table > tbody > [class*="row"] > [class*="contentcell"] {
+    padding-right: 0;
+
     > .v-textfield,
     > .v-textarea,
     > .v-filterselect,
@@ -208,6 +226,8 @@
     > .v-label-h3,
     > .v-label-h4 {
       border-bottom: none;
+      left: 0;
+      right: 0;
     }
 
     > .v-label-h3,

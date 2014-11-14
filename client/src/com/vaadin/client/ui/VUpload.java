@@ -184,7 +184,7 @@ public class VUpload extends SimplePanel {
 
     /** For internal use only. May be removed or replaced in the future. */
     public void disableUpload() {
-        submitButton.setEnabled(false);
+        setEnabledForSubmitButton(false);
         if (!submitted) {
             // Cannot disable the fileupload while submitting or the file won't
             // be submitted at all
@@ -195,7 +195,7 @@ public class VUpload extends SimplePanel {
 
     /** For internal use only. May be removed or replaced in the future. */
     public void enableUpload() {
-        submitButton.setEnabled(true);
+        setEnabledForSubmitButton(true);
         fu.getElement().setPropertyBoolean("disabled", false);
         enabled = true;
         if (submitted) {
@@ -207,6 +207,12 @@ public class VUpload extends SimplePanel {
             cleanTargetFrame();
             submitted = false;
         }
+    }
+
+    private void setEnabledForSubmitButton(boolean enabled) {
+        submitButton.setEnabled(enabled);
+        submitButton.setStyleName(ApplicationConnection.DISABLED_CLASSNAME,
+                !enabled);
     }
 
     /**

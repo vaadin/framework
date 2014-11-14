@@ -51,7 +51,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
  * Outputs the selectors and properties for the TextField component.
  *
  * @param {string} $primary-stylename (v-textfield) - the primary style name for the selectors
- * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group textfield
  */
@@ -122,7 +122,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
 /**
  * Outputs the styles for a text field variant.
  *
- * @param {size} $unit-size ($v-unit-size) - The sizing of the text field, which corresponds its height
+ * @param {size} $unit-size ($v-unit-size) - The sizing of the text field, which corresponds its height
  * @param {size | list} $padding (null) - The padding of the text field. Computed from other parameters by default.
  * @param {color} $font-color (null) - The font color of the text field. Computed from the $background-color by default.
  * @param {number} $font-weight (max(400, $v-font-weight)) - The font weight of the text field
@@ -254,7 +254,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
  * @param {list} $bevel ($v-textfield-bevel) - Box-shadow value according to $v-bevel documentation
  * @param {list} $shadow ($v-textfield-shadow) - Box-shadow value according to $v-shadow documentation
  * @param {color} $background-color ($v-textfield-background-color) - The background color of the text field
- * @param {list} $gradient (null) - Valo specific gradient value. See the documentation for $v-gradient.
+ * @param {list} $gradient (null) - Valo specific gradient value. See the documentation for $v-gradient.
  * 
  * @group textfield
  */
@@ -341,7 +341,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
  * @param {string | list} $stylenames (inline-icon) - The additional style names which will define the inline-icon style
  * @param {string} $input-selector (null) - Additional selector for a nested input element which should be targeted
  * @param {size} $unit-size ($v-unit-size) - The unit size which the resulting style will support
- * @param {size} $font-size ($v-font-size) - The font size which the resulting style will support (needed for font icons)
+ * @param {size} $font-size ($v-font-size) - The font size which the resulting style will support (needed for font icons)
  * @param {size} $image-icon-size (16px) - The image icon height which the resulting style will support (needed to center the icon vertically inside the text field)
  * 
  * @group text field

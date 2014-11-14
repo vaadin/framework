@@ -203,6 +203,7 @@ public class DateFields extends VerticalLayout implements View {
         item.addItemProperty("date", new ObjectProperty<Date>(getDefaultDate()));
 
         FormLayout form = new FormLayout();
+        form.setMargin(false);
 
         FieldGroup binder = new FieldGroup(item);
         form.addComponent(binder.buildAndBind(

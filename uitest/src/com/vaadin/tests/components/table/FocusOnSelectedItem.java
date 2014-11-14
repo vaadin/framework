@@ -49,8 +49,7 @@ public class FocusOnSelectedItem extends AbstractTestUI {
         }
         addComponent(table);
 
-        Button button = new Button("Select");
-        button.addClickListener(new Button.ClickListener() {
+        addButton("Select", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 table.setValue("Item 198");
@@ -58,7 +57,6 @@ public class FocusOnSelectedItem extends AbstractTestUI {
                 table.focus();
             }
         });
-        addComponent(button);
     }
 
     /*

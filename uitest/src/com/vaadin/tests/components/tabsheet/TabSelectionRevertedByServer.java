@@ -2,7 +2,6 @@ package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
@@ -59,15 +58,13 @@ public class TabSelectionRevertedByServer extends AbstractTestUI {
 
         addComponent(tabsheet);
 
-        Button button = new Button("Select Last Tab");
-        button.addClickListener(new ClickListener() {
+        addButton("Select Last Tab", new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
                 tabsheet.setSelectedTab(lastTab);
             }
         });
-        addComponent(button);
     }
 
     @Override

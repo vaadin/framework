@@ -67,7 +67,7 @@ public interface Constants {
 
     // Keep the version number in sync with push/build.xml and other locations
     // listed in that file
-    static final String REQUIRED_ATMOSPHERE_RUNTIME_VERSION = "2.1.2.vaadin5";
+    static final String REQUIRED_ATMOSPHERE_RUNTIME_VERSION = "2.1.2.vaadin6";
 
     static final String INVALID_ATMOSPHERE_VERSION_WARNING = "\n"
             + "=================================================================\n"
@@ -114,6 +114,15 @@ public interface Constants {
     static final String WARNING_UNKNOWN_LEGACY_PROPERTY_TOSTRING_VALUE = "Unknown value '{0}' for parameter "
             + Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING
             + ". Supported values are 'false','warning','true'";
+
+    static final String CANNOT_ACQUIRE_CLASSLOADER_SEVERE = "\n"
+            + "=================================================================\n"
+            + "Vaadin was unable to acquire class loader from servlet container\n"
+            + "to load your application classes. Setup appropriate security\n"
+            + "policy to allow invoking Thread.getContextClassLoader() from\n"
+            + "VaadinService if you're not using custom class loader.\n"
+            + "NullPointerExceptions will be thrown later."
+            + "=================================================================";
 
     static final String URL_PARAMETER_THEME = "theme";
 
@@ -164,4 +173,5 @@ public interface Constants {
     static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
 
     static final String PORTLET_CONTEXT = "PORTLET_CONTEXT";
+
 }

@@ -132,6 +132,22 @@ public class VTooltip extends VOverlay {
         }
         if (info.getTitle() != null && !info.getTitle().isEmpty()) {
             description.setInnerHTML(info.getTitle());
+            /*
+             * Issue #11871: to correctly update the offsetWidth of description
+             * element we need to clear style width of it's parent DIV from old
+             * value (in some strange cases this width=[tooltip MAX_WIDTH] after
+             * tooltip text has been already updated to new shortly value:
+             * 
+             * <div class="popupContent"> <div style="width: 500px;"> <div
+             * class="v-errormessage" aria-hidden="true" style="display: none;">
+             * <div class="gwt-HTML"> </div> </div> <div
+             * class="v-tooltip-text">This is a short tooltip</div> </div>
+             * 
+             * and it leads to error during calculation offsetWidth (it is
+             * native GWT method getSubPixelOffsetWidth()) of description
+             * element")
+             */
+            description.getParentElement().getStyle().clearWidth();
             description.getStyle().clearDisplay();
         } else {
             description.setInnerHTML("");
@@ -151,6 +167,7 @@ public class VTooltip extends VOverlay {
             // in the right or bottom edge. For this reason the tooltip is moved
             // first to 0,0 position so that the calculation goes correctly.
             setPopupPosition(0, 0);
+
             setPopupPositionAndShow(new PositionCallback() {
                 @Override
                 public void setPosition(int offsetWidth, int offsetHeight) {

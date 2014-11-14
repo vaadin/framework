@@ -2600,11 +2600,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         @Override
         public void run() {
+
             if (client.hasActiveRequest() || navKeyDown) {
                 // if client connection is busy, don't bother loading it more
                 VConsole.log("Postponed rowfetch");
                 schedule(250);
-            } else if (!updatedReqRows && allRenderedRowsAreNew()) {
+            } else if (allRenderedRowsAreNew() && !updatedReqRows) {
 
                 /*
                  * If all rows are new, there might have been a server-side call
@@ -2625,6 +2626,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 setReqRows(last - getReqFirstRow() + 1);
                 updatedReqRows = true;
                 schedule(250);
+
             } else {
 
                 int firstRendered = scrollBody.getFirstRendered();
@@ -2712,6 +2714,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     client.updateVariable(paintableId, "firstvisible",
                             firstRowInViewPort, false);
                 }
+
                 client.updateVariable(paintableId, "reqfirstrow", reqFirstRow,
                         false);
                 client.updateVariable(paintableId, "reqrows", reqRows, true);
@@ -3138,6 +3141,15 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         && Util.isTouchEventOrLeftMouseButton(event)) {
                     dragging = false;
                     DOM.releaseCapture(getElement());
+
+                    if (Util.isTouchEvent(event)) {
+                        /*
+                         * Prevent using in e.g. scrolling and prevent generated
+                         * events.
+                         */
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
                     if (moved) {
                         hideFloatingCopy();
                         tHead.removeSlotFocus();
@@ -3149,14 +3161,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                                 reOrderColumn(cid, closestSlot);
                             }
                         }
-                    }
-                    if (Util.isTouchEvent(event)) {
-                        /*
-                         * Prevent using in e.g. scrolling and prevent generated
-                         * events.
-                         */
-                        event.preventDefault();
-                        event.stopPropagation();
+                        moved = false;
+                        break;
                     }
                 }
 
@@ -3630,6 +3636,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         c.setWidth(widthWithoutAddedIndent, true);
                     }
                 } else if (col.hasAttribute("er")) {
+                    c.setUndefinedWidth();
                     c.setExpandRatio(col.getFloatAttribute("er"));
 
                 } else if (recalcWidths) {
@@ -4205,7 +4212,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
 
         /**
-         * Returns the expand ration of the cell
+         * Returns the expand ratio of the cell
          * 
          * @return The expand ratio
          */
@@ -4693,10 +4700,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
 
         public int getLastRendered() {
+
             return lastRendered;
         }
 
         public int getFirstRendered() {
+
             return firstRendered;
         }
 
@@ -4780,10 +4789,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             } else if (firstIndex + rows == firstRendered) {
                 final VScrollTableRow[] rowArray = new VScrollTableRow[rows];
                 int i = rows;
+
                 while (it.hasNext()) {
                     i--;
                     rowArray[i] = prepareRow((UIDL) it.next());
                 }
+
                 for (i = 0; i < rows; i++) {
                     addRowBeforeFirstRendered(rowArray[i]);
                     firstRendered--;
@@ -4808,10 +4819,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 setLastRendered(lastRendered + 1);
                 setContainerHeight();
                 fixSpacers();
+
                 while (it.hasNext()) {
                     addRow(prepareRow((UIDL) it.next()));
                     setLastRendered(lastRendered + 1);
                 }
+
                 fixSpacers();
             }
 
@@ -4826,6 +4839,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * has changed since the last request.
          */
         protected void ensureCacheFilled() {
+
+            /**
+             * Fixes cache issue #13576 where unnecessary rows are fetched
+             */
+            if (isLazyScrollerActive()) {
+                return;
+            }
+
             int reactFirstRow = (int) (firstRowInViewPort - pageLength
                     * cache_react_rate);
             int reactLastRow = (int) (firstRowInViewPort + pageLength + pageLength
@@ -6133,7 +6154,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         touchStart = event;
                         Touch touch = event.getChangedTouches().get(0);
                         // save position to fields, touches in events are same
-                        // isntance during the operation.
+                        // instance during the operation.
                         touchStartX = touch.getClientX();
                         touchStartY = touch.getClientY();
                         /*
@@ -6441,8 +6462,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     startRow = focusedRow;
                     selectionRangeStart = focusedRow;
                     // If start row is null then we have a multipage selection
-                    // from
-                    // above
+                    // from above
                     if (startRow == null) {
                         startRow = (VScrollTableRow) scrollBody.iterator()
                                 .next();
@@ -7277,6 +7297,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
         if (preLimit < firstRendered) {
             // need some rows to the beginning of the rendered area
+
             rowRequestHandler
                     .setReqFirstRow((int) (firstRowInViewPort - pageLength
                             * cache_rate));
@@ -7662,13 +7683,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                             // viewport
                             selectLastItemInNextRender = true;
                             multiselectPending = shift;
-                            scrollByPagelenght(1);
+                            scrollByPagelength(1);
                         }
                     }
                 }
             } else {
                 /* No selections, go page down by scrolling */
-                scrollByPagelenght(1);
+                scrollByPagelength(1);
             }
             return true;
         }
@@ -7714,13 +7735,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                             // viewport
                             selectFirstItemInNextRender = true;
                             multiselectPending = shift;
-                            scrollByPagelenght(-1);
+                            scrollByPagelength(-1);
                         }
                     }
                 }
             } else {
                 /* No selections, go page up by scrolling */
-                scrollByPagelenght(-1);
+                scrollByPagelength(-1);
             }
 
             return true;
@@ -7794,7 +7815,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 .getRowHeight());
     }
 
-    private void scrollByPagelenght(int i) {
+    private void scrollByPagelength(int i) {
         int pixels = i * scrollBodyPanel.getOffsetHeight();
         int newPixels = scrollBodyPanel.getScrollPosition() + pixels;
         if (newPixels < 0) {

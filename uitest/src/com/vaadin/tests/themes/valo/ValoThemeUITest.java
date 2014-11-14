@@ -133,6 +133,15 @@ public class ValoThemeUITest extends MultiBrowserTest {
     }
 
     @Test
+    public void treeTables() throws Exception {
+        openTestURL("test");
+        open("Tables");
+        check("Hierarchical");
+        check("Footer");
+        compareScreen("treetables");
+    }
+
+    @Test
     public void dragging() throws Exception {
         openTestURL("test");
         open("Drag and Drop", "Dragging Components");
@@ -169,6 +178,17 @@ public class ValoThemeUITest extends MultiBrowserTest {
         check("Disable tabs");
         check("Overflow");
         compareScreen("tabs-closable-disabled");
+    }
+
+    @Test
+    public void tabsClosableUnframed() throws Exception {
+        openTestURL("test");
+        open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
+        check("Closable");
+        // Framed option is checked by default so we are actually unchecking
+        check("Framed");
+        check("Overflow");
+        compareScreen("tabs-closable-unframed");
     }
 
     @Test

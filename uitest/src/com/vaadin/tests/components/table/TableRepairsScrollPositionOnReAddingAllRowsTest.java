@@ -18,17 +18,10 @@ package com.vaadin.tests.components.table;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.IsCloseTo.closeTo;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.vaadin.testbench.commands.TestBenchCommandExecutor;
 import com.vaadin.testbench.elements.TableElement;
-import com.vaadin.testbench.screenshot.ImageComparison;
-import com.vaadin.testbench.screenshot.ReferenceNameGenerator;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -40,138 +33,127 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class TableRepairsScrollPositionOnReAddingAllRowsTest extends
         MultiBrowserTest {
 
-    @Test
-    public void testScrollRepairsAfterReAddingAllRows()
-            throws InterruptedException {
+    private int rowLocation0;
+
+    @Override
+    @Before
+    public void setup() throws Exception {
+        super.setup();
         openTestURL();
 
-        WebElement row0 = $(TableElement.class).first().getCell(0, 0);
-        int rowLocation0 = row0.getLocation().getY();
+        rowLocation0 = getCellY(0);
+        scrollToBottom();
+    }
 
-        // case 1
-        scrollUp();
-
-        waitUntilNot(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return $(TableElement.class).first().getCell(48, 0) == null;
-            }
-        }, 10);
-
-        WebElement row = $(TableElement.class).first().getCell(48, 0);
-        int rowLocation = row.getLocation().getY();
+    @Test
+    public void testReAddAllViaAddAll() {
+        int rowLocation = getCellY(70);
 
         // This button is for re-adding all rows (original itemIds) at once
         // (removeAll() + addAll())
         hitButton("buttonReAddAllViaAddAll");
 
-        row = $(TableElement.class).first().getCell(48, 0);
-        int newRowLocation = row.getLocation().getY();
+        int newRowLocation = getCellY(70);
 
-        // ranged check because IE9 consistently misses the mark by 1 pixel
-        assertThat(
+        assertCloseTo(
                 "Scroll position should be the same as before Re-Adding rows via addAll()",
-                (double) newRowLocation,
-                closeTo(rowLocation, row.getSize().height + 1));
+                newRowLocation, rowLocation);
 
-        // case 2
-        scrollUp();
+    }
 
-        waitUntilNot(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return $(TableElement.class).first().getCell(48, 0) == null;
-            }
-        }, 10);
-
-        row = $(TableElement.class).first().getCell(48, 0);
-        rowLocation = row.getLocation().getY();
+    @Test
+    public void testReplaceByAnotherCollectionViaAddAll() {
+        int rowLocation = getCellY(70);
 
         // This button is for replacing all rows at once (removeAll() +
         // addAll())
         hitButton("buttonReplaceByAnotherCollectionViaAddAll");
 
-        row = $(TableElement.class).first().getCell(48, 0);
-        newRowLocation = row.getLocation().getY();
+        // new collection has one less element
+        int newRowLocation = getCellY(69);
 
-        // ranged check because IE9 consistently misses the mark by 1 pixel
-        assertThat(
+        assertCloseTo(
                 "Scroll position should be the same as before Replacing rows via addAll()",
-                (double) newRowLocation,
-                closeTo(rowLocation, row.getSize().height + 1));
+                newRowLocation, rowLocation);
+    }
 
-        // case 3
+    @Test
+    public void testReplaceByAnotherCollectionViaAdd() {
+
         // This button is for replacing all rows one by one (removeAll() + add()
         // + add()..)
         hitButton("buttonReplaceByAnotherCollectionViaAdd");
 
-        row = $(TableElement.class).first().getCell(0, 0);
-        newRowLocation = row.getLocation().getY();
+        int newRowLocation = getCellY(0);
 
-        // ranged check because IE9 consistently misses the mark by 1 pixel
-        assertThat("Scroll position should be 0", (double) newRowLocation,
-                closeTo(rowLocation0, 1));
+        assertCloseTo("Scroll position should be 0", newRowLocation,
+                rowLocation0);
+    }
 
-        // case 4
-        // This button is for restoring initial list and for scrolling to 0
-        // position
-        hitButton("buttonRestore");
-        scrollUp();
-
-        waitUntilNot(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return $(TableElement.class).first().getCell(48, 0) == null;
-            }
-        }, 10);
-
+    @Test
+    public void testReplaceBySubsetOfSmallerSize() {
         // This button is for replacing all rows at once but the count of rows
         // is less then first index to scroll
         hitButton("buttonReplaceBySubsetOfSmallerSize");
 
-        row = $(TableElement.class).first().getCell(5, 0);
+        int newRowLocation = getCellY(5);
 
-        newRowLocation = row.getLocation().getY();
+        assertCloseTo("Scroll position should be 0", newRowLocation,
+                rowLocation0);
+    }
 
-        // ranged check because IE9 consistently misses the mark by 1 pixel
-        assertThat("Scroll position should be 0", (double) newRowLocation,
-                closeTo(rowLocation0, 1));
-
-        // case 5
-        // This button is for restoring initial list and for scrolling to 0
-        // position
-        hitButton("buttonRestore");
-        scrollUp();
-
-        waitUntilNot(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return $(TableElement.class).first().getCell(48, 0) == null;
-            }
-        }, 10);
-
-        row = $(TableElement.class).first().getCell(48, 0);
-        rowLocation = row.getLocation().getY();
+    @Test
+    public void testReplaceByWholeSubsetPlusOneNew() {
+        int rowLocation = getCellY(70);
 
         // This button is for replacing by whole original sub-set of items plus
         // one new
-        hitButton("buttonReplaceByWholeSubsetPlusOnNew");
+        hitButton("buttonReplaceByWholeSubsetPlusOneNew");
 
-        row = $(TableElement.class).first().getCell(48, 0);
-        newRowLocation = row.getLocation().getY();
+        int newRowLocation = getCellY(70);
 
+        assertCloseTo("Scroll position should be the same as before Replacing",
+                newRowLocation, rowLocation);
+
+    }
+
+    @Test
+    public void testRemoveAllAddOne() {
+        // This button is for removing all and then adding only one new item
+        hitButton("buttonRemoveAllAddOne");
+
+        int newRowLocation = getCellY(0);
+
+        assertCloseTo("Scroll position should be 0", newRowLocation,
+                rowLocation0);
+    }
+
+    @Test
+    public void testReplaceByNewDatasource() {
+        // This button is for remove all items and add new datasource
+        hitButton("buttonReplaceByNewDatasource");
+
+        int newRowLocation = getCellY(0);
+
+        assertCloseTo("Scroll position should be 0", newRowLocation,
+                rowLocation0);
+    }
+
+    private TableElement getTable() {
+        return $(TableElement.class).first();
+    }
+
+    private void scrollToBottom() {
+        scrollTable(getTable(), 80, 70);
+    }
+
+    private int getCellY(int row) {
+        return getTable().getCell(row, 0).getLocation().getY();
+    }
+
+    private void assertCloseTo(String reason, int actual, int expected) {
         // ranged check because IE9 consistently misses the mark by 1 pixel
-        assertThat("Scroll position should be the same as before Replacing",
-                (double) newRowLocation,
-                closeTo(rowLocation, row.getSize().height + 1));
-
+        assertThat(reason, (double) actual, closeTo(expected, 1));
     }
 
-    private void scrollUp() {
-        WebElement actualElement = getDriver().findElement(
-                By.className("v-table-body-wrapper"));
-        JavascriptExecutor js = new TestBenchCommandExecutor(getDriver(),
-                new ImageComparison(), new ReferenceNameGenerator());
-        js.executeScript("arguments[0].scrollTop = " + 1205, actualElement);
-    }
 }

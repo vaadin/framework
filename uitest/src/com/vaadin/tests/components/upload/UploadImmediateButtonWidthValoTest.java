@@ -13,23 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui;
+package com.vaadin.tests.components.upload;
 
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.impl.PopupImplMozilla;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
 
-public class VPopupImplMozilla extends PopupImplMozilla {
+import com.vaadin.ui.themes.*;
+import org.junit.Test;
+
+public class UploadImmediateButtonWidthValoTest extends
+        UploadImmediateButtonWidthTest {
 
     @Override
-    public void onShow(Element popup) {
-        // Move the overlay to the appropriate overlay container
-        final VOverlay overlay = VOverlay.current;
-        if (overlay != null) {
-            final Element e = overlay.getOverlayContainer();
-            e.appendChild(popup);
-        }
-
-        super.onShow(popup);
+    protected String getTheme() {
+        return ValoTheme.THEME_NAME;
     }
 
+    @Test
+    public void immediateButtonWithUndefinedWidth() {
+        assertThat(getButtonWidth("upload3"), closeTo(89, 2));
+    }
 }

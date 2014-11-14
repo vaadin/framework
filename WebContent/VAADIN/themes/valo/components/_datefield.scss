@@ -2,7 +2,7 @@
  * Outputs the selectors and properties for the DateField component.
  *
  * @param {string} $primary-stylename (v-datefield) - the primary style name for the selectors
- * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group datefield
  */
@@ -120,7 +120,7 @@
  *
  * @param {list} $bevel ($v-textfield-bevel) - Box-shadow value according to $v-bevel documentation
  * @param {list} $shadow ($v-textfield-shadow) - Box-shadow value according to $v-shadow documentation
- * @param {size} $unit-size ($v-unit-size) - The sizing of the datefield, which corresponds its height
+ * @param {size} $unit-size ($v-unit-size) - The sizing of the datefield, which corresponds its height
  * @param {list} $border ($v-textfield-border) - The border of the datefield
  * @param {size} $border-radius ($v-textfield-border-radius) - The border-radius of the datefield
  * @param {color} $background-color ($v-textfield-background-color) - The background color of the datefield
@@ -189,7 +189,7 @@
 /**
  * Outputs the styles for a date field variant button element.
  * 
- * @param {size} $unit-size ($v-unit-size) - The sizing of the button, which corresponds its width.
+ * @param {size} $unit-size ($v-unit-size) - The sizing of the button, which corresponds its width.
  * @param {list} $bevel ($v-textfield-bevel) - Box-shadow value according to $v-bevel documentation
  * @param {color} $background-color ($v-textfield-background-color) - The background color of the input, which affects the font color of the button
  * @param {size} $border-radius ($v-textfield-border-radius) - The border-radius of the input, which affects the border-radius of the button

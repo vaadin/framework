@@ -19,21 +19,17 @@ import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public abstract class BaseLayoutExpandTest extends MultiBrowserTest {
 
     @Test
     public void LayoutExpand() throws IOException, InterruptedException {
         openTestURL();
-        sleep(500);
+        waitForElementPresent(By.className("v-table"));
         compareScreen("initial");
         String[] states = { "expand_100_0", "expand_50_50", "expand_25_75" };
         List<ButtonElement> buttons = $(ButtonElement.class).all();
@@ -41,7 +37,7 @@ public abstract class BaseLayoutExpandTest extends MultiBrowserTest {
         // go through all buttons click them and see result
         for (ButtonElement btn : buttons) {
             btn.click();
-            sleep(500);
+            waitForElementPresent(By.className("v-table"));
             compareScreen(states[index]);
             index++;
         }

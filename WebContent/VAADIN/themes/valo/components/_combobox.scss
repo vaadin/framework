@@ -2,7 +2,7 @@
  * Outputs the selectors and properties for the ComboBox component.
  *
  * @param {string} $primary-stylename (v-filterselect) - the primary style name for the selectors
- * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group combobox
  */
@@ -93,7 +93,7 @@
 /**
  * Outputs the styles for a combobox variant.
  *
- * @param {size} $unit-size ($v-unit-size) - The sizing of the combobox, which corresponds its height
+ * @param {size} $unit-size ($v-unit-size) - The sizing of the combobox, which corresponds its height
  * @param {color} $font-color (null) - The font color of the combobox. Computed from the $background-color by default.
  * @param {number} $font-weight (max(400, $v-font-weight)) - The font weight of the combobox
  * @param {size} $font-size (null) - The font size of the combobox. Inherited from the parent by default.
@@ -201,7 +201,7 @@
 /**
  * Outputs the styles for a combobox variant input element.
  * 
- * @param {size} $unit-size ($v-unit-size) - The sizing of the input (affects the padding only, width and height are 100%)
+ * @param {size} $unit-size ($v-unit-size) - The sizing of the input (affects the padding only, width and height are 100%)
  * @param {size | list} $padding (null) - The padding of the input. Computed from other parameters by default.
  * @param {color} $font-color (null) - The font color of the input. Computed from the $background-color by default.
  * @param {number} $font-weight (null) - The font weight of the input. Inherited from the parent by default.
@@ -257,7 +257,7 @@
 /**
  * Outputs the styles for a combobox variant button element.
  * 
- * @param {size} $unit-size ($v-unit-size) - The sizing of the button, which corresponds its width.
+ * @param {size} $unit-size ($v-unit-size) - The sizing of the button, which corresponds its width.
  * @param {list} $bevel ($v-textfield-bevel) - Box-shadow value according to $v-bevel documentation
  * @param {color} $background-color ($v-textfield-background-color) - The background color of the input, which affects the font color of the button
  * @param {size} $border-radius ($v-textfield-border-radius) - The border-radius of the input, which affects the border-radius of the button

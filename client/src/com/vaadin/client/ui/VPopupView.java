@@ -195,6 +195,8 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
 
     /**
      * Returns true if the popup is enabled, false if not.
+     *
+     * @since 7.3.4
      */
     @Override
     public boolean isEnabled() {
@@ -206,6 +208,7 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
      *
      * @param enabled <code>true</code> to enable the popup, <code>false</code>
      *          to disable it
+     * @since 7.3.4
      */
     @Override
     public void setEnabled(boolean enabled) {
@@ -439,6 +442,14 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
         return Collections.singleton((Widget) popup).iterator();
     }
 
+    /**
+     * Checks whether there are operations pending for this widget that must be
+     * executed before reaching a steady state.
+     *
+     * @returns <code>true</code> iff there are operations pending which must be
+     *          executed before reaching a steady state
+     * @since 7.3.4
+     */
     @Override
     public boolean isWorkPending() {
         return popupShowInProgress;

@@ -63,7 +63,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
  * Outputs the selectors and properties for the TabSheet component.
  *
  * @param {string} $primary-stylename (v-tabsheet) - the primary style name for the selectors
- * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group tabsheet
  */
@@ -208,6 +208,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     overflow: hidden;
     text-overflow: ellipsis;
     border-bottom: max(1px, first-number($v-border))*2 solid transparent;
+    position: relative;
 
     @if $v-animations-enabled {
       @include transition(border-bottom 200ms, color 200ms);
@@ -229,7 +230,6 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
       @include opacity($v-disabled-opacity);
       cursor: default;
       color: inherit !important;
-      border-bottom: none;
     }
   }
 
@@ -251,14 +251,23 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     color: $v-selection-color;
   }
 
+  .v-caption-closable {
+    padding-right: round($v-unit-size/10) + round($v-font-size * 1.1);
+  }
+
+  &.icons-on-top .v-caption-closable {
+    padding-right: round($v-unit-size/10);
+  }
+
   .#{$primary-stylename}-caption-close {
-    display: inline-block;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin: round($v-font-size / -2) 0 0;
     font-size: round($v-font-size * 1.1);
     line-height: round($v-font-size * 1.1);
     width: round($v-font-size * 1.1);
-    vertical-align: middle;
     text-align: center;
-    margin: 0 round($v-font-size/-4) 0 round($v-font-size/2);
     border-radius: round($v-border-radius/2);
     color: valo-font-color($v-app-background-color, 0.4);
 
@@ -388,7 +397,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 /**
  * Outputs the styles for the framed tabsheet style.
  * 
- * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
+ * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
  * @param {bool} $frame-inactive-tabs (true) - Should inactive tabs be framed as well (the active tab is always framed with this style)
  * @param {bool} $outer-frame (true) - Should the frame contain the whole tabsheet (i.e. tabbar and tab content). If false, works like a "borderless" style.
  * @param {size} $tab-spacing ($v-unit-size/10) - The spacing between tabs
@@ -398,9 +407,9 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 @mixin valo-tabsheet-framed-style ($primary-stylename: v-tabsheet, $frame-inactive-tabs: true, $outer-frame: true, $tab-spacing: round($v-unit-size/10)) {
   > .#{$primary-stylename}-tabcontainer {
     .v-caption {
-      position: relative;
       margin-left: $tab-spacing or first-number($v-border) * -1;
       padding: 0 $v-layout-spacing-horizontal;
+      background-color: $v-app-background-color;
       border: first-number($v-border) solid transparent;
       line-height: $v-unit-size - first-number($v-border);
       border-radius: $v-border-radius $v-border-radius 0 0;
@@ -414,6 +423,20 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
         background-color: darken($v-app-background-color, 3%);
         border-bottom-color: first-color(valo-border($color: $v-app-background-color, $strength: 0.5));
       }
+
+      &.v-disabled:hover {
+        background-color: $v-app-background-color;
+      }
+    }
+
+    .v-caption-closable {
+      padding-right: $v-layout-spacing-horizontal + round($v-font-size * 1.1);
+    }
+
+    .#{$primary-stylename}-caption-close {
+      top: round($v-font-size/4);
+      right: round($v-font-size/4);
+      margin-top: 0;
     }
 
     td:first-child .v-caption,
@@ -432,17 +455,6 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
       border-color: first-color(valo-border($color: $v-app-background-color, $strength: 0.5));
       border-bottom: none;
       padding-bottom: first-number($v-border);
-    }
-
-    .v-caption-closable {
-      padding-right: $v-layout-spacing-horizontal + round($v-font-size * 1.1);
-    }
-
-    .#{$primary-stylename}-caption-close {
-      position: absolute;
-      top: round($v-font-size/4);
-      right: round($v-font-size/4);
-      margin: 0;
     }
   }
 
@@ -471,8 +483,10 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     }
   }
 
-  &.icons-on-top .v-caption-closable {
-    padding-right: $v-layout-spacing-horizontal;
+  &.icons-on-top {
+    > .#{$primary-stylename}-tabcontainer .#{$primary-stylename}-tabitem-selected .v-caption {
+      padding-bottom: round($v-unit-size/6) + first-number($v-border);
+    }
   }
 }
 
@@ -480,8 +494,8 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 /**
  * Outputs the styles for a tabsheet where the tabs are aligned to the position specified by the parameter in the tabbar.
  * 
- * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
- * @param {string} $align (center) - The alignment of the tabs inside the tabbar. Possible values: left, right, center.
+ * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
+ * @param {string} $align (center) - The alignment of the tabs inside the tabbar. Possible values: left, right, center.
  * 
  * @group tabsheet
  */
@@ -495,7 +509,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 /**
  * Outputs the styles for a tabsheet where all tabs in the tabbar have equal width and span the entire width of the tabbar.
  * 
- * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
+ * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
  * @param {bool} $flex (false) - Should the size of the tabs be proportional to their content, i.e. should the available space in the tabbar be distributed to the tabs in relation to their content sizes.
  * 
  * @group tabsheet
@@ -530,20 +544,16 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 /**
  * Outputs the styles for a tabsheet where the icons of individual tabs are on top of the tab captions.
  * 
- * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
+ * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
  *  
  * @group tabsheet
  */
 @mixin valo-tabsheet-icons-on-top-style ($primary-stylename: v-tabsheet) {
-  > div > .#{$primary-stylename}-tabs {
+  > .#{$primary-stylename}-tabcontainer {
     .v-caption {
       padding-top: round($v-unit-size/6);
       padding-bottom: round($v-unit-size/6);
       line-height: 1.2;
-    }
-
-    .#{$primary-stylename}-tabitem-selected .v-caption {
-      padding-bottom: round($v-unit-size/6) + first-number($v-border);
     }
 
     .v-icon {
@@ -553,6 +563,15 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
         margin-left: 0;
       }
     }
+
+    .v-caption-closable {
+      padding-right: $v-layout-spacing-horizontal;
+    }
+
+    .#{$primary-stylename}-caption-close {
+      top: round($v-font-size/4);
+      margin-top: 0;
+    }
   }
 }
 
@@ -561,7 +580,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
  * Outputs the styles for a tabsheet where only the selected tab has the close button visible. 
  * Note that the other tabs can still be closed programmatically.
  * 
- * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
+ * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
  *  
  * @group tabsheet
  */
@@ -580,7 +599,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
  * Outputs the styles for a tabsheet where the tabbar has increased padding to separate the tabs 
  * inside it from their surrounding container.
  * 
- * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
+ * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
  *  
  * @group tabsheet
  */

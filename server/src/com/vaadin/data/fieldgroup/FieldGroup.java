@@ -211,7 +211,8 @@ public class FieldGroup implements Serializable {
     public void setReadOnly(boolean fieldsReadOnly) {
         readOnly = fieldsReadOnly;
         for (Field<?> field : getFields()) {
-            if (!field.getPropertyDataSource().isReadOnly()) {
+            if (field.getPropertyDataSource() == null
+                    || !field.getPropertyDataSource().isReadOnly()) {
                 field.setReadOnly(fieldsReadOnly);
             } else {
                 field.setReadOnly(true);
@@ -244,15 +245,13 @@ public class FieldGroup implements Serializable {
      * @param propertyId
      *            The propertyId to bind to the field
      * @throws BindException
-     *             If the property id is already bound to another field by this
-     *             field binder
+     *             If the field is null or the property id is already bound to
+     *             another field by this field binder
      */
     public void bind(Field<?> field, Object propertyId) throws BindException {
-        if (propertyIdToField.containsKey(propertyId)
-                && propertyIdToField.get(propertyId) != field) {
-            throw new BindException("Property id " + propertyId
-                    + " is already bound to another field");
-        }
+        throwIfFieldIsNull(field, propertyId);
+        throwIfPropertyIdAlreadyBound(field, propertyId);
+
         fieldToPropertyId.put(field, propertyId);
         propertyIdToField.put(propertyId, field);
         if (itemDataSource == null) {
@@ -262,6 +261,23 @@ public class FieldGroup implements Serializable {
 
         field.setPropertyDataSource(wrapInTransactionalProperty(getItemProperty(propertyId)));
         configureField(field);
+    }
+
+    private void throwIfFieldIsNull(Field<?> field, Object propertyId) {
+        if (field == null) {
+            throw new BindException(
+                    String.format(
+                            "Cannot bind property id '%s' to a null field.",
+                            propertyId));
+        }
+    }
+
+    private void throwIfPropertyIdAlreadyBound(Field<?> field, Object propertyId) {
+        if (propertyIdToField.containsKey(propertyId)
+                && propertyIdToField.get(propertyId) != field) {
+            throw new BindException("Property id " + propertyId
+                    + " is already bound to another field");
+        }
     }
 
     private <T> Property.Transactional<T> wrapInTransactionalProperty(

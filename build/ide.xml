@@ -29,10 +29,10 @@
             <path refid="client-compiler.deps" />
             <path refid="server.deps" />
             <path refid="shared.deps" />
-            <path refid="uitest.deps" />
             <path refid="client.deps" />
             <path refid="buildhelpers.deps" />
             <path refid="gwt.deps" />
+            <path refid="uitest.deps" />
             <path location="server/src" />
             <path location="shared/src" />
             <path location="uitest/src" />
@@ -163,6 +163,7 @@
             <sysproperty key="vFailIfNotSerializable" value="true" />
 
             <jvmarg value="-Xss8M" />
+            <jvmarg value="-Xmx1G" />
             <jvmarg value="-XX:MaxPermSize=256M" />
             <jvmarg value="-Djava.awt.headless=true" />
             <jvmarg value="-Dgwt.usearchives=false" />

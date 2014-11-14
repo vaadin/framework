@@ -170,6 +170,10 @@ public abstract class VaadinService implements Serializable {
                                 + classLoaderName, e);
             }
         }
+
+        if (getClassLoader() == null) {
+            setDefaultClassLoader();
+        }
     }
 
     /**
@@ -1861,4 +1865,25 @@ public abstract class VaadinService implements Serializable {
         eventRouter.fireEvent(new ServiceDestroyEvent(this));
     }
 
+    /**
+     * Tries to acquire default class loader and sets it as a class loader for
+     * this {@link VaadinService} if found. If current security policy disallows
+     * acquiring class loader instance it will log a message and re-throw
+     * {@link SecurityException}
+     * 
+     * @throws SecurityException
+     *             If current security policy forbids acquiring class loader
+     * 
+     * @since 7.3.5
+     */
+    protected void setDefaultClassLoader() {
+        try {
+            setClassLoader(VaadinServiceClassLoaderUtil
+                    .findDefaultClassLoader());
+        } catch (SecurityException e) {
+            getLogger().log(Level.SEVERE,
+                    Constants.CANNOT_ACQUIRE_CLASSLOADER_SEVERE, e);
+            throw e;
+        }
+    }
 }

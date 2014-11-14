@@ -16,7 +16,7 @@
     <property name="vaadinPush.debug.js" location="${result.dir}/js/VAADIN/vaadinPush.debug.js" />
 
     <!-- Keep the version number in sync with ivy.xml, server/src/com/vaadin/server/Constants.java -->
-    <property name="atmosphere.runtime.version" value="2.1.2.vaadin5" />
+    <property name="atmosphere.runtime.version" value="2.1.2.vaadin6" />
     <property name="jquery.js" location="lib/jquery/jquery-1.11.0.js" />
 
     <path id="classpath.compile.custom" />

@@ -36,8 +36,7 @@ public class ThemeChangeOnTheFly extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Button inject = new Button("Inject blue background");
-        inject.addClickListener(new ClickListener() {
+        addButton("Inject blue background", new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -46,7 +45,6 @@ public class ThemeChangeOnTheFly extends AbstractTestUIWithLog {
 
             }
         });
-        addComponent(inject);
 
         GridLayout gl = new GridLayout(2, 4);
         gl.setCaption("Change theme by clicking a button");

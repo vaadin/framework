@@ -44,6 +44,12 @@
             conf="build,ide -> default" />
         <dependency org="ant" name="ant-launcher" rev="1.6.5"
             conf="build,ide -> default" />
+        <dependency org="org.ow2.asm" name="asm"
+            rev="5.0.3" conf="build-> default" />
+        <dependency org="org.ow2.asm" name="asm-util"
+            rev="5.0.3" conf="build-> default" />
+        <dependency org="org.ow2.asm" name="asm-commons"
+            rev="5.0.3" conf="build-> default" />
 
         <dependency org="org.eclipse.jetty" name="jetty-annotations"
             rev="8.1.12.v20130726" conf="build,ide -> default">
@@ -88,7 +94,7 @@
             conf="build,ide -> default" />
 
         <dependency org="com.vaadin" name="vaadin-client-compiler-deps"
-            rev="1.1.0" conf="build,ide -> default" />
+            rev="1.2.0" conf="build,ide -> default" />
 
     </dependencies>
 
