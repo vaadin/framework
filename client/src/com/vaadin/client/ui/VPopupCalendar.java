@@ -27,10 +27,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -64,8 +60,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
  * 
  */
 public class VPopupCalendar extends VTextualDate implements Field,
-        ClickHandler, MouseOverHandler, MouseOutHandler,
-        CloseHandler<PopupPanel>, SubPartAware {
+        ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
 
     /** For internal use only. May be removed or replaced in the future. */
     public final Button calendarToggle = new Button();
@@ -80,20 +75,6 @@ public class VPopupCalendar extends VTextualDate implements Field,
     public boolean parsable = true;
 
     private boolean open = false;
-    /*
-     * To resolve #14857. If to click on calendarToggle button when calendar
-     * popup is opened (*1) then we have the following chain of calls:
-     * 
-     * 1) onClose() 2) onClick()
-     * 
-     * In this case we should prevent calling openCalendarPanel() in onClick.
-     */
-    private boolean preventOpenPopupCalendar = false;
-    /*
-     * To resolve #14857. To determine this situation (*1) we use onMouseOver
-     * and OnMouseOut (for calendarToggle button).
-     */
-    private boolean cursorOverCalendarToggleButton = false;
 
     private boolean textFieldEnabled = true;
 
@@ -108,10 +89,6 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
         calendarToggle.setText("");
         calendarToggle.addClickHandler(this);
-
-        calendarToggle.addMouseOverHandler(this);
-        calendarToggle.addMouseOutHandler(this);
-
         // -2 instead of -1 to avoid FocusWidget.onAttach to reset it
         calendarToggle.getElement().setTabIndex(-2);
 
@@ -464,10 +441,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
     @Override
     public void onClick(ClickEvent event) {
         if (event.getSource() == calendarToggle && isEnabled()) {
-            if (!preventOpenPopupCalendar) {
-                openCalendarPanel();
-            }
-            preventOpenPopupCalendar = false;
+            openCalendarPanel();
         }
     }
 
@@ -490,22 +464,15 @@ public class VPopupCalendar extends VTextualDate implements Field,
                 focus();
             }
 
-            open = false;
-
-            if (cursorOverCalendarToggleButton) {
-                preventOpenPopupCalendar = true;
-
-                // To resolve the problem: onMouseOut event not triggered when
-                // moving mouse fast (GWT - all browsers)
-                Timer unPreventClickTimer = new Timer() {
-                    @Override
-                    public void run() {
-                        preventOpenPopupCalendar = false;
-                    }
-                };
-
-                unPreventClickTimer.schedule(300);
-            }
+            // TODO resolve what the "Sigh." is all about and document it here
+            // Sigh.
+            Timer t = new Timer() {
+                @Override
+                public void run() {
+                    open = false;
+                }
+            };
+            t.schedule(100);
         }
     }
 
@@ -673,30 +640,6 @@ public class VPopupCalendar extends VTextualDate implements Field,
      */
     public void setRangeEnd(Date rangeEnd) {
         calendar.setRangeEnd(rangeEnd);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.google.gwt.event.dom.client.MouseOverHandler#onMouseOver(com.google
-     * .gwt.event.dom.client.MouseOverEvent)
-     */
-    @Override
-    public void onMouseOver(MouseOverEvent event) {
-        cursorOverCalendarToggleButton = true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.google.gwt.event.dom.client.MouseOutHandler#onMouseOut(com.google
-     * .gwt.event.dom.client.MouseOutEvent)
-     */
-    @Override
-    public void onMouseOut(MouseOutEvent event) {
-        cursorOverCalendarToggleButton = false;
     }
 
 }
