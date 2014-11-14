@@ -9,6 +9,7 @@
     <property name="categories.exclude" value="" />
     <property name="useLocalWebDriver" value="false" />
     <property name="com.vaadin.testbench.max.retries" value="0" />
+    <property name="junit.test.suite" value="com.vaadin.tests.tb3.AllTB3Tests" />
 
     <ivy:resolve file="${tb3test.dir}/ivy.xml" conf="build, build-provided" />
     <ivy:cachepath pathid="classpath.tb3.lib" conf="build, build-provided" />
@@ -18,13 +19,10 @@
     </path>
 
     <target name="run-all-tb3-tests" unless="tests.tb3.skip" description="Run all the TB3 tests (except server tests) in the project">
-        <antcall target="run-tb3-suite">
-            <param name="junit.test.suite" value="com.vaadin.tests.tb3.AllTB3Tests" />
-        </antcall>
+        <antcall target="run-tb3-suite" />
     </target>
 
     <target name="run-tb3-suite">
-        <fail unless="junit.test.suite" message="Define suite to run using junit.test.suite" />
         <fail unless="com.vaadin.testbench.screenshot.directory" message="Define screenshot directory using -Dcom.vaadin.testbench.screenshot.directory" />
         <delete dir="${report.dir}" />
         <mkdir dir="${report.dir}" />

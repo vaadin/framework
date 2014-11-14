@@ -102,13 +102,24 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
         List<DiffEntry> diffsInWorkingTree = new ArrayList<DiffEntry>();
 
         for (DiffEntry diff : diffCommand.call()) {
-            // Exclude temporary junit files.
-            if (!diff.getNewPath().startsWith("uitest/junit")) {
-                diffsInWorkingTree.add(diff);
+            if (pathIsExcluded(diff.getNewPath())) {
+                continue;
             }
+
+            diffsInWorkingTree.add(diff);
         }
 
         return diffsInWorkingTree;
+    }
+
+    private boolean pathIsExcluded(String path) {
+        // Exclude temporary junit files and screeenshots.
+        return path.startsWith("uitest/junit")
+                || getScreenshotDirectory().contains(path);
+    }
+
+    private String getScreenshotDirectory() {
+        return System.getProperty(PrivateTB3Configuration.SCREENSHOT_DIRECTORY);
     }
 
     private List<DiffEntry> getDiffsInHead(Repository repository)

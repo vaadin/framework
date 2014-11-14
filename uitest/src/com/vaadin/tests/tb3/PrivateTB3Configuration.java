@@ -42,10 +42,14 @@ import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
  * Provides values for parameters which depend on where the test is run.
  * Parameters should be configured in work/eclipse-run-selected-test.properties.
  * A template is available in uitest/.
- *
+ * 
  * @author Vaadin Ltd
  */
 public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
+    /**
+     * 
+     */
+    public static final String SCREENSHOT_DIRECTORY = "com.vaadin.testbench.screenshot.directory";
     private static final String RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.runLocally";
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
     private static final String PORT_PROPERTY = "com.vaadin.testbench.deployment.port";
@@ -84,10 +88,11 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     @Override
     protected String getScreenshotDirectory() {
-        String screenshotDirectory = getProperty("com.vaadin.testbench.screenshot.directory");
+        String screenshotDirectory = getProperty(SCREENSHOT_DIRECTORY);
         if (screenshotDirectory == null) {
             throw new RuntimeException(
-                    "No screenshot directory defined. Use -Dcom.vaadin.testbench.screenshot.directory=<path>");
+                    "No screenshot directory defined. Use -D"
+                            + SCREENSHOT_DIRECTORY + "=<path>");
         }
         return screenshotDirectory;
     }
@@ -116,7 +121,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     /**
      * Gets the hostname that tests are configured to use.
-     *
+     * 
      * @return the host name configuration value
      */
     public static String getConfiguredDeploymentHostname() {
@@ -136,7 +141,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     /**
      * Gets the port that tests are configured to use.
-     *
+     * 
      * @return the port configuration value
      */
     public static int getConfiguredDeploymentPort() {
@@ -153,7 +158,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     /**
      * Tries to automatically determine the IP address of the machine the test
      * is running on.
-     *
+     * 
      * @return An IP address of one of the network interfaces in the machine.
      * @throws RuntimeException
      *             if there was an error or no IP was found
