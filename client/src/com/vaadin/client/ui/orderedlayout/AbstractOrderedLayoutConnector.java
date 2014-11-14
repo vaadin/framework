@@ -152,20 +152,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         public void onElementResize(ElementResizeEvent e) {
             updateLayoutHeight();
             if (needsExpand()) {
-                /*
-                 * updateLayoutHeight causes calling of
-                 * getLayoutManager().setNeedsMeasure(this) which informs this
-                 * LayoutManager that the size of a component might have
-                 * changed. Then a new layout phase is scheduled. So
-                 * updateExpandCompensation must be delayed until layout phase
-                 * will be completed. #12672
-                 */
-                Scheduler.get().scheduleFinally(new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        getWidget().updateExpandCompensation();
-                    }
-                });
+                getWidget().updateExpandCompensation();
             }
         }
     };
