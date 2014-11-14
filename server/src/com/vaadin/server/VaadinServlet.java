@@ -573,8 +573,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     /**
      * A helper method to strip away characters that might somehow be used for
-     * XSS attacs. Leaves at least alphanumeric characters intact. Also removes
-     * eg. ( and ), so values should be safe in javascript too.
+     * XSS attacks. Leaves at least alphanumeric characters intact. Also removes
+     * e.g. '(' and ')', so values should be safe in javascript too.
      * 
      * @param themeName
      * @return
@@ -583,7 +583,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      *             version
      */
     @Deprecated
-    protected static String stripSpecialChars(String themeName) {
+    public static String stripSpecialChars(String themeName) {
         StringBuilder sb = new StringBuilder();
         char[] charArray = themeName.toCharArray();
         for (int i = 0; i < charArray.length; i++) {

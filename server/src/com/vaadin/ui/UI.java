@@ -633,7 +633,11 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         this.embedId = embedId;
 
         // Actual theme - used for finding CustomLayout templates
-        getState().theme = request.getParameter("theme");
+        String unescapedThemeName = request.getParameter("theme");
+        if (unescapedThemeName != null) {
+            // Set theme escapes the name
+            setTheme(unescapedThemeName);
+        }
 
         getPage().init(request);
 
@@ -1164,7 +1168,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      *            The new theme name
      */
     public void setTheme(String theme) {
-        getState().theme = theme;
+        getState().theme = VaadinServlet.stripSpecialChars(theme);
     }
 
     /**
