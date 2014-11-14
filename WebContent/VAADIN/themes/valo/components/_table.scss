@@ -238,6 +238,7 @@ $v-table-background-color: null !default;
     border-left: $v-table-border-width solid $border-color;
     overflow: hidden;
     height: $v-table-row-height;
+    vertical-align: middle;
 
     &:first-child {
       border-left: none;
@@ -520,46 +521,28 @@ $v-table-background-color: null !default;
     }
   }
 
-  .#{$primary-stylename}-row-drag-middle td:first-child:before {
-    content: "";
-    display: block;
-    position: absolute;
-    z-index: 1;
-    height: $v-table-row-height + $v-table-border-width;
-    left: 0;
-    right: 0;
-    background: $v-focus-color;
-    @include opacity(.2);
+  .#{$primary-stylename}-row-drag-middle .#{$primary-stylename}-cell-content {
+    $bg: mix($v-focus-color, $background-color, 20%);
+    background-color: $bg;
+    color: valo-font-color($bg);
   }
 
-  .#{$primary-stylename}-row-drag-top td:first-child:before,
-  .#{$primary-stylename}-row-drag-bottom td:first-child:after {
-    content: "\2022";
-    display: block;
-    position: absolute;
-    height: 2px;
-    left: 0;
-    right: 0;
-    background: $v-focus-color;
-    font-size: $v-font-size * 2;
-    line-height: 2px;
-    color: $v-focus-color;
-    text-indent: round($v-font-size/-4);
-    text-shadow: 0 0 1px $background-color, 0 0 1px $background-color;
+  .#{$primary-stylename}-row-drag-bottom td.#{$primary-stylename}-cell-content {
+    border-bottom: 2px solid $v-focus-color;
+    height: $v-table-row-height - 2px;
   }
 
-  .#{$primary-stylename}-row-drag-top td:first-child:before {
-    margin-top: -$v-table-border-width;
+  .#{$primary-stylename}-row-drag-bottom .#{$primary-stylename}-cell-wrapper {
+    margin-bottom: -2px;
   }
 
-  .v-ff & .#{$primary-stylename}-row-drag-top td:first-child:before,
-  .v-ff & .#{$primary-stylename}-row-drag-bottom td:first-child:after {
-    line-height: 1px;
+  .#{$primary-stylename}-row-drag-top td.#{$primary-stylename}-cell-content {
+    border-top: 2px solid $v-focus-color;
+    height: $v-table-row-height - 2px + $v-table-border-width;
   }
 
-  .v-ie & .#{$primary-stylename}-row-drag-top td:first-child:before,
-  .v-ie & .#{$primary-stylename}-row-drag-bottom td:first-child:after {
-    line-height: 0;
+  .#{$primary-stylename}-row-drag-top .#{$primary-stylename}-cell-wrapper {
+    margin-top: -1px;
   }
 
 
@@ -700,6 +683,11 @@ $v-table-background-color: null !default;
     border-top: none;
     border-bottom: none;
   }
+
+  .#{$primary-stylename}-row-drag-top .#{$primary-stylename}-cell-content,
+  .#{$primary-stylename}-row-drag-bottom .#{$primary-stylename}-cell-content {
+    height: $v-table-row-height - 1px;
+  }
 }
 
 
@@ -814,10 +802,6 @@ $v-table-background-color: null !default;
     margin-top: round($row-height/-2);
   }
 
-  .#{$primary-stylename}-row-drag-middle td:first-child:before {
-    height: $row-height + $v-table-border-width;
-  }
-
   &.v-treetable {
     .#{$primary-stylename}-cell-wrapper {
       padding-left: 0;
@@ -838,5 +822,10 @@ $v-table-background-color: null !default;
       padding-left: $cell-padding-horizontal;
       padding-right: $cell-padding-horizontal;
     }
+  }
+
+  .#{$primary-stylename}-row-drag-top .#{$primary-stylename}-cell-content,
+  .#{$primary-stylename}-row-drag-bottom .#{$primary-stylename}-cell-content {
+    height: $row-height - 1px;
   }
 }
