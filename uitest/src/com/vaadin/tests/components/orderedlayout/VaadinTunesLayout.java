@@ -55,7 +55,7 @@ public class VaadinTunesLayout extends AbstractTestUI {
         // modes and search
         HorizontalLayout top = new HorizontalLayout();
         top.setWidth("100%");
-        top.setMargin(new MarginInfo(false, true, false, true)); // Enable
+        top.setMargin(new MarginInfo(false, true)); // Enable
         // horizontal
         // margins
         top.setSpacing(true);
