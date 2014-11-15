@@ -171,7 +171,7 @@ public class Forms extends VerticalLayout implements View {
         });
 
         HorizontalLayout footer = new HorizontalLayout();
-        footer.setMargin(new MarginInfo(true, false, true, false));
+        footer.setMargin(new MarginInfo(true, false));
         footer.setSpacing(true);
         footer.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
         form.addComponent(footer);

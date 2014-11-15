@@ -63,8 +63,8 @@ public abstract class AbstractLayoutTest<T extends AbstractLayout> extends
         options.put("right", new MarginInfo(false, true, false, false));
         options.put("top", new MarginInfo(true, false, false, false));
         options.put("bottom", new MarginInfo(false, false, true, false));
-        options.put("left-right", new MarginInfo(false, true, false, true));
-        options.put("top-bottom", new MarginInfo(true, false, true, false));
+        options.put("left-right", new MarginInfo(false, true));
+        options.put("top-bottom", new MarginInfo(true, false));
 
         createSelectAction("Margins", category, options, "off", marginCommand);
     }

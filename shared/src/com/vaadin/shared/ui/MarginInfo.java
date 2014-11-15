@@ -68,7 +68,11 @@ public class MarginInfo implements Serializable {
      *            enable or disable left margin
      */
     public MarginInfo(boolean top, boolean right, boolean bottom, boolean left) {
-        setMargins(top, right, bottom, left);
+        doSetMargins(top, right, bottom, left);
+    }
+
+    public MarginInfo(boolean vertical, boolean horizontal) {
+        this(vertical, horizontal, vertical, horizontal);
     }
 
     /**
@@ -96,10 +100,7 @@ public class MarginInfo implements Serializable {
      */
     public void setMargins(boolean top, boolean right, boolean bottom,
             boolean left) {
-        bitMask = top ? TOP : 0;
-        bitMask += right ? RIGHT : 0;
-        bitMask += bottom ? BOTTOM : 0;
-        bitMask += left ? LEFT : 0;
+        doSetMargins(top, right, bottom, left);
     }
 
     /**
@@ -188,4 +189,13 @@ public class MarginInfo implements Serializable {
                 + hasBottom() + ", " + hasLeft() + ")";
 
     }
+
+    private void doSetMargins(boolean top, boolean right, boolean bottom,
+            boolean left) {
+        bitMask = top ? TOP : 0;
+        bitMask += right ? RIGHT : 0;
+        bitMask += bottom ? BOTTOM : 0;
+        bitMask += left ? LEFT : 0;
+    }
+
 }
