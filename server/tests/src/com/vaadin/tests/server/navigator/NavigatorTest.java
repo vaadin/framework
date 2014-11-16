@@ -24,6 +24,7 @@ import org.easymock.EasyMock;
 import org.easymock.IArgumentMatcher;
 import org.easymock.IMocksControl;
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.navigator.NavigationStateManager;
 import com.vaadin.navigator.Navigator;
@@ -314,7 +315,8 @@ public class NavigatorTest extends TestCase {
         // prepare mocks: what to expect
         manager.setNavigator(EasyMock.anyObject(Navigator.class));
 
-        EasyMock.expect(provider.getViewName("test1")).andReturn("test1");
+        EasyMock.expect(provider.getViewName("test1")).andReturn("test1")
+                .times(2);
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
         EasyMock.expect(manager.getState()).andReturn("");
         view1.enter(eventParametersEqual(""));
@@ -322,7 +324,8 @@ public class NavigatorTest extends TestCase {
         manager.setState("test1");
         EasyMock.expect(manager.getState()).andReturn("test1");
 
-        EasyMock.expect(provider.getViewName("test2/")).andReturn("test2");
+        EasyMock.expect(provider.getViewName("test2/")).andReturn("test2")
+                .times(2);
         EasyMock.expect(provider.getView("test2")).andReturn(view2);
         EasyMock.expect(manager.getState()).andReturn("test1");
         view2.enter(eventParametersEqual(""));
@@ -331,7 +334,7 @@ public class NavigatorTest extends TestCase {
         EasyMock.expect(manager.getState()).andReturn("test2");
 
         EasyMock.expect(provider.getViewName("test1/params"))
-                .andReturn("test1");
+                .andReturn("test1").times(2);
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
         EasyMock.expect(manager.getState()).andReturn("test2");
         view1.enter(eventParametersEqual("params"));
@@ -367,14 +370,15 @@ public class NavigatorTest extends TestCase {
         // prepare mocks: what to expect
         manager.setNavigator(EasyMock.anyObject(Navigator.class));
 
-        EasyMock.expect(provider.getViewName("test2")).andReturn("test2");
+        EasyMock.expect(provider.getViewName("test2")).andReturn("test2")
+                .times(2);
         EasyMock.expect(provider.getView("test2")).andReturn(view2);
         EasyMock.expect(manager.getState()).andReturn("view1");
         view2.enter(eventParametersEqual(""));
         display.showView(view2);
         manager.setState("test2");
 
-        EasyMock.expect(provider.getViewName("")).andReturn("test1");
+        EasyMock.expect(provider.getViewName("")).andReturn("test1").times(2);
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
         EasyMock.expect(manager.getState()).andReturn("");
         view1.enter(eventParametersEqual(""));
@@ -382,7 +386,7 @@ public class NavigatorTest extends TestCase {
         manager.setState("test1");
 
         EasyMock.expect(provider.getViewName("test1/params"))
-                .andReturn("test1");
+                .andReturn("test1").times(2);
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
         EasyMock.expect(manager.getState()).andReturn("test2");
         view1.enter(eventParametersEqual("params"));
@@ -414,7 +418,8 @@ public class NavigatorTest extends TestCase {
         Navigator navigator = createNavigator(manager, display);
 
         // prepare mocks: what to expect
-        EasyMock.expect(provider.getViewName("test1")).andReturn("test1");
+        EasyMock.expect(provider.getViewName("test1")).andReturn("test1")
+                .times(2);
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
         ViewChangeEvent event1 = new ViewChangeEvent(navigator, null, view1,
                 "test1", "");
@@ -425,7 +430,8 @@ public class NavigatorTest extends TestCase {
         manager.setState("test1");
         listener.addExpectedNavigatorViewChange(event1);
 
-        EasyMock.expect(provider.getViewName("test2")).andReturn("test2");
+        EasyMock.expect(provider.getViewName("test2")).andReturn("test2")
+                .times(2);
         EasyMock.expect(provider.getView("test2")).andReturn(view2);
         ViewChangeEvent event2 = new ViewChangeEvent(navigator, view1, view2,
                 "test2", "");
@@ -493,7 +499,8 @@ public class NavigatorTest extends TestCase {
 
         // prepare mocks: what to expect
         // first listener blocks first view change
-        EasyMock.expect(provider.getViewName("test1")).andReturn("test1");
+        EasyMock.expect(provider.getViewName("test1")).andReturn("test1")
+                .times(2);
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
         EasyMock.expect(manager.getState()).andReturn("");
         ViewChangeEvent event1 = new ViewChangeEvent(navigator, null, view1,
@@ -501,7 +508,8 @@ public class NavigatorTest extends TestCase {
         listener1.addExpectedIsViewChangeAllowed(event1, false);
 
         // second listener blocks second view change
-        EasyMock.expect(provider.getViewName("test1/test")).andReturn("test1");
+        EasyMock.expect(provider.getViewName("test1/test")).andReturn("test1")
+                .times(2);
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
         EasyMock.expect(manager.getState()).andReturn("");
         ViewChangeEvent event2 = new ViewChangeEvent(navigator, null, view1,
@@ -510,7 +518,8 @@ public class NavigatorTest extends TestCase {
         listener2.addExpectedIsViewChangeAllowed(event2, false);
 
         // both listeners allow view change
-        EasyMock.expect(provider.getViewName("test1/bar")).andReturn("test1");
+        EasyMock.expect(provider.getViewName("test1/bar")).andReturn("test1")
+                .times(2);
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
         EasyMock.expect(manager.getState()).andReturn("");
         ViewChangeEvent event3 = new ViewChangeEvent(navigator, null, view1,
@@ -524,7 +533,8 @@ public class NavigatorTest extends TestCase {
         listener2.addExpectedNavigatorViewChange(event3);
 
         // both listeners allow view change from non-null view
-        EasyMock.expect(provider.getViewName("test2")).andReturn("test2");
+        EasyMock.expect(provider.getViewName("test2")).andReturn("test2")
+                .times(2);
         EasyMock.expect(provider.getView("test2")).andReturn(view2);
         EasyMock.expect(manager.getState()).andReturn("view1");
         ViewChangeEvent event4 = new ViewChangeEvent(navigator, view1, view2,
@@ -820,5 +830,64 @@ public class NavigatorTest extends TestCase {
         } catch (IllegalArgumentException e) {
             // Expected
         }
+    }
+
+    @Test
+    public void testNavigateTo_navigateSameUriTwice_secondNavigationDoesNothing() {
+        NavigationStateManager manager = new NavigationStateManager() {
+
+            private String state;
+
+            @Override
+            public void setState(String state) {
+                this.state = state;
+            }
+
+            @Override
+            public void setNavigator(Navigator navigator) {
+            }
+
+            @Override
+            public String getState() {
+                return state;
+            }
+        };
+
+        final String viewName = "view";
+
+        final View view = EasyMock.createMock(View.class);
+        ViewProvider provider = new ViewProvider() {
+
+            @Override
+            public String getViewName(String viewAndParameters) {
+                return viewName;
+            }
+
+            @Override
+            public View getView(String viewName) {
+                return view;
+            }
+
+        };
+
+        final int[] count = new int[] { 0 };
+        Navigator navigator = new Navigator(createMockUI(), manager,
+                EasyMock.createMock(ViewDisplay.class)) {
+            @Override
+            protected void navigateTo(View view, String viewName,
+                    String parameters) {
+                count[0] = count[0] + 1;
+                super.navigateTo(view, viewName, parameters);
+            }
+        };
+        navigator.addProvider(provider);
+
+        // First time navigation
+        navigator.navigateTo(viewName);
+        Assert.assertEquals(1, count[0]);
+
+        // Second time navigation to the same view
+        navigator.navigateTo(viewName);
+        Assert.assertEquals(1, count[0]);
     }
 }
