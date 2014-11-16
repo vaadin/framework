@@ -41,6 +41,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.Page.UriFragmentChangedListener;
+import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -543,18 +544,11 @@ public class Navigator implements Serializable {
      *             and no error view is registered
      */
     public void navigateTo(String navigationState) {
-        String longestViewName = null;
-        ViewProvider longestViewNameProvider = null;
+        ViewProvider longestViewNameProvider = getViewProvider(navigationState);
+        String longestViewName = longestViewNameProvider == null ? null
+                : longestViewNameProvider.getViewName(navigationState);
         View viewWithLongestName = null;
-        for (ViewProvider provider : providers) {
-            String viewName = provider.getViewName(navigationState);
-            if (null != viewName
-                    && (longestViewName == null || viewName.length() > longestViewName
-                            .length())) {
-                longestViewName = viewName;
-                longestViewNameProvider = provider;
-            }
-        }
+
         if (longestViewName != null) {
             viewWithLongestName = longestViewNameProvider
                     .getView(longestViewName);
@@ -570,7 +564,15 @@ public class Navigator implements Serializable {
                 parameters = navigationState
                         .substring(longestViewName.length() + 1);
             }
-            navigateTo(viewWithLongestName, longestViewName, parameters);
+            if (getCurrentView() == null
+                    || !SharedUtil
+                            .equals(getCurrentView(), viewWithLongestName)) {
+                navigateTo(viewWithLongestName, longestViewName, parameters);
+            } else {
+                updateNavigationState(new ViewChangeEvent(this,
+                        getCurrentView(), viewWithLongestName, longestViewName,
+                        parameters));
+            }
         } else {
             throw new IllegalArgumentException(
                     "Trying to navigate to an unknown state '"
@@ -986,8 +988,33 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Destroys the navigator and cleans it up. The method detaches the
-     * navigator from UI and removes all view change listeners.
+     * Get view provider that handles the given {@code state}.
+     * 
+     * @param state
+     *            state string
+     * @return suitable provider
+     */
+    private ViewProvider getViewProvider(String state) {
+        String longestViewName = null;
+        ViewProvider longestViewNameProvider = null;
+        for (ViewProvider provider : providers) {
+            String viewName = provider.getViewName(state);
+            if (null != viewName
+                    && (longestViewName == null || viewName.length() > longestViewName
+                            .length())) {
+                longestViewName = viewName;
+                longestViewNameProvider = provider;
+            }
+        }
+        return longestViewNameProvider;
+    }
+
+    /**
+     * Creates view change event for given {@code view}, {@code viewName} and
+     * {@code parameters}.
+     * 
+     * @since
+     * @return view change event
      */
     public void destroy() {
         stateManager.setNavigator(null);
