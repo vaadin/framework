@@ -50,7 +50,7 @@ public class JavaScriptConnectorHelper {
     private JavaScriptObject connectorWrapper;
     private int tag;
 
-    private boolean inited = false;
+    private String initFunctionName;
 
     public JavaScriptConnectorHelper(ServerConnector connector) {
         this.connector = connector;
@@ -96,9 +96,8 @@ public class JavaScriptConnectorHelper {
                 }
 
                 // Init after setting up callbacks & rpc
-                if (!inited) {
+                if (initFunctionName == null) {
                     initJavaScript();
-                    inited = true;
                 }
 
                 invokeIfPresent(wrapper, "onStateChange");
@@ -120,7 +119,7 @@ public class JavaScriptConnectorHelper {
         return object;
     }
 
-    private boolean initJavaScript() {
+    protected boolean initJavaScript() {
         ApplicationConfiguration conf = connector.getConnection()
                 .getConfiguration();
         ArrayList<String> attemptedNames = new ArrayList<String>();
@@ -132,6 +131,7 @@ public class JavaScriptConnectorHelper {
             if (tryInitJs(initFunctionName, getConnectorWrapper())) {
                 VConsole.log("JavaScript connector initialized using "
                         + initFunctionName);
+                this.initFunctionName = initFunctionName;
                 return true;
             } else {
                 VConsole.log("No JavaScript function " + initFunctionName
@@ -160,7 +160,7 @@ public class JavaScriptConnectorHelper {
         }
     }-*/;
 
-    private JavaScriptObject getConnectorWrapper() {
+    public JavaScriptObject getConnectorWrapper() {
         if (connectorWrapper == null) {
             connectorWrapper = createConnectorWrapper(this,
                     connector.getConnection(), nativeState, rpcMap,
@@ -465,4 +465,7 @@ public class JavaScriptConnectorHelper {
         }
     }-*/;
 
+    public String getInitFunctionName() {
+        return initFunctionName;
+    }
 }
