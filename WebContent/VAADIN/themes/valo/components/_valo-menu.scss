@@ -193,6 +193,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
         height: $v-unit-size !important;
         padding-top: 0;
         padding-bottom: 0;
+        -webkit-backface-visibility: hidden;
       }
 
       .valo-menu .v-menubar-user-menu {
@@ -205,6 +206,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
         height: $v-unit-size;
         color: valo-font-color($v-selection-color, 0.5);
         max-width: 30%;
+        -webkit-backface-visibility: hidden;
 
         .v-menubar-menuitem {
           line-height: $v-unit-size - 1px;
