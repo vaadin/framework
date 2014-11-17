@@ -330,6 +330,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
   padding: 0 round($v-unit-size) 0 round($v-unit-size/2);
   cursor: pointer;
   position: relative;
+  overflow: hidden;
   text-shadow: valo-text-shadow($font-color: $font-color, $background-color: $bg, $offset: 2px);
   @include transition(background-color 300ms, color 60ms);
 
