@@ -27,6 +27,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -77,6 +81,15 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
     private boolean open = false;
 
+    /*
+     * #14857: If calendarToggle button is clicked when calendar popup is
+     * already open we should prevent calling openCalendarPanel() in onClick,
+     * since we don't want to reopen it again right after it closes.
+     */
+    private boolean preventOpenPopupCalendar = false;
+    private boolean cursorOverCalendarToggleButton = false;
+    private boolean toggleButtonClosesWithGuarantee = false;
+
     private boolean textFieldEnabled = true;
 
     private String captionId;
@@ -90,6 +103,21 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
         calendarToggle.setText("");
         calendarToggle.addClickHandler(this);
+
+        calendarToggle.addDomHandler(new MouseOverHandler() {
+            @Override
+            public void onMouseOver(MouseOverEvent event) {
+                cursorOverCalendarToggleButton = true;
+            }
+        }, MouseOverEvent.getType());
+
+        calendarToggle.addDomHandler(new MouseOutHandler() {
+            @Override
+            public void onMouseOut(MouseOutEvent event) {
+                cursorOverCalendarToggleButton = false;
+            }
+        }, MouseOutEvent.getType());
+
         // -2 instead of -1 to avoid FocusWidget.onAttach to reset it
         calendarToggle.getElement().setTabIndex(-2);
 
@@ -389,7 +417,10 @@ public class VPopupCalendar extends VTextualDate implements Field,
     @Override
     public void onClick(ClickEvent event) {
         if (event.getSource() == calendarToggle && isEnabled()) {
-            openCalendarPanel();
+            if (!preventOpenPopupCalendar) {
+                openCalendarPanel();
+            }
+            preventOpenPopupCalendar = false;
         }
     }
 
@@ -412,15 +443,14 @@ public class VPopupCalendar extends VTextualDate implements Field,
                 focus();
             }
 
-            // TODO resolve what the "Sigh." is all about and document it here
-            // Sigh.
-            Timer t = new Timer() {
-                @Override
-                public void run() {
-                    open = false;
-                }
-            };
-            t.schedule(100);
+            open = false;
+
+            if (cursorOverCalendarToggleButton
+                    && !toggleButtonClosesWithGuarantee) {
+                preventOpenPopupCalendar = true;
+            }
+
+            toggleButtonClosesWithGuarantee = false;
         }
     }
 
@@ -520,6 +550,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
      */
     public void closeCalendarPanel() {
         if (open) {
+            toggleButtonClosesWithGuarantee = true;
             popup.hide(true);
         }
     }
