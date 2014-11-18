@@ -15,8 +15,14 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import org.junit.Assert;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import java.util.List;
+
 import org.junit.Test;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -28,32 +34,36 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  */
 public class TextFieldBevelTest extends MultiBrowserTest {
 
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
+
+        // IE8 doesn't support box-shadow.
+        browsers.remove(Browser.IE8.getDesiredCapabilities());
+
+        return browsers;
+    }
+
     @Test
-    public void testTextFieldBevel() {
-        String url = getTestUrl();
-        StringBuilder defaultValoUi = new StringBuilder(
-                TextFieldBevel.class.getSimpleName());
-        defaultValoUi.append('$');
-        defaultValoUi.append(TextFieldBevel.ValoDefaultTextFieldBevel.class
-                .getSimpleName());
-        url = url.replace(TextFieldBevel.class.getSimpleName(),
-                defaultValoUi.toString());
-        getDriver().get(url);
+    public void bevelChangesBoxShadow() {
+        openTestURL();
+        String boxShadowWithBevel = getBoxShadow();
 
-        String defaultBoxShadow = $(TextFieldElement.class).first()
-                .getCssValue("box-shadow");
+        openTestUrlWithoutBevel();
+        String boxShadowWithoutBevel = getBoxShadow();
 
-        if (url.contains("restartApplication")) {
-            openTestURL();
-        } else {
-            openTestURL("restartApplication");
-        }
+        assertThat(boxShadowWithBevel, is(not(boxShadowWithoutBevel)));
+    }
 
-        String boxShadow = $(TextFieldElement.class).first().getCssValue(
-                "box-shadow");
+    private void openTestUrlWithoutBevel() {
+        getDriver().get(
+                getTestUrl()
+                        + "$"
+                        + TextFieldBevel.ValoDefaultTextFieldBevel.class
+                                .getSimpleName() + "?restartApplication");
+    }
 
-        Assert.assertNotEquals(
-                "Set v-bevel to 'false' doesn't affect 'v-textfield-bevel' value",
-                defaultBoxShadow, boxShadow);
+    private String getBoxShadow() {
+        return $(TextFieldElement.class).first().getCssValue("box-shadow");
     }
 }
