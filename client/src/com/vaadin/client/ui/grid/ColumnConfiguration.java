@@ -127,19 +127,6 @@ public interface ColumnConfiguration {
             throws IllegalArgumentException;
 
     /**
-     * Sets the column width to as wide as the widest currently visible content
-     * in that column.
-     * 
-     * @param index
-     *            the index of the column for which to calculate the width.
-     * @throws IllegalArgumentException
-     *             if {@code index} is not a valid column index, or if any cell
-     *             in the given column is a part of a colspan range
-     */
-    public void setColumnWidthToContent(int index)
-            throws IllegalArgumentException;
-
-    /**
      * Returns the user-defined width of a column.
      * 
      * @param index

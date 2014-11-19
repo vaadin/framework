@@ -469,9 +469,16 @@ public class EscalatorBasicClientFeaturesWidget extends
                     @Override
                     public void execute() {
                         escalator.getColumnConfiguration()
-                                .setColumnWidthToContent(0);
+                                .setColumnWidth(0, -1);
                     }
                 }, menupath);
+
+        addMenuCommand("Resize first column to 100 px", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                escalator.getColumnConfiguration().setColumnWidth(0, 100);
+            }
+        }, menupath);
     }
 
     private void createHeaderRowsMenu() {

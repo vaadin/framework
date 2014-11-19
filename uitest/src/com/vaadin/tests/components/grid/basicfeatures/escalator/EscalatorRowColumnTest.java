@@ -219,7 +219,11 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
         openTestURL();
         selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
 
+        selectMenuPath(COLUMNS_AND_ROWS, COLUMNS, RESIZE_FIRST_COLUMN_TO_100PX);
         int originalWidth = getBodyCell(0, 0).getSize().getWidth();
+
+        assertEquals(100, originalWidth);
+
         selectMenuPath(COLUMNS_AND_ROWS, COLUMNS,
                 RESIZE_FIRST_COLUMN_TO_MAX_WIDTH);
         int newWidth = getBodyCell(0, 0).getSize().getWidth();

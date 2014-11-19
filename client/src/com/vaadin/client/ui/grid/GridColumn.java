@@ -15,7 +15,6 @@
  */
 package com.vaadin.client.ui.grid;
 
-
 /**
  * Represents a column in the {@link Grid}.
  * 

@@ -82,17 +82,6 @@ public class EscalatorProxy extends Escalator {
         }
 
         @Override
-        public void setColumnWidthToContent(int index)
-                throws IllegalArgumentException {
-            int oldWidth = columnConfiguration.getColumnWidthActual(index);
-            columnConfiguration.setColumnWidthToContent(index);
-            int newWidth = columnConfiguration.getColumnWidthActual(index);
-            logWidget.log("Changed column " + index + " width from " + oldWidth
-                    + "px to " + newWidth + "px");
-            logWidget.updateDebugLabel();
-        }
-
-        @Override
         public void refreshColumns(int index, int numberOfColumns)
                 throws IndexOutOfBoundsException, IllegalArgumentException {
             columnConfiguration.refreshColumns(index, numberOfColumns);

@@ -153,12 +153,13 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         cell = getGridElement().getCell(0, 1);
         assertEquals(150, cell.getSize().getWidth());
 
-        // Set first column to be auto sized (defaults to 100px currently)
         selectMenuPath("Component", "Columns", "Column 0", "Column 0 Width",
                 "Auto");
 
+        // since the column 0 was previously 200, it should've shrunk when
+        // autoresizing.
         cell = getGridElement().getCell(0, 0);
-        assertEquals(100, cell.getSize().getWidth());
+        assertLessThan("", cell.getSize().getWidth(), 200);
     }
 
     @Test

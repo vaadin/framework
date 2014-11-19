@@ -40,8 +40,9 @@ public class EscalatorColspanTest extends EscalatorBasicClientFeaturesTest {
         openTestURL();
         populate();
 
-        int singleCellWidth = getWidth(getBodyCell(0, 0));
-        int doubleCellWidth = singleCellWidth * 2;
+        int firstCellWidth = getWidth(getBodyCell(0, 0));
+        int secondCellWidth = getWidth(getBodyCell(0, 1));
+        int doubleCellWidth = firstCellWidth + secondCellWidth;
 
         selectMenuPath(FEATURES, COLUMN_SPANNING, COLSPAN_NORMAL);
 

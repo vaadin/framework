@@ -91,6 +91,7 @@ import com.vaadin.client.ui.grid.sort.Sort;
 import com.vaadin.client.ui.grid.sort.SortEvent;
 import com.vaadin.client.ui.grid.sort.SortHandler;
 import com.vaadin.client.ui.grid.sort.SortOrder;
+import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -1494,6 +1495,9 @@ public class Grid<T> extends ResizeComposite implements
                 });
                 header.getDefaultRow().getCell(this).setWidget(checkBox);
             }
+
+            setWidth(-1);
+
             initDone = true;
         }
 
@@ -1775,15 +1779,66 @@ public class Grid<T> extends ResizeComposite implements
             }
         }
 
+        private final class AsyncWidthAutodetectRunner {
+            private static final int POLLING_PERIOD_MS = 50;
+
+            private final Timer timer = new Timer() {
+                @Override
+                public void run() {
+                    /* Detaching the column from the grid should've cancelled */
+                    assert grid != null : "Column was detached from Grid before width autodetection completed";
+
+                    /*
+                     * setting a positive value for the width should've
+                     * cancelled
+                     */
+                    assert widthUser < 0 : "User defined width is not negative (to indicate autodetection) anymore!";
+
+                    if (!grid.dataIsBeingFetched) {
+                        setWidthForce(widthUser);
+                    } else {
+                        timer.schedule(POLLING_PERIOD_MS);
+                        return;
+                    }
+                }
+            };
+
+            /**
+             * Schedules an width autodetection.
+             * <p>
+             * It's not done immediately in case we're retrieving some lazy
+             * data, that will affect the appropriate width of the cells.
+             */
+            public void reschedule() {
+                /*
+                 * Check immediately. This will be _actually_ rescheduled if
+                 * things don't work out. Otherwise, autodetectionage will
+                 * happen.
+                 */
+                timer.schedule(0);
+            }
+
+            public void stop() {
+                timer.cancel();
+            }
+
+            public boolean isRunning() {
+                return timer.isRunning();
+            }
+        }
+
         /**
          * the column is associated with
          */
         private Grid<T> grid;
 
         /**
-         * Width of column in pixels
+         * Should the column be visible in the grid
          */
-        private int width = 100;
+        private boolean visible = true;
+
+        /** Width of column in pixels as {@link #setWidth(int)} has been called */
+        private int widthUser = GridColumnState.DEFAULT_COLUMN_WIDTH_PX;
 
         /**
          * Renderer for rendering a value into the cell
@@ -1793,6 +1848,8 @@ public class Grid<T> extends ResizeComposite implements
         private boolean sortable = false;
 
         private String headerText = "";
+
+        private final AsyncWidthAutodetectRunner asyncAutodetectWidth = new AsyncWidthAutodetectRunner();
 
         /**
          * Constructs a new column with a simple TextRenderer.
@@ -1863,6 +1920,8 @@ public class Grid<T> extends ResizeComposite implements
             this.grid = grid;
             if (grid != null) {
                 updateHeader();
+            } else {
+                asyncAutodetectWidth.stop();
             }
         }
 
@@ -1958,29 +2017,70 @@ public class Grid<T> extends ResizeComposite implements
          * @return the column itself
          */
         public GridColumn<C, T> setWidth(int pixels) {
-            width = pixels;
-
-            if (grid != null) {
-                int index = grid.indexOfColumn((GridColumn<?, T>) this);
-                ColumnConfiguration conf = grid.escalator
-                        .getColumnConfiguration();
-                conf.setColumnWidth(index, pixels);
+            widthUser = pixels;
+            if (pixels < 0) {
+                setWidthAutodetect();
+            } else {
+                setWidthAbsolute(pixels);
             }
 
             return (GridColumn<C, T>) this;
         }
 
+        private void setWidthAutodetect() {
+            if (grid != null) {
+                asyncAutodetectWidth.reschedule();
+            }
+
+            /*
+             * It's okay if the colum isn't attached to a grid immediately. The
+             * width will be re-set once it gets attached.
+             */
+        }
+
+        private void setWidthAbsolute(int pixels) {
+            asyncAutodetectWidth.stop();
+            if (grid != null) {
+                setWidthForce(pixels);
+            }
+        }
+
+        private void setWidthForce(int pixels) {
+            int index = grid.columns.indexOf(this);
+            ColumnConfiguration conf = grid.escalator.getColumnConfiguration();
+            conf.setColumnWidth(index, pixels);
+        }
+
         /**
-         * Returns the pixel width of the column
+         * Returns the pixel width of the column as given by the user.
+         * <p>
+         * <em>Note:</em> If a negative value was given to
+         * {@link #setWidth(int)}, that same negative value is returned here.
          * 
-         * @return pixel width of the column
+         * @return pixel width of the column, or a negative number if the column
+         *         width has been automatically calculated.
+         * @see #setWidth(int)
+         * @see #getWidthActual()
          */
         public int getWidth() {
-            return width;
+            return widthUser;
+        }
+
+        /**
+         * Returns the effective pixel width of the column.
+         * <p>
+         * This differs from {@link #getWidth()} only when the column has been
+         * automatically resized.
+         * 
+         * @return pixel width of the column.
+         */
+        public int getWidthActual() {
+            return grid.escalator.getColumnConfiguration()
+                    .getColumnWidthActual(grid.columns.indexOf(this));
         }
 
         void reapplyWidth() {
-            setWidth(width);
+            setWidth(getWidth());
         }
 
         /**
@@ -2037,6 +2137,10 @@ public class Grid<T> extends ResizeComposite implements
             details += "sortable:" + sortable + " ";
 
             return getClass().getSimpleName() + "[" + details.trim() + "]";
+        }
+
+        boolean widthCalculationPending() {
+            return asyncAutodetectWidth.isRunning();
         }
     }
 
@@ -3166,6 +3270,7 @@ public class Grid<T> extends ResizeComposite implements
                     body.removeRows(newSize, oldSize - newSize);
                 }
 
+                dataIsBeingFetched = true;
                 Range visibleRowRange = escalator.getVisibleRowRange();
                 dataSource.ensureAvailability(visibleRowRange.getStart(),
                         visibleRowRange.length());
@@ -3896,8 +4001,6 @@ public class Grid<T> extends ResizeComposite implements
             cellFocusHandler.offsetRangeBy(1);
             selectionColumn = new SelectionColumn(selectColumnRenderer);
 
-            // FIXME: this needs to be done elsewhere, requires design...
-            selectionColumn.setWidth(40);
             addColumnSkipSelectionColumnCheck(selectionColumn, 0);
             selectionColumn.initDone();
         } else {
@@ -4174,8 +4277,10 @@ public class Grid<T> extends ResizeComposite implements
         Scheduler.get().scheduleFinally(new ScheduledCommand() {
             @Override
             public void execute() {
-                handler.onDataAvailable(new DataAvailableEvent(
-                        currentDataAvailable));
+                if (!dataIsBeingFetched) {
+                    handler.onDataAvailable(new DataAvailableEvent(
+                            currentDataAvailable));
+                }
             }
         });
         return addHandler(handler, DataAvailableEvent.TYPE);
@@ -4386,7 +4491,17 @@ public class Grid<T> extends ResizeComposite implements
 
     @Override
     public boolean isWorkPending() {
-        return escalator.isWorkPending() || dataIsBeingFetched;
+        return escalator.isWorkPending() || dataIsBeingFetched
+                || anyColumnIsBeingResized();
+    }
+
+    private boolean anyColumnIsBeingResized() {
+        for (AbstractGridColumn<?, ?> column : columns) {
+            if (column.widthCalculationPending()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

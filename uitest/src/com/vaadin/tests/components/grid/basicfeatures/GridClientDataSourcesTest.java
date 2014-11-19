@@ -102,11 +102,15 @@ public class GridClientDataSourcesTest extends MultiBrowserTest {
     }
 
     private void assertCellPresent(String content) {
-        assertNotNull(findByXPath("//td[text()='" + content + "']"));
+        assertNotNull("A cell with content \"" + content
+                + "\" should've been found", findByXPath("//td[text()='"
+                + content + "']"));
     }
 
     private void assertCellNotPresent(String content) {
-        assertNull(findByXPath("//td[text()='" + content + "']"));
+        assertNull("A cell with content \"" + content
+                + "\" should've not been found", findByXPath("//td[text()='"
+                + content + "']"));
     }
 
     private void scrollToTop() {
@@ -130,7 +134,6 @@ public class GridClientDataSourcesTest extends MultiBrowserTest {
     }
 
     private Object executeScript(String script, Object args) {
-        @SuppressWarnings("hiding")
         final WebDriver driver = getDriver();
         if (driver instanceof JavascriptExecutor) {
             final JavascriptExecutor je = (JavascriptExecutor) driver;

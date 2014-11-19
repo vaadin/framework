@@ -36,9 +36,9 @@ public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest 
             int width = getGridElement().getCell(0, col).getSize().getWidth();
             if (col <= 6) {
                 // Growing column widths
-                assertEquals(50 + col * 25, width);
-            } else {
-                assertEquals(100, width);
+                int expectedWidth = 50 + col * 25;
+                assertEquals("column " + col + " has incorrect width",
+                        expectedWidth, width);
             }
         }
     }
@@ -56,8 +56,9 @@ public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest 
         assertEquals(200, width);
 
         selectMenuPath("Component", "Columns", "Column 0", "Width", "auto");
-        width = getGridElement().getCell(0, 0).getSize().getWidth();
-        assertEquals(100, width);
+        int autoWidth = getGridElement().getCell(0, 0).getSize().getWidth();
+        assertLessThan("Automatic sizing should've shrunk the column",
+                autoWidth, width);
     }
 
     @Test
