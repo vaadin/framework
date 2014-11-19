@@ -295,7 +295,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 }
 
                 for (JSONObject row : event.getAdded()) {
-                    selectedKeys.add((String) dataSource.getRowKey(row));
+                    selectedKeys.add(dataSource.getRowKey(row));
                 }
 
                 getRpcProxy(GridServerRpc.class).selectionChange(
@@ -481,29 +481,25 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 CustomGridColumn column = columnIdToColumn
                         .get(cellState.columnId);
                 GridStaticSection.StaticCell cell = row.getCell(column);
-                switch (cellState.type) {
-                case TEXT:
-                    cell.setText(cellState.text);
-                    break;
-                case HTML:
-                    cell.setHtml(cellState.html);
-                    break;
-                case WIDGET:
-                    ComponentConnector connector = (ComponentConnector) cellState.connector;
-                    cell.setWidget(connector.getWidget());
-                    break;
-                default:
-                    throw new IllegalStateException("unexpected cell type: "
-                            + cellState.type);
-                }
+                updateStaticCellFromState(cell, cellState);
             }
 
             for (List<String> group : rowState.cellGroups) {
                 GridColumn<?, ?>[] columns = new GridColumn<?, ?>[group.size()];
+                String firstId = group.get(0);
+                CellState cellState = null;
+                for (CellState c : rowState.cells) {
+                    if (c.columnId.equals(firstId)) {
+                        cellState = c;
+                    }
+                }
+
                 for (int i = 0; i < group.size(); ++i) {
                     columns[i] = columnIdToColumn.get(group.get(i));
                 }
-                row.join(columns);
+
+                // Set state to be the same as first in group.
+                updateStaticCellFromState(row.join(columns), cellState);
             }
 
             if (section instanceof GridHeader && rowState.defaultRow) {
@@ -514,6 +510,25 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         section.setVisible(state.visible);
 
         section.requestSectionRefresh();
+    }
+
+    private void updateStaticCellFromState(GridStaticSection.StaticCell cell,
+            CellState cellState) {
+        switch (cellState.type) {
+        case TEXT:
+            cell.setText(cellState.text);
+            break;
+        case HTML:
+            cell.setHtml(cellState.html);
+            break;
+        case WIDGET:
+            ComponentConnector connector = (ComponentConnector) cellState.connector;
+            cell.setWidget(connector.getWidget());
+            break;
+        default:
+            throw new IllegalStateException("unexpected cell type: "
+                    + cellState.type);
+        }
     }
 
     /**

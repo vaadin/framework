@@ -235,14 +235,14 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
             }
 
             cellGroups.add(Arrays.asList(columns));
+            CELLTYPE joinedCell = createCell();
+            joinedCell.setSection(getSection());
+            for (GridColumn<?, ?> column : columns) {
+                cells.put(column, joinedCell);
+            }
 
             calculateColspans();
 
-            for (i = 0; i < columns.length; ++i) {
-                if (columns[i].isVisible()) {
-                    return getCell(columns[i]);
-                }
-            }
             return getCell(columns[0]);
         }
 

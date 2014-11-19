@@ -19,10 +19,12 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -69,5 +71,21 @@ public class GridColspansTest extends MultiBrowserTest {
         }
 
         compareScreen("afterNavigation");
+    }
+
+    @Test
+    public void testHideFirstColumnOfColspan() {
+        openTestURL();
+
+        GridElement grid = $(GridElement.class).first();
+        Assert.assertEquals("Failed initial condition.",
+                grid.getHeaderCell(0, 1).getText(), "All the stuff");
+        Assert.assertEquals("Failed initial condition.",
+                grid.getHeaderCell(2, 1).getText(), "firstName");
+        $(ButtonElement.class).first().click();
+        Assert.assertEquals("Header text changed on column hide.", grid
+                .getHeaderCell(0, 1).getText(), "All the stuff");
+        Assert.assertEquals("Failed initial condition.", "lastName", grid
+                .getHeaderCell(2, 1).getText());
     }
 }

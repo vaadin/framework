@@ -20,7 +20,10 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.components.grid.Grid;
+import com.vaadin.ui.components.grid.GridColumn;
 import com.vaadin.ui.components.grid.GridFooter;
 import com.vaadin.ui.components.grid.GridFooter.FooterRow;
 import com.vaadin.ui.components.grid.GridHeader;
@@ -32,7 +35,7 @@ public class GridColspans extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         Indexed dataSource = new IndexedContainer();
-        Grid grid;
+        final Grid grid;
 
         dataSource.addContainerProperty("firstName", String.class, "");
         dataSource.addContainerProperty("lastName", String.class, "");
@@ -64,6 +67,16 @@ public class GridColspans extends AbstractTestUI {
         footerRow.join("streetAddress", "zipCode", "city").setText("Address");
         footer.appendRow().join(dataSource.getContainerPropertyIds().toArray())
                 .setText("All the stuff");
+
+        addComponent(new Button("Show/Hide firstName",
+                new Button.ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        GridColumn column = grid.getColumn("firstName");
+                        column.setVisible(!column.isVisible());
+                    }
+                }));
     }
 
     @Override
