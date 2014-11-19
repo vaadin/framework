@@ -145,8 +145,6 @@ public class GridClientRenderers extends MultiBrowserTest {
     @Test
     public void complexRendererSetVisibleContent() throws Exception {
 
-        testBench().disableWaitForVaadin();
-
         DesiredCapabilities desiredCapabilities = getDesiredCapabilities();
 
         // Simulate network latency with 2000ms
@@ -167,11 +165,9 @@ public class GridClientRenderers extends MultiBrowserTest {
 
         openTestURL();
 
-        /*
-         * because there's no wait for vaadin, we need to wait for a little
-         * while.
-         */
-        sleep(200);
+        getGrid();
+
+        testBench().disableWaitForVaadin();
 
         // Test initial renderering with contentVisible = False
         TestBenchElement cell = getGrid().getCell(51, 1);
