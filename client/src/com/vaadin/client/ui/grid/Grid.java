@@ -652,6 +652,10 @@ public class Grid<T> extends ResizeComposite implements
 
             final GridColumn<?, T> column = getColumnFromVisibleIndex(cell
                     .getColumn());
+            if (!column.isSortable()) {
+                return;
+            }
+
             final SortOrder so = getSortOrder(column);
 
             if (multisort) {
