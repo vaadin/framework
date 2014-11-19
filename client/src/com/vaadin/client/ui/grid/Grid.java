@@ -2308,20 +2308,25 @@ public class Grid<T> extends ResizeComposite implements
 
         Element e = Element.as(target);
         RowContainer container = escalator.findRowContainer(e);
-        Cell cell;
+        Cell cell = null;
         boolean isGrid = Util.findWidget(e, null) == this;
 
+        String eventType = event.getType();
         if (container == null) {
-            // TODO: Add a check to catch mouse click outside of table but
-            // inside of grid
-            cell = cellFocusHandler.getFocusedCell();
-            container = cellFocusHandler.containerWithFocus;
+            if (eventType.equals(BrowserEvents.KEYDOWN)
+                    || eventType.equals(BrowserEvents.KEYUP)
+                    || eventType.equals(BrowserEvents.KEYPRESS)) {
+                cell = cellFocusHandler.getFocusedCell();
+                container = cellFocusHandler.containerWithFocus;
+            } else {
+                // Click in a location that does not contain cells.
+                return;
+            }
         } else {
             cell = container.getCell(e);
-            if (event.getType().equals(BrowserEvents.MOUSEDOWN)) {
+            if (eventType.equals(BrowserEvents.MOUSEDOWN)) {
                 cellOnPrevMouseDown = cell;
-            } else if (cell == null
-                    && event.getType().equals(BrowserEvents.CLICK)) {
+            } else if (cell == null && eventType.equals(BrowserEvents.CLICK)) {
                 /*
                  * Chrome has an interesting idea on click targets (see
                  * cellOnPrevMouseDown javadoc). Firefox, on the other hand, has
@@ -2331,7 +2336,7 @@ public class Grid<T> extends ResizeComposite implements
             }
         }
 
-        assert cell != null : "received " + event.getType()
+        assert cell != null : "received " + eventType
                 + "-event with a null cell target";
 
         // Editor Row can steal focus from Grid and is still handled

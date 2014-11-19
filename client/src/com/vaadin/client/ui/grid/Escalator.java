@@ -4786,11 +4786,14 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
      *         is not present in any container.
      */
     public RowContainer findRowContainer(Element element) {
-        if (getHeader().getElement().isOrHasChild(element)) {
+        if (getHeader().getElement() != element
+                && getHeader().getElement().isOrHasChild(element)) {
             return getHeader();
-        } else if (getBody().getElement().isOrHasChild(element)) {
+        } else if (getBody().getElement() != element
+                && getBody().getElement().isOrHasChild(element)) {
             return getBody();
-        } else if (getFooter().getElement().isOrHasChild(element)) {
+        } else if (getFooter().getElement() != element
+                && getFooter().getElement().isOrHasChild(element)) {
             return getFooter();
         }
         return null;
