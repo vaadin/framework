@@ -762,6 +762,7 @@ public class Grid<T> extends ResizeComposite implements
 
     private SelectionColumn selectionColumn;
 
+    private String rowStripeStyleName;
     private String rowHasDataStyleName;
     private String rowSelectedStyleName;
     private String cellFocusStyleName;
@@ -1249,6 +1250,9 @@ public class Grid<T> extends ResizeComposite implements
                 setStyleName(rowElement, rowHasDataStyleName, hasData);
             }
 
+            boolean isEvenIndex = (row.getRow() % 2 == 0);
+            setStyleName(rowElement, rowStripeStyleName, isEvenIndex);
+
             // Assign stylename for selected rows
             if (hasData) {
                 setStyleName(rowElement, rowSelectedStyleName,
@@ -1578,8 +1582,10 @@ public class Grid<T> extends ResizeComposite implements
         escalator.setStylePrimaryName(style);
         editorRow.setStylePrimaryName(style);
 
-        rowHasDataStyleName = getStylePrimaryName() + "-row-has-data";
-        rowSelectedStyleName = getStylePrimaryName() + "-row-selected";
+        String rowStyle = getStylePrimaryName() + "-row";
+        rowHasDataStyleName = rowStyle + "-has-data";
+        rowSelectedStyleName = rowStyle + "-selected";
+        rowStripeStyleName = rowStyle + "-stripe";
 
         /*
          * TODO rename CSS "active" to "focused" once Valo theme has been

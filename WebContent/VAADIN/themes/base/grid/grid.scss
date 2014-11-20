@@ -31,6 +31,14 @@
 			background: rgb(244,244,244);
 		}
 	}
+	
+	.#{$primaryStyleName}-row > td {
+		background-color: #fff;
+	}
+	
+	.#{$primaryStyleName}-row-stripe > td {
+		background-color: #eee;
+	}
 
 	.#{$primaryStyleName}-row-selected > td {
 		background: lightblue;
