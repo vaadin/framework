@@ -113,13 +113,14 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
     }
 
     private boolean pathIsExcluded(String path) {
-        // Exclude temporary junit files and screeenshots.
+        // Exclude temporary junit files and screenshots.
         return path.startsWith("uitest/junit")
                 || getScreenshotDirectory().contains(path);
     }
 
     private String getScreenshotDirectory() {
-        return System.getProperty(PrivateTB3Configuration.SCREENSHOT_DIRECTORY);
+        return PrivateTB3Configuration
+                .getProperty(PrivateTB3Configuration.SCREENSHOT_DIRECTORY);
     }
 
     private List<DiffEntry> getDiffsInHead(Repository repository)

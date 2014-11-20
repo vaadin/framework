@@ -67,7 +67,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         }
     }
 
-    private static String getProperty(String name) {
+    protected static String getProperty(String name) {
         String property = properties.getProperty(name);
         if (property == null) {
             property = System.getProperty(name);
