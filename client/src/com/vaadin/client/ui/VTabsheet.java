@@ -909,7 +909,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
 
         deco = DOM.createDiv();
 
-        addStyleDependentName("loading"); // Indicate initial progress
         tb.setStyleName(CLASSNAME + "-tabs");
         DOM.setElementProperty(contentNode, "className", CLASSNAME + "-content");
         DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
