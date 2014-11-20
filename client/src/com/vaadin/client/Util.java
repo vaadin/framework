@@ -46,6 +46,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -893,6 +894,13 @@ public class Util {
     /**
      * Helper method to find first instance of given Widget type found by
      * traversing DOM upwards from given element.
+     * <p>
+     * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
+     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite}
+     * {@code C}, this method will not find {@code W}. It returns either
+     * {@code C} or null, depending on whether the class parameter matches. This
+     * may also be the case with other Composite-like classes that hijack the
+     * event handling of their child widget(s).
      *
      * @param element
      *            the element where to start seeking of Widget

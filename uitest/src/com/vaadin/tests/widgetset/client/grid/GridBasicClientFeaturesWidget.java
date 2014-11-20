@@ -28,7 +28,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -367,7 +369,20 @@ public class GridBasicClientFeaturesWidget extends
         createInternalsMenu();
 
         grid.getElement().getStyle().setZIndex(0);
-        addNorth(grid, 400);
+
+        //
+        // Composite wrapping for grid.
+        //
+        boolean isComposite = Window.Location.getParameter("composite") != null;
+        if (isComposite) {
+            addNorth(new Composite() {
+                {
+                    initWidget(grid);
+                }
+            }, 400);
+        } else {
+            addNorth(grid, 400);
+        }
 
         createKeyHandlers();
     }

@@ -15,15 +15,10 @@
  */
 package com.vaadin.client.ui.grid.renderers;
 
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.EventTarget;
-import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.Util;
-import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.FlyweightCell;
-import com.vaadin.client.ui.grid.Grid;
-import com.vaadin.client.ui.grid.GridUtil;
 
 /**
  * A renderer for rendering widgets into cells.
@@ -75,27 +70,35 @@ public abstract class WidgetRenderer<T, W extends Widget> extends
      */
     public abstract void render(FlyweightCell cell, T data, W widget);
 
-    protected W getWidget(Element e) {
-        return Util.findWidget(e.getFirstChildElement(), null);
+    /**
+     * Returns the widget contained inside the given cell element. Cannot be
+     * called for cells that do not contain a widget.
+     * 
+     * @param e
+     *            the element inside which to find a widget
+     * @return the widget inside the element
+     */
+    protected W getWidget(TableCellElement e) {
+        W w = getWidget(e, null);
+        assert w != null : "Widget not found inside cell";
+        return w;
     }
 
     /**
-     * Returns the cell instance corresponding to the element that the given
-     * event originates from. If the event does not originate from a grid cell,
-     * returns null.
-     *
-     * @param event
-     *            the event
-     * @return the cell or null if no such cell
+     * Returns the widget contained inside the given cell element, or null if it
+     * is not an instance of the given class. Cannot be called for cells that do
+     * not contain a widget.
+     * 
+     * @param e
+     *            the element inside to find a widget
+     * @param klass
+     *            the type of the widget to find
+     * @return the widget inside the element, or null if its type does not match
      */
-    protected static Cell getCell(NativeEvent event) {
-        EventTarget target = event.getEventTarget();
-        if (!Element.is(target)) {
-            return null;
-        }
-
-        Element elem = Element.as(target);
-        Grid<?> grid = Util.findWidget(elem, Grid.class);
-        return GridUtil.findCell(grid, elem);
+    protected static <W extends Widget> W getWidget(TableCellElement e,
+            Class<W> klass) {
+        W w = Util.findWidget(e.getFirstChildElement(), klass);
+        assert w == null || w.getElement() == e.getFirstChildElement() : "Widget not found inside cell";
+        return w;
     }
 }

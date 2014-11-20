@@ -16,7 +16,9 @@
 package com.vaadin.client.ui.grid;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.Util;
 
 /**
  * Utilities for working with Grid.
@@ -39,6 +41,28 @@ public class GridUtil {
     public static Cell findCell(Grid<?> grid, Element e) {
         RowContainer container = grid.getEscalator().findRowContainer(e);
         return container != null ? container.getCell(e) : null;
+    }
+
+    /**
+     * Returns the Grid instance containing the given element, if any.
+     * <p>
+     * <strong>Note:</strong> This method may not work reliably if the grid in
+     * question is wrapped in a {@link Composite} <em>unless</em> the element is
+     * inside another widget that is a child of the wrapped grid; please refer
+     * to the note in {@link Util#findWidget(Element, Class) Util.findWidget}
+     * for details.
+     * 
+     * @param e
+     *            the element whose parent grid to find
+     * @return the parent grid or null if none found.
+     */
+    public static Grid<?> findClosestParentGrid(Element e) {
+        Widget w = Util.findWidget(e, null);
+
+        while (w != null && !(w instanceof Grid)) {
+            w = w.getParent();
+        }
+        return (Grid<?>) w;
     }
 
     /**

@@ -167,7 +167,7 @@ public class Grid<T> extends ResizeComposite implements
         protected void dispatch(HANDLER handler) {
             EventTarget target = getNativeEvent().getEventTarget();
             if (Element.is(target)
-                    && Util.findWidget(Element.as(target), null) == grid) {
+                    && !grid.isElementInChildWidget(Element.as(target))) {
 
                 focusedCell = grid.cellFocusHandler.getFocusedCell();
                 GridSection section = GridSection.FOOTER;
@@ -2318,8 +2318,7 @@ public class Grid<T> extends ResizeComposite implements
 
         Element e = Element.as(target);
         RowContainer container = escalator.findRowContainer(e);
-        Cell cell = null;
-        boolean isGrid = Util.findWidget(e, null) == this;
+        Cell cell;
 
         String eventType = event.getType();
         if (container == null) {
@@ -2357,7 +2356,7 @@ public class Grid<T> extends ResizeComposite implements
         // Fire GridKeyEvents and pass the event to escalator.
         super.onBrowserEvent(event);
 
-        if (isGrid) {
+        if (!isElementInChildWidget(e)) {
 
             // Sorting through header Click / KeyUp
             if (handleHeaderDefaultRowEvent(event, container, cell)) {
@@ -2376,6 +2375,26 @@ public class Grid<T> extends ResizeComposite implements
                 return;
             }
         }
+    }
+
+    private boolean isElementInChildWidget(Element e) {
+        Widget w = Util.findWidget(e, null);
+
+        if (w == this) {
+            return false;
+        }
+
+        /*
+         * If e is directly inside this grid, but the grid is wrapped in a
+         * Composite, findWidget is not going to find this, only the wrapper.
+         * Thus we need to check its parents to see if we encounter this; if we
+         * don't, the found widget is actually a parent of this, so we should
+         * return false.
+         */
+        while (w != null && w != this) {
+            w = w.getParent();
+        }
+        return w != null;
     }
 
     private boolean handleEditorRowEvent(Event event, RowContainer container,

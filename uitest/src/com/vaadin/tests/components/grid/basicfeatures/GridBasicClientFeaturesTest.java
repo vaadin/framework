@@ -15,10 +15,13 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.tests.components.grid.GridElement;
 
 /**
  * Variant of GridBasicFeaturesTest to be used with GridBasicClientFeatures.
@@ -28,9 +31,24 @@ import org.openqa.selenium.interactions.Actions;
  */
 public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest {
 
+    private boolean composite = false;
+
     @Override
     protected Class<?> getUIClass() {
         return GridBasicClientFeatures.class;
+    }
+
+    @Override
+    protected String getDeploymentPath() {
+        String path = super.getDeploymentPath();
+        if (composite) {
+            path += (path.contains("?") ? "&" : "?") + "composite";
+        }
+        return path;
+    }
+
+    protected void setUseComposite(boolean useComposite) {
+        composite = useComposite;
     }
 
     @Override
@@ -60,4 +78,15 @@ public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest 
                 .click().perform();
     }
 
+    @Override
+    protected GridElement getGridElement() {
+        if (composite) {
+            // Composite requires the basic client features widget for subparts
+            return ((TestBenchElement) findElement(By
+                    .vaadin("//GridBasicClientFeaturesWidget")))
+                    .wrap(GridElement.class);
+        } else {
+            return super.getGridElement();
+        }
+    }
 }

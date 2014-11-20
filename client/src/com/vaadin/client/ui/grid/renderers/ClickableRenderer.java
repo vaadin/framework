@@ -16,6 +16,8 @@
 package com.vaadin.client.ui.grid.renderers;
 
 import com.google.gwt.dom.client.BrowserEvents;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
@@ -24,9 +26,9 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.vaadin.client.Util;
 import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.Grid;
+import com.vaadin.client.ui.grid.GridUtil;
 
 /**
  * An abstract superclass for renderers that render clickable widgets. Click
@@ -112,10 +114,19 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
         @Override
         @SuppressWarnings("unchecked")
         protected void dispatch(RendererClickHandler handler) {
-            cell = WidgetRenderer.getCell(getNativeEvent());
-            assert cell != null;
-            Grid<R> grid = Util.findWidget(cell.getElement(), Grid.class);
+
+            EventTarget target = getNativeEvent().getEventTarget();
+
+            if (!Element.is(target)) {
+                return;
+            }
+
+            Element e = Element.as(target);
+            Grid<R> grid = (Grid<R>) GridUtil.findClosestParentGrid(e);
+
+            cell = GridUtil.findCell(grid, e);
             row = grid.getDataSource().getRow(cell.getRow());
+
             handler.onClick(this);
         }
     }
