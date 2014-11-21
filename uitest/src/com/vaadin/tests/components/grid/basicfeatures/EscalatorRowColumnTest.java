@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -23,6 +24,12 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
+
+    /**
+     * The scroll position of the Escalator when scrolled all the way down, to
+     * reveal the 100:th row.
+     */
+    private static final int BOTTOM_SCROLL_POSITION = 1857;
 
     @Test
     public void testInit() {
@@ -213,5 +220,88 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
         int newWidth = getBodyCell(0, 0).getSize().getWidth();
         assertNotEquals("Column width should've changed", originalWidth,
                 newWidth);
+    }
+
+    @Test
+    public void testRemoveMoreThanPagefulAtBottomWhileScrolledToBottom()
+            throws Exception {
+        openTestURL();
+        selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
+
+        scrollVerticallyTo(BOTTOM_SCROLL_POSITION);
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, REMOVE_50_ROWS_FROM_BOTTOM);
+        assertEquals("Row 49: 0,49", getBodyCell(-1, 0).getText());
+
+        scrollVerticallyTo(0);
+
+        // let the DOM organize itself
+        Thread.sleep(500);
+
+        // if something goes wrong, it'll explode before this.
+        assertEquals("Row 0: 0,0", getBodyCell(0, 0).getText());
+    }
+
+    @Test
+    public void testRemoveMoreThanPagefulAtBottomWhileScrolledAlmostToBottom()
+            throws Exception {
+        openTestURL();
+        selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
+
+        // bottom minus 15 rows.
+        scrollVerticallyTo(BOTTOM_SCROLL_POSITION - 15 * 20);
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, REMOVE_50_ROWS_FROM_BOTTOM);
+        assertEquals("Row 49: 0,49", getBodyCell(-1, 0).getText());
+
+        scrollVerticallyTo(0);
+
+        // let the DOM organize itself
+        Thread.sleep(500);
+
+        // if something goes wrong, it'll explode before this.
+        assertEquals("Row 0: 0,0", getBodyCell(0, 0).getText());
+    }
+
+    @Test
+    public void testRemoveMoreThanPagefulNearBottomWhileScrolledToBottom()
+            throws Exception {
+        openTestURL();
+        selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
+
+        scrollVerticallyTo(BOTTOM_SCROLL_POSITION);
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS,
+                REMOVE_50_ROWS_FROM_ALMOST_BOTTOM);
+        assertEquals("Row 49: 0,99", getBodyCell(-1, 0).getText());
+
+        scrollVerticallyTo(0);
+
+        // let the DOM organize itself
+        Thread.sleep(500);
+
+        // if something goes wrong, it'll explode before this.
+        assertEquals("Row 0: 0,0", getBodyCell(0, 0).getText());
+    }
+
+    @Test
+    public void testRemoveMoreThanPagefulNearBottomWhileScrolledAlmostToBottom()
+            throws Exception {
+        openTestURL();
+        selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
+
+        // bottom minus 15 rows.
+        scrollVerticallyTo(BOTTOM_SCROLL_POSITION - 15 * 20);
+        selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS,
+                REMOVE_50_ROWS_FROM_ALMOST_BOTTOM);
+
+        // let the DOM organize itself
+        Thread.sleep(500);
+        assertEquals("Row 49: 0,99", getBodyCell(-1, 0).getText());
+
+        scrollVerticallyTo(0);
+
+        // let the DOM organize itself
+        Thread.sleep(500);
+
+        // if something goes wrong, it'll explode before this.
+        assertEquals("Row 0: 0,0", getBodyCell(0, 0).getText());
     }
 }

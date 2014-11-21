@@ -514,6 +514,14 @@ public class EscalatorBasicClientFeaturesWidget extends
                         .getRowCount() - 50, 50);
             }
         }, menupath);
+        addMenuCommand("Remove 50 rows from almost bottom",
+                new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        removeRows(escalator.getBody(), escalator.getBody()
+                                .getRowCount() - 60, 50);
+                    }
+                }, menupath);
         addMenuCommand("Remove all, insert 30 and scroll 40px",
                 new ScheduledCommand() {
                     @Override

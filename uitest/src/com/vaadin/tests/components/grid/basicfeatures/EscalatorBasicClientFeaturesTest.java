@@ -38,6 +38,8 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     protected static final String ADD_ONE_ROW_TO_BEGINNING = "Add one row to beginning";
     protected static final String REMOVE_ONE_COLUMN_FROM_BEGINNING = "Remove one column from beginning";
     protected static final String REMOVE_ONE_ROW_FROM_BEGINNING = "Remove one row from beginning";
+    protected static final String REMOVE_50_ROWS_FROM_BOTTOM = "Remove 50 rows from bottom";
+    protected static final String REMOVE_50_ROWS_FROM_ALMOST_BOTTOM = "Remove 50 rows from almost bottom";
     protected static final String ADD_ONE_OF_EACH_ROW = "Add one of each row";
     protected static final String RESIZE_FIRST_COLUMN_TO_MAX_WIDTH = "Resize first column to max width";
 
@@ -75,30 +77,72 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
         }
     }
 
+    /**
+     * @param row
+     *            the index of the row element in the section. If negative, the
+     *            calculation starts from the end (-1 is the last, -2 is the
+     *            second-to-last etc)
+     */
     protected WebElement getHeaderRow(int row) {
         return getRow("thead", row);
     }
 
+    /**
+     * @param row
+     *            the index of the row element in the section. If negative, the
+     *            calculation starts from the end (-1 is the last, -2 is the
+     *            second-to-last etc)
+     */
     protected WebElement getBodyRow(int row) {
         return getRow("tbody", row);
     }
 
+    /**
+     * @param row
+     *            the index of the row element in the section. If negative, the
+     *            calculation starts from the end (-1 is the last, -2 is the
+     *            second-to-last etc)
+     */
     protected WebElement getFooterRow(int row) {
         return getRow("tfoot", row);
     }
 
+    /**
+     * @param row
+     *            the index of the row element in the section. If negative, the
+     *            calculation starts from the end (-1 is the last, -2 is the
+     *            second-to-last etc)
+     */
     protected WebElement getHeaderCell(int row, int col) {
         return getCell("thead", row, col);
     }
 
+    /**
+     * @param row
+     *            the index of the row element in the section. If negative, the
+     *            calculation starts from the end (-1 is the last, -2 is the
+     *            second-to-last etc)
+     */
     protected WebElement getBodyCell(int row, int col) {
         return getCell("tbody", row, col);
     }
 
+    /**
+     * @param row
+     *            the index of the row element in the section. If negative, the
+     *            calculation starts from the end (-1 is the last, -2 is the
+     *            second-to-last etc)
+     */
     protected WebElement getFooterCell(int row, int col) {
         return getCell("tfoot", row, col);
     }
 
+    /**
+     * @param row
+     *            the index of the row element in the section. If negative, the
+     *            calculation starts from the end (-1 is the last, -2 is the
+     *            second-to-last etc)
+     */
     private WebElement getCell(String sectionTag, int row, int col) {
         WebElement rowElement = getRow(sectionTag, row);
         if (rowElement != null) {
@@ -112,12 +156,26 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
         }
     }
 
+    /**
+     * @param row
+     *            the index of the row element in the section. If negative, the
+     *            calculation starts from the end (-1 is the last, -2 is the
+     *            second-to-last etc)
+     */
     private WebElement getRow(String sectionTag, int row) {
         WebElement escalator = getEscalator();
         WebElement tableSection = escalator.findElement(By.tagName(sectionTag));
 
         try {
-            return tableSection.findElement(By.xpath("tr[" + (row + 1) + "]"));
+            if (row >= 0) {
+                int fromFirst = row + 1;
+                return tableSection.findElement(By.xpath("tr[" + fromFirst
+                        + "]"));
+            } else {
+                int fromLast = Math.abs(row + 1);
+                return tableSection.findElement(By.xpath("tr[last() - "
+                        + fromLast + "]"));
+            }
         } catch (NoSuchElementException e) {
             return null;
         }

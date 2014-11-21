@@ -2150,7 +2150,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                         "topRowLogicalIndex: " + this.topRowLogicalIndex
                                 + " -> " + topRowLogicalIndex);
             }
-            assert topRowLogicalIndex >= 0 : "topRowLogicalIndex became negative";
+            assert topRowLogicalIndex >= 0 : "topRowLogicalIndex became negative (top left cell contents: "
+                    + visualRowOrder.getFirst().getCells().getItem(0)
+                            .getInnerText() + ") ";
             /*
              * if there's a smart way of evaluating and asserting the max index,
              * this would be a nice place to put it. I haven't found out an
@@ -2882,19 +2884,52 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                                 removedVisualInside, 0);
                     }
 
+                    else if (removedVisualInside.contains(0)
+                            && numberOfRows >= visualRowOrder.size()) {
+                        /*
+                         * We're removing so many rows that the viewport is
+                         * pushed up more than a screenful. This means we can
+                         * simply scroll up and everything will work without a
+                         * sweat.
+                         */
+
+                        double left = horizontalScrollbar.getScrollPos();
+                        int top = contentBottom - visualRowOrder.size()
+                                * getDefaultRowHeight();
+                        setBodyScrollPosition(left, top);
+
+                        Range allEscalatorRows = Range.withLength(0,
+                                visualRowOrder.size());
+                        int logicalTargetIndex = getRowCount()
+                                - allEscalatorRows.length();
+                        moveAndUpdateEscalatorRows(allEscalatorRows, 0,
+                                logicalTargetIndex);
+
+                        /*
+                         * Scrolling the body to the correct location will be
+                         * fixed automatically. Because the amount of rows is
+                         * decreased, the viewport is pushed up as the scrollbar
+                         * shrinks. So no need to do anything there.
+                         * 
+                         * TODO [[optimize]]: This might lead to a double body
+                         * refresh. Needs investigation.
+                         */
+                    }
+
                     else if (contentBottom
                             + (numberOfRows * getDefaultRowHeight())
                             - viewportBottom < getDefaultRowHeight()) {
                         /*
-                         * FIXME [[rowheight]]: above coded to work only with
-                         * default row heights - will not work with variable row
-                         * heights
-                         */
-
-                        /*
                          * We're at the end of the row container, everything is
                          * added to the top.
                          */
+
+                        /*
+                         * FIXME [[rowheight]]: above if-clause is coded to only
+                         * work with default row heights - will not work with
+                         * variable row heights
+                         */
+
                         paintRemoveRowsAtBottom(removedLogicalInside,
                                 removedVisualInside);
                         updateTopRowLogicalIndex(-removedLogicalInside.length());
