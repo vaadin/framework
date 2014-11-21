@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
+import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.components.grid.GridElement.GridCellElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -31,6 +32,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * @since
  * @author Vaadin Ltd
  */
+@TestCategory("grid")
 public class WidgetRenderersTest extends MultiBrowserTest {
 
     @Test

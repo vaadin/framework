@@ -2647,17 +2647,46 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     private Element getSubPart(RowContainer container, int[] indices) {
+        Element targetElement = container.getRowElement(indices[0]);
+
         // Scroll wanted column to view if able
-        if (indices.length > 1
-                && escalator.getColumnConfiguration().getFrozenColumnCount() <= indices[1]) {
-            escalator.scrollToColumn(indices[1], ScrollDestination.ANY, 0);
+        if (indices.length > 1 && targetElement != null) {
+            if (escalator.getColumnConfiguration().getFrozenColumnCount() <= indices[1]) {
+                escalator.scrollToColumn(indices[1], ScrollDestination.ANY, 0);
+            }
+
+            targetElement = getCellFromRow(TableRowElement.as(targetElement),
+                    indices[1]);
+
+            for (int i = 2; i < indices.length && targetElement != null; ++i) {
+                targetElement = (Element) targetElement.getChild(indices[i]);
+            }
         }
 
-        Element targetElement = container.getRowElement(indices[0]);
-        for (int i = 1; i < indices.length && targetElement != null; ++i) {
-            targetElement = (Element) targetElement.getChild(indices[i]);
-        }
         return targetElement;
+    }
+
+    private Element getCellFromRow(TableRowElement rowElement, int index) {
+        int childCount = rowElement.getCells().getLength();
+        if (index < 0 || index >= childCount) {
+            return null;
+        }
+
+        TableCellElement currentCell = null;
+        boolean indexInColspan = false;
+        int i = 0;
+
+        while (!indexInColspan) {
+            currentCell = rowElement.getCells().getItem(i);
+
+            // Calculate if this is the cell we are looking for
+            int colSpan = currentCell.getColSpan();
+            indexInColspan = index < colSpan + i;
+
+            // Increment by colspan to skip over hidden cells
+            i += colSpan;
+        }
+        return currentCell;
     }
 
     @Override

@@ -16,7 +16,6 @@
 package com.vaadin.tests.components.grid.basicfeatures.client;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -105,8 +104,9 @@ public class GridFooterTest extends GridStaticSectionTest {
         assertTrue(spannedCell.isDisplayed());
         assertEquals("2", spannedCell.getAttribute("colspan"));
 
-        GridCellElement hiddenCell = getGridElement().getFooterCell(0, 1);
-        assertFalse(hiddenCell.isDisplayed());
+        // TestBench returns the spanned cell for all columns
+        assertEquals(spannedCell.getText(), getGridElement()
+                .getFooterCell(0, 1).getText());
     }
 
     @Test
@@ -121,8 +121,9 @@ public class GridFooterTest extends GridStaticSectionTest {
         assertTrue(spannedCell.isDisplayed());
         assertEquals("2", spannedCell.getAttribute("colspan"));
 
-        GridCellElement hiddenCell = getGridElement().getFooterCell(0, 2);
-        assertFalse(hiddenCell.isDisplayed());
+        // TestBench returns the spanned cell for all columns
+        assertEquals(spannedCell.getText(), getGridElement()
+                .getFooterCell(0, 2).getText());
     }
 
     @Test
@@ -141,7 +142,8 @@ public class GridFooterTest extends GridStaticSectionTest {
         for (int columnIndex = 1; columnIndex < GridBasicFeatures.COLUMNS; columnIndex++) {
             GridCellElement hiddenCell = getGridElement().getFooterCell(0,
                     columnIndex);
-            assertFalse(hiddenCell.isDisplayed());
+            // TestBench returns the spanned cell for all columns
+            assertEquals(spannedCell.getText(), hiddenCell.getText());
         }
     }
 

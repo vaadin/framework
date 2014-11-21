@@ -708,7 +708,8 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void execute() {
                 row.join(row.getCell(grid.getColumn(0)),
-                        row.getCell(grid.getColumn(1)));
+                        row.getCell(grid.getColumn(1))).setText(
+                        "Join column cells 0, 1");
 
             }
         }, menuPath);
@@ -717,7 +718,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void execute() {
-                row.join(grid.getColumn(1), grid.getColumn(2));
+                row.join(grid.getColumn(1), grid.getColumn(2)).setText(
+                        "Join columns 1, 2");
+                ;
 
             }
         }, menuPath);
@@ -727,7 +730,7 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void execute() {
                 row.join(grid.getColumn(3), grid.getColumn(4),
-                        grid.getColumn(5));
+                        grid.getColumn(5)).setText("Join columns 3, 4, 5");
 
             }
         }, menuPath);
@@ -736,8 +739,11 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void execute() {
-                row.join(grid.getColumns().toArray(
-                        new GridColumn[grid.getColumnCount()]));
+                row.join(
+                        grid.getColumns().toArray(
+                                new GridColumn[grid.getColumnCount()]))
+                        .setText("Join all columns");
+                ;
 
             }
         }, menuPath);
@@ -838,7 +844,8 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void execute() {
                 row.join(row.getCell(grid.getColumn(0)),
-                        row.getCell(grid.getColumn(1)));
+                        row.getCell(grid.getColumn(1))).setText(
+                        "Join column cells 0, 1");
 
             }
         }, menuPath);
@@ -847,7 +854,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void execute() {
-                row.join(grid.getColumn(1), grid.getColumn(2));
+                row.join(grid.getColumn(1), grid.getColumn(2)).setText(
+                        "Join columns 1, 2");
+                ;
 
             }
         }, menuPath);
@@ -856,8 +865,11 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void execute() {
-                row.join(grid.getColumns().toArray(
-                        new GridColumn[grid.getColumnCount()]));
+                row.join(
+                        grid.getColumns().toArray(
+                                new GridColumn[grid.getColumnCount()]))
+                        .setText("Join all columns");
+                ;
 
             }
         }, menuPath);
