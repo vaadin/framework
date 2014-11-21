@@ -3185,6 +3185,14 @@ public class Grid<T> extends ResizeComposite implements
             column.reapplyWidth();
         }
 
+        // Recalculate all the colspans
+        for (HeaderRow row : header.getRows()) {
+            row.calculateColspans();
+        }
+        for (FooterRow row : footer.getRows()) {
+            row.calculateColspans();
+        }
+
         refreshHeader();
         refreshBody();
         refreshFooter();

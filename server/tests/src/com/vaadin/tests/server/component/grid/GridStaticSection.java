@@ -17,6 +17,8 @@ package com.vaadin.tests.server.component.grid;
 
 import static org.junit.Assert.assertEquals;
 
+import java.lang.reflect.Method;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -88,18 +90,35 @@ public class GridStaticSection {
                 mergeRow.getCell("zipCode"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testJoinHeaderCellsIncorrectly() {
+    @Test(expected = IllegalStateException.class)
+    public void testJoinHeaderCellsIncorrectly() throws Throwable {
         final GridHeader section = grid.getHeader();
         HeaderRow mergeRow = section.prependRow();
         mergeRow.join("firstName", "zipCode").setText("Name");
+        sanityCheck();
     }
 
     @Test
-    public void testJoinAllFooterrCells() {
+    public void testJoinAllFooterCells() {
         final GridFooter section = grid.getFooter();
         FooterRow mergeRow = section.prependRow();
         mergeRow.join(dataSource.getContainerPropertyIds().toArray()).setText(
                 "All the stuff.");
+    }
+
+    private void sanityCheck() throws Throwable {
+        Method sanityCheckHeader;
+        try {
+            sanityCheckHeader = GridHeader.class
+                    .getDeclaredMethod("sanityCheck");
+            sanityCheckHeader.setAccessible(true);
+            Method sanityCheckFooter = GridFooter.class
+                    .getDeclaredMethod("sanityCheck");
+            sanityCheckFooter.setAccessible(true);
+            sanityCheckHeader.invoke(grid.getHeader());
+            sanityCheckFooter.invoke(grid.getFooter());
+        } catch (Exception e) {
+            throw e.getCause();
+        }
     }
 }

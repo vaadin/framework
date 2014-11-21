@@ -20,16 +20,24 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.annotations.TestCategory;
+import com.vaadin.tests.components.grid.GridElement.GridCellElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")
 public class GridColspansTest extends MultiBrowserTest {
+
+    @Before
+    public void setUp() {
+        setDebug(true);
+    }
 
     @Test
     public void testHeaderColSpans() {
@@ -87,5 +95,32 @@ public class GridColspansTest extends MultiBrowserTest {
                 .getHeaderCell(0, 1).getText(), "All the stuff");
         Assert.assertEquals("Failed initial condition.", "lastName", grid
                 .getHeaderCell(2, 1).getText());
+    }
+
+    @Test
+    public void testSplittingMergedHeaders() {
+        openTestURL();
+
+        GridElement grid = $(GridElement.class).first();
+        GridCellElement headerCell = grid.getHeaderCell(1, 1);
+        Assert.assertEquals("Failed initial condition.", headerCell.getText(),
+                "Full Name");
+        Assert.assertEquals("Failed initial condition.",
+                grid.getHeaderCell(2, 1).getText(), "firstName");
+        $(ButtonElement.class).get(1).click();
+        headerCell = grid.getHeaderCell(1, 1);
+        Assert.assertEquals("Header text not changed on column reorder.",
+                headerCell.getText(), "Address");
+        Assert.assertEquals("Unexpected colspan", "1",
+                headerCell.getAttribute("colspan"));
+        headerCell = grid.getHeaderCell(1, 2);
+        Assert.assertEquals("Header text not changed on column reorder",
+                "Full Name", headerCell.getText());
+        Assert.assertEquals("Unexpected colspan", "2",
+                headerCell.getAttribute("colspan"));
+
+        Assert.assertTrue("Error indicator not present",
+                isElementPresent(By.className("v-errorindicator")));
+
     }
 }

@@ -449,7 +449,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 .size()];
         int i = 0;
         for (String id : stateColumnOrder) {
-            columns[i++] = columnIdToColumn.get(id);
+            columns[i] = columnIdToColumn.get(id);
+            i++;
         }
         getWidget().setColumnOrder(columns);
         columnOrder = stateColumnOrder;
@@ -484,18 +485,14 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 updateStaticCellFromState(cell, cellState);
             }
 
-            for (List<String> group : rowState.cellGroups) {
+            for (Set<String> group : rowState.cellGroups.keySet()) {
                 GridColumn<?, ?>[] columns = new GridColumn<?, ?>[group.size()];
-                String firstId = group.get(0);
-                CellState cellState = null;
-                for (CellState c : rowState.cells) {
-                    if (c.columnId.equals(firstId)) {
-                        cellState = c;
-                    }
-                }
+                CellState cellState = rowState.cellGroups.get(group);
 
-                for (int i = 0; i < group.size(); ++i) {
-                    columns[i] = columnIdToColumn.get(group.get(i));
+                int i = 0;
+                for (String columnId : group) {
+                    columns[i] = columnIdToColumn.get(columnId);
+                    i++;
                 }
 
                 // Set state to be the same as first in group.

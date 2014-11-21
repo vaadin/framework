@@ -121,4 +121,21 @@ public class GridHeader extends GridStaticSection<GridHeader.HeaderRow> {
         }
         return row;
     }
+
+    @Override
+    protected void sanityCheck() throws IllegalStateException {
+        super.sanityCheck();
+
+        boolean hasDefaultRow = false;
+        for (HeaderRow row : rows) {
+            if (row.getRowState().defaultRow) {
+                if (!hasDefaultRow) {
+                    hasDefaultRow = true;
+                } else {
+                    throw new IllegalStateException(
+                            "Multiple default rows in header");
+                }
+            }
+        }
+    }
 }

@@ -17,7 +17,10 @@ package com.vaadin.shared.ui.grid;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.vaadin.shared.Connector;
 
@@ -46,7 +49,10 @@ public class GridStaticSectionState implements Serializable {
 
         public boolean defaultRow = false;
 
-        public List<List<String>> cellGroups = new ArrayList<List<String>>();
+        /**
+         * Map from column id set to cell state for merged state.
+         */
+        public Map<Set<String>, CellState> cellGroups = new HashMap<Set<String>, CellState>();
     }
 
     public List<RowState> rows = new ArrayList<RowState>();

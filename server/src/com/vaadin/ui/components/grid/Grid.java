@@ -40,6 +40,7 @@ import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.ErrorHandler;
+import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.EditorRowClientRpc;
 import com.vaadin.shared.ui.grid.EditorRowServerRpc;
@@ -470,6 +471,31 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 handler.error(new ConnectorErrorEvent(Grid.this, e));
             }
         });
+    }
+
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        try {
+            header.sanityCheck();
+            footer.sanityCheck();
+        } catch (Exception e) {
+            e.printStackTrace();
+            setComponentError(new ErrorMessage() {
+
+                @Override
+                public ErrorLevel getErrorLevel() {
+                    return ErrorLevel.CRITICAL;
+                }
+
+                @Override
+                public String getFormattedHtmlMessage() {
+                    return "Incorrectly merged cells";
+                }
+
+            });
+        }
+
+        super.beforeClientResponse(initial);
     }
 
     /**

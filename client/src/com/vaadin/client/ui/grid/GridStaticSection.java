@@ -16,12 +16,11 @@
 package com.vaadin.client.ui.grid;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
@@ -191,16 +190,25 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
 
         private GridStaticSection<?> section;
 
-        private Collection<List<GridColumn<?, ?>>> cellGroups = new HashSet<List<GridColumn<?, ?>>>();
+        /**
+         * Map from set of spanned columns to cell meta data.
+         */
+        private Map<Set<GridColumn<?, ?>>, CELLTYPE> cellGroups = new HashMap<Set<GridColumn<?, ?>>, CELLTYPE>();
 
         /**
-         * Returns the cell on given GridColumn.
+         * Returns the cell on given GridColumn. If the column is merged
+         * returned cell is the cell for the whole group.
          * 
          * @param column
          *            the column in grid
-         * @return the cell on given column, null if not found
+         * @return the cell on given column, merged cell for merged columns,
+         *         null if not found
          */
         public CELLTYPE getCell(GridColumn<?, ?> column) {
+            Set<GridColumn<?, ?>> cellGroup = getCellGroupForColumn(column);
+            if (cellGroup != null) {
+                return cellGroups.get(cellGroup);
+            }
             return cells.get(column);
         }
 
@@ -218,9 +226,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
                         "You can't merge less than 2 columns together.");
             }
 
-            final List<?> columnList = section.grid.getColumns();
-            int firstIndex = columnList.indexOf(columns[0]);
-            int i = 0;
+            HashSet<GridColumn<?, ?>> columnGroup = new HashSet<GridColumn<?, ?>>();
             for (GridColumn<?, ?> column : columns) {
                 if (!cells.containsKey(column)) {
                     throw new IllegalArgumentException(
@@ -228,22 +234,17 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
                 } else if (getCellGroupForColumn(column) != null) {
                     throw new IllegalStateException(
                             "Column is already in a group.");
-                } else if (!column.equals(columnList.get(firstIndex + (i++)))) {
-                    throw new IllegalStateException(
-                            "Columns are in invalid order or not in a continuous range");
                 }
+                columnGroup.add(column);
             }
 
-            cellGroups.add(Arrays.asList(columns));
             CELLTYPE joinedCell = createCell();
+            cellGroups.put(columnGroup, joinedCell);
             joinedCell.setSection(getSection());
-            for (GridColumn<?, ?> column : columns) {
-                cells.put(column, joinedCell);
-            }
 
             calculateColspans();
 
-            return getCell(columns[0]);
+            return joinedCell;
         }
 
         /**
@@ -273,18 +274,15 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
                     if (j == cells.length) {
                         break;
                     }
-                } else if (j > 0) {
-                    throw new IllegalStateException(
-                            "Cells are in invalid order or not in a continuous range.");
                 }
             }
 
             return join(columns);
         }
 
-        private List<GridColumn<?, ?>> getCellGroupForColumn(
+        private Set<GridColumn<?, ?>> getCellGroupForColumn(
                 GridColumn<?, ?> column) {
-            for (List<GridColumn<?, ?>> group : cellGroups) {
+            for (Set<GridColumn<?, ?>> group : cellGroups.keySet()) {
                 if (group.contains(column)) {
                     return group;
                 }
@@ -299,51 +297,45 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
                 cell.setColspan(1);
             }
 
+            List<GridColumn<?, ?>> columnOrder = new ArrayList<GridColumn<?, ?>>(
+                    section.grid.getColumns());
             // Set colspan for grouped cells
-            for (List<GridColumn<?, ?>> group : cellGroups) {
-
-                int firstVisibleColumnInGroup = -1;
-                int lastVisibleColumnInGroup = -1;
-                int hiddenInsideGroup = 0;
-
-                /*
-                 * To be able to calculate the colspan correctly we need to two
-                 * things; find the first visible cell in the group which will
-                 * get the colspan assigned to and find the amount of columns
-                 * which should be spanned.
-                 * 
-                 * To do that we iterate through all cells, marking into memory
-                 * when we find the first visible cell, when we find the last
-                 * visible cell and how many cells are hidden in between.
-                 */
-                for (int i = 0; i < group.size(); i++) {
-                    if (group.get(i).isVisible()) {
-                        lastVisibleColumnInGroup = i;
-                        if (firstVisibleColumnInGroup == -1) {
-                            firstVisibleColumnInGroup = i;
+            for (Set<GridColumn<?, ?>> group : cellGroups.keySet()) {
+                if (!checkCellGroupAndOrder(columnOrder, group)) {
+                    cellGroups.get(group).setColspan(1);
+                } else {
+                    int colSpan = group.size();
+                    for (GridColumn<?, ?> column : group) {
+                        if (!column.isVisible()) {
+                            --colSpan;
                         }
-                    } else if (firstVisibleColumnInGroup != -1) {
-                        hiddenInsideGroup++;
                     }
+                    cellGroups.get(group).setColspan(colSpan);
                 }
+            }
 
-                if (firstVisibleColumnInGroup == -1
-                        || lastVisibleColumnInGroup == -1
-                        || firstVisibleColumnInGroup == lastVisibleColumnInGroup) {
-                    // No cells in group
+        }
+
+        private boolean checkCellGroupAndOrder(
+                List<GridColumn<?, ?>> columnOrder,
+                Set<GridColumn<?, ?>> cellGroup) {
+            if (!columnOrder.containsAll(cellGroup)) {
+                return false;
+            }
+
+            for (int i = 0; i < columnOrder.size(); ++i) {
+                if (!cellGroup.contains(columnOrder.get(i))) {
                     continue;
                 }
 
-                /*
-                 * Assign colspan to first cell in group.
-                 */
-                GridColumn<?, ?> firstVisibleColumn = group
-                        .get(firstVisibleColumnInGroup);
-                CELLTYPE firstVisibleCell = getCell(firstVisibleColumn);
-                firstVisibleCell.setColspan(lastVisibleColumnInGroup
-                        - firstVisibleColumnInGroup - hiddenInsideGroup + 1);
+                for (int j = 1; j < cellGroup.size(); ++j) {
+                    if (!cellGroup.contains(columnOrder.get(i + j))) {
+                        return false;
+                    }
+                }
+                return true;
             }
-
+            return false;
         }
 
         protected void addCell(GridColumn<?, ?> column) {

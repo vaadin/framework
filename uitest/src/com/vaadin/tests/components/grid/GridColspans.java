@@ -77,6 +77,15 @@ public class GridColspans extends AbstractTestUI {
                         column.setVisible(!column.isVisible());
                     }
                 }));
+
+        addComponent(new Button("Change column order",
+                new Button.ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        grid.setColumnOrder("zipCode", "firstName");
+                    }
+                }));
     }
 
     @Override

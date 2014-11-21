@@ -62,4 +62,8 @@ public class GridFooter extends GridStaticSection<GridFooter.FooterRow> {
         return new FooterRow(this);
     }
 
+    @Override
+    protected void sanityCheck() throws IllegalStateException {
+        super.sanityCheck();
+    }
 }
