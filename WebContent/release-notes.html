@@ -140,6 +140,8 @@
                 cause problems with external libraries compiled against said versions.</li>
             <li>Declarative format is now using "vaadin-" as a default prefix instead of the "v-" prefix used in 7.5. 
                 This default can be changed in deployment configuration.</li>
+            <li>The annotations @PreserveOnRefresh, @Push, @Theme, @Title, @VaadinServletConfiguration and @Widgetset now use
+                @Inherited. The annotation is also looked up in extended interfaces for backwards compatibility.</li>
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>

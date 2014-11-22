@@ -18,6 +18,7 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.annotation.Inherited;
 
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Push;
@@ -43,8 +44,15 @@ public abstract class UIProvider implements Serializable {
 
     /**
      * Helper to get an annotation for a class. If the annotation is not present
-     * on the target class, its super classes and implemented interfaces are
-     * also searched for the annotation.
+     * on the target class, its super classes and directly implemented
+     * interfaces are also searched for the annotation. Interfaces implemented
+     * by superclasses are not taken into account.
+     * <p>
+     * Note that searching implemented interfaces for {@code @Inherited}
+     * annotations and searching for superclasses for non-inherited annotations
+     * do not follow the standard semantics and are supported for backwards
+     * compatibility. Future versions of the framework might only support the
+     * standard semantics of {@code @Inherited}.
      * 
      * @param clazz
      *            the class from which the annotation should be found
@@ -55,18 +63,26 @@ public abstract class UIProvider implements Serializable {
      */
     protected static <T extends Annotation> T getAnnotationFor(Class<?> clazz,
             Class<T> annotationType) {
-        // Find from the class hierarchy
-        Class<?> currentType = clazz;
-        while (currentType != Object.class) {
-            T annotation = currentType.getAnnotation(annotationType);
+        // Don't discover hierarchy if annotation is inherited
+        if (annotationType.getAnnotation(Inherited.class) != null) {
+            T annotation = clazz.getAnnotation(annotationType);
             if (annotation != null) {
                 return annotation;
-            } else {
-                currentType = currentType.getSuperclass();
+            }
+        } else {
+            // Find from the class hierarchy
+            Class<?> currentType = clazz;
+            while (currentType != Object.class) {
+                T annotation = currentType.getAnnotation(annotationType);
+                if (annotation != null) {
+                    return annotation;
+                } else {
+                    currentType = currentType.getSuperclass();
+                }
             }
         }
 
-        // Find from an implemented interface
+        // Find from a directly implemented interface
         for (Class<?> iface : clazz.getInterfaces()) {
             T annotation = iface.getAnnotation(annotationType);
             if (annotation != null) {
