@@ -178,6 +178,11 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
         link.setIcon(testIcon.get());
         link.addStyleName("large");
         row.addComponent(link);
+
+        link = new Link("Disabled", new ExternalResource("https://vaadin.com"));
+        link.setIcon(testIcon.get());
+        link.setEnabled(false);
+        row.addComponent(link);
     }
 
     @Override
