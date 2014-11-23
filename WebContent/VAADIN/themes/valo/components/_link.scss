@@ -20,8 +20,8 @@ $v-link-cursor: pointer !default;
 /**
  *
  *
- * @param {string} $primary-stylename (v-link) - 
- * @param {bool} $include-additional-styles - 
+ * @param {string} $primary-stylename (v-link) -
+ * @param {bool} $include-additional-styles -
  *
  * @group link
  */
@@ -73,5 +73,9 @@ $v-link-cursor: pointer !default;
 
   &:hover {
     color: lighten($v-link-font-color, 10%);
+  }
+
+  &.v-disabled {
+    @include opacity($v-disabled-opacity);
   }
 }

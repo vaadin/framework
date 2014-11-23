@@ -39,7 +39,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
     public void buttonsLinks() throws Exception {
         openTestURL("test");
         open("Buttons & Links", "Buttons");
-        compareScreen("buttonsLinks");
+        compareScreen("buttonsLinks_with_disabled");
     }
 
     @Test
