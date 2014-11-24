@@ -1713,16 +1713,17 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             this.primaryStyleName = primaryStyleName;
 
             // Update already rendered rows and cells
-            TableRowElement row = root.getRows().getItem(0);
+            Element row = root.getRows().getItem(0);
             while (row != null) {
                 UIObject.setStylePrimaryName(row, primaryStyleName + "-row");
-                TableCellElement cell = row.getCells().getItem(0);
+                Element cell = TableRowElement.as(row).getCells().getItem(0);
                 while (cell != null) {
+                    assert TableCellElement.is(cell);
                     UIObject.setStylePrimaryName(cell, primaryStyleName
                             + "-cell");
-                    cell = TableCellElement.as(cell.getNextSiblingElement());
+                    cell = cell.getNextSiblingElement();
                 }
-                row = TableRowElement.as(row.getNextSiblingElement());
+                row = row.getNextSiblingElement();
             }
         }
 
