@@ -127,16 +127,16 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
         /**
          * Merges columns cells in a row
          * 
-         * @param properties
-         *            The column properties which header should be merged
+         * @param propertyIds
+         *            The property ids of columns to merge
          * @return The remaining visible cell after the merge
          */
-        public CELLTYPE join(Object... properties) {
-            assert properties.length > 1 : "You need to merge at least 2 properties";
+        public CELLTYPE join(Object... propertyIds) {
+            assert propertyIds.length > 1 : "You need to merge at least 2 properties";
 
             Set<CELLTYPE> cells = new HashSet<CELLTYPE>();
-            for (int i = 0; i < properties.length; ++i) {
-                cells.add(getCell(properties[i]));
+            for (int i = 0; i < propertyIds.length; ++i) {
+                cells.add(getCell(propertyIds[i]));
             }
 
             return join(cells);
