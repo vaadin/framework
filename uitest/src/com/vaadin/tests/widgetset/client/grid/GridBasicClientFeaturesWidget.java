@@ -41,6 +41,7 @@ import com.vaadin.client.ui.grid.Cell;
 import com.vaadin.client.ui.grid.EditorRowHandler;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Grid;
+import com.vaadin.client.ui.grid.Grid.CellStyleGenerator;
 import com.vaadin.client.ui.grid.Grid.SelectionMode;
 import com.vaadin.client.ui.grid.GridColumn;
 import com.vaadin.client.ui.grid.GridFooter;
@@ -417,6 +418,8 @@ public class GridBasicClientFeaturesWidget extends
         String[] selectionModePath = { "Component", "State", "Selection mode" };
         String[] primaryStyleNamePath = { "Component", "State",
                 "Primary Stylename" };
+        String[] styleGeneratorNamePath = { "Component", "State",
+                "Style generator" };
 
         addMenuCommand("multi", new ScheduledCommand() {
             @Override
@@ -491,6 +494,84 @@ public class GridBasicClientFeaturesWidget extends
             }
         }, "Component", "State");
 
+        addMenuCommand("None", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setCellStyleGenerator(null);
+            }
+        }, styleGeneratorNamePath);
+
+        addMenuCommand("Row only", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setCellStyleGenerator(new CellStyleGenerator<List<Data>>() {
+                    @Override
+                    public String getStyle(Grid<List<Data>> grid,
+                            List<Data> row, int rowIndex,
+                            GridColumn<?, List<Data>> column, int columnIndex) {
+                        if (column == null) {
+                            if (rowIndex % 3 == 0) {
+                                return "third";
+                            } else {
+                                // First manual col is integer
+                                Integer value = (Integer) row.get(COLUMNS
+                                        - MANUALLY_FORMATTED_COLUMNS).value;
+                                return value.toString();
+                            }
+                        } else {
+                            return null;
+                        }
+                    }
+                });
+            }
+        }, styleGeneratorNamePath);
+
+        addMenuCommand("Cell only", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setCellStyleGenerator(new CellStyleGenerator<List<Data>>() {
+                    @Override
+                    public String getStyle(Grid<List<Data>> grid,
+                            List<Data> row, int rowIndex,
+                            GridColumn<?, List<Data>> column, int columnIndex) {
+                        if (column == null) {
+                            return null;
+                        } else {
+                            if (column == grid.getColumn(2)) {
+                                return "two";
+                            } else if (column == grid.getColumn(COLUMNS
+                                    - MANUALLY_FORMATTED_COLUMNS)) {
+                                // First manual col is integer
+                                Integer value = (Integer) column.getValue(row);
+                                return value.toString();
+
+                            } else {
+                                return null;
+                            }
+                        }
+                    }
+                });
+            }
+        }, styleGeneratorNamePath);
+
+        addMenuCommand("Combined", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                grid.setCellStyleGenerator(new CellStyleGenerator<List<Data>>() {
+                    @Override
+                    public String getStyle(Grid<List<Data>> grid,
+                            List<Data> row, int rowIndex,
+                            GridColumn<?, List<Data>> column, int columnIndex) {
+                        if (column == null) {
+                            return Integer.toString(rowIndex);
+                        } else {
+                            return rowIndex + "_"
+                                    + grid.getColumns().indexOf(column);
+                        }
+                    }
+                });
+            }
+        }, styleGeneratorNamePath);
     }
 
     private void createColumnsMenu() {

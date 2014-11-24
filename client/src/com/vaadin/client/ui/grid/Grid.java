@@ -125,6 +125,41 @@ import com.vaadin.shared.util.SharedUtil;
 public class Grid<T> extends ResizeComposite implements
         HasSelectionChangeHandlers<T>, SubPartAware, DeferredWorker {
 
+    /**
+     * Callback interface for generating custom style names for data rows and
+     * cells.
+     * 
+     * @see Grid#setCellStyleGenerator(CellStyleGenerator)
+     */
+    public interface CellStyleGenerator<T> {
+
+        /**
+         * Called by Grid to generate a style name for a row or cell element.
+         * Row styles are generated when the column parameter is
+         * <code>null</code>, otherwise a cell style is generated.
+         * <p>
+         * The returned style name is prefixed so that the actual style for
+         * cells will be <tt>v-grid-cell-content-[style name]</tt>, and the row
+         * style will be <tt>v-grid-row-[style name]</tt>.
+         * 
+         * @param grid
+         *            the source grid
+         * @param row
+         *            the data object of the target row
+         * @param rowIndex
+         *            the index of the row
+         * @param column
+         *            the column of the cell, <code>null</code> when getting a
+         *            row style
+         * @param columnIndex
+         *            the index of the column, -1 when getting a row style
+         * @return the style name to add to this cell or row element, or
+         *         <code>null</code> to not set any style
+         */
+        public abstract String getStyle(Grid<T> grid, T row, int rowIndex,
+                GridColumn<?, T> column, int columnIndex);
+    }
+
     public static abstract class AbstractGridKeyEvent<HANDLER extends AbstractGridKeyEventHandler>
             extends KeyEvent<HANDLER> {
 
@@ -190,6 +225,8 @@ public class Grid<T> extends ResizeComposite implements
             return associatedType;
         }
     }
+
+    private static final String CUSTOM_STYLE_PROPERTY_NAME = "customStyle";
 
     private GridKeyDownEvent keyDown = new GridKeyDownEvent(this);
     private GridKeyUpEvent keyUp = new GridKeyUpEvent(this);
@@ -765,7 +802,9 @@ public class Grid<T> extends ResizeComposite implements
 
     private String rowStripeStyleName;
     private String rowHasDataStyleName;
+    private String rowGeneratedStylePrefix;
     private String rowSelectedStyleName;
+    private String cellGeneratedStylePrefix;
     private String cellFocusStyleName;
     private String rowFocusStyleName;
     private String headerFooterFocusStyleName;
@@ -1243,6 +1282,12 @@ public class Grid<T> extends ResizeComposite implements
 
             boolean hasData = rowData != null;
 
+            /*
+             * TODO could be more efficient to build a list of all styles that
+             * should be used and update the element only once instead of
+             * attempting to update only the ones that have changed.
+             */
+
             // Assign stylename for rows with data
             boolean usedToHaveData = rowElement
                     .hasClassName(rowHasDataStyleName);
@@ -1254,12 +1299,25 @@ public class Grid<T> extends ResizeComposite implements
             boolean isEvenIndex = (row.getRow() % 2 == 0);
             setStyleName(rowElement, rowStripeStyleName, isEvenIndex);
 
-            // Assign stylename for selected rows
             if (hasData) {
                 setStyleName(rowElement, rowSelectedStyleName,
                         isSelected(rowData));
+
+                if (cellStyleGenerator != null) {
+                    String rowStylename = cellStyleGenerator.getStyle(
+                            Grid.this, rowData, rowIndex, null, -1);
+                    if (rowStylename != null) {
+                        rowStylename = rowGeneratedStylePrefix + rowStylename;
+                    }
+                    setCustomStyleName(rowElement, rowStylename);
+                } else {
+                    // Remove in case there was a generator previously
+                    setCustomStyleName(rowElement, null);
+                }
             } else if (usedToHaveData) {
                 setStyleName(rowElement, rowSelectedStyleName, false);
+
+                setCustomStyleName(rowElement, null);
             }
 
             cellFocusHandler.updateFocusedRowStyle(row);
@@ -1273,6 +1331,19 @@ public class Grid<T> extends ResizeComposite implements
 
                 cellFocusHandler.updateFocusedCellStyle(cell,
                         escalator.getBody());
+
+                if (hasData && cellStyleGenerator != null) {
+                    String generatedStyle = cellStyleGenerator.getStyle(
+                            Grid.this, rowData, rowIndex, column,
+                            cell.getColumn());
+                    if (generatedStyle != null) {
+                        generatedStyle = cellGeneratedStylePrefix
+                                + generatedStyle;
+                    }
+                    setCustomStyleName(cell.getElement(), generatedStyle);
+                } else if (hasData || usedToHaveData) {
+                    setCustomStyleName(cell.getElement(), null);
+                }
 
                 Renderer renderer = column.getRenderer();
 
@@ -1339,7 +1410,6 @@ public class Grid<T> extends ResizeComposite implements
 
         private GridStaticSection<?> section;
         private RowContainer container;
-        private static final String CUSTOM_STYLE_PROPERTY_NAME = "customStyle";
 
         public StaticSectionUpdater(GridStaticSection<?> section,
                 RowContainer container) {
@@ -1386,22 +1456,6 @@ public class Grid<T> extends ResizeComposite implements
 
                 cellFocusHandler.updateFocusedCellStyle(cell, container);
             }
-        }
-
-        private void setCustomStyleName(Element element, String styleName) {
-            String oldStyleName = element
-                    .getPropertyString(CUSTOM_STYLE_PROPERTY_NAME);
-
-            if (!SharedUtil.equals(oldStyleName, styleName)) {
-                if (oldStyleName != null) {
-                    element.removeClassName(oldStyleName);
-                }
-                if (styleName != null) {
-                    element.addClassName(styleName);
-                }
-                element.setPropertyString(CUSTOM_STYLE_PROPERTY_NAME, styleName);
-            }
-
         }
 
         private void addSortingIndicatorsToHeaderRow(HeaderRow headerRow,
@@ -1608,12 +1662,14 @@ public class Grid<T> extends ResizeComposite implements
         rowHasDataStyleName = rowStyle + "-has-data";
         rowSelectedStyleName = rowStyle + "-selected";
         rowStripeStyleName = rowStyle + "-stripe";
+        rowGeneratedStylePrefix = rowStyle + "-";
 
         /*
          * TODO rename CSS "active" to "focused" once Valo theme has been
          * merged.
          */
         cellFocusStyleName = getStylePrimaryName() + "-cell-active";
+        cellGeneratedStylePrefix = getStylePrimaryName() + "-cell-content-";
         headerFooterFocusStyleName = getStylePrimaryName() + "-header-active";
         rowFocusStyleName = getStylePrimaryName() + "-row-active";
 
@@ -2535,6 +2591,7 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     private Point rowEventTouchStartingPoint;
+    private CellStyleGenerator<T> cellStyleGenerator;
 
     private boolean handleHeaderDefaultRowEvent(Event event,
             RowContainer container, final Cell cell) {
@@ -3247,5 +3304,47 @@ public class Grid<T> extends ResizeComposite implements
         refreshHeader();
         refreshBody();
         refreshFooter();
+    }
+
+    /**
+     * Sets the cell style generator that is used for generating styles for rows
+     * and cells.
+     * 
+     * @param cellStyleGenerator
+     *            the cell style generator to set, or <code>null</code> to
+     *            remove a previously set generator
+     */
+    public void setCellStyleGenerator(CellStyleGenerator<T> cellStyleGenerator) {
+        this.cellStyleGenerator = cellStyleGenerator;
+        refreshBody();
+    }
+
+    /**
+     * Gets the cell style generator that is used for generating styles for rows
+     * and cells.
+     * 
+     * @return the cell style generator, or <code>null</code> if no generator is
+     *         set
+     */
+    public CellStyleGenerator<T> getCellStyleGenerator() {
+        return cellStyleGenerator;
+    }
+
+    private static void setCustomStyleName(Element element, String styleName) {
+        assert element != null;
+
+        String oldStyleName = element
+                .getPropertyString(CUSTOM_STYLE_PROPERTY_NAME);
+
+        if (!SharedUtil.equals(oldStyleName, styleName)) {
+            if (oldStyleName != null) {
+                element.removeClassName(oldStyleName);
+            }
+            if (styleName != null) {
+                element.addClassName(styleName);
+            }
+            element.setPropertyString(CUSTOM_STYLE_PROPERTY_NAME, styleName);
+        }
+
     }
 }
