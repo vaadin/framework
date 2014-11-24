@@ -17,7 +17,7 @@
 package com.vaadin.server.communication;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.logging.Level;
@@ -114,18 +114,13 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         // iOS 6 Safari requires this (#9732)
         response.setHeader("Cache-Control", "no-cache");
 
-        // NOTE! GateIn requires, for some weird reason, getOutputStream
-        // to be used instead of getWriter() (it seems to interpret
-        // application/json as a binary content type)
-        OutputStreamWriter outputWriter = new OutputStreamWriter(
-                response.getOutputStream(), "UTF-8");
-        try {
-            outputWriter.write(json);
-            // NOTE GateIn requires the buffers to be flushed to work
-            outputWriter.flush();
-        } finally {
-            outputWriter.close();
-        }
+        byte[] b = json.getBytes("UTF-8");
+        response.setHeader("Content-Length", String.valueOf(b.length));
+
+        OutputStream outputStream = response.getOutputStream();
+        outputStream.write(b);
+        // NOTE GateIn requires the buffers to be flushed to work
+        outputStream.flush();
 
         return true;
     }
