@@ -551,6 +551,9 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
                 return;
             }
 
+            // Prevent space page scrolling
+            event.getNativeEvent().preventDefault();
+
             spaceDown = true;
             Cell focused = event.getFocusedCell();
             final int rowIndex = focused.getRow();
