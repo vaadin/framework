@@ -17,6 +17,7 @@ package com.vaadin.tests.components.calendar;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
@@ -69,6 +70,13 @@ public class BeanItemContainerTestUI extends UI {
         table.setVisibleColumns(new Object[] { "caption", "description",
                 "start", "end" });
         content.addComponent(table);
+
+        BasicEvent longEvent = new BasicEvent();
+        longEvent.setCaption("Long event");
+        longEvent.setAllDay(true);
+        longEvent.setStart(new GregorianCalendar(2000, 1, 3).getTime());
+        longEvent.setEnd(new GregorianCalendar(2000, 2, 5).getTime());
+        events.addBean(longEvent);
     }
 
     /**
