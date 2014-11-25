@@ -3043,7 +3043,9 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     }
 
     /**
-     * Inserts a new row at the given position to the header section.
+     * Inserts a new row at the given position to the header section. Shifts the
+     * row currently at that position and any subsequent rows down (adds one to
+     * their indices).
      * 
      * @param index
      *            the position at which to insert the row
@@ -3199,7 +3201,9 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     }
 
     /**
-     * Inserts a new row at the given position to the footer section.
+     * Inserts a new row at the given position to the footer section. Shifts the
+     * row currently at that position and any subsequent rows down (adds one to
+     * their indices).
      * 
      * @param index
      *            the position at which to insert the row

@@ -402,7 +402,8 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
     }
 
     /**
-     * Inserts a new row at the given position.
+     * Inserts a new row at the given position. Shifts the row currently at that
+     * position and any subsequent rows down (adds one to their indices).
      * 
      * @param index
      *            the position at which to insert the row
