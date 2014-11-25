@@ -84,7 +84,11 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
             for (Set<String> group : rowState.cellGroups.keySet()) {
                 if (group.contains(columnId)) {
                     if (group.size() > 2) {
+                        // Update map key correctly
+                        CELLTYPE mergedCell = cellGroups.remove(cellGroup);
                         cellGroup.remove(cell);
+                        cellGroups.put(cellGroup, mergedCell);
+
                         group.remove(columnId);
                     } else {
                         rowState.cellGroups.remove(group);
@@ -119,7 +123,7 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
             CELLTYPE cell = cells.get(propertyId);
             Set<CELLTYPE> cellGroup = getCellGroupForCell(cell);
             if (cellGroup != null) {
-                return cellGroups.get(cellGroup);
+                cell = cellGroups.get(cellGroup);
             }
             return cell;
         }
