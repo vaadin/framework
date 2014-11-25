@@ -249,71 +249,33 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
     @Override
     public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
         eventCache.clear();
-
-        int[] rangeIndexes = getFirstAndLastEventIndex(startDate, endDate);
-        for (int i = rangeIndexes[0]; i <= rangeIndexes[1]
-                && i < container.size(); i++) {
-            eventCache.add(getEvent(i));
-        }
-        return Collections.unmodifiableList(eventCache);
-    }
-
-    /**
-     * Get the first event for a date
-     * 
-     * @param date
-     *            The date to search for, NUll returns first event in container
-     * @return Returns an array where the first item is the start index and the
-     *         second item is the end item
-     */
-    private int[] getFirstAndLastEventIndex(Date start, Date end) {
-        int startIndex = 0;
         int size = container.size();
         assert size >= 0;
-        int endIndex = size - 1;
 
-        if (start != null) {
-            /*
-             * Iterating from the start of the container, if range is in the end
-             * of the container then this will be slow TODO This could be
-             * improved by using some sort of divide and conquer algorithm
-             */
-            while (startIndex < size) {
-                Object id = container.getIdByIndex(startIndex);
-                Item item = container.getItem(id);
-                Date d = (Date) item.getItemProperty(startDateProperty)
+        for (int i = 0; i < size; i++) {
+            Object id = container.getIdByIndex(i);
+            Item item = container.getItem(id);
+            boolean add = true;
+            if (startDate != null) {
+                Date eventEnd = (Date) item.getItemProperty(endDateProperty)
                         .getValue();
-                if (d.compareTo(start) >= 0) {
-                    break;
+                if (eventEnd.compareTo(startDate) < 0) {
+                    add = false;
                 }
-                startIndex++;
+            }
+            if (add && endDate != null) {
+                Date eventStart = (Date) item
+                        .getItemProperty(startDateProperty).getValue();
+                if (eventStart.compareTo(endDate) >= 0) {
+                    break; // because container is sorted, all further events
+                    // will be even later
+                }
+            }
+            if (add) {
+                eventCache.add(getEvent(i));
             }
         }
-
-        if (end != null) {
-            /*
-             * Iterate from the start index until range ends
-             */
-            endIndex = startIndex;
-            while (endIndex < size - 1) {
-                Object id = container.getIdByIndex(endIndex);
-                Item item = container.getItem(id);
-                Date d = (Date) item.getItemProperty(endDateProperty)
-                        .getValue();
-                if (d == null) {
-                    // No end date present, use start date
-                    d = (Date) item.getItemProperty(startDateProperty)
-                            .getValue();
-                }
-                if (d.compareTo(end) >= 0) {
-                    endIndex--;
-                    break;
-                }
-                endIndex++;
-            }
-        }
-
-        return new int[] { startIndex, endIndex };
+        return Collections.unmodifiableList(eventCache);
     }
 
     /*
