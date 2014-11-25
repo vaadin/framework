@@ -193,6 +193,14 @@ public class VTooltip extends VWindowOverlay {
                         x = Window.getClientWidth() - offsetWidth - MARGIN
                                 + Window.getScrollLeft();
                     }
+
+                    if (tooltipEventMouseX != EVENT_XY_POSITION_OUTSIDE) {
+                        // Do not allow x to be zero, for otherwise the tooltip
+                        // does not close when the mouse is moved (see
+                        // isTooltipOpen()). #15129
+                        int minX = Window.getScrollLeft() + MARGIN;
+                        x = Math.max(x, minX);
+                    }
                     return x;
                 }
 
@@ -227,6 +235,14 @@ public class VTooltip extends VWindowOverlay {
                             // put it at the top of the screen
                             y = Window.getScrollTop();
                         }
+                    }
+
+                    if (tooltipEventMouseY != EVENT_XY_POSITION_OUTSIDE) {
+                        // Do not allow y to be zero, for otherwise the tooltip
+                        // does not close when the mouse is moved (see
+                        // isTooltipOpen()). #15129
+                        int minY = Window.getScrollTop() + MARGIN;
+                        y = Math.max(y, minY);
                     }
                     return y;
                 }
@@ -306,6 +322,7 @@ public class VTooltip extends VWindowOverlay {
         setPopupPosition(tooltipEventMouseX, tooltipEventMouseY);
     }
 
+    private int EVENT_XY_POSITION_OUTSIDE = -5000;
     private int tooltipEventMouseX;
     private int tooltipEventMouseY;
 
@@ -315,11 +332,13 @@ public class VTooltip extends VWindowOverlay {
     }
 
     private int getEventX(Event event, boolean isFocused) {
-        return isFocused ? -5000 : DOM.eventGetClientX(event);
+        return isFocused ? EVENT_XY_POSITION_OUTSIDE : DOM
+                .eventGetClientX(event);
     }
 
     private int getEventY(Event event, boolean isFocused) {
-        return isFocused ? -5000 : DOM.eventGetClientY(event);
+        return isFocused ? EVENT_XY_POSITION_OUTSIDE : DOM
+                .eventGetClientY(event);
     }
 
     @Override
