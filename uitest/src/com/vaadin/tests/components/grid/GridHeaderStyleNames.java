@@ -1,0 +1,92 @@
+/*
+ * Copyright 2000-2014 Vaadin Ltd.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package com.vaadin.tests.components.grid;
+
+import com.vaadin.annotations.Theme;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.components.beanitemcontainer.BeanItemContainerGenerator;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.FooterCell;
+import com.vaadin.ui.Grid.FooterRow;
+import com.vaadin.ui.Grid.HeaderCell;
+import com.vaadin.ui.Grid.HeaderRow;
+
+@Theme("valo")
+public class GridHeaderStyleNames extends AbstractTestUIWithLog {
+
+    private HeaderCell ageHeaderCell;
+    private HeaderCell mergedCityCountryCell;
+    private FooterCell ageFooterCell;
+
+    @Override
+    protected void setup(VaadinRequest request) {
+        Grid grid = new Grid();
+        grid.setContainerDataSource(BeanItemContainerGenerator
+                .createContainer(100));
+
+        ageHeaderCell = grid.getDefaultHeaderRow().getCell("age");
+
+        HeaderRow row = grid.prependHeaderRow();
+        mergedCityCountryCell = row.join("city", "country");
+        mergedCityCountryCell.setText("Merged cell");
+        addComponent(grid);
+
+        FooterRow footerRow = grid.appendFooterRow();
+        ageFooterCell = footerRow.getCell("age");
+
+        getPage()
+                .getStyles()
+                .add(".age {background-image: linear-gradient(to bottom,green 2%, #efefef 98%) !important;}");
+        getPage()
+                .getStyles()
+                .add(".valo .v-grid-header .v-grid-cell.city-country {background-image: linear-gradient(to bottom,yellow 2%, #efefef 98%);}");
+        getPage()
+                .getStyles()
+                .add(".valo .v-grid-footer .v-grid-cell.age-footer {background-image: linear-gradient(to bottom,blue 2%, #efefef 98%);}");
+
+        setStyles(true);
+
+        Button b = new Button("Toggle styles");
+        b.addClickListener(new ClickListener() {
+            private boolean stylesOn = true;
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                setStyles(!stylesOn);
+                stylesOn = !stylesOn;
+            }
+        });
+        addComponent(b);
+    }
+
+    protected void setStyles(boolean set) {
+        if (set) {
+            ageHeaderCell.setStyleName("age");
+            ageFooterCell.setStyleName("age-footer");
+            mergedCityCountryCell.setStyleName("city-country");
+        } else {
+            ageHeaderCell.setStyleName(null);
+            ageFooterCell.setStyleName(null);
+            mergedCityCountryCell.setStyleName(null);
+        }
+
+    }
+
+}

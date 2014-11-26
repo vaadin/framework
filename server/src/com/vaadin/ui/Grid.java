@@ -470,6 +470,27 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 cellState.type = GridStaticCellType.WIDGET;
                 row.section.markAsDirty();
             }
+
+            /**
+             * Returns the custom style name for this cell.
+             * 
+             * @return the style name or null if no style name has been set
+             */
+            public String getStyleName() {
+                return cellState.styleName;
+            }
+
+            /**
+             * Sets a custom style name for this cell.
+             * 
+             * @param styleName
+             *            the style name to set
+             */
+            public void setStyleName(String styleName) {
+                cellState.styleName = styleName;
+                row.section.markAsDirty();
+            }
+
         }
 
         protected Grid grid;

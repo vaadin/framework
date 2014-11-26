@@ -526,6 +526,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             throw new IllegalStateException("unexpected cell type: "
                     + cellState.type);
         }
+        cell.setStyleName(cellState.styleName);
     }
 
     /**

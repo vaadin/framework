@@ -42,6 +42,8 @@ public class GridStaticSectionState implements Serializable {
         public GridStaticCellType type = GridStaticCellType.TEXT;
 
         public String columnId;
+
+        public String styleName = null;
     }
 
     public static class RowState implements Serializable {

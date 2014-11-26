@@ -88,6 +88,7 @@ import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.shared.ui.grid.SortEventOriginator;
+import com.vaadin.shared.util.SharedUtil;
 
 /**
  * A data grid view that supports columns and lazy loading of data rows from a
@@ -1338,6 +1339,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private GridStaticSection<?> section;
         private RowContainer container;
+        private static final String CUSTOM_STYLE_PROPERTY_NAME = "customStyle";
 
         public StaticSectionUpdater(GridStaticSection<?> section,
                 RowContainer container) {
@@ -1364,18 +1366,33 @@ public class Grid<T> extends ResizeComposite implements
                 // Assign colspan to cell before rendering
                 cell.setColSpan(metadata.getColspan());
 
+                TableCellElement element = cell.getElement();
                 switch (metadata.getType()) {
                 case TEXT:
-                    cell.getElement().setInnerText(metadata.getText());
+                    element.setInnerText(metadata.getText());
                     break;
                 case HTML:
-                    cell.getElement().setInnerHTML(metadata.getHtml());
+                    element.setInnerHTML(metadata.getHtml());
                     break;
                 case WIDGET:
                     preDetach(row, Arrays.asList(cell));
-                    cell.getElement().setInnerHTML("");
+                    element.setInnerHTML("");
                     postAttach(row, Arrays.asList(cell));
                     break;
+                }
+                String oldStyleName = element
+                        .getPropertyString(CUSTOM_STYLE_PROPERTY_NAME);
+                String newStyleName = metadata.getStyleName();
+
+                if (!SharedUtil.equals(oldStyleName, newStyleName)) {
+                    if (oldStyleName != null) {
+                        element.removeClassName(oldStyleName);
+                    }
+                    if (newStyleName != null) {
+                        element.addClassName(newStyleName);
+                    }
+                    element.setPropertyString(CUSTOM_STYLE_PROPERTY_NAME,
+                            newStyleName);
                 }
 
                 cellFocusHandler.updateFocusedCellStyle(cell, container);

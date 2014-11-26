@@ -49,6 +49,8 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
 
         private GridStaticCellType type = GridStaticCellType.TEXT;
 
+        private String styleName = null;
+
         /**
          * Sets the text displayed in this cell.
          * 
@@ -176,6 +178,28 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
         public GridStaticCellType getType() {
             return type;
         }
+
+        /**
+         * Returns the custom style name for this cell.
+         * 
+         * @return the style name or null if no style name has been set
+         */
+        public String getStyleName() {
+            return styleName;
+        }
+
+        /**
+         * Sets a custom style name for this cell.
+         * 
+         * @param styleName
+         *            the style name to set or null to not use any style name
+         */
+        public void setStyleName(String styleName) {
+            this.styleName = styleName;
+            section.requestSectionRefresh();
+
+        }
+
     }
 
     /**
