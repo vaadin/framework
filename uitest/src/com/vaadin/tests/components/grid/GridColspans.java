@@ -23,11 +23,9 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.GridColumn;
-import com.vaadin.ui.Grid.GridFooter;
-import com.vaadin.ui.Grid.GridFooter.FooterRow;
-import com.vaadin.ui.Grid.GridHeader;
-import com.vaadin.ui.Grid.GridHeader.HeaderRow;
+import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.components.grid.renderers.NumberRenderer;
 
 public class GridColspans extends AbstractTestUI {
@@ -53,19 +51,18 @@ public class GridColspans extends AbstractTestUI {
         grid.getColumn("zipCode").setRenderer(new NumberRenderer());
         addComponent(grid);
 
-        GridHeader header = grid.getHeader();
-        HeaderRow row = header.prependRow();
+        HeaderRow row = grid.prependHeaderRow();
         row.join("firstName", "lastName").setText("Full Name");
         row.join("streetAddress", "zipCode", "city").setText("Address");
-        header.prependRow()
+        grid.prependHeaderRow()
                 .join(dataSource.getContainerPropertyIds().toArray())
                 .setText("All the stuff");
 
-        GridFooter footer = grid.getFooter();
-        FooterRow footerRow = footer.appendRow();
+        FooterRow footerRow = grid.appendFooterRow();
         footerRow.join("firstName", "lastName").setText("Full Name");
         footerRow.join("streetAddress", "zipCode", "city").setText("Address");
-        footer.appendRow().join(dataSource.getContainerPropertyIds().toArray())
+        grid.appendFooterRow()
+                .join(dataSource.getContainerPropertyIds().toArray())
                 .setText("All the stuff");
 
         addComponent(new Button("Show/Hide firstName",

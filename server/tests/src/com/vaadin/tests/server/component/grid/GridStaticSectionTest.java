@@ -25,15 +25,10 @@ import org.junit.Test;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.GridFooter;
-import com.vaadin.ui.Grid.GridFooter.FooterRow;
-import com.vaadin.ui.Grid.GridHeader;
-import com.vaadin.ui.Grid.GridHeader.HeaderRow;
 
-public class GridStaticSection {
+public class GridStaticSectionTest extends Grid {
 
     private Indexed dataSource = new IndexedContainer();
-    private Grid grid;
 
     @Before
     public void setUp() {
@@ -41,50 +36,45 @@ public class GridStaticSection {
         dataSource.addContainerProperty("lastName", String.class, "");
         dataSource.addContainerProperty("streetAddress", String.class, "");
         dataSource.addContainerProperty("zipCode", Integer.class, null);
-        grid = new Grid(dataSource);
+        setContainerDataSource(dataSource);
     }
 
     @Test
     public void testAddAndRemoveHeaders() {
-
-        final GridHeader section = grid.getHeader();
-        assertEquals(1, section.getRowCount());
-        section.prependRow();
-        assertEquals(2, section.getRowCount());
-        section.removeRow(0);
-        assertEquals(1, section.getRowCount());
-        section.removeRow(0);
-        assertEquals(0, section.getRowCount());
-        assertEquals(null, section.getDefaultRow());
-        HeaderRow row = section.appendRow();
-        assertEquals(1, section.getRowCount());
-        assertEquals(null, section.getDefaultRow());
-        section.setDefaultRow(row);
-        assertEquals(row, section.getDefaultRow());
+        assertEquals(1, getHeaderRowCount());
+        prependHeaderRow();
+        assertEquals(2, getHeaderRowCount());
+        removeHeaderRow(0);
+        assertEquals(1, getHeaderRowCount());
+        removeHeaderRow(0);
+        assertEquals(0, getHeaderRowCount());
+        assertEquals(null, getDefaultHeaderRow());
+        HeaderRow row = appendHeaderRow();
+        assertEquals(1, getHeaderRowCount());
+        assertEquals(null, getDefaultHeaderRow());
+        setDefaultHeaderRow(row);
+        assertEquals(row, getDefaultHeaderRow());
     }
 
     @Test
     public void testAddAndRemoveFooters() {
-        final GridFooter section = grid.getFooter();
-
         // By default there are no footer rows
-        assertEquals(0, section.getRowCount());
-        FooterRow row = section.appendRow();
+        assertEquals(0, getFooterRowCount());
+        FooterRow row = appendFooterRow();
 
-        assertEquals(1, section.getRowCount());
-        section.prependRow();
-        assertEquals(2, section.getRowCount());
-        assertEquals(row, section.getRow(1));
-        section.removeRow(0);
-        assertEquals(1, section.getRowCount());
-        section.removeRow(0);
-        assertEquals(0, section.getRowCount());
+        assertEquals(1, getFooterRowCount());
+        prependFooterRow();
+        assertEquals(2, getFooterRowCount());
+        assertEquals(row, getFooterRow(1));
+        removeFooterRow(0);
+        assertEquals(1, getFooterRowCount());
+        removeFooterRow(0);
+        assertEquals(0, getFooterRowCount());
     }
 
     @Test
     public void testJoinHeaderCells() {
-        final GridHeader section = grid.getHeader();
-        HeaderRow mergeRow = section.prependRow();
+        HeaderRow mergeRow = prependHeaderRow();
         mergeRow.join("firstName", "lastName").setText("Name");
         mergeRow.join(mergeRow.getCell("streetAddress"),
                 mergeRow.getCell("zipCode"));
@@ -92,16 +82,14 @@ public class GridStaticSection {
 
     @Test(expected = IllegalStateException.class)
     public void testJoinHeaderCellsIncorrectly() throws Throwable {
-        final GridHeader section = grid.getHeader();
-        HeaderRow mergeRow = section.prependRow();
+        HeaderRow mergeRow = prependHeaderRow();
         mergeRow.join("firstName", "zipCode").setText("Name");
         sanityCheck();
     }
 
     @Test
     public void testJoinAllFooterCells() {
-        final GridFooter section = grid.getFooter();
-        FooterRow mergeRow = section.prependRow();
+        FooterRow mergeRow = prependFooterRow();
         mergeRow.join(dataSource.getContainerPropertyIds().toArray()).setText(
                 "All the stuff.");
     }
@@ -109,14 +97,14 @@ public class GridStaticSection {
     private void sanityCheck() throws Throwable {
         Method sanityCheckHeader;
         try {
-            sanityCheckHeader = GridHeader.class
+            sanityCheckHeader = Grid.Header.class
                     .getDeclaredMethod("sanityCheck");
             sanityCheckHeader.setAccessible(true);
-            Method sanityCheckFooter = GridFooter.class
+            Method sanityCheckFooter = Grid.Footer.class
                     .getDeclaredMethod("sanityCheck");
             sanityCheckFooter.setAccessible(true);
-            sanityCheckHeader.invoke(grid.getHeader());
-            sanityCheckFooter.invoke(grid.getFooter());
+            sanityCheckHeader.invoke(getHeader());
+            sanityCheckFooter.invoke(getFooter());
         } catch (Exception e) {
             throw e.getCause();
         }

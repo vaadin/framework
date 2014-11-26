@@ -80,8 +80,8 @@ public class GridColumns {
             assertNotNull(column);
 
             // Property id should be the column header by default
-            assertEquals(propertyId.toString(), grid.getHeader()
-                    .getDefaultRow().getCell(propertyId).getText());
+            assertEquals(propertyId.toString(), grid.getDefaultHeaderRow()
+                    .getCell(propertyId).getText());
         }
     }
 
@@ -114,8 +114,8 @@ public class GridColumns {
             assertNotNull(column);
 
             // Property id should be the column header by default
-            assertEquals(propertyId.toString(), grid.getHeader()
-                    .getDefaultRow().getCell(propertyId).getText());
+            assertEquals(propertyId.toString(), grid.getDefaultHeaderRow()
+                    .getCell(propertyId).getText());
         }
     }
 
@@ -128,8 +128,8 @@ public class GridColumns {
 
         column.setHeaderCaption("CustomHeader");
         assertEquals("CustomHeader", column.getHeaderCaption());
-        assertEquals(column.getHeaderCaption(), grid.getHeader()
-                .getDefaultRow().getCell("column1").getText());
+        assertEquals(column.getHeaderCaption(), grid.getDefaultHeaderRow()
+                .getCell("column1").getText());
 
         column.setVisible(false);
         assertFalse(column.isVisible());
@@ -200,30 +200,30 @@ public class GridColumns {
     @Test
     public void testHeaderVisiblility() throws Exception {
 
-        assertTrue(grid.getHeader().isVisible());
+        assertTrue(grid.isHeaderVisible());
         assertTrue(state.header.visible);
 
-        grid.getHeader().setVisible(false);
-        assertFalse(grid.getHeader().isVisible());
+        grid.setHeaderVisible(false);
+        assertFalse(grid.isHeaderVisible());
         assertFalse(state.header.visible);
 
-        grid.getHeader().setVisible(true);
-        assertTrue(grid.getHeader().isVisible());
+        grid.setHeaderVisible(true);
+        assertTrue(grid.isHeaderVisible());
         assertTrue(state.header.visible);
     }
 
     @Test
     public void testFooterVisibility() throws Exception {
 
-        assertTrue(grid.getFooter().isVisible());
+        assertTrue(grid.isFooterVisible());
         assertTrue(state.footer.visible);
 
-        grid.getFooter().setVisible(false);
-        assertFalse(grid.getFooter().isVisible());
+        grid.setFooterVisible(false);
+        assertFalse(grid.isFooterVisible());
         assertFalse(state.footer.visible);
 
-        grid.getFooter().setVisible(true);
-        assertTrue(grid.getFooter().isVisible());
+        grid.setFooterVisible(true);
+        assertTrue(grid.isFooterVisible());
         assertTrue(state.footer.visible);
     }
 

@@ -38,12 +38,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.FooterCell;
 import com.vaadin.ui.Grid.GridColumn;
-import com.vaadin.ui.Grid.GridFooter;
-import com.vaadin.ui.Grid.GridFooter.FooterCell;
-import com.vaadin.ui.Grid.GridHeader;
-import com.vaadin.ui.Grid.GridHeader.HeaderCell;
-import com.vaadin.ui.Grid.GridHeader.HeaderRow;
+import com.vaadin.ui.Grid.HeaderCell;
+import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.SortOrderChangeEvent;
 import com.vaadin.ui.components.grid.SortOrderChangeListener;
@@ -155,13 +153,12 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         }
 
         // Create footer
-        GridFooter footer = grid.getFooter();
-        footer.appendRow();
-        footer.setVisible(false);
+        grid.appendFooterRow();
+        grid.setFooterVisible(false);
 
         // Add footer values (header values are automatically created)
         for (int col = 0; col < COLUMNS; col++) {
-            footer.getRow(0).getCell(getColumnProperty(col))
+            grid.getFooterRow(0).getCell(getColumnProperty(col))
                     .setText("Footer " + col);
         }
 
@@ -298,7 +295,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     @Override
                     public void execute(Grid grid, Boolean value, Object data) {
-                        grid.getHeader().setVisible(value);
+                        grid.setHeaderVisible(value);
                     }
                 });
 
@@ -313,13 +310,13 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     @Override
                     public void execute(Grid grid, String value, Object data) {
                         HeaderRow defaultRow = null;
-                        GridHeader header = grid.getHeader();
                         if (value.equals("Top")) {
-                            defaultRow = header.getRow(0);
+                            defaultRow = grid.getHeaderRow(0);
                         } else if (value.equals("Bottom")) {
-                            defaultRow = header.getRow(header.getRowCount() - 1);
+                            defaultRow = grid.getHeaderRow(grid
+                                    .getHeaderRowCount() - 1);
                         }
-                        header.setDefaultRow(defaultRow);
+                        grid.setDefaultHeaderRow(defaultRow);
                     }
 
                 }, defaultRows.get("Top"));
@@ -328,7 +325,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
             @Override
             public void execute(Grid grid, Object value, Object data) {
-                grid.getHeader().prependRow();
+                grid.prependHeaderRow();
             }
 
         }, null);
@@ -336,7 +333,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
             @Override
             public void execute(Grid grid, Object value, Object data) {
-                grid.getHeader().appendRow();
+                grid.appendHeaderRow();
             }
 
         }, null);
@@ -346,7 +343,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     @Override
                     public void execute(Grid grid, Object value, Object data) {
-                        grid.getHeader().removeRow(0);
+                        grid.removeHeaderRow(0);
                     }
 
                 }, null);
@@ -355,8 +352,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     @Override
                     public void execute(Grid grid, Object value, Object data) {
-                        grid.getHeader().removeRow(
-                                grid.getHeader().getRowCount() - 1);
+                        grid.removeHeaderRow(grid.getHeaderRowCount() - 1);
                     }
 
                 }, null);
@@ -370,7 +366,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     @Override
                     public void execute(Grid grid, Boolean value, Object data) {
-                        grid.getFooter().setVisible(value);
+                        grid.setFooterVisible(value);
                     }
                 });
 
@@ -378,7 +374,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
             @Override
             public void execute(Grid grid, Object value, Object data) {
-                grid.getFooter().prependRow();
+                grid.prependFooterRow();
             }
 
         }, null);
@@ -386,7 +382,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
             @Override
             public void execute(Grid grid, Object value, Object data) {
-                grid.getFooter().appendRow();
+                grid.appendFooterRow();
             }
 
         }, null);
@@ -396,7 +392,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     @Override
                     public void execute(Grid grid, Object value, Object data) {
-                        grid.getFooter().removeRow(0);
+                        grid.removeFooterRow(0);
                     }
 
                 }, null);
@@ -405,8 +401,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     @Override
                     public void execute(Grid grid, Object value, Object data) {
-                        grid.getFooter().removeRow(
-                                grid.getFooter().getRowCount() - 1);
+                        grid.removeFooterRow(grid.getFooterRowCount() - 1);
                     }
 
                 }, null);
@@ -503,8 +498,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         public void execute(Grid grid,
                                 GridStaticCellType value, Object columnIndex) {
                             final Object propertyId = getColumnProperty((Integer) columnIndex);
-                            final HeaderCell cell = grid.getHeader()
-                                    .getDefaultRow().getCell(propertyId);
+                            final HeaderCell cell = grid.getDefaultHeaderRow()
+                                    .getCell(propertyId);
                             switch (value) {
                             case TEXT:
                                 cell.setText("Text Header");
@@ -541,7 +536,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         public void execute(Grid grid,
                                 GridStaticCellType value, Object columnIndex) {
                             final Object propertyId = getColumnProperty((Integer) columnIndex);
-                            final FooterCell cell = grid.getFooter().getRow(0)
+                            final FooterCell cell = grid.getFooterRow(0)
                                     .getCell(propertyId);
                             switch (value) {
                             case TEXT:

@@ -73,10 +73,7 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.shared.ui.grid.SortEventOriginator;
-import com.vaadin.ui.Grid.GridFooter.FooterCell;
-import com.vaadin.ui.Grid.GridFooter.FooterRow;
-import com.vaadin.ui.Grid.GridHeader.HeaderCell;
-import com.vaadin.ui.Grid.GridHeader.HeaderRow;
+import com.vaadin.ui.Grid.StaticSection.StaticRow;
 import com.vaadin.ui.components.grid.Renderer;
 import com.vaadin.ui.components.grid.SortOrderChangeEvent;
 import com.vaadin.ui.components.grid.SortOrderChangeListener;
@@ -205,11 +202,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     /**
      * Abstract base class for Grid header and footer sections.
      * 
-     * @author Vaadin Ltd
      * @param <ROWTYPE>
      *            the type of the rows in the section
      */
-    private static abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
+    protected static abstract class StaticSection<ROWTYPE extends StaticSection.StaticRow<?>>
             implements Serializable {
 
         /**
@@ -222,11 +218,11 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 Serializable {
 
             private RowState rowState = new RowState();
-            protected GridStaticSection<?> section;
+            protected StaticSection<?> section;
             private Map<Object, CELLTYPE> cells = new LinkedHashMap<Object, CELLTYPE>();
             private Map<Set<CELLTYPE>, CELLTYPE> cellGroups = new HashMap<Set<CELLTYPE>, CELLTYPE>();
 
-            protected StaticRow(GridStaticSection<?> section) {
+            protected StaticRow(StaticSection<?> section) {
                 this.section = section;
             }
 
@@ -507,14 +503,18 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * @param index
          *            the position of the row
          * 
-         * @throws IndexOutOfBoundsException
-         *             if the index is out of bounds
+         * @throws IllegalArgumentException
+         *             if no row exists at given index
          * @see #removeRow(StaticRow)
          * @see #addRowAt(int)
          * @see #appendRow()
          * @see #prependRow()
          */
         public ROWTYPE removeRow(int rowIndex) {
+            if (rowIndex >= rows.size() || rowIndex < 0) {
+                throw new IllegalArgumentException("No row at given index "
+                        + rowIndex);
+            }
             ROWTYPE row = rows.remove(rowIndex);
             getSectionState().rows.remove(rowIndex);
 
@@ -552,6 +552,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * @return row at given index
          */
         public ROWTYPE getRow(int rowIndex) {
+            if (rowIndex >= rows.size() || rowIndex < 0) {
+                throw new IllegalArgumentException("No row at given index "
+                        + rowIndex);
+            }
             return rows.get(rowIndex);
         }
 
@@ -596,6 +600,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * @see #removeRow(int)
          */
         public ROWTYPE addRowAt(int index) {
+            if (index > rows.size() || index < 0) {
+                throw new IllegalArgumentException(
+                        "Unable to add row at index " + index);
+            }
             ROWTYPE row = createRow();
             rows.add(index, row);
             getSectionState().rows.add(index, row.getRowState());
@@ -696,39 +704,13 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
     /**
      * Represents the header section of a Grid.
-     * 
-     * @author Vaadin Ltd
      */
-    public static class GridHeader extends
-            GridStaticSection<GridHeader.HeaderRow> {
-
-        public class HeaderRow extends GridStaticSection.StaticRow<HeaderCell> {
-
-            protected HeaderRow(GridStaticSection<?> section) {
-                super(section);
-            }
-
-            private void setDefaultRow(boolean value) {
-                getRowState().defaultRow = value;
-            }
-
-            @Override
-            protected HeaderCell createCell() {
-                return new HeaderCell(this);
-            }
-        }
-
-        public class HeaderCell extends GridStaticSection.StaticCell {
-
-            protected HeaderCell(HeaderRow row) {
-                super(row);
-            }
-        }
+    protected static class Header extends StaticSection<HeaderRow> {
 
         private HeaderRow defaultRow = null;
         private final GridStaticSectionState headerState = new GridStaticSectionState();
 
-        protected GridHeader(Grid grid) {
+        protected Header(Grid grid) {
             this.grid = grid;
             grid.getState(true).header = headerState;
             HeaderRow row = createRow();
@@ -818,37 +800,44 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     }
 
     /**
+     * Represents a header row in Grid.
+     */
+    public static class HeaderRow extends StaticSection.StaticRow<HeaderCell> {
+
+        protected HeaderRow(StaticSection<?> section) {
+            super(section);
+        }
+
+        private void setDefaultRow(boolean value) {
+            getRowState().defaultRow = value;
+        }
+
+        @Override
+        protected HeaderCell createCell() {
+            return new HeaderCell(this);
+        }
+    }
+
+    /**
+     * Represents a header cell in Grid. Can be a merged cell for multiple
+     * columns.
+     */
+    public static class HeaderCell extends StaticSection.StaticCell {
+
+        protected HeaderCell(HeaderRow row) {
+            super(row);
+        }
+    }
+
+    /**
      * Represents the footer section of a Grid. By default Footer is not
      * visible.
-     * 
-     * @author Vaadin Ltd
      */
-    public static class GridFooter extends
-            GridStaticSection<GridFooter.FooterRow> {
-
-        public class FooterRow extends GridStaticSection.StaticRow<FooterCell> {
-
-            protected FooterRow(GridStaticSection<?> section) {
-                super(section);
-            }
-
-            @Override
-            protected FooterCell createCell() {
-                return new FooterCell(this);
-            }
-
-        }
-
-        public class FooterCell extends GridStaticSection.StaticCell {
-
-            protected FooterCell(FooterRow row) {
-                super(row);
-            }
-        }
+    protected static class Footer extends StaticSection<FooterRow> {
 
         private final GridStaticSectionState footerState = new GridStaticSectionState();
 
-        protected GridFooter(Grid grid) {
+        protected Footer(Grid grid) {
             this.grid = grid;
             grid.getState(true).footer = footerState;
         }
@@ -870,10 +859,34 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     }
 
     /**
+     * Represents a footer row in Grid.
+     */
+    public static class FooterRow extends StaticSection.StaticRow<FooterCell> {
+
+        protected FooterRow(StaticSection<?> section) {
+            super(section);
+        }
+
+        @Override
+        protected FooterCell createCell() {
+            return new FooterCell(this);
+        }
+
+    }
+
+    /**
+     * Represents a footer cell in Grid.
+     */
+    public static class FooterCell extends StaticSection.StaticCell {
+
+        protected FooterCell(FooterRow row) {
+            super(row);
+        }
+    }
+
+    /**
      * A column in the grid. Can be obtained by calling
      * {@link Grid#getColumn(Object propertyId)}.
-     * 
-     * @author Vaadin Ltd
      */
     public static class GridColumn implements Serializable {
 
@@ -1262,8 +1275,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
     /**
      * A class for configuring the editor row in a grid.
-     * 
-     * @author Vaadin Ltd
      */
     public static class EditorRow implements Serializable {
         private Grid grid;
@@ -1686,8 +1697,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      * 
      * @param <T>
      *            the type this renderer knows how to present
-     * 
-     * @author Vaadin Ltd
      */
     public static abstract class AbstractRenderer<T> extends AbstractExtension
             implements Renderer<T> {
@@ -1858,8 +1867,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      */
     private int ignoreSelectionClientSync = 0;
 
-    private final GridHeader header = new GridHeader(this);
-    private final GridFooter footer = new GridFooter(this);
+    private final Header header = new Header(this);
+    private final Footer footer = new Footer(this);
 
     private EditorRow editorRow;
 
@@ -3008,15 +3017,163 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 SORT_ORDER_CHANGE_METHOD);
     }
 
+    /* Grid Headers */
+
     /**
      * Returns the header section of this grid. The default header contains a
      * single row displaying the column captions.
      * 
      * @return the header
      */
-    public GridHeader getHeader() {
+    protected Header getHeader() {
         return header;
     }
+
+    /**
+     * Gets the header row at given index.
+     * 
+     * @param rowIndex
+     *            0 based index for row. Counted from top to bottom
+     * @return header row at given index
+     * @throws IllegalArgumentException
+     *             if no row exists at given index
+     */
+    public HeaderRow getHeaderRow(int rowIndex) {
+        return header.getRow(rowIndex);
+    }
+
+    /**
+     * Inserts a new row at the given position to the header section.
+     * 
+     * @param index
+     *            the position at which to insert the row
+     * @return the new row
+     * 
+     * @throws IllegalArgumentException
+     *             if the index is less than 0 or greater than row count
+     * @see #appendHeaderRow()
+     * @see #prependHeaderRow()
+     * @see #removeHeaderRow(HeaderRow)
+     * @see #removeHeaderRow(int)
+     */
+    public HeaderRow addHeaderRowAt(int index) {
+        return header.addRowAt(index);
+    }
+
+    /**
+     * Adds a new row at the bottom of the header section.
+     * 
+     * @return the new row
+     * @see #prependRow()
+     * @see #addRowAt(int)
+     * @see #removeRow(StaticRow)
+     * @see #removeRow(int)
+     */
+    public HeaderRow appendHeaderRow() {
+        return header.appendRow();
+    }
+
+    /**
+     * Returns the current default row of the header section. The default row is
+     * a special header row providing a user interface for sorting columns.
+     * Setting a header text for column updates cells in the default header.
+     * 
+     * @return the default row or null if no default row set
+     */
+    public HeaderRow getDefaultHeaderRow() {
+        return header.getDefaultRow();
+    }
+
+    /**
+     * Gets the row count for the header section.
+     * 
+     * @return row count
+     */
+    public int getHeaderRowCount() {
+        return header.getRowCount();
+    }
+
+    /**
+     * Adds a new row at the top of the header section.
+     * 
+     * @return the new row
+     * @see #appendHeaderRow()
+     * @see #addHeaderRowAt(int)
+     * @see #removeHeaderRow(HeaderRow)
+     * @see #removeHeaderRow(int)
+     */
+    public HeaderRow prependHeaderRow() {
+        return header.prependRow();
+    }
+
+    /**
+     * Removes the given row from the header section.
+     * 
+     * @param row
+     *            the row to be removed
+     * 
+     * @throws IllegalArgumentException
+     *             if the row does not exist in this section
+     * @see #removeHeaderRow(int)
+     * @see #addHeaderRowAt(int)
+     * @see #appendHeaderRow()
+     * @see #prependHeaderRow()
+     */
+    public void removeHeaderRow(HeaderRow row) {
+        header.removeRow(row);
+    }
+
+    /**
+     * Removes the row at the given position from the header section.
+     * 
+     * @param index
+     *            the position of the row
+     * 
+     * @throws IllegalArgumentException
+     *             if no row exists at given index
+     * @see #removeHeaderRow(HeaderRow)
+     * @see #addHeaderRowAt(int)
+     * @see #appendHeaderRow()
+     * @see #prependHeaderRow()
+     */
+    public void removeHeaderRow(int rowIndex) {
+        header.removeRow(rowIndex);
+    }
+
+    /**
+     * Sets the default row of the header. The default row is a special header
+     * row providing a user interface for sorting columns.
+     * 
+     * @param row
+     *            the new default row, or null for no default row
+     * 
+     * @throws IllegalArgumentException
+     *             header does not contain the row
+     */
+    public void setDefaultHeaderRow(HeaderRow row) {
+        header.setDefaultRow(row);
+    }
+
+    /**
+     * Sets the visibility of the header section.
+     * 
+     * @param visible
+     *            true to show header section, false to hide
+     */
+    public void setHeaderVisible(boolean visible) {
+        header.setVisible(visible);
+    }
+
+    /**
+     * Returns the visibility of the header section.
+     * 
+     * @return true if visible, false otherwise.
+     */
+    public boolean isHeaderVisible() {
+        return header.isVisible();
+    }
+
+    /* Grid Footers */
 
     /**
      * Returns the footer section of this grid. The default header contains a
@@ -3024,15 +3181,134 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      * 
      * @return the footer
      */
-    public GridFooter getFooter() {
+    protected Footer getFooter() {
         return footer;
+    }
+
+    /**
+     * Gets the footer row at given index.
+     * 
+     * @param rowIndex
+     *            0 based index for row. Counted from top to bottom
+     * @return footer row at given index
+     * @throws IllegalArgumentException
+     *             if no row exists at given index
+     */
+    public FooterRow getFooterRow(int rowIndex) {
+        return footer.getRow(rowIndex);
+    }
+
+    /**
+     * Inserts a new row at the given position to the footer section.
+     * 
+     * @param index
+     *            the position at which to insert the row
+     * @return the new row
+     * 
+     * @throws IllegalArgumentException
+     *             if the index is less than 0 or greater than row count
+     * @see #appendFooterRow()
+     * @see #prependFooterRow()
+     * @see #removeFooterRow(FooterRow)
+     * @see #removeFooterRow(int)
+     */
+    public FooterRow addFooterRowAt(int index) {
+        return footer.addRowAt(index);
+    }
+
+    /**
+     * Adds a new row at the bottom of the footer section.
+     * 
+     * @return the new row
+     * @see #prependRow()
+     * @see #addRowAt(int)
+     * @see #removeRow(StaticRow)
+     * @see #removeRow(int)
+     */
+    public FooterRow appendFooterRow() {
+        return footer.appendRow();
+    }
+
+    /**
+     * Gets the row count for the footer.
+     * 
+     * @return row count
+     */
+    public int getFooterRowCount() {
+        return footer.getRowCount();
+    }
+
+    /**
+     * Adds a new row at the top of the footer section.
+     * 
+     * @return the new row
+     * @see #appendFooterRow()
+     * @see #addFooterRowAt(int)
+     * @see #removeFooterRow(FooterRow)
+     * @see #removeFooterRow(int)
+     */
+    public FooterRow prependFooterRow() {
+        return footer.prependRow();
+    }
+
+    /**
+     * Removes the given row from the footer section.
+     * 
+     * @param row
+     *            the row to be removed
+     * 
+     * @throws IllegalArgumentException
+     *             if the row does not exist in this section
+     * @see #removeFooterRow(int)
+     * @see #addFooterRowAt(int)
+     * @see #appendFooterRow()
+     * @see #prependFooterRow()
+     */
+    public void removeFooterRow(FooterRow row) {
+        footer.removeRow(row);
+    }
+
+    /**
+     * Removes the row at the given position from the footer section.
+     * 
+     * @param index
+     *            the position of the row
+     * 
+     * @throws IllegalArgumentException
+     *             if no row exists at given index
+     * @see #removeFooterRow(FooterRow)
+     * @see #addFooterRowAt(int)
+     * @see #appendFooterRow()
+     * @see #prependFooterRow()
+     */
+    public void removeFooterRow(int rowIndex) {
+        footer.removeRow(rowIndex);
+    }
+
+    /**
+     * Sets the visibility of the footer section.
+     * 
+     * @param visible
+     *            true to show footer section, false to hide
+     */
+    public void setFooterVisible(boolean visible) {
+        footer.setVisible(visible);
+    }
+
+    /**
+     * Returns the visibility of the footer section.
+     * 
+     * @return true if visible, false otherwise.
+     */
+    public boolean isFooterVisible() {
+        return footer.isVisible();
     }
 
     @Override
     public Iterator<Component> iterator() {
         List<Component> componentList = new ArrayList<Component>();
 
-        GridHeader header = getHeader();
+        Header header = getHeader();
         for (int i = 0; i < header.getRowCount(); ++i) {
             HeaderRow row = header.getRow(i);
             for (Object propId : datasource.getContainerPropertyIds()) {
@@ -3043,7 +3319,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             }
         }
 
-        GridFooter footer = getFooter();
+        Footer footer = getFooter();
         for (int i = 0; i < footer.getRowCount(); ++i) {
             FooterRow row = footer.getRow(i);
             for (Object propId : datasource.getContainerPropertyIds()) {
