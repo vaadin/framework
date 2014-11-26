@@ -2735,7 +2735,7 @@ public class Grid<T> extends ResizeComposite implements
             selectionColumn = new SelectionColumn(selectColumnRenderer);
 
             // FIXME: this needs to be done elsewhere, requires design...
-            selectionColumn.setWidth(25);
+            selectionColumn.setWidth(40);
             addColumnSkipSelectionColumnCheck(selectionColumn, 0);
             selectionColumn.initDone();
         } else {
