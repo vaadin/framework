@@ -22,12 +22,12 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.components.grid.Grid;
-import com.vaadin.ui.components.grid.GridColumn;
-import com.vaadin.ui.components.grid.GridFooter;
-import com.vaadin.ui.components.grid.GridFooter.FooterRow;
-import com.vaadin.ui.components.grid.GridHeader;
-import com.vaadin.ui.components.grid.GridHeader.HeaderRow;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.GridColumn;
+import com.vaadin.ui.Grid.GridFooter;
+import com.vaadin.ui.Grid.GridFooter.FooterRow;
+import com.vaadin.ui.Grid.GridHeader;
+import com.vaadin.ui.Grid.GridHeader.HeaderRow;
 import com.vaadin.ui.components.grid.renderers.NumberRenderer;
 
 public class GridColspans extends AbstractTestUI {

@@ -33,7 +33,7 @@ import com.vaadin.testbench.elements.ServerClass;
  * @since
  * @author Vaadin Ltd
  */
-@ServerClass("com.vaadin.ui.components.grid.Grid")
+@ServerClass("com.vaadin.ui.Grid")
 public class GridElement extends AbstractComponentElement {
 
     public static class GridCellElement extends AbstractElement {

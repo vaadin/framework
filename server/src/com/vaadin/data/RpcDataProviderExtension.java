@@ -46,8 +46,8 @@ import com.vaadin.shared.data.DataProviderState;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
-import com.vaadin.ui.components.grid.Grid;
-import com.vaadin.ui.components.grid.GridColumn;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.GridColumn;
 import com.vaadin.ui.components.grid.Renderer;
 
 import elemental.json.Json;

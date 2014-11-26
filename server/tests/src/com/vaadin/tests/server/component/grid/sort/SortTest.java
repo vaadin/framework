@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.grid.SortDirection;
-import com.vaadin.ui.components.grid.Grid;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.components.grid.SortOrderChangeEvent;
 import com.vaadin.ui.components.grid.SortOrderChangeListener;
 import com.vaadin.ui.components.grid.sort.Sort;

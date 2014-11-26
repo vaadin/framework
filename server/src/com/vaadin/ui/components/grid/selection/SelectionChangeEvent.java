@@ -21,7 +21,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.google.gwt.thirdparty.guava.common.collect.Sets;
-import com.vaadin.ui.components.grid.Grid;
+import com.vaadin.ui.Grid;
 
 /**
  * An event that specifies what in a selection has changed, and where the

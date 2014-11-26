@@ -35,8 +35,8 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.ui.components.grid.Grid;
-import com.vaadin.ui.components.grid.GridColumn;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.GridColumn;
 
 public class GridColumns {
 

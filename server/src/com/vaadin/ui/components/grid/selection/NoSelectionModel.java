@@ -18,7 +18,7 @@ package com.vaadin.ui.components.grid.selection;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.vaadin.ui.components.grid.Grid;
+import com.vaadin.ui.Grid;
 
 /**
  * A default implementation for a {@link SelectionModel.None}

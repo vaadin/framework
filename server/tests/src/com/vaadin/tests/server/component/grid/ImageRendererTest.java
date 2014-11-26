@@ -28,8 +28,8 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.components.grid.Grid;
 import com.vaadin.ui.components.grid.renderers.ImageRenderer;
 
 import elemental.json.JsonObject;

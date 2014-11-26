@@ -19,7 +19,7 @@ import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.components.grid.Grid;
+import com.vaadin.ui.Grid;
 
 public class GridAddAndRemoveDataOnInit extends AbstractTestUI {
 

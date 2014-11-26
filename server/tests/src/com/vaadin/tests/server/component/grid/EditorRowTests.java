@@ -33,9 +33,9 @@ import com.vaadin.server.MockVaadinSession;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Field;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.EditorRow;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.components.grid.EditorRow;
-import com.vaadin.ui.components.grid.Grid;
 
 public class EditorRowTests {
 

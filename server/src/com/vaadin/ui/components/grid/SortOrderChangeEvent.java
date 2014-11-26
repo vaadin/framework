@@ -19,6 +19,7 @@ import java.util.List;
 
 import com.vaadin.shared.ui.grid.SortEventOriginator;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.components.grid.sort.SortOrder;
 
 /**

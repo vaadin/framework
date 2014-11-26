@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
-import com.vaadin.ui.components.grid.Grid;
+import com.vaadin.ui.Grid;
 
 /**
  * A base class for SelectionModels that contains some of the logic that is

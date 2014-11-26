@@ -18,7 +18,7 @@ package com.vaadin.ui.components.grid.selection;
 import java.io.Serializable;
 import java.util.Collection;
 
-import com.vaadin.ui.components.grid.Grid;
+import com.vaadin.ui.Grid;
 
 /**
  * The server-side interface that controls Grid's selection state.

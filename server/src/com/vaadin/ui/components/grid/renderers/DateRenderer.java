@@ -19,7 +19,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.ui.components.grid.AbstractRenderer;
+import com.vaadin.ui.Grid.AbstractRenderer;
 
 import elemental.json.JsonValue;
 

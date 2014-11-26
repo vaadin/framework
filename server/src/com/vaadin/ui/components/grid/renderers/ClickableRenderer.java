@@ -21,8 +21,8 @@ import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
-import com.vaadin.ui.components.grid.AbstractRenderer;
-import com.vaadin.ui.components.grid.Grid;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.AbstractRenderer;
 import com.vaadin.util.ReflectTools;
 
 /**

@@ -29,7 +29,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.components.grid.Grid;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.components.grid.sort.Sort;
 import com.vaadin.ui.components.grid.sort.SortOrder;
 

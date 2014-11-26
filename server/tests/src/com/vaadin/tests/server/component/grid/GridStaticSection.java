@@ -24,11 +24,11 @@ import org.junit.Test;
 
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.ui.components.grid.Grid;
-import com.vaadin.ui.components.grid.GridFooter;
-import com.vaadin.ui.components.grid.GridFooter.FooterRow;
-import com.vaadin.ui.components.grid.GridHeader;
-import com.vaadin.ui.components.grid.GridHeader.HeaderRow;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.GridFooter;
+import com.vaadin.ui.Grid.GridFooter.FooterRow;
+import com.vaadin.ui.Grid.GridHeader;
+import com.vaadin.ui.Grid.GridHeader.HeaderRow;
 
 public class GridStaticSection {
 

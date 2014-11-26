@@ -77,7 +77,7 @@ import com.vaadin.shared.ui.grid.SortDirection;
  * @since
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.components.grid.Grid.class)
+@Connect(com.vaadin.ui.Grid.class)
 public class GridConnector extends AbstractHasComponentsConnector implements
         SimpleManagedLayout {
 

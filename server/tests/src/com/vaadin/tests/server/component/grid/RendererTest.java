@@ -34,9 +34,9 @@ import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.ConnectorTracker;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.GridColumn;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.components.grid.Grid;
-import com.vaadin.ui.components.grid.GridColumn;
 import com.vaadin.ui.components.grid.renderers.TextRenderer;
 
 import elemental.json.JsonValue;
