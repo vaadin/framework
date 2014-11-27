@@ -114,20 +114,20 @@ $grid-border: valo-border($color: $grid-background-color, $strength: 0.8);
     .#{$primary-stylename}-row {
       border-bottom: $grid-border;
       
-      &:nth-child(odd) td {
-        $bg-lightness: if(color-luminance($grid-background-color) < 10, 4%, -4%);
-        background-color: scale-color($grid-background-color, $lightness: $bg-lightness);
-      }
-
-      &:nth-child(even) td {
-        background-color: $grid-background-color;
-      }
-
       &.#{$primary-stylename}-row-active td {
         @include valo-gradient($v-selection-color);
         color: $grid-background-color;
         border-color: adjust-color($v-selection-color, $lightness: -8%, $saturation: -8%);
       }
+    }
+
+    .#{$primary-stylename}-row > td {
+        background-color: $grid-background-color;
+    }
+
+    .#{$primary-stylename}-row-stripe > td {
+        $bg-lightness: if(color-luminance($grid-background-color) < 10, 4%, -4%);
+        background-color: scale-color($grid-background-color, $lightness: $bg-lightness);
     }
   }
 }
