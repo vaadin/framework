@@ -39,7 +39,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.FooterCell;
-import com.vaadin.ui.Grid.GridColumn;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
@@ -420,7 +420,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         public void execute(Grid grid, Boolean value,
                                 Object columnIndex) {
                             Object propertyId = getColumnProperty((Integer) columnIndex);
-                            GridColumn column = grid.getColumn(propertyId);
+                            Column column = grid.getColumn(propertyId);
                             column.setVisible(!column.isVisible());
                         }
                     }, c);
@@ -453,7 +453,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         public void execute(Grid grid, Boolean value,
                                 Object columnIndex) {
                             Object propertyId = getColumnProperty((Integer) columnIndex);
-                            GridColumn column = grid.getColumn(propertyId);
+                            Column column = grid.getColumn(propertyId);
                             column.setSortable(value);
                         }
                     }, c);
@@ -467,7 +467,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         public void execute(Grid grid, Integer value,
                                 Object columnIndex) {
                             Object propertyId = getColumnProperty((Integer) columnIndex);
-                            GridColumn column = grid.getColumn(propertyId);
+                            Column column = grid.getColumn(propertyId);
                             column.setWidthUndefined();
                         }
                     }, -1, c);
@@ -480,7 +480,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             public void execute(Grid grid, Integer value,
                                     Object columnIndex) {
                                 Object propertyId = getColumnProperty((Integer) columnIndex);
-                                GridColumn column = grid.getColumn(propertyId);
+                                Column column = grid.getColumn(propertyId);
                                 column.setWidth(value);
                             }
                         }, w, c);

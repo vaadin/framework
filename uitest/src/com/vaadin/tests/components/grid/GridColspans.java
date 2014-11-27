@@ -24,7 +24,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.FooterRow;
-import com.vaadin.ui.Grid.GridColumn;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.components.grid.renderers.NumberRenderer;
 
@@ -70,7 +70,7 @@ public class GridColspans extends AbstractTestUI {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        GridColumn column = grid.getColumn("firstName");
+                        Column column = grid.getColumn("firstName");
                         column.setVisible(!column.isVisible());
                     }
                 }));

@@ -888,7 +888,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      * A column in the grid. Can be obtained by calling
      * {@link Grid#getColumn(Object propertyId)}.
      */
-    public static class GridColumn implements Serializable {
+    public static class Column implements Serializable {
 
         /**
          * The state of the column shared to the client
@@ -917,7 +917,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * @param state
          *            the shared state of this column
          */
-        GridColumn(Grid grid, GridColumnState state) {
+        Column(Grid grid, GridColumnState state) {
             this.grid = grid;
             this.state = state;
             internalSetRenderer(new TextRenderer());
@@ -957,11 +957,12 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * 
          * @param caption
          *            the text to show in the caption
+         * @return the column itself
          * 
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          */
-        public void setHeaderCaption(String caption)
+        public Column setHeaderCaption(String caption)
                 throws IllegalStateException {
             checkColumnIsAttached();
             HeaderRow row = grid.getHeader().getDefaultRow();
@@ -969,6 +970,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 row.getCell(grid.getPropertyIdByColumnId(state.id)).setText(
                         caption);
             }
+            return this;
         }
 
         /**
@@ -988,12 +990,14 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * 
          * @param pixelWidth
          *            the new pixel width of the column
+         * @return the column itself
+         * 
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          * @throws IllegalArgumentException
          *             thrown if pixel width is less than zero
          */
-        public void setWidth(int pixelWidth) throws IllegalStateException,
+        public Column setWidth(int pixelWidth) throws IllegalStateException,
                 IllegalArgumentException {
             checkColumnIsAttached();
             if (pixelWidth < 0) {
@@ -1003,17 +1007,21 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             }
             state.width = pixelWidth;
             grid.markAsDirty();
+            return this;
         }
 
         /**
          * Marks the column width as undefined meaning that the grid is free to
          * resize the column based on the cell contents and available space in
          * the grid.
+         * 
+         * @return the column itself
          */
-        public void setWidthUndefined() {
+        public Column setWidthUndefined() {
             checkColumnIsAttached();
             state.width = -1;
             grid.markAsDirty();
+            return this;
         }
 
         /**
@@ -1034,13 +1042,16 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * 
          * @param visible
          *            is the column visible
+         * @return the column itself
+         * 
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          */
-        public void setVisible(boolean visible) throws IllegalStateException {
+        public Column setVisible(boolean visible) throws IllegalStateException {
             checkColumnIsAttached();
             state.visible = visible;
             grid.markAsDirty();
+            return this;
         }
 
         /**
@@ -1059,13 +1070,16 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         /**
          * Sets this column as the last frozen column in its grid.
          * 
+         * @return the column itself
+         * 
          * @throws IllegalArgumentException
          *             if the column is no longer attached to any grid
-         * @see Grid#setLastFrozenColumn(GridColumn)
+         * @see Grid#setLastFrozenColumn(Column)
          */
-        public void setLastFrozenColumn() {
+        public Column setLastFrozenColumn() {
             checkColumnIsAttached();
             grid.setLastFrozenColumn(this);
+            return this;
         }
 
         /**
@@ -1076,6 +1090,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * 
          * @param renderer
          *            the renderer to use
+         * @return the column itself
+         * 
          * @throws IllegalArgumentException
          *             if no compatible converter could be found
          * 
@@ -1083,7 +1099,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * @see ConverterUtil#getConverter(Class, Class, VaadinSession)
          * @see #setConverter(Converter)
          */
-        public void setRenderer(Renderer<?> renderer) {
+        public Column setRenderer(Renderer<?> renderer) {
             if (!internalSetRenderer(renderer)) {
                 throw new IllegalArgumentException(
                         "Could not find a converter for converting from the model type "
@@ -1092,6 +1108,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                                 + renderer.getPresentationType() + " (in "
                                 + toString() + ")");
             }
+            return this;
         }
 
         /**
@@ -1102,11 +1119,12 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          *            the renderer to use, cannot be null
          * @param converter
          *            the converter to use
+         * @return the column itself
          * 
          * @throws IllegalArgumentException
          *             if the renderer is already associated with a grid column
          */
-        public <T> void setRenderer(Renderer<T> renderer,
+        public <T> Column setRenderer(Renderer<T> renderer,
                 Converter<? extends T, ?> converter) {
             if (renderer.getParent() != null) {
                 throw new IllegalArgumentException(
@@ -1121,6 +1139,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             grid.addRenderer(renderer);
             state.rendererConnector = renderer;
             setConverter(converter);
+            return this;
         }
 
         /**
@@ -1130,10 +1149,12 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * @param converter
          *            the converter to use, or {@code null} to not use any
          *            converters
+         * @return the column itself
+         * 
          * @throws IllegalArgumentException
          *             if the types are not compatible
          */
-        public void setConverter(Converter<?, ?> converter)
+        public Column setConverter(Converter<?, ?> converter)
                 throws IllegalArgumentException {
             Class<?> modelType = getModelType();
             if (converter != null) {
@@ -1189,6 +1210,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             @SuppressWarnings("unchecked")
             Converter<?, Object> castConverter = (Converter<?, Object>) converter;
             this.converter = castConverter;
+
+            return this;
         }
 
         /**
@@ -1252,11 +1275,13 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * @param sortable
          *            <code>true</code> if the sorting controls should be
          *            visible.
+         * @return the column itself
          */
-        public void setSortable(boolean sortable) {
+        public Column setSortable(boolean sortable) {
             checkColumnIsAttached();
             state.sortable = sortable;
             grid.markAsDirty();
+            return this;
         }
 
         /**
@@ -1788,7 +1813,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     /**
      * Property id to column instance mapping
      */
-    private final Map<Object, GridColumn> columns = new HashMap<Object, GridColumn>();
+    private final Map<Object, Column> columns = new HashMap<Object, Column>();
 
     /**
      * Key generator for column server-to-client communication
@@ -1842,7 +1867,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             if (event.getContainer() instanceof Sortable) {
                 Collection<?> sortableProperties = ((Sortable) event
                         .getContainer()).getSortableContainerPropertyIds();
-                for (Entry<Object, GridColumn> columnEntry : columns.entrySet()) {
+                for (Entry<Object, Column> columnEntry : columns.entrySet()) {
                     columnEntry.getValue().setSortable(
                             sortableProperties.contains(columnEntry.getKey()));
                 }
@@ -2198,7 +2223,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         // Add columns
         HeaderRow row = getHeader().getDefaultRow();
         for (Object propertyId : datasource.getContainerPropertyIds()) {
-            GridColumn column = appendColumn(propertyId);
+            Column column = appendColumn(propertyId);
 
             // Initial sorting is defined by container
             if (datasource instanceof Sortable) {
@@ -2224,21 +2249,21 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      *            the property id of the column
      * @return the column or <code>null</code> if not found
      */
-    public GridColumn getColumn(Object propertyId) {
+    public Column getColumn(Object propertyId) {
         return columns.get(propertyId);
     }
 
     /**
-     * Used internally by the {@link Grid} to get a {@link GridColumn} by
-     * referencing its generated state id. Also used by {@link GridColumn} to
-     * verify if it has been detached from the {@link Grid}.
+     * Used internally by the {@link Grid} to get a {@link Column} by
+     * referencing its generated state id. Also used by {@link Column} to verify
+     * if it has been detached from the {@link Grid}.
      * 
      * @param columnId
      *            the client id generated for the column when the column is
      *            added to the grid
      * @return the column with the id or <code>null</code> if not found
      */
-    GridColumn getColumnByColumnId(String columnId) {
+    Column getColumnByColumnId(String columnId) {
         Object propertyId = getPropertyIdByColumnId(columnId);
         return getColumn(propertyId);
     }
@@ -2272,7 +2297,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      * @param datasourcePropertyId
      *            The property id of a property in the datasource
      */
-    private GridColumn appendColumn(Object datasourcePropertyId) {
+    private Column appendColumn(Object datasourcePropertyId) {
         if (datasourcePropertyId == null) {
             throw new IllegalArgumentException("Property id cannot be null");
         }
@@ -2282,7 +2307,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         GridColumnState columnState = new GridColumnState();
         columnState.id = columnKeys.key(datasourcePropertyId);
 
-        GridColumn column = new GridColumn(this, columnState);
+        Column column = new Column(this, columnState);
         columns.put(datasourcePropertyId, column);
 
         getState().columns.add(columnState);
@@ -2304,7 +2329,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     private void removeColumn(Object propertyId) {
         header.removeColumn(propertyId);
         footer.removeColumn(propertyId);
-        GridColumn column = columns.remove(propertyId);
+        Column column = columns.remove(propertyId);
         getState().columnOrder.remove(columnKeys.key(propertyId));
         getState().columns.remove(column.getState());
         columnKeys.remove(propertyId);
@@ -2355,7 +2380,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      * @throws IllegalArgumentException
      *             if {@code lastFrozenColumn} is not a column from this grid
      */
-    void setLastFrozenColumn(GridColumn lastFrozenColumn) {
+    void setLastFrozenColumn(Column lastFrozenColumn) {
         /*
          * TODO: If and when Grid supports column reordering or insertion of
          * columns before other columns, make sure to mention that adding
@@ -2391,7 +2416,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      *             if {@code lastFrozenColumn} is not a column from this grid
      */
     public void setLastFrozenPropertyId(Object propertyId) {
-        final GridColumn column;
+        final Column column;
         if (propertyId == null) {
             column = null;
         } else {

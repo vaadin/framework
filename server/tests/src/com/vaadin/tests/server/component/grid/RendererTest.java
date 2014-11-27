@@ -35,7 +35,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.GridColumn;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.components.grid.renderers.TextRenderer;
 
@@ -92,10 +92,10 @@ public class RendererTest {
 
     private Grid grid;
 
-    private GridColumn foo;
-    private GridColumn bar;
-    private GridColumn baz;
-    private GridColumn bah;
+    private Column foo;
+    private Column bar;
+    private Column baz;
+    private Column bah;
 
     @Before
     public void setUp() {
@@ -203,7 +203,7 @@ public class RendererTest {
         return new TestRenderer();
     }
 
-    private JsonValue render(GridColumn column, Object value) {
+    private JsonValue render(Column column, Object value) {
         return RpcDataProviderExtension.encodeValue(value,
                 column.getRenderer(), column.getConverter(), grid.getLocale());
     }

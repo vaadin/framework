@@ -36,7 +36,7 @@ import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.GridColumn;
+import com.vaadin.ui.Grid.Column;
 
 public class GridColumns {
 
@@ -76,7 +76,7 @@ public class GridColumns {
                 .getContainerPropertyIds()) {
 
             // All property ids should get a column
-            GridColumn column = grid.getColumn(propertyId);
+            Column column = grid.getColumn(propertyId);
             assertNotNull(column);
 
             // Property id should be the column header by default
@@ -93,7 +93,7 @@ public class GridColumns {
         // Change old columns so they wouldn't pass the check.
         for (Object propertyId : grid.getContainerDatasource()
                 .getContainerPropertyIds()) {
-            GridColumn column = grid.getColumn(propertyId);
+            Column column = grid.getColumn(propertyId);
             column.setHeaderCaption("Old " + column.getHeaderCaption());
         }
 
@@ -110,7 +110,7 @@ public class GridColumns {
                 .getContainerPropertyIds()) {
 
             // All property ids should get a column
-            GridColumn column = grid.getColumn(propertyId);
+            Column column = grid.getColumn(propertyId);
             assertNotNull(column);
 
             // Property id should be the column header by default
@@ -123,7 +123,7 @@ public class GridColumns {
     public void testModifyingColumnProperties() throws Exception {
 
         // Modify first column
-        GridColumn column = grid.getColumn("column1");
+        Column column = grid.getColumn("column1");
         assertNotNull(column);
 
         column.setHeaderCaption("CustomHeader");
@@ -157,7 +157,7 @@ public class GridColumns {
     @Test
     public void testRemovingColumn() throws Exception {
 
-        GridColumn column = grid.getColumn("column1");
+        Column column = grid.getColumn("column1");
         assertNotNull(column);
 
         // Remove column
@@ -193,7 +193,7 @@ public class GridColumns {
     public void testAddingColumn() throws Exception {
         grid.getContainerDatasource().addContainerProperty("columnX",
                 String.class, "");
-        GridColumn column = grid.getColumn("columnX");
+        Column column = grid.getColumn("columnX");
         assertNotNull(column);
     }
 
