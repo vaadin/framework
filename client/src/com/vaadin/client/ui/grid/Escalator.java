@@ -800,6 +800,17 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             horizontalScrollbar.getElement().getStyle()
                     .setLeft(frozenPixels, Unit.PX);
             horizontalScrollbar.setScrollPos(prevScrollPos);
+
+            /*
+             * only show the scrollbar wrapper if the scrollbar itself is
+             * visible.
+             */
+            if (horizontalScrollbar.showsScrollHandle()) {
+                horizontalScrollbarBackground.getStyle().clearDisplay();
+            } else {
+                horizontalScrollbarBackground.getStyle().setDisplay(
+                        Display.NONE);
+            }
         }
 
         /**
@@ -4039,6 +4050,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
     private final ColumnConfigurationImpl columnConfiguration = new ColumnConfigurationImpl();
     private final DivElement tableWrapper;
 
+    private final DivElement horizontalScrollbarBackground = DivElement.as(DOM
+            .createDiv());
+
     private PositionFunction position;
 
     /** The cached width of the escalator, in pixels. */
@@ -4137,6 +4151,11 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         table.appendChild(headElem);
         table.appendChild(bodyElem);
         table.appendChild(footElem);
+
+        Style hWrapperStyle = horizontalScrollbarBackground.getStyle();
+        hWrapperStyle.setDisplay(Display.NONE);
+        hWrapperStyle.setHeight(Util.getNativeScrollbarSize(), Unit.PX);
+        root.appendChild(horizontalScrollbarBackground);
 
         setStylePrimaryName("v-escalator");
 
@@ -4655,6 +4674,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         horizontalScrollbar.setStylePrimaryName(style);
 
         UIObject.setStylePrimaryName(tableWrapper, style + "-tablewrapper");
+        UIObject.setStylePrimaryName(horizontalScrollbarBackground, style
+                + "-horizontalscrollbarbackground");
 
         header.setStylePrimaryName(style);
         body.setStylePrimaryName(style);

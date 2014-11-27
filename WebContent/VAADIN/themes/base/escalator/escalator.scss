@@ -41,6 +41,12 @@ $border-color: #aaa;
 	width: inherit; /* a decent default fallback */
 }
 
+.#{$primaryStyleName}-horizontalscrollbarbackground {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+
 .#{$primaryStyleName}-header,
 .#{$primaryStyleName}-body,
 .#{$primaryStyleName}-footer {
