@@ -31,6 +31,7 @@ import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -4036,7 +4037,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
     private final Scroller scroller = new Scroller();
 
     private final ColumnConfigurationImpl columnConfiguration = new ColumnConfigurationImpl();
-    private final Element tableWrapper;
+    private final DivElement tableWrapper;
 
     private PositionFunction position;
 
@@ -4126,7 +4127,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                     }
                 });
 
-        tableWrapper = DOM.createDiv();
+        tableWrapper = DivElement.as(DOM.createDiv());
 
         root.appendChild(tableWrapper);
 
