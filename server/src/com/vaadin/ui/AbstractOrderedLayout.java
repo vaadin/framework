@@ -486,7 +486,6 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
                 Attributes attr = childComponent.attributes();
                 DesignSynchronizable newChild = designContext
                         .createChild(childComponent);
-                newChild.synchronizeFromDesign(childComponent, designContext);
                 addComponent(newChild);
                 // handle alignment
                 int bitMask = 0;

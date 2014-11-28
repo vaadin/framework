@@ -54,13 +54,13 @@ import com.vaadin.util.ReflectTools;
  * {@link Component} interface. Basic UI components that are not derived from an
  * external component can inherit this class to easily qualify as Vaadin
  * components. Most components in Vaadin do just that.
- *
+ * 
  * @author Vaadin Ltd.
  * @since 3.0
  */
 @SuppressWarnings("serial")
 public abstract class AbstractComponent extends AbstractClientConnector
-        implements Component, DesignSynchronizable {
+        implements DesignSynchronizable {
 
     /* Private members */
 
@@ -249,7 +249,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Sets the component's caption <code>String</code>. Caption is the visible
      * name of the component. This method will trigger a
      * {@link RepaintRequestEvent}.
-     *
+     * 
      * @param caption
      *            the new caption <code>String</code> for the component.
      */
@@ -280,7 +280,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Sets the locale of this component.
-     *
+     * 
      * <pre>
      * // Component for which the locale is meaningful
      * InlineDateField date = new InlineDateField(&quot;Datum&quot;);
@@ -292,8 +292,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * date.setResolution(DateField.RESOLUTION_DAY);
      * layout.addComponent(date);
      * </pre>
-     *
-     *
+     * 
+     * 
      * @param locale
      *            the locale to become this component's locale.
      */
@@ -319,7 +319,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Sets the component's icon. This method will trigger a
      * {@link RepaintRequestEvent}.
-     *
+     * 
      * @param icon
      *            the icon to be shown with the component's caption.
      */
@@ -385,7 +385,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Sets the component's immediate mode to the specified status.
-     *
+     * 
      * @param immediate
      *            the boolean value specifying if the component should be in the
      *            immediate mode after the call.
@@ -446,11 +446,11 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Sets the component's description. See {@link #getDescription()} for more
      * information on what the description is. This method will trigger a
      * {@link RepaintRequestEvent}.
-     *
+     * 
      * The description is displayed as HTML in tooltips or directly in certain
      * components so care should be taken to avoid creating the possibility for
      * HTML injection and possibly XSS vulnerabilities.
-     *
+     * 
      * @param description
      *            the new description string for the component.
      */
@@ -499,7 +499,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * To find the Window that contains the component, use {@code Window w =
      * getParent(Window.class);}
      * </p>
-     *
+     * 
      * @param <T>
      *            The type of the ancestor
      * @param parentType
@@ -520,7 +520,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Gets the error message for this component.
-     *
+     * 
      * @return ErrorMessage containing the description of the error state of the
      *         component or null, if the component contains no errors. Extending
      *         classes should override this method if they support other error
@@ -533,9 +533,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Gets the component's error message.
-     *
+     * 
      * @link Terminal.ErrorMessage#ErrorMessage(String, int)
-     *
+     * 
      * @return the component's error message.
      */
     public ErrorMessage getComponentError() {
@@ -545,9 +545,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Sets the component's error message. The message may contain certain XML
      * tags, for more information see
-     *
+     * 
      * @link Component.ErrorMessage#ErrorMessage(String, int)
-     *
+     * 
      * @param componentError
      *            the new <code>ErrorMessage</code> of the component.
      */
@@ -624,7 +624,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Build CSS compatible string representation of height.
-     *
+     * 
      * @return CSS height
      */
     private String getCSSHeight() {
@@ -633,7 +633,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Build CSS compatible string representation of width.
-     *
+     * 
      * @return CSS width
      */
     private String getCSSWidth() {
@@ -643,12 +643,12 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Returns the shared state bean with information to be sent from the server
      * to the client.
-     *
+     * 
      * Subclasses should override this method and set any relevant fields of the
      * state returned by super.getState().
-     *
+     * 
      * @since 7.0
-     *
+     * 
      * @return updated component shared state
      */
     @Override
@@ -739,7 +739,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Sets the data object, that can be used for any application specific data.
      * The component does not use or modify this data.
-     *
+     * 
      * @param data
      *            the Application specific data.
      * @since 3.1
@@ -750,7 +750,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Gets the application specific data. See {@link #setData(Object)}.
-     *
+     * 
      * @return the Application specific data set with setData function.
      * @since 3.1
      */
@@ -1035,7 +1035,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Gets the {@link ActionManager} used to manage the
      * {@link ShortcutListener}s added to this {@link Field}.
-     *
+     * 
      * @return the ActionManager in use
      */
     protected ActionManager getActionManager() {
@@ -1079,7 +1079,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Determine whether a <code>content</code> component is equal to, or the
      * ancestor of this component.
-     *
+     * 
      * @param content
      *            the potential ancestor element
      * @return <code>true</code> if the relationship holds

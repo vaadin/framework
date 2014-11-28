@@ -74,7 +74,6 @@ public class TestSynchronizeFromDesign extends TestCase {
         DesignContext ctx = new DesignContext();
         Node design = createDesign(expandRatio, alignments);
         DesignSynchronizable child = ctx.createChild(design);
-        child.synchronizeFromDesign(design, ctx);
         return (VerticalLayout) child;
     }
 

@@ -59,5 +59,4 @@ public interface DesignSynchronizable extends Component {
      * @param designContext
      */
     public void synchronizeToDesign(Node design, DesignContext designContext);
-
 }
