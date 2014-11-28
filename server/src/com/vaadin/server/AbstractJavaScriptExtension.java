@@ -127,6 +127,27 @@ public abstract class AbstractJavaScriptExtension extends AbstractExtension {
     private JavaScriptCallbackHelper callbackHelper = new JavaScriptCallbackHelper(
             this);
 
+    /**
+     * Creates a new JavasScript extension instance without extending any
+     * connector.
+     */
+    public AbstractJavaScriptExtension() {
+        // Empty default constructor
+    }
+
+    /**
+     * Creates a new JavaScript extension extending the provided connector.
+     * 
+     * @since
+     * 
+     * @param target
+     *            the connector to extend
+     */
+    public AbstractJavaScriptExtension(AbstractClientConnector target) {
+        this();
+        extend(target);
+    }
+
     @Override
     protected <T extends ServerRpc> void registerRpc(T implementation,
             Class<T> rpcInterfaceType) {

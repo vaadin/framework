@@ -1,0 +1,6 @@
+@import "variables";
+@import "../tests-valo/valotest";
+
+.tests-valo-textfield-bevel {
+   @include valotest;
+}

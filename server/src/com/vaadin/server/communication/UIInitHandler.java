@@ -65,8 +65,6 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
     @Override
     public boolean synchronizedHandleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
-        StringWriter stringWriter = new StringWriter();
-
         try {
             assert UI.getCurrent() == null;
 
@@ -82,14 +80,10 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             String initialUIDL = getInitialUidl(request, uI);
             params.put("uidl", initialUIDL);
 
-            stringWriter.write(JsonUtil.stringify(params));
+            return commitJsonResponse(request, response, JsonUtil.stringify(params));
         } catch (JsonException e) {
             throw new IOException("Error producing initial UIDL", e);
-        } finally {
-            stringWriter.close();
         }
-
-        return commitJsonResponse(request, response, stringWriter.toString());
     }
 
     /**

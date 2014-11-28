@@ -16,6 +16,7 @@
 package com.vaadin.data.util.sqlcontainer;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * RowId represents identifiers of a single database result set row.
@@ -47,47 +48,30 @@ public class RowId implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = 31;
-        if (id != null) {
-            for (Object o : id) {
-                if (o != null) {
-                    result += o.hashCode();
-                }
-            }
-        }
-        return result;
+        return Arrays.hashCode(getId());
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof RowId)) {
+        if (obj == null || !(RowId.class.equals(obj.getClass()))) {
             return false;
         }
-        Object[] compId = ((RowId) obj).getId();
-        if (id == null && compId == null) {
-            return true;
-        }
-        if (id.length != compId.length) {
-            return false;
-        }
-        for (int i = 0; i < id.length; i++) {
-            if ((id[i] == null && compId[i] != null)
-                    || (id[i] != null && !id[i].equals(compId[i]))) {
-                return false;
-            }
-        }
-        return true;
+        return Arrays.equals(getId(), ((RowId) obj).getId());
     }
 
     @Override
     public String toString() {
-        StringBuffer s = new StringBuffer();
-        for (int i = 0; i < id.length; i++) {
-            s.append(id[i]);
-            if (i < id.length - 1) {
-                s.append("/");
-            }
+        if (getId() == null) {
+            return "";
         }
-        return s.toString();
+        StringBuilder builder = new StringBuilder();
+        for (Object id : getId()) {
+            builder.append(id);
+            builder.append('/');
+        }
+        if (builder.length() > 0) {
+            return builder.substring(0, builder.length() - 1);
+        }
+        return builder.toString();
     }
 }

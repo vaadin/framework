@@ -50,4 +50,11 @@ public class RowIdTest {
         Assert.assertFalse(id.equals("Tudiluu"));
         Assert.assertFalse(id.equals(new Integer(1337)));
     }
+
+    @Test
+    public void toString_defaultCtor_noException() {
+        RowId rowId = new RowId();
+        Assert.assertTrue("Unexpected to string for empty Row Id", rowId
+                .toString().isEmpty());
+    }
 }

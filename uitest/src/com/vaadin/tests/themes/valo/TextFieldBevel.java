@@ -13,31 +13,40 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.datefield;
+package com.vaadin.tests.themes.valo;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.DateField;
+import com.vaadin.ui.TextField;
 
-public class DateFieldPopupClosing extends AbstractTestUI {
-
-    static final String DATEFIELD_ID = "datefield";
+/**
+ * Test UI for $v-textfield-bevel value in TextField component.
+ * 
+ * @author Vaadin Ltd
+ */
+@Theme("tests-valo-textfield-bevel")
+public class TextFieldBevel extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final DateField df = new DateField();
-        df.setId(DATEFIELD_ID);
-        addComponent(df);
-    }
-
-    @Override
-    protected String getTestDescription() {
-        return "DateField popup should be closed when click on popup button";
+        TextField field = new TextField();
+        addComponent(field);
     }
 
     @Override
     protected Integer getTicketNumber() {
-        return 14857;
+        return 14634;
+    }
+
+    @Override
+    protected String getTestDescription() {
+        return "Set v-bevel to 'false' should unset 'v-textfield-bevel' value.";
+    }
+
+    @Theme("valo")
+    public static class ValoDefaultTextFieldBevel extends TextFieldBevel {
+
     }
 
 }

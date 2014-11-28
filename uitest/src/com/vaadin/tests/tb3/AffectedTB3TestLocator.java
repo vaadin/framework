@@ -17,7 +17,9 @@ package com.vaadin.tests.tb3;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AffectedTB3TestLocator extends TB3TestLocator {
 
@@ -42,21 +44,14 @@ public class AffectedTB3TestLocator extends TB3TestLocator {
     private <T> List<Class<? extends T>> getAffectedTestClasses(
             List<Class<? extends T>> allTestClasses,
             List<Class<? extends T>> changedTestClasses) throws IOException {
-        List<Class<? extends T>> affectedWithPackageTestClasses = getTestClassesWithAffectedPackageName(allTestClasses);
+
+        Set testClasses = new HashSet(changedTestClasses);
+        testClasses
+                .addAll(getTestClassesWithAffectedPackageName(allTestClasses));
+
         List<Class<? extends T>> affectedTestClasses = new ArrayList<Class<? extends T>>();
-        affectedTestClasses.addAll(affectedWithPackageTestClasses);
+        affectedTestClasses.addAll(testClasses);
 
-        // Removing duplicate entries before adding changed test classes.
-        for (Class<? extends T> changedTestClass : changedTestClasses) {
-            for (Class<? extends T> affectedTestClass : affectedWithPackageTestClasses) {
-                if (!changedTestClass.getName().equals(
-                        affectedTestClass.getName())) {
-                    affectedTestClasses.add(changedTestClass);
-
-                    break;
-                }
-            }
-        }
         return affectedTestClasses;
     }
 
