@@ -1137,6 +1137,20 @@ public class SQLContainerTableQueryTest {
     }
 
     @Test
+    public void commit_removeModifiedItem_shouldSucceed() throws SQLException {
+        TableQuery query = new TableQuery("people", connectionPool,
+                SQLTestsConstants.sqlGen);
+        SQLContainer container = new SQLContainer(query);
+        int size = container.size();
+        Object key = container.firstItemId();
+        Item row = container.getItem(key);
+        row.getItemProperty("NAME").setValue("Pekka");
+        Assert.assertTrue(container.removeItem(key));
+        container.commit();
+        Assert.assertEquals(size - 1, container.size());
+    }
+
+    @Test
     public void rollback_tableItemAdded_discardsAddedItem() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
                 connectionPool, SQLTestsConstants.sqlGen));
