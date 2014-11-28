@@ -1020,18 +1020,20 @@ public class SQLContainer implements Container, Container.Filterable,
             }
             /* Perform buffered modifications */
             for (RowItem item : modifiedItems) {
-                if (queryDelegate.storeRow(item) > 0) {
-                    /*
-                     * Also reset the modified state in the item in case it is
-                     * reused e.g. in a form.
-                     */
-                    item.commit();
-                } else {
-                    queryDelegate.rollback();
-                    refresh();
-                    throw new ConcurrentModificationException(
-                            "Item with the ID '" + item.getId()
-                                    + "' has been externally modified.");
+                if (!removedItems.containsKey(item.getId())) {
+                    if (queryDelegate.storeRow(item) > 0) {
+                        /*
+                         * Also reset the modified state in the item in case it
+                         * is reused e.g. in a form.
+                         */
+                        item.commit();
+                    } else {
+                        queryDelegate.rollback();
+                        refresh();
+                        throw new ConcurrentModificationException(
+                                "Item with the ID '" + item.getId()
+                                        + "' has been externally modified.");
+                    }
                 }
             }
             /* Perform buffered additions */
