@@ -84,7 +84,7 @@ public class TextFieldConnector extends AbstractFieldConnector implements
         /*
          * We skip the text content update if field has been repainted, but text
          * has not been changed. Additional sanity check verifies there is no
-         * change in the que (in which case we count more on the server side
+         * change in the queue (in which case we count more on the server side
          * value).
          */
         if (!(uidl
