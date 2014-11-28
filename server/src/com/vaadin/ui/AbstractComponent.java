@@ -26,6 +26,9 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Node;
+
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.ConnectorActionManager;
 import com.vaadin.event.ShortcutListener;
@@ -39,6 +42,8 @@ import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Field.ValueChangeEvent;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -52,7 +57,7 @@ import com.vaadin.util.ReflectTools;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractComponent extends AbstractClientConnector
-        implements Component {
+        implements Component, DesignSynchronizable {
 
     /* Private members */
 
@@ -894,6 +899,65 @@ public abstract class AbstractComponent extends AbstractClientConnector
         } else {
             setHeight(-1, Unit.PIXELS);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.DesignSynchronizable#synchronizeFromDesign(org.jsoup.nodes
+     * .Node, com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeFromDesign(Node design, DesignContext designContext) {
+        Attributes attr = design.attributes();
+        DesignSynchronizable def = designContext.getDefaultInstance(this
+                .getClass());
+        // handle default attributes
+        for (String property : getDefaultAttributes()) {
+            String value = null;
+            if (attr.hasKey(property)) {
+                value = attr.get(property);
+            }
+            DesignAttributeHandler.assignAttribute(this, property, value, def);
+        }
+        // handle width and height
+        DesignAttributeHandler.assignWidth(this, attr, def);
+        DesignAttributeHandler.assignHeight(this, attr, def);
+    }
+
+    /**
+     * Returns the list of attributes that do not require custom handling when
+     * synchronizing from design. These are typically attributes of some
+     * primitive type. The default implementation searches setters with
+     * primitive values
+     * 
+     * @since 7.4
+     * @return the list of attributes that can be synchronized from design using
+     *         the default approach.
+     */
+    protected List<String> getDefaultAttributes() {
+        List<String> attributes = DesignAttributeHandler
+                .findSupportedAttributes(this.getClass());
+        // we want to handle width and height in a custom way
+        attributes.remove("width");
+        attributes.remove("height");
+        attributes.remove("debug-id");
+        return attributes;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.DesignSynchronizable#synchronizeToDesign(org.jsoup.nodes
+     * .Node, com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeToDesign(Node design, DesignContext designContext) {
+        AbstractComponent def = designContext.getDefaultInstance(this
+                .getClass());
+
     }
 
     /*
