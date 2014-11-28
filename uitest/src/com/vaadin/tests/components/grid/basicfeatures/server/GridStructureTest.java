@@ -45,14 +45,19 @@ public class GridStructureTest extends GridBasicFeaturesTest {
 
         // Column 0 should be visible
         List<TestBenchElement> cells = getGridHeaderRowCells();
-        assertEquals("Column 0", cells.get(0).getText());
+        assertEquals("column 0", cells.get(0).getText().toLowerCase());
 
         // Hide column 0
         selectMenuPath("Component", "Columns", "Column 0", "Visible");
 
         // Column 1 should now be the first cell
         cells = getGridHeaderRowCells();
-        assertEquals("Column 1", cells.get(0).getText());
+
+        /*
+         * Reindeer has a CSS text transformation that changes the casing so
+         * that we can't rely on it being what we set
+         */
+        assertEquals("column 1", cells.get(0).getText().toLowerCase());
     }
 
     @Test
@@ -74,14 +79,14 @@ public class GridStructureTest extends GridBasicFeaturesTest {
 
         // Column 0 should be visible
         List<TestBenchElement> cells = getGridHeaderRowCells();
-        assertEquals("Column 0", cells.get(0).getText());
+        assertEquals("column 0", cells.get(0).getText().toLowerCase());
 
         // Hide column 0
         selectMenuPath("Component", "Columns", "Column 0", "Remove");
 
         // Column 1 should now be the first cell
         cells = getGridHeaderRowCells();
-        assertEquals("Column 1", cells.get(0).getText());
+        assertEquals("column 1", cells.get(0).getText().toLowerCase());
     }
 
     @Test
@@ -239,7 +244,10 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Body rows", "Remove all rows");
         assertFalse(verticalScrollbarIsPresent());
 
-        selectMenuPath("Component", "Body rows", "Add 18 rows");
+        selectMenuPath("Component", "Size", "HeightMode Row");
+        selectMenuPath("Component", "Size", "Height by Rows", "2.33 rows");
+        selectMenuPath("Component", "Body rows", "Add first row");
+        selectMenuPath("Component", "Body rows", "Add first row");
         assertFalse(verticalScrollbarIsPresent());
 
         selectMenuPath("Component", "Body rows", "Add first row");

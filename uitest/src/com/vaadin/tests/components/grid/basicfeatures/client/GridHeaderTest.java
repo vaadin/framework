@@ -289,7 +289,12 @@ public class GridHeaderTest extends GridStaticSectionTest {
         openTestURL();
 
         GridCellElement textCell = getGridElement().getHeaderCell(0, 0);
-        assertEquals("Header (0,0)", textCell.getText());
+
+        /*
+         * Reindeer has a CSS text transformation that changes the casing so
+         * that we can't rely on it being what we set
+         */
+        assertEquals("header (0,0)", textCell.getText().toLowerCase());
 
         GridCellElement widgetCell = getGridElement().getHeaderCell(0, 1);
         assertTrue(widgetCell.isElementPresent(By.className("gwt-HTML")));
@@ -315,7 +320,12 @@ public class GridHeaderTest extends GridStaticSectionTest {
         selectMenuPath("Component", "Columns", "Column 2", "Header Type",
                 "Text Header");
         GridCellElement textCell = getGridElement().getHeaderCell(0, 2);
-        assertEquals("Text Header", textCell.getText());
+
+        /*
+         * Reindeer has a CSS text transformation that changes the casing so
+         * that we can't rely on it being what we set
+         */
+        assertEquals("text header", textCell.getText().toLowerCase());
     }
 
     @Test

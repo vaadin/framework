@@ -154,7 +154,11 @@ public class GridFooterTest extends GridStaticSectionTest {
         selectMenuPath("Component", "Footer", "Append row");
 
         GridCellElement textCell = getGridElement().getFooterCell(0, 0);
-        assertEquals("Footer (0,0)", textCell.getText());
+        /*
+         * Reindeer has a CSS text transformation that changes the casing so
+         * that we can't rely on it being what we set
+         */
+        assertEquals("footer (0,0)", textCell.getText().toLowerCase());
 
         GridCellElement widgetCell = getGridElement().getFooterCell(0, 1);
         assertTrue(widgetCell.isElementPresent(By.className("gwt-HTML")));
@@ -182,7 +186,12 @@ public class GridFooterTest extends GridStaticSectionTest {
         selectMenuPath("Component", "Columns", "Column 2", "Footer Type",
                 "Text Footer");
         GridCellElement textCell = getGridElement().getFooterCell(0, 2);
-        assertEquals("Text Footer", textCell.getText());
+
+        /*
+         * Reindeer has a CSS text transformation that changes the casing so
+         * that we can't rely on it being what we set
+         */
+        assertEquals("text footer", textCell.getText().toLowerCase());
     }
 
     @Test

@@ -1,0 +1,175 @@
+@mixin reindeer-grid($primary-stylename : v-grid) {
+  
+  // TODO: check/set these values
+  $scrollbar-size: 15px;
+  $header-height: 22px;
+  
+  $grid-border-main: 1px solid #c2c3c4;
+  $grid-border-light: 1px solid #d4d4d4;
+  
+  .#{$primary-stylename} {
+    outline: none;
+  }
+  
+  // Table wrapper
+  .#{$primary-stylename}-tablewrapper {
+    @include box-sizing(border-box);
+    border: $grid-border-light;
+  }
+  
+  // Grid header.
+  .#{$primary-stylename}-header, .#{$primary-stylename}-footer {
+    
+    .#{$primary-stylename}-cell {
+      background: transparent repeat-x;
+      background-image: url(img/header-bg-light.png);
+      border: $grid-border-main;
+      border-right: none;
+      color: #222;
+      font-size: 10px;
+      font-weight: bold;
+      line-height: normal;
+      padding: 4px 4px 5px 6px;
+      text-shadow: #f3f5f8 0 1px 0;
+      text-transform: uppercase;
+      
+      &:first-child {
+        border-left: none;
+      }
+    }
+  }
+  
+  .#{$primary-stylename}-header {
+    border-top: none;
+  }
+  
+  .#{$primary-stylename}-footer {
+    border-bottom: none;
+  }
+  
+  // Grid body
+  .#{$primary-stylename}-body {
+    
+    // Rows
+    .#{$primary-stylename}-row:nth-child(odd) .#{$primary-stylename}-cell {
+      background-color: #eff0f1;
+    }
+    
+    // Cells
+    .#{$primary-stylename}-cell {
+      border: none;
+      border-left: 1px solid #d3d4d5;
+      padding: 3px 6px;
+      
+      &:first-child {
+        border-left: none;
+        
+        input[type="checkbox"] {
+          margin: 0;
+        }
+      }
+    }
+    
+    // Active state
+    .#{$primary-stylename}-row-active {
+      
+      .#{$primary-stylename}-cell {
+        background: none;
+      }
+      
+      .#{$primary-stylename}-cell-active {
+        border: 1px solid #0f68ba;
+      
+        // Adjust padding for 'active' borders.
+        padding: 2px 5px 2px 6px;
+        &:first-child {
+          padding-left: 5px;
+        }
+      }
+    }
+    
+    // Selected state
+    .#{$primary-stylename}-row-selected {
+      color: #fff;
+      text-shadow: #3b5a7a 0 1px 0;
+      
+      .#{$primary-stylename}-cell {
+        background: #4d749f url(../common/img/sel-bg.png) repeat-x;
+        border-color: #466c90;
+      }
+      
+      .#{$primary-stylename}-cell-active {
+        border-color: #b1cde4;
+      }
+    }
+  }
+  
+  // Sort indicators
+  .#{$primary-stylename} th.sort-asc:after,
+  .#{$primary-stylename} th.sort-desc:after {
+    content: " " attr(sort-order);
+    position: absolute;
+    right: 5px;
+    background: transparent no-repeat right 7px;
+    width: 16px;
+    height: 12px;
+    top: 0px;
+  }
+  
+  .#{$primary-stylename} th.sort-asc:after {
+    background-image: url(img/desc-light.png);
+  }
+  
+  .#{$primary-stylename} th.sort-desc:after {
+    background-image: url(img/asc-light.png);
+  }
+  
+  // Scrollbars
+  .#{$primary-stylename}-scroller {
+    @include box-sizing(border-box);
+    outline: none;
+  }  
+  
+  .#{$primary-stylename}-scroller-vertical {
+    border-top: $grid-border-main;
+    border-bottom: $grid-border-light;
+  }
+  
+  .#{$primary-stylename}-scroller-horizontal {
+    border-left: $grid-border-light;
+    border-right: $grid-border-light;
+  }
+  
+  // Fillers
+  .#{$primary-stylename}-filler-x {
+    @include box-sizing(border-box);
+    background: transparent repeat-x;
+    background-image: url(img/header-bg-light.png);
+    border: $grid-border-light;
+    border-top: none;
+    bottom: 0px;
+    height: $scrollbar-size;
+    left: 0;
+    position: absolute;
+    width: 100%;
+  }
+  
+  .#{$primary-stylename}-filler-y {
+    @include box-sizing(border-box);
+    background: transparent repeat-x;
+    background-image: url(img/header-bg-light.png);
+    border: $grid-border-light;
+    border-left: none;
+    height: $header-height;
+    position: absolute;
+    right: 0;
+    top: 0px;
+    width: $scrollbar-size; 
+  }
+}
+
+@mixin box-sizing($value) {
+  box-sizing: $value;
+  -moz-box-sizing: $value;
+  -webkit-box-sizing: $value;
+}

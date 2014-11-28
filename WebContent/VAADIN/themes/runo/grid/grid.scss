@@ -1,0 +1,165 @@
+@mixin runo-grid($primary-stylename : v-grid) {
+  
+  // TODO: check/set these values
+  $scrollbar-size: 15px;
+  $header-height: 38px;
+  
+  $grid-border-main: 1px solid #b6bbbc;
+  
+  .#{$primary-stylename} {
+    outline: none;
+  }
+  
+  .#{$primary-stylename}-tablewrapper {
+    @include box-sizing(border-box);
+    border: $grid-border-main;
+  }
+  
+  // Grid header.
+  .#{$primary-stylename}-header, .#{$primary-stylename}-footer {
+    
+    .#{$primary-stylename}-cell {
+      color: #393a3c;
+      background: #e7e9ea url(img/header-bg.png) repeat-x;
+      border: none;
+      font-size: 15px;
+      font-weight: normal;
+      padding: 9px 2px 9px 6px;
+      position: relative;
+      text-shadow: #ffffff 0 1px 0;
+      
+      &:first-child {
+      	&:before, &:after {
+      	  content: none;
+      	}
+      }
+      
+      &:before {
+        background-image: url(img/resizer-bg.png);
+        content: "";
+        height: 100%;
+        left: 0;
+        top: 0;
+        width: 2px;
+        position: absolute;
+      }
+    }
+  }
+  
+  .#{$primary-stylename}-header .#{$primary-stylename}-cell {
+    border-bottom: $grid-border-main;
+  }
+  
+  .#{$primary-stylename}-footer .#{$primary-stylename}-cell {
+    border-top: $grid-border-main;
+  }
+  
+  // Sort indicators
+  .#{$primary-stylename} th.sort-asc:after,
+  .#{$primary-stylename} th.sort-desc:after {
+    content: "";
+    height: 36px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 20px;
+  }
+  
+  .#{$primary-stylename} th.sort-asc:after {
+    background: transparent url(img/sort-asc.png) no-repeat right 50%;
+  }
+  
+  .#{$primary-stylename} th.sort-desc:after {
+    background: transparent url(img/sort-desc.png) no-repeat right 50%;
+  }
+  
+  // Grid body
+  .#{$primary-stylename}-body {
+    
+    .#{$primary-stylename}-row:nth-child(odd) .#{$primary-stylename}-cell {
+      background-color: #f6f7f7;
+    }
+    
+    // Cells
+    .#{$primary-stylename}-cell {
+      border: none;
+      line-height: 23px;
+      padding: 3px 6px 0 6px;
+    }
+    
+    // Active state
+    .#{$primary-stylename}-row-active {
+      
+      .#{$primary-stylename}-cell {
+        background: none;
+      }
+      
+      .#{$primary-stylename}-cell-active {
+        border: 1px solid #57a7ed;
+      
+        // Adjust padding for 'active' border.
+        padding: 2px 5px 0 5px;
+      }
+    }
+    
+    // Selected state
+    .#{$primary-stylename}-row.#{$primary-stylename}-row-selected {
+      color: white;
+      
+      .#{$primary-stylename}-cell {
+        background-color: #57a7ed;
+      }
+      
+      .#{$primary-stylename}-cell-active {
+        border-color: #c5e0f7;
+      }
+    }
+  }
+  
+  // Scrollbars
+  .#{$primary-stylename}-scroller {
+    @include box-sizing(border-box);
+    outline: none;
+  }
+  
+  .#{$primary-stylename}-scroller-vertical {
+    border-top: $grid-border-main;
+    border-bottom: $grid-border-main;
+  }
+  
+  .#{$primary-stylename}-scroller-horizontal {
+    border-left: $grid-border-main;
+    border-right: $grid-border-main;
+  }
+  
+  // Fillers
+  .#{$primary-stylename}-filler-x {
+    @include box-sizing(border-box);
+    background: #e7e9ea url(img/header-bg.png) repeat-x;
+    border: $grid-border-main;
+    border-top: none;
+    bottom: 0px;
+    height: $scrollbar-size;
+    left: 0;
+    position: absolute;
+    width: 100%;
+  }
+  
+  .#{$primary-stylename}-filler-y {
+    @include box-sizing(border-box);
+    background: #e7e9ea url(img/header-bg.png) repeat-x;
+    border: $grid-border-main;
+    border-left: none;
+    height: $header-height;
+    position: absolute;
+    right: 0;
+    top: 0px;
+    width: $scrollbar-size;
+  }
+}
+
+@mixin box-sizing($value) {
+  box-sizing: $value;
+  -moz-box-sizing: $value;
+  -webkit-box-sizing: $value;
+}

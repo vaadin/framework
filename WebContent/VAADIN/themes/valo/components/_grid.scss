@@ -5,6 +5,9 @@ $primary-stylename: v-grid;
 $grid-background-color: valo-table-background-color();
 $grid-border: valo-border($color: $grid-background-color, $strength: 0.8);
 
+$grid-cell-active-border-width: round($v-unit-size * 0.05);
+$grid-cell-padding-vertical: round(($v-table-row-height - $v-font-size)/2);
+
 /**
  *
  * 
@@ -15,78 +18,16 @@ $grid-border: valo-border($color: $grid-background-color, $strength: 0.8);
 @mixin valo-grid($primary-stylename : v-grid) {
 
   @include base-escalator($primary-stylename);
-
-  // TODO: check/set scrollbar height
+  
+  // TODO: check/set these values
   $scrollbar-size: 15px;
-
-  // Base grid.
+  $header-height: 39px;
+  
   .#{$primary-stylename} {
-    th {
-      position: relative;
-    }
-
-    th.sort-asc:after {
-      content: "\f0dd" attr(sort-order);
-      font-family: FontAwesome;
-      float: right;
-    }
-
-    th.sort-desc:after {
-      content: "\f0de" attr(sort-order);
-      font-family: FontAwesome;
-      float: right;
-    }
-
-    &:after {
-      @include valo-gradient($v-background-color);
-      
-      content: "";
-      width: 100%;
-      height: $scrollbar-size;
-      position: absolute;
-      bottom: 0;
-
-      border: $grid-border;
-      border-top: none;
-
-      @include box-sizing(border-box);
-    }
+    outline: none;
   }
-
-  .#{$primary-stylename}-row-selected > td {
-    background: $v-selection-color;
-  }
-
-  // Empty area before horizontal scroll.
-
-
-  // All but first column cells have left border.
-  .#{$primary-stylename}-row {
-    th, td {
-      background: none;
-      border: none;
-      border-left: $grid-border;
-
-      &:first-child {
-        border-left: none; 
-      }
-    }
-  }
-
-  // Clear the float and change display value for all cells.
-  .#{$primary-stylename}-cell {
-    float: none;
-    display: inline-block;
-
-    &.frozen {
-      @include box-shadow(2px 0 2px rgba(0,0,0,0.1));
-    }
-    &.#{$primary-stylename}-cell-active {
-      @include box-shadow(inset 2px 2px 0px #77aeee, inset -2px -2px 0px #77aeee);
-    }
-  }
-
-  // Main border, moved from .#{$primary-stylename} due to scroll div widths.
+  
+  // Table wrapper
   .#{$primary-stylename}-tablewrapper {
     border: $grid-border;
     @include box-sizing(border-box);
@@ -96,39 +37,189 @@ $grid-border: valo-border($color: $grid-background-color, $strength: 0.8);
   .#{$primary-stylename}-header {
     @include valo-grid-header-style;
   }
+  
+  // Sort indicators
+  .#{$primary-stylename} th.sort-asc:after, th.sort-desc:after {
+    font-family: FontAwesome;
+    float: right;
+  }
 
-  // Grid footer.
-  .#{$primary-stylename}-footer {
-    @include valo-grid-footer-style;
+  .#{$primary-stylename} th.sort-asc:after {
+   content: "\f0dd" attr(sort-order);
+  }
+  
+  .#{$primary-stylename} th.sort-desc:after {
+    content: "\f0de" attr(sort-order);
   }
 
   // Grid body.
   .#{$primary-stylename}-body {
     
-    .#{$primary-stylename}-cell {
-      line-height: 1;
-      $vertical-padding: round(($v-table-row-height - $v-font-size)/2);
-      padding: $vertical-padding $v-table-cell-padding-horizontal;
-    }
-
+    // Rows
     .#{$primary-stylename}-row {
-      border-bottom: $grid-border;
+      &:nth-child(odd) td {
+        $bg-lightness: if(color-luminance($grid-background-color) < 10, 4%, -4%);
+        background-color: scale-color($grid-background-color, $lightness: $bg-lightness);
+      }
+
+      &:nth-child(even) td {
+        background-color: $grid-background-color;
+      }
+    }
+    
+    // Cells
+    .#{$primary-stylename}-cell {
+      padding: $grid-cell-padding-vertical $v-table-cell-padding-horizontal;
+    }
+    
+    
+    // Active state
+    .#{$primary-stylename}-row-active .#{$primary-stylename}-cell-active {
+      border: $grid-cell-active-border-width solid $v-selection-color;
+      padding-top: $grid-cell-padding-vertical - $grid-cell-active-border-width;
+      padding-right: $v-table-cell-padding-horizontal - $grid-cell-active-border-width;
+      padding-bottom: $grid-cell-padding-vertical - $grid-cell-active-border-width;
+      padding-left: $v-table-cell-padding-horizontal - round($grid-cell-active-border-width/2);
       
-      &.#{$primary-stylename}-row-active td {
+      &:first-child {
+        padding-left: $v-table-cell-padding-horizontal - $grid-cell-active-border-width;
+      }
+    }
+    
+    // Selected state
+    .#{$primary-stylename}-row-selected {
+      
+      .#{$primary-stylename}-cell-active {
+        border-color: adjust-color($v-selection-color, $lightness: 20%);
+      }
+      
+      td {
         @include valo-gradient($v-selection-color);
         color: $grid-background-color;
         border-color: adjust-color($v-selection-color, $lightness: -8%, $saturation: -8%);
       }
     }
-
-    .#{$primary-stylename}-row > td {
-        background-color: $grid-background-color;
+  }
+  
+  // Common styles for all cells
+  .#{$primary-stylename}-cell {
+    border: none;
+    border-left: $grid-border;
+    line-height: 1;
+    
+    &.frozen {
+      @include box-shadow(2px 0 2px rgba(0,0,0,0.1));
     }
-
-    .#{$primary-stylename}-row-stripe > td {
-        $bg-lightness: if(color-luminance($grid-background-color) < 10, 4%, -4%);
-        background-color: scale-color($grid-background-color, $lightness: $bg-lightness);
+    
+    &:first-child {
+      border-left: none;
+      position: relative;
+        
+      // Position the first column checkboxes
+      input[type="checkbox"] {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        margin: auto;
+        right: 0;
+        top: 0;
+      }
     }
+  }
+  
+  // Grid footer.
+  .#{$primary-stylename}-footer {
+    @include valo-grid-footer-style;
+  }
+  
+  // Grid editor row
+  .#{$primary-stylename}-editor-row {
+    @include box-shadow(0px 0px 6px 2px rgba(0,0,0,0.14));
+    position: relative;
+    outline: none;
+    
+    // Ugly fix for correcting editor row position
+    margin-top: -1px;
+    
+    > div {
+      @include box-sizing(border-box);
+      display: inline-block;
+      
+      .v-textfield, .v-datefield, .v-filterselect {
+        background: $grid-background-color;
+        border: none;
+        border-left: $grid-border;
+        border-radius: 0;
+        height: 100%;
+        width: 100%;
+        
+        &:focus, &:active {
+          @include box-shadow(inset 0 0 0 2px $v-focus-color);
+          outline: none;
+        }
+      }
+      
+      &:first-child > * {
+        border-left: none;
+      }
+    }
+  }
+  
+  // Grid editor row buttons
+  .v-editor-row-save, .v-editor-row-cancel {
+    @include valo-button-static-style;
+    @include valo-button-style($unit-size: $v-unit-size--small, $border-radius: 0);
+    border-right: none;
+    position: static;
+    width: auto !important;
+
+    &:after, &:before {
+      content: none;
+    }
+  }
+  .v-editor-row-save {
+    border-bottom-left-radius: round($v-unit-size * 0.1);
+  }
+  
+   // Scrollbars
+  .#{$primary-stylename}-scroller {
+    @include box-sizing(border-box);
+    outline: none;
+  }  
+  
+  .#{$primary-stylename}-scroller-vertical {
+    border-top: $grid-border;
+    border-bottom: $grid-border;
+  }
+    
+  .#{$primary-stylename}-scroller-horizontal {
+    border-left: $grid-border;
+    border-right: $grid-border;
+  }
+  
+  // Fillers
+  .#{$primary-stylename}-filler-x {
+    @include box-sizing(border-box);
+    @include valo-gradient($v-background-color);
+    border: $grid-border;
+    border-top: none;
+    bottom: 0px;
+    height: $scrollbar-size;
+    left: 0;
+    position: absolute;
+    width: 100%;
+  }
+  
+  .#{$primary-stylename}-filler-y {
+    @include box-sizing(border-box);
+    @include valo-gradient($v-background-color);
+    border: $grid-border;
+    border-left: none;
+    height: $header-height;
+    position: absolute;
+    right: 0;
+    top: 0px;
+    width: $scrollbar-size;
   }
 }
 
@@ -141,9 +232,7 @@ $grid-border: valo-border($color: $grid-background-color, $strength: 0.8);
   th {
     font-weight: inherit;
     font-size: $v-table-header-font-size;
-    $vertical-padding: round(($v-table-row-height - $v-table-header-font-size)/2);
-    padding: $vertical-padding $v-table-cell-padding-horizontal $vertical-padding - $v-table-border-width;
-    line-height: 1;
+    padding: $grid-cell-padding-vertical $v-table-cell-padding-horizontal $grid-cell-padding-vertical - $v-table-border-width;
   }
 }
 
@@ -156,5 +245,6 @@ $grid-border: valo-border($color: $grid-background-color, $strength: 0.8);
   td {
     font-weight: inherit;
     font-size: $v-table-header-font-size;
+    padding: $grid-cell-padding-vertical $v-table-cell-padding-horizontal $grid-cell-padding-vertical - $v-table-border-width;
   }
 }
