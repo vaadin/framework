@@ -358,7 +358,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * by the first region, but if split position is reversed the measuring is
      * done by the second region instead.
      * 
-     * @since 7.4
+     * @since 7.3.6
      * @return {@code true} if reversed, {@code false} otherwise.
      * @see #setSplitPosition(float, boolean)
      */
