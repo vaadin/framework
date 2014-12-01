@@ -249,9 +249,25 @@ public class GridStructureTest extends GridBasicFeaturesTest {
     @Test
     public void testBareItemSetChange() throws Exception {
         openTestURL();
+        filterAndAssert();
+    }
 
+    @Test
+    public void testBareItemSetChangeWithMidScroll() throws Exception {
+        openTestURL();
+        getGridElement().scrollToRow(GridBasicFeatures.ROWS / 2);
+        filterAndAssert();
+    }
+
+    @Test
+    public void testBareItemSetChangeWithBottomScroll() throws Exception {
+        openTestURL();
+        getGridElement().scrollToRow(GridBasicFeatures.ROWS);
+        filterAndAssert();
+    }
+
+    private void filterAndAssert() {
         selectMenuPath("Component", "Filter", "Column 1 starts with \"(23\"");
-
         boolean foundElements = false;
         for (int row = 0; row < 100; row++) {
             try {

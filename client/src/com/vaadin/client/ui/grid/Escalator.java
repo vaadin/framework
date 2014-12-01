@@ -2280,7 +2280,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 moveAndUpdateEscalatorRows(Range.between(start, end), 0,
                         logicalRowIndex);
 
-                updateTopRowLogicalIndex(-originalRowsToMove);
+                setTopRowLogicalIndex(logicalRowIndex);
 
                 rowsWereMoved = true;
             }

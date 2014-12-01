@@ -1608,7 +1608,7 @@ public class Grid<T> extends ResizeComposite implements
                     @Override
                     public void onRowVisibilityChange(
                             RowVisibilityChangeEvent event) {
-                        if (dataSource != null) {
+                        if (dataSource != null && dataSource.size() > 0) {
                             dataIsBeingFetched = true;
                             dataSource.ensureAvailability(
                                     event.getFirstVisibleRow(),
