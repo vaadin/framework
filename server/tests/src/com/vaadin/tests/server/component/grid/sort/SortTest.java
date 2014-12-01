@@ -167,6 +167,9 @@ public class SortTest {
 
     @Test
     public void testChangeContainerAfterSorting() {
+        class Person {
+        }
+
         container.expectedSort(new Object[] { "foo", "bar", "baz" },
                 new SortDirection[] { SortDirection.ASCENDING,
                         SortDirection.ASCENDING, SortDirection.DESCENDING });
@@ -179,7 +182,9 @@ public class SortTest {
                         SortDirection.DESCENDING));
 
         container = new DummySortingIndexedContainer();
+        container.addContainerProperty("foo", Person.class, null);
         container.addContainerProperty("baz", String.class, "");
+        container.addContainerProperty("bar", Person.class, null);
         container.expectedSort(new Object[] { "baz" },
                 new SortDirection[] { SortDirection.DESCENDING });
         grid.setContainerDataSource(container);

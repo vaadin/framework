@@ -16,12 +16,15 @@
 package com.vaadin.tests.server.component.grid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Grid;
 
 public class GridColumnBuildTest {
@@ -79,5 +82,35 @@ public class GridColumnBuildTest {
         grid.addColumn("foo");
         grid.removeColumn("foo");
         grid.addColumn("foo", Integer.class);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testAddColumnToNonDefaultContainer() {
+        grid.setContainerDataSource(new IndexedContainer());
+        grid.addColumn("foo");
+    }
+
+    @Test
+    public void testAddColumnForExistingProperty() {
+        grid.addColumn("bar");
+        IndexedContainer container2 = new IndexedContainer();
+        container2.addContainerProperty("foo", Integer.class, 0);
+        container2.addContainerProperty("bar", String.class, "");
+        grid.setContainerDataSource(container2);
+        assertNull("Grid should not have a column for property foo",
+                grid.getColumn("foo"));
+        grid.removeAllColumns();
+        grid.addColumn("foo");
+        assertNotNull("Grid should now have a column for property foo",
+                grid.getColumn("foo"));
+        assertNull("Grid should not have a column for property bar anymore",
+                grid.getColumn("bar"));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testAddIncompatibleColumnProperty() {
+        grid.addColumn("bar");
+        grid.removeAllColumns();
+        grid.addColumn("bar", Integer.class);
     }
 }

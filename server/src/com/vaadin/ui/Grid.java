@@ -1919,6 +1919,16 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
     private EditorRow editorRow;
 
+    /**
+     * <code>true</code> if Grid is using the internal IndexedContainer created
+     * in Grid() constructor, or <code>false</code> if the user has set their
+     * own Container.
+     * 
+     * @see #setContainerDataSource()
+     * @see #Grid()
+     */
+    private boolean defaultContainer = true;
+
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
             .findMethod(SelectionChangeListener.class, "selectionChange",
                     SelectionChangeEvent.class);
@@ -1931,7 +1941,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      * Creates a new Grid with a new {@link IndexedContainer} as the datasource.
      */
     public Grid() {
-        this(new IndexedContainer());
+        internalSetContainerDataSource(new IndexedContainer());
+        initGrid();
     }
 
     /**
@@ -1942,7 +1953,13 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      */
     public Grid(final Container.Indexed datasource) {
         setContainerDataSource(datasource);
+        initGrid();
+    }
 
+    /**
+     * Grid initial setup
+     */
+    private void initGrid() {
         setSelectionMode(SelectionMode.MULTI);
         addSelectionChangeListener(new SelectionChangeListener() {
             @Override
@@ -2153,7 +2170,11 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      *             if the data source is null
      */
     public void setContainerDataSource(Container.Indexed container) {
+        defaultContainer = false;
+        internalSetContainerDataSource(container);
+    }
 
+    private void internalSetContainerDataSource(Container.Indexed container) {
         if (container == null) {
             throw new IllegalArgumentException(
                     "Cannot set the datasource to null");
@@ -2248,6 +2269,18 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                                     propertyId));
                 }
             }
+        } else {
+            Collection<?> properties = datasource.getContainerPropertyIds();
+            for (Object property : columns.keySet()) {
+                if (!properties.contains(property)) {
+                    throw new IllegalStateException(
+                            "Found at least one column in Grid that does not exist in the given container: "
+                                    + property
+                                    + " with the header \""
+                                    + getColumn(property).getHeaderCaption()
+                                    + "\"");
+                }
+            }
         }
     }
 
@@ -2272,38 +2305,60 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     }
 
     /**
-     * Used internally by the {@link Grid} to get a {@link Column} by
-     * referencing its generated state id. Also used by {@link Column} to verify
-     * if it has been detached from the {@link Grid}. Adds a new Column to Grid.
-     * Also adds the property to container with data type String, if property
-     * for column does not exist in it. Default value for the new property is an
-     * empty String.
+     * Adds a new Column to Grid. Also adds the property to container with data
+     * type String, if property for column does not exist in it. Default value
+     * for the new property is an empty String.
+     * <p>
+     * Note that adding a new property is only done for the default container
+     * that Grid sets up with the default constructor.
      * 
      * @param propertyId
      *            the property id of the new column
      * @return the new column
+     * 
+     * @throws IllegalStateException
+     *             if column for given property already exists in this grid
      */
-    public Column addColumn(Object propertyId) {
-        addColumnProperty(propertyId, String.class, "");
+
+    public Column addColumn(Object propertyId) throws IllegalStateException {
+        if (datasource.getContainerPropertyIds().contains(propertyId)
+                && !columns.containsKey(propertyId)) {
+            appendColumn(propertyId);
+        } else {
+            addColumnProperty(propertyId, String.class, "");
+        }
         return getColumn(propertyId);
     }
 
     /**
-     * Adds a new Column to Grid. Also adds the property to container with given
-     * Number data type, if property for column does not exist already in it.
-     * Default value for the new property is 0.
+     * Adds a new Column to Grid. This function makes sure that the property
+     * with the given id and data type exists in the container. If property does
+     * not exists, it will be created. Default value for the new property is 0.
+     * <p>
+     * Note that adding a new property is only done for the default container
+     * that Grid sets up with the default constructor.
      * 
      * @param propertyId
      *            the property id of the new column
      * @return the new column
+     * 
+     * @throws IllegalStateException
+     *             if column for given property already exists in this grid or
+     *             property already exists in the container with wrong type
      */
-    public <T extends Number> Column addColumn(Object propertyId, Class<T> type) {
+    public <T extends Number> Column addColumn(Object propertyId, Class<T> type)
+            throws IllegalStateException {
         addColumnProperty(propertyId, type, 0);
         return getColumn(propertyId);
     }
 
     protected void addColumnProperty(Object propertyId, Class<?> type,
-            Object defaultValue) {
+            Object defaultValue) throws IllegalStateException {
+        if (!defaultContainer) {
+            throw new IllegalStateException(
+                    "Container for this Grid is not a default container from Grid() constructor");
+        }
+
         if (!columns.containsKey(propertyId)) {
             if (!datasource.getContainerPropertyIds().contains(propertyId)) {
                 datasource.addContainerProperty(propertyId, type, defaultValue);
