@@ -41,6 +41,7 @@ import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.data.Container.PropertySetChangeNotifier;
 import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -118,7 +119,7 @@ import elemental.json.JsonValue;
  * <p>
  * <code><pre>
  * Grid grid = new Grid(myContainer);
- * GridColumn column = grid.getColumn(STRING_DATE_PROPERTY);
+ * Column column = grid.getColumn(STRING_DATE_PROPERTY);
  * column.setConverter(new StringToDateConverter());
  * column.setRenderer(new MyColorfulDateRenderer());
  * </pre></code>
@@ -924,7 +925,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         private Converter<?, Object> converter;
 
         /**
-         * A check for allowing the {@link #GridColumn(Grid, GridColumnState)
+         * A check for allowing the {@link #Column(Grid, GridColumnState)
          * constructor} to call {@link #setConverter(Converter)} with a
          * <code>null</code>, even if model and renderer aren't compatible.
          */
@@ -2211,12 +2212,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             clearSortOrder();
         }
 
-        // Remove all old columns
-        Set<Object> properties = new HashSet<Object>(columns.keySet());
-        for (Object propertyId : properties) {
-            removeColumn(propertyId);
-        }
-
         datasourceExtension = new RpcDataProviderExtension(container);
         datasourceExtension.extend(this, columnKeys);
 
@@ -2241,15 +2236,17 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
         setLastFrozenPropertyId(null);
 
-        // Add columns
-        HeaderRow row = getHeader().getDefaultRow();
-        for (Object propertyId : datasource.getContainerPropertyIds()) {
-            Column column = appendColumn(propertyId);
+        if (columns.isEmpty()) {
+            // Add columns
+            for (Object propertyId : datasource.getContainerPropertyIds()) {
+                Column column = appendColumn(propertyId);
 
-            // Initial sorting is defined by container
-            if (datasource instanceof Sortable) {
-                column.setSortable(((Sortable) datasource)
-                        .getSortableContainerPropertyIds().contains(propertyId));
+                // Initial sorting is defined by container
+                if (datasource instanceof Sortable) {
+                    column.setSortable(((Sortable) datasource)
+                            .getSortableContainerPropertyIds().contains(
+                                    propertyId));
+                }
             }
         }
     }
@@ -2272,6 +2269,70 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      */
     public Column getColumn(Object propertyId) {
         return columns.get(propertyId);
+    }
+
+    /**
+     * Used internally by the {@link Grid} to get a {@link Column} by
+     * referencing its generated state id. Also used by {@link Column} to verify
+     * if it has been detached from the {@link Grid}. Adds a new Column to Grid.
+     * Also adds the property to container with data type String, if property
+     * for column does not exist in it. Default value for the new property is an
+     * empty String.
+     * 
+     * @param propertyId
+     *            the property id of the new column
+     * @return the new column
+     */
+    public Column addColumn(Object propertyId) {
+        addColumnProperty(propertyId, String.class, "");
+        return getColumn(propertyId);
+    }
+
+    /**
+     * Adds a new Column to Grid. Also adds the property to container with given
+     * Number data type, if property for column does not exist already in it.
+     * Default value for the new property is 0.
+     * 
+     * @param propertyId
+     *            the property id of the new column
+     * @return the new column
+     */
+    public <T extends Number> Column addColumn(Object propertyId, Class<T> type) {
+        addColumnProperty(propertyId, type, 0);
+        return getColumn(propertyId);
+    }
+
+    protected void addColumnProperty(Object propertyId, Class<?> type,
+            Object defaultValue) {
+        if (!columns.containsKey(propertyId)) {
+            if (!datasource.getContainerPropertyIds().contains(propertyId)) {
+                datasource.addContainerProperty(propertyId, type, defaultValue);
+            } else {
+                Property<?> containerProperty = datasource
+                        .getContainerProperty(datasource.firstItemId(),
+                                propertyId);
+                if (containerProperty.getType() == type) {
+                    appendColumn(propertyId);
+                } else {
+                    throw new IllegalStateException(
+                            "DataSource already has the given property "
+                                    + propertyId + " with a different type");
+                }
+            }
+        } else {
+            throw new IllegalStateException(
+                    "Grid already has a column for property " + propertyId);
+        }
+    }
+
+    /**
+     * Removes all columns from this Grid.
+     */
+    public void removeAllColumns() {
+        Set<Object> properties = new HashSet<Object>(columns.keySet());
+        for (Object propertyId : properties) {
+            removeColumn(propertyId);
+        }
     }
 
     /**
@@ -2344,10 +2405,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     /**
      * Removes a column from Grid based on a property id.
      * 
-     * @param datasourcePropertyId
-     *            The property id of a property in the datasource
+     * @param propertyId
+     *            The property id of column to be removed
      */
-    private void removeColumn(Object propertyId) {
+    public void removeColumn(Object propertyId) {
         header.removeColumn(propertyId);
         footer.removeColumn(propertyId);
         Column column = columns.remove(propertyId);
