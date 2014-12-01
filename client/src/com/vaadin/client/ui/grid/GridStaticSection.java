@@ -220,6 +220,11 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
         private Map<Set<GridColumn<?, ?>>, CELLTYPE> cellGroups = new HashMap<Set<GridColumn<?, ?>>, CELLTYPE>();
 
         /**
+         * A custom style name for the row or null if none is set.
+         */
+        private String styleName = null;
+
+        /**
          * Returns the cell on given GridColumn. If the column is merged
          * returned cell is the cell for the whole group.
          * 
@@ -381,6 +386,27 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
         protected void setSection(GridStaticSection<?> section) {
             this.section = section;
         }
+
+        /**
+         * Returns the custom style name for this row.
+         * 
+         * @return the style name or null if no style name has been set
+         */
+        public String getStyleName() {
+            return styleName;
+        }
+
+        /**
+         * Sets a custom style name for this row.
+         * 
+         * @param styleName
+         *            the style name to set or null to not use any style name
+         */
+        public void setStyleName(String styleName) {
+            this.styleName = styleName;
+            section.requestSectionRefresh();
+        }
+
     }
 
     private Grid<?> grid;

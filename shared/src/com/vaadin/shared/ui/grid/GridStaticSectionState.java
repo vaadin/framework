@@ -55,6 +55,11 @@ public class GridStaticSectionState implements Serializable {
          * Map from column id set to cell state for merged state.
          */
         public Map<Set<String>, CellState> cellGroups = new HashMap<Set<String>, CellState>();
+
+        /**
+         * The style name for the row. Null if none.
+         */
+        public String styleName = null;
     }
 
     public List<RowState> rows = new ArrayList<RowState>();

@@ -1354,6 +1354,8 @@ public class Grid<T> extends ResizeComposite implements
                     .getRow());
             final List<GridColumn<?, T>> columns = getVisibleColumns();
 
+            setCustomStyleName(row.getElement(), staticRow.getStyleName());
+
             for (FlyweightCell cell : cellsToUpdate) {
                 final StaticCell metadata = staticRow.getCell(columns.get(cell
                         .getColumn()));
@@ -1380,23 +1382,26 @@ public class Grid<T> extends ResizeComposite implements
                     postAttach(row, Arrays.asList(cell));
                     break;
                 }
-                String oldStyleName = element
-                        .getPropertyString(CUSTOM_STYLE_PROPERTY_NAME);
-                String newStyleName = metadata.getStyleName();
-
-                if (!SharedUtil.equals(oldStyleName, newStyleName)) {
-                    if (oldStyleName != null) {
-                        element.removeClassName(oldStyleName);
-                    }
-                    if (newStyleName != null) {
-                        element.addClassName(newStyleName);
-                    }
-                    element.setPropertyString(CUSTOM_STYLE_PROPERTY_NAME,
-                            newStyleName);
-                }
+                setCustomStyleName(element, metadata.getStyleName());
 
                 cellFocusHandler.updateFocusedCellStyle(cell, container);
             }
+        }
+
+        private void setCustomStyleName(Element element, String styleName) {
+            String oldStyleName = element
+                    .getPropertyString(CUSTOM_STYLE_PROPERTY_NAME);
+
+            if (!SharedUtil.equals(oldStyleName, styleName)) {
+                if (oldStyleName != null) {
+                    element.removeClassName(oldStyleName);
+                }
+                if (styleName != null) {
+                    element.addClassName(styleName);
+                }
+                element.setPropertyString(CUSTOM_STYLE_PROPERTY_NAME, styleName);
+            }
+
         }
 
         private void addSortingIndicatorsToHeaderRow(HeaderRow headerRow,

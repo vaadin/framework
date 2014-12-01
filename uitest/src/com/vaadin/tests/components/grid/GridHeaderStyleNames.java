@@ -34,6 +34,8 @@ public class GridHeaderStyleNames extends AbstractTestUIWithLog {
     private HeaderCell ageHeaderCell;
     private HeaderCell mergedCityCountryCell;
     private FooterCell ageFooterCell;
+    private HeaderRow headerRow;
+    private FooterRow footerRow;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -43,12 +45,12 @@ public class GridHeaderStyleNames extends AbstractTestUIWithLog {
 
         ageHeaderCell = grid.getDefaultHeaderRow().getCell("age");
 
-        HeaderRow row = grid.prependHeaderRow();
-        mergedCityCountryCell = row.join("city", "country");
+        headerRow = grid.prependHeaderRow();
+        mergedCityCountryCell = headerRow.join("city", "country");
         mergedCityCountryCell.setText("Merged cell");
         addComponent(grid);
 
-        FooterRow footerRow = grid.appendFooterRow();
+        footerRow = grid.appendFooterRow();
         ageFooterCell = footerRow.getCell("age");
 
         getPage()
@@ -56,12 +58,16 @@ public class GridHeaderStyleNames extends AbstractTestUIWithLog {
                 .add(".age {background-image: linear-gradient(to bottom,green 2%, #efefef 98%) !important;}");
         getPage()
                 .getStyles()
-                .add(".valo .v-grid-header .v-grid-cell.city-country {background-image: linear-gradient(to bottom,yellow 2%, #efefef 98%);}");
+                .add(".valo .v-grid-header .v-grid-cell.city-country {background-image: linear-gradient(to bottom,yellow 2%, #efefef 98%) !important;}");
         getPage()
                 .getStyles()
-                .add(".valo .v-grid-footer .v-grid-cell.age-footer {background-image: linear-gradient(to bottom,blue 2%, #efefef 98%);}");
+                .add(".valo .v-grid-footer .v-grid-cell.age-footer {background-image: linear-gradient(to bottom,blue 2%, #efefef 98%) !important;}");
+        getPage()
+                .getStyles()
+                .add(".valo .v-grid .v-grid-row.custom-row > * {background-image: linear-gradient(to bottom,purple 2%, #efefef 98%);}");
 
-        setStyles(true);
+        setCellStyles(true);
+        setRowStyles(true);
 
         Button b = new Button("Toggle styles");
         b.addClickListener(new ClickListener() {
@@ -69,14 +75,15 @@ public class GridHeaderStyleNames extends AbstractTestUIWithLog {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                setStyles(!stylesOn);
+                setCellStyles(!stylesOn);
+                setRowStyles(!stylesOn);
                 stylesOn = !stylesOn;
             }
         });
         addComponent(b);
     }
 
-    protected void setStyles(boolean set) {
+    protected void setCellStyles(boolean set) {
         if (set) {
             ageHeaderCell.setStyleName("age");
             ageFooterCell.setStyleName("age-footer");
@@ -89,4 +96,14 @@ public class GridHeaderStyleNames extends AbstractTestUIWithLog {
 
     }
 
+    protected void setRowStyles(boolean set) {
+        if (set) {
+            headerRow.setStyleName("custom-row");
+            footerRow.setStyleName("custom-row");
+        } else {
+            headerRow.setStyleName(null);
+            footerRow.setStyleName(null);
+        }
+
+    }
 }

@@ -357,6 +357,27 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 }
                 return null;
             }
+
+            /**
+             * Returns the custom style name for this row.
+             * 
+             * @return the style name or null if no style name has been set
+             */
+            public String getStyleName() {
+                return getRowState().styleName;
+            }
+
+            /**
+             * Sets a custom style name for this row.
+             * 
+             * @param styleName
+             *            the style name to set or null to not use any style
+             *            name
+             */
+            public void setStyleName(String styleName) {
+                getRowState().styleName = styleName;
+            }
+
         }
 
         /**
@@ -485,7 +506,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
              * Sets a custom style name for this cell.
              * 
              * @param styleName
-             *            the style name to set
+             *            the style name to set or null to not use any style
+             *            name
              */
             public void setStyleName(String styleName) {
                 cellState.styleName = styleName;

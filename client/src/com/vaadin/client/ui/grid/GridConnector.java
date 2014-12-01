@@ -502,6 +502,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             if (section instanceof GridHeader && rowState.defaultRow) {
                 ((GridHeader) section).setDefaultRow((HeaderRow) row);
             }
+
+            row.setStyleName(rowState.styleName);
         }
 
         section.setVisible(state.visible);

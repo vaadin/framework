@@ -45,7 +45,7 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
     }
 
     @Test
-    public void styleNamesCanBeAddedAndRemoved() {
+    public void cellStyleNamesCanBeAddedAndRemoved() {
         ButtonElement toggleStyles = $(ButtonElement.class).caption(
                 "Toggle styles").first();
 
@@ -54,6 +54,19 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
         assertStylesSet(false);
         toggleStyles.click();
         assertStylesSet(true);
+    }
+
+    @Test
+    public void rowStyleNamesCanBeAddedAndRemoved() {
+        ButtonElement toggleStyles = $(ButtonElement.class).caption(
+                "Toggle styles").first();
+
+        assertRowStylesSet(true);
+        toggleStyles.click();
+        assertRowStylesSet(false);
+        toggleStyles.click();
+        assertRowStylesSet(true);
+
     }
 
     private void assertStylesSet(boolean set) {
@@ -90,8 +103,41 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
 
     }
 
+    private void assertRowStylesSet(boolean set) {
+        if (set) {
+            assertHasStyleName(
+                    "Footer row should have the assigned 'custom-row' class name",
+                    getFooterRow(), "custom-row");
+            assertHasStyleName(
+                    "Header row should have the assigned 'custom-row' class name",
+                    getHeaderRow(), "custom-row");
+        } else {
+            assertHasNotStyleName(
+                    "Footer row should not have the removed 'custom-row' class name",
+                    getFooterRow(), "custom-row");
+            assertHasNotStyleName(
+                    "Header row should not have the removed 'custom-row' class name",
+                    getHeaderRow(), "custom-row");
+        }
+        assertHasStyleName(
+                "The default v-grid-row style name should not be removed from the header row",
+                getHeaderRow(), "v-grid-row");
+        assertHasStyleName(
+                "The default v-grid-row style name should not be removed from the footer row",
+                getFooterRow(), "v-grid-row");
+
+    }
+
     private WebElement getAgeHeaderCell() {
         return grid.getHeaderCell(1, 2);
+    }
+
+    private WebElement getFooterRow() {
+        return grid.getFooterRow(0);
+    }
+
+    private WebElement getHeaderRow() {
+        return grid.getHeaderRow(0);
     }
 
     private void assertHasStyleName(String message, WebElement element,
