@@ -2333,22 +2333,27 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     /**
      * Adds a new Column to Grid. This function makes sure that the property
      * with the given id and data type exists in the container. If property does
-     * not exists, it will be created. Default value for the new property is 0.
+     * not exists, it will be created.
+     * <p>
+     * Default value for the new property is 0 if type is Integer, Double and
+     * Float. If type is String, default value is an empty string. For all other
+     * types the default value is null.
      * <p>
      * Note that adding a new property is only done for the default container
      * that Grid sets up with the default constructor.
      * 
      * @param propertyId
      *            the property id of the new column
+     * @param type
+     *            the data type for the new property
      * @return the new column
      * 
      * @throws IllegalStateException
      *             if column for given property already exists in this grid or
      *             property already exists in the container with wrong type
      */
-    public <T extends Number> Column addColumn(Object propertyId, Class<T> type)
-            throws IllegalStateException {
-        addColumnProperty(propertyId, type, 0);
+    public Column addColumn(Object propertyId, Class<?> type) {
+        addColumnProperty(propertyId, type, null);
         return getColumn(propertyId);
     }
 

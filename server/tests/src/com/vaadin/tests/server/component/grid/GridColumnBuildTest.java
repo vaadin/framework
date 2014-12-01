@@ -65,6 +65,7 @@ public class GridColumnBuildTest {
         grid.addColumn("foo");
     }
 
+    @Test
     public void testAddNumberColumns() {
         grid.addColumn("bar", Integer.class);
         grid.addColumn("baz", Double.class);
@@ -72,9 +73,11 @@ public class GridColumnBuildTest {
         Property<?> property = container.getContainerProperty(
                 container.firstItemId(), "bar");
         assertEquals(property.getType(), Integer.class);
+        assertEquals(null, property.getValue());
         property = container.getContainerProperty(container.firstItemId(),
                 "baz");
         assertEquals(property.getType(), Double.class);
+        assertEquals(null, property.getValue());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -112,5 +115,14 @@ public class GridColumnBuildTest {
         grid.addColumn("bar");
         grid.removeAllColumns();
         grid.addColumn("bar", Integer.class);
+    }
+
+    @Test
+    public void testAddBooleanColumnProperty() {
+        grid.addColumn("foo", Boolean.class);
+        Property<?> property = container.getContainerProperty(
+                container.firstItemId(), "foo");
+        assertEquals(property.getType(), Boolean.class);
+        assertEquals(property.getValue(), null);
     }
 }
