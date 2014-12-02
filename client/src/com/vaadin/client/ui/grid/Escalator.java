@@ -1556,7 +1556,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         private void paintInsertCells(final TableRowElement tr,
                 int logicalRowIndex, final int offset, final int numberOfCells) {
 
-            assert Document.get().isOrHasChild(tr) : "The row must be attached to the document";
+            assert root.isOrHasChild(tr) : "The row must be attached to the document";
 
             flyweightRow.setup(tr, logicalRowIndex,
                     columnConfiguration.getCalculatedColumnWidths());
@@ -1581,6 +1581,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             } else {
                 referenceCell = null;
             }
+
             for (FlyweightCell cell : cells) {
                 referenceCell = insertAfterReferenceAndUpdateIt(tr,
                         cell.getElement(), referenceCell);

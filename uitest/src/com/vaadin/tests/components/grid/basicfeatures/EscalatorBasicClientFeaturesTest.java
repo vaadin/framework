@@ -22,14 +22,14 @@ import static org.junit.Assert.fail;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-@TestCategory("grid")
+@TestCategory("escalator")
 public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest {
     protected static final String COLUMNS_AND_ROWS = "Columns and Rows";
 
@@ -69,12 +69,12 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
         return EscalatorBasicClientFeatures.class;
     }
 
-    protected WebElement getEscalator() {
-        try {
-            return getDriver().findElement(By.className("v-escalator"));
-        } catch (NoSuchElementException e) {
-            return null;
+    protected TestBenchElement getEscalator() {
+        By className = By.className("v-escalator");
+        if (isElementPresent(className)) {
+            return (TestBenchElement) findElement(className);
         }
+        return null;
     }
 
     /**
@@ -83,7 +83,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
      *            calculation starts from the end (-1 is the last, -2 is the
      *            second-to-last etc)
      */
-    protected WebElement getHeaderRow(int row) {
+    protected TestBenchElement getHeaderRow(int row) {
         return getRow("thead", row);
     }
 
@@ -93,7 +93,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
      *            calculation starts from the end (-1 is the last, -2 is the
      *            second-to-last etc)
      */
-    protected WebElement getBodyRow(int row) {
+    protected TestBenchElement getBodyRow(int row) {
         return getRow("tbody", row);
     }
 
@@ -103,7 +103,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
      *            calculation starts from the end (-1 is the last, -2 is the
      *            second-to-last etc)
      */
-    protected WebElement getFooterRow(int row) {
+    protected TestBenchElement getFooterRow(int row) {
         return getRow("tfoot", row);
     }
 
@@ -113,7 +113,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
      *            calculation starts from the end (-1 is the last, -2 is the
      *            second-to-last etc)
      */
-    protected WebElement getHeaderCell(int row, int col) {
+    protected TestBenchElement getHeaderCell(int row, int col) {
         return getCell("thead", row, col);
     }
 
@@ -123,7 +123,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
      *            calculation starts from the end (-1 is the last, -2 is the
      *            second-to-last etc)
      */
-    protected WebElement getBodyCell(int row, int col) {
+    protected TestBenchElement getBodyCell(int row, int col) {
         return getCell("tbody", row, col);
     }
 
@@ -133,7 +133,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
      *            calculation starts from the end (-1 is the last, -2 is the
      *            second-to-last etc)
      */
-    protected WebElement getFooterCell(int row, int col) {
+    protected TestBenchElement getFooterCell(int row, int col) {
         return getCell("tfoot", row, col);
     }
 
@@ -143,17 +143,13 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
      *            calculation starts from the end (-1 is the last, -2 is the
      *            second-to-last etc)
      */
-    private WebElement getCell(String sectionTag, int row, int col) {
-        WebElement rowElement = getRow(sectionTag, row);
-        if (rowElement != null) {
-            try {
-                return rowElement.findElement(By.xpath("*[" + (col + 1) + "]"));
-            } catch (NoSuchElementException e) {
-                return null;
-            }
-        } else {
-            return null;
+    private TestBenchElement getCell(String sectionTag, int row, int col) {
+        TestBenchElement rowElement = getRow(sectionTag, row);
+        By xpath = By.xpath("*[" + (col + 1) + "]");
+        if (rowElement != null && rowElement.isElementPresent(xpath)) {
+            return (TestBenchElement) rowElement.findElement(xpath);
         }
+        return null;
     }
 
     /**
@@ -162,35 +158,35 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
      *            calculation starts from the end (-1 is the last, -2 is the
      *            second-to-last etc)
      */
-    private WebElement getRow(String sectionTag, int row) {
-        WebElement escalator = getEscalator();
+    private TestBenchElement getRow(String sectionTag, int row) {
+        TestBenchElement escalator = getEscalator();
         WebElement tableSection = escalator.findElement(By.tagName(sectionTag));
+        By xpath;
 
-        try {
-            if (row >= 0) {
-                int fromFirst = row + 1;
-                return tableSection.findElement(By.xpath("tr[" + fromFirst
-                        + "]"));
-            } else {
-                int fromLast = Math.abs(row + 1);
-                return tableSection.findElement(By.xpath("tr[last() - "
-                        + fromLast + "]"));
-            }
-        } catch (NoSuchElementException e) {
-            return null;
+        if (row >= 0) {
+            int fromFirst = row + 1;
+            xpath = By.xpath("tr[" + fromFirst + "]");
+        } else {
+            int fromLast = Math.abs(row + 1);
+            xpath = By.xpath("tr[last() - " + fromLast + "]");
         }
+        if (tableSection != null
+                && ((TestBenchElement) tableSection).isElementPresent(xpath)) {
+            return (TestBenchElement) tableSection.findElement(xpath);
+        }
+        return null;
     }
 
     protected void selectMenu(String menuCaption) {
-        WebElement menuElement = getMenuElement(menuCaption);
+        TestBenchElement menuElement = getMenuElement(menuCaption);
         Dimension size = menuElement.getSize();
         new Actions(getDriver()).moveToElement(menuElement, size.width - 10,
                 size.height / 2).perform();
     }
 
-    private WebElement getMenuElement(String menuCaption) {
-        return getDriver().findElement(
-                By.xpath("//td[text() = '" + menuCaption + "']"));
+    private TestBenchElement getMenuElement(String menuCaption) {
+        return (TestBenchElement) findElement(By.xpath("//td[text() = '"
+                + menuCaption + "']"));
     }
 
     protected void selectMenuPath(String... menuCaptions) {
@@ -217,7 +213,7 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     }
 
     private String getLogText() {
-        WebElement log = getDriver().findElement(By.cssSelector("#log"));
+        WebElement log = findElement(By.cssSelector("#log"));
         return log.getText();
     }
 
@@ -240,8 +236,8 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
         executeScript("arguments[0].scrollTop = " + px, getVeticalScrollbar());
     }
 
-    private WebElement getVeticalScrollbar() {
-        return getEscalator().findElement(
+    private TestBenchElement getVeticalScrollbar() {
+        return (TestBenchElement) getEscalator().findElement(
                 By.className("v-escalator-scroller-vertical"));
     }
 
@@ -250,8 +246,8 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
                 getHorizontalScrollbar());
     }
 
-    private WebElement getHorizontalScrollbar() {
-        return getEscalator().findElement(
+    private TestBenchElement getHorizontalScrollbar() {
+        return (TestBenchElement) getEscalator().findElement(
                 By.className("v-escalator-scroller-horizontal"));
     }
 

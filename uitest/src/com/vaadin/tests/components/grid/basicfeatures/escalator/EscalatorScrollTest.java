@@ -13,13 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.grid.basicfeatures;
+package com.vaadin.tests.components.grid.basicfeatures.escalator;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+
+import com.vaadin.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
 
 public class EscalatorScrollTest extends EscalatorBasicClientFeaturesTest {
 

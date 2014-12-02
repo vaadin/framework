@@ -13,14 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.grid.basicfeatures;
+package com.vaadin.tests.components.grid.basicfeatures.escalator;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
 
 public class EscalatorBasicsTest extends EscalatorBasicClientFeaturesTest {
 
@@ -34,7 +37,7 @@ public class EscalatorBasicsTest extends EscalatorBasicClientFeaturesTest {
     }
 
     @Test
-    public void testDetachingASemiPopulatedEscalator() {
+    public void testDetachingASemiPopulatedEscalator() throws IOException {
         setDebug(true);
         openTestURL();
 

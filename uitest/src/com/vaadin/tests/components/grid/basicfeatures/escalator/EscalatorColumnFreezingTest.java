@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.grid.basicfeatures;
+package com.vaadin.tests.components.grid.basicfeatures.escalator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -24,6 +24,8 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
+
+import com.vaadin.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
 
 public class EscalatorColumnFreezingTest extends
         EscalatorBasicClientFeaturesTest {
@@ -42,12 +44,12 @@ public class EscalatorColumnFreezingTest extends
             + "\\((\\d+)px,"
 
             // any end of the string
-            + ".*");
+            + ".*", Pattern.CASE_INSENSITIVE);
 
             // @formatter:on
 
-    private final static Pattern LEFT_PATTERN = Pattern
-            .compile(".*left: (\\d+)px.*");
+    private final static Pattern LEFT_PATTERN = Pattern.compile(
+            ".*left: (\\d+)px.*", Pattern.CASE_INSENSITIVE);
 
     private static final int NO_FREEZE = -1;
 
