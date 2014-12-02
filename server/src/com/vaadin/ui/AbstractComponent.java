@@ -33,9 +33,12 @@ import com.vaadin.event.ActionManager;
 import com.vaadin.event.ConnectorActionManager;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.AbstractClientConnector;
+import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.server.Resource;
+import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
@@ -911,19 +914,23 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     public void synchronizeFromDesign(Node design, DesignContext designContext) {
         Attributes attr = design.attributes();
-        DesignSynchronizable def = designContext.getDefaultInstance(this
+        AbstractComponent def = designContext.getDefaultInstance(this
                 .getClass());
         // handle default attributes
-        for (String property : getDefaultAttributes()) {
-            String value = null;
-            if (attr.hasKey(property)) {
-                value = attr.get(property);
-            }
-            DesignAttributeHandler.assignAttribute(this, property, value, def);
+        for (String attribute : getDefaultAttributes()) {
+            DesignAttributeHandler.readAttribute(this, attribute, attr, def);
         }
         // handle width and height
-        DesignAttributeHandler.assignWidth(this, attr, def);
-        DesignAttributeHandler.assignHeight(this, attr, def);
+        DesignAttributeHandler.readWidth(this, attr, def);
+        DesignAttributeHandler.readHeight(this, attr, def);
+        // handle component error
+        if (attr.hasKey("error")) {
+            UserError error = new UserError(attr.get("error"),
+                    ContentMode.HTML, ErrorLevel.ERROR);
+            setComponentError(error);
+        } else {
+            setComponentError(def.getComponentError());
+        }
     }
 
     /**
@@ -955,9 +962,21 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void synchronizeToDesign(Node design, DesignContext designContext) {
+        // clear node contents
+        DesignAttributeHandler.clearNode(design);
         AbstractComponent def = designContext.getDefaultInstance(this
                 .getClass());
-
+        Attributes attr = design.attributes();
+        // handle default attributes
+        for (String attribute : getDefaultAttributes()) {
+            DesignAttributeHandler.writeAttribute(this, attribute, attr, def);
+        }
+        // handle size
+        DesignAttributeHandler.writeSize(this, attr, def);
+        // handle component error
+        if (getComponentError() != null) {
+            attr.put("error", getComponentError().getFormattedHtmlMessage());
+        }
     }
 
     /*

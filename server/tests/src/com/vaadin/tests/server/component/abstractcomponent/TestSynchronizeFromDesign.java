@@ -30,9 +30,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
- * Test case for the properties of the abstract component
+ * Test case for reading the attributes of the abstract component from design
  * 
- * @since
  * @author Vaadin Ltd
  */
 public class TestSynchronizeFromDesign extends TestCase {
@@ -67,10 +66,11 @@ public class TestSynchronizeFromDesign extends TestCase {
     }
 
     public void testSynchronizeLocale() {
-        Node design = createDesign("locale", "fi");
+        Node design = createDesign("locale", "fi_FI");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals("fi", component.getLocale().getLanguage());
+        assertEquals("FI", component.getLocale().getCountry());
     }
 
     public void testSynchronizeExternalIcon() {
@@ -109,6 +109,14 @@ public class TestSynchronizeFromDesign extends TestCase {
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals("test-description", component.getDescription());
+    }
+
+    public void testSynchronizeComponentError() {
+        Node design = createDesign("error", "<div>test-error</div>");
+        AbstractComponent component = getComponent();
+        component.synchronizeFromDesign(design, ctx);
+        assertEquals("<div>test-error</div>", component.getComponentError()
+                .getFormattedHtmlMessage());
     }
 
     public void testSynchronizeSizeFull() {
