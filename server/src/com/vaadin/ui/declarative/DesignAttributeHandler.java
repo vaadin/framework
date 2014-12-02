@@ -297,9 +297,9 @@ public class DesignAttributeHandler {
                 } else if (widthAuto) {
                     attributes.put("width-auto", "true");
                 } else {
-                    DecimalFormat fmt = new DecimalFormat();
-                    attributes.put("width", fmt.format(component.getWidth())
-                            + component.getWidthUnits().getSymbol());
+                    attributes.put("width",
+                            formatDesignAttribute(component.getWidth())
+                                    + component.getWidthUnits().getSymbol());
                 }
             }
             if (!areEqualHeight(component, defaultInstance)) {
@@ -309,12 +309,26 @@ public class DesignAttributeHandler {
                 } else if (heightAuto) {
                     attributes.put("height-auto", "true");
                 } else {
-                    DecimalFormat fmt = new DecimalFormat();
-                    attributes.put("height", fmt.format(component.getHeight())
-                            + component.getHeightUnits().getSymbol());
+                    attributes.put("height",
+                            formatDesignAttribute(component.getHeight())
+                                    + component.getHeightUnits().getSymbol());
                 }
             }
         }
+    }
+
+    /**
+     * Formats the given design attribute value. The method is provided to
+     * ensure consistent number formatting for design attribute values
+     * 
+     * @since 7.4
+     * @param number
+     *            the number to be formatted
+     * @return the formatted number
+     */
+    public static String formatDesignAttribute(float number) {
+        DecimalFormat fmt = new DecimalFormat();
+        return fmt.format(number);
     }
 
     /**

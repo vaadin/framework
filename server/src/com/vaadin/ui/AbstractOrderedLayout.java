@@ -18,6 +18,11 @@ package com.vaadin.ui;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.logging.Logger;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
@@ -26,10 +31,13 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState.ChildComponentData;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 @SuppressWarnings("serial")
 public abstract class AbstractOrderedLayout extends AbstractLayout implements
@@ -459,4 +467,111 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         setExpandRatio(target, expandRatio);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.AbstractComponent#synchronizeFromDesign(org.jsoup.nodes
+     * .Node, com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeFromDesign(Node design, DesignContext designContext) {
+        // process default attributes
+        super.synchronizeFromDesign(design, designContext);
+        // remove current children
+        removeAllComponents();
+        // handle children
+        for (Node childComponent : design.childNodes()) {
+            if (childComponent instanceof Element) {
+                Attributes attr = childComponent.attributes();
+                DesignSynchronizable newChild = designContext
+                        .createChild(childComponent);
+                newChild.synchronizeFromDesign(childComponent, designContext);
+                addComponent(newChild);
+                // handle alignment
+                int bitMask = 0;
+                if (attr.hasKey(":middle")) {
+                    bitMask += AlignmentInfo.Bits.ALIGNMENT_VERTICAL_CENTER;
+                } else if (attr.hasKey(":bottom")) {
+                    bitMask += AlignmentInfo.Bits.ALIGNMENT_BOTTOM;
+                } else {
+                    bitMask += AlignmentInfo.Bits.ALIGNMENT_TOP;
+                }
+                if (attr.hasKey(":center")) {
+                    bitMask += AlignmentInfo.Bits.ALIGNMENT_HORIZONTAL_CENTER;
+                } else if (attr.hasKey(":right")) {
+                    bitMask += AlignmentInfo.Bits.ALIGNMENT_RIGHT;
+                } else {
+                    bitMask += AlignmentInfo.Bits.ALIGNMENT_LEFT;
+                }
+                setComponentAlignment(newChild, new Alignment(bitMask));
+                // handle expand ratio
+                if (attr.hasKey(":expand")) {
+                    String value = attr.get(":expand");
+                    if (value.length() > 0) {
+                        try {
+                            float ratio = Float.valueOf(value);
+                            setExpandRatio(newChild, ratio);
+                        } catch (NumberFormatException nfe) {
+                            getLogger().info(
+                                    "Failed to parse expand ratio " + value);
+                        }
+                    } else {
+                        setExpandRatio(newChild, 1.0f);
+                    }
+                }
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.AbstractComponent#synchronizeToDesign(org.jsoup.nodes.Node,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeToDesign(Node design, DesignContext designContext) {
+        // synchronize default attributes
+        super.synchronizeToDesign(design, designContext);
+        // handle children
+        if (this instanceof HasComponents) {
+            if (!(design instanceof Element)) {
+                throw new RuntimeException(
+                        "Attempted to create child elements for a node that cannot have children.");
+            }
+            Element designElement = (Element) design;
+            for (Component child : this) {
+                DesignSynchronizable childComponent = (DesignSynchronizable) child;
+                Node childNode = designContext.createNode(childComponent);
+                designElement.appendChild(childNode);
+                childComponent.synchronizeToDesign(childNode, designContext);
+                // handle alignment
+                Alignment alignment = getComponentAlignment(child);
+                if (alignment.isMiddle()) {
+                    childNode.attr(":middle", "");
+                } else if (alignment.isBottom()) {
+                    childNode.attr(":bottom", "");
+                }
+                if (alignment.isCenter()) {
+                    childNode.attr(":center", "");
+                } else if (alignment.isRight()) {
+                    childNode.attr(":right", "");
+                }
+                // handle expand ratio
+                float expandRatio = getExpandRatio(child);
+                if (expandRatio == 1.0f) {
+                    childNode.attr(":expand", "");
+                } else if (expandRatio > 0) {
+                    childNode.attr(":expand", DesignAttributeHandler
+                            .formatDesignAttribute(expandRatio));
+                }
+            }
+        }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(AbstractOrderedLayout.class.getName());
+    }
 }
