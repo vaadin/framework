@@ -43,7 +43,7 @@ public class TextField extends AbstractTextField {
      * Constructs an empty <code>TextField</code> with no caption.
      */
     public TextField() {
-        setValue("");
+        clear();
     }
 
     /**
@@ -97,6 +97,16 @@ public class TextField extends AbstractTextField {
     public TextField(String caption, String value) {
         setValue(value);
         setCaption(caption);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#clear()
+     */
+    @Override
+    public void clear() {
+        setValue("");
     }
 
 }
