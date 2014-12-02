@@ -3572,7 +3572,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
             final Element focusedElement = Util.getFocusedElement();
 
-            if (root.isOrHasChild(focusedElement)) {
+            if (focusedElement != null && root.isOrHasChild(focusedElement)) {
                 Element e = focusedElement;
 
                 while (e != null && e != root) {
