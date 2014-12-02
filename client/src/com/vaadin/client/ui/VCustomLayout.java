@@ -158,7 +158,7 @@ public class VCustomLayout extends ComplexPanel {
 
         // TODO prefix img src:s here with a regeps, cannot work further with IE
 
-        String relImgPrefix = themeUri + "/layouts/";
+        String relImgPrefix = Util.escapeAttribute(themeUri + "/layouts/");
 
         // prefix all relative image elements to point to theme dir with a
         // regexp search
