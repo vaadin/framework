@@ -1812,14 +1812,14 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * client. This method can be used to get the item id for the row key
          * that the client has sent.
          * 
-         * @param key
+         * @param rowKey
          *            the row key for which to retrieve an item id
          * @return the item id corresponding to {@code key}
          */
-        protected Object getItemId(String key) {
+        protected Object getItemId(String rowKey) {
             if (getParent() instanceof Grid) {
                 Grid grid = (Grid) getParent();
-                return grid.getKeyMapper().getItemId(key);
+                return grid.getKeyMapper().getItemId(rowKey);
             } else {
                 throw new IllegalStateException(
                         "Renderers can be used only with Grid");
