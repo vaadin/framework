@@ -41,6 +41,17 @@ $border-color: #aaa;
 	width: inherit; /* a decent default fallback */
 }
 
+.#{$primaryStyleName}-headercorner,
+.#{$primaryStyleName}-footercorner {
+	position: absolute;
+	right: 0;
+	border: 1px solid $border-color;
+	box-sizing: border-box;
+}
+
+.#{$primaryStyleName}-headercorner { top: 0; }
+.#{$primaryStyleName}-footercorner { bottom: 0; }
+
 .#{$primaryStyleName}-horizontalscrollbarbackground {
 	position: absolute;
 	bottom: 0;
