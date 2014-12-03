@@ -16,11 +16,8 @@
 package com.vaadin.ui.declarative;
 
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -38,18 +35,17 @@ import com.vaadin.ui.DesignSynchronizable;
  * component hierarchy must contain a single root.
  * 
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class LayoutHandler {
     /**
      * Constructs a component hierarchy from the design specified as an html
-     * document. The hierarchy must contain exactly one top-level Component. The
-     * component should be located under <body>, but also invalid html
-     * containing the hierarchy without <html>, <head> and <body> tags is
+     * document. The component hierarchy must contain exactly one top-level
+     * Component. The component should be located under <body>, but also invalid
+     * html containing the hierarchy without <html>, <head> and <body> tags is
      * accepted.
      * 
-     * @since
      * @param html
      *            the html document describing the component design
      * @return the DesignContext created while traversing the tree. The
@@ -63,9 +59,37 @@ public class LayoutHandler {
         try {
             doc = Jsoup.parse(html, "UTF-8", "", Parser.htmlParser());
         } catch (IOException e) {
-            throw new LayoutInflaterException(
-                    "The html document cannot be parsed.");
+            throw new DesignException("The html document cannot be parsed.");
         }
+        return parse(doc);
+    }
+
+    /**
+     * Constructs a component hierarchy from the design specified as an html
+     * document given as a string. The component hierarchy must contain exactly
+     * one top-level Component. The component should be located under <body>,
+     * but also invalid html containing the hierarchy without <html>, <head> and
+     * <body> tags is accepted.
+     * 
+     * @param html
+     *            the html document describing the component design
+     * @return the DesignContext created while traversing the tree. The
+     *         top-level component of the created component hierarchy can be
+     *         accessed using result.getRootComponent(), where result is the
+     *         object returned by this method.
+     * @throws IOException
+     */
+    public static DesignContext parse(String html) {
+        Document doc = Jsoup.parse(html);
+        return parse(doc);
+    }
+
+    /**
+     * Constructs a component hierarchy from the design specified as an html
+     * tree.
+     * 
+     */
+    private static DesignContext parse(Document doc) {
         DesignContext designContext = new DesignContext(doc);
         designContext.getPrefixes(doc);
         // No special handling for a document without a body element - should be
@@ -75,7 +99,7 @@ public class LayoutHandler {
         for (Node element : root.childNodes()) {
             if (element instanceof Element) {
                 if (componentRoot != null) {
-                    throw new LayoutInflaterException(
+                    throw new DesignException(
                             "The first level of a component hierarchy should contain a single root component, but found "
                                     + "two: "
                                     + componentRoot
@@ -96,7 +120,6 @@ public class LayoutHandler {
      * the tree. The generated tree corresponds to a valid html document.
      * 
      * 
-     * @since
      * @param root
      *            the root of the component hierarchy
      * @return an html tree representation of the component hierarchy
@@ -126,7 +149,6 @@ public class LayoutHandler {
      * Generates an html file corresponding to the component hierarchy with the
      * given root.
      * 
-     * @since
      * @param writer
      * @param root
      * @throws IOException
@@ -135,33 +157,5 @@ public class LayoutHandler {
             throws IOException {
         String docAsString = createHtml(ctx).toString();
         writer.write(docAsString);
-    }
-
-    /**
-     * Used for testing only.
-     * 
-     * This method reads and constructs a component hierarchy from a file whose
-     * name is given as the first parameter. The constructed hierarchy is then
-     * transformed back to html form, the resulting html being written to a file
-     * whose name is given as the second parameter.
-     * 
-     * This is useful for checking that: 1) a design can be successfully parsed
-     * 2) a component hierarchy can be transformed to html form and 3) No
-     * relevant information is lost in these conversions.
-     * 
-     */
-    public static void main(String[] args) throws IOException {
-        String inputFileName = args[0];
-        String outputFileName = args[1];
-        // Read and parse the contents of the output file.
-        FileInputStream fis = new FileInputStream(inputFileName);
-        DesignContext ctx = parse(fis);
-        DesignSynchronizable root = ctx.getComponentRoot();
-        // Write
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream(outputFileName)));
-        createHtml(writer, ctx);
-        fis.close();
-        writer.close();
     }
 }

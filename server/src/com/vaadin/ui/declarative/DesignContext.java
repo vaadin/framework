@@ -31,7 +31,9 @@ import com.vaadin.ui.DesignSynchronizable;
 
 /**
  * This class contains contextual information that is collected when a component
- * tree is constructed based on HTML design template.
+ * tree is constructed based on HTML design template. This information includes
+ * mappings from local ids, global ids and captions to components , as well as a
+ * mapping between prefixes and package names (such as "v" -> "com.vaadin.ui").
  * 
  * @since 7.4
  * @author Vaadin Ltd
@@ -48,12 +50,12 @@ public class DesignContext {
     // id
     public static final String ID_ATTRIBUTE = "id";
     public static final String CAPTION_ATTRIBUTE = "caption";
-    public static final String LOCAL_ID_PREFIX = "_";
-    // Mappings from IDs to components. Modified when synchronizing from design.
-    private Map<String, DesignSynchronizable> globalIdToComponent = new HashMap<String, DesignSynchronizable>();
+    public static final String LOCAL_ID_ATTRIBUTE = "_id";
+    // Mappings from ids to components. Modified when synchronizing from design.
+    private Map<String, DesignSynchronizable> idToComponent = new HashMap<String, DesignSynchronizable>();
     private Map<String, DesignSynchronizable> localIdToComponent = new HashMap<String, DesignSynchronizable>();
     private Map<String, DesignSynchronizable> captionToComponent = new HashMap<String, DesignSynchronizable>();
-    // Mapping from components to local IDs. Accessed when synchronizing to
+    // Mapping from components to local ids. Accessed when synchronizing to
     // design. Modified when synchronizing from design.
     private Map<DesignSynchronizable, String> componentToLocalId = new HashMap<DesignSynchronizable, String>();
     private Document doc; // required for calling createElement(String)
@@ -80,36 +82,73 @@ public class DesignContext {
     }
 
     /**
+     * Returns a component having the specified local id. If no component is
+     * found, returns null.
+     * 
+     * @param localId
+     *            The local id of the component
+     * @return a component whose local id equals localId
+     */
+    public DesignSynchronizable getComponentByLocalId(String localId) {
+        return localIdToComponent.get(localId);
+    }
+
+    /**
+     * Returns a component having the specified global id. If no component is
+     * found, returns null.
+     * 
+     * @param globalId
+     *            The global id of the component
+     * @return a component whose global id equals globalId
+     */
+    public DesignSynchronizable getComponentById(String globalId) {
+        return idToComponent.get(globalId);
+    }
+
+    /**
+     * Returns a component having the specified caption. If no component is
+     * found, returns null.
+     * 
+     * @param caption
+     *            The caption of the component
+     * @return a component whose caption equals the caption given as a parameter
+     */
+    public DesignSynchronizable getComponentByCaption(String caption) {
+        return captionToComponent.get(caption);
+    }
+
+    /**
      * Creates a mapping between the given global id and the component. Returns
-     * true if globalId was already mapped to some component or if component was
-     * mapped to some string. Otherwise returns false. Also sets the id of the
-     * component to globalId.
+     * true if globalId was already mapped to some component. Otherwise returns
+     * false. Also sets the id of the component to globalId.
+     * 
+     * If there is a mapping from the component to a global id (gid) different
+     * from globalId, the mapping from gid to component is removed.
      * 
      * If the string was mapped to a component c different from the given
      * component, the mapping from c to the string is removed. Similarly, if
      * component was mapped to some string s different from globalId, the
      * mapping from s to component is removed.
      * 
-     * @since
      * @param globalId
      *            The new global id of the component.
      * @param component
      *            The component whose global id is to be set.
      * @return true, if there already was a global id mapping from the string to
-     *         some component or from the component to some string. Otherwise
-     *         returns false.
+     *         some component.
      */
-    public boolean mapGlobalId(String globalId, DesignSynchronizable component) {
-        DesignSynchronizable oldComponent = globalIdToComponent.get(globalId);
+    private boolean mapId(String globalId, DesignSynchronizable component) {
+        DesignSynchronizable oldComponent = idToComponent.get(globalId);
         if (oldComponent != null && !oldComponent.equals(component)) {
             oldComponent.setId(null);
         }
         String oldGID = component.getId();
         if (oldGID != null && !oldGID.equals(globalId)) {
-            globalIdToComponent.remove(oldGID);
+            idToComponent.remove(oldGID);
         }
         component.setId(globalId);
-        return oldComponent != null || oldGID != null;
+        idToComponent.put(globalId, component);
+        return oldComponent != null && !oldComponent.equals(component);
     }
 
     /**
@@ -122,8 +161,7 @@ public class DesignContext {
      * component was mapped to some string s different from localId, the mapping
      * from s to component is removed.
      * 
-     * @since
-     * @param globalId
+     * @param localId
      *            The new local id of the component.
      * @param component
      *            The component whose local id is to be set.
@@ -131,7 +169,7 @@ public class DesignContext {
      *         some component or from the component to some string. Otherwise
      *         returns false.
      */
-    public boolean mapLocalId(String localId, DesignSynchronizable component) {
+    private boolean mapLocalId(String localId, DesignSynchronizable component) {
         return twoWayMap(localId, component, localIdToComponent,
                 componentToLocalId);
     }
@@ -146,7 +184,6 @@ public class DesignContext {
      * a given caption can be found using the map captionToComponent. Hence, any
      * captions that are used to identify an object should be unique.
      * 
-     * @since
      * @param caption
      *            The new caption of the component.
      * @param component
@@ -154,7 +191,7 @@ public class DesignContext {
      * @return true, if there already was a caption mapping from the string to
      *         some component.
      */
-    public boolean mapCaption(String caption, DesignSynchronizable component) {
+    private boolean mapCaption(String caption, DesignSynchronizable component) {
         return captionToComponent.put(caption, component) != null;
     }
 
@@ -168,7 +205,6 @@ public class DesignContext {
      * Returns true if there already was a mapping from key to some value v or
      * if there was a mapping from value to some key k. Otherwise returns false.
      * 
-     * @since
      * @param key
      *            The new key in keyToValue.
      * @param value
@@ -198,7 +234,6 @@ public class DesignContext {
      * true if prefix was already mapped to some package name or packageName to
      * some prefix.
      * 
-     * @since
      * @param prefix
      *            the prefix name without an ending dash (for instance, "v" is
      *            always used for "com.vaadin.ui")
@@ -207,7 +242,7 @@ public class DesignContext {
      * @return whether there was a mapping from prefix to some package name or
      *         from packageName to some prefix.
      */
-    public boolean mapPrefixToPackage(String prefix, String packageName) {
+    private boolean mapPrefixToPackage(String prefix, String packageName) {
         return twoWayMap(prefix, packageName, prefixToPackage, packageToPrefix);
     }
 
@@ -240,7 +275,6 @@ public class DesignContext {
      * Get and store the mappings from prefixes to package names from meta tags
      * located under <head> in the html document.
      * 
-     * @since
      */
     public void getPrefixes(Document doc) {
         Element head = doc.head();
@@ -258,7 +292,7 @@ public class DesignContext {
                         String contentString = attributes.get("content");
                         String[] parts = contentString.split(":");
                         if (parts.length != 2) {
-                            throw new LayoutInflaterException("The meta tag '"
+                            throw new DesignException("The meta tag '"
                                     + child.toString() + "' cannot be parsed.");
                         }
                         String prefixName = parts[0];
@@ -297,7 +331,6 @@ public class DesignContext {
      * the synchronizeToDesign() call, this method creates the entire subtree
      * rooted at the returned Node.
      * 
-     * @since
      * @param childComponent
      *            A component implementing the DesignSynchronizable interface.
      * @return An html tree node corresponding to the given component. The tag
@@ -321,8 +354,7 @@ public class DesignContext {
         // care of by synchronizeToDesign.
         String localId = componentToLocalId.get(childComponent);
         if (localId != null) {
-            localId = LOCAL_ID_PREFIX + localId;
-            newElement.attr(localId, "");
+            newElement.attr(LOCAL_ID_ATTRIBUTE, localId);
         }
         return newElement;
     }
@@ -333,7 +365,6 @@ public class DesignContext {
      * inserting a dash before the letter. No dash is inserted before the first
      * letter of the class name.
      * 
-     * @since
      * @param className
      *            the name of the class without a package name
      * @return the html tag name corresponding to className
@@ -359,7 +390,6 @@ public class DesignContext {
      * node. Also calls synchronizeFromDesign() for the created node, in effect
      * creating the entire component hierarchy rooted at the returned component.
      * 
-     * @since
      * @param componentDesign
      *            The html tree node containing the description of the component
      *            to be created.
@@ -370,16 +400,16 @@ public class DesignContext {
         // Create the component.
         DesignSynchronizable component = instantiateComponent(componentDesign);
         component.synchronizeFromDesign(componentDesign, this);
-        // Get the IDs and the caption of the component and store them in the
+        // Get the ids and the caption of the component and store them in the
         // maps of this design context.
         org.jsoup.nodes.Attributes attributes = componentDesign.attributes();
         // global id: only update the mapping, the id has already been set for
         // the component
-        String id = component.getCaption();
+        String id = component.getId();
         if (id != null && id.length() > 0) {
-            boolean mappingExists = mapGlobalId(id, component);
+            boolean mappingExists = mapId(id, component);
             if (mappingExists) {
-                throw new LayoutInflaterException(
+                throw new DesignException(
                         "The following global id is not unique: " + id);
             }
         }
@@ -387,17 +417,12 @@ public class DesignContext {
         // from the attributes of componentDesign
         String localId = null;
         for (Attribute attribute : attributes.asList()) {
-            if (attribute.getKey().startsWith(LOCAL_ID_PREFIX)) {
+            if (attribute.getKey().equals(LOCAL_ID_ATTRIBUTE)) {
                 if (localId != null) {
-                    throw new LayoutInflaterException(
-                            "Duplicate local ids specified: "
-                                    + localId
-                                    + " and "
-                                    + attribute.getKey().substring(
-                                            LOCAL_ID_PREFIX.length()));
+                    throw new DesignException("Duplicate local ids specified: "
+                            + localId + ".");
                 }
-                localId = attribute.getKey()
-                        .substring(LOCAL_ID_PREFIX.length());
+                localId = attribute.getValue();
                 mapLocalId(localId, component); // two-way map
             }
         }
@@ -413,7 +438,6 @@ public class DesignContext {
      * Creates a DesignSynchronizable component corresponding to the given node.
      * Does not set the attributes for the created object.
      * 
-     * @since
      * @param node
      *            a node of an html tree
      * @return a DesignSynchronizable object corresponding to node, with no
@@ -427,16 +451,15 @@ public class DesignContext {
             DesignSynchronizable newComponent = componentClass.newInstance();
             return newComponent;
         } catch (Exception e) {
-            throw createException(e, qualifiedClassName);
+            throw new DesignException("No component class could be found for "
+                    + node.nodeName() + ".", e);
         }
     }
 
     /**
      * Returns the qualified class name corresponding to the given html tree
-     * node. If the node is not a span or a div, the class name is extracted
-     * from the tag name of node.
+     * node. The class name is extracted from the tag name of node.
      * 
-     * @since
      * @param node
      *            an html tree node
      * @return The qualified class name corresponding to the given node.
@@ -445,22 +468,19 @@ public class DesignContext {
         String tagName = node.nodeName();
         if (tagName.equals("v-addon")) {
             return node.attr("class");
-        } else if (tagName.toLowerCase(Locale.ENGLISH).equals("span")
-                || tagName.toLowerCase(Locale.ENGLISH).equals("div")) {
-            return "com.vaadin.ui.Label";
         }
         // Otherwise, get the full class name using the prefix to package
         // mapping. Example: "v-vertical-layout" ->
         // "com.vaadin.ui.VerticalLayout"
         String[] parts = tagName.split("-");
         if (parts.length < 2) {
-            throw new LayoutInflaterException("The tagname '" + tagName
+            throw new DesignException("The tagname '" + tagName
                     + "' is invalid: missing prefix.");
         }
         String prefixName = parts[0];
         String packageName = prefixToPackage.get(prefixName);
         if (packageName == null) {
-            throw new LayoutInflaterException("Unknown tag: " + tagName);
+            throw new DesignException("Unknown tag: " + tagName);
         }
         int firstCharacterIndex = prefixName.length() + 1; // +1 is for '-'
         tagName = tagName.substring(firstCharacterIndex,
@@ -498,20 +518,6 @@ public class DesignContext {
         }
     }
 
-    /*
-     * Create a new ComponentInstantiationException.
-     */
-    private ComponentInstantiationException createException(Exception e,
-            String qualifiedClassName) {
-        String message = String.format(
-                "Couldn't instantiate a component for %s.", qualifiedClassName);
-        if (e != null) {
-            return new ComponentInstantiationException(message, e);
-        } else {
-            return new ComponentInstantiationException(message);
-        }
-    }
-
     /**
      * Returns {@code true} if the given {@link Class} implements the
      * {@link Component} interface of Vaadin Framework otherwise {@code false}.
@@ -532,7 +538,6 @@ public class DesignContext {
     /**
      * Returns the root component of a created component hierarchy.
      * 
-     * @since
      * @return
      */
     public DesignSynchronizable getComponentRoot() {

@@ -541,7 +541,6 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
             DesignSynchronizable childComponent = (DesignSynchronizable) child;
             Element childNode = designContext.createNode(childComponent);
             designElement.appendChild(childNode);
-            childComponent.synchronizeToDesign(childNode, designContext);
             // handle alignment
             Alignment alignment = getComponentAlignment(child);
             if (alignment.isMiddle()) {
