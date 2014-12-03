@@ -1071,6 +1071,26 @@ public class SQLContainerTableQueryTest {
         Assert.assertEquals(0, container.size());
     }
 
+    // Set timeout to ensure there is no infinite looping (#12882)
+    @Test(timeout = 1000)
+    public void removeAllItems_manyItems_commit_shouldSucceed()
+            throws SQLException {
+        SQLContainer container = new SQLContainer(new TableQuery("people",
+                connectionPool, SQLTestsConstants.sqlGen));
+        final int itemNumber = (SQLContainer.CACHE_RATIO + 1)
+                * SQLContainer.DEFAULT_PAGE_LENGTH + 1;
+        container.removeAllItems();
+        Assert.assertEquals(container.size(), 0);
+        for (int i = 0; i < itemNumber; ++i) {
+            container.addItem();
+        }
+        container.commit();
+        Assert.assertEquals(container.size(), itemNumber);
+        Assert.assertTrue(container.removeAllItems());
+        container.commit();
+        Assert.assertEquals(container.size(), 0);
+    }
+
     @Test
     public void commit_tableAddedItem_shouldBeWrittenToDB() throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,

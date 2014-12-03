@@ -652,7 +652,6 @@ public class SQLContainer implements Container, Container.Filterable,
         if (cachedItems.isEmpty()) {
             getPage();
         }
-        int size = size();
         // this protects against infinite looping
         int counter = 0;
         int oldIndex;
