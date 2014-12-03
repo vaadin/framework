@@ -18,6 +18,7 @@ package com.vaadin.ui.declarative;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -327,7 +328,10 @@ public class DesignAttributeHandler {
      * @return the formatted number
      */
     public static String formatDesignAttribute(float number) {
-        DecimalFormat fmt = new DecimalFormat();
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale(
+                "en_US"));
+        DecimalFormat fmt = new DecimalFormat("0.###", symbols);
+        fmt.setGroupingUsed(false);
         return fmt.format(number);
     }
 
@@ -473,7 +477,13 @@ public class DesignAttributeHandler {
             } else if (value instanceof FontAwesome) {
                 return "font://" + ((FontAwesome) value).name();
             } else if (value instanceof FileResource) {
-                return ((FileResource) value).getSourceFile().getPath();
+                String path = ((FileResource) value).getSourceFile().getPath();
+                if (File.separatorChar != '/') {
+                    // make sure we use '/' as file separator in templates
+                    return path.replace(File.separatorChar, '/');
+                } else {
+                    return path;
+                }
             } else {
                 return null;
             }
