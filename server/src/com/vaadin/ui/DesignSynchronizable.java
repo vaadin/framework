@@ -15,7 +15,7 @@
  */
 package com.vaadin.ui;
 
-import org.jsoup.nodes.Node;
+import org.jsoup.nodes.Element;
 
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -42,7 +42,8 @@ public interface DesignSynchronizable extends Component {
      * @param designContext
      *            The DesignContext instance used for parsing the design
      */
-    public void synchronizeFromDesign(Node design, DesignContext designContext);
+    public void synchronizeFromDesign(Element design,
+            DesignContext designContext);
 
     /**
      * Update the given design based on the component state. The component is
@@ -58,5 +59,5 @@ public interface DesignSynchronizable extends Component {
      *            The design as HTML to update with the current state
      * @param designContext
      */
-    public void synchronizeToDesign(Node design, DesignContext designContext);
+    public void synchronizeToDesign(Element design, DesignContext designContext);
 }

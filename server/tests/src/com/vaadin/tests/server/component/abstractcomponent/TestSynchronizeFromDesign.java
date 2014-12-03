@@ -19,7 +19,6 @@ import junit.framework.TestCase;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
 import com.vaadin.server.ExternalResource;
@@ -45,28 +44,28 @@ public class TestSynchronizeFromDesign extends TestCase {
     }
 
     public void testSynchronizeId() {
-        Node design = createDesign("id", "testId");
+        Element design = createDesign("id", "testId");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals("testId", component.getId());
     }
 
     public void testSynchronizePrimaryStyleName() {
-        Node design = createDesign("primary-style-name", "test-style");
+        Element design = createDesign("primary-style-name", "test-style");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals("test-style", component.getPrimaryStyleName());
     }
 
     public void testSynchronizeCaption() {
-        Node design = createDesign("caption", "test-caption");
+        Element design = createDesign("caption", "test-caption");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals("test-caption", component.getCaption());
     }
 
     public void testSynchronizeLocale() {
-        Node design = createDesign("locale", "fi_FI");
+        Element design = createDesign("locale", "fi_FI");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals("fi", component.getLocale().getLanguage());
@@ -74,7 +73,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     }
 
     public void testSynchronizeExternalIcon() {
-        Node design = createDesign("icon", "http://example.com/example.gif");
+        Element design = createDesign("icon", "http://example.com/example.gif");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertTrue("Incorrect resource type returned", component.getIcon()
@@ -82,7 +81,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     }
 
     public void testSynchronizeThemeIcon() {
-        Node design = createDesign("icon", "theme://example.gif");
+        Element design = createDesign("icon", "theme://example.gif");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertTrue("Incorrect resource type returned", component.getIcon()
@@ -90,7 +89,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     }
 
     public void testSynchronizeFileResource() {
-        Node design = createDesign("icon", "img/example.gif");
+        Element design = createDesign("icon", "img/example.gif");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertTrue("Incorrect resource type returned", component.getIcon()
@@ -98,21 +97,21 @@ public class TestSynchronizeFromDesign extends TestCase {
     }
 
     public void testSynchronizeImmediate() {
-        Node design = createDesign("immediate", "true");
+        Element design = createDesign("immediate", "true");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals(true, component.isImmediate());
     }
 
     public void testSynchronizeDescription() {
-        Node design = createDesign("description", "test-description");
+        Element design = createDesign("description", "test-description");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals("test-description", component.getDescription());
     }
 
     public void testSynchronizeComponentError() {
-        Node design = createDesign("error", "<div>test-error</div>");
+        Element design = createDesign("error", "<div>test-error</div>");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals("<div>test-error</div>", component.getComponentError()
@@ -120,7 +119,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     }
 
     public void testSynchronizeSizeFull() {
-        Node design = createDesign("size-full", "");
+        Element design = createDesign("size-full", "");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals(100, component.getWidth(), 0.1f);
@@ -128,7 +127,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     }
 
     public void testSynchronizeSizeAuto() {
-        Node design = createDesign("size-auto", "");
+        Element design = createDesign("size-auto", "");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals(-1, component.getWidth(), 0.1f);
@@ -136,35 +135,35 @@ public class TestSynchronizeFromDesign extends TestCase {
     }
 
     public void testSynchronizeHeightFull() {
-        Node design = createDesign("height-full", "");
+        Element design = createDesign("height-full", "");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals(100, component.getHeight(), 0.1f);
     }
 
     public void testSynchronizeHeightAuto() {
-        Node design = createDesign("height-auto", "");
+        Element design = createDesign("height-auto", "");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals(-1, component.getHeight(), 0.1f);
     }
 
     public void testSynchronizeWidthFull() {
-        Node design = createDesign("width-full", "");
+        Element design = createDesign("width-full", "");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals(100, component.getWidth(), 0.1f);
     }
 
     public void testSynchronizeWidthAuto() {
-        Node design = createDesign("width-auto", "");
+        Element design = createDesign("width-auto", "");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals(-1, component.getWidth(), 0.1f);
     }
 
     public void testSynchronizeWidth() {
-        Node design = createDesign("width", "12px");
+        Element design = createDesign("width", "12px");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals(12, component.getWidth(), 0.1f);
@@ -173,7 +172,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     }
 
     public void testSynchronizeHeight() {
-        Node design = createDesign("height", "12px");
+        Element design = createDesign("height", "12px");
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals(12, component.getHeight(), 0.1f);
@@ -186,7 +185,7 @@ public class TestSynchronizeFromDesign extends TestCase {
         return new Label();
     }
 
-    private Node createDesign(String key, String value) {
+    private Element createDesign(String key, String value) {
         Attributes attributes = new Attributes();
         attributes.put(key, value);
         Element node = new Element(Tag.valueOf("v-label"), "", attributes);

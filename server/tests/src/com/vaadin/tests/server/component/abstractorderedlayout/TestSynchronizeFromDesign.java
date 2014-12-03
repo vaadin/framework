@@ -19,7 +19,6 @@ import junit.framework.TestCase;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
 import com.vaadin.ui.Alignment;
@@ -72,12 +71,12 @@ public class TestSynchronizeFromDesign extends TestCase {
 
     private VerticalLayout createLayout(float expandRatio, String... alignments) {
         DesignContext ctx = new DesignContext();
-        Node design = createDesign(expandRatio, alignments);
+        Element design = createDesign(expandRatio, alignments);
         DesignSynchronizable child = ctx.createChild(design);
         return (VerticalLayout) child;
     }
 
-    private Node createDesign(float expandRatio, String... alignments) {
+    private Element createDesign(float expandRatio, String... alignments) {
 
         Attributes rootAttributes = new Attributes();
         rootAttributes.put("caption", "test-layout");

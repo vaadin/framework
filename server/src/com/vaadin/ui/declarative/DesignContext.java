@@ -302,7 +302,7 @@ public class DesignContext {
      *         name of the created node is derived from the class name of
      *         childComponent.
      */
-    public Node createNode(DesignSynchronizable childComponent) {
+    public Element createNode(DesignSynchronizable childComponent) {
         Class<?> componentClass = childComponent.getClass();
         String packageName = componentClass.getPackage().getName();
         String prefix = packageToPrefix.get(packageName);
@@ -364,7 +364,7 @@ public class DesignContext {
      * @return a DesignSynchronizable object corresponding to componentDesign,
      *         with no attributes set.
      */
-    public DesignSynchronizable createChild(Node componentDesign) {
+    public DesignSynchronizable createChild(Element componentDesign) {
         // Create the component.
         DesignSynchronizable component = instantiateComponent(componentDesign);
         component.synchronizeFromDesign(componentDesign, this);

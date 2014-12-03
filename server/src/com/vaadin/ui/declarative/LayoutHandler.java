@@ -70,7 +70,7 @@ public class LayoutHandler {
         designContext.getPrefixes(doc);
         // No special handling for a document without a body element - should be
         // taken care of by jsoup.
-        Node root = doc.body();
+        Element root = doc.body();
         DesignSynchronizable componentRoot = null;
         for (Node element : root.childNodes()) {
             if (element instanceof Element) {
@@ -83,7 +83,7 @@ public class LayoutHandler {
                                     + element + ".");
                 }
                 // createChild creates the entire component hierarchy
-                componentRoot = designContext.createChild(element);
+                componentRoot = designContext.createChild((Element) element);
                 designContext.setComponentRoot(componentRoot);
             }
         }

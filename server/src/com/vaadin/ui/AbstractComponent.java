@@ -27,7 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.Node;
+import org.jsoup.nodes.Element;
 
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.ConnectorActionManager;
@@ -909,10 +909,11 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see
      * com.vaadin.ui.DesignSynchronizable#synchronizeFromDesign(org.jsoup.nodes
-     * .Node, com.vaadin.ui.declarative.DesignContext)
+     * .Element, com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeFromDesign(Node design, DesignContext designContext) {
+    public void synchronizeFromDesign(Element design,
+            DesignContext designContext) {
         Attributes attr = design.attributes();
         AbstractComponent def = designContext.getDefaultInstance(this
                 .getClass());
@@ -958,10 +959,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see
      * com.vaadin.ui.DesignSynchronizable#synchronizeToDesign(org.jsoup.nodes
-     * .Node, com.vaadin.ui.declarative.DesignContext)
+     * .Element, com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeToDesign(Node design, DesignContext designContext) {
+    public void synchronizeToDesign(Element design, DesignContext designContext) {
         // clear node contents
         DesignAttributeHandler.clearNode(design);
         AbstractComponent def = designContext.getDefaultInstance(this

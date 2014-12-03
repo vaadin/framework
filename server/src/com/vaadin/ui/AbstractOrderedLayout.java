@@ -472,10 +472,11 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * 
      * @see
      * com.vaadin.ui.AbstractComponent#synchronizeFromDesign(org.jsoup.nodes
-     * .Node, com.vaadin.ui.declarative.DesignContext)
+     * .Element, com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeFromDesign(Node design, DesignContext designContext) {
+    public void synchronizeFromDesign(Element design,
+            DesignContext designContext) {
         // process default attributes
         super.synchronizeFromDesign(design, designContext);
         // remove current children
@@ -485,7 +486,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
             if (childComponent instanceof Element) {
                 Attributes attr = childComponent.attributes();
                 DesignSynchronizable newChild = designContext
-                        .createChild(childComponent);
+                        .createChild((Element) childComponent);
                 addComponent(newChild);
                 // handle alignment
                 int bitMask = 0;
@@ -527,45 +528,39 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.ui.AbstractComponent#synchronizeToDesign(org.jsoup.nodes.Node,
-     * com.vaadin.ui.declarative.DesignContext)
+     * com.vaadin.ui.AbstractComponent#synchronizeToDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeToDesign(Node design, DesignContext designContext) {
+    public void synchronizeToDesign(Element design, DesignContext designContext) {
         // synchronize default attributes
         super.synchronizeToDesign(design, designContext);
         // handle children
-        if (this instanceof HasComponents) {
-            if (!(design instanceof Element)) {
-                throw new RuntimeException(
-                        "Attempted to create child elements for a node that cannot have children.");
+        Element designElement = design;
+        for (Component child : this) {
+            DesignSynchronizable childComponent = (DesignSynchronizable) child;
+            Element childNode = designContext.createNode(childComponent);
+            designElement.appendChild(childNode);
+            childComponent.synchronizeToDesign(childNode, designContext);
+            // handle alignment
+            Alignment alignment = getComponentAlignment(child);
+            if (alignment.isMiddle()) {
+                childNode.attr(":middle", "");
+            } else if (alignment.isBottom()) {
+                childNode.attr(":bottom", "");
             }
-            Element designElement = (Element) design;
-            for (Component child : this) {
-                DesignSynchronizable childComponent = (DesignSynchronizable) child;
-                Node childNode = designContext.createNode(childComponent);
-                designElement.appendChild(childNode);
-                childComponent.synchronizeToDesign(childNode, designContext);
-                // handle alignment
-                Alignment alignment = getComponentAlignment(child);
-                if (alignment.isMiddle()) {
-                    childNode.attr(":middle", "");
-                } else if (alignment.isBottom()) {
-                    childNode.attr(":bottom", "");
-                }
-                if (alignment.isCenter()) {
-                    childNode.attr(":center", "");
-                } else if (alignment.isRight()) {
-                    childNode.attr(":right", "");
-                }
-                // handle expand ratio
-                float expandRatio = getExpandRatio(child);
-                if (expandRatio == 1.0f) {
-                    childNode.attr(":expand", "");
-                } else if (expandRatio > 0) {
-                    childNode.attr(":expand", DesignAttributeHandler
-                            .formatDesignAttribute(expandRatio));
-                }
+            if (alignment.isCenter()) {
+                childNode.attr(":center", "");
+            } else if (alignment.isRight()) {
+                childNode.attr(":right", "");
+            }
+            // handle expand ratio
+            float expandRatio = getExpandRatio(child);
+            if (expandRatio == 1.0f) {
+                childNode.attr(":expand", "");
+            } else if (expandRatio > 0) {
+                childNode.attr(":expand", DesignAttributeHandler
+                        .formatDesignAttribute(expandRatio));
             }
         }
     }

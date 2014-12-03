@@ -19,7 +19,6 @@ import junit.framework.TestCase;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
 import com.vaadin.ui.Alignment;
@@ -38,7 +37,7 @@ public class TestSynchronizeToDesign extends TestCase {
     public void testSynchronizeEmptyLayout() {
         VerticalLayout layout = new VerticalLayout();
         layout.setCaption("changed-caption");
-        Node design = createDesign();
+        Element design = createDesign();
         layout.synchronizeToDesign(design, createDesignContext());
         assertEquals(0, design.childNodes().size());
         assertEquals("changed-caption", design.attr("caption"));
@@ -49,7 +48,7 @@ public class TestSynchronizeToDesign extends TestCase {
         layout.addComponent(new Label("test-label"));
         layout.getComponent(0).setCaption("test-caption");
         layout.addComponent(new Label("test-label-2"));
-        Node design = createDesign();
+        Element design = createDesign();
         layout.synchronizeToDesign(design, createDesignContext());
         assertEquals(2, design.childNodes().size());
         assertEquals("v-label", ((Element) design.childNode(0)).tagName());
@@ -60,7 +59,7 @@ public class TestSynchronizeToDesign extends TestCase {
         VerticalLayout layout = new VerticalLayout();
         layout.addComponent(new Label("test-label"));
         layout.setExpandRatio(layout.getComponent(0), 1.0f);
-        Node design = createDesign();
+        Element design = createDesign();
         layout.synchronizeToDesign(design, createDesignContext());
         assertTrue(design.childNode(0).hasAttr(":expand"));
         assertEquals("", design.childNode(0).attr(":expand"));
@@ -70,14 +69,14 @@ public class TestSynchronizeToDesign extends TestCase {
         VerticalLayout layout = new VerticalLayout();
         layout.addComponent(new Label("test-label"));
         layout.setExpandRatio(layout.getComponent(0), 2.40f);
-        Node design = createDesign();
+        Element design = createDesign();
         layout.synchronizeToDesign(design, createDesignContext());
         assertTrue(design.childNode(0).hasAttr(":expand"));
         assertEquals("2.4", design.childNode(0).attr(":expand"));
     }
 
     public void testSynchronizeDefaultAlignment() {
-        Node design = createDesign();
+        Element design = createDesign();
         VerticalLayout layout = createLayoutWithAlignment(design, null);
         layout.synchronizeToDesign(design, createDesignContext());
         assertFalse(design.childNode(0).hasAttr(":top"));
@@ -85,7 +84,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeMiddleCenter() {
-        Node design = createDesign();
+        Element design = createDesign();
         VerticalLayout layout = createLayoutWithAlignment(design,
                 Alignment.MIDDLE_CENTER);
         layout.synchronizeToDesign(design, createDesignContext());
@@ -94,7 +93,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeBottomRight() {
-        Node design = createDesign();
+        Element design = createDesign();
         VerticalLayout layout = createLayoutWithAlignment(design,
                 Alignment.BOTTOM_RIGHT);
         layout.synchronizeToDesign(design, createDesignContext());
@@ -102,7 +101,7 @@ public class TestSynchronizeToDesign extends TestCase {
         assertTrue(design.childNode(0).hasAttr(":right"));
     }
 
-    private VerticalLayout createLayoutWithAlignment(Node design,
+    private VerticalLayout createLayoutWithAlignment(Element design,
             Alignment alignment) {
         VerticalLayout layout = new VerticalLayout();
         layout.addComponent(new Label("test-label"));
@@ -113,7 +112,7 @@ public class TestSynchronizeToDesign extends TestCase {
         return layout;
     }
 
-    private Node createDesign() {
+    private Element createDesign() {
         // make sure that the design node has old content that should be removed
         Attributes rootAttributes = new Attributes();
         rootAttributes.put("caption", "test-layout");

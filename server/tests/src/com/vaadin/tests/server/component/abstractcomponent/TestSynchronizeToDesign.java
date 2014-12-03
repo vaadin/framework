@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
@@ -52,7 +51,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeId() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setId("testId");
         component.synchronizeToDesign(design, ctx);
@@ -62,7 +61,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizePrimaryStyleName() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setPrimaryStyleName("test-style");
         component.synchronizeToDesign(design, ctx);
@@ -72,7 +71,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeCaption() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setCaption("test-caption");
         component.synchronizeToDesign(design, ctx);
@@ -82,7 +81,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeLocale() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setLocale(new Locale("fi", "FI"));
         component.synchronizeToDesign(design, ctx);
@@ -92,7 +91,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeExternalIcon() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component
                 .setIcon(new ExternalResource("http://example.com/example.gif"));
@@ -103,7 +102,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeThemeIcon() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setIcon(new ThemeResource("example.gif"));
         component.synchronizeToDesign(design, ctx);
@@ -113,7 +112,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeFileResource() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setIcon(new FileResource(new File("img/example.gif")));
         component.synchronizeToDesign(design, ctx);
@@ -123,7 +122,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeImmediate() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setImmediate(true);
         component.synchronizeToDesign(design, ctx);
@@ -133,7 +132,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeDescription() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setDescription("test-description");
         component.synchronizeToDesign(design, ctx);
@@ -143,7 +142,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeComponentError() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setComponentError(new UserError("<div>test-error</div>",
                 ContentMode.HTML, ErrorLevel.ERROR));
@@ -154,7 +153,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeSizeFull() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setSizeFull();
         component.synchronizeToDesign(design, ctx);
@@ -164,7 +163,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeSizeAuto() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getPanel();
         component.setSizeUndefined();
         component.synchronizeToDesign(design, ctx);
@@ -174,7 +173,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeHeightFull() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setHeight("100%");
         component.setWidth("20px");
@@ -183,7 +182,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeHeightAuto() {
-        Node design = createDesign();
+        Element design = createDesign();
         // we need to have default height of 100% -> use split panel
         AbstractComponent component = getPanel();
         component.setHeight(null);
@@ -193,7 +192,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeWidthFull() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setHeight("20px");
         component.setWidth("100%");
@@ -202,7 +201,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeWidthAuto() {
-        Node design = createDesign();
+        Element design = createDesign();
         // need to get label, otherwise the default would be auto
         AbstractComponent component = getPanel();
         component.setHeight("20px");
@@ -212,7 +211,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeWidth() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setHeight("20px");
         component.setWidth("70%");
@@ -221,7 +220,7 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     public void testSynchronizeHeight() {
-        Node design = createDesign();
+        Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setHeight("20px");
         component.setWidth("70%");
@@ -237,7 +236,7 @@ public class TestSynchronizeToDesign extends TestCase {
         return new HorizontalSplitPanel();
     }
 
-    private Node createDesign() {
+    private Element createDesign() {
         Attributes attr = new Attributes();
         attr.put("should_be_removed", "foo");
         Element node = new Element(Tag.valueOf("v-button"), "", attr);
