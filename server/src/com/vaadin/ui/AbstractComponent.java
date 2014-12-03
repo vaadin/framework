@@ -1029,7 +1029,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
                     attributes.put("width-auto", "true");
                 } else {
                     String widthString = DesignAttributeHandler
-                            .formatDesignAttribute(getWidth())
+                            .formatFloat(getWidth())
                             + getWidthUnits().getSymbol();
                     attributes.put("width", widthString);
 
@@ -1043,7 +1043,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
                     attributes.put("height-auto", "true");
                 } else {
                     String heightString = DesignAttributeHandler
-                            .formatDesignAttribute(getHeight())
+                            .formatFloat(getHeight())
                             + getHeightUnits().getSymbol();
                     attributes.put("height", heightString);
                 }

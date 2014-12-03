@@ -244,12 +244,35 @@ public class DesignAttributeHandler {
      *            the number to be formatted
      * @return the formatted number
      */
-    public static String formatDesignAttribute(float number) {
+    public static String formatFloat(float number) {
+        return getDecimalFormat().format(number);
+    }
+
+    /**
+     * Formats the given design attribute value. The method is provided to
+     * ensure consistent number formatting for design attribute values
+     * 
+     * @since 7.4
+     * @param number
+     *            the number to be formatted
+     * @return the formatted number
+     */
+    public static String formatDouble(double number) {
+        return getDecimalFormat().format(number);
+    }
+
+    /**
+     * Creates the decimal format used when writing attributes to the design
+     * 
+     * @since 7.4
+     * @return the decimal format
+     */
+    private static DecimalFormat getDecimalFormat() {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale(
                 "en_US"));
         DecimalFormat fmt = new DecimalFormat("0.###", symbols);
         fmt.setGroupingUsed(false);
-        return fmt.format(number);
+        return fmt;
     }
 
     /**
@@ -359,8 +382,13 @@ public class DesignAttributeHandler {
                         "Unknown resource type " + value.getClass().getName());
                 return null;
             }
+        } else if (sourceType == Float.class || sourceType == Float.TYPE) {
+            return formatFloat(((Float) value).floatValue());
+        } else if (sourceType == Double.class || sourceType == Double.TYPE) {
+            return formatDouble(((Double) value).doubleValue());
         } else {
             return value.toString();
+
         }
     }
 
