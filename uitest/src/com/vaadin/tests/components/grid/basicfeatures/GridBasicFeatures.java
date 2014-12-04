@@ -135,7 +135,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         Grid grid = new Grid(ds);
 
         {
-            int col = grid.getContainerDatasource().getContainerPropertyIds()
+            int col = grid.getContainerDataSource().getContainerPropertyIds()
                     .size()
                     - MANUALLY_FORMATTED_COLUMNS;
             grid.getColumn(getColumnProperty(col++)).setRenderer(
@@ -430,7 +430,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                         @Override
                         public void execute(Grid grid, String value, Object data) {
-                            grid.getContainerDatasource()
+                            grid.getContainerDataSource()
                                     .removeContainerProperty(
                                             getColumnProperty((Integer) data));
                             removeCategory("Column " + data);
@@ -696,7 +696,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     @Override
                     public void execute(Grid grid, Boolean select, Object data) {
                         final Object firstItemId = grid
-                                .getContainerDatasource().firstItemId();
+                                .getContainerDataSource().firstItemId();
                         if (select.booleanValue()) {
                             grid.select(firstItemId);
                         } else {

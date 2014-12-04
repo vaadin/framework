@@ -34,7 +34,7 @@ public class GridColumnBuildTest {
 
     @Before
     public void setUp() {
-        container = grid.getContainerDatasource();
+        container = grid.getContainerDataSource();
         container.addItem();
     }
 

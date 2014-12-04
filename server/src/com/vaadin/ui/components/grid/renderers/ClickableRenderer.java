@@ -89,7 +89,7 @@ public class ClickableRenderer<T> extends AbstractRenderer<T> {
                     MouseEventDetails mouseDetails) {
 
                 Grid grid = (Grid) getParent();
-                Object itemId = grid.getContainerDatasource().getIdByIndex(row);
+                Object itemId = grid.getContainerDataSource().getIdByIndex(row);
                 // TODO map column index to property ID or send column ID
                 // instead of index from the client
                 fireEvent(new RendererClickEvent(grid, itemId, mouseDetails));

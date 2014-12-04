@@ -652,7 +652,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             rows.add(index, row);
             getSectionState().rows.add(index, row.getRowState());
 
-            Indexed dataSource = grid.getContainerDatasource();
+            Indexed dataSource = grid.getContainerDataSource();
             for (Object id : dataSource.getContainerPropertyIds()) {
                 row.addCell(id);
             }
@@ -1309,7 +1309,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         }
 
         private Class<?> getModelType() {
-            return grid.getContainerDatasource().getType(
+            return grid.getContainerDataSource().getType(
                     grid.getPropertyIdByColumnId(state.id));
         }
 
@@ -1645,7 +1645,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             internalEditItem(itemId);
 
             grid.getEditorRowRpc().bind(
-                    grid.getContainerDatasource().indexOfId(itemId));
+                    grid.getContainerDataSource().indexOfId(itemId));
         }
 
         protected void internalEditItem(Object itemId) {
@@ -1692,7 +1692,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             checkDetached();
             if (isEditing()) {
                 grid.getEditorRowRpc().cancel(
-                        grid.getContainerDatasource().indexOfId(editedItemId));
+                        grid.getContainerDataSource().indexOfId(editedItemId));
                 internalCancel();
             }
         }
@@ -1738,7 +1738,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         }
 
         private Container getContainer() {
-            return grid.getContainerDatasource();
+            return grid.getContainerDataSource();
         }
 
         private void checkDetached() throws IllegalStateException {
@@ -2110,7 +2110,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             @Override
             public void bind(int rowIndex) {
                 try {
-                    Object id = getContainerDatasource().getIdByIndex(rowIndex);
+                    Object id = getContainerDataSource().getIdByIndex(rowIndex);
                     getEditorRow().internalEditItem(id);
                     getEditorRowRpc().confirmBind();
                 } catch (Exception e) {
@@ -2237,7 +2237,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             // container. If the new container does not support an item in the
             // current sort order, that item is removed from the current sort
             // order list.
-            Collection<?> sortableProps = ((Container.Sortable) getContainerDatasource())
+            Collection<?> sortableProps = ((Container.Sortable) getContainerDataSource())
                     .getSortableContainerPropertyIds();
 
             Iterator<SortOrder> i = sortOrder.iterator();
@@ -2311,7 +2311,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      * 
      * @return the container data source of the grid
      */
-    public Container.Indexed getContainerDatasource() {
+    public Container.Indexed getContainerDataSource() {
         return datasource;
     }
 
@@ -3097,7 +3097,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
     private void setSortOrder(List<SortOrder> order,
             SortEventOriginator originator) {
-        if (!(getContainerDatasource() instanceof Container.Sortable)) {
+        if (!(getContainerDataSource() instanceof Container.Sortable)) {
             throw new IllegalStateException(
                     "Attached container is not sortable (does not implement Container.Sortable)");
         }
@@ -3108,7 +3108,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
         sortOrder.clear();
 
-        Collection<?> sortableProps = ((Container.Sortable) getContainerDatasource())
+        Collection<?> sortableProps = ((Container.Sortable) getContainerDataSource())
                 .getSortableContainerPropertyIds();
 
         for (SortOrder o : order) {
@@ -3138,7 +3138,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      */
     private void sort(SortEventOriginator originator) {
 
-        Container c = getContainerDatasource();
+        Container c = getContainerDataSource();
         if (c instanceof Container.Sortable) {
             Container.Sortable cs = (Container.Sortable) c;
 

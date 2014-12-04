@@ -29,7 +29,7 @@ public class GridAddAndRemoveDataOnInit extends AbstractTestUI {
         gridAdd.setHeight("240px");
         gridAdd.setWidth("140px");
         addComponent(gridAdd);
-        Indexed dataSource = gridAdd.getContainerDatasource();
+        Indexed dataSource = gridAdd.getContainerDataSource();
         dataSource.addContainerProperty("foo", Integer.class, 0);
         for (int i = 0; i < 10; ++i) {
             Object id = dataSource.addItem();

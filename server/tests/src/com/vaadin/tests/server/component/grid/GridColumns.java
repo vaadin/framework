@@ -72,7 +72,7 @@ public class GridColumns {
     @Test
     public void testColumnGeneration() throws Exception {
 
-        for (Object propertyId : grid.getContainerDatasource()
+        for (Object propertyId : grid.getContainerDataSource()
                 .getContainerPropertyIds()) {
 
             // All property ids should get a column
@@ -127,7 +127,7 @@ public class GridColumns {
         assertNotNull(column);
 
         // Remove column
-        grid.getContainerDatasource().removeContainerProperty("column1");
+        grid.getContainerDataSource().removeContainerProperty("column1");
 
         try {
             column.setHeaderCaption("asd");
@@ -157,7 +157,7 @@ public class GridColumns {
 
     @Test
     public void testAddingColumn() throws Exception {
-        grid.getContainerDatasource().addContainerProperty("columnX",
+        grid.getContainerDataSource().addContainerProperty("columnX",
                 String.class, "");
         Column column = grid.getColumn("columnX");
         assertNotNull(column);
@@ -198,19 +198,19 @@ public class GridColumns {
         assertNull("Grid should not start with a frozen column",
                 grid.getLastFrozenPropertyId());
 
-        Object propertyId = grid.getContainerDatasource()
+        Object propertyId = grid.getContainerDataSource()
                 .getContainerPropertyIds().iterator().next();
         grid.setLastFrozenPropertyId(propertyId);
         assertEquals(propertyId, grid.getLastFrozenPropertyId());
 
-        grid.getContainerDatasource().removeContainerProperty(propertyId);
+        grid.getContainerDataSource().removeContainerProperty(propertyId);
         assertNull(grid.getLastFrozenPropertyId());
     }
 
     @Test
     public void testReorderColumns() {
         Set<?> containerProperties = new LinkedHashSet<Object>(grid
-                .getContainerDatasource().getContainerPropertyIds());
+                .getContainerDataSource().getContainerPropertyIds());
         Object[] properties = new Object[] { "column3", "column2", "column6" };
         grid.setColumnOrder(properties);
 

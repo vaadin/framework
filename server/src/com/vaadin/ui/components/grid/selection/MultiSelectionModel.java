@@ -92,7 +92,7 @@ public class MultiSelectionModel extends AbstractSelectionModel implements
     @Override
     public boolean selectAll() {
         // select will fire the event
-        final Indexed container = grid.getContainerDatasource();
+        final Indexed container = grid.getContainerDataSource();
         if (container != null) {
             return select(container.getItemIds());
         } else if (selection.isEmpty()) {
