@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,9 +51,6 @@ import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.grid.EditorRow.State;
-import com.vaadin.client.ui.grid.GridFooter.FooterRow;
-import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
-import com.vaadin.client.ui.grid.GridStaticSection.StaticCell;
 import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler;
 import com.vaadin.client.ui.grid.events.BodyKeyDownHandler;
 import com.vaadin.client.ui.grid.events.BodyKeyPressHandler;
@@ -157,6 +156,757 @@ public class Grid<T> extends ResizeComposite implements
          */
         public abstract String getStyle(Grid<T> grid, T row, int rowIndex,
                 GridColumn<?, T> column, int columnIndex);
+    }
+
+    /**
+     * Abstract base class for Grid header and footer sections.
+     * 
+     * @param <ROWTYPE>
+     *            the type of the rows in the section
+     */
+    protected abstract static class StaticSection<ROWTYPE extends StaticSection.StaticRow<?>> {
+
+        /**
+         * A header or footer cell. Has a simple textual caption.
+         * 
+         */
+        static class StaticCell {
+
+            private Object content = null;
+
+            private int colspan = 1;
+
+            private StaticSection<?> section;
+
+            private GridStaticCellType type = GridStaticCellType.TEXT;
+
+            private String styleName = null;
+
+            /**
+             * Sets the text displayed in this cell.
+             * 
+             * @param text
+             *            a plain text caption
+             */
+            public void setText(String text) {
+                this.content = text;
+                this.type = GridStaticCellType.TEXT;
+                section.requestSectionRefresh();
+            }
+
+            /**
+             * Returns the text displayed in this cell.
+             * 
+             * @return the plain text caption
+             */
+            public String getText() {
+                if (type != GridStaticCellType.TEXT) {
+                    throw new IllegalStateException(
+                            "Cannot fetch Text from a cell with type " + type);
+                }
+                return (String) content;
+            }
+
+            protected StaticSection<?> getSection() {
+                assert section != null;
+                return section;
+            }
+
+            protected void setSection(StaticSection<?> section) {
+                this.section = section;
+            }
+
+            /**
+             * Returns the amount of columns the cell spans. By default is 1.
+             * 
+             * @return The amount of columns the cell spans.
+             */
+            public int getColspan() {
+                return colspan;
+            }
+
+            /**
+             * Sets the amount of columns the cell spans. Must be more or equal
+             * to 1. By default is 1.
+             * 
+             * @param colspan
+             *            the colspan to set
+             */
+            public void setColspan(int colspan) {
+                if (colspan < 1) {
+                    throw new IllegalArgumentException(
+                            "Colspan cannot be less than 1");
+                }
+
+                this.colspan = colspan;
+                section.requestSectionRefresh();
+            }
+
+            /**
+             * Returns the html inside the cell.
+             * 
+             * @throws IllegalStateException
+             *             if trying to retrive HTML from a cell with a type
+             *             other than {@link GridStaticCellType#HTML}.
+             * @return the html content of the cell.
+             */
+            public String getHtml() {
+                if (type != GridStaticCellType.HTML) {
+                    throw new IllegalStateException(
+                            "Cannot fetch HTML from a cell with type " + type);
+                }
+                return (String) content;
+            }
+
+            /**
+             * Sets the content of the cell to the provided html. All previous
+             * content is discarded and the cell type is set to
+             * {@link GridStaticCellType#HTML}.
+             * 
+             * @param html
+             *            The html content of the cell
+             */
+            public void setHtml(String html) {
+                this.content = html;
+                this.type = GridStaticCellType.HTML;
+                section.requestSectionRefresh();
+            }
+
+            /**
+             * Returns the widget in the cell.
+             * 
+             * @throws IllegalStateException
+             *             if the cell is not {@link GridStaticCellType#WIDGET}
+             * 
+             * @return the widget in the cell
+             */
+            public Widget getWidget() {
+                if (type != GridStaticCellType.WIDGET) {
+                    throw new IllegalStateException(
+                            "Cannot fetch Widget from a cell with type " + type);
+                }
+                return (Widget) content;
+            }
+
+            /**
+             * Set widget as the content of the cell. The type of the cell
+             * becomes {@link GridStaticCellType#WIDGET}. All previous content
+             * is discarded.
+             * 
+             * @param widget
+             *            The widget to add to the cell. Should not be
+             *            previously attached anywhere (widget.getParent ==
+             *            null).
+             */
+            public void setWidget(Widget widget) {
+                this.content = widget;
+                this.type = GridStaticCellType.WIDGET;
+                section.requestSectionRefresh();
+            }
+
+            /**
+             * Returns the type of the cell.
+             * 
+             * @return the type of content the cell contains.
+             */
+            public GridStaticCellType getType() {
+                return type;
+            }
+
+            /**
+             * Returns the custom style name for this cell.
+             * 
+             * @return the style name or null if no style name has been set
+             */
+            public String getStyleName() {
+                return styleName;
+            }
+
+            /**
+             * Sets a custom style name for this cell.
+             * 
+             * @param styleName
+             *            the style name to set or null to not use any style
+             *            name
+             */
+            public void setStyleName(String styleName) {
+                this.styleName = styleName;
+                section.requestSectionRefresh();
+
+            }
+
+        }
+
+        /**
+         * Abstract base class for Grid header and footer rows.
+         * 
+         * @param <CELLTYPE>
+         *            the type of the cells in the row
+         */
+        abstract static class StaticRow<CELLTYPE extends StaticCell> {
+
+            private Map<GridColumn<?, ?>, CELLTYPE> cells = new HashMap<GridColumn<?, ?>, CELLTYPE>();
+
+            private StaticSection<?> section;
+
+            /**
+             * Map from set of spanned columns to cell meta data.
+             */
+            private Map<Set<GridColumn<?, ?>>, CELLTYPE> cellGroups = new HashMap<Set<GridColumn<?, ?>>, CELLTYPE>();
+
+            /**
+             * A custom style name for the row or null if none is set.
+             */
+            private String styleName = null;
+
+            /**
+             * Returns the cell on given GridColumn. If the column is merged
+             * returned cell is the cell for the whole group.
+             * 
+             * @param column
+             *            the column in grid
+             * @return the cell on given column, merged cell for merged columns,
+             *         null if not found
+             */
+            public CELLTYPE getCell(GridColumn<?, ?> column) {
+                Set<GridColumn<?, ?>> cellGroup = getCellGroupForColumn(column);
+                if (cellGroup != null) {
+                    return cellGroups.get(cellGroup);
+                }
+                return cells.get(column);
+            }
+
+            /**
+             * Merges columns cells in a row
+             * 
+             * @param columns
+             *            the columns which header should be merged
+             * @return the remaining visible cell after the merge, or the cell
+             *         on first column if all are hidden
+             */
+            public CELLTYPE join(GridColumn<?, ?>... columns) {
+                if (columns.length <= 1) {
+                    throw new IllegalArgumentException(
+                            "You can't merge less than 2 columns together.");
+                }
+
+                HashSet<GridColumn<?, ?>> columnGroup = new HashSet<GridColumn<?, ?>>();
+                for (GridColumn<?, ?> column : columns) {
+                    if (!cells.containsKey(column)) {
+                        throw new IllegalArgumentException(
+                                "Given column does not exists on row " + column);
+                    } else if (getCellGroupForColumn(column) != null) {
+                        throw new IllegalStateException(
+                                "Column is already in a group.");
+                    }
+                    columnGroup.add(column);
+                }
+
+                CELLTYPE joinedCell = createCell();
+                cellGroups.put(columnGroup, joinedCell);
+                joinedCell.setSection(getSection());
+
+                calculateColspans();
+
+                return joinedCell;
+            }
+
+            /**
+             * Merges columns cells in a row
+             * 
+             * @param cells
+             *            The cells to merge. Must be from the same row.
+             * @return The remaining visible cell after the merge, or the first
+             *         cell if all columns are hidden
+             */
+            public CELLTYPE join(CELLTYPE... cells) {
+                if (cells.length <= 1) {
+                    throw new IllegalArgumentException(
+                            "You can't merge less than 2 cells together.");
+                }
+
+                GridColumn<?, ?>[] columns = new GridColumn<?, ?>[cells.length];
+
+                int j = 0;
+                for (GridColumn<?, ?> column : this.cells.keySet()) {
+                    CELLTYPE cell = this.cells.get(column);
+                    if (!this.cells.containsValue(cells[j])) {
+                        throw new IllegalArgumentException(
+                                "Given cell does not exists on row");
+                    } else if (cell.equals(cells[j])) {
+                        columns[j++] = column;
+                        if (j == cells.length) {
+                            break;
+                        }
+                    }
+                }
+
+                return join(columns);
+            }
+
+            private Set<GridColumn<?, ?>> getCellGroupForColumn(
+                    GridColumn<?, ?> column) {
+                for (Set<GridColumn<?, ?>> group : cellGroups.keySet()) {
+                    if (group.contains(column)) {
+                        return group;
+                    }
+                }
+                return null;
+            }
+
+            void calculateColspans() {
+
+                // Reset all cells
+                for (CELLTYPE cell : this.cells.values()) {
+                    cell.setColspan(1);
+                }
+
+                List<GridColumn<?, ?>> columnOrder = new ArrayList<GridColumn<?, ?>>(
+                        section.grid.getColumns());
+                // Set colspan for grouped cells
+                for (Set<GridColumn<?, ?>> group : cellGroups.keySet()) {
+                    if (!checkCellGroupAndOrder(columnOrder, group)) {
+                        cellGroups.get(group).setColspan(1);
+                    } else {
+                        int colSpan = group.size();
+                        cellGroups.get(group).setColspan(colSpan);
+                    }
+                }
+
+            }
+
+            private boolean checkCellGroupAndOrder(
+                    List<GridColumn<?, ?>> columnOrder,
+                    Set<GridColumn<?, ?>> cellGroup) {
+                if (!columnOrder.containsAll(cellGroup)) {
+                    return false;
+                }
+
+                for (int i = 0; i < columnOrder.size(); ++i) {
+                    if (!cellGroup.contains(columnOrder.get(i))) {
+                        continue;
+                    }
+
+                    for (int j = 1; j < cellGroup.size(); ++j) {
+                        if (!cellGroup.contains(columnOrder.get(i + j))) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            protected void addCell(GridColumn<?, ?> column) {
+                CELLTYPE cell = createCell();
+                cell.setSection(getSection());
+                cells.put(column, cell);
+            }
+
+            protected void removeCell(GridColumn<?, ?> column) {
+                cells.remove(column);
+            }
+
+            protected abstract CELLTYPE createCell();
+
+            protected StaticSection<?> getSection() {
+                return section;
+            }
+
+            protected void setSection(StaticSection<?> section) {
+                this.section = section;
+            }
+
+            /**
+             * Returns the custom style name for this row.
+             * 
+             * @return the style name or null if no style name has been set
+             */
+            public String getStyleName() {
+                return styleName;
+            }
+
+            /**
+             * Sets a custom style name for this row.
+             * 
+             * @param styleName
+             *            the style name to set or null to not use any style
+             *            name
+             */
+            public void setStyleName(String styleName) {
+                this.styleName = styleName;
+                section.requestSectionRefresh();
+            }
+        }
+
+        private Grid<?> grid;
+
+        private List<ROWTYPE> rows = new ArrayList<ROWTYPE>();
+
+        private boolean visible = true;
+
+        /**
+         * Creates and returns a new instance of the row type.
+         * 
+         * @return the created row
+         */
+        protected abstract ROWTYPE createRow();
+
+        /**
+         * Informs the grid that this section should be re-rendered.
+         * <p>
+         * <b>Note</b> that re-render means calling update() on each cell,
+         * preAttach()/postAttach()/preDetach()/postDetach() is not called as
+         * the cells are not removed from the DOM.
+         */
+        protected abstract void requestSectionRefresh();
+
+        /**
+         * Sets the visibility of the whole section.
+         * 
+         * @param visible
+         *            true to show this section, false to hide
+         */
+        public void setVisible(boolean visible) {
+            this.visible = visible;
+            requestSectionRefresh();
+        }
+
+        /**
+         * Returns the visibility of this section.
+         * 
+         * @return true if visible, false otherwise.
+         */
+        public boolean isVisible() {
+            return visible;
+        }
+
+        /**
+         * Inserts a new row at the given position. Shifts the row currently at
+         * that position and any subsequent rows down (adds one to their
+         * indices).
+         * 
+         * @param index
+         *            the position at which to insert the row
+         * @return the new row
+         * 
+         * @throws IndexOutOfBoundsException
+         *             if the index is out of bounds
+         * @see #appendRow()
+         * @see #prependRow()
+         * @see #removeRow(int)
+         * @see #removeRow(StaticRow)
+         */
+        public ROWTYPE addRowAt(int index) {
+            ROWTYPE row = createRow();
+            row.setSection(this);
+            for (int i = 0; i < getGrid().getColumnCount(); ++i) {
+                row.addCell(grid.getColumn(i));
+            }
+            rows.add(index, row);
+
+            requestSectionRefresh();
+            return row;
+        }
+
+        /**
+         * Adds a new row at the top of this section.
+         * 
+         * @return the new row
+         * @see #appendRow()
+         * @see #addRowAt(int)
+         * @see #removeRow(int)
+         * @see #removeRow(StaticRow)
+         */
+        public ROWTYPE prependRow() {
+            return addRowAt(0);
+        }
+
+        /**
+         * Adds a new row at the bottom of this section.
+         * 
+         * @return the new row
+         * @see #prependRow()
+         * @see #addRowAt(int)
+         * @see #removeRow(int)
+         * @see #removeRow(StaticRow)
+         */
+        public ROWTYPE appendRow() {
+            return addRowAt(rows.size());
+        }
+
+        /**
+         * Removes the row at the given position.
+         * 
+         * @param index
+         *            the position of the row
+         * 
+         * @throws IndexOutOfBoundsException
+         *             if the index is out of bounds
+         * @see #addRowAt(int)
+         * @see #appendRow()
+         * @see #prependRow()
+         * @see #removeRow(StaticRow)
+         */
+        public void removeRow(int index) {
+            rows.remove(index);
+            requestSectionRefresh();
+        }
+
+        /**
+         * Removes the given row from the section.
+         * 
+         * @param row
+         *            the row to be removed
+         * 
+         * @throws IllegalArgumentException
+         *             if the row does not exist in this section
+         * @see #addRowAt(int)
+         * @see #appendRow()
+         * @see #prependRow()
+         * @see #removeRow(int)
+         */
+        public void removeRow(ROWTYPE row) {
+            try {
+                removeRow(rows.indexOf(row));
+            } catch (IndexOutOfBoundsException e) {
+                throw new IllegalArgumentException(
+                        "Section does not contain the given row");
+            }
+        }
+
+        /**
+         * Returns the row at the given position.
+         * 
+         * @param index
+         *            the position of the row
+         * @return the row with the given index
+         * 
+         * @throws IndexOutOfBoundsException
+         *             if the index is out of bounds
+         */
+        public ROWTYPE getRow(int index) {
+            try {
+                return rows.get(index);
+            } catch (IndexOutOfBoundsException e) {
+                throw new IllegalArgumentException("Row with index " + index
+                        + " does not exist");
+            }
+        }
+
+        /**
+         * Returns the number of rows in this section.
+         * 
+         * @return the number of rows
+         */
+        public int getRowCount() {
+            return rows.size();
+        }
+
+        protected List<ROWTYPE> getRows() {
+            return rows;
+        }
+
+        protected int getVisibleRowCount() {
+            return isVisible() ? getRowCount() : 0;
+        }
+
+        protected void addColumn(GridColumn<?, ?> column) {
+            for (ROWTYPE row : rows) {
+                row.addCell(column);
+            }
+        }
+
+        protected void removeColumn(GridColumn<?, ?> column) {
+            for (ROWTYPE row : rows) {
+                row.removeCell(column);
+            }
+        }
+
+        protected void setGrid(Grid<?> grid) {
+            this.grid = grid;
+        }
+
+        protected Grid<?> getGrid() {
+            assert grid != null;
+            return grid;
+        }
+    }
+
+    /**
+     * Represents the header section of a Grid. A header consists of a single
+     * header row containing a header cell for each column. Each cell has a
+     * simple textual caption.
+     */
+    protected static class Header extends StaticSection<HeaderRow> {
+        private HeaderRow defaultRow;
+
+        private boolean markAsDirty = false;
+
+        @Override
+        public void removeRow(int index) {
+            HeaderRow removedRow = getRow(index);
+            super.removeRow(index);
+            if (removedRow == defaultRow) {
+                setDefaultRow(null);
+            }
+        }
+
+        /**
+         * Sets the default row of this header. The default row is a special
+         * header row providing a user interface for sorting columns.
+         * 
+         * @param row
+         *            the new default row, or null for no default row
+         * 
+         * @throws IllegalArgumentException
+         *             this header does not contain the row
+         */
+        public void setDefaultRow(HeaderRow row) {
+            if (row == defaultRow) {
+                return;
+            }
+            if (row != null && !getRows().contains(row)) {
+                throw new IllegalArgumentException(
+                        "Cannot set a default row that does not exist in the container");
+            }
+            if (defaultRow != null) {
+                defaultRow.setDefault(false);
+            }
+            if (row != null) {
+                row.setDefault(true);
+            }
+            defaultRow = row;
+            requestSectionRefresh();
+        }
+
+        /**
+         * Returns the current default row of this header. The default row is a
+         * special header row providing a user interface for sorting columns.
+         * 
+         * @return the default row or null if no default row set
+         */
+        public HeaderRow getDefaultRow() {
+            return defaultRow;
+        }
+
+        @Override
+        protected HeaderRow createRow() {
+            return new HeaderRow();
+        }
+
+        @Override
+        protected void requestSectionRefresh() {
+            markAsDirty = true;
+
+            /*
+             * Defer the refresh so if we multiple times call refreshSection()
+             * (for example when updating cell values) we only get one actual
+             * refresh in the end.
+             */
+            Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
+
+                @Override
+                public void execute() {
+                    if (markAsDirty) {
+                        markAsDirty = false;
+                        getGrid().refreshHeader();
+                    }
+                }
+            });
+        }
+
+        /**
+         * Returns the events consumed by the header
+         * 
+         * @return a collection of BrowserEvents
+         */
+        public Collection<String> getConsumedEvents() {
+            return Arrays.asList(BrowserEvents.TOUCHSTART,
+                    BrowserEvents.TOUCHMOVE, BrowserEvents.TOUCHEND,
+                    BrowserEvents.TOUCHCANCEL, BrowserEvents.CLICK);
+        }
+    }
+
+    /**
+     * A single row in a grid header section.
+     * 
+     */
+    public static class HeaderRow extends StaticSection.StaticRow<HeaderCell> {
+
+        private boolean isDefault = false;
+
+        protected void setDefault(boolean isDefault) {
+            this.isDefault = isDefault;
+        }
+
+        public boolean isDefault() {
+            return isDefault;
+        }
+
+        @Override
+        protected HeaderCell createCell() {
+            return new HeaderCell();
+        }
+    }
+
+    /**
+     * A single cell in a grid header row. Has a textual caption.
+     * 
+     */
+    public static class HeaderCell extends StaticSection.StaticCell {
+    }
+
+    /**
+     * Represents the footer section of a Grid. The footer is always empty.
+     */
+    protected static class Footer extends StaticSection<FooterRow> {
+        private boolean markAsDirty = false;
+
+        @Override
+        protected FooterRow createRow() {
+            return new FooterRow();
+        }
+
+        @Override
+        protected void requestSectionRefresh() {
+            markAsDirty = true;
+
+            /*
+             * Defer the refresh so if we multiple times call refreshSection()
+             * (for example when updating cell values) we only get one actual
+             * refresh in the end.
+             */
+            Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
+
+                @Override
+                public void execute() {
+                    if (markAsDirty) {
+                        markAsDirty = false;
+                        getGrid().refreshFooter();
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * A single cell in a grid Footer row. Has a textual caption.
+     * 
+     */
+    public static class FooterCell extends StaticSection.StaticCell {
+    }
+
+    /**
+     * A single row in a grid Footer section.
+     * 
+     */
+    public static class FooterRow extends StaticSection.StaticRow<FooterCell> {
+
+        @Override
+        protected FooterCell createCell() {
+            return new FooterCell();
+        }
     }
 
     public static abstract class AbstractGridKeyEvent<HANDLER extends AbstractGridKeyEventHandler>
@@ -753,9 +1503,9 @@ public class Grid<T> extends ResizeComposite implements
      */
     private Escalator escalator = GWT.create(Escalator.class);
 
-    private final GridHeader header = GWT.create(GridHeader.class);
+    private final Header header = GWT.create(Header.class);
 
-    private final GridFooter footer = GWT.create(GridFooter.class);
+    private final Footer footer = GWT.create(Footer.class);
 
     /**
      * List of columns in the grid. Order defines the visible order.
@@ -1320,10 +2070,10 @@ public class Grid<T> extends ResizeComposite implements
 
     protected class StaticSectionUpdater implements EscalatorUpdater {
 
-        private GridStaticSection<?> section;
+        private StaticSection<?> section;
         private RowContainer container;
 
-        public StaticSectionUpdater(GridStaticSection<?> section,
+        public StaticSectionUpdater(StaticSection<?> section,
                 RowContainer container) {
             super();
             this.section = section;
@@ -1332,15 +2082,14 @@ public class Grid<T> extends ResizeComposite implements
 
         @Override
         public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
-            GridStaticSection.StaticRow<?> staticRow = section.getRow(row
-                    .getRow());
+            StaticSection.StaticRow<?> staticRow = section.getRow(row.getRow());
             final List<GridColumn<?, T>> columns = getColumns();
 
             setCustomStyleName(row.getElement(), staticRow.getStyleName());
 
             for (FlyweightCell cell : cellsToUpdate) {
-                final StaticCell metadata = staticRow.getCell(columns.get(cell
-                        .getColumn()));
+                final StaticSection.StaticCell metadata = staticRow
+                        .getCell(columns.get(cell.getColumn()));
 
                 // Decorate default row with sorting indicators
                 if (staticRow instanceof HeaderRow) {
@@ -1426,13 +2175,12 @@ public class Grid<T> extends ResizeComposite implements
 
         @Override
         public void postAttach(Row row, Iterable<FlyweightCell> attachedCells) {
-            GridStaticSection.StaticRow<?> gridRow = section.getRow(row
-                    .getRow());
+            StaticSection.StaticRow<?> gridRow = section.getRow(row.getRow());
             List<GridColumn<?, T>> columns = getColumns();
 
             for (FlyweightCell cell : attachedCells) {
-                StaticCell metadata = gridRow.getCell(columns.get(cell
-                        .getColumn()));
+                StaticSection.StaticCell metadata = gridRow.getCell(columns
+                        .get(cell.getColumn()));
                 /*
                  * If the cell contains widgets that are not currently attach
                  * then attach them now.
@@ -1456,12 +2204,12 @@ public class Grid<T> extends ResizeComposite implements
         @Override
         public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
             if (section.getRowCount() > row.getRow()) {
-                GridStaticSection.StaticRow<?> gridRow = section.getRow(row
+                StaticSection.StaticRow<?> gridRow = section.getRow(row
                         .getRow());
                 List<GridColumn<?, T>> columns = getColumns();
                 for (FlyweightCell cell : cellsToDetach) {
-                    StaticCell metadata = gridRow.getCell(columns.get(cell
-                            .getColumn()));
+                    StaticSection.StaticCell metadata = gridRow.getCell(columns
+                            .get(cell.getColumn()));
 
                     if (GridStaticCellType.WIDGET.equals(metadata.getType())
                             && metadata.getWidget().isAttached()) {
@@ -1642,8 +2390,7 @@ public class Grid<T> extends ResizeComposite implements
      *            <code>true</code> if we refreshing the header, else assumed
      *            the footer
      */
-    private void refreshRowContainer(RowContainer rows,
-            GridStaticSection<?> section) {
+    private void refreshRowContainer(RowContainer rows, StaticSection<?> section) {
 
         // Add or Remove rows on demand
         int rowDiff = section.getVisibleRowCount() - rows.getRowCount();
@@ -1861,17 +2608,286 @@ public class Grid<T> extends ResizeComposite implements
      * 
      * @return the header
      */
-    public GridHeader getHeader() {
+    protected Header getHeader() {
         return header;
     }
+
+    /**
+     * Gets the header row at given index.
+     * 
+     * @param rowIndex
+     *            0 based index for row. Counted from top to bottom
+     * @return header row at given index
+     * @throws IllegalArgumentException
+     *             if no row exists at given index
+     */
+    public HeaderRow getHeaderRow(int rowIndex) {
+        return header.getRow(rowIndex);
+    }
+
+    /**
+     * Inserts a new row at the given position to the header section. Shifts the
+     * row currently at that position and any subsequent rows down (adds one to
+     * their indices).
+     * 
+     * @param index
+     *            the position at which to insert the row
+     * @return the new row
+     * 
+     * @throws IllegalArgumentException
+     *             if the index is less than 0 or greater than row count
+     * @see #appendHeaderRow()
+     * @see #prependHeaderRow()
+     * @see #removeHeaderRow(HeaderRow)
+     * @see #removeHeaderRow(int)
+     */
+    public HeaderRow addHeaderRowAt(int index) {
+        return header.addRowAt(index);
+    }
+
+    /**
+     * Adds a new row at the bottom of the header section.
+     * 
+     * @return the new row
+     * @see #prependHeaderRow()
+     * @see #addHeaderRowAt(int)
+     * @see #removeHeaderRow(HeaderRow)
+     * @see #removeHeaderRow(int)
+     */
+    public HeaderRow appendHeaderRow() {
+        return header.appendRow();
+    }
+
+    /**
+     * Returns the current default row of the header section. The default row is
+     * a special header row providing a user interface for sorting columns.
+     * Setting a header text for column updates cells in the default header.
+     * 
+     * @return the default row or null if no default row set
+     */
+    public HeaderRow getDefaultHeaderRow() {
+        return header.getDefaultRow();
+    }
+
+    /**
+     * Gets the row count for the header section.
+     * 
+     * @return row count
+     */
+    public int getHeaderRowCount() {
+        return header.getRowCount();
+    }
+
+    /**
+     * Adds a new row at the top of the header section.
+     * 
+     * @return the new row
+     * @see #appendHeaderRow()
+     * @see #addHeaderRowAt(int)
+     * @see #removeHeaderRow(HeaderRow)
+     * @see #removeHeaderRow(int)
+     */
+    public HeaderRow prependHeaderRow() {
+        return header.prependRow();
+    }
+
+    /**
+     * Removes the given row from the header section.
+     * 
+     * @param row
+     *            the row to be removed
+     * 
+     * @throws IllegalArgumentException
+     *             if the row does not exist in this section
+     * @see #removeHeaderRow(int)
+     * @see #addHeaderRowAt(int)
+     * @see #appendHeaderRow()
+     * @see #prependHeaderRow()
+     */
+    public void removeHeaderRow(HeaderRow row) {
+        header.removeRow(row);
+    }
+
+    /**
+     * Removes the row at the given position from the header section.
+     * 
+     * @param index
+     *            the position of the row
+     * 
+     * @throws IllegalArgumentException
+     *             if no row exists at given index
+     * @see #removeHeaderRow(HeaderRow)
+     * @see #addHeaderRowAt(int)
+     * @see #appendHeaderRow()
+     * @see #prependHeaderRow()
+     */
+    public void removeHeaderRow(int rowIndex) {
+        header.removeRow(rowIndex);
+    }
+
+    /**
+     * Sets the default row of the header. The default row is a special header
+     * row providing a user interface for sorting columns.
+     * 
+     * @param row
+     *            the new default row, or null for no default row
+     * 
+     * @throws IllegalArgumentException
+     *             header does not contain the row
+     */
+    public void setDefaultHeaderRow(HeaderRow row) {
+        header.setDefaultRow(row);
+    }
+
+    /**
+     * Sets the visibility of the header section.
+     * 
+     * @param visible
+     *            true to show header section, false to hide
+     */
+    public void setHeaderVisible(boolean visible) {
+        header.setVisible(visible);
+    }
+
+    /**
+     * Returns the visibility of the header section.
+     * 
+     * @return true if visible, false otherwise.
+     */
+    public boolean isHeaderVisible() {
+        return header.isVisible();
+    }
+
+    /* Grid Footers */
 
     /**
      * Returns the footer section of this grid. The default footer is empty.
      * 
      * @return the footer
      */
-    public GridFooter getFooter() {
+    protected Footer getFooter() {
         return footer;
+    }
+
+    /**
+     * Gets the footer row at given index.
+     * 
+     * @param rowIndex
+     *            0 based index for row. Counted from top to bottom
+     * @return footer row at given index
+     * @throws IllegalArgumentException
+     *             if no row exists at given index
+     */
+    public FooterRow getFooterRow(int rowIndex) {
+        return footer.getRow(rowIndex);
+    }
+
+    /**
+     * Inserts a new row at the given position to the footer section. Shifts the
+     * row currently at that position and any subsequent rows down (adds one to
+     * their indices).
+     * 
+     * @param index
+     *            the position at which to insert the row
+     * @return the new row
+     * 
+     * @throws IllegalArgumentException
+     *             if the index is less than 0 or greater than row count
+     * @see #appendFooterRow()
+     * @see #prependFooterRow()
+     * @see #removeFooterRow(FooterRow)
+     * @see #removeFooterRow(int)
+     */
+    public FooterRow addFooterRowAt(int index) {
+        return footer.addRowAt(index);
+    }
+
+    /**
+     * Adds a new row at the bottom of the footer section.
+     * 
+     * @return the new row
+     * @see #prependFooterRow()
+     * @see #addFooterRowAt(int)
+     * @see #removeFooterRow(FooterRow)
+     * @see #removeFooterRow(int)
+     */
+    public FooterRow appendFooterRow() {
+        return footer.appendRow();
+    }
+
+    /**
+     * Gets the row count for the footer.
+     * 
+     * @return row count
+     */
+    public int getFooterRowCount() {
+        return footer.getRowCount();
+    }
+
+    /**
+     * Adds a new row at the top of the footer section.
+     * 
+     * @return the new row
+     * @see #appendFooterRow()
+     * @see #addFooterRowAt(int)
+     * @see #removeFooterRow(FooterRow)
+     * @see #removeFooterRow(int)
+     */
+    public FooterRow prependFooterRow() {
+        return footer.prependRow();
+    }
+
+    /**
+     * Removes the given row from the footer section.
+     * 
+     * @param row
+     *            the row to be removed
+     * 
+     * @throws IllegalArgumentException
+     *             if the row does not exist in this section
+     * @see #removeFooterRow(int)
+     * @see #addFooterRowAt(int)
+     * @see #appendFooterRow()
+     * @see #prependFooterRow()
+     */
+    public void removeFooterRow(FooterRow row) {
+        footer.removeRow(row);
+    }
+
+    /**
+     * Removes the row at the given position from the footer section.
+     * 
+     * @param index
+     *            the position of the row
+     * 
+     * @throws IllegalArgumentException
+     *             if no row exists at given index
+     * @see #removeFooterRow(FooterRow)
+     * @see #addFooterRowAt(int)
+     * @see #appendFooterRow()
+     * @see #prependFooterRow()
+     */
+    public void removeFooterRow(int rowIndex) {
+        footer.removeRow(rowIndex);
+    }
+
+    /**
+     * Sets the visibility of the footer section.
+     * 
+     * @param visible
+     *            true to show footer section, false to hide
+     */
+    public void setFooterVisible(boolean visible) {
+        footer.setVisible(visible);
+    }
+
+    /**
+     * Returns the visibility of the footer section.
+     * 
+     * @return true if visible, false otherwise.
+     */
+    public boolean isFooterVisible() {
+        return footer.isVisible();
     }
 
     public EditorRow<T> getEditorRow() {

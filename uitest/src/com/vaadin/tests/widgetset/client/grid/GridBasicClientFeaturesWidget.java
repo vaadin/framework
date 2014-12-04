@@ -42,12 +42,10 @@ import com.vaadin.client.ui.grid.EditorRowHandler;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.Grid.CellStyleGenerator;
+import com.vaadin.client.ui.grid.Grid.FooterRow;
+import com.vaadin.client.ui.grid.Grid.HeaderRow;
 import com.vaadin.client.ui.grid.Grid.SelectionMode;
 import com.vaadin.client.ui.grid.GridColumn;
-import com.vaadin.client.ui.grid.GridFooter;
-import com.vaadin.client.ui.grid.GridFooter.FooterRow;
-import com.vaadin.client.ui.grid.GridHeader;
-import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.Renderer;
 import com.vaadin.client.ui.grid.datasources.ListDataSource;
 import com.vaadin.client.ui.grid.datasources.ListSorter;
@@ -343,7 +341,7 @@ public class GridBasicClientFeaturesWidget extends
             column.setHeaderText("Header (0," + c + ")");
         }
 
-        HeaderRow row = grid.getHeader().getDefaultRow();
+        HeaderRow row = grid.getDefaultHeaderRow();
         for (int i = 0; i < col; ++i) {
             String caption = "Header (0," + i + ")";
             GridColumn<?, ?> column = grid.getColumn(i);
@@ -628,7 +626,7 @@ public class GridBasicClientFeaturesWidget extends
             addMenuCommand("HTML Header", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    grid.getHeader().getRow(0).getCell(column)
+                    grid.getHeaderRow(0).getCell(column)
                             .setHtml("<b>HTML Header</b>");
                 }
             }, "Component", "Columns", "Column " + i, "Header Type");
@@ -643,8 +641,7 @@ public class GridBasicClientFeaturesWidget extends
                             button.setText("Clicked");
                         }
                     });
-                    grid.getHeader().getRow(0).getCell(column)
-                            .setWidget(button);
+                    grid.getHeaderRow(0).getCell(column).setWidget(button);
                 }
             }, "Component", "Columns", "Column " + i, "Header Type");
 
@@ -652,14 +649,13 @@ public class GridBasicClientFeaturesWidget extends
             addMenuCommand("Text Footer", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    grid.getFooter().getRow(0).getCell(column)
-                            .setText("Text Footer");
+                    grid.getFooterRow(0).getCell(column).setText("Text Footer");
                 }
             }, "Component", "Columns", "Column " + i, "Footer Type");
             addMenuCommand("HTML Footer", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    grid.getFooter().getRow(0).getCell(column)
+                    grid.getFooterRow(0).getCell(column)
                             .setHtml("<b>HTML Footer</b>");
                 }
             }, "Component", "Columns", "Column " + i, "Footer Type");
@@ -674,8 +670,7 @@ public class GridBasicClientFeaturesWidget extends
                             button.setText("Clicked");
                         }
                     });
-                    grid.getFooter().getRow(0).getCell(column)
-                            .setWidget(button);
+                    grid.getFooterRow(0).getCell(column).setWidget(button);
                 }
             }, "Component", "Columns", "Column " + i, "Footer Type");
         }
@@ -719,66 +714,65 @@ public class GridBasicClientFeaturesWidget extends
     }
 
     private void createHeaderMenu() {
-        final GridHeader header = grid.getHeader();
         final String[] menuPath = { "Component", "Header" };
 
         addMenuCommand("Visible", new ScheduledCommand() {
             @Override
             public void execute() {
-                header.setVisible(!header.isVisible());
+                grid.setHeaderVisible(!grid.isHeaderVisible());
             }
         }, menuPath);
 
         addMenuCommand("Top", new ScheduledCommand() {
             @Override
             public void execute() {
-                header.setDefaultRow(header.getRow(0));
+                grid.setDefaultHeaderRow(grid.getHeaderRow(0));
             }
         }, "Component", "Header", "Default row");
         addMenuCommand("Bottom", new ScheduledCommand() {
             @Override
             public void execute() {
-                header.setDefaultRow(header.getRow(header.getRowCount() - 1));
+                grid.setDefaultHeaderRow(grid.getHeaderRow(grid
+                        .getHeaderRowCount() - 1));
             }
         }, "Component", "Header", "Default row");
         addMenuCommand("Unset", new ScheduledCommand() {
             @Override
             public void execute() {
-                header.setDefaultRow(null);
+                grid.setDefaultHeaderRow(null);
             }
         }, "Component", "Header", "Default row");
 
         addMenuCommand("Prepend row", new ScheduledCommand() {
             @Override
             public void execute() {
-                configureHeaderRow(header.prependRow());
+                configureHeaderRow(grid.prependHeaderRow());
             }
         }, menuPath);
         addMenuCommand("Append row", new ScheduledCommand() {
             @Override
             public void execute() {
-                configureHeaderRow(header.appendRow());
+                configureHeaderRow(grid.appendHeaderRow());
             }
         }, menuPath);
         addMenuCommand("Remove top row", new ScheduledCommand() {
             @Override
             public void execute() {
-                header.removeRow(0);
+                grid.removeHeaderRow(0);
             }
         }, menuPath);
         addMenuCommand("Remove bottom row", new ScheduledCommand() {
             @Override
             public void execute() {
-                header.removeRow(header.getRowCount() - 1);
+                grid.removeHeaderRow(grid.getHeaderRowCount() - 1);
             }
         }, menuPath);
 
     }
 
     private void configureHeaderRow(final HeaderRow row) {
-        final GridHeader header = grid.getHeader();
         setHeaderTexts(row);
-        String rowTitle = "Row " + header.getRowCount();
+        String rowTitle = "Row " + grid.getHeaderRowCount();
         final String[] menuPath = { "Component", "Header", rowTitle };
 
         addMenuCommand("Join column cells 0, 1", new ScheduledCommand() {
@@ -828,39 +822,38 @@ public class GridBasicClientFeaturesWidget extends
     }
 
     private void createFooterMenu() {
-        final GridFooter footer = grid.getFooter();
         final String[] menuPath = { "Component", "Footer" };
 
         addMenuCommand("Visible", new ScheduledCommand() {
             @Override
             public void execute() {
-                footer.setVisible(!footer.isVisible());
+                grid.setFooterVisible(!grid.isFooterVisible());
             }
         }, menuPath);
 
         addMenuCommand("Prepend row", new ScheduledCommand() {
             @Override
             public void execute() {
-                configureFooterRow(footer.prependRow());
+                configureFooterRow(grid.prependFooterRow());
             }
         }, menuPath);
         addMenuCommand("Append row", new ScheduledCommand() {
             @Override
             public void execute() {
-                configureFooterRow(footer.appendRow());
+                configureFooterRow(grid.appendFooterRow());
             }
         }, menuPath);
         addMenuCommand("Remove top row", new ScheduledCommand() {
             @Override
             public void execute() {
-                footer.removeRow(0);
+                grid.removeFooterRow(0);
             }
         }, menuPath);
         addMenuCommand("Remove bottom row", new ScheduledCommand() {
             @Override
             public void execute() {
-                assert footer.getRowCount() > 0;
-                footer.removeRow(footer.getRowCount() - 1);
+                assert grid.getFooterRowCount() > 0;
+                grid.removeFooterRow(grid.getFooterRowCount() - 1);
             }
         }, menuPath);
     }
@@ -912,9 +905,8 @@ public class GridBasicClientFeaturesWidget extends
     }
 
     private void configureFooterRow(final FooterRow row) {
-        final GridFooter footer = grid.getFooter();
         setFooterTexts(row);
-        String rowTitle = "Row " + footer.getRowCount();
+        String rowTitle = "Row " + grid.getFooterRowCount();
         final String[] menuPath = { "Component", "Footer", rowTitle };
 
         addMenuCommand("Join column cells 0, 1", new ScheduledCommand() {

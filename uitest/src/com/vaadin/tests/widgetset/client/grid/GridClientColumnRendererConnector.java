@@ -145,12 +145,12 @@ public class GridClientColumnRendererConnector extends
         // Add a column to display the data in
         GridColumn<String, String> c = createColumnWithRenderer(Renderers.TEXT_RENDERER);
         grid.addColumn(c);
-        grid.getHeader().getDefaultRow().getCell(c).setText("Column 1");
+        grid.getDefaultHeaderRow().getCell(c).setText("Column 1");
 
         // Add another column with a custom complex renderer
         c = createColumnWithRenderer(Renderers.CPLX_RENDERER);
         grid.addColumn(c);
-        grid.getHeader().getDefaultRow().getCell(c).setText("Column 2");
+        grid.getDefaultHeaderRow().getCell(c).setText("Column 2");
 
         // Add method for testing sort event firing
         grid.addSortHandler(new SortHandler<String>() {
@@ -161,9 +161,8 @@ public class GridClientColumnRendererConnector extends
                 String text = "Client-side sort event received<br>"
                         + "Columns: " + event.getOrder().size() + ", order: ";
                 for (SortOrder order : event.getOrder()) {
-                    String columnHeader = getWidget().getHeader()
-                            .getDefaultRow().getCell(order.getColumn())
-                            .getText();
+                    String columnHeader = getWidget().getDefaultHeaderRow()
+                            .getCell(order.getColumn()).getText();
                     text += columnHeader + ": "
                             + order.getDirection().toString();
                 }
@@ -189,8 +188,7 @@ public class GridClientColumnRendererConnector extends
                         getWidget().addColumn(column);
 
                         getWidget()
-                                .getHeader()
-                                .getDefaultRow()
+                                .getDefaultHeaderRow()
                                 .getCell(column)
                                 .setText(
                                         "Column "

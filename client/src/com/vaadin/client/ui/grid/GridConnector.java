@@ -42,7 +42,10 @@ import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.grid.Grid.CellStyleGenerator;
-import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
+import com.vaadin.client.ui.grid.Grid.FooterCell;
+import com.vaadin.client.ui.grid.Grid.FooterRow;
+import com.vaadin.client.ui.grid.Grid.HeaderCell;
+import com.vaadin.client.ui.grid.Grid.HeaderRow;
 import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
 import com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel;
 import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
@@ -442,13 +445,11 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 }
 
                 if (stateChangeEvent.hasPropertyChanged("header")) {
-                    updateSectionFromState(getWidget().getHeader(),
-                            getState().header);
+                    updateHeaderFromState(getState().header);
                 }
 
                 if (stateChangeEvent.hasPropertyChanged("footer")) {
-                    updateSectionFromState(getWidget().getFooter(),
-                            getState().footer);
+                    updateFooterFromState(getState().footer);
                 }
 
                 if (stateChangeEvent.hasPropertyChanged("editorRowEnabled")) {
@@ -485,21 +486,20 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         return true;
     }
 
-    private void updateSectionFromState(GridStaticSection<?> section,
-            GridStaticSectionState state) {
+    private void updateHeaderFromState(GridStaticSectionState state) {
+        getWidget().setHeaderVisible(state.visible);
 
-        while (section.getRowCount() != 0) {
-            section.removeRow(0);
+        while (getWidget().getHeaderRowCount() > 0) {
+            getWidget().removeHeaderRow(0);
         }
 
         for (RowState rowState : state.rows) {
-            GridStaticSection.StaticRow<?> row = section.appendRow();
+            HeaderRow row = getWidget().appendHeaderRow();
 
             for (CellState cellState : rowState.cells) {
                 CustomGridColumn column = columnIdToColumn
                         .get(cellState.columnId);
-                GridStaticSection.StaticCell cell = row.getCell(column);
-                updateStaticCellFromState(cell, cellState);
+                updateHeaderCellFromState(row.getCell(column), cellState);
             }
 
             for (Set<String> group : rowState.cellGroups.keySet()) {
@@ -513,23 +513,71 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 }
 
                 // Set state to be the same as first in group.
-                updateStaticCellFromState(row.join(columns), cellState);
+                updateHeaderCellFromState(row.join(columns), cellState);
             }
 
-            if (section instanceof GridHeader && rowState.defaultRow) {
-                ((GridHeader) section).setDefaultRow((HeaderRow) row);
+            if (rowState.defaultRow) {
+                getWidget().setDefaultHeaderRow(row);
             }
 
             row.setStyleName(rowState.styleName);
         }
-
-        section.setVisible(state.visible);
-
-        section.requestSectionRefresh();
     }
 
-    private void updateStaticCellFromState(GridStaticSection.StaticCell cell,
-            CellState cellState) {
+    private void updateHeaderCellFromState(HeaderCell cell, CellState cellState) {
+        switch (cellState.type) {
+        case TEXT:
+            cell.setText(cellState.text);
+            break;
+        case HTML:
+            cell.setHtml(cellState.html);
+            break;
+        case WIDGET:
+            ComponentConnector connector = (ComponentConnector) cellState.connector;
+            cell.setWidget(connector.getWidget());
+            break;
+        default:
+            throw new IllegalStateException("unexpected cell type: "
+                    + cellState.type);
+        }
+        cell.setStyleName(cellState.styleName);
+    }
+
+    private void updateFooterFromState(GridStaticSectionState state) {
+        getWidget().setFooterVisible(state.visible);
+
+        while (getWidget().getFooterRowCount() > 0) {
+            getWidget().removeFooterRow(0);
+        }
+
+        for (RowState rowState : state.rows) {
+            FooterRow row = getWidget().appendFooterRow();
+
+            for (CellState cellState : rowState.cells) {
+                CustomGridColumn column = columnIdToColumn
+                        .get(cellState.columnId);
+                updateFooterCellFromState(row.getCell(column), cellState);
+            }
+
+            for (Set<String> group : rowState.cellGroups.keySet()) {
+                GridColumn<?, ?>[] columns = new GridColumn<?, ?>[group.size()];
+                CellState cellState = rowState.cellGroups.get(group);
+
+                int i = 0;
+                for (String columnId : group) {
+                    columns[i] = columnIdToColumn.get(columnId);
+                    i++;
+                }
+
+                // Set state to be the same as first in group.
+                updateFooterCellFromState(row.join(columns), cellState);
+            }
+
+            row.setStyleName(rowState.styleName);
+        }
+    }
+
+    private void updateFooterCellFromState(FooterCell cell, CellState cellState) {
         switch (cellState.type) {
         case TEXT:
             cell.setText(cellState.text);
