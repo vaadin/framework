@@ -75,7 +75,7 @@ $valo-anim-keyframes-included: false !default;
       @include transform(translatey(30%));
     }
   }
-  
+
   $valo-anim-keyframes-included: true;
 }
 
@@ -88,7 +88,7 @@ $valo-anim-keyframes-included: false !default;
  * @param {time} $delay (null) - the delay of the fade
  */
 @mixin valo-animate-in-fade ($duration: 180ms, $delay: null){
-  @include animation(valo-animate-in-fade $duration $delay);
+  @include animation(valo-animate-in-fade $duration $delay backwards);
 }
 
 /**
@@ -100,7 +100,7 @@ $valo-anim-keyframes-included: false !default;
  * @param {time} $delay (null) - the delay of the fade
  */
 @mixin valo-animate-out-fade ($duration: 180ms, $delay: null){
-  @include animation(valo-animate-out-fade $duration $delay);
+  @include animation(valo-animate-out-fade $duration $delay backwards);
 }
 
 /**
@@ -112,7 +112,7 @@ $valo-anim-keyframes-included: false !default;
  * @param {time} $delay (null) - the delay of the slide
  */
 @mixin valo-animate-in-slide-down ($duration: 400ms, $delay: null){
-  @include animation(valo-animate-in-slide-down $duration $delay);
+  @include animation(valo-animate-in-slide-down $duration $delay backwards);
 }
 
 /**
@@ -124,7 +124,7 @@ $valo-anim-keyframes-included: false !default;
  * @param {time} $delay (null) - the delay of the slide
  */
 @mixin valo-animate-in-slide-up ($duration: 400ms, $delay: null){
-  @include animation(valo-animate-in-slide-up $duration $delay);
+  @include animation(valo-animate-in-slide-up $duration $delay backwards);
 }
 
 /**
@@ -136,7 +136,7 @@ $valo-anim-keyframes-included: false !default;
  * @param {time} $delay (null) - the delay of the slide
  */
 @mixin valo-animate-in-slide-left ($duration: 400ms, $delay: null){
-  @include animation(valo-animate-in-slide-left $duration $delay);
+  @include animation(valo-animate-in-slide-left $duration $delay backwards);
 }
 
 /**
@@ -148,5 +148,5 @@ $valo-anim-keyframes-included: false !default;
  * @param {time} $delay (null) - the delay of the slide
  */
 @mixin valo-animate-in-slide-right ($duration: 400ms, $delay: null){
-  @include animation(valo-animate-in-slide-right $duration $delay);
+  @include animation(valo-animate-in-slide-right $duration $delay backwards);
 }
