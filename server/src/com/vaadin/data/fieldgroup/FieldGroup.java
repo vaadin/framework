@@ -26,6 +26,7 @@ import java.util.List;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
 import com.vaadin.ui.AbstractField;
@@ -452,6 +453,54 @@ public class FieldGroup implements Serializable {
             // Not using buffered mode, nothing to do
             return;
         }
+
+        startTransactions();
+
+        try {
+            firePreCommitEvent();
+
+            List<InvalidValueException> invalidValueExceptions = commitFields();
+
+            if(invalidValueExceptions.isEmpty()) {
+                firePostCommitEvent();
+                commitTransactions();
+            } else {
+                throwInvalidValueException(invalidValueExceptions);
+            }
+        } catch (Exception e) {
+            rollbackTransactions();
+
+            throw new CommitException("Commit failed", e);
+        }
+
+    }
+
+    private List<InvalidValueException> commitFields() {
+        List<InvalidValueException> invalidValueExceptions = new ArrayList<InvalidValueException>();
+
+        for (Field<?> f : fieldToPropertyId.keySet()) {
+            try {
+                f.commit();
+            } catch (InvalidValueException e) {
+                invalidValueExceptions.add(e);
+            }
+        }
+
+        return invalidValueExceptions;
+    }
+
+    private void throwInvalidValueException(List<InvalidValueException> invalidValueExceptions) {
+        if(invalidValueExceptions.size() == 1) {
+            throw invalidValueExceptions.get(0);
+        } else {
+            InvalidValueException[] causes = invalidValueExceptions.toArray(
+                    new InvalidValueException[invalidValueExceptions.size()]);
+
+            throw new InvalidValueException(null, causes);
+        }
+    }
+
+    private void startTransactions() throws CommitException {
         for (Field<?> f : fieldToPropertyId.keySet()) {
             Property.Transactional<?> property = (Property.Transactional<?>) f
                     .getPropertyDataSource();
@@ -462,33 +511,24 @@ public class FieldGroup implements Serializable {
             }
             property.startTransaction();
         }
-        try {
-            firePreCommitEvent();
-            // Commit the field values to the properties
-            for (Field<?> f : fieldToPropertyId.keySet()) {
-                f.commit();
-            }
-            firePostCommitEvent();
+    }
 
-            // Commit the properties
-            for (Field<?> f : fieldToPropertyId.keySet()) {
-                ((Property.Transactional<?>) f.getPropertyDataSource())
-                        .commit();
-            }
-
-        } catch (Exception e) {
-            for (Field<?> f : fieldToPropertyId.keySet()) {
-                try {
-                    ((Property.Transactional<?>) f.getPropertyDataSource())
-                            .rollback();
-                } catch (Exception rollbackException) {
-                    // FIXME: What to do ?
-                }
-            }
-
-            throw new CommitException("Commit failed", e);
+    private void commitTransactions() {
+        for (Field<?> f : fieldToPropertyId.keySet()) {
+            ((Property.Transactional<?>) f.getPropertyDataSource())
+                    .commit();
         }
+    }
 
+    private void rollbackTransactions() {
+        for (Field<?> f : fieldToPropertyId.keySet()) {
+            try {
+                ((Property.Transactional<?>) f.getPropertyDataSource())
+                        .rollback();
+            } catch (Exception rollbackException) {
+                // FIXME: What to do ?
+            }
+        }
     }
 
     /**
