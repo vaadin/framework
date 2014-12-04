@@ -19,13 +19,19 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
@@ -38,6 +44,7 @@ import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.server.Resource;
+import com.vaadin.server.Sizeable;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.AbstractComponentState;
@@ -922,8 +929,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
             DesignAttributeHandler.readAttribute(this, attribute, attr, def);
         }
         // handle width and height
-        DesignAttributeHandler.readWidth(this, attr, def);
-        DesignAttributeHandler.readHeight(this, attr, def);
+        readSize(attr, def);
         // handle component error
         if (attr.hasKey("error")) {
             UserError error = new UserError(attr.get("error"),
@@ -932,27 +938,186 @@ public abstract class AbstractComponent extends AbstractClientConnector
         } else {
             setComponentError(def.getComponentError());
         }
+        // check for unsupported attributes
+        Set<String> supported = new HashSet<String>();
+        supported.addAll(getDefaultAttributes());
+        supported.addAll(getCustomAttributes());
+        for (Attribute a : attr) {
+            if (!a.getKey().startsWith(":") && !supported.contains(a.getKey())) {
+                getLogger().info(
+                        "Unsupported attribute found when synchronizing from design : "
+                                + a.getKey());
+            }
+        }
     }
 
     /**
-     * Returns the list of attributes that do not require custom handling when
-     * synchronizing from design. These are typically attributes of some
+     * Synchronizes the size of this component from the given design attributes.
+     * If the attributes do not contain relevant size information, defaults is
+     * consulted.
+     * 
+     * @param attributes
+     *            the design attributes
+     * @param defaultInstance
+     *            instance of the class that has default sizing.
+     */
+    private void readSize(Attributes attributes,
+            AbstractComponent defaultInstance) {
+        // read width
+        if (attributes.hasKey("width-auto") || attributes.hasKey("size-auto")) {
+            this.setWidth(null);
+        } else if (attributes.hasKey("width-full")
+                || attributes.hasKey("size-full")) {
+            this.setWidth("100%");
+        } else if (attributes.hasKey("width")) {
+            this.setWidth(attributes.get("width"));
+        } else {
+            this.setWidth(defaultInstance.getWidth(),
+                    defaultInstance.getWidthUnits());
+        }
+
+        // read height
+        if (attributes.hasKey("height-auto") || attributes.hasKey("size-auto")) {
+            this.setHeight(null);
+        } else if (attributes.hasKey("height-full")
+                || attributes.hasKey("size-full")) {
+            this.setHeight("100%");
+        } else if (attributes.hasKey("height")) {
+            this.setHeight(attributes.get("height"));
+        } else {
+            this.setHeight(defaultInstance.getHeight(),
+                    defaultInstance.getHeightUnits());
+        }
+    }
+
+    /**
+     * Writes the size related attributes for the component if they differ from
+     * the defaults
+     * 
+     * @param component
+     *            the component
+     * @param attributes
+     *            the attribute map where the attribute are written
+     * @param defaultInstance
+     *            the default instance of the class for fetching the default
+     *            values
+     */
+    private void writeSize(Attributes attributes,
+            DesignSynchronizable defaultInstance) {
+        if (hasEqualSize(defaultInstance)) {
+            // we have default values -> ignore
+            return;
+        }
+        boolean widthFull = getWidth() == 100f
+                && getWidthUnits().equals(Sizeable.Unit.PERCENTAGE);
+        boolean heightFull = getHeight() == 100f
+                && getHeightUnits().equals(Sizeable.Unit.PERCENTAGE);
+        boolean widthAuto = getWidth() == -1;
+        boolean heightAuto = getHeight() == -1;
+
+        // first try the full shorthands
+        if (widthFull && heightFull) {
+            attributes.put("size-full", "true");
+        } else if (widthAuto && heightAuto) {
+            attributes.put("size-auto", "true");
+        } else {
+            // handle width
+            if (!hasEqualWidth(defaultInstance)) {
+                if (widthFull) {
+                    attributes.put("width-full", "true");
+                } else if (widthAuto) {
+                    attributes.put("width-auto", "true");
+                } else {
+                    String widthString = DesignAttributeHandler
+                            .formatDesignAttribute(getWidth())
+                            + getWidthUnits().getSymbol();
+                    attributes.put("width", widthString);
+
+                }
+            }
+            if (!hasEqualHeight(defaultInstance)) {
+                // handle height
+                if (heightFull) {
+                    attributes.put("height-full", "true");
+                } else if (heightAuto) {
+                    attributes.put("height-auto", "true");
+                } else {
+                    String heightString = DesignAttributeHandler
+                            .formatDesignAttribute(getHeight())
+                            + getHeightUnits().getSymbol();
+                    attributes.put("height", heightString);
+                }
+            }
+        }
+    }
+
+    /**
+     * Test if the given component has equal width with this instance
+     * 
+     * @param component
+     *            the component for the width comparison
+     * @return true if the widths are equal
+     */
+    private boolean hasEqualWidth(Component component) {
+        return getWidth() == component.getWidth()
+                && getWidthUnits().equals(component.getWidthUnits());
+    }
+
+    /**
+     * Test if the given component has equal height with this instance
+     * 
+     * @param component
+     *            the component for the height comparison
+     * @return true if the heights are equal
+     */
+    private boolean hasEqualHeight(Component component) {
+        return getHeight() == component.getHeight()
+                && getHeightUnits().equals(component.getHeightUnits());
+    }
+
+    /**
+     * Test if the given components has equal size with this instance
+     * 
+     * @param component
+     *            the component for the size comparison
+     * @return true if the sizes are equal
+     */
+    private boolean hasEqualSize(Component component) {
+        return hasEqualWidth(component) && hasEqualHeight(component);
+    }
+
+    /**
+     * Returns a collection of attributes that do not require custom handling
+     * when synchronizing from design. These are typically attributes of some
      * primitive type. The default implementation searches setters with
      * primitive values
      * 
-     * @since 7.4
-     * @return the list of attributes that can be synchronized from design using
-     *         the default approach.
+     * @return a collection of attributes that can be synchronized from design
+     *         using the default approach.
      */
-    protected List<String> getDefaultAttributes() {
-        List<String> attributes = DesignAttributeHandler
-                .findSupportedAttributes(this.getClass());
-        // we want to handle width and height in a custom way
-        attributes.remove("width");
-        attributes.remove("height");
-        attributes.remove("debug-id");
+    private Collection<String> getDefaultAttributes() {
+        Collection<String> attributes = DesignAttributeHandler
+                .getSupportedAttributes(this.getClass());
+        attributes.removeAll(getCustomAttributes());
         return attributes;
     }
+
+    /**
+     * Returns a collection of attributes that should not be handled by the
+     * basic implementation of the {@link synhronizeFromDesign} and
+     * {@link synchronizeToDesign} methods. Typically these are handled in a
+     * custom way in the overridden versions of the above methods
+     * 
+     * @return the collection of attributes that are not handled by the basic
+     *         implementation
+     */
+    protected Collection<String> getCustomAttributes() {
+        return new ArrayList<String>(Arrays.asList(customAttributes));
+    }
+
+    private static final String[] customAttributes = new String[] { "width",
+            "height", "debug-id", "error", "width-auto", "height-auto",
+            "width-full", "height-full", "size-auto", "size-full" };
 
     /*
      * (non-Javadoc)
@@ -963,8 +1128,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void synchronizeToDesign(Element design, DesignContext designContext) {
-        // clear node contents
-        DesignAttributeHandler.clearNode(design);
+        // clear element contents
+        DesignAttributeHandler.clearElement(design);
         AbstractComponent def = designContext.getDefaultInstance(this
                 .getClass());
         Attributes attr = design.attributes();
@@ -973,10 +1138,14 @@ public abstract class AbstractComponent extends AbstractClientConnector
             DesignAttributeHandler.writeAttribute(this, attribute, attr, def);
         }
         // handle size
-        DesignAttributeHandler.writeSize(this, attr, def);
+        writeSize(attr, def);
         // handle component error
-        if (getComponentError() != null) {
-            attr.put("error", getComponentError().getFormattedHtmlMessage());
+        String errorMsg = getComponentError() != null ? getComponentError()
+                .getFormattedHtmlMessage() : null;
+        String defErrorMsg = def.getComponentError() != null ? def
+                .getComponentError().getFormattedHtmlMessage() : null;
+        if (!SharedUtil.equals(errorMsg, defErrorMsg)) {
+            attr.put("error", errorMsg);
         }
     }
 
@@ -1095,5 +1264,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
             }
         }
         return false;
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(AbstractComponent.class.getName());
     }
 }

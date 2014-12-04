@@ -215,21 +215,23 @@ public class DesignContext {
      * Returns the default instance for the given class. The instance must not
      * be modified by the caller.
      * 
-     * @since
      * @param instanceClass
-     * @return
+     * @return the default instance for the given class. The return value must
+     *         not be modified by the caller
      */
     public <T> T getDefaultInstance(Class<T> instanceClass) {
         T instance = (T) instanceCache.get(instanceClass);
         if (instance == null) {
             try {
                 instance = instanceClass.newInstance();
+                instanceCache.put(instanceClass, instance);
             } catch (InstantiationException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Could not instantiate "
+                        + instanceClass.getName());
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Could not instantiate "
+                        + instanceClass.getName());
             }
-            instanceCache.put(instanceClass, instance);
         }
         return instance;
     }
