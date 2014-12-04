@@ -334,11 +334,6 @@ abstract class GridStaticSection<ROWTYPE extends GridStaticSection.StaticRow<?>>
                     cellGroups.get(group).setColspan(1);
                 } else {
                     int colSpan = group.size();
-                    for (GridColumn<?, ?> column : group) {
-                        if (!column.isVisible()) {
-                            --colSpan;
-                        }
-                    }
                     cellGroups.get(group).setColspan(colSpan);
                 }
             }

@@ -280,7 +280,7 @@ public class EditorRow<T> {
     /**
      * Returns the editor widget associated with the given column. If the editor
      * row is not active, returns null.
-     *
+     * 
      * @param column
      *            the column
      * @return the widget if the editor row is open, null otherwise
@@ -326,7 +326,7 @@ public class EditorRow<T> {
 
             editorOverlay.appendChild(cell);
 
-            GridColumn<?, T> column = grid.getColumnFromVisibleIndex(i);
+            GridColumn<?, T> column = grid.getColumn(i);
             if (column instanceof SelectionColumn) {
                 continue;
             }

@@ -579,12 +579,6 @@ public class GridBasicClientFeaturesWidget extends
         for (int i = 0; i < COLUMNS; i++) {
             final int index = i;
             final GridColumn<?, List<Data>> column = grid.getColumn(index);
-            addMenuCommand("Visible", new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    column.setVisible(!column.isVisible());
-                }
-            }, "Component", "Columns", "Column " + i);
             addMenuCommand("Sortable", new ScheduledCommand() {
                 @Override
                 public void execute() {

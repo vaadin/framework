@@ -21,7 +21,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -63,31 +62,6 @@ public class GridHeaderTest extends GridStaticSectionTest {
         openTestURL();
 
         assertHeaderTexts(0, 0);
-    }
-
-    @Test
-    public void testHeadersWithInvisibleColumns() throws Exception {
-        openTestURL();
-
-        selectMenuPath("Component", "Columns", "Column 1", "Visible");
-        selectMenuPath("Component", "Columns", "Column 3", "Visible");
-
-        List<TestBenchElement> cells = getGridHeaderRowCells();
-        assertEquals(GridBasicFeatures.COLUMNS - 2, cells.size());
-
-        assertText("Header (0,0)", cells.get(0));
-        assertHTML("<b>Header (0,2)</b>", cells.get(1));
-        assertHTML("<b>Header (0,4)</b>", cells.get(2));
-
-        selectMenuPath("Component", "Columns", "Column 3", "Visible");
-
-        cells = getGridHeaderRowCells();
-        assertEquals(GridBasicFeatures.COLUMNS - 1, cells.size());
-
-        assertText("Header (0,0)", cells.get(0));
-        assertHTML("<b>Header (0,2)</b>", cells.get(1));
-        assertText("Header (0,3)", cells.get(2));
-        assertHTML("<b>Header (0,4)</b>", cells.get(3));
     }
 
     @Test
@@ -216,72 +190,6 @@ public class GridHeaderTest extends GridStaticSectionTest {
                     columnIndex);
             assertEquals(spannedCell.getText(), hiddenCell.getText());
         }
-    }
-
-    @Test
-    public void hideFirstColumnInColspan() throws Exception {
-        openTestURL();
-
-        selectMenuPath("Component", "Header", "Append row");
-
-        selectMenuPath("Component", "Header", "Row 2", "Join all columns");
-
-        int visibleColumns = GridBasicFeatures.COLUMNS;
-
-        GridCellElement spannedCell = getGridElement().getHeaderCell(1, 0);
-        assertTrue(spannedCell.isDisplayed());
-        assertEquals("" + visibleColumns, spannedCell.getAttribute("colspan"));
-
-        selectMenuPath("Component", "Columns", "Column 0", "Visible");
-        visibleColumns--;
-
-        spannedCell = getGridElement().getHeaderCell(1, 0);
-        assertTrue(spannedCell.isDisplayed());
-        assertEquals("" + visibleColumns, spannedCell.getAttribute("colspan"));
-    }
-
-    @Test
-    public void multipleColspanAndMultipleHiddenColumns() throws Exception {
-        openTestURL();
-
-        selectMenuPath("Component", "Header", "Append row");
-
-        // Join columns [1,2] and [3,4,5]
-        selectMenuPath("Component", "Header", "Row 2", "Join columns 1, 2");
-        GridCellElement spannedCell = getGridElement().getHeaderCell(1, 1);
-        assertEquals("2", spannedCell.getAttribute("colspan"));
-
-        selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
-        spannedCell = getGridElement().getHeaderCell(1, 3);
-        assertEquals("3", spannedCell.getAttribute("colspan"));
-
-        selectMenuPath("Component", "Columns", "Column 2", "Visible");
-        spannedCell = getGridElement().getHeaderCell(1, 1);
-        assertEquals("1", spannedCell.getAttribute("colspan"));
-
-        // Ensure the second colspan is preserved (shifts one index to the left)
-        spannedCell = getGridElement().getHeaderCell(1, 2);
-        assertEquals("3", spannedCell.getAttribute("colspan"));
-
-        selectMenuPath("Component", "Columns", "Column 4", "Visible");
-
-        // First reduced colspan is reduced
-        spannedCell = getGridElement().getHeaderCell(1, 1);
-        assertEquals("1", spannedCell.getAttribute("colspan"));
-
-        // Second colspan is also now reduced
-        spannedCell = getGridElement().getHeaderCell(1, 2);
-        assertEquals("2", spannedCell.getAttribute("colspan"));
-
-        // Show columns again
-        selectMenuPath("Component", "Columns", "Column 2", "Visible");
-        selectMenuPath("Component", "Columns", "Column 4", "Visible");
-
-        spannedCell = getGridElement().getHeaderCell(1, 1);
-        assertEquals("2", spannedCell.getAttribute("colspan"));
-        spannedCell = getGridElement().getHeaderCell(1, 3);
-        assertEquals("3", spannedCell.getAttribute("colspan"));
-
     }
 
     @Test

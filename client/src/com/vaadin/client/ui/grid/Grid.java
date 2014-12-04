@@ -41,7 +41,6 @@ import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.HasVisibility;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.DeferredWorker;
@@ -444,7 +443,7 @@ public class Grid<T> extends ResizeComposite implements
                     --newRow;
                     break;
                 case KeyCodes.KEY_RIGHT:
-                    if (cellFocusRange.getEnd() >= getVisibleColumns().size()) {
+                    if (cellFocusRange.getEnd() >= getColumns().size()) {
                         return;
                     }
                     newColumn = cellFocusRange.getEnd();
@@ -627,16 +626,6 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         @Override
-        public void setVisible(boolean visible) {
-            if (!visible && initDone) {
-                throw new UnsupportedOperationException("The selection "
-                        + "column cannot be modified after init");
-            } else {
-                super.setVisible(visible);
-            }
-        }
-
-        @Override
         public void setWidth(int pixels) {
             if (pixels != getWidth() && initDone) {
                 throw new UnsupportedOperationException("The selection "
@@ -688,8 +677,7 @@ public class Grid<T> extends ResizeComposite implements
          */
         public void sort(Cell cell, boolean multisort) {
 
-            final GridColumn<?, T> column = getColumnFromVisibleIndex(cell
-                    .getColumn());
+            final GridColumn<?, T> column = getColumn(cell.getColumn());
             if (!column.isSortable()) {
                 return;
             }
@@ -889,7 +877,7 @@ public class Grid<T> extends ResizeComposite implements
      * @param <T>
      *            the row type
      */
-    static abstract class AbstractGridColumn<C, T> implements HasVisibility {
+    static abstract class AbstractGridColumn<C, T> {
 
         /**
          * Default renderer for GridColumns. Renders everything into text
@@ -916,11 +904,6 @@ public class Grid<T> extends ResizeComposite implements
          * the column is associated with
          */
         private Grid<T> grid;
-
-        /**
-         * Should the column be visible in the grid
-         */
-        private boolean visible = true;
 
         /**
          * Width of column in pixels
@@ -1039,68 +1022,6 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Is the column visible. By default all columns are visible.
-         * 
-         * @return <code>true</code> if the column is visible
-         */
-        @Override
-        public boolean isVisible() {
-            return visible;
-        }
-
-        /**
-         * Sets a column as visible in the grid.
-         * 
-         * @param visible
-         *            <code>true</code> if the column should be displayed in the
-         *            grid
-         */
-        @Override
-        public void setVisible(boolean visible) {
-            if (this.visible == visible) {
-                return;
-            }
-
-            /*
-             * We need to guarantee that both insertColumns and removeColumns
-             * have this particular column accessible. Therefore, if we're
-             * turning the column visible, it's set before the other logic.
-             * Analogously, if we're turning the column invisible, we do that
-             * only after the logic has been performed.
-             */
-
-            if (visible) {
-                this.visible = true;
-            }
-
-            if (grid != null) {
-                int index = findIndexOfColumn();
-                ColumnConfiguration conf = grid.escalator
-                        .getColumnConfiguration();
-
-                if (visible) {
-                    conf.insertColumns(index, 1);
-                } else {
-                    conf.removeColumns(index, 1);
-                }
-            }
-
-            if (!visible) {
-                this.visible = false;
-            }
-
-            if (grid != null) {
-                for (HeaderRow row : grid.getHeader().getRows()) {
-                    row.calculateColspans();
-                }
-
-                for (FooterRow row : grid.getFooter().getRows()) {
-                    row.calculateColspans();
-                }
-            }
-        }
-
-        /**
          * Returns the data that should be rendered into the cell. By default
          * returning Strings and Widgets are supported. If the return type is a
          * String then it will be treated as preformatted text.
@@ -1148,14 +1069,6 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Finds the index of this column instance
-         * 
-         */
-        private int findIndexOfColumn() {
-            return grid.findVisibleColumnIndex((GridColumn<?, T>) this);
-        }
-
-        /**
          * Sets the pixel width of the column. Use a negative value for the grid
          * to autosize column based on content and available space
          * 
@@ -1165,8 +1078,8 @@ public class Grid<T> extends ResizeComposite implements
         public void setWidth(int pixels) {
             width = pixels;
 
-            if (grid != null && isVisible()) {
-                int index = findIndexOfColumn();
+            if (grid != null) {
+                int index = grid.indexOfColumn((GridColumn<?, T>) this);
                 ColumnConfiguration conf = grid.escalator
                         .getColumnConfiguration();
                 conf.setColumnWidth(index, pixels);
@@ -1234,7 +1147,6 @@ public class Grid<T> extends ResizeComposite implements
                 details += "detached ";
             }
 
-            details += "visible:" + visible + " ";
             details += "sortable:" + sortable + " ";
 
             return getClass().getSimpleName() + "[" + details.trim() + "]";
@@ -1323,8 +1235,7 @@ public class Grid<T> extends ResizeComposite implements
             cellFocusHandler.updateFocusedRowStyle(row);
 
             for (FlyweightCell cell : cellsToUpdate) {
-                GridColumn<?, T> column = getColumnFromVisibleIndex(cell
-                        .getColumn());
+                GridColumn<?, T> column = getColumn(cell.getColumn());
 
                 assert column != null : "Column was not found from cell ("
                         + cell.getColumn() + "," + cell.getRow() + ")";
@@ -1422,7 +1333,7 @@ public class Grid<T> extends ResizeComposite implements
         public void update(Row row, Iterable<FlyweightCell> cellsToUpdate) {
             GridStaticSection.StaticRow<?> staticRow = section.getRow(row
                     .getRow());
-            final List<GridColumn<?, T>> columns = getVisibleColumns();
+            final List<GridColumn<?, T>> columns = getColumns();
 
             setCustomStyleName(row.getElement(), staticRow.getStyleName());
 
@@ -1463,8 +1374,7 @@ public class Grid<T> extends ResizeComposite implements
 
             cleanup(cell);
 
-            GridColumn<?, ?> column = getColumnFromVisibleIndex(cell
-                    .getColumn());
+            GridColumn<?, ?> column = getColumn(cell.getColumn());
             SortOrder sortingOrder = getSortOrder(column);
             if (!headerRow.isDefault() || !column.isSortable()
                     || sortingOrder == null) {
@@ -1517,7 +1427,7 @@ public class Grid<T> extends ResizeComposite implements
         public void postAttach(Row row, Iterable<FlyweightCell> attachedCells) {
             GridStaticSection.StaticRow<?> gridRow = section.getRow(row
                     .getRow());
-            List<GridColumn<?, T>> columns = getVisibleColumns();
+            List<GridColumn<?, T>> columns = getColumns();
 
             for (FlyweightCell cell : attachedCells) {
                 StaticCell metadata = gridRow.getCell(columns.get(cell
@@ -1547,7 +1457,7 @@ public class Grid<T> extends ResizeComposite implements
             if (section.getRowCount() > row.getRow()) {
                 GridStaticSection.StaticRow<?> gridRow = section.getRow(row
                         .getRow());
-                List<GridColumn<?, T>> columns = getVisibleColumns();
+                List<GridColumn<?, T>> columns = getColumns();
                 for (FlyweightCell cell : cellsToDetach) {
                     StaticCell metadata = gridRow.getCell(columns.get(cell
                             .getColumn()));
@@ -1826,21 +1736,13 @@ public class Grid<T> extends ResizeComposite implements
         // Register this grid instance with the column
         ((AbstractGridColumn<?, T>) column).setGrid(this);
 
-        // Insert column into escalator
-        if (column.isVisible()) {
-            int visibleIndex = findVisibleColumnIndex(column);
-            ColumnConfiguration conf = escalator.getColumnConfiguration();
+        // Add to escalator
+        escalator.getColumnConfiguration().insertColumns(index, 1);
 
-            // Insert column
-            conf.insertColumns(visibleIndex, 1);
+        // Reapply column width
+        column.reapplyWidth();
 
-            // Transfer column width from column object to escalator
-            conf.setColumnWidth(visibleIndex, column.getWidth());
-        }
-
-        if (lastFrozenColumn != null
-                && ((AbstractGridColumn<?, T>) lastFrozenColumn)
-                        .findIndexOfColumn() < index) {
+        if (lastFrozenColumn != null && indexOfColumn(lastFrozenColumn) < index) {
             refreshFrozenColumns();
         }
 
@@ -1870,33 +1772,8 @@ public class Grid<T> extends ResizeComposite implements
         }
     }
 
-    protected int findVisibleColumnIndex(GridColumn<?, T> column) {
-        int idx = 0;
-        for (GridColumn<?, T> c : columns) {
-            if (c == column) {
-                return idx;
-            } else if (c.isVisible()) {
-                idx++;
-            }
-        }
-        return -1;
-    }
-
-    protected GridColumn<?, T> getColumnFromVisibleIndex(int index) {
-        int idx = -1;
-        for (GridColumn<?, T> c : columns) {
-            if (c.isVisible()) {
-                idx++;
-            }
-            if (index == idx) {
-                return c;
-            }
-        }
-        return null;
-    }
-
     private Renderer<?> findRenderer(FlyweightCell cell) {
-        GridColumn<?, T> column = getColumnFromVisibleIndex(cell.getColumn());
+        GridColumn<?, T> column = getColumn(cell.getColumn());
         assert column != null : "Could not find column at index:"
                 + cell.getColumn();
         return column.getRenderer();
@@ -1919,12 +1796,9 @@ public class Grid<T> extends ResizeComposite implements
 
     private void removeColumnSkipSelectionColumnCheck(GridColumn<?, T> column) {
         int columnIndex = columns.indexOf(column);
-        int visibleIndex = findVisibleColumnIndex(column);
 
-        if (column.isVisible()) {
-            ColumnConfiguration conf = escalator.getColumnConfiguration();
-            conf.removeColumns(visibleIndex, 1);
-        }
+        // Remove from column configuration
+        escalator.getColumnConfiguration().removeColumns(columnIndex, 1);
 
         if (column.equals(lastFrozenColumn)) {
             setLastFrozenColumn(null);
@@ -1978,18 +1852,14 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
-     * Returns a list of columns that are currently visible.
+     * Returns current index of given column
      * 
-     * @return a list of columns
+     * @param column
+     *            column in grid
+     * @return column index, or <code>-1</code> if not in this Grid
      */
-    protected List<GridColumn<?, T>> getVisibleColumns() {
-        List<GridColumn<?, T>> visible = new ArrayList<GridColumn<?, T>>();
-        for (GridColumn<?, T> column : getColumns()) {
-            if (column.isVisible()) {
-                visible.add(column);
-            }
-        }
-        return visible;
+    protected int indexOfColumn(GridColumn<?, T> column) {
+        return columns.indexOf(column);
     }
 
     /**
@@ -2505,8 +2375,7 @@ public class Grid<T> extends ResizeComposite implements
             Cell cell) {
 
         if (container == escalator.getBody() && cell != null) {
-            GridColumn<?, T> gridColumn = getColumnFromVisibleIndex(cell
-                    .getColumn());
+            GridColumn<?, T> gridColumn = getColumn(cell.getColumn());
             boolean enterKey = event.getType().equals(BrowserEvents.KEYDOWN)
                     && event.getKeyCode() == KeyCodes.KEY_ENTER;
             boolean doubleClick = event.getType()

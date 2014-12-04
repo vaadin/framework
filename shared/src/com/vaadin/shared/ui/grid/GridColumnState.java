@@ -35,11 +35,6 @@ public class GridColumnState implements Serializable {
     public String id;
 
     /**
-     * Has the column been hidden. By default the column is visible.
-     */
-    public boolean visible = true;
-
-    /**
      * Column width in pixels. Default column width is 100px.
      */
     public int width = 100;

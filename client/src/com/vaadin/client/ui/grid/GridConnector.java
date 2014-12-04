@@ -621,7 +621,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      */
     private static void updateColumnFromState(CustomGridColumn column,
             GridColumnState state) {
-        column.setVisible(state.visible);
         column.setWidth(state.width);
         column.setSortable(state.sortable);
         column.setEditorConnector((AbstractFieldConnector) state.editorConnector);
