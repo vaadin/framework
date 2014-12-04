@@ -28,7 +28,7 @@ import java.util.Locale;
  * </p>
  * 
  * @author Vaadin Ltd
- * @since 7.3.1
+ * @since
  */
 public class StringToShortConverter extends
         AbstractStringToNumberConverter<Short> {

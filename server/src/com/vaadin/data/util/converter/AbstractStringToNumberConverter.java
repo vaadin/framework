@@ -88,6 +88,7 @@ public abstract class AbstractStringToNumberConverter<T> implements
             // Convert "" to null
             return null;
         }
+
         return parsedValue;
     }
 
