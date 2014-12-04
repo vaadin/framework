@@ -94,13 +94,13 @@ public class TestSynchronizeFromDesign extends TestCase {
         node.appendChild(firstChild);
 
         Attributes secondChildAttributes = new Attributes();
-        secondChildAttributes.put("caption", "test-button");
         secondChildAttributes.put(":expand", String.valueOf(expandRatio));
         for (String alignment : alignments) {
             secondChildAttributes.put(alignment, "");
         }
         Element secondChild = new Element(Tag.valueOf("v-button"), "",
                 secondChildAttributes);
+        secondChild.html("test-button");
         node.appendChild(secondChild);
         return node;
     }

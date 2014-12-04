@@ -100,11 +100,11 @@ public class TestSynchronizeFromDesign extends TestCase {
         node.appendChild(firstChild);
 
         Attributes secondChildAttributes = new Attributes();
-        secondChildAttributes.put("caption", "test-button");
         secondChildAttributes.put(":bottom", "100px");
         secondChildAttributes.put(":right", "50%");
         Element secondChild = new Element(Tag.valueOf("v-button"), "",
                 secondChildAttributes);
+        secondChild.html("test-button");
         node.appendChild(secondChild);
         return node;
     }

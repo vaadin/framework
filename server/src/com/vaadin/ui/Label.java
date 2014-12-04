@@ -17,7 +17,10 @@
 package com.vaadin.ui;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Locale;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractProperty;
@@ -27,6 +30,7 @@ import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.ui.label.LabelState;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Label component for showing non-editable short texts.
@@ -568,6 +572,51 @@ public class Label extends AbstractComponent implements Property<String>,
             return super.toString();
         } else {
             return LegacyPropertyHelper.legacyPropertyToString(this);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.DesignSynchronizable#synchronizeFromDesign(org.jsoup.nodes
+     * .Element, com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeFromDesign(Element design,
+            DesignContext designContext) {
+        super.synchronizeFromDesign(design, designContext);
+        String innerHtml = design.html();
+        if (innerHtml != null && !"".equals(innerHtml)) {
+            setValue(innerHtml);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#getCustomAttributes()
+     */
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> result = super.getCustomAttributes();
+        result.add("value");
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.DesignSynchronizable#synchronizeToDesign(org.jsoup.nodes
+     * .Element, com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeToDesign(Element design, DesignContext designContext) {
+        super.synchronizeToDesign(design, designContext);
+        String content = getValue();
+        if (content != null) {
+            design.html(getValue());
         }
     }
 }

@@ -18,6 +18,9 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Collection;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.FieldEvents;
@@ -35,6 +38,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
 import com.vaadin.shared.ui.button.ButtonState;
 import com.vaadin.ui.Component.Focusable;
+import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -660,4 +664,46 @@ public class Button extends AbstractComponent implements
         return getState(false).htmlContentAllowed;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.DesignSynchronizable#synchronizeFromDesign(org.jsoup.nodes
+     * .Element, com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeFromDesign(Element design,
+            DesignContext designContext) {
+        super.synchronizeFromDesign(design, designContext);
+        String content = design.html();
+        setCaption(content);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#getCustomAttributes()
+     */
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> result = super.getCustomAttributes();
+        result.add("caption");
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.DesignSynchronizable#synchronizeToDesign(org.jsoup.nodes
+     * .Element, com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeToDesign(Element design, DesignContext designContext) {
+        super.synchronizeToDesign(design, designContext);
+        String content = getCaption();
+        if (content != null) {
+            design.html(content);
+        }
+    }
 }

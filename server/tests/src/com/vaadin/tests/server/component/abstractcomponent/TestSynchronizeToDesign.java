@@ -75,9 +75,10 @@ public class TestSynchronizeToDesign extends TestCase {
         AbstractComponent component = getComponent();
         component.setCaption("test-caption");
         component.synchronizeToDesign(design, ctx);
-        // we only changed one of the attributes, others are at default values
-        assertEquals(1, design.attributes().size());
-        assertEquals("test-caption", design.attr("caption"));
+        // We only changed the caption, which is not
+        // an attribute.
+        assertEquals(0, design.attributes().size());
+        assertEquals("test-caption", design.html());
     }
 
     public void testSynchronizeLocale() {
