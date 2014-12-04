@@ -722,12 +722,16 @@ public class RpcDataProviderExtension extends AbstractExtension {
         for (Object propertyId : propertyIds) {
             Column column = grid.getColumn(propertyId);
 
-            Object propertyValue = item.getItemProperty(propertyId).getValue();
-            JsonValue encodedValue = encodeValue(propertyValue,
-                    column.getRenderer(), column.getConverter(),
-                    grid.getLocale());
+            // TODO: Optimize this with Grid.getColumns() 04.12.2014 -Teemu
+            if (column != null) {
+                Object propertyValue = item.getItemProperty(propertyId)
+                        .getValue();
+                JsonValue encodedValue = encodeValue(propertyValue,
+                        column.getRenderer(), column.getConverter(),
+                        grid.getLocale());
 
-            rowData.put(columnKeys.key(propertyId), encodedValue);
+                rowData.put(columnKeys.key(propertyId), encodedValue);
+            }
         }
 
         final JsonObject rowObject = Json.createObject();

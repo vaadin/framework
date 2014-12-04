@@ -1100,36 +1100,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         }
 
         /**
-         * Is this column visible in the grid. By default all columns are
-         * visible.
-         * 
-         * @return <code>true</code> if the column is visible
-         * @throws IllegalStateException
-         *             if the column is no longer attached to any grid
-         */
-        public boolean isVisible() throws IllegalStateException {
-            checkColumnIsAttached();
-            return state.visible;
-        }
-
-        /**
-         * Set the visibility of this column
-         * 
-         * @param visible
-         *            is the column visible
-         * @return the column itself
-         * 
-         * @throws IllegalStateException
-         *             if the column is no longer attached to any grid
-         */
-        public Column setVisible(boolean visible) throws IllegalStateException {
-            checkColumnIsAttached();
-            state.visible = visible;
-            grid.markAsDirty();
-            return this;
-        }
-
-        /**
          * Checks if column is attached and throws an
          * {@link IllegalStateException} if it is not
          * 
@@ -1919,6 +1889,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             }
             for (Object columnId : removedColumns) {
                 removeColumn(columnId);
+                columnKeys.remove(columnId);
             }
             datasourceExtension.propertiesRemoved(removedColumns);
 
@@ -2248,6 +2219,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             removeExtension(datasourceExtension);
         }
 
+        columnKeys.removeAll();
         datasource = container;
 
         /*
@@ -2529,7 +2501,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         Column column = columns.remove(propertyId);
         getState().columnOrder.remove(columnKeys.key(propertyId));
         getState().columns.remove(column.getState());
-        columnKeys.remove(propertyId);
         removeExtension(column.getRenderer());
     }
 
@@ -3537,7 +3508,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         Header header = getHeader();
         for (int i = 0; i < header.getRowCount(); ++i) {
             HeaderRow row = header.getRow(i);
-            for (Object propId : datasource.getContainerPropertyIds()) {
+            for (Object propId : columns.keySet()) {
                 HeaderCell cell = row.getCell(propId);
                 if (cell.getCellState().type == GridStaticCellType.WIDGET) {
                     componentList.add(cell.getComponent());
@@ -3548,7 +3519,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         Footer footer = getFooter();
         for (int i = 0; i < footer.getRowCount(); ++i) {
             FooterRow row = footer.getRow(i);
-            for (Object propId : datasource.getContainerPropertyIds()) {
+            for (Object propId : columns.keySet()) {
                 FooterCell cell = row.getCell(propId);
                 if (cell.getCellState().type == GridStaticCellType.WIDGET) {
                     componentList.add(cell.getComponent());

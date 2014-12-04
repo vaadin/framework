@@ -40,37 +40,31 @@ import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 public class GridStructureTest extends GridBasicFeaturesTest {
 
     @Test
-    public void testHidingColumn() throws Exception {
-        openTestURL();
-
-        // Column 0 should be visible
-        List<TestBenchElement> cells = getGridHeaderRowCells();
-        assertEquals("column 0", cells.get(0).getText().toLowerCase());
-
-        // Hide column 0
-        selectMenuPath("Component", "Columns", "Column 0", "Visible");
-
-        // Column 1 should now be the first cell
-        cells = getGridHeaderRowCells();
-
-        /*
-         * Reindeer has a CSS text transformation that changes the casing so
-         * that we can't rely on it being what we set
-         */
-        assertEquals("column 1", cells.get(0).getText().toLowerCase());
-    }
-
-    @Test
-    public void testHidingAllColumns() {
+    public void testRemovingAllColumns() {
         setDebug(true);
         openTestURL();
         for (int i = 0; i < GridBasicFeatures.COLUMNS; ++i) {
-            selectMenuPath("Component", "Columns", "Column " + i, "Visible");
+            selectMenuPath("Component", "Columns", "Column " + i,
+                    "Add / Remove");
             assertFalse(isElementPresent(NotificationElement.class));
         }
 
         assertEquals("Headers still visible.", 0, getGridHeaderRowCells()
                 .size());
+    }
+
+    @Test
+    public void testRemoveAndAddColumn() {
+        setDebug(true);
+        openTestURL();
+
+        assertEquals("Column 0", getGridElement().getHeaderCell(0, 0).getText());
+        selectMenuPath("Component", "Columns", "Column 0", "Add / Remove");
+        assertEquals("Column 1", getGridElement().getHeaderCell(0, 0).getText());
+        selectMenuPath("Component", "Columns", "Column 0", "Add / Remove");
+        // Column 0 is appended to the end of grid
+        assertEquals("Column 0", getGridElement().getHeaderCell(0, 11)
+                .getText());
     }
 
     @Test
@@ -82,7 +76,7 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         assertEquals("column 0", cells.get(0).getText().toLowerCase());
 
         // Hide column 0
-        selectMenuPath("Component", "Columns", "Column 0", "Remove");
+        selectMenuPath("Component", "Columns", "Column 0", "Add / Remove");
 
         // Column 1 should now be the first cell
         cells = getGridHeaderRowCells();
@@ -94,9 +88,9 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         openTestURL();
 
         // Remove columns 2,3,4
-        selectMenuPath("Component", "Columns", "Column 2", "Remove");
-        selectMenuPath("Component", "Columns", "Column 3", "Remove");
-        selectMenuPath("Component", "Columns", "Column 4", "Remove");
+        selectMenuPath("Component", "Columns", "Column 2", "Add / Remove");
+        selectMenuPath("Component", "Columns", "Column 3", "Add / Remove");
+        selectMenuPath("Component", "Columns", "Column 4", "Add / Remove");
 
         // Scroll so new data is lazy loaded
         scrollGridVerticallyTo(1000);
@@ -300,7 +294,7 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         String columnName = "Column " + (GridBasicFeatures.COLUMNS - 1);
         assertTrue(columnName + " was not present in DOM",
                 isElementPresent(By.xpath("//th[text()='" + columnName + "']")));
-        selectMenuPath("Component", "Columns", columnName, "Remove");
+        selectMenuPath("Component", "Columns", columnName, "Add / Remove");
         assertFalse(isElementPresent(NotificationElement.class));
         assertFalse(columnName + " was still present in DOM",
                 isElementPresent(By.xpath("//th[text()='" + columnName + "']")));

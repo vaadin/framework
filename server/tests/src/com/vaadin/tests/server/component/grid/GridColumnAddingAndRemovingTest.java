@@ -27,7 +27,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Grid;
 
-public class GridColumnBuildTest {
+public class GridColumnAddingAndRemovingTest {
 
     Grid grid = new Grid();
     Container.Indexed container;

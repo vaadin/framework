@@ -97,14 +97,6 @@ public class GridColumns {
         assertEquals(column.getHeaderCaption(), grid.getDefaultHeaderRow()
                 .getCell("column1").getText());
 
-        column.setVisible(false);
-        assertFalse(column.isVisible());
-        assertFalse(getColumnState("column1").visible);
-
-        column.setVisible(true);
-        assertTrue(column.isVisible());
-        assertTrue(getColumnState("column1").visible);
-
         column.setWidth(100);
         assertEquals(100, column.getWidth());
         assertEquals(column.getWidth(), getColumnState("column1").width);
@@ -121,7 +113,8 @@ public class GridColumns {
     }
 
     @Test
-    public void testRemovingColumn() throws Exception {
+    public void testRemovingColumnByRemovingPropertyFromContainer()
+            throws Exception {
 
         Column column = grid.getColumn("column1");
         assertNotNull(column);
@@ -132,13 +125,6 @@ public class GridColumns {
         try {
             column.setHeaderCaption("asd");
 
-            fail("Succeeded in modifying a detached column");
-        } catch (IllegalStateException ise) {
-            // Detached state should throw exception
-        }
-
-        try {
-            column.setVisible(false);
             fail("Succeeded in modifying a detached column");
         } catch (IllegalStateException ise) {
             // Detached state should throw exception
@@ -156,7 +142,7 @@ public class GridColumns {
     }
 
     @Test
-    public void testAddingColumn() throws Exception {
+    public void testAddingColumnByAddingPropertyToContainer() throws Exception {
         grid.getContainerDataSource().addContainerProperty("columnX",
                 String.class, "");
         Column column = grid.getColumn("columnX");

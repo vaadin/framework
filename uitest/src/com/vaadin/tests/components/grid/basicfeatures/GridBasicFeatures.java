@@ -466,27 +466,17 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         for (int c = 0; c < COLUMNS; c++) {
             createCategory(getColumnProperty(c), "Columns");
 
-            createBooleanAction("Visible", getColumnProperty(c), true,
-                    new Command<Grid, Boolean>() {
-
-                        @Override
-                        public void execute(Grid grid, Boolean value,
-                                Object columnIndex) {
-                            Object propertyId = getColumnProperty((Integer) columnIndex);
-                            Column column = grid.getColumn(propertyId);
-                            column.setVisible(!column.isVisible());
-                        }
-                    }, c);
-
-            createClickAction("Remove", getColumnProperty(c),
+            createClickAction("Add / Remove", getColumnProperty(c),
                     new Command<Grid, String>() {
 
                         @Override
                         public void execute(Grid grid, String value, Object data) {
-                            grid.getContainerDataSource()
-                                    .removeContainerProperty(
-                                            getColumnProperty((Integer) data));
-                            removeCategory("Column " + data);
+                            String columnProperty = getColumnProperty((Integer) data);
+                            if (grid.getColumn(columnProperty) == null) {
+                                grid.addColumn(columnProperty);
+                            } else {
+                                grid.removeColumn(columnProperty);
+                            }
                         }
                     }, null, c);
 
