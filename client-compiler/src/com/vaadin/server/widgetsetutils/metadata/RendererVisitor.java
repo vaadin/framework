@@ -17,8 +17,10 @@ package com.vaadin.server.widgetsetutils.metadata;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.TreeLogger.Type;
+import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
 
@@ -43,7 +45,7 @@ public class RendererVisitor extends TypeVisitor {
 
     @Override
     public void visitConnector(TreeLogger logger, JClassType type,
-            ConnectorBundle bundle) {
+            ConnectorBundle bundle) throws UnableToCompleteException {
         if (ConnectorBundle.isConnectedRendererConnector(type)) {
             doRendererType(logger, type, bundle);
             doPresentationType(logger, type, bundle);
@@ -75,20 +77,31 @@ public class RendererVisitor extends TypeVisitor {
     }
 
     private void doPresentationType(TreeLogger logger, JClassType type,
-            ConnectorBundle bundle) {
-        JType presentationType = getPresentationType(type);
+            ConnectorBundle bundle) throws UnableToCompleteException {
+        JType presentationType = getPresentationType(type, logger);
         bundle.setPresentationType(type, presentationType);
 
         logger.log(Type.DEBUG, "Presentation type of " + type + " is "
                 + presentationType);
     }
 
-    private static JType getPresentationType(JClassType type) {
+    private static JType getPresentationType(JClassType type, TreeLogger logger)
+            throws UnableToCompleteException {
         JClassType originalType = type;
         while (type != null) {
             if (type.getQualifiedBinaryName().equals(
                     AbstractRendererConnector.class.getName())) {
-                return type.isParameterized().getTypeArgs()[0];
+                JParameterizedType parameterized = type.isParameterized();
+                if (parameterized == null) {
+                    logger.log(
+                            Type.ERROR,
+                            type.getQualifiedSourceName()
+                                    + " must define the generic parameter of the inherited "
+                                    + AbstractRendererConnector.class
+                                            .getSimpleName());
+                    throw new UnableToCompleteException();
+                }
+                return parameterized.getTypeArgs()[0];
             }
             type = type.getSuperclass();
         }
