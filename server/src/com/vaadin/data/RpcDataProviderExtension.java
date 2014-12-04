@@ -47,6 +47,7 @@ import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.components.grid.Renderer;
 
@@ -718,7 +719,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
         Grid grid = getGrid();
 
-        int i = 0;
         for (Object propertyId : propertyIds) {
             Column column = grid.getColumn(propertyId);
 
@@ -733,7 +733,40 @@ public class RpcDataProviderExtension extends AbstractExtension {
         final JsonObject rowObject = Json.createObject();
         rowObject.put(GridState.JSONKEY_DATA, rowData);
         rowObject.put(GridState.JSONKEY_ROWKEY, keyMapper.getKey(itemId));
+
+        CellStyleGenerator cellStyleGenerator = grid.getCellStyleGenerator();
+        if (cellStyleGenerator != null) {
+            setGeneratedStyles(cellStyleGenerator, rowObject, propertyIds,
+                    itemId);
+        }
+
         return rowObject;
+    }
+
+    private void setGeneratedStyles(CellStyleGenerator generator,
+            JsonObject rowObject, Collection<?> propertyIds, Object itemId) {
+        Grid grid = getGrid();
+
+        JsonObject cellStyles = null;
+        for (Object propertyId : propertyIds) {
+            String style = generator.getStyle(grid, itemId, propertyId);
+            if (style != null) {
+                if (cellStyles == null) {
+                    cellStyles = Json.createObject();
+                }
+
+                String columnKey = columnKeys.key(propertyId);
+                cellStyles.put(columnKey, style);
+            }
+        }
+        if (cellStyles != null) {
+            rowObject.put(GridState.JSONKEY_CELLSTYLES, cellStyles);
+        }
+
+        String rowStyle = generator.getStyle(grid, itemId, null);
+        if (rowStyle != null) {
+            rowObject.put(GridState.JSONKEY_ROWSTYLE, rowStyle);
+        }
     }
 
     @Override
@@ -811,6 +844,22 @@ public class RpcDataProviderExtension extends AbstractExtension {
         JsonArray rowArray = Json.createArray();
         rowArray.set(0, row);
         rpc.setRowData(index, rowArray.toJson());
+    }
+
+    /**
+     * Pushes a new version of all the rows in the active cache range.
+     */
+    public void refreshCache() {
+        if (!clientInitialized) {
+            return;
+        }
+
+        int firstRow = activeRowHandler.activeRange.getStart();
+        int numberOfRows = activeRowHandler.activeRange.length();
+
+        List<?> itemIds = RpcDataProviderExtension.this.container.getItemIds(
+                firstRow, numberOfRows);
+        pushRows(firstRow, itemIds);
     }
 
     @Override

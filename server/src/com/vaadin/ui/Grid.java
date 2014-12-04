@@ -201,6 +201,37 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     }
 
     /**
+     * Callback interface for generating custom style names for data rows and
+     * cells.
+     * 
+     * @see Grid#setCellStyleGenerator(CellStyleGenerator)
+     */
+    public interface CellStyleGenerator extends Serializable {
+
+        /**
+         * Called by Grid to generate a style name for a row or cell element.
+         * Row styles are generated when the column parameter is
+         * <code>null</code>, otherwise a cell style is generated.
+         * <p>
+         * The returned style name is prefixed so that the actual style for
+         * cells will be <tt>v-grid-cell-content-[style name]</tt>, and the row
+         * style will be <tt>v-grid-row-[style name]</tt>.
+         * 
+         * @param grid
+         *            the source grid
+         * @param itemId
+         *            the itemId of the target row
+         * @param propertyId
+         *            the propertyId of the target cell, <code>null</code> when
+         *            getting row style
+         * @return the style name to add to this cell or row element, or
+         *         <code>null</code> to not set any style
+         */
+        public abstract String getStyle(Grid grid, Object itemId,
+                Object propertyId);
+    }
+
+    /**
      * Abstract base class for Grid header and footer sections.
      * 
      * @param <ROWTYPE>
@@ -1941,6 +1972,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
     private EditorRow editorRow;
 
+    private CellStyleGenerator cellStyleGenerator;
+
     /**
      * <code>true</code> if Grid is using the internal IndexedContainer created
      * in Grid() constructor, or <code>false</code> if the user has set their
@@ -3550,5 +3583,31 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
     EditorRowClientRpc getEditorRowRpc() {
         return getRpcProxy(EditorRowClientRpc.class);
+    }
+
+    /**
+     * Sets the cell style generator that is used for generating styles for rows
+     * and cells.
+     * 
+     * @param cellStyleGenerator
+     *            the cell style generator to set, or <code>null</code> to
+     *            remove a previously set generator
+     */
+    public void setCellStyleGenerator(CellStyleGenerator cellStyleGenerator) {
+        this.cellStyleGenerator = cellStyleGenerator;
+        getState().hasCellStyleGenerator = (cellStyleGenerator != null);
+
+        datasourceExtension.refreshCache();
+    }
+
+    /**
+     * Gets the cell style generator that is used for generating styles for rows
+     * and cells.
+     * 
+     * @return the cell style generator, or <code>null</code> if no generator is
+     *         set
+     */
+    public CellStyleGenerator getCellStyleGenerator() {
+        return cellStyleGenerator;
     }
 }

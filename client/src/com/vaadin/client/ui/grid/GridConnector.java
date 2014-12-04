@@ -41,6 +41,7 @@ import com.vaadin.client.data.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.ui.grid.Grid.CellStyleGenerator;
 import com.vaadin.client.ui.grid.GridHeader.HeaderRow;
 import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
 import com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel;
@@ -80,6 +81,35 @@ import com.vaadin.shared.ui.grid.SortDirection;
 @Connect(com.vaadin.ui.Grid.class)
 public class GridConnector extends AbstractHasComponentsConnector implements
         SimpleManagedLayout {
+
+    private static final class CustomCellStyleGenerator implements
+            CellStyleGenerator<JSONObject> {
+        @Override
+        public String getStyle(Grid<JSONObject> grid, JSONObject row,
+                int rowIndex, GridColumn<?, JSONObject> column, int columnIndex) {
+            if (column == null) {
+                JSONValue styleValue = row.get(GridState.JSONKEY_ROWSTYLE);
+                if (styleValue != null) {
+                    return styleValue.isString().stringValue();
+                } else {
+                    return null;
+                }
+            } else {
+                JSONValue cellstyles = row.get(GridState.JSONKEY_CELLSTYLES);
+                if (cellstyles == null) {
+                    return null;
+                }
+
+                CustomGridColumn c = (CustomGridColumn) column;
+                JSONValue styleValue = cellstyles.isObject().get(c.id);
+                if (styleValue != null) {
+                    return styleValue.isString().stringValue();
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
 
     /**
      * Custom implementation of the custom grid column using a JSONObject to
@@ -641,6 +671,15 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             selectionModel = model;
             getWidget().setSelectionModel(model);
             selectedKeys.clear();
+        }
+    }
+
+    @OnStateChange("hasCellStyleGenerator")
+    private void onCellStyleGeneratorChange() {
+        if (getState().hasCellStyleGenerator) {
+            getWidget().setCellStyleGenerator(new CustomCellStyleGenerator());
+        } else {
+            getWidget().setCellStyleGenerator(null);
         }
     }
 

@@ -38,8 +38,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.FooterCell;
+import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.FooterCell;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
@@ -283,6 +284,58 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             }
                             c.setColumnOrder(idsArray);
                         }
+                    }
+                });
+
+        LinkedHashMap<String, CellStyleGenerator> styleGenerators = new LinkedHashMap<String, CellStyleGenerator>();
+        styleGenerators.put("None", null);
+        styleGenerators.put("Row only", new CellStyleGenerator() {
+            @Override
+            public String getStyle(Grid grid, Object itemId, Object propertyId) {
+                if (propertyId == null) {
+                    return "row" + itemId;
+                } else {
+                    return null;
+                }
+            }
+        });
+        styleGenerators.put("Cell only", new CellStyleGenerator() {
+            @Override
+            public String getStyle(Grid grid, Object itemId, Object propertyId) {
+                if (propertyId == null) {
+                    return null;
+                } else {
+                    return propertyId.toString().replace(' ', '-');
+                }
+            }
+        });
+        styleGenerators.put("Combined", new CellStyleGenerator() {
+            @Override
+            public String getStyle(Grid grid, Object itemId, Object propertyId) {
+                int rowIndex = ((Integer) itemId).intValue();
+                if (propertyId == null) {
+                    if (rowIndex % 4 == 0) {
+                        return null;
+                    } else {
+                        return "row" + itemId;
+                    }
+                } else {
+                    if (rowIndex % 4 == 1) {
+                        return null;
+                    } else if (rowIndex % 4 == 3
+                            && "Column 1".equals(propertyId)) {
+                        return null;
+                    }
+                    return propertyId.toString().replace(' ', '_');
+                }
+            }
+        });
+        createSelectAction("Style generator", "State", styleGenerators, "None",
+                new Command<Grid, CellStyleGenerator>() {
+                    @Override
+                    public void execute(Grid grid,
+                            CellStyleGenerator generator, Object data) {
+                        grid.setCellStyleGenerator(generator);
                     }
                 });
     }

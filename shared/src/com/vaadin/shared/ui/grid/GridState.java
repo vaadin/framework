@@ -88,6 +88,20 @@ public class GridState extends AbstractComponentState {
     public static final String JSONKEY_ROWKEY = "k";
 
     /**
+     * The key in which a row's generated style can be found
+     * 
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
+     */
+    public static final String JSONKEY_ROWSTYLE = "rs";
+
+    /**
+     * The key in which a generated styles for a row's cells can be found
+     * 
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
+     */
+    public static final String JSONKEY_CELLSTYLES = "cs";
+
+    /**
      * Columns in grid.
      */
     public List<GridColumnState> columns = new ArrayList<GridColumnState>();
@@ -129,4 +143,7 @@ public class GridState extends AbstractComponentState {
 
     /** The enabled state of the editor row */
     public boolean editorRowEnabled = false;
+
+    /** Whether row data might contain generated styles */
+    public boolean hasCellStyleGenerator;
 }
