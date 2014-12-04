@@ -423,11 +423,11 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 this.row = row;
             }
 
-            private void setColumnId(String id) {
+            void setColumnId(String id) {
                 cellState.columnId = id;
             }
 
-            private String getColumnId() {
+            String getColumnId() {
                 return cellState.columnId;
             }
 
