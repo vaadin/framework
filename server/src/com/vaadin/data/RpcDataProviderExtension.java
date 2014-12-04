@@ -709,34 +709,29 @@ public class RpcDataProviderExtension extends AbstractExtension {
     }
 
     private void pushRows(int firstRow, List<?> itemIds) {
-        Collection<?> propertyIds = container.getContainerPropertyIds();
         JsonArray rows = Json.createArray();
         for (int i = 0; i < itemIds.size(); ++i) {
-            rows.set(i, getRowData(propertyIds, itemIds.get(i)));
+            rows.set(i, getRowData(getGrid().getColumns(), itemIds.get(i)));
         }
         rpc.setRowData(firstRow, rows.toJson());
     }
 
-    private JsonValue getRowData(Collection<?> propertyIds, Object itemId) {
+    private JsonValue getRowData(Collection<Column> columns, Object itemId) {
         Item item = container.getItem(itemId);
 
         JsonObject rowData = Json.createObject();
 
         Grid grid = getGrid();
 
-        for (Object propertyId : propertyIds) {
-            Column column = grid.getColumn(propertyId);
+        for (Column column : columns) {
+            Object propertyId = column.getColumnProperty();
 
-            // TODO: Optimize this with Grid.getColumns() 04.12.2014 -Teemu
-            if (column != null) {
-                Object propertyValue = item.getItemProperty(propertyId)
-                        .getValue();
-                JsonValue encodedValue = encodeValue(propertyValue,
-                        column.getRenderer(), column.getConverter(),
-                        grid.getLocale());
+            Object propertyValue = item.getItemProperty(propertyId).getValue();
+            JsonValue encodedValue = encodeValue(propertyValue,
+                    column.getRenderer(), column.getConverter(),
+                    grid.getLocale());
 
-                rowData.put(columnKeys.key(propertyId), encodedValue);
-            }
+            rowData.put(columnKeys.key(propertyId), encodedValue);
         }
 
         final JsonObject rowObject = Json.createObject();
@@ -745,19 +740,19 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
         CellStyleGenerator cellStyleGenerator = grid.getCellStyleGenerator();
         if (cellStyleGenerator != null) {
-            setGeneratedStyles(cellStyleGenerator, rowObject, propertyIds,
-                    itemId);
+            setGeneratedStyles(cellStyleGenerator, rowObject, columns, itemId);
         }
 
         return rowObject;
     }
 
     private void setGeneratedStyles(CellStyleGenerator generator,
-            JsonObject rowObject, Collection<?> propertyIds, Object itemId) {
+            JsonObject rowObject, Collection<Column> columns, Object itemId) {
         Grid grid = getGrid();
 
         JsonObject cellStyles = null;
-        for (Object propertyId : propertyIds) {
+        for (Column column : columns) {
+            Object propertyId = column.getColumnProperty();
             String style = generator.getStyle(grid, itemId, propertyId);
             if (style != null) {
                 if (cellStyles == null) {
@@ -849,7 +844,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * roundtrip.
          */
         Object itemId = container.getIdByIndex(index);
-        JsonValue row = getRowData(container.getContainerPropertyIds(), itemId);
+        JsonValue row = getRowData(getGrid().getColumns(), itemId);
         JsonArray rowArray = Json.createArray();
         rowArray.set(0, row);
         rpc.setRowData(index, rowArray.toJson());

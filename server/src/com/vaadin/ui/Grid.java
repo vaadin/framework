@@ -974,6 +974,11 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          */
         private final Grid grid;
 
+        /**
+         * Backing property for column
+         */
+        private final Object columnProperty;
+
         private Converter<?, Object> converter;
 
         /**
@@ -990,10 +995,13 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          *            The grid this column belongs to. Should not be null.
          * @param state
          *            the shared state of this column
+         * @param columnProperty
+         *            the backing property id for this column
          */
-        Column(Grid grid, GridColumnState state) {
+        Column(Grid grid, GridColumnState state, Object columnProperty) {
             this.grid = grid;
             this.state = state;
+            this.columnProperty = columnProperty;
             internalSetRenderer(new TextRenderer());
         }
 
@@ -1005,6 +1013,15 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          */
         GridColumnState getState() {
             return state;
+        }
+
+        /**
+         * Return the property id for the backing property of this Column
+         * 
+         * @return property id
+         */
+        public Object getColumnProperty() {
+            return columnProperty;
         }
 
         /**
@@ -2337,6 +2354,20 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     }
 
     /**
+     * Returns a copy of currently configures columns in their current visual
+     * order in this Grid.
+     * 
+     * @return unmodifiable copy of current columns in visual order
+     */
+    public Collection<Column> getColumns() {
+        List<Column> columns = new ArrayList<Grid.Column>();
+        for (String columnId : getState(false).columnOrder) {
+            columns.add(getColumnByColumnId(columnId));
+        }
+        return Collections.unmodifiableList(columns);
+    }
+
+    /**
      * Adds a new Column to Grid. Also adds the property to container with data
      * type String, if property for column does not exist in it. Default value
      * for the new property is an empty String.
@@ -2481,7 +2512,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         GridColumnState columnState = new GridColumnState();
         columnState.id = columnKeys.key(datasourcePropertyId);
 
-        Column column = new Column(this, columnState);
+        Column column = new Column(this, columnState, datasourcePropertyId);
         columns.put(datasourcePropertyId, column);
 
         getState().columns.add(columnState);
