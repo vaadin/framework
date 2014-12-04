@@ -79,6 +79,11 @@ public class CheckBoxes extends VerticalLayout implements View {
         check.addStyleName("large");
         row.addComponent(check);
 
+        check = new CheckBox("Disabled", true);
+        check.setEnabled(false);
+        check.setIcon(testIcon.get());
+        row.addComponent(check);
+
         h1 = new Label("Option Groups");
         h1.addStyleName("h1");
         addComponent(h1);
@@ -183,6 +188,17 @@ public class CheckBoxes extends VerticalLayout implements View {
         options.setItemIcon("Option One", testIcon.get());
         options.setItemIcon(two, testIcon.get());
         options.setItemIcon("Option Three", testIcon.get());
+        row.addComponent(options);
+
+        options = new OptionGroup("Disabled items");
+        options.setEnabled(false);
+        options.addItem("Option One");
+        options.addItem("Option Two");
+        options.addItem("Option Three");
+        options.select("Option One");
+        options.setItemIcon("Option One", testIcon.get());
+        options.setItemIcon("Option Two", testIcon.get());
+        options.setItemIcon("Option Three", testIcon.get(true));
         row.addComponent(options);
     }
 

@@ -85,7 +85,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
     public void checkboxes() throws Exception {
         openTestURL("test");
         open("Check Boxes & Option Groups", "Check Boxes");
-        compareScreen("checkboxes");
+        compareScreen("checkboxes_with_disabled");
     }
 
     @Test
