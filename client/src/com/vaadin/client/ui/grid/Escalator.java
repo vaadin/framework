@@ -3871,7 +3871,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             if (count < 0 || count > getColumnCount()) {
                 throw new IllegalArgumentException(
                         "count must be between 0 and the current number of columns ("
-                                + columns + ")");
+                                + getColumnCount() + ")");
             }
             int oldCount = frozenColumns;
             if (count == oldCount) {

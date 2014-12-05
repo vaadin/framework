@@ -65,10 +65,25 @@ public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest 
         assertFalse(cellIsFrozen(0, 0));
         assertFalse(cellIsFrozen(0, 1));
 
-        selectMenuPath("Component", "Columns", "Column 0", "Frozen");
+        selectMenuPath("Component", "State", "Frozen column count", "1 columns");
 
         assertTrue(cellIsFrozen(1, 0));
         assertFalse(cellIsFrozen(1, 1));
+
+        selectMenuPath("Component", "State", "Selection mode", "multi");
+
+        assertTrue(cellIsFrozen(1, 1));
+        assertFalse(cellIsFrozen(1, 2));
+
+        selectMenuPath("Component", "State", "Frozen column count", "0 columns");
+
+        assertTrue(cellIsFrozen(1, 0));
+        assertFalse(cellIsFrozen(1, 1));
+
+        selectMenuPath("Component", "State", "Frozen column count",
+                "-1 columns");
+
+        assertFalse(cellIsFrozen(1, 0));
     }
 
     private boolean cellIsFrozen(int row, int col) {

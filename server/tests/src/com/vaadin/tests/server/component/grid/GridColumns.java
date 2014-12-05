@@ -180,17 +180,21 @@ public class GridColumns {
     }
 
     @Test
-    public void testFrozenColumnByPropertyId() {
-        assertNull("Grid should not start with a frozen column",
-                grid.getLastFrozenPropertyId());
+    public void testFrozenColumnRemoveColumn() {
+        assertEquals("Grid should not start with a frozen column", 0,
+                grid.getFrozenColumnCount());
+
+        int containerSize = grid.getContainerDataSource()
+                .getContainerPropertyIds().size();
+        grid.setFrozenColumnCount(containerSize);
 
         Object propertyId = grid.getContainerDataSource()
                 .getContainerPropertyIds().iterator().next();
-        grid.setLastFrozenPropertyId(propertyId);
-        assertEquals(propertyId, grid.getLastFrozenPropertyId());
 
         grid.getContainerDataSource().removeContainerProperty(propertyId);
-        assertNull(grid.getLastFrozenPropertyId());
+        assertEquals(
+                "Frozen column count should update when removing last row",
+                containerSize - 1, grid.getFrozenColumnCount());
     }
 
     @Test

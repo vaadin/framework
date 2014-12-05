@@ -451,19 +451,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                             getState().footer);
                 }
 
-                if (stateChangeEvent.hasPropertyChanged("lastFrozenColumnId")) {
-                    String frozenColId = getState().lastFrozenColumnId;
-                    if (frozenColId != null) {
-                        CustomGridColumn column = columnIdToColumn
-                                .get(frozenColId);
-                        assert column != null : "Column to be frozen could not be found (id:"
-                                + frozenColId + ")";
-                        getWidget().setLastFrozenColumn(column);
-                    } else {
-                        getWidget().setLastFrozenColumn(null);
-                    }
-                }
-
                 if (stateChangeEvent.hasPropertyChanged("editorRowEnabled")) {
                     getWidget().getEditorRow().setEnabled(
                             getState().editorRowEnabled);

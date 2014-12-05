@@ -774,9 +774,10 @@ public class Grid<T> extends ResizeComposite implements
     private Range currentDataAvailable = Range.withLength(0, 0);
 
     /**
-     * The last column frozen counter from the left
+     * The number of frozen columns, 0 freezes the selection column if
+     * displayed, -1 also prevents selection col from freezing.
      */
-    private GridColumn<?, T> lastFrozenColumn;
+    private int frozenColumnCount = 0;
 
     /**
      * Current sort order. The (private) sort() method reads this list to
@@ -1742,10 +1743,6 @@ public class Grid<T> extends ResizeComposite implements
         // Reapply column width
         column.reapplyWidth();
 
-        if (lastFrozenColumn != null && indexOfColumn(lastFrozenColumn) < index) {
-            refreshFrozenColumns();
-        }
-
         // Sink all renderer events
         Set<String> events = new HashSet<String>();
         events.addAll(getConsumedEventsForRenderer(column.getRenderer()));
@@ -1800,11 +1797,7 @@ public class Grid<T> extends ResizeComposite implements
         // Remove from column configuration
         escalator.getColumnConfiguration().removeColumns(columnIndex, 1);
 
-        if (column.equals(lastFrozenColumn)) {
-            setLastFrozenColumn(null);
-        } else {
-            refreshFrozenColumns();
-        }
+        updateFrozenColumns();
 
         header.removeColumn(column);
         footer.removeColumn(column);
@@ -1996,49 +1989,55 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
-     * Sets the rightmost frozen column in the grid.
+     * Sets the number of frozen columns in this grid. Setting the count to 0
+     * means that no data columns will be frozen, but the built-in selection
+     * checkbox column will still be frozen if it's in use. Setting the count to
+     * -1 will also disable the selection column.
      * <p>
-     * All columns up to and including the given column will be frozen in place
-     * when the grid is scrolled sideways.
+     * The default value is 0.
      * 
-     * @param lastFrozenColumn
-     *            the rightmost column to freeze, or <code>null</code> to not
-     *            have any columns frozen
+     * @param numberOfColumns
+     *            the number of columns that should be frozen
+     * 
      * @throws IllegalArgumentException
-     *             if {@code lastFrozenColumn} is not a column from this grid
+     *             if the column count is < -1 or > the number of visible
+     *             columns
      */
-    public void setLastFrozenColumn(GridColumn<?, T> lastFrozenColumn) {
-        this.lastFrozenColumn = lastFrozenColumn;
-        refreshFrozenColumns();
-    }
-
-    private void refreshFrozenColumns() {
-        final int frozenCount;
-        if (lastFrozenColumn != null) {
-            frozenCount = columns.indexOf(lastFrozenColumn) + 1;
-            if (frozenCount == 0) {
-                throw new IllegalArgumentException(
-                        "The given column isn't attached to this grid");
-            }
-        } else {
-            frozenCount = 0;
+    public void setFrozenColumnCount(int numberOfColumns) {
+        if (numberOfColumns < -1 || numberOfColumns > getColumnCount()) {
+            throw new IllegalArgumentException(
+                    "count must be between -1 and the current number of columns ("
+                            + getColumnCount() + ")");
         }
 
-        escalator.getColumnConfiguration().setFrozenColumnCount(frozenCount);
+        this.frozenColumnCount = numberOfColumns;
+        updateFrozenColumns();
+    }
+
+    private void updateFrozenColumns() {
+        int numberOfColumns = frozenColumnCount;
+
+        if (numberOfColumns == -1) {
+            numberOfColumns = 0;
+        } else if (selectionColumn != null) {
+            numberOfColumns++;
+        }
+
+        escalator.getColumnConfiguration()
+                .setFrozenColumnCount(numberOfColumns);
+
     }
 
     /**
-     * Gets the rightmost frozen column in the grid.
-     * <p>
-     * <em>Note:</em> Most usually, this method returns the very value set with
-     * {@link #setLastFrozenColumn(GridColumn)}. This value, however, can be
-     * reset to <code>null</code> if the column is removed from this grid.
+     * Gets the number of frozen columns in this grid. 0 means that no data
+     * columns will be frozen, but the built-in selection checkbox column will
+     * still be frozen if it's in use. -1 means that not even the selection
+     * column is frozen.
      * 
-     * @return the rightmost frozen column in the grid, or <code>null</code> if
-     *         no columns are frozen.
+     * @return the number of frozen columns
      */
-    public GridColumn<?, T> getLastFrozenColumn() {
-        return lastFrozenColumn;
+    public int getFrozenColumnCount() {
+        return frozenColumnCount;
     }
 
     public HandlerRegistration addRowVisibilityChangeHandler(
@@ -2672,7 +2671,11 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         if (this.selectColumnRenderer != null) {
-            removeColumnSkipSelectionColumnCheck(selectionColumn);
+            // Clear field so frozen column logic in the remove method knows
+            // what to do
+            GridColumn<?, T> colToRemove = selectionColumn;
+            selectionColumn = null;
+            removeColumnSkipSelectionColumnCheck(colToRemove);
             cellFocusHandler.offsetRangeBy(-1);
         }
 
@@ -2690,6 +2693,8 @@ public class Grid<T> extends ResizeComposite implements
             selectionColumn = null;
             refreshBody();
         }
+
+        updateFrozenColumns();
     }
 
     /**

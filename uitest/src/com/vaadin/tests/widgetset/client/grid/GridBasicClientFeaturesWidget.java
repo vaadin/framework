@@ -572,6 +572,19 @@ public class GridBasicClientFeaturesWidget extends
                 });
             }
         }, styleGeneratorNamePath);
+
+        for (int i = -1; i <= COLUMNS; i++) {
+            final int index = i;
+            // Including dummy "columns" prefix because TB fails to select item
+            // if it's too narrow
+            addMenuCommand(Integer.toString(index) + " columns",
+                    new ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            grid.setFrozenColumnCount(index);
+                        }
+                    }, "Component", "State", "Frozen column count");
+        }
     }
 
     private void createColumnsMenu() {
@@ -583,16 +596,6 @@ public class GridBasicClientFeaturesWidget extends
                 @Override
                 public void execute() {
                     column.setSortable(!column.isSortable());
-                }
-            }, "Component", "Columns", "Column " + i);
-            addMenuCommand("Frozen", new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    if (column.equals(grid.getLastFrozenColumn())) {
-                        grid.setLastFrozenColumn(null);
-                    } else {
-                        grid.setLastFrozenColumn(column);
-                    }
                 }
             }, "Component", "Columns", "Column " + i);
 

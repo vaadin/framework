@@ -338,6 +338,18 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         grid.setCellStyleGenerator(generator);
                     }
                 });
+
+        LinkedHashMap<String, Integer> frozenOptions = new LinkedHashMap<String, Integer>();
+        for (int i = -1; i <= COLUMNS; i++) {
+            frozenOptions.put(String.valueOf(i), Integer.valueOf(i));
+        }
+        createSelectAction("Frozen column count", "State", frozenOptions, "0",
+                new Command<Grid, Integer>() {
+                    @Override
+                    public void execute(Grid c, Integer value, Object data) {
+                        c.setFrozenColumnCount(value.intValue());
+                    }
+                });
     }
 
     protected void createHeaderActions() {
@@ -464,6 +476,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         createCategory("Columns", null);
 
         for (int c = 0; c < COLUMNS; c++) {
+            final int index = c;
             createCategory(getColumnProperty(c), "Columns");
 
             createClickAction("Add / Remove", getColumnProperty(c),
@@ -477,15 +490,6 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             } else {
                                 grid.removeColumn(columnProperty);
                             }
-                        }
-                    }, null, c);
-
-            createClickAction("Freeze", getColumnProperty(c),
-                    new Command<Grid, String>() {
-
-                        @Override
-                        public void execute(Grid grid, String value, Object data) {
-                            grid.setLastFrozenPropertyId(getColumnProperty((Integer) data));
                         }
                     }, null, c);
 

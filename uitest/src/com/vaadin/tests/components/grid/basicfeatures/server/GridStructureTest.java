@@ -106,14 +106,14 @@ public class GridStructureTest extends GridBasicFeaturesTest {
     public void testFreezingColumn() throws Exception {
         openTestURL();
 
-        // Freeze column 2
-        selectMenuPath("Component", "Columns", "Column 2", "Freeze");
+        // Freeze column 1
+        selectMenuPath("Component", "State", "Frozen column count", "1");
 
         WebElement cell = getGridElement().getCell(0, 0);
         assertTrue(cell.getAttribute("class").contains("frozen"));
 
         cell = getGridElement().getCell(0, 1);
-        assertTrue(cell.getAttribute("class").contains("frozen"));
+        assertFalse(cell.getAttribute("class").contains("frozen"));
     }
 
     @Test

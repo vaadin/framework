@@ -1119,11 +1119,12 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * 
          * @throws IllegalArgumentException
          *             if the column is no longer attached to any grid
-         * @see Grid#setLastFrozenColumn(Column)
+         * @see Grid#setFrozenColumnCount(int)
          */
         public Column setLastFrozenColumn() {
             checkColumnIsAttached();
-            grid.setLastFrozenColumn(this);
+            grid.setFrozenColumnCount(grid.getState(false).columnOrder
+                    .indexOf(this) + 1);
             return this;
         }
 
@@ -1903,10 +1904,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             }
             datasourceExtension.propertiesAdded(addedPropertyIds);
 
-            Object frozenPropertyId = columnKeys
-                    .get(getState(false).lastFrozenColumnId);
-            if (!columns.containsKey(frozenPropertyId)) {
-                setLastFrozenPropertyId(null);
+            if (getFrozenColumnCount() > columns.size()) {
+                setFrozenColumnCount(columns.size());
             }
 
             // Update sortable columns
@@ -2282,7 +2281,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * ValueChangeListeners at this point.
          */
 
-        setLastFrozenPropertyId(null);
+        setFrozenColumnCount(0);
 
         if (columns.isEmpty()) {
             // Add columns
@@ -2533,82 +2532,41 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     }
 
     /**
-     * Sets (or unsets) the rightmost frozen column in the grid.
+     * Sets the number of frozen columns in this grid. Setting the count to 0
+     * means that no data columns will be frozen, but the built-in selection
+     * checkbox column will still be frozen if it's in use. Setting the count to
+     * -1 will also disable the selection column.
      * <p>
-     * All columns up to and including the given column will be frozen in place
-     * when the grid is scrolled sideways.
-     * <p>
-     * Reordering columns in the grid while there is a frozen column will make
-     * all columns frozen that are before the frozen column. ie. If you move the
-     * frozen column to be last, all columns will be frozen.
+     * The default value is 0.
      * 
-     * @param lastFrozenColumn
-     *            the rightmost column to freeze, or <code>null</code> to not
-     *            have any columns frozen
+     * @param numberOfColumns
+     *            the number of columns that should be frozen
+     * 
      * @throws IllegalArgumentException
-     *             if {@code lastFrozenColumn} is not a column from this grid
+     *             if the column count is < 0 or > the number of visible columns
      */
-    void setLastFrozenColumn(Column lastFrozenColumn) {
-        /*
-         * TODO: If and when Grid supports column reordering or insertion of
-         * columns before other columns, make sure to mention that adding
-         * columns before lastFrozenColumn will change the frozen column count
-         */
-
-        if (lastFrozenColumn == null) {
-            getState().lastFrozenColumnId = null;
-        } else if (columns.containsValue(lastFrozenColumn)) {
-            getState().lastFrozenColumnId = lastFrozenColumn.getState().id;
-        } else {
+    public void setFrozenColumnCount(int numberOfColumns) {
+        if (numberOfColumns < -1 || numberOfColumns > columns.size()) {
             throw new IllegalArgumentException(
-                    "The given column isn't attached to this grid");
+                    "count must be between -1 and the current number of columns ("
+                            + columns + ")");
         }
+
+        getState().frozenColumnCount = numberOfColumns;
     }
 
     /**
-     * Sets (or unsets) the rightmost frozen column in the grid.
-     * <p>
-     * All columns up to and including the indicated property will be frozen in
-     * place when the grid is scrolled sideways.
-     * <p>
-     * <em>Note:</em> If the container used by this grid supports a propertyId
-     * <code>null</code>, it can never be defined as the last frozen column, as
-     * a <code>null</code> parameter will always reset the frozen columns in
-     * Grid.
+     * Gets the number of frozen columns in this grid. 0 means that no data
+     * columns will be frozen, but the built-in selection checkbox column will
+     * still be frozen if it's in use. -1 means that not even the selection
+     * column is frozen.
      * 
-     * @param propertyId
-     *            the property id corresponding to the column that should be the
-     *            last frozen column, or <code>null</code> to not have any
-     *            columns frozen.
-     * @throws IllegalArgumentException
-     *             if {@code lastFrozenColumn} is not a column from this grid
-     */
-    public void setLastFrozenPropertyId(Object propertyId) {
-        final Column column;
-        if (propertyId == null) {
-            column = null;
-        } else {
-            column = getColumn(propertyId);
-            if (column == null) {
-                throw new IllegalArgumentException(
-                        "property id does not exist.");
-            }
-        }
-        setLastFrozenColumn(column);
-    }
-
-    /**
-     * Gets the rightmost frozen column in the grid.
-     * <p>
-     * <em>Note:</em> Most often, this method returns the very value set with
-     * {@link #setLastFrozenPropertyId(Object)}. This value, however, can be
-     * reset to <code>null</code> if the column is detached from this grid.
+     * @see #setFrozenColumnCount(int)
      * 
-     * @return the rightmost frozen column in the grid, or <code>null</code> if
-     *         no columns are frozen.
+     * @return the number of frozen columns
      */
-    public Object getLastFrozenPropertyId() {
-        return columnKeys.get(getState().lastFrozenColumnId);
+    public int getFrozenColumnCount() {
+        return getState(false).frozenColumnCount;
     }
 
     /**
