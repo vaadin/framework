@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui.declarative;
 
+import java.beans.IntrospectionException;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,8 +26,11 @@ import org.jsoup.nodes.DocumentType;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Parser;
+import org.jsoup.select.Elements;
 
 import com.vaadin.ui.DesignSynchronizable;
+import com.vaadin.ui.declarative.DesignContext.ComponentCreatedEvent;
+import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
 
 /**
  * LayoutHandler is used for parsing a component hierarchy from an html file
@@ -61,7 +65,39 @@ public class LayoutHandler {
         } catch (IOException e) {
             throw new DesignException("The html document cannot be parsed.");
         }
-        return parse(doc);
+        return parse(doc, null);
+    }
+
+    /**
+     * Constructs a component hierarchy from the design specified as an html
+     * document. The component hierarchy must contain exactly one top-level
+     * Component. The component should be located under <body>, but also invalid
+     * html containing the hierarchy without <html>, <head> and <body> tags is
+     * accepted. You can optionally pass instance for the root component with
+     * some uninitialized instance fields. The fields will be automatically
+     * populated when parsing the design based on the component ids, local ids,
+     * and captions of the components in the design.
+     * 
+     * @param html
+     *            the html document describing the component design
+     * @param rootInstance
+     *            the root instance with fields to be mapped to components in
+     *            the design
+     * @return the DesignContext created while traversing the tree. The
+     *         top-level component of the created component hierarchy can be
+     *         accessed using result.getRootComponent(), where result is the
+     *         object returned by this method.
+     * @throws IOException
+     */
+    public static DesignContext parse(InputStream html,
+            DesignSynchronizable rootInstance) {
+        Document doc;
+        try {
+            doc = Jsoup.parse(html, "UTF-8", "", Parser.htmlParser());
+        } catch (IOException e) {
+            throw new DesignException("The html document cannot be parsed.");
+        }
+        return parse(doc, rootInstance);
     }
 
     /**
@@ -81,36 +117,100 @@ public class LayoutHandler {
      */
     public static DesignContext parse(String html) {
         Document doc = Jsoup.parse(html);
-        return parse(doc);
+        return parse(doc, null);
     }
 
     /**
      * Constructs a component hierarchy from the design specified as an html
-     * tree.
+     * document given as a string. The component hierarchy must contain exactly
+     * one top-level Component. The component should be located under <body>,
+     * but also invalid html containing the hierarchy without <html>, <head> and
+     * <body> tags is accepted. You can optionally pass instance for the root
+     * component with some uninitialized instance fields. The fields will be
+     * automatically populated when parsing the design based on the component
+     * ids, local ids, and captions of the components in the design.
+     * 
+     * @param html
+     *            the html document describing the component design
+     * @param rootInstance
+     *            the root instance with fields to be mapped to components in
+     *            the design
+     * @return the DesignContext created while traversing the tree. The
+     *         top-level component of the created component hierarchy can be
+     *         accessed using result.getRootComponent(), where result is the
+     *         object returned by this method.
+     * @throws IOException
+     */
+    public static DesignContext parse(String html,
+            DesignSynchronizable rootInstance) {
+        Document doc = Jsoup.parse(html);
+        return parse(doc, rootInstance);
+    }
+
+    /**
+     * Constructs a component hierarchy from the design specified as an html
+     * tree. If componentRoot is not null, the component instances created
+     * during synchronizing the design are assigned to its member fields based
+     * on their id, localId, and caption
+     * 
+     * @param doc
+     *            the html tree
+     * @param componentRoot
+     *            optional component root instance with some member fields. The
+     *            type must match the type of the root element in the design.
+     *            The member fields whose type is assignable from
+     *            {@link DesignSynchronizable} are set when parsing the
+     *            component tree
      * 
      */
-    private static DesignContext parse(Document doc) {
+    private static DesignContext parse(Document doc,
+            DesignSynchronizable componentRoot) {
         DesignContext designContext = new DesignContext(doc);
         designContext.getPrefixes(doc);
         // No special handling for a document without a body element - should be
         // taken care of by jsoup.
         Element root = doc.body();
-        DesignSynchronizable componentRoot = null;
-        for (Node element : root.childNodes()) {
-            if (element instanceof Element) {
-                if (componentRoot != null) {
-                    throw new DesignException(
-                            "The first level of a component hierarchy should contain a single root component, but found "
-                                    + "two: "
-                                    + componentRoot
-                                    + " and "
-                                    + element + ".");
-                }
-                // createChild creates the entire component hierarchy
-                componentRoot = designContext.createChild((Element) element);
-                designContext.setComponentRoot(componentRoot);
-            }
+        Elements children = root.children();
+        if (children.size() != 1) {
+            throw new DesignException(
+                    "The first level of a component hierarchy should contain exactly one root component, but found "
+                            + children.size());
         }
+        Element element = children.first();
+        if (componentRoot != null) {
+            // user has specified root instance that may have member fields that
+            // should be bound
+            FieldBinder binder = null;
+            try {
+                binder = new FieldBinder(componentRoot);
+            } catch (IntrospectionException e) {
+                throw new DesignException(
+                        "Could not bind fields of the root component", e);
+            }
+            final FieldBinder fBinder = binder;
+            // create listener for component creations that binds the created
+            // components to the componentRoot instance fields
+            ComponentCreationListener creationListener = new ComponentCreationListener() {
+                @Override
+                public void componentCreated(ComponentCreatedEvent event) {
+                    fBinder.bindField(event.getComponent(), event.getLocalId());
+                }
+            };
+            designContext.addComponentCreationListener(creationListener);
+            // create subtree
+            designContext.synchronizeAndRegister(componentRoot, element);
+            // make sure that all the member fields are bound
+            if (!binder.isAllFieldsBound()) {
+                throw new DesignException(
+                        "Found unbound fields from component root");
+            }
+            // no need to listen anymore
+            designContext.removeComponentCreationListener(creationListener);
+        } else {
+            // createChild creates the entire component hierarchy
+            componentRoot = designContext.createChild(element);
+        }
+        designContext.setComponentRoot(componentRoot);
         return designContext;
     }
 

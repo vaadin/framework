@@ -15,8 +15,10 @@
  */
 package com.vaadin.ui.declarative;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -66,6 +68,9 @@ public class DesignContext {
     // html tree (this includes at least "v" which is always taken to refer
     // to "com.vaadin.ui".
     private Map<String, String> defaultPrefixes = new HashMap<String, String>();
+
+    // component creation listeners
+    private List<ComponentCreationListener> listeners = new ArrayList<ComponentCreationListener>();
 
     public DesignContext(Document doc) {
         this.doc = doc;
@@ -393,12 +398,31 @@ public class DesignContext {
      * @param componentDesign
      *            The html tree node containing the description of the component
      *            to be created.
-     * @return a DesignSynchronizable object corresponding to componentDesign,
-     *         with no attributes set.
+     * @return a DesignSynchronizable object corresponding to componentDesign
      */
     public DesignSynchronizable createChild(Element componentDesign) {
         // Create the component.
         DesignSynchronizable component = instantiateComponent(componentDesign);
+        synchronizeAndRegister(component, componentDesign);
+        fireComponentCreatedEvent(componentToLocalId.get(component), component);
+        return component;
+    }
+
+    /**
+     * Calls synchronizeFromDesign() for the given component and passes the
+     * given component design as a parameter. This creates the entire component
+     * hierarchy rooted at the given component. Also registers the componentid,
+     * localId and caption of the given component and all its children to the
+     * context
+     * 
+     * 
+     * @param component
+     *            The component to be synchronized from design
+     * @param componentDesign
+     *            The html tree node containing the description of the component
+     */
+    public void synchronizeAndRegister(DesignSynchronizable component,
+            Element componentDesign) {
         component.synchronizeFromDesign(componentDesign, this);
         // Get the ids and the caption of the component and store them in the
         // maps of this design context.
@@ -431,7 +455,6 @@ public class DesignContext {
         if (caption != null) {
             mapCaption(caption, component);
         }
-        return component;
     }
 
     /**
@@ -550,4 +573,106 @@ public class DesignContext {
     public void setComponentRoot(DesignSynchronizable componentRoot) {
         this.componentRoot = componentRoot;
     }
+
+    /**
+     * Adds a component creation listener. The listener will be notified when
+     * components are created while parsing a design template
+     * 
+     * @param listener
+     *            the component creation listener to be added
+     */
+    public void addComponentCreationListener(ComponentCreationListener listener) {
+        listeners.add(listener);
+    }
+
+    /**
+     * Removes a component creation listener.
+     * 
+     * @param listener
+     *            the component creation listener to be removed
+     */
+    public void removeComponentCreationListener(
+            ComponentCreationListener listener) {
+        listeners.remove(listener);
+    }
+
+    /**
+     * Fires component creation event
+     * 
+     * @param localId
+     *            localId of the component
+     * @param component
+     *            the component that was created
+     */
+    private void fireComponentCreatedEvent(String localId,
+            DesignSynchronizable component) {
+        ComponentCreatedEvent event = new ComponentCreatedEvent(localId,
+                component);
+        for (ComponentCreationListener listener : listeners) {
+            listener.componentCreated(event);
+        }
+    }
+
+    /**
+     * Interface to be implemented by component creation listeners
+     * 
+     * @author Vaadin Ltd
+     */
+    public interface ComponentCreationListener {
+
+        /**
+         * Called when component has been created in the design context
+         * 
+         * @param event
+         *            the component creation event containing information on the
+         *            created component
+         */
+        public void componentCreated(ComponentCreatedEvent event);
+    }
+
+    /**
+     * Component creation event that is fired when a component is created in the
+     * context
+     * 
+     * @author Vaadin Ltd
+     */
+    public class ComponentCreatedEvent {
+        private String localId;
+        private DesignSynchronizable component;
+        private DesignContext context;
+
+        /**
+         * Creates a new instance of ComponentCreatedEvent
+         * 
+         * @param localId
+         *            the local id of the created component
+         * @param component
+         *            the created component
+         */
+        private ComponentCreatedEvent(String localId,
+                DesignSynchronizable component) {
+            this.localId = localId;
+            this.component = component;
+            context = DesignContext.this;
+        }
+
+        /**
+         * Returns the local id of the created component or null if not exist
+         * 
+         * @return the localId
+         */
+        public String getLocalId() {
+            return localId;
+        }
+
+        /**
+         * Returns the created component
+         * 
+         * @return the component
+         */
+        public DesignSynchronizable getComponent() {
+            return component;
+        }
+    }
+
 }

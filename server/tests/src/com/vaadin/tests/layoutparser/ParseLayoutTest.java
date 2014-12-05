@@ -18,6 +18,7 @@ package com.vaadin.tests.layoutparser;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import junit.framework.TestCase;
 
@@ -35,6 +36,7 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.ui.declarative.LayoutHandler;
 
 /**
@@ -106,6 +108,43 @@ public class ParseLayoutTest extends TestCase {
     }
 
     /*
+     * Check that the field binding works if root instance with member fields is
+     * passed to the LayoutHandler
+     * 
+     * @throws IOException
+     */
+    public void testFieldBinding() throws IOException {
+        LayoutTemplate template = new LayoutTemplate();
+        InputStream htmlFile = new FileInputStream(
+                "server/tests/src/com/vaadin/tests/layoutparser/testFile.html");
+        LayoutHandler.parse(htmlFile, template);
+        assertNotNull(template.getFirstButton());
+        assertNotNull(template.getSecondButton());
+        assertNotNull(template.getYetanotherbutton());
+        assertNotNull(template.getClickme());
+        assertEquals("Native click me", template.getFirstButton().getCaption());
+    }
+
+    /*
+     * Check that the field binding fails if some of the fields in the root
+     * instance were not bound
+     * 
+     * @throws IOException
+     */
+    public void testUnboundFields() throws IOException {
+        InvalidLayoutTemplate template = new InvalidLayoutTemplate();
+        InputStream htmlFile = new FileInputStream(
+                "server/tests/src/com/vaadin/tests/layoutparser/testFile.html");
+        try {
+            LayoutHandler.parse(htmlFile, template);
+            // we are expecting an exception
+            fail();
+        } catch (DesignException e) {
+            // expected
+        }
+    }
+
+    /*
      * Checks that the correct components occur in the correct order in the
      * component hierarchy rooted at context.getComponentRoot().
      */
@@ -173,4 +212,5 @@ public class ParseLayoutTest extends TestCase {
         assertTrue("The found button is incorrect.", thirdButton.getCaption()
                 .equals("Yet another button"));
     }
+
 }
