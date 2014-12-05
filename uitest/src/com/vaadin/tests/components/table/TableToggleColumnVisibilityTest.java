@@ -18,13 +18,15 @@ package com.vaadin.tests.components.table;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.testbench.elements.TableHeaderElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Tests that column keeps its header, icon, alignment after toggling visibility
- * (#6245).
+ * (#6245, #12303).
  * 
  * @author Vaadin Ltd
  */
@@ -34,8 +36,10 @@ public class TableToggleColumnVisibilityTest extends MultiBrowserTest {
     public void testColumnWidthRestoredAfterTogglingVisibility() {
         openTestURL();
 
-        WebElement toggleVisibilityButton = findElement(By.id("visib-toggler"));
-        WebElement changeOrderButton = findElement(By.id("order-toggler"));
+        ButtonElement toggleVisibilityButton = $(ButtonElement.class).id(
+                "visib-toggler");
+        ButtonElement changeOrderButton = $(ButtonElement.class).id(
+                "order-toggler");
 
         checkHeaderAttributes(1);
 
@@ -58,8 +62,8 @@ public class TableToggleColumnVisibilityTest extends MultiBrowserTest {
      * Checks column header with number columnNumber.
      */
     private void checkHeaderAttributes(int columnNumber) {
-        WebElement headerCell = findElements(
-                By.className("v-table-header-cell")).get(columnNumber);
+        TableHeaderElement headerCell = $(TableElement.class).first()
+                .getHeaderCell(columnNumber);
 
         Assert.assertTrue("Column header text should be custom", headerCell
                 .getText().equalsIgnoreCase("Hello World"));
@@ -73,5 +77,4 @@ public class TableToggleColumnVisibilityTest extends MultiBrowserTest {
                         By.className("v-table-caption-container-align-right"))
                         .size() > 0);
     }
-
 }
