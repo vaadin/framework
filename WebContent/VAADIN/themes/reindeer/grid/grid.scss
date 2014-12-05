@@ -51,7 +51,7 @@
   .#{$primary-stylename}-body {
     
     // Rows
-    .#{$primary-stylename}-row:nth-child(odd) .#{$primary-stylename}-cell {
+    .#{$primary-stylename}-row-stripe > .#{$primary-stylename}-cell {
       background-color: #eff0f1;
     }
     

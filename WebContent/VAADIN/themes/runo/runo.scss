@@ -9,6 +9,7 @@
 @import "datefield/datefield.scss";
 @import "inlinedatefield/inlinedatefield.scss";
 @import "formlayout/formlayout.scss";
+@import "grid/grid.scss";
 @import "gridlayout/gridlayout.scss";
 @import "label/label.scss";
 @import "link/link.scss";
@@ -50,6 +51,7 @@ $line-height: 18px;
 	@include runo-datefield;
 	@include runo-inline-datefield;
 	@include runo-formlayout;
+	@include runo-grid;
 	@include runo-gridlayout;
 	@include runo-label;
 	@include runo-link;

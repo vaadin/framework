@@ -12,6 +12,7 @@
 @import "datefield/datefield.scss";
 @import "inlinedatefield/inlinedatefield.scss";
 @import "formlayout/formlayout.scss";
+@import "grid/grid.scss";
 @import "label/label.scss";
 @import "layouts/layouts.scss";
 @import "link/link.scss";
@@ -49,6 +50,7 @@ $line-height: normal;
 	@include reindeer-datefield;
 	@include reindeer-inlinedatefield;
 	@include reindeer-formlayout;
+	@include reindeer-grid;
 	@include reindeer-label;
 	@include reindeer-layouts;
 	@include reindeer-link;

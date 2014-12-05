@@ -76,7 +76,7 @@
   // Grid body
   .#{$primary-stylename}-body {
     
-    .#{$primary-stylename}-row:nth-child(odd) .#{$primary-stylename}-cell {
+    .#{$primary-stylename}-row-stripe(odd) > .#{$primary-stylename}-cell {
       background-color: #f6f7f7;
     }
     

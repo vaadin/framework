@@ -58,13 +58,15 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         setDebug(true);
         openTestURL();
 
-        assertEquals("Column 0", getGridElement().getHeaderCell(0, 0).getText());
+        assertEquals("column 0", getGridElement().getHeaderCell(0, 0).getText()
+                .toLowerCase());
         selectMenuPath("Component", "Columns", "Column 0", "Add / Remove");
-        assertEquals("Column 1", getGridElement().getHeaderCell(0, 0).getText());
+        assertEquals("column 1", getGridElement().getHeaderCell(0, 0).getText()
+                .toLowerCase());
         selectMenuPath("Component", "Columns", "Column 0", "Add / Remove");
         // Column 0 is appended to the end of grid
-        assertEquals("Column 0", getGridElement().getHeaderCell(0, 11)
-                .getText());
+        assertEquals("column 0", getGridElement().getHeaderCell(0, 11)
+                .getText().toLowerCase());
     }
 
     @Test

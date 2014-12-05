@@ -56,15 +56,13 @@ $grid-cell-padding-vertical: round(($v-table-row-height - $v-font-size)/2);
   .#{$primary-stylename}-body {
     
     // Rows
-    .#{$primary-stylename}-row {
-      &:nth-child(odd) td {
-        $bg-lightness: if(color-luminance($grid-background-color) < 10, 4%, -4%);
-        background-color: scale-color($grid-background-color, $lightness: $bg-lightness);
-      }
-
-      &:nth-child(even) td {
-        background-color: $grid-background-color;
-      }
+    .#{$primary-stylename}-row > td {
+      background-color: $grid-background-color;
+    }
+      
+    .#{$primary-stylename}-row-stripe > td {
+      $bg-lightness: if(color-luminance($grid-background-color) < 10, 4%, -4%);
+      background-color: scale-color($grid-background-color, $lightness: $bg-lightness);
     }
     
     // Cells

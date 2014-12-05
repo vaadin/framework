@@ -33,7 +33,7 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
         openTestURL();
         GridElement grid = $(GridElement.class).first();
         assertEquals("Miles header wasn't present.", "miles", grid
-                .getHeaderCell(0, 3).getText());
+                .getHeaderCell(0, 3).getText().toLowerCase());
     }
 
     @Test

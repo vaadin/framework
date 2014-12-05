@@ -16,10 +16,10 @@
 package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -86,15 +86,15 @@ public class GridColspansTest extends MultiBrowserTest {
         openTestURL();
 
         GridElement grid = $(GridElement.class).first();
-        Assert.assertEquals("Failed initial condition.",
-                grid.getHeaderCell(0, 1).getText(), "All the stuff");
-        Assert.assertEquals("Failed initial condition.",
-                grid.getHeaderCell(2, 1).getText(), "firstName");
+        assertEquals("Failed initial condition.", "all the stuff", grid
+                .getHeaderCell(0, 1).getText().toLowerCase());
+        assertEquals("Failed initial condition.", "firstname", grid
+                .getHeaderCell(2, 1).getText().toLowerCase());
         $(ButtonElement.class).first().click();
-        Assert.assertEquals("Header text changed on column hide.", grid
-                .getHeaderCell(0, 1).getText(), "All the stuff");
-        Assert.assertEquals("Failed initial condition.", "lastName", grid
-                .getHeaderCell(2, 1).getText());
+        assertEquals("Header text changed on column hide.", "all the stuff",
+                grid.getHeaderCell(0, 1).getText().toLowerCase());
+        assertEquals("Failed initial condition.", "lastname", grid
+                .getHeaderCell(2, 1).getText().toLowerCase());
     }
 
     @Test
@@ -103,23 +103,23 @@ public class GridColspansTest extends MultiBrowserTest {
 
         GridElement grid = $(GridElement.class).first();
         GridCellElement headerCell = grid.getHeaderCell(1, 1);
-        Assert.assertEquals("Failed initial condition.", headerCell.getText(),
-                "Full Name");
-        Assert.assertEquals("Failed initial condition.",
-                grid.getHeaderCell(2, 1).getText(), "firstName");
+        assertEquals("Failed initial condition.", "full name", headerCell
+                .getText().toLowerCase());
+        assertEquals("Failed initial condition.", "firstname", grid
+                .getHeaderCell(2, 1).getText().toLowerCase());
         $(ButtonElement.class).get(1).click();
         headerCell = grid.getHeaderCell(1, 1);
-        Assert.assertEquals("Header text not changed on column reorder.",
-                headerCell.getText(), "Address");
-        Assert.assertEquals("Unexpected colspan", "1",
+        assertEquals("Header text not changed on column reorder.", "address",
+                headerCell.getText().toLowerCase());
+        assertEquals("Unexpected colspan", "1",
                 headerCell.getAttribute("colspan"));
         headerCell = grid.getHeaderCell(1, 2);
-        Assert.assertEquals("Header text not changed on column reorder",
-                "Full Name", headerCell.getText());
-        Assert.assertEquals("Unexpected colspan", "2",
+        assertEquals("Header text not changed on column reorder", "full name",
+                headerCell.getText().toLowerCase());
+        assertEquals("Unexpected colspan", "2",
                 headerCell.getAttribute("colspan"));
 
-        Assert.assertTrue("Error indicator not present",
+        assertTrue("Error indicator not present",
                 isElementPresent(By.className("v-errorindicator")));
 
     }
