@@ -22,9 +22,11 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.By;
 import com.vaadin.tests.components.grid.GridElement;
+import com.vaadin.tests.components.grid.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.GridElement.GridRowElement;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public class GridSelectionTest extends GridBasicFeaturesTest {
@@ -151,6 +153,55 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
     }
 
+    @Test
+    public void testSelectAllCheckbox() {
+        openTestURL();
+
+        setSelectionModelMulti();
+        GridCellElement header = getGridElement().getHeaderCell(0, 0);
+
+        assertTrue("No checkbox", header.isElementPresent(By.tagName("input")));
+        header.findElement(By.tagName("input")).click();
+
+        for (int i = 0; i < GridBasicFeatures.ROWS; i += 100) {
+            assertTrue("Row " + i + " was not selected.", getGridElement()
+                    .getRow(i).isSelected());
+        }
+
+        header.findElement(By.tagName("input")).click();
+        assertFalse("Row 100 was still selected", getGridElement().getRow(100)
+                .isSelected());
+    }
+
+    @Test
+    public void testSelectAllCheckboxWhenChangingModels() {
+        openTestURL();
+
+        GridCellElement header;
+        header = getGridElement().getHeaderCell(0, 0);
+        assertFalse(
+                "Check box shouldn't have been in header for None Selection Model",
+                header.isElementPresent(By.tagName("input")));
+
+        setSelectionModelMulti();
+        header = getGridElement().getHeaderCell(0, 0);
+        assertTrue("Multi Selection Model should have select all checkbox",
+                header.isElementPresent(By.tagName("input")));
+
+        setSelectionModelSingle();
+        header = getGridElement().getHeaderCell(0, 0);
+        assertFalse(
+                "Check box shouldn't have been in header for Single Selection Model",
+                header.isElementPresent(By.tagName("input")));
+
+        setSelectionModelNone();
+        header = getGridElement().getHeaderCell(0, 0);
+        assertFalse(
+                "Check box shouldn't have been in header for None Selection Model",
+                header.isElementPresent(By.tagName("input")));
+
+    }
+
     private void setSelectionModelMulti() {
         selectMenuPath("Component", "State", "Selection mode", "multi");
     }
@@ -159,14 +210,8 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "State", "Selection mode", "single");
     }
 
-    @SuppressWarnings("static-method")
-    private boolean isSelected(TestBenchElement row) {
-        /*
-         * FIXME We probably should get a GridRow instead of a plain
-         * TestBenchElement, that has an "isSelected" thing integrated. (henrik
-         * paul 26.6.2014)
-         */
-        return row.getAttribute("class").contains("-row-selected");
+    private void setSelectionModelNone() {
+        selectMenuPath("Component", "State", "Selection mode", "none");
     }
 
     private void toggleFirstRowSelection() {

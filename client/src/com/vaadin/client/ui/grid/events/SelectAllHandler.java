@@ -13,23 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.grid;
+package com.vaadin.client.ui.grid.events;
 
-import java.util.List;
-
-import com.vaadin.shared.communication.ServerRpc;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Client-to-server RPC interface for the Grid component
+ * Handler for a Grid select all event, called when the Grid needs all rows in
+ * data source to be selected.
  * 
  * @since
  * @author Vaadin Ltd
  */
-public interface GridServerRpc extends ServerRpc {
-    void selectionChange(List<String> newSelection);
+public interface SelectAllHandler<T> extends EventHandler {
 
-    void sort(String[] columnIds, SortDirection[] directions,
-            SortEventOriginator originator);
+    /**
+     * Called when select all value in SelectionColumn header changes value.
+     * 
+     * @param event
+     *            select all event telling that all rows should be selected
+     */
+    public void onSelectAll(SelectAllEvent<T> event);
 
-    void selectAll();
 }

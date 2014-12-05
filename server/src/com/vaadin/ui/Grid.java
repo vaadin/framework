@@ -2105,6 +2105,13 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
                 setSortOrder(order, originator);
             }
+
+            @Override
+            public void selectAll() {
+                assert getSelectionModel() instanceof SelectionModel.Multi : "Not a multi selection model!";
+
+                ((SelectionModel.Multi) getSelectionModel()).selectAll();
+            }
         });
 
         registerRpc(new EditorRowServerRpc() {

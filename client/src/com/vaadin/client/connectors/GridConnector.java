@@ -50,6 +50,8 @@ import com.vaadin.client.ui.grid.Grid.HeaderCell;
 import com.vaadin.client.ui.grid.Grid.HeaderRow;
 import com.vaadin.client.ui.grid.GridColumn;
 import com.vaadin.client.ui.grid.Renderer;
+import com.vaadin.client.ui.grid.events.SelectAllEvent;
+import com.vaadin.client.ui.grid.events.SelectAllHandler;
 import com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel;
 import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
 import com.vaadin.client.ui.grid.selection.SelectionChangeHandler;
@@ -400,6 +402,15 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                             directions, event.getOriginator());
                 }
             }
+        });
+
+        getWidget().addSelectAllHandler(new SelectAllHandler<JSONObject>() {
+
+            @Override
+            public void onSelectAll(SelectAllEvent<JSONObject> event) {
+                getRpcProxy(GridServerRpc.class).selectAll();
+            }
+
         });
 
         getWidget().getEditorRow().setHandler(new CustomEditorRowHandler());

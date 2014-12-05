@@ -38,11 +38,14 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.DeferredWorker;
@@ -66,12 +69,15 @@ import com.vaadin.client.ui.grid.events.HeaderKeyPressHandler;
 import com.vaadin.client.ui.grid.events.HeaderKeyUpHandler;
 import com.vaadin.client.ui.grid.events.ScrollEvent;
 import com.vaadin.client.ui.grid.events.ScrollHandler;
+import com.vaadin.client.ui.grid.events.SelectAllEvent;
+import com.vaadin.client.ui.grid.events.SelectAllHandler;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
 import com.vaadin.client.ui.grid.selection.HasSelectionChangeHandlers;
 import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
 import com.vaadin.client.ui.grid.selection.SelectionChangeHandler;
 import com.vaadin.client.ui.grid.selection.SelectionModel;
+import com.vaadin.client.ui.grid.selection.SelectionModel.Multi;
 import com.vaadin.client.ui.grid.selection.SelectionModelMulti;
 import com.vaadin.client.ui.grid.selection.SelectionModelNone;
 import com.vaadin.client.ui.grid.selection.SelectionModelSingle;
@@ -1372,6 +1378,31 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         void initDone() {
+            if (getSelectionModel() instanceof SelectionModel.Multi
+                    && header.getDefaultRow() != null) {
+                /*
+                 * TODO: Currently the select all check box is shown when multi
+                 * selection is in use. This might result in malfunctions if no
+                 * SelectAllHandlers are present.
+                 * 
+                 * Later on this could be fixed so that it check such handlers
+                 * exist.
+                 */
+                final SelectionModel.Multi<T> model = (Multi<T>) getSelectionModel();
+                final CheckBox checkBox = new CheckBox();
+                checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+                    @Override
+                    public void onValueChange(ValueChangeEvent<Boolean> event) {
+                        if (event.getValue()) {
+                            fireEvent(new SelectAllEvent<T>(model));
+                        } else {
+                            model.deselectAll();
+                        }
+                    }
+                });
+                header.getDefaultRow().getCell(this).setWidget(checkBox);
+            }
             initDone = true;
         }
 
@@ -3042,7 +3073,6 @@ public class Grid<T> extends ResizeComposite implements
         if (size > 0) {
             escalator.getBody().insertRows(0, size);
         }
-
     }
 
     /**
@@ -3998,6 +4028,17 @@ public class Grid<T> extends ResizeComposite implements
      */
     public HandlerRegistration addSortHandler(SortHandler<T> handler) {
         return addHandler(handler, SortEvent.getType());
+    }
+
+    /**
+     * Register a GWT event handler for a select all event. This handler gets
+     * called whenever Grid needs all rows selected.
+     * 
+     * @param handler
+     *            a select all event handler
+     */
+    public HandlerRegistration addSelectAllHandler(SelectAllHandler<T> handler) {
+        return addHandler(handler, SelectAllEvent.getType());
     }
 
     /**

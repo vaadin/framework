@@ -238,6 +238,7 @@ public class GridBasicClientFeaturesWidget extends
         grid = getTestedWidget();
         grid.getElement().setId("testComponent");
         grid.setDataSource(ds);
+        grid.addSelectAllHandler(ds.getSelectAllHandler());
         grid.setSelectionMode(SelectionMode.NONE);
         grid.getEditorRow().setHandler(new TestEditorRowHandler());
 

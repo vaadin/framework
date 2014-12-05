@@ -26,6 +26,8 @@ import java.util.ListIterator;
 
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
+import com.vaadin.client.ui.grid.events.SelectAllEvent;
+import com.vaadin.client.ui.grid.events.SelectAllHandler;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
@@ -444,5 +446,19 @@ public class ListDataSource<T> implements DataSource<T> {
     @Override
     public int indexOf(T row) {
         return ds.indexOf(row);
+    }
+
+    /**
+     * Returns a {@link SelectAllHandler} for this ListDataSource.
+     * 
+     * @return select all handler
+     */
+    public SelectAllHandler<T> getSelectAllHandler() {
+        return new SelectAllHandler<T>() {
+            @Override
+            public void onSelectAll(SelectAllEvent<T> event) {
+                event.getSelectionModel().select(asList());
+            }
+        };
     }
 }
