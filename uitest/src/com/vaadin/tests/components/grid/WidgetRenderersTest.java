@@ -16,12 +16,15 @@
 package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.components.grid.GridElement.GridCellElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -68,6 +71,24 @@ public class WidgetRenderersTest extends MultiBrowserTest {
 
         assertTrue(image.getAttribute("src")
                 .endsWith("window/img/maximize.png"));
+    }
+
+    @Test
+    public void testColumnReorder() {
+        setDebug(true);
+        openTestURL();
+
+        $(ButtonElement.class).caption("Change column order").first().click();
+
+        assertFalse("Notification was present",
+                isElementPresent(NotificationElement.class));
+
+        assertTrue(getGridCell(0, 0)
+                .isElementPresent(By.className("gwt-Image")));
+        assertTrue(getGridCell(0, 1).isElementPresent(
+                By.className("v-progressbar")));
+        assertTrue(getGridCell(0, 2).isElementPresent(
+                By.className("gwt-Button")));
     }
 
     GridCellElement getGridCell(int row, int col) {

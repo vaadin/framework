@@ -3140,6 +3140,11 @@ public class Grid<T> extends ResizeComposite implements
      *            array of columns in wanted order
      */
     public void setColumnOrder(GridColumn<?, T>... orderedColumns) {
+        ColumnConfiguration conf = getEscalator().getColumnConfiguration();
+
+        // Trigger ComplexRenderer.destroy for old content
+        conf.removeColumns(0, conf.getColumnCount());
+
         List<GridColumn<?, T>> newOrder = new ArrayList<GridColumn<?, T>>();
         if (selectionColumn != null) {
             newOrder.add(selectionColumn);
@@ -3162,6 +3167,9 @@ public class Grid<T> extends ResizeComposite implements
         }
         columns = newOrder;
 
+        // Do ComplexRenderer.init and render new content
+        conf.insertColumns(0, columns.size());
+
         // Update column widths.
         for (GridColumn<?, T> column : columns) {
             column.reapplyWidth();
@@ -3174,10 +3182,6 @@ public class Grid<T> extends ResizeComposite implements
         for (FooterRow row : footer.getRows()) {
             row.calculateColspans();
         }
-
-        refreshHeader();
-        refreshBody();
-        refreshFooter();
     }
 
     /**

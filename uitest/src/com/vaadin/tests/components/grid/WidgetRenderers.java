@@ -21,6 +21,8 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.renderers.ButtonRenderer;
@@ -49,7 +51,7 @@ public class WidgetRenderers extends AbstractTestUI {
         item.getItemProperty(ImageRenderer.class).setValue(
                 new ThemeResource("window/img/close.png"));
 
-        Grid grid = new Grid(container);
+        final Grid grid = new Grid(container);
 
         grid.setId("test-grid");
         grid.setSelectionMode(SelectionMode.NONE);
@@ -77,6 +79,15 @@ public class WidgetRenderers extends AbstractTestUI {
                 }));
 
         addComponent(grid);
+
+        addComponent(new Button("Change column order",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        grid.setColumnOrder(ImageRenderer.class,
+                                ProgressBarRenderer.class, ButtonRenderer.class);
+                    }
+                }));
     }
 
     @Override
