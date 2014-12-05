@@ -25,7 +25,7 @@ import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.GridColumn;
 import com.vaadin.client.ui.grid.sort.SortEvent;
-import com.vaadin.client.ui.grid.sort.SortEventHandler;
+import com.vaadin.client.ui.grid.sort.SortHandler;
 import com.vaadin.client.ui.grid.sort.SortOrder;
 import com.vaadin.shared.ui.grid.SortDirection;
 
@@ -54,7 +54,7 @@ public class ListSorter<T> {
         comparators = new HashMap<GridColumn<?, T>, Comparator<?>>();
 
         sortHandlerRegistration = grid
-                .addSortHandler(new SortEventHandler<T>() {
+                .addSortHandler(new SortHandler<T>() {
                     @Override
                     public void sort(SortEvent<T> event) {
                         ListSorter.this.sort(event.getOrder());

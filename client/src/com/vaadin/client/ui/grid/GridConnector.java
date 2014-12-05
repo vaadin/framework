@@ -51,7 +51,7 @@ import com.vaadin.client.ui.grid.selection.SelectionModelMulti;
 import com.vaadin.client.ui.grid.selection.SelectionModelNone;
 import com.vaadin.client.ui.grid.selection.SelectionModelSingle;
 import com.vaadin.client.ui.grid.sort.SortEvent;
-import com.vaadin.client.ui.grid.sort.SortEventHandler;
+import com.vaadin.client.ui.grid.sort.SortHandler;
 import com.vaadin.client.ui.grid.sort.SortOrder;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.EditorRowClientRpc;
@@ -372,7 +372,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         getWidget().addSelectionChangeHandler(internalSelectionChangeHandler);
 
-        getWidget().addSortHandler(new SortEventHandler<JSONObject>() {
+        getWidget().addSortHandler(new SortHandler<JSONObject>() {
             @Override
             public void sort(SortEvent<JSONObject> event) {
                 List<SortOrder> order = event.getOrder();

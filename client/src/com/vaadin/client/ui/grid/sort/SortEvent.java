@@ -29,9 +29,9 @@ import com.vaadin.shared.ui.grid.SortEventOriginator;
  * @since
  * @author Vaadin Ltd
  */
-public class SortEvent<T> extends GwtEvent<SortEventHandler<?>> {
+public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
 
-    private static final Type<SortEventHandler<?>> TYPE = new Type<SortEventHandler<?>>();
+    private static final Type<SortHandler<?>> TYPE = new Type<SortHandler<?>>();
 
     private final Grid<T> grid;
     private final List<SortOrder> order;
@@ -56,7 +56,7 @@ public class SortEvent<T> extends GwtEvent<SortEventHandler<?>> {
     }
 
     @Override
-    public Type<SortEventHandler<?>> getAssociatedType() {
+    public Type<SortHandler<?>> getAssociatedType() {
         return TYPE;
     }
 
@@ -66,7 +66,7 @@ public class SortEvent<T> extends GwtEvent<SortEventHandler<?>> {
      * 
      * @return a type object, uniquely describing this event type.
      */
-    public static Type<SortEventHandler<?>> getType() {
+    public static Type<SortHandler<?>> getType() {
         return TYPE;
     }
 
@@ -121,8 +121,8 @@ public class SortEvent<T> extends GwtEvent<SortEventHandler<?>> {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void dispatch(SortEventHandler<?> handler) {
-        ((SortEventHandler<T>) handler).sort(this);
+    protected void dispatch(SortHandler<?> handler) {
+        ((SortHandler<T>) handler).sort(this);
     }
 
 }

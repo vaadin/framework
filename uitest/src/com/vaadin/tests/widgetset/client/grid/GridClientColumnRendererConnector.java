@@ -46,7 +46,7 @@ import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
 import com.vaadin.client.ui.grid.sort.Sort;
 import com.vaadin.client.ui.grid.sort.SortEvent;
-import com.vaadin.client.ui.grid.sort.SortEventHandler;
+import com.vaadin.client.ui.grid.sort.SortHandler;
 import com.vaadin.client.ui.grid.sort.SortOrder;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
@@ -153,7 +153,7 @@ public class GridClientColumnRendererConnector extends
         grid.getHeader().getDefaultRow().getCell(c).setText("Column 2");
 
         // Add method for testing sort event firing
-        grid.addSortHandler(new SortEventHandler<String>() {
+        grid.addSortHandler(new SortHandler<String>() {
             @Override
             public void sort(SortEvent<String> event) {
                 Element console = Document.get().getElementById(

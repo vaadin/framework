@@ -24,7 +24,7 @@ import com.google.gwt.event.shared.EventHandler;
  * @since
  * @author Vaadin Ltd
  */
-public interface SortEventHandler<T> extends EventHandler {
+public interface SortHandler<T> extends EventHandler {
 
     /**
      * Handle sorting of the Grid. This method is called when a re-sorting of

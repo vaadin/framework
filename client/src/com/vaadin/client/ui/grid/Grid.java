@@ -78,7 +78,7 @@ import com.vaadin.client.ui.grid.selection.SelectionModelNone;
 import com.vaadin.client.ui.grid.selection.SelectionModelSingle;
 import com.vaadin.client.ui.grid.sort.Sort;
 import com.vaadin.client.ui.grid.sort.SortEvent;
-import com.vaadin.client.ui.grid.sort.SortEventHandler;
+import com.vaadin.client.ui.grid.sort.SortHandler;
 import com.vaadin.client.ui.grid.sort.SortOrder;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
@@ -2930,7 +2930,7 @@ public class Grid<T> extends ResizeComposite implements
      *            a sort event handler
      * @return the registration for the event
      */
-    public HandlerRegistration addSortHandler(SortEventHandler<T> handler) {
+    public HandlerRegistration addSortHandler(SortHandler<T> handler) {
         return addHandler(handler, SortEvent.getType());
     }
 
