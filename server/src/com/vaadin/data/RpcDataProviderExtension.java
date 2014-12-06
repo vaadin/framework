@@ -680,10 +680,15 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
             @Override
             public void setPinned(String key, boolean isPinned) {
+                Object itemId = keyMapper.getItemId(key);
                 if (isPinned) {
-                    keyMapper.pin(keyMapper.getItemId(key));
+                    // Row might already be pinned if it was selected from the
+                    // server
+                    if (!keyMapper.isPinned(itemId)) {
+                        keyMapper.pin(itemId);
+                    }
                 } else {
-                    keyMapper.unpin(keyMapper.getItemId(key));
+                    keyMapper.unpin(itemId);
                 }
             }
         });
