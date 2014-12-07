@@ -100,18 +100,18 @@ public class GridColumns {
                 .getCell("column1").getText());
 
         column.setWidth(100);
-        assertEquals(100, column.getWidth());
-        assertEquals(column.getWidth(), getColumnState("column1").width);
+        assertEquals(100, column.getWidth(), 0.49d);
+        assertEquals(column.getWidth(), getColumnState("column1").width, 0.49d);
 
         try {
             column.setWidth(-1);
             fail("Setting width to -1 should throw exception");
         } catch (IllegalArgumentException iae) {
-
+            // expected
         }
 
-        assertEquals(100, column.getWidth());
-        assertEquals(100, getColumnState("column1").width);
+        assertEquals(100, column.getWidth(), 0.49d);
+        assertEquals(100, getColumnState("column1").width, 0.49d);
     }
 
     @Test

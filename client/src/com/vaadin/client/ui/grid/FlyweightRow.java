@@ -140,10 +140,10 @@ class FlyweightRow implements Row {
 
     private int row;
     private TableRowElement element;
-    private int[] columnWidths = null;
+    private double[] columnWidths = null;
     private final List<FlyweightCell> cells = new ArrayList<FlyweightCell>();
 
-    void setup(final TableRowElement e, final int row, int[] columnWidths) {
+    void setup(final TableRowElement e, final int row, double[] columnWidths) {
         element = e;
         this.row = row;
         this.columnWidths = columnWidths;
@@ -285,7 +285,7 @@ class FlyweightRow implements Row {
                 + "has been stored and accessed.";
     }
 
-    int getColumnWidth(int column) {
+    double getColumnWidth(int column) {
         assertSetup();
         return columnWidths[column];
     }

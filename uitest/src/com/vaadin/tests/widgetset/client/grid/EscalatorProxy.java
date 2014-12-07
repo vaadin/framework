@@ -65,18 +65,18 @@ public class EscalatorProxy extends Escalator {
         }
 
         @Override
-        public void setColumnWidth(int index, int px)
+        public void setColumnWidth(int index, double px)
                 throws IllegalArgumentException {
             columnConfiguration.setColumnWidth(index, px);
         }
 
         @Override
-        public int getColumnWidth(int index) throws IllegalArgumentException {
+        public double getColumnWidth(int index) throws IllegalArgumentException {
             return columnConfiguration.getColumnWidth(index);
         }
 
         @Override
-        public int getColumnWidthActual(int index)
+        public double getColumnWidthActual(int index)
                 throws IllegalArgumentException {
             return columnConfiguration.getColumnWidthActual(index);
         }

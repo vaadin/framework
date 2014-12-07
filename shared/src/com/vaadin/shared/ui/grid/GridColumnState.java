@@ -28,7 +28,7 @@ import com.vaadin.shared.Connector;
  */
 public class GridColumnState implements Serializable {
 
-    public static final int DEFAULT_COLUMN_WIDTH_PX = -1;
+    public static final double DEFAULT_COLUMN_WIDTH_PX = -1;
 
     /**
      * Id used by grid connector to map server side column with client side
@@ -40,7 +40,7 @@ public class GridColumnState implements Serializable {
      * Column width in pixels. Default column width is
      * {@value #DEFAULT_COLUMN_WIDTH_PX}.
      */
-    public int width = DEFAULT_COLUMN_WIDTH_PX;
+    public double width = DEFAULT_COLUMN_WIDTH_PX;
 
     /**
      * The connector for the renderer used to render the cells in this column.

@@ -169,8 +169,8 @@ public class FlyweightCell {
         final int cellsToTheRight = currentIterator.rawPeekNext(
                 numberOfCells - 1).size();
 
-        final int selfWidth = row.getColumnWidth(column);
-        int widthsOfColumnsToTheRight = 0;
+        final double selfWidth = row.getColumnWidth(column);
+        double widthsOfColumnsToTheRight = 0;
         for (int i = 0; i < cellsToTheRight; i++) {
             widthsOfColumnsToTheRight += row.getColumnWidth(column + i + 1);
         }

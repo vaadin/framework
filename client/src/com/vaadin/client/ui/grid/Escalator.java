@@ -744,7 +744,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          */
         public void recalculateScrollbarsForVirtualViewport() {
             int scrollContentHeight = body.calculateEstimatedTotalRowHeight();
-            int scrollContentWidth = columnConfiguration.calculateRowWidth();
+            double scrollContentWidth = columnConfiguration.calculateRowWidth();
 
             double tableWrapperHeight = heightOfEscalator;
             double tableWrapperWidth = widthOfEscalator;
@@ -789,11 +789,11 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
              */
             double prevScrollPos = horizontalScrollbar.getScrollPos();
 
-            int unfrozenPixels = columnConfiguration
+            double unfrozenPixels = columnConfiguration
                     .getCalculatedColumnsWidth(Range.between(
                             columnConfiguration.getFrozenColumnCount(),
                             columnConfiguration.getColumnCount()));
-            int frozenPixels = scrollContentWidth - unfrozenPixels;
+            double frozenPixels = scrollContentWidth - unfrozenPixels;
             double hScrollOffsetWidth = tableWrapperWidth - frozenPixels;
             horizontalScrollbar.setOffsetSize(hScrollOffsetWidth);
             horizontalScrollbar.setScrollSize(unfrozenPixels);
@@ -1034,19 +1034,19 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
              * structure effectively means that scrollLeft also ignores the
              * frozen columns.
              */
-            final int frozenPixels = columnConfiguration
+            final double frozenPixels = columnConfiguration
                     .getCalculatedColumnsWidth(Range.withLength(0,
                             columnConfiguration.frozenColumns));
 
-            final int targetStartPx = columnConfiguration
+            final double targetStartPx = columnConfiguration
                     .getCalculatedColumnsWidth(Range.withLength(0, columnIndex))
                     - frozenPixels;
-            final int targetEndPx = targetStartPx
+            final double targetEndPx = targetStartPx
                     + columnConfiguration.getColumnWidthActual(columnIndex);
 
             final double viewportStartPx = getScrollLeft();
             double viewportEndPx = viewportStartPx
-                    + getElement().getOffsetWidth() - frozenPixels;
+                    + getPreciseWidth(getElement()) - frozenPixels;
             if (verticalScrollbar.showsScrollHandle()) {
                 viewportEndPx -= Util.getNativeScrollbarSize();
             }
@@ -1399,7 +1399,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 tr.addClassName(getStylePrimaryName() + "-row");
 
                 for (int col = 0; col < columnConfiguration.getColumnCount(); col++) {
-                    final int colWidth = columnConfiguration
+                    final double colWidth = columnConfiguration
                             .getColumnWidthActual(col);
                     final TableCellElement cellElem = createCellElement(
                             rowHeight, colWidth);
@@ -1542,11 +1542,11 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          * @return a set-up empty cell element
          */
         public TableCellElement createCellElement(final int height,
-                final int width) {
+                final double colWidth) {
             final TableCellElement cellElem = TableCellElement.as(DOM
                     .createElement(getCellElementTagName()));
             cellElem.getStyle().setHeight(height, Unit.PX);
-            cellElem.getStyle().setWidth(width, Unit.PX);
+            cellElem.getStyle().setWidth(colWidth, Unit.PX);
             cellElem.addClassName(getStylePrimaryName() + "-cell");
             return cellElem;
         }
@@ -1640,7 +1640,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
             final int rowHeight = getDefaultRowHeight();
             for (FlyweightCell cell : cells) {
-                final int colWidth = columnConfiguration
+                final double colWidth = columnConfiguration
                         .getColumnWidthActual(cell.getColumn());
                 final TableCellElement cellElem = createCellElement(rowHeight,
                         colWidth);
@@ -1706,16 +1706,16 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          *            the index of the column to inspect
          * @return the pixel width of the widest element in the indicated column
          */
-        public int calculateMaxColWidth(int index) {
+        public double calculateMaxColWidth(int index) {
             TableRowElement row = TableRowElement.as(root
                     .getFirstChildElement());
-            int maxWidth = 0;
+            double maxWidth = 0;
             while (row != null) {
                 final TableCellElement cell = row.getCells().getItem(index);
                 final boolean isVisible = !cell.getStyle().getDisplay()
                         .equals(Display.NONE.getCssName());
                 if (isVisible) {
-                    maxWidth = Math.max(maxWidth, cell.getScrollWidth());
+                    maxWidth = Math.max(maxWidth, getPreciseWidth(cell));
                 }
                 row = TableRowElement.as(row.getNextSiblingElement());
             }
@@ -1732,8 +1732,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 Element cell = row.getFirstChildElement();
                 int columnIndex = 0;
                 while (cell != null) {
-                    final int width = getCalculatedColumnWidthWithColspan(cell,
-                            columnIndex);
+                    final double width = getCalculatedColumnWidthWithColspan(
+                            cell, columnIndex);
 
                     /*
                      * TODO Should Escalator implement ProvidesResize at some
@@ -1750,7 +1750,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             reapplyRowWidths();
         }
 
-        private int getCalculatedColumnWidthWithColspan(final Element cell,
+        private double getCalculatedColumnWidthWithColspan(final Element cell,
                 final int columnIndex) {
             final int colspan = cell.getPropertyInt(FlyweightCell.COLSPAN_ATTR);
             Range spannedColumns = Range.withLength(columnIndex, colspan);
@@ -1775,7 +1775,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          * cells within.
          */
         protected void reapplyRowWidths() {
-            int rowWidth = columnConfiguration.calculateRowWidth();
+            double rowWidth = columnConfiguration.calculateRowWidth();
 
             com.google.gwt.dom.client.Element row = root.getFirstChildElement();
             while (row != null) {
@@ -1957,8 +1957,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             return new Cell(domRowIndex, domColumnIndex, cellElement);
         }
 
-        int getMaxCellWidth(int colIndex) throws IllegalArgumentException {
-            int maxCellWidth = -1;
+        double getMaxCellWidth(int colIndex) throws IllegalArgumentException {
+            double maxCellWidth = -1;
 
             assert isAttached() : "Can't measure max width of cell, since Escalator is not attached to the DOM.";
 
@@ -1988,7 +1988,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 cellClone.getStyle().clearWidth();
 
                 rowElement.insertBefore(cellClone, cellOriginal);
-                maxCellWidth = Math.max(cellClone.getOffsetWidth(),
+                maxCellWidth = Math.max(getPreciseWidth(cellClone),
                         maxCellWidth);
                 cellClone.removeFromParent();
             }
@@ -3684,8 +3684,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         public class Column {
             private static final int DEFAULT_COLUMN_WIDTH_PX = 100;
 
-            private int definedWidth = -1;
-            private int calculatedWidth = DEFAULT_COLUMN_WIDTH_PX;
+            private double definedWidth = -1;
+            private double calculatedWidth = DEFAULT_COLUMN_WIDTH_PX;
             private boolean measuringRequested = false;
 
             /**
@@ -3695,7 +3695,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
              */
             private boolean widthHasBeenFinalized = false;
 
-            public void setWidth(int px) {
+            public void setWidth(double px) {
                 definedWidth = px;
 
                 if (px < 0) {
@@ -3713,7 +3713,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 }
             }
 
-            public int getDefinedWidth() {
+            public double getDefinedWidth() {
                 return definedWidth;
             }
 
@@ -3723,7 +3723,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
              * @return the width in pixels in the DOM. Returns -1 if the column
              *         needs measuring, but has not been yet measured
              */
-            public int getCalculatedWidth() {
+            public double getCalculatedWidth() {
                 /*
                  * This might return an untrue value (e.g. during init/onload),
                  * since we haven't had a proper chance to actually calculate
@@ -3777,7 +3777,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          * 
          * @see #getCalculatedColumnWidths()
          */
-        private int[] widthsArray = null;
+        private double[] widthsArray = null;
 
         /**
          * {@inheritDoc}
@@ -3884,7 +3884,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          * 
          * @return the width of a row, in pixels
          */
-        public int calculateRowWidth() {
+        public double calculateRowWidth() {
             return getCalculatedColumnsWidth(Range.between(0, getColumnCount()));
         }
 
@@ -3966,12 +3966,12 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             }
 
             // Adjust scrollbar
-            int pixelsToInsertedColumn = columnConfiguration
+            double pixelsToInsertedColumn = columnConfiguration
                     .getCalculatedColumnsWidth(Range.withLength(0, index));
             final boolean columnsWereAddedToTheLeftOfViewport = scroller.lastScrollLeft > pixelsToInsertedColumn;
 
             if (columnsWereAddedToTheLeftOfViewport) {
-                int insertedColumnsWidth = columnConfiguration
+                double insertedColumnsWidth = columnConfiguration
                         .getCalculatedColumnsWidth(Range.withLength(index,
                                 numberOfColumns));
                 horizontalScrollbar.setScrollPos(scroller.lastScrollLeft
@@ -4042,7 +4042,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         }
 
         @Override
-        public void setColumnWidth(int index, int px)
+        public void setColumnWidth(int index, double px)
                 throws IllegalArgumentException {
             checkValidColumnIndex(index);
 
@@ -4069,25 +4069,25 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         }
 
         @Override
-        public int getColumnWidth(int index) throws IllegalArgumentException {
+        public double getColumnWidth(int index) throws IllegalArgumentException {
             checkValidColumnIndex(index);
             return columns.get(index).getDefinedWidth();
         }
 
         @Override
-        public int getColumnWidthActual(int index) {
+        public double getColumnWidthActual(int index) {
             return columns.get(index).getCalculatedWidth();
         }
 
-        private int getMaxCellWidth(int colIndex)
+        private double getMaxCellWidth(int colIndex)
                 throws IllegalArgumentException {
-            int headerWidth = header.getMaxCellWidth(colIndex);
-            int bodyWidth = body.getMaxCellWidth(colIndex);
-            int footerWidth = footer.getMaxCellWidth(colIndex);
+            double headerWidth = header.getMaxCellWidth(colIndex);
+            double bodyWidth = body.getMaxCellWidth(colIndex);
+            double footerWidth = footer.getMaxCellWidth(colIndex);
 
-            int maxWidth = Math.max(headerWidth,
+            double maxWidth = Math.max(headerWidth,
                     Math.max(bodyWidth, footerWidth));
-            assert maxWidth > 0 : "Got a negative max width for a column, which should be impossible.";
+            assert maxWidth >= 0 : "Got a negative max width for a column, which should be impossible.";
             return maxWidth;
         }
 
@@ -4099,7 +4099,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          * @return the total width of the columns in the given
          *         <code>columns</code>
          */
-        int getCalculatedColumnsWidth(final Range columns) {
+        double getCalculatedColumnsWidth(final Range columns) {
             /*
              * This is an assert instead of an exception, since this is an
              * internal method.
@@ -4110,17 +4110,17 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                     + ", but was given :"
                     + columns;
 
-            int sum = 0;
+            double sum = 0;
             for (int i = columns.getStart(); i < columns.getEnd(); i++) {
-                int columnWidthActual = getColumnWidthActual(i);
+                double columnWidthActual = getColumnWidthActual(i);
                 sum += columnWidthActual;
             }
             return sum;
         }
 
-        int[] getCalculatedColumnWidths() {
+        double[] getCalculatedColumnWidths() {
             if (widthsArray == null || widthsArray.length != getColumnCount()) {
-                widthsArray = new int[getColumnCount()];
+                widthsArray = new double[getColumnCount()];
                 for (int i = 0; i < columns.size(); i++) {
                     widthsArray[i] = columns.get(i).getCalculatedWidth();
                 }

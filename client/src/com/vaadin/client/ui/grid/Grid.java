@@ -1875,7 +1875,7 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         @Override
-        public GridColumn<Boolean, T> setWidth(int pixels) {
+        public GridColumn<Boolean, T> setWidth(double pixels) {
             if (pixels != getWidth() && initDone) {
                 throw new UnsupportedOperationException("The selection "
                         + "column cannot be modified after init");
@@ -2208,8 +2208,11 @@ public class Grid<T> extends ResizeComposite implements
          */
         private boolean visible = true;
 
-        /** Width of column in pixels as {@link #setWidth(int)} has been called */
-        private int widthUser = GridColumnState.DEFAULT_COLUMN_WIDTH_PX;
+        /**
+         * Width of column in pixels as {@link #setWidth(double)} has been
+         * called
+         */
+        private double widthUser = GridColumnState.DEFAULT_COLUMN_WIDTH_PX;
 
         /**
          * Renderer for rendering a value into the cell
@@ -2387,7 +2390,7 @@ public class Grid<T> extends ResizeComposite implements
          *            the width in pixels or negative for auto sizing
          * @return the column itself
          */
-        public GridColumn<C, T> setWidth(int pixels) {
+        public GridColumn<C, T> setWidth(double pixels) {
             widthUser = pixels;
             if (pixels < 0) {
                 setWidthAutodetect();
@@ -2409,14 +2412,14 @@ public class Grid<T> extends ResizeComposite implements
              */
         }
 
-        private void setWidthAbsolute(int pixels) {
+        private void setWidthAbsolute(double pixels) {
             asyncAutodetectWidth.stop();
             if (grid != null) {
                 setWidthForce(pixels);
             }
         }
 
-        private void setWidthForce(int pixels) {
+        private void setWidthForce(double pixels) {
             int index = grid.columns.indexOf(this);
             ColumnConfiguration conf = grid.escalator.getColumnConfiguration();
             conf.setColumnWidth(index, pixels);
@@ -2426,14 +2429,14 @@ public class Grid<T> extends ResizeComposite implements
          * Returns the pixel width of the column as given by the user.
          * <p>
          * <em>Note:</em> If a negative value was given to
-         * {@link #setWidth(int)}, that same negative value is returned here.
+         * {@link #setWidth(double)}, that same negative value is returned here.
          * 
          * @return pixel width of the column, or a negative number if the column
          *         width has been automatically calculated.
-         * @see #setWidth(int)
+         * @see #setWidth(double)
          * @see #getWidthActual()
          */
-        public int getWidth() {
+        public double getWidth() {
             return widthUser;
         }
 
@@ -2445,7 +2448,7 @@ public class Grid<T> extends ResizeComposite implements
          * 
          * @return pixel width of the column.
          */
-        public int getWidthActual() {
+        public double getWidthActual() {
             return grid.escalator.getColumnConfiguration()
                     .getColumnWidthActual(grid.columns.indexOf(this));
         }

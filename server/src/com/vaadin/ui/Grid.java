@@ -64,7 +64,6 @@ import com.vaadin.event.SortOrderChangeEvent.SortOrderChangeListener;
 import com.vaadin.event.SortOrderChangeEvent.SortOrderChangeNotifier;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
-import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.JsonCodec;
@@ -1643,7 +1642,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          */
-        public int getWidth() throws IllegalStateException {
+        public double getWidth() throws IllegalStateException {
             checkColumnIsAttached();
             return state.width;
         }
@@ -1660,7 +1659,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * @throws IllegalArgumentException
          *             thrown if pixel width is less than zero
          */
-        public Column setWidth(int pixelWidth) throws IllegalStateException,
+        public Column setWidth(double pixelWidth) throws IllegalStateException,
                 IllegalArgumentException {
             checkColumnIsAttached();
             if (pixelWidth < 0) {
@@ -2518,7 +2517,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      * 
      * @return unmodifiable copy of current columns in visual order
      */
-    public Collection<Column> getColumns() {
+    public List<Column> getColumns() {
         List<Column> columns = new ArrayList<Grid.Column>();
         for (String columnId : getState(false).columnOrder) {
             columns.add(getColumnByColumnId(columnId));

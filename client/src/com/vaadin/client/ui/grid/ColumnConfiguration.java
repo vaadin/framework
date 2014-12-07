@@ -123,7 +123,7 @@ public interface ColumnConfiguration {
      * @throws IllegalArgumentException
      *             if <code>index</code> is not a valid column index
      */
-    public void setColumnWidth(int index, int px)
+    public void setColumnWidth(int index, double px)
             throws IllegalArgumentException;
 
     /**
@@ -136,7 +136,7 @@ public interface ColumnConfiguration {
      * @throws IllegalArgumentException
      *             if <code>index</code> is not a valid column index
      */
-    public int getColumnWidth(int index) throws IllegalArgumentException;
+    public double getColumnWidth(int index) throws IllegalArgumentException;
 
     /**
      * Returns the actual width of a column.
@@ -147,7 +147,8 @@ public interface ColumnConfiguration {
      * @throws IllegalArgumentException
      *             if <code>index</code> is not a valid column index
      */
-    public int getColumnWidthActual(int index) throws IllegalArgumentException;
+    public double getColumnWidthActual(int index)
+            throws IllegalArgumentException;
 
     /**
      * Refreshes a range of rows in the current row containers in each Escalator

@@ -179,15 +179,6 @@ abstract class ScrollbarBundle {
     private static final int OSX_INVISIBLE_SCROLLBAR_FAKE_SIZE_PX = 13;
 
     /**
-     * The allowed value inaccuracy when comparing two double-typed pixel
-     * values.
-     * <p>
-     * Since we're comparing pixels on a screen, epsilon must be less than 1.
-     * 0.49 was deemed a perfectly fine and beautifully round number.
-     */
-    private static final double PIXEL_EPSILON = 0.49d;
-
-    /**
      * A representation of a single vertical scrollbar.
      * 
      * @see VerticalScrollbarBundle#getElement()
@@ -211,7 +202,7 @@ abstract class ScrollbarBundle {
         }
 
         @Override
-        protected void internalSetScrollSize(int px) {
+        protected void internalSetScrollSize(double px) {
             scrollSizeElement.getStyle().setHeight(px, Unit.PX);
         }
 
@@ -280,7 +271,7 @@ abstract class ScrollbarBundle {
         }
 
         @Override
-        protected void internalSetScrollSize(int px) {
+        protected void internalSetScrollSize(double px) {
             scrollSizeElement.getStyle().setWidth(px, Unit.PX);
         }
 
@@ -451,7 +442,7 @@ abstract class ScrollbarBundle {
         double oldScrollPos = scrollPos;
         scrollPos = Math.max(0, Math.min(maxScrollPos, truncate(px)));
 
-        if (!pixelValuesEqual(oldScrollPos, scrollPos)) {
+        if (!GridUtil.pixelValuesEqual(oldScrollPos, scrollPos)) {
             if (isInvisibleScrollbar) {
                 invisibleScrollbarTemporaryResizer.show();
             }
@@ -533,7 +524,7 @@ abstract class ScrollbarBundle {
      *            the new size of {@link #scrollSizeElement} in the dimension
      *            this scrollbar is representing
      */
-    protected abstract void internalSetScrollSize(int px);
+    protected abstract void internalSetScrollSize(double px);
 
     /**
      * Sets the amount of pixels the scrollbar needs to be able to scroll
@@ -549,7 +540,7 @@ abstract class ScrollbarBundle {
      *            through
      */
     public final void setScrollSize(double px) {
-        internalSetScrollSize(toInt32(Math.max(0, truncate(px))));
+        internalSetScrollSize(Math.max(0, px));
         forceScrollbar(showsScrollHandle());
         recalculateMaxScrollPos();
         fireVisibilityChangeIfNeeded();
@@ -717,19 +708,6 @@ abstract class ScrollbarBundle {
     /*-{
         return val | 0;
     }-*/;
-
-    /**
-     * Compares two double values with the error margin of
-     * {@link #PIXEL_EPSILON} (i.e. {@value #PIXEL_EPSILON})
-     * 
-     * @param num1
-     *            the first value for which to compare equality
-     * @param num2
-     *            the second value for which to compare equality
-     */
-    private static boolean pixelValuesEqual(final double num1, final double num2) {
-        return Math.abs(num1 - num2) <= PIXEL_EPSILON;
-    }
 
     /**
      * Locks or unlocks the scrollbar bundle.

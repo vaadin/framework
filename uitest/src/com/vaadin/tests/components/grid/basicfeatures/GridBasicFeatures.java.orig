@@ -49,9 +49,20 @@ import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.MultiSelectionModel;
 import com.vaadin.ui.Grid.SelectionMode;
+<<<<<<< HEAD
 import com.vaadin.ui.renderer.DateRenderer;
 import com.vaadin.ui.renderer.HtmlRenderer;
 import com.vaadin.ui.renderer.NumberRenderer;
+=======
+import com.vaadin.ui.components.grid.SortOrderChangeEvent;
+import com.vaadin.ui.components.grid.SortOrderChangeListener;
+import com.vaadin.ui.components.grid.renderers.DateRenderer;
+import com.vaadin.ui.components.grid.renderers.HtmlRenderer;
+import com.vaadin.ui.components.grid.renderers.NumberRenderer;
+import com.vaadin.ui.components.grid.selection.MultiSelectionModel;
+import com.vaadin.ui.components.grid.sort.Sort;
+import com.vaadin.ui.components.grid.sort.SortOrder;
+>>>>>>> Columns can now have subpixel accuracy widths (#13334)
 
 /**
  * Tests the basic features like columns, footers and headers

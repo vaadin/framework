@@ -16,7 +16,6 @@
 package com.vaadin.client.ui.grid;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.Util;
 
@@ -29,8 +28,17 @@ import com.vaadin.client.Util;
 public class GridUtil {
 
     /**
+     * The allowed value inaccuracy when comparing two double-typed pixel
+     * values.
+     * <p>
+     * Since we're comparing pixels on a screen, epsilon must be less than 1.
+     * 0.49 was deemed a perfectly fine and beautifully round number.
+     */
+    public static final double PIXEL_EPSILON = 0.49d;
+
+    /**
      * Returns the cell the given element belongs to.
-     *
+     * 
      * @param grid
      *            the grid instance that is queried
      * @param e
@@ -77,5 +85,18 @@ public class GridUtil {
     /*-{
         widget.@com.google.gwt.user.client.ui.Widget::setParent(Lcom/google/gwt/user/client/ui/Widget;)(parent);
     }-*/;
+
+    /**
+     * Compares two double values with the error margin of
+     * {@link #PIXEL_EPSILON} (i.e. {@value #PIXEL_EPSILON})
+     * 
+     * @param num1
+     *            the first value for which to compare equality
+     * @param num2
+     *            the second value for which to compare equality
+     */
+    public static boolean pixelValuesEqual(final double num1, final double num2) {
+        return Math.abs(num1 - num2) <= PIXEL_EPSILON;
+    }
 
 }
