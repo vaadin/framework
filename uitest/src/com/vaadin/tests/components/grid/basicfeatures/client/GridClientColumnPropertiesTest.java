@@ -21,6 +21,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.tests.components.grid.GridElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget;
 
@@ -84,6 +86,39 @@ public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest 
                 "-1 columns");
 
         assertFalse(cellIsFrozen(1, 0));
+    }
+
+    @Test
+    public void testBrokenRenderer() {
+        setDebug(true);
+        openTestURL();
+
+        GridElement gridElement = getGridElement();
+
+        // Scroll first row out of view
+        gridElement.getRow(50);
+
+        // Enable broken renderer for the first row
+        selectMenuPath("Component", "Columns", "Column 0", "Broken renderer");
+
+        // Shouldn't have an error notification yet
+        assertFalse("Notification was present",
+                isElementPresent(NotificationElement.class));
+
+        // Scroll broken row into view and enjoy the chaos
+        gridElement.getRow(0);
+
+        assertTrue("Notification was not present",
+                isElementPresent(NotificationElement.class));
+
+        assertFalse("Text in broken cell should have old value",
+                "(0, 0)".equals(gridElement.getCell(0, 0).getText()));
+
+        assertEquals("Neighbour cell should be updated", "(0, 1)", gridElement
+                .getCell(0, 1).getText());
+
+        assertEquals("Neighbour cell should be updated", "(1, 0)", gridElement
+                .getCell(1, 0).getText());
     }
 
     private boolean cellIsFrozen(int row, int col) {

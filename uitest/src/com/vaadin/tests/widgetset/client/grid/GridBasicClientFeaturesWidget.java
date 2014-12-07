@@ -673,6 +673,25 @@ public class GridBasicClientFeaturesWidget extends
                     grid.getFooterRow(0).getCell(column).setWidget(button);
                 }
             }, "Component", "Columns", "Column " + i, "Footer Type");
+
+            // Renderer throwing exceptions
+            addMenuCommand("Broken renderer", new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    final Renderer<Object> originalRenderer = (Renderer<Object>) column
+                            .getRenderer();
+
+                    column.setRenderer(new Renderer<Object>() {
+                        @Override
+                        public void render(FlyweightCell cell, Object data) {
+                            if (cell.getRow() == cell.getColumn()) {
+                                throw new RuntimeException("I'm broken");
+                            }
+                            originalRenderer.render(cell, data);
+                        }
+                    });
+                }
+            }, "Component", "Columns", "Column " + i);
         }
     }
 

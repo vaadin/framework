@@ -1911,7 +1911,14 @@ public class Grid<T> extends ResizeComposite implements
             for (FlyweightCell cell : cellsToAttach) {
                 Renderer<?> renderer = findRenderer(cell);
                 if (renderer instanceof ComplexRenderer) {
-                    ((ComplexRenderer<?>) renderer).init(cell);
+                    try {
+                        ((ComplexRenderer<?>) renderer).init(cell);
+                    } catch (RuntimeException e) {
+                        getLogger().log(
+                                Level.SEVERE,
+                                "Error initing cell in column "
+                                        + cell.getColumn(), e);
+                    }
                 }
             }
         }
@@ -1921,18 +1928,25 @@ public class Grid<T> extends ResizeComposite implements
             for (FlyweightCell cell : attachedCells) {
                 Renderer<?> renderer = findRenderer(cell);
                 if (renderer instanceof WidgetRenderer) {
-                    WidgetRenderer<?, ?> widgetRenderer = (WidgetRenderer<?, ?>) renderer;
+                    try {
+                        WidgetRenderer<?, ?> widgetRenderer = (WidgetRenderer<?, ?>) renderer;
 
-                    Widget widget = widgetRenderer.createWidget();
-                    assert widget != null : "WidgetRenderer.createWidget() returned null. It should return a widget.";
-                    assert widget.getParent() == null : "WidgetRenderer.createWidget() returned a widget which already is attached.";
-                    assert cell.getElement().getChildCount() == 0 : "Cell content should be empty when adding Widget";
+                        Widget widget = widgetRenderer.createWidget();
+                        assert widget != null : "WidgetRenderer.createWidget() returned null. It should return a widget.";
+                        assert widget.getParent() == null : "WidgetRenderer.createWidget() returned a widget which already is attached.";
+                        assert cell.getElement().getChildCount() == 0 : "Cell content should be empty when adding Widget";
 
-                    // Physical attach
-                    cell.getElement().appendChild(widget.getElement());
+                        // Physical attach
+                        cell.getElement().appendChild(widget.getElement());
 
-                    // Logical attach
-                    GridUtil.setParent(widget, Grid.this);
+                        // Logical attach
+                        GridUtil.setParent(widget, Grid.this);
+                    } catch (RuntimeException e) {
+                        getLogger().log(
+                                Level.SEVERE,
+                                "Error attaching child widget in column "
+                                        + cell.getColumn(), e);
+                    }
                 }
             }
         }
@@ -1967,12 +1981,20 @@ public class Grid<T> extends ResizeComposite implements
                         isSelected(rowData));
 
                 if (cellStyleGenerator != null) {
-                    String rowStylename = cellStyleGenerator.getStyle(
-                            Grid.this, rowData, rowIndex, null, -1);
-                    if (rowStylename != null) {
-                        rowStylename = rowGeneratedStylePrefix + rowStylename;
+                    try {
+                        String rowStylename = cellStyleGenerator.getStyle(
+                                Grid.this, rowData, rowIndex, null, -1);
+                        if (rowStylename != null) {
+                            rowStylename = rowGeneratedStylePrefix
+                                    + rowStylename;
+                        }
+                        setCustomStyleName(rowElement, rowStylename);
+                    } catch (RuntimeException e) {
+                        getLogger().log(
+                                Level.SEVERE,
+                                "Error generating styles for row "
+                                        + row.getRow(), e);
                     }
-                    setCustomStyleName(rowElement, rowStylename);
                 } else {
                     // Remove in case there was a generator previously
                     setCustomStyleName(rowElement, null);
@@ -1995,45 +2017,59 @@ public class Grid<T> extends ResizeComposite implements
                         escalator.getBody());
 
                 if (hasData && cellStyleGenerator != null) {
-                    String generatedStyle = cellStyleGenerator.getStyle(
-                            Grid.this, rowData, rowIndex, column,
-                            cell.getColumn());
-                    if (generatedStyle != null) {
-                        generatedStyle = cellGeneratedStylePrefix
-                                + generatedStyle;
+                    try {
+                        String generatedStyle = cellStyleGenerator.getStyle(
+                                Grid.this, rowData, rowIndex, column,
+                                cell.getColumn());
+                        if (generatedStyle != null) {
+                            generatedStyle = cellGeneratedStylePrefix
+                                    + generatedStyle;
+                        }
+                        setCustomStyleName(cell.getElement(), generatedStyle);
+                    } catch (RuntimeException e) {
+                        getLogger().log(
+                                Level.SEVERE,
+                                "Error generating style for cell in column "
+                                        + cell.getColumn(), e);
                     }
-                    setCustomStyleName(cell.getElement(), generatedStyle);
                 } else if (hasData || usedToHaveData) {
                     setCustomStyleName(cell.getElement(), null);
                 }
 
                 Renderer renderer = column.getRenderer();
 
-                if (renderer instanceof ComplexRenderer) {
-                    // Hide cell content if needed
-                    ComplexRenderer clxRenderer = (ComplexRenderer) renderer;
-                    if (hasData) {
-                        if (!usedToHaveData) {
-                            // Prepare cell for rendering
-                            clxRenderer.setContentVisible(cell, true);
+                try {
+                    if (renderer instanceof ComplexRenderer) {
+                        // Hide cell content if needed
+                        ComplexRenderer clxRenderer = (ComplexRenderer) renderer;
+                        if (hasData) {
+                            if (!usedToHaveData) {
+                                // Prepare cell for rendering
+                                clxRenderer.setContentVisible(cell, true);
+                            }
+
+                            Object value = column.getValue(rowData);
+                            clxRenderer.render(cell, value);
+
+                        } else {
+                            // Prepare cell for no data
+                            clxRenderer.setContentVisible(cell, false);
                         }
 
+                    } else if (hasData) {
+                        // Simple renderers just render
                         Object value = column.getValue(rowData);
-                        clxRenderer.render(cell, value);
+                        renderer.render(cell, value);
 
                     } else {
-                        // Prepare cell for no data
-                        clxRenderer.setContentVisible(cell, false);
+                        // Clear cell if there is no data
+                        cell.getElement().removeAllChildren();
                     }
-
-                } else if (hasData) {
-                    // Simple renderers just render
-                    Object value = column.getValue(rowData);
-                    renderer.render(cell, value);
-
-                } else {
-                    // Clear cell if there is no data
-                    cell.getElement().removeAllChildren();
+                } catch (RuntimeException e) {
+                    getLogger().log(
+                            Level.SEVERE,
+                            "Error rendering cell in column "
+                                    + cell.getColumn(), e);
                 }
             }
         }
@@ -2043,15 +2079,22 @@ public class Grid<T> extends ResizeComposite implements
             for (FlyweightCell cell : cellsToDetach) {
                 Renderer renderer = findRenderer(cell);
                 if (renderer instanceof WidgetRenderer) {
-                    Widget w = Util.findWidget(cell.getElement()
-                            .getFirstChildElement(), Widget.class);
-                    if (w != null) {
+                    try {
+                        Widget w = Util.findWidget(cell.getElement()
+                                .getFirstChildElement(), Widget.class);
+                        if (w != null) {
 
-                        // Logical detach
-                        GridUtil.setParent(w, null);
+                            // Logical detach
+                            GridUtil.setParent(w, null);
 
-                        // Physical detach
-                        cell.getElement().removeChild(w.getElement());
+                            // Physical detach
+                            cell.getElement().removeChild(w.getElement());
+                        }
+                    } catch (RuntimeException e) {
+                        getLogger().log(
+                                Level.SEVERE,
+                                "Error detaching widget in column "
+                                        + cell.getColumn(), e);
                     }
                 }
             }
@@ -2062,7 +2105,14 @@ public class Grid<T> extends ResizeComposite implements
             for (FlyweightCell cell : detachedCells) {
                 Renderer renderer = findRenderer(cell);
                 if (renderer instanceof ComplexRenderer) {
-                    ((ComplexRenderer) renderer).destroy(cell);
+                    try {
+                        ((ComplexRenderer) renderer).destroy(cell);
+                    } catch (RuntimeException e) {
+                        getLogger().log(
+                                Level.SEVERE,
+                                "Error destroying cell in column "
+                                        + cell.getColumn(), e);
+                    }
                 }
             }
         }
