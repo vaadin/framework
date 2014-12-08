@@ -74,7 +74,6 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.shared.ui.grid.SortEventOriginator;
-import com.vaadin.ui.Grid.StaticSection.StaticRow;
 import com.vaadin.ui.components.grid.Renderer;
 import com.vaadin.ui.components.grid.SortOrderChangeEvent;
 import com.vaadin.ui.components.grid.SortOrderChangeListener;
@@ -3217,10 +3216,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      * Adds a new row at the bottom of the header section.
      * 
      * @return the new row
-     * @see #prependRow()
-     * @see #addRowAt(int)
-     * @see #removeRow(StaticRow)
-     * @see #removeRow(int)
+     * @see #prependHeaderRow()
+     * @see #addHeaderRowAt(int)
+     * @see #removeHeaderRow(HeaderRow)
+     * @see #removeHeaderRow(int)
      */
     public HeaderRow appendHeaderRow() {
         return header.appendRow();
@@ -3375,10 +3374,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      * Adds a new row at the bottom of the footer section.
      * 
      * @return the new row
-     * @see #prependRow()
-     * @see #addRowAt(int)
-     * @see #removeRow(StaticRow)
-     * @see #removeRow(int)
+     * @see #prependFooterRow()
+     * @see #addFooterRowAt(int)
+     * @see #removeFooterRow(FooterRow)
+     * @see #removeFooterRow(int)
      */
     public FooterRow appendFooterRow() {
         return footer.appendRow();
