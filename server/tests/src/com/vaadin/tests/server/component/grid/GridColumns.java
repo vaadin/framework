@@ -34,6 +34,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 
@@ -79,9 +80,10 @@ public class GridColumns {
             Column column = grid.getColumn(propertyId);
             assertNotNull(column);
 
-            // Property id should be the column header by default
-            assertEquals(propertyId.toString(), grid.getDefaultHeaderRow()
-                    .getCell(propertyId).getText());
+            // Humanized property id should be the column header by default
+            assertEquals(
+                    SharedUtil.camelCaseToHumanFriendly(propertyId.toString()),
+                    grid.getDefaultHeaderRow().getCell(propertyId).getText());
         }
     }
 

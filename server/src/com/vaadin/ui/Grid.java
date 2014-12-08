@@ -76,6 +76,7 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.shared.ui.grid.SortEventOriginator;
+import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.components.grid.Renderer;
 import com.vaadin.ui.components.grid.SortOrderChangeEvent;
 import com.vaadin.ui.components.grid.SortOrderChangeListener;
@@ -2119,7 +2120,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         header.addColumn(datasourcePropertyId);
         footer.addColumn(datasourcePropertyId);
 
-        column.setHeaderCaption(String.valueOf(datasourcePropertyId));
+        column.setHeaderCaption(SharedUtil.camelCaseToHumanFriendly(String
+                .valueOf(datasourcePropertyId)));
 
         return column;
     }
