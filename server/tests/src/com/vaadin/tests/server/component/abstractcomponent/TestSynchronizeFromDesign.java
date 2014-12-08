@@ -23,6 +23,7 @@ import org.jsoup.parser.Tag;
 
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.Responsive;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Label;
@@ -178,7 +179,34 @@ public class TestSynchronizeFromDesign extends TestCase {
         assertEquals(12, component.getHeight(), 0.1f);
         assertEquals(com.vaadin.server.Sizeable.Unit.PIXELS,
                 component.getHeightUnits());
+    }
 
+    public void testSynchronizeNotResponsive() {
+        AbstractComponent component = getComponent();
+        Responsive.makeResponsive(component);
+        Element design = createDesign("responsive", "false");
+        component.synchronizeFromDesign(design, ctx);
+        assertEquals("Component should not have extensions", 0, component
+                .getExtensions().size());
+    }
+
+    public void testSynchronizeResponsive() {
+        AbstractComponent component = getComponent();
+        Element design = createDesign("responsive", "");
+        component.synchronizeFromDesign(design, ctx);
+        assertEquals("Component should have one extension", 1, component
+                .getExtensions().size());
+        assertTrue("Extension should be responsive", component.getExtensions()
+                .iterator().next() instanceof Responsive);
+    }
+
+    public void testSynchronizeAlreadyResponsive() {
+        AbstractComponent component = getComponent();
+        Responsive.makeResponsive(component);
+        Element design = createDesign("responsive", "");
+        component.synchronizeFromDesign(design, ctx);
+        assertEquals("Component should have only one extension", 1, component
+                .getExtensions().size());
     }
 
     private AbstractComponent getComponent() {

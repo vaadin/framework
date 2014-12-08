@@ -28,6 +28,7 @@ import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.Responsive;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.AbstractComponent;
@@ -227,6 +228,17 @@ public class TestSynchronizeToDesign extends TestCase {
         component.setWidth("70%");
         component.synchronizeToDesign(design, ctx);
         assertEquals("20px", design.attr("height"));
+    }
+
+    public void testSynchronizeResponsive() {
+        Element design = createDesign();
+        AbstractComponent component = getComponent();
+        Responsive.makeResponsive(component);
+        component.synchronizeToDesign(design, ctx);
+        assertTrue("Design attributes should have key 'responsive'", design
+                .attributes().hasKey("responsive"));
+        assertFalse("Responsive attribute should not be 'false'",
+                design.attr("responsive").equalsIgnoreCase("false"));
     }
 
     private AbstractComponent getComponent() {

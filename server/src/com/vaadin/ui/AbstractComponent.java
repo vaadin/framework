@@ -43,7 +43,9 @@ import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ErrorMessage.ErrorLevel;
+import com.vaadin.server.Extension;
 import com.vaadin.server.Resource;
+import com.vaadin.server.Responsive;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinSession;
@@ -938,6 +940,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
         } else {
             setComponentError(def.getComponentError());
         }
+        // handle responsive
+        setResponsive(attr.hasKey("responsive")
+                && !attr.get("responsive").equalsIgnoreCase("false"));
         // check for unsupported attributes
         Set<String> supported = new HashSet<String>();
         supported.addAll(getDefaultAttributes());
@@ -949,6 +954,46 @@ public abstract class AbstractComponent extends AbstractClientConnector
                                 + a.getKey());
             }
         }
+    }
+
+    /**
+     * Toggles responsiveness of this component.
+     * 
+     * @since 7.4
+     * @param responsive
+     *            boolean enables responsiveness, false disables
+     */
+    private void setResponsive(boolean responsive) {
+        if (responsive) {
+            // make responsive if necessary
+            if (!isResponsive()) {
+                Responsive.makeResponsive(this);
+            }
+        } else {
+            // remove responsive extensions
+            List<Extension> extensions = new ArrayList<Extension>(
+                    getExtensions());
+            for (Extension e : extensions) {
+                if (e instanceof Responsive) {
+                    removeExtension(e);
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns true if the component is responsive
+     * 
+     * @since 7.4
+     * @return true if the component is responsive
+     */
+    private boolean isResponsive() {
+        for (Extension e : getExtensions()) {
+            if (e instanceof Responsive) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -1117,7 +1162,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     private static final String[] customAttributes = new String[] { "width",
             "height", "debug-id", "error", "width-auto", "height-auto",
-            "width-full", "height-full", "size-auto", "size-full" };
+            "width-full", "height-full", "size-auto", "size-full", "responsive" };
 
     /*
      * (non-Javadoc)
@@ -1146,6 +1191,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
                 .getComponentError().getFormattedHtmlMessage() : null;
         if (!SharedUtil.equals(errorMsg, defErrorMsg)) {
             attr.put("error", errorMsg);
+        }
+        // handle responsive
+        if (isResponsive()) {
+            attr.put("responsive", "");
         }
     }
 
