@@ -29,7 +29,6 @@ import com.vaadin.data.Item;
 import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
@@ -176,9 +175,9 @@ public class RendererTest {
         assertEquals("renderer(2.72)", render(bar, "2.72").asString());
     }
 
-    @Test(expected = ConversionException.class)
+    @Test
     public void testEncodingWithoutConverter() throws Exception {
-        render(baz, new TestBean());
+        assertEquals("", render(baz, new TestBean()).asString());
     }
 
     @Test
