@@ -648,7 +648,8 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
     @Override
     public boolean onBrowserEvent(final Cell cell, final NativeEvent event) {
         if (BrowserEvents.TOUCHSTART.equals(event.getType())
-                || BrowserEvents.MOUSEDOWN.equals(event.getType())) {
+                || (BrowserEvents.MOUSEDOWN.equals(event.getType()) && event
+                        .getButton() == NativeEvent.BUTTON_LEFT)) {
             injectNativeHandler();
             int logicalRowIndex = getLogicalRowIndex(Element.as(event
                     .getEventTarget()));
