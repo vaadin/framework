@@ -1407,13 +1407,15 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         @Override
-        public void setWidth(int pixels) {
+        public GridColumn<Boolean, T> setWidth(int pixels) {
             if (pixels != getWidth() && initDone) {
                 throw new UnsupportedOperationException("The selection "
                         + "column cannot be modified after init");
             } else {
                 super.setWidth(pixels);
             }
+
+            return this;
         }
 
         @Override
@@ -1778,11 +1780,12 @@ public class Grid<T> extends ResizeComposite implements
          * 
          * @param headerText
          *            The header text for this column
+         * @return the column itself
          * 
          * @throws IllegalArgumentException
          *             if given header text is null
          */
-        public void setHeaderText(String headerText) {
+        public GridColumn<C, T> setHeaderText(String headerText) {
             if (headerText == null) {
                 throw new IllegalArgumentException(
                         "Header text cannot be null.");
@@ -1794,6 +1797,8 @@ public class Grid<T> extends ResizeComposite implements
                     updateHeader();
                 }
             }
+
+            return (GridColumn<C, T>) this;
         }
 
         private void updateHeader() {
@@ -1834,11 +1839,12 @@ public class Grid<T> extends ResizeComposite implements
          * 
          * @param renderer
          *            The renderer to use for rendering the cells
+         * @return the column itself
          * 
          * @throws IllegalArgumentException
          *             if given Renderer is null
          */
-        public void setRenderer(Renderer<? super C> renderer)
+        public GridColumn<C, T> setRenderer(Renderer<? super C> renderer)
                 throws IllegalArgumentException {
             if (renderer == null) {
                 throw new IllegalArgumentException("Renderer cannot be null.");
@@ -1848,6 +1854,8 @@ public class Grid<T> extends ResizeComposite implements
             if (grid != null) {
                 grid.refreshBody();
             }
+
+            return (GridColumn<C, T>) this;
         }
 
         /**
@@ -1856,8 +1864,9 @@ public class Grid<T> extends ResizeComposite implements
          * 
          * @param pixels
          *            the width in pixels or negative for auto sizing
+         * @return the column itself
          */
-        public void setWidth(int pixels) {
+        public GridColumn<C, T> setWidth(int pixels) {
             width = pixels;
 
             if (grid != null) {
@@ -1866,6 +1875,8 @@ public class Grid<T> extends ResizeComposite implements
                         .getColumnConfiguration();
                 conf.setColumnWidth(index, pixels);
             }
+
+            return (GridColumn<C, T>) this;
         }
 
         /**
@@ -1889,14 +1900,17 @@ public class Grid<T> extends ResizeComposite implements
          * 
          * @param sortable
          *            <code>true</code> when column sort indicators are visible.
+         * @return the column itself
          */
-        public void setSortable(boolean sortable) {
+        public GridColumn<C, T> setSortable(boolean sortable) {
             if (this.sortable != sortable) {
                 this.sortable = sortable;
                 if (grid != null) {
                     grid.refreshHeader();
                 }
             }
+
+            return (GridColumn<C, T>) this;
         }
 
         /**
