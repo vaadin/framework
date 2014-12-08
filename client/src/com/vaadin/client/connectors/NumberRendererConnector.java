@@ -13,21 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.grid.renderers;
+package com.vaadin.client.connectors;
 
 import com.vaadin.shared.ui.Connect;
 
 /**
- * A connector for {@link TextRenderer}.
+ * A connector for
+ * {@link com.vaadin.ui.components.grid.renderers.NumberRenderer NumberRenderer}
+ * .
+ * <p>
+ * The server-side Renderer operates on numbers, but the data is serialized as a
+ * string, and displayed as-is on the client side. This is to be able to support
+ * the server's locale.
  * 
  * @since
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.components.grid.renderers.TextRenderer.class)
-public class TextRendererConnector extends AbstractRendererConnector<String> {
-
-    @Override
-    public TextRenderer getRenderer() {
-        return (TextRenderer) super.getRenderer();
-    }
+@Connect(com.vaadin.ui.components.grid.renderers.NumberRenderer.class)
+public class NumberRendererConnector extends TextRendererConnector {
+    // no implementation needed
 }

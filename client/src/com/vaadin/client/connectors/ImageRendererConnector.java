@@ -13,25 +13,37 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.grid.renderers;
+package com.vaadin.client.connectors;
 
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.vaadin.client.communication.JsonDecoder;
+import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.grid.renderers.ClickableRenderer.RendererClickHandler;
+import com.vaadin.client.ui.grid.renderers.ImageRenderer;
+import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.Connect;
 
 /**
- * A connector for {@link ButtonRenderer}.
+ * A connector for {@link ImageRenderer}.
  * 
  * @since
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.components.grid.renderers.ButtonRenderer.class)
-public class ButtonRendererConnector extends ClickableRendererConnector<String> {
+@Connect(com.vaadin.ui.components.grid.renderers.ImageRenderer.class)
+public class ImageRendererConnector extends ClickableRendererConnector<String> {
 
     @Override
-    public ButtonRenderer getRenderer() {
-        return (ButtonRenderer) super.getRenderer();
+    public ImageRenderer getRenderer() {
+        return (ImageRenderer) super.getRenderer();
+    }
+
+    @Override
+    public String decode(JSONValue value) {
+        return ((URLReference) JsonDecoder.decodeValue(
+                TypeDataStore.getType(URLReference.class), value, null,
+                getConnection())).getURL();
     }
 
     @Override

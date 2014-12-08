@@ -22,7 +22,7 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
+import com.vaadin.client.connectors.AbstractRendererConnector;
 
 /**
  * Generates type data for renderer connectors.

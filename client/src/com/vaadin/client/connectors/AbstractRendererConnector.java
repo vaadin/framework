@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.grid.renderers;
+package com.vaadin.client.connectors;
 
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ServerConnector;
@@ -24,7 +24,6 @@ import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.metadata.TypeDataStore;
-import com.vaadin.client.ui.grid.GridConnector;
 import com.vaadin.client.ui.grid.Renderer;
 
 /**
@@ -88,12 +87,12 @@ public abstract class AbstractRendererConnector<T> extends
      * Creates a new Renderer instance associated with this renderer connector.
      * <p>
      * You should typically not override this method since the framework by
-     * default generates an implementation that uses {@link GWT#create(Class)}
-     * to create a renderer of the same type as returned by the most specific
-     * override of {@link #getRenderer()}. If you do override the method, you
-     * can't call <code>super.createRenderer()</code> since the metadata needed
-     * for that implementation is not generated if there's an override of the
-     * method.
+     * default generates an implementation that uses
+     * {@link com.google.gwt.core.client.GWT#create(Class)} to create a renderer
+     * of the same type as returned by the most specific override of
+     * {@link #getRenderer()}. If you do override the method, you can't call
+     * <code>super.createRenderer()</code> since the metadata needed for that
+     * implementation is not generated if there's an override of the method.
      * 
      * @return a new renderer to be used with this connector
      */

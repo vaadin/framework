@@ -13,23 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.grid.renderers;
+package com.vaadin.client.connectors;
 
+import com.vaadin.client.ui.grid.FlyweightCell;
+import com.vaadin.client.ui.grid.Renderer;
 import com.vaadin.shared.ui.Connect;
 
 /**
- * A connector for
- * {@link com.vaadin.ui.components.grid.renderers.NumberRenderer NumberRenderer}
- * .
- * <p>
- * The server-side Renderer operates on numbers, but the data is serialized as a
- * string, and displayed as-is on the client side. This is to be able to support
- * the server's locale.
+ * A connector for {@link UnsafeHtmlRenderer}
  * 
  * @since
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.components.grid.renderers.NumberRenderer.class)
-public class NumberRendererConnector extends TextRendererConnector {
-    // no implementation needed
+@Connect(com.vaadin.ui.components.grid.renderers.HtmlRenderer.class)
+public class UnsafeHtmlRendererConnector extends
+        AbstractRendererConnector<String> {
+
+    public static class UnsafeHtmlRenderer implements Renderer<String> {
+        @Override
+        public void render(FlyweightCell cell, String data) {
+            cell.getElement().setInnerHTML(data);
+        }
+    }
+
+    @Override
+    public UnsafeHtmlRenderer getRenderer() {
+        return (UnsafeHtmlRenderer) super.getRenderer();
+    }
 }

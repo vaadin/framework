@@ -76,7 +76,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             }
         }
 
-        protected boolean isPinned() {
+        public boolean isPinned() {
             return pinnedRows.containsKey(key);
         }
 

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.ui.grid;
+package com.vaadin.client.connectors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,17 +36,20 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.connectors.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
-import com.vaadin.client.data.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.ui.grid.EditorRowHandler;
+import com.vaadin.client.ui.grid.Grid;
 import com.vaadin.client.ui.grid.Grid.CellStyleGenerator;
 import com.vaadin.client.ui.grid.Grid.FooterCell;
 import com.vaadin.client.ui.grid.Grid.FooterRow;
 import com.vaadin.client.ui.grid.Grid.HeaderCell;
 import com.vaadin.client.ui.grid.Grid.HeaderRow;
-import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
+import com.vaadin.client.ui.grid.GridColumn;
+import com.vaadin.client.ui.grid.Renderer;
 import com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel;
 import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
 import com.vaadin.client.ui.grid.selection.SelectionChangeHandler;
@@ -799,7 +802,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      */
     private native void selectByHandle(RowHandle<JSONObject> handle)
     /*-{
-        var model = this.@com.vaadin.client.ui.grid.GridConnector::selectionModel;
+        var model = this.@com.vaadin.client.connectors.GridConnector::selectionModel;
         model.@com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel::selectByHandle(*)(handle);
     }-*/;
 
@@ -809,7 +812,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      */
     private native void deselectByHandle(RowHandle<JSONObject> handle)
     /*-{
-        var model = this.@com.vaadin.client.ui.grid.GridConnector::selectionModel;
+        var model = this.@com.vaadin.client.connectors.GridConnector::selectionModel;
         model.@com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel::deselectByHandle(*)(handle);
     }-*/;
 

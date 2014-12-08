@@ -13,31 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.grid.renderers;
+package com.vaadin.client.connectors;
 
-import com.vaadin.client.ui.grid.FlyweightCell;
-import com.vaadin.client.ui.grid.Renderer;
+import com.vaadin.client.ui.grid.renderers.TextRenderer;
 import com.vaadin.shared.ui.Connect;
 
 /**
- * A connector for {@link UnsafeHtmlRenderer}
+ * A connector for {@link TextRenderer}.
  * 
  * @since
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.components.grid.renderers.HtmlRenderer.class)
-public class UnsafeHtmlRendererConnector extends
-        AbstractRendererConnector<String> {
-
-    public static class UnsafeHtmlRenderer implements Renderer<String> {
-        @Override
-        public void render(FlyweightCell cell, String data) {
-            cell.getElement().setInnerHTML(data);
-        }
-    }
+@Connect(com.vaadin.ui.components.grid.renderers.TextRenderer.class)
+public class TextRendererConnector extends AbstractRendererConnector<String> {
 
     @Override
-    public UnsafeHtmlRenderer getRenderer() {
-        return (UnsafeHtmlRenderer) super.getRenderer();
+    public TextRenderer getRenderer() {
+        return (TextRenderer) super.getRenderer();
     }
 }

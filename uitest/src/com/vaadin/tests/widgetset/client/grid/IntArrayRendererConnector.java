@@ -15,9 +15,9 @@
  */
 package com.vaadin.tests.widgetset.client.grid;
 
+import com.vaadin.client.connectors.AbstractRendererConnector;
 import com.vaadin.client.ui.grid.FlyweightCell;
 import com.vaadin.client.ui.grid.Renderer;
-import com.vaadin.client.ui.grid.renderers.AbstractRendererConnector;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(com.vaadin.tests.components.grid.IntArrayRenderer.class)

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.data;
+package com.vaadin.client.connectors;
 
 import java.util.ArrayList;
 
@@ -24,8 +24,8 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
-import com.vaadin.client.ui.grid.GridConnector;
 import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataProviderState;
 import com.vaadin.shared.data.DataRequestRpc;
@@ -46,6 +46,45 @@ import com.vaadin.shared.ui.grid.Range;
 public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
     public class RpcDataSource extends AbstractRemoteDataSource<JSONObject> {
+
+        protected RpcDataSource() {
+            registerRpc(DataProviderRpc.class, new DataProviderRpc() {
+                @Override
+                public void setRowData(int firstRow, String rowsJson) {
+                    JSONValue parsedJson = JSONParser.parseStrict(rowsJson);
+                    JSONArray rowArray = parsedJson.isArray();
+                    assert rowArray != null : "Was unable to parse JSON into an array: "
+                            + parsedJson;
+
+                    ArrayList<JSONObject> rows = new ArrayList<JSONObject>(
+                            rowArray.size());
+                    for (int i = 0; i < rowArray.size(); i++) {
+                        JSONValue rowValue = rowArray.get(i);
+                        JSONObject rowObject = rowValue.isObject();
+                        assert rowObject != null : "Was unable to parse JSON into an object: "
+                                + rowValue;
+                        rows.add(rowObject);
+                    }
+
+                    dataSource.setRowData(firstRow, rows);
+                }
+
+                @Override
+                public void removeRowData(int firstRow, int count) {
+                    dataSource.removeRowData(firstRow, count);
+                }
+
+                @Override
+                public void insertRowData(int firstRow, int count) {
+                    dataSource.insertRowData(firstRow, count);
+                }
+
+                @Override
+                public void resetDataAndSize(int size) {
+                    dataSource.resetDataAndSize(size);
+                }
+            });
+        }
 
         private DataRequestRpc rpcProxy = getRpcProxy(DataRequestRpc.class);
 
@@ -106,43 +145,6 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
     @Override
     protected void extend(ServerConnector target) {
         ((GridConnector) target).setDataSource(dataSource);
-
-        registerRpc(DataProviderRpc.class, new DataProviderRpc() {
-            @Override
-            public void setRowData(int firstRow, String rowsJson) {
-                JSONValue parsedJson = JSONParser.parseStrict(rowsJson);
-                JSONArray rowArray = parsedJson.isArray();
-                assert rowArray != null : "Was unable to parse JSON into an array: "
-                        + parsedJson;
-
-                ArrayList<JSONObject> rows = new ArrayList<JSONObject>(rowArray
-                        .size());
-                for (int i = 0; i < rowArray.size(); i++) {
-                    JSONValue rowValue = rowArray.get(i);
-                    JSONObject rowObject = rowValue.isObject();
-                    assert rowObject != null : "Was unable to parse JSON into an object: "
-                            + rowValue;
-                    rows.add(rowObject);
-                }
-
-                dataSource.setRowData(firstRow, rows);
-            }
-
-            @Override
-            public void removeRowData(int firstRow, int count) {
-                dataSource.removeRowData(firstRow, count);
-            }
-
-            @Override
-            public void insertRowData(int firstRow, int count) {
-                dataSource.insertRowData(firstRow, count);
-            }
-
-            @Override
-            public void resetDataAndSize(int size) {
-                dataSource.resetDataAndSize(size);
-            }
-        });
     }
 
     @Override
