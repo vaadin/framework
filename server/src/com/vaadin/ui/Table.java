@@ -699,7 +699,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Gets the headers of the columns.
      * 
      * <p>
-     * The headers match the property id:s given my the set visible column
+     * The headers match the property id:s given by the set visible column
      * headers. The table must be set in either
      * {@link #COLUMN_HEADER_MODE_EXPLICIT} or
      * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the
@@ -726,7 +726,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Sets the headers of the columns.
      * 
      * <p>
-     * The headers match the property id:s given my the set visible column
+     * The headers match the property id:s given by the set visible column
      * headers. The table must be set in either
      * {@link #COLUMN_HEADER_MODE_EXPLICIT} or
      * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the
@@ -759,7 +759,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Gets the icons of the columns.
      * 
      * <p>
-     * The icons in headers match the property id:s given my the set visible
+     * The icons in headers match the property id:s given by the set visible
      * column headers. The table must be set in either
      * {@link #COLUMN_HEADER_MODE_EXPLICIT} or
      * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the headers
@@ -786,7 +786,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Sets the icons of the columns.
      * 
      * <p>
-     * The icons in headers match the property id:s given my the set visible
+     * The icons in headers match the property id:s given by the set visible
      * column headers. The table must be set in either
      * {@link #COLUMN_HEADER_MODE_EXPLICIT} or
      * {@link #COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID} mode to show the headers
