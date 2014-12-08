@@ -195,7 +195,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         if (component != null && components.contains(component)) {
 
             int componentIndex = components.indexOf(component);
-
             super.removeComponent(component);
             keyMapper.remove(component);
             components.remove(component);
@@ -232,7 +231,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                     fireSelectedTabChange();
                 }
             }
-            markAsDirty();
         }
     }
 
@@ -394,8 +392,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                 setSelected(tabComponent);
                 fireSelectedTabChange();
             }
+
             super.addComponent(tabComponent);
-            markAsDirty();
+
             return tab;
         }
     }
@@ -967,16 +966,16 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         /**
          * Gets the icon alt text for the tab.
-         *
+         * 
          * @since 7.2
          */
         public String getIconAlternateText();
 
         /**
          * Sets the icon alt text for the tab.
-         *
+         * 
          * @since 7.2
-         *
+         * 
          * @param iconAltText
          *            the icon to set
          */

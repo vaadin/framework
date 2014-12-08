@@ -214,7 +214,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         } else if (c == getSecondComponent()) {
             getState().secondChild = null;
         }
-        markAsDirty();
     }
 
     /*
@@ -256,7 +255,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         } else if (oldComponent == getSecondComponent()) {
             setSecondComponent(newComponent);
         }
-        markAsDirty();
     }
 
     /**
