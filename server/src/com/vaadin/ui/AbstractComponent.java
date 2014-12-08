@@ -938,6 +938,12 @@ public abstract class AbstractComponent extends AbstractClientConnector
         } else {
             explicitImmediateValue = null;
         }
+        // handle locale
+        if (attr.hasKey("locale")) {
+            setLocale(getLocaleFromString(attr.get("locale")));
+        } else {
+            setLocale(null);
+        }
         // handle width and height
         readSize(attr, def);
         // handle component error
@@ -961,6 +967,35 @@ public abstract class AbstractComponent extends AbstractClientConnector
                         "Unsupported attribute found when synchronizing from design : "
                                 + a.getKey());
             }
+        }
+    }
+
+    /**
+     * Constructs a Locale corresponding to the given string. The string should
+     * consist of one, two or three parts with '_' between the different parts
+     * if there is more than one part. The first part specifies the language,
+     * the second part the country and the third part the variant of the locale.
+     * 
+     * @param localeString
+     *            the locale specified as a string
+     * @return the Locale object corresponding to localeString
+     */
+    private Locale getLocaleFromString(String localeString) {
+        if (localeString == null) {
+            return null;
+        }
+        String[] parts = localeString.split("_");
+        if (parts.length > 3) {
+            throw new RuntimeException("Cannot parse the locale string: "
+                    + localeString);
+        }
+        switch (parts.length) {
+        case 1:
+            return new Locale(parts[0]);
+        case 2:
+            return new Locale(parts[0], parts[1]);
+        default:
+            return new Locale(parts[0], parts[1], parts[2]);
         }
     }
 
@@ -1171,7 +1206,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     private static final String[] customAttributes = new String[] { "width",
             "height", "debug-id", "error", "width-auto", "height-auto",
             "width-full", "height-full", "size-auto", "size-full",
-            "responsive", "immediate" };
+            "responsive", "immediate", "locale" };
 
     /*
      * (non-Javadoc)
@@ -1194,6 +1229,12 @@ public abstract class AbstractComponent extends AbstractClientConnector
         // handle immediate
         if (explicitImmediateValue != null) {
             design.attr("immediate", explicitImmediateValue.toString());
+        }
+        // handle locale
+        if (getLocale() != null
+                && (getParent() == null || !getLocale().equals(
+                        getParent().getLocale()))) {
+            design.attr("locale", getLocale().toString());
         }
         // handle size
         writeSize(attr, def);
