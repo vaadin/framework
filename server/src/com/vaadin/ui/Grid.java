@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.google.gwt.thirdparty.guava.common.collect.Sets.SetView;
@@ -3591,5 +3593,80 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      */
     public CellStyleGenerator getCellStyleGenerator() {
         return cellStyleGenerator;
+    }
+
+    /**
+     * Adds a row to the underlying container. The order of the parameters
+     * should match the current visible column order.
+     * <p>
+     * Please note that it's generally only safe to use this method during
+     * initialization. After Grid has been initialized and the visible column
+     * order might have been changed, it's better to instead add items directly
+     * to the underlying container and use {@link Item#getItemProperty(Object)}
+     * to make sure each value is assigned to the intended property.
+     * 
+     * @param values
+     *            the cell values of the new row, in the same order as the
+     *            visible column order, not <code>null</code>.
+     * @return the item id of the new row
+     * @throws IllegalArgumentException
+     *             if values is null
+     * @throws IllegalArgumentException
+     *             if its length does not match the number of visible columns
+     * @throws IllegalArgumentException
+     *             if a parameter value is not an instance of the corresponding
+     *             property type
+     * @throws UnsupportedOperationException
+     *             if the container does not support adding new items
+     */
+    public Object addRow(Object... values) {
+        if (values == null) {
+            throw new IllegalArgumentException("Values cannot be null");
+        }
+
+        Indexed dataSource = getContainerDataSource();
+        List<String> columnOrder = getState(false).columnOrder;
+
+        if (values.length != columnOrder.size()) {
+            throw new IllegalArgumentException("There are "
+                    + columnOrder.size() + " visible columns, but "
+                    + values.length + " cell values were provided.");
+        }
+
+        // First verify all parameter types
+        for (int i = 0; i < columnOrder.size(); i++) {
+            Object propertyId = getPropertyIdByColumnId(columnOrder.get(i));
+
+            Class<?> propertyType = dataSource.getType(propertyId);
+            if (values[i] != null && !propertyType.isInstance(values[i])) {
+                throw new IllegalArgumentException("Parameter " + i + "("
+                        + values[i] + ") is not an instance of "
+                        + propertyType.getCanonicalName());
+            }
+        }
+
+        Object itemId = dataSource.addItem();
+        try {
+            Item item = dataSource.getItem(itemId);
+            for (int i = 0; i < columnOrder.size(); i++) {
+                Object propertyId = getPropertyIdByColumnId(columnOrder.get(i));
+                Property<Object> property = item.getItemProperty(propertyId);
+                property.setValue(values[i]);
+            }
+        } catch (RuntimeException e) {
+            try {
+                dataSource.removeItem(itemId);
+            } catch (Exception e2) {
+                getLogger().log(Level.SEVERE,
+                        "Error recovering from exception in addRow", e);
+            }
+            throw e;
+        }
+
+        return itemId;
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(Grid.class.getName());
     }
 }

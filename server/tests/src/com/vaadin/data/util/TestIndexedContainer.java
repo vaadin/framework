@@ -2,10 +2,9 @@ package com.vaadin.data.util;
 
 import java.util.List;
 
-import org.junit.Assert;
-
 import org.easymock.Capture;
 import org.easymock.EasyMock;
+import org.junit.Assert;
 
 import com.vaadin.data.Container.Indexed.ItemAddEvent;
 import com.vaadin.data.Container.Indexed.ItemRemoveEvent;
@@ -275,6 +274,38 @@ public class TestIndexedContainer extends AbstractInMemoryContainerTest {
         // no visible items
         container.removeAllItems();
         counter.assertNone();
+    }
+
+    public void testItemAdd_idSequence() {
+        IndexedContainer container = new IndexedContainer();
+        Object itemId;
+
+        itemId = container.addItem();
+        assertEquals(Integer.valueOf(1), itemId);
+
+        itemId = container.addItem();
+        assertEquals(Integer.valueOf(2), itemId);
+
+        itemId = container.addItemAfter(null);
+        assertEquals(Integer.valueOf(3), itemId);
+
+        itemId = container.addItemAt(2);
+        assertEquals(Integer.valueOf(4), itemId);
+    }
+
+    public void testItemAddRemove_idSequence() {
+        IndexedContainer container = new IndexedContainer();
+        Object itemId;
+
+        itemId = container.addItem();
+        assertEquals(Integer.valueOf(1), itemId);
+
+        container.removeItem(itemId);
+
+        itemId = container.addItem();
+        assertEquals(
+                "Id sequence should continue from the previous value even if an item is removed",
+                Integer.valueOf(2), itemId);
     }
 
     public void testItemAddedEvent() {

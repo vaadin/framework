@@ -242,10 +242,11 @@ public class IndexedContainer extends
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container#addItem()
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The item ID is generated from a sequence of Integers. The id of the first
+     * added item is 1.
      */
     @Override
     public Object addItem() {
@@ -363,10 +364,11 @@ public class IndexedContainer extends
                 new IndexedContainerItem(newItemId), true);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The item ID is generated from a sequence of Integers. The id of the first
+     * added item is 1.
      */
     @Override
     public Object addItemAfter(Object previousItemId) {
@@ -392,10 +394,11 @@ public class IndexedContainer extends
                 newItemId), true);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.Container.Indexed#addItemAt(int)
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The item ID is generated from a sequence of Integers. The id of the first
+     * added item is 1.
      */
     @Override
     public Object addItemAt(int index) {
