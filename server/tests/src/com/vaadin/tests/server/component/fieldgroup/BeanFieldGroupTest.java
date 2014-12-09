@@ -2,8 +2,6 @@ package com.vaadin.tests.server.component.fieldgroup;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Collection;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -144,15 +142,7 @@ public class BeanFieldGroupTest {
         group.setItemDataSource((MyBean) null);
 
         BeanItem<MyBean> dataSource = group.getItemDataSource();
-        Assert.assertNotNull("Data source is null for null bean", dataSource);
-
-        Collection<?> itemPropertyIds = dataSource.getItemPropertyIds();
-        Assert.assertEquals("Unexpected number of properties", 3,
-                itemPropertyIds.size());
-        for (Object id : itemPropertyIds) {
-            Assert.assertNull("Value for property " + id + " is not null",
-                    dataSource.getItemProperty(id).getValue());
-        }
+        Assert.assertNull("Data source is null for null bean", dataSource);
     }
 
     @Test

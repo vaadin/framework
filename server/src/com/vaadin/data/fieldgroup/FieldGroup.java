@@ -26,7 +26,6 @@ import java.util.List;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
 import com.vaadin.ui.AbstractField;
@@ -256,6 +255,9 @@ public class FieldGroup implements Serializable {
         fieldToPropertyId.put(field, propertyId);
         propertyIdToField.put(propertyId, field);
         if (itemDataSource == null) {
+            // Clear any possible existing binding to clear the field
+            field.setPropertyDataSource(null);
+            field.clear();
             // Will be bound when data source is set
             return;
         }
@@ -461,7 +463,7 @@ public class FieldGroup implements Serializable {
 
             List<InvalidValueException> invalidValueExceptions = commitFields();
 
-            if(invalidValueExceptions.isEmpty()) {
+            if (invalidValueExceptions.isEmpty()) {
                 firePostCommitEvent();
                 commitTransactions();
             } else {
@@ -489,12 +491,14 @@ public class FieldGroup implements Serializable {
         return invalidValueExceptions;
     }
 
-    private void throwInvalidValueException(List<InvalidValueException> invalidValueExceptions) {
-        if(invalidValueExceptions.size() == 1) {
+    private void throwInvalidValueException(
+            List<InvalidValueException> invalidValueExceptions) {
+        if (invalidValueExceptions.size() == 1) {
             throw invalidValueExceptions.get(0);
         } else {
-            InvalidValueException[] causes = invalidValueExceptions.toArray(
-                    new InvalidValueException[invalidValueExceptions.size()]);
+            InvalidValueException[] causes = invalidValueExceptions
+                    .toArray(new InvalidValueException[invalidValueExceptions
+                            .size()]);
 
             throw new InvalidValueException(null, causes);
         }
@@ -515,8 +519,7 @@ public class FieldGroup implements Serializable {
 
     private void commitTransactions() {
         for (Field<?> f : fieldToPropertyId.keySet()) {
-            ((Property.Transactional<?>) f.getPropertyDataSource())
-                    .commit();
+            ((Property.Transactional<?>) f.getPropertyDataSource()).commit();
         }
     }
 

@@ -125,12 +125,19 @@ public class BeanFieldGroup<T> extends FieldGroup {
      * Helper method for setting the data source directly using a bean. This
      * method wraps the bean in a {@link BeanItem} and calls
      * {@link #setItemDataSource(Item)}.
+     * <p>
+     * For null values, a null item is passed to
+     * {@link #setItemDataSource(Item)} to be properly clear fields.
      * 
      * @param bean
      *            The bean to use as data source.
      */
     public void setItemDataSource(T bean) {
-        setItemDataSource(new BeanItem<T>(bean, beanType));
+        if (bean == null) {
+            setItemDataSource((Item) null);
+        } else {
+            setItemDataSource(new BeanItem<T>(bean, beanType));
+        }
     }
 
     @Override
