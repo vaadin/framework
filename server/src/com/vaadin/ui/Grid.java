@@ -91,6 +91,7 @@ import com.vaadin.util.ReflectTools;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
+import elemental.json.JsonObject;
 import elemental.json.JsonValue;
 
 /**
@@ -1945,13 +1946,11 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     private SelectionModel selectionModel;
 
     /**
-     * The number of times to ignore selection state sync to the client.
-     * <p>
-     * This usually means that the client side has modified the selection. We
-     * still want to inform the listeners that the selection has changed, but we
-     * don't want to send those changes "back to the client".
+     * Used to know whether selection change events originate from the server or
+     * the client so the selection change handler knows whether the changes
+     * should be sent to the client.
      */
-    private int ignoreSelectionClientSync = 0;
+    private boolean applyingSelectionFromClient;
 
     private final Header header = new Header(this);
     private final Footer footer = new Footer(this);
@@ -2005,53 +2004,37 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         addSelectionChangeListener(new SelectionChangeListener() {
             @Override
             public void selectionChange(SelectionChangeEvent event) {
+                if (applyingSelectionFromClient) {
+                    /*
+                     * Avoid sending changes back to the client if they
+                     * originated from the client. Instead, the RPC handler is
+                     * responsible for keeping track of the resulting selection
+                     * state and notifying the client if it doens't match the
+                     * expectation.
+                     */
+                    return;
+                }
+
                 /*
-                 * This listener nor anything else in the server side should
-                 * never unpin anything from KeyMapper. Pinning is mostly a
-                 * client feature and is only used when selecting something from
-                 * the server side. This is to ensure that client has the
+                 * The rows are pinned here to ensure that the client gets the
                  * correct key from server when the selected row is first
                  * loaded.
                  * 
-                 * Once client has gotten info that it is supposed to select a
-                 * row, it will pin the data from the client side as well and it
-                 * will be unpinned once it gets deselected.
+                 * Once the client has gotten info that it is supposed to select
+                 * a row, it will pin the data from the client side as well and
+                 * it will be unpinned once it gets deselected. Nothing on the
+                 * server side should ever unpin anything from KeyMapper.
+                 * Pinning is mostly a client feature and is only used when
+                 * selecting something from the server side.
                  */
-
                 for (Object addedItemId : event.getAdded()) {
                     if (!getKeyMapper().isPinned(addedItemId)) {
                         getKeyMapper().pin(addedItemId);
                     }
                 }
 
-                List<String> keys = getKeyMapper().getKeys(getSelectedRows());
-
-                boolean markAsDirty = true;
-
-                /*
-                 * If this clause is true, it means that the selection event
-                 * originated from the client. This means that we don't want to
-                 * send the changes back to the client (markAsDirty => false).
-                 */
-                if (ignoreSelectionClientSync > 0) {
-                    ignoreSelectionClientSync--;
-                    markAsDirty = false;
-
-                    /*
-                     * Make sure that the diffstate is aware of the "undirty"
-                     * modification, so that the diffs are calculated correctly
-                     * the next time we actually want to send the selection
-                     * state to the client.
-                     */
-                    JsonArray jsonKeys = Json.createArray();
-                    for (int i = 0; i < keys.size(); ++i) {
-                        jsonKeys.set(i, keys.get(i));
-                    }
-                    getUI().getConnectorTracker().getDiffState(Grid.this)
-                            .put("selectedKeys", jsonKeys);
-                }
-
-                getState(markAsDirty).selectedKeys = keys;
+                getState().selectedKeys = getKeyMapper().getKeys(
+                        getSelectedRows());
             }
         });
 
@@ -2059,52 +2042,85 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
             @Override
             public void selectionChange(List<String> selection) {
-                final HashSet<Object> newSelection = new HashSet<Object>(
-                        getKeyMapper().getItemIds(selection));
-                final HashSet<Object> oldSelection = new HashSet<Object>(
+                Collection<Object> receivedSelection = getKeyMapper()
+                        .getItemIds(selection);
+
+                final HashSet<Object> receivedSelectionSet = new HashSet<Object>(
+                        receivedSelection);
+                final HashSet<Object> previousSelectionSet = new HashSet<Object>(
                         getSelectedRows());
 
-                SetView<Object> addedItemIds = Sets.difference(newSelection,
-                        oldSelection);
-                SetView<Object> removedItemIds = Sets.difference(oldSelection,
-                        newSelection);
+                applyingSelectionFromClient = true;
+                try {
+                    SelectionModel selectionModel = getSelectionModel();
 
-                if (!removedItemIds.isEmpty()) {
-                    /*
-                     * Since these changes come from the client, we want to
-                     * modify the selection model and get that event fired to
-                     * all the listeners. One of the listeners is our internal
-                     * selection listener, and this tells it not to send the
-                     * selection event back to the client.
-                     */
-                    ignoreSelectionClientSync++;
+                    SetView<Object> removedItemIds = Sets.difference(
+                            previousSelectionSet, receivedSelectionSet);
+                    if (!removedItemIds.isEmpty()) {
+                        if (removedItemIds.size() == 1) {
+                            deselect(removedItemIds.iterator().next());
+                        } else {
+                            assert selectionModel instanceof SelectionModel.Multi : "Got multiple deselections, but the selection model is not a SelectionModel.Multi";
+                            ((SelectionModel.Multi) selectionModel)
+                                    .deselect(removedItemIds);
+                        }
+                    }
 
-                    if (removedItemIds.size() == 1) {
-                        deselect(removedItemIds.iterator().next());
-                    } else {
-                        assert getSelectionModel() instanceof SelectionModel.Multi : "Got multiple deselections, but the selection model is not a SelectionModel.Multi";
-                        ((SelectionModel.Multi) getSelectionModel())
-                                .deselect(removedItemIds);
+                    SetView<Object> addedItemIds = Sets.difference(
+                            receivedSelectionSet, previousSelectionSet);
+                    if (!addedItemIds.isEmpty()) {
+                        if (addedItemIds.size() == 1) {
+                            select(addedItemIds.iterator().next());
+                        } else {
+                            assert selectionModel instanceof SelectionModel.Multi : "Got multiple selections, but the selection model is not a SelectionModel.Multi";
+                            ((SelectionModel.Multi) selectionModel)
+                                    .select(addedItemIds);
+                        }
+                    }
+                } finally {
+                    applyingSelectionFromClient = false;
+                }
+
+                Collection<Object> actualSelection = getSelectedRows();
+
+                // Make sure all selected rows are pinned
+                for (Object itemId : actualSelection) {
+                    if (!getKeyMapper().isPinned(itemId)) {
+                        getKeyMapper().pin(itemId);
                     }
                 }
 
-                if (!addedItemIds.isEmpty()) {
-                    /*
-                     * Since these changes come from the client, we want to
-                     * modify the selection model and get that event fired to
-                     * all the listeners. One of the listeners is our internal
-                     * selection listener, and this tells it not to send the
-                     * selection event back to the client.
-                     */
-                    ignoreSelectionClientSync++;
+                // Don't mark as dirty since this might be the expected state
+                getState(false).selectedKeys = getKeyMapper().getKeys(
+                        actualSelection);
 
-                    if (addedItemIds.size() == 1) {
-                        select(addedItemIds.iterator().next());
-                    } else {
-                        assert getSelectionModel() instanceof SelectionModel.Multi : "Got multiple selections, but the selection model is not a SelectionModel.Multi";
-                        ((SelectionModel.Multi) getSelectionModel())
-                                .select(addedItemIds);
+                JsonObject diffState = getUI().getConnectorTracker()
+                        .getDiffState(Grid.this);
+
+                final String diffstateKey = "selectedKeys";
+
+                assert diffState.hasKey(diffstateKey) : "Field name has changed";
+
+                if (receivedSelection.equals(actualSelection)) {
+                    /*
+                     * We ended up with the same selection state that the client
+                     * sent us. There's nothing to send back to the client, just
+                     * update the diffstate so subsequent changes will be
+                     * detected.
+                     */
+                    JsonArray diffSelected = Json.createArray();
+                    for (String rowKey : getState(false).selectedKeys) {
+                        diffSelected.set(diffSelected.length(), rowKey);
                     }
+                    diffState.put(diffstateKey, diffSelected);
+                } else {
+                    /*
+                     * Actual selection is not what the client expects. Make
+                     * sure the client gets a state change event by clearing the
+                     * diffstate and marking as dirty
+                     */
+                    diffState.remove(diffstateKey);
+                    markAsDirty();
                 }
             }
 

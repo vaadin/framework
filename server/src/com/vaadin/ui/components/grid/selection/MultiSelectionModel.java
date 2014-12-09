@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import com.vaadin.data.Container.Indexed;
 
@@ -30,6 +31,15 @@ import com.vaadin.data.Container.Indexed;
  */
 public class MultiSelectionModel extends AbstractSelectionModel implements
         SelectionModel.Multi {
+
+    /**
+     * The default selection size limit.
+     * 
+     * @see #setSelectionLimit(int)
+     */
+    public static final int DEFAULT_MAX_SELECTIONS = 1000;
+
+    private int selectionLimit = DEFAULT_MAX_SELECTIONS;
 
     @Override
     public boolean select(final Object... itemIds)
@@ -43,6 +53,12 @@ public class MultiSelectionModel extends AbstractSelectionModel implements
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * All items might not be selected if the limit set using
+     * {@link #setSelectionLimit(int)} is exceeded.
+     */
     @Override
     public boolean select(final Collection<?> itemIds)
             throws IllegalArgumentException {
@@ -50,14 +66,57 @@ public class MultiSelectionModel extends AbstractSelectionModel implements
             throw new IllegalArgumentException("itemIds may not be null");
         }
 
-        final boolean hasSomeDifferingElements = !selection
-                .containsAll(itemIds);
-        if (hasSomeDifferingElements) {
+        final boolean selectionWillChange = !selection.containsAll(itemIds)
+                && selection.size() < selectionLimit;
+        if (selectionWillChange) {
             final HashSet<Object> oldSelection = new HashSet<Object>(selection);
-            selection.addAll(itemIds);
+            if (selection.size() + itemIds.size() >= selectionLimit) {
+                // Add one at a time if there's a risk of overflow
+                Iterator<?> iterator = itemIds.iterator();
+                while (iterator.hasNext() && selection.size() < selectionLimit) {
+                    selection.add(iterator.next());
+                }
+            } else {
+                selection.addAll(itemIds);
+            }
             fireSelectionChangeEvent(oldSelection, selection);
         }
-        return hasSomeDifferingElements;
+        return selectionWillChange;
+    }
+
+    /**
+     * Sets the maximum number of rows that can be selected at once. This is a
+     * mechanism to prevent exhausting server memory in situations where users
+     * select lots of rows. If the limit is reached, newly selected rows will
+     * not become recorded.
+     * <p>
+     * Old selections are not discarded if the current number of selected row
+     * exceeds the new limit.
+     * <p>
+     * The default limit is {@value #DEFAULT_MAX_SELECTIONS} rows.
+     * 
+     * @param selectionLimit
+     *            the non-negative selection limit to set
+     * @throws IllegalArgumentException
+     *             if the limit is negative
+     */
+    public void setSelectionLimit(int selectionLimit) {
+        if (selectionLimit < 0) {
+            throw new IllegalArgumentException(
+                    "The selection limit must be non-negative");
+        }
+        this.selectionLimit = selectionLimit;
+    }
+
+    /**
+     * Gets the selection limit.
+     * 
+     * @see #setSelectionLimit(int)
+     * 
+     * @return the selection limit
+     */
+    public int getSelectionLimit() {
+        return selectionLimit;
     }
 
     @Override

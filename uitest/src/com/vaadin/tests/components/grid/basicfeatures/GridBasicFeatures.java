@@ -49,6 +49,8 @@ import com.vaadin.ui.components.grid.SortOrderChangeListener;
 import com.vaadin.ui.components.grid.renderers.DateRenderer;
 import com.vaadin.ui.components.grid.renderers.HtmlRenderer;
 import com.vaadin.ui.components.grid.renderers.NumberRenderer;
+import com.vaadin.ui.components.grid.selection.MultiSelectionModel;
+import com.vaadin.ui.components.grid.selection.SelectionModel;
 import com.vaadin.ui.components.grid.sort.Sort;
 import com.vaadin.ui.components.grid.sort.SortOrder;
 
@@ -249,6 +251,24 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     public void execute(Grid grid, SelectionMode selectionMode,
                             Object data) {
                         grid.setSelectionMode(selectionMode);
+                    }
+                });
+
+        LinkedHashMap<String, Integer> selectionLimits = new LinkedHashMap<String, Integer>();
+        selectionLimits.put("2", Integer.valueOf(2));
+        selectionLimits.put("1000", Integer.valueOf(1000));
+        selectionLimits.put("Integer.MAX_VALUE",
+                Integer.valueOf(Integer.MAX_VALUE));
+        createSelectAction("Selection limit", "State", selectionLimits, "1000",
+                new Command<Grid, Integer>() {
+                    @Override
+                    public void execute(Grid grid, Integer limit, Object data) {
+                        if (!(grid.getSelectionModel() instanceof MultiSelectionModel)) {
+                            grid.setSelectionMode(SelectionMode.MULTI);
+                        }
+
+                        ((MultiSelectionModel) grid.getSelectionModel()).setSelectionLimit(limit
+                                .intValue());
                     }
                 });
 
