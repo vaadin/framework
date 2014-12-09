@@ -38,6 +38,7 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyEvent;
+import com.google.gwt.event.dom.client.MouseEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -55,15 +56,20 @@ import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.grid.EditorRow.State;
 import com.vaadin.client.ui.grid.events.AbstractGridKeyEventHandler;
+import com.vaadin.client.ui.grid.events.AbstractGridMouseEventHandler;
+import com.vaadin.client.ui.grid.events.BodyClickHandler;
 import com.vaadin.client.ui.grid.events.BodyKeyDownHandler;
 import com.vaadin.client.ui.grid.events.BodyKeyPressHandler;
 import com.vaadin.client.ui.grid.events.BodyKeyUpHandler;
+import com.vaadin.client.ui.grid.events.FooterClickHandler;
 import com.vaadin.client.ui.grid.events.FooterKeyDownHandler;
 import com.vaadin.client.ui.grid.events.FooterKeyPressHandler;
 import com.vaadin.client.ui.grid.events.FooterKeyUpHandler;
+import com.vaadin.client.ui.grid.events.GridClickEvent;
 import com.vaadin.client.ui.grid.events.GridKeyDownEvent;
 import com.vaadin.client.ui.grid.events.GridKeyPressEvent;
 import com.vaadin.client.ui.grid.events.GridKeyUpEvent;
+import com.vaadin.client.ui.grid.events.HeaderClickHandler;
 import com.vaadin.client.ui.grid.events.HeaderKeyDownHandler;
 import com.vaadin.client.ui.grid.events.HeaderKeyPressHandler;
 import com.vaadin.client.ui.grid.events.HeaderKeyUpHandler;
@@ -919,7 +925,7 @@ public class Grid<T> extends ResizeComposite implements
             extends KeyEvent<HANDLER> {
 
         /**
-         * Enum describing different section of Grid.
+         * Enum describing different sections of Grid.
          */
         public enum GridSection {
             HEADER, BODY, FOOTER
@@ -973,7 +979,91 @@ public class Grid<T> extends ResizeComposite implements
             }
         }
 
-        protected abstract void doDispatch(HANDLER handler, GridSection seciton);
+        protected abstract void doDispatch(HANDLER handler, GridSection section);
+
+        @Override
+        public Type<HANDLER> getAssociatedType() {
+            return associatedType;
+        }
+    }
+
+    public static abstract class AbstractGridMouseEvent<HANDLER extends AbstractGridMouseEventHandler>
+            extends MouseEvent<HANDLER> {
+
+        /**
+         * Enum describing different sections of Grid.
+         */
+        public enum GridSection {
+            HEADER, BODY, FOOTER
+        }
+
+        private Grid<?> grid;
+        protected Cell targetCell;
+        private final Type<HANDLER> associatedType = new Type<HANDLER>(
+                getBrowserEventType(), this);
+
+        public AbstractGridMouseEvent(Grid<?> grid) {
+            this.grid = grid;
+        }
+
+        protected abstract String getBrowserEventType();
+
+        /**
+         * Gets the Grid instance for this event.
+         * 
+         * @return grid
+         */
+        public Grid<?> getGrid() {
+            return grid;
+        }
+
+        /**
+         * Gets the target cell for this event.
+         * 
+         * @return target cell
+         */
+        public Cell getTargetCell() {
+            return targetCell;
+        }
+
+        @Override
+        protected void dispatch(HANDLER handler) {
+            EventTarget target = getNativeEvent().getEventTarget();
+            if (!Element.is(target)) {
+                // Target is not an element
+                return;
+            }
+
+            Element targetElement = Element.as(target);
+            if (grid.isElementInChildWidget(targetElement)) {
+                // Target is some widget inside of Grid
+                return;
+            }
+
+            final RowContainer container = grid.escalator
+                    .findRowContainer(targetElement);
+            if (container == null) {
+                // No container for given element
+                return;
+            }
+
+            targetCell = container.getCell(targetElement);
+            if (targetCell == null) {
+                // Is not a cell in given container.
+                return;
+            }
+
+            GridSection section = GridSection.FOOTER;
+            if (container == grid.escalator.getHeader()) {
+                section = GridSection.HEADER;
+            } else if (container == grid.escalator.getBody()) {
+                section = GridSection.BODY;
+            }
+
+            doDispatch(handler, section);
+        }
+
+        protected abstract void doDispatch(HANDLER handler, GridSection section);
 
         @Override
         public Type<HANDLER> getAssociatedType() {
@@ -986,6 +1076,7 @@ public class Grid<T> extends ResizeComposite implements
     private GridKeyDownEvent keyDown = new GridKeyDownEvent(this);
     private GridKeyUpEvent keyUp = new GridKeyUpEvent(this);
     private GridKeyPressEvent keyPress = new GridKeyPressEvent(this);
+    private GridClickEvent clickEvent = new GridClickEvent(this);
 
     private class CellFocusHandler {
 
@@ -3415,7 +3506,7 @@ public class Grid<T> extends ResizeComposite implements
             return;
         }
 
-        // Fire GridKeyEvents and pass the event to escalator.
+        // Fire GridKeyEvents and GridClickEvents. Pass the event to escalator.
         super.onBrowserEvent(event);
 
         if (!isElementInChildWidget(e)) {
@@ -4210,6 +4301,42 @@ public class Grid<T> extends ResizeComposite implements
     public HandlerRegistration addFooterKeyPressHandler(
             FooterKeyPressHandler handler) {
         return addHandler(handler, keyPress.getAssociatedType());
+    }
+
+    /**
+     * Register a BodyClickHandler to this Grid. The event for this handler is
+     * fired when a Click event occurs in the Body of this Grid.
+     * 
+     * @param handler
+     *            the click handler to register
+     * @return the registration for the event
+     */
+    public HandlerRegistration addBodyClickHandler(BodyClickHandler handler) {
+        return addHandler(handler, clickEvent.getAssociatedType());
+    }
+
+    /**
+     * Register a HeaderClickHandler to this Grid. The event for this handler is
+     * fired when a Click event occurs in the Header of this Grid.
+     * 
+     * @param handler
+     *            the click handler to register
+     * @return the registration for the event
+     */
+    public HandlerRegistration addHeaderClickHandler(HeaderClickHandler handler) {
+        return addHandler(handler, clickEvent.getAssociatedType());
+    }
+
+    /**
+     * Register a FooterClickHandler to this Grid. The event for this handler is
+     * fired when a Click event occurs in the Footer of this Grid.
+     * 
+     * @param handler
+     *            the click handler to register
+     * @return the registration for the event
+     */
+    public HandlerRegistration addFooterClickHandler(FooterClickHandler handler) {
+        return addHandler(handler, clickEvent.getAssociatedType());
     }
 
     /**

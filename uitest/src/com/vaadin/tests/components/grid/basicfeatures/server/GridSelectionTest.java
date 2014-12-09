@@ -114,13 +114,13 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         grid.getCell(5, 0).click();
         assertTrue("Fifth row was not selected.", getRow(5).isSelected());
         assertFalse("First row was still selected.", getRow(0).isSelected());
-        grid.getCell(0, 0).click();
+        grid.getCell(0, 6).click();
         toggleFirstRowSelection();
         assertFalse("First row was still selected.", getRow(0).isSelected());
         assertFalse("Fifth row was still selected.", getRow(5).isSelected());
 
         grid.scrollToRow(600);
-        grid.getCell(595, 0).click();
+        grid.getCell(595, 3).click();
         assertTrue("Row 595 was not selected.", getRow(595).isSelected());
         toggleFirstRowSelection();
         assertFalse("Row 595 was still selected.", getRow(595).isSelected());
@@ -159,21 +159,25 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
         GridElement grid = getGridElement();
         grid.getCell(3, 1).click();
-        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
 
-        assertTrue("Grid row 3 was not selected with space key.", grid
-                .getRow(3).isSelected());
+        assertTrue("Grid row 3 was not selected with clicking.", grid.getRow(3)
+                .isSelected());
 
         new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
 
         assertTrue("Grid row 3 was not deselected with space key.", !grid
                 .getRow(3).isSelected());
 
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+
+        assertTrue("Grid row 3 was not selected with space key.", grid
+                .getRow(3).isSelected());
+
         grid.scrollToRow(500);
 
         new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
 
-        assertTrue("Grid row 3 was not selected with space key.", grid
+        assertTrue("Grid row 3 was not deselected with space key.", !grid
                 .getRow(3).isSelected());
     }
 

@@ -33,8 +33,12 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
 
     private Grid<T> grid;
     private RowHandle<T> selectedRow;
+
     /** Event handling for selection with space key */
     private SpaceSelectHandler<T> spaceSelectHandler;
+
+    /** Event handling for selection by clicking cells */
+    private ClickSelectHandler<T> clickSelectHandler;
 
     @Override
     public boolean isSelected(T row) {
@@ -61,9 +65,12 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
         this.grid = grid;
         if (this.grid != null) {
             spaceSelectHandler = new SpaceSelectHandler<T>(grid);
+            clickSelectHandler = new ClickSelectHandler<T>(grid);
         } else {
             spaceSelectHandler.removeHandler();
+            clickSelectHandler.removeHandler();
             spaceSelectHandler = null;
+            clickSelectHandler = null;
         }
     }
 
