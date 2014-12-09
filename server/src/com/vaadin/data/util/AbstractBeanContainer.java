@@ -880,7 +880,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
             model.put(qualifiedPropertyId, pd);
             model.remove(propertyId);
             for (BeanItem<BEANTYPE> item : itemIdToItem.values()) {
-                item.addItemProperty(propertyId,
+                item.addItemProperty(qualifiedPropertyId,
                         pd.createProperty(item.getBean()));
                 item.removeItemProperty(propertyId);
             }
