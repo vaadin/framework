@@ -18,6 +18,8 @@ package com.vaadin.ui;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
@@ -26,6 +28,7 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.csslayout.CssLayoutServerRpc;
 import com.vaadin.shared.ui.csslayout.CssLayoutState;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * CssLayout is a layout component that can be used in browser environment only.
@@ -356,6 +359,48 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
      */
     public Component getComponent(int index) throws IndexOutOfBoundsException {
         return components.get(index);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.AbstractComponent#synchronizeFromDesign(org.jsoup.nodes
+     * .Element, com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeFromDesign(Element design,
+            DesignContext designContext) {
+        // process default attributes
+        super.synchronizeFromDesign(design, designContext);
+        // remove current children
+        removeAllComponents();
+        // handle children
+        for (Element childComponent : design.children()) {
+            DesignSynchronizable newChild = designContext
+                    .createChild(childComponent);
+            addComponent(newChild);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.AbstractComponent#synchronizeToDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeToDesign(Element design, DesignContext designContext) {
+        // synchronize default attributes
+        super.synchronizeToDesign(design, designContext);
+        // handle children
+        Element designElement = design;
+        for (Component child : this) {
+            DesignSynchronizable childComponent = (DesignSynchronizable) child;
+            Element childNode = designContext.createNode(childComponent);
+            designElement.appendChild(childNode);
+        }
     }
 
 }
