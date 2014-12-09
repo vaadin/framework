@@ -34,7 +34,7 @@ public class StringToEnumConverter implements Converter<String, Enum> {
     @Override
     public Enum convertToModel(String value, Class<? extends Enum> targetType,
             Locale locale) throws ConversionException {
-        if (value == null) {
+        if (value == null || value.trim().equals("")) {
             return null;
         }
         if (locale == null) {
@@ -46,19 +46,21 @@ public class StringToEnumConverter implements Converter<String, Enum> {
         String result = value.replace(" ", "_").toUpperCase(locale);
         try {
             return Enum.valueOf(targetType, result);
-        } catch (IllegalArgumentException ee) {
+        } catch (Exception ee) {
             // There was no match. Try to compare the available values to see if
             // the constant is using something else than all upper case
-
-            EnumSet<?> set = EnumSet.allOf(targetType);
-            for (Enum e : set) {
-                if (e.name().toUpperCase(locale).equals(result)) {
-                    return e;
+            try {
+                EnumSet<?> set = EnumSet.allOf(targetType);
+                for (Enum e : set) {
+                    if (e.name().toUpperCase(locale).equals(result)) {
+                        return e;
+                    }
                 }
+            } catch (Exception e) {
             }
 
-            // Fallback did not work either, re-throw original exception so user
-            // knows what went wrong
+            // Fallback did not work either, re-throw original exception so
+            // user knows what went wrong
             throw new ConversionException(ee);
         }
     }

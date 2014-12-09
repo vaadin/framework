@@ -27,8 +27,7 @@ public class EnumTextFieldTest extends SingleBrowserTest {
     public void validValues() {
         openTestURL();
         $(TextFieldElement.class).first().clear();
-        $(TextFieldElement.class).first().sendKeys("Value");
-        $(TextFieldElement.class).first().sendKeys(Keys.TAB);
+        $(TextFieldElement.class).first().sendKeys("Value", Keys.TAB);
         Assert.assertEquals("3. Value (valid)", getLogRow(0));
 
         $(TextFieldElement.class).first().clear();
@@ -41,13 +40,15 @@ public class EnumTextFieldTest extends SingleBrowserTest {
         $(TextFieldElement.class).first().sendKeys(Keys.TAB);
         Assert.assertEquals("7. The last value (valid)", getLogRow(0));
 
+        $(TextFieldElement.class).first().clear();
+        Assert.assertEquals("8. null (valid)", getLogRow(0));
+
     }
 
     @Test
     public void invalidValue() {
         openTestURL();
         $(TextFieldElement.class).first().clear();
-        Assert.assertEquals("2. (INVALID)", getLogRow(0));
 
         $(TextFieldElement.class).first().sendKeys("bar");
         $(TextFieldElement.class).first().sendKeys(Keys.TAB);
