@@ -1782,7 +1782,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @see AbstractField#isEmpty().
      */
     @Override
-    protected boolean isEmpty() {
+    public boolean isEmpty() {
         if (!multiSelect) {
             return super.isEmpty();
         } else {

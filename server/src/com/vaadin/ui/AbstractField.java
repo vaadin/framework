@@ -1502,25 +1502,12 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         markAsDirty();
     }
 
-    /**
-     * Is the field empty?
-     * 
-     * In general, "empty" state is same as null. As an exception, TextField
-     * also treats empty string as "empty".
-     */
-    protected boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
         return (getFieldValue() == null);
     }
 
-    /**
-     * Clear the value of the field.
-     * <p>
-     * The field value is typically reset to the initial value of the field but
-     * this is not mandatory. Calling {@link #isEmpty()} on a cleared field must
-     * always returns true.
-     * 
-     * @since
-     */
+    @Override
     public void clear() {
         setValue(null);
     }
