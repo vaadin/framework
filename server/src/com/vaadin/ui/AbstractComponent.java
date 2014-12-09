@@ -930,6 +930,14 @@ public abstract class AbstractComponent extends AbstractClientConnector
         for (String attribute : getDefaultAttributes()) {
             DesignAttributeHandler.readAttribute(this, attribute, attr, def);
         }
+        // handle immediate
+        if (attr.hasKey("immediate")) {
+            String str = attr.get("immediate");
+            boolean immediate = "".equals(str) ? true : Boolean.valueOf(str);
+            setImmediate(immediate);
+        } else {
+            explicitImmediateValue = null;
+        }
         // handle width and height
         readSize(attr, def);
         // handle component error
@@ -1162,7 +1170,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     private static final String[] customAttributes = new String[] { "width",
             "height", "debug-id", "error", "width-auto", "height-auto",
-            "width-full", "height-full", "size-auto", "size-full", "responsive" };
+            "width-full", "height-full", "size-auto", "size-full",
+            "responsive", "immediate" };
 
     /*
      * (non-Javadoc)
@@ -1181,6 +1190,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
         // handle default attributes
         for (String attribute : getDefaultAttributes()) {
             DesignAttributeHandler.writeAttribute(this, attribute, attr, def);
+        }
+        // handle immediate
+        if (explicitImmediateValue != null) {
+            design.attr("immediate", explicitImmediateValue.toString());
         }
         // handle size
         writeSize(attr, def);

@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.server.component.abstractcomponent;
 
+import java.lang.reflect.Field;
+
 import junit.framework.TestCase;
 
 import org.jsoup.nodes.Attributes;
@@ -102,6 +104,23 @@ public class TestSynchronizeFromDesign extends TestCase {
         AbstractComponent component = getComponent();
         component.synchronizeFromDesign(design, ctx);
         assertEquals(true, component.isImmediate());
+        assertEquals(Boolean.TRUE, getExplicitImmediate(component));
+        // Synchronize with a design having no immediate attribute -
+        // explicitImmediate should then be null.
+        design = createDesign("description", "test-description");
+        component.synchronizeFromDesign(design, ctx);
+        assertEquals(null, getExplicitImmediate(component));
+        // Synchronize with a design having immediate = false
+        design = createDesign("immediate", "false");
+        component.synchronizeFromDesign(design, ctx);
+        assertEquals(false, component.isImmediate());
+        assertEquals(Boolean.FALSE, getExplicitImmediate(component));
+        // Synchronize with a design having immediate = "" - should correspond to
+        // true.
+        design = createDesign("immediate", "");
+        component.synchronizeFromDesign(design, ctx);
+        assertEquals(true, component.isImmediate());
+        assertEquals(Boolean.TRUE, getExplicitImmediate(component));
     }
 
     public void testSynchronizeDescription() {
@@ -218,5 +237,17 @@ public class TestSynchronizeFromDesign extends TestCase {
         attributes.put(key, value);
         Element node = new Element(Tag.valueOf("v-label"), "", attributes);
         return node;
+    }
+
+    private Boolean getExplicitImmediate(AbstractComponent component) {
+        try {
+            Field immediate = AbstractComponent.class
+                    .getDeclaredField("explicitImmediateValue");
+            immediate.setAccessible(true);
+            return (Boolean) immediate.get(component);
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "Getting the field explicitImmediateValue failed.");
+        }
     }
 }
