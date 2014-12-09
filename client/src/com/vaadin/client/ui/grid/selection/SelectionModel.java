@@ -60,7 +60,8 @@ public interface SelectionModel<T> {
      * internally by Grid.
      * 
      * @param grid
-     *            a {@link Grid} instance
+     *            a {@link Grid} instance; <code>null</code> when removing from
+     *            Grid
      */
     public void setGrid(Grid<T> grid);
 

@@ -43,6 +43,9 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
     private final LinkedHashSet<RowHandle<T>> selectionBatch = new LinkedHashSet<RowHandle<T>>();
     private final LinkedHashSet<RowHandle<T>> deselectionBatch = new LinkedHashSet<RowHandle<T>>();
 
+    /* Event handling for selection with space key */
+    private SpaceSelectHandler<T> spaceSelectHandler;
+
     public SelectionModelMulti() {
         grid = null;
         renderer = null;
@@ -61,18 +64,24 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
 
     @Override
     public void setGrid(Grid<T> grid) {
-        if (grid == null) {
-            throw new IllegalArgumentException("Grid cannot be null");
-        }
-
-        if (this.grid == null) {
-            this.grid = grid;
-        } else {
+        if (this.grid != null && grid != null) {
+            // Trying to replace grid
             throw new IllegalStateException(
-                    "Grid reference cannot be reassigned");
+                    "Selection model is already attached to a grid. "
+                            + "Remove the selection model first from "
+                            + "the grid and then add it.");
         }
 
-        this.renderer = new MultiSelectionRenderer<T>(grid);
+        this.grid = grid;
+        if (this.grid != null) {
+            spaceSelectHandler = new SpaceSelectHandler<T>(grid);
+            this.renderer = new MultiSelectionRenderer<T>(grid);
+        } else {
+            spaceSelectHandler.removeHandler();
+            spaceSelectHandler = null;
+            this.renderer = null;
+        }
+
     }
 
     @Override

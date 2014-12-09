@@ -33,7 +33,8 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
 
     private Grid<T> grid;
     private RowHandle<T> selectedRow;
-    private Renderer<Boolean> renderer;
+    /** Event handling for selection with space key */
+    private SpaceSelectHandler<T> spaceSelectHandler;
 
     @Override
     public boolean isSelected(T row) {
@@ -43,22 +44,27 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
 
     @Override
     public Renderer<Boolean> getSelectionColumnRenderer() {
-        return renderer;
+        // No Selection column renderer for single selection
+        return null;
     }
 
     @Override
     public void setGrid(Grid<T> grid) {
-        if (grid == null) {
-            throw new IllegalArgumentException("Grid cannot be null");
+        if (this.grid != null && grid != null) {
+            // Trying to replace grid
+            throw new IllegalStateException(
+                    "Selection model is already attached to a grid. "
+                            + "Remove the selection model first from "
+                            + "the grid and then add it.");
         }
 
-        if (this.grid == null) {
-            this.grid = grid;
+        this.grid = grid;
+        if (this.grid != null) {
+            spaceSelectHandler = new SpaceSelectHandler<T>(grid);
         } else {
-            throw new IllegalStateException(
-                    "Grid reference cannot be reassigned");
+            spaceSelectHandler.removeHandler();
+            spaceSelectHandler = null;
         }
-        renderer = new MultiSelectionRenderer<T>(grid);
     }
 
     @Override

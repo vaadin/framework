@@ -150,7 +150,31 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
         assertTrue("Grid row 3 was not selected with space key.", grid
                 .getRow(3).isSelected());
+    }
 
+    @Test
+    public void testKeyboardWithSingleSelection() {
+        openTestURL();
+        setSelectionModelSingle();
+
+        GridElement grid = getGridElement();
+        grid.getCell(3, 1).click();
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+
+        assertTrue("Grid row 3 was not selected with space key.", grid
+                .getRow(3).isSelected());
+
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+
+        assertTrue("Grid row 3 was not deselected with space key.", !grid
+                .getRow(3).isSelected());
+
+        grid.scrollToRow(500);
+
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+
+        assertTrue("Grid row 3 was not selected with space key.", grid
+                .getRow(3).isSelected());
     }
 
     @Test
@@ -193,6 +217,12 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         assertFalse(
                 "Check box shouldn't have been in header for Single Selection Model",
                 header.isElementPresent(By.tagName("input")));
+
+        // Single selection model shouldn't have selection column to begin with
+        assertFalse(
+                "Selection columnn shouldn't have been in grid for Single Selection Model",
+                getGridElement().getCell(0, 1).isElementPresent(
+                        By.tagName("input")));
 
         setSelectionModelNone();
         header = getGridElement().getHeaderCell(0, 0);

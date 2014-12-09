@@ -3786,6 +3786,11 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         if (this.selectColumnRenderer != null) {
+            if (this.selectColumnRenderer instanceof ComplexRenderer) {
+                // End of Life for the old selection column renderer.
+                ((ComplexRenderer<?>) this.selectColumnRenderer).destroy();
+            }
+
             // Clear field so frozen column logic in the remove method knows
             // what to do
             GridColumn<?, T> colToRemove = selectionColumn;
@@ -3828,9 +3833,9 @@ public class Grid<T> extends ResizeComposite implements
             throw new IllegalArgumentException("Selection model can't be null");
         }
 
-        if (selectColumnRenderer != null
-                && selectColumnRenderer instanceof ComplexRenderer) {
-            ((ComplexRenderer<?>) selectColumnRenderer).destroy();
+        if (this.selectionModel != null) {
+            // Detach selection model from Grid.
+            this.selectionModel.setGrid(null);
         }
 
         this.selectionModel = selectionModel;
