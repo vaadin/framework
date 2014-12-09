@@ -21,8 +21,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.tests.components.grid.GridElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget;
 

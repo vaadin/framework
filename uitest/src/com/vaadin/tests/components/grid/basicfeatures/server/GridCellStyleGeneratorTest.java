@@ -18,8 +18,8 @@ package com.vaadin.tests.components.grid.basicfeatures.server;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.tests.components.grid.GridElement.GridCellElement;
-import com.vaadin.tests.components.grid.GridElement.GridRowElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
+import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public class GridCellStyleGeneratorTest extends GridBasicFeaturesTest {

@@ -26,8 +26,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.tests.annotations.TestCategory;
-import com.vaadin.tests.components.grid.GridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")

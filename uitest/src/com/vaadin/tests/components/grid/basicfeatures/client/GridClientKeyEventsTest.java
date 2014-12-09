@@ -27,7 +27,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
-import com.vaadin.tests.components.grid.GridElement.GridCellElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 
 public class GridClientKeyEventsTest extends GridBasicClientFeaturesTest {

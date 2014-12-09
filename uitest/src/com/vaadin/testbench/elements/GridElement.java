@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.grid;
+package com.vaadin.testbench.elements;
 
 import java.util.ArrayList;
 import java.util.List;

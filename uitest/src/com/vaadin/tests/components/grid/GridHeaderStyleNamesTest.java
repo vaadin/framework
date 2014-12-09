@@ -21,8 +21,9 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.annotations.TestCategory;
-import com.vaadin.tests.components.grid.GridElement.GridCellElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 @TestCategory("grid")

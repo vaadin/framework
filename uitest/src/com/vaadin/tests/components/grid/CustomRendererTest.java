@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;

@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.tests.components.grid.GridElement.GridCellElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 
 public class GridFooterTest extends GridStaticSectionTest {

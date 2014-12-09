@@ -21,7 +21,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.tests.components.grid.GridElement;
+import com.vaadin.testbench.elements.GridElement;
 
 /**
  * Variant of GridBasicFeaturesTest to be used with GridBasicClientFeatures.
