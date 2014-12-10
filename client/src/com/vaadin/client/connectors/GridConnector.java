@@ -471,6 +471,11 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                             getState().editorRowEnabled);
                 }
 
+                if (stateChangeEvent.hasPropertyChanged("frozenColumnCount")) {
+                    getWidget().setFrozenColumnCount(
+                            getState().frozenColumnCount);
+                }
+
             }
         });
 

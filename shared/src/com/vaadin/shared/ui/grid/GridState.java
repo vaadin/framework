@@ -116,7 +116,6 @@ public class GridState extends AbstractComponentState {
     public GridStaticSectionState footer = new GridStaticSectionState();
 
     /** The number of frozen columns */
-    @DelegateToWidget
     public int frozenColumnCount = 0;
 
     /** The height of the Grid in terms of body rows. */
