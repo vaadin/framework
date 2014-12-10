@@ -16,6 +16,7 @@
 
 package com.vaadin.ui;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Logger;
@@ -481,6 +482,17 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         super.synchronizeFromDesign(design, designContext);
         // remove current children
         removeAllComponents();
+        // handle margin
+        AbstractOrderedLayout def = designContext.getDefaultInstance(this
+                .getClass());
+        if (design.hasAttr("margin")) {
+            String value = design.attr("margin");
+            setMargin(value.isEmpty() || value.equalsIgnoreCase("true"));
+
+        } else {
+            // we currently support only on-off margins
+            setMargin(def.getMargin().getBitMask() != 0);
+        }
         // handle children
         for (Node childComponent : design.childNodes()) {
             if (childComponent instanceof Element) {
@@ -535,6 +547,12 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     public void synchronizeToDesign(Element design, DesignContext designContext) {
         // synchronize default attributes
         super.synchronizeToDesign(design, designContext);
+        // handle margin
+        AbstractOrderedLayout def = designContext.getDefaultInstance(this
+                .getClass());
+        if (getMargin().getBitMask() != def.getMargin().getBitMask()) {
+            design.attr("margin", "");
+        }
         // handle children
         Element designElement = design;
         for (Component child : this) {
@@ -562,6 +580,18 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
                         DesignAttributeHandler.formatFloat(expandRatio));
             }
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#getCustomAttributes()
+     */
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> customAttributes = super.getCustomAttributes();
+        customAttributes.add("margin");
+        return customAttributes;
     }
 
     private static Logger getLogger() {

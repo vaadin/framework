@@ -34,6 +34,16 @@ import com.vaadin.ui.declarative.DesignContext;
  */
 public class TestSynchronizeToDesign extends TestCase {
 
+    public void testSynchronizeMargin() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        Element design = createDesign();
+        layout.synchronizeToDesign(design, createDesignContext());
+        assertTrue("The margin must be written", design.hasAttr("margin"));
+        assertTrue("The margin must be empty or true", design.attr("margin")
+                .equals("") || design.attr("margin").equalsIgnoreCase("true"));
+    }
+
     public void testSynchronizeEmptyLayout() {
         VerticalLayout layout = new VerticalLayout();
         layout.setCaption("changed-caption");

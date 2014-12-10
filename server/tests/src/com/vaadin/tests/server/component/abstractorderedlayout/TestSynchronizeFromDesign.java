@@ -35,51 +35,63 @@ import com.vaadin.ui.declarative.DesignContext;
 public class TestSynchronizeFromDesign extends TestCase {
 
     public void testChildCount() {
-        VerticalLayout root = createLayout(0f);
+        VerticalLayout root = createLayout(0f, false);
         assertEquals(2, root.getComponentCount());
     }
 
+    public void testMargin() {
+        VerticalLayout root = createLayout(0f, true);
+        assertTrue(root.getMargin().getBitMask() != 0);
+        root = createLayout(0f, false);
+        assertTrue(root.getMargin().getBitMask() == 0);
+    }
+
     public void testAttributes() {
-        VerticalLayout root = createLayout(0f);
+        VerticalLayout root = createLayout(0f, false);
         assertEquals("test-layout", root.getCaption());
         assertEquals("test-label", root.getComponent(0).getCaption());
         assertEquals("test-button", root.getComponent(1).getCaption());
     }
 
     public void testExpandRatio() {
-        VerticalLayout root = createLayout(1f);
+        VerticalLayout root = createLayout(1f, false);
         assertEquals(1f, root.getExpandRatio(root.getComponent(0)));
         assertEquals(1f, root.getExpandRatio(root.getComponent(1)));
 
-        root = createLayout(0f);
+        root = createLayout(0f, false);
         assertEquals(0f, root.getExpandRatio(root.getComponent(0)));
         assertEquals(0f, root.getExpandRatio(root.getComponent(1)));
     }
 
     public void testAlignment() {
-        VerticalLayout root = createLayout(0f, ":top", ":left");
+        VerticalLayout root = createLayout(0f, false, ":top", ":left");
         assertEquals(Alignment.TOP_LEFT,
                 root.getComponentAlignment(root.getComponent(0)));
-        root = createLayout(0f, ":middle", ":center");
+        root = createLayout(0f, false, ":middle", ":center");
         assertEquals(Alignment.MIDDLE_CENTER,
                 root.getComponentAlignment(root.getComponent(0)));
-        root = createLayout(0f, ":bottom", ":right");
+        root = createLayout(0f, false, ":bottom", ":right");
         assertEquals(Alignment.BOTTOM_RIGHT,
                 root.getComponentAlignment(root.getComponent(0)));
 
     }
 
-    private VerticalLayout createLayout(float expandRatio, String... alignments) {
+    private VerticalLayout createLayout(float expandRatio, boolean margin,
+            String... alignments) {
         DesignContext ctx = new DesignContext();
-        Element design = createDesign(expandRatio, alignments);
+        Element design = createDesign(expandRatio, margin, alignments);
         DesignSynchronizable child = ctx.createChild(design);
         return (VerticalLayout) child;
     }
 
-    private Element createDesign(float expandRatio, String... alignments) {
+    private Element createDesign(float expandRatio, boolean margin,
+            String... alignments) {
 
         Attributes rootAttributes = new Attributes();
         rootAttributes.put("caption", "test-layout");
+        if (margin) {
+            rootAttributes.put("margin", "");
+        }
         Element node = new Element(Tag.valueOf("v-vertical-layout"), "",
                 rootAttributes);
 
