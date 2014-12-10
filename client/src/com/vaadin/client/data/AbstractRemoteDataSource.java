@@ -429,7 +429,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         assertDataChangeHandlerIsInjected();
         dataChangeHandler.dataRemoved(firstRowIndex, count);
-        checkCacheCoverage();
+        ensureCoverageCheck();
 
         Profiler.leave("AbstractRemoteDataSource.removeRowData");
     }
@@ -476,7 +476,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         assertDataChangeHandlerIsInjected();
         dataChangeHandler.dataAdded(firstRowIndex, count);
-        checkCacheCoverage();
+        ensureCoverageCheck();
 
         Profiler.leave("AbstractRemoteDataSource.insertRowData");
     }

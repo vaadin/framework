@@ -721,6 +721,17 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 }, null);
 
+        createClickAction("Remove 18 first rows", "Body rows",
+                new Command<Grid, String>() {
+                    @Override
+                    public void execute(Grid c, String value, Object data) {
+                        for (int i = 0; i < 18; i++) {
+                            Object firstItemId = ds.getIdByIndex(0);
+                            ds.removeItem(firstItemId);
+                        }
+                    }
+                }, null);
+
         createClickAction("Modify first row (getItemProperty)", "Body rows",
                 new Command<Grid, String>() {
                     @SuppressWarnings("unchecked")
