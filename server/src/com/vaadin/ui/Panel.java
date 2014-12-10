@@ -16,7 +16,10 @@
 
 package com.vaadin.ui;
 
+import java.util.Collection;
 import java.util.Map;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
@@ -31,6 +34,8 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.panel.PanelServerRpc;
 import com.vaadin.shared.ui.panel.PanelState;
 import com.vaadin.ui.Component.Focusable;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Panel - a simple single component container.
@@ -337,6 +342,34 @@ public class Panel extends AbstractSingleComponentContainer implements
     @Override
     protected PanelState getState(boolean markAsDirty) {
         return (PanelState) super.getState(markAsDirty);
+    }
+
+    @Override
+    public void synchronizeFromDesign(Element design,
+            DesignContext designContext) {
+        super.synchronizeFromDesign(design, designContext);
+        // handle tabindex
+        Panel def = designContext.getDefaultInstance(this.getClass());
+        int tabIndex = DesignAttributeHandler.readAttribute("tabindex",
+                design.attributes(), def.getTabIndex(), Integer.class);
+        setTabIndex(tabIndex);
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> attributes = super.getCustomAttributes();
+        attributes.add("tabindex");
+        attributes.add("tab-index");
+        return attributes;
+    }
+
+    @Override
+    public void synchronizeToDesign(Element design, DesignContext designContext) {
+        super.synchronizeToDesign(design, designContext);
+        // handle tabindex
+        Panel def = designContext.getDefaultInstance(this.getClass());
+        DesignAttributeHandler.writeAttribute("tabindex", design.attributes(),
+                getTabIndex(), def.getTabIndex(), Integer.class);
     }
 
 }
