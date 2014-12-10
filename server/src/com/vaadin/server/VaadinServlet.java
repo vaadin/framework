@@ -403,6 +403,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             location = location + "/" + lastPathParameter;
             String queryString = request.getQueryString();
             if (queryString != null) {
+                // Prevent HTTP Response splitting in case the server doesn't
+                queryString = queryString.replaceAll("[\\r\\n]", "");
                 location += '?' + queryString;
             }
             response.sendRedirect(location);
