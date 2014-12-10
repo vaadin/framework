@@ -128,7 +128,7 @@ public class TestSynchronizeToDesign extends TestCase {
         AbstractComponent component = getComponent();
         // no immediate attribute should be written before setting immediate to
         // some value
-        component.synchronizeFromDesign(design, ctx);
+        component.synchronizeToDesign(design, ctx);
         assertFalse(design.hasAttr("immediate"));
         component.setImmediate(true);
         component.synchronizeToDesign(design, ctx);

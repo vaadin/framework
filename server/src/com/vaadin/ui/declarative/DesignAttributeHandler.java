@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.LocaleUtils;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -336,9 +335,6 @@ public class DesignAttributeHandler {
         if (targetType == Double.TYPE || targetType == Double.class) {
             return Double.valueOf(value);
         }
-        if (targetType == Locale.class) {
-            return LocaleUtils.toLocale(value);
-        }
         if (targetType == Resource.class) {
             return parseResource(value);
         }
@@ -360,9 +356,7 @@ public class DesignAttributeHandler {
             // value is not null. How to represent null value in attributes?
             return "";
         }
-        if (sourceType == Locale.class) {
-            return value != null ? ((Locale) value).toString() : null;
-        } else if (sourceType == Resource.class) {
+        if (sourceType == Resource.class) {
             if (value instanceof ExternalResource) {
                 return ((ExternalResource) value).getURL();
             } else if (value instanceof ThemeResource) {
@@ -447,8 +441,7 @@ public class DesignAttributeHandler {
     private static final List<Class<?>> supportedClasses = Arrays
             .asList(new Class<?>[] { String.class, Boolean.class,
                     Integer.class, Byte.class, Short.class, Long.class,
-                    Character.class, Float.class, Double.class, Locale.class,
-                    Resource.class });
+                    Character.class, Float.class, Double.class, Resource.class });
 
     /**
      * Returns true if the specified value type is supported by this class.
