@@ -1,10 +1,7 @@
 @mixin runo-grid($primary-stylename : v-grid) {
   
-  // TODO: check/set these values
-  $scrollbar-size: 15px;
-  $header-height: 38px;
-  
   $grid-border-main: 1px solid #b6bbbc;
+  $grid-border-active: 1px solid #57a7ed;
   
   .#{$primary-stylename} {
     outline: none;
@@ -13,6 +10,12 @@
   .#{$primary-stylename}-tablewrapper {
     @include box-sizing(border-box);
     border: $grid-border-main;
+  }
+  
+  .#{$primary-stylename}-cell.frozen {
+    /* TODO this probably should be a SCSS mixin */
+    -webkit-box-shadow: 2px 0 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 0 2px rgba(0, 0, 0, 0.1);
   }
   
   // Grid header.
@@ -29,9 +32,9 @@
       text-shadow: #ffffff 0 1px 0;
       
       &:first-child {
-      	&:before, &:after {
-      	  content: none;
-      	}
+        &:before, &:after {
+          content: none;
+        }
       }
       
       &:before {
@@ -44,25 +47,55 @@
         position: absolute;
       }
     }
+    
+    .#{$primary-stylename}-cell-active {
+        border: $grid-border-active;
+    }
   }
   
-  .#{$primary-stylename}-header .#{$primary-stylename}-cell {
-    border-bottom: $grid-border-main;
+  .#{$primary-stylename}-header {
+    .#{$primary-stylename}-cell {
+      border-bottom: $grid-border-main;
+    }
+
+    .#{$primary-stylename}-cell-active {
+        padding: 8px 1px 9px 5px;
+    }
   }
   
-  .#{$primary-stylename}-footer .#{$primary-stylename}-cell {
-    border-top: $grid-border-main;
+  .#{$primary-stylename}-footer {
+    .#{$primary-stylename}-cell {
+      border-top: $grid-border-main;
+    }
+    
+    .#{$primary-stylename}-cell-active {
+        padding: 9px 1px 8px 5px;
+    }
+  }
+  
+  .#{$primary-stylename}-header .#{$primary-stylename}-cell-active {
+    border-bottom: $grid-border-active;
+  }
+  
+  .#{$primary-stylename}-footer .#{$primary-stylename}-cell-active {
+    border-top: $grid-border-active;
   }
   
   // Sort indicators
   .#{$primary-stylename} th.sort-asc:after,
   .#{$primary-stylename} th.sort-desc:after {
-    content: "";
+    content: attr(sort-order);
     height: 36px;
     position: absolute;
     right: 0;
     top: 0;
     width: 20px;
+  }
+  
+  .#{$primary-stylename} th.#{$primary-stylename}-cell-active.sort-asc:after,
+  .#{$primary-stylename} th.#{$primary-stylename}-cell-active.sort-desc:after {
+    right: -1px;
+    top: -1px;
   }
   
   .#{$primary-stylename} th.sort-asc:after {
@@ -76,7 +109,7 @@
   // Grid body
   .#{$primary-stylename}-body {
     
-    .#{$primary-stylename}-row-stripe(odd) > .#{$primary-stylename}-cell {
+    .#{$primary-stylename}-row-stripe > .#{$primary-stylename}-cell {
       background-color: #f6f7f7;
     }
     
@@ -91,11 +124,11 @@
     .#{$primary-stylename}-row-active {
       
       .#{$primary-stylename}-cell {
-        background: none;
+        background: #edeeee;
       }
       
       .#{$primary-stylename}-cell-active {
-        border: 1px solid #57a7ed;
+        border: $grid-border-active;
       
         // Adjust padding for 'active' border.
         padding: 2px 5px 0 5px;
@@ -111,9 +144,14 @@
       }
       
       .#{$primary-stylename}-cell-active {
-        border-color: #c5e0f7;
+        border-color: #489ade;
       }
     }
+    
+    .#{$primary-stylename}-row-active.#{$primary-stylename}-row-selected > .#{$primary-stylename}-cell {
+        background: #3a90d3;
+    }
+    
   }
   
   // Scrollbars
@@ -133,28 +171,30 @@
   }
   
   // Fillers
-  .#{$primary-stylename}-filler-x {
+  .#{$primary-stylename}-horizontalscrollbarbackground,
+  .#{$primary-stylename}-footercorner,
+  .#{$primary-stylename}-headercorner {
     @include box-sizing(border-box);
-    background: #e7e9ea url(img/header-bg.png) repeat-x;
     border: $grid-border-main;
-    border-top: none;
-    bottom: 0px;
-    height: $scrollbar-size;
-    left: 0;
-    position: absolute;
-    width: 100%;
+  }
+
+  .#{$primary-stylename}-footercorner,
+  .#{$primary-stylename}-headercorner {
+    background: #e7e9ea url(img/header-bg.png) repeat-x;
+    border-left: 0;
+  }
+
+  .#{$primary-stylename}-footercorner {
+    border-top: 0;
   }
   
-  .#{$primary-stylename}-filler-y {
-    @include box-sizing(border-box);
-    background: #e7e9ea url(img/header-bg.png) repeat-x;
-    border: $grid-border-main;
-    border-left: none;
-    height: $header-height;
-    position: absolute;
-    right: 0;
-    top: 0px;
-    width: $scrollbar-size;
+  .#{$primary-stylename}-headercorner {
+    border-bottom: 0;
+  }
+      
+  .#{$primary-stylename}-horizontalscrollbarbackground {
+    background-color: #edeeee;
+    border-top: 0;
   }
 }
 

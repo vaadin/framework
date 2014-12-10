@@ -1,11 +1,8 @@
 @mixin reindeer-grid($primary-stylename : v-grid) {
   
-  // TODO: check/set these values
-  $scrollbar-size: 15px;
-  $header-height: 22px;
-  
   $grid-border-main: 1px solid #c2c3c4;
   $grid-border-light: 1px solid #d4d4d4;
+  $grid-background-light: #d4d7d9;
   
   .#{$primary-stylename} {
     outline: none;
@@ -21,7 +18,7 @@
   .#{$primary-stylename}-header, .#{$primary-stylename}-footer {
     
     .#{$primary-stylename}-cell {
-      background: transparent repeat-x;
+      background: $grid-background-light repeat-x;
       background-image: url(img/header-bg-light.png);
       border: $grid-border-main;
       border-right: none;
@@ -37,6 +34,24 @@
         border-left: none;
       }
     }
+    
+    .#{$primary-stylename}-cell-active {
+      border-right: 1px solid transparent;
+      border-color: #0f68ba;
+      padding-right: 3px;
+    }
+    
+    .#{$primary-stylename}-cell-active:first-child {
+      border-left: 1px solid #0f68ba;
+      padding-left: 5px;
+    }
+    
+  }
+  
+  .#{$primary-stylename}-cell.frozen {
+    /* TODO this probably should be a SCSS mixin */
+    -webkit-box-shadow: 2px 0 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 0 2px rgba(0, 0, 0, 0.1);
   }
   
   .#{$primary-stylename}-header {
@@ -74,7 +89,7 @@
     .#{$primary-stylename}-row-active {
       
       .#{$primary-stylename}-cell {
-        background: none;
+        background: #d6dfe9 url(img/focus-bg-light.png) repeat-x;
       }
       
       .#{$primary-stylename}-cell-active {
@@ -98,9 +113,14 @@
         border-color: #466c90;
       }
       
+      // Selected and focused
       .#{$primary-stylename}-cell-active {
         border-color: #b1cde4;
       }
+    }
+    
+    .#{$primary-stylename}-row-active.#{$primary-stylename}-row-selected > .#{$primary-stylename}-cell {
+        background: #d6dfe9 url(img/focus-sel-bg-light.png) repeat-x;
     }
   }
   
@@ -114,6 +134,11 @@
     width: 16px;
     height: 12px;
     top: 0px;
+  }
+  
+  .#{$primary-stylename} th.#{$primary-stylename}-cell-active:after,
+  .#{$primary-stylename} th.#{$primary-stylename}-cell-active:after {
+  	right: 4px;
   }
   
   .#{$primary-stylename} th.sort-asc:after {
@@ -141,30 +166,17 @@
   }
   
   // Fillers
-  .#{$primary-stylename}-filler-x {
+  .#{$primary-stylename}-horizontalscrollbarbackground,
+  .#{$primary-stylename}-footercorner,
+  .#{$primary-stylename}-headercorner {
     @include box-sizing(border-box);
-    background: transparent repeat-x;
+    background: $grid-background-light repeat-x;
     background-image: url(img/header-bg-light.png);
     border: $grid-border-light;
-    border-top: none;
-    bottom: 0px;
-    height: $scrollbar-size;
-    left: 0;
-    position: absolute;
-    width: 100%;
   }
   
-  .#{$primary-stylename}-filler-y {
-    @include box-sizing(border-box);
-    background: transparent repeat-x;
-    background-image: url(img/header-bg-light.png);
-    border: $grid-border-light;
-    border-left: none;
-    height: $header-height;
-    position: absolute;
-    right: 0;
-    top: 0px;
-    width: $scrollbar-size; 
+  .#{$primary-stylename}-footercorner {
+    border-top: none;
   }
 }
 

@@ -19,10 +19,6 @@ $grid-cell-padding-vertical: round(($v-table-row-height - $v-font-size)/2);
 
   @include base-escalator($primary-stylename);
   
-  // TODO: check/set these values
-  $scrollbar-size: 15px;
-  $header-height: 39px;
-  
   .#{$primary-stylename} {
     outline: none;
   }
@@ -196,28 +192,29 @@ $grid-cell-padding-vertical: round(($v-table-row-height - $v-font-size)/2);
   }
   
   // Fillers
-  .#{$primary-stylename}-filler-x {
+  .#{$primary-stylename}-horizontalscrollbarbackground,
+  .#{$primary-stylename}-headercorner,
+  .#{$primary-stylename}-footercorner {
     @include box-sizing(border-box);
     @include valo-gradient($v-background-color);
     border: $grid-border;
-    border-top: none;
-    bottom: 0px;
-    height: $scrollbar-size;
-    left: 0;
-    position: absolute;
-    width: 100%;
   }
   
-  .#{$primary-stylename}-filler-y {
-    @include box-sizing(border-box);
-    @include valo-gradient($v-background-color);
-    border: $grid-border;
-    border-left: none;
-    height: $header-height;
-    position: absolute;
-    right: 0;
-    top: 0px;
-    width: $scrollbar-size;
+  .#{$primary-stylename}-horizontalscrollbarbackground {
+  	border-top: none;
+  }
+  
+  .#{$primary-stylename}-headercorner,
+  .#{$primary-stylename}-footercorner {
+  	border-left: none;
+  }
+  
+  .#{$primary-stylename}-footercorner {
+  	border-top: none;
+  }
+  
+  .#{$primary-stylename}-headercorner {
+  	border-bottom: none;
   }
 }
 
@@ -232,6 +229,21 @@ $grid-cell-padding-vertical: round(($v-table-row-height - $v-font-size)/2);
     font-size: $v-table-header-font-size;
     padding: $grid-cell-padding-vertical $v-table-cell-padding-horizontal $grid-cell-padding-vertical - $v-table-border-width;
   }
+  
+  // Active state
+    .#{$primary-stylename}-cell-active {
+      border: $grid-cell-active-border-width solid $v-selection-color;
+      padding-top: $grid-cell-padding-vertical - $grid-cell-active-border-width;
+      padding-right: $v-table-cell-padding-horizontal - $grid-cell-active-border-width;
+      padding-bottom: $grid-cell-padding-vertical - $grid-cell-active-border-width;
+      padding-left: $v-table-cell-padding-horizontal - round($grid-cell-active-border-width/2);
+    }
+    
+    & .#{$primary-stylename}-cell-active:first-child {
+      border-left: $grid-cell-active-border-width solid $v-selection-color;
+      padding-left: $v-table-cell-padding-horizontal - $grid-cell-active-border-width;
+    }
+
 }
 
 @mixin valo-grid-footer-style {
@@ -245,4 +257,19 @@ $grid-cell-padding-vertical: round(($v-table-row-height - $v-font-size)/2);
     font-size: $v-table-header-font-size;
     padding: $grid-cell-padding-vertical $v-table-cell-padding-horizontal $grid-cell-padding-vertical - $v-table-border-width;
   }
+  
+    // Active state
+    .#{$primary-stylename}-cell-active {
+      border: $grid-cell-active-border-width solid $v-selection-color;
+      padding-top: $grid-cell-padding-vertical - round($grid-cell-active-border-width/2);
+      padding-right: $v-table-cell-padding-horizontal - $grid-cell-active-border-width;
+      padding-bottom: $grid-cell-padding-vertical - $grid-cell-active-border-width;
+      padding-left: $v-table-cell-padding-horizontal - round($grid-cell-active-border-width/2);
+    }
+    
+    & .#{$primary-stylename}-cell-active:first-child {
+      border-left: $grid-cell-active-border-width solid $v-selection-color;
+      padding-left: $v-table-cell-padding-horizontal - $grid-cell-active-border-width;
+    }
+  
 }
