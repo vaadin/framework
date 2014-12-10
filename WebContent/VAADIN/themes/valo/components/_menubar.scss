@@ -70,10 +70,6 @@
 
   .#{$primary-stylename}-popup {
     @include valo-menubar-popup-style($primary-stylename);
-
-    &.#{$primary-stylename}-popup-animate-out {
-      @include animation(none);
-    }
   }
 
 
