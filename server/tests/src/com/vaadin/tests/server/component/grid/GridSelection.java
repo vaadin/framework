@@ -31,11 +31,6 @@ import com.vaadin.ui.components.grid.selection.SelectionChangeEvent;
 import com.vaadin.ui.components.grid.selection.SelectionChangeListener;
 import com.vaadin.ui.components.grid.selection.SelectionModel;
 
-/**
- * 
- * @since
- * @author Vaadin Ltd
- */
 public class GridSelection {
 
     private static class MockSelectionChangeListener implements

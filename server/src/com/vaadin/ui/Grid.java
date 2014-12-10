@@ -2575,7 +2575,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     // keep this javadoc in sync with SelectionModel.Single.deselect
     public boolean deselect(Object itemId) throws IllegalStateException {
         if (selectionModel instanceof SelectionModel.Single) {
-            return ((SelectionModel.Single) selectionModel).deselect(itemId);
+            if (isSelected(itemId)) {
+                return ((SelectionModel.Single) selectionModel).select(null);
+            }
+            return false;
         } else if (selectionModel instanceof SelectionModel.Multi) {
             return ((SelectionModel.Multi) selectionModel).deselect(itemId);
         } else {

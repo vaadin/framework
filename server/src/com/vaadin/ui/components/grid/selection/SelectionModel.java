@@ -167,39 +167,25 @@ public interface SelectionModel extends Serializable {
      * do in the server-side and client-side APIs.
      */
     public interface Single extends SelectionModel {
+
         /**
          * Marks an item as selected.
          * 
          * @param itemIds
-         *            the itemId to mark as selected
+         *            the itemId to mark as selected; <code>null</code> for
+         *            deselect
          * @return <code>true</code> if the selection state changed.
          *         <code>false</code> if the itemId already was selected
          * @throws IllegalStateException
          *             if the selection was illegal. One such reason might be
-         *             that the implementation already had an item selected, and
-         *             that needs to be explicitly deselected before
-         *             re-selecting something
+         *             that the given id was null, indicating a deselect, but
+         *             implementation doesn't allow deselecting. re-selecting
+         *             something
          * @throws IllegalArgumentException
          *             if given itemId does not exist in the container of Grid
-         * @see #deselect(Object)
          */
         boolean select(Object itemId) throws IllegalStateException,
                 IllegalArgumentException;
-
-        /**
-         * Marks an item as deselected.
-         * 
-         * @param itemId
-         *            the itemId to remove from being selected
-         * @return <code>true</code> if the selection state changed.
-         *         <code>false</code> if the itemId already was selected
-         * @throws IllegalStateException
-         *             if the deselection was illegal. One such reason might be
-         *             that the implementation enforces that an item is always
-         *             selected
-         * @see #select(Object)
-         */
-        boolean deselect(Object itemId) throws IllegalStateException;
 
         /**
          * Gets the item id of the currently selected item.

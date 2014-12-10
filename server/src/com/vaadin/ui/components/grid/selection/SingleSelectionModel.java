@@ -28,6 +28,10 @@ public class SingleSelectionModel extends AbstractSelectionModel implements
         SelectionModel.Single {
     @Override
     public boolean select(final Object itemId) {
+        if (itemId == null) {
+            return deselect(getSelectedRow());
+        }
+
         checkItemIdExists(itemId);
 
         final Object selectedRow = getSelectedRow();
@@ -47,8 +51,7 @@ public class SingleSelectionModel extends AbstractSelectionModel implements
         return modified;
     }
 
-    @Override
-    public boolean deselect(final Object itemId) {
+    private boolean deselect(final Object itemId) {
         return deselectInternal(itemId, true);
     }
 
