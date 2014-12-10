@@ -26,8 +26,6 @@ import com.vaadin.shared.ui.grid.SortDirection;
  * 
  * @since
  * @author Vaadin Ltd
- * @param T
- *            grid data type
  */
 public class Sort {
 
