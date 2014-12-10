@@ -28,6 +28,8 @@ public class SingleSelectionModel extends AbstractSelectionModel implements
         SelectionModel.Single {
     @Override
     public boolean select(final Object itemId) {
+        checkItemIdExists(itemId);
+
         final Object selectedRow = getSelectedRow();
         final boolean modified = selection.add(itemId);
         if (modified) {

@@ -66,6 +66,9 @@ public class MultiSelectionModel extends AbstractSelectionModel implements
             throw new IllegalArgumentException("itemIds may not be null");
         }
 
+        // Sanity check
+        checkItemIdsExist(itemIds);
+
         final boolean selectionWillChange = !selection.containsAll(itemIds)
                 && selection.size() < selectionLimit;
         if (selectionWillChange) {

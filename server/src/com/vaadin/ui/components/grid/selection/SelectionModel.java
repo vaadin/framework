@@ -87,7 +87,8 @@ public interface SelectionModel extends Serializable {
          *         selected
          * @throws IllegalArgumentException
          *             if the <code>itemIds</code> varargs array is
-         *             <code>null</code>
+         *             <code>null</code> or given itemIds don't exist in the
+         *             container of Grid
          * @see #deselect(Object...)
          */
         boolean select(Object... itemIds) throws IllegalArgumentException;
@@ -104,7 +105,8 @@ public interface SelectionModel extends Serializable {
          *         <code>false</code> if all the given itemIds already were
          *         selected
          * @throws IllegalArgumentException
-         *             if <code>itemIds</code> is <code>null</code>
+         *             if <code>itemIds</code> is <code>null</code> or given
+         *             itemIds don't exist in the container of Grid
          * @see #deselect(Collection)
          */
         boolean select(Collection<?> itemIds) throws IllegalArgumentException;
@@ -177,9 +179,12 @@ public interface SelectionModel extends Serializable {
          *             that the implementation already had an item selected, and
          *             that needs to be explicitly deselected before
          *             re-selecting something
+         * @throws IllegalArgumentException
+         *             if given itemId does not exist in the container of Grid
          * @see #deselect(Object)
          */
-        boolean select(Object itemId) throws IllegalStateException;
+        boolean select(Object itemId) throws IllegalStateException,
+                IllegalArgumentException;
 
         /**
          * Marks an item as deselected.

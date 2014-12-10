@@ -48,6 +48,40 @@ public abstract class AbstractSelectionModel implements SelectionModel {
     }
 
     /**
+     * Sanity check for existence of item id.
+     * 
+     * @param itemId
+     *            item id to be selected / deselected
+     * 
+     * @throws IllegalArgumentException
+     *             if item Id doesn't exist in the container of Grid
+     */
+    protected void checkItemIdExists(Object itemId)
+            throws IllegalArgumentException {
+        if (!grid.getContainerDataSource().containsId(itemId)) {
+            throw new IllegalArgumentException("Given item id (" + itemId
+                    + ") does not exist in the container");
+        }
+    }
+
+    /**
+     * Sanity check for existence of item ids in given collection.
+     * 
+     * @param itemIds
+     *            item id collection to be selected / deselected
+     * 
+     * @throws IllegalArgumentException
+     *             if at least one item id doesn't exist in the container of
+     *             Grid
+     */
+    protected void checkItemIdsExist(Collection<?> itemIds)
+            throws IllegalArgumentException {
+        for (Object itemId : itemIds) {
+            checkItemIdExists(itemId);
+        }
+    }
+
+    /**
      * Fires a {@link SelectionChangeEvent} to all the
      * {@link SelectionChangeListener SelectionChangeListeners} currently added
      * to the Grid in which this SelectionModel is.

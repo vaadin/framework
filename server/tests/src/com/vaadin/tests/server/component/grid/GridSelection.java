@@ -243,14 +243,14 @@ public class GridSelection {
         grid.deselect(itemId1NotPresent);
     }
 
-    @Test
-    public void selectNotPresentItemIdShouldNotThrowExceptionMulti() {
+    @Test(expected = IllegalArgumentException.class)
+    public void selectNotPresentItemIdShouldThrowExceptionMulti() {
         grid.setSelectionMode(SelectionMode.MULTI);
         grid.select(itemId1NotPresent);
     }
 
-    @Test
-    public void selectNotPresentItemIdShouldNotThrowExceptionSingle() {
+    @Test(expected = IllegalArgumentException.class)
+    public void selectNotPresentItemIdShouldThrowExceptionSingle() {
         grid.setSelectionMode(SelectionMode.SINGLE);
         grid.select(itemId1NotPresent);
     }
