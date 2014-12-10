@@ -83,7 +83,7 @@ public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest 
         if (composite) {
             // Composite requires the basic client features widget for subparts
             return ((TestBenchElement) findElement(By
-                    .vaadin("//GridBasicClientFeaturesWidget")))
+                    .vaadin("//TestWidgetComponent")))
                     .wrap(GridElement.class);
         } else {
             return super.getGridElement();

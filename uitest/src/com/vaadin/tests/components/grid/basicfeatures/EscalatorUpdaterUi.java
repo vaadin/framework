@@ -18,18 +18,16 @@ package com.vaadin.tests.components.grid.basicfeatures;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
-import com.vaadin.ui.AbstractComponent;
+import com.vaadin.tests.widgetset.client.grid.EscalatorBasicClientFeaturesWidget;
+import com.vaadin.tests.widgetset.server.TestWidgetComponent;
 import com.vaadin.ui.UI;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class EscalatorUpdaterUi extends UI {
 
-    public class EscalatorUpdaterTestComponent extends AbstractComponent {
-        // empty
-    }
-
     @Override
     protected void init(VaadinRequest request) {
-        setContent(new EscalatorUpdaterTestComponent());
+        setContent(new TestWidgetComponent(
+                EscalatorBasicClientFeaturesWidget.UpdaterLifetimeWidget.class));
     }
 }
