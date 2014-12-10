@@ -19,7 +19,6 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.lang3.LocaleUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.DocumentType;
 import org.jsoup.nodes.Element;
@@ -134,17 +133,15 @@ public class TestLocale extends TestCase {
         // hierarchy
         VerticalLayout vLayout = (VerticalLayout) LayoutHandler.parse(
                 doc.toString()).getComponentRoot();
-        assertEquals("Wrong locale.", LocaleUtils.toLocale("en_US"),
+        assertEquals("Wrong locale.", new Locale("en", "US"),
                 vLayout.getLocale());
         HorizontalLayout hLayout = (HorizontalLayout) vLayout.getComponent(0);
         assertEquals("The element should have the same locale as its parent.",
                 vLayout.getLocale(), hLayout.getLocale());
         Button b1 = (Button) hLayout.getComponent(0);
-        assertEquals("Wrong locale.", LocaleUtils.toLocale("en_US"),
-                b1.getLocale());
+        assertEquals("Wrong locale.", new Locale("en", "US"), b1.getLocale());
         Button b2 = (Button) hLayout.getComponent(1);
-        assertEquals("Wrong locale.", LocaleUtils.toLocale("en_GB"),
-                b2.getLocale());
+        assertEquals("Wrong locale.", new Locale("en", "GB"), b2.getLocale());
         Button b3 = (Button) hLayout.getComponent(2);
         assertEquals(
                 "The component should have the same locale as its parent.",
