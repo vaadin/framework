@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui.declarative;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,7 +41,7 @@ import com.vaadin.ui.DesignSynchronizable;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class DesignContext {
+public class DesignContext implements Serializable {
 
     // cache for object instances
     private static Map<Class<?>, Object> instanceCache = Collections
@@ -618,7 +619,7 @@ public class DesignContext {
      * 
      * @author Vaadin Ltd
      */
-    public interface ComponentCreationListener {
+    public interface ComponentCreationListener extends Serializable {
 
         /**
          * Called when component has been created in the design context
@@ -636,7 +637,7 @@ public class DesignContext {
      * 
      * @author Vaadin Ltd
      */
-    public class ComponentCreatedEvent {
+    public class ComponentCreatedEvent implements Serializable {
         private String localId;
         private DesignSynchronizable component;
         private DesignContext context;

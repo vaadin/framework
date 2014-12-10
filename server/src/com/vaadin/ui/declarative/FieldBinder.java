@@ -16,6 +16,7 @@
 package com.vaadin.ui.declarative;
 
 import java.beans.IntrospectionException;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import com.vaadin.util.ReflectTools;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class FieldBinder {
+public class FieldBinder implements Serializable {
 
     // the design class instance (the instance containing the bound fields)
     private Component bindTarget;

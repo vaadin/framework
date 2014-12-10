@@ -19,6 +19,7 @@ import java.beans.IntrospectionException;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -42,7 +43,7 @@ import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class LayoutHandler {
+public class LayoutHandler implements Serializable {
     /**
      * Constructs a component hierarchy from the design specified as an html
      * document. The component hierarchy must contain exactly one top-level

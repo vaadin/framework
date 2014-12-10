@@ -20,6 +20,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.File;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -55,7 +56,7 @@ import com.vaadin.ui.DesignSynchronizable;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class DesignAttributeHandler {
+public class DesignAttributeHandler implements Serializable {
 
     protected static Logger getLogger() {
         return Logger.getLogger(DesignAttributeHandler.class.getName());
@@ -464,7 +465,7 @@ public class DesignAttributeHandler {
      * 
      * @author Vaadin Ltd
      */
-    private static class AttributeCacheEntry {
+    private static class AttributeCacheEntry implements Serializable {
         private Map<String, Method[]> accessMethods = Collections
                 .synchronizedMap(new HashMap<String, Method[]>());
 
