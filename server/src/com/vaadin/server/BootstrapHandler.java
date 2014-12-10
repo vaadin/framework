@@ -39,6 +39,7 @@ import org.jsoup.parser.Tag;
 
 import com.vaadin.annotations.Viewport;
 import com.vaadin.annotations.ViewportGeneratorClass;
+import com.vaadin.server.communication.AtmospherePushConnection;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.PushMode;
@@ -505,8 +506,12 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
         JsonObject versionInfo = Json.createObject();
         versionInfo.put("vaadinVersion", Version.getFullVersion());
-        versionInfo.put("atmosphereVersion",
-                org.atmosphere.util.Version.getRawVersion());
+        String atmosphereVersion = AtmospherePushConnection
+                .getAtmosphereVersion();
+        if (atmosphereVersion != null) {
+            versionInfo.put("atmosphereVersion", atmosphereVersion);
+        }
+
         appConfig.put("versionInfo", versionInfo);
 
         appConfig.put("widgetset", context.getWidgetsetName());
