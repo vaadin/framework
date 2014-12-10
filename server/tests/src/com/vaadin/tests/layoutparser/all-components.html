@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta name="package-mapping" content="my:com.addon.mypackage"/>
+ </head>
+ <body>
+  <v-vertical-layout>
+      <!-- abstract component -->
+  	  <v-button primary-style-name="button" id="foo" style-name="red" caption="Some caption" icon="vaadin://themes/runo/icons/16/ok.png" description="My tooltip" error="Something went wrong" locale="en_US"></v-button>
+
+      <!-- absolute layout -->
+      <v-absolute-layout>
+		<v-button :top="100px" :left="0px" :z-index=21>OK</v-button>
+		<v-button :bottom="0px" :right="0px">Cancel</v-button>
+	  </v-absolute-layout>
+	  
+	  <!--  vertical layout -->
+      <v-vertical-layout spacing margin>
+		<v-button :top>OK</v-button>
+		<v-table size-full :expand=1 />      
+      </v-vertical-layout>
+      
+	  <!--  horizontal layout -->
+      <v-horizontal-layout spacing margin>
+		<v-button :top>OK</v-button>
+		<v-table size-full :expand=1 />      
+      </v-horizontal-layout>
+      
+	  <!--  form layout -->
+      <v-form-layout spacing margin>
+		<v-button :top>OK</v-button>
+		<v-table size-full :expand=1 />      
+      </v-form-layout>
+
+	  <!--  css layout -->
+      <v-css-layout>
+		<v-button>OK</v-button>
+		<v-table size-full />
+      </v-css-layout>
+      
+      <!--  abstract field -->
+	  <v-text-field buffered validation-visible=false invalid-committed invalid-allowed=false required required-error="This is a required field" conversion-error="Input {0} cannot be parsed" tabindex=3 readonly/>
+      
+  </v-vertical-layout>
+ </body>
+</html>

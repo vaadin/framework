@@ -32,7 +32,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
- * Test case for reading the attributes of the abstract component from design
+ * Test case for reading the attributes of the AbstractComponent from design
  * 
  * @author Vaadin Ltd
  */

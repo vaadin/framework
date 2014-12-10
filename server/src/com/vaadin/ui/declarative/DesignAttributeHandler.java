@@ -99,6 +99,7 @@ public class DesignAttributeHandler implements Serializable {
      * @param defaultInstance
      *            the default instance of the class for fetching the default
      *            values
+     * @return true on success
      */
     public static boolean readAttribute(DesignSynchronizable component,
             String attribute, Attributes attributes,
@@ -233,6 +234,69 @@ public class DesignAttributeHandler implements Serializable {
                                 "Failed to invoke getter for attribute "
                                         + attribute, e);
             }
+        }
+    }
+
+    /**
+     * Reads the given attribute from attributes. If the attribute is not found,
+     * the provided default value is returned
+     * 
+     * @param attribute
+     *            the attribute key
+     * @param attributes
+     *            the set of attributes to read from
+     * @param defaultValue
+     *            the default value that is returned if the attribute is not
+     *            found
+     * @param outputType
+     *            the output type for the attribute
+     * @return the attribute value or the default value if the attribute is not
+     *         found
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T readAttribute(String attribute, Attributes attributes,
+            T defaultValue, Class<T> outputType) {
+        if (!isSupported(outputType)) {
+            throw new IllegalArgumentException("output type: "
+                    + outputType.getName() + " not supported");
+        }
+        if (!attributes.hasKey(attribute)) {
+            return defaultValue;
+        } else {
+            try {
+                String value = attributes.get(attribute);
+                return (T) fromAttributeValue(outputType, value);
+            } catch (Exception e) {
+                throw new DesignException("Failed to read attribute "
+                        + attribute, e);
+            }
+        }
+    }
+
+    /**
+     * Writes the given attribute value to attributes if it differs from the
+     * default attribute value
+     * 
+     * @param attribute
+     *            the attribute key
+     * @param attributes
+     *            the set of attributes where the new attribute is written
+     * @param value
+     *            the attribute value
+     * @param defaultValue
+     *            the default attribute value
+     * @param the
+     *            type of the input value
+     */
+    public static <T> void writeAttribute(String attribute,
+            Attributes attributes, T value, T defaultValue, Class<T> inputType) {
+        if (!isSupported(inputType)) {
+            throw new IllegalArgumentException("input type: "
+                    + inputType.getName() + " not supported");
+        }
+        if (!SharedUtil.equals(value, defaultValue)) {
+            String attributeValue = toAttributeValue(value.getClass(), value);
+            attributes.put(attribute, attributeValue);
         }
     }
 

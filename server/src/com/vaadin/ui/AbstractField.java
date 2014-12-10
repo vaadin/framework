@@ -25,6 +25,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Logger;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Property;
@@ -43,6 +47,8 @@ import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * <p>
@@ -1750,5 +1756,64 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             }
             isListeningToPropertyEvents = false;
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.AbstractComponent#synchronizeFromDesign(org.jsoup.nodes
+     * .Element, com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeFromDesign(Element design,
+            DesignContext designContext) {
+        super.synchronizeFromDesign(design, designContext);
+        AbstractField def = designContext.getDefaultInstance(this.getClass());
+        Attributes attr = design.attributes();
+        boolean readOnly = DesignAttributeHandler.readAttribute("readonly",
+                attr, def.isReadOnly(), Boolean.class);
+        setReadOnly(readOnly);
+        // tabindex
+        int tabIndex = DesignAttributeHandler.readAttribute("tabindex", attr,
+                def.getTabIndex(), Integer.class);
+        setTabIndex(tabIndex);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#getCustomAttributes()
+     */
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> attributes = super.getCustomAttributes();
+        attributes.add("readonly");
+        attributes.add("tabindex");
+        return attributes;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.AbstractComponent#synchronizeToDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeToDesign(Element design, DesignContext designContext) {
+        super.synchronizeToDesign(design, designContext);
+        AbstractField def = designContext.getDefaultInstance(this.getClass());
+        Attributes attr = design.attributes();
+        // handle readonly
+        DesignAttributeHandler.writeAttribute("readonly", attr,
+                super.isReadOnly(), def.isReadOnly(), Boolean.class);
+        // handle tab index
+        DesignAttributeHandler.writeAttribute("tabindex", attr, getTabIndex(),
+                def.getTabIndex(), Integer.class);
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(AbstractField.class.getName());
     }
 }
