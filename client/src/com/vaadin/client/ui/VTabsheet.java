@@ -78,6 +78,8 @@ import com.vaadin.shared.ui.tabsheet.TabsheetState;
 
 public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware {
 
+    private static final String PREV_SCROLLER_DISABLED_CLASSNAME = "Prev-disabled";
+
     private static class VCloseEvent {
         private Tab tab;
 
@@ -1069,6 +1071,22 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         updateOpenTabSize();
     }
 
+    private boolean isAllTabsBeforeIndexInvisible() {
+        boolean invisible = true;
+        for (int i = 0; i < scrollerIndex; i++) {
+            invisible = invisible & !tb.getTab(i).isVisible();
+        }
+        return invisible;
+    }
+
+    private boolean isScrollerPrevDisabled() {
+        return scrollerPrev.getClassName().contains(PREV_SCROLLER_DISABLED_CLASSNAME);
+    }
+
+    private boolean isIndexSkippingHiddenTabs() {
+        return isAllTabsBeforeIndexInvisible() && isScrollerPrevDisabled();
+    }
+
     @Override
     public void renderTab(final TabState tabState, int index) {
         Tab tab = tb.getTab(index);
@@ -1080,10 +1098,15 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         tab.setEnabledOnServer((!disabledTabKeys.contains(tabKeys.get(index))));
         tab.setHiddenOnServer(!tabState.visible);
 
-        if (scrolledOutOfView(index)) {
+        if (scrolledOutOfView(index) && !isIndexSkippingHiddenTabs()) {
             // Should not set tabs visible if they are scrolled out of view
             tab.setVisible(false);
         } else {
+            //reset the scroller index back to zero if tab is visible
+            //again and tab is in view
+            if(isIndexSkippingHiddenTabs() && tabState.visible) {
+                scrollerIndex = 0;
+            }
             tab.setVisible(tabState.visible);
         }
 
@@ -1223,7 +1246,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         if (tb.getTabCount() > 0 && tb.isVisible() && (scrolled || clipped)) {
             scroller.getStyle().clearDisplay();
             DOM.setElementProperty(scrollerPrev, "className",
-                    SCROLLER_CLASSNAME + (scrolled ? "Prev" : "Prev-disabled"));
+                    SCROLLER_CLASSNAME + (scrolled ? "Prev" : PREV_SCROLLER_DISABLED_CLASSNAME));
             DOM.setElementProperty(scrollerNext, "className",
                     SCROLLER_CLASSNAME + (clipped ? "Next" : "Next-disabled"));
 
