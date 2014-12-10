@@ -20,6 +20,8 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.InlineDateField;
 
+import java.util.Locale;
+
 public class DateRangeWithSqlDate extends AbstractTestUI {
 
     // 2014-12-01
@@ -33,6 +35,7 @@ public class DateRangeWithSqlDate extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         DateField df = new InlineDateField();
+        df.setLocale(Locale.US);
         df.setRangeStart(startDate);
         df.setRangeEnd(endDate);
 
