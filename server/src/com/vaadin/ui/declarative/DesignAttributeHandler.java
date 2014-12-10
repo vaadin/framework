@@ -403,6 +403,10 @@ public class DesignAttributeHandler implements Serializable {
         if (targetType == Resource.class) {
             return parseResource(value);
         }
+        if (Enum.class.isAssignableFrom(targetType)) {
+            return Enum.valueOf((Class<? extends Enum>) targetType,
+                    value.toUpperCase());
+        }
         return null;
     }
 
@@ -519,8 +523,9 @@ public class DesignAttributeHandler implements Serializable {
      */
     private static boolean isSupported(Class<?> valueType) {
         return valueType != null
-                && (valueType.isPrimitive() || supportedClasses
-                        .contains(valueType));
+                && (valueType.isPrimitive()
+                        || supportedClasses.contains(valueType) || Enum.class
+                            .isAssignableFrom(valueType));
     }
 
     /**
