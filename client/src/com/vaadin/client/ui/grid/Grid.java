@@ -2540,9 +2540,11 @@ public class Grid<T> extends ResizeComposite implements
      * 
      * @param column
      *            the column to add
+     * @return given column
      */
-    public void addColumn(GridColumn<?, T> column) {
+    public GridColumn<?, T> addColumn(GridColumn<?, T> column) {
         addColumn(column, getColumnCount());
+        return column;
     }
 
     /**
@@ -2552,11 +2554,13 @@ public class Grid<T> extends ResizeComposite implements
      *            the index where the column should be inserted into
      * @param column
      *            the column to add
+     * @return given column
+     * 
      * @throws IllegalStateException
      *             if Grid's current selection model renders a selection column,
      *             and {@code index} is 0.
      */
-    public void addColumn(GridColumn<?, T> column, int index) {
+    public GridColumn<?, T> addColumn(GridColumn<?, T> column, int index) {
         if (column == selectionColumn) {
             throw new IllegalArgumentException("The selection column many "
                     + "not be added manually");
@@ -2566,6 +2570,7 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         addColumnSkipSelectionColumnCheck(column, index);
+        return column;
     }
 
     private void addColumnSkipSelectionColumnCheck(GridColumn<?, T> column,
