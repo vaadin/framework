@@ -28,13 +28,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.MockVaadinSession;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.EditorRow;
 import com.vaadin.ui.TextField;
 
 public class EditorRowTests {
@@ -44,7 +44,9 @@ public class EditorRowTests {
     private static final Object ITEM_ID = new Object();
 
     private Grid grid;
-    private EditorRow row;
+
+    // Explicit field for the test session to save it from GC
+    private VaadinSession session;
 
     @Before
     @SuppressWarnings("unchecked")
@@ -59,172 +61,174 @@ public class EditorRowTests {
         item.getItemProperty(PROPERTY_AGE).setValue(Integer.valueOf(25));
 
         grid = new Grid(container);
-        row = grid.getEditorRow();
 
         // VaadinSession needed for ConverterFactory
         VaadinService mockService = EasyMock
                 .createNiceMock(VaadinService.class);
-        VaadinSession session = new MockVaadinSession(mockService);
+        session = new MockVaadinSession(mockService);
         VaadinSession.setCurrent(session);
         session.lock();
     }
 
     @After
     public void tearDown() {
-        VaadinSession.getCurrent().unlock();
+        session.unlock();
+        session = null;
         VaadinSession.setCurrent(null);
     }
 
     @Test
     public void initAssumptions() throws Exception {
-        assertNotNull(row);
-        assertFalse(row.isEnabled());
-        assertNull(row.getEditedItemId());
-        assertNotNull(row.getFieldGroup());
+        assertFalse(grid.isEditorRowEnabled());
+        assertNull(grid.getEditedItemId());
+        assertNotNull(grid.getEditorRowFieldGroup());
     }
 
     @Test
     public void setEnabled() throws Exception {
-        assertFalse(row.isEnabled());
-        row.setEnabled(true);
-        assertTrue(row.isEnabled());
+        assertFalse(grid.isEditorRowEnabled());
+        grid.setEditorRowEnabled(true);
+        assertTrue(grid.isEditorRowEnabled());
     }
 
     @Test
     public void setDisabled() throws Exception {
-        assertFalse(row.isEnabled());
-        row.setEnabled(true);
-        row.setEnabled(false);
-        assertFalse(row.isEnabled());
+        assertFalse(grid.isEditorRowEnabled());
+        grid.setEditorRowEnabled(true);
+        grid.setEditorRowEnabled(false);
+        assertFalse(grid.isEditorRowEnabled());
     }
 
     @Test
     public void setReEnabled() throws Exception {
-        assertFalse(row.isEnabled());
-        row.setEnabled(true);
-        row.setEnabled(false);
-        row.setEnabled(true);
-        assertTrue(row.isEnabled());
+        assertFalse(grid.isEditorRowEnabled());
+        grid.setEditorRowEnabled(true);
+        grid.setEditorRowEnabled(false);
+        grid.setEditorRowEnabled(true);
+        assertTrue(grid.isEditorRowEnabled());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void detached() throws Exception {
-        EditorRow oldEditorRow = row;
+        FieldGroup oldFieldGroup = grid.getEditorRowFieldGroup();
+        grid.removeAllColumns();
         grid.setContainerDataSource(new IndexedContainer());
-        oldEditorRow.isEnabled();
+        assertFalse(oldFieldGroup == grid.getEditorRowFieldGroup());
     }
 
     @Test
     public void propertyUneditable() throws Exception {
-        row.setPropertyEditable(PROPERTY_NAME, false);
+        assertTrue(grid.isPropertyEditable(PROPERTY_NAME));
+        grid.setPropertyEditable(PROPERTY_NAME, false);
+        assertFalse(grid.isPropertyEditable(PROPERTY_NAME));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nonexistentPropertyUneditable() throws Exception {
-        row.setPropertyEditable(new Object(), false);
+        grid.setPropertyEditable(new Object(), false);
     }
 
     @Test(expected = IllegalStateException.class)
     public void disabledEditItem() throws Exception {
-        row.editItem(ITEM_ID);
+        grid.editItem(ITEM_ID);
     }
 
     @Test
     public void editItem() throws Exception {
         startEdit();
-        assertEquals(ITEM_ID, row.getEditedItemId());
+        assertEquals(ITEM_ID, grid.getEditedItemId());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nonexistentEditItem() throws Exception {
-        row.setEnabled(true);
-        row.editItem(new Object());
+        grid.setEditorRowEnabled(true);
+        grid.editItem(new Object());
     }
 
     @Test
     public void getField() throws Exception {
         startEdit();
 
-        assertNotNull(row.getField(PROPERTY_NAME));
+        assertNotNull(grid.getEditorRowField(PROPERTY_NAME));
     }
 
     @Test
     public void getFieldWithoutItem() throws Exception {
-        row.setEnabled(true);
-        assertNull(row.getField(PROPERTY_NAME));
+        grid.setEditorRowEnabled(true);
+        assertNull(grid.getEditorRowField(PROPERTY_NAME));
     }
 
     @Test
     public void getFieldAfterReSettingFieldAsEditable() throws Exception {
         startEdit();
 
-        row.setPropertyEditable(PROPERTY_NAME, false);
-        row.setPropertyEditable(PROPERTY_NAME, true);
-        assertNotNull(row.getField(PROPERTY_NAME));
+        grid.setPropertyEditable(PROPERTY_NAME, false);
+        grid.setPropertyEditable(PROPERTY_NAME, true);
+        assertNotNull(grid.getEditorRowField(PROPERTY_NAME));
     }
 
     @Test
     public void isEditable() {
-        assertTrue(row.isPropertyEditable(PROPERTY_NAME));
+        assertTrue(grid.isPropertyEditable(PROPERTY_NAME));
     }
 
     @Test
     public void isUneditable() {
-        row.setPropertyEditable(PROPERTY_NAME, false);
-        assertFalse(row.isPropertyEditable(PROPERTY_NAME));
+        grid.setPropertyEditable(PROPERTY_NAME, false);
+        assertFalse(grid.isPropertyEditable(PROPERTY_NAME));
     }
 
     @Test
     public void isEditableAgain() {
-        row.setPropertyEditable(PROPERTY_NAME, false);
-        row.setPropertyEditable(PROPERTY_NAME, true);
-        assertTrue(row.isPropertyEditable(PROPERTY_NAME));
+        grid.setPropertyEditable(PROPERTY_NAME, false);
+        grid.setPropertyEditable(PROPERTY_NAME, true);
+        assertTrue(grid.isPropertyEditable(PROPERTY_NAME));
     }
 
     @Test
     public void isUneditableAgain() {
-        row.setPropertyEditable(PROPERTY_NAME, false);
-        row.setPropertyEditable(PROPERTY_NAME, true);
-        row.setPropertyEditable(PROPERTY_NAME, false);
-        assertFalse(row.isPropertyEditable(PROPERTY_NAME));
+        grid.setPropertyEditable(PROPERTY_NAME, false);
+        grid.setPropertyEditable(PROPERTY_NAME, true);
+        grid.setPropertyEditable(PROPERTY_NAME, false);
+        assertFalse(grid.isPropertyEditable(PROPERTY_NAME));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void isNonexistentEditable() {
-        row.isPropertyEditable(new Object());
+        grid.isPropertyEditable(new Object());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void setNonexistentUneditable() {
-        row.setPropertyEditable(new Object(), false);
+        grid.setPropertyEditable(new Object(), false);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void setNonexistentEditable() {
-        row.setPropertyEditable(new Object(), true);
+        grid.setPropertyEditable(new Object(), true);
     }
 
     @Test
     public void customBinding() {
         TextField textField = new TextField();
-        row.bind(PROPERTY_NAME, textField);
+        grid.bindEditorRowField(PROPERTY_NAME, textField);
 
         startEdit();
 
-        assertSame(textField, row.getField(PROPERTY_NAME));
+        assertSame(textField, grid.getEditorRowField(PROPERTY_NAME));
     }
 
     @Test(expected = IllegalStateException.class)
     public void disableWhileEditing() {
         startEdit();
-        row.setEnabled(false);
+        grid.setEditorRowEnabled(false);
     }
 
     @Test
     public void fieldIsNotReadonly() {
         startEdit();
 
-        Field<?> field = row.getField(PROPERTY_NAME);
+        Field<?> field = grid.getEditorRowField(PROPERTY_NAME);
         assertFalse(field.isReadOnly());
     }
 
@@ -232,8 +236,8 @@ public class EditorRowTests {
     public void fieldIsReadonlyWhenFieldGroupIsReadonly() {
         startEdit();
 
-        row.getFieldGroup().setReadOnly(true);
-        Field<?> field = row.getField(PROPERTY_NAME);
+        grid.getEditorRowFieldGroup().setReadOnly(true);
+        Field<?> field = grid.getEditorRowField(PROPERTY_NAME);
         assertTrue(field.isReadOnly());
     }
 
@@ -241,13 +245,13 @@ public class EditorRowTests {
     public void fieldIsReadonlyWhenPropertyIsNotEditable() {
         startEdit();
 
-        row.setPropertyEditable(PROPERTY_NAME, false);
-        Field<?> field = row.getField(PROPERTY_NAME);
+        grid.setPropertyEditable(PROPERTY_NAME, false);
+        Field<?> field = grid.getEditorRowField(PROPERTY_NAME);
         assertTrue(field.isReadOnly());
     }
 
     private void startEdit() {
-        row.setEnabled(true);
-        row.editItem(ITEM_ID);
+        grid.setEditorRowEnabled(true);
+        grid.editItem(ITEM_ID);
     }
 }

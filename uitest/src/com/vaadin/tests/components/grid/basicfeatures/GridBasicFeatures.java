@@ -181,7 +181,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         grid.setSelectionMode(SelectionMode.NONE);
 
-        grid.getEditorRow().setPropertyEditable(getColumnProperty(3), false);
+        grid.setPropertyEditable(getColumnProperty(3), false);
 
         createGridActions();
 
@@ -787,7 +787,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 new Command<Grid, Boolean>() {
                     @Override
                     public void execute(Grid c, Boolean value, Object data) {
-                        c.getEditorRow().setEnabled(value);
+                        c.setEditorRowEnabled(value);
                     }
                 });
 
@@ -795,7 +795,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 new Command<Grid, String>() {
                     @Override
                     public void execute(Grid c, String value, Object data) {
-                        c.getEditorRow().editItem(5);
+                        c.editItem(5);
                     }
                 }, null);
 
@@ -803,14 +803,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 new Command<Grid, String>() {
                     @Override
                     public void execute(Grid c, String value, Object data) {
-                        c.getEditorRow().editItem(100);
+                        c.editItem(100);
                     }
                 }, null);
         createClickAction("Commit", "Editor row", new Command<Grid, String>() {
             @Override
             public void execute(Grid c, String value, Object data) {
                 try {
-                    c.getEditorRow().commit();
+                    c.commitEditorRow();
                 } catch (CommitException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -820,14 +820,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         createClickAction("Discard", "Editor row", new Command<Grid, String>() {
             @Override
             public void execute(Grid c, String value, Object data) {
-                c.getEditorRow().discard();
+                c.discardEditorRow();
             }
         }, null);
         createClickAction("Cancel edit", "Editor row",
                 new Command<Grid, String>() {
                     @Override
                     public void execute(Grid c, String value, Object data) {
-                        c.getEditorRow().cancel();
+                        c.cancelEditorRow();
                     }
                 }, null);
     }

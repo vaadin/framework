@@ -1364,421 +1364,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     }
 
     /**
-     * A class for configuring the editor row in a grid.
-     */
-    public static class EditorRow implements Serializable {
-        private Grid grid;
-
-        private FieldGroup fieldGroup = new FieldGroup();
-
-        private ErrorHandler errorHandler;
-
-        private Object editedItemId = null;
-
-        private HashSet<Object> uneditableProperties = new HashSet<Object>();
-
-        /**
-         * Constructs a new editor row for the given grid component.
-         * 
-         * @param grid
-         *            the grid this editor row is attached to
-         */
-        EditorRow(Grid grid) {
-            this.grid = grid;
-        }
-
-        /**
-         * Checks whether the editor row feature is enabled for the grid or not.
-         * 
-         * @return <code>true</code> iff the editor row feature is enabled for
-         *         the grid
-         * @see #getEditedItemId()
-         */
-        public boolean isEnabled() {
-            checkDetached();
-            return grid.getState(false).editorRowEnabled;
-        }
-
-        /**
-         * Sets whether or not the editor row feature is enabled for the grid.
-         * 
-         * @param isEnabled
-         *            <code>true</code> to enable the feature,
-         *            <code>false</code> otherwise
-         * @throws IllegalStateException
-         *             if an item is currently being edited
-         * @see #getEditedItemId()
-         */
-        public void setEnabled(boolean isEnabled) throws IllegalStateException {
-            checkDetached();
-            if (isEditing()) {
-                throw new IllegalStateException(
-                        "Cannot disable the editor row " + "while an item ("
-                                + getEditedItemId() + ") is being edited.");
-            }
-            if (isEnabled() != isEnabled) {
-                grid.getState().editorRowEnabled = isEnabled;
-            }
-        }
-
-        /**
-         * Gets the field group that is backing this editor row.
-         * 
-         * @return the backing field group
-         */
-        public FieldGroup getFieldGroup() {
-            checkDetached();
-            return fieldGroup;
-        }
-
-        /**
-         * Sets the field group that is backing this editor row.
-         * 
-         * @param fieldGroup
-         *            the backing field group
-         */
-        public void setFieldGroup(FieldGroup fieldGroup) {
-            checkDetached();
-            this.fieldGroup = fieldGroup;
-            if (isEditing()) {
-                this.fieldGroup.setItemDataSource(getContainer().getItem(
-                        editedItemId));
-            }
-        }
-
-        /**
-         * Returns the error handler of this editor row.
-         * 
-         * @return the error handler or null if there is no dedicated error
-         *         handler
-         * 
-         * @see #setErrorHandler(ErrorHandler)
-         * @see ClientConnector#getErrorHandler()
-         */
-        public ErrorHandler getErrorHandler() {
-            return errorHandler;
-        }
-
-        /**
-         * Sets the error handler for this editor row. The error handler is
-         * invoked for exceptions thrown while processing client requests;
-         * specifically when {@link #commit()} triggered by the client throws a
-         * CommitException. If the error handler is not set, one is looked up
-         * via Grid.
-         * 
-         * @param errorHandler
-         *            the error handler to use
-         * 
-         * @see ClientConnector#setErrorHandler(ErrorHandler)
-         * @see ErrorEvent#findErrorHandler(ClientConnector)
-         */
-        public void setErrorHandler(ErrorHandler errorHandler) {
-            this.errorHandler = errorHandler;
-        }
-
-        /**
-         * Builds a field using the given caption and binds it to the given
-         * property id using the field binder. Ensures the new field is of the
-         * given type.
-         * <p>
-         * <em>Note:</em> This is a pass-through call to the backing field
-         * group.
-         * 
-         * @param propertyId
-         *            The property id to bind to. Must be present in the field
-         *            finder
-         * @param fieldType
-         *            The type of field that we want to create
-         * @throws BindException
-         *             If the field could not be created
-         * @return The created and bound field. Can be any type of {@link Field}
-         *         .
-         */
-        public <T extends Field<?>> T buildAndBind(Object propertyId,
-                Class<T> fieldComponent) throws BindException {
-            checkDetached();
-            return fieldGroup.buildAndBind(null, propertyId, fieldComponent);
-        }
-
-        /**
-         * Binds the field with the given propertyId from the current item. If
-         * an item has not been set then the binding is postponed until the item
-         * is set using {@link #editItem(Object)}.
-         * <p>
-         * This method also adds validators when applicable.
-         * <p>
-         * <em>Note:</em> This is a pass-through call to the backing field
-         * group.
-         * 
-         * @param field
-         *            The field to bind
-         * @param propertyId
-         *            The propertyId to bind to the field
-         * @throws BindException
-         *             If the property id is already bound to another field by
-         *             this field binder
-         */
-        public void bind(Object propertyId, Field<?> field)
-                throws BindException {
-            checkDetached();
-            fieldGroup.bind(field, propertyId);
-        }
-
-        /**
-         * Sets the field factory for the {@link FieldGroup}. The field factory
-         * is only used when {@link FieldGroup} creates a new field.
-         * <p>
-         * <em>Note:</em> This is a pass-through call to the backing field
-         * group.
-         * 
-         * @param fieldFactory
-         *            The field factory to use
-         */
-        public void setFieldFactory(FieldGroupFieldFactory factory) {
-            checkDetached();
-            fieldGroup.setFieldFactory(factory);
-        }
-
-        /**
-         * Gets the field component that represents a property. If the property
-         * is not yet bound to a field, null is returned.
-         * <p>
-         * When {@link #editItem(Object) editItem} is called, fields are
-         * automatically created and bound to any unbound properties.
-         * 
-         * @param propertyId
-         *            the property id of the property for which to find the
-         *            field
-         * @return the bound field or null if not bound
-         * 
-         * @see #setPropertyUneditable(Object)
-         */
-        public Field<?> getField(Object propertyId) {
-            checkDetached();
-            return fieldGroup.getField(propertyId);
-        }
-
-        /**
-         * Sets a property editable or not.
-         * <p>
-         * In order for a user to edit a particular value with a Field, it needs
-         * to be both non-readonly and editable.
-         * <p>
-         * The difference between read-only and uneditable is that the read-only
-         * state is propagated back into the property, while the editable
-         * property is internal metadata for the editor row.
-         * 
-         * @param propertyId
-         *            the id of the property to set as editable state
-         * @param editable
-         *            whether or not {@code propertyId} chould be editable
-         */
-        public void setPropertyEditable(Object propertyId, boolean editable) {
-            checkDetached();
-            checkPropertyExists(propertyId);
-            if (getField(propertyId) != null) {
-                getField(propertyId).setReadOnly(!editable);
-            }
-            if (editable) {
-                uneditableProperties.remove(propertyId);
-            } else {
-                uneditableProperties.add(propertyId);
-            }
-        }
-
-        /**
-         * Checks whether a property is uneditable or not.
-         * <p>
-         * This only checks whether the property is configured as uneditable in
-         * this editor row. The property's or field's readonly status will
-         * ultimately decide whether the value can be edited or not.
-         * 
-         * @param propertyId
-         *            the id of the property to check for editable status
-         * @return <code>true</code> iff the property is editable according to
-         *         this editor row
-         */
-        public boolean isPropertyEditable(Object propertyId) {
-            checkDetached();
-            checkPropertyExists(propertyId);
-            return !uneditableProperties.contains(propertyId);
-        }
-
-        /**
-         * Commits all changes done to the bound fields.
-         * <p>
-         * <em>Note:</em> This is a pass-through call to the backing field
-         * group.
-         * 
-         * @throws CommitException
-         *             If the commit was aborted
-         */
-        public void commit() throws CommitException {
-            checkDetached();
-            fieldGroup.commit();
-        }
-
-        /**
-         * Discards all changes done to the bound fields.
-         * <p>
-         * <em>Note:</em> This is a pass-through call to the backing field
-         * group.
-         */
-        public void discard() {
-            checkDetached();
-            fieldGroup.discard();
-        }
-
-        /**
-         * Internal method to inform the editor row that it is no longer
-         * attached to a Grid.
-         */
-        void detach() {
-            checkDetached();
-            if (isEditing()) {
-                /*
-                 * Simply force cancel the editing; throwing here would just
-                 * make Grid.setContainerDataSource semantics more complicated.
-                 */
-                cancel();
-            }
-            for (Field<?> editor : getFields()) {
-                editor.setParent(null);
-            }
-            grid = null;
-        }
-
-        /**
-         * Sets an item as editable.
-         * 
-         * @param itemId
-         *            the id of the item to edit
-         * @throws IllegalStateException
-         *             if the editor row is not enabled
-         * @throws IllegalArgumentException
-         *             if the {@code itemId} is not in the backing container
-         * @see #setEnabled(boolean)
-         */
-        public void editItem(Object itemId) throws IllegalStateException,
-                IllegalArgumentException {
-            checkDetached();
-
-            internalEditItem(itemId);
-
-            grid.getEditorRowRpc().bind(
-                    grid.getContainerDataSource().indexOfId(itemId));
-        }
-
-        protected void internalEditItem(Object itemId) {
-            if (!isEnabled()) {
-                throw new IllegalStateException("This "
-                        + getClass().getSimpleName() + " is not enabled");
-            }
-
-            Item item = getContainer().getItem(itemId);
-            if (item == null) {
-                throw new IllegalArgumentException("Item with id " + itemId
-                        + " not found in current container");
-            }
-
-            fieldGroup.setItemDataSource(item);
-            editedItemId = itemId;
-
-            for (Object propertyId : item.getItemPropertyIds()) {
-
-                final Field<?> editor;
-                if (fieldGroup.getUnboundPropertyIds().contains(propertyId)) {
-                    editor = fieldGroup.buildAndBind(propertyId);
-                } else {
-                    editor = fieldGroup.getField(propertyId);
-                }
-
-                grid.getColumn(propertyId).getState().editorConnector = editor;
-
-                if (editor != null) {
-                    editor.setReadOnly(!isPropertyEditable(propertyId));
-
-                    if (editor.getParent() != grid) {
-                        assert editor.getParent() == null;
-                        editor.setParent(grid);
-                    }
-                }
-            }
-        }
-
-        /**
-         * Cancels the currently active edit if any.
-         */
-        public void cancel() {
-            checkDetached();
-            if (isEditing()) {
-                grid.getEditorRowRpc().cancel(
-                        grid.getContainerDataSource().indexOfId(editedItemId));
-                internalCancel();
-            }
-        }
-
-        protected void internalCancel() {
-            editedItemId = null;
-        }
-
-        /**
-         * Returns whether this editor row is currently editing an item.
-         * 
-         * @return true iff this editor row is editing an item
-         */
-        public boolean isEditing() {
-            return editedItemId != null;
-        }
-
-        /**
-         * Gets the id of the item that is currently being edited.
-         * 
-         * @return the id of the item that is currently being edited, or
-         *         <code>null</code> if no item is being edited at the moment
-         */
-        public Object getEditedItemId() {
-            checkDetached();
-            return editedItemId;
-        }
-
-        /**
-         * Gets a collection of all fields bound to this editor row.
-         * <p>
-         * All non-editable fields (either readonly or uneditable) are in
-         * read-only mode.
-         * <p>
-         * When {@link #editItem(Object) editItem} is called, fields are
-         * automatically created and bound to any unbound properties.
-         * 
-         * @return a collection of all the fields bound to this editor row
-         */
-        Collection<Field<?>> getFields() {
-            checkDetached();
-            return fieldGroup.getFields();
-        }
-
-        private Container getContainer() {
-            return grid.getContainerDataSource();
-        }
-
-        private void checkDetached() throws IllegalStateException {
-            if (grid == null) {
-                throw new IllegalStateException("The method cannot be "
-                        + "processed as this " + getClass().getSimpleName()
-                        + " has become detached.");
-            }
-        }
-
-        private void checkPropertyExists(Object propertyId) {
-            if (!getContainer().getContainerPropertyIds().contains(propertyId)) {
-                throw new IllegalArgumentException("Property with id "
-                        + propertyId + " is not in the current Container");
-            }
-        }
-    }
-
-    /**
      * An abstract base class for server-side Grid renderers.
      * {@link com.vaadin.client.ui.grid.Renderer Grid renderers}. This class
      * currently extends the AbstractExtension superclass, but this fact should
@@ -1957,7 +1542,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     private final Header header = new Header(this);
     private final Footer footer = new Footer(this);
 
-    private EditorRow editorRow;
+    private Object editedItemId = null;
+    private FieldGroup editorRowFieldGroup = new FieldGroup();
+    private HashSet<Object> uneditableProperties = new HashSet<Object>();
+    private ErrorHandler editorRowErrorHandler;
 
     private CellStyleGenerator cellStyleGenerator;
 
@@ -2155,7 +1743,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             public void bind(int rowIndex) {
                 try {
                     Object id = getContainerDataSource().getIdByIndex(rowIndex);
-                    getEditorRow().internalEditItem(id);
+                    doEditItem(id);
                     getEditorRowRpc().confirmBind();
                 } catch (Exception e) {
                     handleError(e);
@@ -2166,7 +1754,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             public void cancel(int rowIndex) {
                 try {
                     // For future proofing even though cannot currently fail
-                    getEditorRow().internalCancel();
+                    doCancelEditorRow();
                 } catch (Exception e) {
                     handleError(e);
                 }
@@ -2175,7 +1763,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             @Override
             public void commit(int rowIndex) {
                 try {
-                    getEditorRow().commit();
+                    commitEditorRow();
                     getEditorRowRpc().confirmCommit();
                 } catch (Exception e) {
                     handleError(e);
@@ -2185,14 +1773,14 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             @Override
             public void discard(int rowIndex) {
                 try {
-                    getEditorRow().discard();
+                    discardEditorRow();
                 } catch (Exception e) {
                     handleError(e);
                 }
             }
 
             private void handleError(Exception e) {
-                ErrorHandler handler = getEditorRow().getErrorHandler();
+                ErrorHandler handler = getEditorRowErrorHandler();
                 if (handler == null) {
                     handler = com.vaadin.server.ErrorEvent
                             .findErrorHandler(Grid.this);
@@ -2262,14 +1850,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         columnKeys.removeAll();
         datasource = container;
 
-        /*
-         * This is null when this method is called the first time in the
-         * constructor
-         */
-        if (editorRow != null) {
-            editorRow.detach();
-        }
-        editorRow = new EditorRow(this);
+        resetEditorRow();
 
         //
         // Adjust sort order
@@ -3540,29 +3121,20 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             }
         }
 
-        componentList.addAll(getEditorRow().getFields());
+        componentList.addAll(getEditorRowFields());
         return componentList.iterator();
     }
 
     @Override
     public boolean isRendered(Component childComponent) {
-        if (getEditorRow().getFields().contains(childComponent)) {
+        if (getEditorRowFields().contains(childComponent)) {
             // Only render editor row fields if the editor is open
-            return getEditorRow().isEditing();
+            return isEditorRowActive();
         } else {
             // TODO Header and footer components should also only be rendered if
             // the header/footer is visible
             return true;
         }
-    }
-
-    /**
-     * Gets the editor row configuration object.
-     * 
-     * @return the editor row configuration object
-     */
-    public EditorRow getEditorRow() {
-        return editorRow;
     }
 
     EditorRowClientRpc getEditorRowRpc() {
@@ -3669,4 +3241,354 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     private static Logger getLogger() {
         return Logger.getLogger(Grid.class.getName());
     }
+
+    /**
+     * Sets whether or not the editor row feature is enabled for this grid.
+     * 
+     * @param isEnabled
+     *            <code>true</code> to enable the feature, <code>false</code>
+     *            otherwise
+     * @throws IllegalStateException
+     *             if an item is currently being edited
+     * @see #getEditedItemId()
+     */
+    public void setEditorRowEnabled(boolean isEnabled)
+            throws IllegalStateException {
+        if (isEditorRowActive()) {
+            throw new IllegalStateException(
+                    "Cannot disable the editor row while an item ("
+                            + getEditedItemId() + ") is being edited.");
+        }
+        if (isEditorRowEnabled() != isEnabled) {
+            getState().editorRowEnabled = isEnabled;
+        }
+    }
+
+    /**
+     * Checks whether the editor row feature is enabled for this grid.
+     * 
+     * @return <code>true</code> iff the editor row feature is enabled for this
+     *         grid
+     * @see #getEditedItemId()
+     */
+    public boolean isEditorRowEnabled() {
+        return getState(false).editorRowEnabled;
+    }
+
+    /**
+     * Gets the id of the item that is currently being edited.
+     * 
+     * @return the id of the item that is currently being edited, or
+     *         <code>null</code> if no item is being edited at the moment
+     */
+    public Object getEditedItemId() {
+        return editedItemId;
+    }
+
+    /**
+     * Gets the field group that is backing the editor row of this grid.
+     * 
+     * @return the backing field group
+     */
+    public FieldGroup getEditorRowFieldGroup() {
+        return editorRowFieldGroup;
+    }
+
+    /**
+     * Sets the field group that is backing this editor row.
+     * 
+     * @param fieldGroup
+     *            the backing field group
+     */
+    public void setEditorRowFieldGroup(FieldGroup fieldGroup) {
+        editorRowFieldGroup = fieldGroup;
+        if (isEditorRowActive()) {
+            editorRowFieldGroup.setItemDataSource(getContainerDataSource()
+                    .getItem(editedItemId));
+        }
+    }
+
+    /**
+     * Returns whether an item is currently being edited in the editor row.
+     * 
+     * @return true iff the editor row is editing an item
+     */
+    public boolean isEditorRowActive() {
+        return editedItemId != null;
+    }
+
+    /**
+     * Sets a property editable or not.
+     * <p>
+     * In order for a user to edit a particular value with a Field, it needs to
+     * be both non-readonly and editable.
+     * <p>
+     * The difference between read-only and uneditable is that the read-only
+     * state is propagated back into the property, while the editable property
+     * is internal metadata for the editor row.
+     * 
+     * @param propertyId
+     *            the id of the property to set as editable state
+     * @param editable
+     *            whether or not {@code propertyId} chould be editable
+     */
+    public void setPropertyEditable(Object propertyId, boolean editable) {
+        checkPropertyExists(propertyId);
+        if (getEditorRowField(propertyId) != null) {
+            getEditorRowField(propertyId).setReadOnly(!editable);
+        }
+        if (editable) {
+            uneditableProperties.remove(propertyId);
+        } else {
+            uneditableProperties.add(propertyId);
+        }
+    }
+
+    /**
+     * Checks whether a property is editable through the editor row.
+     * <p>
+     * This only checks whether the property is configured as uneditable in the
+     * editor row. The property's or field's readonly status will ultimately
+     * decide whether the value can be edited or not.
+     * 
+     * @param propertyId
+     *            the id of the property to check for editable status
+     * @return <code>true</code> iff the property is editable according to this
+     *         editor row
+     */
+    public boolean isPropertyEditable(Object propertyId) {
+        checkPropertyExists(propertyId);
+        return !uneditableProperties.contains(propertyId);
+    }
+
+    private void checkPropertyExists(Object propertyId) {
+        if (!getContainerDataSource().getContainerPropertyIds().contains(
+                propertyId)) {
+            throw new IllegalArgumentException("Property with id " + propertyId
+                    + " is not in the current Container");
+        }
+    }
+
+    /**
+     * Gets the field component that represents a property in the editor row. If
+     * the property is not yet bound to a field, null is returned.
+     * <p>
+     * When {@link #editItem(Object) editItem} is called, fields are
+     * automatically created and bound for any unbound properties.
+     * 
+     * @param propertyId
+     *            the property id of the property for which to find the field
+     * @return the bound field or null if not bound
+     */
+    public Field<?> getEditorRowField(Object propertyId) {
+        return editorRowFieldGroup.getField(propertyId);
+    }
+
+    /**
+     * Opens the editor row for the provided item.
+     * 
+     * @param itemId
+     *            the id of the item to edit
+     * @throws IllegalStateException
+     *             if the editor row is not enabled
+     * @throws IllegalArgumentException
+     *             if the {@code itemId} is not in the backing container
+     * @see #setEditorRowEnabled(boolean)
+     */
+    public void editItem(Object itemId) throws IllegalStateException,
+            IllegalArgumentException {
+        doEditItem(itemId);
+
+        getEditorRowRpc().bind(getContainerDataSource().indexOfId(itemId));
+    }
+
+    protected void doEditItem(Object itemId) {
+        if (!isEditorRowEnabled()) {
+            throw new IllegalStateException("Editor row is not enabled");
+        }
+
+        Item item = getContainerDataSource().getItem(itemId);
+        if (item == null) {
+            throw new IllegalArgumentException("Item with id " + itemId
+                    + " not found in current container");
+        }
+
+        editorRowFieldGroup.setItemDataSource(item);
+        editedItemId = itemId;
+
+        for (Object propertyId : item.getItemPropertyIds()) {
+
+            final Field<?> editor;
+            if (editorRowFieldGroup.getUnboundPropertyIds()
+                    .contains(propertyId)) {
+                editor = editorRowFieldGroup.buildAndBind(propertyId);
+            } else {
+                editor = editorRowFieldGroup.getField(propertyId);
+            }
+
+            getColumn(propertyId).getState().editorConnector = editor;
+
+            if (editor != null) {
+                editor.setReadOnly(!isPropertyEditable(propertyId));
+
+                if (editor.getParent() != Grid.this) {
+                    assert editor.getParent() == null;
+                    editor.setParent(Grid.this);
+                }
+            }
+        }
+    }
+
+    /**
+     * Binds the field with the given propertyId from the current item. If an
+     * item has not been set then the binding is postponed until the item is set
+     * using {@link #editItem(Object)}.
+     * <p>
+     * This method also adds validators when applicable.
+     * <p>
+     * <em>Note:</em> This is a pass-through call to the backing field group.
+     * 
+     * @param field
+     *            The field to bind
+     * @param propertyId
+     *            The propertyId to bind to the field
+     * @throws BindException
+     *             If the property id is already bound to another field by this
+     *             field binder
+     */
+    public void bindEditorRowField(Object propertyId, Field<?> field)
+            throws BindException {
+        editorRowFieldGroup.bind(field, propertyId);
+    }
+
+    /**
+     * Commits all changes done to the bound fields.
+     * <p>
+     * <em>Note:</em> This is a pass-through call to the backing field group.
+     * 
+     * @throws CommitException
+     *             If the commit was aborted
+     */
+    public void commitEditorRow() throws CommitException {
+        editorRowFieldGroup.commit();
+    }
+
+    /**
+     * Cancels the currently active edit if any.
+     */
+    public void cancelEditorRow() {
+        if (isEditorRowActive()) {
+            getEditorRowRpc().cancel(
+                    getContainerDataSource().indexOfId(editedItemId));
+            doCancelEditorRow();
+        }
+    }
+
+    protected void doCancelEditorRow() {
+        editedItemId = null;
+    }
+
+    /**
+     * Discards all changes done to the bound fields.
+     * <p>
+     * <em>Note:</em> This is a pass-through call to the backing field group.
+     */
+    public void discardEditorRow() {
+        editorRowFieldGroup.discard();
+    }
+
+    void resetEditorRow() {
+        if (isEditorRowActive()) {
+            /*
+             * Simply force cancel the editing; throwing here would just make
+             * Grid.setContainerDataSource semantics more complicated.
+             */
+            cancelEditorRow();
+        }
+        for (Field<?> editor : getEditorRowFields()) {
+            editor.setParent(null);
+        }
+
+        editedItemId = null;
+        editorRowFieldGroup = new FieldGroup();
+        uneditableProperties = new HashSet<Object>();
+    }
+
+    /**
+     * Gets a collection of all fields bound to the editor row of this grid.
+     * <p>
+     * All non-editable fields (either readonly or uneditable) are in read-only
+     * mode.
+     * <p>
+     * When {@link #editItem(Object) editItem} is called, fields are
+     * automatically created and bound to any unbound properties.
+     * 
+     * @return a collection of all the fields bound to this editor row
+     */
+    Collection<Field<?>> getEditorRowFields() {
+        return editorRowFieldGroup.getFields();
+    }
+
+    /**
+     * Sets the field factory for the {@link FieldGroup}. The field factory is
+     * only used when {@link FieldGroup} creates a new field.
+     * <p>
+     * <em>Note:</em> This is a pass-through call to the backing field group.
+     * 
+     * @param fieldFactory
+     *            The field factory to use
+     */
+    public void setEditorRowFieldFactory(FieldGroupFieldFactory fieldFactory) {
+        editorRowFieldGroup.setFieldFactory(fieldFactory);
+    }
+
+    /**
+     * Returns the error handler of this editor row.
+     * 
+     * @return the error handler or null if there is no dedicated error handler
+     * 
+     * @see #setEditorRowErrorHandler(ErrorHandler)
+     * @see ClientConnector#getErrorHandler()
+     */
+    public ErrorHandler getEditorRowErrorHandler() {
+        return editorRowErrorHandler;
+    }
+
+    /**
+     * Sets the error handler for this editor row. The error handler is invoked
+     * for exceptions thrown while processing client requests; specifically when
+     * {@link #commitEditorRow()} triggered by the client throws a
+     * CommitException. If the error handler is not set, one is looked up via
+     * Grid.
+     * 
+     * @param errorHandler
+     *            the error handler to use
+     * 
+     * @see ClientConnector#setErrorHandler(ErrorHandler)
+     * @see ErrorEvent#findErrorHandler(ClientConnector)
+     */
+    public void setEditorRowErrorHandler(ErrorHandler errorHandler) {
+        editorRowErrorHandler = errorHandler;
+    }
+
+    /**
+     * Builds a field using the given caption and binds it to the given property
+     * id using the field binder. Ensures the new field is of the given type.
+     * <p>
+     * <em>Note:</em> This is a pass-through call to the backing field group.
+     * 
+     * @param propertyId
+     *            The property id to bind to. Must be present in the field
+     *            finder
+     * @param fieldType
+     *            The type of field that we want to create
+     * @throws BindException
+     *             If the field could not be created
+     * @return The created and bound field. Can be any type of {@link Field} .
+     */
+    public <T extends Field<?>> T buildAndBind(Object propertyId,
+            Class<T> fieldType) throws BindException {
+        return editorRowFieldGroup.buildAndBind(null, propertyId, fieldType);
+    }
+
 }
