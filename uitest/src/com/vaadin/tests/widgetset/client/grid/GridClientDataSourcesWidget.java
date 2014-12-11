@@ -80,7 +80,7 @@ public class GridClientDataSourcesWidget extends
                 public List<String[]> rows;
             }
 
-            private int size = 100;
+            private int size = 200;
             private int modCount = 0;
 
             public Result query(int firstRowIndex, int numberOfRows) {

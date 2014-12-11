@@ -15,31 +15,23 @@
  */
 package com.vaadin.tests.components.grid;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")
 public class GridSingleColumnTest extends MultiBrowserTest {
 
-    /*
-     * TODO unignore once column header captions are reimplemented
-     */
     @Test
-    @Ignore
     public void headerIsVisible() {
         openTestURL();
 
-        WebElement header = getDriver().findElement(
-                By.className("v-grid-header"));
-        WebElement cell = header.findElement(By.className("v-grid-cell"));
-        assertThat(cell.getText(), is("Header"));
+        GridCellElement cell = $(GridElement.class).first().getHeaderCell(0, 0);
+        Assert.assertTrue("No header available", cell.getText()
+                .equalsIgnoreCase("header"));
     }
 }

@@ -23,13 +23,14 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+@TestCategory("grid")
 public class GridClientDataSourcesTest extends MultiBrowserTest {
 
     @Before
@@ -43,8 +44,8 @@ public class GridClientDataSourcesTest extends MultiBrowserTest {
         assertCellPresent("cell 0 #0");
 
         scrollToBottom();
-        assertCellPresent("cell 99 #0");
-        assertCellNotPresent("cell 100 #0");
+        assertCellPresent("cell 199 #0");
+        assertCellNotPresent("cell 200 #0");
     }
 
     @Test
@@ -56,8 +57,8 @@ public class GridClientDataSourcesTest extends MultiBrowserTest {
         /* second scroll needed because of scrollsize change after scrolling */
         scrollToBottom();
 
-        assertCellPresent("cell 109 #1");
-        assertCellNotPresent("cell 110 #1");
+        assertCellPresent("cell 209 #1");
+        assertCellNotPresent("cell 210 #1");
     }
 
     @Test
@@ -86,7 +87,7 @@ public class GridClientDataSourcesTest extends MultiBrowserTest {
         assertCellPresent("cell 0 #1");
         assertCellNotPresent("cell 0 #0");
         scrollToBottom();
-        assertCellPresent("cell 109 #1");
+        assertCellPresent("cell 209 #1");
     }
 
     @Test
@@ -95,10 +96,10 @@ public class GridClientDataSourcesTest extends MultiBrowserTest {
         scrollToBottom();
 
         selectMenuPath("DataSources", "RESTish", "Push data change -10");
-        assertCellPresent("cell 89 #1");
-        assertCellNotPresent("cell 89 #0");
-        assertCellNotPresent("cell 99 #1");
-        assertCellNotPresent("cell 99 #0");
+        assertCellPresent("cell 189 #1");
+        assertCellNotPresent("cell 189 #0");
+        assertCellNotPresent("cell 199 #1");
+        assertCellNotPresent("cell 199 #0");
     }
 
     private void assertCellPresent(String content) {
@@ -122,9 +123,9 @@ public class GridClientDataSourcesTest extends MultiBrowserTest {
     }
 
     private WebElement findByXPath(String string) {
-        try {
+        if (isElementPresent(By.xpath(string))) {
             return findElement(By.xpath(string));
-        } catch (NoSuchElementException e) {
+        } else {
             return null;
         }
     }

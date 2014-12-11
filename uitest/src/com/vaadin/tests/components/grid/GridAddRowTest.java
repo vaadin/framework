@@ -20,8 +20,10 @@ import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+@TestCategory("grid")
 public class GridAddRowTest extends MultiBrowserTest {
     @Test
     public void testAddRow() {
