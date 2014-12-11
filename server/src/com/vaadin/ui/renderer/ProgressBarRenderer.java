@@ -13,22 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.connectors;
+package com.vaadin.ui.renderer;
 
-import com.vaadin.shared.ui.Connect;
+import com.vaadin.ui.Grid.AbstractRenderer;
+
+import elemental.json.JsonValue;
 
 /**
- * A connector for {@link com.vaadin.ui.components.grid.renderers.DateRenderer
- * DateRenderer}.
- * <p>
- * The server-side Renderer operates on dates, but the data is serialized as a
- * string, and displayed as-is on the client side. This is to be able to support
- * the server's locale.
+ * A renderer that represents a double values as a graphical progress bar.
  * 
  * @since
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.renderer.DateRenderer.class)
-public class DateRendererConnector extends TextRendererConnector {
-    // No implementation needed
+public class ProgressBarRenderer extends AbstractRenderer<Double> {
+
+    /**
+     * Creates a new text renderer
+     */
+    public ProgressBarRenderer() {
+        super(Double.class);
+    }
+
+    @Override
+    public JsonValue encode(Double value) {
+        if (value != null) {
+            value = Math.max(Math.min(value, 1), 0);
+        }
+        return super.encode(value);
+    }
 }

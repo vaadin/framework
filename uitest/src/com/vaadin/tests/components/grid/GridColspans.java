@@ -25,7 +25,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderRow;
-import com.vaadin.ui.components.grid.renderers.NumberRenderer;
+import com.vaadin.ui.renderer.NumberRenderer;
 
 public class GridColspans extends AbstractTestUI {
 

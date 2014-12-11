@@ -27,7 +27,7 @@ import com.vaadin.shared.ui.Connect;
  * @since
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.components.grid.renderers.ButtonRenderer.class)
+@Connect(com.vaadin.ui.renderer.ButtonRenderer.class)
 public class ButtonRendererConnector extends ClickableRendererConnector<String> {
 
     @Override

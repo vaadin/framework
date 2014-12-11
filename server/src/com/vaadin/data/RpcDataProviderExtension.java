@@ -52,7 +52,7 @@ import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.components.grid.Renderer;
+import com.vaadin.ui.renderer.Renderer;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
@@ -439,8 +439,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * @param removedPropertyIds
          *            the property ids that have been removed from the container
          */
-        public void propertiesRemoved(
-                @SuppressWarnings("unused") Collection<Object> removedPropertyIds) {
+        public void propertiesRemoved(@SuppressWarnings("unused")
+        Collection<Object> removedPropertyIds) {
             /*
              * no-op, for now.
              * 

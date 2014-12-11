@@ -25,11 +25,11 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.components.grid.renderers.ButtonRenderer;
-import com.vaadin.ui.components.grid.renderers.ClickableRenderer.RendererClickEvent;
-import com.vaadin.ui.components.grid.renderers.ClickableRenderer.RendererClickListener;
-import com.vaadin.ui.components.grid.renderers.ImageRenderer;
-import com.vaadin.ui.components.grid.renderers.ProgressBarRenderer;
+import com.vaadin.ui.renderer.ButtonRenderer;
+import com.vaadin.ui.renderer.ClickableRenderer.RendererClickEvent;
+import com.vaadin.ui.renderer.ClickableRenderer.RendererClickListener;
+import com.vaadin.ui.renderer.ImageRenderer;
+import com.vaadin.ui.renderer.ProgressBarRenderer;
 
 public class WidgetRenderers extends AbstractTestUI {
 

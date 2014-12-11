@@ -46,13 +46,12 @@ import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.SortOrderChangeEvent;
 import com.vaadin.ui.components.grid.SortOrderChangeListener;
-import com.vaadin.ui.components.grid.renderers.DateRenderer;
-import com.vaadin.ui.components.grid.renderers.HtmlRenderer;
-import com.vaadin.ui.components.grid.renderers.NumberRenderer;
 import com.vaadin.ui.components.grid.selection.MultiSelectionModel;
-import com.vaadin.ui.components.grid.selection.SelectionModel;
 import com.vaadin.ui.components.grid.sort.Sort;
 import com.vaadin.ui.components.grid.sort.SortOrder;
+import com.vaadin.ui.renderer.DateRenderer;
+import com.vaadin.ui.renderer.HtmlRenderer;
+import com.vaadin.ui.renderer.NumberRenderer;
 
 /**
  * Tests the basic features like columns, footers and headers
@@ -267,8 +266,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             grid.setSelectionMode(SelectionMode.MULTI);
                         }
 
-                        ((MultiSelectionModel) grid.getSelectionModel()).setSelectionLimit(limit
-                                .intValue());
+                        ((MultiSelectionModel) grid.getSelectionModel())
+                                .setSelectionLimit(limit.intValue());
                     }
                 });
 

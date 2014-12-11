@@ -31,7 +31,7 @@ import com.vaadin.shared.ui.Connect;
  * @since
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.components.grid.renderers.ImageRenderer.class)
+@Connect(com.vaadin.ui.renderer.ImageRenderer.class)
 public class ImageRendererConnector extends ClickableRendererConnector<String> {
 
     @Override

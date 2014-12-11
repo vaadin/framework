@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.server.component.grid;
+package com.vaadin.tests.server.renderer;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,7 +30,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.components.grid.renderers.ImageRenderer;
+import com.vaadin.ui.renderer.ImageRenderer;
 
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;

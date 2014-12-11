@@ -25,7 +25,7 @@ import com.vaadin.shared.ui.Connect;
  * @since
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.components.grid.renderers.HtmlRenderer.class)
+@Connect(com.vaadin.ui.renderer.HtmlRenderer.class)
 public class UnsafeHtmlRendererConnector extends
         AbstractRendererConnector<String> {
 

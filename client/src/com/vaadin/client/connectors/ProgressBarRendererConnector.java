@@ -24,7 +24,7 @@ import com.vaadin.shared.ui.Connect;
  * @since
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.components.grid.renderers.ProgressBarRenderer.class)
+@Connect(com.vaadin.ui.renderer.ProgressBarRenderer.class)
 public class ProgressBarRendererConnector extends
         AbstractRendererConnector<Double> {
 
