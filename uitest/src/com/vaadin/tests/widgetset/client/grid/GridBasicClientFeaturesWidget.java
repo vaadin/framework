@@ -240,7 +240,7 @@ public class GridBasicClientFeaturesWidget extends
         grid.setDataSource(ds);
         grid.addSelectAllHandler(ds.getSelectAllHandler());
         grid.setSelectionMode(SelectionMode.NONE);
-        grid.getEditorRow().setHandler(new TestEditorRowHandler());
+        grid.setEditorRowHandler(new TestEditorRowHandler());
 
         sorter = new ListSorter<List<Data>>(grid);
 
@@ -882,43 +882,42 @@ public class GridBasicClientFeaturesWidget extends
         addMenuCommand("Enabled", new ScheduledCommand() {
             @Override
             public void execute() {
-                grid.getEditorRow()
-                        .setEnabled(!grid.getEditorRow().isEnabled());
+                grid.setEditorRowEnabled(!grid.isEditorRowEnabled());
             }
         }, "Component", "Editor row");
 
         addMenuCommand("Edit row 5", new ScheduledCommand() {
             @Override
             public void execute() {
-                grid.getEditorRow().editRow(5);
+                grid.editRow(5);
             }
         }, "Component", "Editor row");
 
         addMenuCommand("Edit row 100", new ScheduledCommand() {
             @Override
             public void execute() {
-                grid.getEditorRow().editRow(100);
+                grid.editRow(100);
             }
         }, "Component", "Editor row");
 
         addMenuCommand("Commit", new ScheduledCommand() {
             @Override
             public void execute() {
-                grid.getEditorRow().commit();
+                grid.commitEditorRow();
             }
         }, "Component", "Editor row");
 
         addMenuCommand("Discard", new ScheduledCommand() {
             @Override
             public void execute() {
-                grid.getEditorRow().discard();
+                grid.discardEditorRow();
             }
         }, "Component", "Editor row");
 
         addMenuCommand("Cancel edit", new ScheduledCommand() {
             @Override
             public void execute() {
-                grid.getEditorRow().cancel();
+                grid.cancelEditorRow();
             }
         }, "Component", "Editor row");
 

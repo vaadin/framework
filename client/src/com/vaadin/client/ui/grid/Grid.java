@@ -944,17 +944,16 @@ public class Grid<T> extends ResizeComposite implements
      * An editor UI for Grid rows. A single Grid row at a time can be opened for
      * editing.
      */
-    public static class EditorRow<T> {
+    protected static class EditorRow<T> {
 
         public static final int KEYCODE_SHOW = KeyCodes.KEY_ENTER;
         public static final int KEYCODE_HIDE = KeyCodes.KEY_ESCAPE;
 
-        public enum State {
+        protected enum State {
             INACTIVE, ACTIVATING, ACTIVE, COMMITTING
         }
 
         private Grid<T> grid;
-
         private EditorRowHandler<T> handler;
 
         private DivElement editorOverlay = DivElement.as(DOM.createDiv());
@@ -1105,7 +1104,7 @@ public class Grid<T> extends ResizeComposite implements
                 throw new IllegalStateException(
                         "Cannot set EditorRowHandler: EditorRow is currently in edit mode");
             }
-            this.handler = rowHandler;
+            handler = rowHandler;
         }
 
         public boolean isEnabled() {
@@ -3584,7 +3583,7 @@ public class Grid<T> extends ResizeComposite implements
         return footer.isVisible();
     }
 
-    public EditorRow<T> getEditorRow() {
+    protected EditorRow<T> getEditorRow() {
         return editorRow;
     }
 
@@ -4996,5 +4995,118 @@ public class Grid<T> extends ResizeComposite implements
             element.setPropertyString(CUSTOM_STYLE_PROPERTY_NAME, styleName);
         }
 
+    }
+
+    /**
+     * Opens the editor over the row with the given index.
+     * 
+     * @param rowIndex
+     *            the index of the row to be edited
+     * 
+     * @throws IllegalStateException
+     *             if the editor row is not enabled
+     * @throws IllegalStateException
+     *             if the editor row is already in edit mode
+     */
+    public void editRow(int rowIndex) {
+        editorRow.editRow(rowIndex);
+    }
+
+    /**
+     * Commits any unsaved changes to the data source.
+     * 
+     * @throws IllegalStateException
+     *             if the editor row is not enabled
+     * @throws IllegalStateException
+     *             if the editor row is not in edit mode
+     */
+    public void commitEditorRow() {
+        editorRow.commit();
+    }
+
+    /**
+     * Reloads values from the data source for the row being edited, discarding
+     * any unsaved changes.
+     * 
+     * @throws IllegalStateException
+     *             if the editor row is not enabled
+     * @throws IllegalStateException
+     *             if the editor row is not in edit mode
+     */
+    public void discardEditorRow() {
+        editorRow.discard();
+    }
+
+    /**
+     * Cancels the currently active edit and hides the editor. Any changes that
+     * are not {@link #commit() committed} are lost.
+     * 
+     * @throws IllegalStateException
+     *             if the editor row is not enabled
+     * @throws IllegalStateException
+     *             if the editor row is not in edit mode
+     */
+    public void cancelEditorRow() {
+        editorRow.cancel();
+    }
+
+    /**
+     * Returns the handler responsible for binding data and editor widgets to
+     * the editor row.
+     * 
+     * @return the editor row handler or null if not set
+     */
+    public EditorRowHandler<T> getEditorRowHandler() {
+        return editorRow.getHandler();
+    }
+
+    /**
+     * Sets the handler responsible for binding data and editor widgets to the
+     * editor row.
+     * 
+     * @param rowHandler
+     *            the new editor row handler
+     * 
+     * @throws IllegalStateException
+     *             if the editor row is currently in edit mode
+     */
+    public void setEditorRowHandler(EditorRowHandler<T> handler) {
+        editorRow.setHandler(handler);
+    }
+
+    /**
+     * Returns the enabled state of the editor row.
+     * 
+     * @return true if editing is enabled, false otherwise
+     */
+    public boolean isEditorRowEnabled() {
+        return editorRow.isEnabled();
+    }
+
+    /**
+     * Sets the enabled state of the editor row.
+     * 
+     * @param enabled
+     *            true to enable editing, false to disable
+     * 
+     * @throws IllegalStateException
+     *             if in edit mode and trying to disable
+     * @throws IllegalStateException
+     *             if the editor row handler is not set
+     */
+    public void setEditorRowEnabled(boolean enabled) {
+        editorRow.setEnabled(enabled);
+    }
+
+    /**
+     * Returns the editor widget associated with the given column. If the editor
+     * row is not active, returns null.
+     * 
+     * @param column
+     *            the column
+     * @return the widget if the editor row is open, null otherwise
+     */
+    public Widget getEditorRowWidget(GridColumn<?, T> column) {
+        return editorRow.getWidget(column);
     }
 }

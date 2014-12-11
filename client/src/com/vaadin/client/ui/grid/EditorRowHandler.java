@@ -103,7 +103,7 @@ public interface EditorRowHandler<T> {
          * @return the widget related to the column
          */
         public Widget getWidget(GridColumn<?, T> column) {
-            Widget w = grid.getEditorRow().getWidget(column);
+            Widget w = grid.getEditorRowWidget(column);
             assert w != null;
             return w;
         }

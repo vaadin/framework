@@ -192,20 +192,19 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 @Override
                 public void bind(int rowIndex) {
                     serverInitiated = true;
-                    GridConnector.this.getWidget().getEditorRow()
-                            .editRow(rowIndex);
+                    GridConnector.this.getWidget().editRow(rowIndex);
                 }
 
                 @Override
                 public void discard(int rowIndex) {
                     serverInitiated = true;
-                    GridConnector.this.getWidget().getEditorRow().discard();
+                    GridConnector.this.getWidget().discardEditorRow();
                 }
 
                 @Override
                 public void cancel(int rowIndex) {
                     serverInitiated = true;
-                    GridConnector.this.getWidget().getEditorRow().cancel();
+                    GridConnector.this.getWidget().cancelEditorRow();
                 }
 
                 @Override
@@ -413,7 +412,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         });
 
-        getWidget().getEditorRow().setHandler(new CustomEditorRowHandler());
+        getWidget().setEditorRowHandler(new CustomEditorRowHandler());
         getLayoutManager().registerDependency(this, getWidget().getElement());
         layout();
     }
@@ -467,8 +466,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 }
 
                 if (stateChangeEvent.hasPropertyChanged("editorRowEnabled")) {
-                    getWidget().getEditorRow().setEnabled(
-                            getState().editorRowEnabled);
+                    getWidget()
+                            .setEditorRowEnabled(getState().editorRowEnabled);
                 }
 
                 if (stateChangeEvent.hasPropertyChanged("frozenColumnCount")) {
