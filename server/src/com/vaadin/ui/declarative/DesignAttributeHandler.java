@@ -295,7 +295,7 @@ public class DesignAttributeHandler implements Serializable {
                     + inputType.getName() + " not supported");
         }
         if (!SharedUtil.equals(value, defaultValue)) {
-            String attributeValue = toAttributeValue(value.getClass(), value);
+            String attributeValue = toAttributeValue(inputType, value);
             attributes.put(attribute, attributeValue);
         }
     }
@@ -464,7 +464,7 @@ public class DesignAttributeHandler implements Serializable {
      */
     private static Resource parseResource(String value) {
         if (value.startsWith("http://")) {
-            return new ExternalResource("value");
+            return new ExternalResource(value);
         } else if (value.startsWith("theme://")) {
             return new ThemeResource(value.substring(8));
         } else if (value.startsWith("font://")) {

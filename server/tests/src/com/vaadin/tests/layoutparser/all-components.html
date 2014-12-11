@@ -47,6 +47,37 @@
       <!--  text area -->
       <v-text-area rows=5 wordwrap=false >test value</v-text-area>
       
+      <!-- tabsheet -->
+	  <v-tab-sheet tabindex=5>
+		  <tab visible=false closable caption="My first tab">
+			<v-vertical-layout>
+				<v-text-field/>
+		    </v-vertical-layout>
+		  </tab>
+		  <tab enabled=false caption="Disabled second tab">
+			<v-button>In disabled tab - can’t be shown by default</v-button>
+	      </tab>
+		  <tab icon="theme://../runo/icons/16/ok.png" icon-alt="Ok png from Runo - very helpful" description="Click to show a text field" style-name="red" id="uniqueDomId">
+			<v-text-field input-prompt="Icon only in tab" />
+	      </tab>
+	   </v-tab-sheet>
+
+      <!-- accordion -->
+	  <v-accordion tabindex=5>
+		  <tab visible=false closable caption="My first tab">
+			<v-vertical-layout>
+				<v-text-field/>
+		    </v-vertical-layout>
+		  </tab>
+		  <tab enabled=false caption="Disabled second tab">
+			<v-button>In disabled tab - can’t be shown by default</v-button>
+	      </tab>
+		  <tab icon="theme://../runo/icons/16/ok.png" icon-alt="Ok png from Runo - very helpful" description="Click to show a text field" style-name="red" id="uniqueDomId">
+			<v-text-field input-prompt="Icon only in tab" />
+	      </tab>
+	   </v-accordion>
+
+           
   </v-vertical-layout>
  </body>
 </html>

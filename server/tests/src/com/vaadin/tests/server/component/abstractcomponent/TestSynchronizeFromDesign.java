@@ -81,6 +81,8 @@ public class TestSynchronizeFromDesign extends TestCase {
         component.synchronizeFromDesign(design, ctx);
         assertTrue("Incorrect resource type returned", component.getIcon()
                 .getClass().isAssignableFrom(ExternalResource.class));
+        assertEquals("http://example.com/example.gif",
+                ((ExternalResource) component.getIcon()).getURL());
     }
 
     public void testSynchronizeThemeIcon() {
@@ -115,7 +117,8 @@ public class TestSynchronizeFromDesign extends TestCase {
         component.synchronizeFromDesign(design, ctx);
         assertEquals(false, component.isImmediate());
         assertEquals(Boolean.FALSE, getExplicitImmediate(component));
-        // Synchronize with a design having immediate = "" - should correspond to
+        // Synchronize with a design having immediate = "" - should correspond
+        // to
         // true.
         design = createDesign("immediate", "");
         component.synchronizeFromDesign(design, ctx);
