@@ -1762,19 +1762,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             }
 
             @Override
-            public void commit(int rowIndex) {
+            public void save(int rowIndex) {
                 try {
-                    commitEditorRow();
-                    getEditorRowRpc().confirmCommit();
-                } catch (Exception e) {
-                    handleError(e);
-                }
-            }
-
-            @Override
-            public void discard(int rowIndex) {
-                try {
-                    discardEditorRow();
+                    saveEditorRow();
+                    getEditorRowRpc().confirmSave();
                 } catch (Exception e) {
                     handleError(e);
                 }
@@ -3467,14 +3458,16 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     }
 
     /**
-     * Commits all changes done to the bound fields.
+     * Saves all changes done to the bound fields.
      * <p>
      * <em>Note:</em> This is a pass-through call to the backing field group.
      * 
      * @throws CommitException
      *             If the commit was aborted
+     * 
+     * @see FieldGroup#commit()
      */
-    public void commitEditorRow() throws CommitException {
+    public void saveEditorRow() throws CommitException {
         editorRowFieldGroup.commit();
     }
 
@@ -3491,15 +3484,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
     protected void doCancelEditorRow() {
         editedItemId = null;
-    }
-
-    /**
-     * Discards all changes done to the bound fields.
-     * <p>
-     * <em>Note:</em> This is a pass-through call to the backing field group.
-     */
-    public void discardEditorRow() {
-        editorRowFieldGroup.discard();
     }
 
     void resetEditorRow() {
@@ -3562,7 +3546,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     /**
      * Sets the error handler for this editor row. The error handler is invoked
      * for exceptions thrown while processing client requests; specifically when
-     * {@link #commitEditorRow()} triggered by the client throws a
+     * {@link #saveEditorRow()} triggered by the client throws a
      * CommitException. If the error handler is not set, one is looked up via
      * Grid.
      * 

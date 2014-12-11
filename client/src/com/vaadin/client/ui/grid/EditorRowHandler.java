@@ -16,6 +16,7 @@
 package com.vaadin.client.ui.grid;
 
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ui.grid.Grid.EditorRow;
 
 /**
  * An interface for binding widgets and data to the editor row. Used by the
@@ -149,26 +150,13 @@ public interface EditorRowHandler<T> {
     public void cancel(EditorRowRequest<T> request);
 
     /**
-     * Commits changes in the currently active edit to the data source. Called
-     * by the editor row when changes are saved.
+     * Saves changes in the currently active edit to the data source. Called by
+     * the editor row when changes are saved.
      * 
      * @param request
-     *            the commit request
+     *            the save request
      */
-    public void commit(EditorRowRequest<T> request);
-
-    /**
-     * Discards any unsaved changes and reloads editor content from the data
-     * source.
-     * <p>
-     * Implementation note: This method may simply call
-     * {@link #bind(EditorRowRequest) bind} if no other processing needs to be
-     * done.
-     * 
-     * @param request
-     *            the discard request
-     */
-    public void discard(EditorRowRequest<T> request);
+    public void save(EditorRowRequest<T> request);
 
     /**
      * Returns a widget instance that is used to edit the values in the given

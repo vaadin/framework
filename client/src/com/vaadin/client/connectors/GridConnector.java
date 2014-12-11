@@ -196,12 +196,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 }
 
                 @Override
-                public void discard(int rowIndex) {
-                    serverInitiated = true;
-                    GridConnector.this.getWidget().discardEditorRow();
-                }
-
-                @Override
                 public void cancel(int rowIndex) {
                     serverInitiated = true;
                     GridConnector.this.getWidget().cancelEditorRow();
@@ -213,7 +207,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 }
 
                 @Override
-                public void confirmCommit() {
+                public void confirmSave() {
                     endRequest();
                 }
             });
@@ -228,18 +222,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         @Override
-        public void commit(EditorRowRequest<JSONObject> request) {
+        public void save(EditorRowRequest<JSONObject> request) {
             if (!handleServerInitiated(request)) {
                 startRequest(request);
-                rpc.commit(request.getRowIndex());
-            }
-        }
-
-        @Override
-        public void discard(EditorRowRequest<JSONObject> request) {
-            if (!handleServerInitiated(request)) {
-                startRequest(request);
-                rpc.discard(request.getRowIndex());
+                rpc.save(request.getRowIndex());
             }
         }
 

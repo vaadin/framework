@@ -34,14 +34,6 @@ public interface EditorRowClientRpc extends ClientRpc {
     void bind(int rowIndex);
 
     /**
-     * Tells the client to discard unsaved changes in the editor row.
-     * 
-     * @param rowIndex
-     *            the index of the edited row
-     */
-    void discard(int rowIndex);
-
-    /**
      * Tells the client to cancel editing and hide the editor row.
      * 
      * @param rowIndex
@@ -56,8 +48,8 @@ public interface EditorRowClientRpc extends ClientRpc {
     void confirmBind();
 
     /**
-     * Confirms a pending {@link EditorRowServerRpc#commit(int) commit request}
-     * sent by the client.
+     * Confirms a pending {@link EditorRowServerRpc#save(int) save request} sent
+     * by the client.
      */
-    void confirmCommit();
+    void confirmSave();
 }

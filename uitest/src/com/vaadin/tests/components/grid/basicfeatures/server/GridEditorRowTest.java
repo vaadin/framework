@@ -118,15 +118,15 @@ public class GridEditorRowTest extends GridBasicFeaturesTest {
     }
 
     @Test
-    public void testCommit() {
+    public void testSave() {
         selectMenuPath("Component", "Editor row", "Edit item 100");
 
-        List<WebElement> widgets = getEditorRow().findElements(
-                By.className("v-textfield"));
+        WebElement textField = getEditorRow().findElements(
+                By.className("v-textfield")).get(0);
 
-        widgets.get(0).click();
+        textField.click();
 
-        widgets.get(0).sendKeys(" changed");
+        textField.sendKeys(" changed");
 
         WebElement saveButton = getEditorRow().findElement(
                 By.className("v-editor-row-save"));
@@ -138,16 +138,19 @@ public class GridEditorRowTest extends GridBasicFeaturesTest {
     }
 
     @Test
-    public void testDiscard() {
+    public void testProgrammaticSave() {
         selectMenuPath("Component", "Editor row", "Edit item 100");
 
-        List<WebElement> widgets = getEditorRow().findElements(
-                By.className("v-textfield"));
+        WebElement textField = getEditorRow().findElements(
+                By.className("v-textfield")).get(0);
 
-        widgets.get(0).sendKeys(" changed");
+        textField.click();
 
-        selectMenuPath("Component", "Editor row", "Discard");
+        textField.sendKeys(" changed");
 
-        assertEquals("(100, 0)", getGridElement().getCell(100, 0).getText());
+        selectMenuPath("Component", "Editor row", "Save");
+
+        assertEquals("(100, 0) changed", getGridElement().getCell(100, 0)
+                .getText());
     }
 }

@@ -950,7 +950,7 @@ public class Grid<T> extends ResizeComposite implements
         public static final int KEYCODE_HIDE = KeyCodes.KEY_ESCAPE;
 
         protected enum State {
-            INACTIVE, ACTIVATING, ACTIVE, COMMITTING
+            INACTIVE, ACTIVATING, ACTIVE, SAVING
         }
 
         private Grid<T> grid;
@@ -1005,7 +1005,7 @@ public class Grid<T> extends ResizeComposite implements
 
         /**
          * Cancels the currently active edit and hides the editor. Any changes
-         * that are not {@link #commit() committed} are lost.
+         * that are not {@link #save() saved} are lost.
          * 
          * @throws IllegalStateException
          *             if this editor row is not enabled
@@ -1028,55 +1028,34 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Commits any unsaved changes to the data source.
+         * Saves any unsaved changes to the data source.
          * 
          * @throws IllegalStateException
          *             if this editor row is not enabled
          * @throws IllegalStateException
          *             if this editor row is not in edit mode
          */
-        public void commit() {
+        public void save() {
             if (!enabled) {
                 throw new IllegalStateException(
-                        "Cannot commit: EditorRow is not enabled");
+                        "Cannot save: EditorRow is not enabled");
             }
             if (state != State.ACTIVE) {
                 throw new IllegalStateException(
-                        "Cannot commit: EditorRow is not in edit mode");
+                        "Cannot save: EditorRow is not in edit mode");
             }
 
-            state = State.COMMITTING;
+            state = State.SAVING;
 
-            handler.commit(new EditorRowRequest<T>(grid, rowIndex,
+            handler.save(new EditorRowRequest<T>(grid, rowIndex,
                     new RequestCallback<T>() {
                         @Override
                         public void onResponse(EditorRowRequest<T> request) {
-                            if (state == State.COMMITTING) {
+                            if (state == State.SAVING) {
                                 state = State.ACTIVE;
                             }
                         }
                     }));
-        }
-
-        /**
-         * Reloads row values from the data source, discarding any unsaved
-         * changes.
-         * 
-         * @throws IllegalStateException
-         *             if this editor row is not enabled
-         * @throws IllegalStateException
-         *             if this editor row is not in edit mode
-         */
-        public void discard() {
-            if (!enabled) {
-                throw new IllegalStateException(
-                        "Cannot discard: EditorRow is not enabled");
-            }
-            if (state != State.ACTIVE) {
-                throw new IllegalStateException(
-                        "Cannot discard: EditorRow is not in edit mode");
-            }
-            handler.discard(new EditorRowRequest<T>(grid, rowIndex, null));
         }
 
         /**
@@ -1244,8 +1223,8 @@ public class Grid<T> extends ResizeComposite implements
             save.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    // TODO should have a mechanism for handling failed commits
-                    commit();
+                    // TODO should have a mechanism for handling failed save
+                    save();
                     cancel();
                 }
             });
@@ -5013,33 +4992,20 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
-     * Commits any unsaved changes to the data source.
+     * Saves any unsaved changes to the data source.
      * 
      * @throws IllegalStateException
      *             if the editor row is not enabled
      * @throws IllegalStateException
      *             if the editor row is not in edit mode
      */
-    public void commitEditorRow() {
-        editorRow.commit();
-    }
-
-    /**
-     * Reloads values from the data source for the row being edited, discarding
-     * any unsaved changes.
-     * 
-     * @throws IllegalStateException
-     *             if the editor row is not enabled
-     * @throws IllegalStateException
-     *             if the editor row is not in edit mode
-     */
-    public void discardEditorRow() {
-        editorRow.discard();
+    public void saveEditorRow() {
+        editorRow.save();
     }
 
     /**
      * Cancels the currently active edit and hides the editor. Any changes that
-     * are not {@link #commit() committed} are lost.
+     * are not {@link #saveEditorRow() saved} are lost.
      * 
      * @throws IllegalStateException
      *             if the editor row is not enabled

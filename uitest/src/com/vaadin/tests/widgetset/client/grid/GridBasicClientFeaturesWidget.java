@@ -114,7 +114,7 @@ public class GridBasicClientFeaturesWidget extends
         }
 
         @Override
-        public void commit(EditorRowRequest<List<Data>> request) {
+        public void save(EditorRowRequest<List<Data>> request) {
             log.setText("Row " + request.getRowIndex() + " edit committed");
             List<Data> rowData = ds.getRow(request.getRowIndex());
 
@@ -133,11 +133,6 @@ public class GridBasicClientFeaturesWidget extends
             ds.asList().set(request.getRowIndex(), rowData);
 
             request.invokeCallback();
-        }
-
-        @Override
-        public void discard(EditorRowRequest<List<Data>> request) {
-            bind(request);
         }
 
         @Override
@@ -900,17 +895,10 @@ public class GridBasicClientFeaturesWidget extends
             }
         }, "Component", "Editor row");
 
-        addMenuCommand("Commit", new ScheduledCommand() {
+        addMenuCommand("Save", new ScheduledCommand() {
             @Override
             public void execute() {
-                grid.commitEditorRow();
-            }
-        }, "Component", "Editor row");
-
-        addMenuCommand("Discard", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                grid.discardEditorRow();
+                grid.saveEditorRow();
             }
         }, "Component", "Editor row");
 

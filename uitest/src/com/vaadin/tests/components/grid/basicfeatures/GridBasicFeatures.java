@@ -816,21 +816,15 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         c.editItem(100);
                     }
                 }, null);
-        createClickAction("Commit", "Editor row", new Command<Grid, String>() {
+        createClickAction("Save", "Editor row", new Command<Grid, String>() {
             @Override
             public void execute(Grid c, String value, Object data) {
                 try {
-                    c.commitEditorRow();
+                    c.saveEditorRow();
                 } catch (CommitException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-            }
-        }, null);
-        createClickAction("Discard", "Editor row", new Command<Grid, String>() {
-            @Override
-            public void execute(Grid c, String value, Object data) {
-                c.discardEditorRow();
             }
         }, null);
         createClickAction("Cancel edit", "Editor row",
