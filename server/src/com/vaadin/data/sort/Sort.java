@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui.components.grid.sort;
+package com.vaadin.data.sort;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -23,13 +23,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.sort.Sort;
+import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.event.SortOrderChangeEvent;
+import com.vaadin.event.SortOrderChangeEvent.SortOrderChangeListener;
 import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.components.grid.SortOrderChangeEvent;
-import com.vaadin.ui.components.grid.SortOrderChangeListener;
-import com.vaadin.ui.components.grid.sort.Sort;
-import com.vaadin.ui.components.grid.sort.SortOrder;
 
 public class SortTest {
 

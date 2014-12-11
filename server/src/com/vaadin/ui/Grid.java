@@ -51,12 +51,17 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.BindException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroupFieldFactory;
+import com.vaadin.data.sort.Sort;
+import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.event.SelectionChangeEvent;
 import com.vaadin.event.SelectionChangeEvent.SelectionChangeListener;
 import com.vaadin.event.SelectionChangeEvent.SelectionChangeNotifier;
+import com.vaadin.event.SortOrderChangeEvent;
+import com.vaadin.event.SortOrderChangeEvent.SortOrderChangeListener;
+import com.vaadin.event.SortOrderChangeEvent.SortOrderChangeNotifier;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ClientConnector;
@@ -81,10 +86,6 @@ import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.shared.ui.grid.SortEventOriginator;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.components.grid.SortOrderChangeEvent;
-import com.vaadin.ui.components.grid.SortOrderChangeListener;
-import com.vaadin.ui.components.grid.sort.Sort;
-import com.vaadin.ui.components.grid.sort.SortOrder;
 import com.vaadin.ui.renderer.Renderer;
 import com.vaadin.ui.renderer.TextRenderer;
 import com.vaadin.util.ReflectTools;
@@ -157,7 +158,7 @@ import elemental.json.JsonValue;
  * @author Vaadin Ltd
  */
 public class Grid extends AbstractComponent implements SelectionChangeNotifier,
-        SelectiveRenderer {
+        SortOrderChangeNotifier, SelectiveRenderer {
 
     /**
      * Selection modes representing built-in {@link SelectionModel
@@ -3354,6 +3355,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      * @param listener
      *            the sort order change listener to add
      */
+    @Override
     public void addSortOrderChangeListener(SortOrderChangeListener listener) {
         addListener(SortOrderChangeEvent.class, listener,
                 SORT_ORDER_CHANGE_METHOD);
@@ -3366,6 +3368,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      * @param listener
      *            the sort order change listener to remove
      */
+    @Override
     public void removeSortOrderChangeListener(SortOrderChangeListener listener) {
         removeListener(SortOrderChangeEvent.class, listener,
                 SORT_ORDER_CHANGE_METHOD);

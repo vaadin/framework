@@ -31,9 +31,9 @@ import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
 import com.vaadin.shared.ui.grid.SortDirection;
-import com.vaadin.ui.components.grid.sort.SortOrder;
 
 /**
  * Container wrapper that adds support for generated properties. This container

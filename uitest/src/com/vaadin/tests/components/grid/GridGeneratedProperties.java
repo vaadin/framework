@@ -19,6 +19,8 @@ import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Item;
+import com.vaadin.data.sort.Sort;
+import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.PropertyValueGenerator;
@@ -30,8 +32,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.components.grid.sort.Sort;
-import com.vaadin.ui.components.grid.sort.SortOrder;
 
 public class GridGeneratedProperties extends AbstractTestUI {
 

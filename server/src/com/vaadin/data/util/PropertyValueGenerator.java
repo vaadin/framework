@@ -20,8 +20,8 @@ import java.io.Serializable;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
-import com.vaadin.ui.components.grid.sort.SortOrder;
 
 /**
  * PropertyValueGenerator for GeneratedPropertyContainer.

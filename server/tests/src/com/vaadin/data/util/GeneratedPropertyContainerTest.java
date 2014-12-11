@@ -30,9 +30,9 @@ import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.data.Item;
+import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
-import com.vaadin.ui.components.grid.sort.SortOrder;
 
 public class GeneratedPropertyContainerTest {
 
