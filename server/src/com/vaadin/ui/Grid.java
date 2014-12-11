@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -79,13 +80,9 @@ import com.vaadin.shared.ui.grid.SortEventOriginator;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.components.grid.SortOrderChangeEvent;
 import com.vaadin.ui.components.grid.SortOrderChangeListener;
-import com.vaadin.ui.components.grid.selection.MultiSelectionModel;
-import com.vaadin.ui.components.grid.selection.NoSelectionModel;
 import com.vaadin.ui.components.grid.selection.SelectionChangeEvent;
 import com.vaadin.ui.components.grid.selection.SelectionChangeListener;
 import com.vaadin.ui.components.grid.selection.SelectionChangeNotifier;
-import com.vaadin.ui.components.grid.selection.SelectionModel;
-import com.vaadin.ui.components.grid.selection.SingleSelectionModel;
 import com.vaadin.ui.components.grid.sort.Sort;
 import com.vaadin.ui.components.grid.sort.SortOrder;
 import com.vaadin.ui.renderer.Renderer;
@@ -201,6 +198,580 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         };
 
         protected abstract SelectionModel createModel();
+    }
+
+    /**
+     * The server-side interface that controls Grid's selection state.
+     * 
+     * @since
+     * @author Vaadin Ltd
+     */
+    public interface SelectionModel extends Serializable {
+        /**
+         * Checks whether an item is selected or not.
+         * 
+         * @param itemId
+         *            the item id to check for
+         * @return <code>true</code> iff the item is selected
+         */
+        boolean isSelected(Object itemId);
+
+        /**
+         * Returns a collection of all the currently selected itemIds.
+         * 
+         * @return a collection of all the currently selected itemIds
+         */
+        Collection<Object> getSelectedRows();
+
+        /**
+         * Injects the current {@link Grid} instance into the SelectionModel.
+         * <p>
+         * <em>Note:</em> This method should not be called manually.
+         * 
+         * @param grid
+         *            the Grid in which the SelectionModel currently is, or
+         *            <code>null</code> when a selection model is being detached
+         *            from a Grid.
+         */
+        void setGrid(Grid grid);
+
+        /**
+         * Resets the SelectiomModel to an initial state.
+         * <p>
+         * Most often this means that the selection state is cleared, but
+         * implementations are free to interpret the "initial state" as they
+         * wish. Some, for example, may want to keep the first selected item as
+         * selected.
+         */
+        void reset();
+
+        /**
+         * A SelectionModel that supports multiple selections to be made.
+         * <p>
+         * This interface has a contract of having the same behavior, no matter
+         * how the selection model is interacted with. In other words, if
+         * something is forbidden to do in e.g. the user interface, it must also
+         * be forbidden to do in the server-side and client-side APIs.
+         */
+        public interface Multi extends SelectionModel {
+
+            /**
+             * Marks items as selected.
+             * <p>
+             * This method does not clear any previous selection state, only
+             * adds to it.
+             * 
+             * @param itemIds
+             *            the itemId(s) to mark as selected
+             * @return <code>true</code> if the selection state changed.
+             *         <code>false</code> if all the given itemIds already were
+             *         selected
+             * @throws IllegalArgumentException
+             *             if the <code>itemIds</code> varargs array is
+             *             <code>null</code> or given itemIds don't exist in the
+             *             container of Grid
+             * @see #deselect(Object...)
+             */
+            boolean select(Object... itemIds) throws IllegalArgumentException;
+
+            /**
+             * Marks items as selected.
+             * <p>
+             * This method does not clear any previous selection state, only
+             * adds to it.
+             * 
+             * @param itemIds
+             *            the itemIds to mark as selected
+             * @return <code>true</code> if the selection state changed.
+             *         <code>false</code> if all the given itemIds already were
+             *         selected
+             * @throws IllegalArgumentException
+             *             if <code>itemIds</code> is <code>null</code> or given
+             *             itemIds don't exist in the container of Grid
+             * @see #deselect(Collection)
+             */
+            boolean select(Collection<?> itemIds)
+                    throws IllegalArgumentException;
+
+            /**
+             * Marks items as deselected.
+             * 
+             * @param itemIds
+             *            the itemId(s) to remove from being selected
+             * @return <code>true</code> if the selection state changed.
+             *         <code>false</code> if none the given itemIds were
+             *         selected previously
+             * @throws IllegalArgumentException
+             *             if the <code>itemIds</code> varargs array is
+             *             <code>null</code>
+             * @see #select(Object...)
+             */
+            boolean deselect(Object... itemIds) throws IllegalArgumentException;
+
+            /**
+             * Marks items as deselected.
+             * 
+             * @param itemIds
+             *            the itemId(s) to remove from being selected
+             * @return <code>true</code> if the selection state changed.
+             *         <code>false</code> if none the given itemIds were
+             *         selected previously
+             * @throws IllegalArgumentException
+             *             if <code>itemIds</code> is <code>null</code>
+             * @see #select(Collection)
+             */
+            boolean deselect(Collection<?> itemIds)
+                    throws IllegalArgumentException;
+
+            /**
+             * Marks all the items in the current Container as selected
+             * 
+             * @return <code>true</code> iff some items were previously not
+             *         selected
+             * @see #deselectAll()
+             */
+            boolean selectAll();
+
+            /**
+             * Marks all the items in the current Container as deselected
+             * 
+             * @return <code>true</code> iff some items were previously selected
+             * @see #selectAll()
+             */
+            boolean deselectAll();
+        }
+
+        /**
+         * A SelectionModel that supports for only single rows to be selected at
+         * a time.
+         * <p>
+         * This interface has a contract of having the same behavior, no matter
+         * how the selection model is interacted with. In other words, if
+         * something is forbidden to do in e.g. the user interface, it must also
+         * be forbidden to do in the server-side and client-side APIs.
+         */
+        public interface Single extends SelectionModel {
+
+            /**
+             * Marks an item as selected.
+             * 
+             * @param itemIds
+             *            the itemId to mark as selected; <code>null</code> for
+             *            deselect
+             * @return <code>true</code> if the selection state changed.
+             *         <code>false</code> if the itemId already was selected
+             * @throws IllegalStateException
+             *             if the selection was illegal. One such reason might
+             *             be that the given id was null, indicating a deselect,
+             *             but implementation doesn't allow deselecting.
+             *             re-selecting something
+             * @throws IllegalArgumentException
+             *             if given itemId does not exist in the container of
+             *             Grid
+             */
+            boolean select(Object itemId) throws IllegalStateException,
+                    IllegalArgumentException;
+
+            /**
+             * Gets the item id of the currently selected item.
+             * 
+             * @return the item id of the currently selected item, or
+             *         <code>null</code> if nothing is selected
+             */
+            Object getSelectedRow();
+        }
+
+        /**
+         * A SelectionModel that does not allow for rows to be selected.
+         * <p>
+         * This interface has a contract of having the same behavior, no matter
+         * how the selection model is interacted with. In other words, if the
+         * developer is unable to select something programmatically, it is not
+         * allowed for the end-user to select anything, either.
+         */
+        public interface None extends SelectionModel {
+
+            /**
+             * {@inheritDoc}
+             * 
+             * @return always <code>false</code>.
+             */
+            @Override
+            public boolean isSelected(Object itemId);
+
+            /**
+             * {@inheritDoc}
+             * 
+             * @return always an empty collection.
+             */
+            @Override
+            public Collection<Object> getSelectedRows();
+        }
+    }
+
+    /**
+     * A base class for SelectionModels that contains some of the logic that is
+     * reusable.
+     * 
+     * @since
+     * @author Vaadin Ltd
+     */
+    public static abstract class AbstractSelectionModel implements
+            SelectionModel {
+        protected final LinkedHashSet<Object> selection = new LinkedHashSet<Object>();
+        protected Grid grid = null;
+
+        @Override
+        public boolean isSelected(final Object itemId) {
+            return selection.contains(itemId);
+        }
+
+        @Override
+        public Collection<Object> getSelectedRows() {
+            return new ArrayList<Object>(selection);
+        }
+
+        @Override
+        public void setGrid(final Grid grid) {
+            this.grid = grid;
+        }
+
+        /**
+         * Sanity check for existence of item id.
+         * 
+         * @param itemId
+         *            item id to be selected / deselected
+         * 
+         * @throws IllegalArgumentException
+         *             if item Id doesn't exist in the container of Grid
+         */
+        protected void checkItemIdExists(Object itemId)
+                throws IllegalArgumentException {
+            if (!grid.getContainerDataSource().containsId(itemId)) {
+                throw new IllegalArgumentException("Given item id (" + itemId
+                        + ") does not exist in the container");
+            }
+        }
+
+        /**
+         * Sanity check for existence of item ids in given collection.
+         * 
+         * @param itemIds
+         *            item id collection to be selected / deselected
+         * 
+         * @throws IllegalArgumentException
+         *             if at least one item id doesn't exist in the container of
+         *             Grid
+         */
+        protected void checkItemIdsExist(Collection<?> itemIds)
+                throws IllegalArgumentException {
+            for (Object itemId : itemIds) {
+                checkItemIdExists(itemId);
+            }
+        }
+
+        /**
+         * Fires a {@link SelectionChangeEvent} to all the
+         * {@link SelectionChangeListener SelectionChangeListeners} currently
+         * added to the Grid in which this SelectionModel is.
+         * <p>
+         * Note that this is only a helper method, and routes the call all the
+         * way to Grid. A {@link SelectionModel} is not a
+         * {@link SelectionChangeNotifier}
+         * 
+         * @param oldSelection
+         *            the complete {@link Collection} of the itemIds that were
+         *            selected <em>before</em> this event happened
+         * @param newSelection
+         *            the complete {@link Collection} of the itemIds that are
+         *            selected <em>after</em> this event happened
+         */
+        protected void fireSelectionChangeEvent(
+                final Collection<Object> oldSelection,
+                final Collection<Object> newSelection) {
+            grid.fireSelectionChangeEvent(oldSelection, newSelection);
+        }
+    }
+
+    /**
+     * A default implementation of a {@link SelectionModel.Single}
+     * 
+     * @since
+     * @author Vaadin Ltd
+     */
+    public static class SingleSelectionModel extends AbstractSelectionModel
+            implements SelectionModel.Single {
+        @Override
+        public boolean select(final Object itemId) {
+            if (itemId == null) {
+                return deselect(getSelectedRow());
+            }
+
+            checkItemIdExists(itemId);
+
+            final Object selectedRow = getSelectedRow();
+            final boolean modified = selection.add(itemId);
+            if (modified) {
+                final Collection<Object> deselected;
+                if (selectedRow != null) {
+                    deselectInternal(selectedRow, false);
+                    deselected = Collections.singleton(selectedRow);
+                } else {
+                    deselected = Collections.emptySet();
+                }
+
+                fireSelectionChangeEvent(deselected, selection);
+            }
+
+            return modified;
+        }
+
+        private boolean deselect(final Object itemId) {
+            return deselectInternal(itemId, true);
+        }
+
+        private boolean deselectInternal(final Object itemId,
+                boolean fireEventIfNeeded) {
+            final boolean modified = selection.remove(itemId);
+            if (fireEventIfNeeded && modified) {
+                fireSelectionChangeEvent(Collections.singleton(itemId),
+                        Collections.emptySet());
+            }
+            return modified;
+        }
+
+        @Override
+        public Object getSelectedRow() {
+            if (selection.isEmpty()) {
+                return null;
+            } else {
+                return selection.iterator().next();
+            }
+        }
+
+        /**
+         * Resets the selection state.
+         * <p>
+         * If an item is selected, it will become deselected.
+         */
+        @Override
+        public void reset() {
+            deselect(getSelectedRow());
+        }
+    }
+
+    /**
+     * A default implementation for a {@link SelectionModel.None}
+     * 
+     * @since
+     * @author Vaadin Ltd
+     */
+    public static class NoSelectionModel implements SelectionModel.None {
+        @Override
+        public void setGrid(final Grid grid) {
+            // NOOP, not needed for anything
+        }
+
+        @Override
+        public boolean isSelected(final Object itemId) {
+            return false;
+        }
+
+        @Override
+        public Collection<Object> getSelectedRows() {
+            return Collections.emptyList();
+        }
+
+        /**
+         * Semantically resets the selection model.
+         * <p>
+         * Effectively a no-op.
+         */
+        @Override
+        public void reset() {
+            // NOOP
+        }
+    }
+
+    /**
+     * A default implementation of a {@link SelectionModel.Multi}
+     * 
+     * @since
+     * @author Vaadin Ltd
+     */
+    public static class MultiSelectionModel extends AbstractSelectionModel
+            implements SelectionModel.Multi {
+
+        /**
+         * The default selection size limit.
+         * 
+         * @see #setSelectionLimit(int)
+         */
+        public static final int DEFAULT_MAX_SELECTIONS = 1000;
+
+        private int selectionLimit = DEFAULT_MAX_SELECTIONS;
+
+        @Override
+        public boolean select(final Object... itemIds)
+                throws IllegalArgumentException {
+            if (itemIds != null) {
+                // select will fire the event
+                return select(Arrays.asList(itemIds));
+            } else {
+                throw new IllegalArgumentException(
+                        "Vararg array of itemIds may not be null");
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         * <p>
+         * All items might not be selected if the limit set using
+         * {@link #setSelectionLimit(int)} is exceeded.
+         */
+        @Override
+        public boolean select(final Collection<?> itemIds)
+                throws IllegalArgumentException {
+            if (itemIds == null) {
+                throw new IllegalArgumentException("itemIds may not be null");
+            }
+
+            // Sanity check
+            checkItemIdsExist(itemIds);
+
+            final boolean selectionWillChange = !selection.containsAll(itemIds)
+                    && selection.size() < selectionLimit;
+            if (selectionWillChange) {
+                final HashSet<Object> oldSelection = new HashSet<Object>(
+                        selection);
+                if (selection.size() + itemIds.size() >= selectionLimit) {
+                    // Add one at a time if there's a risk of overflow
+                    Iterator<?> iterator = itemIds.iterator();
+                    while (iterator.hasNext()
+                            && selection.size() < selectionLimit) {
+                        selection.add(iterator.next());
+                    }
+                } else {
+                    selection.addAll(itemIds);
+                }
+                fireSelectionChangeEvent(oldSelection, selection);
+            }
+            return selectionWillChange;
+        }
+
+        /**
+         * Sets the maximum number of rows that can be selected at once. This is
+         * a mechanism to prevent exhausting server memory in situations where
+         * users select lots of rows. If the limit is reached, newly selected
+         * rows will not become recorded.
+         * <p>
+         * Old selections are not discarded if the current number of selected
+         * row exceeds the new limit.
+         * <p>
+         * The default limit is {@value #DEFAULT_MAX_SELECTIONS} rows.
+         * 
+         * @param selectionLimit
+         *            the non-negative selection limit to set
+         * @throws IllegalArgumentException
+         *             if the limit is negative
+         */
+        public void setSelectionLimit(int selectionLimit) {
+            if (selectionLimit < 0) {
+                throw new IllegalArgumentException(
+                        "The selection limit must be non-negative");
+            }
+            this.selectionLimit = selectionLimit;
+        }
+
+        /**
+         * Gets the selection limit.
+         * 
+         * @see #setSelectionLimit(int)
+         * 
+         * @return the selection limit
+         */
+        public int getSelectionLimit() {
+            return selectionLimit;
+        }
+
+        @Override
+        public boolean deselect(final Object... itemIds)
+                throws IllegalArgumentException {
+            if (itemIds != null) {
+                // deselect will fire the event
+                return deselect(Arrays.asList(itemIds));
+            } else {
+                throw new IllegalArgumentException(
+                        "Vararg array of itemIds may not be null");
+            }
+        }
+
+        @Override
+        public boolean deselect(final Collection<?> itemIds)
+                throws IllegalArgumentException {
+            if (itemIds == null) {
+                throw new IllegalArgumentException("itemIds may not be null");
+            }
+
+            final boolean hasCommonElements = !Collections.disjoint(itemIds,
+                    selection);
+            if (hasCommonElements) {
+                final HashSet<Object> oldSelection = new HashSet<Object>(
+                        selection);
+                selection.removeAll(itemIds);
+                fireSelectionChangeEvent(oldSelection, selection);
+            }
+            return hasCommonElements;
+        }
+
+        @Override
+        public boolean selectAll() {
+            // select will fire the event
+            final Indexed container = grid.getContainerDataSource();
+            if (container != null) {
+                return select(container.getItemIds());
+            } else if (selection.isEmpty()) {
+                return false;
+            } else {
+                /*
+                 * this should never happen (no container but has a selection),
+                 * but I guess the only theoretically correct course of
+                 * action...
+                 */
+                return deselectAll();
+            }
+        }
+
+        @Override
+        public boolean deselectAll() {
+            // deselect will fire the event
+            return deselect(getSelectedRows());
+        }
+
+        /**
+         * {@inheritDoc}
+         * <p>
+         * The returned Collection is in <strong>order of selection</strong>
+         * &ndash; the item that was first selected will be first in the
+         * collection, and so on. Should an item have been selected twice
+         * without being deselected in between, it will have remained in its
+         * original position.
+         */
+        @Override
+        public Collection<Object> getSelectedRows() {
+            // overridden only for JavaDoc
+            return super.getSelectedRows();
+        }
+
+        /**
+         * Resets the selection model.
+         * <p>
+         * Equivalent to calling {@link #deselectAll()}
+         */
+        @Override
+        public void reset() {
+            deselectAll();
+        }
     }
 
     /**

@@ -24,9 +24,9 @@ import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.Grid.SingleSelectionModel;
 import com.vaadin.ui.components.grid.selection.SelectionChangeEvent;
 import com.vaadin.ui.components.grid.selection.SelectionChangeListener;
-import com.vaadin.ui.components.grid.selection.SingleSelectionModel;
 
 public class SingleSelectionModelTest {
 
