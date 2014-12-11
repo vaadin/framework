@@ -42,7 +42,7 @@ public class GridColumnAutoWidthClientWidget extends
         }
     }
 
-    protected GridColumnAutoWidthClientWidget() {
+    public GridColumnAutoWidthClientWidget() {
         super(new Grid<List<String>>());
         grid = getTestedWidget();
         grid.setSelectionMode(SelectionMode.NONE);

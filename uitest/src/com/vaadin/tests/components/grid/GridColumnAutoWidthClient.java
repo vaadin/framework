@@ -19,17 +19,15 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
-import com.vaadin.ui.AbstractComponent;
+import com.vaadin.tests.widgetset.client.grid.GridColumnAutoWidthClientWidget;
+import com.vaadin.tests.widgetset.server.TestWidgetComponent;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class GridColumnAutoWidthClient extends AbstractTestUI {
 
-    public static class GridColumnAutoWidthClientComponent extends
-            AbstractComponent {
-    }
-
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(new GridColumnAutoWidthClientComponent());
+        addComponent(new TestWidgetComponent(
+                GridColumnAutoWidthClientWidget.class));
     }
 }

@@ -22,9 +22,11 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @SuppressWarnings("boxing")
+@TestCategory("grid")
 public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
 
     public static final int TOTAL_MARGIN_PX = 13;
