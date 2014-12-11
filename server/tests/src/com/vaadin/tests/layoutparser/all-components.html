@@ -39,7 +39,7 @@
       </v-css-layout>
       
       <!--  panel  -->
-      <v-panel caption=”Hello world” tabindex=2 scroll-left="10" scroll-top="10">
+      <v-panel caption="Hello world" tabindex=2 scroll-left="10" scroll-top="10">
         <v-table size-full />
       </v-panel>
       
@@ -86,7 +86,18 @@
 	      </tab>
 	   </v-accordion>
 
-           
+      <!--  abstract split panel -->
+      <v-horizontal-split-panel split-position="20px" min-split-position="0px" max-split-position="50px" locked>
+        <v-button>First slot</v-button>
+      </v-horizontal-split-panel>      
+      <v-vertical-split-panel split-position="25%" reversed>
+        <v-button :second>Second slot</v-button>
+      </v-vertical-split-panel>
+      <v-horizontal-split-panel split-position="25%" reversed>
+        <v-button>First slot</v-button>
+        <v-button>Second slot</v-button>
+      </v-horizontal-split-panel>
+     
   </v-vertical-layout>
  </body>
 </html>

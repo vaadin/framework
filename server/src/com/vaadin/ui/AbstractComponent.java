@@ -16,7 +16,6 @@
 
 package com.vaadin.ui;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,8 +27,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
@@ -46,6 +43,7 @@ import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.server.Extension;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Responsive;
+import com.vaadin.server.SizeWithUnit;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinSession;
@@ -100,8 +98,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
     private float height = SIZE_UNDEFINED;
     private Unit widthUnit = Unit.PIXELS;
     private Unit heightUnit = Unit.PIXELS;
-    private static final Pattern sizePattern = Pattern
-            .compile(SharedUtil.SIZE_PATTERN);
 
     /**
      * Keeps track of the Actions added to this component; the actual
@@ -890,7 +886,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setWidth(String width) {
-        Size size = parseStringSize(width);
+        SizeWithUnit size = SizeWithUnit.parseStringSize(width);
         if (size != null) {
             setWidth(size.getSize(), size.getUnit());
         } else {
@@ -905,7 +901,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setHeight(String height) {
-        Size size = parseStringSize(height);
+        SizeWithUnit size = SizeWithUnit.parseStringSize(height);
         if (size != null) {
             setHeight(size.getSize(), size.getUnit());
         } else {
@@ -1247,55 +1243,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
         // handle responsive
         if (isResponsive()) {
             attr.put("responsive", "");
-        }
-    }
-
-    /*
-     * Returns array with size in index 0 unit in index 1. Null or empty string
-     * will produce {-1,Unit#PIXELS}
-     */
-    private static Size parseStringSize(String s) {
-        if (s == null) {
-            return null;
-        }
-        s = s.trim();
-        if ("".equals(s)) {
-            return null;
-        }
-        float size = 0;
-        Unit unit = null;
-        Matcher matcher = sizePattern.matcher(s);
-        if (matcher.find()) {
-            size = Float.parseFloat(matcher.group(1));
-            if (size < 0) {
-                size = -1;
-                unit = Unit.PIXELS;
-            } else {
-                String symbol = matcher.group(2);
-                unit = Unit.getUnitFromSymbol(symbol);
-            }
-        } else {
-            throw new IllegalArgumentException("Invalid size argument: \"" + s
-                    + "\" (should match " + sizePattern.pattern() + ")");
-        }
-        return new Size(size, unit);
-    }
-
-    private static class Size implements Serializable {
-        float size;
-        Unit unit;
-
-        public Size(float size, Unit unit) {
-            this.size = size;
-            this.unit = unit;
-        }
-
-        public float getSize() {
-            return size;
-        }
-
-        public Unit getUnit() {
-            return unit;
         }
     }
 
