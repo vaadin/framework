@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
+import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.event.Action;
@@ -38,6 +39,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
 import com.vaadin.shared.ui.button.ButtonState;
 import com.vaadin.ui.Component.Focusable;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.util.ReflectTools;
 
@@ -675,8 +677,25 @@ public class Button extends AbstractComponent implements
     public void synchronizeFromDesign(Element design,
             DesignContext designContext) {
         super.synchronizeFromDesign(design, designContext);
+        Button def = designContext.getDefaultInstance(this.getClass());
+        Attributes attr = design.attributes();
         String content = design.html();
         setCaption(content);
+        // tabindex
+        setTabIndex(DesignAttributeHandler.readAttribute("tabindex", attr,
+                def.getTabIndex(), Integer.class));
+        // plain-text (default is html)
+        setHtmlContentAllowed(!DesignAttributeHandler.readAttribute(
+                "plain-text", attr, false, Boolean.class));
+        setIconAlternateText(DesignAttributeHandler.readAttribute("icon-alt",
+                attr, def.getIconAlternateText(), String.class));
+        // click-shortcut
+        removeClickShortcut();
+        ShortcutAction action = DesignAttributeHandler.readAttribute(
+                "click-shortcut", attr, null, ShortcutAction.class);
+        if (action != null) {
+            setClickShortcut(action.getKeyCode(), action.getModifiers());
+        }
     }
 
     /*
@@ -687,7 +706,12 @@ public class Button extends AbstractComponent implements
     @Override
     protected Collection<String> getCustomAttributes() {
         Collection<String> result = super.getCustomAttributes();
+        result.add("tabindex");
+        result.add("plain-text");
         result.add("caption");
+        result.add("icon-alt");
+        result.add("click-shortcut");
+        result.add("html-content-allowed");
         return result;
     }
 
@@ -701,9 +725,27 @@ public class Button extends AbstractComponent implements
     @Override
     public void synchronizeToDesign(Element design, DesignContext designContext) {
         super.synchronizeToDesign(design, designContext);
+        Attributes attr = design.attributes();
+        Button def = designContext.getDefaultInstance(this.getClass());
         String content = getCaption();
         if (content != null) {
             design.html(content);
+        }
+        // tabindex
+        DesignAttributeHandler.writeAttribute("tabindex", attr, getTabIndex(),
+                def.getTabIndex(), Integer.class);
+        // plain-text (default is html)
+        if (!isHtmlContentAllowed()) {
+            design.attr("plain-text", "");
+        }
+        // icon-alt
+        DesignAttributeHandler.writeAttribute("icon-alt", attr,
+                getIconAlternateText(), def.getIconAlternateText(),
+                String.class);
+        // click-shortcut
+        if (clickShortcut != null) {
+            DesignAttributeHandler.writeAttribute("click-shortcut", attr,
+                    clickShortcut, null, ShortcutAction.class);
         }
     }
 }

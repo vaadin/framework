@@ -40,6 +40,9 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
@@ -316,13 +319,70 @@ public class DesignAttributeHandler implements Serializable {
      * Formats the given design attribute value. The method is provided to
      * ensure consistent number formatting for design attribute values
      * 
-     * @since 7.4
      * @param number
      *            the number to be formatted
      * @return the formatted number
      */
     public static String formatDouble(double number) {
         return getDecimalFormat().format(number);
+    }
+
+    /**
+     * Convert ShortcutAction to attribute string presentation
+     * 
+     * @param shortcut
+     *            the shortcut action
+     * @return the action as attribute string presentation
+     */
+    private static String formatShortcutAction(ShortcutAction shortcut) {
+        StringBuilder sb = new StringBuilder();
+        // handle modifiers
+        if (shortcut.getModifiers() != null) {
+            for (int modifier : shortcut.getModifiers()) {
+                sb.append(ShortcutKeyMapper.getStringForKeycode(modifier))
+                        .append("-");
+            }
+        }
+        // handle keycode
+        sb.append(ShortcutKeyMapper.getStringForKeycode(shortcut.getKeyCode()));
+        return sb.toString();
+    }
+
+    /**
+     * Reads shortcut action from attribute presentation
+     * 
+     * @param attributeValue
+     *            attribute presentation of shortcut action
+     * @return shortcut action with keycode and modifier keys from attribute
+     *         value
+     */
+    private static ShortcutAction readShortcutAction(String attributeValue) {
+        if (attributeValue.length() == 0) {
+            return null;
+        }
+        String[] parts = attributeValue.split("-");
+        // handle keycode
+        String keyCodePart = parts[parts.length - 1];
+        int keyCode = ShortcutKeyMapper.getKeycodeForString(keyCodePart);
+        if (keyCode < 0) {
+            throw new IllegalArgumentException("Invalid shortcut definition "
+                    + attributeValue);
+        }
+        // handle modifiers
+        int[] modifiers = null;
+        if (parts.length > 1) {
+            modifiers = new int[parts.length - 1];
+        }
+        for (int i = 0; i < parts.length - 1; i++) {
+            int modifier = ShortcutKeyMapper.getKeycodeForString(parts[i]);
+            if (modifier > 0) {
+                modifiers[i] = modifier;
+            } else {
+                throw new IllegalArgumentException(
+                        "Invalid shortcut definition " + attributeValue);
+            }
+        }
+        return new ShortcutAction(null, keyCode, modifiers);
     }
 
     /**
@@ -407,6 +467,9 @@ public class DesignAttributeHandler implements Serializable {
             return Enum.valueOf((Class<? extends Enum>) targetType,
                     value.toUpperCase());
         }
+        if (targetType == ShortcutAction.class) {
+            return readShortcutAction(value);
+        }
         return null;
     }
 
@@ -449,9 +512,10 @@ public class DesignAttributeHandler implements Serializable {
             return formatFloat(((Float) value).floatValue());
         } else if (sourceType == Double.class || sourceType == Double.TYPE) {
             return formatDouble(((Double) value).doubleValue());
+        } else if (sourceType == ShortcutAction.class) {
+            return formatShortcutAction((ShortcutAction) value);
         } else {
             return value.toString();
-
         }
     }
 
@@ -510,7 +574,8 @@ public class DesignAttributeHandler implements Serializable {
     private static final List<Class<?>> supportedClasses = Arrays
             .asList(new Class<?>[] { String.class, Boolean.class,
                     Integer.class, Byte.class, Short.class, Long.class,
-                    Character.class, Float.class, Double.class, Resource.class });
+                    Character.class, Float.class, Double.class, Resource.class,
+                    ShortcutAction.class });
 
     /**
      * Returns true if the specified value type is supported by this class.
@@ -559,6 +624,106 @@ public class DesignAttributeHandler implements Serializable {
         private Method getSetter(String attribute) {
             Method[] methods = accessMethods.get(attribute);
             return (methods != null && methods.length > 1) ? methods[1] : null;
+        }
+    }
+
+    /**
+     * Provides mappings between shortcut keycodes and their representation in
+     * design attributes
+     * 
+     * @since 7.4
+     * @author Vaadin Ltd
+     */
+    private static class ShortcutKeyMapper implements Serializable {
+
+        private static Map<Integer, String> keyCodeMap = Collections
+                .synchronizedMap(new HashMap<Integer, String>());
+        private static Map<String, Integer> presentationMap = Collections
+                .synchronizedMap(new HashMap<String, Integer>());
+
+        static {
+            // map modifiers
+            mapKey(ModifierKey.ALT, "alt");
+            mapKey(ModifierKey.CTRL, "ctrl");
+            mapKey(ModifierKey.META, "meta");
+            mapKey(ModifierKey.SHIFT, "shift");
+            // map keys
+            mapKey(KeyCode.ENTER, "enter");
+            mapKey(KeyCode.ESCAPE, "escape");
+            mapKey(KeyCode.PAGE_UP, "pageup");
+            mapKey(KeyCode.PAGE_DOWN, "pagedown");
+            mapKey(KeyCode.TAB, "tab");
+            mapKey(KeyCode.ARROW_LEFT, "left");
+            mapKey(KeyCode.ARROW_UP, "up");
+            mapKey(KeyCode.ARROW_RIGHT, "right");
+            mapKey(KeyCode.ARROW_DOWN, "down");
+            mapKey(KeyCode.BACKSPACE, "backspace");
+            mapKey(KeyCode.DELETE, "delete");
+            mapKey(KeyCode.INSERT, "insert");
+            mapKey(KeyCode.END, "end");
+            mapKey(KeyCode.HOME, "home");
+            mapKey(KeyCode.F1, "f1");
+            mapKey(KeyCode.F2, "f2");
+            mapKey(KeyCode.F3, "f3");
+            mapKey(KeyCode.F4, "f4");
+            mapKey(KeyCode.F5, "f5");
+            mapKey(KeyCode.F6, "f6");
+            mapKey(KeyCode.F7, "f7");
+            mapKey(KeyCode.F8, "f8");
+            mapKey(KeyCode.F9, "f9");
+            mapKey(KeyCode.F10, "f10");
+            mapKey(KeyCode.F11, "f11");
+            mapKey(KeyCode.F12, "f12");
+            mapKey(KeyCode.NUM0, "0");
+            mapKey(KeyCode.NUM1, "1");
+            mapKey(KeyCode.NUM2, "2");
+            mapKey(KeyCode.NUM3, "3");
+            mapKey(KeyCode.NUM4, "4");
+            mapKey(KeyCode.NUM5, "5");
+            mapKey(KeyCode.NUM6, "6");
+            mapKey(KeyCode.NUM7, "7");
+            mapKey(KeyCode.NUM8, "8");
+            mapKey(KeyCode.NUM9, "9");
+            mapKey(KeyCode.SPACEBAR, "spacebar");
+            mapKey(KeyCode.A, "a");
+            mapKey(KeyCode.B, "b");
+            mapKey(KeyCode.C, "c");
+            mapKey(KeyCode.D, "d");
+            mapKey(KeyCode.E, "e");
+            mapKey(KeyCode.F, "f");
+            mapKey(KeyCode.G, "g");
+            mapKey(KeyCode.H, "h");
+            mapKey(KeyCode.I, "i");
+            mapKey(KeyCode.J, "j");
+            mapKey(KeyCode.K, "k");
+            mapKey(KeyCode.L, "l");
+            mapKey(KeyCode.M, "m");
+            mapKey(KeyCode.N, "n");
+            mapKey(KeyCode.O, "o");
+            mapKey(KeyCode.P, "p");
+            mapKey(KeyCode.Q, "q");
+            mapKey(KeyCode.R, "r");
+            mapKey(KeyCode.S, "s");
+            mapKey(KeyCode.T, "t");
+            mapKey(KeyCode.U, "u");
+            mapKey(KeyCode.V, "v");
+            mapKey(KeyCode.X, "x");
+            mapKey(KeyCode.Y, "y");
+            mapKey(KeyCode.Z, "z");
+        }
+
+        private static void mapKey(int keyCode, String presentation) {
+            keyCodeMap.put(keyCode, presentation);
+            presentationMap.put(presentation, keyCode);
+        }
+
+        private static int getKeycodeForString(String attributePresentation) {
+            Integer code = presentationMap.get(attributePresentation);
+            return code != null ? code.intValue() : -1;
+        }
+
+        private static String getStringForKeycode(int keyCode) {
+            return keyCodeMap.get(keyCode);
         }
     }
 

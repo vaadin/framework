@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.server.component.button;
 
+import java.lang.reflect.Field;
+
 import junit.framework.TestCase;
 
 import org.jsoup.nodes.Attributes;
@@ -22,7 +24,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 import org.junit.Test;
 
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickShortcut;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -62,6 +67,27 @@ public class TestSynchronizeFromDesign extends TestCase {
         createAndTestButtons(null, "Click me");
     }
 
+    @Test
+    public void testAttributes() throws IllegalArgumentException,
+            SecurityException, IllegalAccessException, NoSuchFieldException {
+        Attributes attributes = new Attributes();
+        attributes.put("tabindex", "3");
+        attributes.put("plain-text", "");
+        attributes.put("icon-alt", "OK");
+        attributes.put("click-shortcut", "ctrl-shift-o");
+        Button button = (Button) ctx
+                .createChild(createButtonWithAttributes(attributes));
+        assertEquals(3, button.getTabIndex());
+        assertEquals(false, button.isHtmlContentAllowed());
+        assertEquals("OK", button.getIconAlternateText());
+        Field field = Button.class.getDeclaredField("clickShortcut");
+        field.setAccessible(true);
+        ClickShortcut value = (ClickShortcut) field.get(button);
+        assertEquals(KeyCode.O, value.getKeyCode());
+        assertEquals(ModifierKey.CTRL, value.getModifiers()[0]);
+        assertEquals(ModifierKey.SHIFT, value.getModifiers()[1]);
+    }
+
     /*
      * Test both Button and NativeButton. Caption should always be ignored. If
      * content is null, the created button should have empty content.
@@ -82,6 +108,10 @@ public class TestSynchronizeFromDesign extends TestCase {
             assertTrue("The button has the wrong content.",
                     b2.getCaption() == null || "".equals(b2.getCaption()));
         }
+    }
+
+    private Element createButtonWithAttributes(Attributes attributes) {
+        return new Element(Tag.valueOf("v-button"), "", attributes);
     }
 
     private Element createElement(String elementName, String content,

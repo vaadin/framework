@@ -246,7 +246,9 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     private AbstractComponent getComponent() {
-        return new Button();
+        Button button = new Button();
+        button.setHtmlContentAllowed(true);
+        return button;
     }
 
     private AbstractComponent getPanel() {

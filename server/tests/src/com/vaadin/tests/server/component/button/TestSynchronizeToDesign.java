@@ -17,9 +17,13 @@ package com.vaadin.tests.server.component.button;
 
 import junit.framework.TestCase;
 
+import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 import org.junit.Test;
 
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.declarative.DesignContext;
@@ -48,8 +52,25 @@ public class TestSynchronizeToDesign extends TestCase {
         createAndTestButtons("<b>Click</b>");
     }
 
+    @Test
+    public void testAttributes() {
+        Button button = new Button();
+        button.setTabIndex(3);
+        button.setIconAlternateText("OK");
+        button.setClickShortcut(KeyCode.O, ModifierKey.CTRL, ModifierKey.SHIFT);
+        Element e = new Element(Tag.valueOf("v-button"), "", new Attributes());
+        button.synchronizeToDesign(e, ctx);
+        assertEquals("3", e.attr("tabindex"));
+        assertTrue("Button is plain text by default", e.hasAttr("plain-text"));
+        assertEquals("OK", e.attr("icon-alt"));
+        assertEquals("ctrl-shift-o", e.attr("click-shortcut"));
+    }
+
     private void createAndTestButtons(String content) {
         Button b1 = new Button(content);
+        // we need to set this on, since the plain-text attribute will appear
+        // otherwise
+        b1.setHtmlContentAllowed(true);
         Element e1 = ctx.createNode(b1);
         assertEquals("Wrong tag name for button.", "v-button", e1.tagName());
         assertEquals("Unexpected content in the v-button element.", content,
@@ -57,6 +78,7 @@ public class TestSynchronizeToDesign extends TestCase {
         assertTrue("The v-button element should not have attributes.", e1
                 .attributes().size() == 0);
         NativeButton b2 = new NativeButton(content);
+        b2.setHtmlContentAllowed(true);
         Element e2 = ctx.createNode(b2);
         assertEquals("Wrong tag name for button.", "v-native-button",
                 e2.tagName());
