@@ -105,27 +105,36 @@ import com.vaadin.shared.util.SharedUtil;
  * A data grid view that supports columns and lazy loading of data rows from a
  * data source.
  * 
- * <h3>Columns</h3>
+ * <h1>Columns</h1>
  * <p>
- * The {@link GridColumn} class defines the renderer used to render a cell in
- * the grid. Implement {@link GridColumn#getValue(Object)} to retrieve the cell
- * value from the row object and return the cell renderer to render that cell.
- * </p>
+ * Each column in Grid is represented by a {@link GridColumn}. Each
+ * {@code GridColumn} has a custom implementation for
+ * {@link GridColumn#getValue(Object)} that gets the row object as an argument,
+ * and returns the value for that particular column, extracted from the row
+ * object.
  * <p>
- * {@link GridColumn}s contain other properties like the width of the column and
- * the visiblity of the column. If you want to change a column's properties
- * after it has been added to the grid you can get a column object for a
- * specific column index using {@link Grid#getColumn(int)}.
- * </p>
+ * Each column also has a Renderer. Its function is to take the value that is
+ * given by the {@code GridColumn} and display it to the user. A simple column
+ * might have a {@link com.vaadin.client.ui.grid.renderers.TextRenderer
+ * TextRenderer} that simply takes in a {@code String} and displays it as the
+ * cell's content. A more complex renderer might be
+ * {@link com.vaadin.client.ui.grid.renderers.ProgressBarRenderer
+ * ProgressBarRenderer} that takes in a floating point number, and displays a
+ * progress bar instead, based on the given number.
  * <p>
+ * <em>See:</em> {@link #addColumn(GridColumn)},
+ * {@link #addColumn(GridColumn, int)} and {@link #addColumns(GridColumn...)}.
+ * <em>Also</em> {@link GridColumn#setRenderer(Renderer)}.
  * 
- * TODO Explain about headers/footers once the multiple header/footer api has
- * been implemented
- * 
- * <h3>Data sources</h3>
+ * <h1>Data Sources</h1>
  * <p>
- * TODO Explain about what a data source is and how it should be implemented.
- * </p>
+ * Grid gets its data from a {@link DataSource}, providing row objects to Grid
+ * from a user-defined endpoint. It can be either a local in-memory data source
+ * (e.g. {@link com.vaadin.client.ui.grid.datasources.ListDataSource
+ * ListDataSource}) or even a remote one, retrieving data from e.g. a REST API
+ * (see {@link com.vaadin.client.data.AbstractRemoteDataSource
+ * AbstractRemoteDataSource}).
+ * 
  * 
  * @param <T>
  *            The row type of the grid. The row type is the POJO type from where
