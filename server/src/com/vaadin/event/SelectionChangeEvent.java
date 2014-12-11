@@ -13,15 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui.components.grid.selection;
+package com.vaadin.event;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.EventObject;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.google.gwt.thirdparty.guava.common.collect.Sets;
-import com.vaadin.ui.Grid;
 
 /**
  * An event that specifies what in a selection has changed, and where the
@@ -35,7 +35,7 @@ public class SelectionChangeEvent extends EventObject {
     private LinkedHashSet<Object> oldSelection;
     private LinkedHashSet<Object> newSelection;
 
-    public SelectionChangeEvent(Grid source, Collection<Object> oldSelection,
+    public SelectionChangeEvent(Object source, Collection<Object> oldSelection,
             Collection<Object> newSelection) {
         super(source);
         this.oldSelection = new LinkedHashSet<Object>(oldSelection);
@@ -66,8 +66,45 @@ public class SelectionChangeEvent extends EventObject {
         return Sets.difference(oldSelection, newSelection);
     }
 
-    @Override
-    public Grid getSource() {
-        return (Grid) super.getSource();
+    /**
+     * The listener interface for receiving {@link SelectionChangeEvent
+     * SelectionChangeEvents}.
+     * 
+     * @since
+     * @author Vaadin Ltd
+     */
+    public interface SelectionChangeListener extends Serializable {
+        /**
+         * Notifies the listener that the selection state has changed.
+         * 
+         * @param event
+         *            the selection change event
+         */
+        void selectionChange(SelectionChangeEvent event);
+    }
+
+    /**
+     * The interface for adding and removing listeners for
+     * {@link SelectionChangeEvent SelectionChangeEvents}.
+     * 
+     * @since
+     * @author Vaadin Ltd
+     */
+    public interface SelectionChangeNotifier extends Serializable {
+        /**
+         * Registers a new selection change listener
+         * 
+         * @param listener
+         *            the listener to register
+         */
+        void addSelectionChangeListener(SelectionChangeListener listener);
+
+        /**
+         * Removes a previously registered selection change listener
+         * 
+         * @param listener
+         *            the listener to remove
+         */
+        void removeSelectionChangeListener(SelectionChangeListener listener);
     }
 }

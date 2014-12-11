@@ -22,11 +22,11 @@ import org.junit.Test;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.event.SelectionChangeEvent;
+import com.vaadin.event.SelectionChangeEvent.SelectionChangeListener;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Grid.SingleSelectionModel;
-import com.vaadin.ui.components.grid.selection.SelectionChangeEvent;
-import com.vaadin.ui.components.grid.selection.SelectionChangeListener;
 
 public class SingleSelectionModelTest {
 
