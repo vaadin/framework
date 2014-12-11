@@ -24,10 +24,12 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.TooltipInfo;
+import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractLayoutConnector;
+import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.VFormLayout;
 import com.vaadin.client.ui.VFormLayout.Caption;
@@ -36,13 +38,35 @@ import com.vaadin.client.ui.VFormLayout.VFormLayoutTable;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.LayoutClickRpc;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.shared.ui.orderedlayout.FormLayoutState;
 import com.vaadin.ui.FormLayout;
 
 @Connect(FormLayout.class)
 public class FormLayoutConnector extends AbstractLayoutConnector implements
         PostLayoutListener {
+
+    /*
+     * Handlers & Listeners
+     */
+
+    private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
+            this) {
+
+        @Override
+        protected ComponentConnector getChildComponent(
+                com.google.gwt.user.client.Element element) {
+            return Util.getConnectorForElement(getConnection(), getWidget(),
+                    element);
+        }
+
+        @Override
+        protected LayoutClickRpc getLayoutClickRPC() {
+            return getRpcProxy(AbstractOrderedLayoutServerRpc.class);
+        }
+    };
 
     private Map<ComponentConnector, String> oldMaxWidths = null;
 
@@ -143,6 +167,7 @@ public class FormLayoutConnector extends AbstractLayoutConnector implements
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
+        clickEventHandler.handleEventHandlerRegistration();
         VFormLayoutTable formLayoutTable = getWidget().table;
 
         formLayoutTable.setMargins(new MarginInfo(getState().marginsBitmask));
