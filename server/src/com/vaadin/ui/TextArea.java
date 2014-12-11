@@ -16,8 +16,11 @@
 
 package com.vaadin.ui;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.data.Property;
 import com.vaadin.shared.ui.textarea.TextAreaState;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * A text field that supports multi line editing.
@@ -133,4 +136,30 @@ public class TextArea extends AbstractTextField {
         return getState(false).wordwrap;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.AbstractField#synchronizeFromDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeFromDesign(Element design,
+            DesignContext designContext) {
+        super.synchronizeFromDesign(design, designContext);
+        setValue(design.html());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.AbstractTextField#synchronizeToDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeToDesign(Element design, DesignContext designContext) {
+        super.synchronizeToDesign(design, designContext);
+        design.html(getValue());
+    }
 }

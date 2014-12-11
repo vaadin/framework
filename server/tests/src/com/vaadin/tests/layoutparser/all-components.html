@@ -40,8 +40,12 @@
       
       <!--  abstract field -->
 	  <v-text-field buffered validation-visible=false invalid-committed invalid-allowed=false required required-error="This is a required field" conversion-error="Input {0} cannot be parsed" tabindex=3 readonly />
-      <!--  abstract text field -->
-      <v-text-field null-representation="" null-setting-allowed maxlength=10 columns=5 input-prompt="Please enter a value" text-change-event-mode="eager" text-change-timeout=2 />
+      <!--  abstract text field, text field -->
+      <v-text-field null-representation="" null-setting-allowed maxlength=10 columns=5 input-prompt="Please enter a value" text-change-event-mode="eager" text-change-timeout=2 value="foo" />
+	  <!--  password field -->      
+      <v-password-field null-representation="" null-setting-allowed maxlength=10 columns=5 input-prompt="Please enter a value" text-change-event-mode="eager" text-change-timeout=2 value="foo" />
+      <!--  text area -->
+      <v-text-area rows=5 wordwrap=false >test value</v-text-area>
       
   </v-vertical-layout>
  </body>

@@ -16,7 +16,12 @@
 
 package com.vaadin.ui;
 
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+
 import com.vaadin.data.Property;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * <p>
@@ -99,4 +104,39 @@ public class TextField extends AbstractTextField {
         setCaption(caption);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.AbstractField#synchronizeFromDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeFromDesign(Element design,
+            DesignContext designContext) {
+        super.synchronizeFromDesign(design, designContext);
+        AbstractTextField def = designContext.getDefaultInstance(this
+                .getClass());
+        Attributes attr = design.attributes();
+        String value = DesignAttributeHandler.readAttribute("value", attr,
+                def.getValue(), String.class);
+        setValue(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.AbstractTextField#synchronizeToDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void synchronizeToDesign(Element design, DesignContext designContext) {
+        super.synchronizeToDesign(design, designContext);
+        AbstractTextField def = designContext.getDefaultInstance(this
+                .getClass());
+        Attributes attr = design.attributes();
+        DesignAttributeHandler.writeAttribute("value", attr, getValue(),
+                def.getValue(), String.class);
+    }
 }

@@ -1790,6 +1790,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         Collection<String> attributes = super.getCustomAttributes();
         attributes.add("readonly");
         attributes.add("tabindex");
+        // must be handled by subclasses
+        attributes.add("value");
         return attributes;
     }
 
