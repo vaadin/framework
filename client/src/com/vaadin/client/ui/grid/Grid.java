@@ -2934,7 +2934,7 @@ public class Grid<T> extends ResizeComposite implements
                     @Override
                     public void onRowVisibilityChange(
                             RowVisibilityChangeEvent event) {
-                        if (dataSource != null && dataSource.size() > 0) {
+                        if (dataSource != null && dataSource.size() != 0) {
                             dataIsBeingFetched = true;
                             dataSource.ensureAvailability(
                                     event.getFirstVisibleRow(),
@@ -3661,7 +3661,18 @@ public class Grid<T> extends ResizeComposite implements
             escalator.getBody().removeRows(0, previousRowCount);
         }
 
+        setEscalatorSizeFromDataSource();
+    }
+
+    private void setEscalatorSizeFromDataSource() {
+        assert escalator.getBody().getRowCount() == 0;
+
         int size = dataSource.size();
+        if (size == -1 && isAttached()) {
+            // Exact size is not yet known, start with some reasonable guess
+            // just to get an initial backend request going
+            size = getEscalator().getMaxVisibleRowCount();
+        }
         if (size > 0) {
             escalator.getBody().insertRows(0, size);
         }
@@ -5074,5 +5085,14 @@ public class Grid<T> extends ResizeComposite implements
      */
     public Widget getEditorRowWidget(GridColumn<?, T> column) {
         return editorRow.getWidget(column);
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+
+        if (getEscalator().getBody().getRowCount() == 0 && dataSource != null) {
+            setEscalatorSizeFromDataSource();
+        }
     }
 }

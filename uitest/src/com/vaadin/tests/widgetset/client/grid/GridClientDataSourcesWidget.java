@@ -18,6 +18,7 @@ package com.vaadin.tests.widgetset.client.grid;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.ui.grid.Grid;
@@ -27,6 +28,10 @@ import com.vaadin.client.ui.grid.renderers.TextRenderer;
 
 public class GridClientDataSourcesWidget extends
         PureGWTTestApplication<Grid<String[]>> {
+
+    private interface RestCallback {
+        void onResponse(RestishDataSource.Backend.Result result);
+    }
 
     /**
      * This is an emulated datasource that has a back-end that changes size
@@ -66,8 +71,6 @@ public class GridClientDataSourcesWidget extends
      * </ol>
      */
     private class RestishDataSource extends AbstractRemoteDataSource<String[]> {
-        private int currentSize = 0;
-
         /**
          * Pretend like this class doesn't exist. It just simulates a backend
          * somewhere.
@@ -83,14 +86,22 @@ public class GridClientDataSourcesWidget extends
             private int size = 200;
             private int modCount = 0;
 
-            public Result query(int firstRowIndex, int numberOfRows) {
-                Result result = new Result();
+            public void query(int firstRowIndex, int numberOfRows,
+                    final RestCallback callback) {
+                final Result result = new Result();
                 result.size = size;
-                result.rows = getRows(firstRowIndex, numberOfRows);
-                return result;
+                result.rows = fetchRows(firstRowIndex, numberOfRows);
+
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        callback.onResponse(result);
+                    }
+                });
+
             }
 
-            private List<String[]> getRows(int firstRowIndex, int numberOfRows) {
+            private List<String[]> fetchRows(int firstRowIndex, int numberOfRows) {
                 List<String[]> rows = new ArrayList<String[]>();
                 for (int i = 0; i < numberOfRows; i++) {
                     String id = String.valueOf(firstRowIndex + i);
@@ -121,29 +132,18 @@ public class GridClientDataSourcesWidget extends
 
         public RestishDataSource() {
             backend = new Backend();
-            currentSize = backend.size;
         }
 
         @Override
-        public int size() {
-            return currentSize;
-        }
+        protected void requestRows(int firstRowIndex, int numberOfRows,
+                final RequestRowsCallback<String[]> callback) {
 
-        @Override
-        protected void requestRows(int firstRowIndex, int numberOfRows) {
-            Backend.Result result = backend.query(firstRowIndex, numberOfRows);
-            final List<String[]> newRows = result.rows;
-
-            // order matters: first set row data, only then modify size.
-
-            /* Here's the requested data. Process it, please. */
-            setRowData(firstRowIndex, newRows);
-
-            /* Let's check whether the backend size changed. */
-            if (currentSize != result.size) {
-                currentSize = result.size;
-                resetDataAndSize(currentSize);
-            }
+            backend.query(firstRowIndex, numberOfRows, new RestCallback() {
+                @Override
+                public void onResponse(Backend.Result result) {
+                    callback.onResponse(result.rows, result.size);
+                }
+            });
         }
 
         @Override

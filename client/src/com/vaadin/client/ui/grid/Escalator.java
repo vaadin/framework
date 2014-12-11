@@ -5047,4 +5047,14 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             Scheduler.get().scheduleDeferred(layoutCommand);
         }
     }
+
+    /**
+     * Gets the maximum number of body rows that can be visible on the screen at
+     * once.
+     * 
+     * @return the maximum capacity
+     */
+    public int getMaxVisibleRowCount() {
+        return body.getMaxEscalatorRowCapacity();
+    }
 }

@@ -55,7 +55,7 @@ public class GridEditorRowTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Editor row", "Edit item 5");
         assertNull(getEditorRow());
         assertEquals(
-                "4. Exception occured, java.lang.IllegalStateExceptionEditor row is not enabled",
+                "5. Exception occured, java.lang.IllegalStateExceptionEditor row is not enabled",
                 getLogRow(0));
     }
 
@@ -65,7 +65,7 @@ public class GridEditorRowTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Editor row", "Enabled");
         assertNotNull(getEditorRow());
         assertEquals(
-                "4. Exception occured, java.lang.IllegalStateExceptionCannot disable the editor row while an item (5) is being edited.",
+                "5. Exception occured, java.lang.IllegalStateExceptionCannot disable the editor row while an item (5) is being edited.",
                 getLogRow(0));
 
     }

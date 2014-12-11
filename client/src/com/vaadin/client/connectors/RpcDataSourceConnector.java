@@ -27,7 +27,6 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.data.DataProviderRpc;
-import com.vaadin.shared.data.DataProviderState;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.GridState;
@@ -89,7 +88,20 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
         private DataRequestRpc rpcProxy = getRpcProxy(DataRequestRpc.class);
 
         @Override
-        protected void requestRows(int firstRowIndex, int numberOfRows) {
+        protected void requestRows(int firstRowIndex, int numberOfRows,
+                RequestRowsCallback<JSONObject> callback) {
+            /*
+             * If you're looking at this code because you want to learn how to
+             * use AbstactRemoteDataSource, please look somewhere else instead.
+             * 
+             * We're not doing things in the conventional way with the callback
+             * here since Vaadin doesn't directly support RPC with return
+             * values. We're instead asking the server to push us some data, and
+             * when we receive pushed data, we just push it along to the
+             * underlying cache in the same way no matter if it was a genuine
+             * push or just a result of us requesting rows.
+             */
+
             Range cached = getCachedRange();
 
             rpcProxy.requestRows(firstRowIndex, numberOfRows,
@@ -110,11 +122,6 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
             JSONObject row = new JSONObject();
             row.put(GridState.JSONKEY_ROWKEY, new JSONString((String) key));
             return new RowHandleImpl(row, key);
-        }
-
-        @Override
-        public int size() {
-            return getState().containerSize;
         }
 
         @Override
@@ -145,10 +152,5 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
     @Override
     protected void extend(ServerConnector target) {
         ((GridConnector) target).setDataSource(dataSource);
-    }
-
-    @Override
-    public DataProviderState getState() {
-        return (DataProviderState) super.getState();
     }
 }

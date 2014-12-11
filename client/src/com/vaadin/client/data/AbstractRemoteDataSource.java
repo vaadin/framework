@@ -32,10 +32,8 @@ import com.vaadin.shared.ui.grid.Range;
  * Base implementation for data sources that fetch data from a remote system.
  * This class takes care of caching data and communicating with the data source
  * user. An implementation of this class should override
- * {@link #requestRows(int, int)} to trigger asynchronously loading of data.
- * When data is received from the server, new row data should be passed to
- * {@link #setRowData(int, List)}. {@link #setEstimatedSize(int)} should be used
- * based on estimations of how many rows are available.
+ * {@link #requestRows(int, int, RequestRowsCallback)} to trigger asynchronously
+ * loading of data and then pass the loaded data into the provided callback.
  * 
  * @since
  * @author Vaadin Ltd
@@ -43,6 +41,60 @@ import com.vaadin.shared.ui.grid.Range;
  *            the row type
  */
 public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
+
+    /**
+     * Callback used by
+     * {@link AbstractRemoteDataSource#requestRows(int, int, RequestRowsCallback)}
+     * to pass data to the underlying implementation when data has been fetched.
+     */
+    public static class RequestRowsCallback<T> {
+        private final Range requestedRange;
+        private final double requestStart;
+        private final AbstractRemoteDataSource<T> source;
+
+        /**
+         * Creates a new callback
+         * 
+         * @param source
+         *            the data source for which the request is made
+         * @param requestedRange
+         *            the requested row range
+         */
+        protected RequestRowsCallback(AbstractRemoteDataSource<T> source,
+                Range requestedRange) {
+            this.source = source;
+            this.requestedRange = requestedRange;
+
+            requestStart = Duration.currentTimeMillis();
+        }
+
+        /**
+         * Called by the
+         * {@link AbstractRemoteDataSource#requestRows(int, int, RequestRowsCallback)}
+         * implementation when data has been received.
+         * 
+         * @param rowData
+         *            a list of row objects starting at the requested offset
+         * @param totalSize
+         *            the total number of rows available at the remote end
+         */
+        public void onResponse(List<T> rowData, int totalSize) {
+            if (source.size != totalSize) {
+                source.resetDataAndSize(totalSize);
+            }
+            source.setRowData(requestedRange.getStart(), rowData);
+        }
+
+        /**
+         * Gets the range of rows that was requested.
+         * 
+         * @return the requsted row range
+         */
+        public Range getRequestedRange() {
+            return requestedRange;
+        }
+
+    }
 
     protected class RowHandleImpl extends RowHandle<T> {
         private T row;
@@ -120,13 +172,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         }
     }
 
-    /**
-     * Records the start of the previously requested range. This is used when
-     * tracking request timings to distinguish between explicit responses and
-     * arbitrary updates pushed from the server.
-     */
-    private int lastRequestStart = -1;
-    private double pendingRequestTime;
+    private RequestRowsCallback<T> currentRequestCallback;
 
     private boolean coverageCheckPending = false;
 
@@ -152,6 +198,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     private Map<Object, Integer> pinnedCounts = new HashMap<Object, Integer>();
     private Map<Object, RowHandleImpl> pinnedRows = new HashMap<Object, RowHandleImpl>();
     protected Collection<T> temporarilyPinnedRows = Collections.emptySet();
+
+    // Size not yet known
+    private int size = -1;
 
     private void ensureCoverageCheck() {
         if (!coverageCheckPending) {
@@ -214,8 +263,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     }
 
     private void checkCacheCoverage() {
-        if (lastRequestStart != -1) {
-            // Anyone clearing lastRequestStart should run this method again
+        if (currentRequestCallback != null) {
+            // Anyone clearing currentRequestCallback should run this method
+            // again
             return;
         }
 
@@ -269,22 +319,23 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         if (range.isEmpty()) {
             return;
         }
-        lastRequestStart = range.getStart();
-        pendingRequestTime = Duration.currentTimeMillis();
-        requestRows(range.getStart(), range.length());
+        currentRequestCallback = new RequestRowsCallback<T>(this, range);
+        requestRows(range.getStart(), range.length(), currentRequestCallback);
     }
 
     /**
-     * Triggers fetching rows from the remote data source.
-     * {@link #setRowData(int, List)} should be invoked with data for the
-     * requested rows when they have been received.
+     * Triggers fetching rows from the remote data source. The provided callback
+     * should be informed when the requested rows have been received.
      * 
      * @param firstRowIndex
      *            the index of the first row to fetch
      * @param numberOfRows
      *            the number of rows to fetch
+     * @param callback
+     *            callback to inform when the requested rows are available
      */
-    protected abstract void requestRows(int firstRowIndex, int numberOfRows);
+    protected abstract void requestRows(int firstRowIndex, int numberOfRows,
+            RequestRowsCallback<T> callback);
 
     @Override
     public T getRow(int rowIndex) {
@@ -321,16 +372,18 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      */
     protected void setRowData(int firstRowIndex, List<T> rowData) {
 
+        assert firstRowIndex + rowData.size() <= size();
+
         Profiler.enter("AbstractRemoteDataSource.setRowData");
 
         Range received = Range.withLength(firstRowIndex, rowData.size());
 
-        if (firstRowIndex == lastRequestStart) {
-            // Provide timing information if we know when we asked for this data
+        if (currentRequestCallback != null) {
             cacheStrategy.onDataArrive(Duration.currentTimeMillis()
-                    - pendingRequestTime, received.length());
+                    - currentRequestCallback.requestStart, received.length());
+
+            currentRequestCallback = null;
         }
-        lastRequestStart = -1;
 
         Range maxCacheRange = getMaxCacheRange();
 
@@ -411,6 +464,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     protected void removeRowData(int firstRowIndex, int count) {
         Profiler.enter("AbstractRemoteDataSource.removeRowData");
 
+        size -= count;
+
         // shift indices to fill the cache correctly
         for (int i = firstRowIndex + count; i < cached.getEnd(); i++) {
             moveRowFromIndexToIndex(i, i - count);
@@ -444,6 +499,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      */
     protected void insertRowData(int firstRowIndex, int count) {
         Profiler.enter("AbstractRemoteDataSource.insertRowData");
+
+        size += count;
 
         if (cached.contains(firstRowIndex)) {
             int oldCacheEnd = cached.getEnd();
@@ -523,7 +580,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     }
 
     private Range getMinCacheRange() {
-        Range availableDataRange = Range.withLength(0, size());
+        Range availableDataRange = getAvailableRangeForCache();
         Range minCacheRange = cacheStrategy.getMinCacheRange(
                 requestedAvailability, cached, availableDataRange);
 
@@ -533,13 +590,21 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     }
 
     private Range getMaxCacheRange() {
-        Range availableDataRange = Range.withLength(0, size());
+        Range availableDataRange = getAvailableRangeForCache();
         Range maxCacheRange = cacheStrategy.getMaxCacheRange(
                 requestedAvailability, cached, availableDataRange);
 
         assert maxCacheRange.isSubsetOf(availableDataRange);
 
         return maxCacheRange;
+    }
+
+    private Range getAvailableRangeForCache() {
+        int upperBound = size();
+        if (upperBound == -1) {
+            upperBound = requestedAvailability.length();
+        }
+        return Range.withLength(0, upperBound);
     }
 
     @Override
@@ -584,7 +649,26 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      */
     abstract public Object getRowKey(T row);
 
+    @Override
+    public int size() {
+        return size;
+    }
+
+    /**
+     * Updates the size, discarding all cached data. This method is used when
+     * the size of the container is changed without any information about the
+     * structure of the change. In this case, all cached data is discarded to
+     * avoid cache offset issues.
+     * <p>
+     * If you have information about the structure of the change, use
+     * {@link #insertRowData(int, int)} or {@link #removeRowData(int, int)} to
+     * indicate where the inserted or removed rows are located.
+     * 
+     * @param newSize
+     *            the new size of the container
+     */
     protected void resetDataAndSize(int newSize) {
+        size = newSize;
         dropFromCache(getCachedRange());
         cached = Range.withLength(0, 0);
         assertDataChangeHandlerIsInjected();

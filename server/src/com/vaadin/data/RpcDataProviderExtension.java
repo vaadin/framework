@@ -45,7 +45,6 @@ import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.data.DataProviderRpc;
-import com.vaadin.shared.data.DataProviderState;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
@@ -638,7 +637,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 activeRowHandler.activeRange = Range.withLength(0, 0);
                 activeRowHandler.valueChangeListeners.clear();
                 rpc.resetDataAndSize(event.getContainer().size());
-                getState().containerSize = event.getContainer().size();
             }
         }
     };
@@ -665,20 +663,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
             public void requestRows(int firstRow, int numberOfRows,
                     int firstCachedRowIndex, int cacheSize) {
 
-                Range active = Range.withLength(firstRow, numberOfRows);
-                if (cacheSize != 0) {
-                    Range cached = Range.withLength(firstCachedRowIndex,
-                            cacheSize);
-                    active = active.combineWith(cached);
-                }
-
-                List<?> itemIds = RpcDataProviderExtension.this.container
-                        .getItemIds(firstRow, numberOfRows);
-                keyMapper.preActiveRowsChange(active, firstRow, itemIds);
-                pushRows(firstRow, itemIds);
-
-                activeRowHandler.setActiveRows(active.getStart(),
-                        active.length());
+                pushRowData(firstRow, numberOfRows, firstCachedRowIndex,
+                        cacheSize);
             }
 
             @Override
@@ -696,8 +682,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
         });
 
-        getState().containerSize = container.size();
-
         if (container instanceof ItemSetChangeNotifier) {
             ((ItemSetChangeNotifier) container)
                     .addItemSetChangeListener(itemListener);
@@ -708,15 +692,43 @@ public class RpcDataProviderExtension extends AbstractExtension {
     @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
-        clientInitialized = true;
+        if (!clientInitialized) {
+            clientInitialized = true;
+
+            /*
+             * Push initial set of rows, assuming Grid will initially be
+             * rendered scrolled to the top and with a decent amount of rows
+             * visible. If this guess is right, initial data can be shown
+             * without a round-trip and if it's wrong, the data will simply be
+             * discarded.
+             */
+            int size = container.size();
+            rpc.resetDataAndSize(size);
+
+            int numberOfRows = Math.min(40, size);
+            pushRowData(0, numberOfRows, 0, 0);
+        }
     }
 
-    private void pushRows(int firstRow, List<?> itemIds) {
+    private void pushRowData(int firstRowToPush, int numberOfRows,
+            int firstCachedRowIndex, int cacheSize) {
+        Range active = Range.withLength(firstRowToPush, numberOfRows);
+        if (cacheSize != 0) {
+            Range cached = Range.withLength(firstCachedRowIndex, cacheSize);
+            active = active.combineWith(cached);
+        }
+
+        List<?> itemIds = RpcDataProviderExtension.this.container.getItemIds(
+                firstRowToPush, numberOfRows);
+        keyMapper.preActiveRowsChange(active, firstRowToPush, itemIds);
+
         JsonArray rows = Json.createArray();
         for (int i = 0; i < itemIds.size(); ++i) {
             rows.set(i, getRowData(getGrid().getColumns(), itemIds.get(i)));
         }
-        rpc.setRowData(firstRow, rows.toJson());
+        rpc.setRowData(firstRowToPush, rows.toJson());
+
+        activeRowHandler.setActiveRows(active.getStart(), active.length());
     }
 
     private JsonValue getRowData(Collection<Column> columns, Object itemId) {
@@ -776,11 +788,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
         }
     }
 
-    @Override
-    protected DataProviderState getState() {
-        return (DataProviderState) super.getState();
-    }
-
     /**
      * Makes the data source available to the given {@link Grid} component.
      * 
@@ -802,7 +809,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *            the number of rows inserted at <code>index</code>
      */
     private void insertRowData(int index, int count) {
-        getState().containerSize += count;
         if (clientInitialized) {
             rpc.insertRowData(index, count);
         }
@@ -821,7 +827,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *            the item id of the first removed item
      */
     private void removeRowData(int firstIndex, int count) {
-        getState().containerSize -= count;
         if (clientInitialized) {
             rpc.removeRowData(firstIndex, count);
         }
@@ -864,9 +869,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         int firstRow = activeRowHandler.activeRange.getStart();
         int numberOfRows = activeRowHandler.activeRange.length();
 
-        List<?> itemIds = RpcDataProviderExtension.this.container.getItemIds(
-                firstRow, numberOfRows);
-        pushRows(firstRow, itemIds);
+        pushRowData(firstRow, numberOfRows, firstRow, numberOfRows);
     }
 
     @Override
