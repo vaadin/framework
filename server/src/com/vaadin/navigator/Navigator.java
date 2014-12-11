@@ -371,6 +371,7 @@ public class Navigator implements Serializable {
     private View currentView = null;
     private List<ViewChangeListener> listeners = new LinkedList<ViewChangeListener>();
     private List<ViewProvider> providers = new LinkedList<ViewProvider>();
+    private String currentNavigationState = null;
     private ViewProvider errorProvider;
 
     /**
@@ -551,6 +552,11 @@ public class Navigator implements Serializable {
         ViewChangeEvent event = new ViewChangeEvent(this, currentView, view,
                 viewName, parameters);
         if (!fireBeforeViewChange(event)) {
+            // #10901. Revert URL to previous state if back-button navigation
+            // was canceled
+            if (currentNavigationState != null) {
+                getStateManager().setState(currentNavigationState);
+            }
             return;
         }
 
@@ -561,6 +567,7 @@ public class Navigator implements Serializable {
             }
             if (!navigationState.equals(getStateManager().getState())) {
                 getStateManager().setState(navigationState);
+                currentNavigationState = navigationState;
             }
         }
 
