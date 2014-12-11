@@ -166,10 +166,6 @@ public class Grid<T> extends ResizeComposite implements
          * Called by Grid to generate a style name for a row or cell element.
          * Row styles are generated when the column parameter is
          * <code>null</code>, otherwise a cell style is generated.
-         * <p>
-         * The returned style name is prefixed so that the actual style for
-         * cells will be <tt>v-grid-cell-content-[style name]</tt>, and the row
-         * style will be <tt>v-grid-row-[style name]</tt>.
          * 
          * @param grid
          *            the source grid
@@ -2046,9 +2042,7 @@ public class Grid<T> extends ResizeComposite implements
 
     private String rowStripeStyleName;
     private String rowHasDataStyleName;
-    private String rowGeneratedStylePrefix;
     private String rowSelectedStyleName;
-    private String cellGeneratedStylePrefix;
     private String cellFocusStyleName;
     private String rowFocusStyleName;
     private String headerFooterFocusStyleName;
@@ -2601,10 +2595,6 @@ public class Grid<T> extends ResizeComposite implements
                     try {
                         String rowStylename = cellStyleGenerator.getStyle(
                                 Grid.this, rowData, rowIndex, null, -1);
-                        if (rowStylename != null) {
-                            rowStylename = rowGeneratedStylePrefix
-                                    + rowStylename;
-                        }
                         setCustomStyleName(rowElement, rowStylename);
                     } catch (RuntimeException e) {
                         getLogger().log(
@@ -2638,10 +2628,6 @@ public class Grid<T> extends ResizeComposite implements
                         String generatedStyle = cellStyleGenerator.getStyle(
                                 Grid.this, rowData, rowIndex, column,
                                 cell.getColumn());
-                        if (generatedStyle != null) {
-                            generatedStyle = cellGeneratedStylePrefix
-                                    + generatedStyle;
-                        }
                         setCustomStyleName(cell.getElement(), generatedStyle);
                     } catch (RuntimeException e) {
                         getLogger().log(
@@ -2988,14 +2974,12 @@ public class Grid<T> extends ResizeComposite implements
         rowHasDataStyleName = rowStyle + "-has-data";
         rowSelectedStyleName = rowStyle + "-selected";
         rowStripeStyleName = rowStyle + "-stripe";
-        rowGeneratedStylePrefix = rowStyle + "-";
 
         /*
          * TODO rename CSS "active" to "focused" once Valo theme has been
          * merged.
          */
         cellFocusStyleName = getStylePrimaryName() + "-cell-active";
-        cellGeneratedStylePrefix = getStylePrimaryName() + "-cell-content-";
         headerFooterFocusStyleName = getStylePrimaryName() + "-header-active";
         rowFocusStyleName = getStylePrimaryName() + "-row-active";
 

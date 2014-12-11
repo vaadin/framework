@@ -33,18 +33,16 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
         GridRowElement row2 = getGridElement().getRow(2);
         GridCellElement cell4_2 = getGridElement().getCell(4, 2);
 
-        Assert.assertTrue(row2.getAttribute("class").contains("v-grid-row-2"));
-        Assert.assertTrue(cell4_2.getAttribute("class").contains(
-                "v-grid-cell-content-4_2"));
+        Assert.assertTrue(hasCssClass(row2, "2"));
+        Assert.assertTrue(hasCssClass(cell4_2, "4_2"));
 
         // Scroll down and verify that the old elements don't have the
         // stylename any more
 
         getGridElement().getRow(350);
 
-        Assert.assertFalse(row2.getAttribute("class").contains("v-grid-row-2"));
-        Assert.assertFalse(cell4_2.getAttribute("class").contains(
-                "v-grid-cell-content-4_2"));
+        Assert.assertFalse(hasCssClass(row2, "2"));
+        Assert.assertFalse(hasCssClass(cell4_2, "4_2"));
     }
 
     @Test
@@ -57,16 +55,14 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
         GridRowElement row2 = getGridElement().getRow(2);
         GridCellElement cell4_2 = getGridElement().getCell(4, 2);
 
-        Assert.assertTrue(row2.getAttribute("class").contains("v-grid-row-2"));
-        Assert.assertTrue(cell4_2.getAttribute("class").contains(
-                "v-grid-cell-content-4_2"));
+        Assert.assertTrue(hasCssClass(row2, "2"));
+        Assert.assertTrue(hasCssClass(cell4_2, "4_2"));
 
         // Disable the generator and check again
         selectStyleNameGenerator("None");
 
-        Assert.assertFalse(row2.getAttribute("class").contains("v-grid-row-2"));
-        Assert.assertFalse(cell4_2.getAttribute("class").contains(
-                "v-grid-cell-content-4_2"));
+        Assert.assertFalse(hasCssClass(row2, "2"));
+        Assert.assertFalse(hasCssClass(cell4_2, "4_2"));
     }
 
     @Test
@@ -79,21 +75,18 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
         GridRowElement row2 = getGridElement().getRow(2);
         GridCellElement cell4_2 = getGridElement().getCell(4, 2);
 
-        Assert.assertTrue(row2.getAttribute("class").contains("v-grid-row-2"));
-        Assert.assertTrue(cell4_2.getAttribute("class").contains(
-                "v-grid-cell-content-4_2"));
+        Assert.assertTrue(hasCssClass(row2, "2"));
+        Assert.assertTrue(hasCssClass(cell4_2, "4_2"));
 
         // Change the generator and check again
         selectStyleNameGenerator("Cell only");
 
         // Old styles removed?
-        Assert.assertFalse(row2.getAttribute("class").contains("v-grid-row-2"));
-        Assert.assertFalse(cell4_2.getAttribute("class").contains(
-                "v-grid-cell-content-4_2"));
+        Assert.assertFalse(hasCssClass(row2, "2"));
+        Assert.assertFalse(hasCssClass(cell4_2, "4_2"));
 
         // New style present?
-        Assert.assertTrue(cell4_2.getAttribute("class").contains(
-                "v-grid-cell-content-two"));
+        Assert.assertTrue(hasCssClass(cell4_2, "two"));
     }
 
     @Test
@@ -106,23 +99,19 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
         GridRowElement row2 = getGridElement().getRow(2);
         GridCellElement cell4_2 = getGridElement().getCell(4, 2);
 
-        Assert.assertTrue(row2.getAttribute("class").contains("v-grid-row-2"));
-        Assert.assertTrue(cell4_2.getAttribute("class").contains(
-                "v-grid-cell-content-4_2"));
+        Assert.assertTrue(hasCssClass(row2, "2"));
+        Assert.assertTrue(hasCssClass(cell4_2, "4_2"));
 
         // Change primary stylename
         selectMenuPath("Component", "State", "Primary Stylename", "v-escalator");
 
-        // Old styles removed?
-        Assert.assertFalse(row2.getAttribute("class").contains("v-grid-row-2"));
-        Assert.assertFalse(cell4_2.getAttribute("class").contains(
-                "v-grid-cell-content-4_2"));
+        // Styles still present
+        Assert.assertTrue(hasCssClass(row2, "2"));
+        Assert.assertTrue(hasCssClass(cell4_2, "4_2"));
 
         // New styles present?
-        Assert.assertTrue(row2.getAttribute("class").contains(
-                "v-escalator-row-2"));
-        Assert.assertTrue(cell4_2.getAttribute("class").contains(
-                "v-escalator-cell-content-4_2"));
+        Assert.assertFalse(hasCssClass(row2, "v-escalator-row-2"));
+        Assert.assertFalse(hasCssClass(cell4_2, "v-escalator-cell-content-4_2"));
     }
 
     private void selectStyleNameGenerator(String name) {

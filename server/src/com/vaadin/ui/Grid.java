@@ -787,10 +787,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          * Called by Grid to generate a style name for a row or cell element.
          * Row styles are generated when the column parameter is
          * <code>null</code>, otherwise a cell style is generated.
-         * <p>
-         * The returned style name is prefixed so that the actual style for
-         * cells will be <tt>v-grid-cell-content-[style name]</tt>, and the row
-         * style will be <tt>v-grid-row-[style name]</tt>.
          * 
          * @param grid
          *            the source grid
