@@ -24,40 +24,17 @@ import com.vaadin.client.Util;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractLayoutConnector;
-import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.client.ui.VFormLayout;
 import com.vaadin.client.ui.VFormLayout.Caption;
 import com.vaadin.client.ui.VFormLayout.ErrorFlag;
 import com.vaadin.client.ui.VFormLayout.VFormLayoutTable;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.LayoutClickRpc;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 import com.vaadin.ui.FormLayout;
 
 @Connect(FormLayout.class)
 public class FormLayoutConnector extends AbstractLayoutConnector {
-
-    /*
-     * Handlers & Listeners
-     */
-
-    private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
-            this) {
-
-        @Override
-        protected ComponentConnector getChildComponent(
-                com.google.gwt.user.client.Element element) {
-            return Util.getConnectorForElement(getConnection(), getWidget(),
-                    element);
-        }
-
-        @Override
-        protected LayoutClickRpc getLayoutClickRPC() {
-            return getRpcProxy(AbstractOrderedLayoutServerRpc.class);
-        }
-    };
 
     @Override
     public AbstractOrderedLayoutState getState() {
@@ -68,7 +45,6 @@ public class FormLayoutConnector extends AbstractLayoutConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        clickEventHandler.handleEventHandlerRegistration();
         VFormLayoutTable formLayoutTable = getWidget().table;
 
         formLayoutTable.setMargins(new MarginInfo(getState().marginsBitmask));
