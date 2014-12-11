@@ -305,6 +305,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                     getWidget().tb.setValue("");
                 }
             }
+            getWidget().currentSuggestion = null; // #13217
             getWidget().setSelectedItemIcon(null);
             getWidget().selectedOptionKey = null;
         }
