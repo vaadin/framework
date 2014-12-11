@@ -83,7 +83,6 @@ import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SortDirection;
-import com.vaadin.shared.ui.grid.SortEventOriginator;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.renderer.Renderer;
 import com.vaadin.ui.renderer.TextRenderer;
@@ -2284,7 +2283,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
             @Override
             public void sort(String[] columnIds, SortDirection[] directions,
-                    SortEventOriginator originator) {
+                    boolean userOriginated) {
                 assert columnIds.length == directions.length;
 
                 List<SortOrder> order = new ArrayList<SortOrder>(
@@ -2294,7 +2293,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                     order.add(new SortOrder(propertyId, directions[i]));
                 }
 
-                setSortOrder(order, originator);
+                setSortOrder(order, userOriginated);
             }
 
             @Override
@@ -2432,7 +2431,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 }
             }
 
-            sort(SortEventOriginator.API);
+            sort(false);
         } else {
 
             // If the new container is not sortable, we'll just re-set the sort
@@ -3253,11 +3252,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      *            a sort order list.
      */
     public void setSortOrder(List<SortOrder> order) {
-        setSortOrder(order, SortEventOriginator.API);
+        setSortOrder(order, false);
     }
 
-    private void setSortOrder(List<SortOrder> order,
-            SortEventOriginator originator) {
+    private void setSortOrder(List<SortOrder> order, boolean userOriginated) {
         if (!(getContainerDataSource() instanceof Container.Sortable)) {
             throw new IllegalStateException(
                     "Attached container is not sortable (does not implement Container.Sortable)");
@@ -3282,7 +3280,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         }
 
         sortOrder.addAll(order);
-        sort(originator);
+        sort(false);
     }
 
     /**
@@ -3297,7 +3295,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     /**
      * Apply sorting to data source.
      */
-    private void sort(SortEventOriginator originator) {
+    private void sort(boolean userOriginated) {
 
         Container c = getContainerDataSource();
         if (c instanceof Container.Sortable) {
@@ -3333,7 +3331,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
             cs.sort(propertyIds, directions);
 
             fireEvent(new SortOrderChangeEvent(this, new ArrayList<SortOrder>(
-                    sortOrder), originator));
+                    sortOrder), userOriginated));
 
             getState().sortColumns = columnKeys;
             getState(false).sortDirs = stateDirs;

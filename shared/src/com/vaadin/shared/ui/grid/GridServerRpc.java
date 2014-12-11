@@ -29,7 +29,7 @@ public interface GridServerRpc extends ServerRpc {
     void selectionChange(List<String> newSelection);
 
     void sort(String[] columnIds, SortDirection[] directions,
-            SortEventOriginator originator);
+            boolean userOriginated);
 
     void selectAll();
 }

@@ -384,7 +384,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                         || !Arrays.equals(directions, getState().sortDirs)) {
                     // Report back to server if changed
                     getRpcProxy(GridServerRpc.class).sort(columnIds,
-                            directions, event.getOriginator());
+                            directions, event.isUserOriginated());
                 }
             }
         });

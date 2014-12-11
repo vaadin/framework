@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.vaadin.data.sort.SortOrder;
-import com.vaadin.shared.ui.grid.SortEventOriginator;
 import com.vaadin.ui.Component;
 
 /**
@@ -34,7 +33,7 @@ import com.vaadin.ui.Component;
 public class SortOrderChangeEvent extends Component.Event {
 
     private final List<SortOrder> sortOrder;
-    private final SortEventOriginator originator;
+    private final boolean userOriginated;
 
     /**
      * Creates a new sort order change event with a sort order list.
@@ -43,14 +42,15 @@ public class SortOrderChangeEvent extends Component.Event {
      *            the component from which the event originates
      * @param sortOrder
      *            the new sort order list
-     * @param originator
-     *            an enumeration describing what triggered the sorting
+     * @param userOriginated
+     *            <code>true</code> if event is a result of user interaction,
+     *            <code>false</code> if from API call
      */
     public SortOrderChangeEvent(Component source, List<SortOrder> sortOrder,
-            SortEventOriginator originator) {
+            boolean userOriginated) {
         super(source);
         this.sortOrder = sortOrder;
-        this.originator = originator;
+        this.userOriginated = userOriginated;
     }
 
     /**
@@ -68,7 +68,7 @@ public class SortOrderChangeEvent extends Component.Event {
      * @return true if sort event originated from user interaction
      */
     public boolean isUserOriginated() {
-        return originator == SortEventOriginator.USER;
+        return userOriginated;
     }
 
     /**

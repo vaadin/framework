@@ -107,7 +107,6 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SortDirection;
-import com.vaadin.shared.ui.grid.SortEventOriginator;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
@@ -1965,7 +1964,7 @@ public class Grid<T> extends ResizeComposite implements
 
             // sortOrder has been changed; tell the Grid to re-sort itself by
             // user request.
-            Grid.this.sort(SortEventOriginator.USER);
+            Grid.this.sort(true);
         }
 
         /**
@@ -4575,18 +4574,17 @@ public class Grid<T> extends ResizeComposite implements
      *            a sort order list. If set to null, the sort order is cleared.
      */
     public void setSortOrder(List<SortOrder> order) {
-        setSortOrder(order, SortEventOriginator.API);
+        setSortOrder(order, false);
     }
 
-    private void setSortOrder(List<SortOrder> order,
-            SortEventOriginator originator) {
+    private void setSortOrder(List<SortOrder> order, boolean userOriginated) {
         if (order != sortOrder) {
             sortOrder.clear();
             if (order != null) {
                 sortOrder.addAll(order);
             }
         }
-        sort(originator);
+        sort(userOriginated);
     }
 
     /**
@@ -4822,10 +4820,10 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Apply sorting to data source.
      */
-    private void sort(SortEventOriginator originator) {
+    private void sort(boolean userOriginated) {
         refreshHeader();
         fireEvent(new SortEvent<T>(this,
-                Collections.unmodifiableList(sortOrder), originator));
+                Collections.unmodifiableList(sortOrder), userOriginated));
     }
 
     private int getLastVisibleRowIndex() {
