@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -1889,6 +1890,39 @@ public class Grid<T> extends ResizeComposite implements
         public Boolean getValue(T row) {
             return Boolean.valueOf(isSelected(row));
         }
+
+        @Override
+        public GridColumn<Boolean, T> setExpandRatio(int ratio) {
+            throw new UnsupportedOperationException(
+                    "can't change the expand ratio of the selection column");
+        }
+
+        @Override
+        public int getExpandRatio() {
+            return 0;
+        }
+
+        @Override
+        public GridColumn<Boolean, T> setMaximumWidth(double pixels) {
+            throw new UnsupportedOperationException(
+                    "can't change the maximum width of the selection column");
+        }
+
+        @Override
+        public double getMaximumWidth() {
+            return -1;
+        }
+
+        @Override
+        public GridColumn<Boolean, T> setMinimumWidth(double pixels) {
+            throw new UnsupportedOperationException(
+                    "can't change the minimum width of the selection column");
+        }
+
+        @Override
+        public double getMinimumWidth() {
+            return -1;
+        }
     }
 
     /**
@@ -1998,6 +2032,328 @@ public class Grid<T> extends ResizeComposite implements
 
     }
 
+    /** @see Grid#autoColumnWidthsRecalculator */
+    private class AutoColumnWidthsRecalculator {
+
+        private final ScheduledCommand calculateCommand = new ScheduledCommand() {
+            @Override
+            public void execute() {
+                if (!isScheduled) {
+                    // something cancelled running this.
+                    return;
+                }
+
+                if (!dataIsBeingFetched) {
+                    calculate();
+                } else {
+                    Scheduler.get().scheduleDeferred(this);
+                }
+            }
+        };
+
+        private boolean isScheduled;
+
+        /**
+         * Calculates and applies column widths, taking into account fixed
+         * widths and column expand rules
+         * 
+         * @param immediately
+         *            <code>true</code> if the widths should be executed
+         *            immediately (ignoring lazy loading completely), or
+         *            <code>false</code> if the command should be run after a
+         *            while (duplicate non-immediately invocations are ignored).
+         * @see GridColumn#setWidth(double)
+         * @see GridColumn#setExpandRatio(int)
+         * @see GridColumn#setMinimumWidth(double)
+         * @see GridColumn#setMaximumWidth(double)
+         */
+        public void schedule() {
+            if (!isScheduled) {
+                isScheduled = true;
+                Scheduler.get().scheduleFinally(calculateCommand);
+            }
+        }
+
+        private void calculate() {
+            isScheduled = false;
+
+            assert !dataIsBeingFetched : "Trying to calculate column widths even though data is still being fetched.";
+            /*
+             * At this point we assume that no data is being fetched anymore.
+             * Everything's rendered in the DOM. Now we just make sure
+             * everything fits as it should.
+             */
+
+            /*
+             * Quick optimization: if the sum of fixed widths and minimum widths
+             * is greater than the grid can display, we already know that things
+             * will be squeezed and no expansion will happen.
+             */
+            if (gridWasTooNarrowAndEverythingWasFixedAlready()) {
+                return;
+            }
+
+            boolean someColumnExpands = false;
+            int totalRatios = 0;
+            double reservedPixels = 0;
+            final Set<GridColumn<?, ?>> columnsToExpand = new HashSet<GridColumn<?, ?>>();
+
+            /*
+             * Set all fixed widths and also calculate the size-to-fit widths
+             * for the autocalculated columns.
+             * 
+             * This way we know with how many pixels we have left to expand the
+             * rest.
+             */
+            for (GridColumn<?, ?> column : getColumns()) {
+                final double widthAsIs = column.getWidth();
+                final boolean isFixedWidth = widthAsIs >= 0;
+                final double widthFixed = Math.max(widthAsIs,
+                        column.getMinimumWidth());
+                final int expandRatio = column.getExpandRatio();
+
+                if (isFixedWidth) {
+                    column.doSetWidth(widthFixed);
+                } else {
+                    column.doSetWidth(-1);
+                    final double newWidth = column.getWidthActual();
+                    final double maxWidth = getMaxWidth(column);
+                    boolean shouldExpand = newWidth < maxWidth
+                            && expandRatio > 0;
+                    if (shouldExpand) {
+                        totalRatios += expandRatio;
+                        columnsToExpand.add(column);
+                        someColumnExpands = true;
+                    }
+                }
+                reservedPixels += column.getWidthActual();
+            }
+
+            /*
+             * If no column has a positive expand ratio, all columns with a
+             * negative expand ratio has an expand ratio. Columns with 0 expand
+             * ratio are excluded.
+             * 
+             * This means that if we only define one column to have 0 expand, it
+             * will be the only one not to expand, while all the others expand.
+             */
+            if (!someColumnExpands) {
+                assert totalRatios == 0 : "totalRatios should've been 0";
+                assert columnsToExpand.isEmpty() : "columnsToExpand should've been empty";
+                for (GridColumn<?, ?> column : getColumns()) {
+                    final double width = column.getWidth();
+                    final int expandRatio = column.getExpandRatio();
+                    if (width < 0 && expandRatio < 0) {
+                        totalRatios++;
+                        columnsToExpand.add(column);
+                    }
+                }
+            }
+
+            /*
+             * Now that we know how many pixels we need at the very least, we
+             * can distribute the remaining pixels to all columns according to
+             * their expand ratios.
+             */
+            double pixelsToDistribute = escalator.getInnerWidth()
+                    - reservedPixels;
+            if (pixelsToDistribute <= 0 || totalRatios <= 0) {
+                return;
+            }
+
+            /*
+             * Check for columns that hit their max width. Adjust
+             * pixelsToDistribute and totalRatios accordingly. Recheck. Stop
+             * when no new columns hit their max width
+             */
+            boolean aColumnHasMaxedOut;
+            do {
+                aColumnHasMaxedOut = false;
+                final double widthPerRatio = pixelsToDistribute / totalRatios;
+                final Iterator<GridColumn<?, ?>> i = columnsToExpand.iterator();
+                while (i.hasNext()) {
+                    final GridColumn<?, ?> column = i.next();
+                    final int expandRatio = getExpandRatio(column,
+                            someColumnExpands);
+                    final double autoWidth = column.getWidthActual();
+                    final double maxWidth = getMaxWidth(column);
+                    final double widthCandidate = autoWidth + widthPerRatio
+                            * expandRatio;
+
+                    if (maxWidth <= widthCandidate) {
+                        column.doSetWidth(maxWidth);
+                        totalRatios -= expandRatio;
+                        pixelsToDistribute -= maxWidth - autoWidth;
+                        i.remove();
+                        aColumnHasMaxedOut = true;
+                    }
+                }
+            } while (aColumnHasMaxedOut);
+
+            if (totalRatios <= 0 && columnsToExpand.isEmpty()) {
+                return;
+            }
+            assert pixelsToDistribute > 0 : "We've run out of pixels to distribute ("
+                    + pixelsToDistribute
+                    + "px to "
+                    + totalRatios
+                    + " ratios between " + columnsToExpand.size() + " columns)";
+            assert totalRatios > 0 && !columnsToExpand.isEmpty() : "Bookkeeping out of sync. Ratios: "
+                    + totalRatios + " Columns: " + columnsToExpand.size();
+
+            /*
+             * If we still have anything left, distribute the remaining pixels
+             * to the remaining columns.
+             */
+            final double widthPerRatio = pixelsToDistribute / totalRatios;
+            for (GridColumn<?, ?> column : columnsToExpand) {
+                final int expandRatio = getExpandRatio(column,
+                        someColumnExpands);
+                final double autoWidth = column.getWidthActual();
+                final double totalWidth = autoWidth + widthPerRatio
+                        * expandRatio;
+                column.doSetWidth(totalWidth);
+
+                totalRatios -= expandRatio;
+            }
+            assert totalRatios == 0 : "Bookkeeping error: there were still some ratios left undistributed: "
+                    + totalRatios;
+
+            /*
+             * Check the guarantees for minimum width and scoot back the columns
+             * that don't care.
+             */
+            boolean minWidthsCausedReflows;
+            do {
+                minWidthsCausedReflows = false;
+
+                /*
+                 * First, let's check which columns were too cramped, and expand
+                 * them. Also keep track on how many pixels we grew - we need to
+                 * remove those pixels from other columns
+                 */
+                double pixelsToRemoveFromOtherColumns = 0;
+                for (GridColumn<?, T> column : getColumns()) {
+                    /*
+                     * We can't iterate over columnsToExpand, even though that
+                     * would be convenient. This is because some column without
+                     * an expand ratio might still have a min width - those
+                     * wouldn't show up in that set.
+                     */
+
+                    double minWidth = getMinWidth(column);
+                    double currentWidth = column.getWidthActual();
+                    boolean hasAutoWidth = column.getWidth() < 0;
+                    if (hasAutoWidth && currentWidth < minWidth) {
+                        column.doSetWidth(minWidth);
+                        pixelsToRemoveFromOtherColumns += (minWidth - currentWidth);
+                        minWidthsCausedReflows = true;
+
+                        /*
+                         * Remove this column form the set if it exists. This
+                         * way we make sure that it doesn't get shrunk in the
+                         * next step.
+                         */
+                        columnsToExpand.remove(column);
+                    }
+                }
+
+                /*
+                 * Now we need to shrink the remaining columns according to
+                 * their ratios. Recalculate the sum of remaining ratios.
+                 */
+                totalRatios = 0;
+                for (GridColumn<?, ?> column : columnsToExpand) {
+                    totalRatios += getExpandRatio(column, someColumnExpands);
+                }
+                final double pixelsToRemovePerRatio = pixelsToRemoveFromOtherColumns
+                        / totalRatios;
+                for (GridColumn<?, ?> column : columnsToExpand) {
+                    final double pixelsToRemove = pixelsToRemovePerRatio
+                            * getExpandRatio(column, someColumnExpands);
+                    column.doSetWidth(column.getWidthActual() - pixelsToRemove);
+                }
+
+            } while (minWidthsCausedReflows);
+        }
+
+        private boolean gridWasTooNarrowAndEverythingWasFixedAlready() {
+            double freeSpace = escalator.getInnerWidth();
+            for (GridColumn<?, ?> column : getColumns()) {
+                if (column.getWidth() >= 0) {
+                    freeSpace -= column.getWidth();
+                } else if (column.getMinimumWidth() >= 0) {
+                    freeSpace -= column.getMinimumWidth();
+                }
+            }
+
+            if (freeSpace < 0) {
+                for (GridColumn<?, ?> column : getColumns()) {
+                    column.doSetWidth(column.getWidth());
+
+                    boolean wasFixedWidth = column.getWidth() <= 0;
+                    boolean newWidthIsSmallerThanMinWidth = column
+                            .getWidthActual() < getMinWidth(column);
+                    if (wasFixedWidth && newWidthIsSmallerThanMinWidth) {
+                        column.doSetWidth(column.getMinimumWidth());
+                    }
+                }
+            }
+
+            return freeSpace < 0;
+        }
+
+        private int getExpandRatio(GridColumn<?, ?> column,
+                boolean someColumnExpands) {
+            int expandRatio = column.getExpandRatio();
+            if (expandRatio > 0) {
+                return expandRatio;
+            } else if (expandRatio < 0) {
+                assert !someColumnExpands : "No columns should've expanded";
+                return 1;
+            } else {
+                assert false : "this method should've not been called at all if expandRatio is 0";
+                return 0;
+            }
+        }
+
+        /**
+         * Returns the maximum width of the column, or {@link Double#MAX_VALUE}
+         * if defined as negative.
+         */
+        private double getMaxWidth(GridColumn<?, ?> column) {
+            double maxWidth = column.getMaximumWidth();
+            if (maxWidth >= 0) {
+                return maxWidth;
+            } else {
+                return Double.MAX_VALUE;
+            }
+        }
+
+        /**
+         * Returns the minimum width of the column, or {@link Double#MIN_VALUE}
+         * if defined as negative.
+         */
+        private double getMinWidth(GridColumn<?, ?> column) {
+            double minWidth = column.getMinimumWidth();
+            if (minWidth >= 0) {
+                return minWidth;
+            } else {
+                return Double.MIN_VALUE;
+            }
+        }
+
+        /**
+         * Check whether the auto width calculation is currently scheduled.
+         * 
+         * @return <code>true</code> if auto width calculation is currently
+         *         scheduled
+         */
+        public boolean isScheduled() {
+            return isScheduled;
+        }
+    }
+
     /**
      * Escalator used internally by grid to render the rows
      */
@@ -2076,6 +2432,13 @@ public class Grid<T> extends ResizeComposite implements
     private Cell cellOnPrevMouseDown;
 
     /**
+     * A scheduled command to re-evaluate the widths of <em>all columns</em>
+     * that have calculated widths. Most probably called because
+     * minwidth/maxwidth/expandratio has changed.
+     */
+    private final AutoColumnWidthsRecalculator autoColumnWidthsRecalculator = new AutoColumnWidthsRecalculator();
+
+    /**
      * Enumeration for easy setting of selection mode.
      */
     public enum SelectionMode {
@@ -2149,63 +2512,10 @@ public class Grid<T> extends ResizeComposite implements
             }
         }
 
-        private final class AsyncWidthAutodetectRunner {
-            private static final int POLLING_PERIOD_MS = 50;
-
-            private final Timer timer = new Timer() {
-                @Override
-                public void run() {
-                    /* Detaching the column from the grid should've cancelled */
-                    assert grid != null : "Column was detached from Grid before width autodetection completed";
-
-                    /*
-                     * setting a positive value for the width should've
-                     * cancelled
-                     */
-                    assert widthUser < 0 : "User defined width is not negative (to indicate autodetection) anymore!";
-
-                    if (!grid.dataIsBeingFetched) {
-                        setWidthForce(widthUser);
-                    } else {
-                        timer.schedule(POLLING_PERIOD_MS);
-                        return;
-                    }
-                }
-            };
-
-            /**
-             * Schedules an width autodetection.
-             * <p>
-             * It's not done immediately in case we're retrieving some lazy
-             * data, that will affect the appropriate width of the cells.
-             */
-            public void reschedule() {
-                /*
-                 * Check immediately. This will be _actually_ rescheduled if
-                 * things don't work out. Otherwise, autodetectionage will
-                 * happen.
-                 */
-                timer.schedule(0);
-            }
-
-            public void stop() {
-                timer.cancel();
-            }
-
-            public boolean isRunning() {
-                return timer.isRunning();
-            }
-        }
-
         /**
          * the column is associated with
          */
         private Grid<T> grid;
-
-        /**
-         * Should the column be visible in the grid
-         */
-        private boolean visible = true;
 
         /**
          * Width of column in pixels as {@link #setWidth(double)} has been
@@ -2222,7 +2532,9 @@ public class Grid<T> extends ResizeComposite implements
 
         private String headerText = "";
 
-        private final AsyncWidthAutodetectRunner asyncAutodetectWidth = new AsyncWidthAutodetectRunner();
+        private double minimumWidthPx = GridColumnState.DEFAULT_MIN_WIDTH;
+        private double maximumWidthPx = GridColumnState.DEFAULT_MAX_WIDTH;
+        private int expandRatio = GridColumnState.DEFAULT_EXPAND_RATIO;
 
         /**
          * Constructs a new column with a simple TextRenderer.
@@ -2290,11 +2602,13 @@ public class Grid<T> extends ResizeComposite implements
                         + "and then add it. (in: " + toString() + ")");
             }
 
+            if (this.grid != null) {
+                this.grid.autoColumnWidthsRecalculator.schedule();
+            }
             this.grid = grid;
-            if (grid != null) {
+            if (this.grid != null) {
+                this.grid.autoColumnWidthsRecalculator.schedule();
                 updateHeader();
-            } else {
-                asyncAutodetectWidth.stop();
             }
         }
 
@@ -2383,45 +2697,30 @@ public class Grid<T> extends ResizeComposite implements
 
         /**
          * Sets the pixel width of the column. Use a negative value for the grid
-         * to autosize column based on content and available space
+         * to autosize column based on content and available space.
+         * <p>
+         * This action is done "finally", once the current execution loop
+         * returns. This is done to reduce overhead of unintentionally always
+         * recalculate all columns, when modifying several columns at once.
          * 
          * @param pixels
          *            the width in pixels or negative for auto sizing
-         * @return the column itself
          */
         public GridColumn<C, T> setWidth(double pixels) {
-            widthUser = pixels;
-            if (pixels < 0) {
-                setWidthAutodetect();
-            } else {
-                setWidthAbsolute(pixels);
+            if (widthUser != pixels) {
+                widthUser = pixels;
+                scheduleColumnWidthRecalculator();
             }
-
             return (GridColumn<C, T>) this;
         }
 
-        private void setWidthAutodetect() {
+        void doSetWidth(double pixels) {
             if (grid != null) {
-                asyncAutodetectWidth.reschedule();
+                int index = grid.columns.indexOf(this);
+                ColumnConfiguration conf = grid.escalator
+                        .getColumnConfiguration();
+                conf.setColumnWidth(index, pixels);
             }
-
-            /*
-             * It's okay if the colum isn't attached to a grid immediately. The
-             * width will be re-set once it gets attached.
-             */
-        }
-
-        private void setWidthAbsolute(double pixels) {
-            asyncAutodetectWidth.stop();
-            if (grid != null) {
-                setWidthForce(pixels);
-            }
-        }
-
-        private void setWidthForce(double pixels) {
-            int index = grid.columns.indexOf(this);
-            ColumnConfiguration conf = grid.escalator.getColumnConfiguration();
-            conf.setColumnWidth(index, pixels);
         }
 
         /**
@@ -2512,8 +2811,162 @@ public class Grid<T> extends ResizeComposite implements
             return getClass().getSimpleName() + "[" + details.trim() + "]";
         }
 
-        boolean widthCalculationPending() {
-            return asyncAutodetectWidth.isRunning();
+        /**
+         * Sets the minimum width for this column.
+         * <p>
+         * This defines the minimum guaranteed pixel width of the column
+         * <em>when it is set to expand</em>.
+         * <p>
+         * This action is done "finally", once the current execution loop
+         * returns. This is done to reduce overhead of unintentionally always
+         * recalculate all columns, when modifying several columns at once.
+         * 
+         * @param pixels
+         *            the minimum width
+         * @return this column
+         */
+        public GridColumn<C, T> setMinimumWidth(double pixels) {
+            final double maxwidth = getMaximumWidth();
+            if (pixels >= 0 && pixels > maxwidth && maxwidth >= 0) {
+                throw new IllegalArgumentException("New minimum width ("
+                        + pixels + ") was greater than maximum width ("
+                        + maxwidth + ")");
+            }
+
+            if (minimumWidthPx != pixels) {
+                minimumWidthPx = pixels;
+                scheduleColumnWidthRecalculator();
+            }
+            return (GridColumn<C, T>) this;
+        }
+
+        /**
+         * Sets the maximum width for this column.
+         * <p>
+         * This defines the maximum allowed pixel width of the column
+         * <em>when it is set to expand</em>.
+         * <p>
+         * This action is done "finally", once the current execution loop
+         * returns. This is done to reduce overhead of unintentionally always
+         * recalculate all columns, when modifying several columns at once.
+         * 
+         * @param pixels
+         *            the maximum width
+         * @param immediately
+         *            <code>true</code> if the widths should be executed
+         *            immediately (ignoring lazy loading completely), or
+         *            <code>false</code> if the command should be run after a
+         *            while (duplicate non-immediately invocations are ignored).
+         * @return this column
+         */
+        public GridColumn<C, T> setMaximumWidth(double pixels) {
+            final double minwidth = getMinimumWidth();
+            if (pixels >= 0 && pixels < minwidth && minwidth >= 0) {
+                throw new IllegalArgumentException("New maximum width ("
+                        + pixels + ") was less than minimum width (" + minwidth
+                        + ")");
+            }
+
+            if (maximumWidthPx != pixels) {
+                maximumWidthPx = pixels;
+                scheduleColumnWidthRecalculator();
+            }
+            return (GridColumn<C, T>) this;
+        }
+
+        /**
+         * Sets the ratio with which the column expands.
+         * <p>
+         * By default, all columns expand equally (treated as if all of them had
+         * an expand ratio of 1). Once at least one column gets a defined expand
+         * ratio, the implicit expand ratio is removed, and only the defined
+         * expand ratios are taken into account.
+         * <p>
+         * If a column has a defined width ({@link #setWidth(double)}), it
+         * overrides this method's effects.
+         * <p>
+         * <em>Example:</em> A grid with three columns, with expand ratios 0, 1
+         * and 2, respectively. The column with a <strong>ratio of 0 is exactly
+         * as wide as its contents requires</strong>. The column with a ratio of
+         * 1 is as wide as it needs, <strong>plus a third of any excess
+         * space</strong>, bceause we have 3 parts total, and this column
+         * reservs only one of those. The column with a ratio of 2, is as wide
+         * as it needs to be, <strong>plus two thirds</strong> of the excess
+         * width.
+         * <p>
+         * This action is done "finally", once the current execution loop
+         * returns. This is done to reduce overhead of unintentionally always
+         * recalculate all columns, when modifying several columns at once.
+         * 
+         * @param expandRatio
+         *            the expand ratio of this column. {@code 0} to not have it
+         *            expand at all. A negative number to clear the expand
+         *            value.
+         * @return this column
+         */
+        public GridColumn<C, T> setExpandRatio(int ratio) {
+            if (expandRatio != ratio) {
+                expandRatio = ratio;
+                scheduleColumnWidthRecalculator();
+            }
+            return (GridColumn<C, T>) this;
+        }
+
+        /**
+         * Clears the column's expand ratio.
+         * <p>
+         * Same as calling {@link #setExpandRatio(int) setExpandRatio(-1)}
+         * 
+         * @return this column
+         */
+        public GridColumn<C, T> clearExpandRatio() {
+            return setExpandRatio(-1);
+        }
+
+        /**
+         * Gets the minimum width for this column.
+         * 
+         * @return the minimum width for this column
+         * @see #setMinimumWidth(double)
+         */
+        public double getMinimumWidth() {
+            return minimumWidthPx;
+        }
+
+        /**
+         * Gets the maximum width for this column.
+         * 
+         * @return the maximum width for this column
+         * @see #setMaximumWidth(double)
+         */
+        public double getMaximumWidth() {
+            return maximumWidthPx;
+        }
+
+        /**
+         * Gets the expand ratio for this column.
+         * 
+         * @return the expand ratio for this column
+         * @see #setExpandRatio(int)
+         */
+        public int getExpandRatio() {
+            return expandRatio;
+        }
+
+        private void scheduleColumnWidthRecalculator() {
+            if (grid != null) {
+                grid.autoColumnWidthsRecalculator.schedule();
+            } else {
+                /*
+                 * NOOP
+                 * 
+                 * Since setGrid() will call reapplyWidths as the colum is
+                 * attached to a grid, it will call setWidth, which, in turn,
+                 * will call this method again. Therefore, it's guaranteed that
+                 * the recalculation is scheduled eventually, once the column is
+                 * attached to a grid.
+                 */
+            }
         }
     }
 
@@ -4865,16 +5318,7 @@ public class Grid<T> extends ResizeComposite implements
     @Override
     public boolean isWorkPending() {
         return escalator.isWorkPending() || dataIsBeingFetched
-                || anyColumnIsBeingResized();
-    }
-
-    private boolean anyColumnIsBeingResized() {
-        for (AbstractGridColumn<?, ?> column : columns) {
-            if (column.widthCalculationPending()) {
-                return true;
-            }
-        }
-        return false;
+                || autoColumnWidthsRecalculator.isScheduled();
     }
 
     /**

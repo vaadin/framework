@@ -33,6 +33,7 @@ public class GridColumnAutoWidthClientWidget extends
     private class Col extends GridColumn<String, List<String>> {
         public Col(String header) {
             super(header, new HtmlRenderer());
+            setExpandRatio(0);
         }
 
         @Override

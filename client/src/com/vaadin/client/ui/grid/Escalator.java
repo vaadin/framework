@@ -5057,4 +5057,14 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
     public int getMaxVisibleRowCount() {
         return body.getMaxEscalatorRowCapacity();
     }
+
+    /**
+     * Gets the escalator's inner width. This is the entire width in pixels,
+     * without the vertical scrollbar.
+     * 
+     * @return escalator's inner width
+     */
+    public double getInnerWidth() {
+        return getPreciseWidth(tableWrapper);
+    }
 }

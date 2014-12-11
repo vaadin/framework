@@ -34,6 +34,7 @@ public class GridColumnAutoWidth extends AbstractTestUI {
         for (Object propertyId : grid.getContainerDataSource()
                 .getContainerPropertyIds()) {
             Column column = grid.getColumn(propertyId);
+            column.setExpandRatio(0);
             column.setRenderer(new HtmlRenderer());
             grid.getHeaderRow(0).getCell(propertyId)
                     .setHtml("<span>" + column.getHeaderCaption() + "</span>");

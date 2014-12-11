@@ -1648,6 +1648,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
         /**
          * Sets the width (in pixels).
+         * <p>
+         * This overrides any configuration set by any of
+         * {@link #setExpandRatio(int)}, {@link #setMinimumWidth(double)} or
+         * {@link #setMaximumWidth(double)}.
          * 
          * @param pixelWidth
          *            the new pixel width of the column
@@ -1927,6 +1931,137 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         public String toString() {
             return getClass().getSimpleName() + "[propertyId:"
                     + grid.getPropertyIdByColumnId(state.id) + "]";
+        }
+
+        /**
+         * Sets the ratio with which the column expands.
+         * <p>
+         * By default, all columns expand equally (treated as if all of them had
+         * an expand ratio of 1). Once at least one column gets a defined expand
+         * ratio, the implicit expand ratio is removed, and only the defined
+         * expand ratios are taken into account.
+         * <p>
+         * If a column has a defined width ({@link #setWidth(double)}), it
+         * overrides this method's effects.
+         * <p>
+         * <em>Example:</em> A grid with three columns, with expand ratios 0, 1
+         * and 2, respectively. The column with a <strong>ratio of 0 is exactly
+         * as wide as its contents requires</strong>. The column with a ratio of
+         * 1 is as wide as it needs, <strong>plus a third of any excess
+         * space</strong>, bceause we have 3 parts total, and this column
+         * reservs only one of those. The column with a ratio of 2, is as wide
+         * as it needs to be, <strong>plus two thirds</strong> of the excess
+         * width.
+         * 
+         * @param expandRatio
+         *            the expand ratio of this column. {@code 0} to not have it
+         *            expand at all. A negative number to clear the expand
+         *            value.
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         * @see #setWidth(double)
+         */
+        public Column setExpandRatio(int expandRatio)
+                throws IllegalStateException {
+            checkColumnIsAttached();
+
+            getState().expandRatio = expandRatio;
+            grid.markAsDirty();
+            return this;
+        }
+
+        /**
+         * Gets the column's expand ratio.
+         * 
+         * @return the column's expand ratio
+         * @see #setExpandRatio(int)
+         */
+        public int getExpandRatio() {
+            return getState().expandRatio;
+        }
+
+        /**
+         * Clears the expand ratio for this column.
+         * <p>
+         * Equal to calling {@link #setExpandRatio(int) setExpandRatio(-1)}
+         * 
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         */
+        public Column clearExpandRatio() throws IllegalStateException {
+            return setExpandRatio(-1);
+        }
+
+        /**
+         * Sets the minimum width for this column.
+         * <p>
+         * This defines the minimum guaranteed pixel width of the column
+         * <em>when it is set to expand</em>.
+         * 
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         * @see #setExpandRatio(int)
+         */
+        public Column setMinimumWidth(double pixels)
+                throws IllegalStateException {
+            checkColumnIsAttached();
+
+            final double maxwidth = getMaximumWidth();
+            if (pixels >= 0 && pixels > maxwidth && maxwidth >= 0) {
+                throw new IllegalArgumentException("New minimum width ("
+                        + pixels + ") was greater than maximum width ("
+                        + maxwidth + ")");
+            }
+            getState().minWidth = pixels;
+            grid.markAsDirty();
+            return this;
+        }
+
+        /**
+         * Gets the minimum width for this column.
+         * 
+         * @return the minimum width for this column
+         * @see #setMinimumWidth(double)
+         */
+        public double getMinimumWidth() {
+            return getState().minWidth;
+        }
+
+        /**
+         * Sets the maximum width for this column.
+         * <p>
+         * This defines the maximum allowed pixel width of the column
+         * <em>when it is set to expand</em>.
+         * 
+         * @param pixels
+         *            the maximum width
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         * @see #setExpandRatio(int)
+         */
+        public Column setMaximumWidth(double pixels) {
+            checkColumnIsAttached();
+
+            final double minwidth = getMinimumWidth();
+            if (pixels >= 0 && pixels < minwidth && minwidth >= 0) {
+                throw new IllegalArgumentException("New maximum width ("
+                        + pixels + ") was less than minimum width (" + minwidth
+                        + ")");
+            }
+
+            getState().maxWidth = pixels;
+            grid.markAsDirty();
+            return this;
+        }
+
+        /**
+         * Gets the maximum width for this column.
+         * 
+         * @return the maximum width for this column
+         * @see #setMaximumWidth(double)
+         */
+        public double getMaximumWidth() {
+            return getState().maxWidth;
         }
     }
 

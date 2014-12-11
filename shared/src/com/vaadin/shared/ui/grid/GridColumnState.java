@@ -28,6 +28,10 @@ import com.vaadin.shared.Connector;
  */
 public class GridColumnState implements Serializable {
 
+    public static final double DEFAULT_MAX_WIDTH = -1;
+    public static final double DEFAULT_MIN_WIDTH = 10.0d;
+    public static final int DEFAULT_EXPAND_RATIO = -1;
+
     public static final double DEFAULT_COLUMN_WIDTH_PX = -1;
 
     /**
@@ -57,4 +61,19 @@ public class GridColumnState implements Serializable {
      * Are sorting indicators shown for a column. Default is false.
      */
     public boolean sortable = false;
+
+    /** How much of the remaining space this column will reserve. */
+    public int expandRatio = DEFAULT_EXPAND_RATIO;
+
+    /**
+     * The maximum expansion width of this column. -1 for "no maximum". If
+     * maxWidth is less than the calculated width, maxWidth is ignored.
+     */
+    public double maxWidth = DEFAULT_MAX_WIDTH;
+
+    /**
+     * The minimum expansion width of this column. -1 for "no minimum". If
+     * minWidth is less than the calculated width, minWidth will win.
+     */
+    public double minWidth = DEFAULT_MIN_WIDTH;
 }
