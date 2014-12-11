@@ -43,7 +43,6 @@ import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.grid.EditorRowHandler;
 import com.vaadin.client.ui.grid.Grid;
-import com.vaadin.client.ui.grid.Grid.CellStyleGenerator;
 import com.vaadin.client.ui.grid.Grid.FooterCell;
 import com.vaadin.client.ui.grid.Grid.FooterRow;
 import com.vaadin.client.ui.grid.Grid.HeaderCell;
@@ -61,6 +60,10 @@ import com.vaadin.client.ui.grid.selection.SelectionModelSingle;
 import com.vaadin.client.ui.grid.sort.SortEvent;
 import com.vaadin.client.ui.grid.sort.SortHandler;
 import com.vaadin.client.ui.grid.sort.SortOrder;
+import com.vaadin.client.widget.grid.CellReference;
+import com.vaadin.client.widget.grid.CellStyleGenerator;
+import com.vaadin.client.widget.grid.RowReference;
+import com.vaadin.client.widget.grid.RowStyleGenerator;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.EditorRowClientRpc;
 import com.vaadin.shared.ui.grid.EditorRowServerRpc;
@@ -93,30 +96,41 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     private static final class CustomCellStyleGenerator implements
             CellStyleGenerator<JSONObject> {
         @Override
-        public String getStyle(Grid<JSONObject> grid, JSONObject row,
-                int rowIndex, GridColumn<?, JSONObject> column, int columnIndex) {
-            if (column == null) {
-                JSONValue styleValue = row.get(GridState.JSONKEY_ROWSTYLE);
-                if (styleValue != null) {
-                    return styleValue.isString().stringValue();
-                } else {
-                    return null;
-                }
-            } else {
-                JSONValue cellstyles = row.get(GridState.JSONKEY_CELLSTYLES);
-                if (cellstyles == null) {
-                    return null;
-                }
+        public String getStyle(CellReference<JSONObject> cellReference) {
+            JSONValue cellstyles = cellReference.getRow().get(
+                    GridState.JSONKEY_CELLSTYLES);
+            if (cellstyles == null) {
+                return null;
+            }
 
-                CustomGridColumn c = (CustomGridColumn) column;
-                JSONValue styleValue = cellstyles.isObject().get(c.id);
-                if (styleValue != null) {
-                    return styleValue.isString().stringValue();
-                } else {
-                    return null;
-                }
+            CustomGridColumn c = (CustomGridColumn) cellReference.getColumn();
+
+            JSONObject cellStylesObject = cellstyles.isObject();
+            assert cellStylesObject != null;
+
+            JSONValue styleValue = cellStylesObject.get(c.id);
+            if (styleValue != null) {
+                return styleValue.isString().stringValue();
+            } else {
+                return null;
             }
         }
+
+    }
+
+    private static final class CustomRowStyleGenerator implements
+            RowStyleGenerator<JSONObject> {
+        @Override
+        public String getStyle(RowReference<JSONObject> rowReference) {
+            JSONValue styleValue = rowReference.getRow().get(
+                    GridState.JSONKEY_ROWSTYLE);
+            if (styleValue != null) {
+                return styleValue.isString().stringValue();
+            } else {
+                return null;
+            }
+        }
+
     }
 
     /**
@@ -722,6 +736,15 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             getWidget().setCellStyleGenerator(new CustomCellStyleGenerator());
         } else {
             getWidget().setCellStyleGenerator(null);
+        }
+    }
+
+    @OnStateChange("hasRowStyleGenerator")
+    private void onRowStyleGeneratorChange() {
+        if (getState().hasRowStyleGenerator) {
+            getWidget().setRowStyleGenerator(new CustomRowStyleGenerator());
+        } else {
+            getWidget().setRowStyleGenerator(null);
         }
     }
 

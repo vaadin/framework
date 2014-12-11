@@ -140,6 +140,9 @@ public class GridState extends AbstractComponentState {
     /** The enabled state of the editor row */
     public boolean editorRowEnabled = false;
 
-    /** Whether row data might contain generated styles */
+    /** Whether row data might contain generated row styles */
+    public boolean hasRowStyleGenerator;
+    /** Whether row data might contain generated cell styles */
     public boolean hasCellStyleGenerator;
+
 }

@@ -49,8 +49,11 @@ import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.CellReference;
 import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.RowReference;
+import com.vaadin.ui.Grid.RowStyleGenerator;
 import com.vaadin.ui.renderer.Renderer;
 
 import elemental.json.Json;
@@ -648,6 +651,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
     /* Has client been initialized */
     private boolean clientInitialized = false;
 
+    private RowReference rowReference;
+    private CellReference cellReference;
+
     /**
      * Creates a new data provider using the given container.
      * 
@@ -753,22 +759,27 @@ public class RpcDataProviderExtension extends AbstractExtension {
         rowObject.put(GridState.JSONKEY_DATA, rowData);
         rowObject.put(GridState.JSONKEY_ROWKEY, keyMapper.getKey(itemId));
 
+        rowReference.set(itemId);
+
         CellStyleGenerator cellStyleGenerator = grid.getCellStyleGenerator();
         if (cellStyleGenerator != null) {
-            setGeneratedStyles(cellStyleGenerator, rowObject, columns, itemId);
+            setGeneratedCellStyles(cellStyleGenerator, rowObject, columns);
+        }
+        RowStyleGenerator rowStyleGenerator = grid.getRowStyleGenerator();
+        if (rowStyleGenerator != null) {
+            setGeneratedRowStyles(rowStyleGenerator, rowObject);
         }
 
         return rowObject;
     }
 
-    private void setGeneratedStyles(CellStyleGenerator generator,
-            JsonObject rowObject, Collection<Column> columns, Object itemId) {
-        Grid grid = getGrid();
-
+    private void setGeneratedCellStyles(CellStyleGenerator generator,
+            JsonObject rowObject, Collection<Column> columns) {
         JsonObject cellStyles = null;
         for (Column column : columns) {
             Object propertyId = column.getColumnProperty();
-            String style = generator.getStyle(grid, itemId, propertyId);
+            cellReference.set(propertyId);
+            String style = generator.getStyle(cellReference);
             if (style != null) {
                 if (cellStyles == null) {
                     cellStyles = Json.createObject();
@@ -782,7 +793,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
             rowObject.put(GridState.JSONKEY_CELLSTYLES, cellStyles);
         }
 
-        String rowStyle = generator.getStyle(grid, itemId, null);
+    }
+
+    private void setGeneratedRowStyles(RowStyleGenerator generator,
+            JsonObject rowObject) {
+        String rowStyle = generator.getStyle(rowReference);
         if (rowStyle != null) {
             rowObject.put(GridState.JSONKEY_ROWSTYLE, rowStyle);
         }
@@ -886,6 +901,13 @@ public class RpcDataProviderExtension extends AbstractExtension {
                         .removeItemSetChangeListener(itemListener);
             }
 
+        } else if (parent instanceof Grid) {
+            Grid grid = (Grid) parent;
+            rowReference = new RowReference(grid);
+            cellReference = new CellReference(rowReference);
+        } else {
+            throw new IllegalStateException(
+                    "Grid is the only accepted parent type");
         }
     }
 

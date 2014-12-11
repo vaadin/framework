@@ -774,30 +774,180 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     }
 
     /**
-     * Callback interface for generating custom style names for data rows and
-     * cells.
+     * A data class which contains information which identifies a row in a
+     * {@link Grid}.
+     * <p>
+     * Since this class follows the <code>Flyweight</code>-pattern any instance
+     * of this object is subject to change without the user knowing it and so
+     * should not be stored anywhere outside of the method providing these
+     * instances.
+     */
+    public static class RowReference implements Serializable {
+        private final Grid grid;
+
+        private Object itemId;
+
+        /**
+         * Creates a new row reference for the given grid.
+         * 
+         * @param grid
+         *            the grid that the row belongs to
+         */
+        public RowReference(Grid grid) {
+            this.grid = grid;
+        }
+
+        /**
+         * Sets the identifying information for this row
+         * 
+         * @param itemId
+         *            the item id of the row
+         */
+        public void set(Object itemId) {
+            this.itemId = itemId;
+        }
+
+        /**
+         * Gets the grid that contains the referenced row.
+         * 
+         * @return the grid that contains referenced row
+         */
+        public Grid getGrid() {
+            return grid;
+        }
+
+        /**
+         * Gets the item id of the row.
+         * 
+         * @return the item id of the row
+         */
+        public Object getItemId() {
+            return itemId;
+        }
+
+        /**
+         * Gets the item for the row.
+         * 
+         * @return the item for the row
+         */
+        public Item getItem() {
+            return grid.getContainerDataSource().getItem(itemId);
+        }
+    }
+
+    /**
+     * A data class which contains information which identifies a cell in a
+     * {@link Grid}.
+     * <p>
+     * Since this class follows the <code>Flyweight</code>-pattern any instance
+     * of this object is subject to change without the user knowing it and so
+     * should not be stored anywhere outside of the method providing these
+     * instances.
+     */
+    public static class CellReference implements Serializable {
+        private final RowReference rowReference;
+
+        private Object propertyId;
+
+        public CellReference(RowReference rowReference) {
+            this.rowReference = rowReference;
+        }
+
+        /**
+         * Sets the identifying information for this cell
+         * 
+         * @param propertyId
+         *            the property id of the column
+         */
+        public void set(Object propertyId) {
+            this.propertyId = propertyId;
+        }
+
+        /**
+         * Gets the grid that contains the referenced cell.
+         * 
+         * @return the grid that contains referenced cell
+         */
+        public Grid getGrid() {
+            return rowReference.getGrid();
+        }
+
+        /**
+         * @return the property id of the column
+         */
+        public Object getPropertyId() {
+            return propertyId;
+        }
+
+        /**
+         * @return the property for the cell
+         */
+        public Property<?> getProperty() {
+            return getItem().getItemProperty(propertyId);
+        }
+
+        /**
+         * Gets the item id of the row of the cell.
+         * 
+         * @return the item id of the row
+         */
+        public Object getItemId() {
+            return rowReference.getItemId();
+        }
+
+        /**
+         * Gets the item for the row of the cell.
+         * 
+         * @return the item for the row
+         */
+        public Item getItem() {
+            return rowReference.getItem();
+        }
+
+        /**
+         * Gets the value of the cell.
+         * 
+         * @return the value of the cell
+         */
+        public Object getValue() {
+            return getProperty().getValue();
+        }
+    }
+
+    /**
+     * Callback interface for generating custom style names for data rows
+     * 
+     * @see Grid#setRowStyleGenerator(RowStyleGenerator)
+     */
+    public interface RowStyleGenerator extends Serializable {
+
+        /**
+         * Called by Grid to generate a style name for a row
+         * 
+         * @param rowReference
+         *            The row to generate a style for
+         * @return the style name to add to this row, or {@code null} to not set
+         *         any style
+         */
+        public String getStyle(RowReference rowReference);
+    }
+
+    /**
+     * Callback interface for generating custom style names for cells
      * 
      * @see Grid#setCellStyleGenerator(CellStyleGenerator)
      */
     public interface CellStyleGenerator extends Serializable {
 
         /**
-         * Called by Grid to generate a style name for a row or cell element.
-         * Row styles are generated when the column parameter is
-         * <code>null</code>, otherwise a cell style is generated.
+         * Called by Grid to generate a style name for a column
          * 
-         * @param grid
-         *            the source grid
-         * @param itemId
-         *            the itemId of the target row
-         * @param propertyId
-         *            the propertyId of the target cell, <code>null</code> when
-         *            getting row style
-         * @return the style name to add to this cell or row element, or
-         *         <code>null</code> to not set any style
+         * @param cellReference
+         *            The cell to generate a style for
+         * @return the style name to add to this cell, or {@code null} to not
+         *         set any style
          */
-        public abstract String getStyle(Grid grid, Object itemId,
-                Object propertyId);
+        public String getStyle(CellReference cellReference);
     }
 
     /**
@@ -2248,6 +2398,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     private FieldGroup editorRowFieldGroup = new CustomFieldGroup();
 
     private CellStyleGenerator cellStyleGenerator;
+    private RowStyleGenerator rowStyleGenerator;
 
     /**
      * <code>true</code> if Grid is using the internal IndexedContainer created
@@ -3835,8 +3986,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     }
 
     /**
-     * Sets the cell style generator that is used for generating styles for rows
-     * and cells.
+     * Sets the style generator that is used for generating styles for cells
      * 
      * @param cellStyleGenerator
      *            the cell style generator to set, or <code>null</code> to
@@ -3850,14 +4000,37 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     }
 
     /**
-     * Gets the cell style generator that is used for generating styles for rows
-     * and cells.
+     * Gets the style generator that is used for generating styles for cells
      * 
      * @return the cell style generator, or <code>null</code> if no generator is
      *         set
      */
     public CellStyleGenerator getCellStyleGenerator() {
         return cellStyleGenerator;
+    }
+
+    /**
+     * Sets the style generator that is used for generating styles for rows
+     * 
+     * @param rowStyleGenerator
+     *            the row style generator to set, or <code>null</code> to remove
+     *            a previously set generator
+     */
+    public void setRowStyleGenerator(RowStyleGenerator rowStyleGenerator) {
+        this.rowStyleGenerator = rowStyleGenerator;
+        getState().hasRowStyleGenerator = (rowStyleGenerator != null);
+
+        datasourceExtension.refreshCache();
+    }
+
+    /**
+     * Gets the style generator that is used for generating styles for rows
+     * 
+     * @return the row style generator, or <code>null</code> if no generator is
+     *         set
+     */
+    public RowStyleGenerator getRowStyleGenerator() {
+        return rowStyleGenerator;
     }
 
     /**

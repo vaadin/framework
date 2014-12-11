@@ -101,6 +101,10 @@ import com.vaadin.client.ui.grid.sort.Sort;
 import com.vaadin.client.ui.grid.sort.SortEvent;
 import com.vaadin.client.ui.grid.sort.SortHandler;
 import com.vaadin.client.ui.grid.sort.SortOrder;
+import com.vaadin.client.widget.grid.CellReference;
+import com.vaadin.client.widget.grid.CellStyleGenerator;
+import com.vaadin.client.widget.grid.RowReference;
+import com.vaadin.client.widget.grid.RowStyleGenerator;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
@@ -153,37 +157,6 @@ import com.vaadin.shared.util.SharedUtil;
  */
 public class Grid<T> extends ResizeComposite implements
         HasSelectionChangeHandlers<T>, SubPartAware, DeferredWorker {
-
-    /**
-     * Callback interface for generating custom style names for data rows and
-     * cells.
-     * 
-     * @see Grid#setCellStyleGenerator(CellStyleGenerator)
-     */
-    public interface CellStyleGenerator<T> {
-
-        /**
-         * Called by Grid to generate a style name for a row or cell element.
-         * Row styles are generated when the column parameter is
-         * <code>null</code>, otherwise a cell style is generated.
-         * 
-         * @param grid
-         *            the source grid
-         * @param row
-         *            the data object of the target row
-         * @param rowIndex
-         *            the index of the row
-         * @param column
-         *            the column of the cell, <code>null</code> when getting a
-         *            row style
-         * @param columnIndex
-         *            the index of the column, -1 when getting a row style
-         * @return the style name to add to this cell or row element, or
-         *         <code>null</code> to not set any style
-         */
-        public abstract String getStyle(Grid<T> grid, T row, int rowIndex,
-                GridColumn<?, T> column, int columnIndex);
-    }
 
     /**
      * Abstract base class for Grid header and footer sections.
@@ -3042,14 +3015,16 @@ public class Grid<T> extends ResizeComposite implements
             boolean isEvenIndex = (row.getRow() % 2 == 0);
             setStyleName(rowElement, rowStripeStyleName, isEvenIndex);
 
+            rowReference.set(rowIndex, rowData);
+
             if (hasData) {
                 setStyleName(rowElement, rowSelectedStyleName,
                         isSelected(rowData));
 
-                if (cellStyleGenerator != null) {
+                if (rowStyleGenerator != null) {
                     try {
-                        String rowStylename = cellStyleGenerator.getStyle(
-                                Grid.this, rowData, rowIndex, null, -1);
+                        String rowStylename = rowStyleGenerator
+                                .getStyle(rowReference);
                         setCustomStyleName(rowElement, rowStylename);
                     } catch (RuntimeException e) {
                         getLogger().log(
@@ -3080,9 +3055,9 @@ public class Grid<T> extends ResizeComposite implements
 
                 if (hasData && cellStyleGenerator != null) {
                     try {
-                        String generatedStyle = cellStyleGenerator.getStyle(
-                                Grid.this, rowData, rowIndex, column,
-                                cell.getColumn());
+                        cellReference.set(cell.getColumn(), column);
+                        String generatedStyle = cellStyleGenerator
+                                .getStyle(cellReference);
                         setCustomStyleName(cell.getElement(), generatedStyle);
                     } catch (RuntimeException e) {
                         getLogger().log(
@@ -4598,6 +4573,9 @@ public class Grid<T> extends ResizeComposite implements
 
     private Point rowEventTouchStartingPoint;
     private CellStyleGenerator<T> cellStyleGenerator;
+    private RowStyleGenerator<T> rowStyleGenerator;
+    private RowReference<T> rowReference = new RowReference<T>(this);
+    private CellReference<T> cellReference = new CellReference<T>(rowReference);
 
     private boolean handleHeaderDefaultRowEvent(Event event,
             RowContainer container, final Cell cell) {
@@ -5375,8 +5353,7 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
-     * Sets the cell style generator that is used for generating styles for rows
-     * and cells.
+     * Sets the style generator that is used for generating styles for cells
      * 
      * @param cellStyleGenerator
      *            the cell style generator to set, or <code>null</code> to
@@ -5388,14 +5365,35 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     /**
-     * Gets the cell style generator that is used for generating styles for rows
-     * and cells.
+     * Gets the style generator that is used for generating styles for cells
      * 
      * @return the cell style generator, or <code>null</code> if no generator is
      *         set
      */
     public CellStyleGenerator<T> getCellStyleGenerator() {
         return cellStyleGenerator;
+    }
+
+    /**
+     * Sets the style generator that is used for generating styles for rows
+     * 
+     * @param rowStyleGenerator
+     *            the row style generator to set, or <code>null</code> to remove
+     *            a previously set generator
+     */
+    public void setRowStyleGenerator(RowStyleGenerator<T> rowStyleGenerator) {
+        this.rowStyleGenerator = rowStyleGenerator;
+        refreshBody();
+    }
+
+    /**
+     * Gets the style generator that is used for generating styles for rows
+     * 
+     * @return the row style generator, or <code>null</code> if no generator is
+     *         set
+     */
+    public RowStyleGenerator<T> getRowStyleGenerator() {
+        return rowStyleGenerator;
     }
 
     private static void setCustomStyleName(Element element, String styleName) {

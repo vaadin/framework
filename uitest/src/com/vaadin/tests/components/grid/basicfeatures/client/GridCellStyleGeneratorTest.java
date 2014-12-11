@@ -21,6 +21,7 @@ import org.junit.Test;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
+import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget;
 
 public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
 
@@ -28,7 +29,8 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
     public void testStyleNameGeneratorScrolling() throws Exception {
         openTestURL();
 
-        selectStyleNameGenerator("Combined");
+        selectCellStyleNameGenerator(GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_COL_INDEX);
+        selectRowStyleNameGenerator(GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_ROW_INDEX);
 
         GridRowElement row2 = getGridElement().getRow(2);
         GridCellElement cell4_2 = getGridElement().getCell(4, 2);
@@ -49,7 +51,8 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
     public void testDisableStyleNameGenerator() throws Exception {
         openTestURL();
 
-        selectStyleNameGenerator("Combined");
+        selectCellStyleNameGenerator(GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_COL_INDEX);
+        selectRowStyleNameGenerator(GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_ROW_INDEX);
 
         // Just verify that change was effective
         GridRowElement row2 = getGridElement().getRow(2);
@@ -59,7 +62,8 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
         Assert.assertTrue(hasCssClass(cell4_2, "4_2"));
 
         // Disable the generator and check again
-        selectStyleNameGenerator("None");
+        selectCellStyleNameGenerator(GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_NONE);
+        selectRowStyleNameGenerator(GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_NONE);
 
         Assert.assertFalse(hasCssClass(row2, "2"));
         Assert.assertFalse(hasCssClass(cell4_2, "4_2"));
@@ -69,7 +73,8 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
     public void testChangeStyleNameGenerator() throws Exception {
         openTestURL();
 
-        selectStyleNameGenerator("Combined");
+        selectCellStyleNameGenerator(GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_COL_INDEX);
+        selectRowStyleNameGenerator(GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_ROW_INDEX);
 
         // Just verify that change was effective
         GridRowElement row2 = getGridElement().getRow(2);
@@ -79,7 +84,8 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
         Assert.assertTrue(hasCssClass(cell4_2, "4_2"));
 
         // Change the generator and check again
-        selectStyleNameGenerator("Cell only");
+        selectRowStyleNameGenerator(GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_NONE);
+        selectCellStyleNameGenerator(GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_SIMPLE);
 
         // Old styles removed?
         Assert.assertFalse(hasCssClass(row2, "2"));
@@ -93,7 +99,8 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
     public void testStyleNameGeneratorChangePrimary() throws Exception {
         openTestURL();
 
-        selectStyleNameGenerator("Combined");
+        selectCellStyleNameGenerator(GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_COL_INDEX);
+        selectRowStyleNameGenerator(GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_ROW_INDEX);
 
         // Just verify that change was effective
         GridRowElement row2 = getGridElement().getRow(2);
@@ -114,7 +121,11 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
         Assert.assertFalse(hasCssClass(cell4_2, "v-escalator-cell-content-4_2"));
     }
 
-    private void selectStyleNameGenerator(String name) {
-        selectMenuPath("Component", "State", "Style generator", name);
+    private void selectCellStyleNameGenerator(String name) {
+        selectMenuPath("Component", "State", "Cell style generator", name);
+    }
+
+    private void selectRowStyleNameGenerator(String name) {
+        selectMenuPath("Component", "State", "Row style generator", name);
     }
 }

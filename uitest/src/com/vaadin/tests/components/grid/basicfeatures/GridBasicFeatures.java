@@ -42,12 +42,15 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.CellReference;
 import com.vaadin.ui.Grid.CellStyleGenerator;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.FooterCell;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.MultiSelectionModel;
+import com.vaadin.ui.Grid.RowReference;
+import com.vaadin.ui.Grid.RowStyleGenerator;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.renderer.DateRenderer;
 import com.vaadin.ui.renderer.HtmlRenderer;
@@ -61,6 +64,12 @@ import com.vaadin.ui.renderer.NumberRenderer;
  */
 public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
+    public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4 = "Row numbers for 3/4";
+    public static final String ROW_STYLE_GENERATOR_NONE = "None";
+    public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS = "Row numbers";
+    public static final String CELL_STYLE_GENERATOR_NONE = "None";
+    public static final String CELL_STYLE_GENERATOR_PROPERTY_TO_STRING = "Property to string";
+    public static final String CELL_STYLE_GENERATOR_SPECIAL = "Special for 1/4 Column 1";
     private static final int MANUALLY_FORMATTED_COLUMNS = 5;
     public static final int COLUMNS = 12;
     public static final int ROWS = 1000;
@@ -306,50 +315,68 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
 
-        LinkedHashMap<String, CellStyleGenerator> styleGenerators = new LinkedHashMap<String, CellStyleGenerator>();
-        styleGenerators.put("None", null);
-        styleGenerators.put("Row only", new CellStyleGenerator() {
-            @Override
-            public String getStyle(Grid grid, Object itemId, Object propertyId) {
-                if (propertyId == null) {
-                    return "row" + itemId;
-                } else {
-                    return null;
-                }
-            }
-        });
-        styleGenerators.put("Cell only", new CellStyleGenerator() {
-            @Override
-            public String getStyle(Grid grid, Object itemId, Object propertyId) {
-                if (propertyId == null) {
-                    return null;
-                } else {
-                    return propertyId.toString().replace(' ', '-');
-                }
-            }
-        });
-        styleGenerators.put("Combined", new CellStyleGenerator() {
-            @Override
-            public String getStyle(Grid grid, Object itemId, Object propertyId) {
-                int rowIndex = ((Integer) itemId).intValue();
-                if (propertyId == null) {
-                    if (rowIndex % 4 == 0) {
-                        return null;
-                    } else {
-                        return "row" + itemId;
+        LinkedHashMap<String, CellStyleGenerator> cellStyleGenerators = new LinkedHashMap<String, CellStyleGenerator>();
+        LinkedHashMap<String, RowStyleGenerator> rowStyleGenerators = new LinkedHashMap<String, RowStyleGenerator>();
+        rowStyleGenerators.put(ROW_STYLE_GENERATOR_NONE, null);
+        rowStyleGenerators.put(ROW_STYLE_GENERATOR_ROW_NUMBERS,
+                new RowStyleGenerator() {
+                    @Override
+                    public String getStyle(RowReference rowReference) {
+                        return "row" + rowReference.getItemId();
                     }
-                } else {
-                    if (rowIndex % 4 == 1) {
-                        return null;
-                    } else if (rowIndex % 4 == 3
-                            && "Column 1".equals(propertyId)) {
-                        return null;
+                });
+        rowStyleGenerators.put(ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4,
+                new RowStyleGenerator() {
+                    @Override
+                    public String getStyle(RowReference rowReference) {
+                        int rowIndex = ((Integer) rowReference.getItemId())
+                                .intValue();
+
+                        if (rowIndex % 4 == 0) {
+                            return null;
+                        } else {
+                            return "row" + rowReference.getItemId();
+                        }
                     }
-                    return propertyId.toString().replace(' ', '_');
-                }
-            }
-        });
-        createSelectAction("Style generator", "State", styleGenerators, "None",
+                });
+        cellStyleGenerators.put(CELL_STYLE_GENERATOR_NONE, null);
+        cellStyleGenerators.put(CELL_STYLE_GENERATOR_PROPERTY_TO_STRING,
+                new CellStyleGenerator() {
+                    @Override
+                    public String getStyle(CellReference cellReference) {
+                        return cellReference.getPropertyId().toString()
+                                .replace(' ', '-');
+                    }
+                });
+        cellStyleGenerators.put(CELL_STYLE_GENERATOR_SPECIAL,
+                new CellStyleGenerator() {
+                    @Override
+                    public String getStyle(CellReference cellReference) {
+                        int rowIndex = ((Integer) cellReference.getItemId())
+                                .intValue();
+                        Object propertyId = cellReference.getPropertyId();
+                        if (rowIndex % 4 == 1) {
+                            return null;
+                        } else if (rowIndex % 4 == 3
+                                && "Column 1".equals(propertyId)) {
+                            return null;
+                        }
+                        return propertyId.toString().replace(' ', '_');
+                    }
+                });
+
+        createSelectAction("Row style generator", "State", rowStyleGenerators,
+                CELL_STYLE_GENERATOR_NONE,
+                new Command<Grid, RowStyleGenerator>() {
+                    @Override
+                    public void execute(Grid grid, RowStyleGenerator generator,
+                            Object data) {
+                        grid.setRowStyleGenerator(generator);
+                    }
+                });
+
+        createSelectAction("Cell style generator", "State",
+                cellStyleGenerators, CELL_STYLE_GENERATOR_NONE,
                 new Command<Grid, CellStyleGenerator>() {
                     @Override
                     public void execute(Grid grid,
