@@ -793,6 +793,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         customAttributes.add("maxlength");
         customAttributes.add("max-length"); // to prevent this appearing in
                                             // output
+        customAttributes.add("cursor-position");
         return customAttributes;
     }
 
