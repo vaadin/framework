@@ -26,8 +26,8 @@ import org.junit.Test;
 import com.vaadin.data.sort.Sort;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.event.SortOrderChangeEvent;
-import com.vaadin.event.SortOrderChangeEvent.SortOrderChangeListener;
+import com.vaadin.event.SortEvent;
+import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.ui.Grid;
 
@@ -71,11 +71,11 @@ public class SortTest {
         }
     }
 
-    class RegisteringSortChangeListener implements SortOrderChangeListener {
+    class RegisteringSortChangeListener implements SortListener {
         private List<SortOrder> order;
 
         @Override
-        public void sortOrderChange(SortOrderChangeEvent event) {
+        public void sort(SortEvent event) {
             assert order == null : "The same listener was notified multipe times without checking";
 
             order = event.getSortOrder();
@@ -102,7 +102,7 @@ public class SortTest {
         listener = new RegisteringSortChangeListener();
 
         grid = new Grid(container);
-        grid.addSortOrderChangeListener(listener);
+        grid.addSortListener(listener);
     }
 
     @After

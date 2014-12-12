@@ -32,8 +32,8 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.sort.Sort;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.event.SortOrderChangeEvent;
-import com.vaadin.event.SortOrderChangeEvent.SortOrderChangeListener;
+import com.vaadin.event.SortEvent;
+import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SortDirection;
@@ -178,9 +178,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             grid.getColumn(getColumnProperty(col)).setWidth(100 + col * 50);
         }
 
-        grid.addSortOrderChangeListener(new SortOrderChangeListener() {
+        grid.addSortListener(new SortListener() {
             @Override
-            public void sortOrderChange(SortOrderChangeEvent event) {
+            public void sort(SortEvent event) {
 
                 log("SortOrderChangeEvent: isUserOriginated? "
                         + event.isUserOriginated());

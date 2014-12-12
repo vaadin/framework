@@ -25,8 +25,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.event.SelectionChangeEvent;
-import com.vaadin.event.SelectionChangeEvent.SelectionChangeListener;
+import com.vaadin.event.SelectionEvent;
+import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Grid.SelectionModel;
@@ -34,11 +34,11 @@ import com.vaadin.ui.Grid.SelectionModel;
 public class GridSelection {
 
     private static class MockSelectionChangeListener implements
-            SelectionChangeListener {
-        private SelectionChangeEvent event;
+            SelectionListener {
+        private SelectionEvent event;
 
         @Override
-        public void selectionChange(final SelectionChangeEvent event) {
+        public void select(final SelectionEvent event) {
             this.event = event;
         }
 
@@ -93,7 +93,7 @@ public class GridSelection {
         grid = new Grid(container);
 
         mockListener = new MockSelectionChangeListener();
-        grid.addSelectionChangeListener(mockListener);
+        grid.addSelectionListener(mockListener);
 
         assertFalse("eventHasHappened", mockListener.eventHasHappened());
     }

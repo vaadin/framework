@@ -22,8 +22,8 @@ import org.junit.Test;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.event.SelectionChangeEvent;
-import com.vaadin.event.SelectionChangeEvent.SelectionChangeListener;
+import com.vaadin.event.SelectionEvent;
+import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Grid.SingleSelectionModel;
@@ -124,10 +124,10 @@ public class SingleSelectionModelTest {
 
     private void expectEvent(final Object selected, final Object deselected) {
         expectingEvent = true;
-        grid.addSelectionChangeListener(new SelectionChangeListener() {
+        grid.addSelectionListener(new SelectionListener() {
 
             @Override
-            public void selectionChange(SelectionChangeEvent event) {
+            public void select(SelectionEvent event) {
                 if (selected != null) {
                     Assert.assertTrue(
                             "Selection did not contain expected item", event
@@ -146,7 +146,7 @@ public class SingleSelectionModelTest {
                             .getRemoved().isEmpty());
                 }
 
-                grid.removeSelectionChangeListener(this);
+                grid.removeSelectionListener(this);
                 expectingEvent = false;
             }
         });

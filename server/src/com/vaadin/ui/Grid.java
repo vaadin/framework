@@ -56,12 +56,12 @@ import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterUtil;
-import com.vaadin.event.SelectionChangeEvent;
-import com.vaadin.event.SelectionChangeEvent.SelectionChangeListener;
-import com.vaadin.event.SelectionChangeEvent.SelectionChangeNotifier;
-import com.vaadin.event.SortOrderChangeEvent;
-import com.vaadin.event.SortOrderChangeEvent.SortOrderChangeListener;
-import com.vaadin.event.SortOrderChangeEvent.SortOrderChangeNotifier;
+import com.vaadin.event.SelectionEvent;
+import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.event.SelectionEvent.SelectionNotifier;
+import com.vaadin.event.SortEvent;
+import com.vaadin.event.SortEvent.SortListener;
+import com.vaadin.event.SortEvent.SortNotifier;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ErrorMessage;
@@ -154,8 +154,8 @@ import elemental.json.JsonValue;
  * @since
  * @author Vaadin Ltd
  */
-public class Grid extends AbstractComponent implements SelectionChangeNotifier,
-        SortOrderChangeNotifier, SelectiveRenderer {
+public class Grid extends AbstractComponent implements SelectionNotifier,
+        SortNotifier, SelectiveRenderer {
 
     /**
      * Custom field group that allows finding property types before an item has
@@ -479,13 +479,13 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
         }
 
         /**
-         * Fires a {@link SelectionChangeEvent} to all the
-         * {@link SelectionChangeListener SelectionChangeListeners} currently
-         * added to the Grid in which this SelectionModel is.
+         * Fires a {@link SelectionEvent} to all the {@link SelectionListener
+         * SelectionListeners} currently added to the Grid in which this
+         * SelectionModel is.
          * <p>
          * Note that this is only a helper method, and routes the call all the
          * way to Grid. A {@link SelectionModel} is not a
-         * {@link SelectionChangeNotifier}
+         * {@link SelectionNotifier}
          * 
          * @param oldSelection
          *            the complete {@link Collection} of the itemIds that were
@@ -494,10 +494,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
          *            the complete {@link Collection} of the itemIds that are
          *            selected <em>after</em> this event happened
          */
-        protected void fireSelectionChangeEvent(
+        protected void fireSelectionEvent(
                 final Collection<Object> oldSelection,
                 final Collection<Object> newSelection) {
-            grid.fireSelectionChangeEvent(oldSelection, newSelection);
+            grid.fireSelectionEvent(oldSelection, newSelection);
         }
     }
 
@@ -525,7 +525,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                     deselected = Collections.emptySet();
                 }
 
-                fireSelectionChangeEvent(deselected, selection);
+                fireSelectionEvent(deselected, selection);
             }
 
             return modified;
@@ -539,7 +539,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 boolean fireEventIfNeeded) {
             final boolean modified = selection.remove(itemId);
             if (fireEventIfNeeded && modified) {
-                fireSelectionChangeEvent(Collections.singleton(itemId),
+                fireSelectionEvent(Collections.singleton(itemId),
                         Collections.emptySet());
             }
             return modified;
@@ -653,7 +653,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 } else {
                     selection.addAll(itemIds);
                 }
-                fireSelectionChangeEvent(oldSelection, selection);
+                fireSelectionEvent(oldSelection, selection);
             }
             return selectionWillChange;
         }
@@ -718,7 +718,7 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
                 final HashSet<Object> oldSelection = new HashSet<Object>(
                         selection);
                 selection.removeAll(itemIds);
-                fireSelectionChangeEvent(oldSelection, selection);
+                fireSelectionEvent(oldSelection, selection);
             }
             return hasCommonElements;
         }
@@ -2411,12 +2411,10 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     private boolean defaultContainer = true;
 
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
-            .findMethod(SelectionChangeListener.class, "selectionChange",
-                    SelectionChangeEvent.class);
+            .findMethod(SelectionListener.class, "select", SelectionEvent.class);
 
     private static final Method SORT_ORDER_CHANGE_METHOD = ReflectTools
-            .findMethod(SortOrderChangeListener.class, "sortOrderChange",
-                    SortOrderChangeEvent.class);
+            .findMethod(SortListener.class, "sort", SortEvent.class);
 
     /**
      * Creates a new Grid with a new {@link IndexedContainer} as the datasource.
@@ -2442,9 +2440,9 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      */
     private void initGrid() {
         setSelectionMode(SelectionMode.MULTI);
-        addSelectionChangeListener(new SelectionChangeListener() {
+        addSelectionListener(new SelectionListener() {
             @Override
-            public void selectionChange(SelectionChangeEvent event) {
+            public void select(SelectionEvent event) {
                 if (applyingSelectionFromClient) {
                     /*
                      * Avoid sending changes back to the client if they
@@ -3443,21 +3441,19 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      * @param removedSelections
      *            the selections that were removed by this event
      */
-    public void fireSelectionChangeEvent(Collection<Object> oldSelection,
+    public void fireSelectionEvent(Collection<Object> oldSelection,
             Collection<Object> newSelection) {
-        fireEvent(new SelectionChangeEvent(this, oldSelection, newSelection));
+        fireEvent(new SelectionEvent(this, oldSelection, newSelection));
     }
 
     @Override
-    public void addSelectionChangeListener(SelectionChangeListener listener) {
-        addListener(SelectionChangeEvent.class, listener,
-                SELECTION_CHANGE_METHOD);
+    public void addSelectionListener(SelectionListener listener) {
+        addListener(SelectionEvent.class, listener, SELECTION_CHANGE_METHOD);
     }
 
     @Override
-    public void removeSelectionChangeListener(SelectionChangeListener listener) {
-        removeListener(SelectionChangeEvent.class, listener,
-                SELECTION_CHANGE_METHOD);
+    public void removeSelectionListener(SelectionListener listener) {
+        removeListener(SelectionEvent.class, listener, SELECTION_CHANGE_METHOD);
     }
 
     /**
@@ -3611,8 +3607,8 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
             cs.sort(propertyIds, directions);
 
-            fireEvent(new SortOrderChangeEvent(this, new ArrayList<SortOrder>(
-                    sortOrder), userOriginated));
+            fireEvent(new SortEvent(this, new ArrayList<SortOrder>(sortOrder),
+                    userOriginated));
 
             getState().sortColumns = columnKeys;
             getState(false).sortDirs = stateDirs;
@@ -3630,22 +3626,20 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
      *            the sort order change listener to add
      */
     @Override
-    public void addSortOrderChangeListener(SortOrderChangeListener listener) {
-        addListener(SortOrderChangeEvent.class, listener,
-                SORT_ORDER_CHANGE_METHOD);
+    public void addSortListener(SortListener listener) {
+        addListener(SortEvent.class, listener, SORT_ORDER_CHANGE_METHOD);
     }
 
     /**
      * Removes a sort order change listener previously added using
-     * {@link #addSortOrderChangeListener(SortOrderChangeListener)}.
+     * {@link #addSortListener(SortListener)}.
      * 
      * @param listener
      *            the sort order change listener to remove
      */
     @Override
-    public void removeSortOrderChangeListener(SortOrderChangeListener listener) {
-        removeListener(SortOrderChangeEvent.class, listener,
-                SORT_ORDER_CHANGE_METHOD);
+    public void removeSortistener(SortListener listener) {
+        removeListener(SortEvent.class, listener, SORT_ORDER_CHANGE_METHOD);
     }
 
     /* Grid Headers */

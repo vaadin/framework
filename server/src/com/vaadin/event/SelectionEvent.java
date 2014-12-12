@@ -30,12 +30,12 @@ import com.google.gwt.thirdparty.guava.common.collect.Sets;
  * @since
  * @author Vaadin Ltd
  */
-public class SelectionChangeEvent extends EventObject {
+public class SelectionEvent extends EventObject {
 
     private LinkedHashSet<Object> oldSelection;
     private LinkedHashSet<Object> newSelection;
 
-    public SelectionChangeEvent(Object source, Collection<Object> oldSelection,
+    public SelectionEvent(Object source, Collection<Object> oldSelection,
             Collection<Object> newSelection) {
         super(source);
         this.oldSelection = new LinkedHashSet<Object>(oldSelection);
@@ -67,37 +67,31 @@ public class SelectionChangeEvent extends EventObject {
     }
 
     /**
-     * The listener interface for receiving {@link SelectionChangeEvent
-     * SelectionChangeEvents}.
-     * 
-     * @since
-     * @author Vaadin Ltd
+     * The listener interface for receiving {@link SelectionEvent
+     * SelectionEvents}.
      */
-    public interface SelectionChangeListener extends Serializable {
+    public interface SelectionListener extends Serializable {
         /**
          * Notifies the listener that the selection state has changed.
          * 
          * @param event
          *            the selection change event
          */
-        void selectionChange(SelectionChangeEvent event);
+        void select(SelectionEvent event);
     }
 
     /**
      * The interface for adding and removing listeners for
-     * {@link SelectionChangeEvent SelectionChangeEvents}.
-     * 
-     * @since
-     * @author Vaadin Ltd
+     * {@link SelectionEvent SelectionEvents}.
      */
-    public interface SelectionChangeNotifier extends Serializable {
+    public interface SelectionNotifier extends Serializable {
         /**
-         * Registers a new selection change listener
+         * Registers a new selection listener
          * 
          * @param listener
          *            the listener to register
          */
-        void addSelectionChangeListener(SelectionChangeListener listener);
+        void addSelectionListener(SelectionListener listener);
 
         /**
          * Removes a previously registered selection change listener
@@ -105,6 +99,6 @@ public class SelectionChangeEvent extends EventObject {
          * @param listener
          *            the listener to remove
          */
-        void removeSelectionChangeListener(SelectionChangeListener listener);
+        void removeSelectionListener(SelectionListener listener);
     }
 }
