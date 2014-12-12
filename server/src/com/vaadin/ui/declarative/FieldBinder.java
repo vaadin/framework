@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,18 +60,17 @@ public class FieldBinder implements Serializable {
     }
 
     /**
-     * Returns true if all the fields assignable to Component are bound
+     * Returns a collection of field names that are not bound
      * 
-     * @return true if all the fields assignable to Component are bound
+     * @return a collection of fields assignable to Component that are not bound
      */
-    public boolean isAllFieldsBound() throws FieldBindingException {
-        boolean success = true;
+    public Collection<String> getUnboundFields() throws FieldBindingException {
+        List<String> unboundFields = new ArrayList<String>();
         for (Field f : fieldMap.values()) {
             try {
                 Object value = ReflectTools.getJavaFieldValue(bindTarget, f);
                 if (value == null) {
-                    success = false;
-                    getLogger().severe("Found unbound field :" + f.getName());
+                    unboundFields.add(f.getName());
                 }
             } catch (IllegalArgumentException e) {
                 throw new FieldBindingException("Could not get field value", e);
@@ -80,7 +80,11 @@ public class FieldBinder implements Serializable {
                 throw new FieldBindingException("Could not get field value", e);
             }
         }
-        return success;
+        if (unboundFields.size() > 0) {
+            getLogger().severe(
+                    "Found unbound fields in component root :" + unboundFields);
+        }
+        return unboundFields;
     }
 
     /**
@@ -137,7 +141,7 @@ public class FieldBinder implements Serializable {
         if (!success) {
             String idInfo = "localId: " + localId + " id: " + instance.getId()
                     + " caption: " + instance.getCaption();
-            getLogger().info(
+            getLogger().finest(
                     "Could not bind component to a field "
                             + instance.getClass().getName() + " " + idInfo);
         }
@@ -180,7 +184,7 @@ public class FieldBinder implements Serializable {
                         "The field with identifier \"" + identifier
                                 + "\" already mapped");
                 throw new FieldBindingException(
-                        "Duplicate identifier found for a field");
+                        "Duplicate identifier found for a field: " + fieldName);
             }
             // set the field value
             ReflectTools.setJavaFieldValue(bindTarget, field, instance);

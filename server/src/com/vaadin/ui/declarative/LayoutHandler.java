@@ -20,6 +20,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Collection;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -201,9 +202,11 @@ public class LayoutHandler implements Serializable {
             // create subtree
             designContext.synchronizeAndRegister(componentRoot, element);
             // make sure that all the member fields are bound
-            if (!binder.isAllFieldsBound()) {
+            Collection<String> unboundFields = binder.getUnboundFields();
+            if (!unboundFields.isEmpty()) {
                 throw new DesignException(
-                        "Found unbound fields from component root");
+                        "Found unbound fields from component root "
+                                + unboundFields);
             }
             // no need to listen anymore
             designContext.removeComponentCreationListener(creationListener);

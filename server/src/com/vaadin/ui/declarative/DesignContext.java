@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -440,16 +439,9 @@ public class DesignContext implements Serializable {
         }
         // local id: this is not a property of a component, so need to fetch it
         // from the attributes of componentDesign
-        String localId = null;
-        for (Attribute attribute : attributes.asList()) {
-            if (attribute.getKey().equals(LOCAL_ID_ATTRIBUTE)) {
-                if (localId != null) {
-                    throw new DesignException("Duplicate local ids specified: "
-                            + localId + ".");
-                }
-                localId = attribute.getValue();
-                mapLocalId(localId, component); // two-way map
-            }
+        if (attributes.hasKey(LOCAL_ID_ATTRIBUTE)) {
+            String localId = attributes.get(LOCAL_ID_ATTRIBUTE);
+            mapLocalId(localId, component); // two-way map
         }
         // caption: a property of a component, possibly not unique
         String caption = component.getCaption();
