@@ -69,7 +69,7 @@ import com.vaadin.util.ReflectTools;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractComponent extends AbstractClientConnector
-        implements DesignSynchronizable {
+        implements Component {
 
     /* Private members */
 
@@ -917,8 +917,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.ui.DesignSynchronizable#synchronizeFromDesign(org.jsoup.nodes
-     * .Element, com.vaadin.ui.declarative.DesignContext)
+     * com.vaadin.ui.Component#synchronizeFromDesign(org.jsoup.nodes.Element,
+     * com.vaadin.ui.declarative.DesignContext)
      */
     @Override
     public void synchronizeFromDesign(Element design,
@@ -1090,8 +1090,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *            the default instance of the class for fetching the default
      *            values
      */
-    private void writeSize(Attributes attributes,
-            DesignSynchronizable defaultInstance) {
+    private void writeSize(Attributes attributes, Component defaultInstance) {
         if (hasEqualSize(defaultInstance)) {
             // we have default values -> ignore
             return;
@@ -1211,9 +1210,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.DesignSynchronizable#synchronizeToDesign(org.jsoup.nodes
-     * .Element, com.vaadin.ui.declarative.DesignContext)
+     * @see com.vaadin.ui.Component#synchronizeToDesign(org.jsoup.nodes.Element,
+     * com.vaadin.ui.declarative.DesignContext)
      */
     @Override
     public void synchronizeToDesign(Element design, DesignContext designContext) {

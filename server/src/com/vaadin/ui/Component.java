@@ -19,6 +19,8 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.util.Locale;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.FieldEvents;
@@ -27,6 +29,7 @@ import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.VariableOwner;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * {@code Component} is the top-level interface that is and must be implemented
@@ -725,6 +728,40 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @return component's description <code>String</code>
      */
     public String getDescription();
+
+    /* Declarative support */
+
+    /**
+     * Update the component state based on the given design. The component is
+     * responsible not only for updating itself but also ensuring that its
+     * children update their state based on the design.
+     * <p>
+     * This method must not modify the design.
+     * 
+     * @since 7.4
+     * @param design
+     *            The design as HTML to obtain the state from
+     * @param designContext
+     *            The DesignContext instance used for parsing the design
+     */
+    public void synchronizeFromDesign(Element design,
+            DesignContext designContext);
+
+    /**
+     * Update the given design based on the component state. The component is
+     * responsible not only for updating itself but also for ensuring its
+     * children update themselves in the correct position in the design. The
+     * caller of this method should not assume that contents of the
+     * <code>design</code> parameter are presented.
+     * <p>
+     * This method must not modify the component state.
+     * 
+     * @since 7.4
+     * @param design
+     *            The design as HTML to update with the current state
+     * @param designContext
+     */
+    public void synchronizeToDesign(Element design, DesignContext designContext);
 
     /* Component event framework */
 

@@ -22,7 +22,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.DesignSynchronizable;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -80,7 +80,7 @@ public class TestSynchronizeFromDesign extends TestCase {
             String... alignments) {
         DesignContext ctx = new DesignContext();
         Element design = createDesign(expandRatio, margin, alignments);
-        DesignSynchronizable child = ctx.createChild(design);
+        Component child = ctx.createChild(design);
         return (VerticalLayout) child;
     }
 

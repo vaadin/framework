@@ -30,7 +30,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
-import com.vaadin.ui.DesignSynchronizable;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreatedEvent;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
 
@@ -91,8 +91,7 @@ public class LayoutHandler implements Serializable {
      *         object returned by this method.
      * @throws IOException
      */
-    public static DesignContext parse(InputStream html,
-            DesignSynchronizable rootInstance) {
+    public static DesignContext parse(InputStream html, Component rootInstance) {
         Document doc;
         try {
             doc = Jsoup.parse(html, "UTF-8", "", Parser.htmlParser());
@@ -143,8 +142,7 @@ public class LayoutHandler implements Serializable {
      *         object returned by this method.
      * @throws IOException
      */
-    public static DesignContext parse(String html,
-            DesignSynchronizable rootInstance) {
+    public static DesignContext parse(String html, Component rootInstance) {
         Document doc = Jsoup.parse(html);
         return parse(doc, rootInstance);
     }
@@ -161,12 +159,10 @@ public class LayoutHandler implements Serializable {
      *            optional component root instance with some member fields. The
      *            type must match the type of the root element in the design.
      *            The member fields whose type is assignable from
-     *            {@link DesignSynchronizable} are set when parsing the
-     *            component tree
+     *            {@link Component} are set when parsing the component tree
      * 
      */
-    private static DesignContext parse(Document doc,
-            DesignSynchronizable componentRoot) {
+    private static DesignContext parse(Document doc, Component componentRoot) {
         DesignContext designContext = new DesignContext(doc);
         designContext.getPrefixes(doc);
         // No special handling for a document without a body element - should be
@@ -243,7 +239,7 @@ public class LayoutHandler implements Serializable {
         // Append the design under <body> in the html tree. createNode
         // creates the entire component hierarchy rooted at the
         // given root node.
-        DesignSynchronizable root = designContext.getComponentRoot();
+        Component root = designContext.getComponentRoot();
         Node rootNode = designContext.createNode(root);
         body.appendChild(rootNode);
         return doc;

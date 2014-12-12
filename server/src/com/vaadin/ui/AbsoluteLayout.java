@@ -691,8 +691,7 @@ public class AbsoluteLayout extends AbstractLayout implements
         // handle children
         for (Element childComponent : design.children()) {
             Attributes attr = childComponent.attributes();
-            DesignSynchronizable newChild = designContext
-                    .createChild(childComponent);
+            Component newChild = designContext.createChild(childComponent);
             StringBuilder css = new StringBuilder();
             if (attr.hasKey(ATTR_TOP)) {
                 css.append("top:").append(attr.get(ATTR_TOP)).append(";");
@@ -727,10 +726,9 @@ public class AbsoluteLayout extends AbstractLayout implements
         // handle children
         Element designElement = design;
         for (Component child : this) {
-            DesignSynchronizable childComponent = (DesignSynchronizable) child;
-            Element childNode = designContext.createNode(childComponent);
+            Element childNode = designContext.createNode(child);
             designElement.appendChild(childNode);
-            childComponent.synchronizeToDesign(childNode, designContext);
+            child.synchronizeToDesign(childNode, designContext);
             // handle position
             ComponentPosition position = getPosition(child);
             writePositionAttribute(childNode, ATTR_TOP, position.getTopUnits()

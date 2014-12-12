@@ -21,8 +21,8 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.DesignSynchronizable;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
@@ -47,7 +47,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     private CssLayout createLayout() {
         DesignContext ctx = new DesignContext();
         Element design = createDesign();
-        DesignSynchronizable child = ctx.createChild(design);
+        Component child = ctx.createChild(design);
         return (CssLayout) child;
     }
 

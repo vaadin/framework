@@ -579,7 +579,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.ui.DesignSynchronizable#synchronizeFromDesign(org.jsoup.nodes
+     * com.vaadin.ui.AbstractComponent#synchronizeFromDesign(org.jsoup.nodes
      * .Element, com.vaadin.ui.declarative.DesignContext)
      */
     @Override
@@ -608,8 +608,8 @@ public class Label extends AbstractComponent implements Property<String>,
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.ui.DesignSynchronizable#synchronizeToDesign(org.jsoup.nodes
-     * .Element, com.vaadin.ui.declarative.DesignContext)
+     * com.vaadin.ui.AbstractComponent#synchronizeToDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
      */
     @Override
     public void synchronizeToDesign(Element design, DesignContext designContext) {

@@ -29,7 +29,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DesignSynchronizable;
 
 /**
  * This class contains contextual information that is collected when a component
@@ -47,19 +46,19 @@ public class DesignContext implements Serializable {
             .synchronizedMap(new HashMap<Class<?>, Object>());
 
     // The root component of the component hierarchy
-    private DesignSynchronizable componentRoot = null;
+    private Component componentRoot = null;
     // Attribute names for global id and caption and the prefix name for a local
     // id
     public static final String ID_ATTRIBUTE = "id";
     public static final String CAPTION_ATTRIBUTE = "caption";
     public static final String LOCAL_ID_ATTRIBUTE = "_id";
     // Mappings from ids to components. Modified when synchronizing from design.
-    private Map<String, DesignSynchronizable> idToComponent = new HashMap<String, DesignSynchronizable>();
-    private Map<String, DesignSynchronizable> localIdToComponent = new HashMap<String, DesignSynchronizable>();
-    private Map<String, DesignSynchronizable> captionToComponent = new HashMap<String, DesignSynchronizable>();
+    private Map<String, Component> idToComponent = new HashMap<String, Component>();
+    private Map<String, Component> localIdToComponent = new HashMap<String, Component>();
+    private Map<String, Component> captionToComponent = new HashMap<String, Component>();
     // Mapping from components to local ids. Accessed when synchronizing to
     // design. Modified when synchronizing from design.
-    private Map<DesignSynchronizable, String> componentToLocalId = new HashMap<DesignSynchronizable, String>();
+    private Map<Component, String> componentToLocalId = new HashMap<Component, String>();
     private Document doc; // required for calling createElement(String)
     // namespace mappings
     private Map<String, String> packageToPrefix = new HashMap<String, String>();
@@ -94,7 +93,7 @@ public class DesignContext implements Serializable {
      *            The local id of the component
      * @return a component whose local id equals localId
      */
-    public DesignSynchronizable getComponentByLocalId(String localId) {
+    public Component getComponentByLocalId(String localId) {
         return localIdToComponent.get(localId);
     }
 
@@ -106,7 +105,7 @@ public class DesignContext implements Serializable {
      *            The global id of the component
      * @return a component whose global id equals globalId
      */
-    public DesignSynchronizable getComponentById(String globalId) {
+    public Component getComponentById(String globalId) {
         return idToComponent.get(globalId);
     }
 
@@ -118,7 +117,7 @@ public class DesignContext implements Serializable {
      *            The caption of the component
      * @return a component whose caption equals the caption given as a parameter
      */
-    public DesignSynchronizable getComponentByCaption(String caption) {
+    public Component getComponentByCaption(String caption) {
         return captionToComponent.get(caption);
     }
 
@@ -142,8 +141,8 @@ public class DesignContext implements Serializable {
      * @return true, if there already was a global id mapping from the string to
      *         some component.
      */
-    private boolean mapId(String globalId, DesignSynchronizable component) {
-        DesignSynchronizable oldComponent = idToComponent.get(globalId);
+    private boolean mapId(String globalId, Component component) {
+        Component oldComponent = idToComponent.get(globalId);
         if (oldComponent != null && !oldComponent.equals(component)) {
             oldComponent.setId(null);
         }
@@ -174,7 +173,7 @@ public class DesignContext implements Serializable {
      *         some component or from the component to some string. Otherwise
      *         returns false.
      */
-    private boolean mapLocalId(String localId, DesignSynchronizable component) {
+    private boolean mapLocalId(String localId, Component component) {
         return twoWayMap(localId, component, localIdToComponent,
                 componentToLocalId);
     }
@@ -196,7 +195,7 @@ public class DesignContext implements Serializable {
      * @return true, if there already was a caption mapping from the string to
      *         some component.
      */
-    private boolean mapCaption(String caption, DesignSynchronizable component) {
+    private boolean mapCaption(String caption, Component component) {
         return captionToComponent.put(caption, component) != null;
     }
 
@@ -337,12 +336,12 @@ public class DesignContext implements Serializable {
      * rooted at the returned Node.
      * 
      * @param childComponent
-     *            A component implementing the DesignSynchronizable interface.
+     *            The component with state that is synchronized in to the node
      * @return An html tree node corresponding to the given component. The tag
      *         name of the created node is derived from the class name of
      *         childComponent.
      */
-    public Element createNode(DesignSynchronizable childComponent) {
+    public Element createNode(Component childComponent) {
         Class<?> componentClass = childComponent.getClass();
         String packageName = componentClass.getPackage().getName();
         String prefix = packageToPrefix.get(packageName);
@@ -391,18 +390,18 @@ public class DesignContext implements Serializable {
     }
 
     /**
-     * Creates a DesignSynchronizable object corresponding to the given html
-     * node. Also calls synchronizeFromDesign() for the created node, in effect
-     * creating the entire component hierarchy rooted at the returned component.
+     * Creates a Component corresponding to the given html node. Also calls
+     * synchronizeFromDesign() for the created node, in effect creating the
+     * entire component hierarchy rooted at the returned component.
      * 
      * @param componentDesign
      *            The html tree node containing the description of the component
      *            to be created.
-     * @return a DesignSynchronizable object corresponding to componentDesign
+     * @return a Component corresponding to componentDesign
      */
-    public DesignSynchronizable createChild(Element componentDesign) {
+    public Component createChild(Element componentDesign) {
         // Create the component.
-        DesignSynchronizable component = instantiateComponent(componentDesign);
+        Component component = instantiateComponent(componentDesign);
         synchronizeAndRegister(component, componentDesign);
         fireComponentCreatedEvent(componentToLocalId.get(component), component);
         return component;
@@ -421,7 +420,7 @@ public class DesignContext implements Serializable {
      * @param componentDesign
      *            The html tree node containing the description of the component
      */
-    public void synchronizeAndRegister(DesignSynchronizable component,
+    public void synchronizeAndRegister(Component component,
             Element componentDesign) {
         component.synchronizeFromDesign(componentDesign, this);
         // Get the ids and the caption of the component and store them in the
@@ -451,20 +450,19 @@ public class DesignContext implements Serializable {
     }
 
     /**
-     * Creates a DesignSynchronizable component corresponding to the given node.
-     * Does not set the attributes for the created object.
+     * Creates a Component corresponding to the given node. Does not set the
+     * attributes for the created object.
      * 
      * @param node
      *            a node of an html tree
-     * @return a DesignSynchronizable object corresponding to node, with no
-     *         attributes set.
+     * @return a Component corresponding to node, with no attributes set.
      */
-    private DesignSynchronizable instantiateComponent(Node node) {
+    private Component instantiateComponent(Node node) {
         // Extract the package and class names.
         String qualifiedClassName = tagNameToClassName(node);
         try {
-            Class<? extends DesignSynchronizable> componentClass = resolveComponentClass(qualifiedClassName);
-            DesignSynchronizable newComponent = componentClass.newInstance();
+            Class<? extends Component> componentClass = resolveComponentClass(qualifiedClassName);
+            Component newComponent = componentClass.newInstance();
             return newComponent;
         } catch (Exception e) {
             throw new DesignException("No component class could be found for "
@@ -519,14 +517,14 @@ public class DesignContext implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    private Class<? extends DesignSynchronizable> resolveComponentClass(
+    private Class<? extends Component> resolveComponentClass(
             String qualifiedClassName) throws ClassNotFoundException {
         Class<?> componentClass = null;
         componentClass = Class.forName(qualifiedClassName);
 
-        // Check that we're dealing with a DesignSynchronizable component.
-        if (isDesignSynchronizable(componentClass)) {
-            return (Class<? extends DesignSynchronizable>) componentClass;
+        // Check that we're dealing with a Component.
+        if (isComponent(componentClass)) {
+            return (Class<? extends Component>) componentClass;
         } else {
             throw new IllegalArgumentException(String.format(
                     "Resolved class %s is not a %s.", componentClass.getName(),
@@ -543,9 +541,9 @@ public class DesignContext implements Serializable {
      * @return {@code true} if the given {@link Class} is a {@link Component},
      *         {@code false} otherwise.
      */
-    private static boolean isDesignSynchronizable(Class<?> componentClass) {
+    private static boolean isComponent(Class<?> componentClass) {
         if (componentClass != null) {
-            return DesignSynchronizable.class.isAssignableFrom(componentClass);
+            return Component.class.isAssignableFrom(componentClass);
         } else {
             return false;
         }
@@ -556,14 +554,14 @@ public class DesignContext implements Serializable {
      * 
      * @return
      */
-    public DesignSynchronizable getComponentRoot() {
+    public Component getComponentRoot() {
         return componentRoot;
     }
 
     /**
      * Sets the root component of a created component hierarchy.
      */
-    public void setComponentRoot(DesignSynchronizable componentRoot) {
+    public void setComponentRoot(Component componentRoot) {
         this.componentRoot = componentRoot;
     }
 
@@ -597,8 +595,7 @@ public class DesignContext implements Serializable {
      * @param component
      *            the component that was created
      */
-    private void fireComponentCreatedEvent(String localId,
-            DesignSynchronizable component) {
+    private void fireComponentCreatedEvent(String localId, Component component) {
         ComponentCreatedEvent event = new ComponentCreatedEvent(localId,
                 component);
         for (ComponentCreationListener listener : listeners) {
@@ -631,7 +628,7 @@ public class DesignContext implements Serializable {
      */
     public class ComponentCreatedEvent implements Serializable {
         private String localId;
-        private DesignSynchronizable component;
+        private Component component;
         private DesignContext context;
 
         /**
@@ -642,8 +639,7 @@ public class DesignContext implements Serializable {
          * @param component
          *            the created component
          */
-        private ComponentCreatedEvent(String localId,
-                DesignSynchronizable component) {
+        private ComponentCreatedEvent(String localId, Component component) {
             this.localId = localId;
             this.component = component;
             context = DesignContext.this;
@@ -663,7 +659,7 @@ public class DesignContext implements Serializable {
          * 
          * @return the component
          */
-        public DesignSynchronizable getComponent() {
+        public Component getComponent() {
             return component;
         }
     }

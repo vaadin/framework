@@ -28,7 +28,7 @@ import org.jsoup.nodes.Node;
 import org.junit.Test;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.DesignSynchronizable;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
@@ -149,7 +149,7 @@ public class ParseLayoutTest extends TestCase {
      * component hierarchy rooted at context.getComponentRoot().
      */
     private void checkHierarchy(DesignContext context) {
-        DesignSynchronizable root = context.getComponentRoot();
+        Component root = context.getComponentRoot();
         VerticalLayout vlayout = (VerticalLayout) root;
         int numComponents = vlayout.getComponentCount();
         assertEquals("Wrong number of child components", 3, numComponents);

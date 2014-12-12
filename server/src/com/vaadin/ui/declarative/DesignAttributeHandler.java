@@ -49,7 +49,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.DesignSynchronizable;
+import com.vaadin.ui.Component;
 
 /**
  * Default attribute handler implementation used when parsing designs to
@@ -104,9 +104,8 @@ public class DesignAttributeHandler implements Serializable {
      *            values
      * @return true on success
      */
-    public static boolean readAttribute(DesignSynchronizable component,
-            String attribute, Attributes attributes,
-            DesignSynchronizable defaultInstance) {
+    public static boolean readAttribute(Component component, String attribute,
+            Attributes attributes, Component defaultInstance) {
         String value = null;
         if (component == null || attribute == null || attributes == null
                 || defaultInstance == null) {
@@ -213,9 +212,8 @@ public class DesignAttributeHandler implements Serializable {
      * @param defaultInstance
      *            the default instance for comparing default values
      */
-    public static void writeAttribute(DesignSynchronizable component,
-            String attribute, Attributes attr,
-            DesignSynchronizable defaultInstance) {
+    public static void writeAttribute(Component component, String attribute,
+            Attributes attr, Component defaultInstance) {
         Method getter = findGetterForAttribute(component.getClass(), attribute);
         if (getter == null) {
             getLogger().warning(

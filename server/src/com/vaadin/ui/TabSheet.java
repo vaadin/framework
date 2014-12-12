@@ -1503,7 +1503,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         }
         // create the component that is in tab content
         Element content = tabElement.child(0);
-        DesignSynchronizable child = designContext.createChild(content);
+        Component child = designContext.createChild(content);
         Tab tab = this.addTab(child);
         tab.setVisible(DesignAttributeHandler.readAttribute("visible", attr,
                 tab.isVisible(), Boolean.class));
@@ -1548,8 +1548,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         // create element for tab
         Element tabElement = design.appendElement("tab");
         // add tab content
-        tabElement.appendChild(designContext
-                .createNode((DesignSynchronizable) tab.getComponent()));
+        tabElement.appendChild(designContext.createNode(tab.getComponent()));
         Attributes attr = tabElement.attributes();
         // write attributes
         DesignAttributeHandler.writeAttribute("visible", attr, tab.isVisible(),

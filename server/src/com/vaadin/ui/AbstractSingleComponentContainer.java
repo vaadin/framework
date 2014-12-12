@@ -299,8 +299,7 @@ public abstract class AbstractSingleComponentContainer extends
                     + " can have only one child component.");
         } else if (childCount == 1) {
             Element childElement = design.children().get(0);
-            DesignSynchronizable newChild = designContext
-                    .createChild(childElement);
+            Component newChild = designContext.createChild(childElement);
             setContent(newChild);
         } else {
             setContent(null);
@@ -319,7 +318,7 @@ public abstract class AbstractSingleComponentContainer extends
         // synchronize default attributes (also clears children and attributes)
         super.synchronizeToDesign(design, designContext);
         // handle child component
-        DesignSynchronizable child = (DesignSynchronizable) getContent();
+        Component child = getContent();
         if (child != null) {
             Element childNode = designContext.createNode(child);
             design.appendChild(childNode);

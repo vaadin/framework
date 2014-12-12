@@ -27,7 +27,6 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DesignSynchronizable;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
@@ -79,7 +78,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     private AbsoluteLayout createLayout() {
         DesignContext ctx = new DesignContext();
         Element design = createDesign();
-        DesignSynchronizable child = ctx.createChild(design);
+        Component child = ctx.createChild(design);
         return (AbsoluteLayout) child;
     }
 

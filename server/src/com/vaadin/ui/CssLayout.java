@@ -377,8 +377,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
         removeAllComponents();
         // handle children
         for (Element childComponent : design.children()) {
-            DesignSynchronizable newChild = designContext
-                    .createChild(childComponent);
+            Component newChild = designContext.createChild(childComponent);
             addComponent(newChild);
         }
     }
@@ -397,8 +396,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
         // handle children
         Element designElement = design;
         for (Component child : this) {
-            DesignSynchronizable childComponent = (DesignSynchronizable) child;
-            Element childNode = designContext.createNode(childComponent);
+            Element childNode = designContext.createNode(child);
             designElement.appendChild(childNode);
         }
     }

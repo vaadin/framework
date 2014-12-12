@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
@@ -494,43 +493,40 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
             setMargin(def.getMargin().getBitMask() != 0);
         }
         // handle children
-        for (Node childComponent : design.childNodes()) {
-            if (childComponent instanceof Element) {
-                Attributes attr = childComponent.attributes();
-                DesignSynchronizable newChild = designContext
-                        .createChild((Element) childComponent);
-                addComponent(newChild);
-                // handle alignment
-                int bitMask = 0;
-                if (attr.hasKey(":middle")) {
-                    bitMask += AlignmentInfo.Bits.ALIGNMENT_VERTICAL_CENTER;
-                } else if (attr.hasKey(":bottom")) {
-                    bitMask += AlignmentInfo.Bits.ALIGNMENT_BOTTOM;
-                } else {
-                    bitMask += AlignmentInfo.Bits.ALIGNMENT_TOP;
-                }
-                if (attr.hasKey(":center")) {
-                    bitMask += AlignmentInfo.Bits.ALIGNMENT_HORIZONTAL_CENTER;
-                } else if (attr.hasKey(":right")) {
-                    bitMask += AlignmentInfo.Bits.ALIGNMENT_RIGHT;
-                } else {
-                    bitMask += AlignmentInfo.Bits.ALIGNMENT_LEFT;
-                }
-                setComponentAlignment(newChild, new Alignment(bitMask));
-                // handle expand ratio
-                if (attr.hasKey(":expand")) {
-                    String value = attr.get(":expand");
-                    if (value.length() > 0) {
-                        try {
-                            float ratio = Float.valueOf(value);
-                            setExpandRatio(newChild, ratio);
-                        } catch (NumberFormatException nfe) {
-                            getLogger().info(
-                                    "Failed to parse expand ratio " + value);
-                        }
-                    } else {
-                        setExpandRatio(newChild, 1.0f);
+        for (Element childComponent : design.children()) {
+            Attributes attr = childComponent.attributes();
+            Component newChild = designContext.createChild(childComponent);
+            addComponent(newChild);
+            // handle alignment
+            int bitMask = 0;
+            if (attr.hasKey(":middle")) {
+                bitMask += AlignmentInfo.Bits.ALIGNMENT_VERTICAL_CENTER;
+            } else if (attr.hasKey(":bottom")) {
+                bitMask += AlignmentInfo.Bits.ALIGNMENT_BOTTOM;
+            } else {
+                bitMask += AlignmentInfo.Bits.ALIGNMENT_TOP;
+            }
+            if (attr.hasKey(":center")) {
+                bitMask += AlignmentInfo.Bits.ALIGNMENT_HORIZONTAL_CENTER;
+            } else if (attr.hasKey(":right")) {
+                bitMask += AlignmentInfo.Bits.ALIGNMENT_RIGHT;
+            } else {
+                bitMask += AlignmentInfo.Bits.ALIGNMENT_LEFT;
+            }
+            setComponentAlignment(newChild, new Alignment(bitMask));
+            // handle expand ratio
+            if (attr.hasKey(":expand")) {
+                String value = attr.get(":expand");
+                if (value.length() > 0) {
+                    try {
+                        float ratio = Float.valueOf(value);
+                        setExpandRatio(newChild, ratio);
+                    } catch (NumberFormatException nfe) {
+                        getLogger().info(
+                                "Failed to parse expand ratio " + value);
                     }
+                } else {
+                    setExpandRatio(newChild, 1.0f);
                 }
             }
         }
@@ -556,8 +552,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         // handle children
         Element designElement = design;
         for (Component child : this) {
-            DesignSynchronizable childComponent = (DesignSynchronizable) child;
-            Element childNode = designContext.createNode(childComponent);
+            Element childNode = designContext.createNode(child);
             designElement.appendChild(childNode);
             // handle alignment
             Alignment alignment = getComponentAlignment(child);
