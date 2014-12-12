@@ -2009,6 +2009,7 @@ public class Grid<T> extends ResizeComposite implements
     private class AutoColumnWidthsRecalculator {
 
         private final ScheduledCommand calculateCommand = new ScheduledCommand() {
+
             @Override
             public void execute() {
                 if (!isScheduled) {
@@ -2016,14 +2017,34 @@ public class Grid<T> extends ResizeComposite implements
                     return;
                 }
 
-                if (!dataIsBeingFetched) {
-                    calculate();
-                } else {
+                if (header.markAsDirty || footer.markAsDirty) {
+                    if (rescheduleCount < 10) {
+                        /*
+                         * Headers and footers are rendered as finally, this way
+                         * we re-schedule this loop as finally, at the end of
+                         * the queue, so that the headers have a chance to
+                         * render themselves.
+                         */
+                        Scheduler.get().scheduleFinally(this);
+                        rescheduleCount++;
+                    } else {
+                        /*
+                         * We've tried too many times reschedule finally. Seems
+                         * like something is being deferred. Let the queue
+                         * execute and retry again.
+                         */
+                        rescheduleCount = 0;
+                        Scheduler.get().scheduleDeferred(this);
+                    }
+                } else if (dataIsBeingFetched) {
                     Scheduler.get().scheduleDeferred(this);
+                } else {
+                    calculate();
                 }
             }
         };
 
+        private int rescheduleCount = 0;
         private boolean isScheduled;
 
         /**
@@ -2049,6 +2070,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private void calculate() {
             isScheduled = false;
+            rescheduleCount = 0;
 
             assert !dataIsBeingFetched : "Trying to calculate column widths even though data is still being fetched.";
             /*

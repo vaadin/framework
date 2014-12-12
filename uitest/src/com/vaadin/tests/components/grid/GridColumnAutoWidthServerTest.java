@@ -15,9 +15,6 @@
  */
 package com.vaadin.tests.components.grid;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.vaadin.tests.annotations.TestCategory;
 
 @TestCategory("grid")
@@ -26,13 +23,5 @@ public class GridColumnAutoWidthServerTest extends
     @Override
     protected Class<?> getUIClass() {
         return GridColumnAutoWidth.class;
-    }
-
-    @Override
-    @Test
-    @Ignore
-    public void testWideHeaderNarrowBody() {
-        // TODO this test is temporarily broken, it will be fixed Very Soon TM.
-        super.testWideHeaderNarrowBody();
     }
 }
