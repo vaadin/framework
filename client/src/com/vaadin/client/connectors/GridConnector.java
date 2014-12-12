@@ -203,9 +203,20 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             registerRpc(EditorRowClientRpc.class, new EditorRowClientRpc() {
 
                 @Override
-                public void bind(int rowIndex) {
-                    serverInitiated = true;
-                    GridConnector.this.getWidget().editRow(rowIndex);
+                public void bind(final int rowIndex) {
+                    /*
+                     * Because most shared state handling is deferred, we must
+                     * defer this too to ensure the editorConnector references
+                     * in shared state are up to date before opening the editor.
+                     * Yes, this is a hack on top of a hack.
+                     */
+                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            serverInitiated = true;
+                            GridConnector.this.getWidget().editRow(rowIndex);
+                        }
+                    });
                 }
 
                 @Override
@@ -216,7 +227,15 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
                 @Override
                 public void confirmBind() {
-                    endRequest();
+                    /*
+                     * See comment in bind()
+                     */
+                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            endRequest();
+                        }
+                    });
                 }
 
                 @Override

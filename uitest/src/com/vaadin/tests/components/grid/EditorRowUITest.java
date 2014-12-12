@@ -41,8 +41,6 @@ public class EditorRowUITest extends MultiBrowserTest {
                 isElementPresent(PasswordFieldElement.class));
 
         openEditorRow(5);
-        assertFalse("Remove this when grid is fixed",
-                isElementPresent(PasswordFieldElement.class));
         new Actions(getDriver()).sendKeys(Keys.ESCAPE).perform();
 
         openEditorRow(10);

@@ -43,17 +43,17 @@ public class GridEditorRowTest extends GridBasicFeaturesTest {
     @Test
     public void testProgrammaticOpeningClosing() {
         selectMenuPath("Component", "Editor row", "Edit item 5");
-        assertNotNull(getEditorRow());
+        assertEditorRowOpen();
 
         selectMenuPath("Component", "Editor row", "Cancel edit");
-        assertNull(getEditorRow());
+        assertEditorRowClosed();
     }
 
     @Test
     public void testProgrammaticOpeningWhenDisabled() {
         selectMenuPath("Component", "Editor row", "Enabled");
         selectMenuPath("Component", "Editor row", "Edit item 5");
-        assertNull(getEditorRow());
+        assertEditorRowClosed();
         assertEquals(
                 "5. Exception occured, java.lang.IllegalStateExceptionEditor row is not enabled",
                 getLogRow(0));
@@ -63,7 +63,7 @@ public class GridEditorRowTest extends GridBasicFeaturesTest {
     public void testDisablingWhileOpen() {
         selectMenuPath("Component", "Editor row", "Edit item 5");
         selectMenuPath("Component", "Editor row", "Enabled");
-        assertNotNull(getEditorRow());
+        assertEditorRowOpen();
         assertEquals(
                 "5. Exception occured, java.lang.IllegalStateExceptionCannot disable the editor row while an item (5) is being edited.",
                 getLogRow(0));
@@ -73,7 +73,7 @@ public class GridEditorRowTest extends GridBasicFeaturesTest {
     @Test
     public void testProgrammaticOpeningWithScroll() {
         selectMenuPath("Component", "Editor row", "Edit item 100");
-        assertNotNull(getEditorRow());
+        assertEditorRowOpen();
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -86,30 +86,28 @@ public class GridEditorRowTest extends GridBasicFeaturesTest {
     public void testKeyboardOpeningClosing() {
 
         getGridElement().getCell(4, 0).click();
+        assertEditorRowClosed();
 
         new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
-
-        assertNotNull(getEditorRow());
+        assertEditorRowOpen();
 
         new Actions(getDriver()).sendKeys(Keys.ESCAPE).perform();
-        assertNull(getEditorRow());
+        assertEditorRowClosed();
 
         // Disable editor row
         selectMenuPath("Component", "Editor row", "Enabled");
-
         getGridElement().getCell(5, 0).click();
         new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
-        assertNull(getEditorRow());
+        assertEditorRowClosed();
     }
 
     @Test
     public void testComponentBinding() {
         selectMenuPath("Component", "State", "Editor row", "Edit item 100");
 
-        List<WebElement> widgets = getEditorRow().findElements(
-                By.className("v-widget"));
-
-        assertEquals(GridBasicFeatures.COLUMNS, widgets.size());
+        List<WebElement> widgets = getEditorWidgets();
+        assertEquals("Number of widgets", GridBasicFeatures.COLUMNS,
+                widgets.size());
 
         assertEquals("(100, 0)", widgets.get(0).getAttribute("value"));
         assertEquals("(100, 1)", widgets.get(1).getAttribute("value"));
@@ -121,8 +119,7 @@ public class GridEditorRowTest extends GridBasicFeaturesTest {
     public void testSave() {
         selectMenuPath("Component", "Editor row", "Edit item 100");
 
-        WebElement textField = getEditorRow().findElements(
-                By.className("v-textfield")).get(0);
+        WebElement textField = getEditorWidgets().get(0);
 
         textField.click();
 
@@ -141,8 +138,7 @@ public class GridEditorRowTest extends GridBasicFeaturesTest {
     public void testProgrammaticSave() {
         selectMenuPath("Component", "Editor row", "Edit item 100");
 
-        WebElement textField = getEditorRow().findElements(
-                By.className("v-textfield")).get(0);
+        WebElement textField = getEditorWidgets().get(0);
 
         textField.click();
 
@@ -152,5 +148,21 @@ public class GridEditorRowTest extends GridBasicFeaturesTest {
 
         assertEquals("(100, 0) changed", getGridElement().getCell(100, 0)
                 .getText());
+    }
+
+    private void assertEditorRowOpen() {
+        assertNotNull("Editor row open", getEditorRow());
+        assertEquals("Number of widgets", GridBasicFeatures.COLUMNS,
+                getEditorWidgets().size());
+    }
+
+    private void assertEditorRowClosed() {
+        assertNull("Editor row closed", getEditorRow());
+    }
+
+    private List<WebElement> getEditorWidgets() {
+        assertNotNull(getEditorRow());
+        return getEditorRow().findElements(By.className("v-textfield"));
+
     }
 }
