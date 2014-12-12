@@ -18,8 +18,8 @@ package com.vaadin.client.connectors;
 import com.google.gwt.json.client.JSONObject;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.ui.grid.renderers.ClickableRenderer.RendererClickEvent;
-import com.vaadin.client.ui.grid.renderers.ClickableRenderer.RendererClickHandler;
+import com.vaadin.client.renderers.ClickableRenderer.RendererClickEvent;
+import com.vaadin.client.renderers.ClickableRenderer.RendererClickHandler;
 import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
 
 /**

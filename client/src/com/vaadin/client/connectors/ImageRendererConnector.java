@@ -20,8 +20,8 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.communication.JsonDecoder;
 import com.vaadin.client.metadata.TypeDataStore;
-import com.vaadin.client.ui.grid.renderers.ClickableRenderer.RendererClickHandler;
-import com.vaadin.client.ui.grid.renderers.ImageRenderer;
+import com.vaadin.client.renderers.ImageRenderer;
+import com.vaadin.client.renderers.ClickableRenderer.RendererClickHandler;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.Connect;
 

@@ -17,8 +17,6 @@ package com.vaadin.client.widget.grid;
 
 import java.io.Serializable;
 
-import com.vaadin.client.ui.grid.Grid;
-
 /**
  * Callback interface for generating custom style names for data rows
  * 

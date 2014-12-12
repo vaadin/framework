@@ -22,7 +22,7 @@ import elemental.json.JsonValue;
 
 /**
  * A ClientConnector for controlling client-side
- * {@link com.vaadin.client.ui.grid.Renderer Grid renderers}. Renderers
+ * {@link com.vaadin.client.widget.grid.Renderer Grid renderers}. Renderers
  * currently extend the Extension interface, but this fact should be regarded as
  * an implementation detail and subject to change in a future major or minor
  * Vaadin revision.

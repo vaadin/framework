@@ -23,10 +23,10 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.DOM;
 import com.vaadin.client.connectors.AbstractRendererConnector;
-import com.vaadin.client.ui.grid.Cell;
-import com.vaadin.client.ui.grid.FlyweightCell;
-import com.vaadin.client.ui.grid.Renderer;
-import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
+import com.vaadin.client.renderers.ComplexRenderer;
+import com.vaadin.client.renderers.Renderer;
+import com.vaadin.client.widget.escalator.Cell;
+import com.vaadin.client.widget.escalator.FlyweightCell;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
 

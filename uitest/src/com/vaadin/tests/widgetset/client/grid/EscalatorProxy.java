@@ -17,11 +17,11 @@ package com.vaadin.tests.widgetset.client.grid;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.TableRowElement;
-import com.vaadin.client.ui.grid.Cell;
-import com.vaadin.client.ui.grid.ColumnConfiguration;
-import com.vaadin.client.ui.grid.Escalator;
-import com.vaadin.client.ui.grid.EscalatorUpdater;
-import com.vaadin.client.ui.grid.RowContainer;
+import com.vaadin.client.widget.escalator.Cell;
+import com.vaadin.client.widget.escalator.ColumnConfiguration;
+import com.vaadin.client.widget.escalator.EscalatorUpdater;
+import com.vaadin.client.widget.escalator.RowContainer;
+import com.vaadin.client.widgets.Escalator;
 import com.vaadin.tests.widgetset.client.grid.EscalatorBasicClientFeaturesWidget.LogWidget;
 
 public class EscalatorProxy extends Escalator {

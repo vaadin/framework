@@ -36,41 +36,40 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
+import com.vaadin.client.renderers.DateRenderer;
+import com.vaadin.client.renderers.HtmlRenderer;
+import com.vaadin.client.renderers.NumberRenderer;
+import com.vaadin.client.renderers.Renderer;
+import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.client.ui.VLabel;
-import com.vaadin.client.ui.grid.Cell;
-import com.vaadin.client.ui.grid.EditorRowHandler;
-import com.vaadin.client.ui.grid.FlyweightCell;
-import com.vaadin.client.ui.grid.Grid;
-import com.vaadin.client.ui.grid.Grid.FooterRow;
-import com.vaadin.client.ui.grid.Grid.HeaderRow;
-import com.vaadin.client.ui.grid.Grid.SelectionMode;
-import com.vaadin.client.ui.grid.GridColumn;
-import com.vaadin.client.ui.grid.Renderer;
-import com.vaadin.client.ui.grid.datasources.ListDataSource;
-import com.vaadin.client.ui.grid.datasources.ListSorter;
-import com.vaadin.client.ui.grid.events.BodyKeyDownHandler;
-import com.vaadin.client.ui.grid.events.BodyKeyPressHandler;
-import com.vaadin.client.ui.grid.events.BodyKeyUpHandler;
-import com.vaadin.client.ui.grid.events.FooterKeyDownHandler;
-import com.vaadin.client.ui.grid.events.FooterKeyPressHandler;
-import com.vaadin.client.ui.grid.events.FooterKeyUpHandler;
-import com.vaadin.client.ui.grid.events.GridKeyDownEvent;
-import com.vaadin.client.ui.grid.events.GridKeyPressEvent;
-import com.vaadin.client.ui.grid.events.GridKeyUpEvent;
-import com.vaadin.client.ui.grid.events.HeaderKeyDownHandler;
-import com.vaadin.client.ui.grid.events.HeaderKeyPressHandler;
-import com.vaadin.client.ui.grid.events.HeaderKeyUpHandler;
-import com.vaadin.client.ui.grid.events.ScrollEvent;
-import com.vaadin.client.ui.grid.events.ScrollHandler;
-import com.vaadin.client.ui.grid.renderers.DateRenderer;
-import com.vaadin.client.ui.grid.renderers.HtmlRenderer;
-import com.vaadin.client.ui.grid.renderers.NumberRenderer;
-import com.vaadin.client.ui.grid.renderers.TextRenderer;
-import com.vaadin.client.ui.grid.selection.SelectionModel.None;
+import com.vaadin.client.widget.escalator.Cell;
+import com.vaadin.client.widget.escalator.FlyweightCell;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
+import com.vaadin.client.widget.grid.EditorRowHandler;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
+import com.vaadin.client.widget.grid.datasources.ListDataSource;
+import com.vaadin.client.widget.grid.datasources.ListSorter;
+import com.vaadin.client.widget.grid.events.BodyKeyDownHandler;
+import com.vaadin.client.widget.grid.events.BodyKeyPressHandler;
+import com.vaadin.client.widget.grid.events.BodyKeyUpHandler;
+import com.vaadin.client.widget.grid.events.FooterKeyDownHandler;
+import com.vaadin.client.widget.grid.events.FooterKeyPressHandler;
+import com.vaadin.client.widget.grid.events.FooterKeyUpHandler;
+import com.vaadin.client.widget.grid.events.GridKeyDownEvent;
+import com.vaadin.client.widget.grid.events.GridKeyPressEvent;
+import com.vaadin.client.widget.grid.events.GridKeyUpEvent;
+import com.vaadin.client.widget.grid.events.HeaderKeyDownHandler;
+import com.vaadin.client.widget.grid.events.HeaderKeyPressHandler;
+import com.vaadin.client.widget.grid.events.HeaderKeyUpHandler;
+import com.vaadin.client.widget.grid.events.ScrollEvent;
+import com.vaadin.client.widget.grid.events.ScrollHandler;
+import com.vaadin.client.widget.grid.selection.SelectionModel.None;
+import com.vaadin.client.widgets.Grid;
+import com.vaadin.client.widgets.Grid.FooterRow;
+import com.vaadin.client.widgets.Grid.HeaderRow;
+import com.vaadin.client.widgets.Grid.SelectionMode;
 import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget.Data;
 
 /**
@@ -95,7 +94,7 @@ public class GridBasicClientFeaturesWidget extends
 
     private class TestEditorRowHandler implements EditorRowHandler<List<Data>> {
 
-        private Map<GridColumn<?, ?>, TextBox> widgets = new HashMap<GridColumn<?, ?>, TextBox>();
+        private Map<Grid.Column<?, ?>, TextBox> widgets = new HashMap<Grid.Column<?, ?>, TextBox>();
 
         private Label log = new Label();
 
@@ -146,7 +145,7 @@ public class GridBasicClientFeaturesWidget extends
         }
 
         @Override
-        public TextBox getWidget(GridColumn<?, List<Data>> column) {
+        public TextBox getWidget(Grid.Column<?, List<Data>> column) {
             if (grid.getColumns().indexOf(column) == 0
                     && !(grid.getSelectionModel() instanceof None)) {
                 return null;
@@ -263,7 +262,7 @@ public class GridBasicClientFeaturesWidget extends
 
             final int c = col;
 
-            GridColumn<String, List<Data>> column = new GridColumn<String, List<Data>>(
+            Grid.Column<String, List<Data>> column = new Grid.Column<String, List<Data>>(
                     createRenderer(Renderers.TEXT_RENDERER)) {
                 @Override
                 public String getValue(List<Data> row) {
@@ -280,7 +279,7 @@ public class GridBasicClientFeaturesWidget extends
         // Integer row number
         {
             final int c = col++;
-            GridColumn<Integer, List<Data>> column = new GridColumn<Integer, List<Data>>(
+            Grid.Column<Integer, List<Data>> column = new Grid.Column<Integer, List<Data>>(
                     createRenderer(Renderers.NUMBER_RENDERER)) {
                 @Override
                 public Integer getValue(List<Data> row) {
@@ -294,7 +293,7 @@ public class GridBasicClientFeaturesWidget extends
         // Some date
         {
             final int c = col++;
-            GridColumn<Date, List<Data>> column = new GridColumn<Date, List<Data>>(
+            Grid.Column<Date, List<Data>> column = new Grid.Column<Date, List<Data>>(
                     createRenderer(Renderers.DATE_RENDERER)) {
                 @Override
                 public Date getValue(List<Data> row) {
@@ -308,7 +307,7 @@ public class GridBasicClientFeaturesWidget extends
         // Row number as a HTML string
         {
             final int c = col++;
-            GridColumn<String, List<Data>> column = new GridColumn<String, List<Data>>(
+            Grid.Column<String, List<Data>> column = new Grid.Column<String, List<Data>>(
                     createRenderer(Renderers.HTML_RENDERER)) {
                 @Override
                 public String getValue(List<Data> row) {
@@ -322,7 +321,7 @@ public class GridBasicClientFeaturesWidget extends
         // Random integer value
         {
             final int c = col++;
-            GridColumn<Integer, List<Data>> column = new GridColumn<Integer, List<Data>>(
+            Grid.Column<Integer, List<Data>> column = new Grid.Column<Integer, List<Data>>(
                     createRenderer(Renderers.NUMBER_RENDERER)) {
                 @Override
                 public Integer getValue(List<Data> row) {
@@ -336,7 +335,7 @@ public class GridBasicClientFeaturesWidget extends
         // Random integer value between 0 and 5
         {
             final int c = col++;
-            GridColumn<Integer, List<Data>> column = new GridColumn<Integer, List<Data>>(
+            Grid.Column<Integer, List<Data>> column = new Grid.Column<Integer, List<Data>>(
                     createRenderer(Renderers.NUMBER_RENDERER)) {
                 @Override
                 public Integer getValue(List<Data> row) {
@@ -350,7 +349,7 @@ public class GridBasicClientFeaturesWidget extends
         HeaderRow row = grid.getDefaultHeaderRow();
         for (int i = 0; i < col; ++i) {
             String caption = "Header (0," + i + ")";
-            GridColumn<?, ?> column = grid.getColumn(i);
+            Grid.Column<?, ?> column = grid.getColumn(i);
             // Lets use some different cell types
             if (i % 3 == 0) {
                 // No-op
@@ -557,7 +556,7 @@ public class GridBasicClientFeaturesWidget extends
                     @Override
                     public String getStyle(
                             CellReference<List<Data>> cellReference) {
-                        GridColumn<?, List<Data>> column = cellReference
+                        Grid.Column<?, List<Data>> column = cellReference
                                 .getColumn();
                         if (column == grid.getColumn(2)) {
                             return "two";
@@ -610,7 +609,7 @@ public class GridBasicClientFeaturesWidget extends
 
         for (int i = 0; i < COLUMNS; i++) {
             final int index = i;
-            final GridColumn<?, List<Data>> column = grid.getColumn(index);
+            final Grid.Column<?, List<Data>> column = grid.getColumn(index);
             addMenuCommand("Sortable", new ScheduledCommand() {
                 @Override
                 public void execute() {
@@ -853,7 +852,7 @@ public class GridBasicClientFeaturesWidget extends
             public void execute() {
                 row.join(
                         grid.getColumns().toArray(
-                                new GridColumn[grid.getColumnCount()]))
+                                new Grid.Column[grid.getColumnCount()]))
                         .setText("Join all columns");
                 ;
 
@@ -969,7 +968,7 @@ public class GridBasicClientFeaturesWidget extends
             public void execute() {
                 row.join(
                         grid.getColumns().toArray(
-                                new GridColumn[grid.getColumnCount()]))
+                                new Grid.Column[grid.getColumnCount()]))
                         .setText("Join all columns");
                 ;
 

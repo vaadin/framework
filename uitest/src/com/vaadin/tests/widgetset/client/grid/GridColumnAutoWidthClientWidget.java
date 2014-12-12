@@ -19,18 +19,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.vaadin.client.ui.grid.Grid;
-import com.vaadin.client.ui.grid.Grid.SelectionMode;
-import com.vaadin.client.ui.grid.GridColumn;
-import com.vaadin.client.ui.grid.datasources.ListDataSource;
-import com.vaadin.client.ui.grid.renderers.HtmlRenderer;
+import com.vaadin.client.renderers.HtmlRenderer;
+import com.vaadin.client.widget.grid.datasources.ListDataSource;
+import com.vaadin.client.widgets.Grid;
+import com.vaadin.client.widgets.Grid.SelectionMode;
 
 public class GridColumnAutoWidthClientWidget extends
         PureGWTTestApplication<Grid<List<String>>> {
 
     private Grid<List<String>> grid;
 
-    private class Col extends GridColumn<String, List<String>> {
+    private class Col extends Grid.Column<String, List<String>> {
         public Col(String header) {
             super(header, new HtmlRenderer());
             setExpandRatio(0);

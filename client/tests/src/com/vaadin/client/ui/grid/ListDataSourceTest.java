@@ -25,7 +25,7 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 import com.vaadin.client.data.DataChangeHandler;
-import com.vaadin.client.ui.grid.datasources.ListDataSource;
+import com.vaadin.client.widget.grid.datasources.ListDataSource;
 
 public class ListDataSourceTest {
 

@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.connectors;
 
-import com.vaadin.client.ui.grid.renderers.TextRenderer;
+import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.shared.ui.Connect;
 
 /**

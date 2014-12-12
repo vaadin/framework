@@ -2217,7 +2217,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     /**
      * An abstract base class for server-side Grid renderers.
-     * {@link com.vaadin.client.ui.grid.Renderer Grid renderers}. This class
+     * {@link com.vaadin.client.widget.grid.Renderer Grid renderers}. This class
      * currently extends the AbstractExtension superclass, but this fact should
      * be regarded as an implementation detail and subject to change in a future
      * major or minor Vaadin revision.

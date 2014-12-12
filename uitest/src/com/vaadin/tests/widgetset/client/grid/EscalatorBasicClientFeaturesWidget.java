@@ -8,11 +8,11 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
-import com.vaadin.client.ui.grid.Escalator;
-import com.vaadin.client.ui.grid.EscalatorUpdater;
-import com.vaadin.client.ui.grid.FlyweightCell;
-import com.vaadin.client.ui.grid.Row;
-import com.vaadin.client.ui.grid.RowContainer;
+import com.vaadin.client.widget.escalator.EscalatorUpdater;
+import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.escalator.Row;
+import com.vaadin.client.widget.escalator.RowContainer;
+import com.vaadin.client.widgets.Escalator;
 
 public class EscalatorBasicClientFeaturesWidget extends
         PureGWTTestApplication<Escalator> {

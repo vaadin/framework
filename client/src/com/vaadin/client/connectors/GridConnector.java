@@ -38,32 +38,31 @@ import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
+import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
-import com.vaadin.client.ui.grid.EditorRowHandler;
-import com.vaadin.client.ui.grid.Grid;
-import com.vaadin.client.ui.grid.Grid.FooterCell;
-import com.vaadin.client.ui.grid.Grid.FooterRow;
-import com.vaadin.client.ui.grid.Grid.HeaderCell;
-import com.vaadin.client.ui.grid.Grid.HeaderRow;
-import com.vaadin.client.ui.grid.GridColumn;
-import com.vaadin.client.ui.grid.Renderer;
-import com.vaadin.client.ui.grid.events.SelectAllEvent;
-import com.vaadin.client.ui.grid.events.SelectAllHandler;
-import com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel;
-import com.vaadin.client.ui.grid.selection.SelectionEvent;
-import com.vaadin.client.ui.grid.selection.SelectionHandler;
-import com.vaadin.client.ui.grid.selection.SelectionModelMulti;
-import com.vaadin.client.ui.grid.selection.SelectionModelNone;
-import com.vaadin.client.ui.grid.selection.SelectionModelSingle;
-import com.vaadin.client.ui.grid.sort.SortEvent;
-import com.vaadin.client.ui.grid.sort.SortHandler;
-import com.vaadin.client.ui.grid.sort.SortOrder;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
+import com.vaadin.client.widget.grid.EditorRowHandler;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
+import com.vaadin.client.widget.grid.events.SelectAllEvent;
+import com.vaadin.client.widget.grid.events.SelectAllHandler;
+import com.vaadin.client.widget.grid.selection.AbstractRowHandleSelectionModel;
+import com.vaadin.client.widget.grid.selection.SelectionEvent;
+import com.vaadin.client.widget.grid.selection.SelectionHandler;
+import com.vaadin.client.widget.grid.selection.SelectionModelMulti;
+import com.vaadin.client.widget.grid.selection.SelectionModelNone;
+import com.vaadin.client.widget.grid.selection.SelectionModelSingle;
+import com.vaadin.client.widget.grid.sort.SortEvent;
+import com.vaadin.client.widget.grid.sort.SortHandler;
+import com.vaadin.client.widget.grid.sort.SortOrder;
+import com.vaadin.client.widgets.Grid;
+import com.vaadin.client.widgets.Grid.FooterCell;
+import com.vaadin.client.widgets.Grid.FooterRow;
+import com.vaadin.client.widgets.Grid.HeaderCell;
+import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.EditorRowClientRpc;
 import com.vaadin.shared.ui.grid.EditorRowServerRpc;
@@ -137,7 +136,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      * Custom implementation of the custom grid column using a JSONObject to
      * represent the cell value and String as a column type.
      */
-    private class CustomGridColumn extends GridColumn<Object, JSONObject> {
+    private class CustomGridColumn extends Grid.Column<Object, JSONObject> {
 
         private final String id;
 
@@ -253,7 +252,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         @Override
-        public Widget getWidget(GridColumn<?, JSONObject> column) {
+        public Widget getWidget(Grid.Column<?, JSONObject> column) {
             assert column != null;
 
             if (column instanceof CustomGridColumn) {
@@ -521,7 +520,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
 
             for (Set<String> group : rowState.cellGroups.keySet()) {
-                GridColumn<?, ?>[] columns = new GridColumn<?, ?>[group.size()];
+                Grid.Column<?, ?>[] columns = new Grid.Column<?, ?>[group
+                        .size()];
                 CellState cellState = rowState.cellGroups.get(group);
 
                 int i = 0;
@@ -578,7 +578,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
 
             for (Set<String> group : rowState.cellGroups.keySet()) {
-                GridColumn<?, ?>[] columns = new GridColumn<?, ?>[group.size()];
+                Grid.Column<?, ?>[] columns = new Grid.Column<?, ?>[group
+                        .size()];
                 CellState cellState = rowState.cellGroups.get(group);
 
                 int i = 0;
@@ -831,7 +832,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     private native void selectByHandle(RowHandle<JSONObject> handle)
     /*-{
         var model = this.@com.vaadin.client.connectors.GridConnector::selectionModel;
-        model.@com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel::selectByHandle(*)(handle);
+        model.@com.vaadin.client.widget.grid.selection.AbstractRowHandleSelectionModel::selectByHandle(*)(handle);
     }-*/;
 
     /**
@@ -841,7 +842,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     private native void deselectByHandle(RowHandle<JSONObject> handle)
     /*-{
         var model = this.@com.vaadin.client.connectors.GridConnector::selectionModel;
-        model.@com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel::deselectByHandle(*)(handle);
+        model.@com.vaadin.client.widget.grid.selection.AbstractRowHandleSelectionModel::deselectByHandle(*)(handle);
     }-*/;
 
     /**

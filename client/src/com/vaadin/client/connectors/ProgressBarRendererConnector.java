@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.connectors;
 
-import com.vaadin.client.ui.grid.renderers.ProgressBarRenderer;
+import com.vaadin.client.renderers.ProgressBarRenderer;
 import com.vaadin.shared.ui.Connect;
 
 /**

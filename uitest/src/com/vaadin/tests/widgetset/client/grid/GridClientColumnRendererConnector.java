@@ -30,24 +30,23 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
+import com.vaadin.client.renderers.ComplexRenderer;
+import com.vaadin.client.renderers.DateRenderer;
+import com.vaadin.client.renderers.HtmlRenderer;
+import com.vaadin.client.renderers.NumberRenderer;
+import com.vaadin.client.renderers.Renderer;
+import com.vaadin.client.renderers.TextRenderer;
+import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.client.ui.grid.Cell;
-import com.vaadin.client.ui.grid.FlyweightCell;
-import com.vaadin.client.ui.grid.Grid;
-import com.vaadin.client.ui.grid.GridColumn;
-import com.vaadin.client.ui.grid.Renderer;
-import com.vaadin.client.ui.grid.datasources.ListDataSource;
-import com.vaadin.client.ui.grid.datasources.ListSorter;
-import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
-import com.vaadin.client.ui.grid.renderers.DateRenderer;
-import com.vaadin.client.ui.grid.renderers.HtmlRenderer;
-import com.vaadin.client.ui.grid.renderers.NumberRenderer;
-import com.vaadin.client.ui.grid.renderers.TextRenderer;
-import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
-import com.vaadin.client.ui.grid.sort.Sort;
-import com.vaadin.client.ui.grid.sort.SortEvent;
-import com.vaadin.client.ui.grid.sort.SortHandler;
-import com.vaadin.client.ui.grid.sort.SortOrder;
+import com.vaadin.client.widget.escalator.Cell;
+import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.datasources.ListDataSource;
+import com.vaadin.client.widget.grid.datasources.ListSorter;
+import com.vaadin.client.widget.grid.sort.Sort;
+import com.vaadin.client.widget.grid.sort.SortEvent;
+import com.vaadin.client.widget.grid.sort.SortHandler;
+import com.vaadin.client.widget.grid.sort.SortOrder;
+import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
 
@@ -143,7 +142,7 @@ public class GridClientColumnRendererConnector extends
         }
 
         // Add a column to display the data in
-        GridColumn<String, String> c = createColumnWithRenderer(Renderers.TEXT_RENDERER);
+        Grid.Column<String, String> c = createColumnWithRenderer(Renderers.TEXT_RENDERER);
         grid.addColumn(c);
         grid.getDefaultHeaderRow().getCell(c).setText("Column 1");
 
@@ -177,7 +176,7 @@ public class GridClientColumnRendererConnector extends
                     @Override
                     public void addColumn(Renderers renderer) {
 
-                        GridColumn<?, String> column;
+                        Grid.Column<?, String> column;
                         if (renderer == Renderers.NUMBER_RENDERER) {
                             column = createNumberColumnWithRenderer(renderer);
                         } else if (renderer == Renderers.DATE_RENDERER) {
@@ -221,7 +220,7 @@ public class GridClientColumnRendererConnector extends
 
                         // Make sorter sort the numbers in natural order
                         sorter.setComparator(
-                                (GridColumn<String, String>) grid.getColumn(0),
+                                (Grid.Column<String, String>) grid.getColumn(0),
                                 new Comparator<String>() {
                                     @Override
                                     public int compare(String o1, String o2) {
@@ -246,7 +245,7 @@ public class GridClientColumnRendererConnector extends
 
                         // Make shuffler return random order
                         shuffler.setComparator(
-                                (GridColumn<String, String>) grid.getColumn(0),
+                                (Grid.Column<String, String>) grid.getColumn(0),
                                 new Comparator<String>() {
                                     @Override
                                     public int compare(String o1, String o2) {
@@ -347,9 +346,9 @@ public class GridClientColumnRendererConnector extends
         }
     }
 
-    private GridColumn<String, String> createColumnWithRenderer(
+    private Grid.Column<String, String> createColumnWithRenderer(
             Renderers renderer) {
-        return new GridColumn<String, String>(createRenderer(renderer)) {
+        return new Grid.Column<String, String>(createRenderer(renderer)) {
 
             @Override
             public String getValue(String row) {
@@ -358,9 +357,9 @@ public class GridClientColumnRendererConnector extends
         };
     }
 
-    private GridColumn<Number, String> createNumberColumnWithRenderer(
+    private Grid.Column<Number, String> createNumberColumnWithRenderer(
             Renderers renderer) {
-        return new GridColumn<Number, String>(createRenderer(renderer)) {
+        return new Grid.Column<Number, String>(createRenderer(renderer)) {
 
             @Override
             public Number getValue(String row) {
@@ -369,9 +368,9 @@ public class GridClientColumnRendererConnector extends
         };
     }
 
-    private GridColumn<Date, String> createDateColumnWithRenderer(
+    private Grid.Column<Date, String> createDateColumnWithRenderer(
             Renderers renderer) {
-        return new GridColumn<Date, String>(createRenderer(renderer)) {
+        return new Grid.Column<Date, String>(createRenderer(renderer)) {
 
             @Override
             public Date getValue(String row) {

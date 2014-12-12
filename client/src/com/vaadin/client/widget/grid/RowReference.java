@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.widget.grid;
 
-import com.vaadin.client.ui.grid.Grid;
+import com.vaadin.client.widgets.Grid;
 
 /**
  * A data class which contains information which identifies a row in a

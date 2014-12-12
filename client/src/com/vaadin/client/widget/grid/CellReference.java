@@ -15,8 +15,7 @@
  */
 package com.vaadin.client.widget.grid;
 
-import com.vaadin.client.ui.grid.Grid;
-import com.vaadin.client.ui.grid.GridColumn;
+import com.vaadin.client.widgets.Grid;
 
 /**
  * A data class which contains information which identifies a cell in a
@@ -31,7 +30,7 @@ import com.vaadin.client.ui.grid.GridColumn;
  */
 public class CellReference<T> {
     private int columnIndex;
-    private GridColumn<?, T> column;
+    private Grid.Column<?, T> column;
     private final RowReference<T> rowReference;
 
     public CellReference(RowReference<T> rowReference) {
@@ -48,7 +47,7 @@ public class CellReference<T> {
      * @param column
      *            the column object
      */
-    public void set(int columnIndex, GridColumn<?, T> column) {
+    public void set(int columnIndex, Grid.Column<?, T> column) {
         this.columnIndex = columnIndex;
         this.column = column;
     }
@@ -94,7 +93,7 @@ public class CellReference<T> {
      * 
      * @return the column object
      */
-    public GridColumn<?, T> getColumn() {
+    public Grid.Column<?, T> getColumn() {
         return column;
     }
 

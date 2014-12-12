@@ -24,7 +24,7 @@ import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.metadata.TypeDataStore;
-import com.vaadin.client.ui.grid.Renderer;
+import com.vaadin.client.renderers.Renderer;
 
 /**
  * An abstract base class for renderer connectors. A renderer connector is used

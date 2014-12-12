@@ -15,8 +15,8 @@
  */
 package com.vaadin.client.connectors;
 
-import com.vaadin.client.ui.grid.FlyweightCell;
-import com.vaadin.client.ui.grid.Renderer;
+import com.vaadin.client.renderers.Renderer;
+import com.vaadin.client.widget.escalator.FlyweightCell;
 import com.vaadin.shared.ui.Connect;
 
 /**

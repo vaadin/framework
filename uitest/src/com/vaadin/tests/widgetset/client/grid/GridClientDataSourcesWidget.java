@@ -21,10 +21,9 @@ import java.util.List;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.data.AbstractRemoteDataSource;
-import com.vaadin.client.ui.grid.Grid;
-import com.vaadin.client.ui.grid.Grid.SelectionMode;
-import com.vaadin.client.ui.grid.GridColumn;
-import com.vaadin.client.ui.grid.renderers.TextRenderer;
+import com.vaadin.client.renderers.TextRenderer;
+import com.vaadin.client.widgets.Grid;
+import com.vaadin.client.widgets.Grid.SelectionMode;
 
 public class GridClientDataSourcesWidget extends
         PureGWTTestApplication<Grid<String[]>> {
@@ -159,13 +158,13 @@ public class GridClientDataSourcesWidget extends
     private final ScheduledCommand setRestishCommand = new ScheduledCommand() {
         @Override
         public void execute() {
-            for (GridColumn<?, String[]> column : grid.getColumns()) {
+            for (Grid.Column<?, String[]> column : grid.getColumns()) {
                 grid.removeColumn(column);
             }
 
             restishDataSource = new RestishDataSource();
             grid.setDataSource(restishDataSource);
-            grid.addColumn(new GridColumn<String, String[]>("column",
+            grid.addColumn(new Grid.Column<String, String[]>("column",
                     new TextRenderer()) {
 
                 @Override
