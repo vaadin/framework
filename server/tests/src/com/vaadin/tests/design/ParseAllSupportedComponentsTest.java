@@ -13,15 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.layoutparser;
+package com.vaadin.tests.design;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import junit.framework.TestCase;
 
+import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
-import com.vaadin.ui.declarative.LayoutHandler;
 
 /**
  * Just top level test case that contains all synchronizable components
@@ -32,9 +32,9 @@ public class ParseAllSupportedComponentsTest extends TestCase {
 
     public void testParsing() {
         try {
-            DesignContext ctx = LayoutHandler
+            DesignContext ctx = Design
                     .parse(new FileInputStream(
-                            "server/tests/src/com/vaadin/tests/layoutparser/all-components.html"));
+                            "server/tests/src/com/vaadin/tests/design/all-components.html"));
             assertNotNull("The returned design context can not be null", ctx);
             assertNotNull("the component root can not be null",
                     ctx.getComponentRoot());

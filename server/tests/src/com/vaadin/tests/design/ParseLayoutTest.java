@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.layoutparser;
+package com.vaadin.tests.design;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -35,9 +35,9 @@ import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
-import com.vaadin.ui.declarative.LayoutHandler;
 
 /**
  * A test for checking that parsing a layout preserves the IDs and the mapping
@@ -54,9 +54,8 @@ public class ParseLayoutTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        ctx = LayoutHandler
-                .parse(new FileInputStream(
-                        "server/tests/src/com/vaadin/tests/layoutparser/testFile.html"));
+        ctx = Design.parse(new FileInputStream(
+                "server/tests/src/com/vaadin/tests/design/testFile.html"));
     }
 
     /*
@@ -79,8 +78,8 @@ public class ParseLayoutTest extends TestCase {
      */
     @Test
     public void testThatSerializationPreservesProperties() throws IOException {
-        Document doc = LayoutHandler.createHtml(ctx);
-        DesignContext newContext = LayoutHandler.parse(doc.toString());
+        Document doc = Design.createHtml(ctx);
+        DesignContext newContext = Design.parse(doc.toString());
         // Check that the elements can still be found by id and caption
         findElements(newContext);
         checkHierarchy(newContext);
@@ -116,8 +115,8 @@ public class ParseLayoutTest extends TestCase {
     public void testFieldBinding() throws IOException {
         LayoutTemplate template = new LayoutTemplate();
         InputStream htmlFile = new FileInputStream(
-                "server/tests/src/com/vaadin/tests/layoutparser/testFile.html");
-        LayoutHandler.parse(htmlFile, template);
+                "server/tests/src/com/vaadin/tests/design/testFile.html");
+        Design.parse(htmlFile, template);
         assertNotNull(template.getFirstButton());
         assertNotNull(template.getSecondButton());
         assertNotNull(template.getYetanotherbutton());
@@ -134,9 +133,9 @@ public class ParseLayoutTest extends TestCase {
     public void testUnboundFields() throws IOException {
         InvalidLayoutTemplate template = new InvalidLayoutTemplate();
         InputStream htmlFile = new FileInputStream(
-                "server/tests/src/com/vaadin/tests/layoutparser/testFile.html");
+                "server/tests/src/com/vaadin/tests/design/testFile.html");
         try {
-            LayoutHandler.parse(htmlFile, template);
+            Design.parse(htmlFile, template);
             // we are expecting an exception
             fail();
         } catch (DesignException e) {

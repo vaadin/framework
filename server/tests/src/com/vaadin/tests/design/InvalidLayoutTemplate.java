@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.layoutparser;
+package com.vaadin.tests.design;
 
 import org.junit.Ignore;
 

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.layoutparser;
+package com.vaadin.tests.design;
 
 import java.util.Locale;
 
@@ -28,7 +28,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.DesignContext;
-import com.vaadin.ui.declarative.LayoutHandler;
+import com.vaadin.ui.declarative.Design;
 
 /**
  * Tests the handling of the locale property in parsing and html generation.
@@ -73,7 +73,7 @@ public class TestLocale extends TestCase {
         hlayout2.addComponent(l2);
         ctx.setComponentRoot(vLayout);
         // create the html tree corresponding to the component hierarchy
-        Document doc = LayoutHandler.createHtml(ctx);
+        Document doc = Design.createHtml(ctx);
         // check the created html
         Element body = doc.body();
         Element evLayout = body.child(0);
@@ -131,7 +131,7 @@ public class TestLocale extends TestCase {
 
         // parse the created document and check the constructed component
         // hierarchy
-        VerticalLayout vLayout = (VerticalLayout) LayoutHandler.parse(
+        VerticalLayout vLayout = (VerticalLayout) Design.parse(
                 doc.toString()).getComponentRoot();
         assertEquals("Wrong locale.", new Locale("en", "US"),
                 vLayout.getLocale());

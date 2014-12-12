@@ -35,16 +35,16 @@ import com.vaadin.ui.declarative.DesignContext.ComponentCreatedEvent;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
 
 /**
- * LayoutHandler is used for parsing a component hierarchy from an html file
- * and, conversely, for generating an html tree representation corresponding to
- * a given component hierarchy. For both parsing and tree generation the
- * component hierarchy must contain a single root.
+ * Design is used for parsing a component hierarchy from an html file and,
+ * conversely, for generating an html tree representation corresponding to a
+ * given component hierarchy. For both parsing and tree generation the component
+ * hierarchy must contain a single root.
  * 
  * 
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class LayoutHandler implements Serializable {
+public class Design implements Serializable {
     /**
      * Constructs a component hierarchy from the design specified as an html
      * document. The component hierarchy must contain exactly one top-level
