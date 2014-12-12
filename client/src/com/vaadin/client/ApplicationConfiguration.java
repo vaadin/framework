@@ -172,6 +172,33 @@ public class ApplicationConfiguration implements EntryPoint {
             return this.getConfig("versionInfo").vaadinVersion;
         }-*/;
 
+        /**
+         * Gets the version of the Atmosphere framework.
+         * 
+         * @return a string with the version
+         * 
+         * @see org.atmosphere.util#getRawVersion()
+         */
+        private native String getAtmosphereVersion()
+        /*-{
+            return this.getConfig("versionInfo").atmosphereVersion;
+        }-*/;
+
+        /**
+         * Gets the JS version used in the Atmosphere framework.
+         * 
+         * @return a string with the version
+         */
+        private native String getAtmosphereJSVersion()
+        /*-{
+            if ($wnd.jQueryVaadin != undefined){
+                return $wnd.jQueryVaadin.atmosphere.version;
+            }
+            else {
+                return null;
+            }
+        }-*/;
+
         private native String getUIDL()
         /*-{
            return this.getConfig("uidl");
@@ -459,6 +486,24 @@ public class ApplicationConfiguration implements EntryPoint {
 
     public String getServletVersion() {
         return getJsoConfiguration(id).getVaadinVersion();
+    }
+
+    /**
+     * Return Atmosphere version.
+     * 
+     * @return Atmosphere version.
+     */
+    public String getAtmosphereVersion() {
+        return getJsoConfiguration(id).getAtmosphereVersion();
+    }
+
+    /**
+     * Return Atmosphere JS version.
+     * 
+     * @return Atmosphere JS version.
+     */
+    public String getAtmosphereJSVersion() {
+        return getJsoConfiguration(id).getAtmosphereJSVersion();
     }
 
     public Class<? extends ServerConnector> getConnectorClassByEncodedTag(

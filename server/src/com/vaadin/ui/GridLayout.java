@@ -255,8 +255,6 @@ public class GridLayout extends AbstractLayout implements
                 cursorY = row1;
             }
         }
-
-        markAsDirty();
     }
 
     /**
@@ -390,7 +388,6 @@ public class GridLayout extends AbstractLayout implements
 
         getState().childData.remove(component);
         components.remove(component);
-
         super.removeComponent(component);
     }
 

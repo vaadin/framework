@@ -167,14 +167,11 @@ public class VBrowserDetails implements Serializable {
         if (userAgent.contains("windows ")) {
             os = OperatingSystem.WINDOWS;
             isWindowsPhone = userAgent.contains("windows phone");
+        } else if (userAgent.contains("android")) {
+            os = OperatingSystem.ANDROID;
+            parseAndroidVersion(userAgent);
         } else if (userAgent.contains("linux")) {
-            if (userAgent.contains("android")) {
-                os = OperatingSystem.ANDROID;
-                parseAndroidVersion(userAgent);
-            } else {
-                os = OperatingSystem.LINUX;
-
-            }
+            os = OperatingSystem.LINUX;
         } else if (userAgent.contains("macintosh")
                 || userAgent.contains("mac osx")
                 || userAgent.contains("mac os x")) {

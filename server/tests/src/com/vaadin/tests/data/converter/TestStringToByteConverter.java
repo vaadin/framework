@@ -16,25 +16,28 @@ public class TestStringToByteConverter extends TestCase {
             converter);
 
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, Byte.class, null));
+        assertEquals("Null value was converted incorrectly", null,
+                converter.convertToModel(null, Byte.class, null));
     }
 
     public void testReverseNullConversion() {
-        assertEquals(null,
+        assertEquals("Null value reversely was converted incorrectly", null,
                 reverseConverter.convertToModel(null, String.class, null));
     }
 
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", Byte.class, null));
+        assertEquals("Empty value was converted incorrectly", null,
+                converter.convertToModel("", Byte.class, null));
     }
 
     public void testValueConversion() {
-        assertEquals(Byte.valueOf((byte) 10),
+        assertEquals("Byte value was converted incorrectly",
+                Byte.valueOf((byte) 10),
                 converter.convertToModel("10", Byte.class, null));
     }
 
     public void testReverseValueConversion() {
-        assertEquals(
+        assertEquals("Byte value reversely was converted incorrectly",
                 reverseConverter.convertToModel((byte) 10, String.class, null),
                 "10");
     }
@@ -43,7 +46,8 @@ public class TestStringToByteConverter extends TestCase {
         byte b = converter.convertToModel("127", Byte.class, null);
         Assert.assertEquals(Byte.MAX_VALUE, b);
         b = converter.convertToModel("-128", Byte.class, null);
-        assertEquals(Byte.MIN_VALUE, b);
+        assertEquals("Min byte value was converted incorrectly",
+                Byte.MIN_VALUE, b);
     }
 
     public void testValueOutOfRange() {

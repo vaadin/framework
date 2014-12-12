@@ -17,6 +17,7 @@
 package com.vaadin.data.util.converter;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -112,6 +113,12 @@ public class DefaultConverterFactory implements ConverterFactory {
             return new StringToDateConverter();
         } else if (Enum.class.isAssignableFrom(sourceType)) {
             return new StringToEnumConverter();
+        } else if (BigInteger.class.isAssignableFrom(sourceType)) {
+            return new StringToBigIntegerConverter();
+        } else if (Short.class.isAssignableFrom(sourceType)) {
+            return new StringToShortConverter();
+        } else if (Byte.class.isAssignableFrom(sourceType)) {
+            return new StringToByteConverter();
         } else {
             return null;
         }

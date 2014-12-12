@@ -31,6 +31,7 @@ public class EnumTextField extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         final TextField tf = new TextField();
+        tf.setNullRepresentation("");
         tf.addValueChangeListener(new ValueChangeListener() {
 
             @Override

@@ -573,8 +573,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     /**
      * A helper method to strip away characters that might somehow be used for
-     * XSS attacs. Leaves at least alphanumeric characters intact. Also removes
-     * eg. ( and ), so values should be safe in javascript too.
+     * XSS attacks. Leaves at least alphanumeric characters intact. Also removes
+     * e.g. '(' and ')', so values should be safe in javascript too.
      * 
      * @param themeName
      * @return
@@ -583,7 +583,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      *             version
      */
     @Deprecated
-    protected static String stripSpecialChars(String themeName) {
+    public static String stripSpecialChars(String themeName) {
         StringBuilder sb = new StringBuilder();
         char[] charArray = themeName.toCharArray();
         for (int i = 0; i < charArray.length; i++) {
@@ -704,6 +704,15 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return;
         }
 
+        String cacheControl = "public, max-age=0, must-revalidate";
+        int resourceCacheTime = getCacheTime(filename);
+        if (resourceCacheTime > 0) {
+            cacheControl = "max-age=" + String.valueOf(resourceCacheTime);
+        }
+        response.setHeader("Cache-Control", cacheControl);
+        response.setDateHeader("Expires", System.currentTimeMillis()
+                + (resourceCacheTime * 1000));
+
         // Find the modification timestamp
         long lastModifiedTime = 0;
         URLConnection connection = null;
@@ -714,6 +723,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // are not returned by the browser in the "If-Modified-Since"
             // header).
             lastModifiedTime = lastModifiedTime - lastModifiedTime % 1000;
+            response.setDateHeader("Last-Modified", lastModifiedTime);
 
             if (browserHasNewestVersion(request, lastModifiedTime)) {
                 response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
@@ -746,18 +756,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         final String mimetype = sc.getMimeType(filename);
         if (mimetype != null) {
             response.setContentType(mimetype);
-        }
-
-        // Provide modification timestamp to the browser if it is known.
-        if (lastModifiedTime > 0) {
-            response.setDateHeader("Last-Modified", lastModifiedTime);
-
-            String cacheControl = "public, max-age=0, must-revalidate";
-            int resourceCacheTime = getCacheTime(filename);
-            if (resourceCacheTime > 0) {
-                cacheControl = "max-age=" + String.valueOf(resourceCacheTime);
-            }
-            response.setHeader("Cache-Control", cacheControl);
         }
 
         writeStaticResourceResponse(request, response, resourceUrl);

@@ -1071,6 +1071,26 @@ public class SQLContainerTableQueryTest {
         Assert.assertEquals(0, container.size());
     }
 
+    // Set timeout to ensure there is no infinite looping (#12882)
+    @Test(timeout = 1000)
+    public void removeAllItems_manyItems_commit_shouldSucceed()
+            throws SQLException {
+        SQLContainer container = new SQLContainer(new TableQuery("people",
+                connectionPool, SQLTestsConstants.sqlGen));
+        final int itemNumber = (SQLContainer.CACHE_RATIO + 1)
+                * SQLContainer.DEFAULT_PAGE_LENGTH + 1;
+        container.removeAllItems();
+        Assert.assertEquals(container.size(), 0);
+        for (int i = 0; i < itemNumber; ++i) {
+            container.addItem();
+        }
+        container.commit();
+        Assert.assertEquals(container.size(), itemNumber);
+        Assert.assertTrue(container.removeAllItems());
+        container.commit();
+        Assert.assertEquals(container.size(), 0);
+    }
+
     @Test
     public void commit_tableAddedItem_shouldBeWrittenToDB() throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
@@ -1134,6 +1154,20 @@ public class SQLContainerTableQueryTest {
         Assert.assertEquals("Donald",
                 container.getContainerProperty(container.lastItemId(), "NAME")
                         .getValue());
+    }
+
+    @Test
+    public void commit_removeModifiedItem_shouldSucceed() throws SQLException {
+        TableQuery query = new TableQuery("people", connectionPool,
+                SQLTestsConstants.sqlGen);
+        SQLContainer container = new SQLContainer(query);
+        int size = container.size();
+        Object key = container.firstItemId();
+        Item row = container.getItem(key);
+        row.getItemProperty("NAME").setValue("Pekka");
+        Assert.assertTrue(container.removeItem(key));
+        container.commit();
+        Assert.assertEquals(size - 1, container.size());
     }
 
     @Test

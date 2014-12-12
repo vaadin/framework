@@ -476,7 +476,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
         if (menuVisible && visibleChildMenu != item.getSubMenu()
                 && popup != null) {
-            popup.hide();
+            // #15255 - disable animation-in/out when hide in this case
+            popup.hide(false, false, false);
         }
 
         if (menuVisible && item.getSubMenu() != null
@@ -707,9 +708,22 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * Recursively hide all child menus
      */
     public void hideChildren() {
+        hideChildren(true, true);
+    }
+
+    /**
+     * 
+     * Recursively hide all child menus
+     * 
+     * @param animateIn
+     *            enable/disable animate-in animation when hide popup
+     * @param animateOut
+     *            enable/disable animate-out animation when hide popup
+     */
+    public void hideChildren(boolean animateIn, boolean animateOut) {
         if (visibleChildMenu != null) {
-            visibleChildMenu.hideChildren();
-            popup.hide();
+            visibleChildMenu.hideChildren(animateIn, animateOut);
+            popup.hide(false, animateIn, animateOut);
         }
     }
 
@@ -1326,7 +1340,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 VMenuBar root = getParentMenu();
 
                 root.getSelected().getSubMenu().setSelected(null);
-                root.hideChildren();
+                // #15255 - disable animate-in/out when hide popup
+                root.hideChildren(false, false);
 
                 // Get the root menus items and select the previous one
                 int idx = root.getItems().indexOf(root.getSelected());
@@ -1383,8 +1398,9 @@ public class VMenuBar extends SimpleFocusablePanel implements
                     root = root.getParentMenu();
                 }
 
-                // Hide the submenu
-                root.hideChildren();
+                // Hide the submenu (#15255 - disable animate-in/out when hide
+                // popup)
+                root.hideChildren(false, false);
 
                 // Get the root menus items and select the next one
                 int idx = root.getItems().indexOf(root.getSelected());

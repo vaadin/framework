@@ -8,16 +8,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-
 import org.easymock.Capture;
 import org.easymock.EasyMock;
+import org.junit.Assert;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed.ItemAddEvent;
 import com.vaadin.data.Container.Indexed.ItemRemoveEvent;
 import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.NestedMethodPropertyTest.Address;
 import com.vaadin.data.util.filter.Compare;
 
 /**
@@ -76,6 +76,19 @@ public class BeanItemContainerTest extends AbstractBeanContainerTest {
     @Override
     protected boolean isFilteredOutItemNull() {
         return false;
+    }
+
+    public void testGetType_existingProperty_typeReturned() {
+        BeanItemContainer<ClassName> container = getContainer();
+        Assert.assertEquals(
+                "Unexpected type is returned for property 'simpleName'",
+                String.class, container.getType("simpleName"));
+    }
+
+    public void testGetType_notExistingProperty_nullReturned() {
+        BeanItemContainer<ClassName> container = getContainer();
+        Assert.assertNull("Not null type is returned for property ''",
+                container.getType(""));
     }
 
     public void testBasicOperations() {
@@ -911,5 +924,46 @@ public class BeanItemContainerTest extends AbstractBeanContainerTest {
                 .createNiceMock(ItemSetChangeListener.class);
         container.addItemSetChangeListener(listener);
         return listener;
+    }
+
+    public void testAddNestedContainerBeanBeforeData() {
+        BeanItemContainer<NestedMethodPropertyTest.Person> container = new BeanItemContainer<NestedMethodPropertyTest.Person>(
+                NestedMethodPropertyTest.Person.class);
+
+        container.addNestedContainerBean("address");
+
+        assertTrue(container.getContainerPropertyIds().contains(
+                "address.street"));
+
+        NestedMethodPropertyTest.Person john = new NestedMethodPropertyTest.Person(
+                "John", new Address("streetname", 12345));
+        container.addBean(john);
+
+        assertTrue(container.getItem(john).getItemPropertyIds()
+                .contains("address.street"));
+        assertEquals("streetname",
+                container.getItem(john).getItemProperty("address.street")
+                        .getValue());
+
+    }
+
+    public void testAddNestedContainerBeanAfterData() {
+        BeanItemContainer<NestedMethodPropertyTest.Person> container = new BeanItemContainer<NestedMethodPropertyTest.Person>(
+                NestedMethodPropertyTest.Person.class);
+
+        NestedMethodPropertyTest.Person john = new NestedMethodPropertyTest.Person(
+                "John", new Address("streetname", 12345));
+        container.addBean(john);
+
+        container.addNestedContainerBean("address");
+
+        assertTrue(container.getContainerPropertyIds().contains(
+                "address.street"));
+        assertTrue(container.getItem(john).getItemPropertyIds()
+                .contains("address.street"));
+        assertEquals("streetname",
+                container.getItem(john).getItemProperty("address.street")
+                        .getValue());
+
     }
 }

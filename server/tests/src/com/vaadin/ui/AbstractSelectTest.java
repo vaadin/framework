@@ -16,9 +16,12 @@
 package com.vaadin.ui;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.vaadin.data.util.ObjectProperty;
 
 public class AbstractSelectTest {
 
@@ -73,4 +76,72 @@ public class AbstractSelectTest {
                 .toArray());
 
     }
+
+    @Test
+    public void singleSelectInitiallyEmpty() {
+        AbstractSelect s = new ListSelect();
+        Assert.assertTrue(s.isEmpty());
+    }
+
+    @Test
+    public void singleSelectEmptyAfterClearUsingPDS() {
+        AbstractSelect s = new ListSelect();
+        s.addItem("foo");
+        s.addItem("bar");
+        s.setPropertyDataSource(new ObjectProperty<String>("foo"));
+
+        Assert.assertFalse(s.isEmpty());
+        s.clear();
+        Assert.assertTrue(s.isEmpty());
+    }
+
+    @Test
+    public void singleSelectEmptyAfterClear() {
+        AbstractSelect s = new ListSelect();
+        s.addItem("foo");
+        s.addItem("bar");
+        s.setValue("bar");
+
+        Assert.assertFalse(s.isEmpty());
+        s.clear();
+        Assert.assertTrue(s.isEmpty());
+    }
+
+    @Test
+    public void multiSelectInitiallyEmpty() {
+        AbstractSelect s = new ListSelect();
+        s.setMultiSelect(true);
+        Assert.assertTrue(s.isEmpty());
+    }
+
+    @Test
+    public void multiSelectEmptyAfterClearUsingPDS() {
+        AbstractSelect s = new ListSelect();
+        s.setMultiSelect(true);
+        s.addItem("foo");
+        s.addItem("bar");
+        HashSet<String> sel = new HashSet<String>();
+        sel.add("foo");
+        sel.add("bar");
+        s.setPropertyDataSource(new ObjectProperty<HashSet>(sel));
+
+        Assert.assertFalse(s.isEmpty());
+        s.clear();
+        Assert.assertTrue(s.isEmpty());
+    }
+
+    @Test
+    public void multiSelectEmptyAfterClear() {
+        AbstractSelect s = new ListSelect();
+        s.setMultiSelect(true);
+        s.addItem("foo");
+        s.addItem("bar");
+        s.select("foo");
+        s.select("bar");
+
+        Assert.assertFalse(s.isEmpty());
+        s.clear();
+        Assert.assertTrue(s.isEmpty());
+    }
+
 }

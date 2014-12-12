@@ -27,6 +27,8 @@
 
         <dependency org="javax.validation" name="validation-api"
             rev="1.0.0.GA" conf="build,ide -> default,sources" />
+        <dependency org="org.hibernate" name="hibernate-validator"
+                    rev="4.2.0.Final" conf="build,ide -> default" />
         <!-- Google App Engine -->
         <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
             rev="1.2.1" conf="build-provided,ide -> default" />

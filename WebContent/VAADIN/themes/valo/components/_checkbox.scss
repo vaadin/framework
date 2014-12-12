@@ -99,7 +99,7 @@
     }
 
     & ~ label:before {
-      @include valo-button-style($background-color: $background-color, $unit-size: $size, $border-radius: min(round($size/3), $v-border-radius));
+      @include valo-button-style($background-color: $background-color, $unit-size: $size, $border-radius: min(round($size/3), $v-border-radius), $states: normal);
       padding: 0;
       height: round($size);
     }
@@ -119,24 +119,6 @@
     &:checked ~ label:after {
       color: $selection-color;
     }
-
-    &[disabled] {
-      ~ label,
-      ~ label .v-icon,
-      ~ .v-icon {
-        cursor: default;
-      }
-
-      ~ label:before,
-      ~ label:after {
-        @include opacity($v-disabled-opacity);
-      }
-
-      &:active ~ label:after {
-        background: transparent;
-      }
-    }
-
   }
 
   & > .v-icon,
@@ -144,6 +126,22 @@
     margin: 0 round($size/3) 0 round($size/6);
     min-width: 1em;
     cursor: pointer;
+  }
+
+  &.v-disabled {
+    > label,
+    > .v-icon {
+      cursor: default;
+      @include opacity($v-disabled-opacity);
+    }
+
+    > label > .v-icon {
+      cursor: default;
+    }
+
+    :root & > input:active ~ label:after {
+      background: transparent;
+    }
   }
 
 }
