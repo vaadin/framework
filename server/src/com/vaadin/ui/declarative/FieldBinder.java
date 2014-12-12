@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -93,7 +94,8 @@ public class FieldBinder implements Serializable {
     private void resolveFields() {
         for (Field memberField : getFieldsInDeclareOrder(bindTarget.getClass())) {
             if (Component.class.isAssignableFrom(memberField.getType())) {
-                fieldMap.put(memberField.getName(), memberField);
+                fieldMap.put(memberField.getName().toLowerCase(Locale.ENGLISH),
+                        memberField);
             }
         }
     }
@@ -170,7 +172,7 @@ public class FieldBinder implements Serializable {
                 return false;
             }
             // validate that the field can be found
-            Field field = fieldMap.get(fieldName);
+            Field field = fieldMap.get(fieldName.toLowerCase(Locale.ENGLISH));
             if (field == null) {
                 getLogger().fine(
                         "No field was found by identifier " + identifier);
