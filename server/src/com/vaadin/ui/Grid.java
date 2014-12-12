@@ -201,9 +201,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
     /**
      * The server-side interface that controls Grid's selection state.
-     * 
-     * @since
-     * @author Vaadin Ltd
      */
     public interface SelectionModel extends Serializable {
         /**
@@ -411,9 +408,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
     /**
      * A base class for SelectionModels that contains some of the logic that is
      * reusable.
-     * 
-     * @since
-     * @author Vaadin Ltd
      */
     public static abstract class AbstractSelectionModel implements
             SelectionModel {
@@ -494,9 +488,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
     /**
      * A default implementation of a {@link SelectionModel.Single}
-     * 
-     * @since
-     * @author Vaadin Ltd
      */
     public static class SingleSelectionModel extends AbstractSelectionModel
             implements SelectionModel.Single {
@@ -561,9 +552,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
     /**
      * A default implementation for a {@link SelectionModel.None}
-     * 
-     * @since
-     * @author Vaadin Ltd
      */
     public static class NoSelectionModel implements SelectionModel.None {
         @Override
@@ -594,9 +582,6 @@ public class Grid extends AbstractComponent implements SelectionChangeNotifier,
 
     /**
      * A default implementation of a {@link SelectionModel.Multi}
-     * 
-     * @since
-     * @author Vaadin Ltd
      */
     public static class MultiSelectionModel extends AbstractSelectionModel
             implements SelectionModel.Multi {
