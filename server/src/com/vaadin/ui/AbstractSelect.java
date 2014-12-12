@@ -33,6 +33,8 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -1181,7 +1183,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         switch (getItemCaptionMode()) {
 
         case ID:
-            caption = itemId.toString();
+            caption = idToCaption(itemId);
             break;
 
         case INDEX:
@@ -1207,7 +1209,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         case EXPLICIT_DEFAULTS_ID:
             caption = itemCaptions.get(itemId);
             if (caption == null) {
-                caption = itemId.toString();
+                caption = idToCaption(itemId);
             }
             break;
 
@@ -1225,6 +1227,17 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
         // All items must have some captions
         return caption != null ? caption : "";
+    }
+
+    private String idToCaption(Object itemId) {
+        try {
+            Converter<String, Object> c = (Converter<String, Object>) ConverterUtil
+                    .getConverter(String.class, itemId.getClass(), getSession());
+            return ConverterUtil.convertFromModel(itemId, String.class, c,
+                    getLocale());
+        } catch (Exception e) {
+            return itemId.toString();
+        }
     }
 
     /**

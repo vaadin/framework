@@ -24,6 +24,7 @@ import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.client.grid.GridClientColumnRendererConnector.Renderers;
 import com.vaadin.tests.widgetset.client.grid.GridClientColumnRendererRpc;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
@@ -93,6 +94,10 @@ public class GridClientColumnRenderers extends UI {
 
         final NativeSelect select = new NativeSelect(
                 "Add Column with Renderer", Arrays.asList(Renderers.values()));
+        select.setItemCaptionMode(ItemCaptionMode.EXPLICIT);
+        for (Renderers renderer : Renderers.values()) {
+            select.setItemCaption(renderer, renderer.toString());
+        }
         select.setValue(Renderers.TEXT_RENDERER);
         select.setNullSelectionAllowed(false);
         controls.addComponent(select);
