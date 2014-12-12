@@ -440,7 +440,6 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             }
         } else if (state.windowMode == WindowMode.MAXIMIZED) {
             window.setPopupPositionNoUpdate(0, 0);
-            window.bringToFront();
         }
     }
 
@@ -469,6 +468,10 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
                 state.windowMode = WindowMode.MAXIMIZED;
             }
             updateWindowMode();
+
+            VWindow window = getWidget();
+            window.bringToFront();
+
             getRpcProxy(WindowServerRpc.class).windowModeChanged(
                     state.windowMode);
         }
