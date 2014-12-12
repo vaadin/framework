@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.design;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.io.InputStream;
 
 import junit.framework.TestCase;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -54,8 +57,10 @@ public class ParseLayoutTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        ctx = Design.parse(new FileInputStream(
-                "server/tests/src/com/vaadin/tests/design/testFile.html"));
+        ctx = Design
+                .read(new FileInputStream(
+                        "server/tests/src/com/vaadin/tests/design/testFile.html"),
+                        null);
     }
 
     /*
@@ -78,15 +83,18 @@ public class ParseLayoutTest extends TestCase {
      */
     @Test
     public void testThatSerializationPreservesProperties() throws IOException {
-        Document doc = Design.createHtml(ctx);
-        DesignContext newContext = Design.parse(doc.toString());
-        // Check that the elements can still be found by id and caption
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Design.write(ctx, out);
+        ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+        DesignContext newContext = Design.read(in, null);
         findElements(newContext);
         checkHierarchy(newContext);
         // Check the mapping from prefixes to package names using the html tree
         String[] expectedPrefixes = { "my" };
         String[] expectedPackageNames = { "com.addon.mypackage" };
         int index = 0;
+
+        Document doc = Jsoup.parse(out.toString("UTF-8"));
         Element head = doc.head();
         for (Node child : head.childNodes()) {
             if ("meta".equals(child.nodeName())) {
@@ -116,7 +124,7 @@ public class ParseLayoutTest extends TestCase {
         LayoutTemplate template = new LayoutTemplate();
         InputStream htmlFile = new FileInputStream(
                 "server/tests/src/com/vaadin/tests/design/testFile.html");
-        Design.parse(htmlFile, template);
+        Design.read(htmlFile, template);
         assertNotNull(template.getFirstButton());
         assertNotNull(template.getSecondButton());
         assertNotNull(template.getYetanotherbutton());
@@ -135,7 +143,7 @@ public class ParseLayoutTest extends TestCase {
         InputStream htmlFile = new FileInputStream(
                 "server/tests/src/com/vaadin/tests/design/testFile.html");
         try {
-            Design.parse(htmlFile, template);
+            Design.read(htmlFile, template);
             // we are expecting an exception
             fail();
         } catch (DesignException e) {
@@ -148,7 +156,7 @@ public class ParseLayoutTest extends TestCase {
      * component hierarchy rooted at context.getComponentRoot().
      */
     private void checkHierarchy(DesignContext context) {
-        Component root = context.getComponentRoot();
+        Component root = context.getRootComponent();
         VerticalLayout vlayout = (VerticalLayout) root;
         int numComponents = vlayout.getComponentCount();
         assertEquals("Wrong number of child components", 3, numComponents);

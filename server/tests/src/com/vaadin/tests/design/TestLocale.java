@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.design;
 
+import java.io.ByteArrayInputStream;
 import java.util.Locale;
 
 import junit.framework.TestCase;
@@ -22,13 +23,15 @@ import junit.framework.TestCase;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.DocumentType;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.Design;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Tests the handling of the locale property in parsing and html generation.
@@ -71,9 +74,9 @@ public class TestLocale extends TestCase {
         Label l2 = new Label();
         l2.setLocale(Locale.CANADA);
         hlayout2.addComponent(l2);
-        ctx.setComponentRoot(vLayout);
+        ctx.setRootComponent(vLayout);
         // create the html tree corresponding to the component hierarchy
-        Document doc = Design.createHtml(ctx);
+        Document doc = componentToDoc(ctx);
         // check the created html
         Element body = doc.body();
         Element evLayout = body.child(0);
@@ -99,6 +102,28 @@ public class TestLocale extends TestCase {
                         + el1.attr("locale"), "".equals(el1.attr("locale")));
         Element el2 = ehLayout2.child(1);
         assertEquals("Wrong locale information.", "en_CA", el2.attr("locale"));
+    }
+
+    private Document componentToDoc(DesignContext dc) {
+        // Create the html tree skeleton.
+        Document doc = new Document("");
+        DocumentType docType = new DocumentType("html", "", "", "");
+        doc.appendChild(docType);
+        Element html = doc.createElement("html");
+        doc.appendChild(html);
+        html.appendChild(doc.createElement("head"));
+        Element body = doc.createElement("body");
+        html.appendChild(body);
+        dc.storePrefixes(doc);
+
+        // Append the design under <body> in the html tree. createNode
+        // creates the entire component hierarchy rooted at the
+        // given root node.
+        Component root = dc.getRootComponent();
+        Node rootNode = dc.createNode(root);
+        body.appendChild(rootNode);
+        return doc;
+
     }
 
     /*
@@ -131,8 +156,9 @@ public class TestLocale extends TestCase {
 
         // parse the created document and check the constructed component
         // hierarchy
-        VerticalLayout vLayout = (VerticalLayout) Design.parse(
-                doc.toString()).getComponentRoot();
+        String string = doc.html();
+        VerticalLayout vLayout = (VerticalLayout) Design
+                .read(new ByteArrayInputStream(string.getBytes()));
         assertEquals("Wrong locale.", new Locale("en", "US"),
                 vLayout.getLocale());
         HorizontalLayout hLayout = (HorizontalLayout) vLayout.getComponent(0);

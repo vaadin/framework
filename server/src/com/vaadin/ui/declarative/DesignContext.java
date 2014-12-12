@@ -46,7 +46,7 @@ public class DesignContext implements Serializable {
             .synchronizedMap(new HashMap<Class<?>, Object>());
 
     // The root component of the component hierarchy
-    private Component componentRoot = null;
+    private Component rootComponent = null;
     // Attribute names for global id and caption and the prefix name for a local
     // id
     public static final String ID_ATTRIBUTE = "id";
@@ -280,7 +280,7 @@ public class DesignContext implements Serializable {
      * located under <head> in the html document.
      * 
      */
-    public void getPrefixes(Document doc) {
+    protected void getPrefixes(Document doc) {
         Element head = doc.head();
         if (head == null) {
             return;
@@ -554,15 +554,15 @@ public class DesignContext implements Serializable {
      * 
      * @return
      */
-    public Component getComponentRoot() {
-        return componentRoot;
+    public Component getRootComponent() {
+        return rootComponent;
     }
 
     /**
      * Sets the root component of a created component hierarchy.
      */
-    public void setComponentRoot(Component componentRoot) {
-        this.componentRoot = componentRoot;
+    public void setRootComponent(Component rootComponent) {
+        this.rootComponent = rootComponent;
     }
 
     /**

@@ -33,11 +33,12 @@ public class ParseAllSupportedComponentsTest extends TestCase {
     public void testParsing() {
         try {
             DesignContext ctx = Design
-                    .parse(new FileInputStream(
-                            "server/tests/src/com/vaadin/tests/design/all-components.html"));
+                    .read(new FileInputStream(
+                            "server/tests/src/com/vaadin/tests/design/all-components.html"),
+                            null);
             assertNotNull("The returned design context can not be null", ctx);
             assertNotNull("the component root can not be null",
-                    ctx.getComponentRoot());
+                    ctx.getRootComponent());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             fail("Template parsing threw exception");
