@@ -110,6 +110,7 @@ $v-window-modality-curtain-background-color: #222 !default;
   $scroll-divider-width: max(1px, first-number($v-border));
 
   .#{$primary-stylename}-outerheader {
+    cursor: move;
     position: absolute;
     z-index: 2;
     top: 0;
@@ -133,7 +134,6 @@ $v-window-modality-curtain-background-color: #222 !default;
   }
 
   .#{$primary-stylename}-header {
-    cursor: move;
     line-height: $v-unit-size - 1px;
     padding-left: round($v-unit-size/3);
     margin-right: $v-unit-size * 2;
