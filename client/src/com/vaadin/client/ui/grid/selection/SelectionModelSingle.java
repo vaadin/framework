@@ -83,7 +83,7 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
 
         T removed = getSelectedRow();
         if (selectByHandle(grid.getDataSource().getHandle(row))) {
-            grid.fireEvent(new SelectionChangeEvent<T>(grid, row, removed,
+            grid.fireEvent(new SelectionEvent<T>(grid, row, removed,
                     false));
 
             return true;
@@ -100,7 +100,7 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
 
         if (isSelected(row)) {
             deselectByHandle(selectedRow);
-            grid.fireEvent(new SelectionChangeEvent<T>(grid, null, row, false));
+            grid.fireEvent(new SelectionEvent<T>(grid, null, row, false));
             return true;
         }
 

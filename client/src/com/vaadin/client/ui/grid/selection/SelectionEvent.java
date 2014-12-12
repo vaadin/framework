@@ -30,9 +30,9 @@ import com.vaadin.client.ui.grid.Grid;
  * @author Vaadin Ltd
  */
 @SuppressWarnings("rawtypes")
-public class SelectionChangeEvent<T> extends GwtEvent<SelectionChangeHandler> {
+public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
 
-    private static final Type<SelectionChangeHandler> eventType = new Type<SelectionChangeHandler>();
+    private static final Type<SelectionHandler> eventType = new Type<SelectionHandler>();
 
     private final Grid<T> grid;
     private final List<T> added;
@@ -53,7 +53,7 @@ public class SelectionChangeEvent<T> extends GwtEvent<SelectionChangeHandler> {
      *            a batched selection/deselection action
      * @see SelectionModel.Multi.Batched
      */
-    public SelectionChangeEvent(Grid<T> grid, T added, T removed,
+    public SelectionEvent(Grid<T> grid, T added, T removed,
             boolean batched) {
         this.grid = grid;
         this.batched = batched;
@@ -87,7 +87,7 @@ public class SelectionChangeEvent<T> extends GwtEvent<SelectionChangeHandler> {
      *            a batched selection/deselection action
      * @see SelectionModel.Multi.Batched
      */
-    public SelectionChangeEvent(Grid<T> grid, Collection<T> added,
+    public SelectionEvent(Grid<T> grid, Collection<T> added,
             Collection<T> removed, boolean batched) {
         this.grid = grid;
         this.batched = batched;
@@ -117,7 +117,7 @@ public class SelectionChangeEvent<T> extends GwtEvent<SelectionChangeHandler> {
 
     /**
      * Get all rows added to the selection since the last
-     * {@link SelectionChangeEvent}.
+     * {@link SelectionEvent}.
      * 
      * @return a collection of added rows. Empty collection if no rows were
      *         added.
@@ -128,7 +128,7 @@ public class SelectionChangeEvent<T> extends GwtEvent<SelectionChangeHandler> {
 
     /**
      * Get all rows removed from the selection since the last
-     * {@link SelectionChangeEvent}.
+     * {@link SelectionEvent}.
      * 
      * @return a collection of removed rows. Empty collection if no rows were
      *         removed.
@@ -142,19 +142,19 @@ public class SelectionChangeEvent<T> extends GwtEvent<SelectionChangeHandler> {
      * 
      * @return a {@link Type} identifier.
      */
-    public static Type<SelectionChangeHandler> getType() {
+    public static Type<SelectionHandler> getType() {
         return eventType;
     }
 
     @Override
-    public Type<SelectionChangeHandler> getAssociatedType() {
+    public Type<SelectionHandler> getAssociatedType() {
         return eventType;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    protected void dispatch(SelectionChangeHandler handler) {
-        handler.onSelectionChange(this);
+    protected void dispatch(SelectionHandler handler) {
+        handler.onSelect(this);
     }
 
     /**

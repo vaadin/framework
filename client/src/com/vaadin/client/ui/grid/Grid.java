@@ -89,9 +89,9 @@ import com.vaadin.client.ui.grid.events.SelectAllEvent;
 import com.vaadin.client.ui.grid.events.SelectAllHandler;
 import com.vaadin.client.ui.grid.renderers.ComplexRenderer;
 import com.vaadin.client.ui.grid.renderers.WidgetRenderer;
-import com.vaadin.client.ui.grid.selection.HasSelectionChangeHandlers;
-import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
-import com.vaadin.client.ui.grid.selection.SelectionChangeHandler;
+import com.vaadin.client.ui.grid.selection.HasSelectionHandlers;
+import com.vaadin.client.ui.grid.selection.SelectionEvent;
+import com.vaadin.client.ui.grid.selection.SelectionHandler;
 import com.vaadin.client.ui.grid.selection.SelectionModel;
 import com.vaadin.client.ui.grid.selection.SelectionModel.Multi;
 import com.vaadin.client.ui.grid.selection.SelectionModelMulti;
@@ -156,7 +156,7 @@ import com.vaadin.shared.util.SharedUtil;
  * @author Vaadin Ltd
  */
 public class Grid<T> extends ResizeComposite implements
-        HasSelectionChangeHandlers<T>, SubPartAware, DeferredWorker {
+        HasSelectionHandlers<T>, SubPartAware, DeferredWorker {
 
     /**
      * Abstract base class for Grid header and footer sections.
@@ -3359,12 +3359,12 @@ public class Grid<T> extends ResizeComposite implements
                     }
                 });
 
-        // Default action on SelectionChangeEvents. Refresh the body so changed
+        // Default action on SelectionEvents. Refresh the body so changed
         // become visible.
-        addSelectionChangeHandler(new SelectionChangeHandler<T>() {
+        addSelectionHandler(new SelectionHandler<T>() {
 
             @Override
-            public void onSelectionChange(SelectionChangeEvent<T> event) {
+            public void onSelect(SelectionEvent<T> event) {
                 refreshBody();
             }
         });
@@ -4959,9 +4959,9 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     @Override
-    public HandlerRegistration addSelectionChangeHandler(
-            final SelectionChangeHandler<T> handler) {
-        return addHandler(handler, SelectionChangeEvent.getType());
+    public HandlerRegistration addSelectionHandler(
+            final SelectionHandler<T> handler) {
+        return addHandler(handler, SelectionEvent.getType());
     }
 
     /**

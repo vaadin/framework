@@ -18,22 +18,22 @@ package com.vaadin.client.ui.grid.selection;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link SelectionChangeEvent}s.
+ * Handler for {@link SelectionEvent}s.
  * 
  * @since
  * @author Vaadin Ltd
  * @param <T>
  *            The row data type
  */
-public interface SelectionChangeHandler<T> extends EventHandler {
+public interface SelectionHandler<T> extends EventHandler {
 
     /**
      * Called when a selection model's selection state is changed.
      * 
      * @param event
-     *            a selection change event, containing info about rows that have
-     *            been added to or removed from the selection.
+     *            a selection event, containing info about rows that have been
+     *            added to or removed from the selection.
      */
-    public void onSelectionChange(SelectionChangeEvent<T> event);
+    public void onSelect(SelectionEvent<T> event);
 
 }

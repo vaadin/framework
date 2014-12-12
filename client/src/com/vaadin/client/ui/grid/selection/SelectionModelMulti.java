@@ -107,7 +107,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
             @SuppressWarnings("unchecked")
             final LinkedHashSet<RowHandle<T>> selectedRowsClone = (LinkedHashSet<RowHandle<T>>) selectedRows
                     .clone();
-            SelectionChangeEvent<T> event = new SelectionChangeEvent<T>(grid,
+            SelectionEvent<T> event = new SelectionEvent<T>(grid,
                     null, getSelectedRows(), isBeingBatchSelected());
             selectedRows.clear();
 
@@ -139,7 +139,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
         }
 
         if (added.size() > 0) {
-            grid.fireEvent(new SelectionChangeEvent<T>(grid, added, null,
+            grid.fireEvent(new SelectionEvent<T>(grid, added, null,
                     isBeingBatchSelected()));
 
             return true;
@@ -163,7 +163,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
         }
 
         if (removed.size() > 0) {
-            grid.fireEvent(new SelectionChangeEvent<T>(grid, null, removed,
+            grid.fireEvent(new SelectionEvent<T>(grid, null, removed,
                     isBeingBatchSelected()));
             return true;
         }
@@ -244,7 +244,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
         }
         deselectionBatch.clear();
 
-        grid.fireEvent(new SelectionChangeEvent<T>(grid, added, removed,
+        grid.fireEvent(new SelectionEvent<T>(grid, added, removed,
                 isBeingBatchSelected()));
     }
 

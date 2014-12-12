@@ -52,8 +52,8 @@ import com.vaadin.client.ui.grid.Renderer;
 import com.vaadin.client.ui.grid.events.SelectAllEvent;
 import com.vaadin.client.ui.grid.events.SelectAllHandler;
 import com.vaadin.client.ui.grid.selection.AbstractRowHandleSelectionModel;
-import com.vaadin.client.ui.grid.selection.SelectionChangeEvent;
-import com.vaadin.client.ui.grid.selection.SelectionChangeHandler;
+import com.vaadin.client.ui.grid.selection.SelectionEvent;
+import com.vaadin.client.ui.grid.selection.SelectionHandler;
 import com.vaadin.client.ui.grid.selection.SelectionModelMulti;
 import com.vaadin.client.ui.grid.selection.SelectionModelNone;
 import com.vaadin.client.ui.grid.selection.SelectionModelSingle;
@@ -320,9 +320,9 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
     private RpcDataSource dataSource;
 
-    private SelectionChangeHandler<JSONObject> internalSelectionChangeHandler = new SelectionChangeHandler<JSONObject>() {
+    private SelectionHandler<JSONObject> internalSelectionChangeHandler = new SelectionHandler<JSONObject>() {
         @Override
-        public void onSelectionChange(SelectionChangeEvent<JSONObject> event) {
+        public void onSelect(SelectionEvent<JSONObject> event) {
             if (event.isBatchedSelection()) {
                 return;
             }
@@ -377,7 +377,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         getWidget().setSelectionModel(selectionModel);
 
-        getWidget().addSelectionChangeHandler(internalSelectionChangeHandler);
+        getWidget().addSelectionHandler(internalSelectionChangeHandler);
 
         getWidget().addSortHandler(new SortHandler<JSONObject>() {
             @Override
@@ -785,7 +785,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             // deselected row data. Some data is only stored as keys
             updatedFromState = true;
             getWidget().fireEvent(
-                    new SelectionChangeEvent<JSONObject>(getWidget(),
+                    new SelectionEvent<JSONObject>(getWidget(),
                             (List<JSONObject>) null, null, false));
         }
     }

@@ -141,10 +141,10 @@ public interface SelectionModel<T> {
              * into one, and a final selection event will be fired when
              * {@link #commitBatchSelect()} is called.
              * <p>
-             * <em>Note:</em> {@link SelectionChangeEvent SelectionChangeEvents}
+             * <em>Note:</em> {@link SelectionEvent SelectionChangeEvents}
              * will still be fired for each selection/deselection. You should
              * check whether the event is a part of a batch or not with
-             * {@link SelectionChangeEvent#isBatchedSelection()}.
+             * {@link SelectionEvent#isBatchedSelection()}.
              */
             public void startBatchSelect();
 
@@ -153,7 +153,7 @@ public interface SelectionModel<T> {
              * <p>
              * Any and all selections and deselections since the last invocation
              * of {@link #startBatchSelect()} will be fired at once as one
-             * collated {@link SelectionChangeEvent}.
+             * collated {@link SelectionEvent}.
              */
             public void commitBatchSelect();
 
