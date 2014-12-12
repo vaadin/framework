@@ -16,18 +16,18 @@
 package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public class GridStaticSectionComponentTest extends GridBasicFeaturesTest {
 
     @Test
-    public void testNativeButtonInHeader() throws IOException {
+    public void testNativeButtonInHeader() throws Exception {
         openTestURL();
 
         selectMenuPath("Component", "Columns", "Column 1", "Header Type",
@@ -39,7 +39,7 @@ public class GridStaticSectionComponentTest extends GridBasicFeaturesTest {
     }
 
     @Test
-    public void testNativeButtonInFooter() throws IOException {
+    public void testNativeButtonInFooter() throws Exception {
         openTestURL();
 
         selectMenuPath("Component", "Footer", "Visible");
@@ -51,4 +51,19 @@ public class GridStaticSectionComponentTest extends GridBasicFeaturesTest {
 
         assertEquals("5. Button clicked!", getLogRow(0));
     }
+
+    @Test
+    public void testRemoveComponentFromHeader() throws Exception {
+        openTestURL();
+        selectMenuPath("Component", "Columns", "Column 1", "Header Type",
+                "Widget Header");
+        selectMenuPath("Component", "Columns", "Column 1", "Header Type",
+                "Text Header");
+        assertTrue("No notifications should've been shown",
+                !$(NotificationElement.class).exists());
+        assertEquals("Header should've been reverted back to text header",
+                "text header", getGridElement().getHeaderCell(0, 1).getText()
+                        .toLowerCase());
+    }
+
 }

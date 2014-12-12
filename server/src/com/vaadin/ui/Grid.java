@@ -48,7 +48,6 @@ import com.vaadin.data.Property;
 import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.BindException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroupFieldFactory;
 import com.vaadin.data.sort.Sort;
@@ -1170,6 +1169,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
              *            a plain text caption
              */
             public void setText(String text) {
+                removeComponentIfPresent();
                 cellState.text = text;
                 cellState.type = GridStaticCellType.TEXT;
                 row.section.markAsDirty();
@@ -1211,6 +1211,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
              *            the html to set
              */
             public void setHtml(String html) {
+                removeComponentIfPresent();
                 cellState.html = html;
                 cellState.type = GridStaticCellType.HTML;
                 row.section.markAsDirty();
@@ -1237,6 +1238,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
              *            the component to set
              */
             public void setComponent(Component component) {
+                removeComponentIfPresent();
                 component.setParent(row.section.grid);
                 cellState.connector = component;
                 cellState.type = GridStaticCellType.WIDGET;
@@ -1264,6 +1266,13 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 row.section.markAsDirty();
             }
 
+            private void removeComponentIfPresent() {
+                Component component = (Component) cellState.connector;
+                if (component != null) {
+                    component.setParent(null);
+                    cellState.connector = null;
+                }
+            }
         }
 
         protected Grid grid;

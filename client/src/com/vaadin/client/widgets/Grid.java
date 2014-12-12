@@ -54,6 +54,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.DeferredWorker;
@@ -168,7 +169,7 @@ import com.vaadin.shared.util.SharedUtil;
  * @author Vaadin Ltd
  */
 public class Grid<T> extends ResizeComposite implements
-        HasSelectionHandlers<T>, SubPartAware, DeferredWorker {
+        HasSelectionHandlers<T>, SubPartAware, DeferredWorker, HasWidgets {
 
     /**
      * Enum describing different sections of Grid.
@@ -5544,5 +5545,81 @@ public class Grid<T> extends ResizeComposite implements
         if (getEscalator().getBody().getRowCount() == 0 && dataSource != null) {
             setEscalatorSizeFromDataSource();
         }
+    }
+
+    /**
+     * Grid does not support adding Widgets this way.
+     * <p>
+     * This method is implemented only because removing widgets from Grid (added
+     * via e.g. {@link Renderer}s) requires the {@link HasWidgets} interface.
+     * 
+     * @param w
+     *            irrelevant
+     * @throws UnsupportedOperationException
+     *             always
+     */
+    @Override
+    @Deprecated
+    public void add(Widget w) {
+        throw new UnsupportedOperationException(
+                "Cannot add widgets to Grid with this method");
+    }
+
+    /**
+     * Grid does not support clearing Widgets this way.
+     * <p>
+     * This method is implemented only because removing widgets from Grid (added
+     * via e.g. {@link Renderer}s) requires the {@link HasWidgets} interface.
+     * 
+     * @throws UnsupportedOperationException
+     *             always
+     */
+    @Override
+    @Deprecated
+    public void clear() {
+        throw new UnsupportedOperationException(
+                "Cannot clear widgets from Grid this way");
+    }
+
+    /**
+     * Grid does not support iterating through Widgets this way.
+     * <p>
+     * This method is implemented only because removing widgets from Grid (added
+     * via e.g. {@link Renderer}s) requires the {@link HasWidgets} interface.
+     * 
+     * @return never
+     * @throws UnsupportedOperationException
+     *             always
+     */
+    @Override
+    @Deprecated
+    public Iterator<Widget> iterator() {
+        throw new UnsupportedOperationException(
+                "Cannot iterate through widgets in Grid this way");
+    }
+
+    /**
+     * Grid does not support removing Widgets this way.
+     * <p>
+     * This method is implemented only because removing widgets from Grid (added
+     * via e.g. {@link Renderer}s) requires the {@link HasWidgets} interface.
+     * 
+     * @return always <code>false</code>
+     */
+    @Override
+    @Deprecated
+    public boolean remove(Widget w) {
+        /*
+         * This is the method that is the sole reason to have Grid implement
+         * HasWidget - when Vaadin removes a Component from the hierarchy, the
+         * corresponding Widget will call removeFromParent() on itself. GWT will
+         * check there that its parent (i.e. Grid) implements HasWidgets, and
+         * will call this remove(Widget) method.
+         * 
+         * tl;dr: all this song and dance to make sure GWT's sanity checks
+         * aren't triggered, even though they effectively do nothing interesting
+         * from Grid's perspective.
+         */
+        return false;
     }
 }
