@@ -180,7 +180,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         grid.setSelectionMode(SelectionMode.NONE);
 
-        grid.setPropertyEditable(getColumnProperty(3), false);
+        grid.getEditorRowField(getColumnProperty(3)).setReadOnly(true);
 
         createGridActions();
 

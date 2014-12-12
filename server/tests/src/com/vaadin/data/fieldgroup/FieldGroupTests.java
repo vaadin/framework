@@ -2,6 +2,7 @@ package com.vaadin.data.fieldgroup;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Before;
@@ -36,5 +37,12 @@ public class FieldGroupTests {
     @Test(expected = FieldGroup.BindException.class)
     public void cannotBindNullField() {
         sut.bind(null, "foobar");
+    }
+
+    public void canUnbindWithoutItem() {
+        sut.bind(field, "foobar");
+
+        sut.unbind(field);
+        assertThat(sut.getField("foobar"), is(nullValue()));
     }
 }

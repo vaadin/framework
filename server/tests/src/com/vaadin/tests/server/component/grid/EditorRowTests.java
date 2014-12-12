@@ -116,18 +116,6 @@ public class EditorRowTests {
         assertFalse(oldFieldGroup == grid.getEditorRowFieldGroup());
     }
 
-    @Test
-    public void propertyUneditable() throws Exception {
-        assertTrue(grid.isPropertyEditable(PROPERTY_NAME));
-        grid.setPropertyEditable(PROPERTY_NAME, false);
-        assertFalse(grid.isPropertyEditable(PROPERTY_NAME));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void nonexistentPropertyUneditable() throws Exception {
-        grid.setPropertyEditable(new Object(), false);
-    }
-
     @Test(expected = IllegalStateException.class)
     public void disabledEditItem() throws Exception {
         grid.editItem(ITEM_ID);
@@ -155,63 +143,13 @@ public class EditorRowTests {
     @Test
     public void getFieldWithoutItem() throws Exception {
         grid.setEditorRowEnabled(true);
-        assertNull(grid.getEditorRowField(PROPERTY_NAME));
-    }
-
-    @Test
-    public void getFieldAfterReSettingFieldAsEditable() throws Exception {
-        startEdit();
-
-        grid.setPropertyEditable(PROPERTY_NAME, false);
-        grid.setPropertyEditable(PROPERTY_NAME, true);
         assertNotNull(grid.getEditorRowField(PROPERTY_NAME));
-    }
-
-    @Test
-    public void isEditable() {
-        assertTrue(grid.isPropertyEditable(PROPERTY_NAME));
-    }
-
-    @Test
-    public void isUneditable() {
-        grid.setPropertyEditable(PROPERTY_NAME, false);
-        assertFalse(grid.isPropertyEditable(PROPERTY_NAME));
-    }
-
-    @Test
-    public void isEditableAgain() {
-        grid.setPropertyEditable(PROPERTY_NAME, false);
-        grid.setPropertyEditable(PROPERTY_NAME, true);
-        assertTrue(grid.isPropertyEditable(PROPERTY_NAME));
-    }
-
-    @Test
-    public void isUneditableAgain() {
-        grid.setPropertyEditable(PROPERTY_NAME, false);
-        grid.setPropertyEditable(PROPERTY_NAME, true);
-        grid.setPropertyEditable(PROPERTY_NAME, false);
-        assertFalse(grid.isPropertyEditable(PROPERTY_NAME));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void isNonexistentEditable() {
-        grid.isPropertyEditable(new Object());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void setNonexistentUneditable() {
-        grid.setPropertyEditable(new Object(), false);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void setNonexistentEditable() {
-        grid.setPropertyEditable(new Object(), true);
     }
 
     @Test
     public void customBinding() {
         TextField textField = new TextField();
-        grid.bindEditorRowField(PROPERTY_NAME, textField);
+        grid.setEditorRowField(PROPERTY_NAME, textField);
 
         startEdit();
 
@@ -242,12 +180,26 @@ public class EditorRowTests {
     }
 
     @Test
-    public void fieldIsReadonlyWhenPropertyIsNotEditable() {
-        startEdit();
-
-        grid.setPropertyEditable(PROPERTY_NAME, false);
+    public void columnRemoved() {
         Field<?> field = grid.getEditorRowField(PROPERTY_NAME);
-        assertTrue(field.isReadOnly());
+
+        assertSame("field should be attached to grid.", grid, field.getParent());
+
+        grid.removeColumn(PROPERTY_NAME);
+
+        assertNull("field should be detached from grid.", field.getParent());
+    }
+
+    @Test
+    public void setFieldAgain() {
+        TextField field = new TextField();
+        grid.setEditorRowField(PROPERTY_NAME, field);
+
+        field = new TextField();
+        grid.setEditorRowField(PROPERTY_NAME, field);
+
+        assertSame("new field should be used.", field,
+                grid.getEditorRowField(PROPERTY_NAME));
     }
 
     private void startEdit() {
