@@ -207,6 +207,13 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         addHeightActions();
 
+        addFilterActions();
+
+        this.grid = grid;
+        return grid;
+    }
+
+    private void addFilterActions() {
         createClickAction("Column 1 starts with \"(23\"", "Filter",
                 new Command<Grid, Void>() {
                     @Override
@@ -229,8 +236,24 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 }, null);
 
-        this.grid = grid;
-        return grid;
+        createClickAction("Add impassable filter", "Filter",
+                new Command<Grid, Void>() {
+                    @Override
+                    public void execute(Grid c, Void value, Object data) {
+                        ds.addContainerFilter(new Filter() {
+                            @Override
+                            public boolean passesFilter(Object itemId, Item item)
+                                    throws UnsupportedOperationException {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean appliesToProperty(Object propertyId) {
+                                return true;
+                            }
+                        });
+                    }
+                }, null);
     }
 
     protected void createGridActions() {

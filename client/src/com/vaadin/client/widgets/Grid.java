@@ -4076,10 +4076,12 @@ public class Grid<T> extends ResizeComposite implements
                     body.removeRows(newSize, oldSize - newSize);
                 }
 
-                dataIsBeingFetched = true;
-                Range visibleRowRange = escalator.getVisibleRowRange();
-                dataSource.ensureAvailability(visibleRowRange.getStart(),
-                        visibleRowRange.length());
+                if (newSize > 0) {
+                    dataIsBeingFetched = true;
+                    Range visibleRowRange = escalator.getVisibleRowRange();
+                    dataSource.ensureAvailability(visibleRowRange.getStart(),
+                            visibleRowRange.length());
+                }
 
                 assert body.getRowCount() == newSize;
             }

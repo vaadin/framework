@@ -254,24 +254,34 @@ public class GridStructureTest extends GridBasicFeaturesTest {
     @Test
     public void testBareItemSetChange() throws Exception {
         openTestURL();
-        filterAndAssert();
+        filterSomeAndAssert();
+    }
+
+    @Test
+    public void testBareItemSetChangeRemovingAllRows() throws Exception {
+        openTestURL();
+        selectMenuPath("Component", "Filter", "Add impassable filter");
+        assertFalse("A notification shouldn't have been displayed",
+                $(NotificationElement.class).exists());
+        assertTrue("No body cells should've been found", getGridElement()
+                .getBody().findElements(By.tagName("td")).isEmpty());
     }
 
     @Test
     public void testBareItemSetChangeWithMidScroll() throws Exception {
         openTestURL();
         getGridElement().scrollToRow(GridBasicFeatures.ROWS / 2);
-        filterAndAssert();
+        filterSomeAndAssert();
     }
 
     @Test
     public void testBareItemSetChangeWithBottomScroll() throws Exception {
         openTestURL();
         getGridElement().scrollToRow(GridBasicFeatures.ROWS);
-        filterAndAssert();
+        filterSomeAndAssert();
     }
 
-    private void filterAndAssert() {
+    private void filterSomeAndAssert() {
         selectMenuPath("Component", "Filter", "Column 1 starts with \"(23\"");
         boolean foundElements = false;
         for (int row = 0; row < 100; row++) {

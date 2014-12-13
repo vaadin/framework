@@ -63,7 +63,6 @@ import com.vaadin.client.widget.escalator.PositionFunction.AbsolutePosition;
 import com.vaadin.client.widget.escalator.PositionFunction.Translate3DPosition;
 import com.vaadin.client.widget.escalator.PositionFunction.TranslatePosition;
 import com.vaadin.client.widget.escalator.PositionFunction.WebkitTranslate3DPosition;
-import com.vaadin.client.widget.escalator.Row;
 import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeEvent;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeHandler;
@@ -4807,9 +4806,13 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
      * @return range of visible rows
      */
     public Range getVisibleRowRange() {
-        return Range.withLength(
-                body.getLogicalRowIndex(body.visualRowOrder.getFirst()),
-                body.visualRowOrder.size());
+        if (!body.visualRowOrder.isEmpty()) {
+            return Range.withLength(
+                    body.getLogicalRowIndex(body.visualRowOrder.getFirst()),
+                    body.visualRowOrder.size());
+        } else {
+            return Range.withLength(0, 0);
+        }
     }
 
     /**
