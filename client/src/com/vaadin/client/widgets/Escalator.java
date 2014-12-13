@@ -779,16 +779,19 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             // let's fix the table wrapper size, since it's now stable.
             if (verticalScrollNeeded) {
                 tableWrapperWidth -= verticalScrollbar.getScrollbarThickness();
+                tableWrapperWidth = Math.max(0, tableWrapperWidth);
             }
             if (horizontalScrollNeeded) {
                 tableWrapperHeight -= horizontalScrollbar
                         .getScrollbarThickness();
+                tableWrapperHeight = Math.max(0, tableWrapperHeight);
             }
             tableWrapper.getStyle().setHeight(tableWrapperHeight, Unit.PX);
             tableWrapper.getStyle().setWidth(tableWrapperWidth, Unit.PX);
 
-            verticalScrollbar.setOffsetSize(tableWrapperHeight
+            double vScrollbarHeight = Math.max(0, tableWrapperHeight
                     - footer.heightOfSection - header.heightOfSection);
+            verticalScrollbar.setOffsetSize(vScrollbarHeight);
             verticalScrollbar.setScrollSize(scrollContentHeight);
 
             /*
@@ -832,7 +835,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 fCornerStyle.clearDisplay();
 
                 if (horizontalScrollbar.showsScrollHandle()) {
-                    int offset = horizontalScrollbar.getScrollbarThickness();
+                    double offset = horizontalScrollbar.getScrollbarThickness();
                     fCornerStyle.setBottom(offset, Unit.PX);
                 } else {
                     fCornerStyle.clearBottom();
@@ -1149,8 +1152,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          */
         protected final TableSectionElement root;
 
-        /** The height of the combined rows in the DOM. */
-        protected double heightOfSection = -1;
+        /** The height of the combined rows in the DOM. Never negative. */
+        protected double heightOfSection = 0;
 
         /**
          * The primary style name of the escalator. Most commonly provided by
@@ -1403,7 +1406,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             }
 
             for (int row = visualIndex; row < visualIndex + numberOfRows; row++) {
-                final int rowHeight = getDefaultRowHeight();
                 final TableRowElement tr = TableRowElement.as(DOM.createTR());
                 addedRows.add(tr);
                 tr.addClassName(getStylePrimaryName() + "-row");
@@ -1411,8 +1413,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 for (int col = 0; col < columnConfiguration.getColumnCount(); col++) {
                     final double colWidth = columnConfiguration
                             .getColumnWidthActual(col);
-                    final TableCellElement cellElem = createCellElement(
-                            rowHeight, colWidth);
+                    final TableCellElement cellElem = createCellElement(colWidth);
                     tr.appendChild(cellElem);
 
                     // Set stylename and position if new cell is frozen
@@ -1544,22 +1545,21 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         /**
          * Create and setup an empty cell element.
          * 
-         * @param width
+         * @param colWidth
          *            the width of the cell, in pixels
-         * @param height
-         *            the height of the cell, in pixels
          * 
          * @return a set-up empty cell element
          */
-        public TableCellElement createCellElement(final int height,
-                final double colWidth) {
+        public TableCellElement createCellElement(final double width) {
             final TableCellElement cellElem = TableCellElement.as(DOM
                     .createElement(getCellElementTagName()));
-            if (height >= 0) {
-                cellElem.getStyle().setHeight(height, Unit.PX);
-            }
-            if (colWidth >= 0) {
-                cellElem.getStyle().setWidth(colWidth, Unit.PX);
+
+            final int height = getDefaultRowHeight();
+            assert height >= 0 : "defaultRowHeight was negative. There's a setter leak somewhere.";
+            cellElem.getStyle().setHeight(height, Unit.PX);
+
+            if (width >= 0) {
+                cellElem.getStyle().setWidth(width, Unit.PX);
             }
             cellElem.addClassName(getStylePrimaryName() + "-cell");
             return cellElem;
@@ -1652,12 +1652,10 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             Iterable<FlyweightCell> cells = flyweightRow.getUnattachedCells(
                     offset, numberOfCells);
 
-            final int rowHeight = getDefaultRowHeight();
             for (FlyweightCell cell : cells) {
                 final double colWidth = columnConfiguration
                         .getColumnWidthActual(cell.getColumn());
-                final TableCellElement cellElem = createCellElement(rowHeight,
-                        colWidth);
+                final TableCellElement cellElem = createCellElement(colWidth);
                 cell.setElement(cellElem);
             }
 
@@ -1872,6 +1870,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
         protected void reapplyRowHeight(final TableRowElement tr,
                 final int heightPx) {
+            assert heightPx >= 0 : "Height must not be negative";
+
             Element cellElem = tr.getFirstChildElement();
             while (cellElem != null) {
                 cellElem.getStyle().setHeight(heightPx, Unit.PX);
@@ -4245,9 +4245,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
     private PositionFunction position;
 
     /** The cached width of the escalator, in pixels. */
-    private double widthOfEscalator;
+    private double widthOfEscalator = 0;
     /** The cached height of the escalator, in pixels. */
-    private double heightOfEscalator;
+    private double heightOfEscalator = 0;
 
     /** The height of Escalator in terms of body rows. */
     private double heightByRows = GridState.DEFAULT_HEIGHT_BY_ROWS;
@@ -4291,12 +4291,10 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
         root.appendChild(verticalScrollbar.getElement());
         verticalScrollbar.addScrollHandler(scrollHandler);
-        verticalScrollbar.getElement().setTabIndex(-1);
         verticalScrollbar.setScrollbarThickness(Util.getNativeScrollbarSize());
 
         root.appendChild(horizontalScrollbar.getElement());
         horizontalScrollbar.addScrollHandler(scrollHandler);
-        horizontalScrollbar.getElement().setTabIndex(-1);
         horizontalScrollbar
                 .setScrollbarThickness(Util.getNativeScrollbarSize());
         horizontalScrollbar
@@ -4707,10 +4705,10 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         }
 
         Profiler.enter("Escalator.recalculateElementSizes");
-        widthOfEscalator = Util
-                .getRequiredWidthBoundingClientRectDouble(getElement());
-        heightOfEscalator = Util
-                .getRequiredHeightBoundingClientRectDouble(getElement());
+        widthOfEscalator = Math.max(0,
+                Util.getRequiredWidthBoundingClientRectDouble(getElement()));
+        heightOfEscalator = Math.max(0,
+                Util.getRequiredHeightBoundingClientRectDouble(getElement()));
 
         header.recalculateSectionHeight();
         body.recalculateSectionHeight();
