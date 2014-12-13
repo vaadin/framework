@@ -1,5 +1,5 @@
 @mixin keyframes ($name) {
-	@-webkit-keyframes #{$name} {
+  @-webkit-keyframes #{$name} {
     @content;
   }
   @-moz-keyframes #{$name} {
@@ -11,7 +11,17 @@
 }
 
 @mixin animation ($anim) {
-	-webkit-animation: $anim;
-	-moz-animation: $anim;
-	animation: $anim;
+  -webkit-animation: $anim;
+  -moz-animation: $anim;
+  animation: $anim;
+}
+
+@mixin box-shadow ($shadow) {
+  -webkit-box-shadow: $shadow;
+  box-shadow: $shadow;
+}
+
+@mixin box-sizing ($box-sizing) {
+  -webkit-box-sizing: $box-sizing;
+  box-sizing: $box-sizing;
 }

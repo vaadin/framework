@@ -1,205 +1,53 @@
-@mixin runo-grid($primary-stylename : v-grid) {
-  
-  $grid-border-main: 1px solid #b6bbbc;
-  $grid-border-active: 1px solid #57a7ed;
-  
-  .#{$primary-stylename} {
-    outline: none;
-  }
-  
-  .#{$primary-stylename}-tablewrapper {
-    @include box-sizing(border-box);
-    border: $grid-border-main;
-  }
-  
-  .#{$primary-stylename}-cell.frozen {
-    /* TODO this probably should be a SCSS mixin */
-    -webkit-box-shadow: 2px 0 2px rgba(0, 0, 0, 0.1);
-    box-shadow: 2px 0 2px rgba(0, 0, 0, 0.1);
-  }
-  
-  // Grid header.
-  .#{$primary-stylename}-header, .#{$primary-stylename}-footer {
-    
-    .#{$primary-stylename}-cell {
+// Variables defined in runo.scss
+
+@mixin runo-grid($primaryStyleName: v-grid) {
+
+  .#{$primaryStyleName}-header,
+  .#{$primaryStyleName}-footer {
+    > .#{$primaryStyleName}-cell {
+      background-image: url(img/header-bg.png);
       color: #393a3c;
-      background: #e7e9ea url(img/header-bg.png) repeat-x;
-      border: none;
-      font-size: 15px;
-      font-weight: normal;
-      padding: 9px 2px 9px 6px;
-      position: relative;
-      text-shadow: #ffffff 0 1px 0;
-      
-      &:first-child {
-        &:before, &:after {
-          content: none;
-        }
-      }
-      
-      &:before {
-        background-image: url(img/resizer-bg.png);
-        content: "";
-        height: 100%;
-        left: 0;
-        top: 0;
-        width: 2px;
-        position: absolute;
-      }
-    }
-    
-    .#{$primary-stylename}-cell-active {
-        border: $grid-border-active;
+      text-shadow: #fff 0 1px 0;
+      @include box-shadow(inset 1px 0 0 #fff);
     }
   }
-  
-  .#{$primary-stylename}-header {
-    .#{$primary-stylename}-cell {
-      border-bottom: $grid-border-main;
-    }
 
-    .#{$primary-stylename}-cell-active {
-        padding: 8px 1px 9px 5px;
+  .#{$primaryStyleName}-header-deco,
+  .#{$primaryStyleName}-footer-deco,
+  .#{$primaryStyleName}-horizontal-scrollbar-deco {
+    background-image: url(img/header-bg.png);
+  }
+
+  // Selected row
+  .#{$primaryStyleName}-row-selected {
+    color: #fff;
+
+    // Selected and active
+    > .#{$primaryStyleName}-cell-active:before {
+      border-color: lighten($v-grid-row-selected-background-color, 20%);
     }
   }
-  
-  .#{$primary-stylename}-footer {
-    .#{$primary-stylename}-cell {
-      border-top: $grid-border-main;
-    }
-    
-    .#{$primary-stylename}-cell-active {
-        padding: 9px 1px 8px 5px;
-    }
-  }
-  
-  .#{$primary-stylename}-header .#{$primary-stylename}-cell-active {
-    border-bottom: $grid-border-active;
-  }
-  
-  .#{$primary-stylename}-footer .#{$primary-stylename}-cell-active {
-    border-top: $grid-border-active;
-  }
-  
+
   // Sort indicators
-  .#{$primary-stylename} th.sort-asc:after,
-  .#{$primary-stylename} th.sort-desc:after {
-    content: attr(sort-order);
-    height: 36px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 20px;
-  }
-  
-  .#{$primary-stylename} th.#{$primary-stylename}-cell-active.sort-asc:after,
-  .#{$primary-stylename} th.#{$primary-stylename}-cell-active.sort-desc:after {
-    right: -1px;
-    top: -1px;
-  }
-  
-  .#{$primary-stylename} th.sort-asc:after {
-    background: transparent url(img/sort-asc.png) no-repeat right 50%;
-  }
-  
-  .#{$primary-stylename} th.sort-desc:after {
-    background: transparent url(img/sort-desc.png) no-repeat right 50%;
-  }
-  
-  // Grid body
-  .#{$primary-stylename}-body {
-    
-    .#{$primary-stylename}-row-stripe > .#{$primary-stylename}-cell {
-      background-color: #f6f7f7;
+  .#{$primaryStyleName} th.sort-asc,
+  .#{$primaryStyleName} th.sort-desc {
+    padding-right: 30px + $v-grid-cell-padding-horizontal;
+
+    &:after {
+      content: attr(sort-order);
+      background: transparent no-repeat right 50%;
+      width: 30px;
+      height: 36px;
+      top: 0;
     }
-    
-    // Cells
-    .#{$primary-stylename}-cell {
-      border: none;
-      line-height: 23px;
-      padding: 3px 6px 0 6px;
-    }
-    
-    // Active state
-    .#{$primary-stylename}-row-active {
-      
-      .#{$primary-stylename}-cell {
-        background: #edeeee;
-      }
-      
-      .#{$primary-stylename}-cell-active {
-        border: $grid-border-active;
-      
-        // Adjust padding for 'active' border.
-        padding: 2px 5px 0 5px;
-      }
-    }
-    
-    // Selected state
-    .#{$primary-stylename}-row.#{$primary-stylename}-row-selected {
-      color: white;
-      
-      .#{$primary-stylename}-cell {
-        background-color: #57a7ed;
-      }
-      
-      .#{$primary-stylename}-cell-active {
-        border-color: #489ade;
-      }
-    }
-    
-    .#{$primary-stylename}-row-active.#{$primary-stylename}-row-selected > .#{$primary-stylename}-cell {
-        background: #3a90d3;
-    }
-    
-  }
-  
-  // Scrollbars
-  .#{$primary-stylename}-scroller {
-    @include box-sizing(border-box);
-    outline: none;
-  }
-  
-  .#{$primary-stylename}-scroller-vertical {
-    border-top: $grid-border-main;
-    border-bottom: $grid-border-main;
-  }
-  
-  .#{$primary-stylename}-scroller-horizontal {
-    border-left: $grid-border-main;
-    border-right: $grid-border-main;
-  }
-  
-  // Fillers
-  .#{$primary-stylename}-horizontalscrollbarbackground,
-  .#{$primary-stylename}-footercorner,
-  .#{$primary-stylename}-headercorner {
-    @include box-sizing(border-box);
-    border: $grid-border-main;
   }
 
-  .#{$primary-stylename}-footercorner,
-  .#{$primary-stylename}-headercorner {
-    background: #e7e9ea url(img/header-bg.png) repeat-x;
-    border-left: 0;
+  .#{$primaryStyleName} th.sort-asc:after {
+    background-image: url(img/sort-asc.png);
   }
 
-  .#{$primary-stylename}-footercorner {
-    border-top: 0;
+  .#{$primaryStyleName} th.sort-desc:after {
+    background-image: url(img/sort-desc.png);
   }
-  
-  .#{$primary-stylename}-headercorner {
-    border-bottom: 0;
-  }
-      
-  .#{$primary-stylename}-horizontalscrollbarbackground {
-    background-color: #edeeee;
-    border-top: 0;
-  }
-}
 
-@mixin box-sizing($value) {
-  box-sizing: $value;
-  -moz-box-sizing: $value;
-  -webkit-box-sizing: $value;
 }

@@ -3030,7 +3030,7 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             boolean isEvenIndex = (row.getRow() % 2 == 0);
-            setStyleName(rowElement, rowStripeStyleName, isEvenIndex);
+            setStyleName(rowElement, rowStripeStyleName, !isEvenIndex);
 
             rowReference.set(rowIndex, rowData);
 

@@ -816,18 +816,17 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
              * visible.
              */
             if (horizontalScrollbar.showsScrollHandle()) {
-                horizontalScrollbarBackground.getStyle().clearDisplay();
+                horizontalScrollbarDeco.getStyle().clearDisplay();
             } else {
-                horizontalScrollbarBackground.getStyle().setDisplay(
-                        Display.NONE);
+                horizontalScrollbarDeco.getStyle().setDisplay(Display.NONE);
             }
 
             /*
              * only show corner background divs if the vertical scrollbar is
              * visible.
              */
-            Style hCornerStyle = headerCorner.getStyle();
-            Style fCornerStyle = footerCorner.getStyle();
+            Style hCornerStyle = headerDeco.getStyle();
+            Style fCornerStyle = footerDeco.getStyle();
             if (verticalScrollbar.showsScrollHandle()) {
                 hCornerStyle.clearDisplay();
                 fCornerStyle.clearDisplay();
@@ -4234,10 +4233,10 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
     private final ColumnConfigurationImpl columnConfiguration = new ColumnConfigurationImpl();
     private final DivElement tableWrapper;
 
-    private final DivElement horizontalScrollbarBackground = DivElement.as(DOM
+    private final DivElement horizontalScrollbarDeco = DivElement.as(DOM
             .createDiv());
-    private final DivElement headerCorner = DivElement.as(DOM.createDiv());
-    private final DivElement footerCorner = DivElement.as(DOM.createDiv());
+    private final DivElement headerDeco = DivElement.as(DOM.createDiv());
+    private final DivElement footerDeco = DivElement.as(DOM.createDiv());
 
     private PositionFunction position;
 
@@ -4340,20 +4339,20 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         table.appendChild(bodyElem);
         table.appendChild(footElem);
 
-        Style hCornerStyle = headerCorner.getStyle();
+        Style hCornerStyle = headerDeco.getStyle();
         hCornerStyle.setWidth(Util.getNativeScrollbarSize(), Unit.PX);
         hCornerStyle.setDisplay(Display.NONE);
-        root.appendChild(headerCorner);
+        root.appendChild(headerDeco);
 
-        Style fCornerStyle = footerCorner.getStyle();
+        Style fCornerStyle = footerDeco.getStyle();
         fCornerStyle.setWidth(Util.getNativeScrollbarSize(), Unit.PX);
         fCornerStyle.setDisplay(Display.NONE);
-        root.appendChild(footerCorner);
+        root.appendChild(footerDeco);
 
-        Style hWrapperStyle = horizontalScrollbarBackground.getStyle();
+        Style hWrapperStyle = horizontalScrollbarDeco.getStyle();
         hWrapperStyle.setDisplay(Display.NONE);
         hWrapperStyle.setHeight(Util.getNativeScrollbarSize(), Unit.PX);
-        root.appendChild(horizontalScrollbarBackground);
+        root.appendChild(horizontalScrollbarDeco);
 
         setStylePrimaryName("v-escalator");
 
@@ -4731,8 +4730,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         body.recalculateSectionHeight();
         footer.recalculateSectionHeight();
 
-        headerCorner.getStyle().setHeight(header.heightOfSection, Unit.PX);
-        footerCorner.getStyle().setHeight(footer.heightOfSection, Unit.PX);
+        headerDeco.getStyle().setHeight(header.heightOfSection, Unit.PX);
+        footerDeco.getStyle().setHeight(footer.heightOfSection, Unit.PX);
 
         scroller.recalculateScrollbarsForVirtualViewport();
         body.verifyEscalatorCount();
@@ -4848,10 +4847,10 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         horizontalScrollbar.setStylePrimaryName(style);
 
         UIObject.setStylePrimaryName(tableWrapper, style + "-tablewrapper");
-        UIObject.setStylePrimaryName(headerCorner, style + "-headercorner");
-        UIObject.setStylePrimaryName(footerCorner, style + "-footercorner");
-        UIObject.setStylePrimaryName(horizontalScrollbarBackground, style
-                + "-horizontalscrollbarbackground");
+        UIObject.setStylePrimaryName(headerDeco, style + "-header-deco");
+        UIObject.setStylePrimaryName(footerDeco, style + "-footer-deco");
+        UIObject.setStylePrimaryName(horizontalScrollbarDeco, style
+                + "-horizontal-scrollbar-deco");
 
         header.setStylePrimaryName(style);
         body.setStylePrimaryName(style);
