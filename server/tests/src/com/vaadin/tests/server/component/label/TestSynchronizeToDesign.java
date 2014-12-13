@@ -17,9 +17,12 @@ package com.vaadin.tests.server.component.label;
 
 import junit.framework.TestCase;
 
+import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 import org.junit.Test;
 
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -57,6 +60,43 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     @Test
+    public void testContentModeText() {
+        Label l = new Label("plain text label");
+        Element e = new Element(Tag.valueOf("v-label"), "", new Attributes());
+        l.synchronizeToDesign(e, ctx);
+        assertTrue("Label should be marked as plain text",
+                e.hasAttr("plain-text"));
+    }
+
+    @Test
+    public void testContentModeHtml() {
+        Label l = new Label("html label");
+        l.setContentMode(ContentMode.HTML);
+
+        Element e = new Element(Tag.valueOf("v-label"), "", new Attributes());
+        l.synchronizeToDesign(e, ctx);
+        assertFalse("Label should not be marked as plain text",
+                e.hasAttr("plain-text"));
+    }
+
+    @Test
+    public void testChangeContentMode() {
+        Label l = new Label("html label");
+        l.setContentMode(ContentMode.HTML);
+
+        Element e = new Element(Tag.valueOf("v-label"), "", new Attributes());
+        l.synchronizeToDesign(e, ctx);
+
+        assertFalse("Label should not be marked as plain text",
+                e.hasAttr("plain-text"));
+        l.setContentMode(ContentMode.TEXT);
+        l.synchronizeToDesign(e, ctx);
+
+        assertTrue("Label should be marked as plain text",
+                e.hasAttr("plain-text"));
+    }
+
+    @Test
     public void testWithoutContentAndCaption() {
         createAndTestLabel(null, null);
     }
@@ -75,9 +115,6 @@ public class TestSynchronizeToDesign extends TestCase {
             assertTrue("Unexpected content in the v-label element.",
                     e.html() == null || "".equals(e.html()));
         }
-        int numAttributes = (caption == null ? 0 : 1);
-        assertEquals("Wrong number of attributes in v-label.", numAttributes, e
-                .attributes().size());
         if (caption != null) {
             assertEquals("Wrong caption in the v-label element.", caption,
                     e.attr("caption"));

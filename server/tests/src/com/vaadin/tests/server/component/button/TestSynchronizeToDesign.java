@@ -66,6 +66,19 @@ public class TestSynchronizeToDesign extends TestCase {
         assertEquals("ctrl-shift-o", e.attr("click-shortcut"));
     }
 
+    @Test
+    public void testUpdateContentMode() {
+        Button button = new Button("OK");
+        Element e = new Element(Tag.valueOf("v-button"), "", new Attributes());
+        button.synchronizeToDesign(e, ctx);
+        assertTrue("Button is plain text by default", e.hasAttr("plain-text"));
+
+        button.setHtmlContentAllowed(true);
+        button.synchronizeToDesign(e, ctx);
+        assertTrue("Button is updated to HTML", !e.hasAttr("plain-text"));
+
+    }
+
     private void createAndTestButtons(String content) {
         Button b1 = new Button(content);
         // we need to set this on, since the plain-text attribute will appear

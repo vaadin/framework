@@ -111,6 +111,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     private Boolean explicitImmediateValue;
 
+    protected static final String DESIGN_ATTR_PLAIN_TEXT = "plain-text";
+
     /* Constructor */
 
     /**

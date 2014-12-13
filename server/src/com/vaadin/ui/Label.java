@@ -590,6 +590,11 @@ public class Label extends AbstractComponent implements Property<String>,
         if (innerHtml != null && !"".equals(innerHtml)) {
             setValue(innerHtml);
         }
+        if (design.hasAttr(DESIGN_ATTR_PLAIN_TEXT)) {
+            setContentMode(ContentMode.TEXT);
+        } else {
+            setContentMode(ContentMode.HTML);
+        }
     }
 
     /*
@@ -601,6 +606,7 @@ public class Label extends AbstractComponent implements Property<String>,
     protected Collection<String> getCustomAttributes() {
         Collection<String> result = super.getCustomAttributes();
         result.add("value");
+        result.add("content-mode");
         return result;
     }
 
@@ -617,6 +623,10 @@ public class Label extends AbstractComponent implements Property<String>,
         String content = getValue();
         if (content != null) {
             design.html(getValue());
+        }
+        // plain-text (default is html)
+        if (getContentMode() == ContentMode.TEXT) {
+            design.attr(DESIGN_ATTR_PLAIN_TEXT, "");
         }
     }
 }

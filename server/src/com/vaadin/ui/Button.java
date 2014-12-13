@@ -686,7 +686,7 @@ public class Button extends AbstractComponent implements
                 def.getTabIndex(), Integer.class));
         // plain-text (default is html)
         setHtmlContentAllowed(!DesignAttributeHandler.readAttribute(
-                "plain-text", attr, false, Boolean.class));
+                DESIGN_ATTR_PLAIN_TEXT, attr, false, Boolean.class));
         setIconAlternateText(DesignAttributeHandler.readAttribute("icon-alt",
                 attr, def.getIconAlternateText(), String.class));
         // click-shortcut
@@ -707,7 +707,7 @@ public class Button extends AbstractComponent implements
     protected Collection<String> getCustomAttributes() {
         Collection<String> result = super.getCustomAttributes();
         result.add("tabindex");
-        result.add("plain-text");
+        result.add(DESIGN_ATTR_PLAIN_TEXT);
         result.add("caption");
         result.add("icon-alt");
         result.add("click-shortcut");
@@ -736,7 +736,7 @@ public class Button extends AbstractComponent implements
                 def.getTabIndex(), Integer.class);
         // plain-text (default is html)
         if (!isHtmlContentAllowed()) {
-            design.attr("plain-text", "");
+            design.attr(DESIGN_ATTR_PLAIN_TEXT, "");
         }
         // icon-alt
         DesignAttributeHandler.writeAttribute("icon-alt", attr,
