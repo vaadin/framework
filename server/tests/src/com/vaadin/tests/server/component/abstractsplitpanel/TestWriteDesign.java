@@ -32,7 +32,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * 
  * @author Vaadin Ltd
  */
-public class TestSynchronizeToDesign extends TestCase {
+public class TestWriteDesign extends TestCase {
     private DesignContext ctx;
 
     @Override
@@ -142,7 +142,7 @@ public class TestSynchronizeToDesign extends TestCase {
         sp.setSecondComponent(new Label("Second slot"));
         Element e = ctx.createNode(sp);
         sp = new VerticalSplitPanel();
-        sp.synchronizeToDesign(e, ctx);
+        sp.writeDesign(e, ctx);
         assertTrue("There should be no attributes in the node.", e.attributes()
                 .size() == 0);
         assertTrue("There should be no child elements.",

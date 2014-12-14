@@ -669,14 +669,12 @@ public class Button extends AbstractComponent implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.AbstractComponent#synchronizeFromDesign(org.jsoup.nodes
-     * .Element, com.vaadin.ui.declarative.DesignContext)
+     * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
+     * com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeFromDesign(Element design,
-            DesignContext designContext) {
-        super.synchronizeFromDesign(design, designContext);
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
         Button def = designContext.getDefaultInstance(this.getClass());
         Attributes attr = design.attributes();
         String content = design.html();
@@ -718,13 +716,12 @@ public class Button extends AbstractComponent implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.AbstractComponent#synchronizeToDesign(org.jsoup.nodes.Element
+     * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
      * , com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeToDesign(Element design, DesignContext designContext) {
-        super.synchronizeToDesign(design, designContext);
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
         Attributes attr = design.attributes();
         Button def = designContext.getDefaultInstance(this.getClass());
         String content = getCaption();

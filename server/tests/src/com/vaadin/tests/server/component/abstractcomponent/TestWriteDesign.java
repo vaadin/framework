@@ -41,7 +41,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * 
  * @author Vaadin Ltd
  */
-public class TestSynchronizeToDesign extends TestCase {
+public class TestWriteDesign extends TestCase {
 
     private DesignContext ctx;
 
@@ -55,7 +55,7 @@ public class TestSynchronizeToDesign extends TestCase {
         Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setId("testId");
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         // we only changed one of the attributes, others are at default values
         assertEquals(1, design.attributes().size());
         assertEquals("testId", design.attr("id"));
@@ -65,7 +65,7 @@ public class TestSynchronizeToDesign extends TestCase {
         Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setPrimaryStyleName("test-style");
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         // we only changed one of the attributes, others are at default values
         assertEquals(1, design.attributes().size());
         assertEquals("test-style", design.attr("primary-style-name"));
@@ -75,7 +75,7 @@ public class TestSynchronizeToDesign extends TestCase {
         Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setCaption("test-caption");
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         // We only changed the caption, which is not
         // an attribute.
         assertEquals(0, design.attributes().size());
@@ -86,7 +86,7 @@ public class TestSynchronizeToDesign extends TestCase {
         Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setLocale(new Locale("fi", "FI"));
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         // we only changed one of the attributes, others are at default values
         assertEquals(1, design.attributes().size());
         assertEquals("fi_FI", design.attr("locale"));
@@ -97,7 +97,7 @@ public class TestSynchronizeToDesign extends TestCase {
         AbstractComponent component = getComponent();
         component
                 .setIcon(new ExternalResource("http://example.com/example.gif"));
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         // we only changed one of the attributes, others are at default values
         assertEquals(1, design.attributes().size());
         assertEquals("http://example.com/example.gif", design.attr("icon"));
@@ -107,7 +107,7 @@ public class TestSynchronizeToDesign extends TestCase {
         Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setIcon(new ThemeResource("example.gif"));
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         // we only changed one of the attributes, others are at default values
         assertEquals(1, design.attributes().size());
         assertEquals("theme://example.gif", design.attr("icon"));
@@ -117,7 +117,7 @@ public class TestSynchronizeToDesign extends TestCase {
         Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setIcon(new FileResource(new File("img/example.gif")));
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         // we only changed one of the attributes, others are at default values
         assertEquals(1, design.attributes().size());
         assertEquals("img/example.gif", design.attr("icon"));
@@ -128,10 +128,10 @@ public class TestSynchronizeToDesign extends TestCase {
         AbstractComponent component = getComponent();
         // no immediate attribute should be written before setting immediate to
         // some value
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         assertFalse(design.hasAttr("immediate"));
         component.setImmediate(true);
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         // we only changed one of the attributes, others are at default values
         assertEquals(1, design.attributes().size());
         assertEquals("true", design.attr("immediate"));
@@ -141,7 +141,7 @@ public class TestSynchronizeToDesign extends TestCase {
         Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setDescription("test-description");
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         // we only changed one of the attributes, others are at default values
         assertEquals(1, design.attributes().size());
         assertEquals("test-description", design.attr("description"));
@@ -152,7 +152,7 @@ public class TestSynchronizeToDesign extends TestCase {
         AbstractComponent component = getComponent();
         component.setComponentError(new UserError("<div>test-error</div>",
                 ContentMode.HTML, ErrorLevel.ERROR));
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         // we only changed one of the attributes, others are at default values
         assertEquals(1, design.attributes().size());
         assertEquals("<div>test-error</div>", design.attr("error"));
@@ -162,7 +162,7 @@ public class TestSynchronizeToDesign extends TestCase {
         Element design = createDesign();
         AbstractComponent component = getComponent();
         component.setSizeFull();
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         // there should be only size full
         assertEquals(1, design.attributes().size());
         assertEquals("true", design.attr("size-full"));
@@ -172,7 +172,7 @@ public class TestSynchronizeToDesign extends TestCase {
         Element design = createDesign();
         AbstractComponent component = getPanel();
         component.setSizeUndefined();
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         // there should be only size auto
         assertEquals(1, design.attributes().size());
         assertEquals("true", design.attr("size-auto"));
@@ -183,7 +183,7 @@ public class TestSynchronizeToDesign extends TestCase {
         AbstractComponent component = getComponent();
         component.setHeight("100%");
         component.setWidth("20px");
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         assertEquals("true", design.attr("height-full"));
     }
 
@@ -193,7 +193,7 @@ public class TestSynchronizeToDesign extends TestCase {
         AbstractComponent component = getPanel();
         component.setHeight(null);
         component.setWidth("20px");
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         assertEquals("true", design.attr("height-auto"));
     }
 
@@ -202,7 +202,7 @@ public class TestSynchronizeToDesign extends TestCase {
         AbstractComponent component = getComponent();
         component.setHeight("20px");
         component.setWidth("100%");
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         assertEquals("true", design.attr("width-full"));
     }
 
@@ -212,7 +212,7 @@ public class TestSynchronizeToDesign extends TestCase {
         AbstractComponent component = getPanel();
         component.setHeight("20px");
         component.setWidth(null);
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         assertEquals("true", design.attr("width-auto"));
     }
 
@@ -221,7 +221,7 @@ public class TestSynchronizeToDesign extends TestCase {
         AbstractComponent component = getComponent();
         component.setHeight("20px");
         component.setWidth("70%");
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         assertEquals("70%", design.attr("width"));
     }
 
@@ -230,7 +230,7 @@ public class TestSynchronizeToDesign extends TestCase {
         AbstractComponent component = getComponent();
         component.setHeight("20px");
         component.setWidth("70%");
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         assertEquals("20px", design.attr("height"));
     }
 
@@ -238,7 +238,7 @@ public class TestSynchronizeToDesign extends TestCase {
         Element design = createDesign();
         AbstractComponent component = getComponent();
         Responsive.makeResponsive(component);
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         assertTrue("Design attributes should have key 'responsive'", design
                 .attributes().hasKey("responsive"));
         assertFalse("Responsive attribute should not be 'false'",

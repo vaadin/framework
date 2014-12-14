@@ -557,15 +557,13 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.AbstractComponent#synchronizeFromDesign(org.jsoup.nodes
-     * .Element, com.vaadin.ui.declarative.DesignContext)
+     * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
+     * com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeFromDesign(Element design,
-            DesignContext designContext) {
+    public void readDesign(Element design, DesignContext designContext) {
         // handle default attributes
-        super.synchronizeFromDesign(design, designContext);
+        super.readDesign(design, designContext);
         // handle custom attributes, use default values if no explicit value
         // set
         AbstractSplitPanel def = designContext.getDefaultInstance(this
@@ -634,9 +632,9 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     @Override
-    public void synchronizeToDesign(Element design, DesignContext designContext) {
+    public void writeDesign(Element design, DesignContext designContext) {
         // handle default attributes (also clears children and attributes)
-        super.synchronizeToDesign(design, designContext);
+        super.writeDesign(design, designContext);
         // handle custom attributes (write only if a value is not the
         // default value)
         AbstractSplitPanel def = designContext.getDefaultInstance(this

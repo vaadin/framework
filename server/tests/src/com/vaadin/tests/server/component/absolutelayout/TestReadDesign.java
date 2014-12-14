@@ -35,7 +35,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * @since
  * @author Vaadin Ltd
  */
-public class TestSynchronizeFromDesign extends TestCase {
+public class TestReadDesign extends TestCase {
 
     private AbsoluteLayout root;
 

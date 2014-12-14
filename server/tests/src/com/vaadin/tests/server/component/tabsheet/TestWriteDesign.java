@@ -33,7 +33,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * @since
  * @author Vaadin Ltd
  */
-public class TestSynchronizeToDesign extends TestCase {
+public class TestWriteDesign extends TestCase {
 
     private TabSheet sheet;
     private Element design;
@@ -43,7 +43,7 @@ public class TestSynchronizeToDesign extends TestCase {
         super.setUp();
         sheet = createTabSheet();
         design = createDesign();
-        sheet.synchronizeToDesign(design, createDesignContext());
+        sheet.writeDesign(design, createDesignContext());
     }
 
     public void testOnlyOneTab() {

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.server.component.abstractfield;
+package com.vaadin.tests.server.component.textfield;
 
 import junit.framework.TestCase;
 
@@ -21,18 +21,16 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
-import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
- * 
- * Test case for reading the attributes of the AbstractField from design
+ * Test case for reading the value of the TextField from design
  * 
  * @author Vaadin Ltd
  */
-public class TestSynchronizeFromDesign extends TestCase {
-
+public class TestReadDesign extends TestCase {
     private DesignContext ctx;
 
     @Override
@@ -41,30 +39,20 @@ public class TestSynchronizeFromDesign extends TestCase {
         ctx = new DesignContext();
     }
 
-    public void testSynchronizeReadOnly() {
-        Element design = createDesign("readonly", "");
-        AbstractField component = getComponent();
-        component.synchronizeFromDesign(design, ctx);
-        assertEquals(true, component.isReadOnly());
-        design = createDesign("readonly", "false");
-        component.synchronizeFromDesign(design, ctx);
-        assertEquals(false, component.isReadOnly());
+    public void testValue() {
+        Element design = createDesign();
+        AbstractTextField component = getComponent();
+        component.readDesign(design, ctx);
+        assertEquals("test value", component.getValue());
     }
 
-    public void testSynchronizeTabIndex() {
-        Element design = createDesign("tabindex", "2");
-        AbstractField component = getComponent();
-        component.synchronizeFromDesign(design, ctx);
-        assertEquals("Tab index must be 2", 2, component.getTabIndex());
-    }
-
-    private AbstractField getComponent() {
+    private AbstractTextField getComponent() {
         return new TextField();
     }
 
-    private Element createDesign(String key, String value) {
+    private Element createDesign() {
         Attributes attributes = new Attributes();
-        attributes.put(key, value);
+        attributes.put("value", "test value");
         Element node = new Element(Tag.valueOf("v-text-field"), "", attributes);
         return node;
     }

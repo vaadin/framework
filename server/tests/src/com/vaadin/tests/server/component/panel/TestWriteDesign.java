@@ -30,7 +30,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * 
  * @author Vaadin Ltd
  */
-public class TestSynchronizeToDesign extends TestCase {
+public class TestWriteDesign extends TestCase {
     Element panelElement;
 
     @Override
@@ -47,7 +47,7 @@ public class TestSynchronizeToDesign extends TestCase {
         // synchronize to design
         DesignContext ctx = new DesignContext();
         panelElement = new Element(Tag.valueOf("div"), "");
-        panel.synchronizeToDesign(panelElement, ctx);
+        panel.writeDesign(panelElement, ctx);
     }
 
     public void testAttributes() {

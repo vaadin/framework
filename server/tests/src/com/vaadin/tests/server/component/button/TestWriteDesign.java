@@ -32,7 +32,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * Tests generating html tree nodes corresponding to the contents of a Button
  * and a NativeButton.
  */
-public class TestSynchronizeToDesign extends TestCase {
+public class TestWriteDesign extends TestCase {
 
     private DesignContext ctx;
 
@@ -59,7 +59,7 @@ public class TestSynchronizeToDesign extends TestCase {
         button.setIconAlternateText("OK");
         button.setClickShortcut(KeyCode.O, ModifierKey.CTRL, ModifierKey.SHIFT);
         Element e = new Element(Tag.valueOf("v-button"), "", new Attributes());
-        button.synchronizeToDesign(e, ctx);
+        button.writeDesign(e, ctx);
         assertEquals("3", e.attr("tabindex"));
         assertTrue("Button is plain text by default", e.hasAttr("plain-text"));
         assertEquals("OK", e.attr("icon-alt"));
@@ -70,11 +70,11 @@ public class TestSynchronizeToDesign extends TestCase {
     public void testUpdateContentMode() {
         Button button = new Button("OK");
         Element e = new Element(Tag.valueOf("v-button"), "", new Attributes());
-        button.synchronizeToDesign(e, ctx);
+        button.writeDesign(e, ctx);
         assertTrue("Button is plain text by default", e.hasAttr("plain-text"));
 
         button.setHtmlContentAllowed(true);
-        button.synchronizeToDesign(e, ctx);
+        button.writeDesign(e, ctx);
         assertTrue("Button is updated to HTML", !e.hasAttr("plain-text"));
 
     }

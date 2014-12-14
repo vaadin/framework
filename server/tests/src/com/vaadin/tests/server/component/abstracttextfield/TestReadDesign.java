@@ -27,11 +27,9 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
- * Test case for writing the attributes of the AbstractTextField to design
- * 
- * @author Vaadin Ltd
+ * Test case for reading the attributes of the AbstractTextField from design
  */
-public class TestSynchronizeToDesign extends TestCase {
+public class TestReadDesign extends TestCase {
 
     private DesignContext ctx;
 
@@ -41,24 +39,18 @@ public class TestSynchronizeToDesign extends TestCase {
         ctx = new DesignContext();
     }
 
-    public void testSynchronizetestAttributes() {
+    public void testAttributes() {
         Element design = createDesign();
         AbstractTextField component = getComponent();
-        component.setNullRepresentation("this-is-null");
-        component.setNullSettingAllowed(true);
-        component.setMaxLength(5);
-        component.setColumns(3);
-        component.setInputPrompt("input");
-        component.setTextChangeEventMode(TextChangeEventMode.EAGER);
-        component.setTextChangeTimeout(100);
-        component.synchronizeToDesign(design, ctx);
-        assertEquals("this-is-null", design.attr("null-representation"));
-        assertEquals("true", design.attr("null-setting-allowed"));
-        assertEquals("5", design.attr("maxlength"));
-        assertEquals("3", design.attr("columns"));
-        assertEquals("input", design.attr("input-prompt"));
-        assertEquals("EAGER", design.attr("text-change-event-mode"));
-        assertEquals("100", design.attr("text-change-timeout"));
+        component.readDesign(design, ctx);
+        assertEquals("this-is-null", component.getNullRepresentation());
+        assertEquals(true, component.isNullSettingAllowed());
+        assertEquals(5, component.getMaxLength());
+        assertEquals(3, component.getColumns());
+        assertEquals("input", component.getInputPrompt());
+        assertEquals(TextChangeEventMode.EAGER,
+                component.getTextChangeEventMode());
+        assertEquals(100, component.getTextChangeTimeout());
     }
 
     private AbstractTextField getComponent() {
@@ -66,8 +58,16 @@ public class TestSynchronizeToDesign extends TestCase {
     }
 
     private Element createDesign() {
-        Attributes attr = new Attributes();
-        return new Element(Tag.valueOf("v-text-field"), "", attr);
+        Attributes attributes = new Attributes();
+        attributes.put("null-representation", "this-is-null");
+        attributes.put("null-setting-allowed", "true");
+        attributes.put("maxlength", "5");
+        attributes.put("columns", "3");
+        attributes.put("input-prompt", "input");
+        attributes.put("text-change-event-mode", "eager");
+        attributes.put("text-change-timeout", "100");
+        Element node = new Element(Tag.valueOf("v-text-field"), "", attributes);
+        return node;
     }
 
 }

@@ -32,13 +32,13 @@ import com.vaadin.ui.declarative.DesignContext;
  * @since
  * @author Vaadin Ltd
  */
-public class TestSynchronizeToDesign extends TestCase {
+public class TestWriteDesign extends TestCase {
 
     public void testSynchronizeMargin() {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         Element design = createDesign();
-        layout.synchronizeToDesign(design, createDesignContext());
+        layout.writeDesign(design, createDesignContext());
         assertTrue("The margin must be written", design.hasAttr("margin"));
         assertTrue("The margin must be empty or true", design.attr("margin")
                 .equals("") || design.attr("margin").equalsIgnoreCase("true"));
@@ -48,7 +48,7 @@ public class TestSynchronizeToDesign extends TestCase {
         VerticalLayout layout = new VerticalLayout();
         layout.setCaption("changed-caption");
         Element design = createDesign();
-        layout.synchronizeToDesign(design, createDesignContext());
+        layout.writeDesign(design, createDesignContext());
         assertEquals(0, design.childNodes().size());
         assertEquals("changed-caption", design.attr("caption"));
     }
@@ -59,7 +59,7 @@ public class TestSynchronizeToDesign extends TestCase {
         layout.getComponent(0).setCaption("test-caption");
         layout.addComponent(new Label("test-label-2"));
         Element design = createDesign();
-        layout.synchronizeToDesign(design, createDesignContext());
+        layout.writeDesign(design, createDesignContext());
         assertEquals(2, design.childNodes().size());
         assertEquals("v-label", ((Element) design.childNode(0)).tagName());
         assertEquals("test-caption", design.childNode(0).attr("caption"));
@@ -70,7 +70,7 @@ public class TestSynchronizeToDesign extends TestCase {
         layout.addComponent(new Label("test-label"));
         layout.setExpandRatio(layout.getComponent(0), 1.0f);
         Element design = createDesign();
-        layout.synchronizeToDesign(design, createDesignContext());
+        layout.writeDesign(design, createDesignContext());
         assertTrue(design.childNode(0).hasAttr(":expand"));
         assertEquals("", design.childNode(0).attr(":expand"));
     }
@@ -80,7 +80,7 @@ public class TestSynchronizeToDesign extends TestCase {
         layout.addComponent(new Label("test-label"));
         layout.setExpandRatio(layout.getComponent(0), 2.40f);
         Element design = createDesign();
-        layout.synchronizeToDesign(design, createDesignContext());
+        layout.writeDesign(design, createDesignContext());
         assertTrue(design.childNode(0).hasAttr(":expand"));
         assertEquals("2.4", design.childNode(0).attr(":expand"));
     }
@@ -88,7 +88,7 @@ public class TestSynchronizeToDesign extends TestCase {
     public void testSynchronizeDefaultAlignment() {
         Element design = createDesign();
         VerticalLayout layout = createLayoutWithAlignment(design, null);
-        layout.synchronizeToDesign(design, createDesignContext());
+        layout.writeDesign(design, createDesignContext());
         assertFalse(design.childNode(0).hasAttr(":top"));
         assertFalse(design.childNode(0).hasAttr(":left"));
     }
@@ -97,7 +97,7 @@ public class TestSynchronizeToDesign extends TestCase {
         Element design = createDesign();
         VerticalLayout layout = createLayoutWithAlignment(design,
                 Alignment.MIDDLE_CENTER);
-        layout.synchronizeToDesign(design, createDesignContext());
+        layout.writeDesign(design, createDesignContext());
         assertTrue(design.childNode(0).hasAttr(":middle"));
         assertTrue(design.childNode(0).hasAttr(":center"));
     }
@@ -106,7 +106,7 @@ public class TestSynchronizeToDesign extends TestCase {
         Element design = createDesign();
         VerticalLayout layout = createLayoutWithAlignment(design,
                 Alignment.BOTTOM_RIGHT);
-        layout.synchronizeToDesign(design, createDesignContext());
+        layout.writeDesign(design, createDesignContext());
         assertTrue(design.childNode(0).hasAttr(":bottom"));
         assertTrue(design.childNode(0).hasAttr(":right"));
     }
@@ -118,7 +118,7 @@ public class TestSynchronizeToDesign extends TestCase {
         if (alignment != null) {
             layout.setComponentAlignment(layout.getComponent(0), alignment);
         }
-        layout.synchronizeToDesign(design, createDesignContext());
+        layout.writeDesign(design, createDesignContext());
         return layout;
     }
 

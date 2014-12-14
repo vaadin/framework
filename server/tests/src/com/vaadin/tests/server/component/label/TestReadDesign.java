@@ -30,7 +30,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * Test case for reading the contents of a Label from a design.
  * 
  */
-public class TestSynchronizeFromDesign extends TestCase {
+public class TestReadDesign extends TestCase {
 
     private DesignContext ctx;
 

@@ -578,14 +578,12 @@ public class Label extends AbstractComponent implements Property<String>,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.AbstractComponent#synchronizeFromDesign(org.jsoup.nodes
-     * .Element, com.vaadin.ui.declarative.DesignContext)
+     * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
+     * com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeFromDesign(Element design,
-            DesignContext designContext) {
-        super.synchronizeFromDesign(design, designContext);
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
         String innerHtml = design.html();
         if (innerHtml != null && !"".equals(innerHtml)) {
             setValue(innerHtml);
@@ -613,13 +611,12 @@ public class Label extends AbstractComponent implements Property<String>,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.AbstractComponent#synchronizeToDesign(org.jsoup.nodes.Element
+     * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
      * , com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeToDesign(Element design, DesignContext designContext) {
-        super.synchronizeToDesign(design, designContext);
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
         String content = getValue();
         if (content != null) {
             design.html(getValue());

@@ -37,7 +37,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * design.
  * 
  */
-public class TestSynchronizeFromDesign extends TestCase {
+public class TestReadDesign extends TestCase {
 
     private DesignContext ctx;
 

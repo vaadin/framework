@@ -38,7 +38,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * 
  * @author Vaadin Ltd
  */
-public class TestSynchronizeFromDesign extends TestCase {
+public class TestReadDesign extends TestCase {
     DesignContext ctx;
 
     @Override
@@ -50,7 +50,7 @@ public class TestSynchronizeFromDesign extends TestCase {
         // Create a design with non-default attributes values.
         Element design = createDesign(true, false, true, true);
         HorizontalSplitPanel sp = new HorizontalSplitPanel();
-        sp.synchronizeFromDesign(design, ctx);
+        sp.readDesign(design, ctx);
         // Check that the attributes are correctly parsed.
         assertEquals(20.5f, sp.getSplitPosition());
         assertEquals(Unit.PERCENTAGE, sp.getSplitPositionUnit());
@@ -63,7 +63,7 @@ public class TestSynchronizeFromDesign extends TestCase {
         // check that the properties get the default values if the design
         // does not have attributes corresponding to those properties
         design = createDesign(true, true, true, true);
-        sp.synchronizeFromDesign(design, ctx);
+        sp.readDesign(design, ctx);
         HorizontalSplitPanel def = new HorizontalSplitPanel();
         assertEquals(def.getSplitPosition(), sp.getSplitPosition());
         assertEquals(def.getSplitPositionUnit(), sp.getSplitPositionUnit());
@@ -80,7 +80,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     public void testWithNoChildren() {
         Element design = createDesign(true, false, false, false);
         HorizontalSplitPanel sp = new HorizontalSplitPanel();
-        sp.synchronizeFromDesign(design, ctx);
+        sp.readDesign(design, ctx);
         assertEquals("Unexpected child count for the split panel.", 0,
                 sp.getComponentCount());
     }
@@ -88,7 +88,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     public void testWithFirstChild() {
         Element design = createDesign(false, false, true, false);
         VerticalSplitPanel sp = new VerticalSplitPanel();
-        sp.synchronizeFromDesign(design, ctx);
+        sp.readDesign(design, ctx);
         assertEquals("Unexpected child count for the split panel.", 1,
                 sp.getComponentCount());
         Object obj = sp.getFirstComponent();
@@ -99,7 +99,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     public void testWithSecondChild() {
         Element design = createDesign(true, false, false, true);
         HorizontalSplitPanel sp = new HorizontalSplitPanel();
-        sp.synchronizeFromDesign(design, ctx);
+        sp.readDesign(design, ctx);
         assertEquals("Unexpected child count for the split panel.", 1,
                 sp.getComponentCount());
         Object obj = sp.getSecondComponent();
@@ -110,7 +110,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     public void testWithBothChildren() {
         Element design = createDesign(false, false, true, true);
         VerticalSplitPanel sp = new VerticalSplitPanel();
-        sp.synchronizeFromDesign(design, ctx);
+        sp.readDesign(design, ctx);
         assertEquals("Unexpected child count for the split panel.", 2,
                 sp.getComponentCount());
         Object first = sp.getFirstComponent();

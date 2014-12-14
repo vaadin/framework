@@ -30,7 +30,7 @@ import com.vaadin.ui.declarative.DesignException;
  * 
  * @author Vaadin Ltd
  */
-public class TestSynchronizeFromDesign extends TestCase {
+public class TestReadDesign extends TestCase {
     DesignContext ctx;
 
     @Override
@@ -41,7 +41,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     public void testAttributes() {
         Element design = createDesign();
         Panel panel = new Panel();
-        panel.synchronizeFromDesign(design, ctx);
+        panel.readDesign(design, ctx);
         assertEquals("A panel", panel.getCaption());
         assertEquals(2, panel.getTabIndex());
         assertEquals(10, panel.getScrollLeft());
@@ -53,7 +53,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     public void testChild() {
         Element design = createDesign();
         Panel panel = new Panel();
-        panel.synchronizeFromDesign(design, ctx);
+        panel.readDesign(design, ctx);
         VerticalLayout vLayout = (VerticalLayout) panel.getContent();
         assertEquals(300f, vLayout.getWidth());
         assertEquals(400f, vLayout.getHeight());
@@ -67,7 +67,7 @@ public class TestSynchronizeFromDesign extends TestCase {
         design.appendChild(newChild);
         Panel panel = new Panel();
         try {
-            panel.synchronizeFromDesign(design, ctx);
+            panel.readDesign(design, ctx);
             fail("Parsing a design containing a Panel with more than one child component should have failed.");
         } catch (DesignException e) {
             // Nothing needs to be done, this is the expected case.

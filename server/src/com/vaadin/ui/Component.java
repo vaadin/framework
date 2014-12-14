@@ -744,8 +744,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @param designContext
      *            The DesignContext instance used for parsing the design
      */
-    public void synchronizeFromDesign(Element design,
-            DesignContext designContext);
+    public void readDesign(Element design, DesignContext designContext);
 
     /**
      * Update the given design based on the component state. The component is
@@ -761,7 +760,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      *            The design as HTML to update with the current state
      * @param designContext
      */
-    public void synchronizeToDesign(Element design, DesignContext designContext);
+    public void writeDesign(Element design, DesignContext designContext);
 
     /* Component event framework */
 

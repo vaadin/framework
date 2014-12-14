@@ -345,9 +345,8 @@ public class Panel extends AbstractSingleComponentContainer implements
     }
 
     @Override
-    public void synchronizeFromDesign(Element design,
-            DesignContext designContext) {
-        super.synchronizeFromDesign(design, designContext);
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
         // handle tabindex
         Panel def = designContext.getDefaultInstance(this.getClass());
         int tabIndex = DesignAttributeHandler.readAttribute("tabindex",
@@ -364,8 +363,8 @@ public class Panel extends AbstractSingleComponentContainer implements
     }
 
     @Override
-    public void synchronizeToDesign(Element design, DesignContext designContext) {
-        super.synchronizeToDesign(design, designContext);
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
         // handle tabindex
         Panel def = designContext.getDefaultInstance(this.getClass());
         DesignAttributeHandler.writeAttribute("tabindex", design.attributes(),

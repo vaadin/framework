@@ -677,15 +677,13 @@ public class AbsoluteLayout extends AbstractLayout implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.AbstractComponent#synchronizeFromDesign(org.jsoup.nodes
-     * .Node, com.vaadin.ui.declarative.DesignContext)
+     * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Node,
+     * com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeFromDesign(Element design,
-            DesignContext designContext) {
+    public void readDesign(Element design, DesignContext designContext) {
         // process default attributes
-        super.synchronizeFromDesign(design, designContext);
+        super.readDesign(design, designContext);
         // remove current children
         removeAllComponents();
         // handle children
@@ -716,19 +714,18 @@ public class AbsoluteLayout extends AbstractLayout implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.AbstractComponent#synchronizeToDesign(org.jsoup.nodes.Node,
+     * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Node,
      * com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeToDesign(Element design, DesignContext designContext) {
-        super.synchronizeToDesign(design, designContext);
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
         // handle children
         Element designElement = design;
         for (Component child : this) {
             Element childNode = designContext.createNode(child);
             designElement.appendChild(childNode);
-            child.synchronizeToDesign(childNode, designContext);
+            child.writeDesign(childNode, designContext);
             // handle position
             ComponentPosition position = getPosition(child);
             writePositionAttribute(childNode, ATTR_TOP, position.getTopUnits()

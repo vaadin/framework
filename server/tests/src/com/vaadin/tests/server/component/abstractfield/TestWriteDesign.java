@@ -31,7 +31,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * 
  * @author Vaadin Ltd
  */
-public class TestSynchronizeToDesign extends TestCase {
+public class TestWriteDesign extends TestCase {
 
     private DesignContext ctx;
 
@@ -45,7 +45,7 @@ public class TestSynchronizeToDesign extends TestCase {
         Element design = createDesign();
         AbstractField component = getComponent();
         component.setReadOnly(true);
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         // we only changed one of the attributes, others are at default values
         assertEquals(1, design.attributes().size());
         assertTrue("Design must contain readonly", design.hasAttr("readonly"));
@@ -59,7 +59,7 @@ public class TestSynchronizeToDesign extends TestCase {
         ObjectProperty property = new ObjectProperty<String>("test");
         property.setReadOnly(true);
         component.setPropertyDataSource(property);
-        component.synchronizeToDesign(design, ctx);
+        component.writeDesign(design, ctx);
         // make sure that property readonly is not written to design
         assertFalse("Design must not contain readonly",
                 design.hasAttr("readonly"));

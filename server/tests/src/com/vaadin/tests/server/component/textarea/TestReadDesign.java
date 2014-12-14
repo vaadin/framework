@@ -30,7 +30,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * 
  * @author Vaadin Ltd
  */
-public class TestSynchronizeFromDesign extends TestCase {
+public class TestReadDesign extends TestCase {
     private DesignContext ctx;
 
     @Override
@@ -42,7 +42,7 @@ public class TestSynchronizeFromDesign extends TestCase {
     public void testValue() {
         Element design = createDesign();
         AbstractTextField component = getComponent();
-        component.synchronizeFromDesign(design, ctx);
+        component.readDesign(design, ctx);
         assertEquals("test value", component.getValue());
     }
 

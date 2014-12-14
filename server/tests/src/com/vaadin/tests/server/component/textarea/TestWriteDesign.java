@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.server.component.textfield;
+package com.vaadin.tests.server.component.textarea;
 
 import junit.framework.TestCase;
 
@@ -22,15 +22,15 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
 import com.vaadin.ui.AbstractTextField;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
- * Test case for reading the value of the TextField from design
+ * Test case for writing the value of the TextField to design
  * 
  * @author Vaadin Ltd
  */
-public class TestSynchronizeFromDesign extends TestCase {
+public class TestWriteDesign extends TestCase {
     private DesignContext ctx;
 
     @Override
@@ -39,21 +39,22 @@ public class TestSynchronizeFromDesign extends TestCase {
         ctx = new DesignContext();
     }
 
-    public void testValue() {
+    public void testSynchronizeValue() {
         Element design = createDesign();
         AbstractTextField component = getComponent();
-        component.synchronizeFromDesign(design, ctx);
-        assertEquals("test value", component.getValue());
+        component.setValue("test value");
+        component.writeDesign(design, ctx);
+        assertEquals("test value", design.html());
+        assertFalse(design.hasAttr("value"));
     }
 
     private AbstractTextField getComponent() {
-        return new TextField();
+        return new TextArea();
     }
 
     private Element createDesign() {
-        Attributes attributes = new Attributes();
-        attributes.put("value", "test value");
-        Element node = new Element(Tag.valueOf("v-text-field"), "", attributes);
-        return node;
+        Attributes attr = new Attributes();
+        return new Element(Tag.valueOf("v-text-area"), "", attr);
     }
+
 }

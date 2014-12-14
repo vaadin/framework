@@ -29,7 +29,7 @@ import com.vaadin.ui.declarative.DesignContext;
 /**
  * Tests generating an html tree node corresponding to a Label.
  */
-public class TestSynchronizeToDesign extends TestCase {
+public class TestWriteDesign extends TestCase {
 
     private DesignContext ctx;
 
@@ -63,7 +63,7 @@ public class TestSynchronizeToDesign extends TestCase {
     public void testContentModeText() {
         Label l = new Label("plain text label");
         Element e = new Element(Tag.valueOf("v-label"), "", new Attributes());
-        l.synchronizeToDesign(e, ctx);
+        l.writeDesign(e, ctx);
         assertTrue("Label should be marked as plain text",
                 e.hasAttr("plain-text"));
     }
@@ -74,7 +74,7 @@ public class TestSynchronizeToDesign extends TestCase {
         l.setContentMode(ContentMode.HTML);
 
         Element e = new Element(Tag.valueOf("v-label"), "", new Attributes());
-        l.synchronizeToDesign(e, ctx);
+        l.writeDesign(e, ctx);
         assertFalse("Label should not be marked as plain text",
                 e.hasAttr("plain-text"));
     }
@@ -85,12 +85,12 @@ public class TestSynchronizeToDesign extends TestCase {
         l.setContentMode(ContentMode.HTML);
 
         Element e = new Element(Tag.valueOf("v-label"), "", new Attributes());
-        l.synchronizeToDesign(e, ctx);
+        l.writeDesign(e, ctx);
 
         assertFalse("Label should not be marked as plain text",
                 e.hasAttr("plain-text"));
         l.setContentMode(ContentMode.TEXT);
-        l.synchronizeToDesign(e, ctx);
+        l.writeDesign(e, ctx);
 
         assertTrue("Label should be marked as plain text",
                 e.hasAttr("plain-text"));

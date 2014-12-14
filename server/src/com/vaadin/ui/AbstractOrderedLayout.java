@@ -470,15 +470,13 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.AbstractComponent#synchronizeFromDesign(org.jsoup.nodes
-     * .Element, com.vaadin.ui.declarative.DesignContext)
+     * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
+     * com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeFromDesign(Element design,
-            DesignContext designContext) {
+    public void readDesign(Element design, DesignContext designContext) {
         // process default attributes
-        super.synchronizeFromDesign(design, designContext);
+        super.readDesign(design, designContext);
         // remove current children
         removeAllComponents();
         // handle margin
@@ -535,14 +533,13 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.AbstractComponent#synchronizeToDesign(org.jsoup.nodes.Element
+     * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
      * , com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeToDesign(Element design, DesignContext designContext) {
+    public void writeDesign(Element design, DesignContext designContext) {
         // synchronize default attributes
-        super.synchronizeToDesign(design, designContext);
+        super.writeDesign(design, designContext);
         // handle margin
         AbstractOrderedLayout def = designContext.getDefaultInstance(this
                 .getClass());

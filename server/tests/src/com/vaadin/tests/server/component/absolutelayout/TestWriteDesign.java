@@ -31,13 +31,13 @@ import com.vaadin.ui.declarative.DesignContext;
  * @since
  * @author Vaadin Ltd
  */
-public class TestSynchronizeToDesign extends TestCase {
+public class TestWriteDesign extends TestCase {
 
     public void testSynchronizeEmptyLayout() {
         AbsoluteLayout layout = createTestLayout();
         layout.removeAllComponents();
         Element design = createDesign();
-        layout.synchronizeToDesign(design, createDesignContext());
+        layout.writeDesign(design, createDesignContext());
         assertEquals(0, design.childNodes().size());
         assertEquals("changed-caption", design.attr("caption"));
     }
@@ -45,7 +45,7 @@ public class TestSynchronizeToDesign extends TestCase {
     public void testSynchronizeLayoutWithChildren() {
         AbsoluteLayout layout = createTestLayout();
         Element design = createDesign();
-        layout.synchronizeToDesign(design, createDesignContext());
+        layout.writeDesign(design, createDesignContext());
         assertEquals(2, design.childNodes().size());
         assertEquals("v-label", ((Element) design.childNode(0)).tagName());
         assertEquals("v-label", ((Element) design.childNode(1)).tagName());
@@ -54,7 +54,7 @@ public class TestSynchronizeToDesign extends TestCase {
     public void testSynchronizePosition() {
         AbsoluteLayout layout = createTestLayout();
         Element design = createDesign();
-        layout.synchronizeToDesign(design, createDesignContext());
+        layout.writeDesign(design, createDesignContext());
         Attributes attributes = design.childNode(0).attributes();
         assertEquals("50px", attributes.get(":top"));
         assertEquals("50%", attributes.get(":left"));

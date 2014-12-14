@@ -331,9 +331,9 @@ public class DesignContext implements Serializable {
 
     /**
      * Creates an html tree node corresponding to the given element. Also
-     * initializes its attributes by calling synchronizeToDesign. As a result of
-     * the synchronizeToDesign() call, this method creates the entire subtree
-     * rooted at the returned Node.
+     * initializes its attributes by calling writeDesign. As a result of the
+     * writeDesign() call, this method creates the entire subtree rooted at the
+     * returned Node.
      * 
      * @param childComponent
      *            The component with state that is synchronized in to the node
@@ -353,9 +353,9 @@ public class DesignContext implements Serializable {
         String className = classNameToElementName(componentClass
                 .getSimpleName());
         Element newElement = doc.createElement(prefix + className);
-        childComponent.synchronizeToDesign(newElement, this);
+        childComponent.writeDesign(newElement, this);
         // Handle the local id. Global id and caption should have been taken
-        // care of by synchronizeToDesign.
+        // care of by writeDesign.
         String localId = componentToLocalId.get(childComponent);
         if (localId != null) {
             newElement.attr(LOCAL_ID_ATTRIBUTE, localId);
@@ -391,8 +391,8 @@ public class DesignContext implements Serializable {
 
     /**
      * Creates a Component corresponding to the given html node. Also calls
-     * synchronizeFromDesign() for the created node, in effect creating the
-     * entire component hierarchy rooted at the returned component.
+     * readDesign() for the created node, in effect creating the entire
+     * component hierarchy rooted at the returned component.
      * 
      * @param componentDesign
      *            The html tree node containing the description of the component
@@ -408,11 +408,10 @@ public class DesignContext implements Serializable {
     }
 
     /**
-     * Calls synchronizeFromDesign() for the given component and passes the
-     * given component design as a parameter. This creates the entire component
-     * hierarchy rooted at the given component. Also registers the componentid,
-     * localId and caption of the given component and all its children to the
-     * context
+     * Calls readDesign() for the given component and passes the given component
+     * design as a parameter. This creates the entire component hierarchy rooted
+     * at the given component. Also registers the componentid, localId and
+     * caption of the given component and all its children to the context
      * 
      * 
      * @param component
@@ -422,7 +421,7 @@ public class DesignContext implements Serializable {
      */
     public void synchronizeAndRegister(Component component,
             Element componentDesign) {
-        component.synchronizeFromDesign(componentDesign, this);
+        component.readDesign(componentDesign, this);
         // Get the ids and the caption of the component and store them in the
         // maps of this design context.
         org.jsoup.nodes.Attributes attributes = componentDesign.attributes();

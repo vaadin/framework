@@ -34,7 +34,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * @since
  * @author Vaadin Ltd
  */
-public class TestSynchronizeFromDesign extends TestCase {
+public class TestReadDesign extends TestCase {
 
     private TabSheet sheet;
 
@@ -68,8 +68,7 @@ public class TestSynchronizeFromDesign extends TestCase {
 
     public void testSelectedComponent() {
         TabSheet tabSheet = new TabSheet();
-        tabSheet.synchronizeFromDesign(createFirstTabSelectedDesign(),
-                new DesignContext());
+        tabSheet.readDesign(createFirstTabSelectedDesign(), new DesignContext());
         assertEquals(tabSheet.getTab(0).getComponent(),
                 tabSheet.getSelectedTab());
     }
@@ -86,7 +85,7 @@ public class TestSynchronizeFromDesign extends TestCase {
         tabSheet.addComponent(new Label("tab2"));
         DesignContext ctx = new DesignContext();
         Element design = createDesign();
-        tabSheet.synchronizeFromDesign(design, ctx);
+        tabSheet.readDesign(design, ctx);
         return tabSheet;
     }
 

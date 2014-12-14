@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.server.component.textarea;
+package com.vaadin.tests.server.component.abstracttextfield;
 
 import junit.framework.TestCase;
 
@@ -22,15 +22,17 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
 import com.vaadin.ui.AbstractTextField;
-import com.vaadin.ui.TextArea;
+import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
- * Test case for writing the value of the TextField to design
+ * Test case for writing the attributes of the AbstractTextField to design
  * 
  * @author Vaadin Ltd
  */
-public class TestSynchronizeToDesign extends TestCase {
+public class TestWriteDesign extends TestCase {
+
     private DesignContext ctx;
 
     @Override
@@ -39,22 +41,33 @@ public class TestSynchronizeToDesign extends TestCase {
         ctx = new DesignContext();
     }
 
-    public void testSynchronizeValue() {
+    public void testSynchronizetestAttributes() {
         Element design = createDesign();
         AbstractTextField component = getComponent();
-        component.setValue("test value");
-        component.synchronizeToDesign(design, ctx);
-        assertEquals("test value", design.html());
-        assertFalse(design.hasAttr("value"));
+        component.setNullRepresentation("this-is-null");
+        component.setNullSettingAllowed(true);
+        component.setMaxLength(5);
+        component.setColumns(3);
+        component.setInputPrompt("input");
+        component.setTextChangeEventMode(TextChangeEventMode.EAGER);
+        component.setTextChangeTimeout(100);
+        component.writeDesign(design, ctx);
+        assertEquals("this-is-null", design.attr("null-representation"));
+        assertEquals("true", design.attr("null-setting-allowed"));
+        assertEquals("5", design.attr("maxlength"));
+        assertEquals("3", design.attr("columns"));
+        assertEquals("input", design.attr("input-prompt"));
+        assertEquals("EAGER", design.attr("text-change-event-mode"));
+        assertEquals("100", design.attr("text-change-timeout"));
     }
 
     private AbstractTextField getComponent() {
-        return new TextArea();
+        return new TextField();
     }
 
     private Element createDesign() {
         Attributes attr = new Attributes();
-        return new Element(Tag.valueOf("v-text-area"), "", attr);
+        return new Element(Tag.valueOf("v-text-field"), "", attr);
     }
 
 }

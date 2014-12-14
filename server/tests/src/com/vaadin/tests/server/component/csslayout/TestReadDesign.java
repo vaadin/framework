@@ -21,58 +21,54 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
- * Test case for writing CssLayout to design
+ * Test case for reading CssLayout from design
  * 
  * @author Vaadin Ltd
  */
-public class TestSynchronizeToDesign extends TestCase {
+public class TestReadDesign extends TestCase {
 
-    public void testSynchronizeEmptyLayout() {
-        CssLayout layout = new CssLayout();
-        layout.setCaption("changed-caption");
-        Element design = createDesign();
-        layout.synchronizeToDesign(design, createDesignContext());
-        assertEquals(0, design.childNodes().size());
-        assertEquals("changed-caption", design.attr("caption"));
+    public void testChildCount() {
+        CssLayout root = createLayout();
+        assertEquals(2, root.getComponentCount());
     }
 
-    public void testSynchronizeLayoutWithChildren() {
-        CssLayout layout = new CssLayout();
-        layout.addComponent(new Label("test-label"));
-        layout.getComponent(0).setCaption("test-caption");
-        layout.addComponent(new Label("test-label-2"));
+    public void testAttributes() {
+        CssLayout root = createLayout();
+        assertEquals("test-layout", root.getCaption());
+        assertEquals("test-label", root.getComponent(0).getCaption());
+        assertEquals("test-button", root.getComponent(1).getCaption());
+    }
+
+    private CssLayout createLayout() {
+        DesignContext ctx = new DesignContext();
         Element design = createDesign();
-        layout.synchronizeToDesign(design, createDesignContext());
-        assertEquals(2, design.childNodes().size());
-        assertEquals("v-label", ((Element) design.childNode(0)).tagName());
-        assertEquals("test-caption", design.childNode(0).attr("caption"));
+        Component child = ctx.createChild(design);
+        return (CssLayout) child;
     }
 
     private Element createDesign() {
-        // make sure that the design node has old content that should be removed
+
         Attributes rootAttributes = new Attributes();
         rootAttributes.put("caption", "test-layout");
-        Element node = new Element(Tag.valueOf("v-vertical-layout"), "",
+        Element node = new Element(Tag.valueOf("v-css-layout"), "",
                 rootAttributes);
+
         Attributes firstChildAttributes = new Attributes();
         firstChildAttributes.put("caption", "test-label");
         Element firstChild = new Element(Tag.valueOf("v-label"), "",
                 firstChildAttributes);
         node.appendChild(firstChild);
 
+        Attributes secondChildAttributes = new Attributes();
         Element secondChild = new Element(Tag.valueOf("v-button"), "",
-                new Attributes());
+                secondChildAttributes);
         secondChild.html("test-button");
         node.appendChild(secondChild);
         return node;
-    }
-
-    private DesignContext createDesignContext() {
-        return new DesignContext();
     }
 }

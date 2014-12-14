@@ -914,13 +914,11 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.Component#synchronizeFromDesign(org.jsoup.nodes.Element,
+     * @see com.vaadin.ui.Component#readDesign(org.jsoup.nodes.Element,
      * com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeFromDesign(Element design,
-            DesignContext designContext) {
+    public void readDesign(Element design, DesignContext designContext) {
         Attributes attr = design.attributes();
         AbstractComponent def = designContext.getDefaultInstance(this
                 .getClass());
@@ -1190,8 +1188,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Returns a collection of attributes that should not be handled by the
      * basic implementation of the {@link synhronizeFromDesign} and
-     * {@link synchronizeToDesign} methods. Typically these are handled in a
-     * custom way in the overridden versions of the above methods
+     * {@link writeDesign} methods. Typically these are handled in a custom way
+     * in the overridden versions of the above methods
      * 
      * @return the collection of attributes that are not handled by the basic
      *         implementation
@@ -1208,11 +1206,11 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.Component#synchronizeToDesign(org.jsoup.nodes.Element,
+     * @see com.vaadin.ui.Component#writeDesign(org.jsoup.nodes.Element,
      * com.vaadin.ui.declarative.DesignContext)
      */
     @Override
-    public void synchronizeToDesign(Element design, DesignContext designContext) {
+    public void writeDesign(Element design, DesignContext designContext) {
         // clear element contents
         DesignAttributeHandler.clearElement(design);
         AbstractComponent def = designContext.getDefaultInstance(this
