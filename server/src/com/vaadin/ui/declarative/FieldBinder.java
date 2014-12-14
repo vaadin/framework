@@ -39,8 +39,8 @@ import com.vaadin.util.ReflectTools;
  */
 public class FieldBinder implements Serializable {
 
-    // the design class instance (the instance containing the bound fields)
-    private Component bindTarget;
+    // the instance containing the bound fields
+    private Object bindTarget;
     // mapping between field names and Fields
     private Map<String, Field> fieldMap = new HashMap<String, Field>();
 
@@ -48,16 +48,31 @@ public class FieldBinder implements Serializable {
      * Creates a new instance of LayoutFieldBinder
      * 
      * @param design
-     *            the design class instance containing the bound fields
+     *            the design class instance containing the fields to bind
      * @throws IntrospectionException
      *             if the given design class can not be introspected
      */
-    public FieldBinder(Component design) throws IntrospectionException {
+    public FieldBinder(Object design) throws IntrospectionException {
+        this(design, design.getClass());
+    }
+
+    /**
+     * Creates a new instance of LayoutFieldBinder
+     * 
+     * @param design
+     *            the instance containing the fields
+     * @param classWithFields
+     *            the class which defines the fields to bind
+     * @throws IntrospectionException
+     *             if the given design class can not be introspected
+     */
+    public FieldBinder(Object design, Class<?> classWithFields)
+            throws IntrospectionException {
         if (design == null) {
             throw new IllegalArgumentException("The design must not be null");
         }
         bindTarget = design;
-        resolveFields();
+        resolveFields(classWithFields);
     }
 
     /**
@@ -91,8 +106,8 @@ public class FieldBinder implements Serializable {
     /**
      * Resolves the fields of the design class instance
      */
-    private void resolveFields() {
-        for (Field memberField : getFieldsInDeclareOrder(bindTarget.getClass())) {
+    private void resolveFields(Class<?> classWithFields) {
+        for (Field memberField : getFieldsInDeclareOrder(classWithFields)) {
             if (Component.class.isAssignableFrom(memberField.getType())) {
                 fieldMap.put(memberField.getName().toLowerCase(Locale.ENGLISH),
                         memberField);

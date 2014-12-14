@@ -509,7 +509,7 @@ public class DesignContext implements Serializable {
                                 Locale.ENGLISH) + tagName.substring(i + 2);
 
             } else {
-                // Ends with "-", WTF?
+                // Ends with "-"
                 System.out.println("A tag name should not end with '-'.");
             }
         }

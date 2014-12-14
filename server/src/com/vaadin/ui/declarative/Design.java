@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.util.Collection;
 
 import org.jsoup.Jsoup;
@@ -32,6 +33,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
+import com.vaadin.annotations.DesignRoot;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreatedEvent;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
@@ -128,14 +130,43 @@ public class Design implements Serializable {
      * @param doc
      *            the html tree
      * @param componentRoot
-     *            optional component root instance with some member fields. The
-     *            type must match the type of the root element in the design.
-     *            The member fields whose type is assignable from
-     *            {@link Component} are set when parsing the component tree
-     *
+     *            optional component root instance. The type must match the type
+     *            of the root element in the design. Any member fields whose
+     *            type is assignable from {@link Component} are bound to fields
+     *            in the design based on id/local id/caption
      */
     private static DesignContext designToComponentTree(Document doc,
             Component componentRoot) {
+        if (componentRoot == null) {
+            return designToComponentTree(doc, null, null);
+        } else {
+            return designToComponentTree(doc, componentRoot,
+                    componentRoot.getClass());
+        }
+
+    }
+
+    /**
+     * Constructs a component hierarchy from the design specified as an html
+     * tree.
+     * 
+     * If a component root is given, the component instances created during
+     * synchronizing the design are assigned to its member fields based on their
+     * id, local id, and caption
+     *
+     * @param doc
+     *            the html tree
+     * @param componentRoot
+     *            optional component root instance. The type must match the type
+     *            of the root element in the design.
+     * @param classWithFields
+     *            a class (componentRoot class or a super class) with some
+     *            member fields. The member fields whose type is assignable from
+     *            {@link Component} are bound to fields in the design based on
+     *            id/local id/caption
+     */
+    private static DesignContext designToComponentTree(Document doc,
+            Component componentRoot, Class<? extends Component> classWithFields) {
         DesignContext designContext = new DesignContext(doc);
         designContext.getPrefixes(doc);
         // No special handling for a document without a body element - should be
@@ -151,20 +182,19 @@ public class Design implements Serializable {
         if (componentRoot != null) {
             // user has specified root instance that may have member fields that
             // should be bound
-            FieldBinder binder = null;
+            final FieldBinder binder;
             try {
-                binder = new FieldBinder(componentRoot);
+                binder = new FieldBinder(componentRoot, classWithFields);
             } catch (IntrospectionException e) {
                 throw new DesignException(
                         "Could not bind fields of the root component", e);
             }
-            final FieldBinder fBinder = binder;
             // create listener for component creations that binds the created
             // components to the componentRoot instance fields
             ComponentCreationListener creationListener = new ComponentCreationListener() {
                 @Override
                 public void componentCreated(ComponentCreatedEvent event) {
-                    fBinder.bindField(event.getComponent(), event.getLocalId());
+                    binder.bindField(event.getComponent(), event.getLocalId());
                 }
             };
             designContext.addComponentCreationListener(creationListener);
@@ -233,6 +263,94 @@ public class Design implements Serializable {
     }
 
     /**
+     * Loads a design for the given root component.
+     * <p>
+     * This methods assumes that the component class (or a super class) has been
+     * marked with an {@link DesignRoot} annotation and will either use the
+     * value from the annotation to locate the design file, or will fall back to
+     * using a design with the same same as the annotated class file (with an
+     * .html extension)
+     * <p>
+     * Any {@link Component} type fields in the root component which are not
+     * assigned (i.e. are null) are mapped to corresponding components in the
+     * design. Matching is done based on field name in the component class and
+     * id/local id/caption in the design file.
+     * <p>
+     * The type of the root component must match the root element in the design
+     * 
+     * @param rootComponent
+     *            The root component of the layout
+     * @return The design context used in the load operation
+     * @throws DesignException
+     *             If the design could not be loaded
+     */
+    public static DesignContext read(Component rootComponent)
+            throws DesignException {
+        // Try to find an @DesignRoot annotation on the class or any parent
+        // class
+        Class<? extends Component> annotatedClass = findClassWithAnnotation(
+                rootComponent.getClass(), DesignRoot.class);
+        if (annotatedClass == null) {
+            throw new IllegalArgumentException(
+                    "The class "
+                            + rootComponent.getClass().getName()
+                            + " or any of its superclasses do not have an @DesignRoot annotation");
+        }
+
+        DesignRoot designAnnotation = annotatedClass
+                .getAnnotation(DesignRoot.class);
+        String filename = designAnnotation.value();
+        if (filename.equals("")) {
+            // No value, assume the html file is named as the class
+            filename = annotatedClass.getSimpleName() + ".html";
+        }
+
+        InputStream stream = annotatedClass.getResourceAsStream(filename);
+        if (stream == null) {
+            throw new DesignException("Unable to find design file " + filename
+                    + " in " + annotatedClass.getPackage().getName());
+        }
+
+        Document doc = parse(stream);
+        DesignContext context = designToComponentTree(doc, rootComponent,
+                annotatedClass);
+
+        return context;
+
+    }
+
+    /**
+     * Find the first class with the given annotation, starting the search from
+     * the given class and moving upwards in the class hierarchy.
+     * 
+     * @param componentClass
+     *            the class to check
+     * @param annotationClass
+     *            the annotation to look for
+     * @return the first class with the given annotation or null if no class
+     *         with the annotation was found
+     */
+    private static Class<? extends Component> findClassWithAnnotation(
+            Class<? extends Component> componentClass,
+            Class<? extends Annotation> annotationClass) {
+        if (componentClass == null) {
+            return null;
+        }
+
+        if (componentClass.isAnnotationPresent(annotationClass)) {
+            return componentClass;
+        }
+
+        Class<?> superClass = componentClass.getSuperclass();
+        if (!Component.class.isAssignableFrom(superClass)) {
+            return null;
+        }
+
+        return findClassWithAnnotation((Class<? extends Component>) superClass,
+                annotationClass);
+    }
+
+    /**
      * Loads a design from the given file name using the given root component.
      * <p>
      * Any {@link Component} type fields in the root component which are not
@@ -246,7 +364,7 @@ public class Design implements Serializable {
      *            The file name to load. Loaded from the same package as the
      *            root component
      * @param rootComponent
-     *            The root component of the layout.
+     *            The root component of the layout
      * @return The design context used in the load operation
      * @throws DesignException
      *             If the design could not be loaded
@@ -276,7 +394,7 @@ public class Design implements Serializable {
      * @param stream
      *            The stream to read the design from
      * @param rootComponent
-     *            The root component of the layout.
+     *            The root component of the layout
      * @return The design context used in the load operation
      * @throws DesignException
      *             If the design could not be loaded
