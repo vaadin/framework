@@ -689,8 +689,10 @@ public class Button extends AbstractComponent implements
         if (plain == null || !plain) {
             setHtmlContentAllowed(true);
         }
-        setIconAlternateText(DesignAttributeHandler.readAttribute("icon-alt",
-                attr, String.class));
+        if (attr.hasKey("icon-alt")) {
+            setIconAlternateText(DesignAttributeHandler.readAttribute(
+                    "icon-alt", attr, String.class));
+        }
         // click-shortcut
         removeClickShortcut();
         ShortcutAction action = DesignAttributeHandler.readAttribute(
@@ -712,6 +714,7 @@ public class Button extends AbstractComponent implements
         result.add(DESIGN_ATTR_PLAIN_TEXT);
         result.add("caption");
         result.add("icon-alt");
+        result.add("icon-alternate-text");
         result.add("click-shortcut");
         result.add("html-content-allowed");
         return result;
