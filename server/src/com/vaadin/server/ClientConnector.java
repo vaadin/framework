@@ -26,6 +26,7 @@ import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.ui.UI;
 import com.vaadin.util.ReflectTools;
+
 import elemental.json.JsonObject;
 
 /**
@@ -277,9 +278,8 @@ public interface ClientConnector extends Connector {
      * .
      * 
      * @return a JSON object with the encoded connector state
-     *             if the state can not be encoded
      */
-    public JsonObject encodeState() ;
+    public JsonObject encodeState();
 
     /**
      * Handle a request directed to this connector. This can be used by
