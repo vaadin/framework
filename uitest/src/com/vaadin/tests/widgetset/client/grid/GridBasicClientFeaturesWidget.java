@@ -46,7 +46,7 @@ import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widget.escalator.FlyweightCell;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
-import com.vaadin.client.widget.grid.EditorRowHandler;
+import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
 import com.vaadin.client.widget.grid.datasources.ListDataSource;
@@ -92,19 +92,19 @@ public class GridBasicClientFeaturesWidget extends
         TEXT_RENDERER, HTML_RENDERER, NUMBER_RENDERER, DATE_RENDERER;
     }
 
-    private class TestEditorRowHandler implements EditorRowHandler<List<Data>> {
+    private class TestEditorHandler implements EditorHandler<List<Data>> {
 
         private Map<Grid.Column<?, ?>, TextBox> widgets = new HashMap<Grid.Column<?, ?>, TextBox>();
 
         private Label log = new Label();
 
         {
-            log.addStyleName("editor-row-log");
+            log.addStyleName("grid-editor-log");
             addSouth(log, 20);
         }
 
         @Override
-        public void bind(EditorRowRequest<List<Data>> request) {
+        public void bind(EditorRequest<List<Data>> request) {
             List<Data> rowData = ds.getRow(request.getRowIndex());
 
             boolean hasSelectionColumn = !(grid.getSelectionModel() instanceof None);
@@ -117,13 +117,13 @@ public class GridBasicClientFeaturesWidget extends
         }
 
         @Override
-        public void cancel(EditorRowRequest<List<Data>> request) {
+        public void cancel(EditorRequest<List<Data>> request) {
             log.setText("Row " + request.getRowIndex() + " edit cancelled");
             request.invokeCallback();
         }
 
         @Override
-        public void save(EditorRowRequest<List<Data>> request) {
+        public void save(EditorRequest<List<Data>> request) {
             log.setText("Row " + request.getRowIndex() + " edit committed");
             List<Data> rowData = ds.getRow(request.getRowIndex());
 
@@ -252,7 +252,7 @@ public class GridBasicClientFeaturesWidget extends
         grid.setDataSource(ds);
         grid.addSelectAllHandler(ds.getSelectAllHandler());
         grid.setSelectionMode(SelectionMode.NONE);
-        grid.setEditorRowHandler(new TestEditorRowHandler());
+        grid.setEditorHandler(new TestEditorHandler());
 
         sorter = new ListSorter<List<Data>>(grid);
 
@@ -377,7 +377,7 @@ public class GridBasicClientFeaturesWidget extends
         createColumnsMenu();
         createHeaderMenu();
         createFooterMenu();
-        createEditorRowMenu();
+        createEditorMenu();
         createInternalsMenu();
         createDataSourceMenu();
 
@@ -906,41 +906,41 @@ public class GridBasicClientFeaturesWidget extends
         }, menuPath);
     }
 
-    private void createEditorRowMenu() {
+    private void createEditorMenu() {
         addMenuCommand("Enabled", new ScheduledCommand() {
             @Override
             public void execute() {
-                grid.setEditorRowEnabled(!grid.isEditorRowEnabled());
+                grid.setEditorEnabled(!grid.isEditorEnabled());
             }
-        }, "Component", "Editor row");
+        }, "Component", "Editor");
 
         addMenuCommand("Edit row 5", new ScheduledCommand() {
             @Override
             public void execute() {
                 grid.editRow(5);
             }
-        }, "Component", "Editor row");
+        }, "Component", "Editor");
 
         addMenuCommand("Edit row 100", new ScheduledCommand() {
             @Override
             public void execute() {
                 grid.editRow(100);
             }
-        }, "Component", "Editor row");
+        }, "Component", "Editor");
 
         addMenuCommand("Save", new ScheduledCommand() {
             @Override
             public void execute() {
-                grid.saveEditorRow();
+                grid.saveEditor();
             }
-        }, "Component", "Editor row");
+        }, "Component", "Editor");
 
         addMenuCommand("Cancel edit", new ScheduledCommand() {
             @Override
             public void execute() {
-                grid.cancelEditorRow();
+                grid.cancelEditor();
             }
-        }, "Component", "Editor row");
+        }, "Component", "Editor");
 
     }
 

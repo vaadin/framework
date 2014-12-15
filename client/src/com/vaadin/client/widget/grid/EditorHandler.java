@@ -19,9 +19,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.widgets.Grid;
 
 /**
- * An interface for binding widgets and data to the editor row. Used by the
- * editor row to support different row types, data sources and custom data
- * binding mechanisms.
+ * An interface for binding widgets and data to the grid row editor. Used by the
+ * editor to support different row types, data sources and custom data binding
+ * mechanisms.
  * 
  * @param <T>
  *            the row data type
@@ -29,7 +29,7 @@ import com.vaadin.client.widgets.Grid;
  * @since
  * @author Vaadin Ltd
  */
-public interface EditorRowHandler<T> {
+public interface EditorHandler<T> {
 
     /**
      * A request class for handling asynchronous data binding. The request is
@@ -38,14 +38,14 @@ public interface EditorRowHandler<T> {
      * <p>
      * TODO Should have a mechanism for signaling a failed request to the caller
      */
-    public static class EditorRowRequest<T> {
+    public static class EditorRequest<T> {
 
         /**
          * A callback interface used to notify the caller about completed
          * requests.
          */
         public interface RequestCallback<T> {
-            public void onResponse(EditorRowRequest<T> request);
+            public void onResponse(EditorRequest<T> request);
         }
 
         private Grid<T> grid;
@@ -53,7 +53,7 @@ public interface EditorRowHandler<T> {
         private RequestCallback<T> callback;
 
         /**
-         * Creates a new editor row request.
+         * Creates a new editor request.
          * 
          * @param rowIndex
          *            the index of the edited row
@@ -61,7 +61,7 @@ public interface EditorRowHandler<T> {
          *            the callback invoked when the request is ready, or null if
          *            no need to call back
          */
-        public EditorRowRequest(Grid<T> grid, int rowIndex,
+        public EditorRequest(Grid<T> grid, int rowIndex,
                 RequestCallback<T> callback) {
             this.grid = grid;
             this.rowIndex = rowIndex;
@@ -87,7 +87,7 @@ public interface EditorRowHandler<T> {
         }
 
         /**
-         * Returns the grid instance related to this editor row request.
+         * Returns the grid instance related to this editor request.
          * 
          * @return the grid instance
          */
@@ -96,7 +96,7 @@ public interface EditorRowHandler<T> {
         }
 
         /**
-         * Returns the editor row widget used to edit the values of the given
+         * Returns the editor widget used to edit the values of the given
          * column.
          * 
          * @param column
@@ -104,7 +104,7 @@ public interface EditorRowHandler<T> {
          * @return the widget related to the column
          */
         public Widget getWidget(Grid.Column<?, T> column) {
-            Widget w = grid.getEditorRowWidget(column);
+            Widget w = grid.getEditorWidget(column);
             assert w != null;
             return w;
         }
@@ -120,10 +120,10 @@ public interface EditorRowHandler<T> {
     }
 
     /**
-     * Binds row data to the editor row widgets. Called by the editor row when
-     * it is opened for editing.
+     * Binds row data to the editor widgets. Called by the editor when it is
+     * opened for editing.
      * <p>
-     * An implementation must call {@link EditorRowRequest#invokeCallback()
+     * An implementation must call {@link EditorRequest#invokeCallback()
      * request.invokeCallback()} when the binding is complete (possibly
      * asynchronously).
      * 
@@ -132,31 +132,31 @@ public interface EditorRowHandler<T> {
      * 
      * @see Grid#editRow(int)
      */
-    public void bind(EditorRowRequest<T> request);
+    public void bind(EditorRequest<T> request);
 
     /**
-     * Cancels a currently active edit if any. Called by the editor row when
+     * Cancels a currently active edit if any. Called by the grid editor when
      * editing is cancelled.
      * <p>
-     * An implementation must call {@link EditorRowRequest#invokeCallback()
+     * An implementation must call {@link EditorRequest#invokeCallback()
      * request.invokeCallback()} when the cancel is done (possibly
      * asynchronously).
      * 
      * @param request
      *            the cancel request
      * 
-     * @see Grid#cancelEditorRow()
+     * @see Grid#cancelEditor()
      */
-    public void cancel(EditorRowRequest<T> request);
+    public void cancel(EditorRequest<T> request);
 
     /**
      * Saves changes in the currently active edit to the data source. Called by
-     * the editor row when changes are saved.
+     * the grid editor when changes are saved.
      * 
      * @param request
      *            the save request
      */
-    public void save(EditorRowRequest<T> request);
+    public void save(EditorRequest<T> request);
 
     /**
      * Returns a widget instance that is used to edit the values in the given

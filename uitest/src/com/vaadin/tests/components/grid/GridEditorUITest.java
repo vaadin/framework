@@ -30,29 +30,29 @@ import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")
-public class EditorRowUITest extends MultiBrowserTest {
+public class GridEditorUITest extends MultiBrowserTest {
 
     @Test
-    public void testEditorRow() {
+    public void testEditor() {
         setDebug(true);
         openTestURL();
 
         assertFalse("Sanity check",
                 isElementPresent(PasswordFieldElement.class));
 
-        openEditorRow(5);
+        openEditor(5);
         new Actions(getDriver()).sendKeys(Keys.ESCAPE).perform();
 
-        openEditorRow(10);
+        openEditor(10);
 
-        assertTrue("Edtor row should be opened with a password field",
+        assertTrue("Edtor should be opened with a password field",
                 isElementPresent(PasswordFieldElement.class));
 
         assertFalse("Notification was present",
                 isElementPresent(NotificationElement.class));
     }
 
-    private void openEditorRow(int rowIndex) {
+    private void openEditor(int rowIndex) {
         GridElement grid = $(GridElement.class).first();
 
         GridCellElement cell = grid.getCell(rowIndex, 1);

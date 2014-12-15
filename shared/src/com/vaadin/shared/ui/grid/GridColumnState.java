@@ -53,7 +53,7 @@ public class GridColumnState implements Serializable {
 
     /**
      * The connector for the field used to edit cells in this column when the
-     * editor row is active.
+     * editor interface is active.
      */
     public Connector editorConnector;
 

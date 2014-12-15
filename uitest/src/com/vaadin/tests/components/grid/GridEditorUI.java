@@ -22,7 +22,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 
-public class EditorRowUI extends AbstractTestUI {
+public class GridEditorUI extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -33,15 +33,15 @@ public class EditorRowUI extends AbstractTestUI {
         // Don't use address since there's no converter
         grid.removeColumn("address");
 
-        grid.setEditorRowEnabled(true);
+        grid.setEditorEnabled(true);
 
-        grid.setEditorRowField("firstName", new PasswordField());
+        grid.setEditorField("firstName", new PasswordField());
 
         TextField lastNameField = (TextField) grid
-                .getEditorRowField("lastName");
+                .getEditorField("lastName");
         lastNameField.setMaxLength(50);
 
-        grid.getEditorRowField("phoneNumber").setReadOnly(true);
+        grid.getEditorField("phoneNumber").setReadOnly(true);
 
         addComponent(grid);
     }

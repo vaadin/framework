@@ -34,34 +34,34 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 
-public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
+public class GridEditorClientTest extends GridBasicClientFeaturesTest {
 
     @Before
     public void setUp() {
         openTestURL();
-        selectMenuPath("Component", "Editor row", "Enabled");
+        selectMenuPath("Component", "Editor", "Enabled");
     }
 
     @Test
     public void testProgrammaticOpeningClosing() {
-        selectMenuPath("Component", "Editor row", "Edit row 5");
-        assertNotNull(getEditorRow());
+        selectMenuPath("Component", "Editor", "Edit row 5");
+        assertNotNull(getEditor());
 
-        selectMenuPath("Component", "Editor row", "Cancel edit");
-        assertNull(getEditorRow());
+        selectMenuPath("Component", "Editor", "Cancel edit");
+        assertNull(getEditor());
         assertEquals("Row 5 edit cancelled",
-                findElement(By.className("editor-row-log")).getText());
+                findElement(By.className("grid-editor-log")).getText());
     }
 
     @Test
     public void testProgrammaticOpeningWithScroll() {
-        selectMenuPath("Component", "Editor row", "Edit row 100");
-        assertNotNull(getEditorRow());
+        selectMenuPath("Component", "Editor", "Edit row 100");
+        assertNotNull(getEditor());
     }
 
     @Test(expected = NoSuchElementException.class)
     public void testVerticalScrollLocking() {
-        selectMenuPath("Component", "Editor row", "Edit row 5");
+        selectMenuPath("Component", "Editor", "Edit row 5");
         getGridElement().getCell(200, 0);
     }
 
@@ -72,27 +72,27 @@ public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
 
         new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
 
-        assertNotNull(getEditorRow());
+        assertNotNull(getEditor());
 
         new Actions(getDriver()).sendKeys(Keys.ESCAPE).perform();
-        assertNull(getEditorRow());
+        assertNull(getEditor());
         assertEquals("Row 4 edit cancelled",
-                findElement(By.className("editor-row-log")).getText());
+                findElement(By.className("grid-editor-log")).getText());
 
-        // Disable editor row
-        selectMenuPath("Component", "Editor row", "Enabled");
+        // Disable editor
+        selectMenuPath("Component", "Editor", "Enabled");
 
         getGridElement().getCell(5, 0).click();
         new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
-        assertNull(getEditorRow());
+        assertNull(getEditor());
     }
 
     @Test
     public void testWidgetBinding() throws Exception {
-        selectMenuPath("Component", "Editor row", "Edit row 100");
-        WebElement editorRow = getEditorRow();
+        selectMenuPath("Component", "Editor", "Edit row 100");
+        WebElement editor = getEditor();
 
-        List<WebElement> widgets = editorRow.findElements(By
+        List<WebElement> widgets = editor.findElements(By
                 .className("gwt-TextBox"));
 
         assertEquals(GridBasicFeatures.COLUMNS, widgets.size());
@@ -108,10 +108,10 @@ public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
     @Test
     public void testWithSelectionColumn() throws Exception {
         selectMenuPath("Component", "State", "Selection mode", "multi");
-        selectMenuPath("Component", "State", "Editor row", "Edit row 5");
+        selectMenuPath("Component", "State", "Editor", "Edit row 5");
 
-        WebElement editorRow = getEditorRow();
-        List<WebElement> selectorDivs = editorRow.findElements(By
+        WebElement editor = getEditor();
+        List<WebElement> selectorDivs = editor.findElements(By
                 .cssSelector("div"));
 
         assertTrue("selector column cell should've been empty", selectorDivs
@@ -122,15 +122,15 @@ public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void testSave() {
-        selectMenuPath("Component", "Editor row", "Edit row 100");
+        selectMenuPath("Component", "Editor", "Edit row 100");
 
-        WebElement textField = getEditorRow().findElements(
+        WebElement textField = getEditor().findElements(
                 By.className("gwt-TextBox")).get(0);
 
         textField.clear();
         textField.sendKeys("Changed");
 
-        WebElement saveButton = getEditorRow().findElement(
+        WebElement saveButton = getEditor().findElement(
                 By.className("v-editor-row-save"));
 
         saveButton.click();
@@ -140,15 +140,15 @@ public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void testProgrammaticSave() {
-        selectMenuPath("Component", "Editor row", "Edit row 100");
+        selectMenuPath("Component", "Editor", "Edit row 100");
 
-        WebElement textField = getEditorRow().findElements(
+        WebElement textField = getEditor().findElements(
                 By.className("gwt-TextBox")).get(0);
 
         textField.clear();
         textField.sendKeys("Changed");
 
-        selectMenuPath("Component", "Editor row", "Save");
+        selectMenuPath("Component", "Editor", "Save");
 
         assertEquals("Changed", getGridElement().getCell(100, 0).getText());
     }

@@ -2,7 +2,7 @@ package com.vaadin.tests.components.grid.basicfeatures.client;
 
 import org.junit.Before;
 
-public class GridClientCompositeEditorRowTest extends GridEditorRowClientTest {
+public class GridClientCompositeEditorTest extends GridEditorClientTest {
 
     @Override
     @Before

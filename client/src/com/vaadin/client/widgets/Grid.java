@@ -78,9 +78,9 @@ import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
 import com.vaadin.client.widget.grid.DataAvailableEvent;
 import com.vaadin.client.widget.grid.DataAvailableHandler;
-import com.vaadin.client.widget.grid.EditorRowHandler;
-import com.vaadin.client.widget.grid.EditorRowHandler.EditorRowRequest;
-import com.vaadin.client.widget.grid.EditorRowHandler.EditorRowRequest.RequestCallback;
+import com.vaadin.client.widget.grid.EditorHandler;
+import com.vaadin.client.widget.grid.EditorHandler.EditorRequest;
+import com.vaadin.client.widget.grid.EditorHandler.EditorRequest.RequestCallback;
 import com.vaadin.client.widget.grid.GridUtil;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
@@ -931,7 +931,7 @@ public class Grid<T> extends ResizeComposite implements
      * An editor UI for Grid rows. A single Grid row at a time can be opened for
      * editing.
      */
-    protected static class EditorRow<T> {
+    protected static class Editor<T> {
 
         public static final int KEYCODE_SHOW = KeyCodes.KEY_ENTER;
         public static final int KEYCODE_HIDE = KeyCodes.KEY_ESCAPE;
@@ -941,7 +941,7 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         private Grid<T> grid;
-        private EditorRowHandler<T> handler;
+        private EditorHandler<T> handler;
 
         private DivElement editorOverlay = DivElement.as(DOM.createDiv());
 
@@ -965,18 +965,18 @@ public class Grid<T> extends ResizeComposite implements
          *            the index of the row to be edited
          * 
          * @throws IllegalStateException
-         *             if this editor row is not enabled
+         *             if this editor is not enabled
          * @throws IllegalStateException
-         *             if this editor row is already in edit mode
+         *             if this editor is already in edit mode
          */
         public void editRow(int rowIndex) {
             if (!enabled) {
                 throw new IllegalStateException(
-                        "Cannot edit row: EditorRow is not enabled");
+                        "Cannot edit row: editor is not enabled");
             }
             if (state != State.INACTIVE) {
                 throw new IllegalStateException(
-                        "Cannot edit row: EditorRow already in edit mode");
+                        "Cannot edit row: editor already in edit mode");
             }
 
             this.rowIndex = rowIndex;
@@ -995,22 +995,22 @@ public class Grid<T> extends ResizeComposite implements
          * that are not {@link #save() saved} are lost.
          * 
          * @throws IllegalStateException
-         *             if this editor row is not enabled
+         *             if this editor is not enabled
          * @throws IllegalStateException
-         *             if this editor row is not in edit mode
+         *             if this editor is not in edit mode
          */
         public void cancel() {
             if (!enabled) {
                 throw new IllegalStateException(
-                        "Cannot cancel edit: EditorRow is not enabled");
+                        "Cannot cancel edit: editor is not enabled");
             }
             if (state == State.INACTIVE) {
                 throw new IllegalStateException(
-                        "Cannot cancel edit: EditorRow is not in edit mode");
+                        "Cannot cancel edit: editor is not in edit mode");
             }
             hideOverlay();
             grid.getEscalator().setScrollLocked(Direction.VERTICAL, false);
-            handler.cancel(new EditorRowRequest<T>(grid, rowIndex, null));
+            handler.cancel(new EditorRequest<T>(grid, rowIndex, null));
             state = State.INACTIVE;
         }
 
@@ -1018,26 +1018,26 @@ public class Grid<T> extends ResizeComposite implements
          * Saves any unsaved changes to the data source.
          * 
          * @throws IllegalStateException
-         *             if this editor row is not enabled
+         *             if this editor is not enabled
          * @throws IllegalStateException
-         *             if this editor row is not in edit mode
+         *             if this editor is not in edit mode
          */
         public void save() {
             if (!enabled) {
                 throw new IllegalStateException(
-                        "Cannot save: EditorRow is not enabled");
+                        "Cannot save: editor is not enabled");
             }
             if (state != State.ACTIVE) {
                 throw new IllegalStateException(
-                        "Cannot save: EditorRow is not in edit mode");
+                        "Cannot save: editor is not in edit mode");
             }
 
             state = State.SAVING;
 
-            handler.save(new EditorRowRequest<T>(grid, rowIndex,
+            handler.save(new EditorRequest<T>(grid, rowIndex,
                     new RequestCallback<T>() {
                         @Override
-                        public void onResponse(EditorRowRequest<T> request) {
+                        public void onResponse(EditorRequest<T> request) {
                             if (state == State.SAVING) {
                                 state = State.ACTIVE;
                             }
@@ -1047,28 +1047,28 @@ public class Grid<T> extends ResizeComposite implements
 
         /**
          * Returns the handler responsible for binding data and editor widgets
-         * to this editor row.
+         * to this editor.
          * 
-         * @return the editor row handler or null if not set
+         * @return the editor handler or null if not set
          */
-        public EditorRowHandler<T> getHandler() {
+        public EditorHandler<T> getHandler() {
             return handler;
         }
 
         /**
          * Sets the handler responsible for binding data and editor widgets to
-         * this editor row.
+         * this editor.
          * 
          * @param rowHandler
-         *            the new editor row handler
+         *            the new editor handler
          * 
          * @throws IllegalStateException
-         *             if this editor row is currently in edit mode
+         *             if this editor is currently in edit mode
          */
-        public void setHandler(EditorRowHandler<T> rowHandler) {
+        public void setHandler(EditorHandler<T> rowHandler) {
             if (state != State.INACTIVE) {
                 throw new IllegalStateException(
-                        "Cannot set EditorRowHandler: EditorRow is currently in edit mode");
+                        "Cannot set EditorHandler: editor is currently in edit mode");
             }
             handler = rowHandler;
         }
@@ -1078,7 +1078,7 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Sets the enabled state of this editor row.
+         * Sets the enabled state of this editor.
          * 
          * @param enabled
          *            true if enabled, false otherwise
@@ -1086,25 +1086,25 @@ public class Grid<T> extends ResizeComposite implements
          * @throws IllegalStateException
          *             if in edit mode and trying to disable
          * @throws IllegalStateException
-         *             if the editor row handler is not set
+         *             if the editor handler is not set
          */
         public void setEnabled(boolean enabled) {
             if (enabled == false && state != State.INACTIVE) {
                 throw new IllegalStateException(
-                        "Cannot disable: EditorRow is in edit mode");
+                        "Cannot disable: editor is in edit mode");
             } else if (enabled == true && getHandler() == null) {
                 throw new IllegalStateException(
-                        "Cannot enable: EditorRowHandler not set");
+                        "Cannot enable: EditorHandler not set");
             }
             this.enabled = enabled;
         }
 
         protected void show() {
             if (state == State.ACTIVATING) {
-                handler.bind(new EditorRowRequest<T>(grid, rowIndex,
+                handler.bind(new EditorRequest<T>(grid, rowIndex,
                         new RequestCallback<T>() {
                             @Override
-                            public void onResponse(EditorRowRequest<T> request) {
+                            public void onResponse(EditorRequest<T> request) {
                                 if (state == State.ACTIVATING) {
                                     state = State.ACTIVE;
                                     showOverlay(grid
@@ -1121,7 +1121,7 @@ public class Grid<T> extends ResizeComposite implements
 
         protected void setGrid(final Grid<T> grid) {
             assert grid != null : "Grid cannot be null";
-            assert this.grid == null : "Can only attach EditorRow to Grid once";
+            assert this.grid == null : "Can only attach editor to Grid once";
 
             this.grid = grid;
 
@@ -1145,11 +1145,11 @@ public class Grid<T> extends ResizeComposite implements
 
         /**
          * Returns the editor widget associated with the given column. If the
-         * editor row is not active, returns null.
+         * editor is not active, returns null.
          * 
          * @param column
          *            the column
-         * @return the widget if the editor row is open, null otherwise
+         * @return the widget if the editor is open, null otherwise
          */
         protected Widget getWidget(Column<?, T> column) {
             return columnToWidget.get(column);
@@ -1252,13 +1252,13 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Creates an editor row cell corresponding to the given table cell. The
+         * Creates an editor cell corresponding to the given table cell. The
          * returned element is empty and has the same dimensions and position as
          * the table cell.
          * 
          * @param td
          *            the table cell used as a reference
-         * @return an editor row cell corresponding to the given cell
+         * @return an editor cell corresponding to the given cell
          */
         protected Element createCell(TableCellElement td) {
             DivElement cell = DivElement.as(DOM.createDiv());
@@ -2402,7 +2402,7 @@ public class Grid<T> extends ResizeComposite implements
 
     private final UserSorter sorter = new UserSorter();
 
-    private final EditorRow<T> editorRow = GWT.create(EditorRow.class);
+    private final Editor<T> editor = GWT.create(Editor.class);
 
     private boolean dataIsBeingFetched = false;
 
@@ -3351,7 +3351,7 @@ public class Grid<T> extends ResizeComposite implements
 
         footer.setGrid(this);
 
-        editorRow.setGrid(this);
+        editor.setGrid(this);
 
         setSelectionMode(SelectionMode.MULTI);
 
@@ -3415,7 +3415,7 @@ public class Grid<T> extends ResizeComposite implements
     public void setStylePrimaryName(String style) {
         super.setStylePrimaryName(style);
         escalator.setStylePrimaryName(style);
-        editorRow.setStylePrimaryName(style);
+        editor.setStylePrimaryName(style);
 
         String rowStyle = getStylePrimaryName() + "-row";
         rowHasDataStyleName = rowStyle + "-has-data";
@@ -3987,8 +3987,8 @@ public class Grid<T> extends ResizeComposite implements
         return footer.isVisible();
     }
 
-    protected EditorRow<T> getEditorRow() {
-        return editorRow;
+    protected Editor<T> getEditor() {
+        return editor;
     }
 
     protected Escalator getEscalator() {
@@ -4421,8 +4421,8 @@ public class Grid<T> extends ResizeComposite implements
         assert cell != null : "received " + eventType
                 + "-event with a null cell target";
 
-        // Editor Row can steal focus from Grid and is still handled
-        if (handleEditorRowEvent(event, container, cell)) {
+        // Editor can steal focus from Grid and is still handled
+        if (handleEditorEvent(event, container, cell)) {
             return;
         }
 
@@ -4470,26 +4470,26 @@ public class Grid<T> extends ResizeComposite implements
         return w != null;
     }
 
-    private boolean handleEditorRowEvent(Event event, RowContainer container,
+    private boolean handleEditorEvent(Event event, RowContainer container,
             Cell cell) {
 
-        if (editorRow.getState() != EditorRow.State.INACTIVE) {
+        if (editor.getState() != Editor.State.INACTIVE) {
             if (event.getTypeInt() == Event.ONKEYDOWN
-                    && event.getKeyCode() == EditorRow.KEYCODE_HIDE) {
-                editorRow.cancel();
+                    && event.getKeyCode() == Editor.KEYCODE_HIDE) {
+                editor.cancel();
             }
             return true;
         }
 
-        if (container == escalator.getBody() && editorRow.isEnabled()) {
+        if (container == escalator.getBody() && editor.isEnabled()) {
             if (event.getTypeInt() == Event.ONDBLCLICK) {
                 if (cell != null) {
-                    editorRow.editRow(cell.getRow());
+                    editor.editRow(cell.getRow());
                     return true;
                 }
             } else if (event.getTypeInt() == Event.ONKEYDOWN
-                    && event.getKeyCode() == EditorRow.KEYCODE_SHOW) {
-                editorRow.editRow(cellFocusHandler.rowWithFocus);
+                    && event.getKeyCode() == Editor.KEYCODE_SHOW) {
+                editor.editRow(cellFocusHandler.rowWithFocus);
                 return true;
             }
         }
@@ -5434,74 +5434,74 @@ public class Grid<T> extends ResizeComposite implements
      *            the index of the row to be edited
      * 
      * @throws IllegalStateException
-     *             if the editor row is not enabled
+     *             if the editor is not enabled
      * @throws IllegalStateException
-     *             if the editor row is already in edit mode
+     *             if the editor is already in edit mode
      */
     public void editRow(int rowIndex) {
-        editorRow.editRow(rowIndex);
+        editor.editRow(rowIndex);
     }
 
     /**
-     * Saves any unsaved changes to the data source.
+     * Saves any unsaved changes in the editor to the data source.
      * 
      * @throws IllegalStateException
-     *             if the editor row is not enabled
+     *             if the editor is not enabled
      * @throws IllegalStateException
-     *             if the editor row is not in edit mode
+     *             if the editor is not in edit mode
      */
-    public void saveEditorRow() {
-        editorRow.save();
+    public void saveEditor() {
+        editor.save();
     }
 
     /**
      * Cancels the currently active edit and hides the editor. Any changes that
-     * are not {@link #saveEditorRow() saved} are lost.
+     * are not {@link #saveEditor() saved} are lost.
      * 
      * @throws IllegalStateException
-     *             if the editor row is not enabled
+     *             if the editor is not enabled
      * @throws IllegalStateException
-     *             if the editor row is not in edit mode
+     *             if the editor is not in edit mode
      */
-    public void cancelEditorRow() {
-        editorRow.cancel();
+    public void cancelEditor() {
+        editor.cancel();
     }
 
     /**
      * Returns the handler responsible for binding data and editor widgets to
-     * the editor row.
+     * the editor.
      * 
-     * @return the editor row handler or null if not set
+     * @return the editor handler or null if not set
      */
-    public EditorRowHandler<T> getEditorRowHandler() {
-        return editorRow.getHandler();
+    public EditorHandler<T> getEditorHandler() {
+        return editor.getHandler();
     }
 
     /**
      * Sets the handler responsible for binding data and editor widgets to the
-     * editor row.
+     * editor.
      * 
      * @param rowHandler
-     *            the new editor row handler
+     *            the new editor handler
      * 
      * @throws IllegalStateException
-     *             if the editor row is currently in edit mode
+     *             if the editor is currently in edit mode
      */
-    public void setEditorRowHandler(EditorRowHandler<T> handler) {
-        editorRow.setHandler(handler);
+    public void setEditorHandler(EditorHandler<T> handler) {
+        editor.setHandler(handler);
     }
 
     /**
-     * Returns the enabled state of the editor row.
+     * Returns the enabled state of the editor.
      * 
      * @return true if editing is enabled, false otherwise
      */
-    public boolean isEditorRowEnabled() {
-        return editorRow.isEnabled();
+    public boolean isEditorEnabled() {
+        return editor.isEnabled();
     }
 
     /**
-     * Sets the enabled state of the editor row.
+     * Sets the enabled state of the editor.
      * 
      * @param enabled
      *            true to enable editing, false to disable
@@ -5509,22 +5509,22 @@ public class Grid<T> extends ResizeComposite implements
      * @throws IllegalStateException
      *             if in edit mode and trying to disable
      * @throws IllegalStateException
-     *             if the editor row handler is not set
+     *             if the editor handler is not set
      */
-    public void setEditorRowEnabled(boolean enabled) {
-        editorRow.setEnabled(enabled);
+    public void setEditorEnabled(boolean enabled) {
+        editor.setEnabled(enabled);
     }
 
     /**
      * Returns the editor widget associated with the given column. If the editor
-     * row is not active, returns null.
+     * is not active, returns null.
      * 
      * @param column
      *            the column
-     * @return the widget if the editor row is open, null otherwise
+     * @return the widget if the editor is open, null otherwise
      */
-    public Widget getEditorRowWidget(Column<?, T> column) {
-        return editorRow.getWidget(column);
+    public Widget getEditorWidget(Column<?, T> column) {
+        return editor.getWidget(column);
     }
 
     @Override

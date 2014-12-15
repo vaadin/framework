@@ -44,7 +44,7 @@ import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
-import com.vaadin.client.widget.grid.EditorRowHandler;
+import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
 import com.vaadin.client.widget.grid.events.SelectAllEvent;
@@ -65,10 +65,10 @@ import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.grid.EditorRowClientRpc;
-import com.vaadin.shared.ui.grid.EditorRowServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
+import com.vaadin.shared.ui.grid.EditorClientRpc;
+import com.vaadin.shared.ui.grid.EditorServerRpc;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridState.SharedSelectionMode;
@@ -189,18 +189,17 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     }
 
     /*
-     * An editor row handler using Vaadin RPC to manage the editor row state.
+     * An editor handler using Vaadin RPC to manage the editor state.
      */
-    private class CustomEditorRowHandler implements
-            EditorRowHandler<JSONObject> {
+    private class CustomEditorHandler implements EditorHandler<JSONObject> {
 
-        private EditorRowServerRpc rpc = getRpcProxy(EditorRowServerRpc.class);
+        private EditorServerRpc rpc = getRpcProxy(EditorServerRpc.class);
 
-        private EditorRowRequest<?> currentRequest = null;
+        private EditorRequest<?> currentRequest = null;
         private boolean serverInitiated = false;
 
-        public CustomEditorRowHandler() {
-            registerRpc(EditorRowClientRpc.class, new EditorRowClientRpc() {
+        public CustomEditorHandler() {
+            registerRpc(EditorClientRpc.class, new EditorClientRpc() {
 
                 @Override
                 public void bind(final int rowIndex) {
@@ -222,7 +221,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 @Override
                 public void cancel(int rowIndex) {
                     serverInitiated = true;
-                    GridConnector.this.getWidget().cancelEditorRow();
+                    GridConnector.this.getWidget().cancelEditor();
                 }
 
                 @Override
@@ -246,7 +245,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         @Override
-        public void bind(EditorRowRequest<JSONObject> request) {
+        public void bind(EditorRequest<JSONObject> request) {
             if (!handleServerInitiated(request)) {
                 startRequest(request);
                 rpc.bind(request.getRowIndex());
@@ -254,7 +253,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         @Override
-        public void save(EditorRowRequest<JSONObject> request) {
+        public void save(EditorRequest<JSONObject> request) {
             if (!handleServerInitiated(request)) {
                 startRequest(request);
                 rpc.save(request.getRowIndex());
@@ -262,7 +261,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         @Override
-        public void cancel(EditorRowRequest<JSONObject> request) {
+        public void cancel(EditorRequest<JSONObject> request) {
             if (!handleServerInitiated(request)) {
                 // No startRequest as we don't get (or need)
                 // a confirmation from the server
@@ -285,7 +284,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         /**
-         * Used to handle the case where EditorRow calls us because it was
+         * Used to handle the case where the editor calls us because it was
          * invoked by the server via RPC and not by the client. In that case, we
          * simply synchronously complete the request.
          * 
@@ -294,7 +293,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
          * @return true if the request was originally triggered by the server,
          *         false otherwise
          */
-        private boolean handleServerInitiated(EditorRowRequest<?> request) {
+        private boolean handleServerInitiated(EditorRequest<?> request) {
             assert request != null;
             assert currentRequest == null;
 
@@ -307,7 +306,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
         }
 
-        private void startRequest(EditorRowRequest<?> request) {
+        private void startRequest(EditorRequest<?> request) {
             currentRequest = request;
         }
 
@@ -430,7 +429,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         });
 
-        getWidget().setEditorRowHandler(new CustomEditorRowHandler());
+        getWidget().setEditorHandler(new CustomEditorHandler());
         getLayoutManager().registerDependency(this, getWidget().getElement());
         layout();
     }
@@ -483,9 +482,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                     updateFooterFromState(getState().footer);
                 }
 
-                if (stateChangeEvent.hasPropertyChanged("editorRowEnabled")) {
-                    getWidget()
-                            .setEditorRowEnabled(getState().editorRowEnabled);
+                if (stateChangeEvent.hasPropertyChanged("editorEnabled")) {
+                    getWidget().setEditorEnabled(getState().editorEnabled);
                 }
 
                 if (stateChangeEvent.hasPropertyChanged("frozenColumnCount")) {

@@ -37,7 +37,7 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
 
-public class EditorRowTests {
+public class GridEditorTest {
 
     private static final Object PROPERTY_NAME = "name";
     private static final Object PROPERTY_AGE = "age";
@@ -79,41 +79,41 @@ public class EditorRowTests {
 
     @Test
     public void initAssumptions() throws Exception {
-        assertFalse(grid.isEditorRowEnabled());
+        assertFalse(grid.isEditorEnabled());
         assertNull(grid.getEditedItemId());
-        assertNotNull(grid.getEditorRowFieldGroup());
+        assertNotNull(grid.getEditorFieldGroup());
     }
 
     @Test
     public void setEnabled() throws Exception {
-        assertFalse(grid.isEditorRowEnabled());
-        grid.setEditorRowEnabled(true);
-        assertTrue(grid.isEditorRowEnabled());
+        assertFalse(grid.isEditorEnabled());
+        grid.setEditorEnabled(true);
+        assertTrue(grid.isEditorEnabled());
     }
 
     @Test
     public void setDisabled() throws Exception {
-        assertFalse(grid.isEditorRowEnabled());
-        grid.setEditorRowEnabled(true);
-        grid.setEditorRowEnabled(false);
-        assertFalse(grid.isEditorRowEnabled());
+        assertFalse(grid.isEditorEnabled());
+        grid.setEditorEnabled(true);
+        grid.setEditorEnabled(false);
+        assertFalse(grid.isEditorEnabled());
     }
 
     @Test
     public void setReEnabled() throws Exception {
-        assertFalse(grid.isEditorRowEnabled());
-        grid.setEditorRowEnabled(true);
-        grid.setEditorRowEnabled(false);
-        grid.setEditorRowEnabled(true);
-        assertTrue(grid.isEditorRowEnabled());
+        assertFalse(grid.isEditorEnabled());
+        grid.setEditorEnabled(true);
+        grid.setEditorEnabled(false);
+        grid.setEditorEnabled(true);
+        assertTrue(grid.isEditorEnabled());
     }
 
     @Test
     public void detached() throws Exception {
-        FieldGroup oldFieldGroup = grid.getEditorRowFieldGroup();
+        FieldGroup oldFieldGroup = grid.getEditorFieldGroup();
         grid.removeAllColumns();
         grid.setContainerDataSource(new IndexedContainer());
-        assertFalse(oldFieldGroup == grid.getEditorRowFieldGroup());
+        assertFalse(oldFieldGroup == grid.getEditorFieldGroup());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -129,7 +129,7 @@ public class EditorRowTests {
 
     @Test(expected = IllegalArgumentException.class)
     public void nonexistentEditItem() throws Exception {
-        grid.setEditorRowEnabled(true);
+        grid.setEditorEnabled(true);
         grid.editItem(new Object());
     }
 
@@ -137,36 +137,36 @@ public class EditorRowTests {
     public void getField() throws Exception {
         startEdit();
 
-        assertNotNull(grid.getEditorRowField(PROPERTY_NAME));
+        assertNotNull(grid.getEditorField(PROPERTY_NAME));
     }
 
     @Test
     public void getFieldWithoutItem() throws Exception {
-        grid.setEditorRowEnabled(true);
-        assertNotNull(grid.getEditorRowField(PROPERTY_NAME));
+        grid.setEditorEnabled(true);
+        assertNotNull(grid.getEditorField(PROPERTY_NAME));
     }
 
     @Test
     public void customBinding() {
         TextField textField = new TextField();
-        grid.setEditorRowField(PROPERTY_NAME, textField);
+        grid.setEditorField(PROPERTY_NAME, textField);
 
         startEdit();
 
-        assertSame(textField, grid.getEditorRowField(PROPERTY_NAME));
+        assertSame(textField, grid.getEditorField(PROPERTY_NAME));
     }
 
     @Test(expected = IllegalStateException.class)
     public void disableWhileEditing() {
         startEdit();
-        grid.setEditorRowEnabled(false);
+        grid.setEditorEnabled(false);
     }
 
     @Test
     public void fieldIsNotReadonly() {
         startEdit();
 
-        Field<?> field = grid.getEditorRowField(PROPERTY_NAME);
+        Field<?> field = grid.getEditorField(PROPERTY_NAME);
         assertFalse(field.isReadOnly());
     }
 
@@ -174,14 +174,14 @@ public class EditorRowTests {
     public void fieldIsReadonlyWhenFieldGroupIsReadonly() {
         startEdit();
 
-        grid.getEditorRowFieldGroup().setReadOnly(true);
-        Field<?> field = grid.getEditorRowField(PROPERTY_NAME);
+        grid.getEditorFieldGroup().setReadOnly(true);
+        Field<?> field = grid.getEditorField(PROPERTY_NAME);
         assertTrue(field.isReadOnly());
     }
 
     @Test
     public void columnRemoved() {
-        Field<?> field = grid.getEditorRowField(PROPERTY_NAME);
+        Field<?> field = grid.getEditorField(PROPERTY_NAME);
 
         assertSame("field should be attached to grid.", grid, field.getParent());
 
@@ -193,17 +193,17 @@ public class EditorRowTests {
     @Test
     public void setFieldAgain() {
         TextField field = new TextField();
-        grid.setEditorRowField(PROPERTY_NAME, field);
+        grid.setEditorField(PROPERTY_NAME, field);
 
         field = new TextField();
-        grid.setEditorRowField(PROPERTY_NAME, field);
+        grid.setEditorField(PROPERTY_NAME, field);
 
         assertSame("new field should be used.", field,
-                grid.getEditorRowField(PROPERTY_NAME));
+                grid.getEditorField(PROPERTY_NAME));
     }
 
     private void startEdit() {
-        grid.setEditorRowEnabled(true);
+        grid.setEditorEnabled(true);
         grid.editItem(ITEM_ID);
     }
 }

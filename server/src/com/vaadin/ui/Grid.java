@@ -69,8 +69,8 @@ import com.vaadin.server.JsonCodec;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.data.sort.SortDirection;
-import com.vaadin.shared.ui.grid.EditorRowClientRpc;
-import com.vaadin.shared.ui.grid.EditorRowServerRpc;
+import com.vaadin.shared.ui.grid.EditorClientRpc;
+import com.vaadin.shared.ui.grid.EditorServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
@@ -2405,7 +2405,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     private final Footer footer = new Footer(this);
 
     private Object editedItemId = null;
-    private FieldGroup editorRowFieldGroup = new CustomFieldGroup();
+    private FieldGroup editorFieldGroup = new CustomFieldGroup();
 
     private CellStyleGenerator cellStyleGenerator;
     private RowStyleGenerator rowStyleGenerator;
@@ -2596,14 +2596,14 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             }
         });
 
-        registerRpc(new EditorRowServerRpc() {
+        registerRpc(new EditorServerRpc() {
 
             @Override
             public void bind(int rowIndex) {
                 try {
                     Object id = getContainerDataSource().getIdByIndex(rowIndex);
                     doEditItem(id);
-                    getEditorRowRpc().confirmBind();
+                    getEditorRpc().confirmBind();
                 } catch (Exception e) {
                     handleError(e);
                 }
@@ -2613,7 +2613,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             public void cancel(int rowIndex) {
                 try {
                     // For future proofing even though cannot currently fail
-                    doCancelEditorRow();
+                    doCancelEditor();
                 } catch (Exception e) {
                     handleError(e);
                 }
@@ -2622,8 +2622,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             @Override
             public void save(int rowIndex) {
                 try {
-                    saveEditorRow();
-                    getEditorRowRpc().confirmSave();
+                    saveEditor();
+                    getEditorRpc().confirmSave();
                 } catch (Exception e) {
                     handleError(e);
                 }
@@ -2696,7 +2696,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         columnKeys.removeAll();
         datasource = container;
 
-        resetEditorRow();
+        resetEditor();
 
         //
         // Adjust sort order
@@ -2978,7 +2978,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      *            The property id of column to be removed
      */
     public void removeColumn(Object propertyId) {
-        setEditorRowField(propertyId, null);
+        setEditorField(propertyId, null);
         header.removeColumn(propertyId);
         footer.removeColumn(propertyId);
         Column column = columns.remove(propertyId);
@@ -3969,15 +3969,15 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             }
         }
 
-        componentList.addAll(getEditorRowFields());
+        componentList.addAll(getEditorFields());
         return componentList.iterator();
     }
 
     @Override
     public boolean isRendered(Component childComponent) {
-        if (getEditorRowFields().contains(childComponent)) {
-            // Only render editor row fields if the editor is open
-            return isEditorRowActive();
+        if (getEditorFields().contains(childComponent)) {
+            // Only render editor fields if the editor is open
+            return isEditorActive();
         } else {
             // TODO Header and footer components should also only be rendered if
             // the header/footer is visible
@@ -3985,8 +3985,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
     }
 
-    EditorRowClientRpc getEditorRowRpc() {
-        return getRpcProxy(EditorRowClientRpc.class);
+    EditorClientRpc getEditorRpc() {
+        return getRpcProxy(EditorClientRpc.class);
     }
 
     /**
@@ -4113,36 +4113,41 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
-     * Sets whether or not the editor row feature is enabled for this grid.
+     * Sets whether or not the item editor UI is enabled for this grid. When the
+     * editor is enabled, the user can open it by double-clicking a row or
+     * hitting enter when a row is focused. The editor can also be opened
+     * programmatically using the {@link #editItem(Object)} method.
      * 
      * @param isEnabled
      *            <code>true</code> to enable the feature, <code>false</code>
      *            otherwise
      * @throws IllegalStateException
      *             if an item is currently being edited
+     * 
      * @see #getEditedItemId()
      */
-    public void setEditorRowEnabled(boolean isEnabled)
+    public void setEditorEnabled(boolean isEnabled)
             throws IllegalStateException {
-        if (isEditorRowActive()) {
+        if (isEditorActive()) {
             throw new IllegalStateException(
-                    "Cannot disable the editor row while an item ("
-                            + getEditedItemId() + ") is being edited.");
+                    "Cannot disable the editor while an item ("
+                            + getEditedItemId() + ") is being edited");
         }
-        if (isEditorRowEnabled() != isEnabled) {
-            getState().editorRowEnabled = isEnabled;
+        if (isEditorEnabled() != isEnabled) {
+            getState().editorEnabled = isEnabled;
         }
     }
 
     /**
-     * Checks whether the editor row feature is enabled for this grid.
+     * Checks whether the item editor UI is enabled for this grid.
      * 
-     * @return <code>true</code> iff the editor row feature is enabled for this
-     *         grid
+     * @return <code>true</code> iff the editor is enabled for this grid
+     * 
+     * @see #setEditorEnabled(boolean)
      * @see #getEditedItemId()
      */
-    public boolean isEditorRowEnabled() {
-        return getState(false).editorRowEnabled;
+    public boolean isEditorEnabled() {
+        return getState(false).editorEnabled;
     }
 
     /**
@@ -4156,34 +4161,38 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
-     * Gets the field group that is backing the editor row of this grid.
+     * Gets the field group that is backing the item editor of this grid.
      * 
      * @return the backing field group
      */
-    public FieldGroup getEditorRowFieldGroup() {
-        return editorRowFieldGroup;
+    public FieldGroup getEditorFieldGroup() {
+        return editorFieldGroup;
     }
 
     /**
-     * Sets the field group that is backing this editor row.
+     * Sets the field group that is backing the item editor of this grid.
      * 
      * @param fieldGroup
      *            the backing field group
+     * 
+     * @throws IllegalStateException
+     *             if the editor is currently active
      */
-    public void setEditorRowFieldGroup(FieldGroup fieldGroup) {
-        editorRowFieldGroup = fieldGroup;
-        if (isEditorRowActive()) {
-            editorRowFieldGroup.setItemDataSource(getContainerDataSource()
-                    .getItem(editedItemId));
+    public void setEditorFieldGroup(FieldGroup fieldGroup) {
+        if (isEditorActive()) {
+            throw new IllegalStateException(
+                    "Cannot change field group while an item ("
+                            + getEditedItemId() + ") is being edited");
         }
+        editorFieldGroup = fieldGroup;
     }
 
     /**
-     * Returns whether an item is currently being edited in the editor row.
+     * Returns whether an item is currently being edited in the editor.
      * 
-     * @return true iff the editor row is editing an item
+     * @return true iff the editor is open
      */
-    public boolean isEditorRowActive() {
+    public boolean isEditorActive() {
         return editedItemId != null;
     }
 
@@ -4195,12 +4204,12 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
-     * Gets the field component that represents a property in the editor row.
+     * Gets the field component that represents a property in the item editor.
      * <p>
      * When {@link #editItem(Object) editItem} is called, fields are
      * automatically created and bound for any unbound properties.
      * <p>
-     * Getting a field before the editor row has been opened depends on special
+     * Getting a field before the editor has been opened depends on special
      * support from the {@link FieldGroup} in use. Using this method with a
      * user-provided <code>FieldGroup</code> might cause {@link BindException}
      * to be thrown.
@@ -4215,12 +4224,12 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      *             if no field has been configured and there is a problem
      *             building or binding
      */
-    public Field<?> getEditorRowField(Object propertyId) {
+    public Field<?> getEditorField(Object propertyId) {
         checkColumnExists(propertyId);
 
-        Field<?> editor = editorRowFieldGroup.getField(propertyId);
+        Field<?> editor = editorFieldGroup.getField(propertyId);
         if (editor == null) {
-            editor = editorRowFieldGroup.buildAndBind(propertyId);
+            editor = editorFieldGroup.buildAndBind(propertyId);
         }
 
         if (editor.getParent() != Grid.this) {
@@ -4231,26 +4240,26 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
-     * Opens the editor row for the provided item.
+     * Opens the editor interface for the provided item.
      * 
      * @param itemId
      *            the id of the item to edit
      * @throws IllegalStateException
-     *             if the editor row is not enabled
+     *             if the editor is not enabled
      * @throws IllegalArgumentException
      *             if the {@code itemId} is not in the backing container
-     * @see #setEditorRowEnabled(boolean)
+     * @see #setEditorEnabled(boolean)
      */
     public void editItem(Object itemId) throws IllegalStateException,
             IllegalArgumentException {
         doEditItem(itemId);
 
-        getEditorRowRpc().bind(getContainerDataSource().indexOfId(itemId));
+        getEditorRpc().bind(getContainerDataSource().indexOfId(itemId));
     }
 
     protected void doEditItem(Object itemId) {
-        if (!isEditorRowEnabled()) {
-            throw new IllegalStateException("Editor row is not enabled");
+        if (!isEditorEnabled()) {
+            throw new IllegalStateException("Item editor is not enabled");
         }
 
         Item item = getContainerDataSource().getItem(itemId);
@@ -4259,13 +4268,13 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                     + " not found in current container");
         }
 
-        editorRowFieldGroup.setItemDataSource(item);
+        editorFieldGroup.setItemDataSource(item);
         editedItemId = itemId;
 
         for (Column column : getColumns()) {
             Object propertyId = column.getColumnProperty();
 
-            Field<?> editor = getEditorRowField(propertyId);
+            Field<?> editor = getEditorField(propertyId);
 
             getColumn(propertyId).getState().editorConnector = editor;
         }
@@ -4277,25 +4286,26 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * {@link #editItem(Object)}.
      * <p>
      * Setting the field to <code>null</code> clears any previously set field,
-     * causing a new field to be created the next time the editor row is opened.
+     * causing a new field to be created the next time the item editor is
+     * opened.
      * 
      * @param field
      *            The field to bind
      * @param propertyId
      *            The propertyId to bind the field to
      */
-    public void setEditorRowField(Object propertyId, Field<?> field) {
+    public void setEditorField(Object propertyId, Field<?> field) {
         checkColumnExists(propertyId);
 
-        Field<?> oldField = editorRowFieldGroup.getField(propertyId);
+        Field<?> oldField = editorFieldGroup.getField(propertyId);
         if (oldField != null) {
-            editorRowFieldGroup.unbind(oldField);
+            editorFieldGroup.unbind(oldField);
             oldField.setParent(null);
         }
 
         if (field != null) {
             field.setParent(this);
-            editorRowFieldGroup.bind(field, propertyId);
+            editorFieldGroup.bind(field, propertyId);
         }
     }
 
@@ -4309,51 +4319,51 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * 
      * @see FieldGroup#commit()
      */
-    public void saveEditorRow() throws CommitException {
-        editorRowFieldGroup.commit();
+    public void saveEditor() throws CommitException {
+        editorFieldGroup.commit();
     }
 
     /**
      * Cancels the currently active edit if any.
      */
-    public void cancelEditorRow() {
-        if (isEditorRowActive()) {
-            getEditorRowRpc().cancel(
+    public void cancelEditor() {
+        if (isEditorActive()) {
+            getEditorRpc().cancel(
                     getContainerDataSource().indexOfId(editedItemId));
-            doCancelEditorRow();
+            doCancelEditor();
         }
     }
 
-    protected void doCancelEditorRow() {
+    protected void doCancelEditor() {
         editedItemId = null;
     }
 
-    void resetEditorRow() {
-        if (isEditorRowActive()) {
+    void resetEditor() {
+        if (isEditorActive()) {
             /*
              * Simply force cancel the editing; throwing here would just make
              * Grid.setContainerDataSource semantics more complicated.
              */
-            cancelEditorRow();
+            cancelEditor();
         }
-        for (Field<?> editor : getEditorRowFields()) {
+        for (Field<?> editor : getEditorFields()) {
             editor.setParent(null);
         }
 
         editedItemId = null;
-        editorRowFieldGroup = new CustomFieldGroup();
+        editorFieldGroup = new CustomFieldGroup();
     }
 
     /**
-     * Gets a collection of all fields bound to the editor row of this grid.
+     * Gets a collection of all fields bound to the item editor of this grid.
      * <p>
      * When {@link #editItem(Object) editItem} is called, fields are
      * automatically created and bound to any unbound properties.
      * 
-     * @return a collection of all the fields bound to this editor row
+     * @return a collection of all the fields bound to the item editor
      */
-    Collection<Field<?>> getEditorRowFields() {
-        Collection<Field<?>> fields = editorRowFieldGroup.getFields();
+    Collection<Field<?>> getEditorFields() {
+        Collection<Field<?>> fields = editorFieldGroup.getFields();
         assert allAttached(fields);
         return fields;
     }
@@ -4376,7 +4386,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * @param fieldFactory
      *            The field factory to use
      */
-    public void setEditorRowFieldFactory(FieldGroupFieldFactory fieldFactory) {
-        editorRowFieldGroup.setFieldFactory(fieldFactory);
+    public void setEditorFieldFactory(FieldGroupFieldFactory fieldFactory) {
+        editorFieldGroup.setFieldFactory(fieldFactory);
     }
 }

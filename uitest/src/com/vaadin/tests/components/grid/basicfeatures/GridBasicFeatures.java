@@ -189,7 +189,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         grid.setSelectionMode(SelectionMode.NONE);
 
-        grid.getEditorRowField(getColumnProperty(3)).setReadOnly(true);
+        grid.getEditorField(getColumnProperty(3)).setReadOnly(true);
 
         createGridActions();
 
@@ -203,7 +203,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         createRowActions();
 
-        createEditorRowActions();
+        createEditorActions();
 
         addHeightActions();
 
@@ -853,48 +853,46 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 }, null);
     }
 
-    protected void createEditorRowActions() {
-        createBooleanAction("Enabled", "Editor row", false,
+    protected void createEditorActions() {
+        createBooleanAction("Enabled", "Editor", false,
                 new Command<Grid, Boolean>() {
                     @Override
                     public void execute(Grid c, Boolean value, Object data) {
-                        c.setEditorRowEnabled(value);
+                        c.setEditorEnabled(value);
                     }
                 });
 
-        createClickAction("Edit item 5", "Editor row",
-                new Command<Grid, String>() {
-                    @Override
-                    public void execute(Grid c, String value, Object data) {
-                        c.editItem(5);
-                    }
-                }, null);
+        createClickAction("Edit item 5", "Editor", new Command<Grid, String>() {
+            @Override
+            public void execute(Grid c, String value, Object data) {
+                c.editItem(5);
+            }
+        }, null);
 
-        createClickAction("Edit item 100", "Editor row",
+        createClickAction("Edit item 100", "Editor",
                 new Command<Grid, String>() {
                     @Override
                     public void execute(Grid c, String value, Object data) {
                         c.editItem(100);
                     }
                 }, null);
-        createClickAction("Save", "Editor row", new Command<Grid, String>() {
+        createClickAction("Save", "Editor", new Command<Grid, String>() {
             @Override
             public void execute(Grid c, String value, Object data) {
                 try {
-                    c.saveEditorRow();
+                    c.saveEditor();
                 } catch (CommitException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
         }, null);
-        createClickAction("Cancel edit", "Editor row",
-                new Command<Grid, String>() {
-                    @Override
-                    public void execute(Grid c, String value, Object data) {
-                        c.cancelEditorRow();
-                    }
-                }, null);
+        createClickAction("Cancel edit", "Editor", new Command<Grid, String>() {
+            @Override
+            public void execute(Grid c, String value, Object data) {
+                c.cancelEditor();
+            }
+        }, null);
     }
 
     @SuppressWarnings("boxing")

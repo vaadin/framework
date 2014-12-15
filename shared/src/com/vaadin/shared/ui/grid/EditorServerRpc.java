@@ -18,17 +18,17 @@ package com.vaadin.shared.ui.grid;
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
- * An RPC interface for the grid editor row client-to-server communications.
+ * An RPC interface for the grid editor client-to-server communications.
  * 
  * @since
  * @author Vaadin Ltd
  */
-public interface EditorRowServerRpc extends ServerRpc {
+public interface EditorServerRpc extends ServerRpc {
 
     /**
-     * Asks the server to open the editor row and bind data to it. When a bind
+     * Asks the server to open the editor and bind data to it. When a bind
      * request is sent, it must be acknowledged with a
-     * {@link EditorRowClientRpc#confirmBind() confirm call} before the client
+     * {@link EditorClientRpc#confirmBind() confirm call} before the client
      * can open the editor.
      * 
      * @param rowIndex
@@ -37,9 +37,9 @@ public interface EditorRowServerRpc extends ServerRpc {
     void bind(int rowIndex);
 
     /**
-     * Asks the server to save unsaved changes in the editor row to the data
-     * source. When a save request is sent, it must be acknowledged with a
-     * {@link EditorRowClientRpc#confirmSave() confirm call}.
+     * Asks the server to save unsaved changes in the editor to the data source.
+     * When a save request is sent, it must be acknowledged with a
+     * {@link EditorClientRpc#confirmSave() confirm call}.
      * 
      * @param rowIndex
      *            the index of the edited row
@@ -49,7 +49,7 @@ public interface EditorRowServerRpc extends ServerRpc {
     /**
      * Tells the server to cancel editing. When sending a cancel request, the
      * client does not need to wait for confirmation by the server before hiding
-     * the editor row.
+     * the editor.
      * 
      * @param rowIndex
      *            the index of the edited row
