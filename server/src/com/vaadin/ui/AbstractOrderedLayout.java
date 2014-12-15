@@ -477,18 +477,10 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     public void readDesign(Element design, DesignContext designContext) {
         // process default attributes
         super.readDesign(design, designContext);
-        // remove current children
-        removeAllComponents();
         // handle margin
-        AbstractOrderedLayout def = designContext.getDefaultInstance(this
-                .getClass());
         if (design.hasAttr("margin")) {
-            String value = design.attr("margin");
-            setMargin(value.isEmpty() || value.equalsIgnoreCase("true"));
-
-        } else {
-            // we currently support only on-off margins
-            setMargin(def.getMargin().getBitMask() != 0);
+            setMargin(DesignAttributeHandler.readAttribute("margin",
+                    design.attributes(), Boolean.class));
         }
         // handle children
         for (Element childComponent : design.children()) {

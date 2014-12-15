@@ -113,12 +113,11 @@ public class TextField extends AbstractTextField {
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
-        AbstractTextField def = designContext.getDefaultInstance(this
-                .getClass());
         Attributes attr = design.attributes();
-        String value = DesignAttributeHandler.readAttribute("value", attr,
-                def.getValue(), String.class);
-        setValue(value);
+        if (attr.hasKey("value")) {
+            setValue(DesignAttributeHandler.readAttribute("value", attr,
+                    String.class));
+        }
     }
 
     /*

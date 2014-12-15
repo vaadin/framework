@@ -772,12 +772,11 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
-        AbstractTextField def = designContext.getDefaultInstance(this
-                .getClass());
         Attributes attr = design.attributes();
-        int maxLength = DesignAttributeHandler.readAttribute("maxlength", attr,
-                def.getMaxLength(), Integer.class);
-        setMaxLength(maxLength);
+        if (attr.hasKey("maxlength")) {
+            setMaxLength(DesignAttributeHandler.readAttribute("maxlength",
+                    attr, Integer.class));
+        }
     }
 
     /*

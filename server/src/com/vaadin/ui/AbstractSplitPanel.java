@@ -566,41 +566,31 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         super.readDesign(design, designContext);
         // handle custom attributes, use default values if no explicit value
         // set
-        AbstractSplitPanel def = designContext.getDefaultInstance(this
-                .getClass());
         // There is no setter for reversed, so it will be handled using
         // setSplitPosition.
-        boolean reversed = DesignAttributeHandler.readAttribute("reversed",
-                design.attributes(), def.getSplitterState().positionReversed,
-                Boolean.class);
+        boolean reversed = false;
+        if (design.hasAttr("reversed")) {
+            reversed = DesignAttributeHandler.readAttribute("reversed",
+                    design.attributes(), Boolean.class);
+            setSplitPosition(getSplitPosition(), reversed);
+        }
         if (design.hasAttr("split-position")) {
             SizeWithUnit splitPosition = SizeWithUnit.parseStringSize(
-                    design.attr("split-position"), def.getSplitPositionUnit());
+                    design.attr("split-position"), Unit.PERCENTAGE);
             setSplitPosition(splitPosition.getSize(), splitPosition.getUnit(),
                     reversed);
-        } else { // default value for split position
-            setSplitPosition(def.getSplitPosition(),
-                    def.getSplitPositionUnit(), reversed);
         }
         if (design.hasAttr("min-split-position")) {
             SizeWithUnit minSplitPosition = SizeWithUnit.parseStringSize(
-                    design.attr("min-split-position"),
-                    def.getMinSplitPositionUnit());
+                    design.attr("min-split-position"), Unit.PERCENTAGE);
             setMinSplitPosition(minSplitPosition.getSize(),
                     minSplitPosition.getUnit());
-        } else { // default value for min-split-position
-            setMinSplitPosition(def.getMinSplitPosition(),
-                    def.getMinSplitPositionUnit());
         }
         if (design.hasAttr("max-split-position")) {
             SizeWithUnit maxSplitPosition = SizeWithUnit.parseStringSize(
-                    design.attr("max-split-position"),
-                    def.getMaxSplitPositionUnit());
+                    design.attr("max-split-position"), Unit.PERCENTAGE);
             setMaxSplitPosition(maxSplitPosition.getSize(),
                     maxSplitPosition.getUnit());
-        } else { // default value for max-split-position
-            setMaxSplitPosition(def.getMaxSplitPosition(),
-                    def.getMaxSplitPositionUnit());
         }
         // remove current children
         removeAllComponents();

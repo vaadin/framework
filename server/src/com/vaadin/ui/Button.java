@@ -675,22 +675,26 @@ public class Button extends AbstractComponent implements
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
-        Button def = designContext.getDefaultInstance(this.getClass());
         Attributes attr = design.attributes();
         String content = design.html();
         setCaption(content);
         // tabindex
-        setTabIndex(DesignAttributeHandler.readAttribute("tabindex", attr,
-                def.getTabIndex(), Integer.class));
+        if (attr.hasKey("tabindex")) {
+            setTabIndex(DesignAttributeHandler.readAttribute("tabindex", attr,
+                    Integer.class));
+        }
         // plain-text (default is html)
-        setHtmlContentAllowed(!DesignAttributeHandler.readAttribute(
-                DESIGN_ATTR_PLAIN_TEXT, attr, false, Boolean.class));
+        Boolean plain = DesignAttributeHandler.readAttribute(
+                DESIGN_ATTR_PLAIN_TEXT, attr, Boolean.class);
+        if (plain == null || !plain) {
+            setHtmlContentAllowed(true);
+        }
         setIconAlternateText(DesignAttributeHandler.readAttribute("icon-alt",
-                attr, def.getIconAlternateText(), String.class));
+                attr, String.class));
         // click-shortcut
         removeClickShortcut();
         ShortcutAction action = DesignAttributeHandler.readAttribute(
-                "click-shortcut", attr, null, ShortcutAction.class);
+                "click-shortcut", attr, ShortcutAction.class);
         if (action != null) {
             setClickShortcut(action.getKeyCode(), action.getModifiers());
         }

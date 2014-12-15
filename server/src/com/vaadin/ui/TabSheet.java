@@ -1464,12 +1464,8 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
-        Attributes attr = design.attributes();
-        TabSheet def = designContext.getDefaultInstance(this.getClass());
         // handle tab index
-        int tabIndex = DesignAttributeHandler.readAttribute("tabindex", attr,
-                def.getTabIndex(), Integer.class);
-        setTabIndex(tabIndex);
+        readTabIndex(design);
         // clear old tabs
         removeAllComponents();
         // create new tabs
@@ -1480,6 +1476,15 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             }
             readTabFromDesign(tab, designContext);
         }
+    }
+
+    private void readTabIndex(Element design) {
+        // Could be in AbstractComponent as if (this implements Focusable)
+        if (design.hasAttr("tabindex")) {
+            setTabIndex(DesignAttributeHandler.readAttribute("tabindex",
+                    design.attributes(), Integer.class));
+        }
+
     }
 
     /**
@@ -1503,28 +1508,48 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         Element content = tabElement.child(0);
         Component child = designContext.createChild(content);
         Tab tab = this.addTab(child);
-        tab.setVisible(DesignAttributeHandler.readAttribute("visible", attr,
-                tab.isVisible(), Boolean.class));
-        tab.setClosable(DesignAttributeHandler.readAttribute("closable", attr,
-                tab.isClosable(), Boolean.class));
-        tab.setCaption(DesignAttributeHandler.readAttribute("caption", attr,
-                tab.getCaption(), String.class));
-        tab.setEnabled(DesignAttributeHandler.readAttribute("enabled", attr,
-                tab.isEnabled(), Boolean.class));
-        tab.setIcon(DesignAttributeHandler.readAttribute("icon", attr,
-                tab.getIcon(), Resource.class));
-        tab.setIconAlternateText(DesignAttributeHandler.readAttribute(
-                "icon-alt", attr, tab.getIconAlternateText(), String.class));
-        tab.setDescription(DesignAttributeHandler.readAttribute("description",
-                attr, tab.getDescription(), String.class));
-        tab.setStyleName(DesignAttributeHandler.readAttribute("style-name",
-                attr, tab.getStyleName(), String.class));
-        tab.setId(DesignAttributeHandler.readAttribute("id", attr, tab.getId(),
-                String.class));
-        boolean selected = DesignAttributeHandler.readAttribute("selected",
-                attr, false, Boolean.class);
-        if (selected) {
-            this.setSelectedTab(tab.getComponent());
+        if (attr.hasKey("visible")) {
+            tab.setVisible(DesignAttributeHandler.readAttribute("visible",
+                    attr, Boolean.class));
+        }
+        if (attr.hasKey("closable")) {
+            tab.setClosable(DesignAttributeHandler.readAttribute("closable",
+                    attr, Boolean.class));
+        }
+        if (attr.hasKey("caption")) {
+            tab.setCaption(DesignAttributeHandler.readAttribute("caption",
+                    attr, String.class));
+        }
+        if (attr.hasKey("enabled")) {
+            tab.setEnabled(DesignAttributeHandler.readAttribute("enabled",
+                    attr, Boolean.class));
+        }
+        if (attr.hasKey("icon")) {
+            tab.setIcon(DesignAttributeHandler.readAttribute("icon", attr,
+                    Resource.class));
+        }
+        if (attr.hasKey("icon-alt")) {
+            tab.setIconAlternateText(DesignAttributeHandler.readAttribute(
+                    "icon-alt", attr, String.class));
+        }
+        if (attr.hasKey("description")) {
+            tab.setDescription(DesignAttributeHandler.readAttribute(
+                    "description", attr, String.class));
+        }
+        if (attr.hasKey("style-name")) {
+            tab.setStyleName(DesignAttributeHandler.readAttribute("style-name",
+                    attr, String.class));
+        }
+        if (attr.hasKey("id")) {
+            tab.setId(DesignAttributeHandler.readAttribute("id", attr,
+                    String.class));
+        }
+        if (attr.hasKey("selected")) {
+            boolean selected = DesignAttributeHandler.readAttribute("selected",
+                    attr, Boolean.class);
+            if (selected) {
+                this.setSelectedTab(tab.getComponent());
+            }
         }
     }
 

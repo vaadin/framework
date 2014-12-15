@@ -16,11 +16,8 @@
 package com.vaadin.tests.design.designroot;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
-// This test will not pass until default instance creation is changed. Will leave it ignored for now.
-@Ignore
 public class DesignRootTest {
     @Test
     public void designAnnotationWithoutFilename() {

@@ -1767,15 +1767,16 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
-        AbstractField def = designContext.getDefaultInstance(this.getClass());
         Attributes attr = design.attributes();
-        boolean readOnly = DesignAttributeHandler.readAttribute("readonly",
-                attr, def.isReadOnly(), Boolean.class);
-        setReadOnly(readOnly);
+        if (design.hasAttr("readonly")) {
+            setReadOnly(DesignAttributeHandler.readAttribute("readonly", attr,
+                    Boolean.class));
+        }
         // tabindex
-        int tabIndex = DesignAttributeHandler.readAttribute("tabindex", attr,
-                def.getTabIndex(), Integer.class);
-        setTabIndex(tabIndex);
+        if (design.hasAttr("tabindex")) {
+            setTabIndex(DesignAttributeHandler.readAttribute("tabindex", attr,
+                    Integer.class));
+        }
     }
 
     /*

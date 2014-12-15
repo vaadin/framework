@@ -99,16 +99,12 @@ public class DesignAttributeHandler implements Serializable {
      *            the attribute map. If the attributes does not contain the
      *            requested attribute, the value is retrieved from the
      *            <code> defaultInstance</code>
-     * @param defaultInstance
-     *            the default instance of the class for fetching the default
-     *            values
      * @return true on success
      */
     public static boolean readAttribute(Component component, String attribute,
-            Attributes attributes, Component defaultInstance) {
+            Attributes attributes) {
         String value = null;
-        if (component == null || attribute == null || attributes == null
-                || defaultInstance == null) {
+        if (component == null || attribute == null || attributes == null) {
             throw new IllegalArgumentException(
                     "Parameters with null value not allowed");
         }
@@ -129,13 +125,10 @@ public class DesignAttributeHandler implements Serializable {
                 setter.invoke(component, param);
                 success = true;
             } else {
-                // otherwise find the getter for the attribute
-                Method getter = findGetterForAttribute(component.getClass(),
-                        attribute);
-                // read the default value from defaults
-                Object defaultValue = getter.invoke(defaultInstance);
-                setter.invoke(component, defaultValue);
-                success = true;
+                getLogger().log(
+                        Level.WARNING,
+                        "Attribute value for " + attribute
+                                + " is null, this should not happen");
             }
         } catch (Exception e) {
             getLogger().log(Level.WARNING,
@@ -256,13 +249,13 @@ public class DesignAttributeHandler implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public static <T> T readAttribute(String attribute, Attributes attributes,
-            T defaultValue, Class<T> outputType) {
+            Class<T> outputType) {
         if (!isSupported(outputType)) {
             throw new IllegalArgumentException("output type: "
                     + outputType.getName() + " not supported");
         }
         if (!attributes.hasKey(attribute)) {
-            return defaultValue;
+            return null;
         } else {
             try {
                 String value = attributes.get(attribute);

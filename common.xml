@@ -386,6 +386,10 @@
         <!-- Copy resources -->
         <copy todir="${test.classes}" failonerror="false">
             <fileset dir="${test.resources}" />
+        	 <!-- include html templates used in declarative tests --> 
+   	        <fileset dir="${test.src}">
+                <include name="**/*.html"/>
+   	        </fileset>
         </copy>
     </target>
 

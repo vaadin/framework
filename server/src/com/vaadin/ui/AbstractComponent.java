@@ -920,11 +920,13 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         Attributes attr = design.attributes();
-        AbstractComponent def = designContext.getDefaultInstance(this
-                .getClass());
         // handle default attributes
         for (String attribute : getDefaultAttributes()) {
-            DesignAttributeHandler.readAttribute(this, attribute, attr, def);
+            if (!design.hasAttr(attribute)) {
+                continue;
+            }
+
+            DesignAttributeHandler.readAttribute(this, attribute, attr);
         }
         // handle immediate
         if (attr.hasKey("immediate")) {
@@ -941,14 +943,12 @@ public abstract class AbstractComponent extends AbstractClientConnector
             setLocale(null);
         }
         // handle width and height
-        readSize(attr, def);
+        readSize(attr);
         // handle component error
         if (attr.hasKey("error")) {
             UserError error = new UserError(attr.get("error"),
                     ContentMode.HTML, ErrorLevel.ERROR);
             setComponentError(error);
-        } else {
-            setComponentError(def.getComponentError());
         }
         // handle responsive
         setResponsive(attr.hasKey("responsive")
@@ -1045,8 +1045,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @param defaultInstance
      *            instance of the class that has default sizing.
      */
-    private void readSize(Attributes attributes,
-            AbstractComponent defaultInstance) {
+    private void readSize(Attributes attributes) {
         // read width
         if (attributes.hasKey("width-auto") || attributes.hasKey("size-auto")) {
             this.setWidth(null);
@@ -1055,9 +1054,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
             this.setWidth("100%");
         } else if (attributes.hasKey("width")) {
             this.setWidth(attributes.get("width"));
-        } else {
-            this.setWidth(defaultInstance.getWidth(),
-                    defaultInstance.getWidthUnits());
         }
 
         // read height
@@ -1068,9 +1064,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
             this.setHeight("100%");
         } else if (attributes.hasKey("height")) {
             this.setHeight(attributes.get("height"));
-        } else {
-            this.setHeight(defaultInstance.getHeight(),
-                    defaultInstance.getHeightUnits());
         }
     }
 

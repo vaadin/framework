@@ -348,9 +348,8 @@ public class Panel extends AbstractSingleComponentContainer implements
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         // handle tabindex
-        Panel def = designContext.getDefaultInstance(this.getClass());
         int tabIndex = DesignAttributeHandler.readAttribute("tabindex",
-                design.attributes(), def.getTabIndex(), Integer.class);
+                design.attributes(), Integer.class);
         setTabIndex(tabIndex);
     }
 

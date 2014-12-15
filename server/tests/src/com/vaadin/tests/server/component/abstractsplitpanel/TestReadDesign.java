@@ -60,21 +60,6 @@ public class TestReadDesign extends TestCase {
         assertEquals(Unit.PIXELS, sp.getMaxSplitPositionUnit());
         assertEquals(true, sp.isLocked());
         checkReversed(sp, true);
-        // check that the properties get the default values if the design
-        // does not have attributes corresponding to those properties
-        design = createDesign(true, true, true, true);
-        sp.readDesign(design, ctx);
-        HorizontalSplitPanel def = new HorizontalSplitPanel();
-        assertEquals(def.getSplitPosition(), sp.getSplitPosition());
-        assertEquals(def.getSplitPositionUnit(), sp.getSplitPositionUnit());
-        assertEquals(def.getMinSplitPosition(), sp.getMinSplitPosition());
-        assertEquals(def.getMinSplitPositionUnit(),
-                sp.getMinSplitPositionUnit());
-        assertEquals(def.getMaxSplitPosition(), sp.getMaxSplitPosition());
-        assertEquals(def.getMaxSplitPositionUnit(),
-                sp.getMaxSplitPositionUnit());
-        assertEquals(def.isLocked(), sp.isLocked());
-        checkReversed(sp, false);
     }
 
     public void testWithNoChildren() {
