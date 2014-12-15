@@ -243,7 +243,7 @@ public class Design implements Serializable {
         // creates the entire component hierarchy rooted at the
         // given root node.
         Component root = designContext.getRootComponent();
-        Node rootNode = designContext.createNode(root);
+        Node rootNode = designContext.createElement(root);
         body.appendChild(rootNode);
         return doc;
     }

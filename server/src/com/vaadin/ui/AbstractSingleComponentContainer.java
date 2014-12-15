@@ -317,7 +317,7 @@ public abstract class AbstractSingleComponentContainer extends
         // handle child component
         Component child = getContent();
         if (child != null) {
-            Element childNode = designContext.createNode(child);
+            Element childNode = designContext.createElement(child);
             design.appendChild(childNode);
         }
     }

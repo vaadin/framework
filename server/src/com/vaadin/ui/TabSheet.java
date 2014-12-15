@@ -1571,7 +1571,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         // create element for tab
         Element tabElement = design.appendElement("tab");
         // add tab content
-        tabElement.appendChild(designContext.createNode(tab.getComponent()));
+        tabElement.appendChild(designContext.createElement(tab.getComponent()));
         Attributes attr = tabElement.attributes();
         // write attributes
         DesignAttributeHandler.writeAttribute("visible", attr, tab.isVisible(),

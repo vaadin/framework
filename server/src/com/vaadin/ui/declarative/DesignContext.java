@@ -360,7 +360,7 @@ public class DesignContext implements Serializable {
      *         name of the created node is derived from the class name of
      *         childComponent.
      */
-    public Element createNode(Component childComponent) {
+    public Element createElement(Component childComponent) {
         Class<?> componentClass = childComponent.getClass();
         String packageName = componentClass.getPackage().getName();
         String prefix = packageToPrefix.get(packageName);

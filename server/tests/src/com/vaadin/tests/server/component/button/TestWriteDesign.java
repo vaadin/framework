@@ -84,7 +84,7 @@ public class TestWriteDesign extends TestCase {
         // we need to set this on, since the plain-text attribute will appear
         // otherwise
         b1.setHtmlContentAllowed(true);
-        Element e1 = ctx.createNode(b1);
+        Element e1 = ctx.createElement(b1);
         assertEquals("Wrong tag name for button.", "v-button", e1.tagName());
         assertEquals("Unexpected content in the v-button element.", content,
                 e1.html());
@@ -92,7 +92,7 @@ public class TestWriteDesign extends TestCase {
                 .attributes().size() == 0);
         NativeButton b2 = new NativeButton(content);
         b2.setHtmlContentAllowed(true);
-        Element e2 = ctx.createNode(b2);
+        Element e2 = ctx.createElement(b2);
         assertEquals("Wrong tag name for button.", "v-native-button",
                 e2.tagName());
         assertEquals("Unexpected content in the v-button element.", content,

@@ -120,7 +120,7 @@ public class TestLocale extends TestCase {
         // creates the entire component hierarchy rooted at the
         // given root node.
         Component root = dc.getRootComponent();
-        Node rootNode = dc.createNode(root);
+        Node rootNode = dc.createElement(root);
         body.appendChild(rootNode);
         return doc;
 

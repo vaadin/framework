@@ -43,7 +43,7 @@ public class TestWriteDesign extends TestCase {
     public void testHorizontalWithDefaultValues() {
         // no attributes or child elements should appear
         HorizontalSplitPanel sp = new HorizontalSplitPanel();
-        Element e = ctx.createNode(sp);
+        Element e = ctx.createElement(sp);
         assertEquals("Wrong tag name.", "v-horizontal-split-panel",
                 e.nodeName());
         assertEquals("The split panel should not have attributes.", 0, e
@@ -60,7 +60,7 @@ public class TestWriteDesign extends TestCase {
         sp.setMinSplitPosition(5.5f, Unit.PERCENTAGE);
         sp.setMaxSplitPosition(95, Unit.PERCENTAGE);
         sp.setLocked(true);
-        Element e = ctx.createNode(sp);
+        Element e = ctx.createElement(sp);
         assertEquals("Wrong tag name.", "v-vertical-split-panel", e.nodeName());
         assertEquals("Unexpected number of attributes.", 5, e.attributes()
                 .size());
@@ -82,7 +82,7 @@ public class TestWriteDesign extends TestCase {
         HorizontalSplitPanel sp = new HorizontalSplitPanel();
         sp.setSplitPosition(25f);
         sp.setFirstComponent(new Button("First slot"));
-        Element e = ctx.createNode(sp);
+        Element e = ctx.createElement(sp);
         assertEquals("Wrong split position.", "25%", e.attr("split-position"));
         assertEquals("Wrong number of child elements.", 1, e.children().size());
         Element eb = e.children().get(0);
@@ -97,7 +97,7 @@ public class TestWriteDesign extends TestCase {
         VerticalSplitPanel sp = new VerticalSplitPanel();
         sp.setMinSplitPosition(25f, Unit.PIXELS);
         sp.setSecondComponent(new Label("Second slot"));
-        Element e = ctx.createNode(sp);
+        Element e = ctx.createElement(sp);
         assertEquals("Wrong minimum split position.", "25px",
                 e.attr("min-split-position"));
         assertEquals("Wrong number of child elements.", 1, e.children().size());
@@ -115,7 +115,7 @@ public class TestWriteDesign extends TestCase {
         VerticalSplitPanel sp = new VerticalSplitPanel();
         sp.setFirstComponent(new Button("First slot"));
         sp.setSecondComponent(new Label("Second slot"));
-        Element e = ctx.createNode(sp);
+        Element e = ctx.createElement(sp);
         assertEquals("Wrong number of child elements.", 2, e.children().size());
         Element eb = e.children().get(0);
         assertEquals("Wrong tag name of first child element.", "v-button",
@@ -140,7 +140,7 @@ public class TestWriteDesign extends TestCase {
         sp.setMaxSplitPosition(95, Unit.PERCENTAGE);
         sp.setFirstComponent(new Button("First slot"));
         sp.setSecondComponent(new Label("Second slot"));
-        Element e = ctx.createNode(sp);
+        Element e = ctx.createElement(sp);
         sp = new VerticalSplitPanel();
         sp.writeDesign(e, ctx);
         assertTrue("There should be no attributes in the node.", e.attributes()

@@ -545,26 +545,26 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         }
 
         for (Component child : this) {
-            Element childNode = designContext.createNode(child);
-            designElement.appendChild(childNode);
+            Element childElement = designContext.createElement(child);
+            designElement.appendChild(childElement);
             // handle alignment
             Alignment alignment = getComponentAlignment(child);
             if (alignment.isMiddle()) {
-                childNode.attr(":middle", "");
+                childElement.attr(":middle", "");
             } else if (alignment.isBottom()) {
-                childNode.attr(":bottom", "");
+                childElement.attr(":bottom", "");
             }
             if (alignment.isCenter()) {
-                childNode.attr(":center", "");
+                childElement.attr(":center", "");
             } else if (alignment.isRight()) {
-                childNode.attr(":right", "");
+                childElement.attr(":right", "");
             }
             // handle expand ratio
             float expandRatio = getExpandRatio(child);
             if (expandRatio == 1.0f) {
-                childNode.attr(":expand", "");
+                childElement.attr(":expand", "");
             } else if (expandRatio > 0) {
-                childNode.attr(":expand",
+                childElement.attr(":expand",
                         DesignAttributeHandler.formatFloat(expandRatio));
             }
         }

@@ -654,11 +654,11 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         Component firstComponent = getFirstComponent();
         Component secondComponent = getSecondComponent();
         if (firstComponent != null) {
-            Element childElement = designContext.createNode(firstComponent);
+            Element childElement = designContext.createElement(firstComponent);
             design.appendChild(childElement);
         }
         if (secondComponent != null) {
-            Element childElement = designContext.createNode(secondComponent);
+            Element childElement = designContext.createElement(secondComponent);
             if (firstComponent == null) {
                 childElement.attr(":second", "");
             }

@@ -723,22 +723,23 @@ public class AbsoluteLayout extends AbstractLayout implements
         // handle children
         Element designElement = design;
         for (Component child : this) {
-            Element childNode = designContext.createNode(child);
-            designElement.appendChild(childNode);
-            child.writeDesign(childNode, designContext);
+            Element childElement = designContext.createElement(child);
+            designElement.appendChild(childElement);
+            child.writeDesign(childElement, designContext);
             // handle position
             ComponentPosition position = getPosition(child);
-            writePositionAttribute(childNode, ATTR_TOP, position.getTopUnits()
-                    .getSymbol(), position.getTopValue());
-            writePositionAttribute(childNode, ATTR_RIGHT, position
+            writePositionAttribute(childElement, ATTR_TOP, position
+                    .getTopUnits().getSymbol(), position.getTopValue());
+            writePositionAttribute(childElement, ATTR_RIGHT, position
                     .getRightUnits().getSymbol(), position.getRightValue());
-            writePositionAttribute(childNode, ATTR_BOTTOM, position
+            writePositionAttribute(childElement, ATTR_BOTTOM, position
                     .getBottomUnits().getSymbol(), position.getBottomValue());
-            writePositionAttribute(childNode, ATTR_LEFT, position
+            writePositionAttribute(childElement, ATTR_LEFT, position
                     .getLeftUnits().getSymbol(), position.getLeftValue());
             // handle z-index
             if (position.getZIndex() >= 0) {
-                childNode.attr(ATTR_Z_INDEX, String.valueOf(position.zIndex));
+                childElement
+                        .attr(ATTR_Z_INDEX, String.valueOf(position.zIndex));
             }
         }
     }

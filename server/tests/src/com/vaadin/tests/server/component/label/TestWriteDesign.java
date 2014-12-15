@@ -106,7 +106,7 @@ public class TestWriteDesign extends TestCase {
         if (caption != null) {
             l.setCaption(caption);
         }
-        Element e = ctx.createNode(l);
+        Element e = ctx.createElement(l);
         assertEquals("Wrong tag name for label.", "v-label", e.tagName());
         if (content != null) {
             assertEquals("Unexpected content in the v-label element.", content,
