@@ -34,7 +34,6 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.panel.PanelServerRpc;
 import com.vaadin.shared.ui.panel.PanelState;
 import com.vaadin.ui.Component.Focusable;
-import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
@@ -347,17 +346,11 @@ public class Panel extends AbstractSingleComponentContainer implements
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
-        // handle tabindex
-        int tabIndex = DesignAttributeHandler.readAttribute("tabindex",
-                design.attributes(), Integer.class);
-        setTabIndex(tabIndex);
     }
 
     @Override
     protected Collection<String> getCustomAttributes() {
         Collection<String> attributes = super.getCustomAttributes();
-        attributes.add("tabindex");
-        attributes.add("tab-index");
         return attributes;
     }
 
@@ -366,8 +359,6 @@ public class Panel extends AbstractSingleComponentContainer implements
         super.writeDesign(design, designContext);
         // handle tabindex
         Panel def = (Panel) designContext.getDefaultInstance(this);
-        DesignAttributeHandler.writeAttribute("tabindex", design.attributes(),
-                getTabIndex(), def.getTabIndex(), Integer.class);
     }
 
 }

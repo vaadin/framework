@@ -950,6 +950,13 @@ public abstract class AbstractComponent extends AbstractClientConnector
                     ContentMode.HTML, ErrorLevel.ERROR);
             setComponentError(error);
         }
+        // Tab index when applicable
+        if (design.hasAttr("tabindex") && this instanceof Focusable) {
+            ((Focusable) this).setTabIndex(DesignAttributeHandler
+                    .readAttribute("tabindex", design.attributes(),
+                            Integer.class));
+        }
+
         // handle responsive
         setResponsive(attr.hasKey("responsive")
                 && !attr.get("responsive").equalsIgnoreCase("false"));
@@ -1188,7 +1195,12 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *         implementation
      */
     protected Collection<String> getCustomAttributes() {
-        return new ArrayList<String>(Arrays.asList(customAttributes));
+        ArrayList<String> l = new ArrayList<String>(
+                Arrays.asList(customAttributes));
+        if (this instanceof Focusable) {
+            l.add("tab-index");
+        }
+        return l;
     }
 
     private static final String[] customAttributes = new String[] { "width",
@@ -1232,6 +1244,13 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (!SharedUtil.equals(errorMsg, defErrorMsg)) {
             attr.put("error", errorMsg);
         }
+        // handle tab index
+        if (this instanceof Focusable) {
+            DesignAttributeHandler.writeAttribute("tabindex", attr,
+                    ((Focusable) this).getTabIndex(),
+                    ((Focusable) def).getTabIndex(), Integer.class);
+        }
+
         // handle responsive
         if (isResponsive()) {
             attr.put("responsive", "");

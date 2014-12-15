@@ -1772,11 +1772,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             setReadOnly(DesignAttributeHandler.readAttribute("readonly", attr,
                     Boolean.class));
         }
-        // tabindex
-        if (design.hasAttr("tabindex")) {
-            setTabIndex(DesignAttributeHandler.readAttribute("tabindex", attr,
-                    Integer.class));
-        }
     }
 
     /*
@@ -1788,7 +1783,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     protected Collection<String> getCustomAttributes() {
         Collection<String> attributes = super.getCustomAttributes();
         attributes.add("readonly");
-        attributes.add("tabindex");
         // must be handled by subclasses
         attributes.add("value");
         return attributes;
@@ -1808,9 +1802,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         // handle readonly
         DesignAttributeHandler.writeAttribute("readonly", attr,
                 super.isReadOnly(), def.isReadOnly(), Boolean.class);
-        // handle tab index
-        DesignAttributeHandler.writeAttribute("tabindex", attr, getTabIndex(),
-                def.getTabIndex(), Integer.class);
     }
 
     private static final Logger getLogger() {

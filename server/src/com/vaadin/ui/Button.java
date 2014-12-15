@@ -678,11 +678,6 @@ public class Button extends AbstractComponent implements
         Attributes attr = design.attributes();
         String content = design.html();
         setCaption(content);
-        // tabindex
-        if (attr.hasKey("tabindex")) {
-            setTabIndex(DesignAttributeHandler.readAttribute("tabindex", attr,
-                    Integer.class));
-        }
         // plain-text (default is html)
         Boolean plain = DesignAttributeHandler.readAttribute(
                 DESIGN_ATTR_PLAIN_TEXT, attr, Boolean.class);
@@ -710,7 +705,6 @@ public class Button extends AbstractComponent implements
     @Override
     protected Collection<String> getCustomAttributes() {
         Collection<String> result = super.getCustomAttributes();
-        result.add("tabindex");
         result.add(DESIGN_ATTR_PLAIN_TEXT);
         result.add("caption");
         result.add("icon-alt");
@@ -735,9 +729,6 @@ public class Button extends AbstractComponent implements
         if (content != null) {
             design.html(content);
         }
-        // tabindex
-        DesignAttributeHandler.writeAttribute("tabindex", attr, getTabIndex(),
-                def.getTabIndex(), Integer.class);
         // plain-text (default is html)
         if (!isHtmlContentAllowed()) {
             design.attr(DESIGN_ATTR_PLAIN_TEXT, "");

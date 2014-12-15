@@ -1464,8 +1464,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
-        // handle tab index
-        readTabIndex(design);
         // clear old tabs
         removeAllComponents();
         // create new tabs
@@ -1476,15 +1474,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             }
             readTabFromDesign(tab, designContext);
         }
-    }
-
-    private void readTabIndex(Element design) {
-        // Could be in AbstractComponent as if (this implements Focusable)
-        if (design.hasAttr("tabindex")) {
-            setTabIndex(DesignAttributeHandler.readAttribute("tabindex",
-                    design.attributes(), Integer.class));
-        }
-
     }
 
     /**
@@ -1609,7 +1598,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     @Override
     protected Collection<String> getCustomAttributes() {
         Collection<String> attributes = super.getCustomAttributes();
-        attributes.add("tabindex");
         // no need to list tab attributes since they are considered internal
         return attributes;
     }
@@ -1625,9 +1613,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         super.writeDesign(design, designContext);
         TabSheet def = (TabSheet) designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
-        // handle tab index
-        DesignAttributeHandler.writeAttribute("tabindex", attr, getTabIndex(),
-                def.getTabIndex(), Integer.class);
+
         // write tabs
         for (Component component : this) {
             Tab tab = this.getTab(component);
