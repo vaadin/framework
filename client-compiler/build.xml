@@ -16,7 +16,16 @@
     <path id="classpath.compile.custom">
         <fileset file="${gwt.dev.jar}" />
     </path>
-
+    <path id="classpath.test.custom">
+        <fileset dir="${result.dir}/classes">
+            <include name="**/*" />
+        </fileset>
+    </path>
+    <property name="extra.classes" value="**/*.properties" />
+    <!-- don't try to copy the same files twice (first from classes and then
+         from sources) in order for the build not to fail when packaging the
+         JAR -->
+    <property name="jar.exclude" value="**/*.properties" />
     <union id="compiler.includes">
         <union refid="client-compiler.gwt.includes" />
         <fileset dir="${result.dir}">
@@ -62,8 +71,8 @@
     </target>
 
     <target name="test" depends="checkstyle">
-        <!--<antcall target="common.test.run" /> -->
-        <echo>WHAT? No tests for ${module.name}!</echo>
+        <antcall target="common.test.run" />
+        <!--<echo>WHAT? No tests for ${module.name}!</echo>-->
     </target>
 
 </project>
