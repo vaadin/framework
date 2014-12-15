@@ -32,17 +32,28 @@ import com.vaadin.client.widgets.Grid;
 public interface EditorHandler<T> {
 
     /**
-     * A request class for handling asynchronous data binding. The request is
-     * callback-based to facilitate usage with remote or otherwise asynchronous
-     * data sources.
+     * A request class passed as a parameter to the editor handler methods. The
+     * request is callback-based to facilitate usage with remote or otherwise
+     * asynchronous data sources.
+     * <p>
+     * In any of the EditorHandler methods, an implementation may call
+     * {@link EditorRequest#startAsync()} to signal the caller that the request
+     * is handled asynchronously. In that case, {@link EditorRequest#complete()}
+     * must be called when the request is complete.
      * <p>
      * TODO Should have a mechanism for signaling a failed request to the caller
+     * 
+     * @param <T>
+     *            the row data type
      */
     public static class EditorRequest<T> {
 
         /**
-         * A callback interface used to notify the caller about completed
-         * requests.
+         * A callback interface used to notify the invoker of the editor handler
+         * of completed editor requests.
+         * 
+         * @param <T>
+         *            the row data type
          */
         public interface RequestCallback<T> {
             public void onResponse(EditorRequest<T> request);
@@ -51,6 +62,8 @@ public interface EditorHandler<T> {
         private Grid<T> grid;
         private int rowIndex;
         private RequestCallback<T> callback;
+        private boolean async = false;
+        private boolean completed = false;
 
         /**
          * Creates a new editor request.
@@ -109,10 +122,35 @@ public interface EditorHandler<T> {
             return w;
         }
 
+        public boolean isAsync() {
+            return async;
+        }
+
         /**
-         * Invokes the stored callback if it is not null.
+         * Marks this request as asynchronous. If this method is invoked, the
+         * caller must also ensure that {@link #complete()} is invoked once the
+         * request is finished.
          */
-        public void invokeCallback() {
+        public void startAsync() {
+            async = true;
+        }
+
+        /**
+         * Completes this request. The request can only be completed once. This
+         * method should only be called by an EditorHandler implementer if the
+         * request handling is asynchronous in nature and {@link #startAsync()}
+         * is previously invoked for this request. Synchronous requests are
+         * completed automatically by the editor.
+         * 
+         * @throws IllegalStateException
+         *             if the request is already completed
+         */
+        public void complete() {
+            if (completed) {
+                throw new IllegalStateException(
+                        "An EditorRequest must be completed exactly once");
+            }
+            completed = true;
             if (callback != null) {
                 callback.onResponse(this);
             }
@@ -123,9 +161,10 @@ public interface EditorHandler<T> {
      * Binds row data to the editor widgets. Called by the editor when it is
      * opened for editing.
      * <p>
-     * An implementation must call {@link EditorRequest#invokeCallback()
-     * request.invokeCallback()} when the binding is complete (possibly
-     * asynchronously).
+     * An implementation may call {@link EditorRequest#startAsync()
+     * request.startAsync()} to signal the caller that the request is handled
+     * asynchronously. In that case, {@link EditorRequest#complete()} must be
+     * called once the binding is complete.
      * 
      * @param request
      *            the data binding request
@@ -135,13 +174,14 @@ public interface EditorHandler<T> {
     public void bind(EditorRequest<T> request);
 
     /**
-     * Cancels a currently active edit if any. Called by the grid editor when
-     * editing is cancelled.
+     * Called by the editor when editing is cancelled. This method may have an
+     * empty implementation in case no special processing is required.
      * <p>
-     * An implementation must call {@link EditorRequest#invokeCallback()
-     * request.invokeCallback()} when the cancel is done (possibly
-     * asynchronously).
-     * 
+     * An implementation may call {@link EditorRequest#startAsync()
+     * request.startAsync()} to signal the caller that the request is handled
+     * asynchronously. In that case, {@link EditorRequest#complete()} must be
+     * called once the cancel operation is complete.
+     *
      * @param request
      *            the cancel request
      * 
@@ -150,11 +190,18 @@ public interface EditorHandler<T> {
     public void cancel(EditorRequest<T> request);
 
     /**
-     * Saves changes in the currently active edit to the data source. Called by
-     * the grid editor when changes are saved.
-     * 
+     * Commits changes in the currently active edit to the data source. Called
+     * by the editor when changes are saved.
+     * <p>
+     * An implementation may call {@link EditorRequest#startAsync()
+     * request.startAsync()} to signal the caller that the request is handled
+     * asynchronously. In that case, {@link EditorRequest#complete()} must be
+     * called once the commit operation is complete.
+     *
      * @param request
      *            the save request
+     * 
+     * @see Grid#saveEditor()
      */
     public void save(EditorRequest<T> request);
 

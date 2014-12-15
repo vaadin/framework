@@ -1010,12 +1010,17 @@ public class Grid<T> extends ResizeComposite implements
             }
             hideOverlay();
             grid.getEscalator().setScrollLocked(Direction.VERTICAL, false);
-            handler.cancel(new EditorRequest<T>(grid, rowIndex, null));
+
+            EditorRequest<T> request = new EditorRequest<T>(grid, rowIndex,
+                    null);
+            handler.cancel(request);
+            completeIfSync(request);
+
             state = State.INACTIVE;
         }
 
         /**
-         * Saves any unsaved changes to the data source.
+         * Saves any unsaved changes to the data source and hides the editor.
          * 
          * @throws IllegalStateException
          *             if this editor is not enabled
@@ -1033,16 +1038,18 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             state = State.SAVING;
-
-            handler.save(new EditorRequest<T>(grid, rowIndex,
+            EditorRequest<T> request = new EditorRequest<T>(grid, rowIndex,
                     new RequestCallback<T>() {
                         @Override
                         public void onResponse(EditorRequest<T> request) {
                             if (state == State.SAVING) {
                                 state = State.ACTIVE;
+                                cancel();
                             }
                         }
-                    }));
+                    });
+            handler.save(request);
+            completeIfSync(request);
         }
 
         /**
@@ -1101,7 +1108,7 @@ public class Grid<T> extends ResizeComposite implements
 
         protected void show() {
             if (state == State.ACTIVATING) {
-                handler.bind(new EditorRequest<T>(grid, rowIndex,
+                EditorRequest<T> request = new EditorRequest<T>(grid, rowIndex,
                         new RequestCallback<T>() {
                             @Override
                             public void onResponse(EditorRequest<T> request) {
@@ -1114,7 +1121,10 @@ public class Grid<T> extends ResizeComposite implements
                                                     request.getRowIndex()));
                                 }
                             }
-                        }));
+                        });
+                handler.bind(request);
+                completeIfSync(request);
+
                 grid.getEscalator().setScrollLocked(Direction.VERTICAL, true);
             }
         }
@@ -1212,7 +1222,6 @@ public class Grid<T> extends ResizeComposite implements
                 public void onClick(ClickEvent event) {
                     // TODO should have a mechanism for handling failed save
                     save();
-                    cancel();
                 }
             });
             setBounds(save.getElement(), 0, tr.getOffsetHeight() + 5, 50, 25);
@@ -1283,6 +1292,12 @@ public class Grid<T> extends ResizeComposite implements
 
         private void updateHorizontalScrollPosition() {
             editorOverlay.getStyle().setLeft(-grid.getScrollLeft(), Unit.PX);
+        }
+
+        private void completeIfSync(EditorRequest<T> request) {
+            if (!request.isAsync()) {
+                request.complete();
+            }
         }
     }
 

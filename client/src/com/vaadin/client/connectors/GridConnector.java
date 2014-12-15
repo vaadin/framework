@@ -285,8 +285,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         /**
          * Used to handle the case where the editor calls us because it was
-         * invoked by the server via RPC and not by the client. In that case, we
-         * simply synchronously complete the request.
+         * invoked by the server via RPC and not by the client. In that case,
+         * the request can be simply synchronously completed.
          * 
          * @param request
          *            the request object
@@ -294,12 +294,11 @@ public class GridConnector extends AbstractHasComponentsConnector implements
          *         false otherwise
          */
         private boolean handleServerInitiated(EditorRequest<?> request) {
-            assert request != null;
-            assert currentRequest == null;
+            assert request != null : "Cannot handle null request";
+            assert currentRequest == null : "Earlier request not yet finished";
 
             if (serverInitiated) {
                 serverInitiated = false;
-                request.invokeCallback();
                 return true;
             } else {
                 return false;
@@ -308,12 +307,18 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         private void startRequest(EditorRequest<?> request) {
             currentRequest = request;
+            request.startAsync();
         }
 
         private void endRequest() {
             assert currentRequest != null;
-            currentRequest.invokeCallback();
+            /*
+             * Clear current request first to ensure the state is valid if
+             * another request is made in the callback.
+             */
+            EditorRequest<?> request = currentRequest;
             currentRequest = null;
+            request.complete();
         }
     }
 

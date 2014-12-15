@@ -112,14 +112,11 @@ public class GridBasicClientFeaturesWidget extends
                 int columnIndex = hasSelectionColumn ? i + 1 : i;
                 getWidget(columnIndex).setText(rowData.get(i).value.toString());
             }
-
-            request.invokeCallback();
         }
 
         @Override
         public void cancel(EditorRequest<List<Data>> request) {
             log.setText("Row " + request.getRowIndex() + " edit cancelled");
-            request.invokeCallback();
         }
 
         @Override
@@ -140,8 +137,6 @@ public class GridBasicClientFeaturesWidget extends
 
             // notify data source of changes
             ds.asList().set(request.getRowIndex(), rowData);
-
-            request.invokeCallback();
         }
 
         @Override
