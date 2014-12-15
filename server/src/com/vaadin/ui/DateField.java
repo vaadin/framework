@@ -319,7 +319,8 @@ public class DateField extends AbstractField<Date> implements
 
         // Create a defensive copy against issues when using java.sql.Date (and
         // also against mutable Date).
-        getState().rangeStart = new Date(startDate.getTime());
+        getState().rangeStart = startDate != null ? new Date(
+                startDate.getTime()) : null;
         updateRangeValidator();
     }
 
@@ -439,7 +440,8 @@ public class DateField extends AbstractField<Date> implements
 
         // Create a defensive copy against issues when using java.sql.Date (and
         // also against mutable Date).
-        getState().rangeEnd = new Date(endDate.getTime());
+        getState().rangeEnd = endDate != null ? new Date(endDate.getTime())
+                : null;
         updateRangeValidator();
     }
 
