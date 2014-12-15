@@ -1803,7 +1803,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        AbstractField def = designContext.getDefaultInstance(this.getClass());
+        AbstractField def = designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
         // handle readonly
         DesignAttributeHandler.writeAttribute("readonly", attr,

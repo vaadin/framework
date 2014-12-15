@@ -107,8 +107,8 @@ public class PasswordField extends AbstractTextField {
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        AbstractTextField def = designContext.getDefaultInstance(this
-                .getClass());
+        AbstractTextField def = (AbstractTextField) designContext
+                .getDefaultInstance(this);
         Attributes attr = design.attributes();
         DesignAttributeHandler.writeAttribute("value", attr, getValue(),
                 def.getValue(), String.class);

@@ -1623,7 +1623,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        TabSheet def = designContext.getDefaultInstance(this.getClass());
+        TabSheet def = (TabSheet) designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
         // handle tab index
         DesignAttributeHandler.writeAttribute("tabindex", attr, getTabIndex(),

@@ -803,8 +803,8 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        AbstractTextField def = designContext.getDefaultInstance(this
-                .getClass());
+        AbstractTextField def = (AbstractTextField) designContext
+                .getDefaultInstance(this);
         Attributes attr = design.attributes();
         DesignAttributeHandler.writeAttribute("maxlength", attr,
                 getMaxLength(), def.getMaxLength(), Integer.class);

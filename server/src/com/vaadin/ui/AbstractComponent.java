@@ -1206,8 +1206,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     public void writeDesign(Element design, DesignContext designContext) {
         // clear element contents
         DesignAttributeHandler.clearElement(design);
-        AbstractComponent def = designContext.getDefaultInstance(this
-                .getClass());
+        AbstractComponent def = designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
         // handle default attributes
         for (String attribute : getDefaultAttributes()) {

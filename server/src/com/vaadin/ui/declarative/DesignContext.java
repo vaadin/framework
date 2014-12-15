@@ -28,7 +28,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
+import com.vaadin.annotations.DesignRoot;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HasComponents;
 
 /**
  * This class contains contextual information that is collected when a component
@@ -42,8 +45,8 @@ import com.vaadin.ui.Component;
 public class DesignContext implements Serializable {
 
     // cache for object instances
-    private static Map<Class<?>, Object> instanceCache = Collections
-            .synchronizedMap(new HashMap<Class<?>, Object>());
+    private static Map<Class<?>, Component> instanceCache = Collections
+            .synchronizedMap(new HashMap<Class<?>, Component>());
 
     // The root component of the component hierarchy
     private Component rootComponent = null;
@@ -254,22 +257,38 @@ public class DesignContext implements Serializable {
      * Returns the default instance for the given class. The instance must not
      * be modified by the caller.
      * 
-     * @param instanceClass
+     * @param abstractComponent
      * @return the default instance for the given class. The return value must
      *         not be modified by the caller
      */
-    public <T> T getDefaultInstance(Class<T> instanceClass) {
-        T instance = (T) instanceCache.get(instanceClass);
+    public <T> T getDefaultInstance(AbstractComponent abstractComponent) {
+        // If the root is a @DesignRoot component, it can't use itself as a
+        // reference or the written design will be empty
+
+        // If the root component in some other way initializes itself in the
+        // constructor
+        if (getRootComponent() == abstractComponent
+                && abstractComponent.getClass().isAnnotationPresent(
+                        DesignRoot.class)) {
+            return (T) getDefaultInstance((Class<? extends Component>) abstractComponent
+                    .getClass().getSuperclass());
+        }
+        return (T) getDefaultInstance(abstractComponent.getClass());
+    }
+
+    private Component getDefaultInstance(
+            Class<? extends Component> componentClass) {
+        Component instance = instanceCache.get(componentClass);
         if (instance == null) {
             try {
-                instance = instanceClass.newInstance();
-                instanceCache.put(instanceClass, instance);
+                instance = componentClass.newInstance();
+                instanceCache.put(componentClass, instance);
             } catch (InstantiationException e) {
                 throw new RuntimeException("Could not instantiate "
-                        + instanceClass.getName());
+                        + componentClass.getName());
             } catch (IllegalAccessException e) {
                 throw new RuntimeException("Could not instantiate "
-                        + instanceClass.getName());
+                        + componentClass.getName());
             }
         }
         return instance;
@@ -663,4 +682,30 @@ public class DesignContext implements Serializable {
         }
     }
 
+    /**
+     * Helper method for component write implementors to determine whether their
+     * children should be written out or not
+     * 
+     * @param c
+     *            The component being written
+     * @param defaultC
+     *            The default instance for the component
+     * @return
+     */
+    public boolean shouldWriteChildren(Component c, Component defaultC) {
+        if (c == getRootComponent()) {
+            // The root component should always write its children - otherwise
+            // the result is empty
+            return true;
+        }
+
+        if (defaultC instanceof HasComponents
+                && ((HasComponents) defaultC).iterator().hasNext()) {
+            // Easy version which assumes that this is a custom component if the
+            // constructor adds children
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -533,13 +533,17 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         // synchronize default attributes
         super.writeDesign(design, designContext);
         // handle margin
-        AbstractOrderedLayout def = designContext.getDefaultInstance(this
-                .getClass());
+        AbstractOrderedLayout def = (AbstractOrderedLayout) designContext
+                .getDefaultInstance(this);
         if (getMargin().getBitMask() != def.getMargin().getBitMask()) {
             design.attr("margin", "");
         }
         // handle children
         Element designElement = design;
+        if (!designContext.shouldWriteChildren(this, def)) {
+            return;
+        }
+
         for (Component child : this) {
             Element childNode = designContext.createNode(child);
             designElement.appendChild(childNode);

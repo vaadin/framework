@@ -727,7 +727,7 @@ public class Button extends AbstractComponent implements
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
         Attributes attr = design.attributes();
-        Button def = designContext.getDefaultInstance(this.getClass());
+        Button def = (Button) designContext.getDefaultInstance(this);
         String content = getCaption();
         if (content != null) {
             design.html(content);
