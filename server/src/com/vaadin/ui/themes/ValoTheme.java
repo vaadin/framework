@@ -882,6 +882,31 @@ public class ValoTheme {
 
     /**
      * <p>
+     * When you use the Valo menu and wish to enable responsive features of the
+     * menu, you need to add this style name to the UI containing the menu.
+     * </p>
+     * 
+     * <p>
+     * You only need to add this style name to the UI containing a Valo menu, if
+     * you're using the Responsive extension with the UI.
+     * </p>
+     * 
+     * <h4>Example</h4>
+     * 
+     * <p>
+     * To enable responsivity in the Valo menu, the following example code
+     * should be executed in your UI containing the menu.
+     * </p>
+     * 
+     * <pre>
+     * Responsive.makeResponsive(this);
+     * addStyleName(ValoTheme.UI_WITH_MENU);
+     * </pre>
+     */
+    public static final String UI_WITH_MENU = "valo-menu-responsive";
+
+    /**
+     * <p>
      * Set the <em><b>primary</b></em> style name of a CssLayout to this, and
      * add any number of layouts with the {@link #MENU_PART} style inside it.
      * </p>

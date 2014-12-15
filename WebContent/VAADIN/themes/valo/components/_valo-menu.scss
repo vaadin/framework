@@ -152,7 +152,7 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
  * @group valo-menu
  */
 @mixin valo-menu-responsive {
-  .v-ui {
+  .v-ui.valo-menu-responsive {
     @include width-range($min: 801px, $max: 1100px) {
       .valo-menu-part {
         @include valo-menu-large-icons-style($valo-menu-background-color);
