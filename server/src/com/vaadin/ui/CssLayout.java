@@ -371,8 +371,6 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     public void readDesign(Element design, DesignContext designContext) {
         // process default attributes
         super.readDesign(design, designContext);
-        // remove current children
-        removeAllComponents();
         // handle children
         for (Element childComponent : design.children()) {
             Component newChild = designContext.createChild(childComponent);

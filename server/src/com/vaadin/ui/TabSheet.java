@@ -1464,8 +1464,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
-        // clear old tabs
-        removeAllComponents();
         // create new tabs
         for (Element tab : design.children()) {
             if (!tab.tagName().equals("tab")) {

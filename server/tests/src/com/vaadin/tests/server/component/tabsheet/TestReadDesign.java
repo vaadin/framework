@@ -22,7 +22,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
 import com.vaadin.server.ExternalResource;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
@@ -80,9 +79,6 @@ public class TestReadDesign extends TestCase {
 
     private TabSheet createTabSheet() {
         TabSheet tabSheet = new TabSheet();
-        // add some tabs that should be cleared on sync
-        tabSheet.addComponent(new Label("tab1"));
-        tabSheet.addComponent(new Label("tab2"));
         DesignContext ctx = new DesignContext();
         Element design = createDesign();
         tabSheet.readDesign(design, ctx);

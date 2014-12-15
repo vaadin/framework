@@ -592,8 +592,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
             setMaxSplitPosition(maxSplitPosition.getSize(),
                     maxSplitPosition.getUnit());
         }
-        // remove current children
-        removeAllComponents();
         // handle children
         if (design.children().size() > 2) {
             throw new DesignException(

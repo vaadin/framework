@@ -299,8 +299,6 @@ public abstract class AbstractSingleComponentContainer extends
             Element childElement = design.children().get(0);
             Component newChild = designContext.createChild(childElement);
             setContent(newChild);
-        } else {
-            setContent(null);
         }
     }
 

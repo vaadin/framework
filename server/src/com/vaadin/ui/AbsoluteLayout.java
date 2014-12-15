@@ -684,8 +684,6 @@ public class AbsoluteLayout extends AbstractLayout implements
     public void readDesign(Element design, DesignContext designContext) {
         // process default attributes
         super.readDesign(design, designContext);
-        // remove current children
-        removeAllComponents();
         // handle children
         for (Element childComponent : design.children()) {
             Attributes attr = childComponent.attributes();
