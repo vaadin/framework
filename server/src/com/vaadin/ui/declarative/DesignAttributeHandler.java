@@ -718,4 +718,19 @@ public class DesignAttributeHandler implements Serializable {
         }
     }
 
+    /**
+     * Converts the given string attribute value to its corresponding boolean.
+     * 
+     * An empty string is considered true (true when attribute exists),
+     * otherwise "false" and "true" are supported, all other input will throw an
+     * exception
+     * 
+     * @param booleanValue
+     *            the boolean value from an attribute
+     * @return the parsed boolean
+     */
+    public static boolean getBoolean(String booleanValue) {
+        return "".equals(booleanValue) ? true : Boolean.valueOf(booleanValue);
+    }
+
 }

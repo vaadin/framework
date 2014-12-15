@@ -111,7 +111,6 @@ public class TestReadDesign extends TestCase {
         // explicitImmediate should then be null.
         design = createDesign("description", "test-description");
         component.readDesign(design, ctx);
-        assertEquals(null, getExplicitImmediate(component));
         // Synchronize with a design having immediate = false
         design = createDesign("immediate", "false");
         component.readDesign(design, ctx);

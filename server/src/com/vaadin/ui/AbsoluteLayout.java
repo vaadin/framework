@@ -719,10 +719,9 @@ public class AbsoluteLayout extends AbstractLayout implements
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
         // handle children
-        Element designElement = design;
         for (Component child : this) {
             Element childElement = designContext.createElement(child);
-            designElement.appendChild(childElement);
+            design.appendChild(childElement);
             child.writeDesign(childElement, designContext);
             // handle position
             ComponentPosition position = getPosition(child);

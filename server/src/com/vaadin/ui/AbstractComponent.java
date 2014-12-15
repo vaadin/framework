@@ -930,17 +930,13 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
         // handle immediate
         if (attr.hasKey("immediate")) {
-            String str = attr.get("immediate");
-            boolean immediate = "".equals(str) ? true : Boolean.valueOf(str);
-            setImmediate(immediate);
-        } else {
-            explicitImmediateValue = null;
+            setImmediate(DesignAttributeHandler.getBoolean(attr
+                    .get("immediate")));
         }
+
         // handle locale
         if (attr.hasKey("locale")) {
             setLocale(getLocaleFromString(attr.get("locale")));
-        } else {
-            setLocale(null);
         }
         // handle width and height
         readSize(attr);
@@ -958,8 +954,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
 
         // handle responsive
-        setResponsive(attr.hasKey("responsive")
-                && !attr.get("responsive").equalsIgnoreCase("false"));
+        if (attr.hasKey("responsive")) {
+            setResponsive(DesignAttributeHandler.getBoolean(attr
+                    .get("responsive")));
+        }
         // check for unsupported attributes
         Set<String> supported = new HashSet<String>();
         supported.addAll(getDefaultAttributes());

@@ -539,14 +539,13 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
             design.attr("margin", "");
         }
         // handle children
-        Element designElement = design;
         if (!designContext.shouldWriteChildren(this, def)) {
             return;
         }
 
         for (Component child : this) {
             Element childElement = designContext.createElement(child);
-            designElement.appendChild(childElement);
+            design.appendChild(childElement);
             // handle alignment
             Alignment alignment = getComponentAlignment(child);
             if (alignment.isMiddle()) {
