@@ -108,7 +108,9 @@ public class FlyweightCell {
                     + row.getRow() + " doesn't exist in the DOM!";
 
             e.setPropertyInt(COLSPAN_ATTR, 1);
-            e.getStyle().setWidth(row.getColumnWidth(column), Unit.PX);
+            if (row.getColumnWidth(column) >= 0) {
+                e.getStyle().setWidth(row.getColumnWidth(column), Unit.PX);
+            }
             e.getStyle().clearDisplay();
             setElement(e);
         }

@@ -1556,8 +1556,12 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 final double colWidth) {
             final TableCellElement cellElem = TableCellElement.as(DOM
                     .createElement(getCellElementTagName()));
-            cellElem.getStyle().setHeight(height, Unit.PX);
-            cellElem.getStyle().setWidth(colWidth, Unit.PX);
+            if (height >= 0) {
+                cellElem.getStyle().setHeight(height, Unit.PX);
+            }
+            if (colWidth >= 0) {
+                cellElem.getStyle().setWidth(colWidth, Unit.PX);
+            }
             cellElem.addClassName(getStylePrimaryName() + "-cell");
             return cellElem;
         }
@@ -1790,7 +1794,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
             com.google.gwt.dom.client.Element row = root.getFirstChildElement();
             while (row != null) {
-                row.getStyle().setWidth(rowWidth, Unit.PX);
+                if (rowWidth >= 0) {
+                    row.getStyle().setWidth(rowWidth, Unit.PX);
+                }
                 row = row.getNextSiblingElement();
             }
         }
