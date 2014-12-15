@@ -111,20 +111,32 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
                 .isSelected());
         toggleFirstRowSelection();
         assertTrue("First row was not selected.", getRow(0).isSelected());
+        assertTrue("Selection event was not correct",
+                logContainsText("Added 0, Removed none"));
         grid.getCell(5, 0).click();
         assertTrue("Fifth row was not selected.", getRow(5).isSelected());
         assertFalse("First row was still selected.", getRow(0).isSelected());
+        assertTrue("Selection event was not correct",
+                logContainsText("Added 5, Removed 0"));
         grid.getCell(0, 6).click();
+        assertTrue("Selection event was not correct",
+                logContainsText("Added 0, Removed 5"));
         toggleFirstRowSelection();
+        assertTrue("Selection event was not correct",
+                logContainsText("Added none, Removed 0"));
         assertFalse("First row was still selected.", getRow(0).isSelected());
         assertFalse("Fifth row was still selected.", getRow(5).isSelected());
 
         grid.scrollToRow(600);
         grid.getCell(595, 3).click();
         assertTrue("Row 595 was not selected.", getRow(595).isSelected());
+        assertTrue("Selection event was not correct",
+                logContainsText("Added 595, Removed none"));
         toggleFirstRowSelection();
         assertFalse("Row 595 was still selected.", getRow(595).isSelected());
         assertTrue("First row was not selected.", getRow(0).isSelected());
+        assertTrue("Selection event was not correct",
+                logContainsText("Added 0, Removed 595"));
     }
 
     @Test

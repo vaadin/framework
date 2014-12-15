@@ -350,6 +350,39 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
              * @see #selectAll()
              */
             boolean deselectAll();
+
+            /**
+             * Marks items as selected while deselecting all items not in the
+             * given Collection.
+             * 
+             * @param itemIds
+             *            the itemIds to mark as selected
+             * @return <code>true</code> if the selection state changed.
+             *         <code>false</code> if all the given itemIds already were
+             *         selected
+             * @throws IllegalArgumentException
+             *             if <code>itemIds</code> is <code>null</code> or given
+             *             itemIds don't exist in the container of Grid
+             */
+            boolean setSelected(Collection<?> itemIds)
+                    throws IllegalArgumentException;
+
+            /**
+             * Marks items as selected while deselecting all items not in the
+             * varargs array.
+             * 
+             * @param itemIds
+             *            the itemIds to mark as selected
+             * @return <code>true</code> if the selection state changed.
+             *         <code>false</code> if all the given itemIds already were
+             *         selected
+             * @throws IllegalArgumentException
+             *             if the <code>itemIds</code> varargs array is
+             *             <code>null</code> or given itemIds don't exist in the
+             *             container of Grid
+             */
+            boolean setSelected(Object... itemIds)
+                    throws IllegalArgumentException;
         }
 
         /**
@@ -770,6 +803,48 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         @Override
         public void reset() {
             deselectAll();
+        }
+
+        @Override
+        public boolean setSelected(Collection<?> itemIds)
+                throws IllegalArgumentException {
+            if (itemIds == null) {
+                throw new IllegalArgumentException("itemIds may not be null");
+            }
+
+            checkItemIdsExist(itemIds);
+
+            boolean changed = false;
+            Set<Object> selectedRows = new HashSet<Object>(itemIds);
+            final Collection<Object> oldSelection = getSelectedRows();
+            SetView<?> added = Sets.difference(selectedRows, selection);
+            if (!added.isEmpty()) {
+                changed = true;
+                selection.addAll(added.immutableCopy());
+            }
+
+            SetView<?> removed = Sets.difference(selection, selectedRows);
+            if (!removed.isEmpty()) {
+                changed = true;
+                selection.removeAll(removed.immutableCopy());
+            }
+
+            if (changed) {
+                fireSelectionEvent(oldSelection, selection);
+            }
+
+            return changed;
+        }
+
+        @Override
+        public boolean setSelected(Object... itemIds)
+                throws IllegalArgumentException {
+            if (itemIds != null) {
+                return setSelected(Arrays.asList(itemIds));
+            } else {
+                throw new IllegalArgumentException(
+                        "Vararg array of itemIds may not be null");
+            }
         }
     }
 
@@ -2494,37 +2569,24 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 Collection<Object> receivedSelection = getKeyMapper()
                         .getItemIds(selection);
 
-                final HashSet<Object> receivedSelectionSet = new HashSet<Object>(
-                        receivedSelection);
-                final HashSet<Object> previousSelectionSet = new HashSet<Object>(
-                        getSelectedRows());
-
                 applyingSelectionFromClient = true;
                 try {
                     SelectionModel selectionModel = getSelectionModel();
-
-                    SetView<Object> removedItemIds = Sets.difference(
-                            previousSelectionSet, receivedSelectionSet);
-                    if (!removedItemIds.isEmpty()) {
-                        if (removedItemIds.size() == 1) {
-                            deselect(removedItemIds.iterator().next());
-                        } else {
-                            assert selectionModel instanceof SelectionModel.Multi : "Got multiple deselections, but the selection model is not a SelectionModel.Multi";
-                            ((SelectionModel.Multi) selectionModel)
-                                    .deselect(removedItemIds);
+                    if (selectionModel instanceof SelectionModel.Single
+                            && selection.size() <= 1) {
+                        Object select = null;
+                        if (selection.size() == 1) {
+                            select = getKeyMapper().getItemId(selection.get(0));
                         }
-                    }
-
-                    SetView<Object> addedItemIds = Sets.difference(
-                            receivedSelectionSet, previousSelectionSet);
-                    if (!addedItemIds.isEmpty()) {
-                        if (addedItemIds.size() == 1) {
-                            select(addedItemIds.iterator().next());
-                        } else {
-                            assert selectionModel instanceof SelectionModel.Multi : "Got multiple selections, but the selection model is not a SelectionModel.Multi";
-                            ((SelectionModel.Multi) selectionModel)
-                                    .select(addedItemIds);
-                        }
+                        ((SelectionModel.Single) selectionModel).select(select);
+                    } else if (selectionModel instanceof SelectionModel.Multi) {
+                        ((SelectionModel.Multi) selectionModel)
+                                .setSelected(receivedSelection);
+                    } else {
+                        throw new IllegalStateException("SelectionModel "
+                                + selectionModel.getClass().getSimpleName()
+                                + " does not support selecting the given "
+                                + selection.size() + " items.");
                     }
                 } finally {
                     applyingSelectionFromClient = false;

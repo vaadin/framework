@@ -20,6 +20,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +33,8 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.sort.Sort;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.event.SelectionEvent;
+import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.event.SortEvent;
 import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.shared.data.sort.SortDirection;
@@ -74,9 +77,19 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     public static final int COLUMNS = 12;
     public static final int ROWS = 1000;
 
-    private int columnGroupRows = 0;
     private IndexedContainer ds;
     private Grid grid;
+    private SelectionListener selectionListener = new SelectionListener() {
+
+        @Override
+        public void select(SelectionEvent event) {
+            Iterator<Object> iter = event.getAdded().iterator();
+            Object addedRow = (iter.hasNext() ? iter.next() : "none");
+            iter = event.getRemoved().iterator();
+            Object removedRow = (iter.hasNext() ? iter.next() : "none");
+            log("SelectionEvent: Added " + addedRow + ", Removed " + removedRow);
+        }
+    };
 
     @Override
     @SuppressWarnings("unchecked")
@@ -282,6 +295,11 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     public void execute(Grid grid, SelectionMode selectionMode,
                             Object data) {
                         grid.setSelectionMode(selectionMode);
+                        if (selectionMode == SelectionMode.SINGLE) {
+                            grid.addSelectionListener(selectionListener);
+                        } else {
+                            grid.removeSelectionListener(selectionListener);
+                        }
                     }
                 });
 
