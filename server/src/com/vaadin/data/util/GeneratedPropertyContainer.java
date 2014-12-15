@@ -712,4 +712,13 @@ public class GeneratedPropertyContainer extends AbstractContainer implements
     public Object addItemAt(int index) throws UnsupportedOperationException {
         return wrappedContainer.addItemAt(index);
     }
+
+    /**
+     * Returns the original underlying container.
+     * 
+     * @return the original underlying container
+     */
+    public Container.Indexed getWrappedContainer() {
+        return wrappedContainer;
+    }
 }
