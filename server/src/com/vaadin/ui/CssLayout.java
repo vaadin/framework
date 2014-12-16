@@ -388,7 +388,11 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     public void writeDesign(Element design, DesignContext designContext) {
         // synchronize default attributes
         super.writeDesign(design, designContext);
+        CssLayout def = designContext.getDefaultInstance(this);
         // handle children
+        if (!designContext.shouldWriteChildren(this, def)) {
+            return;
+        }
         Element designElement = design;
         for (Component child : this) {
             Element childNode = designContext.createElement(child);

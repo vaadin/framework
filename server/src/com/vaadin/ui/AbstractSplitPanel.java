@@ -649,6 +649,9 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
             design.attr("reversed", "");
         }
         // handle child components
+        if (!designContext.shouldWriteChildren(this, def)) {
+            return;
+        }
         Component firstComponent = getFirstComponent();
         Component secondComponent = getSecondComponent();
         if (firstComponent != null) {

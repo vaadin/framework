@@ -312,6 +312,11 @@ public abstract class AbstractSingleComponentContainer extends
     public void writeDesign(Element design, DesignContext designContext) {
         // synchronize default attributes (also clears children and attributes)
         super.writeDesign(design, designContext);
+        AbstractSingleComponentContainer def = designContext
+                .getDefaultInstance(this);
+        if (!designContext.shouldWriteChildren(this, def)) {
+            return;
+        }
         // handle child component
         Component child = getContent();
         if (child != null) {

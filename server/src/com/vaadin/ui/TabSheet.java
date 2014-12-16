@@ -1613,6 +1613,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         Attributes attr = design.attributes();
 
         // write tabs
+        if (!designContext.shouldWriteChildren(this, def)) {
+            return;
+        }
         for (Component component : this) {
             Tab tab = this.getTab(component);
             writeTabToDesign(design, designContext, tab);

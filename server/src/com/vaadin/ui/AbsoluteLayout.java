@@ -718,6 +718,10 @@ public class AbsoluteLayout extends AbstractLayout implements
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
+        AbsoluteLayout def = designContext.getDefaultInstance(this);
+        if (!designContext.shouldWriteChildren(this, def)) {
+            return;
+        }
         // handle children
         for (Component child : this) {
             Element childElement = designContext.createElement(child);
