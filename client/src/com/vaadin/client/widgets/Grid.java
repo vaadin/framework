@@ -5281,7 +5281,7 @@ public class Grid<T> extends ResizeComposite implements
 
         do {
             lastRow = escalator.getBody().getRowElement(--lastRowIndex);
-        } while (lastRow.getAbsoluteBottom() > footerTop);
+        } while (lastRow.getAbsoluteTop() > footerTop);
 
         return lastRowIndex;
     }
@@ -5292,7 +5292,7 @@ public class Grid<T> extends ResizeComposite implements
                 .getAbsoluteBottom();
         Element firstRow = escalator.getBody().getRowElement(firstRowIndex);
 
-        while (firstRow.getAbsoluteTop() < headerBottom) {
+        while (firstRow.getAbsoluteBottom() < headerBottom) {
             firstRow = escalator.getBody().getRowElement(++firstRowIndex);
         }
 
