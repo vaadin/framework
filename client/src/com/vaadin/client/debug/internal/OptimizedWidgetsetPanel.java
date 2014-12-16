@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.UnknownComponentConnector;
 
@@ -46,10 +47,11 @@ public class OptimizedWidgetsetPanel extends FlowPanel {
         for (ApplicationConnection ac : ApplicationConfiguration
                 .getRunningApplications()) {
             ApplicationConfiguration conf = ac.getConfiguration();
-            s += "<h1>Used connectors for " + conf.getServiceUrl() + "</h1>";
+            s += "<h1>Used connectors for "
+                    + Util.escapeHTML(conf.getServiceUrl()) + "</h1>";
 
             for (String connectorName : getUsedConnectorNames(conf)) {
-                s += connectorName + "<br/>";
+                s += Util.escapeHTML(connectorName) + "<br/>";
             }
 
             s += "<h2>To make an optimized widgetset based on these connectors, do:</h2>";
@@ -114,7 +116,7 @@ public class OptimizedWidgetsetPanel extends FlowPanel {
         s += "    private Set<String> eagerConnectors = new HashSet<String>();\n";
         s += "    {\n";
         for (String c : usedConnectors) {
-            s += "            eagerConnectors.add(" + c
+            s += "            eagerConnectors.add(" + Util.escapeHTML(c)
                     + ".class.getName());\n";
         }
         s += "    }\n";
