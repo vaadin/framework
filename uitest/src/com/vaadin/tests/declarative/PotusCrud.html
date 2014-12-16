@@ -1,23 +1,14 @@
-<v-vertical-layout size-full margin="true" spacing>
-    <v-horizontal-layout spacing margin width-full>   
-        <v-label size-auto>POTUS Database</v-label>
-        <v-button :expand>Add new</v-button>
-    </v-horizontal-layout>
-    <v-table _id="potusList" :expand selectable size-full/>
-    <v-vertical-layout _id="form" spacing margin>
-        <v-horizontal-layout spacing>   
-            <v-text-field caption="First Name" width="300px" />
-            <v-text-field caption="Last Name" width="300px" />
-        </v-horizontal-layout>
-        <v-horizontal-layout spacing>   
-            <v-combo-box caption="Party" width="300px" />
-            <v-popup-date-field caption="Took Office" />
-            <v-popup-date-field caption="Left Office" />
-        </v-horizontal-layout>
-        <v-horizontal-layout spacing width-full>  
-            <v-button style-name="primary">Save</v-button>
-            <v-button>Revert</v-button>
-            <v-button style-name="danger" :expand :right>Delete</v-button>
-        </v-horizontal-layout>
-    </v-vertical-layout>
-</v-vertical-layout>
+<head>
+  <meta name="package-mapping" content="x:com.vaadin.tests.declarative"/>
+</head>
+<body>
+	<v-vertical-layout size-full margin="true" spacing>
+	    <v-horizontal-layout spacing margin width-full>   
+	        <v-label size-auto>POTUS Database</v-label>
+	        <v-button :expand _id="addNew">Add new</v-button>
+	    </v-horizontal-layout>
+	    <v-table _id="potusList" :expand selectable size-full/>
+	    <x-potus-form _id="potusForm" />
+	</v-vertical-layout>
+</body>
+
