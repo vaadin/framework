@@ -25,6 +25,7 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
@@ -245,9 +246,9 @@ public class GridHeaderTest extends GridStaticSectionTest {
         GridCellElement widgetCell = getGridElement().getHeaderCell(0, 0);
         WebElement button = widgetCell.findElement(By.className("gwt-Button"));
 
-        button.click();
+        new Actions(getDriver()).moveToElement(button, 5, 5).click().perform();
 
-        assertEquals("Clicked", button.getText());
+        assertEquals("clicked", button.getText().toLowerCase());
     }
 
     @Test
@@ -262,11 +263,11 @@ public class GridHeaderTest extends GridStaticSectionTest {
         GridCellElement widgetCell = getGridElement().getHeaderCell(0, 0);
         WebElement button = widgetCell.findElement(By.className("gwt-Button"));
 
-        assertNotEquals("Clicked", button.getText());
+        assertNotEquals("clicked", button.getText().toLowerCase());
 
-        button.click();
+        new Actions(getDriver()).moveToElement(button, 5, 5).click().perform();
 
-        assertEquals("Clicked", button.getText());
+        assertEquals("clicked", button.getText().toLowerCase());
     }
 
     private void assertHeaderCount(int count) {

@@ -170,7 +170,7 @@ public class GridBasicClientFeaturesWidget extends
     public static final int ROWS = 1000;
 
     private final Grid<List<Data>> grid;
-    private final List<List<Data>> data;
+    private List<List<Data>> data;
     private final ListDataSource<List<Data>> ds;
     private final ListSorter<List<Data>> sorter;
 
@@ -179,6 +179,48 @@ public class GridBasicClientFeaturesWidget extends
      */
     public final static class Data {
         Object value;
+    }
+
+    /**
+     * @since
+     * @return
+     */
+    private List<List<Data>> createData(int rowCount) {
+        List<List<Data>> dataList = new ArrayList<List<Data>>();
+        Random rand = new Random();
+        rand.setSeed(13334);
+        long timestamp = 0;
+        for (int row = 0; row < rowCount; row++) {
+
+            List<Data> datarow = createDataRow(COLUMNS);
+            dataList.add(datarow);
+            Data d;
+
+            int col = 0;
+            for (; col < COLUMNS - MANUALLY_FORMATTED_COLUMNS; ++col) {
+                d = datarow.get(col);
+                d.value = "(" + row + ", " + col + ")";
+            }
+
+            d = datarow.get(col++);
+            d.value = Integer.valueOf(row);
+
+            d = datarow.get(col++);
+            d.value = new Date(timestamp);
+            timestamp += 91250000; // a bit over a day, just to get
+                                   // variation
+
+            d = datarow.get(col++);
+            d.value = "<b>" + row + "</b>";
+
+            d = datarow.get(col++);
+            d.value = Integer.valueOf(rand.nextInt());
+
+            d = datarow.get(col++);
+            d.value = Integer.valueOf(rand.nextInt(5));
+        }
+
+        return dataList;
     }
 
     /**
@@ -194,7 +236,6 @@ public class GridBasicClientFeaturesWidget extends
         for (int i = 0; i < cols; ++i) {
             list.add(new Data());
         }
-        data.add(list);
         return list;
     }
 
@@ -203,40 +244,7 @@ public class GridBasicClientFeaturesWidget extends
         super(new Grid<List<Data>>());
 
         // Initialize data source
-        data = new ArrayList<List<Data>>();
-        {
-            Random rand = new Random();
-            rand.setSeed(13334);
-            long timestamp = 0;
-            for (int row = 0; row < ROWS; row++) {
-
-                List<Data> datarow = createDataRow(COLUMNS);
-                Data d;
-
-                int col = 0;
-                for (; col < COLUMNS - MANUALLY_FORMATTED_COLUMNS; ++col) {
-                    d = datarow.get(col);
-                    d.value = "(" + row + ", " + col + ")";
-                }
-
-                d = datarow.get(col++);
-                d.value = Integer.valueOf(row);
-
-                d = datarow.get(col++);
-                d.value = new Date(timestamp);
-                timestamp += 91250000; // a bit over a day, just to get
-                                       // variation
-
-                d = datarow.get(col++);
-                d.value = "<b>" + row + "</b>";
-
-                d = datarow.get(col++);
-                d.value = Integer.valueOf(rand.nextInt());
-
-                d = datarow.get(col++);
-                d.value = Integer.valueOf(rand.nextInt(5));
-            }
-        }
+        data = createData(ROWS);
 
         ds = new ListDataSource<List<Data>>(data);
         grid = getTestedWidget();
@@ -371,6 +379,7 @@ public class GridBasicClientFeaturesWidget extends
         createFooterMenu();
         createEditorRowMenu();
         createInternalsMenu();
+        createDataSourceMenu();
 
         grid.getElement().getStyle().setZIndex(0);
 
@@ -495,7 +504,7 @@ public class GridBasicClientFeaturesWidget extends
                         rowHandle.updateRow();
                     }
 
-                }.schedule(1500);
+                }.schedule(5000);
             }
         }, "Component", "State");
 
@@ -974,6 +983,29 @@ public class GridBasicClientFeaturesWidget extends
 
             }
         }, menuPath);
+    }
+
+    private void createDataSourceMenu() {
+        final String[] menuPath = { "Component", "DataSource" };
+
+        addMenuCommand("Reset with 100 rows of Data", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                ds.asList().clear();
+                data = createData(100);
+                ds.asList().addAll(data);
+            }
+        }, menuPath);
+
+        addMenuCommand("Reset with " + ROWS + " rows of Data",
+                new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        ds.asList().clear();
+                        data = createData(ROWS);
+                        ds.asList().addAll(data);
+                    }
+                }, menuPath);
     }
 
     /**

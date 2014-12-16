@@ -45,7 +45,7 @@ public class GridRowHandleRefreshTest extends GridBasicClientFeaturesTest {
         // Still the same data
         assertEquals("Cell contents did not update correctly", "(0, 0)",
                 getGridElement().getCell(0, 0).getText());
-        sleep(1500);
+        sleep(5000);
         // Data should be updated
         assertEquals("Cell contents did not update correctly", "Bar",
                 getGridElement().getCell(0, 0).getText());

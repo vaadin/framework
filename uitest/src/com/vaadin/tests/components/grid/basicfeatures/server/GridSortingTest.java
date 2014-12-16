@@ -17,7 +17,6 @@ package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -122,15 +121,20 @@ public class GridSortingTest extends GridBasicFeaturesTest {
 
     @Test
     public void testMouseSorting() throws Exception {
+        setDebug(true);
         openTestURL();
 
         GridElement grid = getGridElement();
+
+        selectMenuPath("Component", "Columns", "Column 9", "Column 9 Width",
+                "Auto");
 
         // Sorting by column 9 is sorting by row index that is represented as a
         // String.
 
         // Click header twice to sort descending
-        grid.getHeaderCell(0, 9).click();
+        GridCellElement header = grid.getHeaderCell(0, 9);
+        header.click();
         assertColumnsAreSortedAs(_(9, 1, SortDirection.ASCENDING));
         grid.getHeaderCell(0, 9).click();
         assertColumnsAreSortedAs(_(9, 1, SortDirection.DESCENDING));
@@ -145,6 +149,8 @@ public class GridSortingTest extends GridBasicFeaturesTest {
                     + " using descending direction.", expected, actual);
         }
 
+        selectMenuPath("Component", "Columns", "Column 10", "Column 10 Width",
+                "Auto");
         // Column 10 is random numbers from Random with seed 13334
         // Click header to sort ascending
         grid.getHeaderCell(0, 10).click();
@@ -160,6 +166,8 @@ public class GridSortingTest extends GridBasicFeaturesTest {
 
         }
 
+        selectMenuPath("Component", "Columns", "Column 7", "Column 7 Width",
+                "Auto");
         // Column 7 is row index as a number. Last three row are original rows
         // 2, 1 and 0.
         // Click header twice to sort descending
@@ -173,30 +181,6 @@ public class GridSortingTest extends GridBasicFeaturesTest {
                     "Grid is not sorted by Column 7 using descending direction",
                     "(" + i + ", 0)",
                     grid.getCell(GridBasicFeatures.ROWS - (i + 1), 0).getText());
-        }
-
-    }
-
-    @Test
-    public void testUserMultiColumnSorting() {
-        openTestURL();
-
-        getGridElement().getHeaderCell(0, 0).click();
-        new Actions(driver).keyDown(Keys.SHIFT).perform();
-        getGridElement().getHeaderCell(0, 11).click();
-        new Actions(driver).keyUp(Keys.SHIFT).perform();
-
-        String prev = getGridElement().getCell(0, 11).getAttribute("innerHTML");
-        for (int i = 1; i <= 6; ++i) {
-            assertEquals("Column 11 should contain same values.", prev,
-                    getGridElement().getCell(i, 11).getAttribute("innerHTML"));
-        }
-
-        prev = getGridElement().getCell(0, 0).getText();
-        for (int i = 1; i <= 6; ++i) {
-            assertTrue(
-                    "Grid is not sorted by column 0.",
-                    prev.compareTo(getGridElement().getCell(i, 0).getText()) < 0);
         }
 
     }

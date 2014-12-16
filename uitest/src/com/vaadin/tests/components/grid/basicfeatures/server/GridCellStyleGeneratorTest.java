@@ -31,20 +31,21 @@ public class GridCellStyleGeneratorTest extends GridBasicFeaturesTest {
         selectRowStyleNameGenerator(GridBasicFeatures.ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4);
         selectCellStyleNameGenerator(GridBasicFeatures.CELL_STYLE_GENERATOR_SPECIAL);
 
-        GridRowElement row2 = getGridElement().getRow(2);
-        GridCellElement cell3_2 = getGridElement().getCell(3, 2);
+        GridRowElement row = getGridElement().getRow(2);
+        GridCellElement cell = getGridElement().getCell(3, 2);
 
-        Assert.assertTrue(hasCssClass(row2, "row2"));
-        Assert.assertTrue(hasCssClass(cell3_2, "Column_2"));
+        Assert.assertTrue(hasCssClass(row, "row2"));
+        Assert.assertTrue(hasCssClass(cell, "Column_2"));
 
         // Scroll down and verify that the old elements don't have the
         // stylename any more
 
         // Carefully chosen offset to hit an index % 4 without cell style
-        getGridElement().getRow(352);
+        row = getGridElement().getRow(352);
+        cell = getGridElement().getCell(353, 2);
 
-        Assert.assertFalse(hasCssClass(row2, "row2"));
-        Assert.assertFalse(hasCssClass(cell3_2, "Column_2"));
+        Assert.assertFalse(hasCssClass(row, "row352"));
+        Assert.assertFalse(hasCssClass(cell, "Column_2"));
     }
 
     @Test

@@ -127,15 +127,15 @@ public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
         WebElement textField = getEditorRow().findElements(
                 By.className("gwt-TextBox")).get(0);
 
-        textField.sendKeys(" changed");
+        textField.clear();
+        textField.sendKeys("Changed");
 
         WebElement saveButton = getEditorRow().findElement(
                 By.className("v-editor-row-save"));
 
         saveButton.click();
 
-        assertEquals("(100, 0) changed", getGridElement().getCell(100, 0)
-                .getText());
+        assertEquals("Changed", getGridElement().getCell(100, 0).getText());
     }
 
     @Test
@@ -145,11 +145,11 @@ public class GridEditorRowClientTest extends GridBasicClientFeaturesTest {
         WebElement textField = getEditorRow().findElements(
                 By.className("gwt-TextBox")).get(0);
 
-        textField.sendKeys(" changed");
+        textField.clear();
+        textField.sendKeys("Changed");
 
         selectMenuPath("Component", "Editor row", "Save");
 
-        assertEquals("(100, 0) changed", getGridElement().getCell(100, 0)
-                .getText());
+        assertEquals("Changed", getGridElement().getCell(100, 0).getText());
     }
 }

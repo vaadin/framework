@@ -23,7 +23,6 @@ import org.junit.Test;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
-import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget;
 
 public class GridClientSelectionTest extends GridBasicClientFeaturesTest {
 
@@ -44,18 +43,19 @@ public class GridClientSelectionTest extends GridBasicClientFeaturesTest {
         openTestURL();
 
         setSelectionModelMulti();
+        selectMenuPath("Component", "DataSource", "Reset with 100 rows of Data");
         GridCellElement header = getGridElement().getHeaderCell(0, 0);
 
         assertTrue("No checkbox", header.isElementPresent(By.tagName("input")));
         header.findElement(By.tagName("input")).click();
 
-        for (int i = 0; i < GridBasicClientFeaturesWidget.ROWS; i += 100) {
+        for (int i = 0; i < 100; i += 10) {
             assertTrue("Row " + i + " was not selected.", getGridElement()
                     .getRow(i).isSelected());
         }
 
         header.findElement(By.tagName("input")).click();
-        assertFalse("Row 100 was still selected", getGridElement().getRow(100)
+        assertFalse("Row 52 was still selected", getGridElement().getRow(52)
                 .isSelected());
     }
 

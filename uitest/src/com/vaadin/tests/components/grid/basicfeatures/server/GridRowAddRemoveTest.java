@@ -39,12 +39,19 @@ public class GridRowAddRemoveTest extends GridBasicFeaturesTest {
     public void removeRows_loadAllAtOnce() {
         openTestURL();
 
+        selectMenuPath("Component", "Size", "HeightMode Row");
         selectMenuPath("Settings", "Clear log");
         selectMenuPath("Component", "Body rows", "Remove 18 first rows");
+
+        Assert.assertTrue(
+                "All newly required rows should be fetched in the same round trip.",
+                logContainsText("Requested items 37 - 55"));
+
+        selectMenuPath("Settings", "Clear log");
         selectMenuPath("Component", "Body rows", "Remove 18 first rows");
 
-        Assert.assertEquals(
+        Assert.assertTrue(
                 "All newly required rows should be fetched in the same round trip.",
-                "2. Requested items 64 - 100", getLogRow(0));
+                logContainsText("Requested items 37 - 55"));
     }
 }

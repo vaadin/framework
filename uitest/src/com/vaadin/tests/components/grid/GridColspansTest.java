@@ -65,7 +65,7 @@ public class GridColspansTest extends MultiBrowserTest {
                 .getHeaderCell(0, 1).getText().toLowerCase());
         assertEquals("Failed initial condition.", "first name", grid
                 .getHeaderCell(2, 1).getText().toLowerCase());
-        $(ButtonElement.class).first().click();
+        $(ButtonElement.class).caption("Show/Hide firstName").first().click();
         assertEquals("Header text changed on column hide.", "all the stuff",
                 grid.getHeaderCell(0, 1).getText().toLowerCase());
         assertEquals("Failed initial condition.", "last name", grid
