@@ -23,9 +23,6 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.AbstractComponentElement;
-import com.vaadin.testbench.elements.AbstractElement;
-import com.vaadin.testbench.elements.ServerClass;
 
 /**
  * TestBench Element API for Grid
@@ -41,15 +38,10 @@ public class GridElement extends AbstractComponentElement {
         // TODO static final?
         // TODO rename "active" to "focused" once Valo CSS is merged
         private String FOCUSED_CELL_CLASS_NAME = "-cell-active";
-        private String FOCUSED_HEADER_CLASS_NAME = "-header-active";
         private String FROZEN_CLASS_NAME = "frozen";
 
         public boolean isFocused() {
             return getAttribute("class").contains(FOCUSED_CELL_CLASS_NAME);
-        }
-
-        public boolean isFocusedHeader() {
-            return getAttribute("class").contains(FOCUSED_HEADER_CLASS_NAME);
         }
 
         public boolean isFrozen() {

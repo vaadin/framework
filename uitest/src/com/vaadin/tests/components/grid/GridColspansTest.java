@@ -18,13 +18,9 @@ package com.vaadin.tests.components.grid;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
@@ -58,28 +54,6 @@ public class GridColspansTest extends MultiBrowserTest {
         assertEquals("5", grid.getFooterCell(1, 1).getAttribute("colspan"));
         assertEquals("2", grid.getFooterCell(0, 1).getAttribute("colspan"));
         assertEquals("3", grid.getFooterCell(0, 3).getAttribute("colspan"));
-    }
-
-    @Test
-    public void testFocusedHeaderColumnsWithNavigation() throws IOException {
-        openTestURL();
-
-        GridElement grid = $(GridElement.class).first();
-        grid.getCell(0, 1).click();
-
-        compareScreen("beforeNavigation");
-
-        for (int i = 1; i <= 6; ++i) {
-            assertEquals(true, grid.getFooterCell(1, 1).isFocusedHeader());
-            assertEquals(i < 3, grid.getFooterCell(0, 1).isFocusedHeader());
-            assertEquals(i >= 3, grid.getFooterCell(0, 3).isFocusedHeader());
-            assertEquals(true, grid.getHeaderCell(0, 1).isFocusedHeader());
-            assertEquals(i < 3, grid.getHeaderCell(1, 1).isFocusedHeader());
-            assertEquals(i >= 3, grid.getHeaderCell(1, 3).isFocusedHeader());
-            new Actions(getDriver()).sendKeys(Keys.ARROW_RIGHT).perform();
-        }
-
-        compareScreen("afterNavigation");
     }
 
     @Test

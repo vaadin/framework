@@ -1483,13 +1483,6 @@ public class Grid<T> extends ResizeComposite implements
                     cellWithFocusStyle = null;
                 }
             }
-
-            if (cellContainer == escalator.getHeader()
-                    || cellContainer == escalator.getFooter()) {
-                // Correct header and footer column also needs highlighting
-                setStyleName(cell.getElement(), headerFooterFocusStyleName,
-                        columnHasFocus);
-            }
         }
 
         /**
@@ -2399,7 +2392,6 @@ public class Grid<T> extends ResizeComposite implements
     private String rowSelectedStyleName;
     private String cellFocusStyleName;
     private String rowFocusStyleName;
-    private String headerFooterFocusStyleName;
 
     /**
      * Current selection model.
@@ -3435,7 +3427,6 @@ public class Grid<T> extends ResizeComposite implements
          * merged.
          */
         cellFocusStyleName = getStylePrimaryName() + "-cell-active";
-        headerFooterFocusStyleName = getStylePrimaryName() + "-header-active";
         rowFocusStyleName = getStylePrimaryName() + "-row-active";
 
         if (isAttached()) {

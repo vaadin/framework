@@ -72,13 +72,6 @@ public class GridStylingTest extends GridStaticSectionTest {
                 classNames = getGridElement().getHeaderCell(row, col)
                         .getAttribute("class");
                 assertTrue(classNames.contains(stylename + "-cell"));
-
-                if (row == 0 && col == 0) {
-                    // TODO: rename "active" to "focused" once Valo CSS is
-                    // merged
-                    assertTrue(classNames,
-                            classNames.contains(stylename + "-header-active"));
-                }
             }
         }
 
