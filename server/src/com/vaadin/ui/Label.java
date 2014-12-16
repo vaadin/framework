@@ -605,6 +605,7 @@ public class Label extends AbstractComponent implements Property<String>,
         Collection<String> result = super.getCustomAttributes();
         result.add("value");
         result.add("content-mode");
+        result.add("plain-text");
         return result;
     }
 

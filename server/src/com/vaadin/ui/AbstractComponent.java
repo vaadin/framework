@@ -1199,6 +1199,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
                 Arrays.asList(customAttributes));
         if (this instanceof Focusable) {
             l.add("tab-index");
+            l.add("tabindex");
         }
         return l;
     }
