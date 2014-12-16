@@ -732,9 +732,15 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     /* Declarative support */
 
     /**
-     * Update the component state based on the given design. The component is
-     * responsible not only for updating itself but also ensuring that its
-     * children update their state based on the design.
+     * Reads the component state from the given design.
+     * <p>
+     * The component is responsible not only for updating its own state but also
+     * for ensuring that its children update their state based on the design.
+     * <p>
+     * It is assumed that the component is in its default state when this method
+     * is called. Reading should only take into consideration attributes
+     * specified in the design and not reset any unspecified attributes to their
+     * defaults.
      * <p>
      * This method must not modify the design.
      * 
@@ -747,11 +753,10 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void readDesign(Element design, DesignContext designContext);
 
     /**
-     * Update the given design based on the component state. The component is
-     * responsible not only for updating itself but also for ensuring its
-     * children update themselves in the correct position in the design. The
-     * caller of this method should not assume that contents of the
-     * <code>design</code> parameter are presented.
+     * Writes the component state to the given design.
+     * <p>
+     * The component is responsible not only for writing its own state but also
+     * for ensuring that its children write their state to the design.
      * <p>
      * This method must not modify the component state.
      * 
