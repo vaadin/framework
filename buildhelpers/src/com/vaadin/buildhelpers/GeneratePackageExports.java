@@ -26,6 +26,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * Generates Export-Packages attribute for OSGi compatible manifest.
@@ -172,6 +173,9 @@ public class GeneratePackageExports {
     private static HashSet<String> getPackages(JarFile jar,
             List<String> acceptedPackagePrefixes) {
         HashSet<String> packages = new HashSet<String>();
+
+        Pattern startsWithNumber = Pattern.compile("\\.\\d");
+
         for (Enumeration<JarEntry> it = jar.entries(); it.hasMoreElements();) {
             JarEntry entry = it.nextElement();
 
@@ -189,6 +193,11 @@ public class GeneratePackageExports {
             int lastSlash = entry.getName().lastIndexOf('/');
             String pkg = entry.getName().substring(0, lastSlash)
                     .replace('/', '.');
+
+            if (startsWithNumber.matcher(pkg).find()) {
+                continue;
+            }
+
             packages.add(pkg);
         }
 
