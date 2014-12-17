@@ -238,7 +238,6 @@ public class Design implements Serializable {
         html.appendChild(doc.createElement("head"));
         Element body = doc.createElement("body");
         html.appendChild(body);
-        designContext.storePrefixes(doc);
 
         // Append the design under <body> in the html tree. createNode
         // creates the entire component hierarchy rooted at the
@@ -246,6 +245,7 @@ public class Design implements Serializable {
         Component root = designContext.getRootComponent();
         Node rootNode = designContext.createElement(root);
         body.appendChild(rootNode);
+        designContext.storePrefixes(doc);
         return doc;
     }
 

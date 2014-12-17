@@ -47,6 +47,8 @@ import com.vaadin.ui.declarative.Design;
  */
 public class TestNestedCustomLayouts extends TestCase {
 
+    private static String PACKAGE_MAPPING = "com_vaadin_tests_design_nested_customlayouts:com.vaadin.tests.design.nested.customlayouts";
+
     @Test
     public void testNestedLayouts() throws IOException {
         VerticalLayout rootLayout = new VerticalLayout();
@@ -64,6 +66,8 @@ public class TestNestedCustomLayouts extends TestCase {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Design.write(rootLayout, out);
         Document doc = Jsoup.parse(out.toString("UTF-8"));
+        assertEquals("package-mapping", doc.head().child(0).attr("name"));
+        assertEquals(PACKAGE_MAPPING, doc.head().child(0).attr("content"));
         Element rootNode = doc.body().child(0);
         assertTrue("Root node must have children",
                 rootNode.children().size() > 0);
