@@ -166,7 +166,6 @@ public class AbsoluteLayout extends AbstractLayout implements
             internalRemoveComponent(c);
             throw e;
         }
-        markAsDirty();
     }
 
     /**
@@ -210,7 +209,6 @@ public class AbsoluteLayout extends AbstractLayout implements
     public void removeComponent(Component c) {
         internalRemoveComponent(c);
         super.removeComponent(c);
-        markAsDirty();
     }
 
     /**

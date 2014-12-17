@@ -152,7 +152,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * A description of the properties found in beans of type {@link #type}.
      * Determines the property ids that are present in the container.
      */
-    private LinkedHashMap<String, VaadinPropertyDescriptor<BEANTYPE>> model;
+    private final LinkedHashMap<String, VaadinPropertyDescriptor<BEANTYPE>> model;
 
     /**
      * Constructs a {@code AbstractBeanContainer} for beans of the given type.
@@ -178,7 +178,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     @Override
     public Class<?> getType(Object propertyId) {
-        return model.get(propertyId).getPropertyType();
+        VaadinPropertyDescriptor<BEANTYPE> descriptor = model.get(propertyId);
+        if (descriptor == null) {
+            return null;
+        }
+        return descriptor.getPropertyType();
     }
 
     /**
@@ -876,7 +880,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
             model.put(qualifiedPropertyId, pd);
             model.remove(propertyId);
             for (BeanItem<BEANTYPE> item : itemIdToItem.values()) {
-                item.addItemProperty(propertyId,
+                item.addItemProperty(qualifiedPropertyId,
                         pd.createProperty(item.getBean()));
                 item.removeItemProperty(propertyId);
             }

@@ -5,9 +5,11 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.data.Item;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 
@@ -131,6 +133,25 @@ public class BeanFieldGroupTest {
         com.vaadin.ui.Field<?> helloField = bfg.buildAndBind("Hello string",
                 "nestedBean.hello");
         assertEquals(bean.nestedBean.hello, helloField.getValue().toString());
+    }
+
+    @Test
+    public void setDataSource_nullBean_nullBeanIsSetInDataSource() {
+        BeanFieldGroup<MyBean> group = new BeanFieldGroup<MyBean>(MyBean.class);
+
+        group.setItemDataSource((MyBean) null);
+
+        BeanItem<MyBean> dataSource = group.getItemDataSource();
+        Assert.assertNull("Data source is null for null bean", dataSource);
+    }
+
+    @Test
+    public void setDataSource_nullItem_nullDataSourceIsSet() {
+        BeanFieldGroup<MyBean> group = new BeanFieldGroup<MyBean>(MyBean.class);
+
+        group.setItemDataSource((Item) null);
+        BeanItem<MyBean> dataSource = group.getItemDataSource();
+        Assert.assertNull("Group returns not null data source", dataSource);
     }
 
 }

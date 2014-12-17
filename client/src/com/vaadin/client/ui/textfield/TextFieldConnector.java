@@ -84,13 +84,20 @@ public class TextFieldConnector extends AbstractFieldConnector implements
         /*
          * We skip the text content update if field has been repainted, but text
          * has not been changed. Additional sanity check verifies there is no
-         * change in the que (in which case we count more on the server side
+         * change in the queue (in which case we count more on the server side
          * value).
          */
-        if (!(uidl
-                .getBooleanAttribute(TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
-                && getWidget().valueBeforeEdit != null && text
-                    .equals(getWidget().valueBeforeEdit))) {
+
+        boolean valueChanged = !uidl
+                .getBooleanAttribute(TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS);
+        // null check is not enough since the value is sometimes null but
+        // sometimes empty. Fix for #15144
+        boolean valueBeforeEditEmpty = getWidget().valueBeforeEdit == null
+                || getWidget().valueBeforeEdit.isEmpty();
+        boolean textDoesNotEqualOldValue = !text
+                .equals(getWidget().valueBeforeEdit);
+
+        if (valueChanged || valueBeforeEditEmpty || textDoesNotEqualOldValue) {
             getWidget().updateFieldContent(text);
         }
 

@@ -144,8 +144,8 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
         }
         slots.put(location, c);
         getState().childLocations.put(c, location);
-        c.setParent(this);
-        fireComponentAttachEvent(c);
+
+        super.addComponent(c);
     }
 
     /**

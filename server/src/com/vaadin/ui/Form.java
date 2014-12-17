@@ -1186,9 +1186,14 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
     }
 
-    /** Form is empty if all of its fields are empty. */
+    /**
+     * {@inheritDoc}
+     * <p>
+     * A Form is empty if all of its fields are empty.
+     * 
+     */
     @Override
-    protected boolean isEmpty() {
+    public boolean isEmpty() {
 
         for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
             Field<?> f = i.next();

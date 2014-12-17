@@ -15,6 +15,7 @@
  */
 package com.vaadin.data.util.converter;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -32,7 +33,7 @@ import java.util.Locale;
  * </p>
  * 
  * @author Vaadin Ltd
- * @since 7.3.1
+ * @since
  */
 public class StringToBigIntegerConverter extends
         AbstractStringToNumberConverter<BigInteger> {
@@ -41,7 +42,7 @@ public class StringToBigIntegerConverter extends
     protected NumberFormat getFormat(Locale locale) {
         NumberFormat numberFormat = super.getFormat(locale);
         if (numberFormat instanceof DecimalFormat) {
-            ((DecimalFormat) numberFormat).setParseIntegerOnly(true);
+            ((DecimalFormat) numberFormat).setParseBigDecimal(true);
         }
 
         return numberFormat;
@@ -51,7 +52,11 @@ public class StringToBigIntegerConverter extends
     public BigInteger convertToModel(String value,
             Class<? extends BigInteger> targetType, Locale locale)
             throws com.vaadin.data.util.converter.Converter.ConversionException {
-        return (BigInteger) convertToNumber(value, BigInteger.class, locale);
+
+        BigDecimal bigDecimalValue = (BigDecimal) convertToNumber(value,
+                BigDecimal.class, locale);
+
+        return (bigDecimalValue != null) ? bigDecimalValue.toBigInteger() : null;
     }
 
     @Override

@@ -49,6 +49,7 @@ public class MenuTooltipTest extends MultiBrowserTest {
 
         Coordinates elementCoordinates = getCoordinates($(MenuBarElement.class)
                 .first());
+        sleep(1000);
 
         Mouse mouse = ((HasInputDevices) getDriver()).getMouse();
 

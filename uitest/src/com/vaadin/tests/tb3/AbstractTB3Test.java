@@ -32,7 +32,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.vaadin.testbench.elements.TableElement;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -69,6 +68,7 @@ import com.vaadin.testbench.TestBenchDriverProxy;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.VerticalLayoutElement;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.tb3.MultiBrowserTest.Browser;
@@ -257,7 +257,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
             @Override
             public Object apply(WebDriver input) {
                 try {
-                   return table.getCell(row, 0) != null;
+                    return table.getCell(row, 0) != null;
                 } catch (NoSuchElementException e) {
                     return false;
                 }
@@ -266,7 +266,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     protected void scrollTable(TableElement table, int rows, int rowToWait) {
-        testBenchElement(table.findElement(By.className("v-scrollable"))).scroll(rows * 30);
+        testBenchElement(table.findElement(By.className("v-scrollable")))
+                .scroll(rows * 30);
 
         waitUntilRowIsVisible(table, rowToWait);
     }
@@ -430,6 +431,11 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     @After
     public void tearDown() throws Exception {
         if (driver != null) {
+            try {
+                openTestURL("&closeApplication");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             driver.quit();
         }
         driver = null;

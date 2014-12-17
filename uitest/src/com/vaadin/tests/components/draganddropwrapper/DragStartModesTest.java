@@ -40,7 +40,7 @@ public class DragStartModesTest extends MultiBrowserTest {
         new Actions(driver).moveToElement(draggable, 10, 10).clickAndHold()
                 .moveByOffset(5, 0).perform();
         new Actions(driver).moveToElement(dropTarget, 12, 10).perform();
-        compareScreen("dragMode" + dragMode);
+        compareScreen("dragImageMode" + dragMode);
         new Actions(driver).release().perform();
     }
 

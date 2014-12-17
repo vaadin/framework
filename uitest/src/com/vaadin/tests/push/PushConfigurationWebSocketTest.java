@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.Select;
 
 public class PushConfigurationWebSocketTest extends PushConfigurationTest {
 
@@ -40,8 +39,8 @@ public class PushConfigurationWebSocketTest extends PushConfigurationTest {
 
     @Test
     public void testWebsocket() throws InterruptedException {
-        new Select(getTransportSelect()).selectByVisibleText("WEBSOCKET");
-        new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
+        getTransportSelect().selectByText("Websocket");
+        getPushModeSelect().selectByText("Automatic");
 
         assertThat(getStatusText(),
                 containsString("fallbackTransport: long-polling"));

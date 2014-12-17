@@ -48,7 +48,7 @@ public class TextField extends AbstractTextField {
      * Constructs an empty <code>TextField</code> with no caption.
      */
     public TextField() {
-        setValue("");
+        clear();
     }
 
     /**
@@ -107,7 +107,7 @@ public class TextField extends AbstractTextField {
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.AbstractField#readDesign(org.jsoup.nodes.Element ,
+     * @see com.vaadin.ui.AbstractTextField#readDesign(org.jsoup.nodes.Element,
      * com.vaadin.ui.declarative.DesignContext)
      */
     @Override
@@ -135,4 +135,15 @@ public class TextField extends AbstractTextField {
         DesignAttributeHandler.writeAttribute("value", attr, getValue(),
                 def.getValue(), String.class);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#clear()
+     */
+    @Override
+    public void clear() {
+        setValue("");
+    }
+
 }

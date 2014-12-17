@@ -255,6 +255,9 @@ public class FieldGroup implements Serializable {
         fieldToPropertyId.put(field, propertyId);
         propertyIdToField.put(propertyId, field);
         if (itemDataSource == null) {
+            // Clear any possible existing binding to clear the field
+            field.setPropertyDataSource(null);
+            field.clear();
             // Will be bound when data source is set
             return;
         }
@@ -452,6 +455,56 @@ public class FieldGroup implements Serializable {
             // Not using buffered mode, nothing to do
             return;
         }
+
+        startTransactions();
+
+        try {
+            firePreCommitEvent();
+
+            List<InvalidValueException> invalidValueExceptions = commitFields();
+
+            if (invalidValueExceptions.isEmpty()) {
+                firePostCommitEvent();
+                commitTransactions();
+            } else {
+                throwInvalidValueException(invalidValueExceptions);
+            }
+        } catch (Exception e) {
+            rollbackTransactions();
+
+            throw new CommitException("Commit failed", e);
+        }
+
+    }
+
+    private List<InvalidValueException> commitFields() {
+        List<InvalidValueException> invalidValueExceptions = new ArrayList<InvalidValueException>();
+
+        for (Field<?> f : fieldToPropertyId.keySet()) {
+            try {
+                f.commit();
+            } catch (InvalidValueException e) {
+                invalidValueExceptions.add(e);
+            }
+        }
+
+        return invalidValueExceptions;
+    }
+
+    private void throwInvalidValueException(
+            List<InvalidValueException> invalidValueExceptions) {
+        if (invalidValueExceptions.size() == 1) {
+            throw invalidValueExceptions.get(0);
+        } else {
+            InvalidValueException[] causes = invalidValueExceptions
+                    .toArray(new InvalidValueException[invalidValueExceptions
+                            .size()]);
+
+            throw new InvalidValueException(null, causes);
+        }
+    }
+
+    private void startTransactions() throws CommitException {
         for (Field<?> f : fieldToPropertyId.keySet()) {
             Property.Transactional<?> property = (Property.Transactional<?>) f
                     .getPropertyDataSource();
@@ -462,33 +515,23 @@ public class FieldGroup implements Serializable {
             }
             property.startTransaction();
         }
-        try {
-            firePreCommitEvent();
-            // Commit the field values to the properties
-            for (Field<?> f : fieldToPropertyId.keySet()) {
-                f.commit();
-            }
-            firePostCommitEvent();
+    }
 
-            // Commit the properties
-            for (Field<?> f : fieldToPropertyId.keySet()) {
-                ((Property.Transactional<?>) f.getPropertyDataSource())
-                        .commit();
-            }
-
-        } catch (Exception e) {
-            for (Field<?> f : fieldToPropertyId.keySet()) {
-                try {
-                    ((Property.Transactional<?>) f.getPropertyDataSource())
-                            .rollback();
-                } catch (Exception rollbackException) {
-                    // FIXME: What to do ?
-                }
-            }
-
-            throw new CommitException("Commit failed", e);
+    private void commitTransactions() {
+        for (Field<?> f : fieldToPropertyId.keySet()) {
+            ((Property.Transactional<?>) f.getPropertyDataSource()).commit();
         }
+    }
 
+    private void rollbackTransactions() {
+        for (Field<?> f : fieldToPropertyId.keySet()) {
+            try {
+                ((Property.Transactional<?>) f.getPropertyDataSource())
+                        .rollback();
+            } catch (Exception rollbackException) {
+                // FIXME: What to do ?
+            }
+        }
     }
 
     /**

@@ -10,6 +10,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
 
     private static final String FIREFOX30_WINDOWS = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.0.6) Gecko/2009011913 Firefox/3.0.6";
     private static final String FIREFOX30_LINUX = "Mozilla/5.0 (X11; U; Linux x86_64; es-ES; rv:1.9.0.12) Gecko/2009070811 Ubuntu/9.04 (jaunty) Firefox/3.0.12";
+    private static final String FIREFOX33_ANDROID = "Mozilla/5.0 (Android; Tablet; rv:33.0) Gecko/33.0 Firefox/33.0";
     private static final String FIREFOX35_WINDOWS = "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.8) Gecko/20100202 Firefox/3.5.8 (.NET CLR 3.5.30729) FirePHP/0.4";
     private static final String FIREFOX36_WINDOWS = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2) Gecko/20100115 Firefox/3.6 (.NET CLR 3.5.30729)";
     private static final String FIREFOX36B_MAC = "UAString mozilla/5.0 (macintosh; u; intel mac os x 10.6; en-us; rv:1.9.2) gecko/20100115 firefox/3.6";
@@ -207,6 +208,15 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertBrowserMinorVersion(bd, 0);
         assertEngineVersion(bd, 1.9f);
         assertLinux(bd);
+    }
+
+    public void testFirefox33Android() {
+        VBrowserDetails bd = new VBrowserDetails(FIREFOX33_ANDROID);
+        assertGecko(bd);
+        assertFirefox(bd);
+        assertBrowserMajorVersion(bd, 33);
+        assertBrowserMinorVersion(bd, 0);
+        assertAndroid(bd, -1, -1);
     }
 
     public void testFirefox35() {

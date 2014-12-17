@@ -15,39 +15,43 @@
  */
 package com.vaadin.tests.data.converter;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Locale;
 
 import junit.framework.TestCase;
 
-import com.vaadin.data.util.converter.StringToBigDecimalConverter;
+import com.vaadin.data.util.converter.StringToBigIntegerConverter;
 
 public class TestStringToBigIntegerConverter extends TestCase {
 
-    StringToBigDecimalConverter converter = new StringToBigDecimalConverter();
+    StringToBigIntegerConverter converter = new StringToBigIntegerConverter();
 
     public void testNullConversion() {
-        assertEquals(null,
-                converter.convertToModel(null, BigDecimal.class, null));
+        assertEquals("Null value was converted incorrectly", null,
+                converter.convertToModel(null, BigInteger.class, null));
     }
 
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", BigDecimal.class, null));
+        assertEquals("Empty value was converted incorrectly", null,
+                converter.convertToModel("", BigInteger.class, null));
     }
 
     public void testValueParsing() {
-        BigDecimal converted = converter.convertToModel("10", BigDecimal.class,
-                null);
-        BigDecimal expected = new BigDecimal(10);
-        assertEquals(expected, converted);
+        String bigInt = "1180591620717411303424"; // 2^70 > 2^63 - 1
+        BigInteger converted = converter.convertToModel(bigInt,
+                BigInteger.class, null);
+        BigInteger expected = new BigInteger(bigInt);
+        assertEquals("Value bigger than max long was converted incorrectly",
+                expected, converted);
     }
 
     public void testValueFormatting() {
-        BigDecimal bd = new BigDecimal(1000);
+        BigInteger bd = new BigInteger("1000");
         String expected = "1.000";
 
         String converted = converter.convertToPresentation(bd, String.class,
                 Locale.GERMAN);
-        assertEquals(expected, converted);
+        assertEquals("Value with specific locale was converted incorrectly",
+                expected, converted);
     }
 }

@@ -16,25 +16,29 @@ public class TestStringToShortConverter extends TestCase {
             converter);
 
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, Short.class, null));
+        assertEquals("Null value was converted incorrectly", null,
+                converter.convertToModel(null, Short.class, null));
     }
 
     public void testReverseNullConversion() {
-        assertEquals(null,
+        assertEquals("Null value reversely was converted incorrectly", null,
                 reverseConverter.convertToModel(null, String.class, null));
     }
 
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", Short.class, null));
+        assertEquals("Empty value was converted incorrectly", null,
+                converter.convertToModel("", Short.class, null));
     }
 
     public void testValueConversion() {
-        assertEquals(Short.valueOf((short) 10),
+        assertEquals("Short value was converted incorrectly",
+                Short.valueOf((short) 10),
                 converter.convertToModel("10", Short.class, null));
     }
 
     public void testReverseValueConversion() {
         assertEquals(
+                "Short value reversely was converted incorrectly",
                 reverseConverter.convertToModel((short) 10, String.class, null),
                 "10");
     }
@@ -43,7 +47,8 @@ public class TestStringToShortConverter extends TestCase {
         short b = converter.convertToModel("32767", Short.class, null);
         Assert.assertEquals(Short.MAX_VALUE, b);
         b = converter.convertToModel("-32768", Short.class, null);
-        assertEquals(Short.MIN_VALUE, b);
+        assertEquals("Min short value was converted incorrectly",
+                Short.MIN_VALUE, b);
     }
 
     public void testValueOutOfRange() {

@@ -316,10 +316,11 @@ public class DateField extends AbstractField<Date> implements
             throw new IllegalStateException(
                     "startDate cannot be later than endDate");
         }
-        getState().rangeStart = startDate;
-        // rangeStart = startDate;
-        // This has to be done to correct for the resolution
-        // updateRangeState();
+
+        // Create a defensive copy against issues when using java.sql.Date (and
+        // also against mutable Date).
+        getState().rangeStart = startDate != null ? new Date(
+                startDate.getTime()) : null;
         updateRangeValidator();
     }
 
@@ -436,8 +437,11 @@ public class DateField extends AbstractField<Date> implements
             throw new IllegalStateException(
                     "endDate cannot be earlier than startDate");
         }
-        // rangeEnd = endDate;
-        getState().rangeEnd = endDate;
+
+        // Create a defensive copy against issues when using java.sql.Date (and
+        // also against mutable Date).
+        getState().rangeEnd = endDate != null ? new Date(endDate.getTime())
+                : null;
         updateRangeValidator();
     }
 

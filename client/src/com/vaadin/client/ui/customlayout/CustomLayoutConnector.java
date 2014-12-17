@@ -34,6 +34,8 @@ import com.vaadin.ui.CustomLayout;
 public class CustomLayoutConnector extends AbstractLayoutConnector implements
         SimpleManagedLayout, Paintable {
 
+    private boolean templateUpdated;
+
     @Override
     public CustomLayoutState getState() {
         return (CustomLayoutState) super.getState();
@@ -62,7 +64,7 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
     }
 
     private void updateHtmlTemplate() {
-        if (getWidget().hasTemplate()) {
+        if (templateUpdated) {
             // We (currently) only do this once. You can't change the template
             // later on.
             return;
@@ -76,14 +78,23 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
             templateContents = getConnection().getResource(
                     "layouts/" + templateName + ".html");
             if (templateContents == null) {
-                templateContents = "<em>Layout file layouts/"
-                        + templateName
-                        + ".html is missing. Components will be drawn for debug purposes.</em>";
+                // Template missing -> show debug notice and render components
+                // in order.
+                getWidget()
+                        .getElement()
+                        .setInnerHTML(
+                                "<em>Layout file layouts/"
+                                        + templateName
+                                        + ".html is missing. Components will be drawn for debug purposes.</em>");
             }
         }
 
-        getWidget().initializeHTML(templateContents,
-                getConnection().getThemeUri());
+        if (templateContents != null) {
+            // Template ok -> initialize.
+            getWidget().initializeHTML(templateContents,
+                    getConnection().getThemeUri());
+        }
+        templateUpdated = true;
     }
 
     @Override

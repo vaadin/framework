@@ -17,7 +17,7 @@
 package com.vaadin.server.communication;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.logging.Level;
@@ -65,8 +65,6 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
     @Override
     public boolean synchronizedHandleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
-        StringWriter stringWriter = new StringWriter();
-
         try {
             assert UI.getCurrent() == null;
 
@@ -82,14 +80,10 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             String initialUIDL = getInitialUidl(request, uI);
             params.put("uidl", initialUIDL);
 
-            stringWriter.write(JsonUtil.stringify(params));
+            return commitJsonResponse(request, response, JsonUtil.stringify(params));
         } catch (JsonException e) {
             throw new IOException("Error producing initial UIDL", e);
-        } finally {
-            stringWriter.close();
         }
-
-        return commitJsonResponse(request, response, stringWriter.toString());
     }
 
     /**
@@ -116,18 +110,13 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         // iOS 6 Safari requires this (#9732)
         response.setHeader("Cache-Control", "no-cache");
 
-        // NOTE! GateIn requires, for some weird reason, getOutputStream
-        // to be used instead of getWriter() (it seems to interpret
-        // application/json as a binary content type)
-        OutputStreamWriter outputWriter = new OutputStreamWriter(
-                response.getOutputStream(), "UTF-8");
-        try {
-            outputWriter.write(json);
-            // NOTE GateIn requires the buffers to be flushed to work
-            outputWriter.flush();
-        } finally {
-            outputWriter.close();
-        }
+        byte[] b = json.getBytes("UTF-8");
+        response.setHeader("Content-Length", String.valueOf(b.length));
+
+        OutputStream outputStream = response.getOutputStream();
+        outputStream.write(b);
+        // NOTE GateIn requires the buffers to be flushed to work
+        outputStream.flush();
 
         return true;
     }

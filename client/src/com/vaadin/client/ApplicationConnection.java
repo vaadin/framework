@@ -66,6 +66,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -200,14 +201,6 @@ public class ApplicationConnection implements HasHandlers {
     protected boolean applicationRunning = false;
 
     private boolean hasActiveRequest = false;
-
-    /**
-     * Some browsers cancel pending XHR requests when a request that might
-     * navigate away from the page starts (indicated by a beforeunload event).
-     * In that case, we should just send the request again without displaying
-     * any error.
-     */
-    private boolean retryCanceledActiveRequest = false;
 
     /**
      * Webkit will ignore outgoing requests while waiting for a response to a
@@ -547,14 +540,6 @@ public class ApplicationConnection implements HasHandlers {
         Window.addWindowClosingHandler(new ClosingHandler() {
             @Override
             public void onWindowClosing(ClosingEvent event) {
-                /*
-                 * Set some flags to avoid potential problems with XHR requests,
-                 * see javadocs of the flags for details
-                 */
-                if (hasActiveRequest()) {
-                    retryCanceledActiveRequest = true;
-                }
-
                 webkitMaybeIgnoringRequests = true;
             }
         });
@@ -858,6 +843,22 @@ public class ApplicationConnection implements HasHandlers {
      *            The contents of the request to send
      */
     protected void doUidlRequest(final String uri, final JSONObject payload) {
+        doUidlRequest(uri, payload, true);
+    }
+
+    /**
+     * Sends an asynchronous or synchronous UIDL request to the server using the
+     * given URI.
+     * 
+     * @param uri
+     *            The URI to use for the request. May includes GET parameters
+     * @param payload
+     *            The contents of the request to send
+     * @param retry
+     *            true when a status code 0 should be retried
+     */
+    protected void doUidlRequest(final String uri, final JSONObject payload,
+            final boolean retry) {
         RequestCallback requestCallback = new RequestCallback() {
             @Override
             public void onError(Request request, Throwable exception) {
@@ -887,15 +888,29 @@ public class ApplicationConnection implements HasHandlers {
 
                 switch (statusCode) {
                 case 0:
-                    if (retryCanceledActiveRequest) {
+                    if (retry) {
                         /*
-                         * Request was most likely canceled because the browser
-                         * is maybe navigating away from the page. Just send the
-                         * request again without displaying any error in case
-                         * the navigation isn't carried through.
+                         * There are 2 situations where the error can pop up:
+                         * 
+                         * 1) Request was most likely canceled because the
+                         * browser is maybe navigating away from the page. Just
+                         * send the request again without displaying any error
+                         * in case the navigation isn't carried through.
+                         * 
+                         * 2) The browser failed to establish a network
+                         * connection. This was observed with keep-alive
+                         * requests, and under wi-fi roaming conditions.
+                         * 
+                         * Status code 0 does indicate that there was no server
+                         * side processing, so we can retry the request.
                          */
-                        retryCanceledActiveRequest = false;
-                        doUidlRequest(uri, payload);
+                        VConsole.log("Status code 0, retrying");
+                        (new Timer() {
+                            @Override
+                            public void run() {
+                                doUidlRequest(uri, payload, false);
+                            }
+                        }).schedule(100);
                     } else {
                         handleCommunicationError(
                                 "Invalid status code 0 (server down?)",
@@ -1269,7 +1284,6 @@ public class ApplicationConnection implements HasHandlers {
         // so setting it after used to work but not with the #8505 changes.
         hasActiveRequest = false;
 
-        retryCanceledActiveRequest = false;
         webkitMaybeIgnoringRequests = false;
 
         if (isApplicationRunning()) {

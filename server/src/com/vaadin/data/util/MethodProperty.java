@@ -132,7 +132,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
             setArguments(getArgs, setArgs, setArgumentIndex);
             String name = (String) in.readObject();
             Class<?>[] paramTypes = SerializerHelper.readClassArray(in);
-            if (name != null) {
+            if (instance != null && name != null) {
                 setMethod = instance.getClass().getMethod(name, paramTypes);
             } else {
                 setMethod = null;
@@ -140,7 +140,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
 
             name = (String) in.readObject();
             paramTypes = SerializerHelper.readClassArray(in);
-            if (name != null) {
+            if (instance != null && name != null) {
                 getMethod = instance.getClass().getMethod(name, paramTypes);
             } else {
                 getMethod = null;
@@ -589,7 +589,11 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     @Override
     public T getValue() {
         try {
-            return (T) getMethod.invoke(instance, getArgs);
+            if (instance == null) {
+                return null;
+            } else {
+                return (T) getMethod.invoke(instance, getArgs);
+            }
         } catch (final Throwable e) {
             throw new MethodException(this, e);
         }

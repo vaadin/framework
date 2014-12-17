@@ -3,6 +3,7 @@ package com.vaadin.tests.data.converter;
 import junit.framework.TestCase;
 
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.data.util.converter.ReverseConverter;
 import com.vaadin.data.util.converter.StringToEnumConverter;
 
@@ -15,6 +16,19 @@ public class TestStringToEnumConverter extends TestCase {
     StringToEnumConverter converter = new StringToEnumConverter();
     Converter<Enum, String> reverseConverter = new ReverseConverter<Enum, String>(
             converter);
+
+    public void testEmptyStringConversion() {
+        assertEquals(null, converter.convertToModel("", Enum.class, null));
+    }
+
+    public void testInvalidEnumClassConversion() {
+        try {
+            converter.convertToModel("Foo", Enum.class, null);
+            fail("No exception thrown");
+        } catch (ConversionException e) {
+            // OK
+        }
+    }
 
     public void testNullConversion() {
         assertEquals(null, converter.convertToModel(null, Enum.class, null));

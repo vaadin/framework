@@ -34,9 +34,31 @@ public class StringToEnumConverter implements Converter<String, Enum> {
     @Override
     public Enum convertToModel(String value, Class<? extends Enum> targetType,
             Locale locale) throws ConversionException {
-        if (value == null) {
+        if (value == null || value.trim().equals("")) {
             return null;
         }
+
+        return stringToEnum(value, targetType, locale);
+    }
+
+    /**
+     * Converts the given string to the given enum type using the given locale
+     * <p>
+     * Compatible with {@link #enumToString(Enum, Locale)}
+     * 
+     * @param value
+     *            The string value to convert
+     * @param enumType
+     *            The type of enum to create
+     * @param locale
+     *            The locale to use for conversion. If null, the JVM default
+     *            locale will be used
+     * @return The enum which matches the given string
+     * @throws ConversionException
+     *             if the conversion fails
+     */
+    public static <T extends Enum<T>> T stringToEnum(String value,
+            Class<T> enumType, Locale locale) throws ConversionException {
         if (locale == null) {
             locale = Locale.getDefault();
         }
@@ -45,31 +67,41 @@ public class StringToEnumConverter implements Converter<String, Enum> {
         // Foo bar -> FOO_BAR
         String result = value.replace(" ", "_").toUpperCase(locale);
         try {
-            return Enum.valueOf(targetType, result);
-        } catch (IllegalArgumentException ee) {
+            return Enum.valueOf(enumType, result);
+        } catch (Exception ee) {
             // There was no match. Try to compare the available values to see if
             // the constant is using something else than all upper case
-
-            EnumSet<?> set = EnumSet.allOf(targetType);
-            for (Enum e : set) {
-                if (e.name().toUpperCase(locale).equals(result)) {
-                    return e;
+            try {
+                EnumSet<T> set = EnumSet.allOf(enumType);
+                for (T e : set) {
+                    if (e.name().toUpperCase(locale).equals(result)) {
+                        return e;
+                    }
                 }
+            } catch (Exception e) {
             }
 
-            // Fallback did not work either, re-throw original exception so user
-            // knows what went wrong
+            // Fallback did not work either, re-throw original exception so
+            // user knows what went wrong
             throw new ConversionException(ee);
         }
     }
 
-    @Override
-    public String convertToPresentation(Enum value,
-            Class<? extends String> targetType, Locale locale)
-            throws ConversionException {
-        if (value == null) {
-            return null;
-        }
+    /**
+     * Converts the given enum to a human readable string using the given locale
+     * <p>
+     * Compatible with {@link #stringToEnum(String, Class, Locale)}
+     * 
+     * @param value
+     *            The enum value to convert
+     * @param locale
+     *            The locale to use for conversion. If null, the JVM default
+     *            locale will be used
+     * @return A human readable string based on the enum
+     * @throws ConversionException
+     *             if the conversion fails
+     */
+    public static String enumToString(Enum<?> value, Locale locale) {
         if (locale == null) {
             locale = Locale.getDefault();
         }
@@ -80,8 +112,18 @@ public class StringToEnumConverter implements Converter<String, Enum> {
         // _FOO -> _foo
         String result = enumString.substring(0, 1).toUpperCase(locale);
         result += enumString.substring(1).toLowerCase(locale).replace('_', ' ');
-
         return result;
+    }
+
+    @Override
+    public String convertToPresentation(Enum value,
+            Class<? extends String> targetType, Locale locale)
+            throws ConversionException {
+        if (value == null) {
+            return null;
+        }
+
+        return enumToString(value, locale);
     }
 
     @Override

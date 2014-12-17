@@ -221,7 +221,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         } else if (c == getSecondComponent()) {
             getState().secondChild = null;
         }
-        markAsDirty();
     }
 
     /*
@@ -263,7 +262,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         } else if (oldComponent == getSecondComponent()) {
             setSecondComponent(newComponent);
         }
-        markAsDirty();
     }
 
     /**
@@ -349,9 +347,23 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * Returns the unit of position of the splitter
      * 
      * @return unit of position of the splitter
+     * @see #setSplitPosition(float, Unit)
      */
     public Unit getSplitPositionUnit() {
         return posUnit;
+    }
+
+    /**
+     * Is the split position reversed. By default the split position is measured
+     * by the first region, but if split position is reversed the measuring is
+     * done by the second region instead.
+     * 
+     * @since
+     * @return {@code true} if reversed, {@code false} otherwise.
+     * @see #setSplitPosition(float, boolean)
+     */
+    public boolean isSplitPositionReversed() {
+        return getSplitterState(false).positionReversed;
     }
 
     /**

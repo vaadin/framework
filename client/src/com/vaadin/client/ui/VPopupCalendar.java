@@ -27,6 +27,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -42,6 +46,7 @@ import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.client.ui.VCalendarPanel.SubmitListener;
@@ -76,6 +81,15 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
     private boolean open = false;
 
+    /*
+     * #14857: If calendarToggle button is clicked when calendar popup is
+     * already open we should prevent calling openCalendarPanel() in onClick,
+     * since we don't want to reopen it again right after it closes.
+     */
+    private boolean preventOpenPopupCalendar = false;
+    private boolean cursorOverCalendarToggleButton = false;
+    private boolean toggleButtonClosesWithGuarantee = false;
+
     private boolean textFieldEnabled = true;
 
     private String captionId;
@@ -89,6 +103,21 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
         calendarToggle.setText("");
         calendarToggle.addClickHandler(this);
+
+        calendarToggle.addDomHandler(new MouseOverHandler() {
+            @Override
+            public void onMouseOver(MouseOverEvent event) {
+                cursorOverCalendarToggleButton = true;
+            }
+        }, MouseOverEvent.getType());
+
+        calendarToggle.addDomHandler(new MouseOutHandler() {
+            @Override
+            public void onMouseOut(MouseOutEvent event) {
+                cursorOverCalendarToggleButton = false;
+            }
+        }, MouseOutEvent.getType());
+
         // -2 instead of -1 to avoid FocusWidget.onAttach to reset it
         calendarToggle.getElement().setTabIndex(-2);
 
@@ -372,60 +401,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
             // clear previous values
             popup.setWidth("");
             popup.setHeight("");
-            popup.setPopupPositionAndShow(new PositionCallback() {
-                @Override
-                public void setPosition(int offsetWidth, int offsetHeight) {
-                    final int w = offsetWidth;
-                    final int h = offsetHeight;
-                    final int browserWindowWidth = Window.getClientWidth()
-                            + Window.getScrollLeft();
-                    final int browserWindowHeight = Window.getClientHeight()
-                            + Window.getScrollTop();
-                    int t = calendarToggle.getAbsoluteTop();
-                    int l = calendarToggle.getAbsoluteLeft();
-
-                    // Add a little extra space to the right to avoid
-                    // problems with IE7 scrollbars and to make it look
-                    // nicer.
-                    int extraSpace = 30;
-
-                    boolean overflowRight = false;
-                    if (l + +w + extraSpace > browserWindowWidth) {
-                        overflowRight = true;
-                        // Part of the popup is outside the browser window
-                        // (to the right)
-                        l = browserWindowWidth - w - extraSpace;
-                    }
-
-                    if (t + h + calendarToggle.getOffsetHeight() + 30 > browserWindowHeight) {
-                        // Part of the popup is outside the browser window
-                        // (below)
-                        t = browserWindowHeight - h
-                                - calendarToggle.getOffsetHeight() - 30;
-                        if (!overflowRight) {
-                            // Show to the right of the popup button unless we
-                            // are in the lower right corner of the screen
-                            l += calendarToggle.getOffsetWidth();
-                        }
-                    }
-
-                    popup.setPopupPosition(l,
-                            t + calendarToggle.getOffsetHeight() + 2);
-
-                    /*
-                     * We have to wait a while before focusing since the popup
-                     * needs to be opened before we can focus
-                     */
-                    Timer focusTimer = new Timer() {
-                        @Override
-                        public void run() {
-                            setFocus(true);
-                        }
-                    };
-
-                    focusTimer.schedule(100);
-                }
-            });
+            popup.setPopupPositionAndShow(new PopupPositionCallback());
         } else {
             VConsole.error("Cannot reopen popup, it is already open!");
         }
@@ -441,7 +417,10 @@ public class VPopupCalendar extends VTextualDate implements Field,
     @Override
     public void onClick(ClickEvent event) {
         if (event.getSource() == calendarToggle && isEnabled()) {
-            openCalendarPanel();
+            if (!preventOpenPopupCalendar) {
+                openCalendarPanel();
+            }
+            preventOpenPopupCalendar = false;
         }
     }
 
@@ -464,15 +443,14 @@ public class VPopupCalendar extends VTextualDate implements Field,
                 focus();
             }
 
-            // TODO resolve what the "Sigh." is all about and document it here
-            // Sigh.
-            Timer t = new Timer() {
-                @Override
-                public void run() {
-                    open = false;
-                }
-            };
-            t.schedule(100);
+            open = false;
+
+            if (cursorOverCalendarToggleButton
+                    && !toggleButtonClosesWithGuarantee) {
+                preventOpenPopupCalendar = true;
+            }
+
+            toggleButtonClosesWithGuarantee = false;
         }
     }
 
@@ -572,6 +550,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
      */
     public void closeCalendarPanel() {
         if (open) {
+            toggleButtonClosesWithGuarantee = true;
             popup.hide(true);
         }
     }
@@ -640,6 +619,115 @@ public class VPopupCalendar extends VTextualDate implements Field,
      */
     public void setRangeEnd(Date rangeEnd) {
         calendar.setRangeEnd(rangeEnd);
+    }
+
+    private class PopupPositionCallback implements PositionCallback {
+
+        @Override
+        public void setPosition(int offsetWidth, int offsetHeight) {
+            final int width = offsetWidth;
+            final int height = offsetHeight;
+            final int browserWindowWidth = Window.getClientWidth()
+                    + Window.getScrollLeft();
+            final int windowHeight = Window.getClientHeight()
+                    + Window.getScrollTop();
+            int left = calendarToggle.getAbsoluteLeft();
+
+            // Add a little extra space to the right to avoid
+            // problems with IE7 scrollbars and to make it look
+            // nicer.
+            int extraSpace = 30;
+
+            boolean overflow = left + width + extraSpace > browserWindowWidth;
+            if (overflow) {
+                // Part of the popup is outside the browser window
+                // (to the right)
+                left = browserWindowWidth - width - extraSpace;
+            }
+
+            int top = calendarToggle.getAbsoluteTop();
+            int extraHeight = 2;
+            boolean verticallyRepositioned = false;
+            ComputedStyle style = new ComputedStyle(popup.getElement());
+            int[] margins = style.getMargin();
+            int desiredPopupBottom = top + height
+                    + calendarToggle.getOffsetHeight() + margins[0]
+                    + margins[2];
+
+            if (desiredPopupBottom > windowHeight) {
+                int updatedLeft = left;
+                left = getLeftPosition(left, width, style, overflow);
+
+                // if position has not been changed then it means there is no
+                // space to make popup fully visible
+                if (updatedLeft == left) {
+                    // let's try to show popup on the top of the field
+                    int updatedTop = top - extraHeight - height - margins[0]
+                            - margins[2];
+                    verticallyRepositioned = updatedTop >= 0;
+                    if (verticallyRepositioned) {
+                        top = updatedTop;
+                    }
+                }
+                // Part of the popup is outside the browser window
+                // (below)
+                if (!verticallyRepositioned) {
+                    verticallyRepositioned = true;
+                    top = windowHeight - height - extraSpace + extraHeight;
+                }
+            }
+            if (verticallyRepositioned) {
+                popup.setPopupPosition(left, top);
+            } else {
+                popup.setPopupPosition(left,
+                        top + calendarToggle.getOffsetHeight() + extraHeight);
+            }
+            doSetFocus();
+        }
+
+        private int getLeftPosition(int left, int width, ComputedStyle style,
+                boolean overflow) {
+            if (positionRightSide()) {
+                // Show to the right of the popup button unless we
+                // are in the lower right corner of the screen
+                if (overflow) {
+                    return left;
+                } else {
+                    return left + calendarToggle.getOffsetWidth();
+                }
+            } else {
+                int[] margins = style.getMargin();
+                int desiredLeftPosition = calendarToggle.getAbsoluteLeft()
+                        - width - margins[1] - margins[3];
+                if (desiredLeftPosition >= 0) {
+                    return desiredLeftPosition;
+                } else {
+                    return left;
+                }
+            }
+        }
+
+        private boolean positionRightSide() {
+            int buttonRightSide = calendarToggle.getAbsoluteLeft()
+                    + calendarToggle.getOffsetWidth();
+            int textRightSide = text.getAbsoluteLeft() + text.getOffsetWidth();
+            return buttonRightSide >= textRightSide;
+        }
+
+        private void doSetFocus() {
+            /*
+             * We have to wait a while before focusing since the popup needs to
+             * be opened before we can focus
+             */
+            Timer focusTimer = new Timer() {
+                @Override
+                public void run() {
+                    setFocus(true);
+                }
+            };
+
+            focusTimer.schedule(100);
+        }
     }
 
 }
