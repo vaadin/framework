@@ -1505,7 +1505,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             /**
              * Stop the command from being executed.
              *
-             * @since
+             * @since 7.4
              */
             public void stopSchedule() {
                 blurSource = null;
@@ -1514,7 +1514,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             /**
              * Schedule the command for a deferred execution.
              *
-             * @since
+             * @since 7.4
              */
             public void scheduleDeferred() {
                 Scheduler.get().scheduleDeferred(this);

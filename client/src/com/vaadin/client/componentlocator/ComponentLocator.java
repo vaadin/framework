@@ -121,7 +121,7 @@ public class ComponentLocator {
      * {@link #getPathForElement(com.google.gwt.user.client.Element)} instead.
      * 
      * 
-     * @since
+     * @since 7.4
      * @param targetElement
      *            The element to generate a path for.
      * @return A String locator that identifies the target element or null if a

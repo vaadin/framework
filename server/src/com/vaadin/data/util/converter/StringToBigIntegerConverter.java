@@ -33,7 +33,7 @@ import java.util.Locale;
  * </p>
  * 
  * @author Vaadin Ltd
- * @since
+ * @since 7.4
  */
 public class StringToBigIntegerConverter extends
         AbstractStringToNumberConverter<BigInteger> {

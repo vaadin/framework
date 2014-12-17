@@ -21,7 +21,7 @@ import java.math.BigDecimal;
  * Validator for validating that an {@link BigDecimal} is inside a given range.
  * 
  * @author Vaadin Ltd.
- * @since
+ * @since 7.4
  */
 @SuppressWarnings("serial")
 public class BigDecimalRangeValidator extends RangeValidator<BigDecimal> {

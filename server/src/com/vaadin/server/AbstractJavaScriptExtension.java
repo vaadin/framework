@@ -138,7 +138,7 @@ public abstract class AbstractJavaScriptExtension extends AbstractExtension {
     /**
      * Creates a new JavaScript extension extending the provided connector.
      * 
-     * @since
+     * @since 7.4
      * 
      * @param target
      *            the connector to extend

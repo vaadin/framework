@@ -243,7 +243,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * the removed tab if it's not the last one, otherwise will choose the
      * closer enabled tab to the left.
      * 
-     * @since
+     * @since 7.4
      * @param removedTabIndex
      *            the index of the selected tab which was just remove.
      * @return the index of the tab to be selected or -1 if there are no more

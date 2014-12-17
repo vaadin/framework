@@ -45,7 +45,7 @@ public abstract class AbstractExtension extends AbstractClientConnector
     /**
      * Creates a new extension instance that extends the provided connector.
      * 
-     * @since
+     * @since 7.4
      * 
      * @param target
      *            the connector to extend

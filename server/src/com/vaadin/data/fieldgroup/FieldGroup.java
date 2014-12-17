@@ -1166,7 +1166,7 @@ public class FieldGroup implements Serializable {
     /**
      * Clears the value of all fields.
      * 
-     * @since
+     * @since 7.4
      */
     public void clear() {
         for (Field<?> f : getFields()) {

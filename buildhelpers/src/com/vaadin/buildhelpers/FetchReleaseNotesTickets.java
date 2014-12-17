@@ -132,7 +132,7 @@ public class FetchReleaseNotesTickets {
     }
 
     /**
-     * @since
+     * @since 7.4
      * @param string
      *            the string to be html-escaped
      * @return string in html-escape format
