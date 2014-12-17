@@ -87,6 +87,7 @@ public class PotusCrud extends VerticalLayout {
                 doRevert();
             }
         });
+        fg = new FieldGroup();
     }
 
     protected void doRevert() {
@@ -95,6 +96,7 @@ public class PotusCrud extends VerticalLayout {
 
     protected void doDelete() {
         potusContainer.removeItem(potusList.getValue());
+        fg.setItemDataSource(null);
     }
 
     protected void doSave() {
@@ -112,9 +114,10 @@ public class PotusCrud extends VerticalLayout {
 
     protected void doEdit() {
         if (potusList.getValue() != null) {
-            fg = new FieldGroup();
             fg.setItemDataSource(potusList.getItem(potusList.getValue()));
             fg.bindMemberFields(potusForm);
+        } else {
+            fg.setItemDataSource(null);
         }
     }
 
