@@ -146,29 +146,11 @@
             <param name="target-server" value="tomcat8" />
         </antcall>
     </target>
-    <target name="integration-test-tomcat5">
-        <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="10" />
-            <param name="target-server" value="tomcat5" />
-        </antcall>
-    </target>
 
     <target name="integration-test-tomcat6">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
             <param name="target-server" value="tomcat6" />
-        </antcall>
-    </target>
-
-    <target name="integration-test-jetty5">
-        <antcall target="run-generic-integration-test">
-            <param name="target-server" value="jetty5" />
-        </antcall>
-    </target>
-
-    <target name="integration-test-jetty6">
-        <antcall target="run-generic-integration-test">
-            <param name="target-server" value="jetty6" />
         </antcall>
     </target>
 
@@ -230,13 +212,6 @@
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
             <param name="target-server" value="wildfly8" />
-        </antcall>
-    </target>
-
-    <target name="integration-test-glassfish2">
-        <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="10" />
-            <param name="target-server" value="glassfish2" />
         </antcall>
     </target>
 
@@ -434,7 +409,6 @@
             <antcall target="integration-test-weblogic10" />
             <antcall target="integration-test-weblogic12" />
             <antcall target="integration-test-gatein3" />
-            <antcall target="integration-test-glassfish2" />
             <antcall target="integration-test-glassfish3" />
             <antcall target="integration-test-glassfish4" />
             <antcall target="integration-test-jboss4" />
@@ -443,12 +417,9 @@
             <antcall target="integration-test-jboss7" />
             <antcall target="integration-test-jboss-eap6" />
             <antcall target="integration-test-wildfly8" />
-            <antcall target="integration-test-jetty5" />
-            <antcall target="integration-test-jetty6" />
             <antcall target="integration-test-jetty7" />
             <antcall target="integration-test-jetty8" />
             <antcall target="integration-test-jetty9" />
-            <antcall target="integration-test-tomcat5" />
             <antcall target="integration-test-tomcat6" />
             <antcall target="integration-test-tomcat7" />
             <antcall target="integration-test-tomcat8" />
