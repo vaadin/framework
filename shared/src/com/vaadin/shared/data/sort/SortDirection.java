@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.grid;
+package com.vaadin.shared.data.sort;
 
 import java.io.Serializable;
 
 /**
- * Describes sorting direction for a Grid column
- *
+ * Describes sorting direction.
+ * 
  * @since
  * @author Vaadin Ltd
  */

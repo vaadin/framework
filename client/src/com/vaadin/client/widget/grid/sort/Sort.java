@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.client.widgets.Grid;
-import com.vaadin.shared.ui.grid.SortDirection;
+import com.vaadin.shared.data.sort.SortDirection;
 
 /**
  * Fluid Sort descriptor object.

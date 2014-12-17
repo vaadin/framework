@@ -26,7 +26,7 @@ import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortHandler;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Grid;
-import com.vaadin.shared.ui.grid.SortDirection;
+import com.vaadin.shared.data.sort.SortDirection;
 
 /**
  * Provides sorting facility from Grid for the {@link ListDataSource} in-memory

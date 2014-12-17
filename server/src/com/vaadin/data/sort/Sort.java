@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.shared.ui.grid.SortDirection;
+import com.vaadin.shared.data.sort.SortDirection;
 
 /**
  * Fluid Sort API. Provides a convenient, human-readable way of specifying

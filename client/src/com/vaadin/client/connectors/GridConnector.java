@@ -63,6 +63,7 @@ import com.vaadin.client.widgets.Grid.FooterCell;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.client.widgets.Grid.HeaderRow;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.EditorRowClientRpc;
 import com.vaadin.shared.ui.grid.EditorRowServerRpc;
@@ -75,7 +76,6 @@ import com.vaadin.shared.ui.grid.GridStaticSectionState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.CellState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.ScrollDestination;
-import com.vaadin.shared.ui.grid.SortDirection;
 
 /**
  * Connects the client side {@link Grid} widget with the server side

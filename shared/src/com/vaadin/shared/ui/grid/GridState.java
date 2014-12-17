@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.shared.data.sort.SortDirection;
 
 /**
  * The shared state for the {@link com.vaadin.ui.components.grid.Grid} component

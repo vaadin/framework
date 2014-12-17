@@ -33,7 +33,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
-import com.vaadin.shared.ui.grid.SortDirection;
+import com.vaadin.shared.data.sort.SortDirection;
 
 /**
  * Container wrapper that adds support for generated properties. This container

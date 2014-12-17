@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.shared.ui.grid.SortDirection;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;

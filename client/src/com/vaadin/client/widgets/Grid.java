@@ -119,13 +119,13 @@ import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortHandler;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Escalator.AbstractRowContainer;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.ui.grid.ScrollDestination;
-import com.vaadin.shared.ui.grid.SortDirection;
 import com.vaadin.shared.util.SharedUtil;
 
 /**

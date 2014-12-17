@@ -28,7 +28,7 @@ import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.SortEvent;
 import com.vaadin.event.SortEvent.SortListener;
-import com.vaadin.shared.ui.grid.SortDirection;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Grid;
 
 public class SortTest {

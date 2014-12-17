@@ -18,6 +18,7 @@ package com.vaadin.shared.ui.grid;
 import java.util.List;
 
 import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.shared.data.sort.SortDirection;
 
 /**
  * Client-to-server RPC interface for the Grid component

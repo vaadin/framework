@@ -16,7 +16,7 @@
 package com.vaadin.client.widget.grid.sort;
 
 import com.vaadin.client.widgets.Grid;
-import com.vaadin.shared.ui.grid.SortDirection;
+import com.vaadin.shared.data.sort.SortDirection;
 
 /**
  * Sort order descriptor. Contains column and direction references.

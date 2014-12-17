@@ -17,7 +17,7 @@ package com.vaadin.data.sort;
 
 import java.io.Serializable;
 
-import com.vaadin.shared.ui.grid.SortDirection;
+import com.vaadin.shared.data.sort.SortDirection;
 
 /**
  * Sort order descriptor. Links together a {@link SortDirection} value and a
