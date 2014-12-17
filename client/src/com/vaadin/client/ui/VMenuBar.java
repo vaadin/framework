@@ -719,6 +719,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
      *            enable/disable animate-in animation when hide popup
      * @param animateOut
      *            enable/disable animate-out animation when hide popup
+     * @since 7.3.7
      */
     public void hideChildren(boolean animateIn, boolean animateOut) {
         if (visibleChildMenu != null) {

@@ -66,7 +66,6 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -851,6 +850,7 @@ public class ApplicationConnection implements HasHandlers {
      *            The contents of the request to send
      * @param retry
      *            true when a status code 0 should be retried
+     * @since 7.3.7
      */
     protected void doUidlRequest(final String uri, final JSONObject payload,
             final boolean retry) {
