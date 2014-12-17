@@ -135,8 +135,6 @@ public class FieldBinder implements Serializable {
     /**
      * Tries to bind the given {@link Component} instance to a member field of
      * the bind target. The fields are matched based on localId, id and caption.
-     * If a field is already bound (not null), {@link FieldBindingException} is
-     * thrown.
      * 
      * @param instance
      *            the instance to be bound to a field
@@ -197,14 +195,13 @@ public class FieldBinder implements Serializable {
             Object fieldValue = ReflectTools.getJavaFieldValue(bindTarget,
                     field);
             if (fieldValue != null) {
-                getLogger().severe(
-                        "The field with identifier \"" + identifier
-                                + "\" already mapped");
-                throw new FieldBindingException(
-                        "Duplicate identifier found for a field: " + fieldName);
+                getLogger().fine(
+                        "The field \"" + fieldName
+                                + "\" was already mapped. Ignoring.");
+            } else {
+                // set the field value
+                ReflectTools.setJavaFieldValue(bindTarget, field, instance);
             }
-            // set the field value
-            ReflectTools.setJavaFieldValue(bindTarget, field, instance);
             return true;
         } catch (IllegalAccessException e) {
             throw new FieldBindingException("Field binding failed", e);

@@ -101,6 +101,18 @@ public class DesignTest {
         assertHierarchyEquals(dc.getRootComponent(), newRoot);
     }
 
+    @Test(expected = DesignException.class)
+    public void testDuplicateIds() throws FileNotFoundException {
+        Design.read(new FileInputStream(
+                "server/tests/src/com/vaadin/tests/design/duplicate-ids.html"));
+    }
+
+    @Test(expected = DesignException.class)
+    public void testDuplicateLocalIds() throws FileNotFoundException {
+        Design.read(new FileInputStream(
+                "server/tests/src/com/vaadin/tests/design/duplicate-local-ids.html"));
+    }
+
     private void assertHierarchyEquals(Component expected, Component actual) {
         if (expected.getClass() != actual.getClass()) {
             throw new AssertionError(

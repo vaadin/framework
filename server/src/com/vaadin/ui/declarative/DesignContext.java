@@ -437,11 +437,12 @@ public class DesignContext implements Serializable {
      * at the given component. Also registers the componentid, localId and
      * caption of the given component and all its children to the context
      * 
-     * 
      * @param component
      *            The component to be synchronized from design
      * @param componentDesign
      *            The html tree node containing the description of the component
+     * @throws DesignException
+     *             if the design contains duplicate local or global ids
      */
     public void synchronizeAndRegister(Component component,
             Element componentDesign) {
@@ -463,7 +464,11 @@ public class DesignContext implements Serializable {
         // from the attributes of componentDesign
         if (attributes.hasKey(LOCAL_ID_ATTRIBUTE)) {
             String localId = attributes.get(LOCAL_ID_ATTRIBUTE);
-            mapLocalId(localId, component); // two-way map
+            boolean mappingExists = mapLocalId(localId, component);
+            if (mappingExists) {
+                throw new DesignException(
+                        "the following local id is not unique: " + localId);
+            }
         }
         // caption: a property of a component, possibly not unique
         String caption = component.getCaption();

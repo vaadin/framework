@@ -24,6 +24,7 @@ public class DesignRootTest {
         DesignWithEmptyAnnotation d = new DesignWithEmptyAnnotation();
         Assert.assertNotNull(d.ok);
         Assert.assertNotNull(d.CaNCEL);
+        Assert.assertEquals("original", d.preInitializedField.getValue());
     }
 
     @Test
@@ -31,6 +32,7 @@ public class DesignRootTest {
         DesignWithAnnotation d = new DesignWithAnnotation();
         Assert.assertNotNull(d.ok);
         Assert.assertNotNull(d.cancel);
+        Assert.assertEquals("original", d.preInitializedField.getValue());
     }
 
     @Test
@@ -38,6 +40,7 @@ public class DesignRootTest {
         DesignWithEmptyAnnotation d = new ExtendedDesignWithEmptyAnnotation();
         Assert.assertNotNull(d.ok);
         Assert.assertNotNull(d.CaNCEL);
+        Assert.assertEquals("original", d.preInitializedField.getValue());
     }
 
     @Test
@@ -45,6 +48,7 @@ public class DesignRootTest {
         DesignWithAnnotation d = new ExtendedDesignWithAnnotation();
         Assert.assertNotNull(d.ok);
         Assert.assertNotNull(d.cancel);
+        Assert.assertEquals("original", d.preInitializedField.getValue());
     }
 
 }
