@@ -40,15 +40,18 @@ public class EscalatorColspanTest extends EscalatorBasicClientFeaturesTest {
         openTestURL();
         populate();
 
-        double firstCellWidth = getWidth(getBodyCell(0, 0));
-        double secondCellWidth = getWidth(getBodyCell(0, 1));
-        double doubleCellWidth = firstCellWidth + secondCellWidth;
+        int firstCellWidth = getBodyCell(0, 0).getSize().getWidth();
+        int secondCellWidth = getBodyCell(0, 1).getSize().getWidth();
+        int doubleCellWidth = firstCellWidth + secondCellWidth;
 
         selectMenuPath(FEATURES, COLUMN_SPANNING, COLSPAN_NORMAL);
 
         WebElement bodyCell = getBodyCell(0, 0);
-        assertEquals(2, getColSpan(bodyCell));
-        assertEquals(doubleCellWidth, getWidth(bodyCell), 1);
+        assertEquals("Cell was not spanned correctly", 2, getColSpan(bodyCell));
+        assertEquals(
+                "Spanned cell's width was not the sum of the previous cells ("
+                        + firstCellWidth + " + " + secondCellWidth + ")",
+                doubleCellWidth, bodyCell.getSize().getWidth(), 1);
     }
 
     @Test
@@ -56,27 +59,14 @@ public class EscalatorColspanTest extends EscalatorBasicClientFeaturesTest {
         openTestURL();
         populate();
 
-        double singleCellWidth = getWidth(getBodyCell(0, 0));
+        int singleCellWidth = getBodyCell(0, 0).getSize().getWidth();
 
         selectMenuPath(FEATURES, COLUMN_SPANNING, COLSPAN_NORMAL);
         selectMenuPath(FEATURES, COLUMN_SPANNING, COLSPAN_NONE);
 
         WebElement bodyCell = getBodyCell(0, 0);
         assertEquals(NO_COLSPAN, getColSpan(bodyCell));
-        assertEquals(singleCellWidth, getWidth(bodyCell), 1);
-    }
-
-    private static double getWidth(WebElement element) {
-        String widthString = element.getCssValue("width"); // e.g. 100.1px
-        if ("0".equals(widthString)) {
-            return 0;
-        } else if (widthString.endsWith("px")) {
-            return Double.parseDouble(widthString.substring(0,
-                    widthString.length() - 2));
-        } else {
-            throw new IllegalStateException("Element width expressed "
-                    + "in an unsupported format: " + widthString);
-        }
+        assertEquals(singleCellWidth, bodyCell.getSize().getWidth(), 1);
     }
 
     private static int getColSpan(WebElement cell) {
