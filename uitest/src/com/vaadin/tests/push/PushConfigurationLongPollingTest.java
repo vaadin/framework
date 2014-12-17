@@ -18,11 +18,7 @@ package com.vaadin.tests.push;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.util.List;
-
 import org.junit.Test;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.Select;
 
 public class PushConfigurationLongPollingTest extends PushConfigurationTest {
 
@@ -30,13 +26,13 @@ public class PushConfigurationLongPollingTest extends PushConfigurationTest {
     public void testLongPolling() throws InterruptedException {
         openDebugLogTab();
 
-        new Select(getTransportSelect()).selectByVisibleText("LONG_POLLING");
+        getTransportSelect().selectByText("Long polling");
         assertThat(getStatusText(),
                 containsString("fallbackTransport: long-polling"));
         assertThat(getStatusText(), containsString("transport: long-polling"));
 
         clearDebugMessages();
-        new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
+        getPushModeSelect().selectByText("Automatic");
         waitForDebugMessage("Push connection established using long-polling",
                 10);
         waitForServerCounterToUpdate();

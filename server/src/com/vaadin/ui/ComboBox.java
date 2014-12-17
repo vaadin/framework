@@ -622,7 +622,7 @@ public class ComboBox extends AbstractSelect implements
             if (caption == null || caption.equals("")) {
                 continue;
             } else {
-                caption = caption.toLowerCase();
+                caption = caption.toLowerCase(getLocale());
             }
             switch (filteringMode) {
             case CONTAINS:
@@ -682,7 +682,7 @@ public class ComboBox extends AbstractSelect implements
             currentPage = ((Integer) variables.get("page")).intValue();
             filterstring = newFilter;
             if (filterstring != null) {
-                filterstring = filterstring.toLowerCase();
+                filterstring = filterstring.toLowerCase(getLocale());
             }
             requestRepaint();
         } else if (isNewItemsAllowed()) {

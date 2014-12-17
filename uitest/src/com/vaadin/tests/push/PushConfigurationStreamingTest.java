@@ -15,11 +15,10 @@
  */
 package com.vaadin.tests.push;
 
-import org.junit.Test;
-import org.openqa.selenium.support.ui.Select;
-
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import org.junit.Test;
 
 public class PushConfigurationStreamingTest extends PushConfigurationTest {
 
@@ -27,13 +26,13 @@ public class PushConfigurationStreamingTest extends PushConfigurationTest {
     public void testStreaming() throws InterruptedException {
         openDebugLogTab();
 
-        new Select(getTransportSelect()).selectByVisibleText("STREAMING");
+        getTransportSelect().selectByText("Streaming");
         assertThat(getStatusText(),
                 containsString("fallbackTransport: long-polling"));
         assertThat(getStatusText(), containsString("transport: streaming"));
 
         clearDebugMessages();
-        new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
+        getPushModeSelect().selectByText("Automatic");
 
         waitForDebugMessage("Push connection established using streaming", 10);
         waitForServerCounterToUpdate();
