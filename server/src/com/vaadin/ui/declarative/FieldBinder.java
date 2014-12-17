@@ -45,7 +45,7 @@ public class FieldBinder implements Serializable {
     private Map<String, Field> fieldMap = new HashMap<String, Field>();
 
     /**
-     * Creates a new instance of LayoutFieldBinder
+     * Creates a new instance of LayoutFieldBinder.
      * 
      * @param design
      *            the design class instance containing the fields to bind
@@ -57,7 +57,7 @@ public class FieldBinder implements Serializable {
     }
 
     /**
-     * Creates a new instance of LayoutFieldBinder
+     * Creates a new instance of LayoutFieldBinder.
      * 
      * @param design
      *            the instance containing the fields
@@ -76,7 +76,7 @@ public class FieldBinder implements Serializable {
     }
 
     /**
-     * Returns a collection of field names that are not bound
+     * Returns a collection of field names that are not bound.
      * 
      * @return a collection of fields assignable to Component that are not bound
      */
@@ -104,7 +104,7 @@ public class FieldBinder implements Serializable {
     }
 
     /**
-     * Resolves the fields of the design class instance
+     * Resolves the fields of the design class instance.
      */
     private void resolveFields(Class<?> classWithFields) {
         for (Field memberField : getFieldsInDeclareOrder(classWithFields)) {
@@ -217,7 +217,7 @@ public class FieldBinder implements Serializable {
 
     /**
      * Converts the given identifier to a valid field name by stripping away
-     * illegal character and setting the first letter of the name to lowercase
+     * illegal character and setting the first letter of the name to lower case.
      * 
      * @param identifier
      *            the identifier to be converted to field name
@@ -242,10 +242,10 @@ public class FieldBinder implements Serializable {
     }
 
     /**
-     * Returns an array containing Field objects reflecting all the fields of
-     * the class or interface represented by this Class object. The elements in
-     * the array returned are sorted in declare order. The fields in
-     * superclasses are excluded.
+     * Returns a list containing Field objects reflecting all the fields of the
+     * class or interface represented by this Class object. The elements in the
+     * returned list are sorted in declare order. The fields in superclasses are
+     * excluded.
      * 
      * @param searchClass
      *            the class to be scanned for fields

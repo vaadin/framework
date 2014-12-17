@@ -16,7 +16,6 @@
 package com.vaadin.ui.declarative;
 
 import java.beans.IntrospectionException;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -39,10 +38,11 @@ import com.vaadin.ui.declarative.DesignContext.ComponentCreatedEvent;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
 
 /**
- * Design is used for parsing a component hierarchy from an html file and,
- * conversely, for generating an html tree representation corresponding to a
- * given component hierarchy. For both parsing and tree generation the component
- * hierarchy must contain a single root.
+ * Design is used for reading a component hierarchy from an html string or input
+ * stream and, conversely, for writing an html representation corresponding to a
+ * given component hierarchy. The component hierarchy must contain one root
+ * component. An empty component hierarchy can be represented using null as the
+ * root node.
  * 
  * 
  * @since 7.4
@@ -51,7 +51,7 @@ import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
 public class Design implements Serializable {
     /**
      * Parses the given input stream into a jsoup document
-     *
+     * 
      * @param html
      *            the stream containing the design
      * @return the parsed jsoup document
@@ -69,14 +69,14 @@ public class Design implements Serializable {
 
     /**
      * Constructs a component hierarchy from the design specified as an html
-     * document. The component hierarchy must contain exactly one top-level
-     * Component. The component should be located under <body>, but also invalid
-     * html containing the hierarchy without <html>, <head> and <body> tags is
-     * accepted. You can optionally pass instance for the root component with
-     * some uninitialized instance fields. The fields will be automatically
-     * populated when parsing the design based on the component ids, local ids,
-     * and captions of the components in the design.
-     *
+     * document. The hierarchy must contain at most one top-level component,
+     * which should be located under <body>. Also invalid html containing the
+     * hierarchy without <html>, <head> and <body> tags is accepted. You can
+     * optionally pass instance for the root component with some uninitialized
+     * instance fields. The fields will be automatically populated when parsing
+     * the design based on the component ids, local ids, and captions of the
+     * components in the design.
+     * 
      * @param html
      *            the html document describing the component design
      * @param rootInstance
@@ -95,14 +95,14 @@ public class Design implements Serializable {
 
     /**
      * Constructs a component hierarchy from the design specified as an html
-     * document given as a string. The component hierarchy must contain exactly
-     * one top-level Component. The component should be located under <body>,
-     * but also invalid html containing the hierarchy without <html>, <head> and
-     * <body> tags is accepted. You can optionally pass instance for the root
-     * component with some uninitialized instance fields. The fields will be
-     * automatically populated when parsing the design based on the component
-     * ids, local ids, and captions of the components in the design.
-     *
+     * document given as a string. The hierarchy must contain at most one
+     * top-level component, which should be located under <body>. Also invalid
+     * html containing the hierarchy without <html>, <head> and <body> tags is
+     * accepted. You can optionally pass instance for the root component with
+     * some uninitialized instance fields. The fields will be automatically
+     * populated when parsing the design based on the component ids, local ids,
+     * and captions of the components in the design.
+     * 
      * @param html
      *            the html document describing the component design
      * @param rootInstance
@@ -124,9 +124,9 @@ public class Design implements Serializable {
      * tree.
      * 
      * If a component root is given, the component instances created during
-     * synchronizing the design are assigned to its member fields based on their
-     * id, local id, and caption
-     *
+     * reading the design are assigned to its member fields based on their id,
+     * local id, and caption
+     * 
      * @param doc
      *            the html tree
      * @param componentRoot
@@ -151,9 +151,9 @@ public class Design implements Serializable {
      * tree.
      * 
      * If a component root is given, the component instances created during
-     * synchronizing the design are assigned to its member fields based on their
-     * id, local id, and caption
-     *
+     * reading the design are assigned to its member fields based on their id,
+     * local id, and caption
+     * 
      * @param doc
      *            the html tree
      * @param componentRoot
@@ -218,13 +218,14 @@ public class Design implements Serializable {
     }
 
     /**
-     * Generates an html tree representation representing the component
-     * hierarchy having the given root. The hierarchy is stored under <body> in
-     * the tree. The generated tree corresponds to a valid html document.
-     *
-     *
-     * @param root
-     *            the root of the component hierarchy
+     * Generates an html tree representation of the component hierarchy having
+     * the root designContext.getRootComponent(). The hierarchy is stored under
+     * <body> in the tree. The generated tree represents a valid html document.
+     * 
+     * 
+     * @param designContext
+     *            a DesignContext object specifying the root component
+     *            (designContext.getRootComponent()) of the hierarchy
      * @return an html tree representation of the component hierarchy
      */
     private static Document createHtml(DesignContext designContext) {
@@ -246,20 +247,6 @@ public class Design implements Serializable {
         Node rootNode = designContext.createElement(root);
         body.appendChild(rootNode);
         return doc;
-    }
-
-    /**
-     * Generates an html file corresponding to the component hierarchy with the
-     * given root.
-     *
-     * @param writer
-     * @param root
-     * @throws IOException
-     */
-    private static void createHtml(BufferedWriter writer, DesignContext ctx)
-            throws IOException {
-        String docAsString = createHtml(ctx).toString();
-        writer.write(docAsString);
     }
 
     /**
@@ -358,7 +345,7 @@ public class Design implements Serializable {
      * design. Matching is done based on field name in the component class and
      * id/local id/caption in the design file.
      * <p>
-     * The type of the root component must match the root element in the design
+     * The type of the root component must match the root element in the design.
      * 
      * @param filename
      *            The file name to load. Loaded from the same package as the
@@ -382,14 +369,16 @@ public class Design implements Serializable {
     }
 
     /**
-     * Loads a design from the given stream using the given root component.
+     * Loads a design from the given stream using the given root component. If
+     * rootComponent is null, the type of the root node is read from the design.
      * <p>
      * Any {@link Component} type fields in the root component which are not
      * assigned (i.e. are null) are mapped to corresponding components in the
      * design. Matching is done based on field name in the component class and
      * id/local id/caption in the design file.
      * <p>
-     * The type of the root component must match the root element in the design
+     * If rootComponent is not null, its type must match the type of the root
+     * element in the design
      * 
      * @param stream
      *            The stream to read the design from
@@ -413,13 +402,12 @@ public class Design implements Serializable {
      * Loads a design from the given input stream
      * 
      * @param design
-     *            The input stream which contains the design
+     *            The stream to read the design from
      * @return The root component of the design
      */
     public static Component read(InputStream design) {
         DesignContext context = read(design, null);
         return context.getRootComponent();
-
     }
 
     /**
@@ -427,7 +415,7 @@ public class Design implements Serializable {
      * stream
      * 
      * @param component
-     *            the root component of the component tree to write
+     *            the root component of the component tree
      * @param outputStream
      *            the output stream to write the design to. The design is always
      *            written as UTF-8
@@ -445,8 +433,9 @@ public class Design implements Serializable {
      * the given output stream. The design context is used for writing local ids
      * and other information not available in the component tree.
      * 
-     * @param component
-     *            the root component of the component tree to write
+     * @param designContext
+     *            the DesignContext object specifying the component hierarchy
+     *            and the local id values of the objects
      * @param outputStream
      *            the output stream to write the design to. The design is always
      *            written as UTF-8

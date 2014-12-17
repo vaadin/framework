@@ -16,6 +16,12 @@
 package com.vaadin.ui.declarative;
 
 @SuppressWarnings("serial")
+/**
+ * An exception that is used when reading or writing a design fails.
+ * 
+ * @since 7.4 
+ * @author Vaadin Ltd
+ */
 public class DesignException extends RuntimeException {
 
     public DesignException() {

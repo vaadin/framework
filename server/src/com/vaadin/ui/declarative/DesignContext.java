@@ -55,12 +55,12 @@ public class DesignContext implements Serializable {
     public static final String ID_ATTRIBUTE = "id";
     public static final String CAPTION_ATTRIBUTE = "caption";
     public static final String LOCAL_ID_ATTRIBUTE = "_id";
-    // Mappings from ids to components. Modified when synchronizing from design.
+    // Mappings from ids to components. Modified when reading from design.
     private Map<String, Component> idToComponent = new HashMap<String, Component>();
     private Map<String, Component> localIdToComponent = new HashMap<String, Component>();
     private Map<String, Component> captionToComponent = new HashMap<String, Component>();
-    // Mapping from components to local ids. Accessed when synchronizing to
-    // design. Modified when synchronizing from design.
+    // Mapping from components to local ids. Accessed when writing to
+    // design. Modified when reading from design.
     private Map<Component, String> componentToLocalId = new HashMap<Component, String>();
     private Document doc; // required for calling createElement(String)
     // namespace mappings
@@ -329,7 +329,12 @@ public class DesignContext implements Serializable {
     }
 
     /**
+     * Stores the package mappings (prefix -> package name) of this object to
+     * the specified document. The prefixes are stored as <meta> tags under
+     * <head> in the document.
      * 
+     * @param doc
+     *            the Jsoup document tree where the package mappings are stored
      */
     public void storePrefixes(Document doc) {
         Element head = doc.head();
@@ -355,7 +360,7 @@ public class DesignContext implements Serializable {
      * returned Node.
      * 
      * @param childComponent
-     *            The component with state that is synchronized in to the node
+     *            The component with state that is written in to the node
      * @return An html tree node corresponding to the given component. The tag
      *         name of the created node is derived from the class name of
      *         childComponent.
@@ -570,7 +575,7 @@ public class DesignContext implements Serializable {
     /**
      * Returns the root component of a created component hierarchy.
      * 
-     * @return
+     * @return the root component of the hierarchy
      */
     public Component getRootComponent() {
         return rootComponent;
@@ -578,6 +583,9 @@ public class DesignContext implements Serializable {
 
     /**
      * Sets the root component of a created component hierarchy.
+     * 
+     * @param rootComponent
+     *            the root component of the hierarchy
      */
     public void setRootComponent(Component rootComponent) {
         this.rootComponent = rootComponent;
@@ -690,7 +698,7 @@ public class DesignContext implements Serializable {
      *            The component being written
      * @param defaultC
      *            The default instance for the component
-     * @return
+     * @return whether the children of c should be written
      */
     public boolean shouldWriteChildren(Component c, Component defaultC) {
         if (c == getRootComponent()) {

@@ -310,7 +310,7 @@ public abstract class AbstractSingleComponentContainer extends
      */
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
-        // synchronize default attributes (also clears children and attributes)
+        // write default attributes (also clears children and attributes)
         super.writeDesign(design, designContext);
         AbstractSingleComponentContainer def = designContext
                 .getDefaultInstance(this);

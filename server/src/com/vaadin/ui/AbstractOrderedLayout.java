@@ -530,7 +530,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
-        // synchronize default attributes
+        // write default attributes
         super.writeDesign(design, designContext);
         // handle margin
         AbstractOrderedLayout def = (AbstractOrderedLayout) designContext

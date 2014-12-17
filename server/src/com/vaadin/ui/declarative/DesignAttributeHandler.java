@@ -232,16 +232,12 @@ public class DesignAttributeHandler implements Serializable {
     }
 
     /**
-     * Reads the given attribute from attributes. If the attribute is not found,
-     * the provided default value is returned
+     * Reads the given attribute from attributes.
      * 
      * @param attribute
      *            the attribute key
      * @param attributes
      *            the set of attributes to read from
-     * @param defaultValue
-     *            the default value that is returned if the attribute is not
-     *            found
      * @param outputType
      *            the output type for the attribute
      * @return the attribute value or the default value if the attribute is not
@@ -269,7 +265,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Writes the given attribute value to attributes if it differs from the
-     * default attribute value
+     * default attribute value.
      * 
      * @param attribute
      *            the attribute key
@@ -279,8 +275,8 @@ public class DesignAttributeHandler implements Serializable {
      *            the attribute value
      * @param defaultValue
      *            the default attribute value
-     * @param the
-     *            type of the input value
+     * @param inputType
+     *            the type of the input value
      */
     public static <T> void writeAttribute(String attribute,
             Attributes attributes, T value, T defaultValue, Class<T> inputType) {
@@ -377,9 +373,8 @@ public class DesignAttributeHandler implements Serializable {
     }
 
     /**
-     * Creates the decimal format used when writing attributes to the design
+     * Creates the decimal format used when writing attributes to the design.
      * 
-     * @since 7.4
      * @return the decimal format
      */
     private static DecimalFormat getDecimalFormat() {
@@ -622,7 +617,6 @@ public class DesignAttributeHandler implements Serializable {
      * Provides mappings between shortcut keycodes and their representation in
      * design attributes
      * 
-     * @since 7.4
      * @author Vaadin Ltd
      */
     private static class ShortcutKeyMapper implements Serializable {
@@ -721,8 +715,8 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Converts the given string attribute value to its corresponding boolean.
      * 
-     * An empty string is considered true (true when attribute exists),
-     * otherwise "false" and "true" are supported, all other input will throw an
+     * An empty string and "true" are considered to represent a true value and
+     * "false" to represent a false value. All other input will throw an
      * exception
      * 
      * @param booleanValue

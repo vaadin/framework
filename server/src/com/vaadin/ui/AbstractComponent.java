@@ -965,7 +965,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         for (Attribute a : attr) {
             if (!a.getKey().startsWith(":") && !supported.contains(a.getKey())) {
                 getLogger().info(
-                        "Unsupported attribute found when synchronizing from design : "
+                        "Unsupported attribute found when reading from design : "
                                 + a.getKey());
             }
         }
@@ -1041,8 +1041,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     /**
-     * Synchronizes the size of this component from the given design attributes.
-     * If the attributes do not contain relevant size information, defaults is
+     * Reads the size of this component from the given design attributes. If the
+     * attributes do not contain relevant size information, defaults is
      * consulted.
      * 
      * @param attributes
@@ -1169,12 +1169,12 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Returns a collection of attributes that do not require custom handling
-     * when synchronizing from design. These are typically attributes of some
+     * when reading or writing design. These are typically attributes of some
      * primitive type. The default implementation searches setters with
      * primitive values
      * 
-     * @return a collection of attributes that can be synchronized from design
-     *         using the default approach.
+     * @return a collection of attributes that can be read and written using the
+     *         default approach.
      */
     private Collection<String> getDefaultAttributes() {
         Collection<String> attributes = DesignAttributeHandler
@@ -1185,9 +1185,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Returns a collection of attributes that should not be handled by the
-     * basic implementation of the {@link synhronizeFromDesign} and
-     * {@link writeDesign} methods. Typically these are handled in a custom way
-     * in the overridden versions of the above methods
+     * basic implementation of the {@link readDesign} and {@link writeDesign}
+     * methods. Typically these are handled in a custom way in the overridden
+     * versions of the above methods
      * 
      * @return the collection of attributes that are not handled by the basic
      *         implementation
