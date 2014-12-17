@@ -1055,7 +1055,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
             final double viewportStartPx = getScrollLeft();
             double viewportEndPx = viewportStartPx
-                    + getPreciseWidth(getElement()) - frozenPixels;
+                    + Util.getRequiredWidthBoundingClientRectDouble(getElement())
+                    - frozenPixels;
             if (verticalScrollbar.showsScrollHandle()) {
                 viewportEndPx -= Util.getNativeScrollbarSize();
             }
@@ -1728,7 +1729,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 final boolean isVisible = !cell.getStyle().getDisplay()
                         .equals(Display.NONE.getCssName());
                 if (isVisible) {
-                    maxWidth = Math.max(maxWidth, getPreciseWidth(cell));
+                    maxWidth = Math
+                            .max(maxWidth,
+                                    Util.getRequiredWidthBoundingClientRectDouble(cell));
                 }
                 row = TableRowElement.as(row.getNextSiblingElement());
             }
@@ -2003,7 +2006,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 cellClone.getStyle().clearWidth();
 
                 rowElement.insertBefore(cellClone, cellOriginal);
-                maxCellWidth = Math.max(getPreciseWidth(cellClone),
+                maxCellWidth = Math.max(Util
+                        .getRequiredWidthBoundingClientRectDouble(cellClone),
                         maxCellWidth);
                 cellClone.removeFromParent();
             }
@@ -4264,26 +4268,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
     private final ColumnAutoWidthAssignScheduler columnAutoWidthAssignScheduler = new ColumnAutoWidthAssignScheduler();
 
-    private static native double getPreciseWidth(Element element)
-    /*-{
-        if (element.getBoundingClientRect) {
-            var rect = element.getBoundingClientRect();
-            return rect.right - rect.left;
-        } else {
-            return element.offsetWidth;
-        }
-    }-*/;
-
-    private static native double getPreciseHeight(Element element)
-    /*-{
-        if (element.getBoundingClientRect) {
-            var rect = element.getBoundingClientRect();
-            return rect.bottom - rect.top;
-        } else {
-            return element.offsetHeight;
-        }
-    }-*/;
-
     /**
      * Creates a new Escalator widget instance.
      */
@@ -4723,8 +4707,10 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         }
 
         Profiler.enter("Escalator.recalculateElementSizes");
-        widthOfEscalator = getPreciseWidth(getElement());
-        heightOfEscalator = getPreciseHeight(getElement());
+        widthOfEscalator = Util
+                .getRequiredWidthBoundingClientRectDouble(getElement());
+        heightOfEscalator = Util
+                .getRequiredHeightBoundingClientRectDouble(getElement());
 
         header.recalculateSectionHeight();
         body.recalculateSectionHeight();
@@ -5084,6 +5070,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
      * @return escalator's inner width
      */
     public double getInnerWidth() {
-        return getPreciseWidth(tableWrapper);
+        return Util.getRequiredWidthBoundingClientRectDouble(tableWrapper);
     }
 }

@@ -46,7 +46,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -669,7 +668,33 @@ public class Util {
         return reqHeight;
     }
 
-    public static native int getRequiredWidthBoundingClientRect(
+    /**
+     * Calculates the width of the element's bounding rectangle.
+     * <p>
+     * In case the browser doesn't support bounding rectangles, the returned
+     * value is the offset width.
+     * 
+     * @param element
+     *            the element of which to calculate the width
+     * @return the width of the element
+     */
+    public static int getRequiredWidthBoundingClientRect(
+            com.google.gwt.dom.client.Element element) {
+        return (int) getRequiredWidthBoundingClientRectDouble(element);
+    }
+
+    /**
+     * Calculates the width of the element's bounding rectangle to subpixel
+     * precision.
+     * <p>
+     * In case the browser doesn't support bounding rectangles, the returned
+     * value is the offset width.
+     * 
+     * @param element
+     *            the element of which to calculate the width
+     * @return the subpixel-accurate width of the element
+     */
+    public static native double getRequiredWidthBoundingClientRectDouble(
             com.google.gwt.dom.client.Element element)
     /*-{
         if (element.getBoundingClientRect) {
@@ -720,7 +745,33 @@ public class Util {
          return Math.ceil(width+border+padding);
      }-*/;
 
-    public static native int getRequiredHeightBoundingClientRect(
+    /**
+     * Calculates the height of the element's bounding rectangle.
+     * <p>
+     * In case the browser doesn't support bounding rectangles, the returned
+     * value is the offset height.
+     * 
+     * @param element
+     *            the element of which to calculate the height
+     * @return the height of the element
+     */
+    public static int getRequiredHeightBoundingClientRect(
+            com.google.gwt.dom.client.Element element) {
+        return (int) getRequiredHeightBoundingClientRectDouble(element);
+    }
+
+    /**
+     * Calculates the height of the element's bounding rectangle to subpixel
+     * precision.
+     * <p>
+     * In case the browser doesn't support bounding rectangles, the returned
+     * value is the offset height.
+     * 
+     * @param element
+     *            the element of which to calculate the height
+     * @return the subpixel-accurate height of the element
+     */
+    public static native double getRequiredHeightBoundingClientRectDouble(
             com.google.gwt.dom.client.Element element)
     /*-{
         var height;
