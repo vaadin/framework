@@ -184,13 +184,18 @@ public class Design implements Serializable {
         // taken care of by jsoup.
         Element root = doc.body();
         Elements children = root.children();
-        if (children.size() != 1) {
+        if (children.size() > 1) {
             throw new DesignException(
-                    "The first level of a component hierarchy should contain exactly one root component, but found "
-                            + children.size());
+                    "The first level of a component hierarchy should contain at most one root component, but found "
+                            + children.size() + ".");
         }
-        Element element = children.first();
+        Element element = children.size() == 0 ? null : children.first();
         if (componentRoot != null) {
+            if (element == null) {
+                throw new DesignException(
+                        "The root element cannot be null when the specified root Component is"
+                                + " not null.");
+            }
             // user has specified root instance that may have member fields that
             // should be bound
             final FieldBinder binder;
@@ -222,7 +227,8 @@ public class Design implements Serializable {
             designContext.removeComponentCreationListener(creationListener);
         } else {
             // createChild creates the entire component hierarchy
-            componentRoot = designContext.readDesign(element);
+            componentRoot = element == null ? null : designContext
+                    .readDesign(element);
         }
         designContext.setRootComponent(componentRoot);
         return designContext;
@@ -255,8 +261,10 @@ public class Design implements Serializable {
         // creates the entire component hierarchy rooted at the
         // given root node.
         Component root = designContext.getRootComponent();
-        Node rootNode = designContext.createElement(root);
-        body.appendChild(rootNode);
+        if (root != null) {
+            Node rootNode = designContext.createElement(root);
+            body.appendChild(rootNode);
+        }
         designContext.writePackageMappings(doc);
         return doc;
     }
@@ -424,10 +432,11 @@ public class Design implements Serializable {
 
     /**
      * Writes the given component tree in design format to the given output
-     * stream
+     * stream.
      * 
      * @param component
-     *            the root component of the component tree
+     *            the root component of the component tree, null can be used for
+     *            generating an empty design
      * @param outputStream
      *            the output stream to write the design to. The design is always
      *            written as UTF-8
@@ -446,8 +455,10 @@ public class Design implements Serializable {
      * and other information not available in the component tree.
      * 
      * @param designContext
-     *            the DesignContext object specifying the component hierarchy
-     *            and the local id values of the objects
+     *            The DesignContext object specifying the component hierarchy
+     *            and the local id values of the objects. If
+     *            designContext.getRootComponent() is null, an empty design will
+     *            be generated.
      * @param outputStream
      *            the output stream to write the design to. The design is always
      *            written as UTF-8

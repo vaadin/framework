@@ -415,7 +415,7 @@ public class DesignContext implements Serializable {
      * 
      * @param componentDesign
      *            The design element containing the description of the component
-     *            to be created
+     *            to be created.
      * @return the root component of component tree
      */
     public Component readDesign(Element componentDesign) {
