@@ -34,6 +34,7 @@ import com.vaadin.server.UserError;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
@@ -135,6 +136,20 @@ public class TestWriteDesign extends TestCase {
         // we only changed one of the attributes, others are at default values
         assertEquals(1, design.attributes().size());
         assertEquals("true", design.attr("immediate"));
+    }
+
+    public void testSynchronizeImmediateByDefault() {
+        Element design = createDesign();
+        TabSheet byDefaultImmediate = new TabSheet();
+        // no immediate attribute should be written before setting immediate to
+        // false
+        byDefaultImmediate.writeDesign(design, ctx);
+        assertFalse(design.hasAttr("immediate"));
+        byDefaultImmediate.setImmediate(false);
+        byDefaultImmediate.writeDesign(design, ctx);
+        // we only changed one of the attributes, others are at default values
+        assertEquals(1, design.attributes().size());
+        assertEquals("false", design.attr("immediate"));
     }
 
     public void testSynchronizeDescription() {

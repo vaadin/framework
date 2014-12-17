@@ -1225,7 +1225,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
         // handle immediate
         if (explicitImmediateValue != null) {
-            design.attr("immediate", explicitImmediateValue.toString());
+            DesignAttributeHandler.writeAttribute("immediate", attr,
+                    explicitImmediateValue, def.isImmediate(), Boolean.class);
         }
         // handle locale
         if (getLocale() != null
