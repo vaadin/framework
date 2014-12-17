@@ -67,7 +67,7 @@
         <h2 id="overview">Overview of Vaadin @version@ Release</h2>
 
         <p>
-            Vaadin @version@ is a maintenance release that includes a
+            Vaadin @version@ is a feature release that includes a
             number of new features and bug fixes, as listed in the <a
                 href="#enhancements">list of enhancements</a> and <a
                 href="#changelog">change log</a> below.
@@ -97,35 +97,43 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Valo is a brand new built-in theme for Vaadin. It leverages 
-                the Sass CSS preprocessor heavily, 
-                providing a variety of ways to customize the look and feel of your theme. 
-                See <a href="https://vaadin.com/wiki/-/wiki/Main/Valo+theme+-+Getting+started">the Valo theme tutorial</a> or <a href="https://vaadin.com/book/-/page/themes.valo.html">the Valo theme section</a> in Book of Vaadin for information on how to get started.</li>
-            <li>Support for changing theme on the fly</li>
+            <li>Grid is a new component for showing tabular data. It has been
+                designed from the ground up to eventually replace the Table
+                and TreeTable components.<br />
+                The most notable Grid features in @version-minor@ are:
+                <ul>
+                    <li>Support for multiple rows in the header and footer sections.</li>
+                    <li>Renderer concept for customizing how the data in a given column is represented in the browser.</li>
+                    <li>Support for frozen columns.</li>
+                    <li>Support for inline editing of one row at a time.</li>
+                    <li>Support for components in header and footer cells.</li>
+                    <li>Hardware accelerated, touch optimized scrolling.</li>
+                </ul></li>
+            <li>Declarative layout support for initializing a component hierarchy from an HTML file.</li>
+            <li>Uses GWT 2.7 for improved compilation times when using Super Dev Mode.</li>
+            <li>@Viewport annotation for declaratively defining a mobile viewport definition for a UI.</li>
+            <li>Captions can be configured to be displayed as HTML.</li>
+            <li>Selects use converters when presenting itemids.</li>
+            <li>Improved performance when server response contains no visual changing (e.g. empty polling responses).</li>
+            <li>Unified JSON library for using the same API in both server-side and client-side code.</li>
+            <li>Range validators and converters for additional numerical types.</li>
+            <li>Support for fine grained add/remove item events in in-memory containers.</li>
         </ul>
 
         <p>
-            For enhancements introduced in Vaadin 7.2, see the <a
-                href="http://vaadin.com/download/release/7.2/7.2.0/release-notes.html">Release
-                Notes for Vaadin 7.2.0</a>.
+            For enhancements introduced in Vaadin 7.3, see the <a
+                href="http://vaadin.com/download/release/7.3/7.3.0/release-notes.html">Release
+                Notes for Vaadin 7.3.0</a>.
         </p>
 
         <h3 id="incompatible">Incompatible or behavior-altering changes in @version-minor@</h3>
         <ul>
             <li>
-                <p>The shadow of all overlays (VOverlay) are now implemented with CSS box-shadow in all browsers except Internet Explorer 8 (<a href="http://dev.vaadin.com/ticket/9303">#9303</a>). 
-                In IE8 the old image-based implementation is still used.
-                </p><p>
-                The image-based shadow implementation is also deprecated, so if you have any custom shadow implementations in your themes or add-ons, 
-                please update them accordingly to use CSS box-shadow instead.
-                </p><p>
-                Note that the CSS-based implementation is visually not 100% identical to the old implementation. This should not cause issues except
-                if you are using screenshot-based TestBench tests or similar visual regression tests.
-                </p>
+                <p>The org.json and com.google.gwt.json libraries have been replaced by elemental.json.</p>
+                <p>JavascriptFunction.call parameter type has been changed to elemental.json.JsonArray, affecting JavaScript.addFunction, AbstractJavaScriptComponent.addFunction and AbstractJavaScriptExtension.addFunction</p>
+                <p>Raw JSON values passed to AbstractJavaScriptComponent.callFunction and AbstractJavaScriptExtension.callFunction should be changed to use elemental.json types.</p>
             </li>
-            <li>The theme for the debug window is now implemented using a GWT client bundle and is no longer included in the standard theme.</li>
-            <li>Reverted to use JSON.org implementation of the JSON library instead of the Android implementation that was used in Vaadin 7.2.
-                See <a href="licenses/the-json-license.txt">the-json-license.txt</a> for information about its license.</li>
+            <li>Support for Opera 12 has been dropped. Newer versions based on the Blink rendering engine are still supported.</li>
         </ul>
         <h3 id="knownissues">Known issues</h3>
         <ul>
@@ -501,12 +509,12 @@
         </p>
 
         <ul>
-            <li>Mozilla Firefox 18-33</li>
+            <li>Mozilla Firefox 18-34</li>
             <li>Mozilla Firefox 17 ESR, 24 ESR, 31 ESR</li>
             <li>Internet Explorer 8-11</li>
             <li>Safari 6-8</li>
-            <li>Opera 12, 16-25</li>
-            <li>Google Chrome 23-38</li>
+            <li>Opera 16-27</li>
+            <li>Google Chrome 23-39</li>
         </ul>
 
         <p>
@@ -516,7 +524,7 @@
 
         <ul>
             <li>iOS 5-8</li>
-            <li>Android 2.3-4</li>
+            <li>Android 2.3-5</li>
             <li>Windows Phone 8</li>
         </ul>
 
