@@ -40,15 +40,15 @@ public class EscalatorColspanTest extends EscalatorBasicClientFeaturesTest {
         openTestURL();
         populate();
 
-        int firstCellWidth = getWidth(getBodyCell(0, 0));
-        int secondCellWidth = getWidth(getBodyCell(0, 1));
-        int doubleCellWidth = firstCellWidth + secondCellWidth;
+        double firstCellWidth = getWidth(getBodyCell(0, 0));
+        double secondCellWidth = getWidth(getBodyCell(0, 1));
+        double doubleCellWidth = firstCellWidth + secondCellWidth;
 
         selectMenuPath(FEATURES, COLUMN_SPANNING, COLSPAN_NORMAL);
 
         WebElement bodyCell = getBodyCell(0, 0);
         assertEquals(2, getColSpan(bodyCell));
-        assertEquals(doubleCellWidth, getWidth(bodyCell));
+        assertEquals(doubleCellWidth, getWidth(bodyCell), 1);
     }
 
     @Test
@@ -56,22 +56,22 @@ public class EscalatorColspanTest extends EscalatorBasicClientFeaturesTest {
         openTestURL();
         populate();
 
-        int singleCellWidth = getWidth(getBodyCell(0, 0));
+        double singleCellWidth = getWidth(getBodyCell(0, 0));
 
         selectMenuPath(FEATURES, COLUMN_SPANNING, COLSPAN_NORMAL);
         selectMenuPath(FEATURES, COLUMN_SPANNING, COLSPAN_NONE);
 
         WebElement bodyCell = getBodyCell(0, 0);
         assertEquals(NO_COLSPAN, getColSpan(bodyCell));
-        assertEquals(singleCellWidth, getWidth(bodyCell));
+        assertEquals(singleCellWidth, getWidth(bodyCell), 1);
     }
 
-    private static int getWidth(WebElement element) {
-        String widthString = element.getCssValue("width"); // e.g. 100px
+    private static double getWidth(WebElement element) {
+        String widthString = element.getCssValue("width"); // e.g. 100.1px
         if ("0".equals(widthString)) {
             return 0;
         } else if (widthString.endsWith("px")) {
-            return Integer.parseInt(widthString.substring(0,
+            return Double.parseDouble(widthString.substring(0,
                     widthString.length() - 2));
         } else {
             throw new IllegalStateException("Element width expressed "
