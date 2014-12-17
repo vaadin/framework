@@ -114,7 +114,7 @@ public class TestLocale extends TestCase {
         html.appendChild(doc.createElement("head"));
         Element body = doc.createElement("body");
         html.appendChild(body);
-        dc.storePrefixes(doc);
+        dc.writePackageMappings(doc);
 
         // Append the design under <body> in the html tree. createNode
         // creates the entire component hierarchy rooted at the

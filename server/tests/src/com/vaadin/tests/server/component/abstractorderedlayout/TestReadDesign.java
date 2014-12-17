@@ -80,7 +80,7 @@ public class TestReadDesign extends TestCase {
             String... alignments) {
         DesignContext ctx = new DesignContext();
         Element design = createDesign(expandRatio, margin, alignments);
-        Component child = ctx.createChild(design);
+        Component child = ctx.readDesign(design);
         return (VerticalLayout) child;
     }
 

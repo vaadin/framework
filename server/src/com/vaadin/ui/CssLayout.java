@@ -369,7 +369,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
         super.readDesign(design, designContext);
         // handle children
         for (Element childComponent : design.children()) {
-            Component newChild = designContext.createChild(childComponent);
+            Component newChild = designContext.readDesign(childComponent);
             addComponent(newChild);
         }
     }

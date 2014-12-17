@@ -43,7 +43,7 @@ public class TestReadDesign extends TestCase {
     @Test
     public void testChecked() {
         Element e = createElement(true);
-        CheckBox box = (CheckBox) ctx.createChild(e);
+        CheckBox box = (CheckBox) ctx.readDesign(e);
         assertEquals("The checkbox must be checked", Boolean.TRUE,
                 box.getValue());
     }
@@ -51,7 +51,7 @@ public class TestReadDesign extends TestCase {
     @Test
     public void testUnchecked() {
         Element e = createElement(false);
-        CheckBox box = (CheckBox) ctx.createChild(e);
+        CheckBox box = (CheckBox) ctx.readDesign(e);
         assertEquals("The checkbox must be unchecked", Boolean.FALSE,
                 box.getValue());
     }

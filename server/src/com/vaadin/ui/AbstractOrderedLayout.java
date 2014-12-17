@@ -485,7 +485,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         // handle children
         for (Element childComponent : design.children()) {
             Attributes attr = childComponent.attributes();
-            Component newChild = designContext.createChild(childComponent);
+            Component newChild = designContext.readDesign(childComponent);
             addComponent(newChild);
             // handle alignment
             int bitMask = 0;

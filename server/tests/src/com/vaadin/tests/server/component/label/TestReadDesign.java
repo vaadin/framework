@@ -70,7 +70,7 @@ public class TestReadDesign extends TestCase {
      */
     private void createAndTestLabel(String content, String caption) {
         Element e = createElement("v-label", content, caption);
-        Label l = (Label) ctx.createChild(e);
+        Label l = (Label) ctx.readDesign(e);
         if (content != null) {
             assertEquals("The label has wrong text content.", content,
                     l.getValue());

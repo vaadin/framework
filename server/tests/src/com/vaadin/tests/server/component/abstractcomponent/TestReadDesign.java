@@ -110,6 +110,7 @@ public class TestReadDesign extends TestCase {
         // Synchronize with a design having no immediate attribute -
         // explicitImmediate should then be null.
         design = createDesign("description", "test-description");
+        component = getComponent();
         component.readDesign(design, ctx);
         // Synchronize with a design having immediate = false
         design = createDesign("immediate", "false");

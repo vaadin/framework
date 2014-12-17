@@ -685,7 +685,7 @@ public class AbsoluteLayout extends AbstractLayout implements
         // handle children
         for (Element childComponent : design.children()) {
             Attributes attr = childComponent.attributes();
-            Component newChild = designContext.createChild(childComponent);
+            Component newChild = designContext.readDesign(childComponent);
             StringBuilder css = new StringBuilder();
             if (attr.hasKey(ATTR_TOP)) {
                 css.append("top:").append(attr.get(ATTR_TOP)).append(";");

@@ -61,7 +61,7 @@ import com.vaadin.ui.Component;
  */
 public class DesignAttributeHandler implements Serializable {
 
-    protected static Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(DesignAttributeHandler.class.getName());
     }
 
@@ -423,7 +423,7 @@ public class DesignAttributeHandler implements Serializable {
         // it is present and the value is not "false" or "FALSE". Thus empty
         // value evaluates to true.
         if (targetType == Boolean.TYPE || targetType == Boolean.class) {
-            return !value.equalsIgnoreCase("false");
+            return parseBoolean(value);
         }
         if (targetType == Integer.TYPE || targetType == Integer.class) {
             return Integer.valueOf(value);
@@ -716,15 +716,14 @@ public class DesignAttributeHandler implements Serializable {
      * Converts the given string attribute value to its corresponding boolean.
      * 
      * An empty string and "true" are considered to represent a true value and
-     * "false" to represent a false value. All other input will throw an
-     * exception
+     * "false" to represent a false value.
      * 
      * @param booleanValue
      *            the boolean value from an attribute
      * @return the parsed boolean
      */
-    public static boolean getBoolean(String booleanValue) {
-        return "".equals(booleanValue) ? true : Boolean.valueOf(booleanValue);
+    public static boolean parseBoolean(String booleanValue) {
+        return !booleanValue.equalsIgnoreCase("false");
     }
 
 }

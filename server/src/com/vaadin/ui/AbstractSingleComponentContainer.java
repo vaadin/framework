@@ -297,7 +297,7 @@ public abstract class AbstractSingleComponentContainer extends
                     + " can have only one child component.");
         } else if (childCount == 1) {
             Element childElement = design.children().get(0);
-            Component newChild = designContext.createChild(childElement);
+            Component newChild = designContext.readDesign(childElement);
             setContent(newChild);
         }
     }

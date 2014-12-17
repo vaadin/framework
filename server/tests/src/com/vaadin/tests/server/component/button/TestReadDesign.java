@@ -76,7 +76,7 @@ public class TestReadDesign extends TestCase {
         attributes.put("icon-alt", "OK");
         attributes.put("click-shortcut", "ctrl-shift-o");
         Button button = (Button) ctx
-                .createChild(createButtonWithAttributes(attributes));
+                .readDesign(createButtonWithAttributes(attributes));
         assertEquals(3, button.getTabIndex());
         assertEquals(false, button.isHtmlContentAllowed());
         assertEquals("OK", button.getIconAlternateText());
@@ -94,9 +94,9 @@ public class TestReadDesign extends TestCase {
      */
     private void createAndTestButtons(String content, String caption) {
         Element e1 = createElement("v-button", content, caption);
-        Button b1 = (Button) ctx.createChild(e1);
+        Button b1 = (Button) ctx.readDesign(e1);
         Element e2 = createElement("v-native-button", content, caption);
-        NativeButton b2 = (NativeButton) ctx.createChild(e2);
+        NativeButton b2 = (NativeButton) ctx.readDesign(e2);
         if (content != null) {
             assertEquals("The button has the wrong text content.", content,
                     b1.getCaption());

@@ -930,7 +930,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
         // handle immediate
         if (attr.hasKey("immediate")) {
-            setImmediate(DesignAttributeHandler.getBoolean(attr
+            setImmediate(DesignAttributeHandler.parseBoolean(attr
                     .get("immediate")));
         }
 
@@ -955,7 +955,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
         // handle responsive
         if (attr.hasKey("responsive")) {
-            setResponsive(DesignAttributeHandler.getBoolean(attr
+            setResponsive(DesignAttributeHandler.parseBoolean(attr
                     .get("responsive")));
         }
         // check for unsupported attributes

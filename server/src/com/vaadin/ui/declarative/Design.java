@@ -177,9 +177,9 @@ public class Design implements Serializable {
      *            id/local id/caption
      */
     private static DesignContext designToComponentTree(Document doc,
-            Component componentRoot, Class<? extends Component> classWithFields) {
+            Component componentRoot, Class<?> classWithFields) {
         DesignContext designContext = new DesignContext(doc);
-        designContext.getPrefixes(doc);
+        designContext.readPackageMappings(doc);
         // No special handling for a document without a body element - should be
         // taken care of by jsoup.
         Element root = doc.body();
@@ -210,7 +210,7 @@ public class Design implements Serializable {
             };
             designContext.addComponentCreationListener(creationListener);
             // create subtree
-            designContext.synchronizeAndRegister(componentRoot, element);
+            designContext.readDesign(element, componentRoot);
             // make sure that all the member fields are bound
             Collection<String> unboundFields = binder.getUnboundFields();
             if (!unboundFields.isEmpty()) {
@@ -222,7 +222,7 @@ public class Design implements Serializable {
             designContext.removeComponentCreationListener(creationListener);
         } else {
             // createChild creates the entire component hierarchy
-            componentRoot = designContext.createChild(element);
+            componentRoot = designContext.readDesign(element);
         }
         designContext.setRootComponent(componentRoot);
         return designContext;
@@ -257,7 +257,7 @@ public class Design implements Serializable {
         Component root = designContext.getRootComponent();
         Node rootNode = designContext.createElement(root);
         body.appendChild(rootNode);
-        designContext.storePrefixes(doc);
+        designContext.writePackageMappings(doc);
         return doc;
     }
 

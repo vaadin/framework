@@ -78,7 +78,7 @@ public class TestReadDesign extends TestCase {
     private AbsoluteLayout createLayout() {
         DesignContext ctx = new DesignContext();
         Element design = createDesign();
-        Component child = ctx.createChild(design);
+        Component child = ctx.readDesign(design);
         return (AbsoluteLayout) child;
     }
 

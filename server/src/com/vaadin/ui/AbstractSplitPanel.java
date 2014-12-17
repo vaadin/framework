@@ -610,7 +610,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
                     "A split panel can contain at most two components.");
         }
         for (Element childElement : design.children()) {
-            Component childComponent = designContext.createChild(childElement);
+            Component childComponent = designContext.readDesign(childElement);
             if (childElement.hasAttr(":second")) {
                 setSecondComponent(childComponent);
             } else {

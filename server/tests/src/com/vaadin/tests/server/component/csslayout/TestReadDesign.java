@@ -47,7 +47,7 @@ public class TestReadDesign extends TestCase {
     private CssLayout createLayout() {
         DesignContext ctx = new DesignContext();
         Element design = createDesign();
-        Component child = ctx.createChild(design);
+        Component child = ctx.readDesign(design);
         return (CssLayout) child;
     }
 

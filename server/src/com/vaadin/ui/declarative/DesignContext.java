@@ -29,7 +29,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
 import com.vaadin.annotations.DesignRoot;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
 
@@ -261,19 +260,18 @@ public class DesignContext implements Serializable {
      * @return the default instance for the given class. The return value must
      *         not be modified by the caller
      */
-    public <T> T getDefaultInstance(AbstractComponent abstractComponent) {
+    public <T> T getDefaultInstance(Component component) {
         // If the root is a @DesignRoot component, it can't use itself as a
         // reference or the written design will be empty
 
         // If the root component in some other way initializes itself in the
         // constructor
-        if (getRootComponent() == abstractComponent
-                && abstractComponent.getClass().isAnnotationPresent(
-                        DesignRoot.class)) {
-            return (T) getDefaultInstance((Class<? extends Component>) abstractComponent
+        if (getRootComponent() == component
+                && component.getClass().isAnnotationPresent(DesignRoot.class)) {
+            return (T) getDefaultInstance((Class<? extends Component>) component
                     .getClass().getSuperclass());
         }
-        return (T) getDefaultInstance(abstractComponent.getClass());
+        return (T) getDefaultInstance(component.getClass());
     }
 
     private Component getDefaultInstance(
@@ -295,11 +293,10 @@ public class DesignContext implements Serializable {
     }
 
     /**
-     * Get and store the mappings from prefixes to package names from meta tags
-     * located under <head> in the html document.
-     * 
+     * Reads and stores the mappings from prefixes to package names from meta
+     * tags located under <head> in the html document.
      */
-    protected void getPrefixes(Document doc) {
+    protected void readPackageMappings(Document doc) {
         Element head = doc.head();
         if (head == null) {
             return;
@@ -329,14 +326,15 @@ public class DesignContext implements Serializable {
     }
 
     /**
-     * Stores the package mappings (prefix -> package name) of this object to
-     * the specified document. The prefixes are stored as <meta> tags under
-     * <head> in the document.
+     * Writes the package mappings (prefix -> package name) of this object to
+     * the specified document.
+     * <p>
+     * The prefixes are stored as <meta> tags under <head> in the document.
      * 
      * @param doc
-     *            the Jsoup document tree where the package mappings are stored
+     *            the Jsoup document tree where the package mappings are written
      */
-    public void storePrefixes(Document doc) {
+    public void writePackageMappings(Document doc) {
         Element head = doc.head();
         for (String prefix : prefixToPackage.keySet()) {
             // Only store the prefix-name mapping if it is not a default mapping
@@ -348,7 +346,6 @@ public class DesignContext implements Serializable {
                         + prefixToPackage.get(prefix);
                 newNode.attr("content", prefixToPackageName);
                 head.appendChild(newNode);
-
             }
         }
     }
@@ -414,38 +411,36 @@ public class DesignContext implements Serializable {
     }
 
     /**
-     * Creates a Component corresponding to the given html node. Also calls
-     * readDesign() for the created node, in effect creating the entire
-     * component hierarchy rooted at the returned component.
+     * Reads the given design node and creates the corresponding component tree
      * 
      * @param componentDesign
-     *            The html tree node containing the description of the component
-     *            to be created.
-     * @return a Component corresponding to componentDesign
+     *            The design element containing the description of the component
+     *            to be created
+     * @return the root component of component tree
      */
-    public Component createChild(Element componentDesign) {
+    public Component readDesign(Element componentDesign) {
         // Create the component.
         Component component = instantiateComponent(componentDesign);
-        synchronizeAndRegister(component, componentDesign);
+        readDesign(componentDesign, component);
         fireComponentCreatedEvent(componentToLocalId.get(component), component);
         return component;
     }
 
     /**
-     * Calls readDesign() for the given component and passes the given component
-     * design as a parameter. This creates the entire component hierarchy rooted
-     * at the given component. Also registers the componentid, localId and
-     * caption of the given component and all its children to the context
      * 
-     * @param component
-     *            The component to be synchronized from design
+     * Reads the given design node and populates the given component with the
+     * corresponding component tree
+     * <p>
+     * Additionally registers the component id, local id and caption of the
+     * given component and all its children in the context
+     * 
      * @param componentDesign
-     *            The html tree node containing the description of the component
-     * @throws DesignException
-     *             if the design contains duplicate local or global ids
+     *            The design element containing the description of the component
+     *            to be created
+     * @param component
+     *            The component which corresponds to the design element
      */
-    public void synchronizeAndRegister(Component component,
-            Element componentDesign) {
+    public void readDesign(Element componentDesign, Component component) {
         component.readDesign(componentDesign, this);
         // Get the ids and the caption of the component and store them in the
         // maps of this design context.
