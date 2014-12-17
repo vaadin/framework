@@ -40,10 +40,18 @@ import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
 /**
  * Design is used for reading a component hierarchy from an html string or input
  * stream and, conversely, for writing an html representation corresponding to a
- * given component hierarchy. The component hierarchy must contain one root
- * component. An empty component hierarchy can be represented using null as the
- * root node.
+ * given component hierarchy.
  * 
+ * <p>
+ * In html form a valid nonempty component hierarchy contains a single root
+ * element located under the &lt;body&gt; tag. A hierarchy of components is
+ * achieved by nesting other elements under the root element. An empty component
+ * hierarchy is represented as no elements under the &lt;body&gt; tag.
+ * 
+ * <p>
+ * For writing a component hierarchy the root element is specified as a
+ * Component parameter or as a DesignContext object containing the root
+ * Component. An empty hierarchy can be written by giving a null root Component.
  * 
  * @since 7.4
  * @author Vaadin Ltd
@@ -70,12 +78,12 @@ public class Design implements Serializable {
     /**
      * Constructs a component hierarchy from the design specified as an html
      * document. The hierarchy must contain at most one top-level component,
-     * which should be located under <body>. Also invalid html containing the
-     * hierarchy without <html>, <head> and <body> tags is accepted. You can
-     * optionally pass instance for the root component with some uninitialized
-     * instance fields. The fields will be automatically populated when parsing
-     * the design based on the component ids, local ids, and captions of the
-     * components in the design.
+     * which should be located under &lt;body&gt;. Also invalid html containing
+     * the hierarchy without &lt;html&gt;, &lt;head&gt; and &lt;body&gt; tags is
+     * accepted. You can optionally pass an instance for the root component with
+     * some uninitialized instance fields. The fields will be automatically
+     * populated when parsing the design based on the component ids, local ids,
+     * and captions of the components in the design.
      * 
      * @param html
      *            the html document describing the component design
@@ -96,12 +104,13 @@ public class Design implements Serializable {
     /**
      * Constructs a component hierarchy from the design specified as an html
      * document given as a string. The hierarchy must contain at most one
-     * top-level component, which should be located under <body>. Also invalid
-     * html containing the hierarchy without <html>, <head> and <body> tags is
-     * accepted. You can optionally pass instance for the root component with
-     * some uninitialized instance fields. The fields will be automatically
-     * populated when parsing the design based on the component ids, local ids,
-     * and captions of the components in the design.
+     * top-level component, which should be located under &lt;body&gt;. Also
+     * invalid html containing the hierarchy without &lt;html&gt;, &lt;head&gt;
+     * and &lt;body&gt; tags is accepted. You can optionally pass an instance
+     * for the root component with some uninitialized instance fields. The
+     * fields will be automatically populated when parsing the design based on
+     * the component ids, local ids, and captions of the components in the
+     * design.
      * 
      * @param html
      *            the html document describing the component design
@@ -123,6 +132,7 @@ public class Design implements Serializable {
      * Constructs a component hierarchy from the design specified as an html
      * tree.
      * 
+     * <p>
      * If a component root is given, the component instances created during
      * reading the design are assigned to its member fields based on their id,
      * local id, and caption
@@ -150,6 +160,7 @@ public class Design implements Serializable {
      * Constructs a component hierarchy from the design specified as an html
      * tree.
      * 
+     * <p>
      * If a component root is given, the component instances created during
      * reading the design are assigned to its member fields based on their id,
      * local id, and caption
@@ -220,7 +231,8 @@ public class Design implements Serializable {
     /**
      * Generates an html tree representation of the component hierarchy having
      * the root designContext.getRootComponent(). The hierarchy is stored under
-     * <body> in the tree. The generated tree represents a valid html document.
+     * &lt;body&gt; in the tree. The generated tree represents a valid html
+     * document.
      * 
      * 
      * @param designContext

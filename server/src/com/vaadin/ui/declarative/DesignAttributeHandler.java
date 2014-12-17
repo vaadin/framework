@@ -232,7 +232,7 @@ public class DesignAttributeHandler implements Serializable {
     }
 
     /**
-     * Reads the given attribute from attributes.
+     * Reads the given attribute from a set of attributes.
      * 
      * @param attribute
      *            the attribute key
@@ -264,8 +264,8 @@ public class DesignAttributeHandler implements Serializable {
     }
 
     /**
-     * Writes the given attribute value to attributes if it differs from the
-     * default attribute value.
+     * Writes the given attribute value to a set of attributes if it differs
+     * from the default attribute value.
      * 
      * @param attribute
      *            the attribute key

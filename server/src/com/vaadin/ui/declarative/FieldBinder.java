@@ -107,7 +107,7 @@ public class FieldBinder implements Serializable {
      * Resolves the fields of the design class instance.
      */
     private void resolveFields(Class<?> classWithFields) {
-        for (Field memberField : getFieldsInDeclareOrder(classWithFields)) {
+        for (Field memberField : getFields(classWithFields)) {
             if (Component.class.isAssignableFrom(memberField.getType())) {
                 fieldMap.put(memberField.getName().toLowerCase(Locale.ENGLISH),
                         memberField);
@@ -240,23 +240,22 @@ public class FieldBinder implements Serializable {
 
     /**
      * Returns a list containing Field objects reflecting all the fields of the
-     * class or interface represented by this Class object. The elements in the
-     * returned list are sorted in declare order. The fields in superclasses are
-     * excluded.
+     * class or interface represented by this Class object. The fields in
+     * superclasses are excluded.
      * 
      * @param searchClass
      *            the class to be scanned for fields
      * @return the list of fields in this class
      */
-    protected static List<java.lang.reflect.Field> getFieldsInDeclareOrder(
+    protected static List<java.lang.reflect.Field> getFields(
             Class<?> searchClass) {
-        ArrayList<java.lang.reflect.Field> memberFieldsInOrder = new ArrayList<java.lang.reflect.Field>();
+        ArrayList<java.lang.reflect.Field> memberFields = new ArrayList<java.lang.reflect.Field>();
 
         for (java.lang.reflect.Field memberField : searchClass
                 .getDeclaredFields()) {
-            memberFieldsInOrder.add(memberField);
+            memberFields.add(memberField);
         }
-        return memberFieldsInOrder;
+        return memberFields;
     }
 
     private static Logger getLogger() {
