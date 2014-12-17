@@ -41,6 +41,7 @@
         <ul>
             <li><a href="#overview">Overview of Vaadin
                     @version@ Release</a></li>
+            <li><a href="#security-fixes">Security fixes</a></li>
             <li><a href="#changelog">Change log for Vaadin
                     @version@</a></li>
             <li><a href="#enhancements">Enhancements in Vaadin
@@ -68,10 +69,22 @@
 
         <p>
             Vaadin @version@ is a maintenance release that includes a
-            number of new features and bug fixes, as listed in the <a
-                href="#enhancements">list of enhancements</a> and <a
-                href="#changelog">change log</a> below.
+            number of bug fixes, as listed in the <a href="#changelog">
+            change log</a> below.
         </p>
+        
+        <h3 id="security-fixes">Security fixes in Vaadin Framework 7.3.7</h3>
+		
+		<p>
+		  Vaadin 7.3.7 fixes an important security issue. 
+		</p>
+		<p><b>Portlet error messages</b></p>
+		<p>
+			Proper escaping of HTML in portlet error messages was not ensured,
+			making a reflected cross-site scripting attack possible through
+			VaadinPortlet by making the user load a URL designed to include
+			an error message crafted by the attacker.
+		</p>
 
         <!-- ================================================================ -->
         <h3 id="changelog">Change log for Vaadin @version@</h3>
