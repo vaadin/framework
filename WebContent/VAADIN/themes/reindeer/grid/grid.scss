@@ -29,8 +29,8 @@
       border-color: #466c90;
     }
 
-    // Selected and active
-    > .#{$primaryStyleName}-cell-active:before {
+    // Selected and focused
+    > .#{$primaryStyleName}-cell-focused:before {
       border-color: #b1cde4;
     }
   }

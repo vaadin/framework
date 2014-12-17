@@ -22,8 +22,8 @@
   .#{$primaryStyleName}-row-selected {
     color: #fff;
 
-    // Selected and active
-    > .#{$primaryStyleName}-cell-active:before {
+    // Selected and focused
+    > .#{$primaryStyleName}-cell-focused:before {
       border-color: lighten($v-grid-row-selected-background-color, 20%);
     }
   }

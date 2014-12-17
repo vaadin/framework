@@ -3422,12 +3422,8 @@ public class Grid<T> extends ResizeComposite implements
         rowSelectedStyleName = rowStyle + "-selected";
         rowStripeStyleName = rowStyle + "-stripe";
 
-        /*
-         * TODO rename CSS "active" to "focused" once Valo theme has been
-         * merged.
-         */
-        cellFocusStyleName = getStylePrimaryName() + "-cell-active";
-        rowFocusStyleName = getStylePrimaryName() + "-row-active";
+        cellFocusStyleName = getStylePrimaryName() + "-cell-focused";
+        rowFocusStyleName = getStylePrimaryName() + "-row-focused";
 
         if (isAttached()) {
             refreshHeader();

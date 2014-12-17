@@ -91,11 +91,7 @@ public class GridStylingTest extends GridStaticSectionTest {
                 assertTrue(classNames.contains(stylename + "-cell"));
 
                 if (row == 0 && col == 0) {
-                    /*
-                     * TODO: rename "active" to "focused" once Valo CSS is
-                     * merged
-                     */
-                    assertTrue(classNames.contains(stylename + "-cell-active"));
+                    assertTrue(classNames.contains(stylename + "-cell-focused"));
                 }
             }
         }

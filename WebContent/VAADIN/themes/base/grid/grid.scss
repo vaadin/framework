@@ -1,7 +1,7 @@
 $v-grid-border: 1px solid #ddd !default;
 $v-grid-cell-vertical-border: $v-grid-border !default;
 $v-grid-cell-horizontal-border: $v-grid-cell-vertical-border !default;
-$v-grid-cell-active-border: 1px solid !default;
+$v-grid-cell-focused-border: 1px solid !default;
 $v-grid-header-border: $v-grid-border !default;
 $v-grid-footer-border: $v-grid-header-border !default;
 
@@ -9,7 +9,7 @@ $v-grid-row-height: round($v-font-size * 1.5) !default;
 $v-grid-row-background-color: #fff !default;
 $v-grid-row-stripe-background-color: darken($v-grid-row-background-color, 5%) !default;
 $v-grid-row-selected-background-color: darken($v-grid-row-background-color, 25%) !default;
-$v-grid-row-active-background-color: null !default;
+$v-grid-row-focused-background-color: null !default;
 
 $v-grid-header-row-height: null !default;
 $v-grid-header-font-size: $v-font-size !default;
@@ -92,8 +92,8 @@ $v-grid-editor-row-background-color: $v-grid-row-background-color !default;
     background: $v-grid-row-selected-background-color;
   }
 
-  .#{$primaryStyleName}-row-active > td {
-    background-color: $v-grid-row-active-background-color;
+  .#{$primaryStyleName}-row-focused > td {
+    background-color: $v-grid-row-focused-background-color;
   }
 
   // Header
@@ -169,9 +169,9 @@ $v-grid-editor-row-background-color: $v-grid-row-background-color !default;
     border-top: none;
   }
 
-  // Active cell style (common for all cells)
+  // Focused cell style (common for all cells)
 
-  .#{$primaryStyleName}-cell-active {
+  .#{$primaryStyleName}-cell-focused {
     position: relative;
 
     &:before {
@@ -181,12 +181,12 @@ $v-grid-editor-row-background-color: $v-grid-row-background-color !default;
       right: 0;
       bottom: 0;
       left: 0;
-      border: $v-grid-cell-active-border;
+      border: $v-grid-cell-focused-border;
       display: none;
     }
   }
 
-  .#{$primaryStyleName}:focus .#{$primaryStyleName}-cell-active:before {
+  .#{$primaryStyleName}:focus .#{$primaryStyleName}-cell-focused:before {
     display: block;
   }
 

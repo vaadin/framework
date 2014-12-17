@@ -35,10 +35,8 @@ public class GridElement extends AbstractComponentElement {
 
     public static class GridCellElement extends AbstractElement {
 
-        // TODO static final?
-        // TODO rename "active" to "focused" once Valo CSS is merged
-        private String FOCUSED_CELL_CLASS_NAME = "-cell-active";
-        private String FROZEN_CLASS_NAME = "frozen";
+        private static final String FOCUSED_CELL_CLASS_NAME = "-cell-focused";
+        private static final String FROZEN_CLASS_NAME = "frozen";
 
         public boolean isFocused() {
             return getAttribute("class").contains(FOCUSED_CELL_CLASS_NAME);
@@ -51,10 +49,8 @@ public class GridElement extends AbstractComponentElement {
 
     public static class GridRowElement extends AbstractElement {
 
-        // TODO static final?
-        // TODO rename "active" to "focused" once Valo CSS is merged
-        private String FOCUSED_CLASS_NAME = "-row-active";
-        private String SELECTED_CLASS_NAME = "-row-selected";
+        private static final String FOCUSED_CLASS_NAME = "-row-focused";
+        private static final String SELECTED_CLASS_NAME = "-row-selected";
 
         public boolean isFocused() {
             return getAttribute("class").contains(FOCUSED_CLASS_NAME);

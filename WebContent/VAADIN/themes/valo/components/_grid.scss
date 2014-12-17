@@ -4,7 +4,7 @@ $v-grid-row-background-color: valo-table-background-color() !default;
 $v-grid-row-stripe-background-color: scale-color($v-grid-row-background-color, $lightness: if(color-luminance($v-grid-row-background-color) < 10, 4%, -4%)) !default;
 
 $v-grid-border: valo-border($color: $v-grid-row-background-color, $strength: 0.8) !default;
-$v-grid-cell-active-border: max(2px, first-number($v-border)) solid $v-selection-color !default;
+$v-grid-cell-focused-border: max(2px, first-number($v-border)) solid $v-selection-color !default;
 
 $v-grid-row-height: $v-table-row-height !default;
 $v-grid-row-selected-background-color: $v-selection-color !default;
@@ -61,7 +61,7 @@ $v-grid-cell-padding-horizontal: $v-table-cell-padding-horizontal !default;
       border-color: adjust-color($v-selection-color, $lightness: -8%, $saturation: -8%);
     }
 
-    > .#{$primary-stylename}-cell-active:before {
+    > .#{$primary-stylename}-cell-focused:before {
       border-color: adjust-color($v-selection-color, $lightness: 20%);
     }
   }
