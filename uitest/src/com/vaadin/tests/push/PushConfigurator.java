@@ -87,11 +87,9 @@ public class PushConfigurator extends VerticalLayout {
         pushMode.addItem(PushMode.AUTOMATIC);
 
         for (Transport t : Transport.values()) {
-            transport.addItem(t.toString());
-            fallbackTransport.addItem(t.toString());
+            transport.addItem(t);
+            fallbackTransport.addItem(t);
         }
-        transport.addItem("");
-        fallbackTransport.addItem("");
 
         pushMode.setImmediate(true);
         transport.setImmediate(true);
@@ -124,7 +122,7 @@ public class PushConfigurator extends VerticalLayout {
         transport.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                Transport t = Transport.valueOf((String) transport.getValue());
+                Transport t = (Transport) transport.getValue();
                 ui.getPushConfiguration().setTransport(t);
                 refreshStatus();
             }
@@ -133,8 +131,7 @@ public class PushConfigurator extends VerticalLayout {
         fallbackTransport.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                Transport t = Transport.valueOf((String) fallbackTransport
-                        .getValue());
+                Transport t = (Transport) fallbackTransport.getValue();
                 ui.getPushConfiguration().setFallbackTransport(t);
                 refreshStatus();
             }

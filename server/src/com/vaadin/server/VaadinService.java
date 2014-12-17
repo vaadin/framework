@@ -703,12 +703,12 @@ public abstract class VaadinService implements Serializable {
             final boolean closeApplication = hasParameter(request,
                     URL_PARAMETER_CLOSE_APPLICATION);
 
-            if (restartApplication) {
-                closeSession(session, request.getWrappedSession(false));
-                return createAndRegisterSession(request);
-            } else if (closeApplication) {
+            if (closeApplication) {
                 closeSession(session, request.getWrappedSession(false));
                 return null;
+            } else if (restartApplication) {
+                closeSession(session, request.getWrappedSession(false));
+                return createAndRegisterSession(request);
             } else {
                 return session;
             }

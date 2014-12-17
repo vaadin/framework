@@ -262,6 +262,12 @@ public class DefaultSQLGenerator implements SQLGenerator {
             count++;
         }
         if (versionColumn != null) {
+            if(!item.getItemPropertyIds().contains(versionColumn)) {
+                throw new IllegalArgumentException(String.format(
+                        "Table '%s' does not contain version column '%s'.",
+                        tableName, versionColumn));
+            }
+
             query.append(String.format(" AND %s = ?",
                     QueryBuilder.quote(versionColumn)));
             sh.addParameterValue(

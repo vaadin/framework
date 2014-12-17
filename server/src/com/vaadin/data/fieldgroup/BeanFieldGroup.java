@@ -15,18 +15,20 @@
  */
 package com.vaadin.data.fieldgroup;
 
+import java.beans.IntrospectionException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.BeanUtil;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.ui.Field;
 
 public class BeanFieldGroup<T> extends FieldGroup {
 
-    private Class<T> beanType;
+    private final Class<T> beanType;
 
     private static Boolean beanValidationImplementationAvailable = null;
     private final Map<Field<?>, BeanValidator> defaultValidators;
@@ -47,17 +49,20 @@ public class BeanFieldGroup<T> extends FieldGroup {
              * form "fieldName" or "fieldName.subField[.subField2]" but the
              * method declaration comes from parent.
              */
-            java.lang.reflect.Field f;
             try {
-                f = getField(beanType, propertyId.toString());
-                return f.getType();
-            } catch (SecurityException e) {
+                Class<?> type = BeanUtil.getPropertyType(beanType,
+                        propertyId.toString());
+                if (type == null) {
+                    throw new BindException(
+                            "Cannot determine type of propertyId '"
+                                    + propertyId
+                                    + "'. The propertyId was not found in "
+                                    + beanType.getName());
+                }
+                return type;
+            } catch (IntrospectionException e) {
                 throw new BindException("Cannot determine type of propertyId '"
-                        + propertyId + "'.", e);
-            } catch (NoSuchFieldException e) {
-                throw new BindException("Cannot determine type of propertyId '"
-                        + propertyId + "'. The propertyId was not found in "
-                        + beanType.getName(), e);
+                        + propertyId + "'. Unable to introspect " + beanType, e);
             }
         }
     }
@@ -77,32 +82,6 @@ public class BeanFieldGroup<T> extends FieldGroup {
             }
         }
         return null;
-    }
-
-    private static java.lang.reflect.Field getField(Class<?> cls,
-            String propertyId) throws SecurityException, NoSuchFieldException {
-        if (propertyId.contains(".")) {
-            String[] parts = propertyId.split("\\.", 2);
-            // Get the type of the field in the "cls" class
-            java.lang.reflect.Field field1 = getField(cls, parts[0]);
-            // Find the rest from the sub type
-            return getField(field1.getType(), parts[1]);
-        } else {
-            try {
-                // Try to find the field directly in the given class
-                java.lang.reflect.Field field1 = cls
-                        .getDeclaredField(propertyId);
-                return field1;
-            } catch (NoSuchFieldException e) {
-                // Try super classes until we reach Object
-                Class<?> superClass = cls.getSuperclass();
-                if (superClass != null && superClass != Object.class) {
-                    return getField(superClass, propertyId);
-                } else {
-                    throw e;
-                }
-            }
-        }
     }
 
     private static String getFieldName(Class<?> cls, String propertyId)
