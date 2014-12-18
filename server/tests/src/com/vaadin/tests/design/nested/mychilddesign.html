@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta name="package-mapping" content="x:com.vaadin.tests.design.nested"/>
+ </head>
+ <body>
+	<v-horizontal-layout caption="Default caption for child design">
+		<v-label _id="childLabel">test content</v-label>
+		<!--  Test some custom component in child template -->
+		<x-my-child-design-custom-component _id="childCustomComponent">custom content</x-my-child-design-custom-component>
+	</v-horizontal-layout>
+</body>

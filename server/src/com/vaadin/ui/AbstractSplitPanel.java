@@ -18,16 +18,23 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Iterator;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.server.SizeWithUnit;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelRpc;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState.SplitterState;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -557,5 +564,126 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     private SplitterState getSplitterState(boolean markAsDirty) {
         return ((AbstractSplitPanelState) super.getState(markAsDirty)).splitterState;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        // handle default attributes
+        super.readDesign(design, designContext);
+        // handle custom attributes, use default values if no explicit value
+        // set
+        // There is no setter for reversed, so it will be handled using
+        // setSplitPosition.
+        boolean reversed = false;
+        if (design.hasAttr("reversed")) {
+            reversed = DesignAttributeHandler.readAttribute("reversed",
+                    design.attributes(), Boolean.class);
+            setSplitPosition(getSplitPosition(), reversed);
+        }
+        if (design.hasAttr("split-position")) {
+            SizeWithUnit splitPosition = SizeWithUnit.parseStringSize(
+                    design.attr("split-position"), Unit.PERCENTAGE);
+            setSplitPosition(splitPosition.getSize(), splitPosition.getUnit(),
+                    reversed);
+        }
+        if (design.hasAttr("min-split-position")) {
+            SizeWithUnit minSplitPosition = SizeWithUnit.parseStringSize(
+                    design.attr("min-split-position"), Unit.PERCENTAGE);
+            setMinSplitPosition(minSplitPosition.getSize(),
+                    minSplitPosition.getUnit());
+        }
+        if (design.hasAttr("max-split-position")) {
+            SizeWithUnit maxSplitPosition = SizeWithUnit.parseStringSize(
+                    design.attr("max-split-position"), Unit.PERCENTAGE);
+            setMaxSplitPosition(maxSplitPosition.getSize(),
+                    maxSplitPosition.getUnit());
+        }
+        // handle children
+        if (design.children().size() > 2) {
+            throw new DesignException(
+                    "A split panel can contain at most two components.");
+        }
+        for (Element childElement : design.children()) {
+            Component childComponent = designContext.readDesign(childElement);
+            if (childElement.hasAttr(":second")) {
+                setSecondComponent(childComponent);
+            } else {
+                addComponent(childComponent);
+            }
+        }
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> attributes = super.getCustomAttributes();
+        // the setters of the properties do not accept strings such as "20px"
+        attributes.add("split-position");
+        attributes.add("min-split-position");
+        attributes.add("max-split-position");
+        // no explicit setter for reversed
+        attributes.add("reversed");
+        return attributes;
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        // handle default attributes (also clears children and attributes)
+        super.writeDesign(design, designContext);
+        // handle custom attributes (write only if a value is not the
+        // default value)
+        AbstractSplitPanel def = (AbstractSplitPanel) designContext
+                .getDefaultInstance(this);
+        if (getSplitPosition() != def.getSplitPosition()
+                || !def.getSplitPositionUnit().equals(getSplitPositionUnit())) {
+            String splitPositionString = asString(getSplitPosition())
+                    + getSplitPositionUnit();
+            design.attr("split-position", splitPositionString);
+        }
+        if (getMinSplitPosition() != def.getMinSplitPosition()
+                || !def.getMinSplitPositionUnit().equals(
+                        getMinSplitPositionUnit())) {
+            design.attr("min-split-position", asString(getMinSplitPosition())
+                    + getMinSplitPositionUnit());
+        }
+        if (getMaxSplitPosition() != def.getMaxSplitPosition()
+                || !def.getMaxSplitPositionUnit().equals(
+                        getMaxSplitPositionUnit())) {
+            design.attr("max-split-position", asString(getMaxSplitPosition())
+                    + getMaxSplitPositionUnit());
+        }
+        if (getSplitterState().positionReversed) {
+            design.attr("reversed", "");
+        }
+        // handle child components
+        if (!designContext.shouldWriteChildren(this, def)) {
+            return;
+        }
+        Component firstComponent = getFirstComponent();
+        Component secondComponent = getSecondComponent();
+        if (firstComponent != null) {
+            Element childElement = designContext.createElement(firstComponent);
+            design.appendChild(childElement);
+        }
+        if (secondComponent != null) {
+            Element childElement = designContext.createElement(secondComponent);
+            if (firstComponent == null) {
+                childElement.attr(":second", "");
+            }
+            design.appendChild(childElement);
+        }
+    }
+
+    private String asString(float number) {
+        int truncated = (int) number;
+        if (truncated == number) {
+            return "" + truncated;
+        }
+        return "" + number;
     }
 }

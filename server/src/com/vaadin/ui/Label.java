@@ -17,7 +17,10 @@
 package com.vaadin.ui;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Locale;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractProperty;
@@ -27,6 +30,7 @@ import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.ui.label.LabelState;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Label component for showing non-editable short texts.
@@ -568,6 +572,59 @@ public class Label extends AbstractComponent implements Property<String>,
             return super.toString();
         } else {
             return LegacyPropertyHelper.legacyPropertyToString(this);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        String innerHtml = design.html();
+        if (innerHtml != null && !"".equals(innerHtml)) {
+            setValue(innerHtml);
+        }
+        if (design.hasAttr(DESIGN_ATTR_PLAIN_TEXT)) {
+            setContentMode(ContentMode.TEXT);
+        } else {
+            setContentMode(ContentMode.HTML);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#getCustomAttributes()
+     */
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> result = super.getCustomAttributes();
+        result.add("value");
+        result.add("content-mode");
+        result.add("plain-text");
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        String content = getValue();
+        if (content != null) {
+            design.html(getValue());
+        }
+        // plain-text (default is html)
+        if (getContentMode() == ContentMode.TEXT) {
+            design.attr(DESIGN_ATTR_PLAIN_TEXT, "");
         }
     }
 }

@@ -21,6 +21,10 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
@@ -30,6 +34,8 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutServerRpc;
 import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutState;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * AbsoluteLayout is a layout implementation that mimics html absolute
@@ -39,6 +45,13 @@ import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutState;
 @SuppressWarnings("serial")
 public class AbsoluteLayout extends AbstractLayout implements
         LayoutClickNotifier {
+
+    // constants for design attributes
+    private static final String ATTR_TOP = ":top";
+    private static final String ATTR_RIGHT = ":right";
+    private static final String ATTR_BOTTOM = ":bottom";
+    private static final String ATTR_LEFT = ":left";
+    private static final String ATTR_Z_INDEX = ":z-index";
 
     private AbsoluteLayoutServerRpc rpc = new AbsoluteLayoutServerRpc() {
 
@@ -658,4 +671,98 @@ public class AbsoluteLayout extends AbstractLayout implements
     public void removeListener(LayoutClickListener listener) {
         removeLayoutClickListener(listener);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Node,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        // process default attributes
+        super.readDesign(design, designContext);
+        // handle children
+        for (Element childComponent : design.children()) {
+            Attributes attr = childComponent.attributes();
+            Component newChild = designContext.readDesign(childComponent);
+            StringBuilder css = new StringBuilder();
+            if (attr.hasKey(ATTR_TOP)) {
+                css.append("top:").append(attr.get(ATTR_TOP)).append(";");
+            }
+            if (attr.hasKey(ATTR_RIGHT)) {
+                css.append("right:").append(attr.get(ATTR_RIGHT)).append(";");
+            }
+            if (attr.hasKey(ATTR_BOTTOM)) {
+                css.append("bottom:").append(attr.get(ATTR_BOTTOM)).append(";");
+            }
+            if (attr.hasKey(ATTR_LEFT)) {
+                css.append("left:").append(attr.get(ATTR_LEFT)).append(";");
+            }
+            if (attr.hasKey(ATTR_Z_INDEX)) {
+                css.append("z-index:").append(attr.get(ATTR_Z_INDEX))
+                        .append(";");
+            }
+            addComponent(newChild, css.toString());
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Node,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        AbsoluteLayout def = designContext.getDefaultInstance(this);
+        if (!designContext.shouldWriteChildren(this, def)) {
+            return;
+        }
+        // handle children
+        for (Component child : this) {
+            Element childElement = designContext.createElement(child);
+            design.appendChild(childElement);
+            child.writeDesign(childElement, designContext);
+            // handle position
+            ComponentPosition position = getPosition(child);
+            writePositionAttribute(childElement, ATTR_TOP, position
+                    .getTopUnits().getSymbol(), position.getTopValue());
+            writePositionAttribute(childElement, ATTR_RIGHT, position
+                    .getRightUnits().getSymbol(), position.getRightValue());
+            writePositionAttribute(childElement, ATTR_BOTTOM, position
+                    .getBottomUnits().getSymbol(), position.getBottomValue());
+            writePositionAttribute(childElement, ATTR_LEFT, position
+                    .getLeftUnits().getSymbol(), position.getLeftValue());
+            // handle z-index
+            if (position.getZIndex() >= 0) {
+                childElement
+                        .attr(ATTR_Z_INDEX, String.valueOf(position.zIndex));
+            }
+        }
+    }
+
+    /**
+     * Private method for writing position attributes
+     * 
+     * @since
+     * @param node
+     *            target node
+     * @param key
+     *            attribute key
+     * @param symbol
+     *            value symbol
+     * @param value
+     *            the value
+     */
+    private void writePositionAttribute(Node node, String key, String symbol,
+            Float value) {
+        if (value != null) {
+            String valueString = DesignAttributeHandler.formatFloat(value
+                    .floatValue());
+            node.attr(key, valueString + symbol);
+        }
+    }
+
 }

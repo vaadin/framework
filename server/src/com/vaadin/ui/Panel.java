@@ -16,7 +16,10 @@
 
 package com.vaadin.ui;
 
+import java.util.Collection;
 import java.util.Map;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
@@ -31,6 +34,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.panel.PanelServerRpc;
 import com.vaadin.shared.ui.panel.PanelState;
 import com.vaadin.ui.Component.Focusable;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Panel - a simple single component container.
@@ -337,6 +341,24 @@ public class Panel extends AbstractSingleComponentContainer implements
     @Override
     protected PanelState getState(boolean markAsDirty) {
         return (PanelState) super.getState(markAsDirty);
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> attributes = super.getCustomAttributes();
+        return attributes;
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        // handle tabindex
+        Panel def = (Panel) designContext.getDefaultInstance(this);
     }
 
 }

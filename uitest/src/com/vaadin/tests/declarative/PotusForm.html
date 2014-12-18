@@ -1,0 +1,16 @@
+<v-vertical-layout _id="form" spacing margin>
+    <v-horizontal-layout spacing>   
+        <v-text-field _id="firstName" caption="First Name" null-representation="" width="300px" />
+        <v-text-field _id="lastName" caption="Last Name" null-representation="" width="300px" />
+    </v-horizontal-layout>
+    <v-horizontal-layout spacing>   
+        <v-combo-box _id="party" caption="Party" width="300px" />
+        <v-popup-date-field _id="tookOffice" caption="Took Office" />
+        <v-popup-date-field _id="leftOffice" caption="Left Office" />
+    </v-horizontal-layout>
+    <v-horizontal-layout spacing width-full>  
+        <v-button _id="save" style-name="primary">Save</v-button>
+        <v-button _id="revert">Revert</v-button>
+        <v-button _id="delete" style-name="danger" :expand :right>Delete</v-button>
+    </v-horizontal-layout>
+</v-vertical-layout>

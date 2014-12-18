@@ -18,6 +18,10 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Collection;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.FieldEvents;
@@ -35,6 +39,8 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
 import com.vaadin.shared.ui.button.ButtonState;
 import com.vaadin.ui.Component.Focusable;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -660,4 +666,81 @@ public class Button extends AbstractComponent implements
         return getState(false).htmlContentAllowed;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        Attributes attr = design.attributes();
+        String content = design.html();
+        setCaption(content);
+        // plain-text (default is html)
+        Boolean plain = DesignAttributeHandler.readAttribute(
+                DESIGN_ATTR_PLAIN_TEXT, attr, Boolean.class);
+        if (plain == null || !plain) {
+            setHtmlContentAllowed(true);
+        }
+        if (attr.hasKey("icon-alt")) {
+            setIconAlternateText(DesignAttributeHandler.readAttribute(
+                    "icon-alt", attr, String.class));
+        }
+        // click-shortcut
+        removeClickShortcut();
+        ShortcutAction action = DesignAttributeHandler.readAttribute(
+                "click-shortcut", attr, ShortcutAction.class);
+        if (action != null) {
+            setClickShortcut(action.getKeyCode(), action.getModifiers());
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#getCustomAttributes()
+     */
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> result = super.getCustomAttributes();
+        result.add(DESIGN_ATTR_PLAIN_TEXT);
+        result.add("caption");
+        result.add("icon-alt");
+        result.add("icon-alternate-text");
+        result.add("click-shortcut");
+        result.add("html-content-allowed");
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        Attributes attr = design.attributes();
+        Button def = (Button) designContext.getDefaultInstance(this);
+        String content = getCaption();
+        if (content != null) {
+            design.html(content);
+        }
+        // plain-text (default is html)
+        if (!isHtmlContentAllowed()) {
+            design.attr(DESIGN_ATTR_PLAIN_TEXT, "");
+        }
+        // icon-alt
+        DesignAttributeHandler.writeAttribute("icon-alt", attr,
+                getIconAlternateText(), def.getIconAlternateText(),
+                String.class);
+        // click-shortcut
+        if (clickShortcut != null) {
+            DesignAttributeHandler.writeAttribute("click-shortcut", attr,
+                    clickShortcut, null, ShortcutAction.class);
+        }
+    }
 }

@@ -25,6 +25,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Logger;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Property;
@@ -43,6 +47,8 @@ import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * <p>
@@ -1737,5 +1743,56 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             }
             isListeningToPropertyEvents = false;
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        Attributes attr = design.attributes();
+        if (design.hasAttr("readonly")) {
+            setReadOnly(DesignAttributeHandler.readAttribute("readonly", attr,
+                    Boolean.class));
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#getCustomAttributes()
+     */
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> attributes = super.getCustomAttributes();
+        attributes.add("readonly");
+        // must be handled by subclasses
+        attributes.add("value");
+        return attributes;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        AbstractField def = (AbstractField) designContext
+                .getDefaultInstance(this);
+        Attributes attr = design.attributes();
+        // handle readonly
+        DesignAttributeHandler.writeAttribute("readonly", attr,
+                super.isReadOnly(), def.isReadOnly(), Boolean.class);
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(AbstractField.class.getName());
     }
 }

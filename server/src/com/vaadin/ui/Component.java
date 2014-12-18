@@ -19,6 +19,8 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.util.Locale;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.FieldEvents;
@@ -27,6 +29,7 @@ import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.VariableOwner;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * {@code Component} is the top-level interface that is and must be implemented
@@ -725,6 +728,44 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @return component's description <code>String</code>
      */
     public String getDescription();
+
+    /* Declarative support */
+
+    /**
+     * Reads the component state from the given design.
+     * <p>
+     * The component is responsible not only for updating its own state but also
+     * for ensuring that its children update their state based on the design.
+     * <p>
+     * It is assumed that the component is in its default state when this method
+     * is called. Reading should only take into consideration attributes
+     * specified in the design and not reset any unspecified attributes to their
+     * defaults.
+     * <p>
+     * This method must not modify the design.
+     * 
+     * @since 7.4
+     * @param design
+     *            The design as HTML to obtain the state from
+     * @param designContext
+     *            The DesignContext instance used for parsing the design
+     */
+    public void readDesign(Element design, DesignContext designContext);
+
+    /**
+     * Writes the component state to the given design.
+     * <p>
+     * The component is responsible not only for writing its own state but also
+     * for ensuring that its children write their state to the design.
+     * <p>
+     * This method must not modify the component state.
+     * 
+     * @since 7.4
+     * @param design
+     *            The design as HTML to update with the current state
+     * @param designContext
+     */
+    public void writeDesign(Element design, DesignContext designContext);
 
     /* Component event framework */
 
