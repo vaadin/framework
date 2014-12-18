@@ -38,7 +38,7 @@
 
     <!-- fileset containing all TestBench tests to run -->
     <fileset dir="${test.xml.dir}" id="html-test-files">
-        <include name="src/**/*.html" />
+        <include name="tb2/**/*.html" />
         <exclude name="integration-testscripts/**/*.html" />
     </fileset>
 
