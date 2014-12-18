@@ -27,7 +27,7 @@ import com.vaadin.client.widgets.Grid;
  * this object is subject to change without the user knowing it and so should
  * not be stored anywhere outside of the method providing these instances.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class EventCellReference<T> extends CellReference<T> {

@@ -26,7 +26,7 @@ import com.vaadin.client.widgets.Grid;
 /**
  * Event object describing a change in Grid row selection state.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 @SuppressWarnings("rawtypes")

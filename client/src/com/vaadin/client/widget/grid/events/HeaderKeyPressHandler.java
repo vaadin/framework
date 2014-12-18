@@ -21,7 +21,7 @@ import com.vaadin.client.widget.grid.events.AbstractGridKeyEventHandler.GridKeyP
  * Handler for {@link GridKeyPressEvent}s that happen when the focused cell is
  * in the header of the Grid.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface HeaderKeyPressHandler extends GridKeyPressHandler {

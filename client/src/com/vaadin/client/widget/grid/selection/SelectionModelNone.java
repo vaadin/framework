@@ -26,7 +26,7 @@ import com.vaadin.client.widgets.Grid;
  * No-row selection model.
  * 
  * @author Vaadin Ltd
- * @since
+ * @since 7.4
  */
 public class SelectionModelNone<T> extends AbstractRowHandleSelectionModel<T>
         implements SelectionModel.None<T> {

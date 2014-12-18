@@ -26,7 +26,7 @@ import com.google.gwt.dom.client.TableCellElement;
  * Unlike the {@link FlyweightRow}, an instance of {@link Cell} can be stored in
  * a field.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class Cell {

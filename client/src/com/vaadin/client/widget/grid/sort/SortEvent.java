@@ -24,7 +24,7 @@ import com.vaadin.client.widgets.Grid;
  * A sort event, fired by the Grid when it needs its data source to provide data
  * sorted in a specific manner.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class SortEvent<T> extends GwtEvent<SortHandler<?>> {

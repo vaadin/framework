@@ -39,7 +39,14 @@ import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.selection.SelectionModel.Multi.Batched;
 import com.vaadin.client.widgets.Grid;
 
-/* This class will probably not survive the final merge of all selection functionality. */
+/**
+ * Renderer showing multi selection check boxes.
+ * 
+ * @author Vaadin Ltd
+ * @param <T>
+ *            the type of the associated grid
+ * @since 7.4
+ */
 public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
 
     /** The size of the autoscroll area, both top and bottom. */

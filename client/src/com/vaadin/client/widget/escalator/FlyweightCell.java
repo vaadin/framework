@@ -33,7 +33,7 @@ import com.vaadin.client.widgets.Escalator;
  * and so should not be stored anywhere outside of the method providing these
  * instances.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class FlyweightCell {

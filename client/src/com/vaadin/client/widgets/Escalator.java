@@ -258,7 +258,7 @@ abstract class JsniWorkaround {
  * A low-level table-like widget that features a scrolling virtual viewport and
  * lazily generated rows.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class Escalator extends Widget implements RequiresResize, DeferredWorker {

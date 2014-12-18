@@ -57,7 +57,7 @@ import com.vaadin.shared.data.sort.SortDirection;
  * properties. Generated properties are always read-only. Trying to make them
  * editable throws an exception.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class GeneratedPropertyContainer extends AbstractContainer implements

@@ -26,7 +26,7 @@ import com.vaadin.client.widgets.Grid.Section;
 /**
  * Represents native key down event in Grid.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class GridKeyDownEvent extends AbstractGridKeyEvent<GridKeyDownHandler> {

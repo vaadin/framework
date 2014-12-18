@@ -21,7 +21,7 @@ import com.vaadin.client.widget.grid.events.AbstractGridKeyEventHandler.GridKeyU
  * Handler for {@link GridKeyUpEvent}s that happen when the focused cell is in
  * the footer of the Grid.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface FooterKeyUpHandler extends GridKeyUpHandler {

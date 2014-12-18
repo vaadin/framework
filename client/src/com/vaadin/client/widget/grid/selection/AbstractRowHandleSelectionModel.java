@@ -27,6 +27,7 @@ import com.vaadin.client.data.DataSource.RowHandle;
  * @author Vaadin Ltd
  * @param <T>
  *            The grid's row type
+ * @since 7.4
  */
 public abstract class AbstractRowHandleSelectionModel<T> implements
         SelectionModel<T> {

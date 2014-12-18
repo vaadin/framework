@@ -20,7 +20,7 @@ import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler.GridCl
 /**
  * Handler for {@link GridClickEvent}s that happen in the footer of the Grid.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface FooterClickHandler extends GridClickHandler {

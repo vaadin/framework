@@ -131,7 +131,7 @@ public class Property {
     /**
      * Checks whether this property is annotated with {@link NoLayout}.
      * 
-     * @since
+     * @since 7.4
      * 
      * @return <code>true</code> if this property has a NoLayout annotation;
      *         otherwise <code>false</code>

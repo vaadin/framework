@@ -28,7 +28,7 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
  * 
  * @param <T>
  *            Property data type
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public abstract class PropertyValueGenerator<T> implements Serializable {

@@ -20,10 +20,11 @@ import com.vaadin.client.widgets.Grid;
 /**
  * Callback interface for generating custom style names for cells
  * 
+ * @author Vaadin Ltd
  * @param <T>
  *            the row type of the target grid
- * 
  * @see Grid#setCellStyleGenerator(CellStyleGenerator)
+ * @since 7.4
  */
 public interface CellStyleGenerator<T> {
 

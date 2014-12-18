@@ -20,7 +20,7 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Handler for {@link DataAvailableEvent}s.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface DataAvailableHandler extends EventHandler {

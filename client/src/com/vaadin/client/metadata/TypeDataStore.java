@@ -444,7 +444,7 @@ public class TypeDataStore {
      * @param method
      *            the rpc method to check
      * 
-     * @since
+     * @since 7.4
      * 
      * @return <code>true</code> if the method has a NoLayout annotation;
      *         otherwise <code>false</code>
@@ -456,7 +456,7 @@ public class TypeDataStore {
     /**
      * Defines that a method is annotated with {@link NoLayout}.
      * 
-     * @since
+     * @since 7.4
      * 
      * @param type
      *            the where the method is defined
@@ -474,7 +474,7 @@ public class TypeDataStore {
      * @param property
      *            the property to check
      * 
-     * @since
+     * @since 7.4
      * 
      * @return <code>true</code> if the property has a NoLayout annotation;
      *         otherwise <code>false</code>

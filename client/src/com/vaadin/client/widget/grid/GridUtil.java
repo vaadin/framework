@@ -27,7 +27,7 @@ import com.vaadin.client.widgets.Grid;
 /**
  * Utilities for working with Grid.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class GridUtil {

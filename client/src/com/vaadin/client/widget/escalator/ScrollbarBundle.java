@@ -39,7 +39,7 @@ import com.vaadin.client.widget.grid.events.ScrollHandler;
  * An element-like bundle representing a configurable and visual scrollbar in
  * one axis.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  * @see VerticalScrollbarBundle
  * @see HorizontalScrollbarBundle

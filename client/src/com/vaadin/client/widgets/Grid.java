@@ -167,7 +167,7 @@ import com.vaadin.shared.util.SharedUtil;
  * @param <T>
  *            The row type of the grid. The row type is the POJO type from where
  *            the data is retrieved into the column cells.
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class Grid<T> extends ResizeComposite implements
@@ -1779,8 +1779,7 @@ public class Grid<T> extends ResizeComposite implements
             boolean bodyHasFocus = (containerWithFocus == escalator.getBody());
             boolean insertionIsAboveFocusedCell = (added.getStart() <= rowWithFocus);
             if (bodyHasFocus && insertionIsAboveFocusedCell) {
-                setCellFocus(rowWithFocus + added.length(),
-                        cellFocusRange.getStart(), containerWithFocus);
+                rowWithFocus += added.length();
             }
         }
 

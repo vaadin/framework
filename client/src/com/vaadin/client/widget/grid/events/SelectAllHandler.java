@@ -21,7 +21,7 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for a Grid select all event, called when the Grid needs all rows in
  * data source to be selected.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface SelectAllHandler<T> extends EventHandler {

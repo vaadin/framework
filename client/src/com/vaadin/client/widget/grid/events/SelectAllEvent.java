@@ -22,7 +22,7 @@ import com.vaadin.client.widget.grid.selection.SelectionModel;
  * A select all event, fired by the Grid when it needs all rows in data source
  * to be selected.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class SelectAllEvent<T> extends GwtEvent<SelectAllHandler<T>> {

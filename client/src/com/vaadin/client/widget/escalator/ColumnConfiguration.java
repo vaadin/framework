@@ -16,10 +16,12 @@
 
 package com.vaadin.client.widget.escalator;
 
+import com.vaadin.client.widgets.Escalator;
+
 /**
  * A representation of the columns in an instance of {@link Escalator}.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  * @see Escalator#getColumnConfiguration()
  */

@@ -21,6 +21,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * An event that signifies that a scrollbar bundle has been scrolled
  * 
  * @author Vaadin Ltd
+ * @since 7.4
  */
 public class ScrollEvent extends GwtEvent<ScrollHandler> {
 

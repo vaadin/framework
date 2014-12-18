@@ -21,7 +21,7 @@ import com.vaadin.shared.ui.grid.Range;
 /**
  * Event object describing a change of row availability in DataSource of a Grid.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class DataAvailableEvent extends GwtEvent<DataAvailableHandler> {
