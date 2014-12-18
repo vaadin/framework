@@ -61,12 +61,14 @@ import com.vaadin.server.widgetsetutils.metadata.ConnectorInitVisitor;
 import com.vaadin.server.widgetsetutils.metadata.GeneratedSerializer;
 import com.vaadin.server.widgetsetutils.metadata.OnStateChangeVisitor;
 import com.vaadin.server.widgetsetutils.metadata.Property;
+import com.vaadin.server.widgetsetutils.metadata.RendererVisitor;
 import com.vaadin.server.widgetsetutils.metadata.ServerRpcVisitor;
 import com.vaadin.server.widgetsetutils.metadata.StateInitVisitor;
 import com.vaadin.server.widgetsetutils.metadata.TypeVisitor;
 import com.vaadin.server.widgetsetutils.metadata.WidgetInitVisitor;
 import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
@@ -453,6 +455,10 @@ public class ConnectorBundleLoaderFactory extends Generator {
             writer.println("var data = {");
             writer.indent();
 
+            if (property.getAnnotation(NoLayout.class) != null) {
+                writer.println("noLayout: 1, ");
+            }
+
             writer.println("setter: function(bean, value) {");
             writer.indent();
             property.writeSetterBody(logger, writer, "bean", "value");
@@ -496,6 +502,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writeParamTypes(w, bundle);
         writeProxys(w, bundle);
         writeDelayedInfo(w, bundle);
+        writeNoLayoutRpcMethods(w, bundle);
 
         w.println("%s(store);", loadNativeJsMethodName);
 
@@ -503,8 +510,25 @@ public class ConnectorBundleLoaderFactory extends Generator {
         // this after the JS property data has been initialized
         writePropertyTypes(logger, w, bundle);
         writeSerializers(logger, w, bundle);
+        writePresentationTypes(w, bundle);
         writeDelegateToWidget(logger, w, bundle);
         writeOnStateChangeHandlers(logger, w, bundle);
+    }
+
+    private void writeNoLayoutRpcMethods(SplittingSourceWriter w,
+            ConnectorBundle bundle) {
+        Map<JClassType, Set<JMethod>> needsNoLayout = bundle
+                .getNeedsNoLayoutRpcMethods();
+        for (Entry<JClassType, Set<JMethod>> entry : needsNoLayout.entrySet()) {
+            JClassType type = entry.getKey();
+
+            for (JMethod method : entry.getValue()) {
+                w.println("store.setNoLayoutRpcMethod(%s, \"%s\");",
+                        getClassLiteralString(type), method.getName());
+            }
+
+            w.splitIfNeeded();
+        }
     }
 
     private void writeOnStateChangeHandlers(TreeLogger logger,
@@ -680,6 +704,21 @@ public class ConnectorBundleLoaderFactory extends Generator {
             w.print("}");
             w.println(");");
 
+            w.splitIfNeeded();
+        }
+    }
+
+    private void writePresentationTypes(SplittingSourceWriter w,
+            ConnectorBundle bundle) {
+        Map<JClassType, JType> presentationTypes = bundle
+                .getPresentationTypes();
+        for (Entry<JClassType, JType> entry : presentationTypes.entrySet()) {
+
+            w.print("store.setPresentationType(");
+            writeClassLiteral(w, entry.getKey());
+            w.print(", ");
+            writeClassLiteral(w, entry.getValue());
+            w.println(");");
             w.splitIfNeeded();
         }
     }
@@ -1240,8 +1279,9 @@ public class ConnectorBundleLoaderFactory extends Generator {
             throws NotFoundException {
         List<TypeVisitor> visitors = Arrays.<TypeVisitor> asList(
                 new ConnectorInitVisitor(), new StateInitVisitor(),
-                new WidgetInitVisitor(), new ClientRpcVisitor(),
-                new ServerRpcVisitor(), new OnStateChangeVisitor());
+                new WidgetInitVisitor(), new RendererVisitor(),
+                new ClientRpcVisitor(), new ServerRpcVisitor(),
+                new OnStateChangeVisitor());
         for (TypeVisitor typeVisitor : visitors) {
             typeVisitor.init(oracle);
         }

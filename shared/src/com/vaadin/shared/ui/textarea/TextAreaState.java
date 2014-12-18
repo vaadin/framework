@@ -16,6 +16,7 @@
 package com.vaadin.shared.ui.textarea;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
 
 public class TextAreaState extends AbstractTextFieldState {
@@ -33,6 +34,7 @@ public class TextAreaState extends AbstractTextFieldState {
      * Tells if word-wrapping should be used in the text area.
      */
     @DelegateToWidget
+    @NoLayout
     public boolean wordwrap = true;
 
 }

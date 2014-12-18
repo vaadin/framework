@@ -1,0 +1,239 @@
+$v-grid-border: 1px solid #ddd !default;
+$v-grid-cell-vertical-border: $v-grid-border !default;
+$v-grid-cell-horizontal-border: $v-grid-cell-vertical-border !default;
+$v-grid-cell-focused-border: 1px solid !default;
+$v-grid-header-border: $v-grid-border !default;
+$v-grid-footer-border: $v-grid-header-border !default;
+
+$v-grid-row-height: round($v-font-size * 1.5) !default;
+$v-grid-row-background-color: #fff !default;
+$v-grid-row-stripe-background-color: darken($v-grid-row-background-color, 5%) !default;
+$v-grid-row-selected-background-color: darken($v-grid-row-background-color, 25%) !default;
+$v-grid-row-focused-background-color: null !default;
+
+$v-grid-header-row-height: null !default;
+$v-grid-header-font-size: $v-font-size !default;
+$v-grid-header-background-color: $v-grid-row-background-color !default;
+
+$v-grid-footer-row-height: $v-grid-header-row-height !default;
+$v-grid-footer-font-size: $v-grid-header-font-size !default;
+$v-grid-footer-background-color: $v-grid-header-background-color !default;
+
+$v-grid-cell-padding-horizontal: 5px !default;
+
+$v-grid-editor-row-background-color: $v-grid-row-background-color !default;
+
+
+@import "../escalator/escalator";
+
+
+@mixin base-grid($primaryStyleName: v-grid) {
+
+  @include base-escalator($primaryStyleName: $primaryStyleName, $background-color: $v-grid-row-background-color);
+
+  .#{$primaryStyleName} {
+    outline: none;
+  }
+
+  .#{$primaryStyleName}-scroller-vertical.
+  .#{$primaryStyleName}-scroller-horizontal {
+    border: $v-grid-border;
+  }
+
+  .#{$primaryStyleName}-tablewrapper {
+    border: $v-grid-border;
+  }
+
+  // Common cell styles
+
+  .#{$primaryStyleName}-cell {
+    background-color: $v-grid-row-background-color;
+    padding: 0 $v-grid-cell-padding-horizontal;
+    line-height: $v-grid-row-height;
+    text-overflow: ellipsis;
+
+    > * {
+      line-height: $v-line-height;
+    }
+
+    &.frozen {
+      @include box-shadow(1px 0 2px rgba(0,0,0,.1));
+      border-right: $v-grid-cell-vertical-border;
+
+      @if $v-grid-cell-vertical-border and $v-grid-cell-vertical-border != none {
+        + th,
+        + td {
+          border-left: none;
+        }
+      }
+    }
+  }
+
+  // Rows
+
+  .#{$primaryStyleName}-row > td {
+    border-left: $v-grid-cell-vertical-border;
+    border-top: $v-grid-cell-horizontal-border;
+
+    &:first-child {
+      border-left: none;
+    }
+  }
+
+  tbody > .#{$primaryStyleName}-row:first-child > td {
+    border-top: none;
+  }
+
+  .#{$primaryStyleName}-row-stripe > td {
+    background-color: $v-grid-row-stripe-background-color;
+  }
+
+  .#{$primaryStyleName}-row-selected > td {
+    background: $v-grid-row-selected-background-color;
+  }
+
+  .#{$primaryStyleName}-row-focused > td {
+    background-color: $v-grid-row-focused-background-color;
+  }
+
+  // Header
+
+  .#{$primaryStyleName}-header {
+    th {
+      position: relative;
+      background-color: $v-grid-header-background-color;
+      font-size: $v-grid-header-font-size;
+      font-weight: inherit;
+      border-left: $v-grid-header-border;
+      border-bottom: $v-grid-header-border;
+      line-height: $v-grid-header-row-height;
+      text-align: left;
+
+      &:first-child {
+        border-left: none;
+      }
+    }
+
+    .sort-asc,
+    .sort-desc {
+      padding-right: round($v-grid-header-font-size * 1.2) + $v-grid-cell-padding-horizontal;
+
+      &:after {
+        font-family: FontAwesome, sans-serif;
+        content: "\f0de" " " attr(sort-order);
+        position: absolute;
+        right: $v-grid-cell-padding-horizontal;
+        font-size: round($v-grid-header-font-size * 0.85);
+      }
+    }
+
+    .sort-desc:after {
+      content: "\f0dd" " " attr(sort-order);
+    }
+  }
+
+  // Footer
+
+  .#{$primaryStyleName}-footer {
+    td {
+      background-color: $v-grid-footer-background-color;
+      font-size: $v-grid-footer-font-size;
+      font-weight: inherit;
+      border-left: $v-grid-footer-border;
+      border-top: $v-grid-footer-border;
+      line-height: $v-grid-footer-row-height;
+
+      &:first-child {
+        border-left: none;
+      }
+    }
+  }
+
+  // Decorative elements
+
+  .#{$primaryStyleName}-header-deco {
+    border-top: $v-grid-header-border;
+    border-right: $v-grid-header-border;
+    background-color: $v-grid-header-background-color;
+  }
+
+  .#{$primaryStyleName}-footer-deco {
+    border-bottom: $v-grid-footer-border;
+    border-right: $v-grid-footer-border;
+    background-color: $v-grid-footer-background-color;
+  }
+
+  .#{$primaryStyleName}-horizontal-scrollbar-deco {
+    background-color: $v-grid-footer-background-color;
+    border: $v-grid-footer-border;
+    border-top: none;
+  }
+
+  // Focused cell style (common for all cells)
+
+  .#{$primaryStyleName}-cell-focused {
+    position: relative;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border: $v-grid-cell-focused-border;
+      display: none;
+    }
+  }
+
+  .#{$primaryStyleName}:focus .#{$primaryStyleName}-cell-focused:before {
+    display: block;
+  }
+
+  // Editor row
+
+  .#{$primaryStyleName}-editor-row {
+    // TODO should be fixed in offset calculations
+    margin-top: -1px;
+    position: absolute;
+    overflow-y: visible;
+    background: $v-grid-editor-row-background-color;
+    @include box-shadow(0 0 10px 1px rgba(0,0,0,.3));
+
+    > div {
+      position: absolute;
+      @include box-sizing(border-box);
+      border-left: $v-grid-cell-vertical-border;
+
+      &:first-child {
+        border-left: none;
+      }
+
+      .v-textfield,
+      .v-datefield,
+      .v-filterselect {
+        min-width: 100%;
+        max-width: 100%;
+        min-height: 100%;
+        max-height: 100%;
+        border: none;
+        border-radius: 0;
+
+      }
+
+      .v-textfield-focus,
+      .v-filterselect-focus input {
+        position: relative;
+        z-index: 1;
+      }
+    }
+
+    > .v-editor-row-save,
+    > .v-editor-row-cancel {
+      position: absolute;
+      // TODO remove the inline size from the widgets
+      width: auto !important;
+      height: auto !important;
+    }
+  }
+}

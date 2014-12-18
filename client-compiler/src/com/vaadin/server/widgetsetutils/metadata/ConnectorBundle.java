@@ -43,6 +43,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.JSONSerializer;
+import com.vaadin.client.connectors.AbstractRendererConnector;
 import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
@@ -59,6 +60,7 @@ public class ConnectorBundle {
     private final Set<JType> hasSerializeSupport = new HashSet<JType>();
     private final Set<JType> needsSerializeSupport = new HashSet<JType>();
     private final Map<JType, GeneratedSerializer> serializers = new HashMap<JType, GeneratedSerializer>();
+    private final Map<JClassType, JType> presentationTypes = new HashMap<JClassType, JType>();
 
     private final Set<JClassType> needsSuperClass = new HashSet<JClassType>();
     private final Set<JClassType> needsGwtConstructor = new HashSet<JClassType>();
@@ -71,6 +73,7 @@ public class ConnectorBundle {
     private final Map<JClassType, Set<JMethod>> needsParamTypes = new HashMap<JClassType, Set<JMethod>>();
     private final Map<JClassType, Set<JMethod>> needsDelayedInfo = new HashMap<JClassType, Set<JMethod>>();
     private final Map<JClassType, Set<JMethod>> needsOnStateChange = new HashMap<JClassType, Set<JMethod>>();
+    private final Map<JClassType, Set<JMethod>> needsNoLayoutRpcMethods = new HashMap<JClassType, Set<JMethod>>();
 
     private final Set<Property> needsProperty = new HashSet<Property>();
     private final Map<JClassType, Set<Property>> needsDelegateToWidget = new HashMap<JClassType, Set<Property>>();
@@ -306,6 +309,25 @@ public class ConnectorBundle {
         return Collections.unmodifiableMap(serializers);
     }
 
+    public void setPresentationType(JClassType type, JType presentationType) {
+        if (!hasPresentationType(type)) {
+            presentationTypes.put(type, presentationType);
+        }
+    }
+
+    private boolean hasPresentationType(JClassType type) {
+        if (presentationTypes.containsKey(type)) {
+            return true;
+        } else {
+            return previousBundle != null
+                    && previousBundle.hasPresentationType(type);
+        }
+    }
+
+    public Map<JClassType, JType> getPresentationTypes() {
+        return Collections.unmodifiableMap(presentationTypes);
+    }
+
     private void setNeedsSuperclass(JClassType typeAsClass) {
         if (!isNeedsSuperClass(typeAsClass)) {
             needsSuperClass.add(typeAsClass);
@@ -413,6 +435,11 @@ public class ConnectorBundle {
 
     public static boolean isConnectedComponentConnector(JClassType type) {
         return isConnected(type) && isType(type, ComponentConnector.class);
+    }
+
+    public static boolean isConnectedRendererConnector(JClassType type) {
+        return isConnected(type)
+                && isType(type, AbstractRendererConnector.class);
     }
 
     private static boolean isInterfaceType(JClassType type, Class<?> class1) {
@@ -606,6 +633,25 @@ public class ConnectorBundle {
 
     public Map<JClassType, Set<JMethod>> getNeedsOnStateChangeHandler() {
         return Collections.unmodifiableMap(needsOnStateChange);
+    }
+
+    public void setNeedsNoLayoutRpcMethod(JClassType type, JMethod method) {
+        if (!isNeedsNoLayoutRpcMethod(type, method)) {
+            addMapping(needsNoLayoutRpcMethods, type, method);
+        }
+    }
+
+    private boolean isNeedsNoLayoutRpcMethod(JClassType type, JMethod method) {
+        if (hasMapping(needsNoLayoutRpcMethods, type, method)) {
+            return true;
+        } else {
+            return previousBundle != null
+                    && previousBundle.isNeedsNoLayoutRpcMethod(type, method);
+        }
+    }
+
+    public Map<JClassType, Set<JMethod>> getNeedsNoLayoutRpcMethods() {
+        return Collections.unmodifiableMap(needsNoLayoutRpcMethods);
     }
 
     public static JMethod findInheritedMethod(JClassType type,

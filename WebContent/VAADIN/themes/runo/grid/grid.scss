@@ -1,0 +1,53 @@
+// Variables defined in runo.scss
+
+@mixin runo-grid($primaryStyleName: v-grid) {
+
+  .#{$primaryStyleName}-header,
+  .#{$primaryStyleName}-footer {
+    > .#{$primaryStyleName}-cell {
+      background-image: url(img/header-bg.png);
+      color: #393a3c;
+      text-shadow: #fff 0 1px 0;
+      @include box-shadow(inset 1px 0 0 #fff);
+    }
+  }
+
+  .#{$primaryStyleName}-header-deco,
+  .#{$primaryStyleName}-footer-deco,
+  .#{$primaryStyleName}-horizontal-scrollbar-deco {
+    background-image: url(img/header-bg.png);
+  }
+
+  // Selected row
+  .#{$primaryStyleName}-row-selected {
+    color: #fff;
+
+    // Selected and focused
+    > .#{$primaryStyleName}-cell-focused:before {
+      border-color: lighten($v-grid-row-selected-background-color, 20%);
+    }
+  }
+
+  // Sort indicators
+  .#{$primaryStyleName} th.sort-asc,
+  .#{$primaryStyleName} th.sort-desc {
+    padding-right: 30px + $v-grid-cell-padding-horizontal;
+
+    &:after {
+      content: attr(sort-order);
+      background: transparent no-repeat right 50%;
+      width: 30px;
+      height: 36px;
+      top: 0;
+    }
+  }
+
+  .#{$primaryStyleName} th.sort-asc:after {
+    background-image: url(img/sort-asc.png);
+  }
+
+  .#{$primaryStyleName} th.sort-desc:after {
+    background-image: url(img/sort-desc.png);
+  }
+
+}

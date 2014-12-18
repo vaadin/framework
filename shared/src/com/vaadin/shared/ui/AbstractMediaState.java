@@ -19,17 +19,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.URLReference;
 
 public class AbstractMediaState extends AbstractComponentState {
     public boolean showControls;
 
+    @NoLayout
     public String altText;
 
     public boolean htmlContentAllowed;
 
+    @NoLayout
     public boolean autoplay;
 
+    @NoLayout
     public boolean muted;
 
     public List<URLReference> sources = new ArrayList<URLReference>();

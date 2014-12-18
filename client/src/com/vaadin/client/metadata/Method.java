@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.metadata;
 
+import com.vaadin.shared.annotations.NoLayout;
+
 public class Method {
 
     private final Type type;
@@ -98,6 +100,18 @@ public class Method {
 
     public boolean isLastOnly() {
         return TypeDataStore.isLastOnly(this);
+    }
+
+    /**
+     * Checks whether this method is annotated with {@link NoLayout}.
+     * 
+     * @since
+     * 
+     * @return <code>true</code> if this method has a NoLayout annotation;
+     *         otherwise <code>false</code>
+     */
+    public boolean isNoLayout() {
+        return TypeDataStore.isNoLayoutRpcMethod(this);
     }
 
 }

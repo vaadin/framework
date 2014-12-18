@@ -92,8 +92,9 @@ public class VProgressBar extends Widget implements HasEnabled {
 
     @Override
     public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-        setStyleName(ApplicationConnection.DISABLED_CLASSNAME, !enabled);
+        if (this.enabled != enabled) {
+            this.enabled = enabled;
+            setStyleName(ApplicationConnection.DISABLED_CLASSNAME, !enabled);
+        }
     }
-
 }

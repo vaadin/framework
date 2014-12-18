@@ -18,6 +18,7 @@ package com.vaadin.shared;
 
 import java.util.List;
 
+import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.SharedState;
 
 /**
@@ -31,7 +32,9 @@ public class AbstractComponentState extends SharedState {
     public String height = "";
     public String width = "";
     public boolean readOnly = false;
+    @NoLayout
     public boolean immediate = false;
+    @NoLayout
     public String description = "";
     // Note: for the caption, there is a difference between null and an empty
     // string!

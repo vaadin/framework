@@ -24,6 +24,7 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JType;
+import com.vaadin.shared.annotations.NoLayout;
 
 public class ClientRpcVisitor extends TypeVisitor {
     @Override
@@ -39,6 +40,9 @@ public class ClientRpcVisitor extends TypeVisitor {
 
                 bundle.setNeedsInvoker(type, method);
                 bundle.setNeedsParamTypes(type, method);
+                if (method.getAnnotation(NoLayout.class) != null) {
+                    bundle.setNeedsNoLayoutRpcMethod(type, method);
+                }
 
                 JType[] parameterTypes = method.getParameterTypes();
                 for (JType paramType : parameterTypes) {

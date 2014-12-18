@@ -17,6 +17,7 @@
 package com.vaadin.shared.ui.button;
 
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.ui.TabIndexState;
 
 /**
@@ -31,11 +32,14 @@ public class ButtonState extends TabIndexState {
     {
         primaryStyleName = "v-button";
     }
+    @NoLayout
     public boolean disableOnClick = false;
+    @NoLayout
     public int clickShortcutKeyCode = 0;
     /**
      * If caption should be rendered in HTML
      */
     public boolean htmlContentAllowed = false;
+    @NoLayout
     public String iconAltText = "";
 }

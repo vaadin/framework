@@ -16,10 +16,12 @@
 package com.vaadin.shared.ui;
 
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.annotations.NoLayout;
 
 public class AbstractEmbeddedState extends AbstractComponentState {
 
     public static final String SOURCE_RESOURCE = "source";
 
+    @NoLayout
     public String alternateText;
 }

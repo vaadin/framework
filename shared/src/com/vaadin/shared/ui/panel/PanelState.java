@@ -16,11 +16,14 @@
 package com.vaadin.shared.ui.panel;
 
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.annotations.NoLayout;
 
 public class PanelState extends AbstractComponentState {
     {
         primaryStyleName = "v-panel";
     }
+    @NoLayout
     public int tabIndex;
+    @NoLayout
     public int scrollLeft, scrollTop;
 }

@@ -64,7 +64,18 @@ public class RpcManager {
         }
     }
 
-    private Method getMethod(MethodInvocation invocation) {
+    /**
+     * Gets the method that an invocation targets.
+     * 
+     * @param invocation
+     *            the method invocation to get the method for
+     * 
+     * @since
+     * @return the method targeted by this invocation
+     */
+    public static Method getMethod(MethodInvocation invocation) {
+        // Implemented here instead of in MethodInovcation since it's in shared
+        // and can't use our Method class.
         Type type = new Type(invocation.getInterfaceName(), null);
         Method method = type.getMethod(invocation.getMethodName());
         return method;
@@ -86,7 +97,7 @@ public class RpcManager {
         }
     }
 
-    public void parseAndApplyInvocation(JSONArray rpcCall,
+    public MethodInvocation parseAndApplyInvocation(JSONArray rpcCall,
             ApplicationConnection connection) {
         ConnectorMap connectorMap = ConnectorMap.get(connection);
 
@@ -114,6 +125,8 @@ public class RpcManager {
             VConsole.log("Server to client RPC call: " + invocation);
             applyInvocation(invocation, connector);
         }
+
+        return invocation;
     }
 
     private void parseMethodParameters(MethodInvocation methodInvocation,

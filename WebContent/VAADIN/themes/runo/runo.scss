@@ -1,3 +1,22 @@
+$font-size: 13px !default;
+$line-height: 18px !default;
+
+
+// Override Base Grid variables
+$v-grid-border: 1px solid #b6bbbc;
+$v-grid-cell-vertical-border: 1px solid #d4d4d4;
+$v-grid-cell-vertical-border: none;
+$v-grid-cell-horizontal-border: none;
+$v-grid-cell-active-border: 1px solid #57a7ed;
+$v-grid-row-height: 26px;
+$v-grid-header-row-height: 36px;
+$v-grid-row-background-color: #fff !default;
+$v-grid-row-stripe-background-color:#eff0f1;
+$v-grid-row-selected-background-color: #57a7ed;
+$v-grid-header-font-size: 15px;
+$v-grid-header-background-color: #e7e9ea;
+
+
 @import "../base/base.scss";
 
 @import "absolutelayout/absolutelayout.scss";
@@ -9,6 +28,7 @@
 @import "datefield/datefield.scss";
 @import "inlinedatefield/inlinedatefield.scss";
 @import "formlayout/formlayout.scss";
+@import "grid/grid.scss";
 @import "gridlayout/gridlayout.scss";
 @import "label/label.scss";
 @import "link/link.scss";
@@ -32,9 +52,6 @@
 	background: #e9eced;
 }
 
-$font-size: 13px;
-$line-height: 18px;
-
 @mixin runo {
 	// TODO move?
 	@include base;
@@ -44,12 +61,13 @@ $line-height: 18px;
 	@include runo-button;
 	@include runo-caption;
 	@include runo-colorpicker;
-	
+
 	@include runo-common;
-	
+
 	@include runo-datefield;
 	@include runo-inline-datefield;
 	@include runo-formlayout;
+	@include runo-grid;
 	@include runo-gridlayout;
 	@include runo-label;
 	@include runo-link;
@@ -58,11 +76,11 @@ $line-height: 18px;
 	@include runo-orderedlayout;
 	@include runo-panel;
 	@include runo-popupview;
-	
+
 	@include runo-progressindicator(v-progressbar);
 	/* For legacy ProgressIndicator component */
 	@include runo-progressindicator(v-progressindicator);
-	
+
 	@include runo-select;
 	@include runo-shadow;
 	@include runo-slider;
