@@ -1330,6 +1330,8 @@ public class Util {
     /**
      * Gets currently focused element and checks if it's editable
      * 
+     * @since 7.4
+     * 
      * @return true if focused element is editable
      */
     public static boolean isFocusedElementEditable() {

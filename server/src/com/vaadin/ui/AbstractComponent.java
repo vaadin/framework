@@ -1189,6 +1189,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * methods. Typically these are handled in a custom way in the overridden
      * versions of the above methods
      * 
+     * @since 7.4
+     * 
      * @return the collection of attributes that are not handled by the basic
      *         implementation
      */

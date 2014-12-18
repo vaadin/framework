@@ -74,6 +74,8 @@ public class BeanItem<BT> extends PropertysetItem {
      * <code>are</code> methods are not supported.
      * </p>
      * 
+     * @since 7.4
+     * 
      * @param bean
      *            the Java Bean to copy properties from.
      * @param beanClass

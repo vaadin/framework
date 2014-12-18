@@ -29,6 +29,8 @@ import java.lang.annotation.Target;
  * If you want to dynamically provide different viewport values for different
  * browser, you should use {@link ViewportGeneratorClass} instead.
  * 
+ * @since 7.4
+ * 
  * @author Vaadin Ltd
  */
 @Target(ElementType.TYPE)

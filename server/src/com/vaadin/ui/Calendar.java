@@ -918,7 +918,7 @@ public class Calendar extends AbstractComponent implements
      * 
      * @return true if the client is allowed to click events
      * @see #isClientChangeAllowed()
-     * @deprecated Override {@link #fireEventClick(Integer)} instead.
+     * @deprecated As of 7.4, override {@link #fireEventClick(Integer)} instead.
      */
     @Deprecated
     protected boolean isEventClickAllowed() {

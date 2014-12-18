@@ -1729,6 +1729,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
     /**
      * Removes orphaned ids from selection.
+     * 
+     * @since 7.4
      */
     protected void adjustSelection() {
         Object value = getValue();
