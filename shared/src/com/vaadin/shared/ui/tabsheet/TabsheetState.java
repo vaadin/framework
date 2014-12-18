@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.annotations.NoLayout;
+import com.vaadin.shared.annotations.DelegateToWidget;
 
 public class TabsheetState extends AbstractComponentState {
     public static final String PRIMARY_STYLE_NAME = "v-tabsheet";
@@ -42,5 +43,8 @@ public class TabsheetState extends AbstractComponentState {
 
     /** the key of the currently selected tab */
     public String selected;
+
+    @DelegateToWidget
+    public boolean tabCaptionsAsHtml = false;
 
 }

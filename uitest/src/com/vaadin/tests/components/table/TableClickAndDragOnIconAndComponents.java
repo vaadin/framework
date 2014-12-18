@@ -38,7 +38,7 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
         table.setId("testable-table");
         addComponent(table);
         for (int i = 0; i < 5; i++) {
-            addItemAfter(i + "foo", null, false);
+            addItemAfter(i + "foo", null);
         }
 
         table.addGeneratedColumn("Label", new ColumnGenerator() {
@@ -118,15 +118,14 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
 
                 IndexedContainer container = (IndexedContainer) table
                         .getContainerDataSource();
-                boolean selected = table.getValue().equals(dragged);
                 container.removeItem(dragged);
-                addItemAfter(dragged, target, selected);
+                addItemAfter(dragged, target);
             }
         });
     }
 
     @SuppressWarnings("unchecked")
-    private void addItemAfter(Object itemId, Object afterItemId, boolean select) {
+    private void addItemAfter(Object itemId, Object afterItemId) {
         Item item;
         if (afterItemId != null) {
             item = table.addItemAfter(afterItemId, itemId);
@@ -137,9 +136,6 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
         item.getItemProperty("red").setValue("red " + itemId);
         item.getItemProperty("icon").setValue(
                 new ThemeResource("../runo/icons/16/ok.png"));
-        if (select) {
-            table.select(itemId);
-        }
     }
 
     @Override

@@ -1688,8 +1688,6 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         // Clears the item id mapping table
         itemIdMapper.removeAll();
 
-        adjustSelection();
-
         // Notify all listeners
         fireItemSetChange();
     }
@@ -1725,25 +1723,6 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             }
         }
         markAsDirty();
-    }
-
-    /**
-     * Removes orphaned ids from selection.
-     * 
-     * @since 7.4
-     */
-    protected void adjustSelection() {
-        Object value = getValue();
-        if (isMultiSelect() && (value instanceof Collection)) {
-            Collection<?> collection = (Collection<?>) value;
-            for (Object id : collection) {
-                if (!containsId(id)) {
-                    unselect(id);
-                }
-            }
-        } else if (!containsId(value)) {
-            unselect(value);
-        }
     }
 
     /**

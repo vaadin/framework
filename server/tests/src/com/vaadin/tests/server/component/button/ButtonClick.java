@@ -3,9 +3,11 @@ package com.vaadin.tests.server.component.button;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.UI;
 
 /**
@@ -13,6 +15,22 @@ import com.vaadin.ui.UI;
  */
 public class ButtonClick {
     private boolean clicked = false;
+
+    @Test
+    public void clickDetachedButton() {
+        Button b = new Button();
+        final ObjectProperty<Integer> counter = new ObjectProperty<Integer>(0);
+        b.addClickListener(new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                counter.setValue(counter.getValue() + 1);
+            }
+        });
+
+        b.click();
+        Assert.assertEquals(Integer.valueOf(1), counter.getValue());
+    }
 
     @Test
     public void testClick() {
@@ -34,22 +52,6 @@ public class ButtonClick {
         b.setReadOnly(true);
         b.click();
         Assert.assertFalse("Read only button fires click events", clicked);
-    }
-
-    @Test
-    public void testClickConnectorDisabled() {
-        Button b = new Button() {
-            @Override
-            public boolean isConnectorEnabled() {
-                return false;
-            }
-        };
-        UI ui = createUI();
-        b.setParent(ui);
-        addClickListener(b);
-        b.click();
-        Assert.assertFalse("Button with disabled connector fires click events",
-                clicked);
     }
 
     private Button getButton() {

@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
+import org.atmosphere.util.Version;
 
 import com.vaadin.shared.communication.PushConstants;
 import com.vaadin.ui.UI;
@@ -43,6 +44,16 @@ import com.vaadin.ui.UI;
  * @since 7.1
  */
 public class AtmospherePushConnection implements PushConnection {
+
+    public static String getAtmosphereVersion() {
+        try {
+            String v = Version.getRawVersion();
+            assert v != null;
+            return v;
+        } catch (NoClassDefFoundError e) {
+            return null;
+        }
+    }
 
     /**
      * Represents a message that can arrive as multiple fragments.

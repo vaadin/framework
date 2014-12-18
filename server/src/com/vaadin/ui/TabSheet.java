@@ -1621,4 +1621,34 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         }
     }
 
+    /**
+     * Sets whether HTML is allowed in the tab captions.
+     * <p>
+     * If set to true, the captions are rendered in the browser as HTML and the
+     * developer is responsible for ensuring no harmful HTML is used. If set to
+     * false, the content is rendered in the browser as plain text.
+     * <p>
+     * The default is false, i.e. render tab captions as plain text
+     * 
+     * @param tabCaptionsAsHtml
+     *            true if the tab captions are rendered as HTML, false if
+     *            rendered as plain text
+     * @since 7.4
+     */
+    public void setTabCaptionsAsHtml(boolean tabCaptionsAsHtml) {
+        getState().tabCaptionsAsHtml = tabCaptionsAsHtml;
+    }
+
+    /**
+     * Checks whether HTML is allowed in the tab captions.
+     * <p>
+     * The default is false, i.e. render tab captions as plain text
+     * 
+     * @return true if the tab captions are rendered as HTML, false if rendered
+     *         as plain text
+     * @since 7.4
+     */
+    public boolean isTabCaptionsAsHtml() {
+        return getState(false).tabCaptionsAsHtml;
+    }
 }
