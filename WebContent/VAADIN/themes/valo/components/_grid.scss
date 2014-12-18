@@ -87,22 +87,12 @@ $v-grid-cell-padding-horizontal: $v-table-cell-padding-horizontal !default;
     }
   }
 
-  .#{$primary-stylename}-scroller-vertical {
-    border: $v-grid-border;
-    border-left: none;
-
-    &::-webkit-scrollbar-thumb {
-      min-height: 30px;
-    }
+  .#{$primary-stylename}-scroller-vertical::-webkit-scrollbar-thumb {
+    min-height: 30px;
   }
 
-  .#{$primary-stylename}-scroller-horizontal {
-    border: $v-grid-border;
-    border-top: none;
-
-    &::-webkit-scrollbar-thumb {
-      min-width: 30px;
-    }
+  .#{$primary-stylename}-scroller-horizontal::-webkit-scrollbar-thumb {
+    min-width: 30px;
   }
 
 }

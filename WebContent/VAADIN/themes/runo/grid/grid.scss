@@ -4,7 +4,7 @@
 
   .#{$primaryStyleName}-header,
   .#{$primaryStyleName}-footer {
-    > .#{$primaryStyleName}-cell {
+    .#{$primaryStyleName}-cell {
       background-image: url(img/header-bg.png);
       color: #393a3c;
       text-shadow: #fff 0 1px 0;
