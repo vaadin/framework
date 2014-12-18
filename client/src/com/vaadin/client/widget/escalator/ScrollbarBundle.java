@@ -683,7 +683,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * Gets the scrollbar's thickness.
      * <p>
      * This value will differ from the value in the DOM, if the thickness was
-     * set to 0 with {@link #setScrollbarThickness(int)}, as the scrollbar is
+     * set to 0 with {@link #setScrollbarThickness(double)}, as the scrollbar is
      * then treated as "invisible."
      * 
      * @return the scrollbar's thickness in pixels

@@ -35,7 +35,7 @@ public interface RowContainer {
      * An arbitrary pixel height of a row, before any autodetection for the row
      * height has been made.
      * */
-    public static final int INITIAL_DEFAULT_ROW_HEIGHT = 20;
+    public static final double INITIAL_DEFAULT_ROW_HEIGHT = 20;
 
     /**
      * Returns the current {@link EscalatorUpdater} used to render cells.
@@ -143,7 +143,7 @@ public interface RowContainer {
      *             if <code>px &lt; 1</code>
      * @see #getDefaultRowHeight()
      */
-    public void setDefaultRowHeight(int px) throws IllegalArgumentException;
+    public void setDefaultRowHeight(double px) throws IllegalArgumentException;
 
     /**
      * Returns the default height of the rows in this RowContainer.
@@ -155,7 +155,7 @@ public interface RowContainer {
      * @return the default height of the rows in this RowContainer, in pixels
      * @see #setDefaultRowHeight(int)
      */
-    public int getDefaultRowHeight();
+    public double getDefaultRowHeight();
 
     /**
      * Returns the cell object which contains information about the cell the
