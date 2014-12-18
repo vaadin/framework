@@ -34,6 +34,8 @@ import com.vaadin.server.ViewportGenerator;
  * 
  * @see ViewportGenerator
  * 
+ * @since 7.4
+ * 
  * @author Vaadin Ltd
  */
 @Target(ElementType.TYPE)

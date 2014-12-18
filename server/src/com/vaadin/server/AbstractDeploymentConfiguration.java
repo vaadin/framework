@@ -19,6 +19,8 @@ package com.vaadin.server;
  * An abstract base class for DeploymentConfiguration implementations. This
  * class provides default implementation for common config properties.
  * 
+ * @since 7.4
+ * 
  * @author Vaadin Ltd
  */
 public abstract class AbstractDeploymentConfiguration implements

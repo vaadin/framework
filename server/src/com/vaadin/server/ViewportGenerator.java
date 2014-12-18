@@ -22,6 +22,8 @@ import java.io.Serializable;
  * 
  * @see ViewportGenerator
  * 
+ * @since 7.4
+ * 
  * @author Vaadin Ltd
  */
 public interface ViewportGenerator extends Serializable {

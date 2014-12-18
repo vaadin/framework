@@ -897,9 +897,11 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     /**
      * Notify item set change listeners that an item has been added to the
      * container.
-     * 
+     * <p>
      * Unless subclasses specify otherwise, the default notification indicates a
      * full refresh.
+     * 
+     * @since 7.4
      * 
      * @param postion
      *            position of the added item in the view (if visible)
@@ -915,9 +917,11 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     /**
      * Notify item set change listeners that an item has been removed from the
      * container.
-     * 
+     * <p>
      * Unless subclasses specify otherwise, the default notification indicates a
      * full refresh.
+     * 
+     * @since 7.4
      * 
      * @param postion
      *            position of the removed item in the view prior to removal (if
