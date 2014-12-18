@@ -28,6 +28,7 @@ import org.atmosphere.cpr.AtmosphereFramework;
 import org.atmosphere.cpr.AtmosphereInterceptor;
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResponse;
+import org.atmosphere.interceptor.HeartbeatInterceptor;
 
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.ServiceDestroyEvent;
@@ -101,6 +102,12 @@ public class PushRequestHandler implements RequestHandler,
                     ApplicationConfig.PROPERTY_SESSION_SUPPORT, "true");
             atmosphere.addInitParameter(ApplicationConfig.MESSAGE_DELIMITER,
                     String.valueOf(PushConstants.MESSAGE_DELIMITER));
+
+            // Disable heartbeat (it does not emit correct events client side)
+            // https://github.com/Atmosphere/atmosphere-javascript/issues/141
+            atmosphere.addInitParameter(
+                    ApplicationConfig.DISABLE_ATMOSPHEREINTERCEPTORS,
+                    HeartbeatInterceptor.class.getName());
 
             final String bufferSize = String
                     .valueOf(PushConstants.WEBSOCKET_BUFFER_SIZE);
