@@ -367,6 +367,18 @@ public class GridStructureTest extends GridBasicFeaturesTest {
                 "overflow-y"));
     }
 
+    @Test
+    public void testAddRowAboveViewport() {
+        setDebug(true);
+        openTestURL();
+
+        getGridElement().scrollToRow(500);
+        selectMenuPath("Component", "Body rows", "Add first row");
+
+        assertFalse("Error notification was present",
+                isElementPresent(NotificationElement.class));
+    }
+
     private void assertPrimaryStylename(String stylename) {
         assertTrue(getGridElement().getAttribute("class").contains(stylename));
 

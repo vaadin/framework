@@ -502,7 +502,16 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         size += count;
 
-        if (cached.contains(firstRowIndex)) {
+        if (firstRowIndex < cached.getStart()) {
+            Range oldCached = cached;
+            cached = cached.offsetBy(count);
+
+            for (int i = 1; i <= indexToRowMap.size(); i++) {
+                int oldIndex = oldCached.getEnd() - i;
+                int newIndex = cached.getEnd() - i;
+                moveRowFromIndexToIndex(oldIndex, newIndex);
+            }
+        } else if (cached.contains(firstRowIndex)) {
             int oldCacheEnd = cached.getEnd();
             /*
              * We need to invalidate the cache from the inserted row onwards,
@@ -519,18 +528,6 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                 keyToIndexMap.remove(getRowKey(row));
             }
         }
-
-        else if (firstRowIndex < cached.getStart()) {
-            Range oldCached = cached;
-            cached = cached.offsetBy(count);
-
-            for (int i = 0; i < indexToRowMap.size(); i++) {
-                int oldIndex = oldCached.getEnd() - i;
-                int newIndex = cached.getEnd() - i;
-                moveRowFromIndexToIndex(oldIndex, newIndex);
-            }
-        }
-
         assertDataChangeHandlerIsInjected();
         dataChangeHandler.dataAdded(firstRowIndex, count);
         ensureCoverageCheck();
@@ -545,7 +542,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             keyToIndexMap.remove(getRowKey(indexToRowMap.get(newIndex)));
         }
         indexToRowMap.put(newIndex, row);
-        keyToIndexMap.put(getRowKey(row), newIndex);
+        if (row != null) {
+            keyToIndexMap.put(getRowKey(row), newIndex);
+        }
     }
 
     /**
