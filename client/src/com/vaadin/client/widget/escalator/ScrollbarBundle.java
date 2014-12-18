@@ -29,6 +29,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
+import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Util;
 import com.vaadin.client.widget.grid.events.ScrollEvent;
 import com.vaadin.client.widget.grid.events.ScrollHandler;
@@ -42,7 +43,7 @@ import com.vaadin.client.widget.grid.events.ScrollHandler;
  * @see VerticalScrollbarBundle
  * @see HorizontalScrollbarBundle
  */
-public abstract class ScrollbarBundle {
+public abstract class ScrollbarBundle implements DeferredWorker {
 
     private class ScrollEventFirer {
         private final ScheduledCommand fireEventCommand = new ScheduledCommand() {
@@ -336,6 +337,9 @@ public abstract class ScrollbarBundle {
 
     private final ScrollEventFirer scrollEventFirer = new ScrollEventFirer();
 
+    private HandlerRegistration scrollSizeTemporaryScrollHandler;
+    private HandlerRegistration offsetSizeTemporaryScrollHandler;
+
     private ScrollbarBundle() {
         root.appendChild(scrollSizeElement);
     }
@@ -399,10 +403,37 @@ public abstract class ScrollbarBundle {
      * @param px
      *            the length of the scrollbar in pixels
      */
-    public final void setOffsetSize(double px) {
+    public final void setOffsetSize(final double px) {
+
+        /*
+         * This needs to be made step-by-step because IE8 flat-out refuses to
+         * fire a scroll event when the scroll size becomes smaller than the
+         * offset size. All other browser need to suffer alongside.
+         */
+
+        boolean newOffsetSizeIsGreaterThanScrollSize = px > getOffsetSize();
+        boolean offsetSizeBecomesGreaterThanScrollSize = showsScrollHandle()
+                && newOffsetSizeIsGreaterThanScrollSize;
+        if (offsetSizeBecomesGreaterThanScrollSize && getScrollPos() != 0) {
+            // must be a field because Java insists.
+            offsetSizeTemporaryScrollHandler = addScrollHandler(new ScrollHandler() {
+                @Override
+                public void onScroll(ScrollEvent event) {
+                    setOffsetSizeNow(px);
+                    offsetSizeTemporaryScrollHandler.removeHandler();
+                    offsetSizeTemporaryScrollHandler = null;
+                }
+            });
+            setScrollPos(0);
+        } else {
+            setOffsetSizeNow(px);
+        }
+    }
+
+    private void setOffsetSizeNow(double px) {
         internalSetOffsetSize(Math.max(0, truncate(px)));
-        forceScrollbar(showsScrollHandle());
         recalculateMaxScrollPos();
+        forceScrollbar(showsScrollHandle());
         fireVisibilityChangeIfNeeded();
     }
 
@@ -540,10 +571,37 @@ public abstract class ScrollbarBundle {
      *            the number of pixels the scrollbar should be able to scroll
      *            through
      */
-    public final void setScrollSize(double px) {
+    public final void setScrollSize(final double px) {
+
+        /*
+         * This needs to be made step-by-step because IE8 flat-out refuses to
+         * fire a scroll event when the scroll size becomes smaller than the
+         * offset size. All other browser need to suffer alongside.
+         */
+
+        boolean newScrollSizeIsSmallerThanOffsetSize = px <= getOffsetSize();
+        boolean scrollSizeBecomesSmallerThanOffsetSize = showsScrollHandle()
+                && newScrollSizeIsSmallerThanOffsetSize;
+        if (scrollSizeBecomesSmallerThanOffsetSize && getScrollPos() != 0) {
+            // must be a field because Java insists.
+            scrollSizeTemporaryScrollHandler = addScrollHandler(new ScrollHandler() {
+                @Override
+                public void onScroll(ScrollEvent event) {
+                    setScrollSizeNow(px);
+                    scrollSizeTemporaryScrollHandler.removeHandler();
+                    scrollSizeTemporaryScrollHandler = null;
+                }
+            });
+            setScrollPos(0);
+        } else {
+            setScrollSizeNow(px);
+        }
+    }
+
+    private void setScrollSizeNow(double px) {
         internalSetScrollSize(Math.max(0, px));
-        forceScrollbar(showsScrollHandle());
         recalculateMaxScrollPos();
+        forceScrollbar(showsScrollHandle());
         fireVisibilityChangeIfNeeded();
     }
 
@@ -748,5 +806,11 @@ public abstract class ScrollbarBundle {
      */
     public HandlerRegistration addScrollHandler(final ScrollHandler handler) {
         return getHandlerManager().addHandler(ScrollEvent.TYPE, handler);
+    }
+
+    @Override
+    public boolean isWorkPending() {
+        return scrollSizeTemporaryScrollHandler != null
+                || offsetSizeTemporaryScrollHandler != null;
     }
 }
