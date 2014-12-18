@@ -17,7 +17,7 @@ package com.vaadin.client.renderers;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.RendererCellReference;
 
 /**
  * Renders a string as HTML into a cell.
@@ -34,7 +34,7 @@ import com.vaadin.client.widget.escalator.FlyweightCell;
 public class HtmlRenderer implements Renderer<String> {
 
     @Override
-    public void render(FlyweightCell cell, String htmlString) {
+    public void render(RendererCellReference cell, String htmlString) {
         cell.getElement().setInnerSafeHtml(
                 SafeHtmlUtils.fromSafeConstant(htmlString));
     }

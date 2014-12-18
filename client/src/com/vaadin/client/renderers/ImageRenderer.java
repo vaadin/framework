@@ -17,7 +17,7 @@ package com.vaadin.client.renderers;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Image;
-import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.RendererCellReference;
 
 /**
  * A renderer that renders an image into a cell. Click handlers can be added to
@@ -37,7 +37,7 @@ public class ImageRenderer extends ClickableRenderer<String, Image> {
     }
 
     @Override
-    public void render(FlyweightCell cell, String url, Image image) {
+    public void render(RendererCellReference cell, String url, Image image) {
         image.setUrl(url);
     }
 }

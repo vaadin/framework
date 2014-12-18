@@ -24,6 +24,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.RendererCellReference;
 
 /**
  * Base class for renderers that needs initialization and destruction logic
@@ -49,18 +50,21 @@ public abstract class ComplexRenderer<T> implements Renderer<T> {
      *            the method as the cell install will change. See
      *            {@link FlyweightCell}
      */
-    public abstract void init(FlyweightCell cell);
+    public abstract void init(RendererCellReference cell);
 
     /**
      * Called after the cell is deemed to be destroyed and no longer used by the
      * Grid. Called after the cell element is detached from the DOM.
+     * <p>
+     * The row object in the cell reference will be <code>null</code> since the
+     * row might no longer be present in the data source.
      * 
      * @param cell
      *            The cell. Note that the cell is not to be stored outside of
      *            the method as the cell install will change. See
      *            {@link FlyweightCell}
      */
-    public void destroy(FlyweightCell cell) {
+    public void destroy(RendererCellReference cell) {
         // Implement if needed
     }
 
@@ -114,7 +118,7 @@ public abstract class ComplexRenderer<T> implements Renderer<T> {
      *            Has the cell content been loaded from the data source
      * 
      */
-    public void setContentVisible(FlyweightCell cell, boolean hasData) {
+    public void setContentVisible(RendererCellReference cell, boolean hasData) {
         Element cellElement = cell.getElement();
         for (int n = 0; n < cellElement.getChildCount(); n++) {
             Node node = cellElement.getChild(n);

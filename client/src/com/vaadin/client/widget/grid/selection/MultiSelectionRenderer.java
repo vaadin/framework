@@ -35,7 +35,7 @@ import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.vaadin.client.Util;
 import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.widget.escalator.Cell;
-import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.selection.SelectionModel.Multi.Batched;
 import com.vaadin.client.widgets.Grid;
 
@@ -551,18 +551,18 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
     }
 
     @Override
-    public void init(FlyweightCell cell) {
+    public void init(RendererCellReference cell) {
         final InputElement checkbox = InputElement.as(DOM.createInputCheck());
         cell.getElement().removeAllChildren();
         cell.getElement().appendChild(checkbox);
     }
 
     @Override
-    public void render(final FlyweightCell cell, final Boolean data) {
+    public void render(final RendererCellReference cell, final Boolean data) {
         InputElement checkbox = InputElement.as(cell.getElement()
                 .getFirstChildElement());
         checkbox.setChecked(data.booleanValue());
-        checkbox.setPropertyInt(LOGICAL_ROW_PROPERTY_INT, cell.getRow());
+        checkbox.setPropertyInt(LOGICAL_ROW_PROPERTY_INT, cell.getRowIndex());
     }
 
     @Override

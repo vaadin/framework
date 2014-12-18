@@ -16,7 +16,7 @@
 package com.vaadin.client.renderers;
 
 import com.google.gwt.i18n.client.NumberFormat;
-import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.RendererCellReference;
 
 /**
  * Renders a number into a cell using a specific {@link NumberFormat}. By
@@ -65,7 +65,7 @@ public class NumberRenderer implements Renderer<Number> {
     }
 
     @Override
-    public void render(FlyweightCell cell, Number number) {
+    public void render(RendererCellReference cell, Number number) {
         cell.getElement().setInnerText(format.format(number));
     }
 }

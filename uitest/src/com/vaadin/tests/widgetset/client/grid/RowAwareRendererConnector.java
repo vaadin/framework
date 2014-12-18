@@ -26,7 +26,7 @@ import com.vaadin.client.connectors.AbstractRendererConnector;
 import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.widget.escalator.Cell;
-import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
 
@@ -44,7 +44,7 @@ public class RowAwareRendererConnector extends AbstractRendererConnector<Void> {
         }
 
         @Override
-        public void init(FlyweightCell cell) {
+        public void init(RendererCellReference cell) {
             DivElement div = DivElement.as(DOM.createDiv());
             div.setAttribute("style",
                     "border: 1px solid red; background: pink;");
@@ -53,7 +53,7 @@ public class RowAwareRendererConnector extends AbstractRendererConnector<Void> {
         }
 
         @Override
-        public void render(FlyweightCell cell, Void data) {
+        public void render(RendererCellReference cell, Void data) {
             // NOOP
         }
 

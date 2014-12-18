@@ -82,6 +82,7 @@ import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.EditorHandler.EditorRequest;
 import com.vaadin.client.widget.grid.EditorHandler.EditorRequest.RequestCallback;
 import com.vaadin.client.widget.grid.GridUtil;
+import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
 import com.vaadin.client.widget.grid.events.AbstractGridKeyEventHandler;
@@ -2507,7 +2508,7 @@ public class Grid<T> extends ResizeComposite implements
                     + "A more suitable renderer should be set using the setRenderer() method.";
 
             @Override
-            public void render(FlyweightCell cell, Object data) {
+            public void render(RendererCellReference cell, Object data) {
                 if (!warned) {
                     getLogger().warning(
                             Column.this.toString() + ": "
@@ -2979,11 +2980,16 @@ public class Grid<T> extends ResizeComposite implements
 
         @Override
         public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
+            int rowIndex = row.getRow();
+            rowReference.set(rowIndex, getDataSource().getRow(rowIndex));
             for (FlyweightCell cell : cellsToAttach) {
                 Renderer<?> renderer = findRenderer(cell);
                 if (renderer instanceof ComplexRenderer) {
                     try {
-                        ((ComplexRenderer<?>) renderer).init(cell);
+                        rendererCellReference.set(cell,
+                                getColumn(cell.getColumn()));
+                        ((ComplexRenderer<?>) renderer)
+                                .init(rendererCellReference);
                     } catch (RuntimeException e) {
                         getLogger().log(
                                 Level.SEVERE,
@@ -3104,27 +3110,30 @@ public class Grid<T> extends ResizeComposite implements
                 Renderer renderer = column.getRenderer();
 
                 try {
+                    rendererCellReference.set(cell, column);
                     if (renderer instanceof ComplexRenderer) {
                         // Hide cell content if needed
                         ComplexRenderer clxRenderer = (ComplexRenderer) renderer;
                         if (hasData) {
                             if (!usedToHaveData) {
                                 // Prepare cell for rendering
-                                clxRenderer.setContentVisible(cell, true);
+                                clxRenderer.setContentVisible(
+                                        rendererCellReference, true);
                             }
 
                             Object value = column.getValue(rowData);
-                            clxRenderer.render(cell, value);
+                            clxRenderer.render(rendererCellReference, value);
 
                         } else {
                             // Prepare cell for no data
-                            clxRenderer.setContentVisible(cell, false);
+                            clxRenderer.setContentVisible(
+                                    rendererCellReference, false);
                         }
 
                     } else if (hasData) {
                         // Simple renderers just render
                         Object value = column.getValue(rowData);
-                        renderer.render(cell, value);
+                        renderer.render(rendererCellReference, value);
 
                     } else {
                         // Clear cell if there is no data
@@ -3167,11 +3176,18 @@ public class Grid<T> extends ResizeComposite implements
 
         @Override
         public void postDetach(Row row, Iterable<FlyweightCell> detachedCells) {
+            int rowIndex = row.getRow();
+            // Passing null row data since it might not exist in the data source
+            // any more
+            rowReference.set(rowIndex, null);
             for (FlyweightCell cell : detachedCells) {
                 Renderer renderer = findRenderer(cell);
                 if (renderer instanceof ComplexRenderer) {
                     try {
-                        ((ComplexRenderer) renderer).destroy(cell);
+                        rendererCellReference.set(cell,
+                                getColumn(cell.getColumn()));
+                        ((ComplexRenderer) renderer)
+                                .destroy(rendererCellReference);
                     } catch (RuntimeException e) {
                         getLogger().log(
                                 Level.SEVERE,
@@ -4604,6 +4620,8 @@ public class Grid<T> extends ResizeComposite implements
     private RowStyleGenerator<T> rowStyleGenerator;
     private RowReference<T> rowReference = new RowReference<T>(this);
     private CellReference<T> cellReference = new CellReference<T>(rowReference);
+    private RendererCellReference rendererCellReference = new RendererCellReference(
+            (RowReference<Object>) rowReference);
 
     private boolean handleHeaderDefaultRowEvent(Event event,
             RowContainer container, final Cell cell) {

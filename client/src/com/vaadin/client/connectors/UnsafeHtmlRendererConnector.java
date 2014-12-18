@@ -16,7 +16,7 @@
 package com.vaadin.client.connectors;
 
 import com.vaadin.client.renderers.Renderer;
-import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.ui.Connect;
 
 /**
@@ -31,7 +31,7 @@ public class UnsafeHtmlRendererConnector extends
 
     public static class UnsafeHtmlRenderer implements Renderer<String> {
         @Override
-        public void render(FlyweightCell cell, String data) {
+        public void render(RendererCellReference cell, String data) {
             cell.getElement().setInnerHTML(data);
         }
     }

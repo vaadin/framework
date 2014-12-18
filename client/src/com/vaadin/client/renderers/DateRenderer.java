@@ -20,7 +20,7 @@ import java.util.Date;
 import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.i18n.shared.DateTimeFormat.PredefinedFormat;
-import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.RendererCellReference;
 
 /**
  * A renderer for rendering dates into cells
@@ -50,7 +50,7 @@ public class DateRenderer implements Renderer<Date> {
     }
 
     @Override
-    public void render(FlyweightCell cell, Date date) {
+    public void render(RendererCellReference cell, Date date) {
         String dateStr = format.format(date, timeZone);
         cell.getElement().setInnerText(dateStr);
     }

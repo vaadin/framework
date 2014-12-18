@@ -17,7 +17,7 @@ package com.vaadin.client.renderers;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.Button;
-import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.RendererCellReference;
 
 /**
  * A Renderer that displays buttons with textual captions. The values of the
@@ -37,7 +37,7 @@ public class ButtonRenderer extends ClickableRenderer<String, Button> {
     }
 
     @Override
-    public void render(FlyweightCell cell, String text, Button button) {
+    public void render(RendererCellReference cell, String text, Button button) {
         button.setText(text);
     }
 }
