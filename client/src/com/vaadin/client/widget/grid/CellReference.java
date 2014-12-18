@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.widget.grid;
 
+import com.google.gwt.dom.client.TableCellElement;
 import com.vaadin.client.widgets.Grid;
 
 /**
@@ -40,8 +41,6 @@ public class CellReference<T> {
     /**
      * Sets the identifying information for this cell.
      * 
-     * @param rowReference
-     *            a reference to the row that contains this cell
      * @param columnIndex
      *            the index of the column
      * @param column
@@ -107,6 +106,15 @@ public class CellReference<T> {
     }
 
     /**
+     * Get the element of the cell.
+     * 
+     * @return the element of the cell
+     */
+    public TableCellElement getElement() {
+        return rowReference.getElement().getCells().getItem(columnIndex);
+    }
+
+    /**
      * Gets the RowReference for this CellReference.
      * 
      * @return the row reference
@@ -114,4 +122,5 @@ public class CellReference<T> {
     protected RowReference<T> getRowReference() {
         return rowReference;
     }
+
 }

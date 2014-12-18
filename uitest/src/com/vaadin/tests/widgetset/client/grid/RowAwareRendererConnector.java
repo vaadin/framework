@@ -25,7 +25,7 @@ import com.google.gwt.user.client.DOM;
 import com.vaadin.client.connectors.AbstractRendererConnector;
 import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.renderers.Renderer;
-import com.vaadin.client.widget.escalator.Cell;
+import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
@@ -58,8 +58,8 @@ public class RowAwareRendererConnector extends AbstractRendererConnector<Void> {
         }
 
         @Override
-        public boolean onBrowserEvent(Cell cell, NativeEvent event) {
-            int row = cell.getRow();
+        public boolean onBrowserEvent(CellReference<?> cell, NativeEvent event) {
+            int row = cell.getRowIndex();
             String key = getRowKey(row);
             getRpcProxy(RowAwareRendererRpc.class).clicky(key);
             cell.getElement().setInnerText("row: " + row + ", key: " + key);

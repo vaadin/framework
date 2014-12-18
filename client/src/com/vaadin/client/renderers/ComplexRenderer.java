@@ -24,6 +24,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
 
 /**
@@ -99,7 +100,7 @@ public abstract class ComplexRenderer<T> implements Renderer<T> {
      *            The original DOM event
      * @return true if event should not be handled by grid
      */
-    public boolean onBrowserEvent(Cell cell, NativeEvent event) {
+    public boolean onBrowserEvent(CellReference<?> cell, NativeEvent event) {
         return false;
     }
 
@@ -142,7 +143,7 @@ public abstract class ComplexRenderer<T> implements Renderer<T> {
      * @return <code>true</code> if event was handled and should not be
      *         interpreted as a generic gesture by Grid.
      */
-    public boolean onActivate(Cell cell) {
+    public boolean onActivate(CellReference<?> cell) {
         return false;
     }
 

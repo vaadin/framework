@@ -1612,8 +1612,8 @@ public class Grid<T> extends ResizeComposite implements
          * @param cell
          *            a cell object
          */
-        public void setCellFocus(Cell cell) {
-            setCellFocus(cell.getRow(), cell.getColumn(),
+        public void setCellFocus(CellReference<T> cell) {
+            setCellFocus(cell.getRowIndex(), cell.getColumnIndex(),
                     escalator.findRowContainer(cell.getElement()));
         }
 
@@ -1629,7 +1629,7 @@ public class Grid<T> extends ResizeComposite implements
         /**
          * Handle events that can move the cell focus.
          */
-        public void handleNavigationEvent(Event event, Cell cell) {
+        public void handleNavigationEvent(Event event, CellReference<T> cell) {
             if (event.getType().equals(BrowserEvents.CLICK)) {
                 setCellFocus(cell);
                 // Grid should have focus when clicked.
@@ -2984,7 +2984,8 @@ public class Grid<T> extends ResizeComposite implements
         @Override
         public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
             int rowIndex = row.getRow();
-            rowReference.set(rowIndex, getDataSource().getRow(rowIndex));
+            rowReference.set(rowIndex, getDataSource().getRow(rowIndex),
+                    row.getElement());
             for (FlyweightCell cell : cellsToAttach) {
                 Renderer<?> renderer = findRenderer(cell);
                 if (renderer instanceof ComplexRenderer) {
@@ -3056,7 +3057,7 @@ public class Grid<T> extends ResizeComposite implements
             boolean isEvenIndex = (row.getRow() % 2 == 0);
             setStyleName(rowElement, rowStripeStyleName, !isEvenIndex);
 
-            rowReference.set(rowIndex, rowData);
+            rowReference.set(rowIndex, rowData, rowElement);
 
             if (hasData) {
                 setStyleName(rowElement, rowSelectedStyleName,
@@ -3182,7 +3183,7 @@ public class Grid<T> extends ResizeComposite implements
             int rowIndex = row.getRow();
             // Passing null row data since it might not exist in the data source
             // any more
-            rowReference.set(rowIndex, null);
+            rowReference.set(rowIndex, null, row.getElement());
             for (FlyweightCell cell : detachedCells) {
                 Renderer renderer = findRenderer(cell);
                 if (renderer instanceof ComplexRenderer) {
@@ -4458,7 +4459,7 @@ public class Grid<T> extends ResizeComposite implements
         eventCell.set(cell);
 
         // Editor can steal focus from Grid and is still handled
-        if (handleEditorEvent(event, container, cell)) {
+        if (handleEditorEvent(event, container)) {
             return;
         }
 
@@ -4472,7 +4473,7 @@ public class Grid<T> extends ResizeComposite implements
                 return;
             }
 
-            if (handleRendererEvent(event, container, cell)) {
+            if (handleRendererEvent(event, container)) {
                 return;
             }
 
@@ -4480,7 +4481,7 @@ public class Grid<T> extends ResizeComposite implements
                 return;
             }
 
-            if (handleCellFocusEvent(event, container, cell)) {
+            if (handleCellFocusEvent(event, container)) {
                 return;
             }
         }
@@ -4506,8 +4507,7 @@ public class Grid<T> extends ResizeComposite implements
         return w != null;
     }
 
-    private boolean handleEditorEvent(Event event, RowContainer container,
-            Cell cell) {
+    private boolean handleEditorEvent(Event event, RowContainer container) {
 
         if (editor.getState() != Editor.State.INACTIVE) {
             if (event.getTypeInt() == Event.ONKEYDOWN
@@ -4519,10 +4519,8 @@ public class Grid<T> extends ResizeComposite implements
 
         if (container == escalator.getBody() && editor.isEnabled()) {
             if (event.getTypeInt() == Event.ONDBLCLICK) {
-                if (cell != null) {
-                    editor.editRow(cell.getRow());
-                    return true;
-                }
+                editor.editRow(eventCell.getRowIndex());
+                return true;
             } else if (event.getTypeInt() == Event.ONKEYDOWN
                     && event.getKeyCode() == Editor.KEYCODE_SHOW) {
                 editor.editRow(cellFocusHandler.rowWithFocus);
@@ -4532,8 +4530,7 @@ public class Grid<T> extends ResizeComposite implements
         return false;
     }
 
-    private boolean handleRendererEvent(Event event, RowContainer container,
-            Cell cell) {
+    private boolean handleRendererEvent(Event event, RowContainer container) {
 
         if (container == escalator.getBody()) {
             Column<?, T> gridColumn = eventCell.getColumn();
@@ -4546,13 +4543,14 @@ public class Grid<T> extends ResizeComposite implements
                 ComplexRenderer<?> cplxRenderer = (ComplexRenderer<?>) gridColumn
                         .getRenderer();
                 if (cplxRenderer.getConsumedEvents().contains(event.getType())) {
-                    if (cplxRenderer.onBrowserEvent(cell, event)) {
+                    if (cplxRenderer.onBrowserEvent(eventCell, event)) {
                         return true;
                     }
                 }
 
                 // Calls onActivate if KeyDown and Enter or double click
-                if ((enterKey || doubleClick) && cplxRenderer.onActivate(cell)) {
+                if ((enterKey || doubleClick)
+                        && cplxRenderer.onActivate(eventCell)) {
                     return true;
                 }
             }
@@ -4560,11 +4558,10 @@ public class Grid<T> extends ResizeComposite implements
         return false;
     }
 
-    private boolean handleCellFocusEvent(Event event, RowContainer container,
-            Cell cell) {
+    private boolean handleCellFocusEvent(Event event, RowContainer container) {
         Collection<String> navigation = cellFocusHandler.getNavigationEvents();
         if (navigation.contains(event.getType())) {
-            cellFocusHandler.handleNavigationEvent(event, cell);
+            cellFocusHandler.handleNavigationEvent(event, eventCell);
         }
         return false;
     }

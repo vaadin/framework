@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.widget.grid;
 
+import com.google.gwt.dom.client.TableCellElement;
 import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widgets.Grid;
 
@@ -32,6 +33,7 @@ import com.vaadin.client.widgets.Grid;
 public class EventCellReference<T> extends CellReference<T> {
 
     private Grid<T> grid;
+    private TableCellElement element;
 
     public EventCellReference(Grid<T> grid) {
         super(new RowReference<T>(grid));
@@ -47,8 +49,16 @@ public class EventCellReference<T> extends CellReference<T> {
     public void set(Cell targetCell) {
         int row = targetCell.getRow();
         int column = targetCell.getColumn();
-        getRowReference().set(row, grid.getDataSource().getRow(row));
+        // At least for now we don't need to have the actual TableRowElement
+        // available.
+        getRowReference().set(row, grid.getDataSource().getRow(row), null);
         set(column, grid.getColumn(column));
+
+        this.element = targetCell.getElement();
     }
 
+    @Override
+    public TableCellElement getElement() {
+        return element;
+    }
 }

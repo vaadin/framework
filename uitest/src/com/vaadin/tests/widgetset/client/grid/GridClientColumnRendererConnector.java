@@ -38,7 +38,7 @@ import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.client.widget.escalator.Cell;
+import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.datasources.ListDataSource;
 import com.vaadin.client.widget.grid.datasources.ListSorter;
@@ -335,7 +335,7 @@ public class GridClientColumnRendererConnector extends
                 }
 
                 @Override
-                public boolean onActivate(Cell cell) {
+                public boolean onActivate(CellReference<?> cell) {
                     cell.getElement().setInnerHTML("<span>Activated!</span>");
                     return true;
                 }

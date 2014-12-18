@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.widget.grid;
 
+import com.google.gwt.dom.client.TableRowElement;
 import com.vaadin.client.widgets.Grid;
 
 /**
@@ -34,6 +35,8 @@ public class RowReference<T> {
     private int rowIndex;
     private T row;
 
+    private TableRowElement element;
+
     /**
      * Creates a new row reference for the given grid.
      * 
@@ -51,10 +54,13 @@ public class RowReference<T> {
      *            the index of the row
      * @param row
      *            the row object
+     * @param elemenet
+     *            the element of the row
      */
-    public void set(int rowIndex, T row) {
+    public void set(int rowIndex, T row, TableRowElement element) {
         this.rowIndex = rowIndex;
         this.row = row;
+        this.element = element;
     }
 
     /**
@@ -82,6 +88,15 @@ public class RowReference<T> {
      */
     public T getRow() {
         return row;
+    }
+
+    /**
+     * Gets the table row element of the row.
+     * 
+     * @return the element of the row
+     */
+    public TableRowElement getElement() {
+        return element;
     }
 
 }
