@@ -87,48 +87,34 @@ public class DesignAttributeHandler implements Serializable {
     }
 
     /**
-     * Assigns the specified design attribute to the given component. If the
-     * attribute is not present, (value is null) the corresponding property is
-     * got from the <code>defaultInstance</code>
+     * Assigns the specified design attribute to the given component.
      * 
-     * @param component
-     *            the component to which the attribute should be set
+     * @param target
+     *            the target to which the attribute should be set
      * @param attribute
-     *            the attribute to be set
-     * @param attributes
-     *            the attribute map. If the attributes does not contain the
-     *            requested attribute, the value is retrieved from the
-     *            <code> defaultInstance</code>
+     *            the name of the attribute to be set
+     * @param value
+     *            the string value of the attribute
      * @return true on success
      */
-    public static boolean readAttribute(Component component, String attribute,
-            Attributes attributes) {
-        String value = null;
-        if (component == null || attribute == null || attributes == null) {
+    public static boolean assignValue(Object target, String attribute,
+            String value) {
+        if (target == null || attribute == null || value == null) {
             throw new IllegalArgumentException(
                     "Parameters with null value not allowed");
         }
-        if (attributes.hasKey(attribute)) {
-            value = attributes.get(attribute);
-        }
         boolean success = false;
         try {
-            Method setter = findSetterForAttribute(component.getClass(),
-                    attribute);
+            Method setter = findSetterForAttribute(target.getClass(), attribute);
             if (setter == null) {
                 // if we don't have the setter, there is no point in continuing
                 success = false;
-            } else if (value != null) {
+            } else {
                 // we have a value from design attributes, let's use that
                 Object param = fromAttributeValue(
                         setter.getParameterTypes()[0], value);
-                setter.invoke(component, param);
+                setter.invoke(target, param);
                 success = true;
-            } else {
-                getLogger().log(
-                        Level.WARNING,
-                        "Attribute value for " + attribute
-                                + " is null, this should not happen");
             }
         } catch (Exception e) {
             getLogger().log(Level.WARNING,
