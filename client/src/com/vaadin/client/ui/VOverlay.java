@@ -1019,6 +1019,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      *            enable/disable animate-in animation
      * @param animateOut
      *            enable/disable animate-out animation
+     * @since 7.3.7
      */
     public void hide(final boolean autoClosed, final boolean animateIn,
             final boolean animateOut) {

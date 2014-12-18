@@ -187,6 +187,9 @@ public class ReflectTools implements Serializable {
         field.set(object, value);
     }
 
+    /**
+     * @since 7.4
+     */
     public static Class<?> convertPrimitiveType(Class<?> type) {
         // Gets the return type from get method
         if (type.isPrimitive()) {

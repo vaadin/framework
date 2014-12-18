@@ -120,7 +120,7 @@ public interface Field<T> extends Component, BufferedValidatable, Property<T>,
      * In general, "empty" state is same as null. As an exception, TextField
      * also treats empty string as "empty".
      * 
-     * @since
+     * @since 7.4
      * @return true if the field is empty, false otherwise
      */
     public boolean isEmpty();
@@ -131,7 +131,7 @@ public interface Field<T> extends Component, BufferedValidatable, Property<T>,
      * The field value is typically reset to the initial value of the field.
      * Calling {@link #isEmpty()} on a cleared field must always returns true.
      * 
-     * @since
+     * @since 7.4
      */
     public void clear();
 

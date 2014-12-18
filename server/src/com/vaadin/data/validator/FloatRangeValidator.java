@@ -19,7 +19,7 @@ package com.vaadin.data.validator;
  * Validator for validating that a {@link Float} is inside a given range.
  * 
  * @author Vaadin Ltd.
- * @since
+ * @since 7.4
  */
 @SuppressWarnings("serial")
 public class FloatRangeValidator extends RangeValidator<Float> {

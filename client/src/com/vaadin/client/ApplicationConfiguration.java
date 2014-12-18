@@ -491,6 +491,8 @@ public class ApplicationConfiguration implements EntryPoint {
     /**
      * Return Atmosphere version.
      * 
+     * @since 7.4
+     * 
      * @return Atmosphere version.
      */
     public String getAtmosphereVersion() {
@@ -499,6 +501,8 @@ public class ApplicationConfiguration implements EntryPoint {
 
     /**
      * Return Atmosphere JS version.
+     * 
+     * @since 7.4
      * 
      * @return Atmosphere JS version.
      */

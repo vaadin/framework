@@ -18,9 +18,13 @@ package com.vaadin.ui;
 import java.util.Collections;
 import java.util.Iterator;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
 
 /**
  * Abstract base class for component containers that have only one child
@@ -274,4 +278,50 @@ public abstract class AbstractSingleComponentContainer extends
         repaintChangedChildTree(dirtyChild, childrenMayBecomeUndefined, true);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        // process default attributes
+        super.readDesign(design, designContext);
+        // handle child element, checking that the design specifies at most one
+        // child
+        int childCount = design.children().size();
+        if (childCount > 1) {
+            throw new DesignException("The container of type "
+                    + getClass().toString()
+                    + " can have only one child component.");
+        } else if (childCount == 1) {
+            Element childElement = design.children().get(0);
+            Component newChild = designContext.readDesign(childElement);
+            setContent(newChild);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        // write default attributes (also clears children and attributes)
+        super.writeDesign(design, designContext);
+        AbstractSingleComponentContainer def = designContext
+                .getDefaultInstance(this);
+        if (!designContext.shouldWriteChildren(this, def)) {
+            return;
+        }
+        // handle child component
+        Component child = getContent();
+        if (child != null) {
+            Element childNode = designContext.createElement(child);
+            design.appendChild(childNode);
+        }
+    }
 }

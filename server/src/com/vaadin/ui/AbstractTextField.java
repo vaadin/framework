@@ -16,7 +16,11 @@
 
 package com.vaadin.ui;
 
+import java.util.Collection;
 import java.util.Map;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -31,6 +35,8 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
 import com.vaadin.shared.ui.textfield.TextFieldConstants;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 public abstract class AbstractTextField extends AbstractField<String> implements
         BlurNotifier, FocusNotifier, TextChangeNotifier, LegacyComponent {
@@ -755,6 +761,53 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     @Deprecated
     public void removeListener(BlurListener listener) {
         removeBlurListener(listener);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#readDesign(org.jsoup.nodes.Element ,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        Attributes attr = design.attributes();
+        if (attr.hasKey("maxlength")) {
+            setMaxLength(DesignAttributeHandler.readAttribute("maxlength",
+                    attr, Integer.class));
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#getCustomAttributes()
+     */
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> customAttributes = super.getCustomAttributes();
+        customAttributes.add("maxlength");
+        customAttributes.add("max-length"); // to prevent this appearing in
+                                            // output
+        customAttributes.add("cursor-position");
+        return customAttributes;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#writeDesign(org.jsoup.nodes.Element,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        AbstractTextField def = (AbstractTextField) designContext
+                .getDefaultInstance(this);
+        Attributes attr = design.attributes();
+        DesignAttributeHandler.writeAttribute("maxlength", attr,
+                getMaxLength(), def.getMaxLength(), Integer.class);
     }
 
 }

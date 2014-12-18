@@ -1,0 +1,14 @@
+<head>
+  <meta name="package-mapping" content="x:com.vaadin.tests.declarative"/>
+</head>
+<body>
+	<v-vertical-layout size-full margin="true" spacing>
+	    <v-horizontal-layout spacing margin width-full>   
+	        <v-label size-auto>POTUS Database</v-label>
+	        <v-button :expand _id="addNew">Add new</v-button>
+	    </v-horizontal-layout>
+	    <v-table _id="potusList" :expand selectable size-full/>
+	    <x-potus-form _id="potusForm" />
+	</v-vertical-layout>
+</body>
+

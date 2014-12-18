@@ -979,7 +979,9 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * Notify item set change listeners that an item has been added to the
      * container.
      * 
-     * @param postion
+     * @since 7.4
+     * 
+     * @param position
      *            position of the added item in the view
      * @param itemId
      *            id of the added item
@@ -1012,9 +1014,11 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * Notify item set change listeners that an item has been removed from the
      * container.
      * 
-     * @param position
-     *            position of the removed item in the view prior to removal
+     * @since 7.4
      * 
+     * @param position
+     *            position of the removed item in the view prior to removal (if
+     *            was visible)
      * @param itemId
      *            id of the removed item, of type {@link Object} to satisfy
      *            {@link Container#removeItem(Object)} API

@@ -37,6 +37,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
+import com.vaadin.annotations.Viewport;
+import com.vaadin.annotations.ViewportGeneratorClass;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.PushMode;
@@ -48,10 +50,10 @@ import elemental.json.JsonObject;
 import elemental.json.impl.JsonUtil;
 
 /**
- *
+ * 
  * @author Vaadin Ltd
  * @since 7.0.0
- *
+ * 
  * @deprecated As of 7.0. Will likely change or be removed in a future version
  */
 @Deprecated
@@ -287,6 +289,40 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
                 .attr("content", "IE=11;chrome=1");
 
+        Class<? extends UI> uiClass = context.getUIClass();
+
+        String viewportContent = null;
+        Viewport viewportAnnotation = uiClass.getAnnotation(Viewport.class);
+        ViewportGeneratorClass viewportGeneratorClassAnnotation = uiClass
+                .getAnnotation(ViewportGeneratorClass.class);
+        if (viewportAnnotation != null
+                && viewportGeneratorClassAnnotation != null) {
+            throw new IllegalStateException(uiClass.getCanonicalName()
+                    + " cannot be annotated with both @"
+                    + Viewport.class.getSimpleName() + " and @"
+                    + ViewportGeneratorClass.class.getSimpleName());
+        }
+
+        if (viewportAnnotation != null) {
+            viewportContent = viewportAnnotation.value();
+        } else if (viewportGeneratorClassAnnotation != null) {
+            Class<? extends ViewportGenerator> viewportGeneratorClass = viewportGeneratorClassAnnotation
+                    .value();
+            try {
+                viewportContent = viewportGeneratorClass.newInstance()
+                        .getViewport(context.getRequest());
+            } catch (Exception e) {
+                throw new RuntimeException(
+                        "Error processing viewport generator "
+                                + viewportGeneratorClass.getCanonicalName(), e);
+            }
+        }
+
+        if (viewportContent != null) {
+            head.appendElement("meta").attr("name", "viewport")
+                    .attr("content", viewportContent);
+        }
+
         String title = response.getUIProvider().getPageTitle(
                 new UICreateEvent(context.getRequest(), context.getUIClass()));
         if (title != null) {
@@ -339,9 +375,9 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
      * Override this method if you want to add some custom html around around
      * the div element into which the actual Vaadin application will be
      * rendered.
-     *
+     * 
      * @param context
-     *
+     * 
      * @throws IOException
      */
     private void setupMainDiv(BootstrapContext context) throws IOException {
@@ -553,13 +589,13 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * Get the URI for the application theme.
-     *
+     * 
      * A portal-wide default theme is fetched from the portal shared resource
      * directory (if any), other themes from the portlet.
-     *
+     * 
      * @param context
      * @param themeName
-     *
+     * 
      * @return
      */
     public String getThemeUri(BootstrapContext context, String themeName) {
@@ -572,7 +608,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * Override if required
-     *
+     * 
      * @param context
      * @return
      */
@@ -584,7 +620,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * Don not override.
-     *
+     * 
      * @param context
      * @return
      */

@@ -36,5 +36,4 @@ public class ColorPickerState extends AbstractComponentState {
 
     public boolean showDefaultCaption;
 
-    public boolean htmlContentAllowed;
 }

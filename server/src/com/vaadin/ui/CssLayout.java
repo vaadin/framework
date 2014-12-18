@@ -18,6 +18,8 @@ package com.vaadin.ui;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
@@ -26,6 +28,7 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.csslayout.CssLayoutServerRpc;
 import com.vaadin.shared.ui.csslayout.CssLayoutState;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * CssLayout is a layout component that can be used in browser environment only.
@@ -352,6 +355,45 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
      */
     public Component getComponent(int index) throws IndexOutOfBoundsException {
         return components.get(index);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        // process default attributes
+        super.readDesign(design, designContext);
+        // handle children
+        for (Element childComponent : design.children()) {
+            Component newChild = designContext.readDesign(childComponent);
+            addComponent(newChild);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
+     * , com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        // write default attributes
+        super.writeDesign(design, designContext);
+        CssLayout def = designContext.getDefaultInstance(this);
+        // handle children
+        if (!designContext.shouldWriteChildren(this, def)) {
+            return;
+        }
+        Element designElement = design;
+        for (Component child : this) {
+            Element childNode = designContext.createElement(child);
+            designElement.appendChild(childNode);
+        }
     }
 
 }

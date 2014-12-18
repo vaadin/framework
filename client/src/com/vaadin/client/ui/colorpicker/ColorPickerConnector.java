@@ -55,7 +55,7 @@ public class ColorPickerConnector extends AbstractColorPickerConnector {
 
     @Override
     protected void setCaption(String caption) {
-        if (getState().htmlContentAllowed) {
+        if (getState().captionAsHtml) {
             getWidget().setHtml(caption);
         } else {
             getWidget().setText(caption);

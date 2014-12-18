@@ -19,7 +19,7 @@ package com.vaadin.data.validator;
  * Validator for validating that an {@link Short} is inside a given range.
  * 
  * @author Vaadin Ltd.
- * @since
+ * @since 7.4
  */
 @SuppressWarnings("serial")
 public class ShortRangeValidator extends RangeValidator<Short> {

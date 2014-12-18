@@ -26,6 +26,7 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.VCaption;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.VForm;
@@ -102,7 +103,7 @@ public class FormConnector extends AbstractComponentContainerConnector
 
         boolean legendEmpty = true;
         if (getState().caption != null) {
-            getWidget().caption.setInnerText(getState().caption);
+            VCaption.setCaptionText(getWidget().caption, getState());
             legendEmpty = false;
         } else {
             getWidget().caption.setInnerText("");

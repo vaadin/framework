@@ -130,6 +130,8 @@ public class BrowserWindowOpener extends AbstractExtension {
      * be opened in a new browser window/tab when the extended component is
      * clicked.
      * 
+     * @since 7.4
+     * 
      * @param url
      *            URL to open
      */
@@ -142,6 +144,8 @@ public class BrowserWindowOpener extends AbstractExtension {
      * {@code resource} will be opened in a new browser window/tab when the
      * extended component is clicked.
      * 
+     * @since 7.4
+     * 
      * @param resource
      *            resource to open
      */
@@ -151,6 +155,8 @@ public class BrowserWindowOpener extends AbstractExtension {
 
     /**
      * Returns the resource for this instance.
+     * 
+     * @since 7.4
      * 
      * @return resource to open browser window
      */
@@ -162,6 +168,8 @@ public class BrowserWindowOpener extends AbstractExtension {
      * Returns the URL for this BrowserWindowOpener instance. Returns
      * {@code null} if this instance is not URL resource based (a non URL based
      * resource has been set for it).
+     * 
+     * @since 7.4
      * 
      * @return URL to open in the new browser window/tab when the extended
      *         component is clicked

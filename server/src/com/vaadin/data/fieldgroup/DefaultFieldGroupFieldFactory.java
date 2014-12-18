@@ -52,6 +52,13 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
     protected DefaultFieldGroupFieldFactory() {
     }
 
+    /**
+     * Gets the singleton instance.
+     * 
+     * @since 7.4
+     * 
+     * @return the singleton instance
+     */
     public static DefaultFieldGroupFieldFactory get() {
         return INSTANCE;
     }

@@ -16,6 +16,11 @@
 
 package com.vaadin.ui;
 
+import java.util.Collection;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+
 import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -25,6 +30,8 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 public class CheckBox extends AbstractField<Boolean> {
 
@@ -203,4 +210,58 @@ public class CheckBox extends AbstractField<Boolean> {
         Boolean value = getValue();
         return (null == value) ? false : value.booleanValue();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#readDesign(org.jsoup.nodes.Element,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        if (design.hasAttr("checked")) {
+            this.setValue(DesignAttributeHandler.readAttribute("checked",
+                    design.attributes(), Boolean.class));
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#getCustomAttributes()
+     */
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> attributes = super.getCustomAttributes();
+        attributes.add("checked");
+        return attributes;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.AbstractField#writeDesign(org.jsoup.nodes.Element,
+     * com.vaadin.ui.declarative.DesignContext)
+     */
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        CheckBox def = (CheckBox) designContext.getDefaultInstance(this);
+        Attributes attr = design.attributes();
+        DesignAttributeHandler.writeAttribute("checked", attr, getValue(),
+                def.getValue(), Boolean.class);
+    }
+
+    @Override
+    public void clear() {
+        setValue(Boolean.FALSE);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return getValue() == null || getValue().equals(Boolean.FALSE);
+
+    }
+
 }

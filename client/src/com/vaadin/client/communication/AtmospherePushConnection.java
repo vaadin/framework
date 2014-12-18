@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window.Location;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.CommunicationErrorHandler;
@@ -147,6 +148,10 @@ public class AtmospherePushConnection implements PushConnection {
         this.errorHandler = errorHandler;
 
         config = createConfig();
+        String debugParameter = Location.getParameter("debug");
+        if ("push".equals(debugParameter)) {
+            config.setStringValue("logLevel", "debug");
+        }
         for (String param : pushConfiguration.parameters.keySet()) {
             config.setStringValue(param,
                     pushConfiguration.parameters.get(param));

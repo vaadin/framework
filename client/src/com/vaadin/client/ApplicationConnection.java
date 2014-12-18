@@ -854,6 +854,7 @@ public class ApplicationConnection implements HasHandlers {
      *            The contents of the request to send
      * @param retry
      *            true when a status code 0 should be retried
+     * @since 7.3.7
      */
     protected void doUidlRequest(final String uri, final JsonObject payload,
             final boolean retry) {

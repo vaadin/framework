@@ -28,6 +28,7 @@ import org.atmosphere.cpr.AtmosphereFramework;
 import org.atmosphere.cpr.AtmosphereInterceptor;
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResponse;
+import org.atmosphere.interceptor.HeartbeatInterceptor;
 
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.ServiceDestroyEvent;
@@ -56,12 +57,6 @@ public class PushRequestHandler implements RequestHandler,
 
     private AtmosphereFramework atmosphere;
     private PushHandler pushHandler;
-
-    /**
-     * Atmosphere 2.x has a race condition when AtmosphereFramework init(config)
-     * is run from two threads at once. See http://dev.vaadin.com/ticket/13528
-     */
-    private static Object atmosphereInitRaceConditionWorkaroundLock = new Object();
 
     public PushRequestHandler(VaadinServletService service)
             throws ServiceException {
@@ -92,42 +87,46 @@ public class PushRequestHandler implements RequestHandler,
             }
         });
 
-        synchronized (atmosphereInitRaceConditionWorkaroundLock) {
-            pushHandler = new PushHandler(service);
-            atmosphere.addAtmosphereHandler("/*", pushHandler.handler);
-            atmosphere.addInitParameter(ApplicationConfig.BROADCASTER_CACHE,
-                    UUIDBroadcasterCache.class.getName());
-            atmosphere.addInitParameter(
-                    ApplicationConfig.PROPERTY_SESSION_SUPPORT, "true");
-            atmosphere.addInitParameter(ApplicationConfig.MESSAGE_DELIMITER,
-                    String.valueOf(PushConstants.MESSAGE_DELIMITER));
+        pushHandler = new PushHandler(service);
+        atmosphere.addAtmosphereHandler("/*", pushHandler.handler);
+        atmosphere.addInitParameter(ApplicationConfig.BROADCASTER_CACHE,
+                UUIDBroadcasterCache.class.getName());
+        atmosphere.addInitParameter(ApplicationConfig.PROPERTY_SESSION_SUPPORT,
+                "true");
+        atmosphere.addInitParameter(ApplicationConfig.MESSAGE_DELIMITER,
+                String.valueOf(PushConstants.MESSAGE_DELIMITER));
 
-            final String bufferSize = String
-                    .valueOf(PushConstants.WEBSOCKET_BUFFER_SIZE);
-            atmosphere.addInitParameter(
-                    ApplicationConfig.WEBSOCKET_BUFFER_SIZE, bufferSize);
-            atmosphere.addInitParameter(
-                    ApplicationConfig.WEBSOCKET_MAXTEXTSIZE, bufferSize);
-            atmosphere.addInitParameter(
-                    ApplicationConfig.WEBSOCKET_MAXBINARYSIZE, bufferSize);
-            atmosphere.addInitParameter(
-                    ApplicationConfig.PROPERTY_ALLOW_SESSION_TIMEOUT_REMOVAL,
-                    "false");
-            // Disable Atmosphere's message about commercial support
-            atmosphere.addInitParameter(
-                    "org.atmosphere.cpr.showSupportMessage", "false");
+        // Disable heartbeat (it does not emit correct events client side)
+        // https://github.com/Atmosphere/atmosphere-javascript/issues/141
+        atmosphere.addInitParameter(
+                ApplicationConfig.DISABLE_ATMOSPHEREINTERCEPTORS,
+                HeartbeatInterceptor.class.getName());
 
-            try {
-                atmosphere.init(vaadinServletConfig);
+        final String bufferSize = String
+                .valueOf(PushConstants.WEBSOCKET_BUFFER_SIZE);
+        atmosphere.addInitParameter(ApplicationConfig.WEBSOCKET_BUFFER_SIZE,
+                bufferSize);
+        atmosphere.addInitParameter(ApplicationConfig.WEBSOCKET_MAXTEXTSIZE,
+                bufferSize);
+        atmosphere.addInitParameter(ApplicationConfig.WEBSOCKET_MAXBINARYSIZE,
+                bufferSize);
+        atmosphere.addInitParameter(
+                ApplicationConfig.PROPERTY_ALLOW_SESSION_TIMEOUT_REMOVAL,
+                "false");
+        // Disable Atmosphere's message about commercial support
+        atmosphere.addInitParameter("org.atmosphere.cpr.showSupportMessage",
+                "false");
 
-                // Ensure the client-side knows how to split the message stream
-                // into individual messages when using certain transports
-                AtmosphereInterceptor trackMessageSize = new TrackMessageSizeInterceptor();
-                trackMessageSize.configure(atmosphere.getAtmosphereConfig());
-                atmosphere.interceptor(trackMessageSize);
-            } catch (ServletException e) {
-                throw new ServiceException("Atmosphere init failed", e);
-            }
+        try {
+            atmosphere.init(vaadinServletConfig);
+
+            // Ensure the client-side knows how to split the message stream
+            // into individual messages when using certain transports
+            AtmosphereInterceptor trackMessageSize = new TrackMessageSizeInterceptor();
+            trackMessageSize.configure(atmosphere.getAtmosphereConfig());
+            atmosphere.interceptor(trackMessageSize);
+        } catch (ServletException e) {
+            throw new ServiceException("Atmosphere init failed", e);
         }
     }
 

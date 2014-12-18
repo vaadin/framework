@@ -26,6 +26,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.vaadin.client.EventHelper;
 import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.VCaption;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -98,14 +99,9 @@ public class ButtonConnector extends AbstractComponentConnector implements
                 blurHandlerRegistration);
     }
 
-    @OnStateChange({ "caption", "htmlContentAllowed" })
+    @OnStateChange({ "caption", "captionAsHtml" })
     void setCaption() {
-        String caption = getState().caption;
-        if (getState().htmlContentAllowed) {
-            getWidget().setHtml(caption);
-        } else {
-            getWidget().setText(caption);
-        }
+        VCaption.setCaptionText(getWidget().captionElement, getState());
     }
 
     @OnStateChange("iconAltText")
