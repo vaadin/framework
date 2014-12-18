@@ -66,8 +66,8 @@ $v-grid-cell-padding-horizontal: $v-table-cell-padding-horizontal !default;
     }
   }
 
-  .v-editor-row-save,
-  .v-editor-row-cancel {
+  .#{$primary-stylename}-editor-save,
+  .#{$primary-stylename}-editor-cancel {
     @include valo-button-static-style;
     @include valo-button-style($unit-size: $v-unit-size--small, $font-size: $v-font-size--small);
   }

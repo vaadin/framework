@@ -131,7 +131,7 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
         textField.sendKeys("Changed");
 
         WebElement saveButton = getEditor().findElement(
-                By.className("v-editor-row-save"));
+                By.className("v-grid-editor-save"));
 
         saveButton.click();
 

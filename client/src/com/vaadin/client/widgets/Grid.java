@@ -1218,7 +1218,7 @@ public class Grid<T> extends ResizeComposite implements
 
             Button save = new Button();
             save.setText("Save");
-            save.setStyleName("v-editor-row-save");
+            save.setStyleName(styleName + "-save");
             save.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -1231,7 +1231,7 @@ public class Grid<T> extends ResizeComposite implements
 
             Button cancel = new Button();
             cancel.setText("Cancel");
-            cancel.setStyleName("v-editor-row-cancel");
+            cancel.setStyleName(styleName + "-cancel");
             cancel.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -1258,7 +1258,7 @@ public class Grid<T> extends ResizeComposite implements
             if (styleName != null) {
                 editorOverlay.removeClassName(styleName);
             }
-            styleName = primaryName + "-editor-row";
+            styleName = primaryName + "-editor";
             editorOverlay.addClassName(styleName);
         }
 

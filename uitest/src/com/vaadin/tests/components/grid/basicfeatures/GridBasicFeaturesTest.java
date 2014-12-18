@@ -92,7 +92,7 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
 
     protected WebElement getEditor() {
         List<WebElement> elems = getGridElement().findElements(
-                By.className("v-grid-editor-row"));
+                By.className("v-grid-editor"));
 
         assertLessThanOrEqual("number of editors", elems.size(), 1);
 
