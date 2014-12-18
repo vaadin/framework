@@ -1181,12 +1181,14 @@ public class Grid<T> extends ResizeComposite implements
             AbstractRowContainer body = (AbstractRowContainer) grid
                     .getEscalator().getBody();
 
-            int rowTop = body.getRowTop(tr);
+            double rowTop = body.getRowTop(tr);
             int bodyTop = body.getElement().getAbsoluteTop();
             int wrapperTop = tableWrapper.getAbsoluteTop();
 
+            double width = Util.getRequiredWidthBoundingClientRectDouble(tr);
+            double height = Util.getRequiredHeightBoundingClientRectDouble(tr);
             setBounds(editorOverlay, tr.getOffsetLeft(), rowTop + bodyTop
-                    - wrapperTop, tr.getOffsetWidth(), tr.getOffsetHeight());
+                    - wrapperTop, width, height);
 
             updateHorizontalScrollPosition();
 
@@ -1218,7 +1220,7 @@ public class Grid<T> extends ResizeComposite implements
 
             Button save = new Button();
             save.setText("Save");
-            save.setStyleName("v-editor-row-save");
+            save.setStyleName(styleName + "-save");
             save.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -1231,7 +1233,7 @@ public class Grid<T> extends ResizeComposite implements
 
             Button cancel = new Button();
             cancel.setText("Cancel");
-            cancel.setStyleName("v-editor-row-cancel");
+            cancel.setStyleName(styleName + "-cancel");
             cancel.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -1258,7 +1260,7 @@ public class Grid<T> extends ResizeComposite implements
             if (styleName != null) {
                 editorOverlay.removeClassName(styleName);
             }
-            styleName = primaryName + "-editor-row";
+            styleName = primaryName + "-editor";
             editorOverlay.addClassName(styleName);
         }
 
@@ -1273,8 +1275,10 @@ public class Grid<T> extends ResizeComposite implements
          */
         protected Element createCell(TableCellElement td) {
             DivElement cell = DivElement.as(DOM.createDiv());
-            setBounds(cell, td.getOffsetLeft(), td.getOffsetTop(),
-                    td.getOffsetWidth(), td.getOffsetHeight());
+            double width = Util.getRequiredWidthBoundingClientRectDouble(td);
+            double height = Util.getRequiredHeightBoundingClientRectDouble(td);
+            setBounds(cell, td.getOffsetLeft(), td.getOffsetTop(), width,
+                    height);
             return cell;
         }
 
@@ -1283,8 +1287,8 @@ public class Grid<T> extends ResizeComposite implements
             GridUtil.setParent(w, grid);
         }
 
-        private static void setBounds(Element e, int left, int top, int width,
-                int height) {
+        private static void setBounds(Element e, double left, double top,
+                double width, double height) {
             Style style = e.getStyle();
             style.setLeft(left, Unit.PX);
             style.setTop(top, Unit.PX);

@@ -8,7 +8,8 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -25,7 +26,7 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class CaptionsInLayouts extends TestBase {
+public class CaptionsInLayouts extends AbstractTestUI {
 
     private static final Object CAPTION = "CAPTION";
     private static final Object CLASS = "C";
@@ -42,7 +43,7 @@ public class CaptionsInLayouts extends TestBase {
     private HorizontalLayout layoutParent = new HorizontalLayout();
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         // setTheme("tests-tickets");
         addComponent(createLayoutSelect());
         addComponent(toggleRequired());
@@ -270,7 +271,7 @@ public class CaptionsInLayouts extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Tests what happens when the caption changes in various layouts. Behavior should be consistent.";
     }
 

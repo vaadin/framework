@@ -138,12 +138,12 @@ public class EscalatorProxy extends Escalator {
         }
 
         @Override
-        public void setDefaultRowHeight(int px) throws IllegalArgumentException {
+        public void setDefaultRowHeight(double px) throws IllegalArgumentException {
             rowContainer.setDefaultRowHeight(px);
         }
 
         @Override
-        public int getDefaultRowHeight() {
+        public double getDefaultRowHeight() {
             return rowContainer.getDefaultRowHeight();
         }
 

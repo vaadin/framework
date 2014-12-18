@@ -18,6 +18,7 @@ package com.vaadin.client.ui.link;
 
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.DOM;
+import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
@@ -72,7 +73,7 @@ public class LinkConnector extends AbstractComponentConnector {
         getWidget().targetHeight = getState().targetHeight;
 
         // Set link caption
-        getWidget().captionElement.setInnerText(getState().caption);
+        VCaption.setCaptionText(getWidget().captionElement, getState());
 
         // handle error
         if (null != getState().errorMessage) {

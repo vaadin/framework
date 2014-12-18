@@ -18,10 +18,12 @@
 
 @mixin box-shadow ($shadow) {
   -webkit-box-shadow: $shadow;
+  -moz-box-shadow: $shadow;
   box-shadow: $shadow;
 }
 
 @mixin box-sizing ($box-sizing) {
   -webkit-box-sizing: $box-sizing;
+  -moz-box-sizing: $box-sizing;
   box-sizing: $box-sizing;
 }

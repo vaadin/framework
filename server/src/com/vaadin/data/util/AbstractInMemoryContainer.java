@@ -981,7 +981,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * 
      * @since 7.4
      * 
-     * @param postion
+     * @param position
      *            position of the added item in the view
      * @param itemId
      *            id of the added item
@@ -1016,8 +1016,9 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      *
      * @since 7.4
      * 
-     * @param postion
-     *            position of the removed item in the view prior to removal
+     * @param position
+     *            position of the removed item in the view prior to removal (if
+     *            was visible)
      * @param itemId
      *            id of the removed item, of type {@link Object} to satisfy
      *            {@link Container#removeItem(Object)} API

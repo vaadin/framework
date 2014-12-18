@@ -265,6 +265,35 @@ public abstract class AbstractComponent extends AbstractClientConnector
         getState().caption = caption;
     }
 
+    /**
+     * Sets whether the caption is rendered as HTML.
+     * <p>
+     * If set to true, the captions are rendered in the browser as HTML and the
+     * developer is responsible for ensuring no harmful HTML is used. If set to
+     * false, the caption is rendered in the browser as plain text.
+     * <p>
+     * The default is false, i.e. to render that caption as plain text.
+     * 
+     * @param captionAsHtml
+     *            true if the captions are rendered as HTML, false if rendered
+     *            as plain text
+     */
+    public void setCaptionAsHtml(boolean captionAsHtml) {
+        getState().captionAsHtml = captionAsHtml;
+    }
+
+    /**
+     * Checks whether captions are rendered as HTML
+     * <p>
+     * The default is false, i.e. to render that caption as plain text.
+     * 
+     * @return true if the captions are rendered as HTML, false if rendered as
+     *         plain text
+     */
+    public boolean isCaptionAsHtml() {
+        return getState(false).captionAsHtml;
+    }
+
     /*
      * Don't add a JavaDoc comment here, we use the default documentation from
      * implemented interface.

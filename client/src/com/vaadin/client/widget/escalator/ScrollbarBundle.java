@@ -19,6 +19,7 @@ package com.vaadin.client.widget.escalator;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.EventHandler;
@@ -209,8 +210,8 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         }
 
         @Override
-        protected int internalGetScrollSize() {
-            return scrollSizeElement.getOffsetHeight();
+        protected String internalGetScrollSize() {
+            return scrollSizeElement.getStyle().getHeight();
         }
 
         @Override
@@ -219,23 +220,23 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         }
 
         @Override
-        public double getOffsetSize() {
-            return root.getOffsetHeight();
+        public String internalGetOffsetSize() {
+            return root.getStyle().getHeight();
         }
 
         @Override
-        protected void internalSetScrollbarThickness(int px) {
+        protected void internalSetScrollbarThickness(double px) {
             root.getStyle().setWidth(px, Unit.PX);
             scrollSizeElement.getStyle().setWidth(px, Unit.PX);
         }
 
         @Override
-        protected int internalGetScrollbarThickness() {
-            return root.getOffsetWidth();
+        protected String internalGetScrollbarThickness() {
+            return root.getStyle().getWidth();
         }
 
         @Override
-        protected void forceScrollbar(boolean enable) {
+        protected void internalForceScrollbar(boolean enable) {
             if (enable) {
                 root.getStyle().setOverflowY(Overflow.SCROLL);
             } else {
@@ -278,8 +279,8 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         }
 
         @Override
-        protected int internalGetScrollSize() {
-            return scrollSizeElement.getOffsetWidth();
+        protected String internalGetScrollSize() {
+            return scrollSizeElement.getStyle().getWidth();
         }
 
         @Override
@@ -288,23 +289,23 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         }
 
         @Override
-        public double getOffsetSize() {
-            return root.getOffsetWidth();
+        public String internalGetOffsetSize() {
+            return root.getStyle().getWidth();
         }
 
         @Override
-        protected void internalSetScrollbarThickness(int px) {
+        protected void internalSetScrollbarThickness(double px) {
             root.getStyle().setHeight(px, Unit.PX);
             scrollSizeElement.getStyle().setHeight(px, Unit.PX);
         }
 
         @Override
-        protected int internalGetScrollbarThickness() {
-            return root.getOffsetHeight();
+        protected String internalGetScrollbarThickness() {
+            return root.getStyle().getHeight();
         }
 
         @Override
-        protected void forceScrollbar(boolean enable) {
+        protected void internalForceScrollbar(boolean enable) {
             if (enable) {
                 root.getStyle().setOverflowX(Overflow.SCROLL);
             } else {
@@ -342,9 +343,11 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     private ScrollbarBundle() {
         root.appendChild(scrollSizeElement);
+        root.getStyle().setDisplay(Display.NONE);
+        root.setTabIndex(-1);
     }
 
-    protected abstract int internalGetScrollSize();
+    protected abstract String internalGetScrollSize();
 
     /**
      * Sets the primary style name
@@ -445,14 +448,27 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * This is an IE8 workaround, since it doesn't always show scrollbars with
      * <code>overflow: auto</code> enabled.
      */
-    protected abstract void forceScrollbar(boolean enable);
+    protected void forceScrollbar(boolean enable) {
+        if (enable) {
+            root.getStyle().clearDisplay();
+        } else {
+            root.getStyle().setDisplay(Display.NONE);
+        }
+        internalForceScrollbar(enable);
+    }
+
+    protected abstract void internalForceScrollbar(boolean enable);
 
     /**
      * Gets the length of the scrollbar
      * 
      * @return the length of the scrollbar in pixels
      */
-    public abstract double getOffsetSize();
+    public double getOffsetSize() {
+        return parseCssDimensionToPixels(internalGetOffsetSize());
+    }
+
+    public abstract String internalGetOffsetSize();
 
     /**
      * Sets the scroll position of the scrollbar in the axis the scrollbar is
@@ -613,7 +629,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      *         through
      */
     public double getScrollSize() {
-        return internalGetScrollSize();
+        return parseCssDimensionToPixels(internalGetScrollSize());
     }
 
     /**
@@ -624,7 +640,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      *            the dimension that {@link #scrollSizeElement} should take in
      *            the opposite axis to what the scrollbar is representing
      */
-    protected abstract void internalSetScrollbarThickness(int px);
+    protected abstract void internalSetScrollbarThickness(double px);
 
     /**
      * Sets the scrollbar's thickness.
@@ -637,7 +653,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * @param px
      *            the scrollbar's thickness in pixels
      */
-    public final void setScrollbarThickness(int px) {
+    public final void setScrollbarThickness(double px) {
         isInvisibleScrollbar = (px == 0);
 
         if (isInvisibleScrollbar) {
@@ -653,7 +669,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
             Event.setEventListener(root, null);
         }
 
-        internalSetScrollbarThickness(Math.max(1, px));
+        internalSetScrollbarThickness(Math.max(1d, px));
     }
 
     /**
@@ -661,20 +677,20 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * 
      * @return the scrollbar's thickness as defined in the DOM, in pixels
      */
-    protected abstract int internalGetScrollbarThickness();
+    protected abstract String internalGetScrollbarThickness();
 
     /**
      * Gets the scrollbar's thickness.
      * <p>
      * This value will differ from the value in the DOM, if the thickness was
-     * set to 0 with {@link #setScrollbarThickness(int)}, as the scrollbar is
+     * set to 0 with {@link #setScrollbarThickness(double)}, as the scrollbar is
      * then treated as "invisible."
      * 
      * @return the scrollbar's thickness in pixels
      */
-    public final int getScrollbarThickness() {
+    public final double getScrollbarThickness() {
         if (!isInvisibleScrollbar) {
-            return internalGetScrollbarThickness();
+            return parseCssDimensionToPixels(internalGetScrollbarThickness());
         } else {
             return 0;
         }
@@ -806,6 +822,28 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      */
     public HandlerRegistration addScrollHandler(final ScrollHandler handler) {
         return getHandlerManager().addHandler(ScrollEvent.TYPE, handler);
+    }
+
+    private static double parseCssDimensionToPixels(String size) {
+
+        /*
+         * Sizes of elements are calculated from CSS rather than
+         * element.getOffset*() because those values are 0 whenever display:
+         * none. Because we know that all elements have populated
+         * CSS-dimensions, it's better to do it that way.
+         * 
+         * Another solution would be to make the elements visible while
+         * measuring and then re-hide them, but that would cause unnecessary
+         * reflows that would probably kill the performance dead.
+         */
+
+        if (size.isEmpty()) {
+            return 0;
+        } else {
+            assert size.endsWith("px") : "Can't parse CSS dimension \"" + size
+                    + "\"";
+            return Double.parseDouble(size.substring(0, size.length() - 2));
+        }
     }
 
     @Override

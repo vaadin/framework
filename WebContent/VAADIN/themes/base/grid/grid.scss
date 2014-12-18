@@ -21,7 +21,7 @@ $v-grid-footer-background-color: $v-grid-header-background-color !default;
 
 $v-grid-cell-padding-horizontal: 5px !default;
 
-$v-grid-editor-row-background-color: $v-grid-row-background-color !default;
+$v-grid-editor-background-color: $v-grid-row-background-color !default;
 
 
 @import "../escalator/escalator";
@@ -198,14 +198,14 @@ $v-grid-editor-row-background-color: $v-grid-row-background-color !default;
     display: block;
   }
 
-  // Editor row
+  // Editor
 
-  .#{$primaryStyleName}-editor-row {
+  .#{$primaryStyleName}-editor {
     // TODO should be fixed in offset calculations
     margin-top: -1px;
     position: absolute;
     overflow-y: visible;
-    background: $v-grid-editor-row-background-color;
+    background: $v-grid-editor-background-color;
     @include box-shadow(0 0 10px 1px rgba(0,0,0,.3));
 
     > div {
@@ -226,7 +226,6 @@ $v-grid-editor-row-background-color: $v-grid-row-background-color !default;
         max-height: 100%;
         border: none;
         border-radius: 0;
-
       }
 
       .v-textfield-focus,
@@ -235,13 +234,13 @@ $v-grid-editor-row-background-color: $v-grid-row-background-color !default;
         z-index: 1;
       }
     }
+  }
 
-    > .v-editor-row-save,
-    > .v-editor-row-cancel {
-      position: absolute;
-      // TODO remove the inline size from the widgets
-      width: auto !important;
-      height: auto !important;
-    }
+  .#{$primaryStyleName}-editor-save,
+  .#{$primaryStyleName}-editor-cancel {
+    position: absolute;
+    // TODO remove the inline size from the widgets
+    width: auto !important;
+    height: auto !important;
   }
 }
