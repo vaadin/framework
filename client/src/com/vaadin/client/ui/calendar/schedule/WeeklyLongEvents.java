@@ -102,7 +102,11 @@ public class WeeklyLongEvents extends HorizontalPanel implements HasTooltipKey {
                     eventLabel.addStyleDependentName(extraStyle + "-all-day");
                 }
                 if (!started) {
-                    eventLabel.setText(calendarEvent.getCaption());
+                    if (calendar.isEventCaptionAsHtml()) {
+                        eventLabel.setHTML(calendarEvent.getCaption());
+                    } else {
+                        eventLabel.setText(calendarEvent.getCaption());
+                    }
                     started = true;
                 }
             }
