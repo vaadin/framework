@@ -922,11 +922,11 @@ public abstract class AbstractComponent extends AbstractClientConnector
         Attributes attr = design.attributes();
         // handle default attributes
         for (String attribute : getDefaultAttributes()) {
-            if (!design.hasAttr(attribute)) {
-                continue;
+            if (design.hasAttr(attribute)) {
+                DesignAttributeHandler.assignValue(this, attribute,
+                        design.attr(attribute));
             }
 
-            DesignAttributeHandler.readAttribute(this, attribute, attr);
         }
         // handle immediate
         if (attr.hasKey("immediate")) {

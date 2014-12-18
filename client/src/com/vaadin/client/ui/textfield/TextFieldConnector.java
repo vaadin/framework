@@ -87,17 +87,10 @@ public class TextFieldConnector extends AbstractFieldConnector implements
          * change in the queue (in which case we count more on the server side
          * value).
          */
-
-        boolean valueChanged = !uidl
-                .getBooleanAttribute(TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS);
-        // null check is not enough since the value is sometimes null but
-        // sometimes empty. Fix for #15144
-        boolean valueBeforeEditEmpty = getWidget().valueBeforeEdit == null
-                || getWidget().valueBeforeEdit.isEmpty();
-        boolean textDoesNotEqualOldValue = !text
-                .equals(getWidget().valueBeforeEdit);
-
-        if (valueChanged || valueBeforeEditEmpty || textDoesNotEqualOldValue) {
+        if (!(uidl
+                .getBooleanAttribute(TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
+                && getWidget().valueBeforeEdit != null && text
+                    .equals(getWidget().valueBeforeEdit))) {
             getWidget().updateFieldContent(text);
         }
 
