@@ -253,4 +253,15 @@ public class CheckBox extends AbstractField<Boolean> {
                 def.getValue(), Boolean.class);
     }
 
+    @Override
+    public void clear() {
+        setValue(Boolean.FALSE);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return getValue() == null || getValue().equals(Boolean.FALSE);
+
+    }
+
 }
