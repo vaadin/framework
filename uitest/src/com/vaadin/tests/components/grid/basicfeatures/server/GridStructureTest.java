@@ -372,11 +372,14 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         setDebug(true);
         openTestURL();
 
-        getGridElement().scrollToRow(500);
+        GridCellElement cell = getGridElement().getCell(500, 1);
+        String cellContent = cell.getText();
         selectMenuPath("Component", "Body rows", "Add first row");
 
         assertFalse("Error notification was present",
                 isElementPresent(NotificationElement.class));
+
+        assertEquals("Grid scrolled unexpectedly", cellContent, cell.getText());
     }
 
     private void assertPrimaryStylename(String stylename) {

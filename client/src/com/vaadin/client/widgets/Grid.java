@@ -1779,8 +1779,7 @@ public class Grid<T> extends ResizeComposite implements
             boolean bodyHasFocus = (containerWithFocus == escalator.getBody());
             boolean insertionIsAboveFocusedCell = (added.getStart() <= rowWithFocus);
             if (bodyHasFocus && insertionIsAboveFocusedCell) {
-                setCellFocus(rowWithFocus + added.length(),
-                        cellFocusRange.getStart(), containerWithFocus);
+                rowWithFocus += added.length();
             }
         }
 
