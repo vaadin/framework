@@ -26,5 +26,6 @@ public interface RendererClickRpc extends ServerRpc {
      * @param mouseDetails
      *            Details about the mouse when the event took place
      */
-    public void click(int row, int column, MouseEventDetails mouseDetails);
+    public void click(String rowKey, String columnId,
+            MouseEventDetails mouseDetails);
 }

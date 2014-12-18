@@ -30,6 +30,8 @@ import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
 
+import elemental.json.JsonObject;
+
 @Connect(com.vaadin.tests.components.grid.RowAwareRenderer.class)
 public class RowAwareRendererConnector extends AbstractRendererConnector<Void> {
     public interface RowAwareRendererRpc extends ServerRpc {
@@ -59,10 +61,10 @@ public class RowAwareRendererConnector extends AbstractRendererConnector<Void> {
 
         @Override
         public boolean onBrowserEvent(CellReference<?> cell, NativeEvent event) {
-            int row = cell.getRowIndex();
-            String key = getRowKey(row);
+            String key = getRowKey((JsonObject) cell.getRow());
             getRpcProxy(RowAwareRendererRpc.class).clicky(key);
-            cell.getElement().setInnerText("row: " + row + ", key: " + key);
+            cell.getElement().setInnerText(
+                    "row: " + cell.getRowIndex() + ", key: " + key);
             return true;
         }
     }

@@ -861,14 +861,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     }-*/;
 
     /**
-     * Gets the row key for a row by index.
+     * Gets the row key for a row object.
      * 
-     * @param index
-     *            the index of the row for which to get the key
-     * @return the key for the row at {@code index}
+     * @param row
+     *            the row object
+     * @return the key for the given row
      */
-    public String getRowKey(int index) {
-        final JsonObject row = dataSource.getRow(index);
+    public String getRowKey(JsonObject row) {
         final Object key = dataSource.getRowKey(row);
         assert key instanceof String : "Internal key was not a String but a "
                 + key.getClass().getSimpleName() + " (" + key + ")";
@@ -891,6 +890,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     @Override
     public void onConnectorHierarchyChange(
             ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
+    }
+
+    public String getColumnId(Grid.Column<?, JsonObject> column) {
+        if (column instanceof CustomGridColumn) {
+            return ((CustomGridColumn) column).id;
+        }
+        return null;
     }
 
     @Override

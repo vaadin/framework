@@ -43,8 +43,8 @@ public abstract class ClickableRendererConnector<T> extends
             @Override
             public void onClick(RendererClickEvent<JsonObject> event) {
                 getRpcProxy(RendererClickRpc.class).click(
-                        event.getCell().getRow(),
-                        event.getCell().getColumn(),
+                        getRowKey(event.getCell().getRow()),
+                        getColumnId(event.getCell().getColumn()),
                         MouseEventDetailsBuilder.buildMouseEventDetails(event
                                 .getNativeEvent()));
             }

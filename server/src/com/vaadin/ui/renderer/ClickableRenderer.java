@@ -23,6 +23,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.AbstractRenderer;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -64,11 +65,13 @@ public class ClickableRenderer<T> extends AbstractRenderer<T> {
     public static class RendererClickEvent extends ClickEvent {
 
         private Object itemId;
+        private Column column;
 
-        protected RendererClickEvent(Grid source, Object itemId,
+        protected RendererClickEvent(Grid source, Object itemId, Column column,
                 MouseEventDetails mouseEventDetails) {
             super(source, mouseEventDetails);
             this.itemId = itemId;
+            this.column = column;
         }
 
         /**
@@ -79,20 +82,25 @@ public class ClickableRenderer<T> extends AbstractRenderer<T> {
         public Object getItemId() {
             return itemId;
         }
+
+        /**
+         * Returns the {@link Column} where the click event originated.
+         * 
+         * @return the column of the click event
+         */
+        public Column getColumn() {
+            return column;
+        }
     }
 
     protected ClickableRenderer(Class<T> presentationType) {
         super(presentationType);
         registerRpc(new RendererClickRpc() {
             @Override
-            public void click(int row, int column,
+            public void click(String rowKey, String columnId,
                     MouseEventDetails mouseDetails) {
-
-                Grid grid = (Grid) getParent();
-                Object itemId = grid.getContainerDataSource().getIdByIndex(row);
-                // TODO map column index to property ID or send column ID
-                // instead of index from the client
-                fireEvent(new RendererClickEvent(grid, itemId, mouseDetails));
+                fireEvent(new RendererClickEvent(getParentGrid(),
+                        getItemId(rowKey), getColumn(columnId), mouseDetails));
             }
         });
     }

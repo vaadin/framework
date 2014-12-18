@@ -26,7 +26,7 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.vaadin.client.widget.escalator.Cell;
+import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.GridUtil;
 import com.vaadin.client.widgets.Grid;
 
@@ -80,7 +80,7 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
         static final Type<RendererClickHandler> TYPE = new Type<RendererClickHandler>(
                 BrowserEvents.CLICK, new RendererClickEvent());
 
-        private Cell cell;
+        private CellReference<R> cell;
 
         private R row;
 
@@ -92,7 +92,7 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
          * 
          * @return the cell
          */
-        public Cell getCell() {
+        public CellReference<R> getCell() {
             return cell;
         }
 
@@ -125,7 +125,7 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
             Grid<R> grid = (Grid<R>) GridUtil.findClosestParentGrid(e);
 
             cell = GridUtil.findCell(grid, e);
-            row = grid.getDataSource().getRow(cell.getRow());
+            row = cell.getRow();
 
             handler.onClick(this);
         }
