@@ -54,6 +54,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
@@ -171,7 +172,8 @@ import com.vaadin.shared.util.SharedUtil;
  * @author Vaadin Ltd
  */
 public class Grid<T> extends ResizeComposite implements
-        HasSelectionHandlers<T>, SubPartAware, DeferredWorker, HasWidgets {
+        HasSelectionHandlers<T>, SubPartAware, DeferredWorker, HasWidgets,
+        HasEnabled {
 
     /**
      * Enum describing different sections of Grid.
@@ -2449,6 +2451,8 @@ public class Grid<T> extends ResizeComposite implements
      */
     private final AutoColumnWidthsRecalculator autoColumnWidthsRecalculator = new AutoColumnWidthsRecalculator();
 
+    private boolean enabled = true;
+
     /**
      * Enumeration for easy setting of selection mode.
      */
@@ -3457,6 +3461,19 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        getElement().setTabIndex(enabled ? 0 : -1);
+        getEscalator().setScrollLocked(Direction.VERTICAL, !enabled);
+        getEscalator().setScrollLocked(Direction.HORIZONTAL, !enabled);
+    }
+
+    @Override
     public void setStylePrimaryName(String style) {
         super.setStylePrimaryName(style);
         escalator.setStylePrimaryName(style);
@@ -4428,6 +4445,10 @@ public class Grid<T> extends ResizeComposite implements
 
     @Override
     public void onBrowserEvent(Event event) {
+        if (!isEnabled()) {
+            return;
+        }
+
         EventTarget target = event.getEventTarget();
 
         if (!Element.is(target)) {
