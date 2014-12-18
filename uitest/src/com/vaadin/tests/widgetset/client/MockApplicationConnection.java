@@ -18,12 +18,13 @@ package com.vaadin.tests.widgetset.client;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ValueMap;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.tests.widgetset.server.csrf.ui.CsrfTokenDisabled;
+
+import elemental.json.JsonObject;
+import elemental.json.JsonValue;
 
 /**
  * Mock ApplicationConnection for several issues where we need to hack it.
@@ -71,9 +72,9 @@ public class MockApplicationConnection extends ApplicationConnection {
     }
 
     @Override
-    protected void doUidlRequest(String uri, JSONObject payload) {
-        JSONValue jsonValue = payload.get(ApplicationConstants.CSRF_TOKEN);
-        lastCsrfTokenSent = jsonValue != null ? jsonValue.toString() : null;
+    protected void doUidlRequest(String uri, JsonObject payload) {
+        JsonValue jsonValue = payload.get(ApplicationConstants.CSRF_TOKEN);
+        lastCsrfTokenSent = jsonValue != null ? jsonValue.toJson() : null;
 
         super.doUidlRequest(uri, payload);
     }

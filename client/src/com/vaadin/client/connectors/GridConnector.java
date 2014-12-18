@@ -29,8 +29,6 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
@@ -65,10 +63,10 @@ import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.grid.GridClientRpc;
-import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.EditorClientRpc;
 import com.vaadin.shared.ui.grid.EditorServerRpc;
+import com.vaadin.shared.ui.grid.GridClientRpc;
+import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridState.SharedSelectionMode;
@@ -76,6 +74,9 @@ import com.vaadin.shared.ui.grid.GridStaticSectionState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.CellState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.ScrollDestination;
+
+import elemental.json.JsonObject;
+import elemental.json.JsonValue;
 
 /**
  * Connects the client side {@link Grid} widget with the server side
@@ -93,23 +94,22 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         SimpleManagedLayout {
 
     private static final class CustomCellStyleGenerator implements
-            CellStyleGenerator<JSONObject> {
+            CellStyleGenerator<JsonObject> {
         @Override
-        public String getStyle(CellReference<JSONObject> cellReference) {
-            JSONValue cellstyles = cellReference.getRow().get(
-                    GridState.JSONKEY_CELLSTYLES);
-            if (cellstyles == null) {
+        public String getStyle(CellReference<JsonObject> cellReference) {
+            JsonObject row = cellReference.getRow();
+            if (!row.hasKey(GridState.JSONKEY_CELLSTYLES)) {
                 return null;
             }
 
             CustomGridColumn c = (CustomGridColumn) cellReference.getColumn();
 
-            JSONObject cellStylesObject = cellstyles.isObject();
+            JsonObject cellStylesObject = row
+                    .getObject(GridState.JSONKEY_CELLSTYLES);
             assert cellStylesObject != null;
 
-            JSONValue styleValue = cellStylesObject.get(c.id);
-            if (styleValue != null) {
-                return styleValue.isString().stringValue();
+            if (cellStylesObject.hasKey(c.id)) {
+                return cellStylesObject.getString(c.id);
             } else {
                 return null;
             }
@@ -118,13 +118,12 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     }
 
     private static final class CustomRowStyleGenerator implements
-            RowStyleGenerator<JSONObject> {
+            RowStyleGenerator<JsonObject> {
         @Override
-        public String getStyle(RowReference<JSONObject> rowReference) {
-            JSONValue styleValue = rowReference.getRow().get(
-                    GridState.JSONKEY_ROWSTYLE);
-            if (styleValue != null) {
-                return styleValue.isString().stringValue();
+        public String getStyle(RowReference<JsonObject> rowReference) {
+            JsonObject row = rowReference.getRow();
+            if (row.hasKey(GridState.JSONKEY_ROWSTYLE)) {
+                return row.getString(GridState.JSONKEY_ROWSTYLE);
             } else {
                 return null;
             }
@@ -136,7 +135,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      * Custom implementation of the custom grid column using a JSONObject to
      * represent the cell value and String as a column type.
      */
-    private class CustomGridColumn extends Grid.Column<Object, JSONObject> {
+    private class CustomGridColumn extends Grid.Column<Object, JsonObject> {
 
         private final String id;
 
@@ -152,20 +151,14 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         @Override
-        public Object getValue(final JSONObject obj) {
-            final JSONValue rowData = obj.get(GridState.JSONKEY_DATA);
-            final JSONObject rowDataObject = rowData.isObject();
-            assert rowDataObject != null : "Was unable to parse JSON into an array: "
-                    + rowData;
+        public Object getValue(final JsonObject obj) {
+            final JsonObject rowData = obj.getObject(GridState.JSONKEY_DATA);
 
-            final JSONValue columnValue = rowDataObject.get(id);
-
-            /*
-             * note, Java "null" is different from JSONValue "null" (i.e.
-             * JSONNull).
-             */
-            assert columnValue != null : "Could not find data for column with id "
+            assert rowData.hasKey(id) : "Could not find data for column with id "
                     + id;
+
+            final JsonValue columnValue = rowData.get(id);
+
             return rendererConnector.decode(columnValue);
         }
 
@@ -191,7 +184,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     /*
      * An editor handler using Vaadin RPC to manage the editor state.
      */
-    private class CustomEditorHandler implements EditorHandler<JSONObject> {
+    private class CustomEditorHandler implements EditorHandler<JsonObject> {
 
         private EditorServerRpc rpc = getRpcProxy(EditorServerRpc.class);
 
@@ -245,7 +238,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         @Override
-        public void bind(EditorRequest<JSONObject> request) {
+        public void bind(EditorRequest<JsonObject> request) {
             if (!handleServerInitiated(request)) {
                 startRequest(request);
                 rpc.bind(request.getRowIndex());
@@ -253,7 +246,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         @Override
-        public void save(EditorRequest<JSONObject> request) {
+        public void save(EditorRequest<JsonObject> request) {
             if (!handleServerInitiated(request)) {
                 startRequest(request);
                 rpc.save(request.getRowIndex());
@@ -261,7 +254,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         @Override
-        public void cancel(EditorRequest<JSONObject> request) {
+        public void cancel(EditorRequest<JsonObject> request) {
             if (!handleServerInitiated(request)) {
                 // No startRequest as we don't get (or need)
                 // a confirmation from the server
@@ -270,7 +263,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         @Override
-        public Widget getWidget(Grid.Column<?, JSONObject> column) {
+        public Widget getWidget(Grid.Column<?, JsonObject> column) {
             assert column != null;
 
             if (column instanceof CustomGridColumn) {
@@ -327,7 +320,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      */
     private Map<String, CustomGridColumn> columnIdToColumn = new HashMap<String, CustomGridColumn>();
 
-    private AbstractRowHandleSelectionModel<JSONObject> selectionModel = createSelectionModel(SharedSelectionMode.NONE);
+    private AbstractRowHandleSelectionModel<JsonObject> selectionModel = createSelectionModel(SharedSelectionMode.NONE);
     private Set<String> selectedKeys = new LinkedHashSet<String>();
     private List<String> columnOrder = new ArrayList<String>();
 
@@ -342,18 +335,18 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
     private RpcDataSource dataSource;
 
-    private SelectionHandler<JSONObject> internalSelectionChangeHandler = new SelectionHandler<JSONObject>() {
+    private SelectionHandler<JsonObject> internalSelectionChangeHandler = new SelectionHandler<JsonObject>() {
         @Override
-        public void onSelect(SelectionEvent<JSONObject> event) {
+        public void onSelect(SelectionEvent<JsonObject> event) {
             if (event.isBatchedSelection()) {
                 return;
             }
             if (!updatedFromState) {
-                for (JSONObject row : event.getRemoved()) {
+                for (JsonObject row : event.getRemoved()) {
                     selectedKeys.remove(dataSource.getRowKey(row));
                 }
 
-                for (JSONObject row : event.getAdded()) {
+                for (JsonObject row : event.getAdded()) {
                     selectedKeys.add(dataSource.getRowKey(row));
                 }
 
@@ -367,8 +360,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
     @Override
     @SuppressWarnings("unchecked")
-    public Grid<JSONObject> getWidget() {
-        return (Grid<JSONObject>) super.getWidget();
+    public Grid<JsonObject> getWidget() {
+        return (Grid<JsonObject>) super.getWidget();
     }
 
     @Override
@@ -401,9 +394,9 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         getWidget().addSelectionHandler(internalSelectionChangeHandler);
 
-        getWidget().addSortHandler(new SortHandler<JSONObject>() {
+        getWidget().addSortHandler(new SortHandler<JsonObject>() {
             @Override
-            public void sort(SortEvent<JSONObject> event) {
+            public void sort(SortEvent<JsonObject> event) {
                 List<SortOrder> order = event.getOrder();
                 String[] columnIds = new String[order.size()];
                 SortDirection[] directions = new SortDirection[order.size()];
@@ -425,10 +418,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
         });
 
-        getWidget().addSelectAllHandler(new SelectAllHandler<JSONObject>() {
+        getWidget().addSelectAllHandler(new SelectAllHandler<JsonObject>() {
 
             @Override
-            public void onSelectAll(SelectAllEvent<JSONObject> event) {
+            public void onSelectAll(SelectAllEvent<JsonObject> event) {
                 getRpcProxy(GridServerRpc.class).selectAll();
             }
 
@@ -745,7 +738,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             return;
         }
 
-        AbstractRowHandleSelectionModel<JSONObject> model = createSelectionModel(mode);
+        AbstractRowHandleSelectionModel<JsonObject> model = createSelectionModel(mode);
         if (!model.getClass().equals(selectionModel.getClass())) {
             selectionModel = model;
             getWidget().setSelectionModel(model);
@@ -808,8 +801,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             // deselected row data. Some data is only stored as keys
             updatedFromState = true;
             getWidget().fireEvent(
-                    new SelectionEvent<JSONObject>(getWidget(),
-                            (List<JSONObject>) null, null, false));
+                    new SelectionEvent<JsonObject>(getWidget(),
+                            (List<JsonObject>) null, null, false));
         }
     }
 
@@ -833,15 +826,15 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     }
 
     @SuppressWarnings("static-method")
-    private AbstractRowHandleSelectionModel<JSONObject> createSelectionModel(
+    private AbstractRowHandleSelectionModel<JsonObject> createSelectionModel(
             SharedSelectionMode mode) {
         switch (mode) {
         case SINGLE:
-            return new SelectionModelSingle<JSONObject>();
+            return new SelectionModelSingle<JsonObject>();
         case MULTI:
-            return new SelectionModelMulti<JSONObject>();
+            return new SelectionModelMulti<JsonObject>();
         case NONE:
-            return new SelectionModelNone<JSONObject>();
+            return new SelectionModelNone<JsonObject>();
         default:
             throw new IllegalStateException("unexpected mode value: " + mode);
         }
@@ -851,7 +844,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      * A workaround method for accessing the protected method
      * {@code AbstractRowHandleSelectionModel.selectByHandle}
      */
-    private native void selectByHandle(RowHandle<JSONObject> handle)
+    private native void selectByHandle(RowHandle<JsonObject> handle)
     /*-{
         var model = this.@com.vaadin.client.connectors.GridConnector::selectionModel;
         model.@com.vaadin.client.widget.grid.selection.AbstractRowHandleSelectionModel::selectByHandle(*)(handle);
@@ -861,7 +854,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      * A workaround method for accessing the protected method
      * {@code AbstractRowHandleSelectionModel.deselectByHandle}
      */
-    private native void deselectByHandle(RowHandle<JSONObject> handle)
+    private native void deselectByHandle(RowHandle<JsonObject> handle)
     /*-{
         var model = this.@com.vaadin.client.connectors.GridConnector::selectionModel;
         model.@com.vaadin.client.widget.grid.selection.AbstractRowHandleSelectionModel::deselectByHandle(*)(handle);
@@ -875,7 +868,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      * @return the key for the row at {@code index}
      */
     public String getRowKey(int index) {
-        final JSONObject row = dataSource.getRow(index);
+        final JsonObject row = dataSource.getRow(index);
         final Object key = dataSource.getRowKey(row);
         assert key instanceof String : "Internal key was not a String but a "
                 + key.getClass().getSimpleName() + " (" + key + ")";

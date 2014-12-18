@@ -15,7 +15,6 @@
  */
 package com.vaadin.client.connectors;
 
-import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.communication.JsonDecoder;
@@ -25,6 +24,8 @@ import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.renderers.Renderer;
+
+import elemental.json.JsonValue;
 
 /**
  * An abstract base class for renderer connectors. A renderer connector is used
@@ -122,7 +123,7 @@ public abstract class AbstractRendererConnector<T> extends
      *            the value to decode
      * @return the decoded value of {@code value}
      */
-    public T decode(JSONValue value) {
+    public T decode(JsonValue value) {
         @SuppressWarnings("unchecked")
         T decodedValue = (T) JsonDecoder.decodeValue(presentationType, value,
                 null, getConnection());

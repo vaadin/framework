@@ -37,7 +37,6 @@ import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
@@ -48,6 +47,7 @@ import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
+import elemental.json.JsonValue;
 
 public class ConnectorBundle {
     private static final String FAIL_IF_NOT_SERIALIZABLE = "vFailIfNotSerializable";
@@ -105,7 +105,7 @@ public class ConnectorBundle {
                 .getName());
         JType[] deserializeParamTypes = new JType[] {
                 oracle.findType(com.vaadin.client.metadata.Type.class.getName()),
-                oracle.findType(JSONValue.class.getName()),
+                oracle.findType(JsonValue.class.getName()),
                 oracle.findType(ApplicationConnection.class.getName()) };
         String deserializeMethodName = "deserialize";
         // Just test that the method exists
