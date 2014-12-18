@@ -21,7 +21,7 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * Event fired when the range of visible rows changes e.g. because of scrolling.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class RowVisibilityChangeEvent extends

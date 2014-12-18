@@ -23,7 +23,7 @@ import com.vaadin.client.widgets.Grid;
 /**
  * Generic class to perform selections when clicking on cells in body of Grid.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class ClickSelectHandler<T> {

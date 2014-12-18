@@ -105,7 +105,7 @@ public class Method {
     /**
      * Checks whether this method is annotated with {@link NoLayout}.
      * 
-     * @since
+     * @since 7.4
      * 
      * @return <code>true</code> if this method has a NoLayout annotation;
      *         otherwise <code>false</code>

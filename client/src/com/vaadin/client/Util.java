@@ -700,6 +700,7 @@ public class Util {
      * @param element
      *            the element of which to calculate the width
      * @return the subpixel-accurate width of the element
+     * @since 7.4
      */
     public static native double getRequiredWidthBoundingClientRectDouble(
             com.google.gwt.dom.client.Element element)
@@ -777,6 +778,7 @@ public class Util {
      * @param element
      *            the element of which to calculate the height
      * @return the subpixel-accurate height of the element
+     * @since 7.4
      */
     public static native double getRequiredHeightBoundingClientRectDouble(
             com.google.gwt.dom.client.Element element)
@@ -1588,6 +1590,9 @@ public class Util {
      *            the first value for which to compare equality
      * @param num2
      *            the second value for which to compare equality
+     * @since 7.4
+     * 
+     * @return true if the values are considered equals; false otherwise
      */
     public static boolean pixelValuesEqual(final double num1, final double num2) {
         return Math.abs(num1 - num2) <= PIXEL_EPSILON;

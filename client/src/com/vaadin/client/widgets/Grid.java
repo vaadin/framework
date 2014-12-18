@@ -167,7 +167,7 @@ import com.vaadin.shared.util.SharedUtil;
  * @param <T>
  *            The row type of the grid. The row type is the POJO type from where
  *            the data is retrieved into the column cells.
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class Grid<T> extends ResizeComposite implements

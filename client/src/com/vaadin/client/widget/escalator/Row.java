@@ -17,11 +17,12 @@
 package com.vaadin.client.widget.escalator;
 
 import com.google.gwt.dom.client.TableRowElement;
+import com.vaadin.client.widgets.Escalator;
 
 /**
  * A representation of a row in an {@link Escalator}.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface Row {

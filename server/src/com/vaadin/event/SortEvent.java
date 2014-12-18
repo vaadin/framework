@@ -27,7 +27,7 @@ import com.vaadin.ui.Component;
  * 
  * @see SortListener
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class SortEvent extends Component.Event {

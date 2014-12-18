@@ -37,7 +37,7 @@ import com.vaadin.client.connectors.AbstractRendererConnector;
  * 
  * @see WidgetInitVisitor
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class RendererVisitor extends TypeVisitor {

@@ -27,9 +27,9 @@ import com.vaadin.client.widgets.Grid;
  * dispatching events when the selection state changes.
  * 
  * @author Vaadin Ltd
- * @since
  * @param <T>
  *            Grid's row type
+ * @since 7.4
  */
 public interface SelectionModel<T> {
 

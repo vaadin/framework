@@ -20,8 +20,8 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Handler for a Grid sort event, called when the Grid needs its data source to
  * provide data sorted in a specific manner.
- *
- * @since
+ * 
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface SortHandler<T> extends EventHandler {
@@ -29,7 +29,7 @@ public interface SortHandler<T> extends EventHandler {
     /**
      * Handle sorting of the Grid. This method is called when a re-sorting of
      * the Grid's data is requested.
-     *
+     * 
      * @param event
      *            the sort event
      */

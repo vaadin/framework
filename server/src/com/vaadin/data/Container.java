@@ -585,6 +585,8 @@ public interface Container extends Serializable {
         /**
          * An <code>Event</code> object specifying information about the added
          * items.
+         * 
+         * @since 7.4
          */
         public interface ItemAddEvent extends ItemSetChangeEvent {
 
@@ -613,6 +615,8 @@ public interface Container extends Serializable {
         /**
          * An <code>Event</code> object specifying information about the removed
          * items.
+         * 
+         * @since 7.4
          */
         public interface ItemRemoveEvent extends ItemSetChangeEvent {
             /**

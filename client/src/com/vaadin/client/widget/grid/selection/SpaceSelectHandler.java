@@ -29,10 +29,10 @@ import com.vaadin.shared.ui.grid.ScrollDestination;
 /**
  * Generic class to perform selections when pressing space key.
  * 
- * @since
  * @author Vaadin Ltd
  * @param <T>
  *            row data type
+ * @since 7.4
  */
 public class SpaceSelectHandler<T> {
 

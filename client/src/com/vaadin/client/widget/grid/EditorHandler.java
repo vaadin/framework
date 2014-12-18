@@ -26,7 +26,7 @@ import com.vaadin.client.widgets.Grid;
  * @param <T>
  *            the row data type
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface EditorHandler<T> {
@@ -181,7 +181,7 @@ public interface EditorHandler<T> {
      * request.startAsync()} to signal the caller that the request is handled
      * asynchronously. In that case, {@link EditorRequest#complete()} must be
      * called once the cancel operation is complete.
-     *
+     * 
      * @param request
      *            the cancel request
      * 
@@ -197,7 +197,7 @@ public interface EditorHandler<T> {
      * request.startAsync()} to signal the caller that the request is handled
      * asynchronously. In that case, {@link EditorRequest#complete()} must be
      * called once the commit operation is complete.
-     *
+     * 
      * @param request
      *            the save request
      * 

@@ -151,7 +151,7 @@ import elemental.json.JsonValue;
  * grid.setSelectionModel(new MyTwoSelectionModel());
  * </pre></code>
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class Grid extends AbstractComponent implements SelectionNotifier,

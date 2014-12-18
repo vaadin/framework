@@ -21,7 +21,7 @@ import com.vaadin.client.widgets.Grid.AbstractGridKeyEvent;
 /**
  * Base interface of all handlers for {@link AbstractGridKeyEvent}s.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public abstract interface AbstractGridKeyEventHandler extends EventHandler {

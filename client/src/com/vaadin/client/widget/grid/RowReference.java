@@ -26,8 +26,10 @@ import com.vaadin.client.widgets.Grid;
  * this object is subject to change without the user knowing it and so should
  * not be stored anywhere outside of the method providing these instances.
  * 
+ * @author Vaadin Ltd
  * @param <T>
  *            the row object type
+ * @since 7.4
  */
 public class RowReference<T> {
     private final Grid<T> grid;

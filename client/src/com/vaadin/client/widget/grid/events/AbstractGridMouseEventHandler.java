@@ -21,7 +21,7 @@ import com.vaadin.client.widgets.Grid.AbstractGridMouseEvent;
 /**
  * Base interface of all handlers for {@link AbstractGridMouseEvent}s.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public abstract interface AbstractGridMouseEventHandler extends EventHandler {

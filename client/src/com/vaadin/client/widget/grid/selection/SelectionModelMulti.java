@@ -30,7 +30,7 @@ import com.vaadin.client.widgets.Grid;
  * Multi-row selection model.
  * 
  * @author Vaadin Ltd
- * @since
+ * @since 7.4
  */
 public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
         implements SelectionModel.Multi.Batched<T> {

@@ -21,7 +21,7 @@ import com.vaadin.client.widget.grid.events.AbstractGridKeyEventHandler.GridKeyD
  * Handler for {@link GridKeyDownEvent}s that happen when the focused cell is in
  * the body of the Grid.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface BodyKeyDownHandler extends GridKeyDownHandler {

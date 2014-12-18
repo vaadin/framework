@@ -32,10 +32,10 @@ import com.vaadin.shared.data.sort.SortDirection;
  * Provides sorting facility from Grid for the {@link ListDataSource} in-memory
  * data source.
  * 
- * @since
  * @author Vaadin Ltd
  * @param <T>
  *            Grid row data type
+ * @since 7.4
  */
 public class ListSorter<T> {
 

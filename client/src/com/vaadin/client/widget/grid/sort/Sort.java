@@ -24,7 +24,7 @@ import com.vaadin.shared.data.sort.SortDirection;
 /**
  * Fluid Sort descriptor object.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class Sort {

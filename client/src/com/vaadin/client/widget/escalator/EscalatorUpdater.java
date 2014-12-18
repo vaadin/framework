@@ -16,6 +16,8 @@
 
 package com.vaadin.client.widget.escalator;
 
+import com.vaadin.client.widgets.Escalator;
+
 /**
  * An interface that allows client code to define how a certain row in Escalator
  * will be displayed. The contents of an escalator's header, body and footer are
@@ -27,7 +29,7 @@ package com.vaadin.client.widget.escalator;
  * This has a similar function to {@link Grid Grid's} {@link Renderer Renderers}
  * , although they operate on different abstraction levels.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  * @see RowContainer#setEscalatorUpdater(EscalatorUpdater)
  * @see Escalator#getHeader()

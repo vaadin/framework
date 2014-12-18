@@ -70,7 +70,7 @@ public class RpcManager {
      * @param invocation
      *            the method invocation to get the method for
      * 
-     * @since
+     * @since 7.4
      * @return the method targeted by this invocation
      */
     public static Method getMethod(MethodInvocation invocation) {

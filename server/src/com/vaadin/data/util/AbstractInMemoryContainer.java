@@ -148,8 +148,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         }
     }
 
-    private static abstract class BaseItemAddOrRemoveEvent extends
-            EventObject implements Serializable {
+    private static abstract class BaseItemAddOrRemoveEvent extends EventObject
+            implements Serializable {
         protected Object itemId;
         protected int index;
         protected int count;
@@ -187,10 +187,11 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * This class provides information about the first added item and the number
      * of added items.
      * </p>
+     * 
+     * @since 7.4
      */
-    protected static class BaseItemAddEvent extends
-            BaseItemAddOrRemoveEvent implements
-            Container.Indexed.ItemAddEvent {
+    protected static class BaseItemAddEvent extends BaseItemAddOrRemoveEvent
+            implements Container.Indexed.ItemAddEvent {
 
         public BaseItemAddEvent(Container source, Object itemId, int index,
                 int count) {
@@ -211,13 +212,14 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * This class provides information about the first removed item and the
      * number of removed items.
      * </p>
+     * 
+     * @since 7.4
      */
-    protected static class BaseItemRemoveEvent extends
-            BaseItemAddOrRemoveEvent implements
-            Container.Indexed.ItemRemoveEvent {
+    protected static class BaseItemRemoveEvent extends BaseItemAddOrRemoveEvent
+            implements Container.Indexed.ItemRemoveEvent {
 
-        public BaseItemRemoveEvent(Container source, Object itemId,
-                int index, int count) {
+        public BaseItemRemoveEvent(Container source, Object itemId, int index,
+                int count) {
             super(source, itemId, index, count);
         }
 
@@ -1005,8 +1007,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      */
     protected void fireItemsAdded(int firstPosition, ITEMIDTYPE firstItemId,
             int numberOfItems) {
-        BaseItemAddEvent addEvent = new BaseItemAddEvent(this,
-                firstItemId, firstPosition, numberOfItems);
+        BaseItemAddEvent addEvent = new BaseItemAddEvent(this, firstItemId,
+                firstPosition, numberOfItems);
         fireItemSetChange(addEvent);
     }
 
@@ -1066,8 +1068,10 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     /**
      * Returns the item id of the first visible item after filtering. 'Null' is
      * returned if there is no visible items.
-     * 
+     * <p>
      * For internal use only.
+     * 
+     * @since 7.4
      * 
      * @return item id of the first visible item
      */

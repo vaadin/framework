@@ -27,7 +27,7 @@ import com.google.gwt.thirdparty.guava.common.collect.Sets;
  * An event that specifies what in a selection has changed, and where the
  * selection took place.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class SelectionEvent extends EventObject {

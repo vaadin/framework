@@ -25,7 +25,7 @@ import com.vaadin.client.widgets.Grid.Section;
 /**
  * Represents native key press event in Grid.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class GridKeyPressEvent extends

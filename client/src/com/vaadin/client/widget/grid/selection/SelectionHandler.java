@@ -20,10 +20,10 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Handler for {@link SelectionEvent}s.
  * 
- * @since
  * @author Vaadin Ltd
  * @param <T>
  *            The row data type
+ * @since 7.4
  */
 public interface SelectionHandler<T> extends EventHandler {
 

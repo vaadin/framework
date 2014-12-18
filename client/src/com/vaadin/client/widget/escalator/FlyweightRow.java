@@ -29,7 +29,7 @@ import com.vaadin.client.widgets.Escalator;
  * There is only one instance per Escalator. This is designed to be re-used when
  * rendering rows.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  * @see Escalator.AbstractRowContainer#refreshRow(Node, int)
  */

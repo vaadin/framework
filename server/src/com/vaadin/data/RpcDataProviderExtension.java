@@ -68,7 +68,7 @@ import elemental.json.JsonValue;
  * This will be changed once framework support for something more flexible has
  * been implemented.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class RpcDataProviderExtension extends AbstractExtension {

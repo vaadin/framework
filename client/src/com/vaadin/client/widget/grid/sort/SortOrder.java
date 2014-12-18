@@ -21,10 +21,8 @@ import com.vaadin.shared.data.sort.SortDirection;
 /**
  * Sort order descriptor. Contains column and direction references.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
- * @param T
- *            grid data type
  */
 public class SortOrder {
 
