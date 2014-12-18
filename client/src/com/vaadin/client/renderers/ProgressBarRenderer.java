@@ -17,7 +17,7 @@ package com.vaadin.client.renderers;
 
 import com.google.gwt.core.shared.GWT;
 import com.vaadin.client.ui.VProgressBar;
-import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.RendererCellReference;
 
 /**
  * A Renderer that represents a double value as a graphical progress bar.
@@ -33,7 +33,8 @@ public class ProgressBarRenderer extends WidgetRenderer<Double, VProgressBar> {
     }
 
     @Override
-    public void render(FlyweightCell cell, Double data, VProgressBar progressBar) {
+    public void render(RendererCellReference cell, Double data,
+            VProgressBar progressBar) {
         if (data == null) {
             progressBar.setEnabled(false);
         } else {

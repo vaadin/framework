@@ -21,15 +21,16 @@ import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.json.client.JSONObject;
 import com.vaadin.client.FastStringSet;
 import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.Util;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.ui.AbstractConnector;
+import elemental.json.JsonObject;
 
 public class StateChangeEvent extends
         AbstractServerConnectorEvent<StateChangeHandler> {
@@ -54,7 +55,7 @@ public class StateChangeEvent extends
 
     private boolean initialStateChange = false;
 
-    private JSONObject stateJson;
+    private JsonObject stateJson;
 
     @Override
     public Type<StateChangeHandler> getAssociatedType() {
@@ -69,7 +70,7 @@ public class StateChangeEvent extends
      * @param changedPropertiesSet
      *            a set of names of the changed properties
      * @deprecated As of 7.0.1, use
-     *             {@link #StateChangeEvent(ServerConnector, JSONObject, boolean)}
+     *             {@link #StateChangeEvent(ServerConnector, JsonObject, boolean)}
      *             instead for improved performance.
      */
     @Deprecated
@@ -93,7 +94,7 @@ public class StateChangeEvent extends
      * @param changedProperties
      *            a set of names of the changed properties
      * @deprecated As of 7.0.2, use
-     *             {@link #StateChangeEvent(ServerConnector, JSONObject, boolean)}
+     *             {@link #StateChangeEvent(ServerConnector, JsonObject, boolean)}
      *             instead for improved performance.
      */
     @Deprecated
@@ -114,7 +115,7 @@ public class StateChangeEvent extends
      *            <code>true</code> if the state change is for a new connector,
      *            otherwise <code>false</code>
      */
-    public StateChangeEvent(ServerConnector connector, JSONObject stateJson,
+    public StateChangeEvent(ServerConnector connector, JsonObject stateJson,
             boolean initialStateChange) {
         setConnector(connector);
         this.stateJson = stateJson;
@@ -203,7 +204,7 @@ public class StateChangeEvent extends
             return true;
         } else if (stateJson != null) {
             // Check whether it's in the json object
-            return isInJson(property, stateJson.getJavaScriptObject());
+            return isInJson(property, Util.json2jso(stateJson));
         } else {
             // Legacy cases
             if (changedProperties != null) {
@@ -297,13 +298,13 @@ public class StateChangeEvent extends
      *            the base name of the current object
      */
     @Deprecated
-    private static void addJsonFields(JSONObject json,
+    private static void addJsonFields(JsonObject json,
             FastStringSet changedProperties, String context) {
-        for (String key : json.keySet()) {
+        for (String key : json.keys()) {
             String fieldName = context + key;
             changedProperties.add(fieldName);
 
-            JSONObject object = json.get(key).isObject();
+            JsonObject object = json.get(key);
             if (object != null) {
                 addJsonFields(object, changedProperties, fieldName + ".");
             }

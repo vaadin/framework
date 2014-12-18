@@ -16,6 +16,7 @@
 package com.vaadin.client.widget.grid.events;
 
 import com.google.gwt.dom.client.BrowserEvents;
+import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.events.AbstractGridKeyEventHandler.GridKeyPressHandler;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.AbstractGridKeyEvent;
@@ -30,8 +31,8 @@ import com.vaadin.client.widgets.Grid.Section;
 public class GridKeyPressEvent extends
         AbstractGridKeyEvent<GridKeyPressHandler> {
 
-    public GridKeyPressEvent(Grid<?> grid) {
-        super(grid);
+    public GridKeyPressEvent(Grid<?> grid, CellReference<?> targetCell) {
+        super(grid, targetCell);
     }
 
     @Override

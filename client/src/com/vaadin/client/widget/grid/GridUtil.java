@@ -42,9 +42,15 @@ public class GridUtil {
      * @return the cell or null if the element is not a grid cell or a
      *         descendant of one
      */
-    public static Cell findCell(Grid<?> grid, Element e) {
+    public static <T> CellReference<T> findCell(Grid<T> grid, Element e) {
         RowContainer container = getEscalator(grid).findRowContainer(e);
-        return container != null ? container.getCell(e) : null;
+        if (container == null) {
+            return null;
+        }
+        Cell cell = container.getCell(e);
+        EventCellReference<T> cellReference = new EventCellReference<T>(grid);
+        cellReference.set(cell);
+        return cellReference;
     }
 
     /**

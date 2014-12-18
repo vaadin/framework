@@ -35,9 +35,17 @@ $v-grid-editor-row-background-color: $v-grid-row-background-color !default;
     outline: none;
   }
 
-  .#{$primaryStyleName}-scroller-vertical.
+  .#{$primaryStyleName}-scroller-vertical,
   .#{$primaryStyleName}-scroller-horizontal {
     border: $v-grid-border;
+  }
+
+  .#{$primaryStyleName}-scroller-vertical {
+    border-left: none;
+  }
+
+  .#{$primaryStyleName}-scroller-horizontal {
+    border-top: none;
   }
 
   .#{$primaryStyleName}-tablewrapper {

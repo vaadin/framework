@@ -18,11 +18,6 @@ package com.vaadin.client.connectors;
 
 import java.util.ArrayList;
 
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONString;
-import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
@@ -31,6 +26,12 @@ import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
+
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.JsonObject;
+import elemental.json.JsonType;
+import elemental.json.JsonValue;
 
 /**
  * Connects a Vaadin server-side container data source to a Grid. This is
@@ -44,24 +45,21 @@ import com.vaadin.shared.ui.grid.Range;
 @Connect(com.vaadin.data.RpcDataProviderExtension.class)
 public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
-    public class RpcDataSource extends AbstractRemoteDataSource<JSONObject> {
+    public class RpcDataSource extends AbstractRemoteDataSource<JsonObject> {
 
         protected RpcDataSource() {
             registerRpc(DataProviderRpc.class, new DataProviderRpc() {
                 @Override
                 public void setRowData(int firstRow, String rowsJson) {
-                    JSONValue parsedJson = JSONParser.parseStrict(rowsJson);
-                    JSONArray rowArray = parsedJson.isArray();
-                    assert rowArray != null : "Was unable to parse JSON into an array: "
+                    JsonValue parsedJson = Json.instance().parse(rowsJson);
+                    assert parsedJson.getType() == JsonType.ARRAY : "Was unable to parse JSON into an array: "
                             + parsedJson;
+                    JsonArray rowArray = (JsonArray) parsedJson;
 
-                    ArrayList<JSONObject> rows = new ArrayList<JSONObject>(
-                            rowArray.size());
-                    for (int i = 0; i < rowArray.size(); i++) {
-                        JSONValue rowValue = rowArray.get(i);
-                        JSONObject rowObject = rowValue.isObject();
-                        assert rowObject != null : "Was unable to parse JSON into an object: "
-                                + rowValue;
+                    ArrayList<JsonObject> rows = new ArrayList<JsonObject>(
+                            rowArray.length());
+                    for (int i = 0; i < rowArray.length(); i++) {
+                        JsonObject rowObject = rowArray.getObject(i);
                         rows.add(rowObject);
                     }
 
@@ -89,7 +87,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
         @Override
         protected void requestRows(int firstRowIndex, int numberOfRows,
-                RequestRowsCallback<JSONObject> callback) {
+                RequestRowsCallback<JsonObject> callback) {
             /*
              * If you're looking at this code because you want to learn how to
              * use AbstactRemoteDataSource, please look somewhere else instead.
@@ -109,18 +107,17 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
         }
 
         @Override
-        public String getRowKey(JSONObject row) {
-            JSONString string = row.get(GridState.JSONKEY_ROWKEY).isString();
-            if (string != null) {
-                return string.stringValue();
+        public String getRowKey(JsonObject row) {
+            if (row.hasKey(GridState.JSONKEY_ROWKEY)) {
+                return row.getString(GridState.JSONKEY_ROWKEY);
             } else {
                 return null;
             }
         }
 
-        public RowHandle<JSONObject> getHandleByKey(Object key) {
-            JSONObject row = new JSONObject();
-            row.put(GridState.JSONKEY_ROWKEY, new JSONString((String) key));
+        public RowHandle<JsonObject> getHandleByKey(Object key) {
+            JsonObject row = Json.createObject();
+            row.put(GridState.JSONKEY_ROWKEY, (String) key);
             return new RowHandleImpl(row, key);
         }
 

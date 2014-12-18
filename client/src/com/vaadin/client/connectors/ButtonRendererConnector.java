@@ -15,11 +15,12 @@
  */
 package com.vaadin.client.connectors;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.renderers.ButtonRenderer;
 import com.vaadin.client.renderers.ClickableRenderer.RendererClickHandler;
 import com.vaadin.shared.ui.Connect;
+
+import elemental.json.JsonObject;
 
 /**
  * A connector for {@link ButtonRenderer}.
@@ -37,7 +38,7 @@ public class ButtonRendererConnector extends ClickableRendererConnector<String> 
 
     @Override
     protected HandlerRegistration addClickHandler(
-            RendererClickHandler<JSONObject> handler) {
+            RendererClickHandler<JsonObject> handler) {
         return getRenderer().addClickHandler(handler);
     }
 }

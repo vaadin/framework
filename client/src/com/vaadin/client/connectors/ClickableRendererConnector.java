@@ -15,12 +15,13 @@
  */
 package com.vaadin.client.connectors;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.renderers.ClickableRenderer.RendererClickEvent;
 import com.vaadin.client.renderers.ClickableRenderer.RendererClickHandler;
 import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
+
+import elemental.json.JsonObject;
 
 /**
  * An abstract base class for {@link ClickableRenderer} connectors.
@@ -38,12 +39,12 @@ public abstract class ClickableRendererConnector<T> extends
 
     @Override
     protected void init() {
-        clickRegistration = addClickHandler(new RendererClickHandler<JSONObject>() {
+        clickRegistration = addClickHandler(new RendererClickHandler<JsonObject>() {
             @Override
-            public void onClick(RendererClickEvent<JSONObject> event) {
+            public void onClick(RendererClickEvent<JsonObject> event) {
                 getRpcProxy(RendererClickRpc.class).click(
-                        event.getCell().getRow(),
-                        event.getCell().getColumn(),
+                        getRowKey(event.getCell().getRow()),
+                        getColumnId(event.getCell().getColumn()),
                         MouseEventDetailsBuilder.buildMouseEventDetails(event
                                 .getNativeEvent()));
             }
@@ -56,5 +57,5 @@ public abstract class ClickableRendererConnector<T> extends
     }
 
     protected abstract HandlerRegistration addClickHandler(
-            RendererClickHandler<JSONObject> handler);
+            RendererClickHandler<JsonObject> handler);
 }

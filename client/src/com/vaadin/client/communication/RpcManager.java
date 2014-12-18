@@ -18,8 +18,6 @@ package com.vaadin.client.communication;
 
 import java.util.Collection;
 
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONString;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.ServerConnector;
@@ -29,6 +27,8 @@ import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.MethodInvocation;
+
+import elemental.json.JsonArray;
 
 /**
  * Client side RPC manager that can invoke methods based on RPC calls received
@@ -97,14 +97,14 @@ public class RpcManager {
         }
     }
 
-    public MethodInvocation parseAndApplyInvocation(JSONArray rpcCall,
+    public MethodInvocation parseAndApplyInvocation(JsonArray rpcCall,
             ApplicationConnection connection) {
         ConnectorMap connectorMap = ConnectorMap.get(connection);
 
-        String connectorId = ((JSONString) rpcCall.get(0)).stringValue();
-        String interfaceName = ((JSONString) rpcCall.get(1)).stringValue();
-        String methodName = ((JSONString) rpcCall.get(2)).stringValue();
-        JSONArray parametersJson = (JSONArray) rpcCall.get(3);
+        String connectorId = rpcCall.getString(0);
+        String interfaceName = rpcCall.getString(1);
+        String methodName = rpcCall.getString(2);
+        JsonArray parametersJson = rpcCall.getArray(3);
 
         ServerConnector connector = connectorMap.getConnector(connectorId);
 
@@ -130,11 +130,11 @@ public class RpcManager {
     }
 
     private void parseMethodParameters(MethodInvocation methodInvocation,
-            JSONArray parametersJson, ApplicationConnection connection) {
+            JsonArray parametersJson, ApplicationConnection connection) {
         Type[] parameterTypes = getParameterTypes(methodInvocation);
 
-        Object[] parameters = new Object[parametersJson.size()];
-        for (int j = 0; j < parametersJson.size(); ++j) {
+        Object[] parameters = new Object[parametersJson.length()];
+        for (int j = 0; j < parametersJson.length(); ++j) {
             parameters[j] = JsonDecoder.decodeValue(parameterTypes[j],
                     parametersJson.get(j), null, connection);
         }

@@ -15,7 +15,6 @@
  */
 package com.vaadin.client.connectors;
 
-import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.communication.JsonDecoder;
@@ -25,6 +24,10 @@ import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.renderers.Renderer;
+import com.vaadin.client.widgets.Grid.Column;
+
+import elemental.json.JsonObject;
+import elemental.json.JsonValue;
 
 /**
  * An abstract base class for renderer connectors. A renderer connector is used
@@ -122,7 +125,7 @@ public abstract class AbstractRendererConnector<T> extends
      *            the value to decode
      * @return the decoded value of {@code value}
      */
-    public T decode(JSONValue value) {
+    public T decode(JsonValue value) {
         @SuppressWarnings("unchecked")
         T decodedValue = (T) JsonDecoder.decodeValue(presentationType, value,
                 null, getConnection());
@@ -136,23 +139,45 @@ public abstract class AbstractRendererConnector<T> extends
     }
 
     /**
-     * Gets the row key for a row index.
+     * Gets the row key for a row object.
      * <p>
      * In case this renderer wants be able to identify a row in such a way that
      * the server also understands it, the row key is used for that. Rows are
      * identified by unified keys between the client and the server.
      * 
-     * @param index
-     *            the row index for which to get the row key
-     * @return the row key for the row at {@code index}
+     * @param row
+     *            the row object
+     * @return the row key for the given row
      */
-    protected String getRowKey(int index) {
+    protected String getRowKey(JsonObject row) {
         final ServerConnector parent = getParent();
         if (parent instanceof GridConnector) {
-            return ((GridConnector) parent).getRowKey(index);
+            return ((GridConnector) parent).getRowKey(row);
         } else {
             throw new IllegalStateException("Renderers can only be used "
                     + "with a Grid.");
         }
     }
+
+    /**
+     * Gets the column id for a column.
+     * <p>
+     * In case this renderer wants be able to identify a column in such a way
+     * that the server also understands it, the column id is used for that.
+     * Columns are identified by unified ids between the client and the server.
+     * 
+     * @param column
+     *            the column object
+     * @return the column id for the given column
+     */
+    protected String getColumnId(Column<?, JsonObject> column) {
+        final ServerConnector parent = getParent();
+        if (parent instanceof GridConnector) {
+            return ((GridConnector) parent).getColumnId(column);
+        } else {
+            throw new IllegalStateException("Renderers can only be used "
+                    + "with a Grid.");
+        }
+    }
+
 }

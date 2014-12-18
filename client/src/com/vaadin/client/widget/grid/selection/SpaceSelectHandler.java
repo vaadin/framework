@@ -17,7 +17,6 @@ package com.vaadin.client.widget.grid.selection;
 
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widget.grid.DataAvailableEvent;
 import com.vaadin.client.widget.grid.DataAvailableHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyDownHandler;
@@ -53,8 +52,7 @@ public class SpaceSelectHandler<T> {
             event.getNativeEvent().preventDefault();
 
             spaceDown = true;
-            Cell focused = event.getFocusedCell();
-            final int rowIndex = focused.getRow();
+            final int rowIndex = event.getFocusedCell().getRowIndex();
 
             if (scrollHandler != null) {
                 scrollHandler.removeHandler();

@@ -16,7 +16,7 @@
 package com.vaadin.client.renderers;
 
 import com.vaadin.client.widget.escalator.Cell;
-import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widgets.Grid;
 
 /**
@@ -44,5 +44,5 @@ public interface Renderer<T> {
      * @param data
      *            The column data object
      */
-    void render(FlyweightCell cell, T data);
+    void render(RendererCellReference cell, T data);
 }

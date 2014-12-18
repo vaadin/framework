@@ -2382,9 +2382,35 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * @return the item id corresponding to {@code key}
          */
         protected Object getItemId(String rowKey) {
+            return getParentGrid().getKeyMapper().getItemId(rowKey);
+        }
+
+        /**
+         * Gets the column for a column id.
+         * <p>
+         * An id is used to identify a particular column on both a server and a
+         * client. This method can be used to get the column for the column id
+         * that the client has sent.
+         * 
+         * @param columnId
+         *            the column id for which to retrieve a column
+         * @return the column corresponding to {@code columnId}
+         */
+        protected Column getColumn(String columnId) {
+            return getParentGrid().getColumnByColumnId(columnId);
+        }
+
+        /**
+         * Gets the parent Grid of the renderer.
+         * 
+         * @return parent grid
+         * @throws IllegalStateException
+         *             if parent is not Grid
+         */
+        protected Grid getParentGrid() {
             if (getParent() instanceof Grid) {
                 Grid grid = (Grid) getParent();
-                return grid.getKeyMapper().getItemId(rowKey);
+                return grid;
             } else {
                 throw new IllegalStateException(
                         "Renderers can be used only with Grid");

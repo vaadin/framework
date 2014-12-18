@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.renderers;
 
-import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.RendererCellReference;
 
 /**
  * Renderer that renders text into a cell.
@@ -26,7 +26,7 @@ import com.vaadin.client.widget.escalator.FlyweightCell;
 public class TextRenderer implements Renderer<String> {
 
     @Override
-    public void render(FlyweightCell cell, String text) {
+    public void render(RendererCellReference cell, String text) {
         cell.getElement().setInnerText(text);
     }
 }

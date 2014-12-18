@@ -38,8 +38,8 @@ import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.client.widget.escalator.Cell;
-import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.CellReference;
+import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.datasources.ListDataSource;
 import com.vaadin.client.widget.grid.datasources.ListSorter;
 import com.vaadin.client.widget.grid.sort.Sort;
@@ -289,7 +289,7 @@ public class GridClientColumnRendererConnector extends
                 }
 
                 @Override
-                public void render(FlyweightCell cell, String data,
+                public void render(RendererCellReference cell, String data,
                         Button button) {
                     button.setHTML(data);
                 }
@@ -299,7 +299,7 @@ public class GridClientColumnRendererConnector extends
             return new HtmlRenderer() {
 
                 @Override
-                public void render(FlyweightCell cell, String htmlString) {
+                public void render(RendererCellReference cell, String htmlString) {
                     super.render(cell, "<b>" + htmlString + "</b>");
                 }
             };
@@ -314,17 +314,17 @@ public class GridClientColumnRendererConnector extends
             return new ComplexRenderer<String>() {
 
                 @Override
-                public void init(FlyweightCell cell) {
+                public void init(RendererCellReference cell) {
                 }
 
                 @Override
-                public void render(FlyweightCell cell, String data) {
+                public void render(RendererCellReference cell, String data) {
                     cell.getElement().setInnerHTML("<span>" + data + "</span>");
                     cell.getElement().getStyle().clearBackgroundColor();
                 }
 
                 @Override
-                public void setContentVisible(FlyweightCell cell,
+                public void setContentVisible(RendererCellReference cell,
                         boolean hasData) {
 
                     // Visualize content visible property
@@ -335,7 +335,7 @@ public class GridClientColumnRendererConnector extends
                 }
 
                 @Override
-                public boolean onActivate(Cell cell) {
+                public boolean onActivate(CellReference<?> cell) {
                     cell.getElement().setInnerHTML("<span>Activated!</span>");
                     return true;
                 }

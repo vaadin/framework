@@ -19,11 +19,13 @@ package com.vaadin.server.widgetsetutils.metadata;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JArrayType;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.client.communication.JsonDecoder;
 import com.vaadin.client.communication.JsonEncoder;
 import com.vaadin.server.widgetsetutils.ConnectorBundleLoaderFactory;
+
+import elemental.json.Json;
+import elemental.json.JsonArray;
 
 public class ArraySerializer extends JsonSerializer {
 
@@ -40,12 +42,12 @@ public class ArraySerializer extends JsonSerializer {
         JType leafType = arrayType.getLeafType();
         int rank = arrayType.getRank();
 
-        w.println(JSONArray.class.getName() + " jsonArray = " + jsonValue
-                + ".isArray();");
+        w.println(JsonArray.class.getName() + " jsonArray = ("
+                + JsonArray.class.getName() + ")" + jsonValue + ";");
 
         // Type value = new Type[jsonArray.size()][][];
         w.print(arrayType.getQualifiedSourceName() + " value = new "
-                + leafType.getQualifiedSourceName() + "[jsonArray.size()]");
+                + leafType.getQualifiedSourceName() + "[jsonArray.length()]");
         for (int i = 1; i < rank; i++) {
             w.print("[]");
         }
@@ -75,8 +77,8 @@ public class ArraySerializer extends JsonSerializer {
             String value, String applicationConnection) {
         JType componentType = arrayType.getComponentType();
 
-        w.println(JSONArray.class.getName() + " values = new "
-                + JSONArray.class.getName() + "();");
+        w.println(JsonArray.class.getName() + " values = "
+                + Json.class.getName() + ".createArray();");
         // JPrimitiveType primitive = componentType.isPrimitive();
         w.println("for (int i = 0; i < " + value + ".length; i++) {");
         w.indent();

@@ -5042,7 +5042,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
     @Override
     public boolean isWorkPending() {
         return body.domSorter.waiting
-                || columnAutoWidthAssignScheduler.isScheduled;
+                || columnAutoWidthAssignScheduler.isScheduled
+                || verticalScrollbar.isWorkPending()
+                || horizontalScrollbar.isWorkPending();
     }
 
     @Override

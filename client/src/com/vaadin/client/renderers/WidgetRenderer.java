@@ -18,7 +18,7 @@ package com.vaadin.client.renderers;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.Util;
-import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.RendererCellReference;
 
 /**
  * A renderer for rendering widgets into cells.
@@ -34,7 +34,7 @@ public abstract class WidgetRenderer<T, W extends Widget> extends
         ComplexRenderer<T> {
 
     @Override
-    public void init(FlyweightCell cell) {
+    public void init(RendererCellReference cell) {
         // Implement if needed
     }
 
@@ -48,7 +48,7 @@ public abstract class WidgetRenderer<T, W extends Widget> extends
     public abstract W createWidget();
 
     @Override
-    public void render(FlyweightCell cell, T data) {
+    public void render(RendererCellReference cell, T data) {
         W w = getWidget(cell.getElement());
         assert w != null : "Widget not found in cell (" + cell.getColumn()
                 + "," + cell.getRow() + ")";
@@ -68,7 +68,7 @@ public abstract class WidgetRenderer<T, W extends Widget> extends
      * @param widget
      *            the widget embedded in the cell
      */
-    public abstract void render(FlyweightCell cell, T data, W widget);
+    public abstract void render(RendererCellReference cell, T data, W widget);
 
     /**
      * Returns the widget contained inside the given cell element. Cannot be

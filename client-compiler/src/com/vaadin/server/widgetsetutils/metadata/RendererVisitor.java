@@ -31,9 +31,8 @@ import com.vaadin.client.connectors.AbstractRendererConnector;
  * {@link AbstractRendererConnector#getRenderer() getRenderer} method to enable
  * automatic creation of an instance of the proper renderer type.
  * <li>Stores the presentation type of the connector to enable the
- * {@link AbstractRendererConnector#decode(com.google.gwt.json.client.JSONValue)
- * decode} method to work without having to implement a "getPresentationType"
- * method.
+ * {@link AbstractRendererConnector#decode(elemental.json.JsonValue) decode}
+ * method to work without having to implement a "getPresentationType" method.
  * </ul>
  * 
  * @see WidgetInitVisitor

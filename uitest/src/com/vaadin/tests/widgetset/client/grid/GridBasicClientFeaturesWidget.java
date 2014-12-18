@@ -42,11 +42,10 @@ import com.vaadin.client.renderers.NumberRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.client.ui.VLabel;
-import com.vaadin.client.widget.escalator.Cell;
-import com.vaadin.client.widget.escalator.FlyweightCell;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
+import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
 import com.vaadin.client.widget.grid.datasources.ListDataSource;
@@ -707,8 +706,9 @@ public class GridBasicClientFeaturesWidget extends
 
                     column.setRenderer(new Renderer<Object>() {
                         @Override
-                        public void render(FlyweightCell cell, Object data) {
-                            if (cell.getRow() == cell.getColumn()) {
+                        public void render(RendererCellReference cell,
+                                Object data) {
+                            if (cell.getRowIndex() == cell.getColumnIndex()) {
                                 throw new RuntimeException("I'm broken");
                             }
                             originalRenderer.render(cell, data);
@@ -1016,7 +1016,7 @@ public class GridBasicClientFeaturesWidget extends
             return new HtmlRenderer() {
 
                 @Override
-                public void render(FlyweightCell cell, String htmlString) {
+                public void render(RendererCellReference cell, String htmlString) {
                     super.render(cell, "<b>" + htmlString + "</b>");
                 }
             };
@@ -1049,9 +1049,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyDown(GridKeyDownEvent event) {
-                Cell focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(), focused.getRow(),
-                        focused.getColumn());
+                CellReference<?> focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(),
+                        focused.getRowIndex(), focused.getColumnIndex());
             }
         });
 
@@ -1060,9 +1060,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyDown(GridKeyDownEvent event) {
-                Cell focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(), focused.getRow(),
-                        focused.getColumn());
+                CellReference<?> focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(),
+                        focused.getRowIndex(), focused.getColumnIndex());
             }
         });
 
@@ -1071,9 +1071,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyDown(GridKeyDownEvent event) {
-                Cell focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(), focused.getRow(),
-                        focused.getColumn());
+                CellReference<?> focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(),
+                        focused.getRowIndex(), focused.getColumnIndex());
             }
         });
 
@@ -1083,9 +1083,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyUp(GridKeyUpEvent event) {
-                Cell focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(), focused.getRow(),
-                        focused.getColumn());
+                CellReference<?> focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(),
+                        focused.getRowIndex(), focused.getColumnIndex());
             }
         });
 
@@ -1094,9 +1094,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyUp(GridKeyUpEvent event) {
-                Cell focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(), focused.getRow(),
-                        focused.getColumn());
+                CellReference<?> focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(),
+                        focused.getRowIndex(), focused.getColumnIndex());
             }
         });
 
@@ -1105,9 +1105,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyUp(GridKeyUpEvent event) {
-                Cell focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(), focused.getRow(),
-                        focused.getColumn());
+                CellReference<?> focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(),
+                        focused.getRowIndex(), focused.getColumnIndex());
             }
         });
 
@@ -1117,9 +1117,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyPress(GridKeyPressEvent event) {
-                Cell focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(), focused.getRow(),
-                        focused.getColumn());
+                CellReference<?> focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(),
+                        focused.getRowIndex(), focused.getColumnIndex());
             }
         });
 
@@ -1128,9 +1128,9 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyPress(GridKeyPressEvent event) {
-                Cell focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(), focused.getRow(),
-                        focused.getColumn());
+                CellReference<?> focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(),
+                        focused.getRowIndex(), focused.getColumnIndex());
             }
         });
 
@@ -1139,16 +1139,16 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void onKeyPress(GridKeyPressEvent event) {
-                Cell focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(), focused.getRow(),
-                        focused.getColumn());
+                CellReference<?> focused = event.getFocusedCell();
+                updateLabel(label, event.toDebugString(),
+                        focused.getRowIndex(), focused.getColumnIndex());
             }
         });
 
     }
 
-    private void updateLabel(VLabel label, String output, int row, int col) {
-        String coords = "(" + row + ", " + col + ")";
+    private void updateLabel(VLabel label, String output, int object, int column) {
+        String coords = "(" + object + ", " + column + ")";
         label.setText(coords + " " + output);
     }
 }

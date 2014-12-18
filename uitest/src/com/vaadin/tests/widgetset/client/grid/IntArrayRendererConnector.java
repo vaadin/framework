@@ -17,7 +17,7 @@ package com.vaadin.tests.widgetset.client.grid;
 
 import com.vaadin.client.connectors.AbstractRendererConnector;
 import com.vaadin.client.renderers.Renderer;
-import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(com.vaadin.tests.components.grid.IntArrayRenderer.class)
@@ -27,7 +27,7 @@ public class IntArrayRendererConnector extends AbstractRendererConnector<int[]> 
         private static final String JOINER = " :: ";
 
         @Override
-        public void render(FlyweightCell cell, int[] data) {
+        public void render(RendererCellReference cell, int[] data) {
             String text = "";
             for (int i : data) {
                 text += i + JOINER;
