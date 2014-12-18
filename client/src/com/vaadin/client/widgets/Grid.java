@@ -81,6 +81,7 @@ import com.vaadin.client.widget.grid.DataAvailableHandler;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.EditorHandler.EditorRequest;
 import com.vaadin.client.widget.grid.EditorHandler.EditorRequest.RequestCallback;
+import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.GridUtil;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
@@ -1306,12 +1307,13 @@ public class Grid<T> extends ResizeComposite implements
             extends KeyEvent<HANDLER> {
 
         private Grid<?> grid;
-        protected Cell focusedCell;
         private final Type<HANDLER> associatedType = new Type<HANDLER>(
                 getBrowserEventType(), this);
+        private final CellReference<?> targetCell;
 
-        public AbstractGridKeyEvent(Grid<?> grid) {
+        public AbstractGridKeyEvent(Grid<?> grid, CellReference<?> targetCell) {
             this.grid = grid;
+            this.targetCell = targetCell;
         }
 
         protected abstract String getBrowserEventType();
@@ -1330,8 +1332,8 @@ public class Grid<T> extends ResizeComposite implements
          * 
          * @return focused cell
          */
-        public Cell getFocusedCell() {
-            return focusedCell;
+        public CellReference<?> getFocusedCell() {
+            return targetCell;
         }
 
         @Override
@@ -1340,7 +1342,6 @@ public class Grid<T> extends ResizeComposite implements
             if (Element.is(target)
                     && !grid.isElementInChildWidget(Element.as(target))) {
 
-                focusedCell = grid.cellFocusHandler.getFocusedCell();
                 Section section = Section.FOOTER;
                 final RowContainer container = grid.cellFocusHandler.containerWithFocus;
                 if (container == grid.escalator.getHeader()) {
@@ -1365,12 +1366,13 @@ public class Grid<T> extends ResizeComposite implements
             extends MouseEvent<HANDLER> {
 
         private Grid<?> grid;
-        protected Cell targetCell;
+        private final CellReference<?> targetCell;
         private final Type<HANDLER> associatedType = new Type<HANDLER>(
                 getBrowserEventType(), this);
 
-        public AbstractGridMouseEvent(Grid<?> grid) {
+        public AbstractGridMouseEvent(Grid<?> grid, CellReference<?> targetCell) {
             this.grid = grid;
+            this.targetCell = targetCell;
         }
 
         protected abstract String getBrowserEventType();
@@ -1385,11 +1387,11 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Gets the target cell for this event.
+         * Gets the reference of target cell for this event.
          * 
          * @return target cell
          */
-        public Cell getTargetCell() {
+        public CellReference<?> getTargetCell() {
             return targetCell;
         }
 
@@ -1414,12 +1416,6 @@ public class Grid<T> extends ResizeComposite implements
                 return;
             }
 
-            targetCell = container.getCell(targetElement);
-            if (targetCell == null) {
-                // Is not a cell in given container.
-                return;
-            }
-
             Section section = Section.FOOTER;
             if (container == grid.escalator.getHeader()) {
                 section = Section.HEADER;
@@ -1440,10 +1436,11 @@ public class Grid<T> extends ResizeComposite implements
 
     private static final String CUSTOM_STYLE_PROPERTY_NAME = "customStyle";
 
-    private GridKeyDownEvent keyDown = new GridKeyDownEvent(this);
-    private GridKeyUpEvent keyUp = new GridKeyUpEvent(this);
-    private GridKeyPressEvent keyPress = new GridKeyPressEvent(this);
-    private GridClickEvent clickEvent = new GridClickEvent(this);
+    private EventCellReference<T> eventCell = new EventCellReference<T>(this);
+    private GridKeyDownEvent keyDown = new GridKeyDownEvent(this, eventCell);
+    private GridKeyUpEvent keyUp = new GridKeyUpEvent(this, eventCell);
+    private GridKeyPressEvent keyPress = new GridKeyPressEvent(this, eventCell);
+    private GridClickEvent clickEvent = new GridClickEvent(this, eventCell);
 
     private class CellFocusHandler {
 
@@ -1920,14 +1917,15 @@ public class Grid<T> extends ResizeComposite implements
     private final class UserSorter {
 
         private final Timer timer;
-        private Cell scheduledCell;
         private boolean scheduledMultisort;
+        private Column<?, T> column;
 
         private UserSorter() {
             timer = new Timer() {
+
                 @Override
                 public void run() {
-                    UserSorter.this.sort(scheduledCell, scheduledMultisort);
+                    UserSorter.this.sort(column, scheduledMultisort);
                 }
             };
         }
@@ -1945,9 +1943,14 @@ public class Grid<T> extends ResizeComposite implements
          *            whether the sort command should act as a multi-sort stack
          *            or not
          */
-        public void sort(Cell cell, boolean multisort) {
+        public void sort(Column<?, ?> column, boolean multisort) {
 
-            final Column<?, T> column = getColumn(cell.getColumn());
+            if (!columns.contains(column)) {
+                throw new IllegalArgumentException(
+                        "Given column is not a column in this grid. "
+                                + column.toString());
+            }
+
             if (!column.isSortable()) {
                 return;
             }
@@ -1993,8 +1996,8 @@ public class Grid<T> extends ResizeComposite implements
          * @param delay
          *            delay, in milliseconds
          */
-        public void sortAfterDelay(int delay, Cell cell, boolean multisort) {
-            scheduledCell = cell;
+        public void sortAfterDelay(int delay, boolean multisort) {
+            column = eventCell.getColumn();
             scheduledMultisort = multisort;
             timer.schedule(delay);
         }
@@ -3430,7 +3433,8 @@ public class Grid<T> extends ResizeComposite implements
                     return;
                 }
 
-                sorter.sort(event.getFocusedCell(), event.isShiftKeyDown());
+                sorter.sort(event.getFocusedCell().getColumn(),
+                        event.isShiftKeyDown());
             }
         });
 
@@ -4451,6 +4455,7 @@ public class Grid<T> extends ResizeComposite implements
 
         assert cell != null : "received " + eventType
                 + "-event with a null cell target";
+        eventCell.set(cell);
 
         // Editor can steal focus from Grid and is still handled
         if (handleEditorEvent(event, container, cell)) {
@@ -4463,7 +4468,7 @@ public class Grid<T> extends ResizeComposite implements
         if (!isElementInChildWidget(e)) {
 
             // Sorting through header Click / KeyUp
-            if (handleHeaderDefaultRowEvent(event, container, cell)) {
+            if (handleHeaderDefaultRowEvent(event, container)) {
                 return;
             }
 
@@ -4471,7 +4476,7 @@ public class Grid<T> extends ResizeComposite implements
                 return;
             }
 
-            if (handleNavigationEvent(event, container, cell)) {
+            if (handleNavigationEvent(event, container)) {
                 return;
             }
 
@@ -4530,8 +4535,8 @@ public class Grid<T> extends ResizeComposite implements
     private boolean handleRendererEvent(Event event, RowContainer container,
             Cell cell) {
 
-        if (container == escalator.getBody() && cell != null) {
-            Column<?, T> gridColumn = getColumn(cell.getColumn());
+        if (container == escalator.getBody()) {
+            Column<?, T> gridColumn = eventCell.getColumn();
             boolean enterKey = event.getType().equals(BrowserEvents.KEYDOWN)
                     && event.getKeyCode() == KeyCodes.KEY_ENTER;
             boolean doubleClick = event.getType()
@@ -4564,8 +4569,7 @@ public class Grid<T> extends ResizeComposite implements
         return false;
     }
 
-    private boolean handleNavigationEvent(Event event, RowContainer unused,
-            Cell cell) {
+    private boolean handleNavigationEvent(Event event, RowContainer unused) {
         if (!event.getType().equals(BrowserEvents.KEYDOWN)) {
             // Only handle key downs
             return false;
@@ -4624,14 +4628,14 @@ public class Grid<T> extends ResizeComposite implements
             (RowReference<Object>) rowReference);
 
     private boolean handleHeaderDefaultRowEvent(Event event,
-            RowContainer container, final Cell cell) {
+            RowContainer container) {
         if (container != escalator.getHeader()) {
             return false;
         }
-        if (!getHeader().getRow(cell.getRow()).isDefault()) {
+        if (!getHeader().getRow(eventCell.getRowIndex()).isDefault()) {
             return false;
         }
-        if (!getColumn(cell.getColumn()).isSortable()) {
+        if (!eventCell.getColumn().isSortable()) {
             // Only handle sorting events if the column is sortable
             return false;
         }
@@ -4647,7 +4651,7 @@ public class Grid<T> extends ResizeComposite implements
             rowEventTouchStartingPoint = new Point(touch.getClientX(),
                     touch.getClientY());
 
-            sorter.sortAfterDelay(GridConstants.LONG_TAP_DELAY, cell, true);
+            sorter.sortAfterDelay(GridConstants.LONG_TAP_DELAY, true);
 
             return true;
 
@@ -4681,7 +4685,7 @@ public class Grid<T> extends ResizeComposite implements
             if (sorter.isDelayedSortScheduled()) {
                 // Not a long tap yet, perform single sort
                 sorter.cancelDelayedSort();
-                sorter.sort(cell, false);
+                sorter.sort(eventCell.getColumn(), false);
             }
 
             return true;
@@ -4697,7 +4701,7 @@ public class Grid<T> extends ResizeComposite implements
 
         } else if (BrowserEvents.CLICK.equals(event.getType())) {
 
-            sorter.sort(cell, event.getShiftKey());
+            sorter.sort(eventCell.getColumn(), event.getShiftKey());
 
             // Click events should go onward to cell focus logic
             return false;

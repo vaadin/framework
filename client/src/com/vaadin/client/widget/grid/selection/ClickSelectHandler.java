@@ -35,7 +35,7 @@ public class ClickSelectHandler<T> {
 
         @Override
         public void onClick(GridClickEvent event) {
-            T row = grid.getDataSource().getRow(event.getTargetCell().getRow());
+            T row = (T) event.getTargetCell().getRow();
             if (!grid.isSelected(row)) {
                 grid.select(row);
             }

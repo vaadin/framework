@@ -16,6 +16,7 @@
 package com.vaadin.client.widget.grid.events;
 
 import com.google.gwt.dom.client.BrowserEvents;
+import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler.GridClickHandler;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.AbstractGridMouseEvent;
@@ -29,8 +30,8 @@ import com.vaadin.client.widgets.Grid.Section;
  */
 public class GridClickEvent extends AbstractGridMouseEvent<GridClickHandler> {
 
-    public GridClickEvent(Grid<?> grid) {
-        super(grid);
+    public GridClickEvent(Grid<?> grid, CellReference<?> targetCell) {
+        super(grid, targetCell);
     }
 
     @Override

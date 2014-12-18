@@ -105,4 +105,13 @@ public class CellReference<T> {
     public Object getValue() {
         return getColumn().getValue(getRow());
     }
+
+    /**
+     * Gets the RowReference for this CellReference.
+     * 
+     * @return the row reference
+     */
+    protected RowReference<T> getRowReference() {
+        return rowReference;
+    }
 }
