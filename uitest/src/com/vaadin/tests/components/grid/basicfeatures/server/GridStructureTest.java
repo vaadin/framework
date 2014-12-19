@@ -437,4 +437,14 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         assertTrue(vscrollStyleName.contains(stylename + "-scroller"));
         assertTrue(vscrollStyleName.contains(stylename + "-scroller-vertical"));
     }
+
+    @Test
+    public void testScrollPosDoesNotChangeAfterStateChange() {
+        openTestURL();
+        scrollGridVerticallyTo(1000);
+        int scrollPos = getGridVerticalScrollPos();
+        selectMenuPath("Component", "Editor", "Enabled");
+        assertEquals("Scroll position should've not have changed", scrollPos,
+                getGridVerticalScrollPos());
+    }
 }

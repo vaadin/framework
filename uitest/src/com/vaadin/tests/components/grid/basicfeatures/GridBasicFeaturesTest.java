@@ -74,6 +74,11 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
                 getGridVerticalScrollbar());
     }
 
+    protected int getGridVerticalScrollPos() {
+        return ((Number) executeScript("return arguments[0].scrollTop",
+                getGridVerticalScrollbar())).intValue();
+    }
+
     protected List<TestBenchElement> getGridHeaderRowCells() {
         List<TestBenchElement> headerCells = new ArrayList<TestBenchElement>();
         for (int i = 0; i < getGridElement().getHeaderCount(); ++i) {
