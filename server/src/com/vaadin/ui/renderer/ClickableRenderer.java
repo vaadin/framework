@@ -91,6 +91,15 @@ public class ClickableRenderer<T> extends AbstractRenderer<T> {
         public Column getColumn() {
             return column;
         }
+
+        /**
+         * Returns the property ID where the click event originated.
+         * 
+         * @return the property ID of the clicked cell
+         */
+        public Object getPropertyId() {
+            return column.getPropertyId();
+        }
     }
 
     protected ClickableRenderer(Class<T> presentationType) {

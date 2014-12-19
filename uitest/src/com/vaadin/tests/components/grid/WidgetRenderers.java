@@ -31,7 +31,10 @@ import com.vaadin.ui.renderer.ClickableRenderer.RendererClickListener;
 import com.vaadin.ui.renderer.ImageRenderer;
 import com.vaadin.ui.renderer.ProgressBarRenderer;
 
+@SuppressWarnings("all")
 public class WidgetRenderers extends AbstractTestUI {
+
+    static final String PROPERTY_ID = "property id";
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -43,6 +46,7 @@ public class WidgetRenderers extends AbstractTestUI {
                 .addContainerProperty(ButtonRenderer.class, String.class, null);
         container.addContainerProperty(ImageRenderer.class, Resource.class,
                 null);
+        container.addContainerProperty(PROPERTY_ID, String.class, null);
 
         final Item item = container.getItem(container.addItem());
 
@@ -50,6 +54,7 @@ public class WidgetRenderers extends AbstractTestUI {
         item.getItemProperty(ButtonRenderer.class).setValue("Click");
         item.getItemProperty(ImageRenderer.class).setValue(
                 new ThemeResource("window/img/close.png"));
+        item.getItemProperty(PROPERTY_ID).setValue("Click");
 
         final Grid grid = new Grid(container);
 
@@ -75,6 +80,15 @@ public class WidgetRenderers extends AbstractTestUI {
                     public void click(RendererClickEvent event) {
                         item.getItemProperty(ImageRenderer.class).setValue(
                                 new ThemeResource("window/img/maximize.png"));
+                    }
+                }));
+
+        grid.getColumn(PROPERTY_ID).setRenderer(
+                new ButtonRenderer(new RendererClickListener() {
+                    @Override
+                    public void click(RendererClickEvent event) {
+                        item.getItemProperty(PROPERTY_ID).setValue(
+                                event.getPropertyId());
                     }
                 }));
 

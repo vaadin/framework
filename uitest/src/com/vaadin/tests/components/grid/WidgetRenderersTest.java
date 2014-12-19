@@ -92,6 +92,15 @@ public class WidgetRenderersTest extends MultiBrowserTest {
                 By.className("gwt-Button")));
     }
 
+    @Test
+    public void testPropertyIdInEvent() {
+        openTestURL();
+        WebElement button = getGridCell(0, 3).findElement(
+                By.className("gwt-Button"));
+        button.click();
+        assertEquals(WidgetRenderers.PROPERTY_ID, button.getText());
+    }
+
     GridCellElement getGridCell(int row, int col) {
         return $(GridElement.class).first().getCell(row, col);
     }
