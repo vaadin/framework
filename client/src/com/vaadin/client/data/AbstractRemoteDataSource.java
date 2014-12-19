@@ -589,6 +589,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     private Range getMinCacheRange() {
         Range availableDataRange = getAvailableRangeForCache();
+
         Range minCacheRange = cacheStrategy.getMinCacheRange(
                 requestedAvailability, cached, availableDataRange);
 

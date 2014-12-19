@@ -177,6 +177,10 @@ public final class Range implements Serializable {
      *         range
      */
     public boolean isSubsetOf(final Range other) {
+        if (isEmpty() && other.isEmpty()) {
+            return true;
+        }
+
         return other.getStart() <= getStart() && getEnd() <= other.getEnd();
     }
 
@@ -411,8 +415,10 @@ public final class Range implements Serializable {
      * @return a bounded range
      */
     public Range restrictTo(Range bounds) {
-        boolean startWithin = getStart() >= bounds.getStart();
-        boolean endWithin = getEnd() <= bounds.getEnd();
+        boolean startWithin = bounds.contains(getStart());
+        boolean endWithin = bounds.contains(getEnd());
+        boolean boundsWithin = getStart() < bounds.getStart()
+                && getEnd() >= bounds.getEnd();
 
         if (startWithin) {
             if (endWithin) {
@@ -423,8 +429,10 @@ public final class Range implements Serializable {
         } else {
             if (endWithin) {
                 return Range.between(bounds.getStart(), getEnd());
-            } else {
+            } else if (boundsWithin) {
                 return bounds;
+            } else {
+                return Range.withLength(getStart(), 0);
             }
         }
     }

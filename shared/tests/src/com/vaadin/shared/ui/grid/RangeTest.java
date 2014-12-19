@@ -372,6 +372,7 @@ public class RangeTest {
         assertTrue(r2 == r3);
     }
 
+    @Test
     public void restrictTo_notInterstecting() {
         Range r1 = Range.between(5, 10);
         Range r2 = Range.between(15, 20);
@@ -385,6 +386,7 @@ public class RangeTest {
                 r4.isEmpty());
     }
 
+    @Test
     public void restrictTo_startOutside() {
         Range r1 = Range.between(5, 10);
         Range r2 = Range.between(7, 15);
@@ -392,8 +394,11 @@ public class RangeTest {
         Range r3 = r1.restrictTo(r2);
 
         assertEquals(Range.between(7, 10), r3);
+
+        assertEquals(r2.restrictTo(r1), r3);
     }
 
+    @Test
     public void restrictTo_endOutside() {
         Range r1 = Range.between(5, 10);
         Range r2 = Range.between(4, 7);
@@ -401,6 +406,20 @@ public class RangeTest {
         Range r3 = r1.restrictTo(r2);
 
         assertEquals(Range.between(5, 7), r3);
+
+        assertEquals(r2.restrictTo(r1), r3);
+    }
+
+    @Test
+    public void restrictTo_empty() {
+        Range r1 = Range.between(5, 10);
+        Range r2 = Range.between(0, 0);
+
+        Range r3 = r1.restrictTo(r2);
+        assertTrue(r3.isEmpty());
+
+        Range r4 = r2.restrictTo(r1);
+        assertTrue(r4.isEmpty());
     }
 
 }
