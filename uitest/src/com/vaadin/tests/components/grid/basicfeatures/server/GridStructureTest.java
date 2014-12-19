@@ -26,10 +26,10 @@ import static org.junit.Assert.fail;
 import java.util.List;
 
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
@@ -188,7 +188,8 @@ public class GridStructureTest extends GridBasicFeaturesTest {
     public void testItemSetChangeEvent() throws Exception {
         openTestURL();
 
-        final By newRow = By.xpath("//td[text()='newcell: 0']");
+        final org.openqa.selenium.By newRow = By
+                .xpath("//td[text()='newcell: 0']");
 
         assertTrue("Unexpected initial state", !isElementPresent(newRow));
 
@@ -380,6 +381,42 @@ public class GridStructureTest extends GridBasicFeaturesTest {
                 isElementPresent(NotificationElement.class));
 
         assertEquals("Grid scrolled unexpectedly", cellContent, cell.getText());
+    }
+
+    @Test
+    public void testRemoveAndAddRowAboveViewport() {
+        setDebug(true);
+        openTestURL();
+
+        GridCellElement cell = getGridElement().getCell(500, 1);
+        String cellContent = cell.getText();
+        selectMenuPath("Component", "Body rows", "Remove first row");
+
+        assertFalse("Error notification was present after removing row",
+                isElementPresent(NotificationElement.class));
+
+        assertEquals("Grid scrolled unexpectedly", cellContent, cell.getText());
+
+        selectMenuPath("Component", "Body rows", "Add first row");
+
+        assertFalse("Error notification was present after adding row",
+                isElementPresent(NotificationElement.class));
+
+        assertEquals("Grid scrolled unexpectedly", cellContent, cell.getText());
+    }
+
+    @Test
+    public void testScrollAndRemoveAll() {
+        setDebug(true);
+        openTestURL();
+
+        getGridElement().scrollToRow(500);
+        selectMenuPath("Component", "Body rows", "Remove all rows");
+
+        assertFalse("Error notification was present after removing all rows",
+                isElementPresent(NotificationElement.class));
+
+        assertFalse(getGridElement().isElementPresent(By.vaadin("#cell[0][0]")));
     }
 
     private void assertPrimaryStylename(String stylename) {

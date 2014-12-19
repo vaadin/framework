@@ -1780,6 +1780,7 @@ public class Grid<T> extends ResizeComposite implements
             boolean insertionIsAboveFocusedCell = (added.getStart() <= rowWithFocus);
             if (bodyHasFocus && insertionIsAboveFocusedCell) {
                 rowWithFocus += added.length();
+                refreshRow(rowWithFocus);
             }
         }
 
@@ -1792,32 +1793,29 @@ public class Grid<T> extends ResizeComposite implements
          *            a range of removed rows
          */
         public void rowsRemovedFromBody(Range removed) {
-            int focusedColumn = cellFocusRange.getStart();
             if (containerWithFocus != escalator.getBody()) {
                 return;
             } else if (!removed.contains(rowWithFocus)) {
                 if (removed.getStart() > rowWithFocus) {
                     return;
                 }
-                setCellFocus(rowWithFocus - removed.length(), focusedColumn,
-                        containerWithFocus);
+                rowWithFocus = rowWithFocus - removed.length();
             } else {
                 if (containerWithFocus.getRowCount() > removed.getEnd()) {
-                    setCellFocus(removed.getStart(), focusedColumn,
-                            containerWithFocus);
+                    rowWithFocus = removed.getStart();
                 } else if (removed.getStart() > 0) {
-                    setCellFocus(removed.getStart() - 1, focusedColumn,
-                            containerWithFocus);
+                    rowWithFocus = removed.getStart() - 1;
                 } else {
                     if (escalator.getHeader().getRowCount() > 0) {
-                        setCellFocus(lastFocusedHeaderRow, focusedColumn,
-                                escalator.getHeader());
+                        rowWithFocus = lastFocusedHeaderRow;
+                        containerWithFocus = escalator.getHeader();
                     } else if (escalator.getFooter().getRowCount() > 0) {
-                        setCellFocus(lastFocusedFooterRow, focusedColumn,
-                                escalator.getFooter());
+                        rowWithFocus = lastFocusedFooterRow;
+                        containerWithFocus = escalator.getFooter();
                     }
                 }
             }
+            refreshRow(rowWithFocus);
         }
     }
 
