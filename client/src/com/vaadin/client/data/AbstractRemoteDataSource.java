@@ -467,19 +467,25 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         size -= count;
 
         // shift indices to fill the cache correctly
-        for (int i = firstRowIndex + count; i < cached.getEnd(); i++) {
+        int firstMoved = Math.max(firstRowIndex + count, cached.getStart());
+        for (int i = firstMoved; i < cached.getEnd(); i++) {
             moveRowFromIndexToIndex(i, i - count);
         }
 
         Range removedRange = Range.withLength(firstRowIndex, count);
         if (cached.isSubsetOf(removedRange)) {
+            // Whole cache is part of the removal. Empty cache
             cached = Range.withLength(0, 0);
         } else if (removedRange.intersects(cached)) {
+            // Removal and cache share some indices. fix accordingly.
             Range[] partitions = cached.partitionWith(removedRange);
             Range remainsBefore = partitions[0];
             Range transposedRemainsAfter = partitions[2].offsetBy(-removedRange
                     .length());
             cached = remainsBefore.combineWith(transposedRemainsAfter);
+        } else if (removedRange.getEnd() <= cached.getStart()) {
+            // Removal was before the cache. offset the cache.
+            cached = cached.offsetBy(-removedRange.length());
         }
 
         assertDataChangeHandlerIsInjected();
@@ -502,7 +508,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         size += count;
 
-        if (firstRowIndex < cached.getStart()) {
+        if (firstRowIndex <= cached.getStart()) {
             Range oldCached = cached;
             cached = cached.offsetBy(count);
 
@@ -539,7 +545,10 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         T row = indexToRowMap.remove(oldIndex);
         if (indexToRowMap.containsKey(newIndex)) {
             // Old row is about to be overwritten. Remove it from keyCache.
-            keyToIndexMap.remove(getRowKey(indexToRowMap.get(newIndex)));
+            T row2 = indexToRowMap.remove(newIndex);
+            if (row2 != null) {
+                keyToIndexMap.remove(getRowKey(row2));
+            }
         }
         indexToRowMap.put(newIndex, row);
         if (row != null) {

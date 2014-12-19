@@ -382,6 +382,28 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         assertEquals("Grid scrolled unexpectedly", cellContent, cell.getText());
     }
 
+    @Test
+    public void testRemoveAndAddRowAboveViewport() {
+        setDebug(true);
+        openTestURL();
+
+        GridCellElement cell = getGridElement().getCell(500, 1);
+        String cellContent = cell.getText();
+        selectMenuPath("Component", "Body rows", "Remove first row");
+
+        assertFalse("Error notification was present after removing row",
+                isElementPresent(NotificationElement.class));
+
+        assertEquals("Grid scrolled unexpectedly", cellContent, cell.getText());
+
+        selectMenuPath("Component", "Body rows", "Add first row");
+
+        assertFalse("Error notification was present after adding row",
+                isElementPresent(NotificationElement.class));
+
+        assertEquals("Grid scrolled unexpectedly", cellContent, cell.getText());
+    }
+
     private void assertPrimaryStylename(String stylename) {
         assertTrue(getGridElement().getAttribute("class").contains(stylename));
 
