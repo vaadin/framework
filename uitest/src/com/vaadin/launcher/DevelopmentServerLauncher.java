@@ -48,7 +48,6 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.ssl.SslSocketConnector;
-import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.Scanner;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -257,7 +256,6 @@ public class DevelopmentServerLauncher {
                         webappcontext.stop();
                         server.stop();
                         webappcontext.start();
-                        disableAtmosphereAnnotationScan(webappcontext);
                         server.start();
                     }
                 });
@@ -277,8 +275,6 @@ public class DevelopmentServerLauncher {
 
         // Read web.xml to find all configured servlets
         webappcontext.start();
-
-        disableAtmosphereAnnotationScan(webappcontext);
 
         try {
             server.start();
@@ -349,19 +345,6 @@ public class DevelopmentServerLauncher {
         }
 
         return "http://localhost:" + port + serverArgs.get("context");
-    }
-
-    private static void disableAtmosphereAnnotationScan(
-            WebAppContext webappcontext) {
-        // Reconfigure all servlets to avoid startup delay
-        for (ServletHolder servletHolder : webappcontext.getServletHandler()
-                .getServlets()) {
-            if (servletHolder
-                    .getInitParameter("org.atmosphere.cpr.scanClassPath") == null) {
-                servletHolder.setInitParameter(
-                        "org.atmosphere.cpr.scanClassPath", "false");
-            }
-        }
     }
 
     /**
