@@ -83,7 +83,6 @@ import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.EditorHandler.EditorRequest;
 import com.vaadin.client.widget.grid.EditorHandler.EditorRequest.RequestCallback;
 import com.vaadin.client.widget.grid.EventCellReference;
-import com.vaadin.client.widget.grid.GridUtil;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
@@ -1248,7 +1247,7 @@ public class Grid<T> extends ResizeComposite implements
 
         protected void hideOverlay() {
             for (Widget w : columnToWidget.values()) {
-                GridUtil.setParent(w, null);
+                setParent(w, null);
             }
             columnToWidget.clear();
 
@@ -1286,7 +1285,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private void attachWidget(Widget w, Element parent) {
             parent.appendChild(w.getElement());
-            GridUtil.setParent(w, grid);
+            setParent(w, grid);
         }
 
         private static void setBounds(Element e, double left, double top,
@@ -3034,7 +3033,7 @@ public class Grid<T> extends ResizeComposite implements
                         cell.getElement().appendChild(widget.getElement());
 
                         // Logical attach
-                        GridUtil.setParent(widget, Grid.this);
+                        setParent(widget, Grid.this);
                     } catch (RuntimeException e) {
                         getLogger().log(
                                 Level.SEVERE,
@@ -3176,7 +3175,7 @@ public class Grid<T> extends ResizeComposite implements
                         if (w != null) {
 
                             // Logical detach
-                            GridUtil.setParent(w, null);
+                            setParent(w, null);
 
                             // Physical detach
                             cell.getElement().removeChild(w.getElement());
@@ -3343,7 +3342,7 @@ public class Grid<T> extends ResizeComposite implements
                         cellElement.appendChild(widget.getElement());
 
                         // Logical attach
-                        GridUtil.setParent(widget, Grid.this);
+                        setParent(widget, Grid.this);
                     }
                 }
             }
@@ -3365,7 +3364,7 @@ public class Grid<T> extends ResizeComposite implements
                         Widget widget = metadata.getWidget();
 
                         // Logical detach
-                        GridUtil.setParent(widget, null);
+                        setParent(widget, null);
 
                         // Physical detach
                         widget.getElement().removeFromParent();
@@ -5675,4 +5674,17 @@ public class Grid<T> extends ResizeComposite implements
          */
         return false;
     }
+
+    /**
+     * Accesses the package private method Widget#setParent()
+     * 
+     * @param widget
+     *            The widget to access
+     * @param parent
+     *            The parent to set
+     */
+    private static native final void setParent(Widget widget, Grid<?> parent)
+    /*-{
+        widget.@com.google.gwt.user.client.ui.Widget::setParent(Lcom/google/gwt/user/client/ui/Widget;)(parent);
+    }-*/;
 }
