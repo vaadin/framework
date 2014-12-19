@@ -29,6 +29,7 @@ import org.atmosphere.cpr.AtmosphereInterceptor;
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResponse;
 import org.atmosphere.interceptor.HeartbeatInterceptor;
+import org.atmosphere.util.VoidAnnotationProcessor;
 
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.ServiceDestroyEvent;
@@ -91,6 +92,8 @@ public class PushRequestHandler implements RequestHandler,
         atmosphere.addAtmosphereHandler("/*", pushHandler.handler);
         atmosphere.addInitParameter(ApplicationConfig.BROADCASTER_CACHE,
                 UUIDBroadcasterCache.class.getName());
+        atmosphere.addInitParameter(ApplicationConfig.ANNOTATION_PROCESSOR,
+                VoidAnnotationProcessor.class.getName());
         atmosphere.addInitParameter(ApplicationConfig.PROPERTY_SESSION_SUPPORT,
                 "true");
         atmosphere.addInitParameter(ApplicationConfig.MESSAGE_DELIMITER,
