@@ -2519,7 +2519,15 @@ public class Grid<T> extends ResizeComposite implements
                                     + DEFAULT_RENDERER_WARNING);
                     warned = true;
                 }
-                cell.getElement().setInnerText(data.toString());
+
+                final String text;
+                if (data == null) {
+                    text = "";
+                } else {
+                    text = data.toString();
+                }
+
+                cell.getElement().setInnerText(text);
             }
         }
 
