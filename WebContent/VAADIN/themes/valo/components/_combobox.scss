@@ -266,17 +266,21 @@
  * @group combobox
  */
 @mixin valo-combobox-button-style ($unit-size: $v-unit-size, $bevel: $v-bevel, $background-color: $v-textfield-background-color, $border-radius: $v-border-radius, $border: $v-textfield-border) {
-  $border-width: first-number($v-textfield-border) or 0;
+  $border-width: first-number($border) or 0;
   @include valo-tappable;
   position: absolute;
-  top: $border-width;
-  right: $border-width;
-  bottom: $border-width;
   width: $unit-size;
-  cursor: pointer;
+
+  @if $border and $border != none {
+    top: $border-width;
+    right: $border-width;
+    bottom: $border-width;
+  }
 
   @if type-of($background-color) == color {
-    border-left: valo-border($color: $background-color, $border: $v-textfield-border, $strength: 0.5);
+    @if $border {
+      border-left: valo-border($color: $background-color, $border: $v-textfield-border, $strength: 0.5);
+    }
     color: mix($background-color, valo-font-color($background-color));
 
     .v-ie8 & {
