@@ -60,9 +60,7 @@ import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.util.SharedUtil;
 
 import elemental.js.json.JsJsonValue;
-import elemental.js.util.Json;
 import elemental.json.JsonValue;
-import elemental.json.impl.JsonUtil;
 
 public class Util {
 
@@ -1552,7 +1550,7 @@ public class Util {
         if (GWT.isProdMode()) {
             return (T) jso.<JsJsonValue> cast();
         } else {
-            return JsonUtil.parse(Json.stringify(jso));
+            return elemental.json.Json.instance().parse(stringify(jso));
         }
     }
 
@@ -1569,9 +1567,35 @@ public class Util {
         if (GWT.isProdMode()) {
             return ((JavaScriptObject) jsonValue.toNative()).cast();
         } else {
-            return Json.parse(jsonValue.toJson());
+            return parse(jsonValue.toJson());
         }
     }
+
+    /**
+     * Convert a {@link JavaScriptObject} into a string representation.
+     *
+     * @param json
+     *            a JavaScript object to be converted to a string
+     * @return JSON in string representation
+     */
+    private native static String stringify(JavaScriptObject json)
+    /*-{
+        return JSON.stringify(json);
+    }-*/;
+
+    /**
+     * Parse a string containing JSON into a {@link JavaScriptObject}.
+     *
+     * @param <T>
+     *            the overlay type to expect from the parse
+     * @param jsonAsString
+     * @return a JavaScript object constructed from the parse
+     */
+    public native static <T extends JavaScriptObject> T parse(
+            String jsonAsString)
+    /*-{
+        return JSON.parse(jsonAsString);
+    }-*/;
 
     /**
      * The allowed value inaccuracy when comparing two double-typed pixel

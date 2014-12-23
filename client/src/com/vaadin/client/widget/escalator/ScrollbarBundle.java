@@ -414,7 +414,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
          * offset size. All other browser need to suffer alongside.
          */
 
-        boolean newOffsetSizeIsGreaterThanScrollSize = px > getOffsetSize();
+        boolean newOffsetSizeIsGreaterThanScrollSize = px > getScrollSize();
         boolean offsetSizeBecomesGreaterThanScrollSize = showsScrollHandle()
                 && newOffsetSizeIsGreaterThanScrollSize;
         if (offsetSizeBecomesGreaterThanScrollSize && getScrollPos() != 0) {
