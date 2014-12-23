@@ -34,7 +34,9 @@ $chameleon-line-height: 1.4;
 		}
 	
 	.v-sa & .v-tooltip {
-		outline: 1px solid rgba(0,0,0,.2);
+		outline-color: #000000; /* Fallback for browsers that does not support RGBA such as IE8 */
+		outline-color: rgba(0,0,0,.2);
+		outline: 1px solid;
 		-webkit-border-radius: 0;
 		-moz-border-radius: 0;
 		border: none;
@@ -92,6 +94,7 @@ $chameleon-line-height: 1.4;
 	.v-Notification,
 	.v-menubar-submenu {
 		border: 1px solid #adadad;
+		border-color: #000000; /* Fallback for browsers that does not support RGBA such as IE8 */
 		border-color: rgba(0,0,0,.4);
 		border-radius: 4px;
 		-webkit-border-radius: 4px;
@@ -104,8 +107,10 @@ $chameleon-line-height: 1.4;
 	.v-datefield-popup,
 	.v-contextmenu,
 	.v-menubar-submenu{
-    	background: rgba(232,232,232,.90) url(../img/grad-light-top.png) repeat-x;
-    	}
+		background: #e8e8e8; /* Fallback for browsers that does not support RGBA such as IE8 */
+		background: rgba(232,232,232,.90);
+		background-image: url(../img/grad-light-top.png) repeat-x;
+		}
 	.v-filterselect-suggestpopup,
 	.v-contextmenu,
 	.v-menubar-submenu {
