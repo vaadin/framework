@@ -392,8 +392,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         DOM.appendChild(wrapper, topTabStop);
         DOM.appendChild(wrapper, header);
-        DOM.appendChild(wrapper, maximizeRestoreBox);
-        DOM.appendChild(wrapper, closeBox);
+        DOM.appendChild(header, maximizeRestoreBox);
+        DOM.appendChild(header, closeBox);
         DOM.appendChild(header, headerText);
         DOM.appendChild(wrapper, contents);
         DOM.appendChild(wrapper, footer);
@@ -620,9 +620,13 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         this.closable = closable;
         if (closable) {
-            closeBox.getStyle().clearDisplay();
+            DOM.setElementProperty(closeBox, "className", CLASSNAME
+                    + "-closebox");
+
         } else {
-            closeBox.getStyle().setDisplay(Display.NONE);
+            DOM.setElementProperty(closeBox, "className", CLASSNAME
+                    + "-closebox " + CLASSNAME + "-closebox-disabled");
+
         }
 
     }

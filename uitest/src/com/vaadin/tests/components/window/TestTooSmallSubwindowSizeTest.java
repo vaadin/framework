@@ -33,6 +33,6 @@ public class TestTooSmallSubwindowSizeTest extends MultiBrowserTest {
     public void testSubwindowStyles() throws IOException {
         openTestURL();
 
-        compareScreen("initial");
+        compareScreen("initial_state");
     }
 }

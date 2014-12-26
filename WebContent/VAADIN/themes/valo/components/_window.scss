@@ -143,6 +143,17 @@ $v-window-modality-curtain-background-color: #222 !default;
     color: blend-normal(rgba(valo-font-color($v-window-background-color), .7), $v-window-background-color);
   }
 
+  //Adjust header margin according to visible buttons on header
+  .#{$primary-stylename}-restorebox-disabled,
+  .#{$primary-stylename}-maximizebox-disabled {
+    ~ .#{$primary-stylename}-closebox ~ .#{$primary-stylename}-header {
+      margin-right: $v-unit-size;
+    }
+    ~ .#{$primary-stylename}-closebox-disabled ~ .#{$primary-stylename}-header {
+      margin-right: round($v-unit-size/3);
+    }
+  }
+
   .#{$primary-stylename}-closebox,
   .#{$primary-stylename}-maximizebox,
   .#{$primary-stylename}-restorebox {
@@ -201,6 +212,8 @@ $v-window-modality-curtain-background-color: #222 !default;
     }
   }
 
+  .#{$primary-stylename}-closebox-disabled,
+  .#{$primary-stylename}-resizebox-disabled,
   .#{$primary-stylename}-restorebox-disabled,
   .#{$primary-stylename}-maximizebox-disabled {
     display: none;
@@ -288,10 +301,6 @@ $v-window-modality-curtain-background-color: #222 !default;
     .v-ie9 & {
       cursor: se-resize;
     }
-  }
-
-  .#{$primary-stylename}-resizebox-disabled {
-    display: none;
   }
 
 
