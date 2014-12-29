@@ -50,6 +50,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.Util;
@@ -63,6 +64,7 @@ import com.vaadin.client.widget.escalator.PositionFunction.AbsolutePosition;
 import com.vaadin.client.widget.escalator.PositionFunction.Translate3DPosition;
 import com.vaadin.client.widget.escalator.PositionFunction.TranslatePosition;
 import com.vaadin.client.widget.escalator.PositionFunction.WebkitTranslate3DPosition;
+import com.vaadin.client.widget.escalator.Row;
 import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeEvent;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeHandler;
@@ -2009,9 +2011,19 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 cellClone.getStyle().clearWidth();
 
                 rowElement.insertBefore(cellClone, cellOriginal);
-                maxCellWidth = Math.max(Util
-                        .getRequiredWidthBoundingClientRectDouble(cellClone),
-                        maxCellWidth);
+                double requiredWidth = Util
+                        .getRequiredWidthBoundingClientRectDouble(cellClone);
+
+                if (BrowserInfo.get().isIE9()) {
+                    /*
+                     * IE9 does not support subpixels. Usually it is rounded
+                     * down which leads to content not shown. Increase the
+                     * counted required size by one just to be on the safe side.
+                     */
+                    requiredWidth += 1;
+                }
+
+                maxCellWidth = Math.max(requiredWidth, maxCellWidth);
                 cellClone.removeFromParent();
             }
 
