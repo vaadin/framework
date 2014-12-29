@@ -49,6 +49,8 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
     /** For internal use only. May be removed or replaced in the future. */
     protected AbstractComponentConnector connector;
 
+    private boolean tabCaptionsAsHtml = false;
+
     public VTabsheetBase(String classname) {
         setElement(DOM.createDiv());
         setStyleName(classname);
@@ -168,4 +170,32 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
     public boolean isEnabled() {
         return !disabled;
     }
+
+    /**
+     * Sets whether the caption is rendered as HTML.
+     * <p>
+     * The default is false, i.e. render tab captions as plain text
+     * 
+     * @since 7.4
+     * @param captionAsHtml
+     *            true if the captions are rendered as HTML, false if rendered
+     *            as plain text
+     */
+    public void setTabCaptionsAsHtml(boolean tabCaptionsAsHtml) {
+        this.tabCaptionsAsHtml = tabCaptionsAsHtml;
+    }
+
+    /**
+     * Checks whether captions are rendered as HTML
+     * 
+     * The default is false, i.e. render tab captions as plain text
+     * 
+     * @since 7.4
+     * @return true if the captions are rendered as HTML, false if rendered as
+     *         plain text
+     */
+    public boolean isTabCaptionsAsHtml() {
+        return tabCaptionsAsHtml;
+    }
+
 }

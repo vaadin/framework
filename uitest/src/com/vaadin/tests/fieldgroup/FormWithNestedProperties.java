@@ -31,8 +31,8 @@ public class FormWithNestedProperties extends AbstractBeanFieldGroupTest {
         super.setup();
 
         setFieldBinder(new BeanFieldGroup<Person>(Person.class));
-        country = getFieldBinder().buildAndBind("country", "address.country",
-                NativeSelect.class);
+        country = (NativeSelect) getFieldBinder().buildAndBind("country",
+                "address.country", NativeSelect.class);
         getFieldBinder().bindMemberFields(this);
         addComponent(firstName);
         addComponent(lastName);

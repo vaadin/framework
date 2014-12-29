@@ -27,8 +27,7 @@ import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.atmosphere.util.Version;
-
+import com.vaadin.server.communication.AtmospherePushConnection;
 import com.vaadin.server.communication.PushRequestHandler;
 import com.vaadin.server.communication.ServletBootstrapHandler;
 import com.vaadin.server.communication.ServletUIInitHandler;
@@ -54,21 +53,20 @@ public class VaadinServletService extends VaadinService {
     }
 
     private static boolean checkAtmosphereSupport() {
-        try {
-            String rawVersion = Version.getRawVersion();
-            if (!Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION
-                    .equals(rawVersion)) {
-                getLogger().log(
-                        Level.WARNING,
-                        Constants.INVALID_ATMOSPHERE_VERSION_WARNING,
-                        new Object[] {
-                                Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION,
-                                rawVersion });
-            }
-            return true;
-        } catch (NoClassDefFoundError e) {
+        String rawVersion = AtmospherePushConnection.getAtmosphereVersion();
+        if (rawVersion == null) {
             return false;
         }
+
+        if (!Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION.equals(rawVersion)) {
+            getLogger().log(
+                    Level.WARNING,
+                    Constants.INVALID_ATMOSPHERE_VERSION_WARNING,
+                    new Object[] {
+                            Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION,
+                            rawVersion });
+        }
+        return true;
     }
 
     @Override
