@@ -698,7 +698,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
     @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
-        if (!clientInitialized) {
+
+        if (initial) {
             clientInitialized = true;
 
             /*

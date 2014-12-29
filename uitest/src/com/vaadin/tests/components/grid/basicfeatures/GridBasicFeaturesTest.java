@@ -121,4 +121,15 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
                 .findElement(
                         By.xpath("//div[contains(@class, \"v-grid-scroller-vertical\")]"));
     }
+
+    /**
+     * Reloads the page without restartApplication. This occasionally breaks
+     * stuff.
+     */
+    protected void reopenTestURL() {
+        String testUrl = getTestUrl();
+        testUrl = testUrl.replace("?restartApplication", "?");
+        testUrl = testUrl.replace("?&", "?");
+        driver.get(testUrl);
+    }
 }

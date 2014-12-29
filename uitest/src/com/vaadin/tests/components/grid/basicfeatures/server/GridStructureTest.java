@@ -447,4 +447,32 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         assertEquals("Scroll position should've not have changed", scrollPos,
                 getGridVerticalScrollPos());
     }
+
+    @Test
+    public void testReloadPage() throws InterruptedException {
+        setDebug(true);
+        openTestURL();
+
+        reopenTestURL();
+
+        // After opening the URL Grid can be stuck in a state where it thinks it
+        // should wait for something that's not going to happen.
+        testBench().disableWaitForVaadin();
+
+        // Wait until page is loaded completely.
+        int count = 0;
+        while (!isElementPresent(GridElement.class)) {
+            if (count == 100) {
+                fail("Reloading page failed");
+            }
+            sleep(100);
+            ++count;
+        }
+
+        // Wait a bit more for notification to occur.
+        sleep(1000);
+
+        assertFalse("Exception occurred when reloading page",
+                isElementPresent(NotificationElement.class));
+    }
 }
