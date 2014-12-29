@@ -67,7 +67,8 @@ public class ClientRpcWriter implements Serializable {
             // add invocation to rpcCalls
             try {
                 JsonArray invocationJson = Json.createArray();
-                invocationJson.set(0, invocation.getConnector().getConnectorId());
+                invocationJson.set(0, invocation.getConnector()
+                        .getConnectorId());
                 invocationJson.set(1, invocation.getInterfaceName());
                 invocationJson.set(2, invocation.getMethodName());
                 JsonArray paramJson = Json.createArray();

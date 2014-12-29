@@ -23,9 +23,11 @@ public class ModalWindowTest extends SingleBrowserTest {
 
         openModalWindow();
 
-        WebElement modalityCurtain = findElement(By.className("v-window-modalitycurtain"));
+        WebElement modalityCurtain = findElement(By
+                .className("v-window-modalitycurtain"));
 
-        assertThat(modalityCurtain.getCssValue("-webkit-animation-name"), is("none"));
+        assertThat(modalityCurtain.getCssValue("-webkit-animation-name"),
+                is("none"));
     }
 
     private void openModalWindow() {

@@ -44,8 +44,10 @@ public class FaviconTest extends SingleBrowserTest {
 
     private int getResponseCode(String theme) {
         try {
-            URL url = new URL(String.format("%s/VAADIN/themes/%s/favicon.ico", getBaseURL(), theme));
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            URL url = new URL(String.format("%s/VAADIN/themes/%s/favicon.ico",
+                    getBaseURL(), theme));
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
             connection.setRequestMethod("GET");
             connection.connect();
 

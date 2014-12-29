@@ -92,7 +92,7 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
         addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if(isEnabled()) {
+                if (isEnabled()) {
                     preparePopup(popup);
                     showPopup(popup);
                     center();
@@ -206,8 +206,9 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
     /**
      * Sets whether this popup is enabled.
      *
-     * @param enabled <code>true</code> to enable the popup, <code>false</code>
-     *          to disable it
+     * @param enabled
+     *            <code>true</code> to enable the popup, <code>false</code> to
+     *            disable it
      * @since 7.3.4
      */
     @Override

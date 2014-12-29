@@ -52,12 +52,13 @@ public interface JSONSerializer<T> {
      *            the connector tracker instance for the UI
      * @return A deserialized object
      */
-    T deserialize(Type type, JsonValue jsonValue, ConnectorTracker connectorTracker);
+    T deserialize(Type type, JsonValue jsonValue,
+            ConnectorTracker connectorTracker);
 
     /**
      * Serialize the given object into JSON. Must be compatible with
-     * {@link #deserialize(Type, JsonValue, ConnectorTracker)} and the client side
-     * com.vaadin.client.communication.JSONSerializer
+     * {@link #deserialize(Type, JsonValue, ConnectorTracker)} and the client
+     * side com.vaadin.client.communication.JSONSerializer
      * 
      * @param value
      *            The object to serialize

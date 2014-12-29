@@ -8,7 +8,8 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
 
 @SuppressWarnings("serial")
-public class ComboSelectedValueBeyondTheFirstDropdownPage extends AbstractTestUI {
+public class ComboSelectedValueBeyondTheFirstDropdownPage extends
+        AbstractTestUI {
 
     protected static final int ITEM_COUNT = 21;
     protected static final String ITEM_NAME_TEMPLATE = "Item %d";

@@ -12,7 +12,6 @@ public class ChameleonNotification extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
 
-
         addButton("Notification", new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {

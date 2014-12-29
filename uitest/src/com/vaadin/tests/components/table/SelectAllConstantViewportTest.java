@@ -51,7 +51,8 @@ public class SelectAllConstantViewportTest extends MultiBrowserTest {
 
         int rowLocation = row.getLocation().getY();
 
-        // use click x,y with non-zero offset to actually toggle the checkbox. (#13763)
+        // use click x,y with non-zero offset to actually toggle the checkbox.
+        // (#13763)
         checkbox.click(5, 5);
         int newRowLocation = row.getLocation().getY();
 

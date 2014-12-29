@@ -735,9 +735,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
     /**
      * The id of the tab at position scrollerIndex. This is used for keeping the
      * scroll position unchanged when a tab is removed from the server side and
-     * the removed tab lies to the left of the current scroll position. For other
-     * cases scrollerIndex alone would be sufficient. Since the tab at the current
-     * scroll position can be removed, scrollerIndex is required in addition to this variable.
+     * the removed tab lies to the left of the current scroll position. For
+     * other cases scrollerIndex alone would be sufficient. Since the tab at the
+     * current scroll position can be removed, scrollerIndex is required in
+     * addition to this variable.
      */
     private String scrollerPositionTabId;
 
@@ -1081,7 +1082,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
     }
 
     private boolean isScrollerPrevDisabled() {
-        return scrollerPrev.getClassName().contains(PREV_SCROLLER_DISABLED_CLASSNAME);
+        return scrollerPrev.getClassName().contains(
+                PREV_SCROLLER_DISABLED_CLASSNAME);
     }
 
     private boolean isIndexSkippingHiddenTabs() {
@@ -1103,9 +1105,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             // Should not set tabs visible if they are scrolled out of view
             tab.setVisible(false);
         } else {
-            //reset the scroller index back to zero if tab is visible
-            //again and tab is in view
-            if(isIndexSkippingHiddenTabs() && tabState.visible) {
+            // reset the scroller index back to zero if tab is visible
+            // again and tab is in view
+            if (isIndexSkippingHiddenTabs() && tabState.visible) {
                 scrollerIndex = 0;
             }
             tab.setVisible(tabState.visible);
@@ -1247,7 +1249,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         if (tb.getTabCount() > 0 && tb.isVisible() && (scrolled || clipped)) {
             scroller.getStyle().clearDisplay();
             DOM.setElementProperty(scrollerPrev, "className",
-                    SCROLLER_CLASSNAME + (scrolled ? "Prev" : PREV_SCROLLER_DISABLED_CLASSNAME));
+                    SCROLLER_CLASSNAME
+                            + (scrolled ? "Prev"
+                                    : PREV_SCROLLER_DISABLED_CLASSNAME));
             DOM.setElementProperty(scrollerNext, "className",
                     SCROLLER_CLASSNAME + (clipped ? "Next" : "Next-disabled"));
 
@@ -1861,8 +1865,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             }
             if (scrollerIndex >= 0 && scrollerIndex < tb.getTabCount()) {
                 scrollerPositionTabId = tb.getTab(scrollerIndex).id;
-            }
-            else{
+            } else {
                 scrollerPositionTabId = null;
             }
         }

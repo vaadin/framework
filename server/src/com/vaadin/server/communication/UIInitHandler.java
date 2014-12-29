@@ -80,7 +80,8 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             String initialUIDL = getInitialUidl(request, uI);
             params.put("uidl", initialUIDL);
 
-            return commitJsonResponse(request, response, JsonUtil.stringify(params));
+            return commitJsonResponse(request, response,
+                    JsonUtil.stringify(params));
         } catch (JsonException e) {
             throw new IOException("Error producing initial UIDL", e);
         }
