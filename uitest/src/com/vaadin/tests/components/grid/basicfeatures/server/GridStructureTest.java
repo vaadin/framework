@@ -475,4 +475,11 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         assertFalse("Exception occurred when reloading page",
                 isElementPresent(NotificationElement.class));
     }
+
+    @Test
+    public void testAddThirdRowToGrid() {
+        openTestURL();
+        selectMenuPath("Component", "Body rows", "Add third row");
+        assertFalse(logContainsText("Exception occured"));
+    }
 }

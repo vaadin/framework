@@ -508,7 +508,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
                         activeRange.getEnd(), count);
                 removeValueChangeListeners(deprecatedRange);
 
-                final Range freshRange = Range.between(firstIndex, count);
+                final Range freshRange = Range.withLength(firstIndex, count);
                 addValueChangeListeners(freshRange);
             } else {
                 // out of view, noop

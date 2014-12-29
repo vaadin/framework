@@ -787,7 +787,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         createClickAction("Add first row", "Body rows", newRowCommand, null);
 
-        createClickAction("Add second row", "Body rows", new NewRowCommand(1),
+        createClickAction("Add third row", "Body rows", new NewRowCommand(2),
                 null);
 
         createClickAction("Remove first row", "Body rows",
