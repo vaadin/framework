@@ -2810,7 +2810,6 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             removeExtension(datasourceExtension);
         }
 
-        columnKeys.removeAll();
         datasource = container;
 
         resetEditor();
