@@ -17,6 +17,7 @@ package com.vaadin.launcher;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -48,7 +49,10 @@ import com.vaadin.server.SessionInitListener;
 import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinServletRequest;
+import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
@@ -184,6 +188,29 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         return getApplicationRunnerURIs(request).applicationClassname;
     }
 
+    private final static class ProxyDeploymentConfiguration implements
+            InvocationHandler, Serializable {
+        private final DeploymentConfiguration originalConfiguration;
+
+        private ProxyDeploymentConfiguration(
+                DeploymentConfiguration originalConfiguration) {
+            this.originalConfiguration = originalConfiguration;
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args)
+                throws Throwable {
+            if (method.getDeclaringClass() == DeploymentConfiguration.class) {
+                // Find the configuration instance to delegate to
+                DeploymentConfiguration configuration = findDeploymentConfiguration(originalConfiguration);
+
+                return method.invoke(configuration, args);
+            } else {
+                return method.invoke(proxy, args);
+            }
+        }
+    }
+
     private static final class ApplicationRunnerUIProvider extends UIProvider {
         private final Class<?> classToRun;
 
@@ -309,23 +336,10 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         return (DeploymentConfiguration) Proxy.newProxyInstance(
                 DeploymentConfiguration.class.getClassLoader(),
                 new Class[] { DeploymentConfiguration.class },
-                new InvocationHandler() {
-                    @Override
-                    public Object invoke(Object proxy, Method method,
-                            Object[] args) throws Throwable {
-                        if (method.getDeclaringClass() == DeploymentConfiguration.class) {
-                            // Find the configuration instance to delegate to
-                            DeploymentConfiguration configuration = findDeploymentConfiguration(originalConfiguration);
-
-                            return method.invoke(configuration, args);
-                        } else {
-                            return method.invoke(proxy, args);
-                        }
-                    }
-                });
+                new ProxyDeploymentConfiguration(originalConfiguration));
     }
 
-    private DeploymentConfiguration findDeploymentConfiguration(
+    private static DeploymentConfiguration findDeploymentConfiguration(
             DeploymentConfiguration originalConfiguration) throws Exception {
         // First level of cache
         DeploymentConfiguration configuration = CurrentInstance
@@ -344,16 +358,19 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                  * request.
                  */
 
-                HttpServletRequest currentRequest = request.get();
+                HttpServletRequest currentRequest = VaadinServletService
+                        .getCurrentServletRequest();
                 if (currentRequest != null) {
                     HttpSession httpSession = currentRequest.getSession(false);
                     if (httpSession != null) {
                         Map<Class<?>, CurrentInstance> oldCurrent = CurrentInstance
                                 .setCurrent((VaadinSession) null);
                         try {
-                            session = getService().findVaadinSession(
-                                    new VaadinServletRequest(currentRequest,
-                                            getService()));
+                            VaadinServletService service = (VaadinServletService) VaadinService
+                                    .getCurrent();
+                            session = service
+                                    .findVaadinSession(new VaadinServletRequest(
+                                            currentRequest, service));
                         } finally {
                             /*
                              * Clear some state set by findVaadinSession to
@@ -377,9 +394,11 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                             .getAttribute(name);
 
                     if (configuration == null) {
+                        ApplicationRunnerServlet servlet = (ApplicationRunnerServlet) VaadinServlet
+                                .getCurrent();
                         Class<?> classToRun;
                         try {
-                            classToRun = getClassToRun();
+                            classToRun = servlet.getClassToRun();
                         } catch (ClassNotFoundException e) {
                             /*
                              * This happens e.g. if the UI class defined in the
@@ -402,7 +421,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                             }
 
                             configuration = new DefaultDeploymentConfiguration(
-                                    getClass(), initParameters);
+                                    servlet.getClass(), initParameters);
                         } else {
                             configuration = originalConfiguration;
                         }
