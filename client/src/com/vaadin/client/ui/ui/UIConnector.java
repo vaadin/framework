@@ -887,6 +887,26 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     }
 
+    private void updateVaadinFavicon(String newTheme) {
+        NodeList<Element> iconElements = querySelectorAll("link[rel~=\"icon\"]");
+        for (int i = 0; i < iconElements.getLength(); i++) {
+            Element iconElement = iconElements.getItem(i);
+
+            String href = iconElement.getAttribute("href");
+            if (href != null && href.contains("VAADIN/themes")
+                    && href.endsWith("/favicon.ico")) {
+                href = href.replaceFirst("VAADIN/themes/.+?/favicon.ico",
+                        "VAADIN/themes/" + newTheme + "/favicon.ico");
+                iconElement.setAttribute("href", href);
+            }
+        }
+    }
+
+    private static native NodeList<Element> querySelectorAll(String selector)
+    /*-{
+        return $doc.querySelectorAll(selector);
+    }-*/;
+
     /**
      * Finds a link tag for a style sheet with the given URL
      * 
@@ -979,6 +999,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             getWidget().getParent().addStyleName(newTheme);
             VOverlay.getOverlayContainer(getConnection()).addClassName(
                     activeTheme);
+
+            updateVaadinFavicon(newTheme);
         }
 
         forceStateChangeRecursively(UIConnector.this);
