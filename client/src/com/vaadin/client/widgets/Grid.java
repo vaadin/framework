@@ -2516,7 +2516,7 @@ public class Grid<T> extends ResizeComposite implements
 
             @Override
             public void render(RendererCellReference cell, Object data) {
-                if (!warned) {
+                if (!warned && !(data instanceof String)) {
                     getLogger().warning(
                             Column.this.toString() + ": "
                                     + DEFAULT_RENDERER_WARNING);

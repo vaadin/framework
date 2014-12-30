@@ -47,10 +47,18 @@ public class GridDefaultTextRendererWidget extends
             }
         });
 
+        grid.addColumn(new Column<String, String>() {
+
+            @Override
+            public String getValue(String row) {
+                return "foo";
+            }
+
+        });
+
         grid.setHeightByRows(2);
         grid.setHeightMode(HeightMode.ROW);
         grid.setSelectionMode(SelectionMode.NONE);
         addNorth(grid, 500);
     }
-
 }
