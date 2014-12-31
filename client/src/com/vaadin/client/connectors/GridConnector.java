@@ -442,6 +442,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     public void onStateChanged(final StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
+        if (stateChangeEvent.hasPropertyChanged("selectionMode")) {
+            onSelectionModeChange();
+        }
+        if (stateChangeEvent.hasPropertyChanged("selectedKeys")) {
+            updateSelectionFromState();
+        }
+
         /*
          * The operations in here have been made deferred.
          * 
@@ -736,7 +743,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         getWidget().setDataSource(this.dataSource);
     }
 
-    @OnStateChange("selectionMode")
     private void onSelectionModeChange() {
         SharedSelectionMode mode = getState().selectionMode;
         if (mode == null) {
@@ -770,7 +776,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     }
 
-    @OnStateChange("selectedKeys")
     private void updateSelectionFromState() {
         boolean changed = false;
 
