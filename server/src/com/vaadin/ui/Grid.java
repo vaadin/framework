@@ -2528,21 +2528,50 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             .findMethod(SortListener.class, "sort", SortEvent.class);
 
     /**
-     * Creates a new Grid with a new {@link IndexedContainer} as the datasource.
+     * Creates a new Grid with a new {@link IndexedContainer} as the data
+     * source.
      */
     public Grid() {
-        internalSetContainerDataSource(new IndexedContainer());
-        initGrid();
+        this(null, null);
     }
 
     /**
-     * Creates a new Grid using the given datasource.
+     * Creates a new Grid using the given data source.
      * 
-     * @param datasource
-     *            the data source for the grid
+     * @param dataSource
+     *            the indexed container to use as a data source
      */
-    public Grid(final Container.Indexed datasource) {
-        setContainerDataSource(datasource);
+    public Grid(final Container.Indexed dataSource) {
+        this(null, dataSource);
+    }
+
+    /**
+     * Creates a new Grid with the given caption and a new
+     * {@link IndexedContainer} data source.
+     * 
+     * @param caption
+     *            the caption of the grid
+     */
+    public Grid(String caption) {
+        this(caption, null);
+    }
+
+    /**
+     * Creates a new Grid with the given caption and data source. If the data
+     * source is null, a new {@link IndexedContainer} will be used.
+     * 
+     * @param caption
+     *            the caption of the grid
+     * @param dataSource
+     *            the indexed container to use as a data source
+     */
+    public Grid(String caption, Container.Indexed dataSource) {
+        if (dataSource == null) {
+            internalSetContainerDataSource(new IndexedContainer());
+        } else {
+            setContainerDataSource(dataSource);
+        }
+        setCaption(caption);
         initGrid();
     }
 
