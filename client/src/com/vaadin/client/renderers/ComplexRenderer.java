@@ -37,7 +37,7 @@ import com.vaadin.client.widget.grid.RendererCellReference;
  * Also provides a helper method for hiding the cell contents by overriding
  * {@link #setContentVisible(FlyweightCell, boolean)}
  * 
- * @since
+ * @since 7.4.0
  * @author Vaadin Ltd
  */
 public abstract class ComplexRenderer<T> implements Renderer<T> {
