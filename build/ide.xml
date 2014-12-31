@@ -135,6 +135,9 @@
              Either "-ea" to enable or "" to disable. -->
         <property name="assertions" value="-ea" />
         <property name="extraParams" value="" />
+        
+        <property name="gwt.usearchives" value="true" />
+        <property name="gwt.persistentunitcache" value="false" />
 
         <mkdir dir="${module.output.dir}" />
 
@@ -166,8 +169,8 @@
             <jvmarg value="-Xmx1G" />
             <jvmarg value="-XX:MaxPermSize=256M" />
             <jvmarg value="-Djava.awt.headless=true" />
-            <jvmarg value="-Dgwt.usearchives=false" />
-            <jvmarg value="-Dgwt.persistentunitcache=false" />
+            <jvmarg value="-Dgwt.usearchives=${gwt.usearchives}" />
+            <jvmarg value="-Dgwt.persistentunitcache=${gwt.persistentunitcache}" />
         </java>
     </target>
     <target name="vaadinPush.js" depends="resolve">
@@ -178,5 +181,9 @@
             <fileset dir="${push.js.dir}" includes="VAADIN/vaadinPush*">
             </fileset>
         </copy>
+    </target>
+    
+    <target name="clean-unitcache">
+        <delete dir="WebContent/VAADIN/gwt-unitCache" />
     </target>
 </project>
