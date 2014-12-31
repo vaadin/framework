@@ -15,11 +15,14 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures.server;
 
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
@@ -94,6 +97,18 @@ public class GridCellStyleGeneratorTest extends GridBasicFeaturesTest {
 
         // New style present?
         Assert.assertTrue(hasCssClass(cell3_2, "Column-2"));
+    }
+
+    @Test
+    public void testCellStyleGeneratorWithSelectionColumn() {
+        setDebug(true);
+        openTestURL();
+        selectMenuPath("Component", "State", "Selection mode", "multi");
+
+        selectCellStyleNameGenerator(GridBasicFeatures.CELL_STYLE_GENERATOR_SPECIAL);
+
+        assertFalse("Error notification was present",
+                isElementPresent(NotificationElement.class));
     }
 
     private void selectRowStyleNameGenerator(String name) {
