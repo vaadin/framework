@@ -16,6 +16,8 @@
 package com.vaadin.tests.server.component.grid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.lang.reflect.Method;
 
@@ -70,6 +72,24 @@ public class GridStaticSectionTest extends Grid {
         assertEquals(1, getFooterRowCount());
         removeFooterRow(0);
         assertEquals(0, getFooterRowCount());
+    }
+
+    @Test
+    public void testUnusedPropertyNotInCells() {
+        removeColumn("firstName");
+        assertNull("firstName cell was not removed from existing row",
+                getDefaultHeaderRow().getCell("firstName"));
+        HeaderRow newRow = appendHeaderRow();
+        assertNull("firstName cell was created when it should not.",
+                newRow.getCell("firstName"));
+        addColumn("firstName");
+        assertNotNull(
+                "firstName cell was not created for default row when added again",
+                getDefaultHeaderRow().getCell("firstName"));
+        assertNotNull(
+                "firstName cell was not created for new row when added again",
+                newRow.getCell("firstName"));
+
     }
 
     @Test

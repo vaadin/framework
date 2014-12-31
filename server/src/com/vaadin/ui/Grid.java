@@ -1487,8 +1487,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             rows.add(index, row);
             getSectionState().rows.add(index, row.getRowState());
 
-            Indexed dataSource = grid.getContainerDataSource();
-            for (Object id : dataSource.getContainerPropertyIds()) {
+            for (Object id : grid.columns.keySet()) {
                 row.addCell(id);
             }
 
