@@ -198,6 +198,11 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
     display: block;
   }
 
+  .#{$primaryStyleName}.v-disabled:focus .#{$primaryStyleName}-cell-focused:before {
+    // Disabled Grid should not show cell focus outline
+    display: none;
+  }
+
   // Editor
 
   .#{$primaryStyleName}-editor {

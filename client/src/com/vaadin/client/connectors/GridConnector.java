@@ -57,6 +57,7 @@ import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortHandler;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Grid;
+import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.client.widgets.Grid.FooterCell;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderCell;
@@ -102,7 +103,12 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 return null;
             }
 
-            CustomGridColumn c = (CustomGridColumn) cellReference.getColumn();
+            Column<?, JsonObject> column = cellReference.getColumn();
+            if (!(column instanceof CustomGridColumn)) {
+                // Selection checkbox column
+                return null;
+            }
+            CustomGridColumn c = (CustomGridColumn) column;
 
             JsonObject cellStylesObject = row
                     .getObject(GridState.JSONKEY_CELLSTYLES);
@@ -436,6 +442,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
     public void onStateChanged(final StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
+        if (stateChangeEvent.hasPropertyChanged("selectionMode")) {
+            onSelectionModeChange();
+        }
+        if (stateChangeEvent.hasPropertyChanged("selectedKeys")) {
+            updateSelectionFromState();
+        }
+
         /*
          * The operations in here have been made deferred.
          * 
@@ -730,7 +743,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         getWidget().setDataSource(this.dataSource);
     }
 
-    @OnStateChange("selectionMode")
     private void onSelectionModeChange() {
         SharedSelectionMode mode = getState().selectionMode;
         if (mode == null) {
@@ -764,7 +776,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     }
 
-    @OnStateChange("selectedKeys")
     private void updateSelectionFromState() {
         boolean changed = false;
 

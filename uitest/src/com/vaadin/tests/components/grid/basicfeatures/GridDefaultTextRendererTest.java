@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.ServerClass;
@@ -40,6 +41,7 @@ public class GridDefaultTextRendererTest extends MultiBrowserTest {
 
     @Before
     public void init() {
+        setDebug(true);
         openTestURL();
         grid = $(MyGridElement.class).first();
         assertFalse("There was an unexpected notification during init",
@@ -56,5 +58,11 @@ public class GridDefaultTextRendererTest extends MultiBrowserTest {
     public void testStringIsRenderedAsStringByDefaultTextRenderer() {
         assertEquals("Second cell should've been populated ", "string", grid
                 .getCell(1, 0).getText());
+    }
+
+    @Test
+    public void testWarningShouldNotBeInDebugLog() {
+        assertFalse("Warning visible with string content.",
+                isElementPresent(By.xpath("//span[contains(.,'attached:#1')]")));
     }
 }

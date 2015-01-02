@@ -26,8 +26,12 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.vaadin.client.Util;
+import com.vaadin.client.widget.escalator.Cell;
+import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.grid.CellReference;
-import com.vaadin.client.widget.grid.GridUtil;
+import com.vaadin.client.widget.grid.EventCellReference;
+import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
 
 /**
@@ -122,12 +126,61 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
             }
 
             Element e = Element.as(target);
-            Grid<R> grid = (Grid<R>) GridUtil.findClosestParentGrid(e);
+            Grid<R> grid = (Grid<R>) findClosestParentGrid(e);
 
-            cell = GridUtil.findCell(grid, e);
+            cell = findCell(grid, e);
             row = cell.getRow();
 
             handler.onClick(this);
+        }
+
+        /**
+         * Returns the cell the given element belongs to.
+         * 
+         * @param grid
+         *            the grid instance that is queried
+         * @param e
+         *            a cell element or the descendant of one
+         * @return the cell or null if the element is not a grid cell or a
+         *         descendant of one
+         */
+        private static <T> CellReference<T> findCell(Grid<T> grid, Element e) {
+            RowContainer container = getEscalator(grid).findRowContainer(e);
+            if (container == null) {
+                return null;
+            }
+            Cell cell = container.getCell(e);
+            EventCellReference<T> cellReference = new EventCellReference<T>(
+                    grid);
+            cellReference.set(cell);
+            return cellReference;
+        }
+
+        private native static Escalator getEscalator(Grid<?> grid)
+        /*-{    
+          return grid.@com.vaadin.client.widgets.Grid::escalator;
+        }-*/;
+
+        /**
+         * Returns the Grid instance containing the given element, if any.
+         * <p>
+         * <strong>Note:</strong> This method may not work reliably if the grid
+         * in question is wrapped in a {@link Composite} <em>unless</em> the
+         * element is inside another widget that is a child of the wrapped grid;
+         * please refer to the note in {@link Util#findWidget(Element, Class)
+         * Util.findWidget} for details.
+         * 
+         * @param e
+         *            the element whose parent grid to find
+         * @return the parent grid or null if none found.
+         */
+        private static Grid<?> findClosestParentGrid(Element e) {
+            Widget w = Util.findWidget(e, null);
+
+            while (w != null && !(w instanceof Grid)) {
+                w = w.getParent();
+            }
+            return (Grid<?>) w;
         }
     }
 

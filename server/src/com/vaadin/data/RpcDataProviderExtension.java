@@ -303,7 +303,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         }
 
         Object itemIdAtIndex(int index) {
-            return indexToItemId.inverse().get(Integer.valueOf(index));
+            return indexToItemId.get(Integer.valueOf(index));
         }
     }
 
@@ -508,7 +508,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
                         activeRange.getEnd(), count);
                 removeValueChangeListeners(deprecatedRange);
 
-                final Range freshRange = Range.between(firstIndex, count);
+                final Range freshRange = Range.withLength(firstIndex, count);
                 addValueChangeListeners(freshRange);
             } else {
                 // out of view, noop
@@ -516,23 +516,39 @@ public class RpcDataProviderExtension extends AbstractExtension {
         }
 
         /**
-         * Removes a single item by its id.
+         * Handles the removal of rows.
+         * <p>
+         * This method's responsibilities are to:
+         * <ul>
+         * <li>shift the internal bookkeeping by <code>count</code> if the
+         * removal happens above currently active range
+         * <li>ignore rows removed below the currently active range
+         * </ul>
          * 
-         * @param itemId
-         *            the id of the removed id. <em>Note:</em> this item does
-         *            not exist anymore in the datasource
+         * @param firstIndex
+         *            the index of the first removed rows
+         * @param count
+         *            the number of rows removed at <code>firstIndex</code>
          */
-        public void removeItemId(Object itemId) {
-            final GridValueChangeListener removedListener = valueChangeListeners
-                    .remove(itemId);
-            if (removedListener != null) {
-                /*
-                 * We removed an item from somewhere in the visible range, so we
-                 * make the active range shorter. The empty hole will be filled
-                 * by the client-side code when it asks for more information.
-                 */
+        public void removeRows(int firstIndex, int count) {
+            int lastRemoved = firstIndex + count;
+            if (lastRemoved < activeRange.getStart()) {
+                /* firstIndex < lastIndex < start */
+                activeRange = activeRange.offsetBy(-count);
+            } else if (firstIndex < activeRange.getEnd()) {
+                final Range deprecated = Range.between(
+                        Math.max(activeRange.getStart(), firstIndex),
+                        Math.min(activeRange.getEnd(), lastRemoved + 1));
+                for (int i = deprecated.getStart(); i < deprecated.getEnd(); ++i) {
+                    Object itemId = keyMapper.itemIdAtIndex(i);
+                    // Item doesn't exist anymore.
+                    valueChangeListeners.remove(itemId);
+                }
+
                 activeRange = Range.withLength(activeRange.getStart(),
-                        activeRange.length() - 1);
+                        activeRange.length() - deprecated.length());
+            } else {
+                /* end <= firstIndex, no need to do anything */
             }
         }
     }
@@ -698,7 +714,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
     @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
-        if (!clientInitialized) {
+
+        if (initial) {
             clientInitialized = true;
 
             /*
@@ -846,12 +863,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
             rpc.removeRowData(firstIndex, count);
         }
 
-        for (int i = 0; i < count; i++) {
-            Object itemId = keyMapper.itemIdAtIndex(firstIndex + i);
-            if (itemId != null) {
-                activeRowHandler.removeItemId(itemId);
-            }
-        }
+        activeRowHandler.removeRows(firstIndex, count);
     }
 
     /**

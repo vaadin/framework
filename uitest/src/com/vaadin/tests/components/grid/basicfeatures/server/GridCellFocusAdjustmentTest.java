@@ -78,7 +78,7 @@ public class GridCellFocusAdjustmentTest extends GridBasicFeaturesTest {
         assertTrue("Body 0,0 should've gotten focus",
                 getGridElement().getCell(0, 0).isFocused());
 
-        selectMenuPath("Component", "Body rows", "Add second row");
+        selectMenuPath("Component", "Body rows", "Add third row");
         assertTrue("Body 0,0 should've remained focused", getGridElement()
                 .getCell(0, 0).isFocused());
     }

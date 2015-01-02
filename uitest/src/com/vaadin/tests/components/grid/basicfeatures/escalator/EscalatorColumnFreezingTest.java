@@ -69,7 +69,7 @@ public class EscalatorColumnFreezingTest extends
         populate();
 
         selectMenuPath(FEATURES, FROZEN_COLUMNS, FREEZE_1_COLUMN);
-        int scrollPx = 100;
+        int scrollPx = 60;
         scrollHorizontallyTo(scrollPx);
 
         WebElement bodyCell = getBodyCell(0, 0);

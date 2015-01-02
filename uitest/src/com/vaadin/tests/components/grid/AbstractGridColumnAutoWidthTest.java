@@ -17,6 +17,8 @@ package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -60,10 +62,16 @@ public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
                 bodyWidth);
         assertEquals("column should've been roughly as wide as the header",
                 headerWidth, colWidth, 5);
+
     }
 
     @Test
     public void testTooNarrowColumn() {
+        if (BrowserUtil.isIE(getDesiredCapabilities())) {
+            // IE can't deal with overflow nicely.
+            return;
+        }
+
         WebElement[] col = getColumn(3);
         int headerWidth = col[0].getSize().getWidth();
         int colWidth = col[2].getSize().getWidth() - TOTAL_MARGIN_PX;
@@ -80,6 +88,11 @@ public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
 
         assertGreater("column should've been wider than content", colWidth,
                 headerWidth);
+    }
+
+    @Test
+    public void testColumnsRenderCorrectly() throws IOException {
+        compareScreen("initialRender");
     }
 
     private WebElement[] getColumn(int i) {

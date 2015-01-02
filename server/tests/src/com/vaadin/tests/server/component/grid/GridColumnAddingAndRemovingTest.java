@@ -102,6 +102,12 @@ public class GridColumnAddingAndRemovingTest {
         grid.setContainerDataSource(container2);
         assertNull("Grid should not have a column for property foo",
                 grid.getColumn("foo"));
+        assertNotNull("Grid did should have a column for property bar",
+                grid.getColumn("bar"));
+        for (Grid.Column column : grid.getColumns()) {
+            assertNotNull("Grid getColumns returned a null value", column);
+        }
+
         grid.removeAllColumns();
         grid.addColumn("foo");
         assertNotNull("Grid should now have a column for property foo",
