@@ -7,7 +7,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
 
-public class IsNullFilterTest extends AbstractFilterTest<IsNull> {
+public class IsNullFilterTest extends AbstractFilterTestBase<IsNull> {
 
     public void testIsNull() {
         Item item1 = new PropertysetItem();

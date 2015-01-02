@@ -13,12 +13,6 @@ import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 
 public class DataGenerator {
 
-    @Test
-    public void testDummy() {
-        // Added dummy test so JUnit will not complain about
-        // "No runnable methods".
-    }
-
     public static void addPeopleToDatabase(JDBCConnectionPool connectionPool)
             throws SQLException {
         Connection conn = connectionPool.reserveConnection();

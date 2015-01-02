@@ -3,9 +3,6 @@ package com.vaadin.data.util;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.junit.Ignore;
-
-@Ignore
 public class BeanItemContainerGenerator {
 
     public static class PortableRandom {
