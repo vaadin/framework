@@ -38,7 +38,8 @@ public class LongMultiselectTest extends MultiBrowserTest {
 
         TableElement table = getTable();
         assertThat(table.getCell(LASTSELECTEDROW, 1).getText(), is("updated"));
-        assertThat(table.getCell(LASTSELECTEDROW-1, 1).getText(), is("updated"));
+        assertThat(table.getCell(LASTSELECTEDROW - 1, 1).getText(),
+                is("updated"));
     }
 
     private void selectRows() {
@@ -47,8 +48,9 @@ public class LongMultiselectTest extends MultiBrowserTest {
 
         scrollToBottom();
 
-        new Actions(getDriver()).keyDown(Keys.SHIFT).click(getTable().getCell(LASTSELECTEDROW, 0)).keyUp(Keys.SHIFT)
-                .build().perform();
+        new Actions(getDriver()).keyDown(Keys.SHIFT)
+                .click(getTable().getCell(LASTSELECTEDROW, 0))
+                .keyUp(Keys.SHIFT).build().perform();
     }
 
     private TableElement getTable() {

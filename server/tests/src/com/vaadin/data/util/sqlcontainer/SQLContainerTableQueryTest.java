@@ -70,8 +70,7 @@ public class SQLContainerTableQueryTest {
     }
 
     @Test
-    public void itemWithExistingVersionColumnIsRemoved()
-            throws SQLException {
+    public void itemWithExistingVersionColumnIsRemoved() throws SQLException {
         container.setAutoCommit(true);
         peopleQuery.setVersionColumn("ID");
 
@@ -79,7 +78,8 @@ public class SQLContainerTableQueryTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void itemWithNonExistingVersionColumnCannotBeRemoved() throws SQLException {
+    public void itemWithNonExistingVersionColumnCannotBeRemoved()
+            throws SQLException {
         peopleQuery.setVersionColumn("version");
 
         container.removeItem(container.lastItemId());
@@ -99,33 +99,32 @@ public class SQLContainerTableQueryTest {
         SQLContainer container = new SQLContainer(new TableQuery("people",
                 connectionPool, SQLTestsConstants.sqlGen));
 
-        assertTrue(container.containsId(new RowId(
-                new Object[]{1 + offset})));
+        assertTrue(container.containsId(new RowId(new Object[] { 1 + offset })));
         Assert.assertTrue(container.containsId(new RowId(
                 new Object[] { 1 + offset })));
         assertTrue(this.container.containsId(new RowId(
-                new Object[]{1 + offset})));
+                new Object[] { 1 + offset })));
     }
 
     @Test
     public void containsId_withTableQueryAndNonexistingId_returnsFalse()
             throws SQLException {
         Assert.assertFalse(container.containsId(new RowId(
-                new Object[]{1337 + offset})));
+                new Object[] { 1337 + offset })));
     }
 
     @Test
     public void getContainerProperty_tableExistingItemIdAndNonexistingPropertyId_returnsNull()
             throws SQLException {
         Assert.assertNull(container.getContainerProperty(new RowId(
-                new Object[]{1 + offset}), "asdf"));
+                new Object[] { 1 + offset }), "asdf"));
     }
 
     @Test
     public void getContainerProperty_tableNonexistingItemId_returnsNull()
             throws SQLException {
         Assert.assertNull(container.getContainerProperty(new RowId(
-                new Object[]{1337 + offset}), "NAME"));
+                new Object[] { 1337 + offset }), "NAME"));
     }
 
     @Test
@@ -156,24 +155,23 @@ public class SQLContainerTableQueryTest {
                     "Ville",
                     container
                             .getContainerProperty(
-                                    new RowId(new Object[]{new BigDecimal(
-                                            0 + offset)}), "NAME").getValue());
+                                    new RowId(new Object[] { new BigDecimal(
+                                            0 + offset) }), "NAME").getValue());
         } else {
             Assert.assertEquals(
                     "Ville",
                     container.getContainerProperty(
-                            new RowId(new Object[]{0 + offset}), "NAME")
+                            new RowId(new Object[] { 0 + offset }), "NAME")
                             .getValue());
         }
     }
-
 
     @Test
     public void getContainerPropertyIds_table_returnsIDAndNAME()
             throws SQLException {
         Collection<?> propertyIds = container.getContainerPropertyIds();
         Assert.assertEquals(3, propertyIds.size());
-        Assert.assertArrayEquals(new String[]{"ID", "NAME", "AGE"},
+        Assert.assertArrayEquals(new String[] { "ID", "NAME", "AGE" },
                 propertyIds.toArray());
     }
 
@@ -288,10 +286,10 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(3, container.indexOfId(new RowId(
-                    new Object[]{new BigDecimal(3 + offset)})));
+                    new Object[] { new BigDecimal(3 + offset) })));
         } else {
             Assert.assertEquals(3,
-                    container.indexOfId(new RowId(new Object[]{3 + offset})));
+                    container.indexOfId(new RowId(new Object[] { 3 + offset })));
         }
     }
 
@@ -301,14 +299,14 @@ public class SQLContainerTableQueryTest {
         DataGenerator.addFiveThousandPeople(connectionPool);
 
         if (SQLTestsConstants.db == DB.ORACLE) {
-            container.getItem(new RowId(new Object[]{new BigDecimal(
-                    1337 + offset)}));
+            container.getItem(new RowId(new Object[] { new BigDecimal(
+                    1337 + offset) }));
             Assert.assertEquals(1337, container.indexOfId(new RowId(
-                    new Object[]{new BigDecimal(1337 + offset)})));
+                    new Object[] { new BigDecimal(1337 + offset) })));
         } else {
-            container.getItem(new RowId(new Object[]{1337 + offset}));
+            container.getItem(new RowId(new Object[] { 1337 + offset }));
             Assert.assertEquals(1337, container.indexOfId(new RowId(
-                    new Object[]{1337 + offset})));
+                    new Object[] { 1337 + offset })));
         }
     }
 
@@ -332,7 +330,7 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
 
-         Object itemId = container.getIdByIndex(1337);
+        Object itemId = container.getIdByIndex(1337);
         if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     new RowId(new Object[] { 1337 + offset }).toString(),
@@ -367,10 +365,10 @@ public class SQLContainerTableQueryTest {
         Object itemId = container.getIdByIndex(1337);
         if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
-                    new RowId(new Object[]{1336 + offset}).toString(),
+                    new RowId(new Object[] { 1336 + offset }).toString(),
                     container.prevItemId(itemId).toString());
         } else {
-            Assert.assertEquals(new RowId(new Object[]{1336 + offset}),
+            Assert.assertEquals(new RowId(new Object[] { 1336 + offset }),
                     container.prevItemId(itemId));
         }
     }
@@ -379,10 +377,10 @@ public class SQLContainerTableQueryTest {
     public void firstItemId_table_returnsItemId0() throws SQLException {
         if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
-                    new RowId(new Object[]{0 + offset}).toString(),
+                    new RowId(new Object[] { 0 + offset }).toString(),
                     container.firstItemId().toString());
         } else {
-            Assert.assertEquals(new RowId(new Object[]{0 + offset}),
+            Assert.assertEquals(new RowId(new Object[] { 0 + offset }),
                     container.firstItemId());
         }
     }
@@ -394,10 +392,10 @@ public class SQLContainerTableQueryTest {
 
         if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
-                    new RowId(new Object[]{4999 + offset}).toString(),
+                    new RowId(new Object[] { 4999 + offset }).toString(),
                     container.lastItemId().toString());
         } else {
-            Assert.assertEquals(new RowId(new Object[]{4999 + offset}),
+            Assert.assertEquals(new RowId(new Object[] { 4999 + offset }),
                     container.lastItemId());
         }
     }
@@ -406,10 +404,10 @@ public class SQLContainerTableQueryTest {
     public void isFirstId_tableActualFirstId_returnsTrue() throws SQLException {
         if (SQLTestsConstants.db == DB.ORACLE) {
             assertTrue(container.isFirstId(new RowId(
-                    new Object[]{new BigDecimal(0 + offset)})));
+                    new Object[] { new BigDecimal(0 + offset) })));
         } else {
             assertTrue(container.isFirstId(new RowId(
-                    new Object[]{0 + offset})));
+                    new Object[] { 0 + offset })));
         }
     }
 
@@ -417,10 +415,10 @@ public class SQLContainerTableQueryTest {
     public void isFirstId_tableSecondId_returnsFalse() throws SQLException {
         if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertFalse(container.isFirstId(new RowId(
-                    new Object[]{new BigDecimal(1 + offset)})));
+                    new Object[] { new BigDecimal(1 + offset) })));
         } else {
             Assert.assertFalse(container.isFirstId(new RowId(
-                    new Object[]{1 + offset})));
+                    new Object[] { 1 + offset })));
         }
     }
 
@@ -428,10 +426,10 @@ public class SQLContainerTableQueryTest {
     public void isLastId_tableSecondId_returnsFalse() throws SQLException {
         if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertFalse(container.isLastId(new RowId(
-                    new Object[]{new BigDecimal(1 + offset)})));
+                    new Object[] { new BigDecimal(1 + offset) })));
         } else {
             Assert.assertFalse(container.isLastId(new RowId(
-                    new Object[]{1 + offset})));
+                    new Object[] { 1 + offset })));
         }
     }
 
@@ -439,10 +437,10 @@ public class SQLContainerTableQueryTest {
     public void isLastId_tableLastId_returnsTrue() throws SQLException {
         if (SQLTestsConstants.db == DB.ORACLE) {
             assertTrue(container.isLastId(new RowId(
-                    new Object[]{new BigDecimal(3 + offset)})));
+                    new Object[] { new BigDecimal(3 + offset) })));
         } else {
-            assertTrue(container.isLastId(new RowId(
-                    new Object[]{3 + offset})));
+            assertTrue(container
+                    .isLastId(new RowId(new Object[] { 3 + offset })));
         }
     }
 
@@ -451,10 +449,10 @@ public class SQLContainerTableQueryTest {
         DataGenerator.addFiveThousandPeople(connectionPool);
         if (SQLTestsConstants.db == DB.ORACLE) {
             assertTrue(container.isLastId(new RowId(
-                    new Object[]{new BigDecimal(4999 + offset)})));
+                    new Object[] { new BigDecimal(4999 + offset) })));
         } else {
             assertTrue(container.isLastId(new RowId(
-                    new Object[]{4999 + offset})));
+                    new Object[] { 4999 + offset })));
         }
     }
 
@@ -862,6 +860,7 @@ public class SQLContainerTableQueryTest {
         assertTrue(garbageContainer.removeItem(first));
         Assert.assertSame(second, garbageContainer.firstItemId());
     }
+
     @Test
     public void lastItemId_tableLastItemRemoved_resultChanges()
             throws SQLException {

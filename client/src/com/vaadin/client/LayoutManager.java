@@ -443,7 +443,7 @@ public class LayoutManager {
                         try {
                             String key = null;
                             if (Profiler.isEnabled()) {
-                                key = "layoutHorizontally() for "
+                                key = "layoutVertically() for "
                                         + Util.getSimpleName(cl);
                                 Profiler.enter(key);
                             }

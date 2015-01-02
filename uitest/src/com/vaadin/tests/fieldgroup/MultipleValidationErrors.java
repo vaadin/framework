@@ -39,21 +39,27 @@ public class MultipleValidationErrors extends AbstractTestUI {
                 try {
                     fieldGroup.commit();
                 } catch (FieldGroup.CommitException e) {
-                    if (e.getCause() != null && e.getCause() instanceof Validator.InvalidValueException) {
-                        validationErrors.setValue(StringEscapeUtils.unescapeHtml(
-                            AbstractErrorMessage.getErrorMessageForException(e.getCause()).getFormattedHtmlMessage()));
+                    if (e.getCause() != null
+                            && e.getCause() instanceof Validator.InvalidValueException) {
+                        validationErrors.setValue(StringEscapeUtils
+                                .unescapeHtml(AbstractErrorMessage
+                                        .getErrorMessageForException(
+                                                e.getCause())
+                                        .getFormattedHtmlMessage()));
                     }
                 }
-
 
             }
         });
     }
 
-    private void bindTextField(BeanItem<PersonBeanWithValidationAnnotations> item, FieldGroup fieldGroup,
-                               String caption, String propertyId) {
-        TextField textfield = new TextField(caption, item.getItemProperty(propertyId));
-        textfield.addValidator(new BeanValidator(PersonBeanWithValidationAnnotations.class, propertyId));
+    private void bindTextField(
+            BeanItem<PersonBeanWithValidationAnnotations> item,
+            FieldGroup fieldGroup, String caption, String propertyId) {
+        TextField textfield = new TextField(caption,
+                item.getItemProperty(propertyId));
+        textfield.addValidator(new BeanValidator(
+                PersonBeanWithValidationAnnotations.class, propertyId));
 
         fieldGroup.bind(textfield, propertyId);
 

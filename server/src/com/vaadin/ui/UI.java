@@ -1164,7 +1164,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      *            The new theme name
      */
     public void setTheme(String theme) {
-        if(theme == null) {
+        if (theme == null) {
             getState().theme = null;
         } else {
             getState().theme = VaadinServlet.stripSpecialChars(theme);

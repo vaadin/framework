@@ -71,7 +71,8 @@ public class TestClientMethodSerialization extends TestCase {
 
         ClientMethodInvocation copy = (ClientMethodInvocation) serializeAndDeserialize(original);
         JsonArray copyArray = (JsonArray) copy.getParameters()[1];
-        assertEquals(JsonUtil.stringify(originalArray), JsonUtil.stringify(copyArray));
+        assertEquals(JsonUtil.stringify(originalArray),
+                JsonUtil.stringify(copyArray));
     }
 
     public void testClientMethodSerialization_WithBasicParams_NoChanges()

@@ -1342,6 +1342,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
     private MouseEventListener mouseEventListener;
     private boolean forwardNavigationEnabled = true;
     private boolean backwardNavigationEnabled = true;
+    private boolean eventCaptionAsHtml = false;
 
     /**
      * Get the listener that listen to mouse events
@@ -1466,5 +1467,34 @@ public class VCalendar extends Composite implements VHasDropHandler {
      */
     public void setDropHandler(CalendarDropHandler dropHandler) {
         this.dropHandler = dropHandler;
+    }
+
+    /**
+     * Sets whether the event captions are rendered as HTML.
+     * <p>
+     * If set to true, the captions are rendered in the browser as HTML and the
+     * developer is responsible for ensuring no harmful HTML is used. If set to
+     * false, the caption is rendered in the browser as plain text.
+     * <p>
+     * The default is false, i.e. to render that caption as plain text.
+     * 
+     * @param captionAsHtml
+     *            true if the captions are rendered as HTML, false if rendered
+     *            as plain text
+     */
+    public void setEventCaptionAsHtml(boolean eventCaptionAsHtml) {
+        this.eventCaptionAsHtml = eventCaptionAsHtml;
+    }
+
+    /**
+     * Checks whether event captions are rendered as HTML
+     * <p>
+     * The default is false, i.e. to render that caption as plain text.
+     * 
+     * @return true if the captions are rendered as HTML, false if rendered as
+     *         plain text
+     */
+    public boolean isEventCaptionAsHtml() {
+        return eventCaptionAsHtml;
     }
 }

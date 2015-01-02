@@ -42,7 +42,8 @@ public class TableColumnResizeContentsWidthTest extends MultiBrowserTest {
     public List<DesiredCapabilities> getBrowsersToTest() {
         List<DesiredCapabilities> browsersToTest = super.getBrowsersToTest();
 
-        //Can't get IE8 to hit the resizer, extracted IE8 to it's own test class.
+        // Can't get IE8 to hit the resizer, extracted IE8 to it's own test
+        // class.
         browsersToTest.remove(Browser.IE8.getDesiredCapabilities());
 
         return browsersToTest;
@@ -54,7 +55,8 @@ public class TableColumnResizeContentsWidthTest extends MultiBrowserTest {
 
         List<ButtonElement> buttons = $(ButtonElement.class).all();
 
-        WebElement resizer = getTable().findElement(By.className("v-table-resizer"));
+        WebElement resizer = getTable().findElement(
+                By.className("v-table-resizer"));
 
         assertEquals(100, getTextFieldWidth());
 
@@ -84,7 +86,8 @@ public class TableColumnResizeContentsWidthTest extends MultiBrowserTest {
 
     private int getTextFieldWidth() {
         TableElement table = getTable();
-        final WebElement textField = table.findElement(By.className("v-textfield"));
+        final WebElement textField = table.findElement(By
+                .className("v-textfield"));
 
         return textField.getSize().width;
     }
@@ -94,8 +97,7 @@ public class TableColumnResizeContentsWidthTest extends MultiBrowserTest {
     }
 
     private void moveResizer(WebElement resizer, int offset) {
-        new Actions(driver).clickAndHold(resizer).moveByOffset(offset, 0).release().perform();
+        new Actions(driver).clickAndHold(resizer).moveByOffset(offset, 0)
+                .release().perform();
     }
 }
-
-

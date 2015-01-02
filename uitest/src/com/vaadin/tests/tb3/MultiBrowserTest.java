@@ -41,7 +41,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
     protected List<DesiredCapabilities> getBrowsersSupportingWebSocket() {
-        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(getAllBrowsers());
+        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(
+                getAllBrowsers());
 
         browsers.remove(Browser.IE8.getDesiredCapabilities());
         browsers.remove(Browser.IE9.getDesiredCapabilities());
@@ -51,7 +52,8 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
     }
 
     protected List<DesiredCapabilities> getBrowsersExcludingPhantomJS() {
-        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(getAllBrowsers());
+        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(
+                getAllBrowsers());
 
         browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
 
@@ -59,7 +61,8 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
     }
 
     protected List<DesiredCapabilities> getBrowsersExcludingIE() {
-        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(getAllBrowsers());
+        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(
+                getAllBrowsers());
         browsers.remove(Browser.IE8.getDesiredCapabilities());
         browsers.remove(Browser.IE9.getDesiredCapabilities());
         browsers.remove(Browser.IE10.getDesiredCapabilities());
@@ -69,14 +72,15 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
     }
 
     protected List<DesiredCapabilities> getBrowsersSupportingShiftClick() {
-        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(getAllBrowsers());
+        List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>(
+                getAllBrowsers());
 
-        //IE supports shift click only when require window focus is true
+        // IE supports shift click only when require window focus is true
         browsers.remove(Browser.FIREFOX.getDesiredCapabilities());
         browsers.remove(Browser.PHANTOMJS.getDesiredCapabilities());
 
-		return browsers;
-	}
+        return browsers;
+    }
 
     protected List<DesiredCapabilities> getIEBrowsersOnly() {
         List<DesiredCapabilities> browsers = new ArrayList<DesiredCapabilities>();
@@ -87,7 +91,6 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
         return browsers;
     }
-
 
     public enum Browser {
         FIREFOX(BrowserUtil.firefox(24)), CHROME(BrowserUtil.chrome(33)), SAFARI(

@@ -28,7 +28,8 @@ public class JSAPIUI extends UI {
                             } else {
                                 // type should be in [1]
                                 Notification.show(caption,
-                                        Type.values()[((int) arguments.getNumber(1))]);
+                                        Type.values()[((int) arguments
+                                                .getNumber(1))]);
                             }
 
                         } catch (JsonException e) {

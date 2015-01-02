@@ -25,7 +25,7 @@ public abstract class SendMultibyteCharactersTest extends MultiBrowserTest {
         TextAreaElement textArea = $(TextAreaElement.class).first();
 
         StringBuilder text = new StringBuilder();
-        for(int i=0;i < 20;i++) {
+        for (int i = 0; i < 20; i++) {
             text.append("之は日本語です、テストです。");
         }
 

@@ -20,6 +20,7 @@ import java.util.Date;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.user.client.ui.HTML;
+import com.vaadin.client.Util;
 import com.vaadin.client.ui.VCalendar;
 
 /**
@@ -75,7 +76,8 @@ public class MonthEventLabel extends HTML implements HasTooltipKey {
      * Set the caption of the event label
      * 
      * @param caption
-     *            The caption string, can be HTML
+     *            The caption string, can be HTML if
+     *            {@link VCalendar#isEventCaptionAsHtml()} is true
      */
     public void setCaption(String caption) {
         this.caption = caption;
@@ -87,13 +89,20 @@ public class MonthEventLabel extends HTML implements HasTooltipKey {
      */
     private void renderCaption() {
         StringBuilder html = new StringBuilder();
+        String textOrHtml;
+        if (calendar.isEventCaptionAsHtml()) {
+            textOrHtml = caption;
+        } else {
+            textOrHtml = Util.escapeHTML(caption);
+        }
+
         if (caption != null && time != null) {
             html.append("<span class=\"" + STYLENAME + "-time\">");
             html.append(calendar.getTimeFormat().format(time));
             html.append("</span> ");
-            html.append(caption);
+            html.append(textOrHtml);
         } else if (caption != null) {
-            html.append(caption);
+            html.append(textOrHtml);
         } else if (time != null) {
             html.append("<span class=\"" + STYLENAME + "-time\">");
             html.append(calendar.getTimeFormat().format(time));

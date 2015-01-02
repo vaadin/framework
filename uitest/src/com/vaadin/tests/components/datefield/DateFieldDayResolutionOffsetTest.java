@@ -25,8 +25,9 @@ public class DateFieldDayResolutionOffsetTest extends MultiBrowserTest {
     }
 
     private void select2ndOfSeptember() {
-        for(WebElement e : findElements(By.className("v-datefield-calendarpanel-day"))) {
-            if(e.getText().equals("2")) {
+        for (WebElement e : findElements(By
+                .className("v-datefield-calendarpanel-day"))) {
+            if (e.getText().equals("2")) {
                 e.click();
                 break;
             }
@@ -36,8 +37,7 @@ public class DateFieldDayResolutionOffsetTest extends MultiBrowserTest {
     private void openDatePicker() {
         DateFieldElement dateField = $(DateFieldElement.class).first();
 
-        dateField.findElement(By.tagName("button"))
-                .click();
+        dateField.findElement(By.tagName("button")).click();
     }
 
 }

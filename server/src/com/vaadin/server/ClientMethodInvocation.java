@@ -109,7 +109,8 @@ public class ClientMethodInvocation implements Serializable,
             if (type instanceof Class<?>) {
                 Class<?> clazz = (Class<?>) type;
                 if (JsonArray.class.isAssignableFrom(clazz)) {
-                    parameters[i] = JsonUtil.stringify((JsonArray) parameters[i]);
+                    parameters[i] = JsonUtil
+                            .stringify((JsonArray) parameters[i]);
                 }
             }
         }
@@ -127,7 +128,8 @@ public class ClientMethodInvocation implements Serializable,
                 Class<?> clazz = (Class<?>) type;
                 if (JsonArray.class.isAssignableFrom(clazz)) {
                     try {
-                        parameters[i] = JsonUtil.<JsonArray>parse((String) parameters[i]);
+                        parameters[i] = JsonUtil
+                                .<JsonArray> parse((String) parameters[i]);
                     } catch (JsonException e) {
                         throw new IOException(e);
                     }

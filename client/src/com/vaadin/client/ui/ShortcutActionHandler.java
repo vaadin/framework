@@ -123,6 +123,9 @@ public class ShortcutActionHandler {
         final int modifiers = KeyboardListenerCollection
                 .getKeyboardModifiers(event);
         final char keyCode = (char) DOM.eventGetKeyCode(event);
+        if (keyCode == 0) {
+            return;
+        }
         final ShortcutKeyCombination kc = new ShortcutKeyCombination(keyCode,
                 modifiers);
         final Iterator<ShortcutAction> it = actions.iterator();

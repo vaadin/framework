@@ -112,7 +112,7 @@
             <li>Declarative layout support for initializing a component hierarchy from an HTML file.</li>
             <li>Uses GWT 2.7 for improved compilation times when using Super Dev Mode.</li>
             <li>@Viewport annotation for declaratively defining a mobile viewport definition for a UI.</li>
-            <li>Captions can be configured to be displayed as HTML.</li>
+            <li>Component captions, TabSheet/Accordion tab captions and Calendar event captions can be configured to be displayed as HTML.</li>
             <li>Selects use converters when presenting itemids.</li>
             <li>Improved performance when server response contains no visual changing (e.g. empty polling responses).</li>
             <li>Unified JSON library for using the same API in both server-side and client-side code.</li>
@@ -134,6 +134,7 @@
                 <p>Raw JSON values passed to AbstractJavaScriptComponent.callFunction and AbstractJavaScriptExtension.callFunction should be changed to use elemental.json types.</p>
             </li>
             <li>The semantics of empty and required for Field classes has been made more consistent. This mainly affects Checkbox which is now considered to be empty when it is not checked.</li>
+            <li>The previously inconsistent behavior in HTML vs plain text rendering of Calendar event captions has been made consistent.</li>
             <li>Support for Opera 12 has been dropped. Newer versions based on the Blink rendering engine are still supported.</li>
         </ul>
         <h3 id="knownissues">Known issues</h3>

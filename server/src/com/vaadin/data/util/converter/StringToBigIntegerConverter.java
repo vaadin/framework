@@ -56,7 +56,8 @@ public class StringToBigIntegerConverter extends
         BigDecimal bigDecimalValue = (BigDecimal) convertToNumber(value,
                 BigDecimal.class, locale);
 
-        return (bigDecimalValue != null) ? bigDecimalValue.toBigInteger() : null;
+        return (bigDecimalValue != null) ? bigDecimalValue.toBigInteger()
+                : null;
     }
 
     @Override

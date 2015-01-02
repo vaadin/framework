@@ -69,8 +69,8 @@ public class CvalCheckerTest {
             + "'expiredEpoch':1893511225000," + "'product':{'name':'"
             + productNameCval + "', 'version': 2}}";
 
-    static final String responseJsonWithNullVersion = "{'licenseKey':'" + VALID_KEY + "',"
-            + "'licensee':'Test User','type':'normal',"
+    static final String responseJsonWithNullVersion = "{'licenseKey':'"
+            + VALID_KEY + "'," + "'licensee':'Test User','type':'normal',"
             + "'expiredEpoch':1893511225000," + "'product':{'name':'"
             + productNameCval + "', 'version': null}}";
 
@@ -462,10 +462,10 @@ public class CvalCheckerTest {
         out.println("5 = this-is-another-license");
         out.close();
 
-        assertEquals("this-is-a-license", licenseChecker.readKeyFromFile(tmpLicenseFile.toURI()
-                .toURL(), 3));
-        assertEquals("this-is-a-license", licenseChecker.readKeyFromFile(tmpLicenseFile.toURI()
-                .toURL(), 4));
+        assertEquals("this-is-a-license", licenseChecker.readKeyFromFile(
+                tmpLicenseFile.toURI().toURL(), 3));
+        assertEquals("this-is-a-license", licenseChecker.readKeyFromFile(
+                tmpLicenseFile.toURI().toURL(), 4));
         assertEquals("this-is-another-license", licenseChecker.readKeyFromFile(
                 tmpLicenseFile.toURI().toURL(), 5));
 
@@ -473,17 +473,18 @@ public class CvalCheckerTest {
     }
 
     @Test
-    public void testReadKeyFromFile_FallbackToDefaultKeyReversed() throws Exception {
+    public void testReadKeyFromFile_FallbackToDefaultKeyReversed()
+            throws Exception {
         File tmpLicenseFile = File.createTempFile("license", "lic");
         PrintWriter out = new PrintWriter(tmpLicenseFile);
         out.println("5 = this-is-another-license");
         out.println("this-is-a-license");
         out.close();
 
-        assertEquals("this-is-a-license", licenseChecker.readKeyFromFile(tmpLicenseFile.toURI()
-                .toURL(), 3));
-        assertEquals("this-is-a-license", licenseChecker.readKeyFromFile(tmpLicenseFile.toURI()
-                .toURL(), 4));
+        assertEquals("this-is-a-license", licenseChecker.readKeyFromFile(
+                tmpLicenseFile.toURI().toURL(), 3));
+        assertEquals("this-is-a-license", licenseChecker.readKeyFromFile(
+                tmpLicenseFile.toURI().toURL(), 4));
         assertEquals("this-is-another-license", licenseChecker.readKeyFromFile(
                 tmpLicenseFile.toURI().toURL(), 5));
 

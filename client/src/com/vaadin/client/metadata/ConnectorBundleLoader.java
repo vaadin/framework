@@ -161,7 +161,7 @@ public abstract class ConnectorBundleLoader {
     private HTML notice;
 
     // Not using Vaadin notifications (#14597)
-    private  void notice(String productName) {
+    private void notice(String productName) {
         if (notice == null) {
             notice = new HTML();
             notice.addClickHandler(new ClickHandler() {

@@ -12,8 +12,8 @@ public class TableSortIndicator extends AbstractTestUI {
         Table table = new Table();
         table.addContainerProperty("Index", Integer.class, "");
 
-        for(int i=0;i<10;i++) {
-            table.addItem(new Object[] {i}, i);
+        for (int i = 0; i < 10; i++) {
+            table.addItem(new Object[] { i }, i);
         }
 
         table.setPageLength(0);
@@ -23,8 +23,8 @@ public class TableSortIndicator extends AbstractTestUI {
 
     @Override
     protected String getTestDescription() {
-        return "For Valo, sorting indicators should point up when sorted asc " +
-                "and down when sorted desc.";
+        return "For Valo, sorting indicators should point up when sorted asc "
+                + "and down when sorted desc.";
     }
 
     @Override

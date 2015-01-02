@@ -66,10 +66,12 @@ import elemental.json.impl.JreJsonArray;
 public class JsonCodec implements Serializable {
 
     /* Immutable Encode Result representing null */
-    private static final EncodeResult ENCODE_RESULT_NULL = new EncodeResult(Json.createNull());
+    private static final EncodeResult ENCODE_RESULT_NULL = new EncodeResult(
+            Json.createNull());
 
     /* Immutable empty JSONArray */
-    private static final JsonArray EMPTY_JSON_ARRAY = new JreJsonArray(Json.instance()) {
+    private static final JsonArray EMPTY_JSON_ARRAY = new JreJsonArray(
+            Json.instance()) {
         @Override
         public void set(int index, JsonValue value) {
             throw new UnsupportedOperationException(
@@ -316,7 +318,8 @@ public class JsonCodec implements Serializable {
                     .getGenericComponentType();
             return decodeArray(componentType, (JsonArray) value,
                     connectorTracker);
-        } else if (JsonValue.class.isAssignableFrom(getClassForType(targetType))) {
+        } else if (JsonValue.class
+                .isAssignableFrom(getClassForType(targetType))) {
             return value;
         } else if (Enum.class.isAssignableFrom(getClassForType(targetType))) {
             Class<?> classForType = getClassForType(targetType);
@@ -479,8 +482,7 @@ public class JsonCodec implements Serializable {
     }
 
     private static Map<Object, Object> decodeObjectMap(Type keyType,
-            Type valueType, JsonArray jsonMap, ConnectorTracker connectorTracker)
-            {
+            Type valueType, JsonArray jsonMap, ConnectorTracker connectorTracker) {
 
         JsonArray keys = jsonMap.getArray(0);
         JsonArray values = jsonMap.getArray(1);
@@ -766,7 +768,8 @@ public class JsonCodec implements Serializable {
      * @param referenceValue
      * @return
      */
-    private static boolean jsonEquals(JsonValue fieldValue, JsonValue referenceValue) {
+    private static boolean jsonEquals(JsonValue fieldValue,
+            JsonValue referenceValue) {
         if (fieldValue instanceof JsonNull) {
             fieldValue = null;
         }
@@ -795,13 +798,14 @@ public class JsonCodec implements Serializable {
             Collection<?> collection, ConnectorTracker connectorTracker) {
         JsonArray jsonArray = Json.createArray();
         for (Object o : collection) {
-            jsonArray.set(jsonArray.length(), encodeChild(targetType, 0, o, connectorTracker));
+            jsonArray.set(jsonArray.length(),
+                    encodeChild(targetType, 0, o, connectorTracker));
         }
         return jsonArray;
     }
 
-    private static JsonValue encodeChild(Type targetType, int typeIndex, Object o,
-            ConnectorTracker connectorTracker) {
+    private static JsonValue encodeChild(Type targetType, int typeIndex,
+            Object o, ConnectorTracker connectorTracker) {
         if (targetType instanceof ParameterizedType) {
             Type childType = ((ParameterizedType) targetType)
                     .getActualTypeArguments()[typeIndex];

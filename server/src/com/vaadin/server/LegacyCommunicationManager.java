@@ -85,7 +85,8 @@ public class LegacyCommunicationManager implements Serializable {
      * @deprecated As of 7.1. See #11411.
      */
     @Deprecated
-    public static JsonObject encodeState(ClientConnector connector, SharedState state) {
+    public static JsonObject encodeState(ClientConnector connector,
+            SharedState state) {
         UI uI = connector.getUI();
         ConnectorTracker connectorTracker = uI.getConnectorTracker();
         Class<? extends SharedState> stateType = connector.getStateType();
