@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.design;
 
-import org.junit.Ignore;
-
 import com.vaadin.ui.Button;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.VerticalLayout;
@@ -27,7 +25,6 @@ import com.vaadin.ui.VerticalLayout;
  * @since
  * @author Vaadin Ltd
  */
-@Ignore
 public class LayoutTemplate extends VerticalLayout {
     private NativeButton firstButton; // assigned based on local id
     private NativeButton secondButton; // assigned based on id

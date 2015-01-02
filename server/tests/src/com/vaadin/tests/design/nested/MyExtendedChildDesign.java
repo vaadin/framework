@@ -15,9 +15,6 @@
  */
 package com.vaadin.tests.design.nested;
 
-import org.junit.Ignore;
-
-@Ignore
 public class MyExtendedChildDesign extends MyChildDesign {
     public MyExtendedChildDesign() {
         super();

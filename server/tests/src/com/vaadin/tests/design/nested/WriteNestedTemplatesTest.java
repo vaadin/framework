@@ -15,13 +15,15 @@
  */
 package com.vaadin.tests.design.nested;
 
-import junit.framework.TestCase;
-
+import com.vaadin.ui.declarative.DesignContext;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
+import org.junit.Before;
+import org.junit.Test;
 
-import com.vaadin.ui.declarative.DesignContext;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 /**
  * 
@@ -29,21 +31,29 @@ import com.vaadin.ui.declarative.DesignContext;
  * 
  * @author Vaadin Ltd
  */
-public class TestWriteNestedTemplates extends TestCase {
+public class WriteNestedTemplatesTest {
 
     private MyDesignRoot root;
     private Element design;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() {
         root = new MyDesignRoot();
         design = createDesign();
+    }
+
+    private Element createDesign() {
+        Element design = new Element(Tag.valueOf("v-vertical-layout"), "",
+                new Attributes());
+
         DesignContext designContext = new DesignContext();
         designContext.setRootComponent(root);
         root.writeDesign(design, designContext);
+
+        return design;
     }
 
+    @Test
     public void testChildRendered() {
         assertEquals("Root layout must have one child", 1, design.children()
                 .size());
@@ -51,39 +61,29 @@ public class TestWriteNestedTemplates extends TestCase {
                 design.child(0).tagName());
     }
 
-    public void testRootCaptionWritten() {
-        assertTrue("Root layout caption must be written",
-                design.hasAttr("caption"));
-        assertEquals("Root layout caption must be written", "root caption",
-                design.attr("caption"));
+    @Test
+    public void rootCaptionIsWritten() {
+        assertTrue(design.hasAttr("caption"));
+        assertThat(design.attr("caption"), is("root caption"));
     }
 
-    public void testChildCaptionWritten() {
-        assertTrue("Child design caption must be written", design.child(0)
-                .hasAttr("caption"));
-        assertEquals("Child design caption must be written", "child caption",
-                design.child(0).attr("caption"));
+    @Test
+    public void childCaptionIsWritten() {
+        assertTrue(design.child(0).hasAttr("caption"));
+        assertThat(design.child(0).attr("caption"), is("child caption"));
     }
 
     // The default caption is read from child template
-    public void testDefaultCaptionShouldNotBeWritten() {
-        design = createDesign();
+    @Test
+    public void defaultCaptionIsNotOverwritten() {
         root.childDesign.setCaption("Default caption for child design");
-        DesignContext designContext = new DesignContext();
-        designContext.setRootComponent(root);
-        root.writeDesign(design, designContext);
-        assertFalse("Default caption must not be written", design.child(0)
-                .hasAttr("caption"));
+        design = createDesign();
+
+        assertFalse(design.child(0).hasAttr("caption"));
     }
 
-    public void testChildDesignChildrenNotWrittenInRootTemplate() {
-        assertEquals(
-                "Children of the child template must not be written to root template",
-                0, design.child(0).children().size());
-    }
-
-    private Element createDesign() {
-        return new Element(Tag.valueOf("v-vertical-layout"), "",
-                new Attributes());
+    @Test
+    public void childDesignChildrenIsNotWrittenInRootTemplate() {
+        assertThat(design.child(0).children().size(), is(0));
     }
 }

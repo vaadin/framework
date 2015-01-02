@@ -32,6 +32,11 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the handling of the locale property in parsing and html generation.
@@ -39,10 +44,10 @@ import com.vaadin.ui.declarative.DesignContext;
  * @since
  * @author Vaadin Ltd
  */
-public class TestLocale extends TestCase {
+public class LocaleTest {
     DesignContext ctx;
 
-    @Override
+    @Before
     public void setUp() {
         ctx = new DesignContext();
     }
@@ -52,6 +57,7 @@ public class TestLocale extends TestCase {
      * constructed, the result only contains locale attributes for a component
      * if its locale differs from that of its parent.
      */
+    @Test
     public void testHtmlGeneration() {
         // create a component hierarchy
         VerticalLayout vLayout = new VerticalLayout();
@@ -130,6 +136,7 @@ public class TestLocale extends TestCase {
      * Checks that the locale of a component is set when the html element
      * corresponding to the component specifies a locale.
      */
+    @Test
     public void testParsing() {
         // create an html document
         Document doc = new Document("");

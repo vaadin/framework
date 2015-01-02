@@ -15,12 +15,9 @@
  */
 package com.vaadin.tests.design.designroot;
 
-import org.junit.Ignore;
-
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
-@Ignore
 public class ExtendedDesignWithEmptyAnnotationUI extends UI {
 
     @Override

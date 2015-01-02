@@ -15,15 +15,12 @@
  */
 package com.vaadin.tests.design.nested.customlayouts;
 
-import org.junit.Ignore;
-
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Label;
 
 /**
  * @author Vaadin Ltd
  */
-@Ignore
 public class CustomAccordion extends Accordion {
     public CustomAccordion() {
         addComponent(new Label());

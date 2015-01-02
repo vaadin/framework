@@ -15,15 +15,12 @@
  */
 package com.vaadin.tests.design.nested.customlayouts;
 
-import org.junit.Ignore;
-
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalSplitPanel;
 
 /**
  * @author Vaadin Ltd
  */
-@Ignore
 public class CustomVerticalSplitPanel extends VerticalSplitPanel {
     public CustomVerticalSplitPanel() {
         addComponent(new Label());

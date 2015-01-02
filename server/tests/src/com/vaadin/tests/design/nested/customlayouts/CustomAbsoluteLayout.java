@@ -15,15 +15,12 @@
  */
 package com.vaadin.tests.design.nested.customlayouts;
 
-import org.junit.Ignore;
-
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Label;
 
 /**
  * @author Vaadin Ltd
  */
-@Ignore
 public class CustomAbsoluteLayout extends AbsoluteLayout {
     public CustomAbsoluteLayout() {
         this.addComponent(new Label());

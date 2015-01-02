@@ -15,11 +15,8 @@
  */
 package com.vaadin.tests.design.designroot;
 
-import org.junit.Ignore;
-
 import com.vaadin.ui.TextField;
 
-@Ignore
 public class ExtendedDesignWithAnnotation extends DesignWithAnnotation {
     private TextField customField = new TextField();
 

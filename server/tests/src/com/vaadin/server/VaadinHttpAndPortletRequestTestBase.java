@@ -33,9 +33,7 @@ import org.junit.Test;
 import com.vaadin.server.VaadinPortlet.VaadinHttpAndPortletRequest;
 import com.vaadin.server.VaadinPortletService;
 
-//Have to ignore this class - otherwise JUnit tries to instantiate it...
-@Ignore
-public abstract class VaadinHttpAndPortletRequestTests<T extends VaadinHttpAndPortletRequest> {
+public abstract class VaadinHttpAndPortletRequestTestBase<T extends VaadinHttpAndPortletRequest> {
 
     protected VaadinHttpAndPortletRequest sut;
     protected HttpServletRequest servletRequest;
