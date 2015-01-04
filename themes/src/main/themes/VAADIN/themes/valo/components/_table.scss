@@ -456,6 +456,10 @@ $v-table-background-color: null !default;
     div {
       display: inline;
     }
+
+    &.v-disabled {
+        @include opacity($v-disabled-opacity);
+    }
   }
   .v-off:before {
     visibility: hidden;
