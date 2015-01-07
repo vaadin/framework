@@ -273,7 +273,7 @@ public class GridBasicClientFeaturesWidget extends
             };
 
             column.setWidth(50 + c * 25);
-            column.setHeaderText("Header (0," + c + ")");
+            column.setHeaderCaption("Header (0," + c + ")");
 
             grid.addColumn(column);
         }
@@ -289,7 +289,7 @@ public class GridBasicClientFeaturesWidget extends
                 }
             };
             grid.addColumn(column);
-            column.setHeaderText("Header (0," + c + ")");
+            column.setHeaderCaption("Header (0," + c + ")");
         }
 
         // Some date
@@ -303,7 +303,7 @@ public class GridBasicClientFeaturesWidget extends
                 }
             };
             grid.addColumn(column);
-            column.setHeaderText("Header (0," + c + ")");
+            column.setHeaderCaption("Header (0," + c + ")");
         }
 
         // Row number as a HTML string
@@ -317,7 +317,7 @@ public class GridBasicClientFeaturesWidget extends
                 }
             };
             grid.addColumn(column);
-            column.setHeaderText("Header (0," + c + ")");
+            column.setHeaderCaption("Header (0," + c + ")");
         }
 
         // Random integer value
@@ -331,7 +331,7 @@ public class GridBasicClientFeaturesWidget extends
                 }
             };
             grid.addColumn(column);
-            column.setHeaderText("Header (0," + c + ")");
+            column.setHeaderCaption("Header (0," + c + ")");
         }
 
         // Random integer value between 0 and 5
@@ -345,7 +345,7 @@ public class GridBasicClientFeaturesWidget extends
                 }
             };
             grid.addColumn(column);
-            column.setHeaderText("Header (0," + c + ")");
+            column.setHeaderCaption("Header (0," + c + ")");
         }
 
         HeaderRow row = grid.getDefaultHeaderRow();
@@ -643,7 +643,7 @@ public class GridBasicClientFeaturesWidget extends
             addMenuCommand("Text Header", new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    column.setHeaderText("Text Header");
+                    column.setHeaderCaption("Text Header");
                 }
             }, "Component", "Columns", "Column " + i, "Header Type");
             addMenuCommand("HTML Header", new ScheduledCommand() {

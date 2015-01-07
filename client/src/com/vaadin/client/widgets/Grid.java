@@ -2552,7 +2552,7 @@ public class Grid<T> extends ResizeComposite implements
 
         private boolean sortable = false;
 
-        private String headerText = "";
+        private String headerCaption = "";
 
         private double minimumWidthPx = GridColumnState.DEFAULT_MIN_WIDTH;
         private double maximumWidthPx = GridColumnState.DEFAULT_MAX_WIDTH;
@@ -2568,15 +2568,15 @@ public class Grid<T> extends ResizeComposite implements
         /**
          * Constructs a new column with a simple TextRenderer.
          * 
-         * @param headerText
-         *            The header text for this column
+         * @param caption
+         *            The header caption for this column
          * 
          * @throws IllegalArgumentException
-         *             if given header text is null
+         *             if given header caption is null
          */
-        public Column(String headerText) throws IllegalArgumentException {
+        public Column(String caption) throws IllegalArgumentException {
             this();
-            setHeaderText(headerText);
+            setHeaderCaption(caption);
         }
 
         /**
@@ -2598,16 +2598,16 @@ public class Grid<T> extends ResizeComposite implements
          * 
          * @param renderer
          *            The renderer to use for rendering the cells
-         * @param headerText
-         *            The header text for this column
+         * @param caption
+         *            The header caption for this column
          * 
          * @throws IllegalArgumentException
-         *             if given Renderer or header text is null
+         *             if given Renderer or header caption is null
          */
-        public Column(String headerText, Renderer<? super C> renderer)
+        public Column(String caption, Renderer<? super C> renderer)
                 throws IllegalArgumentException {
             this(renderer);
-            setHeaderText(headerText);
+            setHeaderCaption(caption);
         }
 
         /**
@@ -2634,23 +2634,22 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Sets a header text for this column.
+         * Sets a header caption for this column.
          * 
-         * @param headerText
-         *            The header text for this column
+         * @param caption
+         *            The header caption for this column
          * @return the column itself
          * 
          * @throws IllegalArgumentException
-         *             if given header text is null
+         *             if given caption text is null
          */
-        public Column<C, T> setHeaderText(String headerText) {
-            if (headerText == null) {
-                throw new IllegalArgumentException(
-                        "Header text cannot be null.");
+        public Column<C, T> setHeaderCaption(String caption) {
+            if (caption == null) {
+                throw new IllegalArgumentException("Caption cannot be null.");
             }
 
-            if (!this.headerText.equals(headerText)) {
-                this.headerText = headerText;
+            if (!this.headerCaption.equals(caption)) {
+                this.headerCaption = caption;
                 if (grid != null) {
                     updateHeader();
                 }
@@ -2662,7 +2661,7 @@ public class Grid<T> extends ResizeComposite implements
         private void updateHeader() {
             HeaderRow row = grid.getHeader().getDefaultRow();
             if (row != null) {
-                row.getCell(this).setText(headerText);
+                row.getCell(this).setText(headerCaption);
             }
         }
 
@@ -2810,8 +2809,8 @@ public class Grid<T> extends ResizeComposite implements
         public String toString() {
             String details = "";
 
-            if (headerText != null && !headerText.isEmpty()) {
-                details += "header:\"" + headerText + "\" ";
+            if (headerCaption != null && !headerCaption.isEmpty()) {
+                details += "header:\"" + headerCaption + "\" ";
             } else {
                 details += "header:empty ";
             }
@@ -3819,7 +3818,7 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Returns the current default row of the header section. The default row is
      * a special header row providing a user interface for sorting columns.
-     * Setting a header text for column updates cells in the default header.
+     * Setting a header caption for column updates cells in the default header.
      * 
      * @return the default row or null if no default row set
      */
