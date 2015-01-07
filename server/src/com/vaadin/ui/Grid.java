@@ -1781,7 +1781,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /**
          * Backing property for column
          */
-        private final Object columnProperty;
+        private final Object propertyId;
 
         private Converter<?, Object> converter;
 
@@ -1799,13 +1799,13 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          *            The grid this column belongs to. Should not be null.
          * @param state
          *            the shared state of this column
-         * @param columnProperty
+         * @param propertyId
          *            the backing property id for this column
          */
-        Column(Grid grid, GridColumnState state, Object columnProperty) {
+        Column(Grid grid, GridColumnState state, Object propertyId) {
             this.grid = grid;
             this.state = state;
-            this.columnProperty = columnProperty;
+            this.propertyId = propertyId;
             internalSetRenderer(new TextRenderer());
         }
 
@@ -1824,8 +1824,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * 
          * @return property id
          */
-        public Object getColumnProperty() {
-            return columnProperty;
+        public Object getPropertyId() {
+            return propertyId;
         }
 
         /**
@@ -4387,7 +4387,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         editedItemId = itemId;
 
         for (Column column : getColumns()) {
-            Object propertyId = column.getColumnProperty();
+            Object propertyId = column.getPropertyId();
 
             Field<?> editor = getEditorField(propertyId);
 
