@@ -25,6 +25,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderRow;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.renderer.NumberRenderer;
 
 public class GridColspans extends AbstractTestUI {
@@ -48,6 +49,7 @@ public class GridColspans extends AbstractTestUI {
         grid = new Grid(dataSource);
         grid.setWidth("600px");
         grid.getColumn("zipCode").setRenderer(new NumberRenderer());
+        grid.setSelectionMode(SelectionMode.MULTI);
         addComponent(grid);
 
         HeaderRow row = grid.prependHeaderRow();

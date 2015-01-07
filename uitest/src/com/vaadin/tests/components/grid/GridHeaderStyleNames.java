@@ -27,6 +27,7 @@ import com.vaadin.ui.Grid.FooterCell;
 import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
+import com.vaadin.ui.Grid.SelectionMode;
 
 @Theme("valo")
 public class GridHeaderStyleNames extends AbstractTestUIWithLog {
@@ -40,6 +41,7 @@ public class GridHeaderStyleNames extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         Grid grid = new Grid();
+        grid.setSelectionMode(SelectionMode.MULTI);
         grid.setContainerDataSource(BeanItemContainerGenerator
                 .createContainer(100));
 

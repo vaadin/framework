@@ -2578,7 +2578,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * Grid initial setup
      */
     private void initGrid() {
-        setSelectionMode(SelectionMode.MULTI);
+        setSelectionMode(SelectionMode.SINGLE);
         addSelectionListener(new SelectionListener() {
             @Override
             public void select(SelectionEvent event) {
