@@ -28,12 +28,6 @@ import com.vaadin.shared.Connector;
  */
 public class GridColumnState implements Serializable {
 
-    public static final double DEFAULT_MAX_WIDTH = -1;
-    public static final double DEFAULT_MIN_WIDTH = 10.0d;
-    public static final int DEFAULT_EXPAND_RATIO = -1;
-
-    public static final double DEFAULT_COLUMN_WIDTH_PX = -1;
-
     /**
      * Id used by grid connector to map server side column with client side
      * column
@@ -42,9 +36,9 @@ public class GridColumnState implements Serializable {
 
     /**
      * Column width in pixels. Default column width is
-     * {@value #DEFAULT_COLUMN_WIDTH_PX}.
+     * {@value GridConstants#DEFAULT_COLUMN_WIDTH_PX}.
      */
-    public double width = DEFAULT_COLUMN_WIDTH_PX;
+    public double width = GridConstants.DEFAULT_COLUMN_WIDTH_PX;
 
     /**
      * The connector for the renderer used to render the cells in this column.
@@ -63,17 +57,17 @@ public class GridColumnState implements Serializable {
     public boolean sortable = false;
 
     /** How much of the remaining space this column will reserve. */
-    public int expandRatio = DEFAULT_EXPAND_RATIO;
+    public int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
 
     /**
      * The maximum expansion width of this column. -1 for "no maximum". If
      * maxWidth is less than the calculated width, maxWidth is ignored.
      */
-    public double maxWidth = DEFAULT_MAX_WIDTH;
+    public double maxWidth = GridConstants.DEFAULT_MAX_WIDTH;
 
     /**
      * The minimum expansion width of this column. -1 for "no minimum". If
      * minWidth is less than the calculated width, minWidth will win.
      */
-    public double minWidth = DEFAULT_MIN_WIDTH;
+    public double minWidth = GridConstants.DEFAULT_MIN_WIDTH;
 }

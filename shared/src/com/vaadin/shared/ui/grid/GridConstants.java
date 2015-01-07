@@ -41,4 +41,26 @@ public final class GridConstants implements Serializable {
      * The threshold in pixels a finger can move while long tapping.
      */
     public static final int LONG_TAP_THRESHOLD = 3;
+
+    /* Column constants */
+
+    /**
+     * Default maximum width for columns.
+     */
+    public static final double DEFAULT_MAX_WIDTH = -1;
+
+    /**
+     * Default minimum width for columns.
+     */
+    public static final double DEFAULT_MIN_WIDTH = 10.0d;
+
+    /**
+     * Default expand ratio for columns.
+     */
+    public static final int DEFAULT_EXPAND_RATIO = -1;
+
+    /**
+     * Default width for columns.
+     */
+    public static final double DEFAULT_COLUMN_WIDTH_PX = -1;
 }

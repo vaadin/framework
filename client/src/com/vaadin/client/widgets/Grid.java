@@ -122,7 +122,6 @@ import com.vaadin.client.widget.grid.sort.SortHandler;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Escalator.AbstractRowContainer;
 import com.vaadin.shared.data.sort.SortDirection;
-import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -2543,7 +2542,7 @@ public class Grid<T> extends ResizeComposite implements
          * Width of column in pixels as {@link #setWidth(double)} has been
          * called
          */
-        private double widthUser = GridColumnState.DEFAULT_COLUMN_WIDTH_PX;
+        private double widthUser = GridConstants.DEFAULT_COLUMN_WIDTH_PX;
 
         /**
          * Renderer for rendering a value into the cell
@@ -2554,9 +2553,9 @@ public class Grid<T> extends ResizeComposite implements
 
         private String headerCaption = "";
 
-        private double minimumWidthPx = GridColumnState.DEFAULT_MIN_WIDTH;
-        private double maximumWidthPx = GridColumnState.DEFAULT_MAX_WIDTH;
-        private int expandRatio = GridColumnState.DEFAULT_EXPAND_RATIO;
+        private double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
+        private double maximumWidthPx = GridConstants.DEFAULT_MAX_WIDTH;
+        private int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
 
         /**
          * Constructs a new column with a simple TextRenderer.
