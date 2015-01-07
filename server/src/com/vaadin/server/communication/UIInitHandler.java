@@ -115,7 +115,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         response.setHeader("Cache-Control", "no-cache");
 
         byte[] b = json.getBytes("UTF-8");
-        response.setHeader("Content-Length", String.valueOf(b.length));
+        response.setContentLength(b.length);
 
         OutputStream outputStream = response.getOutputStream();
         outputStream.write(b);
