@@ -22,6 +22,7 @@ import com.google.gwt.user.client.Event;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.Util;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.client.ui.VTextField;
@@ -83,14 +84,15 @@ public class TextFieldConnector extends AbstractFieldConnector implements
         }
         /*
          * We skip the text content update if field has been repainted, but text
-         * has not been changed. Additional sanity check verifies there is no
-         * change in the queue (in which case we count more on the server side
-         * value).
+         * has not been changed (#6588). Additional sanity check verifies there
+         * is no change in the queue (in which case we count more on the server
+         * side value). <input> is updated only when it looses focus, so we
+         * force updating if not focused. Lost focus issue appeared in (#15144)
          */
-        if (!(uidl
-                .getBooleanAttribute(TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
-                && getWidget().valueBeforeEdit != null && text
-                    .equals(getWidget().valueBeforeEdit))) {
+        if (!(Util.getFocusedElement() == getWidget().getElement())
+                || !uidl.getBooleanAttribute(TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
+                || getWidget().valueBeforeEdit == null
+                || !text.equals(getWidget().valueBeforeEdit)) {
             getWidget().updateFieldContent(text);
         }
 
