@@ -28,6 +28,10 @@ import com.vaadin.client.communication.JSONSerializer;
 import com.vaadin.shared.annotations.NoLayout;
 
 public class TypeDataStore {
+    public static enum MethodAttribute {
+        DELAYED, LAST_ONLY, NO_LAYOUT;
+    }
+
     private static final String CONSTRUCTOR_NAME = "!new";
 
     private final FastStringMap<Class<?>> identifiers = FastStringMap.create();
@@ -47,9 +51,8 @@ public class TypeDataStore {
     private final FastStringMap<FastStringMap<JsArrayObject<OnStateChangeMethod>>> onStateChangeMethods = FastStringMap
             .create();
 
-    private final FastStringSet delayedMethods = FastStringSet.create();
-    private final FastStringSet lastOnlyMethods = FastStringSet.create();
-    private final FastStringSet noLayoutRpcMethods = FastStringSet.create();
+    private final FastStringMap<FastStringSet> methodAttributes = FastStringMap
+            .create();
 
     private final FastStringMap<Type> returnTypes = FastStringMap.create();
     private final FastStringMap<Invoker> invokers = FastStringMap.create();
@@ -213,20 +216,29 @@ public class TypeDataStore {
     }
 
     public static boolean isDelayed(Method method) {
-        return get().delayedMethods.contains(method.getLookupKey());
+        return hasMethodAttribute(method, MethodAttribute.DELAYED);
     }
 
-    public void setDelayed(Class<?> type, String methodName) {
-        delayedMethods.add(getType(type).getMethod(methodName).getLookupKey());
+    private static boolean hasMethodAttribute(Method method,
+            MethodAttribute attribute) {
+        FastStringSet attributes = get().methodAttributes.get(method
+                .getLookupKey());
+        return attributes != null && attributes.contains(attribute.name());
+    }
+
+    public void setMethodAttribute(Class<?> type, String methodName,
+            MethodAttribute attribute) {
+        String key = getType(type).getMethod(methodName).getLookupKey();
+        FastStringSet attributes = methodAttributes.get(key);
+        if (attributes == null) {
+            attributes = FastStringSet.create();
+            methodAttributes.put(key, attributes);
+        }
+        attributes.add(attribute.name());
     }
 
     public static boolean isLastOnly(Method method) {
-        return get().lastOnlyMethods.contains(method.getLookupKey());
-    }
-
-    public void setLastOnly(Class<?> clazz, String methodName) {
-        lastOnlyMethods
-                .add(getType(clazz).getMethod(methodName).getLookupKey());
+        return hasMethodAttribute(method, MethodAttribute.LAST_ONLY);
     }
 
     /**
@@ -450,22 +462,7 @@ public class TypeDataStore {
      *         otherwise <code>false</code>
      */
     public static boolean isNoLayoutRpcMethod(Method method) {
-        return get().noLayoutRpcMethods.contains(method.getLookupKey());
-    }
-
-    /**
-     * Defines that a method is annotated with {@link NoLayout}.
-     * 
-     * @since 7.4
-     * 
-     * @param type
-     *            the where the method is defined
-     * @param methodName
-     *            the name of the method
-     */
-    public void setNoLayoutRpcMethod(Class<?> type, String methodName) {
-        noLayoutRpcMethods.add(new Method(getType(type), methodName)
-                .getLookupKey());
+        return hasMethodAttribute(method, MethodAttribute.NO_LAYOUT);
     }
 
     /**

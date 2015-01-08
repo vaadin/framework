@@ -43,6 +43,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.JSONSerializer;
 import com.vaadin.client.connectors.AbstractRendererConnector;
+import com.vaadin.client.metadata.TypeDataStore.MethodAttribute;
 import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
@@ -71,9 +72,9 @@ public class ConnectorBundle {
     private final Map<JClassType, Set<JMethod>> needsReturnType = new HashMap<JClassType, Set<JMethod>>();
     private final Map<JClassType, Set<JMethod>> needsInvoker = new HashMap<JClassType, Set<JMethod>>();
     private final Map<JClassType, Set<JMethod>> needsParamTypes = new HashMap<JClassType, Set<JMethod>>();
-    private final Map<JClassType, Set<JMethod>> needsDelayedInfo = new HashMap<JClassType, Set<JMethod>>();
     private final Map<JClassType, Set<JMethod>> needsOnStateChange = new HashMap<JClassType, Set<JMethod>>();
-    private final Map<JClassType, Set<JMethod>> needsNoLayoutRpcMethods = new HashMap<JClassType, Set<JMethod>>();
+
+    private final Map<JClassType, Map<JMethod, Set<MethodAttribute>>> methodAttributes = new HashMap<JClassType, Map<JMethod, Set<MethodAttribute>>>();
 
     private final Set<Property> needsProperty = new HashSet<Property>();
     private final Map<JClassType, Set<Property>> needsDelegateToWidget = new HashMap<JClassType, Set<Property>>();
@@ -525,23 +526,35 @@ public class ConnectorBundle {
         return Collections.unmodifiableSet(needsProxySupport);
     }
 
-    public void setNeedsDelayedInfo(JClassType type, JMethod method) {
-        if (!isNeedsDelayedInfo(type, method)) {
-            addMapping(needsDelayedInfo, type, method);
+    public void setMethodAttribute(JClassType type, JMethod method,
+            MethodAttribute methodAttribute) {
+        if (!hasMethodAttribute(type, method, methodAttribute)) {
+            Map<JMethod, Set<MethodAttribute>> typeData = methodAttributes
+                    .get(type);
+            if (typeData == null) {
+                typeData = new HashMap<JMethod, Set<MethodAttribute>>();
+                methodAttributes.put(type, typeData);
+            }
+
+            addMapping(typeData, method, methodAttribute);
         }
     }
 
-    private boolean isNeedsDelayedInfo(JClassType type, JMethod method) {
-        if (hasMapping(needsDelayedInfo, type, method)) {
+    private boolean hasMethodAttribute(JClassType type, JMethod method,
+            MethodAttribute methodAttribute) {
+        Map<JMethod, Set<MethodAttribute>> typeData = methodAttributes
+                .get(type);
+        if (typeData != null && hasMapping(typeData, method, methodAttribute)) {
             return true;
         } else {
             return previousBundle != null
-                    && previousBundle.isNeedsDelayedInfo(type, method);
+                    && previousBundle.hasMethodAttribute(type, method,
+                            methodAttribute);
         }
     }
 
-    public Map<JClassType, Set<JMethod>> getNeedsDelayedInfo() {
-        return Collections.unmodifiableMap(needsDelayedInfo);
+    public Map<JClassType, Map<JMethod, Set<MethodAttribute>>> getMethodAttributes() {
+        return Collections.unmodifiableMap(methodAttributes);
     }
 
     public void setNeedsSerialize(JType type) {
@@ -633,25 +646,6 @@ public class ConnectorBundle {
 
     public Map<JClassType, Set<JMethod>> getNeedsOnStateChangeHandler() {
         return Collections.unmodifiableMap(needsOnStateChange);
-    }
-
-    public void setNeedsNoLayoutRpcMethod(JClassType type, JMethod method) {
-        if (!isNeedsNoLayoutRpcMethod(type, method)) {
-            addMapping(needsNoLayoutRpcMethods, type, method);
-        }
-    }
-
-    private boolean isNeedsNoLayoutRpcMethod(JClassType type, JMethod method) {
-        if (hasMapping(needsNoLayoutRpcMethods, type, method)) {
-            return true;
-        } else {
-            return previousBundle != null
-                    && previousBundle.isNeedsNoLayoutRpcMethod(type, method);
-        }
-    }
-
-    public Map<JClassType, Set<JMethod>> getNeedsNoLayoutRpcMethods() {
-        return Collections.unmodifiableMap(needsNoLayoutRpcMethods);
     }
 
     public static JMethod findInheritedMethod(JClassType type,
