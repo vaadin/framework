@@ -42,7 +42,7 @@ import elemental.json.JsonValue;
  * @param <T>
  *            the presentation type of the renderer
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public abstract class AbstractRendererConnector<T> extends

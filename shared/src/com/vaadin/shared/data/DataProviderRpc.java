@@ -22,7 +22,7 @@ import com.vaadin.shared.communication.ClientRpc;
 /**
  * RPC interface used for pushing container data to the client.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface DataProviderRpc extends ClientRpc {

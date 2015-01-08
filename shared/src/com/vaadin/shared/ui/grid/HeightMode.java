@@ -21,7 +21,7 @@ package com.vaadin.shared.ui.grid;
  * {@link com.vaadin.ui.components.grid.Grid server}) /
  * {@link com.vaadin.client.ui.grid.Escalator Escalator}.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  * @see com.vaadin.client.ui.grid.Grid#setHeightMode(HeightMode)
  * @see com.vaadin.ui.components.grid.Grid#setHeightMode(HeightMode)

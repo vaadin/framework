@@ -44,7 +44,7 @@ import com.vaadin.client.widgets.Grid;
  * @param <W>
  *            the widget type
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public abstract class ClickableRenderer<T, W extends Widget> extends

@@ -87,7 +87,7 @@ import elemental.json.JsonValue;
  * at {@link com.vaadin.shared.data.DataProviderRpc#setRowData(int, List)
  * DataProviderRpc.setRowData(int, List)}.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.Grid.class)

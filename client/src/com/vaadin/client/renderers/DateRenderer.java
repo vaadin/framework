@@ -25,7 +25,7 @@ import com.vaadin.client.widget.grid.RendererCellReference;
 /**
  * A renderer for rendering dates into cells
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class DateRenderer implements Renderer<Date> {

@@ -35,7 +35,7 @@ import com.vaadin.shared.ui.grid.Range;
  * {@link #requestRows(int, int, RequestRowsCallback)} to trigger asynchronously
  * loading of data and then pass the loaded data into the provided callback.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  * @param <T>
  *            the row type

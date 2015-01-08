@@ -26,7 +26,7 @@ import elemental.json.JsonValue;
 /**
  * A renderer for presenting date values.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class DateRenderer extends AbstractRenderer<Date> {

@@ -24,7 +24,7 @@ import com.vaadin.client.widget.grid.RendererCellReference;
  * the renderer, invoked every time any of the images rendered by that rendered
  * is clicked.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class ImageRenderer extends ClickableRenderer<String, Image> {

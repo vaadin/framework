@@ -20,7 +20,7 @@ package com.vaadin.client.data;
  * Callback interface used by {@link DataSource} to inform its user about
  * updates to the data.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface DataChangeHandler {

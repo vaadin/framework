@@ -34,7 +34,7 @@ import com.vaadin.util.ReflectTools;
  * @param <T>
  *            the type presented by the renderer
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class ClickableRenderer<T> extends AbstractRenderer<T> {

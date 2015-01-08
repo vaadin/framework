@@ -30,7 +30,7 @@ import elemental.json.JsonValue;
  * @param <T>
  *            the type this renderer knows how to present
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface Renderer<T> extends Extension {

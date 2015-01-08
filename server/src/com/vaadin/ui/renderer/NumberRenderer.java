@@ -25,7 +25,7 @@ import elemental.json.JsonValue;
 /**
  * A renderer for presenting number values.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class NumberRenderer extends AbstractRenderer<Number> {

@@ -22,7 +22,7 @@ import com.vaadin.shared.communication.ServerRpc;
 /**
  * RPC interface used for requesting container data to the client.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface DataRequestRpc extends ServerRpc {

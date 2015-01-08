@@ -23,7 +23,7 @@ import com.vaadin.client.widget.grid.RendererCellReference;
  * default uses the default number format returned by
  * {@link NumberFormat#getDecimalFormat()}.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  * @param <T>
  *            The number type to render.

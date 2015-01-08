@@ -22,7 +22,7 @@ import com.vaadin.client.widget.grid.RendererCellReference;
 /**
  * A Renderer that represents a double value as a graphical progress bar.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class ProgressBarRenderer extends WidgetRenderer<Double, VProgressBar> {

@@ -27,7 +27,7 @@ import com.vaadin.shared.Connector;
 /**
  * Shared state for Grid headers and footers.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class GridStaticSectionState implements Serializable {

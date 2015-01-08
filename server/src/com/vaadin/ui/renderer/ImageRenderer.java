@@ -30,7 +30,7 @@ import elemental.json.JsonValue;
  * the data source. Only {@link ExternalResource}s and {@link ThemeResource}s
  * are currently supported.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class ImageRenderer extends ClickableRenderer<Resource> {

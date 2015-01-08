@@ -29,7 +29,7 @@ import elemental.json.JsonObject;
  * @param <T>
  *            the presentation type of the renderer
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public abstract class ClickableRendererConnector<T> extends

@@ -29,7 +29,7 @@ import elemental.json.JsonValue;
 /**
  * A connector for {@link ImageRenderer}.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.renderer.ImageRenderer.class)

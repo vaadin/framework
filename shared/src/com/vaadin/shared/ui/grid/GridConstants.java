@@ -21,7 +21,7 @@ import java.io.Serializable;
  * Container class for common constants and default values used by the Grid
  * component.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public final class GridConstants implements Serializable {
