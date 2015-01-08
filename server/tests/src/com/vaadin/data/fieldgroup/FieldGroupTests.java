@@ -4,10 +4,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.Transactional;
+import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.TransactionalPropertyWrapper;
 import com.vaadin.ui.Field;
+import com.vaadin.ui.TextField;
 
 public class FieldGroupTests {
 
@@ -36,5 +42,46 @@ public class FieldGroupTests {
     @Test(expected = FieldGroup.BindException.class)
     public void cannotBindNullField() {
         sut.bind(null, "foobar");
+    }
+
+    @Test
+    public void wrapInTransactionalProperty_provideCustomImpl_customTransactionalWrapperIsUsed() {
+        Bean bean = new Bean();
+        FieldGroup group = new FieldGroup() {
+            @Override
+            protected <T> Transactional<T> wrapInTransactionalProperty(
+                    Property<T> itemProperty) {
+                return new TransactionalPropertyImpl(itemProperty);
+            }
+        };
+        group.setItemDataSource(new BeanItem<Bean>(bean));
+        TextField field = new TextField();
+        group.bind(field, "name");
+
+        Property propertyDataSource = field.getPropertyDataSource();
+        Assert.assertTrue("Custom implementation of transactional property "
+                + "has not been used",
+                propertyDataSource instanceof TransactionalPropertyImpl);
+    }
+
+    public static class TransactionalPropertyImpl<T> extends
+            TransactionalPropertyWrapper<T> {
+
+        public TransactionalPropertyImpl(Property<T> wrappedProperty) {
+            super(wrappedProperty);
+        }
+
+    }
+
+    public static class Bean {
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 }
