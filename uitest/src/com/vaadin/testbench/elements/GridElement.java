@@ -62,6 +62,51 @@ public class GridElement extends AbstractComponentElement {
         }
     }
 
+    public static class GridEditorElement extends AbstractElement {
+
+        private GridElement grid;
+
+        private GridEditorElement setGrid(GridElement grid) {
+            this.grid = grid;
+            return this;
+        }
+
+        /**
+         * Gets the editor field for column in given index.
+         * 
+         * @param colIndex
+         *            column index
+         * @return the editor field for given location
+         */
+        public TestBenchElement getField(int colIndex) {
+            return grid.getSubPart("#editor[" + colIndex + "]");
+        }
+
+        /**
+         * Saves the fields of this editor.
+         * <p>
+         * <em>Note:</em> that this closes the editor making this element
+         * useless.
+         */
+        public void save() {
+            getField(0);
+            List<WebElement> buttons = findElements(By.xpath("./button"));
+            buttons.get(0).click();
+        }
+
+        /**
+         * Cancels this editor.
+         * <p>
+         * <em>Note:</em> that this closes the editor making this element
+         * useless.
+         */
+        public void cancel() {
+            getField(0);
+            List<WebElement> buttons = findElements(By.xpath("./button"));
+            buttons.get(1).click();
+        }
+    }
+
     /**
      * Scrolls Grid element so that wanted row is displayed
      * 
@@ -262,6 +307,11 @@ public class GridElement extends AbstractComponentElement {
         return rootElements.get(2);
     }
 
+    public GridEditorElement getEditor() {
+        return getSubPart("#editor").wrap(GridEditorElement.class)
+                .setGrid(this);
+    }
+
     /**
      * Helper function to get Grid subparts wrapped correctly
      * 
@@ -272,5 +322,4 @@ public class GridElement extends AbstractComponentElement {
     private TestBenchElement getSubPart(String subPartSelector) {
         return (TestBenchElement) findElement(By.vaadin(subPartSelector));
     }
-
 }

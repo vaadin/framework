@@ -121,6 +121,7 @@ import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortHandler;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Escalator.AbstractRowContainer;
+import com.vaadin.client.widgets.Grid.Editor.State;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
@@ -4766,6 +4767,20 @@ public class Grid<T> extends ResizeComposite implements
             container = escalator.getBody();
         } else if (type.equalsIgnoreCase("footer")) {
             container = escalator.getFooter();
+        } else if (type.equalsIgnoreCase("editor")) {
+            if (editor.getState() != State.ACTIVE) {
+                // Editor is not there.
+                return null;
+            }
+
+            if (indices.length == 0) {
+                return DOM.asOld(editor.editorOverlay);
+            } else if (indices.length == 1 && indices[0] < columns.size()) {
+                escalator.scrollToColumn(indices[0], ScrollDestination.ANY, 0);
+                return editor.getWidget(columns.get(indices[0])).getElement();
+            } else {
+                return null;
+            }
         }
 
         if (null != container) {
@@ -4851,6 +4866,22 @@ public class Grid<T> extends ResizeComposite implements
                         + (containerRow ? "]" : "][" + cell.getColumn() + "]");
             }
         }
+
+        // Check if subelement is part of editor.
+        if (editor.getState() == State.ACTIVE) {
+            if (editor.editorOverlay.isOrHasChild(subElement)) {
+                int i = 0;
+                for (Column<?, T> column : columns) {
+                    if (editor.getWidget(column).getElement()
+                            .isOrHasChild(subElement)) {
+                        return "editor[" + i + "]";
+                    }
+                    ++i;
+                }
+                return "editor";
+            }
+        }
+
         return null;
     }
 
