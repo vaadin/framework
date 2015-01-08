@@ -17,9 +17,11 @@
 package com.vaadin.tests.serialization;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -377,9 +379,17 @@ public class SerializerTest extends AbstractTestUI {
             @Override
             public void sendSet(Set<Integer> intSet,
                     Set<Connector> connectorSet, Set<SimpleTestBean> beanSet) {
-                log.log("sendSet: " + intSet + ", "
-                        + connectorCollectionToString(connectorSet) + ", "
-                        + beanSet);
+                List<Integer> intList = new ArrayList<Integer>(intSet);
+                Collections.sort(intList);
+                List<Connector> connectorList = new ArrayList<Connector>(
+                        connectorSet);
+                Collections.sort(connectorList, new ConnectorComparator());
+                List<SimpleTestBean> beanList = new ArrayList<SimpleTestBean>(
+                        beanSet);
+                Collections.sort(beanList, new SimpleBeanComparator());
+                log.log("sendSet: " + intList + ", "
+                        + connectorCollectionToString(connectorList) + ", "
+                        + beanList);
             }
 
             @Override
@@ -466,4 +476,19 @@ public class SerializerTest extends AbstractTestUI {
         return Integer.valueOf(8655);
     }
 
+    private static class ConnectorComparator implements Comparator<Connector> {
+
+        @Override
+        public int compare(Connector o1, Connector o2) {
+            return o1.getConnectorId().compareTo(o2.getConnectorId());
+        }
+    }
+
+    private static class SimpleBeanComparator implements
+            Comparator<SimpleTestBean> {
+        @Override
+        public int compare(SimpleTestBean o1, SimpleTestBean o2) {
+            return Integer.valueOf(o1.getValue()).compareTo(o2.getValue());
+        }
+    }
 }
