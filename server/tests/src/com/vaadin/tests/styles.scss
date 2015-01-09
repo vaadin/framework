@@ -1,0 +1,5 @@
+@import "../../../../../../WebContent/VAADIN/themes/valo/valo";
+
+.my-label {
+    @include transition-property (transform);
+}
