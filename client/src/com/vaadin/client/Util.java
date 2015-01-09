@@ -236,7 +236,12 @@ public class Util {
 
     @Deprecated
     public static String getSimpleName(Object widget) {
-        return WidgetUtil.getSimpleName(widget);
+        if (widget == null) {
+            return "(null)";
+        }
+
+        String name = widget.getClass().getName();
+        return name.substring(name.lastIndexOf('.') + 1);
     }
 
     @Deprecated

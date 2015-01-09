@@ -384,15 +384,6 @@ public class WidgetUtil {
 
     }
 
-    public static String getSimpleName(Object widget) {
-        if (widget == null) {
-            return "(null)";
-        }
-
-        String name = widget.getClass().getName();
-        return name.substring(name.lastIndexOf('.') + 1);
-    }
-
     public static void setFloat(Element element, String value) {
         if (BrowserInfo.get().isIE()) {
             element.getStyle().setProperty("styleFloat", value);

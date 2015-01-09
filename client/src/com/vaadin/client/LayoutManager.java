@@ -346,8 +346,8 @@ public class LayoutManager {
                                 if (Profiler.isEnabled()) {
                                     Profiler.enter("ElementResizeListener.onElementResize construct profiler key");
                                     key = "ElementResizeListener.onElementResize for "
-                                            + WidgetUtil
-                                                    .getSimpleName(listener);
+                                            + listener.getClass()
+                                                    .getSimpleName();
                                     Profiler.leave("ElementResizeListener.onElementResize construct profiler key");
                                     Profiler.enter(key);
                                 }
@@ -390,7 +390,7 @@ public class LayoutManager {
                             String key = null;
                             if (Profiler.isEnabled()) {
                                 key = "layoutHorizontally() for "
-                                        + WidgetUtil.getSimpleName(cl);
+                                        + cl.getClass().getSimpleName();
                                 Profiler.enter(key);
                             }
 
@@ -413,7 +413,7 @@ public class LayoutManager {
                             String key = null;
                             if (Profiler.isEnabled()) {
                                 key = "layout() for "
-                                        + WidgetUtil.getSimpleName(rr);
+                                        + rr.getClass().getSimpleName();
                                 Profiler.enter(key);
                             }
 
@@ -446,7 +446,7 @@ public class LayoutManager {
                             String key = null;
                             if (Profiler.isEnabled()) {
                                 key = "layoutVertically() for "
-                                        + WidgetUtil.getSimpleName(cl);
+                                        + cl.getClass().getSimpleName();
                                 Profiler.enter(key);
                             }
 
@@ -469,7 +469,7 @@ public class LayoutManager {
                             String key = null;
                             if (Profiler.isEnabled()) {
                                 key = "layout() for "
-                                        + WidgetUtil.getSimpleName(rr);
+                                        + rr.getClass().getSimpleName();
                                 Profiler.enter(key);
                             }
 
@@ -548,7 +548,7 @@ public class LayoutManager {
                 String key = null;
                 if (Profiler.isEnabled()) {
                     key = "layout PostLayoutListener for "
-                            + WidgetUtil.getSimpleName(connector);
+                            + connector.getClass().getSimpleName();
                     Profiler.enter(key);
                 }
 

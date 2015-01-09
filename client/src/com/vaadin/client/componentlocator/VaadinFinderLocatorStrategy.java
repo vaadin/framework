@@ -29,7 +29,6 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.Util;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.AbstractConnector;
@@ -645,7 +644,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
         // If the server-side class name didn't match, fall back to testing for
         // the explicit widget name
-        String widget = WidgetUtil.getSimpleName(connector.getWidget());
+        String widget = connector.getWidget().getClass().getSimpleName();
         return widgetName.equals(widget)
                 || widgetName.equals(widget + ".class");
 

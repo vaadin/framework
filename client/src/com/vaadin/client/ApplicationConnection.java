@@ -1866,7 +1866,7 @@ public class ApplicationConnection implements HasHandlers {
                 } catch (NoDataException e) {
                     throw new RuntimeException(
                             "Missing data needed to invoke @DelegateToWidget for "
-                                    + WidgetUtil.getSimpleName(component), e);
+                                    + component.getClass().getSimpleName(), e);
                 }
             }
 
@@ -2047,8 +2047,8 @@ public class ApplicationConnection implements HasHandlers {
                             String key = null;
                             if (Profiler.isEnabled()) {
                                 key = "updateFromUIDL for "
-                                        + WidgetUtil
-                                                .getSimpleName(legacyConnector);
+                                        + legacyConnector.getClass()
+                                                .getSimpleName();
                                 Profiler.enter(key);
                             }
 
@@ -2148,7 +2148,7 @@ public class ApplicationConnection implements HasHandlers {
                             Profiler.enter("updateConnectorState inner loop");
                             if (Profiler.isEnabled()) {
                                 Profiler.enter("Decode connector state "
-                                        + WidgetUtil.getSimpleName(connector));
+                                        + connector.getClass().getSimpleName());
                             }
 
                             JavaScriptObject jso = states
@@ -2185,7 +2185,7 @@ public class ApplicationConnection implements HasHandlers {
 
                             if (Profiler.isEnabled()) {
                                 Profiler.leave("Decode connector state "
-                                        + WidgetUtil.getSimpleName(connector));
+                                        + connector.getClass().getSimpleName());
                             }
 
                             Profiler.enter("updateConnectorState create event");

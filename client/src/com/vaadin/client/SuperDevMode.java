@@ -89,7 +89,7 @@ public class SuperDevMode {
                         VConsole.error("JSONP compile call failed");
                         // Don't log exception as they are shown as
                         // notifications
-                        VConsole.error(WidgetUtil.getSimpleName(caught) + ": "
+                        VConsole.error(caught.getClass().getSimpleName() + ": "
                                 + caught.getMessage());
                         failed();
 

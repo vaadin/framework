@@ -24,8 +24,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.ui.AbstractConnector;
@@ -51,7 +51,7 @@ public class ConnectorInfoPanel extends FlowPanel {
         ignoreProperties.add("id");
 
         String html = getRowHTML("Id", connector.getConnectorId());
-        html += getRowHTML("Connector", WidgetUtil.getSimpleName(connector));
+        html += getRowHTML("Connector", connector.getClass().getSimpleName());
 
         if (connector instanceof ComponentConnector) {
             ComponentConnector component = (ComponentConnector) connector;
@@ -61,8 +61,8 @@ public class ConnectorInfoPanel extends FlowPanel {
 
             AbstractComponentState componentState = component.getState();
 
-            html += getRowHTML("Widget",
-                    WidgetUtil.getSimpleName(component.getWidget()));
+            html += getRowHTML("Widget", component.getWidget().getClass()
+                    .getSimpleName());
             html += getRowHTML("Caption", componentState.caption);
             html += getRowHTML("Description", componentState.description);
             html += getRowHTML("Width", componentState.width + " (actual: "
