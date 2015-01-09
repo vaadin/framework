@@ -38,6 +38,8 @@ import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.client.ui.layout.LayoutDependencyTree;
 
 public class LayoutManager {
+    private static final String STATE_CHANGE_MESSAGE = "Cannot run layout while processing state change from the server.";
+
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";
 
     private static final boolean debugLogging = false;
@@ -248,6 +250,18 @@ public class LayoutManager {
             throw new IllegalStateException(
                     "Can't start a new layout phase before the previous layout phase ends.");
         }
+
+        if (connection.isUpdatingState()) {
+            // If assertions are enabled, throw an exception
+            assert false : STATE_CHANGE_MESSAGE;
+
+            // Else just log a warning and postpone the layout
+            getLogger().warning(STATE_CHANGE_MESSAGE);
+
+            // Framework will call layoutNow when the state update is completed
+            return;
+        }
+
         layoutPending = false;
         layoutTimer.cancel();
         try {

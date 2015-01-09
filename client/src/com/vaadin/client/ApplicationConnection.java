@@ -518,6 +518,8 @@ public class ApplicationConnection implements HasHandlers {
         }
     }
 
+    private boolean updatingState = false;
+
     public ApplicationConnection() {
         // Assuming UI data is eagerly loaded
         ConnectorBundleLoader.get().loadBundle(
@@ -1626,6 +1628,8 @@ public class ApplicationConnection implements HasHandlers {
                     redirectTimer.schedule(1000 * sessionExpirationInterval);
                 }
 
+                updatingState = true;
+
                 double processUidlStart = Duration.currentTimeMillis();
 
                 // Ensure that all connectors that we are about to update exist
@@ -1677,6 +1681,8 @@ public class ApplicationConnection implements HasHandlers {
                 VConsole.log("handleUIDLMessage: "
                         + (Duration.currentTimeMillis() - processUidlStart)
                         + " ms");
+
+                updatingState = false;
 
                 Profiler.enter("Layout processing");
                 try {
@@ -3637,5 +3643,20 @@ public class ApplicationConnection implements HasHandlers {
      */
     public Heartbeat getHeartbeat() {
         return heartbeat;
+    }
+
+    /**
+     * Checks whether state changes are currently being processed. Certain
+     * operations are not allowed when the internal state of the application
+     * might be in an inconsistent state because some state changes have been
+     * applied but others not. This includes running layotus.
+     * 
+     * @since 
+     * @return <code>true</code> if the internal state might be inconsistent
+     *         because changes are being processed; <code>false</code> if the
+     *         state should be consistent
+     */
+    public boolean isUpdatingState() {
+        return updatingState;
     }
 }
