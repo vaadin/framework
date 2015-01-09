@@ -34,6 +34,7 @@ import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
@@ -120,11 +121,13 @@ public abstract class AbstractConnector implements ServerConnector,
 
         addStateChangeHandler(this);
         if (Profiler.isEnabled()) {
-            Profiler.enter("AbstractConnector.init " + Util.getSimpleName(this));
+            Profiler.enter("AbstractConnector.init "
+                    + WidgetUtil.getSimpleName(this));
         }
         init();
         if (Profiler.isEnabled()) {
-            Profiler.leave("AbstractConnector.init " + Util.getSimpleName(this));
+            Profiler.leave("AbstractConnector.init "
+                    + WidgetUtil.getSimpleName(this));
         }
         Profiler.leave("AbstractConnector.doInit");
     }
@@ -214,8 +217,8 @@ public abstract class AbstractConnector implements ServerConnector,
     public void fireEvent(GwtEvent<?> event) {
         String profilerKey = null;
         if (Profiler.isEnabled()) {
-            profilerKey = "Fire " + Util.getSimpleName(event) + " for "
-                    + Util.getSimpleName(this);
+            profilerKey = "Fire " + WidgetUtil.getSimpleName(event) + " for "
+                    + WidgetUtil.getSimpleName(this);
             Profiler.enter(profilerKey);
         }
         if (handlerManager != null) {
@@ -377,7 +380,7 @@ public abstract class AbstractConnector implements ServerConnector,
         } catch (NoDataException e) {
             throw new IllegalStateException(
                     "There is no information about the state for "
-                            + Util.getSimpleName(this)
+                            + WidgetUtil.getSimpleName(this)
                             + ". Did you remember to compile the right widgetset?",
                     e);
         }
@@ -391,7 +394,7 @@ public abstract class AbstractConnector implements ServerConnector,
         } catch (NoDataException e) {
             throw new IllegalStateException(
                     "There is no information about the state for "
-                            + Util.getSimpleName(connector)
+                            + WidgetUtil.getSimpleName(connector)
                             + ". Did you remember to compile the right widgetset?",
                     e);
         }

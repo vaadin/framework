@@ -25,7 +25,7 @@ import com.vaadin.client.FastStringSet;
 import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
@@ -204,7 +204,7 @@ public class StateChangeEvent extends
             return true;
         } else if (stateJson != null) {
             // Check whether it's in the json object
-            return isInJson(property, Util.json2jso(stateJson));
+            return isInJson(property, WidgetUtil.json2jso(stateJson));
         } else {
             // Legacy cases
             if (changedProperties != null) {

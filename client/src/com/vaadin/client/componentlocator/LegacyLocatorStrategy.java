@@ -32,6 +32,7 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VGridLayout;
@@ -211,10 +212,10 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
         // widget to which the path is relative. Otherwise, the current
         // implementation simply interprets the path as if baseElement was
         // null.
-        Widget baseWidget = Util.findWidget(baseElement, null);
+        Widget baseWidget = WidgetUtil.findWidget(baseElement, null);
 
         Widget w = getWidgetFromPath(widgetPath, baseWidget);
-        if (w == null || !Util.isAttachedAndDisplayed(w)) {
+        if (w == null || !WidgetUtil.isAttachedAndDisplayed(w)) {
             return null;
         }
         if (parts.length == 1) {
@@ -333,7 +334,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                 String childIndexString = part.substring("domChild[".length(),
                         part.length() - 1);
 
-                if (Util.findWidget(baseElement, null) instanceof VAbstractOrderedLayout) {
+                if (WidgetUtil.findWidget(baseElement, null) instanceof VAbstractOrderedLayout) {
                     if (element.hasChildNodes()) {
                         Element e = element.getFirstChildElement().cast();
                         String cn = e.getClassName();
@@ -454,7 +455,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
         if (basePath == null) {
             return null;
         }
-        String simpleName = Util.getSimpleName(w);
+        String simpleName = WidgetUtil.getSimpleName(w);
 
         /*
          * Check if the parent implements Iterable. At least VPopupView does not
@@ -474,7 +475,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                 return basePath + PARENTCHILD_SEPARATOR + simpleName + "["
                         + pos + "]";
             }
-            String simpleName2 = Util.getSimpleName(child);
+            String simpleName2 = WidgetUtil.getSimpleName(child);
             if (simpleName.equals(simpleName2)) {
                 pos++;
             }
@@ -605,8 +606,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                     // the same type before it
                     int nextIndex = 0;
                     for (Widget child : layout) {
-                        boolean matchingType = nextWidgetClassName.equals(Util
-                                .getSimpleName(child));
+                        boolean matchingType = nextWidgetClassName
+                                .equals(WidgetUtil.getSimpleName(child));
                         if (matchingType && widgetPosition == 0) {
                             // This is the n:th child that we looked for
                             break;
@@ -660,7 +661,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                 while (iterator.hasNext()) {
 
                     Widget child = iterator.next();
-                    String simpleName2 = Util.getSimpleName(child);
+                    String simpleName2 = WidgetUtil.getSimpleName(child);
 
                     if (!widgetClassName.equals(simpleName2)
                             && child instanceof Slot) {
@@ -670,7 +671,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                          * directly checking the stuff inside the slot
                          */
                         child = ((Slot) child).getWidget();
-                        simpleName2 = Util.getSimpleName(child);
+                        simpleName2 = WidgetUtil.getSimpleName(child);
                     }
 
                     if (widgetClassName.equals(simpleName2)) {

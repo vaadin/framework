@@ -30,6 +30,7 @@ import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.ManagedLayout;
 import com.vaadin.shared.AbstractComponentState;
 
@@ -586,7 +587,7 @@ public class LayoutDependencyTree {
     }
 
     private static String getCompactConnectorString(ServerConnector connector) {
-        return Util.getSimpleName(connector) + " ("
+        return WidgetUtil.getSimpleName(connector) + " ("
                 + connector.getConnectorId() + ")";
     }
 

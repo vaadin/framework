@@ -32,6 +32,7 @@ import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
@@ -89,7 +90,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         } catch (NoDataException e) {
             throw new IllegalStateException(
                     "Default implementation of createWidget() does not work for "
-                            + Util.getSimpleName(this)
+                            + WidgetUtil.getSimpleName(this)
                             + ". This might be caused by explicitely using "
                             + "super.createWidget() or some unspecified "
                             + "problem with the widgetset compilation.", e);
@@ -106,10 +107,10 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     public Widget getWidget() {
         if (widget == null) {
             Profiler.enter("AbstractComponentConnector.createWidget for "
-                    + Util.getSimpleName(this));
+                    + WidgetUtil.getSimpleName(this));
             widget = createWidget();
             Profiler.leave("AbstractComponentConnector.createWidget for "
-                    + Util.getSimpleName(this));
+                    + WidgetUtil.getSimpleName(this));
         }
 
         return widget;

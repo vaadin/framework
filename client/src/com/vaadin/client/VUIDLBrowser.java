@@ -161,7 +161,7 @@ public class VUIDLBrowser extends SimpleTree {
             } else {
                 setText("Unknown connector (" + connectorId + ")");
             }
-            dir((JsonObject) Util.jso2json(stateChanges), this);
+            dir((JsonObject) WidgetUtil.jso2json(stateChanges), this);
         }
 
         @Override

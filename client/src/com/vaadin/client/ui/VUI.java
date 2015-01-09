@@ -44,7 +44,7 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Profiler;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
@@ -501,7 +501,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
      * @param focusedElement
      */
     public void storeFocus() {
-        storedFocus = Util.getFocusedElement();
+        storedFocus = WidgetUtil.getFocusedElement();
     }
 
     /**

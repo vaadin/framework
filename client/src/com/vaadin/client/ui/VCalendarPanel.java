@@ -54,7 +54,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DateTimeService;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.util.SharedUtil;
@@ -2065,7 +2065,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
             return SUBPART_PREV_YEAR;
         } else if (contains(days, subElement)) {
             // Day, find out which dayOfMonth and use that as the identifier
-            Day day = Util.findWidget(subElement, Day.class);
+            Day day = WidgetUtil.findWidget(subElement, Day.class);
             if (day != null) {
                 Date date = day.getDate();
                 int id = date.getDate();

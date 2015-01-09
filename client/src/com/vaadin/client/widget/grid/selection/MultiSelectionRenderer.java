@@ -32,7 +32,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
@@ -260,7 +260,7 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
 
             int constrainedPageY = Math.max(bodyAbsoluteTop,
                     Math.min(bodyAbsoluteBottom, pageY));
-            int logicalRow = getLogicalRowIndex(Util.getElementFromPoint(
+            int logicalRow = getLogicalRowIndex(WidgetUtil.getElementFromPoint(
                     initialPageX, constrainedPageY));
 
             int incrementOrDecrement = (logicalRow > lastModifiedLogicalRow) ? 1
@@ -434,8 +434,8 @@ public class MultiSelectionRenderer<T> extends ComplexRenderer<Boolean> {
                 switch (event.getTypeInt()) {
                 case Event.ONMOUSEMOVE:
                 case Event.ONTOUCHMOVE:
-                    pageY = Util.getTouchOrMouseClientY(nativeEvent);
-                    pageX = Util.getTouchOrMouseClientX(nativeEvent);
+                    pageY = WidgetUtil.getTouchOrMouseClientY(nativeEvent);
+                    pageX = WidgetUtil.getTouchOrMouseClientX(nativeEvent);
                     autoScroller.updatePointerCoords(pageX, pageY);
                     break;
                 case Event.ONMOUSEUP:

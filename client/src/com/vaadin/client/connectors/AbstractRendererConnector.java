@@ -16,7 +16,7 @@
 package com.vaadin.client.connectors;
 
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.JsonDecoder;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.metadata.NoDataException;
@@ -57,7 +57,7 @@ public abstract class AbstractRendererConnector<T> extends
         if (presentationType == null) {
             throw new IllegalStateException(
                     "No presentation type found for "
-                            + Util.getSimpleName(this)
+                            + WidgetUtil.getSimpleName(this)
                             + ". This may be caused by some unspecified problem in widgetset compilation.");
         }
     }
@@ -110,7 +110,7 @@ public abstract class AbstractRendererConnector<T> extends
         } catch (NoDataException e) {
             throw new IllegalStateException(
                     "Default implementation of createRenderer() does not work for "
-                            + Util.getSimpleName(this)
+                            + WidgetUtil.getSimpleName(this)
                             + ". This might be caused by explicitely using "
                             + "super.createRenderer() or some unspecified "
                             + "problem with the widgetset compilation.", e);

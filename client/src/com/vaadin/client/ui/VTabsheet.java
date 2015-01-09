@@ -63,7 +63,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.TooltipInfo;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VTooltip;
 import com.vaadin.client.ui.aria.AriaHelper;
@@ -415,7 +415,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         public int getRequiredWidth() {
             int width = super.getRequiredWidth();
             if (closeButton != null) {
-                width += Util.getRequiredWidth(closeButton);
+                width += WidgetUtil.getRequiredWidth(closeButton);
             }
             return width;
         }
@@ -1330,7 +1330,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
 
     /** For internal use only. May be removed or replaced in the future. */
     public int getContentAreaBorderWidth() {
-        return Util.measureHorizontalBorder(contentNode);
+        return WidgetUtil.measureHorizontalBorder(contentNode);
     }
 
     @Override

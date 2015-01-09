@@ -62,6 +62,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -1865,7 +1866,7 @@ public class ApplicationConnection implements HasHandlers {
                 } catch (NoDataException e) {
                     throw new RuntimeException(
                             "Missing data needed to invoke @DelegateToWidget for "
-                                    + Util.getSimpleName(component), e);
+                                    + WidgetUtil.getSimpleName(component), e);
                 }
             }
 
@@ -2046,7 +2047,8 @@ public class ApplicationConnection implements HasHandlers {
                             String key = null;
                             if (Profiler.isEnabled()) {
                                 key = "updateFromUIDL for "
-                                        + Util.getSimpleName(legacyConnector);
+                                        + WidgetUtil
+                                                .getSimpleName(legacyConnector);
                                 Profiler.enter(key);
                             }
 
@@ -2146,12 +2148,12 @@ public class ApplicationConnection implements HasHandlers {
                             Profiler.enter("updateConnectorState inner loop");
                             if (Profiler.isEnabled()) {
                                 Profiler.enter("Decode connector state "
-                                        + Util.getSimpleName(connector));
+                                        + WidgetUtil.getSimpleName(connector));
                             }
 
                             JavaScriptObject jso = states
                                     .getJavaScriptObject(connectorId);
-                            JsonObject stateJson = Util.jso2json(jso);
+                            JsonObject stateJson = WidgetUtil.jso2json(jso);
 
                             if (connector instanceof HasJavaScriptConnectorHelper) {
                                 ((HasJavaScriptConnectorHelper) connector)
@@ -2183,7 +2185,7 @@ public class ApplicationConnection implements HasHandlers {
 
                             if (Profiler.isEnabled()) {
                                 Profiler.leave("Decode connector state "
-                                        + Util.getSimpleName(connector));
+                                        + WidgetUtil.getSimpleName(connector));
                             }
 
                             Profiler.enter("updateConnectorState create event");
@@ -2523,7 +2525,7 @@ public class ApplicationConnection implements HasHandlers {
 
                     VConsole.log(" * Performing server to client RPC calls");
 
-                    JsonArray rpcCalls = Util.jso2json(json
+                    JsonArray rpcCalls = WidgetUtil.jso2json(json
                             .getJavaScriptObject("rpc"));
 
                     int rpcLength = rpcCalls.length();
@@ -3648,7 +3650,7 @@ public class ApplicationConnection implements HasHandlers {
      * @return Connector for focused element or null.
      */
     private ComponentConnector getActiveConnector() {
-        Element focusedElement = Util.getFocusedElement();
+        Element focusedElement = WidgetUtil.getFocusedElement();
         if (focusedElement == null) {
             return null;
         }

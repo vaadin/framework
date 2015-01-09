@@ -22,7 +22,7 @@ import java.util.Set;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.JavaScriptMethodInvocation;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
@@ -116,7 +116,8 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
     }-*/;
 
     public void sendRpc(String name, JsArray<JavaScriptObject> arguments) {
-        Object[] parameters = new Object[] { name, Util.jso2json(arguments) };
+        Object[] parameters = new Object[] { name,
+                WidgetUtil.jso2json(arguments) };
 
         /*
          * Must invoke manually as the RPC interface can't be used in GWT

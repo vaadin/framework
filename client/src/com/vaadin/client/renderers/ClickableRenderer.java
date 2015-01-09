@@ -26,7 +26,7 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.grid.CellReference;
@@ -167,15 +167,16 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
          * <strong>Note:</strong> This method may not work reliably if the grid
          * in question is wrapped in a {@link Composite} <em>unless</em> the
          * element is inside another widget that is a child of the wrapped grid;
-         * please refer to the note in {@link Util#findWidget(Element, Class)
-         * Util.findWidget} for details.
+         * please refer to the note in
+         * {@link WidgetUtil#findWidget(Element, Class) Util.findWidget} for
+         * details.
          * 
          * @param e
          *            the element whose parent grid to find
          * @return the parent grid or null if none found.
          */
         private static Grid<?> findClosestParentGrid(Element e) {
-            Widget w = Util.findWidget(e, null);
+            Widget w = WidgetUtil.findWidget(e, null);
 
             while (w != null && !(w instanceof Grid)) {
                 w = w.getParent();

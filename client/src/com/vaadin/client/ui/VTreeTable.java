@@ -37,7 +37,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VTreeTable.VTreeTableScrollBody.VTreeTableRow;
 
 public class VTreeTable extends VScrollTable {
@@ -418,8 +418,9 @@ public class VTreeTable extends VScrollTable {
                         .getVisibleCellCount(); ix++) {
                     spanWidth += tHead.getHeaderCell(ix).getOffsetWidth();
                 }
-                Util.setWidthExcludingPaddingAndBorder((Element) getElement()
-                        .getChild(cellIx), spanWidth, 13, false);
+                WidgetUtil.setWidthExcludingPaddingAndBorder(
+                        (Element) getElement().getChild(cellIx), spanWidth, 13,
+                        false);
             }
         }
 

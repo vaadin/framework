@@ -35,7 +35,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -420,7 +420,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
     @Override
     public TooltipInfo getTooltipInfo(com.google.gwt.dom.client.Element element) {
         TooltipInfo tooltipInfo = null;
-        Widget w = Util.findWidget(element, null);
+        Widget w = WidgetUtil.findWidget(element, null);
         if (w instanceof HasTooltipKey) {
             tooltipInfo = GWT.create(TooltipInfo.class);
             String title = tooltips.get(((HasTooltipKey) w).getTooltipKey());

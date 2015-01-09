@@ -27,7 +27,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -172,7 +172,7 @@ public class TreeConnector extends AbstractComponentConnector implements
         }
 
         // IE8 needs a hack to measure the tree again after update
-        Util.forceIE8Redraw(getWidget().getElement());
+        WidgetUtil.forceIE8Redraw(getWidget().getElement());
 
         getWidget().rendering = false;
 
@@ -333,7 +333,7 @@ public class TreeConnector extends AbstractComponentConnector implements
 
         // Try to find a tooltip for a node
         if (element != getWidget().getElement()) {
-            Object node = Util.findWidget(element, TreeNode.class);
+            Object node = WidgetUtil.findWidget(element, TreeNode.class);
 
             if (node != null) {
                 TreeNode tnode = (TreeNode) node;

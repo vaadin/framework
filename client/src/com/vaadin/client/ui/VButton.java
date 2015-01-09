@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.FocusWidget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 
 public class VButton extends FocusWidget implements ClickHandler {
 
@@ -373,10 +374,10 @@ public class VButton extends FocusWidget implements ClickHandler {
         // Set (x,y) client coordinates to the middle of the button
         int x = getElement().getAbsoluteLeft() - getElement().getScrollLeft()
                 - getElement().getOwnerDocument().getScrollLeft()
-                + Util.getRequiredWidth(getElement()) / 2;
+                + WidgetUtil.getRequiredWidth(getElement()) / 2;
         int y = getElement().getAbsoluteTop() - getElement().getScrollTop()
                 - getElement().getOwnerDocument().getScrollTop()
-                + Util.getRequiredHeight(getElement()) / 2;
+                + WidgetUtil.getRequiredHeight(getElement()) / 2;
         NativeEvent evt = Document.get().createClickEvent(1, 0, 0, x, y, false,
                 false, false, false);
         getElement().dispatchEvent(evt);

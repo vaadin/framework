@@ -53,7 +53,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Profiler;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widget.escalator.ColumnConfiguration;
 import com.vaadin.client.widget.escalator.EscalatorUpdater;
@@ -1061,10 +1061,11 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
             final double viewportStartPx = getScrollLeft();
             double viewportEndPx = viewportStartPx
-                    + Util.getRequiredWidthBoundingClientRectDouble(getElement())
+                    + WidgetUtil
+                            .getRequiredWidthBoundingClientRectDouble(getElement())
                     - frozenPixels;
             if (verticalScrollbar.showsScrollHandle()) {
-                viewportEndPx -= Util.getNativeScrollbarSize();
+                viewportEndPx -= WidgetUtil.getNativeScrollbarSize();
             }
 
             final double scrollLeft = getScrollPos(destination, targetStartPx,
@@ -1731,9 +1732,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 final boolean isVisible = !cell.getStyle().getDisplay()
                         .equals(Display.NONE.getCssName());
                 if (isVisible) {
-                    maxWidth = Math
-                            .max(maxWidth,
-                                    Util.getRequiredWidthBoundingClientRectDouble(cell));
+                    maxWidth = Math.max(maxWidth, WidgetUtil
+                            .getRequiredWidthBoundingClientRectDouble(cell));
                 }
                 row = TableRowElement.as(row.getNextSiblingElement());
             }
@@ -2011,7 +2011,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 cellClone.getStyle().clearWidth();
 
                 rowElement.insertBefore(cellClone, cellOriginal);
-                double requiredWidth = Util
+                double requiredWidth = WidgetUtil
                         .getRequiredWidthBoundingClientRectDouble(cellClone);
 
                 if (BrowserInfo.get().isIE9()) {
@@ -3681,7 +3681,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         private TableRowElement getEscalatorRowWithFocus() {
             TableRowElement rowContainingFocus = null;
 
-            final Element focusedElement = Util.getFocusedElement();
+            final Element focusedElement = WidgetUtil.getFocusedElement();
 
             if (focusedElement != null && root.isOrHasChild(focusedElement)) {
                 Element e = focusedElement;
@@ -4307,12 +4307,13 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
         root.appendChild(verticalScrollbar.getElement());
         verticalScrollbar.addScrollHandler(scrollHandler);
-        verticalScrollbar.setScrollbarThickness(Util.getNativeScrollbarSize());
+        verticalScrollbar.setScrollbarThickness(WidgetUtil
+                .getNativeScrollbarSize());
 
         root.appendChild(horizontalScrollbar.getElement());
         horizontalScrollbar.addScrollHandler(scrollHandler);
-        horizontalScrollbar
-                .setScrollbarThickness(Util.getNativeScrollbarSize());
+        horizontalScrollbar.setScrollbarThickness(WidgetUtil
+                .getNativeScrollbarSize());
         horizontalScrollbar
                 .addVisibilityHandler(new ScrollbarBundle.VisibilityHandler() {
                     @Override
@@ -4338,18 +4339,18 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         table.appendChild(footElem);
 
         Style hCornerStyle = headerDeco.getStyle();
-        hCornerStyle.setWidth(Util.getNativeScrollbarSize(), Unit.PX);
+        hCornerStyle.setWidth(WidgetUtil.getNativeScrollbarSize(), Unit.PX);
         hCornerStyle.setDisplay(Display.NONE);
         root.appendChild(headerDeco);
 
         Style fCornerStyle = footerDeco.getStyle();
-        fCornerStyle.setWidth(Util.getNativeScrollbarSize(), Unit.PX);
+        fCornerStyle.setWidth(WidgetUtil.getNativeScrollbarSize(), Unit.PX);
         fCornerStyle.setDisplay(Display.NONE);
         root.appendChild(footerDeco);
 
         Style hWrapperStyle = horizontalScrollbarDeco.getStyle();
         hWrapperStyle.setDisplay(Display.NONE);
-        hWrapperStyle.setHeight(Util.getNativeScrollbarSize(), Unit.PX);
+        hWrapperStyle.setHeight(WidgetUtil.getNativeScrollbarSize(), Unit.PX);
         root.appendChild(horizontalScrollbarDeco);
 
         setStylePrimaryName("v-escalator");
@@ -4721,10 +4722,10 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         }
 
         Profiler.enter("Escalator.recalculateElementSizes");
-        widthOfEscalator = Math.max(0,
-                Util.getRequiredWidthBoundingClientRectDouble(getElement()));
-        heightOfEscalator = Math.max(0,
-                Util.getRequiredHeightBoundingClientRectDouble(getElement()));
+        widthOfEscalator = Math.max(0, WidgetUtil
+                .getRequiredWidthBoundingClientRectDouble(getElement()));
+        heightOfEscalator = Math.max(0, WidgetUtil
+                .getRequiredHeightBoundingClientRectDouble(getElement()));
 
         header.recalculateSectionHeight();
         body.recalculateSectionHeight();
@@ -4828,7 +4829,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             @SuppressWarnings("deprecation")
             com.google.gwt.user.client.Element castElement = (com.google.gwt.user.client.Element) possibleWidgetNode
                     .cast();
-            Widget w = Util.findWidget(castElement, null);
+            Widget w = WidgetUtil.findWidget(castElement, null);
 
             // Ensure findWidget did not traverse past the cell element in the
             // DOM hierarchy
@@ -5086,6 +5087,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
      * @return escalator's inner width
      */
     public double getInnerWidth() {
-        return Util.getRequiredWidthBoundingClientRectDouble(tableWrapper);
+        return WidgetUtil
+                .getRequiredWidthBoundingClientRectDouble(tableWrapper);
     }
 }

@@ -319,7 +319,7 @@ public class JavaScriptConnectorHelper {
             iface = findWildcardInterface(method);
         }
 
-        JsonArray argumentsArray = Util.jso2json(arguments);
+        JsonArray argumentsArray = WidgetUtil.jso2json(arguments);
         Object[] parameters = new Object[arguments.length()];
         for (int i = 0; i < parameters.length; i++) {
             parameters[i] = argumentsArray.get(i);
@@ -383,7 +383,7 @@ public class JavaScriptConnectorHelper {
     }-*/;
 
     public Object[] decodeRpcParameters(JsonArray parametersJson) {
-        return new Object[] { Util.json2jso(parametersJson) };
+        return new Object[] { WidgetUtil.json2jso(parametersJson) };
     }
 
     public void setTag(int tag) {
@@ -397,10 +397,11 @@ public class JavaScriptConnectorHelper {
         if ("com.vaadin.ui.JavaScript$JavaScriptCallbackRpc".equals(iface)
                 && "call".equals(method)) {
             String callbackName = parametersJson.getString(0);
-            JavaScriptObject arguments = Util.json2jso(parametersJson.get(1));
+            JavaScriptObject arguments = WidgetUtil.json2jso(parametersJson
+                    .get(1));
             invokeCallback(getConnectorWrapper(), callbackName, arguments);
         } else {
-            JavaScriptObject arguments = Util.json2jso(parametersJson);
+            JavaScriptObject arguments = WidgetUtil.json2jso(parametersJson);
             invokeJsRpc(rpcMap, iface, method, arguments);
             // Also invoke wildcard interface
             invokeJsRpc(rpcMap, "", method, arguments);

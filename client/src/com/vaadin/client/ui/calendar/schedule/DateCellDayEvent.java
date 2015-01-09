@@ -41,7 +41,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.calendar.DateConstants;
 
 /**
@@ -184,7 +184,8 @@ public class DateCellDayEvent extends FocusableHTML implements
      */
     private void updateCaptions(boolean bigMode) {
         String innerHtml;
-        String escapedCaption = Util.escapeHTML(calendarEvent.getCaption());
+        String escapedCaption = WidgetUtil.escapeHTML(calendarEvent
+                .getCaption());
         String timeAsText = calendarEvent.getTimeAsText();
         if (bigMode) {
             innerHtml = "<span>" + timeAsText + "</span><br />"

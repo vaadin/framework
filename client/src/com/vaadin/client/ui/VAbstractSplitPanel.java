@@ -44,7 +44,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.StyleConstants;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.client.ui.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
@@ -577,7 +577,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
             break;
         }
         // Only fire click event listeners if the splitter isn't moved
-        if (Util.isTouchEvent(event) || !resized) {
+        if (WidgetUtil.isTouchEvent(event) || !resized) {
             super.onBrowserEvent(event);
         } else if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
             // Reset the resized flag after a mouseup has occured so the next
@@ -596,8 +596,8 @@ public class VAbstractSplitPanel extends ComplexPanel {
             DOM.setCapture(getElement());
             origX = DOM.getElementPropertyInt(splitter, "offsetLeft");
             origY = DOM.getElementPropertyInt(splitter, "offsetTop");
-            origMouseX = Util.getTouchOrMouseClientX(event);
-            origMouseY = Util.getTouchOrMouseClientY(event);
+            origMouseX = WidgetUtil.getTouchOrMouseClientX(event);
+            origMouseY = WidgetUtil.getTouchOrMouseClientY(event);
             event.stopPropagation();
             event.preventDefault();
         }
@@ -606,12 +606,12 @@ public class VAbstractSplitPanel extends ComplexPanel {
     public void onMouseMove(Event event) {
         switch (orientation) {
         case HORIZONTAL:
-            final int x = Util.getTouchOrMouseClientX(event);
+            final int x = WidgetUtil.getTouchOrMouseClientX(event);
             onHorizontalMouseMove(x);
             break;
         case VERTICAL:
         default:
-            final int y = Util.getTouchOrMouseClientY(event);
+            final int y = WidgetUtil.getTouchOrMouseClientY(event);
             onVerticalMouseMove(y);
             break;
         }
@@ -688,7 +688,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         DOM.releaseCapture(getElement());
         hideDraggingCurtain();
         resizing = false;
-        if (!Util.isTouchEvent(event)) {
+        if (!WidgetUtil.isTouchEvent(event)) {
             onMouseMove(event);
         }
         fireEvent(new SplitterMoveEvent(this));

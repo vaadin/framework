@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.TooltipInfo;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractLayoutConnector;
@@ -114,14 +114,16 @@ public class FormLayoutConnector extends AbstractLayoutConnector {
         TooltipInfo info = null;
 
         if (element != getWidget().getElement()) {
-            Object node = Util.findWidget(element, VFormLayout.Caption.class);
+            Object node = WidgetUtil.findWidget(element,
+                    VFormLayout.Caption.class);
 
             if (node != null) {
                 VFormLayout.Caption caption = (VFormLayout.Caption) node;
                 info = caption.getOwner().getTooltipInfo(element);
             } else {
 
-                node = Util.findWidget(element, VFormLayout.ErrorFlag.class);
+                node = WidgetUtil.findWidget(element,
+                        VFormLayout.ErrorFlag.class);
 
                 if (node != null) {
                     VFormLayout.ErrorFlag flag = (VFormLayout.ErrorFlag) node;

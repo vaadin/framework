@@ -59,7 +59,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.DeferredWorker;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.renderers.ComplexRenderer;
@@ -1186,8 +1186,10 @@ public class Grid<T> extends ResizeComposite implements
             int bodyTop = body.getElement().getAbsoluteTop();
             int wrapperTop = tableWrapper.getAbsoluteTop();
 
-            double width = Util.getRequiredWidthBoundingClientRectDouble(tr);
-            double height = Util.getRequiredHeightBoundingClientRectDouble(tr);
+            double width = WidgetUtil
+                    .getRequiredWidthBoundingClientRectDouble(tr);
+            double height = WidgetUtil
+                    .getRequiredHeightBoundingClientRectDouble(tr);
             setBounds(editorOverlay, tr.getOffsetLeft(), rowTop + bodyTop
                     - wrapperTop, width, height);
 
@@ -1276,8 +1278,10 @@ public class Grid<T> extends ResizeComposite implements
          */
         protected Element createCell(TableCellElement td) {
             DivElement cell = DivElement.as(DOM.createDiv());
-            double width = Util.getRequiredWidthBoundingClientRectDouble(td);
-            double height = Util.getRequiredHeightBoundingClientRectDouble(td);
+            double width = WidgetUtil
+                    .getRequiredWidthBoundingClientRectDouble(td);
+            double height = WidgetUtil
+                    .getRequiredHeightBoundingClientRectDouble(td);
             setBounds(cell, td.getOffsetLeft(), td.getOffsetTop(), width,
                     height);
             return cell;
@@ -3169,7 +3173,7 @@ public class Grid<T> extends ResizeComposite implements
                 Renderer renderer = findRenderer(cell);
                 if (renderer instanceof WidgetRenderer) {
                     try {
-                        Widget w = Util.findWidget(cell.getElement()
+                        Widget w = WidgetUtil.findWidget(cell.getElement()
                                 .getFirstChildElement(), Widget.class);
                         if (w != null) {
 
@@ -4516,7 +4520,7 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     private boolean isElementInChildWidget(Element e) {
-        Widget w = Util.findWidget(e, null);
+        Widget w = WidgetUtil.findWidget(e, null);
 
         if (w == this) {
             return false;

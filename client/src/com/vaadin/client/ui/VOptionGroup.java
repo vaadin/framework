@@ -44,6 +44,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
 
@@ -136,7 +137,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
             String itemHtml = opUidl.getStringAttribute("caption");
             if (!htmlContentAllowed) {
-                itemHtml = Util.escapeHTML(itemHtml);
+                itemHtml = WidgetUtil.escapeHTML(itemHtml);
             }
 
             String iconUrl = opUidl.getStringAttribute("icon");
@@ -160,7 +161,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
                     op.setStyleName("v-radiobutton");
                 }
                 if (iconUrl != null && iconUrl.length() != 0) {
-                    Util.sinkOnloadForImages(op.getElement());
+                    WidgetUtil.sinkOnloadForImages(op.getElement());
                     op.addHandler(iconLoadHandler, LoadEvent.getType());
                 }
 

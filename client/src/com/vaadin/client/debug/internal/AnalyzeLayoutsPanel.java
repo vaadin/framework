@@ -40,7 +40,7 @@ import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.SimpleTree;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ValueMap;
 
 /**
@@ -112,9 +112,10 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
             final ServerConnector parent = connector.getParent();
             final String parentId = parent.getConnectorId();
 
-            final Label errorDetails = new Label(Util.getSimpleName(connector)
-                    + "[" + connector.getConnectorId() + "]" + " inside "
-                    + Util.getSimpleName(parent));
+            final Label errorDetails = new Label(
+                    WidgetUtil.getSimpleName(connector) + "["
+                            + connector.getConnectorId() + "]" + " inside "
+                            + WidgetUtil.getSimpleName(parent));
 
             if (parent instanceof ComponentConnector) {
                 final ComponentConnector parentConnector = (ComponentConnector) parent;
@@ -172,7 +173,7 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
         Highlight.show(connector);
 
         final SimpleTree errorNode = new SimpleTree(
-                Util.getSimpleName(connector) + " id: " + pid);
+                WidgetUtil.getSimpleName(connector) + " id: " + pid);
         errorNode.addDomHandler(new MouseOverHandler() {
             @Override
             public void onMouseOver(MouseOverEvent event) {
