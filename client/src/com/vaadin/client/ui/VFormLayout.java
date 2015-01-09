@@ -30,7 +30,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Focusable;
@@ -78,7 +77,7 @@ public class VFormLayout extends SimplePanel {
         }
 
         if (!enabled) {
-            styles.add(ApplicationConnection.DISABLED_CLASSNAME);
+            styles.add(StyleConstants.DISABLED);
         }
 
         return styles.toArray(new String[styles.size()]);
@@ -242,7 +241,7 @@ public class VFormLayout extends SimplePanel {
 
             if (styles != null) {
                 for (String style : styles) {
-                    if (ApplicationConnection.DISABLED_CLASSNAME.equals(style)) {
+                    if (StyleConstants.DISABLED.equals(style)) {
                         // Add v-disabled also without classname prefix so
                         // generic v-disabled CSS rules work
                         styleName += " " + style;

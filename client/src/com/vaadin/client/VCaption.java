@@ -148,7 +148,7 @@ public class VCaption extends HTML {
             }
         }
         if (!owner.isEnabled()) {
-            style += " " + ApplicationConnection.DISABLED_CLASSNAME;
+            style += " " + StyleConstants.DISABLED;
         }
         setStyleName(style);
 
@@ -328,7 +328,7 @@ public class VCaption extends HTML {
 
         String style = VCaption.CLASSNAME;
         if (disabled) {
-            style += " " + ApplicationConnection.DISABLED_CLASSNAME;
+            style += " " + StyleConstants.DISABLED;
         }
         setStyleName(style);
         if (hasDescription) {

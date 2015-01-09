@@ -144,15 +144,20 @@ public class ApplicationConnection implements HasHandlers {
         private FastStringSet detachedConnectorIds = FastStringSet.create();
     }
 
-    public static final String MODIFIED_CLASSNAME = "v-modified";
+    @Deprecated
+    public static final String MODIFIED_CLASSNAME = StyleConstants.MODIFIED;
 
-    public static final String DISABLED_CLASSNAME = "v-disabled";
+    @Deprecated
+    public static final String DISABLED_CLASSNAME = StyleConstants.DISABLED;
 
-    public static final String REQUIRED_CLASSNAME = "v-required";
+    @Deprecated
+    public static final String REQUIRED_CLASSNAME = StyleConstants.REQUIRED;
 
-    public static final String REQUIRED_CLASSNAME_EXT = "-required";
+    @Deprecated
+    public static final String REQUIRED_CLASSNAME_EXT = StyleConstants.REQUIRED_EXT;
 
-    public static final String ERROR_CLASSNAME_EXT = "-error";
+    @Deprecated
+    public static final String ERROR_CLASSNAME_EXT = StyleConstants.ERROR_EXT;
 
     /**
      * A string that, if found in a non-JSON response to a UIDL request, will

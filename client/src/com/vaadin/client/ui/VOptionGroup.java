@@ -40,8 +40,8 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
@@ -179,8 +179,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
             op.setEnabled(enabled);
             optionsEnabled.put(op, optionEnabled);
 
-            setStyleName(op.getElement(),
-                    ApplicationConnection.DISABLED_CLASSNAME,
+            setStyleName(op.getElement(), StyleConstants.DISABLED,
                     !(optionEnabled && isEnabled()));
 
             newwidgets.add(op);
@@ -249,14 +248,12 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
                 Boolean isOptionEnabled = optionsEnabled.get(w);
                 if (isOptionEnabled == null) {
                     hasEnabled.setEnabled(optionGroupEnabled);
-                    setStyleName(w.getElement(),
-                            ApplicationConnection.DISABLED_CLASSNAME,
+                    setStyleName(w.getElement(), StyleConstants.DISABLED,
                             !isEnabled());
                 } else {
                     hasEnabled
                             .setEnabled(isOptionEnabled && optionGroupEnabled);
-                    setStyleName(w.getElement(),
-                            ApplicationConnection.DISABLED_CLASSNAME,
+                    setStyleName(w.getElement(), StyleConstants.DISABLED,
                             !(isOptionEnabled && isEnabled()));
                 }
             }

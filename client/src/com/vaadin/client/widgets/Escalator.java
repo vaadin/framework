@@ -74,7 +74,6 @@ import com.vaadin.client.widget.escalator.ScrollbarBundle.VerticalScrollbarBundl
 import com.vaadin.client.widget.grid.events.ScrollEvent;
 import com.vaadin.client.widget.grid.events.ScrollHandler;
 import com.vaadin.client.widgets.Escalator.JsniUtil.TouchHandlerBundle;
-import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.ui.grid.ScrollDestination;
@@ -4266,7 +4265,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
     private double heightOfEscalator = 0;
 
     /** The height of Escalator in terms of body rows. */
-    private double heightByRows = GridState.DEFAULT_HEIGHT_BY_ROWS;
+    private double heightByRows = 10.0d;
 
     /** The height of Escalator, as defined by {@link #setHeight(String)} */
     private String heightByCss = "";
@@ -4892,7 +4891,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
      * Gets the amount of rows in Escalator's body that are shown, while
      * {@link #getHeightMode()} is {@link HeightMode#ROW}.
      * <p>
-     * By default, it is {@value GridState#DEFAULT_HEIGHT_BY_ROWS}.
+     * By default, it is 10.
      * 
      * @return the amount of rows that are being shown in Escalator's body
      * @see #setHeightByRows(double)
