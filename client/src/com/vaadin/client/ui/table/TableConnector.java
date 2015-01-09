@@ -425,4 +425,15 @@ public class TableConnector extends AbstractHasComponentsConnector implements
         // TODO Move code from updateFromUIDL to this method
     }
 
+    @Override
+    protected void updateComponentSize(String newWidth, String newHeight) {
+        super.updateComponentSize(newWidth, newHeight);
+
+        if("".equals(newWidth)) {
+            getWidget().updateWidth();
+        }
+        if("".equals(newHeight)) {
+            getWidget().updateHeight();
+        }
+    }
 }
