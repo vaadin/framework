@@ -36,12 +36,9 @@ public interface EditorHandler<T> {
      * request is callback-based to facilitate usage with remote or otherwise
      * asynchronous data sources.
      * <p>
-     * In any of the EditorHandler methods, an implementation may call
-     * {@link EditorRequest#startAsync()} to signal the caller that the request
-     * is handled asynchronously. In that case, {@link EditorRequest#complete()}
-     * must be called when the request is complete.
-     * <p>
-     * TODO Should have a mechanism for signaling a failed request to the caller
+     * An implementation must call either {@link #success()} or {@link #fail()},
+     * according to whether the operation was a success or failed during
+     * execution, respectively.
      * 
      * @param <T>
      *            the row data type
@@ -56,13 +53,28 @@ public interface EditorHandler<T> {
          *            the row data type
          */
         public interface RequestCallback<T> {
-            public void onResponse(EditorRequest<T> request);
+            /**
+             * The method that must be called when the request has been
+             * processed correctly.
+             * 
+             * @param request
+             *            the original request object
+             */
+            public void onSuccess(EditorRequest<T> request);
+
+            /**
+             * The method that must be called when processing the request has
+             * produced an aborting error.
+             * 
+             * @param request
+             *            the original request object
+             */
+            public void onError(EditorRequest<T> request);
         }
 
         private Grid<T> grid;
         private int rowIndex;
         private RequestCallback<T> callback;
-        private boolean async = false;
         private boolean completed = false;
 
         /**
@@ -122,19 +134,6 @@ public interface EditorHandler<T> {
             return w;
         }
 
-        public boolean isAsync() {
-            return async;
-        }
-
-        /**
-         * Marks this request as asynchronous. If this method is invoked, the
-         * caller must also ensure that {@link #complete()} is invoked once the
-         * request is finished.
-         */
-        public void startAsync() {
-            async = true;
-        }
-
         /**
          * Completes this request. The request can only be completed once. This
          * method should only be called by an EditorHandler implementer if the
@@ -145,15 +144,42 @@ public interface EditorHandler<T> {
          * @throws IllegalStateException
          *             if the request is already completed
          */
-        public void complete() {
+        private void complete() {
             if (completed) {
                 throw new IllegalStateException(
                         "An EditorRequest must be completed exactly once");
             }
             completed = true;
+        }
+
+        /**
+         * Informs Grid that the editor request was a success.
+         */
+        public void success() {
+            complete();
             if (callback != null) {
-                callback.onResponse(this);
+                callback.onSuccess(this);
             }
+        }
+
+        /**
+         * Informs Grid that an error occurred while trying to process the
+         * request.
+         */
+        public void fail() {
+            complete();
+            if (callback != null) {
+                callback.onError(this);
+            }
+        }
+
+        /**
+         * Checks whether the request is completed or not.
+         * 
+         * @return <code>true</code> iff the request is completed
+         */
+        public boolean isCompleted() {
+            return completed;
         }
     }
 
@@ -161,10 +187,9 @@ public interface EditorHandler<T> {
      * Binds row data to the editor widgets. Called by the editor when it is
      * opened for editing.
      * <p>
-     * An implementation may call {@link EditorRequest#startAsync()
-     * request.startAsync()} to signal the caller that the request is handled
-     * asynchronously. In that case, {@link EditorRequest#complete()} must be
-     * called once the binding is complete.
+     * The implementation <em>must</em> call either
+     * {@link EditorRequest#success()} or {@link EditorRequest#fail()} to signal
+     * a successful or a failed (respectively) bind action.
      * 
      * @param request
      *            the data binding request
@@ -177,10 +202,11 @@ public interface EditorHandler<T> {
      * Called by the editor when editing is cancelled. This method may have an
      * empty implementation in case no special processing is required.
      * <p>
-     * An implementation may call {@link EditorRequest#startAsync()
-     * request.startAsync()} to signal the caller that the request is handled
-     * asynchronously. In that case, {@link EditorRequest#complete()} must be
-     * called once the cancel operation is complete.
+     * In contrast to {@link #bind(EditorRequest)} and
+     * {@link #save(EditorRequest)}, any calls to
+     * {@link EditorRequest#success()} or {@link EditorRequest#fail()} have no
+     * effect on the outcome of the cancel action. The editor is already closed
+     * when this method is called.
      * 
      * @param request
      *            the cancel request
@@ -193,10 +219,9 @@ public interface EditorHandler<T> {
      * Commits changes in the currently active edit to the data source. Called
      * by the editor when changes are saved.
      * <p>
-     * An implementation may call {@link EditorRequest#startAsync()
-     * request.startAsync()} to signal the caller that the request is handled
-     * asynchronously. In that case, {@link EditorRequest#complete()} must be
-     * called once the commit operation is complete.
+     * The implementation <em>must</em> call either
+     * {@link EditorRequest#success()} or {@link EditorRequest#fail()} to signal
+     * a successful or a failed (respectively) save action.
      * 
      * @param request
      *            the save request

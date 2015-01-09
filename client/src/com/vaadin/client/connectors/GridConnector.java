@@ -221,14 +221,14 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 }
 
                 @Override
-                public void confirmBind() {
-                    endRequest();
+                public void confirmBind(final boolean bindSucceeded) {
+                    endRequest(bindSucceeded);
 
                 }
 
                 @Override
-                public void confirmSave() {
-                    endRequest();
+                public void confirmSave(boolean saveSucceeded) {
+                    endRequest(saveSucceeded);
                 }
             });
         }
@@ -288,6 +288,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
             if (serverInitiated) {
                 serverInitiated = false;
+                request.success();
                 return true;
             } else {
                 return false;
@@ -296,10 +297,9 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         private void startRequest(EditorRequest<?> request) {
             currentRequest = request;
-            request.startAsync();
         }
 
-        private void endRequest() {
+        private void endRequest(boolean succeeded) {
             assert currentRequest != null;
             /*
              * Clear current request first to ensure the state is valid if
@@ -307,7 +307,11 @@ public class GridConnector extends AbstractHasComponentsConnector implements
              */
             EditorRequest<?> request = currentRequest;
             currentRequest = null;
-            request.complete();
+            if (succeeded) {
+                request.success();
+            } else {
+                request.fail();
+            }
         }
     }
 

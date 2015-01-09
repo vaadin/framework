@@ -31,6 +31,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
@@ -38,16 +39,23 @@ import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public class GridEditorTest extends GridBasicFeaturesTest {
 
+    private static final String[] EDIT_ITEM_5 = new String[] { "Component",
+            "Editor", "Edit item 5" };
+    private static final String[] EDIT_ITEM_100 = new String[] { "Component",
+            "Editor", "Edit item 100" };
+    private static final String[] TOGGLE_EDIT_ENABLED = new String[] {
+            "Component", "Editor", "Enabled" };
+
     @Before
     public void setUp() {
         setDebug(true);
         openTestURL();
-        selectMenuPath("Component", "Editor", "Enabled");
+        selectMenuPath(TOGGLE_EDIT_ENABLED);
     }
 
     @Test
     public void testProgrammaticOpeningClosing() {
-        selectMenuPath("Component", "Editor", "Edit item 5");
+        selectMenuPath(EDIT_ITEM_5);
         assertEditorOpen();
 
         selectMenuPath("Component", "Editor", "Cancel edit");
@@ -56,8 +64,8 @@ public class GridEditorTest extends GridBasicFeaturesTest {
 
     @Test
     public void testProgrammaticOpeningWhenDisabled() {
-        selectMenuPath("Component", "Editor", "Enabled");
-        selectMenuPath("Component", "Editor", "Edit item 5");
+        selectMenuPath(TOGGLE_EDIT_ENABLED);
+        selectMenuPath(EDIT_ITEM_5);
         assertEditorClosed();
         boolean thrown = logContainsText("Exception occured, java.lang.IllegalStateException");
         assertTrue("IllegalStateException thrown", thrown);
@@ -65,8 +73,8 @@ public class GridEditorTest extends GridBasicFeaturesTest {
 
     @Test
     public void testDisablingWhileOpen() {
-        selectMenuPath("Component", "Editor", "Edit item 5");
-        selectMenuPath("Component", "Editor", "Enabled");
+        selectMenuPath(EDIT_ITEM_5);
+        selectMenuPath(TOGGLE_EDIT_ENABLED);
         assertEditorOpen();
         boolean thrown = logContainsText("Exception occured, java.lang.IllegalStateException");
         assertTrue("IllegalStateException thrown", thrown);
@@ -74,13 +82,13 @@ public class GridEditorTest extends GridBasicFeaturesTest {
 
     @Test
     public void testProgrammaticOpeningWithScroll() {
-        selectMenuPath("Component", "Editor", "Edit item 100");
+        selectMenuPath(EDIT_ITEM_100);
         assertEditorOpen();
     }
 
     @Test(expected = NoSuchElementException.class)
     public void testVerticalScrollLocking() {
-        selectMenuPath("Component", "Editor", "Edit item 5");
+        selectMenuPath(EDIT_ITEM_5);
         getGridElement().getCell(200, 0);
     }
 
@@ -97,7 +105,7 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         assertEditorClosed();
 
         // Disable Editor
-        selectMenuPath("Component", "Editor", "Enabled");
+        selectMenuPath(TOGGLE_EDIT_ENABLED);
         getGridElement().getCell(5, 0).click();
         new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
         assertEditorClosed();
@@ -105,7 +113,7 @@ public class GridEditorTest extends GridBasicFeaturesTest {
 
     @Test
     public void testComponentBinding() {
-        selectMenuPath("Component", "State", "Editor", "Edit item 100");
+        selectMenuPath(EDIT_ITEM_100);
 
         List<WebElement> widgets = getEditorWidgets();
         assertEquals("Number of widgets", GridBasicFeatures.COLUMNS,
@@ -119,7 +127,7 @@ public class GridEditorTest extends GridBasicFeaturesTest {
 
     @Test
     public void testSave() {
-        selectMenuPath("Component", "Editor", "Edit item 100");
+        selectMenuPath(EDIT_ITEM_100);
 
         WebElement textField = getEditorWidgets().get(0);
 
@@ -138,7 +146,7 @@ public class GridEditorTest extends GridBasicFeaturesTest {
 
     @Test
     public void testProgrammaticSave() {
-        selectMenuPath("Component", "Editor", "Edit item 100");
+        selectMenuPath(EDIT_ITEM_100);
 
         WebElement textField = getEditorWidgets().get(0);
 
@@ -153,13 +161,13 @@ public class GridEditorTest extends GridBasicFeaturesTest {
     }
 
     private void assertEditorOpen() {
-        assertNotNull("Editor open", getEditor());
-        assertEquals("Number of widgets", GridBasicFeatures.COLUMNS,
+        assertNotNull("Editor is supposed to be open", getEditor());
+        assertEquals("Unexpected number of widgets", GridBasicFeatures.COLUMNS,
                 getEditorWidgets().size());
     }
 
     private void assertEditorClosed() {
-        assertNull("Editor closed", getEditor());
+        assertNull("Editor is supposed to be closed", getEditor());
     }
 
     private List<WebElement> getEditorWidgets() {
@@ -170,9 +178,11 @@ public class GridEditorTest extends GridBasicFeaturesTest {
 
     @Test
     public void testInvalidEdition() {
-        selectMenuPath("Component", "Editor", "Edit item 5");
+        selectMenuPath(EDIT_ITEM_5);
         assertFalse(logContainsText("Exception occured, java.lang.IllegalStateException"));
+
         GridEditorElement editor = getGridElement().getEditor();
+
         WebElement intField = editor.getField(7);
         intField.clear();
         intField.sendKeys("banana phone");
@@ -180,8 +190,46 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         assertTrue(
                 "No exception on invalid value.",
                 logContainsText("Exception occured, com.vaadin.data.fieldgroup.FieldGroup$CommitExceptionCommit failed"));
-        selectMenuPath("Component", "Editor", "Edit item 100");
+        editor.cancel();
+
+        selectMenuPath(EDIT_ITEM_100);
         assertFalse("Exception should not exist",
                 isElementPresent(NotificationElement.class));
+    }
+
+    @Test
+    public void testNoScrollAfterEditByAPI() {
+        int originalScrollPos = getGridVerticalScrollPos();
+
+        selectMenuPath(EDIT_ITEM_5);
+
+        scrollGridVerticallyTo(100);
+        assertEquals("Grid shouldn't scroll vertically while editing",
+                originalScrollPos, getGridVerticalScrollPos());
+    }
+
+    @Test
+    public void testNoScrollAfterEditByMouse() {
+        int originalScrollPos = getGridVerticalScrollPos();
+
+        GridCellElement cell_5_0 = getGridElement().getCell(5, 0);
+        new Actions(getDriver()).doubleClick(cell_5_0).perform();
+
+        scrollGridVerticallyTo(100);
+        assertEquals("Grid shouldn't scroll vertically while editing",
+                originalScrollPos, getGridVerticalScrollPos());
+    }
+
+    @Test
+    public void testNoScrollAfterEditByKeyboard() {
+        int originalScrollPos = getGridVerticalScrollPos();
+
+        GridCellElement cell_5_0 = getGridElement().getCell(5, 0);
+        cell_5_0.click();
+        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+
+        scrollGridVerticallyTo(100);
+        assertEquals("Grid shouldn't scroll vertically while editing",
+                originalScrollPos, getGridVerticalScrollPos());
     }
 }

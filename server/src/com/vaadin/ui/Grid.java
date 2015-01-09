@@ -2732,13 +2732,16 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
             @Override
             public void bind(int rowIndex) {
+                boolean success;
                 try {
                     Object id = getContainerDataSource().getIdByIndex(rowIndex);
                     doEditItem(id);
+                    success = true;
                 } catch (Exception e) {
                     handleError(e);
+                    success = false;
                 }
-                getEditorRpc().confirmBind();
+                getEditorRpc().confirmBind(success);
             }
 
             @Override
@@ -2753,12 +2756,15 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
             @Override
             public void save(int rowIndex) {
+                boolean success;
                 try {
                     saveEditor();
+                    success = true;
                 } catch (Exception e) {
                     handleError(e);
+                    success = false;
                 }
-                getEditorRpc().confirmSave();
+                getEditorRpc().confirmSave(success);
             }
 
             private void handleError(Exception e) {

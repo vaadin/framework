@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
@@ -111,6 +112,7 @@ public class GridBasicClientFeaturesWidget extends
                 int columnIndex = hasSelectionColumn ? i + 1 : i;
                 getWidget(columnIndex).setText(rowData.get(i).value.toString());
             }
+            request.success();
         }
 
         @Override
@@ -120,22 +122,31 @@ public class GridBasicClientFeaturesWidget extends
 
         @Override
         public void save(EditorRequest<List<Data>> request) {
-            log.setText("Row " + request.getRowIndex() + " edit committed");
-            List<Data> rowData = ds.getRow(request.getRowIndex());
+            try {
+                log.setText("Row " + request.getRowIndex() + " edit committed");
+                List<Data> rowData = ds.getRow(request.getRowIndex());
 
-            int i = 0;
-            for (; i < COLUMNS - MANUALLY_FORMATTED_COLUMNS; i++) {
-                rowData.get(i).value = getWidget(i).getText();
+                int i = 0;
+                for (; i < COLUMNS - MANUALLY_FORMATTED_COLUMNS; i++) {
+                    rowData.get(i).value = getWidget(i).getText();
+                }
+
+                rowData.get(i).value = Integer
+                        .valueOf(getWidget(i++).getText());
+                rowData.get(i).value = new Date(getWidget(i++).getText());
+                rowData.get(i).value = getWidget(i++).getText();
+                rowData.get(i).value = Integer
+                        .valueOf(getWidget(i++).getText());
+                rowData.get(i).value = Integer
+                        .valueOf(getWidget(i++).getText());
+
+                // notify data source of changes
+                ds.asList().set(request.getRowIndex(), rowData);
+                request.success();
+            } catch (Exception e) {
+                Logger.getLogger(getClass().getName()).warning(e.toString());
+                request.fail();
             }
-
-            rowData.get(i).value = Integer.valueOf(getWidget(i++).getText());
-            rowData.get(i).value = new Date(getWidget(i++).getText());
-            rowData.get(i).value = getWidget(i++).getText();
-            rowData.get(i).value = Integer.valueOf(getWidget(i++).getText());
-            rowData.get(i).value = Integer.valueOf(getWidget(i++).getText());
-
-            // notify data source of changes
-            ds.asList().set(request.getRowIndex(), rowData);
         }
 
         @Override

@@ -961,6 +961,88 @@ public class Grid<T> extends ResizeComposite implements
 
         private HandlerRegistration scrollHandler;
 
+        private Button saveButton;
+        private Button cancelButton;
+
+        private static final int SAVE_TIMEOUT_MS = 5000;
+        private final Timer saveTimeout = new Timer() {
+            @Override
+            public void run() {
+                getLogger().warning(
+                        "Editor save action is taking longer than expected ("
+                                + SAVE_TIMEOUT_MS + "ms). Does your "
+                                + EditorHandler.class.getSimpleName()
+                                + " remember to call success() or fail()?");
+            }
+        };
+
+        private final RequestCallback<T> saveRequestCallback = new RequestCallback<T>() {
+            @Override
+            public void onSuccess(EditorRequest<T> request) {
+                if (state == State.SAVING) {
+                    cleanup();
+                    cancel();
+                }
+            }
+
+            @Override
+            public void onError(EditorRequest<T> request) {
+                if (state == State.SAVING) {
+                    cleanup();
+
+                    // TODO probably not the most correct thing to do...
+                    getLogger().warning(
+                            "An error occurred when trying to save the "
+                                    + "modified row");
+                }
+            }
+
+            private void cleanup() {
+                state = State.ACTIVE;
+                enableButtons(true);
+                saveTimeout.cancel();
+            }
+        };
+
+        private static final int BIND_TIMEOUT_MS = 5000;
+        private final Timer bindTimeout = new Timer() {
+            @Override
+            public void run() {
+                getLogger().warning(
+                        "Editor bind action is taking longer than expected ("
+                                + BIND_TIMEOUT_MS + "ms). Does your "
+                                + EditorHandler.class.getSimpleName()
+                                + " remember to call success() or fail()?");
+            }
+        };
+        private final RequestCallback<T> bindRequestCallback = new RequestCallback<T>() {
+            @Override
+            public void onSuccess(EditorRequest<T> request) {
+                if (state == State.ACTIVATING) {
+                    state = State.ACTIVE;
+                    bindTimeout.cancel();
+
+                    showOverlay(grid.getEscalator().getBody()
+                            .getRowElement(request.getRowIndex()));
+                }
+            }
+
+            @Override
+            public void onError(EditorRequest<T> request) {
+                if (state == State.ACTIVATING) {
+                    state = State.INACTIVE;
+                    bindTimeout.cancel();
+
+                    // TODO show something in the DOM as well?
+                    getLogger().warning(
+                            "An error occurred while trying to show the "
+                                    + "Grid editor");
+                    grid.getEscalator().setScrollLocked(Direction.VERTICAL,
+                            false);
+                }
+            }
+        };
+
         public int getRow() {
             return rowIndex;
         }
@@ -1021,8 +1103,6 @@ public class Grid<T> extends ResizeComposite implements
             EditorRequest<T> request = new EditorRequest<T>(grid, rowIndex,
                     null);
             handler.cancel(request);
-            completeIfSync(request);
-
             state = State.INACTIVE;
         }
 
@@ -1045,18 +1125,11 @@ public class Grid<T> extends ResizeComposite implements
             }
 
             state = State.SAVING;
+            enableButtons(false);
+            saveTimeout.schedule(SAVE_TIMEOUT_MS);
             EditorRequest<T> request = new EditorRequest<T>(grid, rowIndex,
-                    new RequestCallback<T>() {
-                        @Override
-                        public void onResponse(EditorRequest<T> request) {
-                            if (state == State.SAVING) {
-                                state = State.ACTIVE;
-                                cancel();
-                            }
-                        }
-                    });
+                    saveRequestCallback);
             handler.save(request);
-            completeIfSync(request);
         }
 
         /**
@@ -1115,23 +1188,10 @@ public class Grid<T> extends ResizeComposite implements
 
         protected void show() {
             if (state == State.ACTIVATING) {
+                bindTimeout.schedule(BIND_TIMEOUT_MS);
                 EditorRequest<T> request = new EditorRequest<T>(grid, rowIndex,
-                        new RequestCallback<T>() {
-                            @Override
-                            public void onResponse(EditorRequest<T> request) {
-                                if (state == State.ACTIVATING) {
-                                    state = State.ACTIVE;
-                                    showOverlay(grid
-                                            .getEscalator()
-                                            .getBody()
-                                            .getRowElement(
-                                                    request.getRowIndex()));
-                                }
-                            }
-                        });
+                        bindRequestCallback);
                 handler.bind(request);
-                completeIfSync(request);
-
                 grid.getEscalator().setScrollLocked(Direction.VERTICAL, true);
             }
         }
@@ -1225,30 +1285,31 @@ public class Grid<T> extends ResizeComposite implements
                 }
             }
 
-            Button save = new Button();
-            save.setText("Save");
-            save.setStyleName(styleName + "-save");
-            save.addClickHandler(new ClickHandler() {
+            saveButton = new Button();
+            saveButton.setText("Save");
+            saveButton.setStyleName(styleName + "-save");
+            saveButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    // TODO should have a mechanism for handling failed save
                     save();
                 }
             });
-            setBounds(save.getElement(), 0, tr.getOffsetHeight() + 5, 50, 25);
-            attachWidget(save, editorOverlay);
+            setBounds(saveButton.getElement(), 0, tr.getOffsetHeight() + 5, 50,
+                    25);
+            attachWidget(saveButton, editorOverlay);
 
-            Button cancel = new Button();
-            cancel.setText("Cancel");
-            cancel.setStyleName(styleName + "-cancel");
-            cancel.addClickHandler(new ClickHandler() {
+            cancelButton = new Button();
+            cancelButton.setText("Cancel");
+            cancelButton.setStyleName(styleName + "-cancel");
+            cancelButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
                     cancel();
                 }
             });
-            setBounds(cancel.getElement(), 55, tr.getOffsetHeight() + 5, 50, 25);
-            attachWidget(cancel, editorOverlay);
+            setBounds(cancelButton.getElement(), 55, tr.getOffsetHeight() + 5,
+                    50, 25);
+            attachWidget(cancelButton, editorOverlay);
         }
 
         protected void hideOverlay() {
@@ -1309,10 +1370,9 @@ public class Grid<T> extends ResizeComposite implements
             editorOverlay.getStyle().setLeft(-grid.getScrollLeft(), Unit.PX);
         }
 
-        private void completeIfSync(EditorRequest<T> request) {
-            if (!request.isAsync()) {
-                request.complete();
-            }
+        private void enableButtons(boolean enabled) {
+            saveButton.setEnabled(enabled);
+            cancelButton.setEnabled(enabled);
         }
     }
 
@@ -3475,6 +3535,10 @@ public class Grid<T> extends ResizeComposite implements
 
     @Override
     public void setEnabled(boolean enabled) {
+        if (enabled == this.enabled) {
+            return;
+        }
+
         this.enabled = enabled;
         getElement().setTabIndex(enabled ? 0 : -1);
         getEscalator().setScrollLocked(Direction.VERTICAL, !enabled);
