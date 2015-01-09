@@ -2619,7 +2619,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         registerRpc(new GridServerRpc() {
 
             @Override
-            public void selectionChange(List<String> selection) {
+            public void select(List<String> selection) {
                 Collection<Object> receivedSelection = getKeyMapper()
                         .getItemIds(selection);
 
@@ -3763,7 +3763,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      *            the sort order change listener to remove
      */
     @Override
-    public void removeSortistener(SortListener listener) {
+    public void removeSortListener(SortListener listener) {
         removeListener(SortEvent.class, listener, SORT_ORDER_CHANGE_METHOD);
     }
 

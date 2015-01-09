@@ -606,6 +606,14 @@ public class GridBasicClientFeaturesWidget extends
                         }
                     }, "Component", "State", "Frozen column count");
         }
+
+        addMenuCommand("Enabled", new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                grid.setEnabled(!grid.isEnabled());
+            }
+        }, "Component", "State");
     }
 
     private void createColumnsMenu() {

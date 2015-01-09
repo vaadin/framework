@@ -356,7 +356,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                     selectedKeys.add(dataSource.getRowKey(row));
                 }
 
-                getRpcProxy(GridServerRpc.class).selectionChange(
+                getRpcProxy(GridServerRpc.class).select(
                         new ArrayList<String>(selectedKeys));
             } else {
                 updatedFromState = false;

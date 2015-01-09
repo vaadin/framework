@@ -27,10 +27,11 @@ import com.vaadin.shared.data.sort.SortDirection;
  * @author Vaadin Ltd
  */
 public interface GridServerRpc extends ServerRpc {
-    void selectionChange(List<String> newSelection);
+
+    void select(List<String> newSelection);
+
+    void selectAll();
 
     void sort(String[] columnIds, SortDirection[] directions,
             boolean userOriginated);
-
-    void selectAll();
 }
