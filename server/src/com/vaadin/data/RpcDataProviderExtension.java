@@ -441,8 +441,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * @param removedPropertyIds
          *            the property ids that have been removed from the container
          */
-        public void propertiesRemoved(@SuppressWarnings("unused")
-        Collection<Object> removedPropertyIds) {
+        public void propertiesRemoved(
+                @SuppressWarnings("unused") Collection<Object> removedPropertyIds) {
             /*
              * no-op, for now.
              * 

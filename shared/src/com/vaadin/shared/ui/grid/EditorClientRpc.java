@@ -42,14 +42,14 @@ public interface EditorClientRpc extends ClientRpc {
     void cancel(int rowIndex);
 
     /**
-     * Confirms a pending {@link EditorServerRpc#bind(int) bind request}
-     * sent by the client.
+     * Confirms a pending {@link EditorServerRpc#bind(int) bind request} sent by
+     * the client.
      */
     void confirmBind();
 
     /**
-     * Confirms a pending {@link EditorServerRpc#save(int) save request}
-     * sent by the client.
+     * Confirms a pending {@link EditorServerRpc#save(int) save request} sent by
+     * the client.
      */
     void confirmSave();
 }

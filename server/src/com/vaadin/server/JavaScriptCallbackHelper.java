@@ -94,7 +94,8 @@ public class JavaScriptCallbackHelper implements Serializable {
                             + name
                             + " on the client because a callback with the same name is registered on the server.");
         }
-        JsonArray args = (JsonArray) JsonCodec.encode(arguments, null, Object[].class, null).getEncodedValue();
+        JsonArray args = (JsonArray) JsonCodec.encode(arguments, null,
+                Object[].class, null).getEncodedValue();
         connector.addMethodInvocationToQueue(
                 JavaScriptCallbackRpc.class.getName(), CALL_METHOD,
                 new Object[] { name, args });
