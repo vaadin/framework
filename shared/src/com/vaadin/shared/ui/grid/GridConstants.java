@@ -63,4 +63,9 @@ public final class GridConstants implements Serializable {
      * Default width for columns.
      */
     public static final double DEFAULT_COLUMN_WIDTH_PX = -1;
+
+    /**
+     * Event ID for item click events
+     */
+    public static final String ITEM_CLICK_EVENT_ID = "itemClick";
 }

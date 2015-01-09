@@ -15,25 +15,15 @@
  */
 package com.vaadin.client.widget.grid.events;
 
-import com.google.gwt.event.shared.EventHandler;
-import com.vaadin.client.widgets.Grid.AbstractGridMouseEvent;
+import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler.GridDoubleClickHandler;
 
 /**
- * Base interface of all handlers for {@link AbstractGridMouseEvent}s.
+ * Handler for {@link GridDoubleClickEvent}s that happen in the footer of the
+ * Grid.
  * 
- * @since 7.4
+ * @since
  * @author Vaadin Ltd
  */
-public abstract interface AbstractGridMouseEventHandler extends EventHandler {
-
-    public abstract interface GridClickHandler extends
-            AbstractGridMouseEventHandler {
-        public void onClick(GridClickEvent event);
-    }
-
-    public abstract interface GridDoubleClickHandler extends
-            AbstractGridMouseEventHandler {
-        public void onDoubleClick(GridDoubleClickEvent event);
-    }
+public interface FooterDoubleClickHandler extends GridDoubleClickHandler {
 
 }

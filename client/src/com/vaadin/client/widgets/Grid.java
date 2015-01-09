@@ -89,18 +89,22 @@ import com.vaadin.client.widget.grid.RowStyleGenerator;
 import com.vaadin.client.widget.grid.events.AbstractGridKeyEventHandler;
 import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
+import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyDownHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyPressHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyUpHandler;
 import com.vaadin.client.widget.grid.events.FooterClickHandler;
+import com.vaadin.client.widget.grid.events.FooterDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyDownHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyPressHandler;
 import com.vaadin.client.widget.grid.events.FooterKeyUpHandler;
 import com.vaadin.client.widget.grid.events.GridClickEvent;
+import com.vaadin.client.widget.grid.events.GridDoubleClickEvent;
 import com.vaadin.client.widget.grid.events.GridKeyDownEvent;
 import com.vaadin.client.widget.grid.events.GridKeyPressEvent;
 import com.vaadin.client.widget.grid.events.GridKeyUpEvent;
 import com.vaadin.client.widget.grid.events.HeaderClickHandler;
+import com.vaadin.client.widget.grid.events.HeaderDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.HeaderKeyDownHandler;
 import com.vaadin.client.widget.grid.events.HeaderKeyPressHandler;
 import com.vaadin.client.widget.grid.events.HeaderKeyUpHandler;
@@ -1450,6 +1454,8 @@ public class Grid<T> extends ResizeComposite implements
     private GridKeyUpEvent keyUp = new GridKeyUpEvent(this, eventCell);
     private GridKeyPressEvent keyPress = new GridKeyPressEvent(this, eventCell);
     private GridClickEvent clickEvent = new GridClickEvent(this, eventCell);
+    private GridDoubleClickEvent doubleClickEvent = new GridDoubleClickEvent(
+            this, eventCell);
 
     private class CellFocusHandler {
 
@@ -5355,6 +5361,48 @@ public class Grid<T> extends ResizeComposite implements
      */
     public HandlerRegistration addFooterClickHandler(FooterClickHandler handler) {
         return addHandler(handler, clickEvent.getAssociatedType());
+    }
+
+    /**
+     * Register a BodyDoubleClickHandler to this Grid. The event for this
+     * handler is fired when a double click event occurs in the Body of this
+     * Grid.
+     * 
+     * @param handler
+     *            the double click handler to register
+     * @return the registration for the event
+     */
+    public HandlerRegistration addBodyDoubleClickHandler(
+            BodyDoubleClickHandler handler) {
+        return addHandler(handler, doubleClickEvent.getAssociatedType());
+    }
+
+    /**
+     * Register a HeaderDoubleClickHandler to this Grid. The event for this
+     * handler is fired when a double click event occurs in the Header of this
+     * Grid.
+     * 
+     * @param handler
+     *            the double click handler to register
+     * @return the registration for the event
+     */
+    public HandlerRegistration addHeaderDoubleClickHandler(
+            HeaderDoubleClickHandler handler) {
+        return addHandler(handler, doubleClickEvent.getAssociatedType());
+    }
+
+    /**
+     * Register a FooterDoubleClickHandler to this Grid. The event for this
+     * handler is fired when a double click event occurs in the Footer of this
+     * Grid.
+     * 
+     * @param handler
+     *            the double click handler to register
+     * @return the registration for the event
+     */
+    public HandlerRegistration addFooterDoubleClickHandler(
+            FooterDoubleClickHandler handler) {
+        return addHandler(handler, doubleClickEvent.getAssociatedType());
     }
 
     /**

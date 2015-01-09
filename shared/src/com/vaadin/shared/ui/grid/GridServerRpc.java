@@ -17,6 +17,7 @@ package com.vaadin.shared.ui.grid;
 
 import java.util.List;
 
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.data.sort.SortDirection;
 
@@ -34,4 +35,16 @@ public interface GridServerRpc extends ServerRpc {
 
     void sort(String[] columnIds, SortDirection[] directions,
             boolean userOriginated);
+
+    /**
+     * Informs the server that an item has been clicked in Grid.
+     * 
+     * @param rowKey
+     *            a key identifying the clicked item
+     * @param columnId
+     *            column id identifying the clicked property
+     * @param details
+     *            mouse event details
+     */
+    void itemClick(String rowKey, String columnId, MouseEventDetails details);
 }

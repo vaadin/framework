@@ -33,6 +33,8 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.sort.Sort;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.event.SortEvent;
@@ -90,6 +92,16 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             iter = event.getRemoved().iterator();
             Object removedRow = (iter.hasNext() ? iter.next() : "none");
             log("SelectionEvent: Added " + addedRow + ", Removed " + removedRow);
+        }
+    };
+
+    private ItemClickListener itemClickListener = new ItemClickListener() {
+
+        @Override
+        public void itemClick(ItemClickEvent event) {
+            log("Item " + (event.isDoubleClick() ? "double " : "")
+                    + "click on " + event.getPropertyId() + ", item "
+                    + event.getItemId());
         }
     };
 
@@ -452,12 +464,27 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             containerDelayValues.put(String.valueOf(delay),
                     Integer.valueOf(delay));
         }
+
         createSelectAction("Container delay", "State", containerDelayValues,
                 "0", new Command<Grid, Integer>() {
                     @Override
                     public void execute(Grid grid, Integer delay, Object data) {
                         containerDelay = delay.intValue();
                     }
+                });
+
+        createBooleanAction("ItemClickListener", "State", false,
+                new Command<Grid, Boolean>() {
+
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        if (!value) {
+                            c.removeItemClickListener(itemClickListener);
+                        } else {
+                            c.addItemClickListener(itemClickListener);
+                        }
+                    }
+
                 });
     }
 

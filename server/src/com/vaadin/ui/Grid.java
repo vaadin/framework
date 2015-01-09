@@ -56,6 +56,9 @@ import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterUtil;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.event.ItemClickEvent.ItemClickNotifier;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.event.SelectionEvent.SelectionNotifier;
@@ -68,11 +71,13 @@ import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.EditorClientRpc;
 import com.vaadin.shared.ui.grid.EditorServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
+import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridState.SharedSelectionMode;
@@ -155,7 +160,7 @@ import elemental.json.JsonValue;
  * @author Vaadin Ltd
  */
 public class Grid extends AbstractComponent implements SelectionNotifier,
-        SortNotifier, SelectiveRenderer {
+        SortNotifier, SelectiveRenderer, ItemClickNotifier {
 
     /**
      * Custom field group that allows finding property types before an item has
@@ -2712,6 +2717,16 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
                 ((SelectionModel.Multi) getSelectionModel()).selectAll();
             }
+
+            @Override
+            public void itemClick(String rowKey, String columnId,
+                    MouseEventDetails details) {
+                Object itemId = getKeyMapper().getItemId(rowKey);
+                Item item = datasource.getItem(itemId);
+                Object propertyId = getPropertyIdByColumnId(columnId);
+                fireEvent(new ItemClickEvent(Grid.this, item, itemId,
+                        propertyId, details));
+            }
         });
 
         registerRpc(new EditorServerRpc() {
@@ -4523,5 +4538,29 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      */
     public void setEditorFieldFactory(FieldGroupFieldFactory fieldFactory) {
         editorFieldGroup.setFieldFactory(fieldFactory);
+    }
+
+    @Override
+    public void addItemClickListener(ItemClickListener listener) {
+        addListener(GridConstants.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
+                listener, ItemClickEvent.ITEM_CLICK_METHOD);
+    }
+
+    @Override
+    @Deprecated
+    public void addListener(ItemClickListener listener) {
+        addItemClickListener(listener);
+    }
+
+    @Override
+    public void removeItemClickListener(ItemClickListener listener) {
+        removeListener(GridConstants.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
+                listener);
+    }
+
+    @Override
+    @Deprecated
+    public void removeListener(ItemClickListener listener) {
+        removeItemClickListener(listener);
     }
 }

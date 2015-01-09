@@ -29,9 +29,11 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.RpcDataSourceConnector.RpcDataSource;
@@ -45,6 +47,10 @@ import com.vaadin.client.widget.grid.CellStyleGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
+import com.vaadin.client.widget.grid.events.BodyClickHandler;
+import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
+import com.vaadin.client.widget.grid.events.GridClickEvent;
+import com.vaadin.client.widget.grid.events.GridDoubleClickEvent;
 import com.vaadin.client.widget.grid.events.SelectAllEvent;
 import com.vaadin.client.widget.grid.events.SelectAllHandler;
 import com.vaadin.client.widget.grid.selection.AbstractRowHandleSelectionModel;
@@ -68,6 +74,7 @@ import com.vaadin.shared.ui.grid.EditorClientRpc;
 import com.vaadin.shared.ui.grid.EditorServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridColumnState;
+import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridState.SharedSelectionMode;
@@ -304,6 +311,35 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     }
 
+    private class ItemClickHandler implements BodyClickHandler,
+            BodyDoubleClickHandler {
+
+        @Override
+        public void onClick(GridClickEvent event) {
+            if (hasEventListener(GridConstants.ITEM_CLICK_EVENT_ID)) {
+                fireItemClick(event.getTargetCell(), event.getNativeEvent());
+            }
+        }
+
+        @Override
+        public void onDoubleClick(GridDoubleClickEvent event) {
+            if (hasEventListener(GridConstants.ITEM_CLICK_EVENT_ID)) {
+                fireItemClick(event.getTargetCell(), event.getNativeEvent());
+            }
+        }
+
+        private void fireItemClick(CellReference<?> cell, NativeEvent mouseEvent) {
+            String rowKey = getRowKey((JsonObject) cell.getRow());
+            String columnId = getColumnId(cell.getColumn());
+            getRpcProxy(GridServerRpc.class)
+                    .itemClick(
+                            rowKey,
+                            columnId,
+                            MouseEventDetailsBuilder
+                                    .buildMouseEventDetails(mouseEvent));
+        }
+    }
+
     /**
      * Maps a generated column id to a grid column instance
      */
@@ -346,6 +382,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
         }
     };
+
+    private ItemClickHandler itemClickHandler = new ItemClickHandler();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -396,6 +434,10 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         });
 
         getWidget().addSelectionHandler(internalSelectionChangeHandler);
+
+        /* Item click events */
+        getWidget().addBodyClickHandler(itemClickHandler);
+        getWidget().addBodyDoubleClickHandler(itemClickHandler);
 
         getWidget().addSortHandler(new SortHandler<JsonObject>() {
             @Override
@@ -881,7 +923,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
     }
 
-    public String getColumnId(Grid.Column<?, JsonObject> column) {
+    public String getColumnId(Grid.Column<?, ?> column) {
         if (column instanceof CustomGridColumn) {
             return ((CustomGridColumn) column).id;
         }
