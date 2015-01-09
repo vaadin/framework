@@ -24,6 +24,7 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.vaadin.client.metadata.TypeDataStore.MethodAttribute;
+import com.vaadin.shared.annotations.BackgroundMessage;
 import com.vaadin.shared.annotations.Delayed;
 
 public class ServerRpcVisitor extends TypeVisitor {
@@ -49,6 +50,11 @@ public class ServerRpcVisitor extends TypeVisitor {
                             bundle.setMethodAttribute(type, method,
                                     MethodAttribute.LAST_ONLY);
                         }
+                    }
+
+                    if (method.getAnnotation(BackgroundMessage.class) != null) {
+                        bundle.setMethodAttribute(type, method,
+                                MethodAttribute.BACKGROUND_MESSAGE);
                     }
 
                     bundle.setNeedsParamTypes(type, method);

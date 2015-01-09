@@ -16,6 +16,7 @@
 
 package com.vaadin.shared.data;
 
+import com.vaadin.shared.annotations.BackgroundMessage;
 import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.communication.ServerRpc;
 
@@ -39,6 +40,7 @@ public interface DataRequestRpc extends ServerRpc {
      * @param cacheSize
      *            the number of cached rows
      */
+    @BackgroundMessage
     public void requestRows(int firstRowIndex, int numberOfRows,
             int firstCachedRowIndex, int cacheSize);
 

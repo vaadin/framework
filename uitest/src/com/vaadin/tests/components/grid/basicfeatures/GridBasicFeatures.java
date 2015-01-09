@@ -77,6 +77,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     public static final int COLUMNS = 12;
     public static final int ROWS = 1000;
 
+    private int containerDelay = 0;
+
     private IndexedContainer ds;
     private Grid grid;
     private SelectionListener selectionListener = new SelectionListener() {
@@ -101,6 +103,13 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             public List<Object> getItemIds(int startIndex, int numberOfIds) {
                 log("Requested items " + startIndex + " - "
                         + (startIndex + numberOfIds));
+                if (containerDelay > 0) {
+                    try {
+                        Thread.sleep(containerDelay);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 return super.getItemIds(startIndex, numberOfIds);
             }
         };
@@ -435,6 +444,19 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     @Override
                     public void execute(Grid c, Integer value, Object data) {
                         c.setFrozenColumnCount(value.intValue());
+                    }
+                });
+
+        LinkedHashMap<String, Integer> containerDelayValues = new LinkedHashMap<String, Integer>();
+        for (int delay : new int[] { 0, 500, 2000, 10000 }) {
+            containerDelayValues.put(String.valueOf(delay),
+                    Integer.valueOf(delay));
+        }
+        createSelectAction("Container delay", "State", containerDelayValues,
+                "0", new Command<Grid, Integer>() {
+                    @Override
+                    public void execute(Grid grid, Integer delay, Object data) {
+                        containerDelay = delay.intValue();
                     }
                 });
     }

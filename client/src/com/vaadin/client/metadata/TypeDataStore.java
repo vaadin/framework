@@ -29,7 +29,7 @@ import com.vaadin.shared.annotations.NoLayout;
 
 public class TypeDataStore {
     public static enum MethodAttribute {
-        DELAYED, LAST_ONLY, NO_LAYOUT;
+        DELAYED, LAST_ONLY, NO_LAYOUT, BACKGROUND_MESSAGE;
     }
 
     private static final String CONSTRUCTOR_NAME = "!new";
@@ -217,6 +217,10 @@ public class TypeDataStore {
 
     public static boolean isDelayed(Method method) {
         return hasMethodAttribute(method, MethodAttribute.DELAYED);
+    }
+
+    public static boolean isBackgroundMessage(Method method) {
+        return hasMethodAttribute(method, MethodAttribute.BACKGROUND_MESSAGE);
     }
 
     private static boolean hasMethodAttribute(Method method,

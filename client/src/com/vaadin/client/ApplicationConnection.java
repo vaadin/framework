@@ -81,6 +81,7 @@ import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
+import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.FontIcon;
@@ -1275,7 +1276,6 @@ public class ApplicationConnection implements HasHandlers {
         }
         hasActiveRequest = true;
         requestStartTime = new Date();
-        loadingIndicator.trigger();
         eventBus.fireEvent(new RequestStartingEvent(this));
     }
 
@@ -1300,7 +1300,8 @@ public class ApplicationConnection implements HasHandlers {
         Scheduler.get().scheduleDeferred(new Command() {
             @Override
             public void execute() {
-                if (!hasActiveRequest()) {
+                if (!isApplicationRunning()
+                        || !(hasActiveRequest() || deferredSendPending)) {
                     getLoadingIndicator().hide();
 
                     // If on Liferay and session expiration management is in
@@ -2720,8 +2721,8 @@ public class ApplicationConnection implements HasHandlers {
      *
      */
     public void sendPendingVariableChanges() {
-        if (!deferedSendPending) {
-            deferedSendPending = true;
+        if (!deferredSendPending) {
+            deferredSendPending = true;
             Scheduler.get().scheduleFinally(sendPendingCommand);
         }
     }
@@ -2729,11 +2730,11 @@ public class ApplicationConnection implements HasHandlers {
     private final ScheduledCommand sendPendingCommand = new ScheduledCommand() {
         @Override
         public void execute() {
-            deferedSendPending = false;
+            deferredSendPending = false;
             doSendPendingVariableChanges();
         }
     };
-    private boolean deferedSendPending = false;
+    private boolean deferredSendPending = false;
 
     private void doSendPendingVariableChanges() {
         if (isApplicationRunning()) {
@@ -2768,7 +2769,7 @@ public class ApplicationConnection implements HasHandlers {
      */
     private void buildAndSendVariableBurst(
             LinkedHashMap<String, MethodInvocation> pendingInvocations) {
-
+        boolean showLoadingIndicator = false;
         JsonArray reqJson = Json.createArray();
         if (!pendingInvocations.isEmpty()) {
             if (ApplicationConfiguration.isDebugMode()) {
@@ -2791,10 +2792,16 @@ public class ApplicationConnection implements HasHandlers {
                         Method method = type.getMethod(invocation
                                 .getMethodName());
                         parameterTypes = method.getParameterTypes();
+
+                        showLoadingIndicator |= !TypeDataStore
+                                .isBackgroundMessage(method);
                     } catch (NoDataException e) {
                         throw new RuntimeException("No type data for "
                                 + invocation.toString(), e);
                     }
+                } else {
+                    // Always show loading indicator for legacy requests
+                    showLoadingIndicator = true;
                 }
 
                 for (int i = 0; i < invocation.getParameters().length; ++i) {
@@ -2825,6 +2832,9 @@ public class ApplicationConnection implements HasHandlers {
             extraParams += "v-wsver=" + widgetsetVersion;
 
             getConfiguration().setWidgetsetVersionSent();
+        }
+        if (showLoadingIndicator) {
+            getLoadingIndicator().trigger();
         }
         makeUidlRequest(reqJson, extraParams);
     }

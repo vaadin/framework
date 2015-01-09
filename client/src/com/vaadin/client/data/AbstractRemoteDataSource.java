@@ -262,10 +262,19 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         ensureCoverageCheck();
     }
 
+    /**
+     * Gets the row index range that was requested by the previous call to
+     * {@link #ensureAvailability(int, int)}.
+     * 
+     * @return the requested availability range
+     */
+    public Range getRequestedAvailability() {
+        return requestedAvailability;
+    }
+
     private void checkCacheCoverage() {
-        if (currentRequestCallback != null) {
-            // Anyone clearing currentRequestCallback should run this method
-            // again
+        if (isWaitingForData()) {
+            // Anyone clearing the waiting status should run this method again
             return;
         }
 
@@ -299,6 +308,17 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         }
 
         Profiler.leave("AbstractRemoteDataSource.checkCacheCoverage");
+    }
+
+    /**
+     * Checks whether this data source is currently waiting for more rows to
+     * become available.
+     * 
+     * @return <code>true</code> if waiting for data; otherwise
+     *         <code>false</code>
+     */
+    public boolean isWaitingForData() {
+        return currentRequestCallback != null;
     }
 
     private void discardStaleCacheEntries() {
@@ -378,7 +398,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         Range received = Range.withLength(firstRowIndex, rowData.size());
 
-        if (currentRequestCallback != null) {
+        if (isWaitingForData()) {
             cacheStrategy.onDataArrive(Duration.currentTimeMillis()
                     - currentRequestCallback.requestStart, received.length());
 
