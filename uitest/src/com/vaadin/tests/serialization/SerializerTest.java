@@ -42,10 +42,14 @@ import com.vaadin.tests.widgetset.client.SerializerTestState;
 import com.vaadin.tests.widgetset.client.SimpleTestBean;
 import com.vaadin.tests.widgetset.server.SerializerTestExtension;
 
+import elemental.json.Json;
+import elemental.json.JsonString;
+import elemental.json.JsonValue;
+
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
 public class SerializerTest extends AbstractTestUI {
 
-    private Log log = new Log(40);
+    private Log log = new Log(45);
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -256,6 +260,12 @@ public class SerializerTest extends AbstractTestUI {
 
         rpc.sendDate(new Date(1));
         rpc.sendDate(new Date(2013 - 1900, 5 - 1, 31, 11, 12, 13));
+
+        state.jsonNull = Json.createNull();
+        state.jsonString = Json.create("a string");
+        state.jsonBoolean = Json.create(false);
+        rpc.sendJson(Json.create(true), Json.createNull(), Json.create("JSON"));
+
         state.date1 = new Date(1);
         state.date2 = new Date(2013 - 1900, 5 - 1, 31, 11, 12, 13);
 
@@ -448,6 +458,13 @@ public class SerializerTest extends AbstractTestUI {
             }
 
             @Override
+            public void sendJson(JsonValue value1, JsonValue value2,
+                    JsonString string) {
+                log.log("sendJson: " + value1.toJson() + ", " + value2.toJson()
+                        + ", " + string.toJson());
+            }
+
+            @Override
             public void log(String string) {
                 log.log(string);
 
@@ -458,7 +475,7 @@ public class SerializerTest extends AbstractTestUI {
 
     @Override
     protected String getTestDescription() {
-        return "Test for lots of different cases of encoding and decoding variuos data types";
+        return "Test for lots of different cases of encoding and decoding various data types";
     }
 
     @Override

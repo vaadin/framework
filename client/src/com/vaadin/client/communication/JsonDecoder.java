@@ -82,13 +82,16 @@ public class JsonDecoder {
      */
     public static Object decodeValue(Type type, JsonValue jsonValue,
             Object target, ApplicationConnection connection) {
+        String baseTypeName = type.getBaseTypeName();
+        if (baseTypeName.startsWith("elemental.json.Json")) {
+            return jsonValue;
+        }
 
-        // Null is null, regardless of type
+        // Null is null, regardless of type (except JSON)
         if (jsonValue.getType() == JsonType.NULL) {
             return null;
         }
 
-        String baseTypeName = type.getBaseTypeName();
         if (Map.class.getName().equals(baseTypeName)
                 || HashMap.class.getName().equals(baseTypeName)) {
             return decodeMap(type, jsonValue, connection);
@@ -293,4 +296,14 @@ public class JsonDecoder {
             tokens.add(decodeValue(childType, entryValue, null, connection));
         }
     }
+
+    /**
+     * Called by generated deserialization code to treat a generic object as a
+     * JsonValue. This is needed because GWT refuses to directly cast String
+     * typed as Object into a JSO.
+     */
+    public static native <T extends JsonValue> T obj2jso(Object object)
+    /*-{
+        return object;
+    }-*/;
 }

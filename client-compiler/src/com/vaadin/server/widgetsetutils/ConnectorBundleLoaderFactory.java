@@ -47,6 +47,7 @@ import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
+import com.vaadin.client.communication.JsonDecoder;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.ConnectorBundleLoader.CValUiInfo;
 import com.vaadin.client.metadata.InvokationHandler;
@@ -1011,7 +1012,16 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 w.print(", ");
             }
             String parameterTypeName = getBoxedTypeName(parameterType);
-            w.print("(" + parameterTypeName + ") params[" + i + "]");
+
+            if (parameterTypeName.startsWith("elemental.json.Json")) {
+                // Need to pass through native method to allow casting Object to
+                // JSO if the value is a string
+                w.print("%s.<%s>obj2jso(params[%d])",
+                        JsonDecoder.class.getCanonicalName(),
+                        parameterTypeName, i);
+            } else {
+                w.print("(" + parameterTypeName + ") params[" + i + "]");
+            }
         }
         w.println(");");
 
