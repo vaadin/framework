@@ -37,10 +37,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
+import com.google.gwt.thirdparty.guava.common.net.UrlEscapers;
+import com.vaadin.annotations.JavaScript;
+import com.vaadin.annotations.StyleSheet;
 import com.vaadin.annotations.Viewport;
 import com.vaadin.annotations.ViewportGeneratorClass;
 import com.vaadin.server.communication.AtmospherePushConnection;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.VaadinUriResolver;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
@@ -76,6 +80,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         private String themeName;
         private String appId;
         private PushMode pushMode;
+        private JsonObject applicationParameters;
+        private VaadinUriResolver uriResolver;
 
         public BootstrapContext(VaadinResponse response,
                 BootstrapFragmentResponse bootstrapResponse) {
@@ -149,6 +155,71 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             return bootstrapResponse;
         }
 
+        public JsonObject getApplicationParameters() {
+            if (applicationParameters == null) {
+                applicationParameters = BootstrapHandler.this
+                        .getApplicationParameters(this);
+            }
+
+            return applicationParameters;
+        }
+
+        public VaadinUriResolver getUriResolver() {
+            if (uriResolver == null) {
+                uriResolver = new BootstrapUriResolver(this);
+            }
+
+            return uriResolver;
+        }
+    }
+
+    private class BootstrapUriResolver extends VaadinUriResolver {
+        private final BootstrapContext context;
+
+        public BootstrapUriResolver(BootstrapContext bootstrapContext) {
+            context = bootstrapContext;
+        }
+
+        @Override
+        protected String getVaadinDirUrl() {
+            return context.getApplicationParameters().getString(
+                    ApplicationConstants.VAADIN_DIR_URL);
+        }
+
+        @Override
+        protected String getThemeUri() {
+            return getVaadinDirUrl() + "themes/" + context.getThemeName();
+        }
+
+        @Override
+        protected String getServiceUrlParameterName() {
+            return getConfigOrNull(ApplicationConstants.SERVICE_URL_PARAMETER_NAME);
+        }
+
+        @Override
+        protected String getServiceUrl() {
+            String serviceUrl = getConfigOrNull(ApplicationConstants.SERVICE_URL);
+            if (serviceUrl == null) {
+                return "./";
+            } else if (!serviceUrl.endsWith("/")) {
+                serviceUrl += "/";
+            }
+            return serviceUrl;
+        }
+
+        private String getConfigOrNull(String name) {
+            JsonObject parameters = context.getApplicationParameters();
+            if (parameters.hasKey(name)) {
+                return parameters.getString(name);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected String encodeQueryStringParameterValue(String queryString) {
+            return UrlEscapers.urlFormParameterEscaper().escape(queryString);
+        }
     }
 
     @Override
@@ -345,9 +416,39 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                     .attr("href", themeUri + "/favicon.ico");
         }
 
+        JavaScript javaScript = uiClass.getAnnotation(JavaScript.class);
+        if (javaScript != null) {
+            String[] resources = javaScript.value();
+            for (String resource : resources) {
+                String url = registerDependency(context, uiClass, resource);
+                head.appendElement("script").attr("type", "text/javascript")
+                        .attr("src", url);
+            }
+        }
+
+        StyleSheet styleSheet = uiClass.getAnnotation(StyleSheet.class);
+        if (styleSheet != null) {
+            String[] resources = styleSheet.value();
+            for (String resource : resources) {
+                String url = registerDependency(context, uiClass, resource);
+                head.appendElement("link").attr("rel", "stylesheet")
+                        .attr("type", "text/css").attr("href", url);
+            }
+        }
+
         Element body = document.body();
         body.attr("scroll", "auto");
         body.addClass(ApplicationConstants.GENERATED_BODY_CLASSNAME);
+    }
+
+    private String registerDependency(BootstrapContext context,
+            Class<? extends UI> uiClass, String resource) {
+        String url = context.getSession().getCommunicationManager()
+                .registerDependency(resource, uiClass);
+
+        url = context.getUriResolver().resolveVaadinUri(url);
+
+        return url;
     }
 
     protected String getMainDivStyle(BootstrapContext context) {
@@ -457,7 +558,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     protected void appendMainScriptTagContents(BootstrapContext context,
             StringBuilder builder) throws IOException {
-        JsonObject appConfig = getApplicationParameters(context);
+        JsonObject appConfig = context.getApplicationParameters();
 
         boolean isDebug = !context.getSession().getConfiguration()
                 .isProductionMode();
@@ -490,8 +591,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         }
     }
 
-    protected JsonObject getApplicationParameters(BootstrapContext context)
-            throws PaintException {
+    protected JsonObject getApplicationParameters(BootstrapContext context) {
         VaadinRequest request = context.getRequest();
         VaadinSession session = context.getSession();
         VaadinService vaadinService = request.getService();

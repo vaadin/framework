@@ -35,6 +35,7 @@ import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.PushConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
+import com.vaadin.shared.util.SharedUtil;
 
 /**
  * The default {@link PushConnection} implementation that uses Atmosphere for
@@ -185,7 +186,7 @@ public class AtmospherePushConnection implements PushConnection {
         }
 
         // uri is needed to identify the right connection when closing
-        uri = ApplicationConnection.addGetParameters(baseUrl, extraParams);
+        uri = SharedUtil.addGetParameters(baseUrl, extraParams);
 
         VConsole.log("Establishing push connection");
         socket = doConnect(uri, getConfig());
