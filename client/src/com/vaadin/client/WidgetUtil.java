@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.AnchorElement;
@@ -47,9 +45,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.util.SharedUtil;
-
-import elemental.js.json.JsJsonValue;
-import elemental.json.JsonValue;
 
 /**
  * Utility methods which are related to client side code only
@@ -1221,66 +1216,6 @@ public class WidgetUtil {
        } catch (e) {
           // Firefox throws exception if TextBox is not visible, even if attached
        }
-    }-*/;
-
-    /**
-     * Converts a native {@link JavaScriptObject} into a {@link JsonValue}. This
-     * is a no-op in GWT code compiled to javascript, but needs some special
-     * handling to work when run in JVM.
-     * 
-     * @param jso
-     *            the java script object to represent as json
-     * @return the json representation
-     */
-    public static <T extends JsonValue> T jso2json(JavaScriptObject jso) {
-        if (GWT.isProdMode()) {
-            return (T) jso.<JsJsonValue> cast();
-        } else {
-            return elemental.json.Json.instance().parse(stringify(jso));
-        }
-    }
-
-    /**
-     * Converts a {@link JsonValue} into a native {@link JavaScriptObject}. This
-     * is a no-op in GWT code compiled to javascript, but needs some special
-     * handling to work when run in JVM.
-     * 
-     * @param jsonValue
-     *            the json value
-     * @return a native javascript object representation of the json value
-     */
-    public static JavaScriptObject json2jso(JsonValue jsonValue) {
-        if (GWT.isProdMode()) {
-            return ((JavaScriptObject) jsonValue.toNative()).cast();
-        } else {
-            return parse(jsonValue.toJson());
-        }
-    }
-
-    /**
-     * Convert a {@link JavaScriptObject} into a string representation.
-     *
-     * @param json
-     *            a JavaScript object to be converted to a string
-     * @return JSON in string representation
-     */
-    private native static String stringify(JavaScriptObject json)
-    /*-{
-        return JSON.stringify(json);
-    }-*/;
-
-    /**
-     * Parse a string containing JSON into a {@link JavaScriptObject}.
-     *
-     * @param <T>
-     *            the overlay type to expect from the parse
-     * @param jsonAsString
-     * @return a JavaScript object constructed from the parse
-     */
-    public native static <T extends JavaScriptObject> T parse(
-            String jsonAsString)
-    /*-{
-        return JSON.parse(jsonAsString);
     }-*/;
 
     /**

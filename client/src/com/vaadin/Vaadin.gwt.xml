@@ -10,8 +10,6 @@
 
     <inherits name="com.google.gwt.http.HTTP" />
 
-    <inherits name="elemental.Json" />
-
     <inherits name="com.google.gwt.logging.Logging" />
     <set-property name="gwt.logging.enabled" value="TRUE" />
 

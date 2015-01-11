@@ -2158,7 +2158,7 @@ public class ApplicationConnection implements HasHandlers {
 
                             JavaScriptObject jso = states
                                     .getJavaScriptObject(connectorId);
-                            JsonObject stateJson = WidgetUtil.jso2json(jso);
+                            JsonObject stateJson = Util.jso2json(jso);
 
                             if (connector instanceof HasJavaScriptConnectorHelper) {
                                 ((HasJavaScriptConnectorHelper) connector)
@@ -2530,7 +2530,7 @@ public class ApplicationConnection implements HasHandlers {
 
                     VConsole.log(" * Performing server to client RPC calls");
 
-                    JsonArray rpcCalls = WidgetUtil.jso2json(json
+                    JsonArray rpcCalls = Util.jso2json(json
                             .getJavaScriptObject("rpc"));
 
                     int rpcLength = rpcCalls.length();
