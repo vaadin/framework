@@ -19,7 +19,7 @@
         <artifact type="javadoc" ext="jar" m:classifier="javadoc" />
         <artifact type="pom" ext="pom" />
     </publications>
-    <dependencies defaultconf="build" defaultconfmapping="build,ide->default">
+    <dependencies defaultconf="build" defaultconfmapping="build->default">
         <!-- API DEPENDENCIES -->
 
         <!-- LIBRARY DEPENDENCIES (compile time) -->
@@ -41,10 +41,7 @@
             <exclude type="pom" conf="test" />
         </dependency>
         <dependency org="com.vaadin" name="vaadin-sass-compiler"
-                    rev="${vaadin.sass.version}"
-                    conf="build-provided->default" />
-        <dependency org="junit" name="junit" rev="4.11"
-            conf="test->default" />
+            rev="${vaadin.sass.version}" conf="build-provided->default" />
 
     </dependencies>
 
