@@ -450,6 +450,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             // Update parent
             parent.remove(itemId);
 
+            fireItemSetChangeIfAbstractContainer();
+
             return true;
         }
 
@@ -490,7 +492,19 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             }
         }
 
+        fireItemSetChangeIfAbstractContainer();
+
         return true;
+    }
+
+    /**
+     * inform container (if it is instance of AbstractContainer) about the
+     * change in hierarchy (#15421)
+     */
+    private void fireItemSetChangeIfAbstractContainer() {
+        if (container instanceof AbstractContainer) {
+            ((AbstractContainer) container).fireItemSetChange();
+        }
     }
 
     /**
