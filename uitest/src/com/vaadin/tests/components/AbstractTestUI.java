@@ -46,6 +46,11 @@ public abstract class AbstractTestUI extends UI {
     }
 
     protected void warnIfWidgetsetMaybeNotCompiled() {
+        // Can't check location if sendUrlAsParameters is disabled
+        if (!getSession().getConfiguration().isSendUrlsAsParameters()) {
+            return;
+        }
+
         // Ignore if using debug mode
         String query = getPage().getLocation().getQuery();
         if (query != null && query.matches(".*[&?]gwt\\.codesvr.*")) {

@@ -681,6 +681,12 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             appConfig.put(ApplicationConstants.SERVICE_URL, serviceUrl);
         }
 
+        boolean sendUrlsAsParameters = vaadinService
+                .getDeploymentConfiguration().isSendUrlsAsParameters();
+        if (!sendUrlsAsParameters) {
+            appConfig.put("sendUrlsAsParameters", false);
+        }
+
         return appConfig;
     }
 
