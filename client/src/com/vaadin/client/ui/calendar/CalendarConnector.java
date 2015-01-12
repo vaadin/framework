@@ -345,6 +345,8 @@ public class CalendarConnector extends AbstractComponentConnector implements
         widget.setEventMoveAllowed(hasEventListener(CalendarEventId.EVENTMOVE));
         widget.setEventResizeAllowed(hasEventListener(CalendarEventId.EVENTRESIZE));
 
+        widget.setEventCaptionAsHtml(state.eventCaptionAsHtml);
+
         List<CalendarState.Day> days = state.days;
         List<CalendarState.Event> events = state.events;
 

@@ -13,11 +13,10 @@ public class TableInFormLayoutCausesScrollingTest extends MultiBrowserTest {
 
     @Test
     @Ignore
-    //This test is actually testing that #7309 is NOT fixed.
-    //Ignoring the test because it is not stable and it's
-    //occasionally failing on browsers even when it shouldn't.
-
-    //There's no point fixing this test before #7309 is actually fixed.
+    // This test is actually testing that #7309 is NOT fixed.
+    // Ignoring the test because it is not stable and it's
+    // occasionally failing on browsers even when it shouldn't.
+    // There's no point fixing this test before #7309 is actually fixed.
     public void pageIsNotScrolled() throws IOException {
         openTestURL();
 

@@ -43,7 +43,7 @@ public class UIAccessTest extends MultiBrowserTest {
         waitForLogToContainText("0. Current UI matches in beforeResponse? true");
         waitForLogToContainText("1. Current session matches in beforeResponse? true");
     }
-    
+
     @Test
     public void canBeAccessedFromUIThread() {
         $(ButtonElement.class).first().click();
@@ -96,7 +96,7 @@ public class UIAccessTest extends MultiBrowserTest {
         waitForLogToContainText("1. Thread started, waiting for interruption");
         waitForLogToContainText("2. I was interrupted");
     }
-    
+
     @Test
     public void testAccessSynchronously() {
         $(ButtonElement.class).get(5).click();
@@ -106,7 +106,7 @@ public class UIAccessTest extends MultiBrowserTest {
         assertTrue(logContainsText("2. has request after accessSynchronously? true"));
         assertTrue(logContainsText("3. Test value after accessSynchornously: Set in accessSynchronosly"));
     }
-    
+
     @Test
     public void currentInstanceCanAccessValue() {
         $(ButtonElement.class).get(6).click();

@@ -184,15 +184,20 @@ public class DateCellDayEvent extends FocusableHTML implements
      */
     private void updateCaptions(boolean bigMode) {
         String innerHtml;
-        String escapedCaption = WidgetUtil.escapeHTML(calendarEvent
-                .getCaption());
         String timeAsText = calendarEvent.getTimeAsText();
+        String htmlOrText;
+
+        if (dateCell.weekgrid.getCalendar().isEventCaptionAsHtml()) {
+            htmlOrText = calendarEvent.getCaption();
+        } else {
+            htmlOrText = WidgetUtil.escapeHTML(calendarEvent.getCaption());
+        }
+
         if (bigMode) {
-            innerHtml = "<span>" + timeAsText + "</span><br />"
-                    + escapedCaption;
+            innerHtml = "<span>" + timeAsText + "</span><br />" + htmlOrText;
         } else {
             innerHtml = "<span>" + timeAsText + "<span>:</span></span> "
-                    + escapedCaption;
+                    + htmlOrText;
         }
         caption.setInnerHTML(innerHtml);
         eventContent.setInnerHTML("");

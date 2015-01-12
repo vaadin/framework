@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.design.nested;
 
-import org.junit.Ignore;
-
 import com.vaadin.annotations.DesignRoot;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -27,7 +25,6 @@ import com.vaadin.ui.declarative.Design;
  * 
  * @author Vaadin Ltd
  */
-@Ignore
 @DesignRoot("mychilddesign.html")
 public class MyChildDesign extends HorizontalLayout {
     public Label childLabel;

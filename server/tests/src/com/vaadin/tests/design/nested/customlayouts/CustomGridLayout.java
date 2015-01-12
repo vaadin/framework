@@ -15,15 +15,12 @@
  */
 package com.vaadin.tests.design.nested.customlayouts;
 
-import org.junit.Ignore;
-
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 
 /**
  * @author Vaadin Ltd
  */
-@Ignore
 public class CustomGridLayout extends GridLayout {
     public CustomGridLayout() {
         this.addComponent(new Label());

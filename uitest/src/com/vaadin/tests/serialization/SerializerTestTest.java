@@ -92,8 +92,10 @@ public class SerializerTestTest extends MultiBrowserTest {
                 getLogRow(logRow++));
         Assert.assertEquals("state.floatArray: [57, 0, -12]",
                 getLogRow(logRow++));
-        Assert.assertTrue(getLogRow(logRow++).startsWith("state.floatObjectValue: 1.0000001"));
-        Assert.assertTrue(getLogRow(logRow++).startsWith("state.floatValue: 3.14159"));
+        Assert.assertTrue(getLogRow(logRow++).startsWith(
+                "state.floatObjectValue: 1.0000001"));
+        Assert.assertTrue(getLogRow(logRow++).startsWith(
+                "state.floatValue: 3.14159"));
         Assert.assertEquals("state.longArray: [-57841235865, 57]",
                 getLogRow(logRow++));
         Assert.assertEquals("state.longObjectValue: 577431841360",

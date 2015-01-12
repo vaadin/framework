@@ -15,15 +15,12 @@
  */
 package com.vaadin.tests.design.nested.customlayouts;
 
-import org.junit.Ignore;
-
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 
 /**
  * @author Vaadin Ltd
  */
-@Ignore
 public class CustomHorizontalLayout extends HorizontalLayout {
     public CustomHorizontalLayout() {
         this.addComponent(new Label());

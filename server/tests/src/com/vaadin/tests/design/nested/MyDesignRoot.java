@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.design.nested;
 
-import org.junit.Ignore;
-
 import com.vaadin.annotations.DesignRoot;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
@@ -26,7 +24,6 @@ import com.vaadin.ui.declarative.Design;
  * 
  * @author Vaadin Ltd
  */
-@Ignore
 @DesignRoot("mydesignroot.html")
 public class MyDesignRoot extends VerticalLayout {
     // should be assigned automatically

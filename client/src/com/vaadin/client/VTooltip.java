@@ -134,11 +134,11 @@ public class VTooltip extends VOverlay {
             description.setInnerHTML(info.getTitle());
             /*
              * Issue #11871: to correctly update the offsetWidth of description
-             * element we need to clear style width of it's parent DIV from old
+             * element we need to clear style width of its parent DIV from old
              * value (in some strange cases this width=[tooltip MAX_WIDTH] after
              * tooltip text has been already updated to new shortly value:
              * 
-             * <div class="popupContent"> <div style="width: 500px;"> <div
+             * <div class="popupContent"> <div style="width:500px;"> <div
              * class="v-errormessage" aria-hidden="true" style="display: none;">
              * <div class="gwt-HTML"> </div> </div> <div
              * class="v-tooltip-text">This is a short tooltip</div> </div>

@@ -353,14 +353,8 @@
 
             <batchtest fork="yes" todir="${report.dir}">
                 <fileset dir="${test.src}">
-                    <exclude name="**/Abstract*" />
-                    <exclude name="**/Mock*" />
-                    <exclude name="com/vaadin/tests/data/bean/*" />
-                    <exclude name="com/vaadin/tests/util/*" />
-                    <exclude name="com/vaadin/benchmarks/*" />
-                    <exclude name="**/VaadinClasses.java" />
-                    <exclude name="**/*TestRunner.java" />
-                    <exclude name="**/SQLTestsConstants.java" />
+                    <include name="**/*Test.java" />
+                    <include name="**/*Tests.java" />
                 </fileset>
             </batchtest>
         </junit>

@@ -414,6 +414,9 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         String vaadinLocation = vaadinService.getStaticFileLocation(request)
                 + "/VAADIN/";
 
+        // Parameter appended to JS to bypass caches after version upgrade.
+        String versionQueryParam = "?v=" + Version.getFullVersion();
+
         if (context.getPushMode().isEnabled()) {
             // Load client-side dependencies for push support
             String pushJS = vaadinLocation;
@@ -424,12 +427,14 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                 pushJS += ApplicationConstants.VAADIN_PUSH_DEBUG_JS;
             }
 
+            pushJS += versionQueryParam;
+
             fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr(
                     "type", "text/javascript").attr("src", pushJS));
         }
 
         String bootstrapLocation = vaadinLocation
-                + ApplicationConstants.VAADIN_BOOTSTRAP_JS;
+                + ApplicationConstants.VAADIN_BOOTSTRAP_JS + versionQueryParam;
         fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr("type",
                 "text/javascript").attr("src", bootstrapLocation));
         Element mainScriptTag = new Element(Tag.valueOf("script"), "").attr(
@@ -513,7 +518,6 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         }
 
         appConfig.put("versionInfo", versionInfo);
-
         appConfig.put("widgetset", context.getWidgetsetName());
 
         // Use locale from session if set, else from the request
@@ -525,42 +529,32 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         if (systemMessages != null) {
             // Write the CommunicationError -message to client
             JsonObject comErrMsg = Json.createObject();
-            comErrMsg.put("caption",
+            putValueOrNull(comErrMsg, "caption",
                     systemMessages.getCommunicationErrorCaption());
-            comErrMsg.put("message",
+            putValueOrNull(comErrMsg, "message",
                     systemMessages.getCommunicationErrorMessage());
-            if (systemMessages.getCommunicationErrorURL() == null) {
-                comErrMsg.put("url", Json.createNull());
-            } else {
-                comErrMsg.put("url", systemMessages.getCommunicationErrorURL());
-            }
+            putValueOrNull(comErrMsg, "url",
+                    systemMessages.getCommunicationErrorURL());
 
             appConfig.put("comErrMsg", comErrMsg);
 
             JsonObject authErrMsg = Json.createObject();
-            authErrMsg.put("caption",
+            putValueOrNull(authErrMsg, "caption",
                     systemMessages.getAuthenticationErrorCaption());
-            authErrMsg.put("message",
+            putValueOrNull(authErrMsg, "message",
                     systemMessages.getAuthenticationErrorMessage());
-            if (systemMessages.getAuthenticationErrorURL() == null) {
-                authErrMsg.put("url", Json.createNull());
-            } else {
-                authErrMsg.put("url",
-                        systemMessages.getAuthenticationErrorURL());
-            }
+            putValueOrNull(authErrMsg, "url",
+                    systemMessages.getAuthenticationErrorURL());
 
             appConfig.put("authErrMsg", authErrMsg);
 
             JsonObject sessExpMsg = Json.createObject();
-            sessExpMsg
-                    .put("caption", systemMessages.getSessionExpiredCaption());
-            sessExpMsg
-                    .put("message", systemMessages.getSessionExpiredMessage());
-            if (systemMessages.getSessionExpiredURL() == null) {
-                sessExpMsg.put("url", Json.createNull());
-            } else {
-                sessExpMsg.put("url", systemMessages.getSessionExpiredURL());
-            }
+            putValueOrNull(sessExpMsg, "caption",
+                    systemMessages.getSessionExpiredCaption());
+            putValueOrNull(sessExpMsg, "message",
+                    systemMessages.getSessionExpiredMessage());
+            putValueOrNull(sessExpMsg, "url",
+                    systemMessages.getSessionExpiredURL());
 
             appConfig.put("sessExpMsg", sessExpMsg);
         }
@@ -624,7 +618,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
     }
 
     /**
-     * Don not override.
+     * Do not override.
      * 
      * @param context
      * @return
@@ -647,5 +641,15 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             throws IOException {
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                 e.getLocalizedMessage());
+    }
+
+    private void putValueOrNull(JsonObject object, String key, String value) {
+        assert object != null;
+        assert key != null;
+        if (value == null) {
+            object.put(key, Json.createNull());
+        } else {
+            object.put(key, value);
+        }
     }
 }

@@ -39,6 +39,7 @@ public abstract class WebsocketTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return new ArrayList<DesiredCapabilities>(getBrowsersSupportingWebSocket());
+        return new ArrayList<DesiredCapabilities>(
+                getBrowsersSupportingWebSocket());
     }
 }

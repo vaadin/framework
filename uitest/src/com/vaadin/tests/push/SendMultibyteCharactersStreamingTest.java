@@ -1,6 +1,7 @@
 package com.vaadin.tests.push;
 
-public class SendMultibyteCharactersStreamingTest extends SendMultibyteCharactersTest {
+public class SendMultibyteCharactersStreamingTest extends
+        SendMultibyteCharactersTest {
 
     @Override
     protected String getTransport() {

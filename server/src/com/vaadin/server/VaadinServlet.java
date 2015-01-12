@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -45,13 +46,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gwt.thirdparty.guava.common.base.Charsets;
+import com.google.gwt.thirdparty.guava.common.io.Files;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.shared.JsonConstants;
+import com.vaadin.shared.Version;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
+
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.JsonObject;
 
 @SuppressWarnings("serial")
 public class VaadinServlet extends HttpServlet implements Constants {
@@ -61,12 +69,45 @@ public class VaadinServlet extends HttpServlet implements Constants {
         private final String css;
         private final List<String> sourceUris;
         private final long timestamp;
+        private final String scssFileName;
 
-        public ScssCacheEntry(String css, List<String> sourceUris) {
+        public ScssCacheEntry(String scssFileName, String css,
+                List<String> sourceUris) {
+            this.scssFileName = scssFileName;
             this.css = css;
             this.sourceUris = sourceUris;
 
             timestamp = getLastModified();
+        }
+
+        public ScssCacheEntry(JsonObject json) {
+            css = json.getString("css");
+            timestamp = Long.parseLong(json.getString("timestamp"));
+
+            sourceUris = new ArrayList<String>();
+
+            JsonArray uris = json.getArray("uris");
+            for (int i = 0; i < uris.length(); i++) {
+                sourceUris.add(uris.getString(i));
+            }
+
+            // Not set for cache entries read from disk
+            scssFileName = null;
+        }
+
+        public String asJson() {
+            JsonArray uris = Json.createArray();
+            for (String uri : sourceUris) {
+                uris.set(uris.length(), uri);
+            }
+
+            JsonObject object = Json.createObject();
+            object.put("version", Version.getFullVersion());
+            object.put("timestamp", Long.toString(timestamp));
+            object.put("uris", uris);
+            object.put("css", css);
+
+            return object.toJson();
         }
 
         public String getCss() {
@@ -115,6 +156,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
             } else {
                 return true;
             }
+        }
+
+        public String getScssFileName() {
+            return scssFileName;
         }
 
     }
@@ -612,7 +657,14 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * Global cache of scss compilation results. This map is protected from
      * concurrent access by {@link #SCSS_MUTEX}.
      */
-    private static final Map<String, ScssCacheEntry> scssCache = new HashMap<String, ScssCacheEntry>();
+    private final Map<String, ScssCacheEntry> scssCache = new HashMap<String, ScssCacheEntry>();
+
+    /**
+     * Keeps track of whether a warning about not being able to persist cache
+     * files has already been printed. The flag is protected from concurrent
+     * access by {@link #SCSS_MUTEX}.
+     */
+    private static boolean scssCompileWarWarningEmitted = false;
 
     /**
      * Returns the default theme. Must never return null.
@@ -900,10 +952,20 @@ public class VaadinServlet extends HttpServlet implements Constants {
         synchronized (SCSS_MUTEX) {
             ScssCacheEntry cacheEntry = scssCache.get(scssFilename);
 
+            if (cacheEntry == null) {
+                try {
+                    cacheEntry = loadPersistedScssCache(scssFilename, sc);
+                } catch (Exception e) {
+                    getLogger().log(Level.WARNING,
+                            "Could not read persisted scss cache", e);
+                }
+            }
+
             if (cacheEntry == null || !cacheEntry.isStillValid()) {
                 cacheEntry = compileScssOnTheFly(filename, scssFilename, sc);
-                scssCache.put(scssFilename, cacheEntry);
+                persistCacheEntry(cacheEntry);
             }
+            scssCache.put(scssFilename, cacheEntry);
 
             if (cacheEntry == null) {
                 // compilation did not produce any result, but logged a message
@@ -918,6 +980,29 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
             return true;
         }
+    }
+
+    private ScssCacheEntry loadPersistedScssCache(String scssFilename,
+            ServletContext sc) throws IOException {
+        String realFilename = sc.getRealPath(scssFilename);
+
+        File scssCacheFile = getScssCacheFile(new File(realFilename));
+        if (!scssCacheFile.exists()) {
+            return null;
+        }
+
+        String jsonString = Files.toString(scssCacheFile, Charsets.UTF_8);
+
+        JsonObject entryJson = Json.parse(jsonString);
+
+        String cacheVersion = entryJson.getString("version");
+        if (!Version.getFullVersion().equals(cacheVersion)) {
+            // Compiled for some other Vaadin version, discard cache
+            scssCacheFile.delete();
+            return null;
+        }
+
+        return new ScssCacheEntry(entryJson);
     }
 
     private ScssCacheEntry compileScssOnTheFly(String filename,
@@ -951,7 +1036,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return null;
         }
 
-        return new ScssCacheEntry(scss.printState(), scss.getSourceUris());
+        return new ScssCacheEntry(realFilename, scss.printState(),
+                scss.getSourceUris());
     }
 
     /**
@@ -1194,6 +1280,36 @@ public class VaadinServlet extends HttpServlet implements Constants {
     public void destroy() {
         super.destroy();
         getService().destroy();
+    }
+
+    private static void persistCacheEntry(ScssCacheEntry cacheEntry) {
+        String scssFileName = cacheEntry.getScssFileName();
+        if (scssFileName == null) {
+            if (!scssCompileWarWarningEmitted) {
+                getLogger()
+                        .warning(
+                                "Could not persist scss cache because no real file was found for the compiled scss file. "
+                                        + "This might happen e.g. if serving the scss file directly from a .war file.");
+                scssCompileWarWarningEmitted = true;
+            }
+            return;
+        }
+
+        File scssFile = new File(scssFileName);
+        File cacheFile = getScssCacheFile(scssFile);
+
+        String cacheEntryJsonString = cacheEntry.asJson();
+
+        try {
+            Files.write(cacheEntryJsonString, cacheFile, Charsets.UTF_8);
+        } catch (IOException e) {
+            getLogger().log(Level.WARNING,
+                    "Error persisting scss cache " + cacheFile, e);
+        }
+    }
+
+    private static File getScssCacheFile(File scssFile) {
+        return new File(scssFile.getParentFile(), scssFile.getName() + ".cache");
     }
 
     /**

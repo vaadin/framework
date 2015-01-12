@@ -50,9 +50,10 @@ public class RetryOnFail implements TestRule {
             }
 
             private int getRetryCount() {
-                String retryCount = System.getProperty("com.vaadin.testbench.max.retries");
+                String retryCount = System
+                        .getProperty("com.vaadin.testbench.max.retries");
 
-                if(retryCount != null && retryCount != "") {
+                if (retryCount != null && retryCount != "") {
                     return Integer.parseInt(retryCount);
                 }
 

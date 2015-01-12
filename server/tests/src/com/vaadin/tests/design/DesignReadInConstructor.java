@@ -15,12 +15,9 @@
  */
 package com.vaadin.tests.design;
 
-import org.junit.Ignore;
-
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.declarative.Design;
 
-@Ignore
 public class DesignReadInConstructor extends CssLayout {
 
     public DesignReadInConstructor() {

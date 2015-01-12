@@ -13,7 +13,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.AbstractBeanContainer.BeanIdResolver;
 
-public class BeanContainerTest extends AbstractBeanContainerTest {
+public class BeanContainerTest extends AbstractBeanContainerTestBase {
 
     protected static class PersonNameResolver implements
             BeanIdResolver<String, Person> {
@@ -345,7 +345,7 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
                 Person.class);
         // resolver that returns null as item id
         container
-                .setBeanIdResolver(new BeanIdResolver<String, AbstractBeanContainerTest.Person>() {
+                .setBeanIdResolver(new BeanIdResolver<String, AbstractBeanContainerTestBase.Person>() {
 
                     @Override
                     public String getIdForBean(Person bean) {

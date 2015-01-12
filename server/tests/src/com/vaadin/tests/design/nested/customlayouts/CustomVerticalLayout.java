@@ -15,15 +15,12 @@
  */
 package com.vaadin.tests.design.nested.customlayouts;
 
-import org.junit.Ignore;
-
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 /**
  * @author Vaadin Ltd
  */
-@Ignore
 public class CustomVerticalLayout extends VerticalLayout {
     public CustomVerticalLayout() {
         this.addComponent(new Label());

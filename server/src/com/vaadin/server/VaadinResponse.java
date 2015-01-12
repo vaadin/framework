@@ -169,4 +169,17 @@ public interface VaadinResponse extends Serializable {
      * @see PortletResponse#addProperty(Cookie)
      */
     public void addCookie(Cookie cookie);
+
+    /**
+     * Sets the length of the content body in the response In HTTP servlets,
+     * this method sets the HTTP Content-Length header. For some portlet
+     * responses, this method sets the content-length header, for others this
+     * method does nothing.
+     *
+     * @param len
+     *            an integer specifying the length of the content being returned
+     *            to the client
+     * @since 7.3.8
+     */
+    public void setContentLength(int len);
 }
