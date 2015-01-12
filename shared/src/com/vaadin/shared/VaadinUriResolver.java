@@ -19,8 +19,41 @@ import java.io.Serializable;
 
 import com.vaadin.shared.util.SharedUtil;
 
+/**
+ * Utility for translating special Vaadin URIs like theme:// and app:// into
+ * URLs usable by the browser. This is an abstract class performing the main
+ * logic in {@link #resolveVaadinUri(String)} and using abstract methods in the
+ * class for accessing information specific to the current environment.
+ * 
+ * @since
+ * @author Vaadin Ltd
+ */
 public abstract class VaadinUriResolver implements Serializable {
 
+    /**
+     * Translates a Vaadin URI to a URL that can be loaded by the browser. The
+     * following URI schemes are supported:
+     * <ul>
+     * <li><code>theme://</code> - resolves to the URL of the currently active
+     * theme.</li>
+     * <li><code>published://</code> - resolves to resources on the classpath
+     * published by {@link com.vaadin.annotations.JavaScript @JavaScript} or
+     * {@link com.vaadin.annotations.StyleSheet @StyleSheet} annotations on
+     * connectors.</li>
+     * <li><code>app://</code> - resolves to a URL that will be routed to the
+     * currently registered {@link com.vaadin.server.RequestHandler
+     * RequestHandler} instances.</li>
+     * <li><code>vaadin://</code> - resolves to the location of static resouces
+     * in the VAADIN directory</li>
+     * </ul>
+     * Any other URI protocols, such as <code>http://</code> or
+     * <code>https://</code> are passed through this method unmodified.
+     *
+     * @since
+     * @param vaadinUri
+     *            the uri to resolve
+     * @return the resolved uri
+     */
     public String resolveVaadinUri(String vaadinUri) {
         if (vaadinUri == null) {
             return null;
@@ -83,13 +116,46 @@ public abstract class VaadinUriResolver implements Serializable {
         return vaadinUri;
     }
 
+    /**
+     * Gets the URL pointing to the VAADIN directory.
+     * 
+     * @return the VAADIN directory URL
+     */
     protected abstract String getVaadinDirUrl();
 
+    /**
+     * Gets the name of the request parameter that should be used for sending
+     * the requested URL to the {@link #getServiceUrl() service URL}. If
+     * <code>null</code> is returned, the requested URL will instead be appended
+     * to the base service URL.
+     * 
+     * @return the parameter name used for passing request URLs, or
+     *         <code>null</code> to send the path as a part of the request path.
+     */
     protected abstract String getServiceUrlParameterName();
 
+    /**
+     * Gets the URL handled by {@link com.vaadin.server.VaadinService
+     * VaadinService} to handle application requests.
+     * 
+     * @return the service URL
+     */
     protected abstract String getServiceUrl();
 
+    /**
+     * Gets the URI of the directory of the current theme.
+     * 
+     * @return the URI of the current theme directory
+     */
     protected abstract String getThemeUri();
 
-    protected abstract String encodeQueryStringParameterValue(String queryString);
+    /**
+     * Encodes a value for safe inclusion as a parameter in the query string.
+     * 
+     * @param parameterValue
+     *            the value to encode
+     * @return the encoded value
+     */
+    protected abstract String encodeQueryStringParameterValue(
+            String parameterValue);
 }
