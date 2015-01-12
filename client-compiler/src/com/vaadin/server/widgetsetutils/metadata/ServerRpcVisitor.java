@@ -23,6 +23,8 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JType;
+import com.vaadin.client.metadata.TypeDataStore.MethodAttribute;
+import com.vaadin.shared.annotations.Delayed;
 
 public class ServerRpcVisitor extends TypeVisitor {
     @Override
@@ -38,7 +40,17 @@ public class ServerRpcVisitor extends TypeVisitor {
                 JMethod[] methods = subType.getMethods();
                 for (JMethod method : methods) {
                     ClientRpcVisitor.checkReturnType(logger, method);
-                    bundle.setNeedsDelayedInfo(type, method);
+
+                    Delayed delayed = method.getAnnotation(Delayed.class);
+                    if (delayed != null) {
+                        bundle.setMethodAttribute(type, method,
+                                MethodAttribute.DELAYED);
+                        if (delayed.lastOnly()) {
+                            bundle.setMethodAttribute(type, method,
+                                    MethodAttribute.LAST_ONLY);
+                        }
+                    }
+
                     bundle.setNeedsParamTypes(type, method);
 
                     JType[] parameterTypes = method.getParameterTypes();

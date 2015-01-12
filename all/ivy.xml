@@ -31,6 +31,7 @@
         <dependency org="com.vaadin" name="vaadin-client-compiled"
             rev="${vaadin.version}" />
         <dependency org="com.vaadin" name="vaadin-push" rev="${vaadin.version}" />
+        <dependency org="com.vaadin" name="vaadin-widgets" rev="${vaadin.version}" />
 
     </dependencies>
 

@@ -55,6 +55,7 @@ import com.vaadin.client.metadata.OnStateChangeMethod;
 import com.vaadin.client.metadata.ProxyHandler;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.metadata.TypeDataStore;
+import com.vaadin.client.metadata.TypeDataStore.MethodAttribute;
 import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.server.widgetsetutils.metadata.ClientRpcVisitor;
 import com.vaadin.server.widgetsetutils.metadata.ConnectorBundle;
@@ -67,7 +68,6 @@ import com.vaadin.server.widgetsetutils.metadata.ServerRpcVisitor;
 import com.vaadin.server.widgetsetutils.metadata.StateInitVisitor;
 import com.vaadin.server.widgetsetutils.metadata.TypeVisitor;
 import com.vaadin.server.widgetsetutils.metadata.WidgetInitVisitor;
-import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.ClientRpc;
@@ -502,8 +502,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writeInvokers(logger, w, bundle);
         writeParamTypes(w, bundle);
         writeProxys(w, bundle);
-        writeDelayedInfo(w, bundle);
-        writeNoLayoutRpcMethods(w, bundle);
+        writeMethodAttributes(logger, w, bundle);
 
         w.println("%s(store);", loadNativeJsMethodName);
 
@@ -514,22 +513,6 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writePresentationTypes(w, bundle);
         writeDelegateToWidget(logger, w, bundle);
         writeOnStateChangeHandlers(logger, w, bundle);
-    }
-
-    private void writeNoLayoutRpcMethods(SplittingSourceWriter w,
-            ConnectorBundle bundle) {
-        Map<JClassType, Set<JMethod>> needsNoLayout = bundle
-                .getNeedsNoLayoutRpcMethods();
-        for (Entry<JClassType, Set<JMethod>> entry : needsNoLayout.entrySet()) {
-            JClassType type = entry.getKey();
-
-            for (JMethod method : entry.getValue()) {
-                w.println("store.setNoLayoutRpcMethod(%s, \"%s\");",
-                        getClassLiteralString(type), method.getName());
-            }
-
-            w.splitIfNeeded();
-        }
     }
 
     private void writeOnStateChangeHandlers(TreeLogger logger,
@@ -740,32 +723,20 @@ public class ConnectorBundleLoaderFactory extends Generator {
         }
     }
 
-    private void writeDelayedInfo(SplittingSourceWriter w,
-            ConnectorBundle bundle) {
-        Map<JClassType, Set<JMethod>> needsDelayedInfo = bundle
-                .getNeedsDelayedInfo();
-        Set<Entry<JClassType, Set<JMethod>>> entrySet = needsDelayedInfo
-                .entrySet();
-        for (Entry<JClassType, Set<JMethod>> entry : entrySet) {
-            JClassType type = entry.getKey();
-            Set<JMethod> methods = entry.getValue();
-            for (JMethod method : methods) {
-                Delayed annotation = method.getAnnotation(Delayed.class);
-                if (annotation != null) {
-                    w.print("store.setDelayed(");
-                    writeClassLiteral(w, type);
-                    w.print(", \"");
-                    w.print(escape(method.getName()));
-                    w.println("\");");
-
-                    if (annotation.lastOnly()) {
-                        w.print("store.setLastOnly(");
-                        writeClassLiteral(w, type);
-                        w.print(", \"");
-                        w.print(escape(method.getName()));
-                        w.println("\");");
-                    }
-
+    private void writeMethodAttributes(TreeLogger logger,
+            SplittingSourceWriter w, ConnectorBundle bundle) {
+        for (Entry<JClassType, Map<JMethod, Set<MethodAttribute>>> typeEntry : bundle
+                .getMethodAttributes().entrySet()) {
+            JClassType type = typeEntry.getKey();
+            for (Entry<JMethod, Set<MethodAttribute>> methodEntry : typeEntry
+                    .getValue().entrySet()) {
+                JMethod method = methodEntry.getKey();
+                Set<MethodAttribute> attributes = methodEntry.getValue();
+                for (MethodAttribute attribute : attributes) {
+                    w.println("store.setMethodAttribute(%s, \"%s\", %s.%s);",
+                            getClassLiteralString(type), method.getName(),
+                            MethodAttribute.class.getCanonicalName(),
+                            attribute.name());
                     w.splitIfNeeded();
                 }
             }

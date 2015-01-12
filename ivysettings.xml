@@ -43,6 +43,8 @@
             resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-push"
             resolver="build-temp" />
+        <module organisation="com.vaadin" name="vaadin-widgets"
+            resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-liferay"
             resolver="build-temp" />
     </modules>
