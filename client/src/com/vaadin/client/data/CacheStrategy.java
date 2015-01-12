@@ -22,7 +22,7 @@ import com.vaadin.shared.ui.grid.Range;
  * Determines what data an {@link AbstractRemoteDataSource} should fetch and
  * keep cached.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface CacheStrategy {

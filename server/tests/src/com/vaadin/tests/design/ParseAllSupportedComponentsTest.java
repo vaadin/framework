@@ -22,26 +22,28 @@ import junit.framework.TestCase;
 
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
+import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  * Just top level test case that contains all synchronizable components
  * 
  * @author Vaadin Ltd
  */
-public class ParseAllSupportedComponentsTest extends TestCase {
+public class ParseAllSupportedComponentsTest {
 
-    public void testParsing() {
-        try {
-            DesignContext ctx = Design
-                    .read(new FileInputStream(
-                            "server/tests/src/com/vaadin/tests/design/all-components.html"),
-                            null);
-            assertNotNull("The returned design context can not be null", ctx);
-            assertNotNull("the component root can not be null",
-                    ctx.getRootComponent());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            fail("Template parsing threw exception");
-        }
+    @Test
+    public void allComponentsAreParsed() throws FileNotFoundException {
+        DesignContext ctx = Design
+                .read(new FileInputStream(
+            "server/tests/src/com/vaadin/tests/design/all-components.html"),
+                        null);
+
+        assertThat(ctx, is(not(nullValue())));
+        assertThat(ctx.getRootComponent(), is(not(nullValue())));
     }
 }

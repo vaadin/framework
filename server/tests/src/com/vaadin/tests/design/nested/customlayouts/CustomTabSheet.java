@@ -15,15 +15,12 @@
  */
 package com.vaadin.tests.design.nested.customlayouts;
 
-import org.junit.Ignore;
-
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 
 /**
  * @author Vaadin Ltd
  */
-@Ignore
 public class CustomTabSheet extends TabSheet {
     public CustomTabSheet() {
         addComponent(new Label());

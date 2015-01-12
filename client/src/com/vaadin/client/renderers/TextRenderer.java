@@ -20,7 +20,7 @@ import com.vaadin.client.widget.grid.RendererCellReference;
 /**
  * Renderer that renders text into a cell.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class TextRenderer implements Renderer<String> {

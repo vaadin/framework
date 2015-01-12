@@ -35,4 +35,13 @@ public class StyleConstants {
      * Added to all layouts to denote they are layouts
      */
     public static final String UI_LAYOUT = "v-layout";
+
+    public static final String MODIFIED = "v-modified";
+    public static final String DISABLED = "v-disabled";
+
+    public static final String REQUIRED = "v-required";
+
+    public static final String REQUIRED_EXT = "-required";
+
+    public static final String ERROR_EXT = "-error";
 }

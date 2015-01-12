@@ -16,7 +16,7 @@
 
 package com.vaadin.client.ui;
 
-import static com.vaadin.client.Util.isFocusedElementEditable;
+import static com.vaadin.client.WidgetUtil.isFocusedElementEditable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,7 +62,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LayoutManager;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.aria.AriaHelper;
@@ -581,7 +581,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
              * ticket #11994 which was changing the size to 110% was replaced
              * with this due to ticket #12943
              */
-            Util.runWebkitOverflowAutoFix(contents.getFirstChildElement());
+            WidgetUtil
+                    .runWebkitOverflowAutoFix(contents.getFirstChildElement());
         }
     }
 
@@ -878,7 +879,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     public void setCaption(String c, String iconURL, boolean asHtml) {
         String html = c;
         if (!asHtml) {
-            c = Util.escapeHTML(c);
+            c = WidgetUtil.escapeHTML(c);
         }
 
         // Provide information to assistive device users that a sub window was
@@ -1038,7 +1039,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private void onResizeEvent(Event event) {
-        if (resizable && Util.isTouchEventOrLeftMouseButton(event)) {
+        if (resizable && WidgetUtil.isTouchEventOrLeftMouseButton(event)) {
             switch (event.getTypeInt()) {
             case Event.ONMOUSEDOWN:
             case Event.ONTOUCHSTART:
@@ -1050,8 +1051,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                     resizeBox.getStyle().setVisibility(Visibility.HIDDEN);
                 }
                 resizing = true;
-                startX = Util.getTouchOrMouseClientX(event);
-                startY = Util.getTouchOrMouseClientY(event);
+                startX = WidgetUtil.getTouchOrMouseClientX(event);
+                startY = WidgetUtil.getTouchOrMouseClientY(event);
                 origW = getElement().getOffsetWidth();
                 origH = getElement().getOffsetHeight();
                 DOM.setCapture(getElement());
@@ -1117,8 +1118,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             return;
         }
 
-        int w = Util.getTouchOrMouseClientX(event) - startX + origW;
-        int h = Util.getTouchOrMouseClientY(event) - startY + origH;
+        int w = WidgetUtil.getTouchOrMouseClientX(event) - startX + origW;
+        int h = WidgetUtil.getTouchOrMouseClientY(event) - startY + origH;
 
         w = Math.max(w, getMinWidth());
         h = Math.max(h, getMinHeight());
@@ -1181,7 +1182,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private void onDragEvent(Event event) {
-        if (!Util.isTouchEventOrLeftMouseButton(event)) {
+        if (!WidgetUtil.isTouchEventOrLeftMouseButton(event)) {
             return;
         }
 
@@ -1216,9 +1217,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             centered = false;
             if (cursorInsideBrowserContentArea(event)) {
                 // Only drag while cursor is inside the browser client area
-                final int x = Util.getTouchOrMouseClientX(event) - startX
+                final int x = WidgetUtil.getTouchOrMouseClientX(event) - startX
                         + origX;
-                final int y = Util.getTouchOrMouseClientY(event) - startY
+                final int y = WidgetUtil.getTouchOrMouseClientY(event) - startY
                         + origY;
                 setPopupPosition(x, y);
             }
@@ -1230,8 +1231,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         if (draggable) {
             showDraggingCurtain();
             dragging = true;
-            startX = Util.getTouchOrMouseClientX(event);
-            startY = Util.getTouchOrMouseClientY(event);
+            startX = WidgetUtil.getTouchOrMouseClientX(event);
+            startY = WidgetUtil.getTouchOrMouseClientY(event);
             origX = DOM.getAbsoluteLeft(getElement());
             origY = DOM.getAbsoluteTop(getElement());
             DOM.setCapture(getElement());
@@ -1279,7 +1280,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             if (!DOM.isOrHasChild(getTopmostWindow().getElement(), target)) {
                 // not within the modal window, but let's see if it's in the
                 // debug window
-                Widget w = Util.findWidget(target, null);
+                Widget w = WidgetUtil.findWidget(target, null);
                 while (w != null) {
                     if (w instanceof VDebugWindow) {
                         return true; // allow debug-window clicks

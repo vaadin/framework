@@ -29,7 +29,7 @@ import com.vaadin.client.widgets.Grid;
  * @param <T>
  *            The column type
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface Renderer<T> {

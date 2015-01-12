@@ -20,7 +20,7 @@ import com.vaadin.ui.Grid.AbstractRenderer;
 /**
  * A renderer for presenting HTML content.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class HtmlRenderer extends AbstractRenderer<String> {

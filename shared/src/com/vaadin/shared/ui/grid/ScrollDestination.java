@@ -19,7 +19,7 @@ package com.vaadin.shared.ui.grid;
  * Enumeration, specifying the destinations that are supported when scrolling
  * rows or columns into view.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public enum ScrollDestination {

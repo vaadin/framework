@@ -586,7 +586,7 @@ public class LayoutDependencyTree {
     }
 
     private static String getCompactConnectorString(ServerConnector connector) {
-        return Util.getSimpleName(connector) + " ("
+        return connector.getClass().getSimpleName() + " ("
                 + connector.getConnectorId() + ")";
     }
 

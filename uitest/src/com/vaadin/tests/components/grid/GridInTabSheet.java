@@ -20,6 +20,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 
@@ -29,6 +30,7 @@ public class GridInTabSheet extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         TabSheet sheet = new TabSheet();
         final Grid grid = new Grid();
+        grid.setSelectionMode(SelectionMode.MULTI);
         grid.addColumn("count", Integer.class);
         for (Integer i = 0; i < 3; ++i) {
             grid.addRow(i);

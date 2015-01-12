@@ -21,8 +21,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
-import com.vaadin.shared.ui.progressindicator.ProgressBarState;
+import com.vaadin.client.StyleConstants;
 
 /**
  * Widget for showing the current progress of a long running task.
@@ -37,6 +36,8 @@ import com.vaadin.shared.ui.progressindicator.ProgressBarState;
  */
 public class VProgressBar extends Widget implements HasEnabled {
 
+    public static final String PRIMARY_STYLE_NAME = "v-progressbar";
+
     Element wrapper = DOM.createDiv();
     Element indicator = DOM.createDiv();
 
@@ -49,7 +50,7 @@ public class VProgressBar extends Widget implements HasEnabled {
         getElement().appendChild(wrapper);
         wrapper.appendChild(indicator);
 
-        setStylePrimaryName(ProgressBarState.PRIMARY_STYLE_NAME);
+        setStylePrimaryName(PRIMARY_STYLE_NAME);
     }
 
     /*
@@ -94,7 +95,7 @@ public class VProgressBar extends Widget implements HasEnabled {
     public void setEnabled(boolean enabled) {
         if (this.enabled != enabled) {
             this.enabled = enabled;
-            setStyleName(ApplicationConnection.DISABLED_CLASSNAME, !enabled);
+            setStyleName(StyleConstants.DISABLED, !enabled);
         }
     }
 }

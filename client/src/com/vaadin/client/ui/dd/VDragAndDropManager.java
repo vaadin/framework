@@ -38,7 +38,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
 import com.vaadin.client.ui.VOverlay;
@@ -92,16 +92,16 @@ public class VDragAndDropManager {
                 targetElement = targetNode.getParentElement();
             }
 
-            if (Util.isTouchEvent(nativeEvent) || dragElement != null) {
+            if (WidgetUtil.isTouchEvent(nativeEvent) || dragElement != null) {
                 // to detect the "real" target, hide dragelement temporary and
                 // use elementFromPoint
                 String display = dragElement.getStyle().getDisplay();
                 dragElement.getStyle().setDisplay(Display.NONE);
                 try {
-                    int x = Util.getTouchOrMouseClientX(nativeEvent);
-                    int y = Util.getTouchOrMouseClientY(nativeEvent);
+                    int x = WidgetUtil.getTouchOrMouseClientX(nativeEvent);
+                    int y = WidgetUtil.getTouchOrMouseClientY(nativeEvent);
                     // Util.browserDebugger();
-                    targetElement = Util.getElementFromPoint(x, y);
+                    targetElement = WidgetUtil.getElementFromPoint(x, y);
                     if (targetElement == null) {
                         // ApplicationConnection.getConsole().log(
                         // "Event on dragImage, ignored");
@@ -361,10 +361,10 @@ public class VDragAndDropManager {
             deferredStartRegistration = Event
                     .addNativePreviewHandler(new NativePreviewHandler() {
 
-                        private int startX = Util
+                        private int startX = WidgetUtil
                                 .getTouchOrMouseClientX(currentDrag
                                         .getCurrentGwtEvent());
-                        private int startY = Util
+                        private int startY = WidgetUtil
                                 .getTouchOrMouseClientY(currentDrag
                                         .getCurrentGwtEvent());
 
@@ -419,10 +419,10 @@ public class VDragAndDropManager {
                                 }
                             case Event.ONMOUSEMOVE:
                             case Event.ONTOUCHMOVE:
-                                int currentX = Util
+                                int currentX = WidgetUtil
                                         .getTouchOrMouseClientX(event
                                                 .getNativeEvent());
-                                int currentY = Util
+                                int currentY = WidgetUtil
                                         .getTouchOrMouseClientY(event
                                                 .getNativeEvent());
                                 if (Math.abs(startX - currentX) > 3
@@ -462,9 +462,9 @@ public class VDragAndDropManager {
     private void updateDragImagePosition() {
         if (currentDrag.getCurrentGwtEvent() != null && dragElement != null) {
             Style style = dragElement.getStyle();
-            int clientY = Util.getTouchOrMouseClientY(currentDrag
+            int clientY = WidgetUtil.getTouchOrMouseClientY(currentDrag
                     .getCurrentGwtEvent());
-            int clientX = Util.getTouchOrMouseClientX(currentDrag
+            int clientX = WidgetUtil.getTouchOrMouseClientX(currentDrag
                     .getCurrentGwtEvent());
             style.setTop(clientY, Unit.PX);
             style.setLeft(clientX, Unit.PX);
@@ -480,7 +480,7 @@ public class VDragAndDropManager {
      */
     private VDropHandler findDragTarget(Element element) {
         try {
-            Widget w = Util.findWidget(element, null);
+            Widget w = WidgetUtil.findWidget(element, null);
             if (w == null) {
                 return null;
             }

@@ -37,6 +37,7 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VCaptionWrapper;
+import com.vaadin.client.WidgetUtil;
 
 /**
  * Custom Layout implements complex layout defined with HTML template.
@@ -158,7 +159,8 @@ public class VCustomLayout extends ComplexPanel {
 
         // TODO prefix img src:s here with a regeps, cannot work further with IE
 
-        String relImgPrefix = Util.escapeAttribute(themeUri + "/layouts/");
+        String relImgPrefix = WidgetUtil
+                .escapeAttribute(themeUri + "/layouts/");
 
         // prefix all relative image elements to point to theme dir with a
         // regexp search

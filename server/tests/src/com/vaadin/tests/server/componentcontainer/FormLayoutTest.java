@@ -10,7 +10,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 
-public class FormLayoutTest extends AbstractIndexedLayoutTest {
+public class FormLayoutTest extends AbstractIndexedLayoutTestBase {
 
     @Override
     protected Layout createLayout() {

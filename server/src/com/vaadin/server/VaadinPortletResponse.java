@@ -97,6 +97,14 @@ public class VaadinPortletResponse implements VaadinResponse {
     }
 
     @Override
+    public void setContentLength(int len) {
+        if (response instanceof ResourceResponse) {
+            ((ResourceResponse) response).setContentLength(len);
+        }
+
+    }
+
+    @Override
     public PrintWriter getWriter() throws IOException {
         if (response instanceof MimeResponse) {
             return ((MimeResponse) response).getWriter();

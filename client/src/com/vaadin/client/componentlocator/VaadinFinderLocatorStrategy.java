@@ -644,7 +644,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
         // If the server-side class name didn't match, fall back to testing for
         // the explicit widget name
-        String widget = Util.getSimpleName(connector.getWidget());
+        String widget = connector.getWidget().getClass().getSimpleName();
         return widgetName.equals(widget)
                 || widgetName.equals(widget + ".class");
 

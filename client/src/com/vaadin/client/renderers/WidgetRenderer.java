@@ -17,13 +17,13 @@ package com.vaadin.client.renderers;
 
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.widget.grid.RendererCellReference;
 
 /**
  * A renderer for rendering widgets into cells.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  * @param <T>
  *            the row data type
@@ -97,7 +97,7 @@ public abstract class WidgetRenderer<T, W extends Widget> extends
      */
     protected static <W extends Widget> W getWidget(TableCellElement e,
             Class<W> klass) {
-        W w = Util.findWidget(e.getFirstChildElement(), klass);
+        W w = WidgetUtil.findWidget(e.getFirstChildElement(), klass);
         assert w == null || w.getElement() == e.getFirstChildElement() : "Widget not found inside cell";
         return w;
     }

@@ -1781,7 +1781,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         /**
          * Backing property for column
          */
-        private final Object columnProperty;
+        private final Object propertyId;
 
         private Converter<?, Object> converter;
 
@@ -1799,13 +1799,13 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          *            The grid this column belongs to. Should not be null.
          * @param state
          *            the shared state of this column
-         * @param columnProperty
+         * @param propertyId
          *            the backing property id for this column
          */
-        Column(Grid grid, GridColumnState state, Object columnProperty) {
+        Column(Grid grid, GridColumnState state, Object propertyId) {
             this.grid = grid;
             this.state = state;
-            this.columnProperty = columnProperty;
+            this.propertyId = propertyId;
             internalSetRenderer(new TextRenderer());
         }
 
@@ -1824,8 +1824,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
          * 
          * @return property id
          */
-        public Object getColumnProperty() {
-            return columnProperty;
+        public Object getPropertyId() {
+            return propertyId;
         }
 
         /**
@@ -2578,7 +2578,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * Grid initial setup
      */
     private void initGrid() {
-        setSelectionMode(SelectionMode.MULTI);
+        setSelectionMode(SelectionMode.SINGLE);
         addSelectionListener(new SelectionListener() {
             @Override
             public void select(SelectionEvent event) {
@@ -2619,7 +2619,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         registerRpc(new GridServerRpc() {
 
             @Override
-            public void selectionChange(List<String> selection) {
+            public void select(List<String> selection) {
                 Collection<Object> receivedSelection = getKeyMapper()
                         .getItemIds(selection);
 
@@ -2719,10 +2719,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
                 try {
                     Object id = getContainerDataSource().getIdByIndex(rowIndex);
                     doEditItem(id);
-                    getEditorRpc().confirmBind();
                 } catch (Exception e) {
                     handleError(e);
                 }
+                getEditorRpc().confirmBind();
             }
 
             @Override
@@ -2739,10 +2739,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             public void save(int rowIndex) {
                 try {
                     saveEditor();
-                    getEditorRpc().confirmSave();
                 } catch (Exception e) {
                     handleError(e);
                 }
+                getEditorRpc().confirmSave();
             }
 
             private void handleError(Exception e) {
@@ -3763,7 +3763,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      *            the sort order change listener to remove
      */
     @Override
-    public void removeSortistener(SortListener listener) {
+    public void removeSortListener(SortListener listener) {
         removeListener(SortEvent.class, listener, SORT_ORDER_CHANGE_METHOD);
     }
 
@@ -4387,7 +4387,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         editedItemId = itemId;
 
         for (Column column : getColumns()) {
-            Object propertyId = column.getColumnProperty();
+            Object propertyId = column.getPropertyId();
 
             Field<?> editor = getEditorField(propertyId);
 

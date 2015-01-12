@@ -43,7 +43,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 
 public class DateCell extends FocusableComplexPanel implements
         MouseDownHandler, MouseMoveHandler, MouseUpHandler, KeyDownHandler,
@@ -201,7 +201,7 @@ public class DateCell extends FocusableComplexPanel implements
             addStyleDependentName("Hsized");
 
             width = getOffsetWidth()
-                    - Util.measureHorizontalBorder(getElement());
+                    - WidgetUtil.measureHorizontalBorder(getElement());
             // Update moveWidth for any DateCellDayEvent child
             updateEventCellsWidth();
             recalculateEventWidths();
@@ -338,7 +338,7 @@ public class DateCell extends FocusableComplexPanel implements
     }
 
     public int getSlotBorder() {
-        return Util.measureVerticalBorder(slotElements[0]);
+        return WidgetUtil.measureVerticalBorder(slotElements[0]);
     }
 
     private void drawDayEvents(List<DateCellGroup> groups) {

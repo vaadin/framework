@@ -20,7 +20,7 @@ import java.io.Serializable;
 /**
  * Describes sorting direction.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public enum SortDirection implements Serializable {

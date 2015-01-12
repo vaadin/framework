@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.ui;
 
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.AbstractMediaState;
@@ -78,7 +78,7 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
         if (altText == null || "".equals(altText)) {
             altText = getDefaultAltHtml();
         } else if (!getState().htmlContentAllowed) {
-            altText = Util.escapeHTML(altText);
+            altText = WidgetUtil.escapeHTML(altText);
         }
         getWidget().setAltText(altText);
     }

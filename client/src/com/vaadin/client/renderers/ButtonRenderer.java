@@ -24,7 +24,7 @@ import com.vaadin.client.widget.grid.RendererCellReference;
  * corresponding column are used as the captions. Click handlers can be added to
  * the renderer, invoked when any of the rendered buttons is clicked.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class ButtonRenderer extends ClickableRenderer<String, Button> {

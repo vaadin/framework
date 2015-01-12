@@ -87,7 +87,7 @@ import elemental.json.JsonValue;
  * at {@link com.vaadin.shared.data.DataProviderRpc#setRowData(int, List)
  * DataProviderRpc.setRowData(int, List)}.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.Grid.class)
@@ -326,7 +326,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
      */
     private Map<String, CustomGridColumn> columnIdToColumn = new HashMap<String, CustomGridColumn>();
 
-    private AbstractRowHandleSelectionModel<JsonObject> selectionModel = createSelectionModel(SharedSelectionMode.NONE);
+    private AbstractRowHandleSelectionModel<JsonObject> selectionModel;
     private Set<String> selectedKeys = new LinkedHashSet<String>();
     private List<String> columnOrder = new ArrayList<String>();
 
@@ -356,7 +356,7 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                     selectedKeys.add(dataSource.getRowKey(row));
                 }
 
-                getRpcProxy(GridServerRpc.class).selectionChange(
+                getRpcProxy(GridServerRpc.class).select(
                         new ArrayList<String>(selectedKeys));
             } else {
                 updatedFromState = false;
@@ -395,8 +395,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 getWidget().scrollToRow(row, destination);
             }
         });
-
-        getWidget().setSelectionModel(selectionModel);
 
         getWidget().addSelectionHandler(internalSelectionChangeHandler);
 
@@ -751,7 +749,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
 
         AbstractRowHandleSelectionModel<JsonObject> model = createSelectionModel(mode);
-        if (!model.getClass().equals(selectionModel.getClass())) {
+        if (selectionModel == null
+                || !model.getClass().equals(selectionModel.getClass())) {
             selectionModel = model;
             getWidget().setSelectionModel(model);
             selectedKeys.clear();

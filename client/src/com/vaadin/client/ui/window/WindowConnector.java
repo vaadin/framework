@@ -38,7 +38,7 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
@@ -247,7 +247,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             Style childStyle = layoutElement.getStyle();
 
             // IE8 needs some hackery to measure its content correctly
-            Util.forceIE8Redraw(layoutElement);
+            WidgetUtil.forceIE8Redraw(layoutElement);
 
             if (content.isRelativeHeight() && !BrowserInfo.get().isIE9()) {
                 childStyle.setPosition(Position.ABSOLUTE);

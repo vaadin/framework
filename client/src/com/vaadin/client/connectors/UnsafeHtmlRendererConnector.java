@@ -22,7 +22,7 @@ import com.vaadin.shared.ui.Connect;
 /**
  * A connector for {@link UnsafeHtmlRenderer}
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.renderer.HtmlRenderer.class)

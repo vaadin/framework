@@ -15,15 +15,12 @@
  */
 package com.vaadin.tests.design.nested.customlayouts;
 
-import org.junit.Ignore;
-
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 
 /**
  * @author Vaadin Ltd
  */
-@Ignore
 public class CustomHorizontalSplitPanel extends HorizontalSplitPanel {
     public CustomHorizontalSplitPanel() {
         addComponent(new Label());

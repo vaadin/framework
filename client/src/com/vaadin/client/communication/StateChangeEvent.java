@@ -30,6 +30,7 @@ import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.ui.AbstractConnector;
+
 import elemental.json.JsonObject;
 
 public class StateChangeEvent extends

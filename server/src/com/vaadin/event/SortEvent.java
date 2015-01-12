@@ -105,6 +105,6 @@ public class SortEvent extends Component.Event {
          * @param listener
          *            the sort order change listener to remove
          */
-        public void removeSortistener(SortListener listener);
+        public void removeSortListener(SortListener listener);
     }
 }

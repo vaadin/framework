@@ -20,7 +20,7 @@ package com.vaadin.ui.renderer;
  * corresponding property is used as the caption. Click listeners can be added
  * to the renderer, invoked when any of the rendered buttons is clicked.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class ButtonRenderer extends ClickableRenderer<String> {

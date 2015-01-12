@@ -26,7 +26,7 @@ import com.vaadin.shared.ui.Connect;
  * string, and displayed as-is on the client side. This is to be able to support
  * the server's locale.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.renderer.NumberRenderer.class)

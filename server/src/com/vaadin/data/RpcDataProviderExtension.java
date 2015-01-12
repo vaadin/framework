@@ -441,8 +441,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * @param removedPropertyIds
          *            the property ids that have been removed from the container
          */
-        public void propertiesRemoved(@SuppressWarnings("unused")
-        Collection<Object> removedPropertyIds) {
+        public void propertiesRemoved(
+                @SuppressWarnings("unused") Collection<Object> removedPropertyIds) {
             /*
              * no-op, for now.
              * 
@@ -762,7 +762,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         Grid grid = getGrid();
 
         for (Column column : columns) {
-            Object propertyId = column.getColumnProperty();
+            Object propertyId = column.getPropertyId();
 
             Object propertyValue = item.getItemProperty(propertyId).getValue();
             JsonValue encodedValue = encodeValue(propertyValue,
@@ -794,7 +794,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
             JsonObject rowObject, Collection<Column> columns) {
         JsonObject cellStyles = null;
         for (Column column : columns) {
-            Object propertyId = column.getColumnProperty();
+            Object propertyId = column.getPropertyId();
             cellReference.set(propertyId);
             String style = generator.getStyle(cellReference);
             if (style != null) {

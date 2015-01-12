@@ -25,7 +25,7 @@ import com.vaadin.data.util.filter.Compare;
  * 
  * Most sorting related tests are in {@link BeanItemContainerSortTest}.
  */
-public class BeanItemContainerTest extends AbstractBeanContainerTest {
+public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
 
     // basics from the common container test
 

@@ -26,7 +26,7 @@ import com.vaadin.shared.data.sort.SortDirection;
 /**
  * The shared state for the {@link com.vaadin.ui.components.grid.Grid} component
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class GridState extends AbstractComponentState {

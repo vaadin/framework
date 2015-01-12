@@ -29,7 +29,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.shared.ComponentConstants;
@@ -203,7 +203,7 @@ public class VAccordion extends VTabsheetBase {
             }
 
             int captionWidth = caption.getRequiredWidth();
-            int padding = Util.measureHorizontalPaddingAndBorder(
+            int padding = WidgetUtil.measureHorizontalPaddingAndBorder(
                     caption.getElement(), 18);
             return captionWidth + padding;
         }

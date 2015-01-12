@@ -18,7 +18,6 @@ package com.vaadin.tests.widgetset.client;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.SpanElement;
-import com.vaadin.client.Util;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.ui.UI;
@@ -33,7 +32,7 @@ public class CustomUIConnector extends UIConnector {
             public void test() {
                 SpanElement span = Document.get().createSpanElement();
                 span.setInnerText("This is the "
-                        + Util.getSimpleName(CustomUIConnector.this));
+                        + CustomUIConnector.this.getClass().getSimpleName());
                 Document.get().getBody().insertFirst(span);
             }
         });

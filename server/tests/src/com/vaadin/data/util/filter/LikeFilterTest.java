@@ -22,7 +22,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
 
-public class LikeFilterTest extends AbstractFilterTest<Like> {
+public class LikeFilterTest extends AbstractFilterTestBase<Like> {
 
     protected Item item1 = new PropertysetItem();
     protected Item item2 = new PropertysetItem();

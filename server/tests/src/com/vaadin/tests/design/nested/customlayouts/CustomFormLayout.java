@@ -15,15 +15,12 @@
  */
 package com.vaadin.tests.design.nested.customlayouts;
 
-import org.junit.Ignore;
-
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 
 /**
  * @author Vaadin Ltd
  */
-@Ignore
 public class CustomFormLayout extends FormLayout {
     public CustomFormLayout() {
         this.addComponent(new Label());

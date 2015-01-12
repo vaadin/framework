@@ -105,7 +105,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
     }
 
     /**
-     * Get a reference to the Grid object that fired this event.
+     * Gets a reference to the Grid object that fired this event.
      * 
      * @return a grid reference
      */
@@ -115,8 +115,8 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
     }
 
     /**
-     * Get all rows added to the selection since the last {@link SelectionEvent}
-     * .
+     * Gets all rows added to the selection since the last
+     * {@link SelectionEvent} .
      * 
      * @return a collection of added rows. Empty collection if no rows were
      *         added.
@@ -126,7 +126,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
     }
 
     /**
-     * Get all rows removed from the selection since the last
+     * Gets all rows removed from the selection since the last
      * {@link SelectionEvent}.
      * 
      * @return a collection of removed rows. Empty collection if no rows were
@@ -134,6 +134,15 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
      */
     public Collection<T> getRemoved() {
         return Collections.unmodifiableCollection(removed);
+    }
+
+    /**
+     * Gets currently selected rows.
+     * 
+     * @return a non-null collection containing all currently selected rows.
+     */
+    public Collection<T> getSelected() {
+        return grid.getSelectedRows();
     }
 
     /**

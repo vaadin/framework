@@ -23,14 +23,15 @@ import com.vaadin.shared.data.sort.SortDirection;
 /**
  * Client-to-server RPC interface for the Grid component
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface GridServerRpc extends ServerRpc {
-    void selectionChange(List<String> newSelection);
+
+    void select(List<String> newSelection);
+
+    void selectAll();
 
     void sort(String[] columnIds, SortDirection[] directions,
             boolean userOriginated);
-
-    void selectAll();
 }

@@ -27,7 +27,7 @@ import com.vaadin.client.widget.grid.RendererCellReference;
  * contract. For more information see
  * {@link SafeHtmlUtils#fromSafeConstant(String)}.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  * @see SafeHtmlUtils#fromSafeConstant(String)
  */

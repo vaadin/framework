@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  * the potential of causing sizes to change with appropriate style definitions
  * in the application theme.
  * 
- * @since
+ * @since 7.4
  * 
  * @author Vaadin Ltd
  */

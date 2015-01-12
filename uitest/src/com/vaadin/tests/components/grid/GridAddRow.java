@@ -20,6 +20,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.SelectionMode;
 
 public class GridAddRow extends AbstractTestUI {
 
@@ -27,6 +28,7 @@ public class GridAddRow extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
 
         final Grid grid = new Grid();
+        grid.setSelectionMode(SelectionMode.MULTI);
         grid.addColumn("firstName");
         grid.addColumn("age", Integer.class);
 

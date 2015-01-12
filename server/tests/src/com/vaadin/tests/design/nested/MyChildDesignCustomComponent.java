@@ -15,11 +15,8 @@
  */
 package com.vaadin.tests.design.nested;
 
-import org.junit.Ignore;
-
 import com.vaadin.ui.Button;
 
-@Ignore
 public class MyChildDesignCustomComponent extends Button {
 
 }

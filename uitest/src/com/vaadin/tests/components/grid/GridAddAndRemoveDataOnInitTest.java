@@ -31,14 +31,14 @@ public class GridAddAndRemoveDataOnInitTest extends MultiBrowserTest {
         openTestURL();
 
         GridElement gridAdd = $(GridElement.class).first();
-        if (!gridAdd.isElementPresent(By.vaadin("#cell[9][1]"))
-                || gridAdd.isElementPresent(By.vaadin("#cell[10][1]"))) {
+        if (!gridAdd.isElementPresent(By.vaadin("#cell[9][0]"))
+                || gridAdd.isElementPresent(By.vaadin("#cell[10][0]"))) {
             Assert.fail("Grid with added data contained incorrect rows");
         }
 
         GridElement gridRemove = $(GridElement.class).get(1);
-        if (!gridRemove.isElementPresent(By.vaadin("#cell[4][1]"))
-                || gridRemove.isElementPresent(By.vaadin("#cell[5][1]"))) {
+        if (!gridRemove.isElementPresent(By.vaadin("#cell[4][0]"))
+                || gridRemove.isElementPresent(By.vaadin("#cell[5][0]"))) {
             Assert.fail("Grid with removed data contained incorrect rows");
         }
     }

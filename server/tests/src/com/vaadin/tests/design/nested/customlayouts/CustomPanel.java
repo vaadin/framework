@@ -15,15 +15,12 @@
  */
 package com.vaadin.tests.design.nested.customlayouts;
 
-import org.junit.Ignore;
-
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 
 /**
  * @author Vaadin Ltd
  */
-@Ignore
 public class CustomPanel extends Panel {
     public CustomPanel() {
         setContent(new Label());

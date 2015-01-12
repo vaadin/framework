@@ -34,7 +34,7 @@ import com.vaadin.util.ReflectTools;
  * @param <T>
  *            the type presented by the renderer
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class ClickableRenderer<T> extends AbstractRenderer<T> {
@@ -90,6 +90,15 @@ public class ClickableRenderer<T> extends AbstractRenderer<T> {
          */
         public Column getColumn() {
             return column;
+        }
+
+        /**
+         * Returns the property ID where the click event originated.
+         * 
+         * @return the property ID of the clicked cell
+         */
+        public Object getPropertyId() {
+            return column.getPropertyId();
         }
     }
 

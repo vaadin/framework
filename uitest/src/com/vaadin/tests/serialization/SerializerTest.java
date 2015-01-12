@@ -17,9 +17,11 @@
 package com.vaadin.tests.serialization;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,10 +44,14 @@ import com.vaadin.tests.widgetset.client.SerializerTestState;
 import com.vaadin.tests.widgetset.client.SimpleTestBean;
 import com.vaadin.tests.widgetset.server.SerializerTestExtension;
 
+import elemental.json.Json;
+import elemental.json.JsonString;
+import elemental.json.JsonValue;
+
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
 public class SerializerTest extends AbstractTestUI {
 
-    private Log log = new Log(40);
+    private Log log = new Log(45);
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -256,6 +262,12 @@ public class SerializerTest extends AbstractTestUI {
 
         rpc.sendDate(new Date(1));
         rpc.sendDate(new Date(2013 - 1900, 5 - 1, 31, 11, 12, 13));
+
+        state.jsonNull = Json.createNull();
+        state.jsonString = Json.create("a string");
+        state.jsonBoolean = Json.create(false);
+        rpc.sendJson(Json.create(true), Json.createNull(), Json.create("JSON"));
+
         state.date1 = new Date(1);
         state.date2 = new Date(2013 - 1900, 5 - 1, 31, 11, 12, 13);
 
@@ -377,9 +389,17 @@ public class SerializerTest extends AbstractTestUI {
             @Override
             public void sendSet(Set<Integer> intSet,
                     Set<Connector> connectorSet, Set<SimpleTestBean> beanSet) {
-                log.log("sendSet: " + intSet + ", "
-                        + connectorCollectionToString(connectorSet) + ", "
-                        + beanSet);
+                List<Integer> intList = new ArrayList<Integer>(intSet);
+                Collections.sort(intList);
+                List<Connector> connectorList = new ArrayList<Connector>(
+                        connectorSet);
+                Collections.sort(connectorList, new ConnectorComparator());
+                List<SimpleTestBean> beanList = new ArrayList<SimpleTestBean>(
+                        beanSet);
+                Collections.sort(beanList, new SimpleBeanComparator());
+                log.log("sendSet: " + intList + ", "
+                        + connectorCollectionToString(connectorList) + ", "
+                        + beanList);
             }
 
             @Override
@@ -448,6 +468,13 @@ public class SerializerTest extends AbstractTestUI {
             }
 
             @Override
+            public void sendJson(JsonValue value1, JsonValue value2,
+                    JsonString string) {
+                log.log("sendJson: " + value1.toJson() + ", " + value2.toJson()
+                        + ", " + string.toJson());
+            }
+
+            @Override
             public void log(String string) {
                 log.log(string);
 
@@ -458,7 +485,7 @@ public class SerializerTest extends AbstractTestUI {
 
     @Override
     protected String getTestDescription() {
-        return "Test for lots of different cases of encoding and decoding variuos data types";
+        return "Test for lots of different cases of encoding and decoding various data types";
     }
 
     @Override
@@ -466,4 +493,19 @@ public class SerializerTest extends AbstractTestUI {
         return Integer.valueOf(8655);
     }
 
+    private static class ConnectorComparator implements Comparator<Connector> {
+
+        @Override
+        public int compare(Connector o1, Connector o2) {
+            return o1.getConnectorId().compareTo(o2.getConnectorId());
+        }
+    }
+
+    private static class SimpleBeanComparator implements
+            Comparator<SimpleTestBean> {
+        @Override
+        public int compare(SimpleTestBean o1, SimpleTestBean o2) {
+            return Integer.valueOf(o1.getValue()).compareTo(o2.getValue());
+        }
+    }
 }

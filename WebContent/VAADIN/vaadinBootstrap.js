@@ -18,13 +18,19 @@
     	log = console.log;
     }
 	
-	var loadTheme = function(url) {
+	var loadTheme = function(url, version) {
 		if(!themesLoaded[url]) {
-			log("loadTheme", url);
+			log("loadTheme", url, version);
+			
+			var href = url + '/styles.css';
+			if (version) {
+				href += '?v=' + version;
+			}
+			
 			var stylesheet = document.createElement('link');
 			stylesheet.setAttribute('rel', 'stylesheet');
 			stylesheet.setAttribute('type', 'text/css');
-			stylesheet.setAttribute('href', url + "/styles.css");
+			stylesheet.setAttribute('href', href);
 			document.getElementsByTagName('head')[0].appendChild(stylesheet);
 			themesLoaded[url] = true;
 		}		
@@ -200,8 +206,10 @@
 			var bootstrapApp = function(mayDefer) {
 				var vaadinDir = getConfig('vaadinDir');
 				
+				var versionInfo = getConfig('versionInfo');
+				
 				var themeUri = vaadinDir + 'themes/' + getConfig('theme');
-				loadTheme(themeUri);
+				loadTheme(themeUri, versionInfo && versionInfo['vaadinVersion']);
 				
 				var widgetset = getConfig('widgetset');
 				var widgetsetUrl = getConfig('widgetsetUrl');

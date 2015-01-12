@@ -746,7 +746,7 @@ public class AbsoluteLayout extends AbstractLayout implements
     /**
      * Private method for writing position attributes
      * 
-     * @since
+     * @since 7.4
      * @param node
      *            target node
      * @param key

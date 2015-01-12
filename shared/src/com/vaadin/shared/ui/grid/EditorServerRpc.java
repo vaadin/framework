@@ -20,7 +20,7 @@ import com.vaadin.shared.communication.ServerRpc;
 /**
  * An RPC interface for the grid editor client-to-server communications.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public interface EditorServerRpc extends ServerRpc {
@@ -28,8 +28,8 @@ public interface EditorServerRpc extends ServerRpc {
     /**
      * Asks the server to open the editor and bind data to it. When a bind
      * request is sent, it must be acknowledged with a
-     * {@link EditorClientRpc#confirmBind() confirm call} before the client
-     * can open the editor.
+     * {@link EditorClientRpc#confirmBind() confirm call} before the client can
+     * open the editor.
      * 
      * @param rowIndex
      *            the index of the edited row

@@ -31,6 +31,7 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.embedded.EmbeddedConstants;
 
 public class VEmbedded extends HTML {
@@ -83,8 +84,8 @@ public class VEmbedded extends HTML {
          */
         if (uidl.hasAttribute("classid")) {
             html.append("classid=\""
-                    + Util.escapeAttribute(uidl.getStringAttribute("classid"))
-                    + "\" ");
+                    + WidgetUtil.escapeAttribute(uidl
+                            .getStringAttribute("classid")) + "\" ");
         } else {
             html.append("classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" ");
         }
@@ -99,8 +100,8 @@ public class VEmbedded extends HTML {
          */
         if (uidl.hasAttribute("codebase")) {
             html.append("codebase=\""
-                    + Util.escapeAttribute(uidl.getStringAttribute("codebase"))
-                    + "\" ");
+                    + WidgetUtil.escapeAttribute(uidl
+                            .getStringAttribute("codebase")) + "\" ");
         } else {
             html.append("codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
         }
@@ -111,29 +112,29 @@ public class VEmbedded extends HTML {
         String width = paintable.getState().width;
 
         // Add width and height
-        html.append("width=\"" + Util.escapeAttribute(width) + "\" ");
-        html.append("height=\"" + Util.escapeAttribute(height) + "\" ");
+        html.append("width=\"" + WidgetUtil.escapeAttribute(width) + "\" ");
+        html.append("height=\"" + WidgetUtil.escapeAttribute(height) + "\" ");
         html.append("type=\"application/x-shockwave-flash\" ");
 
         // Codetype
         if (uidl.hasAttribute("codetype")) {
             html.append("codetype=\""
-                    + Util.escapeAttribute(uidl.getStringAttribute("codetype"))
-                    + "\" ");
+                    + WidgetUtil.escapeAttribute(uidl
+                            .getStringAttribute("codetype")) + "\" ");
         }
 
         // Standby
         if (uidl.hasAttribute("standby")) {
             html.append("standby=\""
-                    + Util.escapeAttribute(uidl.getStringAttribute("standby"))
-                    + "\" ");
+                    + WidgetUtil.escapeAttribute(uidl
+                            .getStringAttribute("standby")) + "\" ");
         }
 
         // Archive
         if (uidl.hasAttribute("archive")) {
             html.append("archive=\""
-                    + Util.escapeAttribute(uidl.getStringAttribute("archive"))
-                    + "\" ");
+                    + WidgetUtil.escapeAttribute(uidl
+                            .getStringAttribute("archive")) + "\" ");
         }
 
         // End object tag
@@ -148,25 +149,25 @@ public class VEmbedded extends HTML {
         // Add parameters to OBJECT
         for (String name : parameters.keySet()) {
             html.append("<param ");
-            html.append("name=\"" + Util.escapeAttribute(name) + "\" ");
-            html.append("value=\"" + Util.escapeAttribute(parameters.get(name))
-                    + "\" ");
+            html.append("name=\"" + WidgetUtil.escapeAttribute(name) + "\" ");
+            html.append("value=\""
+                    + WidgetUtil.escapeAttribute(parameters.get(name)) + "\" ");
             html.append("/>");
         }
 
         // Build inner EMBED tag
         html.append("<embed ");
-        html.append("src=\"" + Util.escapeAttribute(getSrc(uidl, client))
+        html.append("src=\"" + WidgetUtil.escapeAttribute(getSrc(uidl, client))
                 + "\" ");
-        html.append("width=\"" + Util.escapeAttribute(width) + "\" ");
-        html.append("height=\"" + Util.escapeAttribute(height) + "\" ");
+        html.append("width=\"" + WidgetUtil.escapeAttribute(width) + "\" ");
+        html.append("height=\"" + WidgetUtil.escapeAttribute(height) + "\" ");
         html.append("type=\"application/x-shockwave-flash\" ");
 
         // Add the parameters to the Embed
         for (String name : parameters.keySet()) {
-            html.append(Util.escapeAttribute(name));
+            html.append(WidgetUtil.escapeAttribute(name));
             html.append("=");
-            html.append("\"" + Util.escapeAttribute(parameters.get(name))
+            html.append("\"" + WidgetUtil.escapeAttribute(parameters.get(name))
                     + "\"");
         }
 

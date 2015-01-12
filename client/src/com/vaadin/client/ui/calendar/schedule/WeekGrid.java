@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.DateTimeService;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VCalendar;
 import com.vaadin.shared.ui.calendar.DateConstants;
 
@@ -160,7 +160,7 @@ public class WeekGrid extends SimplePanel {
             // Otherwise the scroll wrapper is somehow too narrow = horizontal
             // scroll
             wrapper.setWidth(content.getOffsetWidth()
-                    + Util.getNativeScrollbarSize() + "px");
+                    + WidgetUtil.getNativeScrollbarSize() + "px");
 
             this.width = content.getOffsetWidth() - timebar.getOffsetWidth();
 
@@ -169,7 +169,7 @@ public class WeekGrid extends SimplePanel {
                     - timebar.getOffsetWidth();
 
             if (isVerticalScrollable() && width != -1) {
-                this.width = this.width - Util.getNativeScrollbarSize();
+                this.width = this.width - WidgetUtil.getNativeScrollbarSize();
             }
             updateCellWidths();
         }

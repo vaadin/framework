@@ -22,7 +22,7 @@ import elemental.json.JsonValue;
 /**
  * A renderer that represents a double values as a graphical progress bar.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public class ProgressBarRenderer extends AbstractRenderer<Double> {

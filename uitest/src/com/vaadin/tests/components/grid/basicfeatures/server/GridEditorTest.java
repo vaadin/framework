@@ -16,6 +16,7 @@
 package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -30,6 +31,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.GridElement.GridEditorElement;
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
@@ -37,6 +40,7 @@ public class GridEditorTest extends GridBasicFeaturesTest {
 
     @Before
     public void setUp() {
+        setDebug(true);
         openTestURL();
         selectMenuPath("Component", "Editor", "Enabled");
     }
@@ -164,5 +168,22 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         assertNotNull(getEditor());
         return getEditor().findElements(By.className("v-textfield"));
 
+    }
+
+    @Test
+    public void testInvalidEdition() {
+        selectMenuPath("Component", "Editor", "Edit item 5");
+        assertFalse(logContainsText("Exception occured, java.lang.IllegalStateException"));
+        GridEditorElement editor = getGridElement().getEditor();
+        WebElement intField = editor.getField(7);
+        intField.clear();
+        intField.sendKeys("banana phone");
+        editor.save();
+        assertTrue(
+                "No exception on invalid value.",
+                logContainsText("Exception occured, com.vaadin.data.fieldgroup.FieldGroup$CommitExceptionCommit failed"));
+        selectMenuPath("Component", "Editor", "Edit item 100");
+        assertFalse("Exception should not exist",
+                isElementPresent(NotificationElement.class));
     }
 }

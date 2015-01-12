@@ -17,6 +17,7 @@ package com.vaadin.event;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EventObject;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -64,6 +65,15 @@ public class SelectionEvent extends EventObject {
      */
     public Set<Object> getRemoved() {
         return Sets.difference(oldSelection, newSelection);
+    }
+
+    /**
+     * A {@link Collection} of all the itemIds that are currently selected.
+     * 
+     * @return a Collection of the itemIds that are currently selected
+     */
+    public Set<Object> getSelected() {
+        return Collections.unmodifiableSet(newSelection);
     }
 
     /**

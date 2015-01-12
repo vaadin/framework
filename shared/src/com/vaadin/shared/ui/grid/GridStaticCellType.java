@@ -18,7 +18,7 @@ package com.vaadin.shared.ui.grid;
 /**
  * Enumeration, specifying the content type of a Cell in a GridStaticSection.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public enum GridStaticCellType {

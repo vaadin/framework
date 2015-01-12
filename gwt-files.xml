@@ -185,10 +185,5 @@
             <!-- Server files from gwt-user -->
             <include name="com/google/gwt/*/server/**" />
         </fileset>
-        <!-- GWT Elemental -->
-        <fileset dir="${gwt.elemental.jar.files}">
-            <exclude name="META-INF/**" />
-            <exclude name="super/**" />
-        </fileset>
     </union>
 </project>

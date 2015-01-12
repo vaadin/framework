@@ -837,7 +837,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
             runPath = "/run-push";
         }
 
-        if (UI.class.isAssignableFrom(uiClass)) {
+        if (UI.class.isAssignableFrom(uiClass)
+                || UIProvider.class.isAssignableFrom(uiClass)) {
             return runPath + "/" + uiClass.getCanonicalName()
                     + (isDebug() ? "?debug" : "");
         } else if (LegacyApplication.class.isAssignableFrom(uiClass)) {

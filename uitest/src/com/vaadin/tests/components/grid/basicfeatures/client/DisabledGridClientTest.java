@@ -24,9 +24,9 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
-import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 
-public class DisabledGridClientTest extends GridBasicFeaturesTest {
+public class DisabledGridClientTest extends GridBasicClientFeaturesTest {
 
     @Before
     public void setUp() {

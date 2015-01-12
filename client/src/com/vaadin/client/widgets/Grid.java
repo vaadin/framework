@@ -59,7 +59,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.DeferredWorker;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.renderers.ComplexRenderer;
@@ -121,8 +121,8 @@ import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortHandler;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Escalator.AbstractRowContainer;
+import com.vaadin.client.widgets.Grid.Editor.State;
 import com.vaadin.shared.data.sort.SortDirection;
-import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -1186,8 +1186,10 @@ public class Grid<T> extends ResizeComposite implements
             int bodyTop = body.getElement().getAbsoluteTop();
             int wrapperTop = tableWrapper.getAbsoluteTop();
 
-            double width = Util.getRequiredWidthBoundingClientRectDouble(tr);
-            double height = Util.getRequiredHeightBoundingClientRectDouble(tr);
+            double width = WidgetUtil
+                    .getRequiredWidthBoundingClientRectDouble(tr);
+            double height = WidgetUtil
+                    .getRequiredHeightBoundingClientRectDouble(tr);
             setBounds(editorOverlay, tr.getOffsetLeft(), rowTop + bodyTop
                     - wrapperTop, width, height);
 
@@ -1276,8 +1278,10 @@ public class Grid<T> extends ResizeComposite implements
          */
         protected Element createCell(TableCellElement td) {
             DivElement cell = DivElement.as(DOM.createDiv());
-            double width = Util.getRequiredWidthBoundingClientRectDouble(td);
-            double height = Util.getRequiredHeightBoundingClientRectDouble(td);
+            double width = WidgetUtil
+                    .getRequiredWidthBoundingClientRectDouble(td);
+            double height = WidgetUtil
+                    .getRequiredHeightBoundingClientRectDouble(td);
             setBounds(cell, td.getOffsetLeft(), td.getOffsetTop(), width,
                     height);
             return cell;
@@ -2543,7 +2547,7 @@ public class Grid<T> extends ResizeComposite implements
          * Width of column in pixels as {@link #setWidth(double)} has been
          * called
          */
-        private double widthUser = GridColumnState.DEFAULT_COLUMN_WIDTH_PX;
+        private double widthUser = GridConstants.DEFAULT_COLUMN_WIDTH_PX;
 
         /**
          * Renderer for rendering a value into the cell
@@ -2552,11 +2556,11 @@ public class Grid<T> extends ResizeComposite implements
 
         private boolean sortable = false;
 
-        private String headerText = "";
+        private String headerCaption = "";
 
-        private double minimumWidthPx = GridColumnState.DEFAULT_MIN_WIDTH;
-        private double maximumWidthPx = GridColumnState.DEFAULT_MAX_WIDTH;
-        private int expandRatio = GridColumnState.DEFAULT_EXPAND_RATIO;
+        private double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
+        private double maximumWidthPx = GridConstants.DEFAULT_MAX_WIDTH;
+        private int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
 
         /**
          * Constructs a new column with a simple TextRenderer.
@@ -2568,15 +2572,15 @@ public class Grid<T> extends ResizeComposite implements
         /**
          * Constructs a new column with a simple TextRenderer.
          * 
-         * @param headerText
-         *            The header text for this column
+         * @param caption
+         *            The header caption for this column
          * 
          * @throws IllegalArgumentException
-         *             if given header text is null
+         *             if given header caption is null
          */
-        public Column(String headerText) throws IllegalArgumentException {
+        public Column(String caption) throws IllegalArgumentException {
             this();
-            setHeaderText(headerText);
+            setHeaderCaption(caption);
         }
 
         /**
@@ -2598,16 +2602,16 @@ public class Grid<T> extends ResizeComposite implements
          * 
          * @param renderer
          *            The renderer to use for rendering the cells
-         * @param headerText
-         *            The header text for this column
+         * @param caption
+         *            The header caption for this column
          * 
          * @throws IllegalArgumentException
-         *             if given Renderer or header text is null
+         *             if given Renderer or header caption is null
          */
-        public Column(String headerText, Renderer<? super C> renderer)
+        public Column(String caption, Renderer<? super C> renderer)
                 throws IllegalArgumentException {
             this(renderer);
-            setHeaderText(headerText);
+            setHeaderCaption(caption);
         }
 
         /**
@@ -2634,23 +2638,22 @@ public class Grid<T> extends ResizeComposite implements
         }
 
         /**
-         * Sets a header text for this column.
+         * Sets a header caption for this column.
          * 
-         * @param headerText
-         *            The header text for this column
+         * @param caption
+         *            The header caption for this column
          * @return the column itself
          * 
          * @throws IllegalArgumentException
-         *             if given header text is null
+         *             if given caption text is null
          */
-        public Column<C, T> setHeaderText(String headerText) {
-            if (headerText == null) {
-                throw new IllegalArgumentException(
-                        "Header text cannot be null.");
+        public Column<C, T> setHeaderCaption(String caption) {
+            if (caption == null) {
+                throw new IllegalArgumentException("Caption cannot be null.");
             }
 
-            if (!this.headerText.equals(headerText)) {
-                this.headerText = headerText;
+            if (!this.headerCaption.equals(caption)) {
+                this.headerCaption = caption;
                 if (grid != null) {
                     updateHeader();
                 }
@@ -2662,7 +2665,7 @@ public class Grid<T> extends ResizeComposite implements
         private void updateHeader() {
             HeaderRow row = grid.getHeader().getDefaultRow();
             if (row != null) {
-                row.getCell(this).setText(headerText);
+                row.getCell(this).setText(headerCaption);
             }
         }
 
@@ -2810,8 +2813,8 @@ public class Grid<T> extends ResizeComposite implements
         public String toString() {
             String details = "";
 
-            if (headerText != null && !headerText.isEmpty()) {
-                details += "header:\"" + headerText + "\" ";
+            if (headerCaption != null && !headerCaption.isEmpty()) {
+                details += "header:\"" + headerCaption + "\" ";
             } else {
                 details += "header:empty ";
             }
@@ -3170,7 +3173,7 @@ public class Grid<T> extends ResizeComposite implements
                 Renderer renderer = findRenderer(cell);
                 if (renderer instanceof WidgetRenderer) {
                     try {
-                        Widget w = Util.findWidget(cell.getElement()
+                        Widget w = WidgetUtil.findWidget(cell.getElement()
                                 .getFirstChildElement(), Widget.class);
                         if (w != null) {
 
@@ -3400,7 +3403,7 @@ public class Grid<T> extends ResizeComposite implements
 
         editor.setGrid(this);
 
-        setSelectionMode(SelectionMode.MULTI);
+        setSelectionMode(SelectionMode.SINGLE);
 
         escalator.addScrollHandler(new ScrollHandler() {
             @Override
@@ -3819,7 +3822,7 @@ public class Grid<T> extends ResizeComposite implements
     /**
      * Returns the current default row of the header section. The default row is
      * a special header row providing a user interface for sorting columns.
-     * Setting a header text for column updates cells in the default header.
+     * Setting a header caption for column updates cells in the default header.
      * 
      * @return the default row or null if no default row set
      */
@@ -4517,7 +4520,7 @@ public class Grid<T> extends ResizeComposite implements
     }
 
     private boolean isElementInChildWidget(Element e) {
-        Widget w = Util.findWidget(e, null);
+        Widget w = WidgetUtil.findWidget(e, null);
 
         if (w == this) {
             return false;
@@ -4768,6 +4771,20 @@ public class Grid<T> extends ResizeComposite implements
             container = escalator.getBody();
         } else if (type.equalsIgnoreCase("footer")) {
             container = escalator.getFooter();
+        } else if (type.equalsIgnoreCase("editor")) {
+            if (editor.getState() != State.ACTIVE) {
+                // Editor is not there.
+                return null;
+            }
+
+            if (indices.length == 0) {
+                return DOM.asOld(editor.editorOverlay);
+            } else if (indices.length == 1 && indices[0] < columns.size()) {
+                escalator.scrollToColumn(indices[0], ScrollDestination.ANY, 0);
+                return editor.getWidget(columns.get(indices[0])).getElement();
+            } else {
+                return null;
+            }
         }
 
         if (null != container) {
@@ -4853,6 +4870,22 @@ public class Grid<T> extends ResizeComposite implements
                         + (containerRow ? "]" : "][" + cell.getColumn() + "]");
             }
         }
+
+        // Check if subelement is part of editor.
+        if (editor.getState() == State.ACTIVE) {
+            if (editor.editorOverlay.isOrHasChild(subElement)) {
+                int i = 0;
+                for (Column<?, T> column : columns) {
+                    if (editor.getWidget(column).getElement()
+                            .isOrHasChild(subElement)) {
+                        return "editor[" + i + "]";
+                    }
+                    ++i;
+                }
+                return "editor";
+            }
+        }
+
         return null;
     }
 

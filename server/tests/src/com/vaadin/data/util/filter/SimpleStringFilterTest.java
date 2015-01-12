@@ -3,7 +3,7 @@ package com.vaadin.data.util.filter;
 import org.junit.Assert;
 
 public class SimpleStringFilterTest extends
-        AbstractFilterTest<SimpleStringFilter> {
+        AbstractFilterTestBase<SimpleStringFilter> {
 
     protected static TestItem<String, String> createTestItem() {
         return new TestItem<String, String>("abcde", "TeSt");

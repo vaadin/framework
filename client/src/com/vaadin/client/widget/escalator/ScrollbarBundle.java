@@ -31,7 +31,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.DeferredWorker;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.widget.grid.events.ScrollEvent;
 import com.vaadin.client.widget.grid.events.ScrollHandler;
 
@@ -490,7 +490,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         double oldScrollPos = scrollPos;
         scrollPos = Math.max(0, Math.min(maxScrollPos, truncate(px)));
 
-        if (!Util.pixelValuesEqual(oldScrollPos, scrollPos)) {
+        if (!WidgetUtil.pixelValuesEqual(oldScrollPos, scrollPos)) {
             if (isInvisibleScrollbar) {
                 invisibleScrollbarTemporaryResizer.show();
             }

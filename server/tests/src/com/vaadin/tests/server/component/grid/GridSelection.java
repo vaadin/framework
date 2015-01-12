@@ -99,8 +99,8 @@ public class GridSelection {
     }
 
     @Test
-    public void defaultSelectionModeIsMulti() {
-        assertTrue(grid.getSelectionModel() instanceof SelectionModel.Multi);
+    public void defaultSelectionModeIsSingle() {
+        assertTrue(grid.getSelectionModel() instanceof SelectionModel.Single);
     }
 
     @Test(expected = IllegalStateException.class)

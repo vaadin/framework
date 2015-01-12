@@ -4,7 +4,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 
-public class VerticalLayoutTest extends AbstractIndexedLayoutTest {
+public class VerticalLayoutTest extends AbstractIndexedLayoutTestBase {
 
     @Override
     protected Layout createLayout() {

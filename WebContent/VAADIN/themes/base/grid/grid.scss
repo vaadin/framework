@@ -191,7 +191,19 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
       left: 0;
       border: $v-grid-cell-focused-border;
       display: none;
+      pointer-events: none;
     }
+    
+    // IE 8-10 apply "pointer-events" only to SVG elements. 
+    // Using an empty SVG instead of an empty text node makes IE
+    // obey the "pointer-events: none" and forwards click events 
+    // to the underlying element. The data decodes to:
+    // <svg xmlns="http://www.w3.org/2000/svg"></svg>
+    .ie8 &:before,
+    .ie9 &:before,
+    .ie10 &:before {
+      content: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==);
+    } 
   }
 
   .#{$primaryStyleName}:focus .#{$primaryStyleName}-cell-focused:before {

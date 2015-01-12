@@ -25,7 +25,7 @@ import elemental.json.JsonObject;
 /**
  * A connector for {@link ButtonRenderer}.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.renderer.ButtonRenderer.class)
