@@ -56,14 +56,17 @@ public class NativeSelect extends AbstractSelect implements
 
     public NativeSelect(String caption, Collection<?> options) {
         super(caption, options);
+        registerRpc(focusBlurRpc);
     }
 
     public NativeSelect(String caption, Container dataSource) {
         super(caption, dataSource);
+        registerRpc(focusBlurRpc);
     }
 
     public NativeSelect(String caption) {
         super(caption);
+        registerRpc(focusBlurRpc);
     }
 
     /**
