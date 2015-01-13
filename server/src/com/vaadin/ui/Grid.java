@@ -48,7 +48,6 @@ import com.vaadin.data.Property;
 import com.vaadin.data.RpcDataProviderExtension;
 import com.vaadin.data.RpcDataProviderExtension.DataProviderKeyMapper;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.BindException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroupFieldFactory;
 import com.vaadin.data.sort.Sort;
@@ -3748,7 +3747,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         }
 
         sortOrder.addAll(order);
-        sort(false);
+        sort(userOriginated);
     }
 
     /**

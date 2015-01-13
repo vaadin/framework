@@ -17,18 +17,27 @@ package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
+import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
+@TestCategory("grid")
 public class GridSortingTest extends GridBasicFeaturesTest {
 
     private static class SortInfo {
@@ -68,6 +77,7 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         // String.
         // First cells for first 3 rows are (9, 0), (99, 0) and (999, 0)
         sortBy("Column 9, DESC");
+        assertLastSortIsUserOriginated(false);
 
         // Verify that programmatic sorting calls are identified as originating
         // from API
@@ -135,6 +145,8 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         // Click header twice to sort descending
         GridCellElement header = grid.getHeaderCell(0, 9);
         header.click();
+        assertLastSortIsUserOriginated(true);
+
         assertColumnsAreSortedAs(_(9, 1, SortDirection.ASCENDING));
         grid.getHeaderCell(0, 9).click();
         assertColumnsAreSortedAs(_(9, 1, SortDirection.DESCENDING));
@@ -211,6 +223,7 @@ public class GridSortingTest extends GridBasicFeaturesTest {
 
         // Sort ASCENDING on first column
         sendKey(Keys.ENTER);
+        assertLastSortIsUserOriginated(true);
         assertColumnsAreSortedAs(_(1, SortDirection.ASCENDING));
 
         // Move to next column
@@ -330,5 +343,33 @@ public class GridSortingTest extends GridBasicFeaturesTest {
 
     private void sortBy(String column) {
         selectMenuPath("Component", "State", "Sort by column", column);
+    }
+
+    private void assertLastSortIsUserOriginated(boolean isUserOriginated) {
+        List<WebElement> userOriginatedMessages = getDriver()
+                .findElements(
+                        By.xpath("//*[contains(text(),'SortOrderChangeEvent: isUserOriginated')]"));
+
+        Collections.sort(userOriginatedMessages, new Comparator<WebElement>() {
+            @Override
+            public int compare(WebElement o1, WebElement o2) {
+                return o1.getText().compareTo(o2.getText());
+            }
+        });
+
+        String newestEntry = userOriginatedMessages.get(
+                userOriginatedMessages.size() - 1).getText();
+
+        String[] parts = newestEntry.split(" ");
+        boolean wasUserOriginated = Boolean
+                .parseBoolean(parts[parts.length - 1]);
+        if (isUserOriginated) {
+            assertTrue("expected the sort to be user originated, but wasn't",
+                    wasUserOriginated);
+        } else {
+            assertFalse(
+                    "expected the sort not to be user originated, but it was",
+                    wasUserOriginated);
+        }
     }
 }
