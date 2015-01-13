@@ -517,6 +517,11 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             updateFooterFromState(getState().footer);
         }
 
+        if (stateChangeEvent.hasPropertyChanged("sortColumns")
+                || stateChangeEvent.hasPropertyChanged("sortDirs")) {
+            onSortStateChange();
+        }
+
         if (stateChangeEvent.hasPropertyChanged("editorEnabled")) {
             getWidget().setEditorEnabled(getState().editorEnabled);
         }
@@ -837,7 +842,6 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     }
 
-    @OnStateChange({ "sortColumns", "sortDirs" })
     private void onSortStateChange() {
         List<SortOrder> sortOrder = new ArrayList<SortOrder>();
 

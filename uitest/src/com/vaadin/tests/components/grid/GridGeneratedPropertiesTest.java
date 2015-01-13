@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -68,5 +69,22 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
         bazHeader.click();
         assertTrue("Column baz was not sorted descending", bazHeader
                 .getAttribute("class").contains("sort-desc"));
+    }
+
+    @Test
+    public void testInitialSorting() {
+        // Grid is sorted in this case by one visible and one nonexistent
+        // column. There should be no sort indicator.
+        setDebug(true);
+        openTestURL();
+
+        GridElement grid = $(GridElement.class).first();
+
+        GridCellElement kmHeader = grid.getHeaderCell(0, 1);
+        assertFalse("Column km was unexpectedly sorted",
+                kmHeader.getAttribute("class").contains("sort-asc")
+                        || kmHeader.getAttribute("class").contains("sort-desc"));
+        assertFalse("Unexpected client-side exception was visible",
+                isElementPresent(NotificationElement.class));
     }
 }

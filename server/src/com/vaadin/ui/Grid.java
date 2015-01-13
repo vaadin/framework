@@ -3638,9 +3638,18 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * Sets the current sort order using the fluid Sort API. Read the
      * documentation for {@link Sort} for more information.
+     * <p>
+     * <em>Note:</em> Sorting by a property that has no column in Grid will hide
+     * all possible sorting indicators.
      * 
      * @param s
      *            a sort instance
+     * 
+     * @throws IllegalStateException
+     *             if container is not sortable (does not implement
+     *             Container.Sortable)
+     * @throws IllegalArgumentException
+     *             if trying to sort by non-existing property
      */
     public void sort(Sort s) {
         setSortOrder(s.build());
@@ -3648,9 +3657,18 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     /**
      * Sort this Grid in ascending order by a specified property.
+     * <p>
+     * <em>Note:</em> Sorting by a property that has no column in Grid will hide
+     * all possible sorting indicators.
      * 
      * @param propertyId
      *            a property ID
+     * 
+     * @throws IllegalStateException
+     *             if container is not sortable (does not implement
+     *             Container.Sortable)
+     * @throws IllegalArgumentException
+     *             if trying to sort by non-existing property
      */
     public void sort(Object propertyId) {
         sort(propertyId, SortDirection.ASCENDING);
@@ -3658,11 +3676,20 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     /**
      * Sort this Grid in user-specified {@link SortOrder} by a property.
+     * <p>
+     * <em>Note:</em> Sorting by a property that has no column in Grid will hide
+     * all possible sorting indicators.
      * 
      * @param propertyId
      *            a property ID
      * @param direction
      *            a sort order value (ascending/descending)
+     * 
+     * @throws IllegalStateException
+     *             if container is not sortable (does not implement
+     *             Container.Sortable)
+     * @throws IllegalArgumentException
+     *             if trying to sort by non-existing property
      */
     public void sort(Object propertyId, SortDirection direction) {
         sort(Sort.by(propertyId, direction));
@@ -3677,20 +3704,26 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
-     * Sets the sort order to use. This method throws
-     * {@link IllegalStateException} if the attached container is not a
-     * {@link Container.Sortable}, and {@link IllegalArgumentException} if a
-     * property in the list is not recognized by the container, or if the
-     * 'order' parameter is null.
+     * Sets the sort order to use.
+     * <p>
+     * <em>Note:</em> Sorting by a property that has no column in Grid will hide
+     * all possible sorting indicators.
      * 
      * @param order
      *            a sort order list.
+     * 
+     * @throws IllegalStateException
+     *             if container is not sortable (does not implement
+     *             Container.Sortable)
+     * @throws IllegalArgumentException
+     *             if order is null or trying to sort by non-existing property
      */
     public void setSortOrder(List<SortOrder> order) {
         setSortOrder(order, false);
     }
 
-    private void setSortOrder(List<SortOrder> order, boolean userOriginated) {
+    private void setSortOrder(List<SortOrder> order, boolean userOriginated)
+            throws IllegalStateException, IllegalArgumentException {
         if (!(getContainerDataSource() instanceof Container.Sortable)) {
             throw new IllegalStateException(
                     "Attached container is not sortable (does not implement Container.Sortable)");
@@ -3740,15 +3773,12 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             Object[] propertyIds = new Object[items];
             boolean[] directions = new boolean[items];
 
-            String[] columnKeys = new String[items];
             SortDirection[] stateDirs = new SortDirection[items];
 
             for (int i = 0; i < items; ++i) {
                 SortOrder order = sortOrder.get(i);
 
-                columnKeys[i] = this.columnKeys.key(order.getPropertyId());
                 stateDirs[i] = order.getDirection();
-
                 propertyIds[i] = order.getPropertyId();
                 switch (order.getDirection()) {
                 case ASCENDING:
@@ -3768,8 +3798,18 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             fireEvent(new SortEvent(this, new ArrayList<SortOrder>(sortOrder),
                     userOriginated));
 
-            getState().sortColumns = columnKeys;
-            getState(false).sortDirs = stateDirs;
+            if (columns.keySet().containsAll(Arrays.asList(propertyIds))) {
+                String[] columnKeys = new String[items];
+                for (int i = 0; i < items; ++i) {
+                    columnKeys[i] = this.columnKeys.key(propertyIds[i]);
+                }
+                getState().sortColumns = columnKeys;
+                getState(false).sortDirs = stateDirs;
+            } else {
+                // Not all sorted properties are in Grid. Remove any indicators.
+                getState().sortColumns = new String[] {};
+                getState(false).sortDirs = new SortDirection[] {};
+            }
         } else {
             throw new IllegalStateException(
                     "Container is not sortable (does not implement Container.Sortable)");

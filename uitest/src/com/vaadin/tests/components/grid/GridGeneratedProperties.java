@@ -27,6 +27,7 @@ import com.vaadin.data.util.PropertyValueGenerator;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -130,6 +131,7 @@ public class GridGeneratedProperties extends AbstractTestUI {
                 });
 
         addComponent(filterButton);
+        grid.sort(Sort.by("km").then("bar", SortDirection.DESCENDING));
     }
 
     private Indexed createContainer() {
