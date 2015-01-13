@@ -1916,16 +1916,18 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                         final Element cellElem = DOM
                                 .createElement(getCellElementTagName());
                         cellElem.setClassName(getStylePrimaryName() + "-cell");
-                        cellElem.setInnerHTML("foo");
+                        cellElem.setInnerText("Ij");
 
                         detectionTr.appendChild(cellElem);
                         root.appendChild(detectionTr);
-                        defaultRowHeight = Math.max(1,
-                                cellElem.getOffsetHeight());
+                        double boundingHeight = WidgetUtil
+                                .getRequiredHeightBoundingClientRectDouble(cellElem);
+                        defaultRowHeight = Math.max(1.0d, boundingHeight);
                         root.removeChild(detectionTr);
 
                         if (root.hasChildNodes()) {
                             reapplyDefaultRowHeights();
+                            applyHeightByRows();
                         }
 
                         defaultRowHeightShouldBeAutodetected = false;
