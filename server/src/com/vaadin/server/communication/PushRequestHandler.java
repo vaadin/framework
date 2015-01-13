@@ -101,7 +101,9 @@ public class PushRequestHandler implements RequestHandler,
                     ApplicationConfig.PROPERTY_SESSION_SUPPORT, "true");
             atmosphere.addInitParameter(ApplicationConfig.MESSAGE_DELIMITER,
                     String.valueOf(PushConstants.MESSAGE_DELIMITER));
-
+        atmosphere.addInitParameter(
+                ApplicationConfig.DROP_ACCESS_CONTROL_ALLOW_ORIGIN_HEADER,
+                "false");
             final String bufferSize = String
                     .valueOf(PushConstants.WEBSOCKET_BUFFER_SIZE);
             atmosphere.addInitParameter(
