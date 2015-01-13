@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
@@ -363,17 +365,33 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         registerRpc(GridClientRpc.class, new GridClientRpc() {
             @Override
             public void scrollToStart() {
-                getWidget().scrollToStart();
+                Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        getWidget().scrollToStart();
+                    }
+                });
             }
 
             @Override
             public void scrollToEnd() {
-                getWidget().scrollToEnd();
+                Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        getWidget().scrollToEnd();
+                    }
+                });
             }
 
             @Override
-            public void scrollToRow(int row, ScrollDestination destination) {
-                getWidget().scrollToRow(row, destination);
+            public void scrollToRow(final int row,
+                    final ScrollDestination destination) {
+                Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        getWidget().scrollToRow(row, destination);
+                    }
+                });
             }
         });
 
