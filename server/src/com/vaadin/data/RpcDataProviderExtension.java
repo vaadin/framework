@@ -129,9 +129,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
             List<?> newItemIds = container.getItemIds(added.getStart(),
                     added.length());
-
-            for (int i = 0; i < newItemIds.size(); i++) {
-
+            Integer index = added.getStart();
+            for (Object itemId : newItemIds) {
                 /*
                  * We might be in a situation we have an index <-> itemId entry
                  * already. This happens when something was selected, scrolled
@@ -139,27 +138,25 @@ public class RpcDataProviderExtension extends AbstractExtension {
                  * unnecessary to overwrite it in that case.
                  * 
                  * Fun thought: considering branch prediction, it _might_ even
-                 * be a bit faster to simply always run the code beyond this
+                 * be a bit faster to simply always run the code inside this
                  * if-state. But it sounds too stupid (and most often too
                  * insignificant) to try out.
                  */
-                final Integer index = Integer.valueOf(i + added.getStart());
-                if (indexToItemId.containsKey(index)) {
-                    continue;
-                }
+                if (!indexToItemId.containsKey(index)) {
+                    /*
+                     * We might be in a situation where we have an itemId <->
+                     * key entry already, but no index for it. This happens when
+                     * something that is out of view is selected
+                     * programmatically. In that case, we only want to add an
+                     * index for that entry, and not overwrite the key.
+                     */
+                    if (!itemIdToKey.containsKey(itemId)) {
+                        itemIdToKey.put(itemId, nextKey());
+                    }
 
-                /*
-                 * We might be in a situation where we have an itemId <-> key
-                 * entry already, but no index for it. This happens when
-                 * something that is out of view is selected programmatically.
-                 * In that case, we only want to add an index for that entry,
-                 * and not overwrite the key.
-                 */
-                final Object itemId = newItemIds.get(i);
-                if (!itemIdToKey.containsKey(itemId)) {
-                    itemIdToKey.put(itemId, nextKey());
+                    indexToItemId.forcePut(index, itemId);
                 }
-                indexToItemId.forcePut(index, itemId);
+                index++;
             }
         }
 
