@@ -24,11 +24,14 @@ import static org.junit.Assert.assertTrue;
 
 import org.easymock.EasyMock;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.MockVaadinSession;
 import com.vaadin.server.VaadinService;
@@ -41,6 +44,8 @@ public class GridEditorTest {
 
     private static final Object PROPERTY_NAME = "name";
     private static final Object PROPERTY_AGE = "age";
+    private static final String DEFAULT_NAME = "Some Valid Name";
+    private static final Integer DEFAULT_AGE = 25;
     private static final Object ITEM_ID = new Object();
 
     private Grid grid;
@@ -57,8 +62,8 @@ public class GridEditorTest {
                 Integer.valueOf(-1));
 
         Item item = container.addItem(ITEM_ID);
-        item.getItemProperty(PROPERTY_NAME).setValue("Some Valid Name");
-        item.getItemProperty(PROPERTY_AGE).setValue(Integer.valueOf(25));
+        item.getItemProperty(PROPERTY_NAME).setValue(DEFAULT_NAME);
+        item.getItemProperty(PROPERTY_AGE).setValue(DEFAULT_AGE);
 
         grid = new Grid(container);
 
@@ -125,6 +130,57 @@ public class GridEditorTest {
     public void editItem() throws Exception {
         startEdit();
         assertEquals(ITEM_ID, grid.getEditedItemId());
+        assertEquals(getEditedItem(), grid.getEditorFieldGroup()
+                .getItemDataSource());
+
+        assertEquals(DEFAULT_NAME, grid.getEditorField(PROPERTY_NAME)
+                .getValue());
+        assertEquals(String.valueOf(DEFAULT_AGE),
+                grid.getEditorField(PROPERTY_AGE).getValue());
+    }
+
+    @Test
+    public void saveEditor() throws Exception {
+        startEdit();
+        TextField field = (TextField) grid.getEditorField(PROPERTY_NAME);
+
+        field.setValue("New Name");
+        assertEquals(DEFAULT_NAME, field.getPropertyDataSource().getValue());
+
+        grid.saveEditor();
+        assertTrue(grid.isEditorActive());
+        assertFalse(field.isModified());
+        assertEquals("New Name", field.getValue());
+        assertEquals("New Name", getEditedProperty(PROPERTY_NAME).getValue());
+    }
+
+    @Test
+    public void saveEditorCommitFail() throws Exception {
+        startEdit();
+
+        ((TextField) grid.getEditorField(PROPERTY_AGE)).setValue("Invalid");
+        try {
+            // Manual fail instead of @Test(expected=...) to check it is
+            // saveEditor that fails and not setValue
+            grid.saveEditor();
+            Assert.fail("CommitException expected when saving an invalid field value");
+        } catch (CommitException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void cancelEditor() throws Exception {
+        startEdit();
+        TextField field = (TextField) grid.getEditorField(PROPERTY_NAME);
+        field.setValue("New Name");
+
+        grid.cancelEditor();
+        assertFalse(grid.isEditorActive());
+        assertNull(grid.getEditedItemId());
+        assertFalse(field.isModified());
+        assertEquals(DEFAULT_NAME, field.getValue());
+        assertEquals(DEFAULT_NAME, field.getPropertyDataSource().getValue());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -205,5 +261,14 @@ public class GridEditorTest {
     private void startEdit() {
         grid.setEditorEnabled(true);
         grid.editItem(ITEM_ID);
+    }
+
+    private Item getEditedItem() {
+        assertNotNull(grid.getEditedItemId());
+        return grid.getContainerDataSource().getItem(grid.getEditedItemId());
+    }
+
+    private Property<?> getEditedProperty(Object propertyId) {
+        return getEditedItem().getItemProperty(PROPERTY_NAME);
     }
 }

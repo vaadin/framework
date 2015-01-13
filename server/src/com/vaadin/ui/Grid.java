@@ -4457,7 +4457,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
-     * Cancels the currently active edit if any.
+     * Cancels the currently active edit if any. Hides the editor and discards
+     * possible unsaved changes in the editor fields.
      */
     public void cancelEditor() {
         if (isEditorActive()) {
@@ -4469,6 +4470,7 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
 
     protected void doCancelEditor() {
         editedItemId = null;
+        editorFieldGroup.discard();
     }
 
     void resetEditor() {
