@@ -2447,28 +2447,30 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             Collection<?> properties = new HashSet<Object>(event.getContainer()
                     .getContainerPropertyIds());
 
-            // Cleanup columns that are no longer in grid
-            List<Object> removedColumns = new LinkedList<Object>();
-            for (Object columnId : columns.keySet()) {
-                if (!properties.contains(columnId)) {
-                    removedColumns.add(columnId);
+            // Find columns that need to be removed.
+            List<Column> removedColumns = new LinkedList<Column>();
+            for (Object propertyId : columns.keySet()) {
+                if (!properties.contains(propertyId)) {
+                    removedColumns.add(getColumn(propertyId));
                 }
             }
-            for (Object columnId : removedColumns) {
-                removeColumn(columnId);
-                columnKeys.remove(columnId);
+
+            // Actually remove columns.
+            for (Column column : removedColumns) {
+                Object propertyId = column.getPropertyId();
+                internalRemoveColumn(propertyId);
+                columnKeys.remove(propertyId);
             }
-            datasourceExtension.propertiesRemoved(removedColumns);
+            datasourceExtension.columnsRemoved(removedColumns);
 
             // Add new columns
-            HashSet<Object> addedPropertyIds = new HashSet<Object>();
+            List<Column> addedColumns = new LinkedList<Column>();
             for (Object propertyId : properties) {
                 if (!columns.containsKey(propertyId)) {
-                    appendColumn(propertyId);
-                    addedPropertyIds.add(propertyId);
+                    addedColumns.add(appendColumn(propertyId));
                 }
             }
-            datasourceExtension.propertiesAdded(addedPropertyIds);
+            datasourceExtension.columnsAdded(addedColumns);
 
             if (getFrozenColumnCount() > columns.size()) {
                 setFrozenColumnCount(columns.size());
@@ -2950,7 +2952,14 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
         } else {
             addColumnProperty(propertyId, String.class, "");
         }
-        return getColumn(propertyId);
+
+        // Inform the data provider of this new column.
+        Column column = getColumn(propertyId);
+        List<Column> addedColumns = new ArrayList<Column>();
+        addedColumns.add(column);
+        datasourceExtension.columnsAdded(addedColumns);
+
+        return column;
     }
 
     /**
@@ -3012,10 +3021,12 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * Removes all columns from this Grid.
      */
     public void removeAllColumns() {
+        List<Column> removed = new ArrayList<Column>(columns.values());
         Set<Object> properties = new HashSet<Object>(columns.keySet());
         for (Object propertyId : properties) {
             removeColumn(propertyId);
         }
+        datasourceExtension.columnsRemoved(removed);
     }
 
     /**
@@ -3093,6 +3104,13 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      *            The property id of column to be removed
      */
     public void removeColumn(Object propertyId) {
+        List<Column> removed = new ArrayList<Column>();
+        removed.add(getColumn(propertyId));
+        internalRemoveColumn(propertyId);
+        datasourceExtension.columnsRemoved(removed);
+    }
+
+    private void internalRemoveColumn(Object propertyId) {
         setEditorField(propertyId, null);
         header.removeColumn(propertyId);
         footer.removeColumn(propertyId);
