@@ -68,8 +68,9 @@ public class LoadingIndicatorTest extends GridBasicFeaturesTest {
         Thread.sleep(2000);
 
         String firstLogRow = getLogRow(0);
-        Assert.assertTrue("Last log message was not the fourth message: "
-                + firstLogRow, firstLogRow.startsWith("4. Requested items"));
+        Assert.assertTrue(
+                "Last log message should be number 6: " + firstLogRow,
+                firstLogRow.startsWith("6. Requested items"));
     }
 
     private boolean isLoadingIndicatorVisible() {

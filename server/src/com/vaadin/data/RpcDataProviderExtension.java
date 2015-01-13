@@ -96,15 +96,14 @@ public class RpcDataProviderExtension extends AbstractExtension {
             // private implementation
         }
 
-        void preActiveRowsChange(Range newActiveRange, int firstNewIndex,
-                List<?> itemIds) {
+        void setActiveRange(Range newActiveRange) {
             final Range[] removed = activeRange.partitionWith(newActiveRange);
             final Range[] added = newActiveRange.partitionWith(activeRange);
 
             removeActiveRows(removed[0]);
             removeActiveRows(removed[2]);
-            addActiveRows(added[0], firstNewIndex, itemIds);
-            addActiveRows(added[2], firstNewIndex, itemIds);
+            addActiveRows(added[0]);
+            addActiveRows(added[2]);
 
             activeRange = newActiveRange;
         }
@@ -121,10 +120,17 @@ public class RpcDataProviderExtension extends AbstractExtension {
             }
         }
 
-        private void addActiveRows(final Range added, int firstNewIndex,
-                List<?> newItemIds) {
+        private void addActiveRows(Range added) {
+            if (added.isEmpty()) {
+                // Some container.getItemIds() implementations just might be
+                // expensive even for an empty range, so bail out early
+                return;
+            }
 
-            for (int i = added.getStart(); i < added.getEnd(); i++) {
+            List<?> newItemIds = container.getItemIds(added.getStart(),
+                    added.length());
+
+            for (int i = 0; i < newItemIds.size(); i++) {
 
                 /*
                  * We might be in a situation we have an index <-> itemId entry
@@ -137,8 +143,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
                  * if-state. But it sounds too stupid (and most often too
                  * insignificant) to try out.
                  */
-                final Integer ii = Integer.valueOf(i);
-                if (indexToItemId.containsKey(ii)) {
+                final Integer index = Integer.valueOf(i + added.getStart());
+                if (indexToItemId.containsKey(index)) {
                     continue;
                 }
 
@@ -149,11 +155,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
                  * In that case, we only want to add an index for that entry,
                  * and not overwrite the key.
                  */
-                final Object itemId = newItemIds.get(i - firstNewIndex);
+                final Object itemId = newItemIds.get(i);
                 if (!itemIdToKey.containsKey(itemId)) {
                     itemIdToKey.put(itemId, nextKey());
                 }
-                indexToItemId.forcePut(ii, itemId);
+                indexToItemId.forcePut(index, itemId);
             }
         }
 
@@ -757,10 +763,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
             active = active.combineWith(cached);
         }
 
-        List<?> itemIds = RpcDataProviderExtension.this.container.getItemIds(
-                firstRowToPush, numberOfRows);
-        keyMapper.preActiveRowsChange(active, firstRowToPush, itemIds);
+        keyMapper.setActiveRange(active);
 
+        List<?> itemIds = container.getItemIds(firstRowToPush, numberOfRows);
         JsonArray rows = Json.createArray();
         for (int i = 0; i < itemIds.size(); ++i) {
             rows.set(i, getRowData(getGrid().getColumns(), itemIds.get(i)));

@@ -30,9 +30,9 @@ public class GridRowAddRemoveTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Body rows", "Remove all rows");
         selectMenuPath("Component", "Body rows", "Add 18 rows");
 
-        Assert.assertEquals(
+        Assert.assertTrue(
                 "All added rows should be fetched in the same round trip.",
-                "2. Requested items 0 - 18", getLogRow(0));
+                logContainsText("Requested items 0 - 18"));
     }
 
     @Test

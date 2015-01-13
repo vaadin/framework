@@ -59,8 +59,7 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Editor", "Enabled");
         selectMenuPath("Component", "Editor", "Edit item 5");
         assertEditorClosed();
-        boolean thrown = getLogRow(0).startsWith(
-                "5. Exception occured, java.lang.IllegalStateException");
+        boolean thrown = logContainsText("Exception occured, java.lang.IllegalStateException");
         assertTrue("IllegalStateException thrown", thrown);
     }
 
@@ -69,8 +68,7 @@ public class GridEditorTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Editor", "Edit item 5");
         selectMenuPath("Component", "Editor", "Enabled");
         assertEditorOpen();
-        boolean thrown = getLogRow(0).startsWith(
-                "5. Exception occured, java.lang.IllegalStateException");
+        boolean thrown = logContainsText("Exception occured, java.lang.IllegalStateException");
         assertTrue("IllegalStateException thrown", thrown);
     }
 

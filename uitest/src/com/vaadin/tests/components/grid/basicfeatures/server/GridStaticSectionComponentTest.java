@@ -35,7 +35,8 @@ public class GridStaticSectionComponentTest extends GridBasicFeaturesTest {
 
         getGridElement().$(ButtonElement.class).first().click();
 
-        assertEquals("3. Button clicked!", getLogRow(0));
+        assertTrue("Button click should be logged",
+                logContainsText("Button clicked!"));
     }
 
     @Test
@@ -49,7 +50,8 @@ public class GridStaticSectionComponentTest extends GridBasicFeaturesTest {
 
         getGridElement().$(ButtonElement.class).first().click();
 
-        assertEquals("5. Button clicked!", getLogRow(0));
+        assertTrue("Button click should be logged",
+                logContainsText("Button clicked!"));
     }
 
     @Test
