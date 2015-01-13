@@ -2794,7 +2794,7 @@ public class ApplicationConnection implements HasHandlers {
                         parameterTypes = method.getParameterTypes();
 
                         showLoadingIndicator |= !TypeDataStore
-                                .isBackgroundMessage(method);
+                                .isNoLoadingIndicator(method);
                     } catch (NoDataException e) {
                         throw new RuntimeException("No type data for "
                                 + invocation.toString(), e);

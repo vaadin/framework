@@ -15,10 +15,10 @@
  */
 package com.vaadin.shared.ui.progressindicator;
 
-import com.vaadin.shared.annotations.BackgroundMessage;
+import com.vaadin.shared.annotations.NoLoadingIndicator;
 import com.vaadin.shared.communication.ServerRpc;
 
 public interface ProgressIndicatorServerRpc extends ServerRpc {
-    @BackgroundMessage
+    @NoLoadingIndicator
     public void poll();
 }

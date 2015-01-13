@@ -20,8 +20,8 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to mark server RPC methods that perform background tasks that
- * are transparent to the user. The framework will show a loading indicator when
+ * Annotation used to mark server RPC methods for which it isn't necessary to
+ * show the loading indicator. The framework will show a loading indicator when
  * sending requests for RPC methods that are not marked with this annotation.
  * The loading indicator is hidden once a response is received.
  * 
@@ -30,6 +30,6 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Documented
-public @interface BackgroundMessage {
+public @interface NoLoadingIndicator {
     // Just an empty marker annotation
 }
