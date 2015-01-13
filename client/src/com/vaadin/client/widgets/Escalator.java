@@ -64,7 +64,6 @@ import com.vaadin.client.widget.escalator.PositionFunction.AbsolutePosition;
 import com.vaadin.client.widget.escalator.PositionFunction.Translate3DPosition;
 import com.vaadin.client.widget.escalator.PositionFunction.TranslatePosition;
 import com.vaadin.client.widget.escalator.PositionFunction.WebkitTranslate3DPosition;
-import com.vaadin.client.widget.escalator.Row;
 import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeEvent;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeHandler;
@@ -2184,6 +2183,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             bodyElem.getStyle().setMarginTop(heightOfSection, Unit.PX);
             verticalScrollbar.getElement().getStyle()
                     .setTop(heightOfSection, Unit.PX);
+            headerDeco.getStyle().setHeight(heightOfSection, Unit.PX);
         }
 
         @Override
@@ -2224,6 +2224,8 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             if (horizontalScrollbarNeeded) {
                 vscrollHeight -= horizontalScrollbar.getScrollbarThickness();
             }
+
+            footerDeco.getStyle().setHeight(footer.heightOfSection, Unit.PX);
 
             verticalScrollbar.setOffsetSize(vscrollHeight);
         }
@@ -4729,9 +4731,6 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         header.recalculateSectionHeight();
         body.recalculateSectionHeight();
         footer.recalculateSectionHeight();
-
-        headerDeco.getStyle().setHeight(header.heightOfSection, Unit.PX);
-        footerDeco.getStyle().setHeight(footer.heightOfSection, Unit.PX);
 
         scroller.recalculateScrollbarsForVirtualViewport();
         body.verifyEscalatorCount();
