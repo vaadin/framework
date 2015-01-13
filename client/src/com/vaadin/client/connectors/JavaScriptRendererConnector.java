@@ -39,7 +39,7 @@ import elemental.json.JsonValue;
 /**
  * Connector for server-side renderer implemented using JavaScript.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 @Connect(AbstractJavaScriptRenderer.class)

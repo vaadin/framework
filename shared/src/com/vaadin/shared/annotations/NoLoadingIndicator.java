@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * sending requests for RPC methods that are not marked with this annotation.
  * The loading indicator is hidden once a response is received.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 @Target(ElementType.METHOD)

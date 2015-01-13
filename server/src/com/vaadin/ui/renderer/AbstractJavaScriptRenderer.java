@@ -99,7 +99,7 @@ import com.vaadin.ui.JavaScriptFunction;
  * </ul>
  * 
  * @author Vaadin Ltd
- * @since
+ * @since 7.4
  */
 public abstract class AbstractJavaScriptRenderer<T> extends AbstractRenderer<T> {
     private JavaScriptCallbackHelper callbackHelper = new JavaScriptCallbackHelper(
