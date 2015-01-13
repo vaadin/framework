@@ -25,7 +25,7 @@ import com.vaadin.shared.util.SharedUtil;
  * logic in {@link #resolveVaadinUri(String)} and using abstract methods in the
  * class for accessing information specific to the current environment.
  * 
- * @since
+ * @since 7.4
  * @author Vaadin Ltd
  */
 public abstract class VaadinUriResolver implements Serializable {
@@ -49,7 +49,7 @@ public abstract class VaadinUriResolver implements Serializable {
      * Any other URI protocols, such as <code>http://</code> or
      * <code>https://</code> are passed through this method unmodified.
      *
-     * @since
+     * @since 7.4
      * @param vaadinUri
      *            the uri to resolve
      * @return the resolved uri
