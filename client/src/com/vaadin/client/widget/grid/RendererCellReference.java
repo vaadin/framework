@@ -83,7 +83,7 @@ public class RendererCellReference extends CellReference<Object> {
      * 
      * @return the number of columns that the cell should span
      */
-    public int getColspan() {
+    public int getColSpan() {
         return cell.getColSpan();
     }
 }

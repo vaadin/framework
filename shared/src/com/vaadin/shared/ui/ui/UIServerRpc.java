@@ -15,6 +15,7 @@
  */
 package com.vaadin.shared.ui.ui;
 
+import com.vaadin.shared.annotations.NoLoadingIndicator;
 import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.ClickRpc;
@@ -27,6 +28,7 @@ public interface UIServerRpc extends ClickRpc, ServerRpc {
     @Delayed(lastOnly = true)
     public void scroll(int scrollTop, int scrollLeft);
 
+    @NoLoadingIndicator
     @Delayed(lastOnly = true)
     /*
      * @Delayed just to get lastOnly semantics, sendPendingVariableChanges()

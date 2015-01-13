@@ -104,6 +104,43 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
             rpcProxy.requestRows(firstRowIndex, numberOfRows,
                     cached.getStart(), cached.length());
+
+            /*
+             * Show the progress indicator if there is a pending data request
+             * and some of the visible rows are being requested. The RPC in
+             * itself will not trigger the indicator since it might just fetch
+             * some rows in the background to fill the cache.
+             * 
+             * The indicator will be hidden by the framework when the response
+             * is received (unless another request is already on its way at that
+             * point).
+             */
+            if (getRequestedAvailability().intersects(
+                    Range.withLength(firstRowIndex, numberOfRows))) {
+                getConnection().getLoadingIndicator().ensureTriggered();
+            }
+        }
+
+        @Override
+        public void ensureAvailability(int firstRowIndex, int numberOfRows) {
+            super.ensureAvailability(firstRowIndex, numberOfRows);
+
+            /*
+             * We trigger the indicator already at this point since the actual
+             * RPC will not be sent right away when waiting for the response to
+             * a previous request.
+             * 
+             * Only triggering here would not be enough since the check that
+             * sets isWaitingForData is deferred. We don't want to trigger the
+             * loading indicator here if we don't know that there is actually a
+             * request going on since some other bug might then cause the
+             * loading indicator to not be hidden.
+             */
+            if (isWaitingForData()
+                    && !Range.withLength(firstRowIndex, numberOfRows)
+                            .isSubsetOf(getCachedRange())) {
+                getConnection().getLoadingIndicator().ensureTriggered();
+            }
         }
 
         @Override

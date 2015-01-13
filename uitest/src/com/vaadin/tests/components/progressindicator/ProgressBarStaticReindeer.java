@@ -13,12 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.progressindicator;
+package com.vaadin.tests.components.progressindicator;
 
-import com.vaadin.shared.annotations.NoLoadingIndicator;
-import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.annotations.Theme;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.ProgressBar;
+import com.vaadin.ui.themes.Reindeer;
 
-public interface ProgressIndicatorServerRpc extends ServerRpc {
-    @NoLoadingIndicator
-    public void poll();
+@Theme(Reindeer.THEME_NAME)
+public class ProgressBarStaticReindeer extends AbstractTestUI {
+    @Override
+    protected void setup(VaadinRequest request) {
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.addStyleName(Reindeer.PROGRESSBAR_STATIC);
+        addComponent(progressBar);
+    }
 }

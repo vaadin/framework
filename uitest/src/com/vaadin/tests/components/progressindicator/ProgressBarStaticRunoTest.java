@@ -13,12 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.progressindicator;
+package com.vaadin.tests.components.progressindicator;
 
-import com.vaadin.shared.annotations.NoLoadingIndicator;
-import com.vaadin.shared.communication.ServerRpc;
+import org.junit.Test;
 
-public interface ProgressIndicatorServerRpc extends ServerRpc {
-    @NoLoadingIndicator
-    public void poll();
+import com.vaadin.tests.tb3.MultiBrowserTest;
+
+public class ProgressBarStaticRunoTest extends MultiBrowserTest {
+    @Test
+    public void compareScreenshot() throws Exception {
+        openTestURL();
+        compareScreen("screen");
+    }
 }

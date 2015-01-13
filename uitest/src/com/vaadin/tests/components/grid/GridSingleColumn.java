@@ -44,6 +44,7 @@ public class GridSingleColumn extends AbstractTestUI {
         column.setHeaderCaption("Header");
 
         addComponent(grid);
+        grid.scrollTo(grid.getContainerDataSource().getIdByIndex(50));
     }
 
     @Override

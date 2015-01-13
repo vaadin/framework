@@ -404,9 +404,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
                         itemId);
                 valueChangeListeners.put(itemId, listener);
 
-                for (final Object propertyId : item.getItemPropertyIds()) {
-                    final Property<?> property = item
-                            .getItemProperty(propertyId);
+                for (final Column column : getGrid().getColumns()) {
+                    final Property<?> property = item.getItemProperty(column
+                            .getPropertyId());
                     if (property instanceof ValueChangeNotifier) {
                         ((ValueChangeNotifier) property)
                                 .addValueChangeListener(listener);
@@ -423,9 +423,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
                         .remove(itemId);
 
                 if (listener != null) {
-                    for (final Object propertyId : item.getItemPropertyIds()) {
+                    for (final Column column : getGrid().getColumns()) {
                         final Property<?> property = item
-                                .getItemProperty(propertyId);
+                                .getItemProperty(column.getPropertyId());
                         if (property instanceof ValueChangeNotifier) {
                             ((ValueChangeNotifier) property)
                                     .removeValueChangeListener(listener);
@@ -436,30 +436,15 @@ public class RpcDataProviderExtension extends AbstractExtension {
         }
 
         /**
-         * Manages removed properties in active rows.
+         * Manages removed columns in active rows.
+         * <p>
+         * This method does <em>not</em> send data again to the client.
          * 
-         * @param removedPropertyIds
-         *            the property ids that have been removed from the container
+         * @param removedColumns
+         *            the columns that have been removed from the grid
          */
-        public void propertiesRemoved(
-                @SuppressWarnings("unused") Collection<Object> removedPropertyIds) {
-            /*
-             * no-op, for now.
-             * 
-             * The Container should be responsible for cleaning out any
-             * ValueChangeListeners from removed Properties. Components will
-             * benefit from this, however.
-             */
-        }
-
-        /**
-         * Manages added properties in active rows.
-         * 
-         * @param addedPropertyIds
-         *            the property ids that have been added to the container
-         */
-        public void propertiesAdded(Collection<Object> addedPropertyIds) {
-            if (addedPropertyIds.isEmpty()) {
+        public void columnsRemoved(Collection<Column> removedColumns) {
+            if (removedColumns.isEmpty()) {
                 return;
             }
 
@@ -470,9 +455,40 @@ public class RpcDataProviderExtension extends AbstractExtension {
                         .get(itemId);
                 assert (listener != null) : "a listener should've been pre-made by addValueChangeListeners";
 
-                for (final Object propertyId : addedPropertyIds) {
-                    final Property<?> property = item
-                            .getItemProperty(propertyId);
+                for (final Column column : removedColumns) {
+                    final Property<?> property = item.getItemProperty(column
+                            .getPropertyId());
+                    if (property instanceof ValueChangeNotifier) {
+                        ((ValueChangeNotifier) property)
+                                .removeValueChangeListener(listener);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Manages added columns in active rows.
+         * <p>
+         * This method sends the data for the changed rows to client side.
+         * 
+         * @param addedColumns
+         *            the columns that have been added to the grid
+         */
+        public void columnsAdded(Collection<Column> addedColumns) {
+            if (addedColumns.isEmpty()) {
+                return;
+            }
+
+            for (int i = activeRange.getStart(); i < activeRange.getEnd(); i++) {
+                final Object itemId = container.getIdByIndex(i);
+                final Item item = container.getItem(itemId);
+                final GridValueChangeListener listener = valueChangeListeners
+                        .get(itemId);
+                assert (listener != null) : "a listener should've been pre-made by addValueChangeListeners";
+
+                for (final Column column : addedColumns) {
+                    final Property<?> property = item.getItemProperty(column
+                            .getPropertyId());
                     if (property instanceof ValueChangeNotifier) {
                         ((ValueChangeNotifier) property)
                                 .addValueChangeListener(listener);
@@ -924,37 +940,24 @@ public class RpcDataProviderExtension extends AbstractExtension {
     }
 
     /**
-     * Informs this data provider that some of the properties have been removed
-     * from the container.
-     * <p>
-     * Please note that we could add our own
-     * {@link com.vaadin.data.Container.PropertySetChangeListener
-     * PropertySetChangeListener} to the container, but then we'd need to
-     * implement the same bookeeping for finding what's added and removed that
-     * Grid already does in its own listener.
+     * Informs this data provider that given columns have been removed from
+     * grid.
      * 
      * @param removedColumns
-     *            a list of property ids for the removed columns
+     *            a list of removed columns
      */
-    public void propertiesRemoved(List<Object> removedColumns) {
-        activeRowHandler.propertiesRemoved(removedColumns);
+    public void columnsRemoved(List<Column> removedColumns) {
+        activeRowHandler.columnsRemoved(removedColumns);
     }
 
     /**
-     * Informs this data provider that some of the properties have been added to
-     * the container.
-     * <p>
-     * Please note that we could add our own
-     * {@link com.vaadin.data.Container.PropertySetChangeListener
-     * PropertySetChangeListener} to the container, but then we'd need to
-     * implement the same bookeeping for finding what's added and removed that
-     * Grid already does in its own listener.
+     * Informs this data provider that given columns have been added to grid.
      * 
-     * @param addedPropertyIds
-     *            a list of property ids for the added columns
+     * @param addedColumns
+     *            a list of added columns
      */
-    public void propertiesAdded(HashSet<Object> addedPropertyIds) {
-        activeRowHandler.propertiesAdded(addedPropertyIds);
+    public void columnsAdded(List<Column> addedColumns) {
+        activeRowHandler.columnsAdded(addedColumns);
     }
 
     public DataProviderKeyMapper getKeyMapper() {

@@ -160,12 +160,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         public Object getValue(final JsonObject obj) {
             final JsonObject rowData = obj.getObject(GridState.JSONKEY_DATA);
 
-            assert rowData.hasKey(id) : "Could not find data for column with id "
-                    + id;
+            if (rowData.hasKey(id)) {
+                final JsonValue columnValue = rowData.get(id);
 
-            final JsonValue columnValue = rowData.get(id);
+                return rendererConnector.decode(columnValue);
+            }
 
-            return rendererConnector.decode(columnValue);
+            return null;
         }
 
         /*
@@ -202,19 +203,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
                 @Override
                 public void bind(final int rowIndex) {
-                    /*
-                     * Because most shared state handling is deferred, we must
-                     * defer this too to ensure the editorConnector references
-                     * in shared state are up to date before opening the editor.
-                     * Yes, this is a hack on top of a hack.
-                     */
-                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            serverInitiated = true;
-                            GridConnector.this.getWidget().editRow(rowIndex);
-                        }
-                    });
+                    serverInitiated = true;
+                    GridConnector.this.getWidget().editRow(rowIndex);
                 }
 
                 @Override
@@ -225,15 +215,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
                 @Override
                 public void confirmBind() {
-                    /*
-                     * See comment in bind()
-                     */
-                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            endRequest();
-                        }
-                    });
+                    endRequest();
+
                 }
 
                 @Override
@@ -382,17 +365,33 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         registerRpc(GridClientRpc.class, new GridClientRpc() {
             @Override
             public void scrollToStart() {
-                getWidget().scrollToStart();
+                Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        getWidget().scrollToStart();
+                    }
+                });
             }
 
             @Override
             public void scrollToEnd() {
-                getWidget().scrollToEnd();
+                Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        getWidget().scrollToEnd();
+                    }
+                });
             }
 
             @Override
-            public void scrollToRow(int row, ScrollDestination destination) {
-                getWidget().scrollToRow(row, destination);
+            public void scrollToRow(final int row,
+                    final ScrollDestination destination) {
+                Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        getWidget().scrollToRow(row, destination);
+                    }
+                });
             }
         });
 
@@ -447,62 +446,42 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             updateSelectionFromState();
         }
 
-        /*
-         * The operations in here have been made deferred.
-         * 
-         * The row data needed to react to column changes comes in the RPC
-         * calls. Since state is always updated before RPCs are called, we need
-         * to be sure that RPC is called before Grid reacts to state changes.
-         * 
-         * Note that there are still some methods annotated with @OnStateChange
-         * that aren't deferred. That's okay, though.
-         */
+        // Column updates
+        if (stateChangeEvent.hasPropertyChanged("columns")) {
 
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                // Column updates
-                if (stateChangeEvent.hasPropertyChanged("columns")) {
+            // Remove old columns
+            purgeRemovedColumns();
 
-                    // Remove old columns
-                    purgeRemovedColumns();
-
-                    // Add new columns
-                    for (GridColumnState state : getState().columns) {
-                        if (!columnIdToColumn.containsKey(state.id)) {
-                            addColumnFromStateChangeEvent(state);
-                        }
-                        updateColumnFromState(columnIdToColumn.get(state.id),
-                                state);
-                    }
+            // Add new columns
+            for (GridColumnState state : getState().columns) {
+                if (!columnIdToColumn.containsKey(state.id)) {
+                    addColumnFromStateChangeEvent(state);
                 }
-
-                if (stateChangeEvent.hasPropertyChanged("columnOrder")) {
-                    if (orderNeedsUpdate(getState().columnOrder)) {
-                        updateColumnOrderFromState(getState().columnOrder);
-                    }
-                }
-
-                if (stateChangeEvent.hasPropertyChanged("header")) {
-                    updateHeaderFromState(getState().header);
-                }
-
-                if (stateChangeEvent.hasPropertyChanged("footer")) {
-                    updateFooterFromState(getState().footer);
-                }
-
-                if (stateChangeEvent.hasPropertyChanged("editorEnabled")) {
-                    getWidget().setEditorEnabled(getState().editorEnabled);
-                }
-
-                if (stateChangeEvent.hasPropertyChanged("frozenColumnCount")) {
-                    getWidget().setFrozenColumnCount(
-                            getState().frozenColumnCount);
-                }
-
+                updateColumnFromState(columnIdToColumn.get(state.id), state);
             }
-        });
+        }
 
+        if (stateChangeEvent.hasPropertyChanged("columnOrder")) {
+            if (orderNeedsUpdate(getState().columnOrder)) {
+                updateColumnOrderFromState(getState().columnOrder);
+            }
+        }
+
+        if (stateChangeEvent.hasPropertyChanged("header")) {
+            updateHeaderFromState(getState().header);
+        }
+
+        if (stateChangeEvent.hasPropertyChanged("footer")) {
+            updateFooterFromState(getState().footer);
+        }
+
+        if (stateChangeEvent.hasPropertyChanged("editorEnabled")) {
+            getWidget().setEditorEnabled(getState().editorEnabled);
+        }
+
+        if (stateChangeEvent.hasPropertyChanged("frozenColumnCount")) {
+            getWidget().setFrozenColumnCount(getState().frozenColumnCount);
+        }
     }
 
     private void updateColumnOrderFromState(List<String> stateColumnOrder) {

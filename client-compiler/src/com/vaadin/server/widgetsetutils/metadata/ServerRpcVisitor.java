@@ -24,6 +24,7 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.vaadin.client.metadata.TypeDataStore.MethodAttribute;
+import com.vaadin.shared.annotations.NoLoadingIndicator;
 import com.vaadin.shared.annotations.Delayed;
 
 public class ServerRpcVisitor extends TypeVisitor {
@@ -49,6 +50,11 @@ public class ServerRpcVisitor extends TypeVisitor {
                             bundle.setMethodAttribute(type, method,
                                     MethodAttribute.LAST_ONLY);
                         }
+                    }
+
+                    if (method.getAnnotation(NoLoadingIndicator.class) != null) {
+                        bundle.setMethodAttribute(type, method,
+                                MethodAttribute.NO_LOADING_INDICATOR);
                     }
 
                     bundle.setNeedsParamTypes(type, method);

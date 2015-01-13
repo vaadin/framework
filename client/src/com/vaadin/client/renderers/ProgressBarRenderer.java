@@ -29,7 +29,9 @@ public class ProgressBarRenderer extends WidgetRenderer<Double, VProgressBar> {
 
     @Override
     public VProgressBar createWidget() {
-        return GWT.create(VProgressBar.class);
+        VProgressBar progressBar = GWT.create(VProgressBar.class);
+        progressBar.addStyleDependentName("static");
+        return progressBar;
     }
 
     @Override

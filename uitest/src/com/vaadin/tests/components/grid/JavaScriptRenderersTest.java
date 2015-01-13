@@ -20,28 +20,27 @@ import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
-import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.tests.annotations.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-@TestCategory("grid")
-public class GridSingleColumnTest extends MultiBrowserTest {
+public class JavaScriptRenderersTest extends MultiBrowserTest {
 
     @Test
-    public void testHeaderIsVisible() {
-        openTestURL();
-
-        GridCellElement cell = $(GridElement.class).first().getHeaderCell(0, 0);
-        Assert.assertTrue("No header available", cell.getText()
-                .equalsIgnoreCase("header"));
-    }
-
-    @Test
-    public void testScrollDidNotThrow() {
+    public void testJavaScriptRenderer() {
         setDebug(true);
         openTestURL();
 
-        Assert.assertFalse("Exception when scrolling on init",
-                isElementPresent(NotificationElement.class));
+        GridElement grid = $(GridElement.class).first();
+        GridCellElement cell_1_2 = grid.getCell(1, 2);
+
+        // Verify render functionality
+        Assert.assertEquals("Bean(2, 0)", cell_1_2.getText());
+
+        // Verify init functionality
+        Assert.assertEquals("2", cell_1_2.getAttribute("column"));
+
+        // Verify onbrowserevent
+        cell_1_2.click();
+        Assert.assertTrue(cell_1_2.getText().startsWith(
+                "Clicked 1 with key 1 at"));
     }
 }

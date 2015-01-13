@@ -13,12 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.progressindicator;
+package com.vaadin.tests.components.grid;
 
-import com.vaadin.shared.annotations.NoLoadingIndicator;
-import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.annotations.JavaScript;
+import com.vaadin.tests.components.grid.JavaScriptRenderers.MyBean;
+import com.vaadin.ui.renderer.AbstractJavaScriptRenderer;
 
-public interface ProgressIndicatorServerRpc extends ServerRpc {
-    @NoLoadingIndicator
-    public void poll();
+/**
+ * 
+ * @since
+ * @author Vaadin Ltd
+ */
+@JavaScript("myBeanJsRenderer.js")
+public class MyBeanJSRenderer extends AbstractJavaScriptRenderer<MyBean> {
+
+    public MyBeanJSRenderer() {
+        super(MyBean.class);
+    }
+
 }
