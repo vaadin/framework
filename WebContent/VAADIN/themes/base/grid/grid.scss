@@ -260,4 +260,10 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
     width: auto !important;
     height: auto !important;
   }
+
+  // Renderers
+
+  .#{$primaryStyleName}-cell > .v-progressbar {
+    width: 100%;
+  }
 }

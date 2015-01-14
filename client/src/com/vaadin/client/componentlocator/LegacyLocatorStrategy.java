@@ -455,7 +455,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
         if (basePath == null) {
             return null;
         }
-        String simpleName = w.getClass().getSimpleName();
+        String simpleName = Util.getSimpleName(w);
 
         /*
          * Check if the parent implements Iterable. At least VPopupView does not
@@ -475,7 +475,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                 return basePath + PARENTCHILD_SEPARATOR + simpleName + "["
                         + pos + "]";
             }
-            String simpleName2 = child.getClass().getSimpleName();
+            String simpleName2 = Util.getSimpleName(child);
             if (simpleName.equals(simpleName2)) {
                 pos++;
             }
@@ -606,8 +606,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                     // the same type before it
                     int nextIndex = 0;
                     for (Widget child : layout) {
-                        boolean matchingType = nextWidgetClassName.equals(child
-                                .getClass().getSimpleName());
+                        boolean matchingType = nextWidgetClassName.equals(Util
+                                .getSimpleName(child));
                         if (matchingType && widgetPosition == 0) {
                             // This is the n:th child that we looked for
                             break;
@@ -661,7 +661,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                 while (iterator.hasNext()) {
 
                     Widget child = iterator.next();
-                    String simpleName2 = child.getClass().getSimpleName();
+                    String simpleName2 = Util.getSimpleName(child);
 
                     if (!widgetClassName.equals(simpleName2)
                             && child instanceof Slot) {
@@ -671,7 +671,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                          * directly checking the stuff inside the slot
                          */
                         child = ((Slot) child).getWidget();
-                        simpleName2 = child.getClass().getSimpleName();
+                        simpleName2 = Util.getSimpleName(child);
                     }
 
                     if (widgetClassName.equals(simpleName2)) {
