@@ -3116,8 +3116,16 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      * 
      * @param propertyId
      *            The property id of column to be removed
+     * 
+     * @throws IllegalArgumentException
+     *             if there is no column for given property id in this grid
      */
-    public void removeColumn(Object propertyId) {
+    public void removeColumn(Object propertyId) throws IllegalArgumentException {
+        if (!columns.keySet().contains(propertyId)) {
+            throw new IllegalArgumentException(
+                    "There is no column for given property id " + propertyId);
+        }
+
         List<Column> removed = new ArrayList<Column>();
         removed.add(getColumn(propertyId));
         internalRemoveColumn(propertyId);

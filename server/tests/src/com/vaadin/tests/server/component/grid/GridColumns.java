@@ -228,6 +228,11 @@ public class GridColumns {
         }
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testRemoveColumnThatDoesNotExist() {
+        grid.removeColumn("banana phone");
+    }
+
     private GridColumnState getColumnState(Object propertyId) {
         String columnId = columnIdMapper.key(propertyId);
         for (GridColumnState columnState : state.columns) {
