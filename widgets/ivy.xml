@@ -25,19 +25,19 @@
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-shared"
-            rev="${vaadin.version}" conf="build,test->build">
+            rev="${vaadin.version}" conf="build-provided,test->build">
             <exclude type="pom" conf="test" />
         </dependency>
         <dependency org="com.vaadin" name="vaadin-client"
-            rev="${vaadin.version}" conf="build,test->build">
+            rev="${vaadin.version}" conf="build-provided,test->build">
             <exclude type="pom" conf="test" />
         </dependency>
         <dependency org="com.vaadin" name="vaadin-client-compiler"
-            rev="${vaadin.version}" conf="build,test->build">
+            rev="${vaadin.version}" conf="build-provided,test->build">
             <exclude type="pom" conf="test" />
         </dependency>
         <dependency org="com.vaadin" name="vaadin-themes"
-            rev="${vaadin.version}" conf="build,test->build">
+            rev="${vaadin.version}" conf="build-provided,test->build">
             <exclude type="pom" conf="test" />
         </dependency>
         <dependency org="com.vaadin" name="vaadin-sass-compiler"

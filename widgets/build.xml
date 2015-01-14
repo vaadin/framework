@@ -33,11 +33,8 @@
     <target name="copysrc" depends="dependencies">
         <delete dir="${result.deps}" />
 
-        <ivy:resolve transitive="false" type="jar" conf="build" />
+        <ivy:resolve transitive="false" type="jar" conf="build-provided" />
         <ivy:cachepath pathid="vaadin.jars" />
-        <ivy:resolve transitive="false" type="jar"
-            conf="build-provided" />
-        <ivy:cachepath pathid="compile.deps" />
         <unjar dest="${result.deps}">
             <path refid="vaadin.jars" />
         </unjar>
@@ -92,7 +89,7 @@
             includeantruntime="false">
             <src path="${result.src}" />
             <classpath refid="classpath.compile.custom" />
-            <classpath refid="compile.deps" />
+            <classpath refid="vaadin.jars" />
         </javac>
     </target>
 
