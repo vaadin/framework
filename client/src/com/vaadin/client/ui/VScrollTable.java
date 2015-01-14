@@ -6890,7 +6890,16 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     * visibleCellCount;
             if (willHaveScrollbars()) {
                 totalExtraWidth += Util.getNativeScrollbarSize();
+                // if there will be vertical scrollbar, let's enable it
+                scrollBodyPanel.getElement().getStyle().clearOverflowY();
+            } else {
+                // if there is no need for vertical scrollbar, let's disable it
+                // this is necessary since sometimes the browsers insist showing
+                // the scrollbar even if the content would fit perfectly
+                scrollBodyPanel.getElement().getStyle()
+                        .setOverflowY(Overflow.HIDDEN);
             }
+
             availW -= totalExtraWidth;
             int forceScrollBodyWidth = -1;
 
@@ -6908,6 +6917,15 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     forceScrollBodyWidth = usedMinimumWidth + totalExtraWidth;
                 }
                 extraSpace = 0;
+                // if there will be horizontal scrollbar, let's enable it
+                scrollBodyPanel.getElement().getStyle().clearOverflowX();
+            } else {
+                // if there is no need for horizontal scrollbar, let's disable
+                // it
+                // this is necessary since sometimes the browsers insist showing
+                // the scrollbar even if the content would fit perfectly
+                scrollBodyPanel.getElement().getStyle()
+                        .setOverflowX(Overflow.HIDDEN);
             }
 
             if (forceScrollBodyWidth > 0) {
