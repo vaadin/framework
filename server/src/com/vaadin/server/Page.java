@@ -939,6 +939,12 @@ public class Page implements Serializable {
      * @return The browser location URI.
      */
     public URI getLocation() {
+        if (location == null
+                && !uI.getSession().getConfiguration().isSendUrlsAsParameters()) {
+            throw new IllegalStateException("Location is not available as the "
+                    + Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS
+                    + " parameter is configured as false");
+        }
         return location;
     }
 

@@ -59,6 +59,8 @@ public class DefaultDeploymentConfiguration extends
      */
     public static final boolean DEFAULT_SYNC_ID_CHECK = true;
 
+    public static final boolean DEFAULT_SEND_URLS_AS_PARAMETERS = true;
+
     private final Properties initParameters;
     private boolean productionMode;
     private boolean xsrfProtectionEnabled;
@@ -69,6 +71,7 @@ public class DefaultDeploymentConfiguration extends
     private final Class<?> systemPropertyBaseClass;
     private LegacyProperyToStringMode legacyPropertyToStringMode;
     private boolean syncIdCheck;
+    private boolean sendUrlsAsParameters;
 
     /**
      * Create a new deployment configuration instance.
@@ -93,6 +96,7 @@ public class DefaultDeploymentConfiguration extends
         checkPushMode();
         checkLegacyPropertyToString();
         checkSyncIdCheck();
+        checkSendUrlsAsParameters();
     }
 
     private void checkLegacyPropertyToString() {
@@ -258,6 +262,16 @@ public class DefaultDeploymentConfiguration extends
     /**
      * {@inheritDoc}
      * <p>
+     * The default value is <code>true</code>.
+     */
+    @Override
+    public boolean isSendUrlsAsParameters() {
+        return sendUrlsAsParameters;
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
      * The default mode is {@link PushMode#DISABLED}.
      */
     @Override
@@ -345,6 +359,13 @@ public class DefaultDeploymentConfiguration extends
         syncIdCheck = getApplicationOrSystemProperty(
                 Constants.SERVLET_PARAMETER_SYNC_ID_CHECK,
                 Boolean.toString(DEFAULT_SYNC_ID_CHECK)).equals("true");
+    }
+
+    private void checkSendUrlsAsParameters() {
+        sendUrlsAsParameters = getApplicationOrSystemProperty(
+                Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS,
+                Boolean.toString(DEFAULT_SEND_URLS_AS_PARAMETERS)).equals(
+                "true");
     }
 
     private Logger getLogger() {

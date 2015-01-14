@@ -48,11 +48,7 @@ public class ApplicationConstants implements Serializable {
 
     public static final String SERVICE_URL = "serviceUrl";
 
-    public static final String SERVICE_URL_PATH_AS_PARAMETER = "usePathParameter";
-
-    // Denotes the namespace which parameters should be prefixed with when
-    // passed as GET parameters. Currently only used by Liferay.
-    public static final String SERVICE_URL_PARAMETER_NAMESPACE = "pathParameterNS";
+    public static final String SERVICE_URL_PARAMETER_NAME = "pathParameterName";
 
     // Javadocs in ApplicationConfiguration should be updated if this is changed
     public static final String V_RESOURCE_PATH = "v-resourcePath";

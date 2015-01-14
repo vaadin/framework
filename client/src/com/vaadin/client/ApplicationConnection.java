@@ -97,12 +97,14 @@ import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
+import com.vaadin.shared.VaadinUriResolver;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
+import com.vaadin.shared.util.SharedUtil;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
@@ -480,6 +482,33 @@ public class ApplicationConnection implements HasHandlers {
 
     private boolean tooltipInitialized = false;
 
+    private final VaadinUriResolver uriResolver = new VaadinUriResolver() {
+        @Override
+        protected String getVaadinDirUrl() {
+            return getConfiguration().getVaadinDirUrl();
+        }
+
+        @Override
+        protected String getServiceUrlParameterName() {
+            return getConfiguration().getServiceUrlParameterName();
+        }
+
+        @Override
+        protected String getServiceUrl() {
+            return getConfiguration().getServiceUrl();
+        }
+
+        @Override
+        protected String getThemeUri() {
+            return ApplicationConnection.this.getThemeUri();
+        }
+
+        @Override
+        protected String encodeQueryStringParameterValue(String queryString) {
+            return URL.encodeQueryString(queryString);
+        }
+    };
+
     public static class MultiStepDuration extends Duration {
         private int previousStep = elapsedMillis();
 
@@ -829,10 +858,10 @@ public class ApplicationConnection implements HasHandlers {
                 + ApplicationConstants.UIDL_PATH + '/');
 
         if (extraParams != null && extraParams.length() > 0) {
-            uri = addGetParameters(uri, extraParams);
+            uri = SharedUtil.addGetParameters(uri, extraParams);
         }
-        uri = addGetParameters(uri, UIConstants.UI_ID_PARAMETER + "="
-                + configuration.getUIId());
+        uri = SharedUtil.addGetParameters(uri, UIConstants.UI_ID_PARAMETER
+                + "=" + configuration.getUIId());
 
         doUidlRequest(uri, payload);
 
@@ -3240,67 +3269,7 @@ public class ApplicationConnection implements HasHandlers {
      * @return translated URI ready for browser
      */
     public String translateVaadinUri(String uidlUri) {
-        if (uidlUri == null) {
-            return null;
-        }
-        if (uidlUri.startsWith("theme://")) {
-            final String themeUri = getThemeUri();
-            if (themeUri == null) {
-                VConsole.error("Theme not set: ThemeResource will not be found. ("
-                        + uidlUri + ")");
-            }
-            uidlUri = themeUri + uidlUri.substring(7);
-        }
-
-        if (uidlUri.startsWith(ApplicationConstants.PUBLISHED_PROTOCOL_PREFIX)) {
-            // getAppUri *should* always end with /
-            // substring *should* always start with / (published:///foo.bar
-            // without published://)
-            uidlUri = ApplicationConstants.APP_PROTOCOL_PREFIX
-                    + ApplicationConstants.PUBLISHED_FILE_PATH
-                    + uidlUri
-                            .substring(ApplicationConstants.PUBLISHED_PROTOCOL_PREFIX
-                                    .length());
-            // Let translation of app:// urls take care of the rest
-        }
-        if (uidlUri.startsWith(ApplicationConstants.APP_PROTOCOL_PREFIX)) {
-            String relativeUrl = uidlUri
-                    .substring(ApplicationConstants.APP_PROTOCOL_PREFIX
-                            .length());
-            ApplicationConfiguration conf = getConfiguration();
-            String serviceUrl = conf.getServiceUrl();
-            if (conf.useServiceUrlPathParam()) {
-                // Should put path in v-resourcePath parameter and append query
-                // params to base portlet url
-                String[] parts = relativeUrl.split("\\?", 2);
-                String path = parts[0];
-
-                // If there's a "?" followed by something, append it as a query
-                // string to the base URL
-                if (parts.length > 1) {
-                    String appUrlParams = parts[1];
-                    serviceUrl = addGetParameters(serviceUrl, appUrlParams);
-                }
-                if (!path.startsWith("/")) {
-                    path = '/' + path;
-                }
-                String pathParam = conf.getServiceUrlParameterName() + "="
-                        + URL.encodeQueryString(path);
-                serviceUrl = addGetParameters(serviceUrl, pathParam);
-                uidlUri = serviceUrl;
-            } else {
-                uidlUri = serviceUrl + relativeUrl;
-            }
-        }
-        if (uidlUri.startsWith(ApplicationConstants.VAADIN_PROTOCOL_PREFIX)) {
-            final String vaadinUri = configuration.getVaadinDirUrl();
-            String relativeUrl = uidlUri
-                    .substring(ApplicationConstants.VAADIN_PROTOCOL_PREFIX
-                            .length());
-            uidlUri = vaadinUri + relativeUrl;
-        }
-
-        return uidlUri;
+        return uriResolver.resolveVaadinUri(uidlUri);
     }
 
     /**
@@ -3417,35 +3386,12 @@ public class ApplicationConnection implements HasHandlers {
      *            One or more parameters in the format "a=b" or "c=d&e=f". An
      *            empty string is allowed but will not modify the url.
      * @return The modified URI with the get parameters in extraParams added.
+     * @deprecated Use {@link SharedUtil#addGetParameters(String,String)}
+     *             instead
      */
+    @Deprecated
     public static String addGetParameters(String uri, String extraParams) {
-        if (extraParams == null || extraParams.length() == 0) {
-            return uri;
-        }
-        // RFC 3986: The query component is indicated by the first question
-        // mark ("?") character and terminated by a number sign ("#") character
-        // or by the end of the URI.
-        String fragment = null;
-        int hashPosition = uri.indexOf('#');
-        if (hashPosition != -1) {
-            // Fragment including "#"
-            fragment = uri.substring(hashPosition);
-            // The full uri before the fragment
-            uri = uri.substring(0, hashPosition);
-        }
-
-        if (uri.contains("?")) {
-            uri += "&";
-        } else {
-            uri += "?";
-        }
-        uri += extraParams;
-
-        if (fragment != null) {
-            uri += fragment;
-        }
-
-        return uri;
+        return SharedUtil.addGetParameters(uri, extraParams);
     }
 
     ConnectorMap getConnectorMap() {

@@ -196,4 +196,45 @@ public class SharedUtil implements Serializable {
         return camelCaseToHumanFriendly(string);
     }
 
+    /**
+     * Adds the get parameters to the uri and returns the new uri that contains
+     * the parameters.
+     *
+     * @param uri
+     *            The uri to which the parameters should be added.
+     * @param extraParams
+     *            One or more parameters in the format "a=b" or "c=d&e=f". An
+     *            empty string is allowed but will not modify the url.
+     * @return The modified URI with the get parameters in extraParams added.
+     */
+    public static String addGetParameters(String uri, String extraParams) {
+        if (extraParams == null || extraParams.length() == 0) {
+            return uri;
+        }
+        // RFC 3986: The query component is indicated by the first question
+        // mark ("?") character and terminated by a number sign ("#") character
+        // or by the end of the URI.
+        String fragment = null;
+        int hashPosition = uri.indexOf('#');
+        if (hashPosition != -1) {
+            // Fragment including "#"
+            fragment = uri.substring(hashPosition);
+            // The full uri before the fragment
+            uri = uri.substring(0, hashPosition);
+        }
+
+        if (uri.contains("?")) {
+            uri += "&";
+        } else {
+            uri += "?";
+        }
+        uri += extraParams;
+
+        if (fragment != null) {
+            uri += fragment;
+        }
+
+        return uri;
+    }
+
 }

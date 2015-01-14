@@ -111,6 +111,15 @@ public interface DeploymentConfiguration extends Serializable {
     public int getHeartbeatInterval();
 
     /**
+     * Returns whether the sending of URL's as GET and POST parameters in
+     * requests with content-type <code>application/x-www-form-urlencoded</code>
+     * is enabled or not.
+     * 
+     * @return <code>false</code> if set to false or <code>true</code> otherwise
+     */
+    public boolean isSendUrlsAsParameters();
+
+    /**
      * Returns whether a session should be closed when all its open UIs have
      * been idle for longer than its configured maximum inactivity time.
      * <p>

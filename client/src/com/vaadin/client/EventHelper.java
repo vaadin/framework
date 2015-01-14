@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Helper class for attaching/detaching handlers for Vaadin client side
@@ -61,7 +62,7 @@ public class EventHelper {
      * @param connector
      *            The connector to update. Must implement focusHandler.
      * @param handlerRegistration
-     *            The old registration reference or null no handler has been
+     *            The old registration reference or null if no handler has been
      *            registered previously
      * @return a new registration handler that can be used to unregister the
      *         handler later
@@ -69,7 +70,27 @@ public class EventHelper {
     public static <T extends ComponentConnector & FocusHandler> HandlerRegistration updateFocusHandler(
             T connector, HandlerRegistration handlerRegistration) {
         return updateHandler(connector, FOCUS, handlerRegistration,
-                FocusEvent.getType());
+                FocusEvent.getType(), connector.getWidget());
+    }
+
+    /**
+     * Adds or removes a focus handler depending on if the connector has focus
+     * listeners on the server side or not.
+     * 
+     * @param connector
+     *            The connector to update. Must implement focusHandler.
+     * @param handlerRegistration
+     *            The old registration reference or null if no handler has been
+     *            registered previously
+     * @param widget
+     *            The widget which emits focus events
+     * @return a new registration handler that can be used to unregister the
+     *         handler later
+     */
+    public static <T extends ComponentConnector & FocusHandler> HandlerRegistration updateFocusHandler(
+            T connector, HandlerRegistration handlerRegistration, Widget widget) {
+        return updateHandler(connector, FOCUS, handlerRegistration,
+                FocusEvent.getType(), widget);
     }
 
     /**
@@ -79,7 +100,7 @@ public class EventHelper {
      * @param connector
      *            The connector to update. Must implement BlurHandler.
      * @param handlerRegistration
-     *            The old registration reference or null no handler has been
+     *            The old registration reference or null if no handler has been
      *            registered previously
      * @return a new registration handler that can be used to unregister the
      *         handler later
@@ -87,16 +108,36 @@ public class EventHelper {
     public static <T extends ComponentConnector & BlurHandler> HandlerRegistration updateBlurHandler(
             T connector, HandlerRegistration handlerRegistration) {
         return updateHandler(connector, BLUR, handlerRegistration,
-                BlurEvent.getType());
+                BlurEvent.getType(), connector.getWidget());
+    }
+
+    /**
+     * Adds or removes a blur handler depending on if the connector has blur
+     * listeners on the server side or not.
+     * 
+     * @param connector
+     *            The connector to update. Must implement BlurHandler.
+     * @param handlerRegistration
+     *            The old registration reference or null if no handler has been
+     *            registered previously
+     * @param widget
+     *            The widget which emits blur events
+     * 
+     * @return a new registration handler that can be used to unregister the
+     *         handler later
+     */
+    public static <T extends ComponentConnector & BlurHandler> HandlerRegistration updateBlurHandler(
+            T connector, HandlerRegistration handlerRegistration, Widget widget) {
+        return updateHandler(connector, BLUR, handlerRegistration,
+                BlurEvent.getType(), widget);
     }
 
     private static <H extends EventHandler> HandlerRegistration updateHandler(
             ComponentConnector connector, String eventIdentifier,
-            HandlerRegistration handlerRegistration, Type<H> type) {
+            HandlerRegistration handlerRegistration, Type<H> type, Widget widget) {
         if (connector.hasEventListener(eventIdentifier)) {
             if (handlerRegistration == null) {
-                handlerRegistration = connector.getWidget().addDomHandler(
-                        (H) connector, type);
+                handlerRegistration = widget.addDomHandler((H) connector, type);
             }
         } else if (handlerRegistration != null) {
             handlerRegistration.removeHandler();

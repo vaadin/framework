@@ -136,7 +136,7 @@
 					params += extraParams;
 				}
 				
-				params += '&' + vaadin.getBrowserDetailsParameters(appId); 
+				params += '&' + vaadin.getBrowserDetailsParameters(appId, getConfig('sendUrlsAsParameters')); 
 				
 				var r;
 				try {
@@ -270,7 +270,7 @@
 				ws.pendingApps = null;
 			}
 		},
-		getBrowserDetailsParameters: function(parentElementId) {
+		getBrowserDetailsParameters: function(parentElementId, sendUrlsAsParameters) {
 			// Screen height and width
 			var params = 'v-sh=' + window.screen.height;
 			params += '&v-sw=' + window.screen.width;
@@ -327,7 +327,9 @@
 			}
 			
 			// Location
-			params += '&v-loc=' + encodeURIComponent(location.href);
+			if (sendUrlsAsParameters !== false) {
+				params += '&v-loc=' + encodeURIComponent(location.href);
+			}
 
 			// Window name
 			if (window.name) {

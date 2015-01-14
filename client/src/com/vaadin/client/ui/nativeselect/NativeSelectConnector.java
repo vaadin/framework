@@ -20,6 +20,9 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.vaadin.client.EventHelper;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.VNativeSelect;
 import com.vaadin.client.ui.optiongroup.OptionGroupBaseConnector;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
@@ -30,10 +33,19 @@ import com.vaadin.ui.NativeSelect;
 public class NativeSelectConnector extends OptionGroupBaseConnector implements
         BlurHandler, FocusHandler {
 
+    private HandlerRegistration focusHandlerRegistration = null;
+    private HandlerRegistration blurHandlerRegistration = null;
+
     public NativeSelectConnector() {
         super();
-        getWidget().addFocusHandler(this);
-        getWidget().addBlurHandler(this);
+    }
+
+    @OnStateChange("registeredEventListeners")
+    private void onServerEventListenerChanged() {
+        focusHandlerRegistration = EventHelper.updateFocusHandler(this,
+                focusHandlerRegistration, getWidget().getSelect());
+        blurHandlerRegistration = EventHelper.updateBlurHandler(this,
+                blurHandlerRegistration, getWidget().getSelect());
     }
 
     @Override
@@ -43,11 +55,16 @@ public class NativeSelectConnector extends OptionGroupBaseConnector implements
 
     @Override
     public void onFocus(FocusEvent event) {
+        // EventHelper.updateFocusHandler ensures that this is called only when
+        // there is a listener on server side
         getRpcProxy(FocusAndBlurServerRpc.class).focus();
     }
 
     @Override
     public void onBlur(BlurEvent event) {
+        // EventHelper.updateFocusHandler ensures that this is called only when
+        // there is a listener on server side
         getRpcProxy(FocusAndBlurServerRpc.class).blur();
     }
+
 }
