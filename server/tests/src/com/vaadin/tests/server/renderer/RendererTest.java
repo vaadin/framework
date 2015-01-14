@@ -18,6 +18,7 @@ package com.vaadin.tests.server.renderer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
 
@@ -36,6 +37,7 @@ import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.renderer.ObjectRenderer;
 import com.vaadin.ui.renderer.TextRenderer;
 
 import elemental.json.JsonValue;
@@ -44,6 +46,11 @@ public class RendererTest {
 
     private static class TestBean {
         int i = 42;
+
+        @Override
+        public String toString() {
+            return "TestBean [" + i + "]";
+        }
     }
 
     private static class ExtendedBean extends TestBean {
@@ -130,15 +137,16 @@ public class RendererTest {
 
     @Test
     public void testDefaultRendererAndConverter() throws Exception {
-        assertSame(TextRenderer.class, foo.getRenderer().getClass());
-        assertSame(StringToIntegerConverter.class, foo.getConverter()
-                .getClass());
+        assertTrue("Foo default renderer should be a type of ObjectRenderer",
+                foo.getRenderer() instanceof ObjectRenderer);
 
-        assertSame(TextRenderer.class, bar.getRenderer().getClass());
+        assertTrue("Bar default renderer should be a type of ObjectRenderer",
+                bar.getRenderer() instanceof ObjectRenderer);
         // String->String; converter not needed
         assertNull(bar.getConverter());
 
-        assertSame(TextRenderer.class, baz.getRenderer().getClass());
+        assertTrue("Baz default renderer should be a type of ObjectRenderer",
+                baz.getRenderer() instanceof ObjectRenderer);
         // MyBean->String; converter not found
         assertNull(baz.getConverter());
     }
@@ -166,6 +174,11 @@ public class RendererTest {
 
     @Test
     public void testEncoding() throws Exception {
+        /*
+         * For some strange reason, this test seems to fail locally, but not on
+         * TeamCity.
+         */
+
         assertEquals("42", render(foo, 42).asString());
         foo.setRenderer(renderer());
         assertEquals("renderer(42)", render(foo, 42).asString());
@@ -177,7 +190,7 @@ public class RendererTest {
 
     @Test
     public void testEncodingWithoutConverter() throws Exception {
-        assertEquals("", render(baz, new TestBean()).asString());
+        assertEquals("TestBean [42]", render(baz, new TestBean()).asString());
     }
 
     @Test
