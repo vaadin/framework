@@ -132,6 +132,8 @@ public class JavaScriptRendererConnector extends
 
     @Override
     protected Renderer<JsonValue> createRenderer() {
+        helper.ensureJavascriptInited();
+
         if (!hasFunction("render")) {
             throw new RuntimeException("JavaScriptRenderer "
                     + helper.getInitFunctionName()

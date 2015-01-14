@@ -59,50 +59,79 @@ public class JavaScriptConnectorHelper {
         rpcObjects.put("", JavaScriptObject.createObject());
     }
 
+    /**
+     * The id of the previous response for which state changes have been
+     * processed. If this is the same as the
+     * {@link ApplicationConnection#getLastResponseId()}, it means that the
+     * state change has already been handled and should not be done again.
+     */
+    private int processedResponseId = -1;
+
     public void init() {
         connector.addStateChangeHandler(new StateChangeHandler() {
             @Override
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
-                JavaScriptObject wrapper = getConnectorWrapper();
-                JavaScriptConnectorState state = getConnectorState();
-
-                for (String callback : state.getCallbackNames()) {
-                    ensureCallback(JavaScriptConnectorHelper.this, wrapper,
-                            callback);
-                }
-
-                for (Entry<String, Set<String>> entry : state
-                        .getRpcInterfaces().entrySet()) {
-                    String rpcName = entry.getKey();
-                    String jsName = getJsInterfaceName(rpcName);
-                    if (!rpcObjects.containsKey(jsName)) {
-                        Set<String> methods = entry.getValue();
-                        rpcObjects.put(jsName,
-                                createRpcObject(rpcName, methods));
-
-                        // Init all methods for wildcard rpc
-                        for (String method : methods) {
-                            JavaScriptObject wildcardRpcObject = rpcObjects
-                                    .get("");
-                            Set<String> interfaces = rpcMethods.get(method);
-                            if (interfaces == null) {
-                                interfaces = new HashSet<String>();
-                                rpcMethods.put(method, interfaces);
-                                attachRpcMethod(wildcardRpcObject, null, method);
-                            }
-                            interfaces.add(rpcName);
-                        }
-                    }
-                }
-
-                // Init after setting up callbacks & rpc
-                if (initFunctionName == null) {
-                    initJavaScript();
-                }
-
-                invokeIfPresent(wrapper, "onStateChange");
+                processStateChanges();
             }
         });
+    }
+
+    /**
+     * Makes sure the javascript part of the connector has been initialized. The
+     * javascript is usually initalized the first time a state change event is
+     * received, but it might in some cases be necessary to make this happen
+     * earlier.
+     * 
+     * @since 7.4.0
+     */
+    public void ensureJavascriptInited() {
+        if (initFunctionName == null) {
+            processStateChanges();
+        }
+    }
+
+    private void processStateChanges() {
+        int lastResponseId = connector.getConnection().getLastResponseId();
+        if (processedResponseId == lastResponseId) {
+            return;
+        }
+        processedResponseId = lastResponseId;
+
+        JavaScriptObject wrapper = getConnectorWrapper();
+        JavaScriptConnectorState state = getConnectorState();
+
+        for (String callback : state.getCallbackNames()) {
+            ensureCallback(JavaScriptConnectorHelper.this, wrapper, callback);
+        }
+
+        for (Entry<String, Set<String>> entry : state.getRpcInterfaces()
+                .entrySet()) {
+            String rpcName = entry.getKey();
+            String jsName = getJsInterfaceName(rpcName);
+            if (!rpcObjects.containsKey(jsName)) {
+                Set<String> methods = entry.getValue();
+                rpcObjects.put(jsName, createRpcObject(rpcName, methods));
+
+                // Init all methods for wildcard rpc
+                for (String method : methods) {
+                    JavaScriptObject wildcardRpcObject = rpcObjects.get("");
+                    Set<String> interfaces = rpcMethods.get(method);
+                    if (interfaces == null) {
+                        interfaces = new HashSet<String>();
+                        rpcMethods.put(method, interfaces);
+                        attachRpcMethod(wildcardRpcObject, null, method);
+                    }
+                    interfaces.add(rpcName);
+                }
+            }
+        }
+
+        // Init after setting up callbacks & rpc
+        if (initFunctionName == null) {
+            initJavaScript();
+        }
+
+        invokeIfPresent(wrapper, "onStateChange");
     }
 
     private static String getJsInterfaceName(String rpcName) {
