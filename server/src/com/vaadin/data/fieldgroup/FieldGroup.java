@@ -266,6 +266,14 @@ public class FieldGroup implements Serializable {
         configureField(field);
     }
 
+    /**
+     * Wrap property to transactional property.
+     */
+    protected <T> Property.Transactional<T> wrapInTransactionalProperty(
+            Property<T> itemProperty) {
+        return new TransactionalPropertyWrapper<T>(itemProperty);
+    }
+
     private void throwIfFieldIsNull(Field<?> field, Object propertyId) {
         if (field == null) {
             throw new BindException(
@@ -281,11 +289,6 @@ public class FieldGroup implements Serializable {
             throw new BindException("Property id " + propertyId
                     + " is already bound to another field");
         }
-    }
-
-    private <T> Property.Transactional<T> wrapInTransactionalProperty(
-            Property<T> itemProperty) {
-        return new TransactionalPropertyWrapper<T>(itemProperty);
     }
 
     /**

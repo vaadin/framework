@@ -123,7 +123,7 @@ public interface VaadinRequest extends Serializable {
 
     /**
      * Gets the path of the requested resource relative to the application. The
-     * path be <code>null</code> if no path information is available. Does
+     * path is <code>null</code> if no path information is available. Does
      * always start with / if the path isn't <code>null</code>.
      * 
      * @return a string with the path relative to the application.

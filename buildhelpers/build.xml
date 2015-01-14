@@ -41,6 +41,7 @@
         <antcall target="common.exec-buildhelper">
             <param name="main.class" value="com.vaadin.buildhelpers.FetchReleaseNotesTickets" />
             <param name="output" value="${output}" />
+            <param name="src" value="src" />
         </antcall>
     </target>
 
@@ -49,6 +50,7 @@
         <antcall target="common.exec-buildhelper">
             <param name="main.class" value="com.vaadin.buildhelpers.FetchReleaseNotesAuthors" />
             <param name="output" value="${output}" />
+            <param name="src" value="src" />
         </antcall>
         <delete file="result/classes/com/vaadin/buildhelpers/authormap.properties" />
     </target>

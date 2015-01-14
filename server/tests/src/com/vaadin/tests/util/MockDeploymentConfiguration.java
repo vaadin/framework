@@ -21,6 +21,7 @@ public class MockDeploymentConfiguration extends
     private Map<String, String> applicationOrSystemProperty = new HashMap<String, String>();
     private LegacyProperyToStringMode legacyPropertyToStringMode = LegacyProperyToStringMode.DISABLED;
     private boolean syncIdCheckEnabled = true;
+    private boolean sendUrlsAsParameters = true;
 
     @Override
     public boolean isProductionMode() {
@@ -117,6 +118,11 @@ public class MockDeploymentConfiguration extends
     public void setLegacyPropertyToStringMode(
             LegacyProperyToStringMode legacyPropertyToStringMode) {
         this.legacyPropertyToStringMode = legacyPropertyToStringMode;
+    }
+
+    @Override
+    public boolean isSendUrlsAsParameters() {
+        return sendUrlsAsParameters;
     }
 
 }

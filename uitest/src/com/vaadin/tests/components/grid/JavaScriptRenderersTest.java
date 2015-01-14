@@ -30,17 +30,17 @@ public class JavaScriptRenderersTest extends MultiBrowserTest {
         openTestURL();
 
         GridElement grid = $(GridElement.class).first();
-        GridCellElement cell_1_2 = grid.getCell(1, 2);
+        GridCellElement cell_1_1 = grid.getCell(1, 1);
 
         // Verify render functionality
-        Assert.assertEquals("Bean(2, 0)", cell_1_2.getText());
+        Assert.assertEquals("Bean(2, 0)", cell_1_1.getText());
 
         // Verify init functionality
-        Assert.assertEquals("2", cell_1_2.getAttribute("column"));
+        Assert.assertEquals("1", cell_1_1.getAttribute("column"));
 
         // Verify onbrowserevent
-        cell_1_2.click();
-        Assert.assertTrue(cell_1_2.getText().startsWith(
+        cell_1_1.click();
+        Assert.assertTrue(cell_1_1.getText().startsWith(
                 "Clicked 1 with key 1 at"));
     }
 }

@@ -276,8 +276,7 @@ public class ApplicationConfiguration implements EntryPoint {
      *         <code>false</code> if the path info goes after the service URL
      */
     public boolean useServiceUrlPathParam() {
-        return getJsoConfiguration(id).getConfigBoolean(
-                ApplicationConstants.SERVICE_URL_PATH_AS_PARAMETER) == Boolean.TRUE;
+        return getServiceUrlParameterName() != null;
     }
 
     /**
@@ -289,12 +288,8 @@ public class ApplicationConfiguration implements EntryPoint {
      * @return The parameter name, by default <code>v-resourcePath</code>
      */
     public String getServiceUrlParameterName() {
-        String prefix = getJsoConfiguration(id).getConfigString(
-                ApplicationConstants.SERVICE_URL_PARAMETER_NAMESPACE);
-        if (prefix == null) {
-            prefix = "";
-        }
-        return prefix + ApplicationConstants.V_RESOURCE_PATH;
+        return getJsoConfiguration(id).getConfigString(
+                ApplicationConstants.SERVICE_URL_PARAMETER_NAME);
     }
 
     public String getRootPanelId() {
