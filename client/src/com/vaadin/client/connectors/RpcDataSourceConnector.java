@@ -30,8 +30,6 @@ import com.vaadin.shared.ui.grid.Range;
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
-import elemental.json.JsonType;
-import elemental.json.JsonValue;
 
 /**
  * Connects a Vaadin server-side container data source to a Grid. This is
@@ -50,12 +48,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
         protected RpcDataSource() {
             registerRpc(DataProviderRpc.class, new DataProviderRpc() {
                 @Override
-                public void setRowData(int firstRow, String rowsJson) {
-                    JsonValue parsedJson = Json.instance().parse(rowsJson);
-                    assert parsedJson.getType() == JsonType.ARRAY : "Was unable to parse JSON into an array: "
-                            + parsedJson;
-                    JsonArray rowArray = (JsonArray) parsedJson;
-
+                public void setRowData(int firstRow, JsonArray rowArray) {
                     ArrayList<JsonObject> rows = new ArrayList<JsonObject>(
                             rowArray.length());
                     for (int i = 0; i < rowArray.length(); i++) {

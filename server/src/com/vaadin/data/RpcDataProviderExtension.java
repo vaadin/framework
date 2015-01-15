@@ -767,7 +767,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         for (int i = 0; i < itemIds.size(); ++i) {
             rows.set(i, getRowData(getGrid().getColumns(), itemIds.get(i)));
         }
-        rpc.setRowData(firstRowToPush, rows.toJson());
+        rpc.setRowData(firstRowToPush, rows);
 
         activeRowHandler.setActiveRows(active.getStart(), active.length());
     }
@@ -900,7 +900,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         JsonValue row = getRowData(getGrid().getColumns(), itemId);
         JsonArray rowArray = Json.createArray();
         rowArray.set(0, row);
-        rpc.setRowData(index, rowArray.toJson());
+        rpc.setRowData(index, rowArray);
     }
 
     /**

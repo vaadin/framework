@@ -19,6 +19,8 @@ package com.vaadin.shared.data;
 import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.ClientRpc;
 
+import elemental.json.JsonArray;
+
 /**
  * RPC interface used for pushing container data to the client.
  * 
@@ -53,7 +55,7 @@ public interface DataProviderRpc extends ClientRpc {
      * @see com.vaadin.ui.components.grid.Renderer#encode(Object)
      */
     @NoLayout
-    public void setRowData(int firstRowIndex, String rowDataJson);
+    public void setRowData(int firstRowIndex, JsonArray rowDataJson);
 
     /**
      * Informs the client to remove row data.

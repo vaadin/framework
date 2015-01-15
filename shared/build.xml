@@ -16,7 +16,9 @@
     <property name="result.dir" location="result" />
     <property name="src.filtered" location="${result.dir}/filtered-src" />
     <property name="src" location="${src.filtered}" />
-    <path id="classpath.compile.custom" />
+    <path id="classpath.compile.custom">
+        <fileset file="${gwt.elemental.jar}" />
+    </path>
     <path id="classpath.test.custom" />
 
     <target name="jar">
