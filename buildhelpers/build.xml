@@ -39,20 +39,24 @@
 
     <target name="fetch-release-notes-tickets">
         <antcall target="common.exec-buildhelper">
-            <param name="main.class" value="com.vaadin.buildhelpers.FetchReleaseNotesTickets" />
+            <param name="main.class"
+                value="com.vaadin.buildhelpers.FetchReleaseNotesTickets" />
             <param name="output" value="${output}" />
             <param name="src" value="src" />
         </antcall>
     </target>
 
     <target name="fetch-release-notes-authors">
-        <copy file="src/com/vaadin/buildhelpers/authormap.properties" tofile="result/classes/com/vaadin/buildhelpers/authormap.properties" />
+        <copy file="src/com/vaadin/buildhelpers/authormap.properties"
+            tofile="result/classes/com/vaadin/buildhelpers/authormap.properties" />
         <antcall target="common.exec-buildhelper">
-            <param name="main.class" value="com.vaadin.buildhelpers.FetchReleaseNotesAuthors" />
+            <param name="main.class"
+                value="com.vaadin.buildhelpers.FetchReleaseNotesAuthors" />
             <param name="output" value="${output}" />
             <param name="src" value="src" />
         </antcall>
-        <delete file="result/classes/com/vaadin/buildhelpers/authormap.properties" />
+        <delete
+            file="result/classes/com/vaadin/buildhelpers/authormap.properties" />
     </target>
 
     <target name="test" depends="checkstyle">

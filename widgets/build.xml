@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-widgets" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="vaadin-widgets" basedir="." default="publish-local"
+    xmlns:ivy="antlib:org.apache.ivy.ant">
     <description>
         Widgets package for using Vaadin widgets with GWT 2.7+
     </description>
@@ -34,7 +35,8 @@
 
         <ivy:resolve transitive="false" type="jar" conf="build" />
         <ivy:cachepath pathid="vaadin.jars" />
-        <ivy:resolve transitive="false" type="jar" conf="build-provided" />
+        <ivy:resolve transitive="false" type="jar"
+            conf="build-provided" />
         <ivy:cachepath pathid="compile.deps" />
         <unjar dest="${result.deps}">
             <path refid="vaadin.jars" />
@@ -62,7 +64,8 @@
                 <include name="com/vaadin/shared/ui/grid/**/*.java" />
                 <include name="com/vaadin/shared/util/SharedUtil.java" />
                 <include name="com/vaadin/shared/VBrowserDetails.java" />
-                <include name="com/vaadin/shared/data/sort/SortDirection.java" />
+                <include
+                    name="com/vaadin/shared/data/sort/SortDirection.java" />
 
                 <include name="com/vaadin/sass/linker/*.java" />
 
@@ -79,11 +82,14 @@
             <fileset dir="${result.deps}/VAADIN/themes/base" />
         </copy>
     </target>
-    <target name="compile" description="Compiles the module" depends="dependencies,copysrc">
+    <target name="compile" description="Compiles the module"
+        depends="dependencies,copysrc">
         <property name="classes" location="${result.dir}/classes" />
         <mkdir dir="${classes}" />
 
-        <javac destdir="${classes}" source="${vaadin.java.version}" target="${vaadin.java.version}" debug="true" encoding="UTF-8" includeantruntime="false">
+        <javac destdir="${classes}" source="${vaadin.java.version}"
+            target="${vaadin.java.version}" debug="true" encoding="UTF-8"
+            includeantruntime="false">
             <src path="${result.src}" />
             <classpath refid="classpath.compile.custom" />
             <classpath refid="compile.deps" />
@@ -91,7 +97,8 @@
     </target>
 
     <target name="jar" depends="compile">
-        <property name="jar.file" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
+        <property name="jar.file"
+            location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
         <antcall target="common.jar">
             <param name="src" value="${result.dir}/src" />
             <reference refid="jar.includes" torefid="extra.jar.includes" />
@@ -118,7 +125,7 @@
     </target>
 
     <target name="test" depends="checkstyle">
-        <!--        <antcall target="common.test.run" />-->
+        <!-- <antcall target="common.test.run" /> -->
     </target>
 
 </project>
