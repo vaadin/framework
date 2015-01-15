@@ -5832,4 +5832,13 @@ public class Grid<T> extends ResizeComposite implements
     /*-{
         widget.@com.google.gwt.user.client.ui.Widget::setParent(Lcom/google/gwt/user/client/ui/Widget;)(parent);
     }-*/;
+
+    /**
+     * Resets all cached pixel sizes and reads new values from the DOM. This
+     * methods should be used e.g. when styles affecting the dimensions of
+     * elements in this grid have been changed.
+     */
+    public void resetSizesFromDom() {
+        getEscalator().resetSizesFromDom();
+    }
 }

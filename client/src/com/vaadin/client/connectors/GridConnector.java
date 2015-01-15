@@ -389,6 +389,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
     private ItemClickHandler itemClickHandler = new ItemClickHandler();
 
+    private String lastKnownTheme = null;
+
     @Override
     @SuppressWarnings("unchecked")
     public Grid<JsonObject> getWidget() {
@@ -532,6 +534,14 @@ public class GridConnector extends AbstractHasComponentsConnector implements
 
         if (stateChangeEvent.hasPropertyChanged("frozenColumnCount")) {
             getWidget().setFrozenColumnCount(getState().frozenColumnCount);
+        }
+
+        String activeTheme = getConnection().getUIConnector().getActiveTheme();
+        if (lastKnownTheme == null) {
+            lastKnownTheme = activeTheme;
+        } else if (!lastKnownTheme.equals(activeTheme)) {
+            getWidget().resetSizesFromDom();
+            lastKnownTheme = activeTheme;
         }
     }
 

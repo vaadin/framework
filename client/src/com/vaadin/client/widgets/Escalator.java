@@ -1903,37 +1903,43 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
             rowTopPositionMap.remove(tr);
         }
 
-        public void autodetectRowHeight() {
+        public void autodetectRowHeightLater() {
             Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-
                 @Override
                 public void execute() {
                     if (defaultRowHeightShouldBeAutodetected && isAttached()) {
-                        final Element detectionTr = DOM.createTR();
-                        detectionTr
-                                .setClassName(getStylePrimaryName() + "-row");
-
-                        final Element cellElem = DOM
-                                .createElement(getCellElementTagName());
-                        cellElem.setClassName(getStylePrimaryName() + "-cell");
-                        cellElem.setInnerText("Ij");
-
-                        detectionTr.appendChild(cellElem);
-                        root.appendChild(detectionTr);
-                        double boundingHeight = WidgetUtil
-                                .getRequiredHeightBoundingClientRectDouble(cellElem);
-                        defaultRowHeight = Math.max(1.0d, boundingHeight);
-                        root.removeChild(detectionTr);
-
-                        if (root.hasChildNodes()) {
-                            reapplyDefaultRowHeights();
-                            applyHeightByRows();
-                        }
-
+                        autodetectRowHeightNow();
                         defaultRowHeightShouldBeAutodetected = false;
                     }
                 }
             });
+        }
+
+        public void autodetectRowHeightNow() {
+            if (!isAttached()) {
+                // Run again when attached
+                defaultRowHeightShouldBeAutodetected = true;
+                return;
+            }
+
+            final Element detectionTr = DOM.createTR();
+            detectionTr.setClassName(getStylePrimaryName() + "-row");
+
+            final Element cellElem = DOM.createElement(getCellElementTagName());
+            cellElem.setClassName(getStylePrimaryName() + "-cell");
+            cellElem.setInnerText("Ij");
+
+            detectionTr.appendChild(cellElem);
+            root.appendChild(detectionTr);
+            double boundingHeight = WidgetUtil
+                    .getRequiredHeightBoundingClientRectDouble(cellElem);
+            defaultRowHeight = Math.max(1.0d, boundingHeight);
+            root.removeChild(detectionTr);
+
+            if (root.hasChildNodes()) {
+                reapplyDefaultRowHeights();
+                applyHeightByRows();
+            }
         }
 
         @Override
@@ -4367,9 +4373,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
     protected void onLoad() {
         super.onLoad();
 
-        header.autodetectRowHeight();
-        body.autodetectRowHeight();
-        footer.autodetectRowHeight();
+        header.autodetectRowHeightLater();
+        body.autodetectRowHeightLater();
+        footer.autodetectRowHeightLater();
 
         header.paintInsertRows(0, header.getRowCount());
         footer.paintInsertRows(0, footer.getRowCount());
@@ -5089,5 +5095,21 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
     public double getInnerWidth() {
         return WidgetUtil
                 .getRequiredWidthBoundingClientRectDouble(tableWrapper);
+    }
+
+    /**
+     * Resets all cached pixel sizes and reads new values from the DOM. This
+     * methods should be used e.g. when styles affecting the dimensions of
+     * elements in this escalator have been changed.
+     */
+    public void resetSizesFromDom() {
+        header.autodetectRowHeightNow();
+        body.autodetectRowHeightNow();
+        footer.autodetectRowHeightNow();
+
+        for (int i = 0; i < columnConfiguration.getColumnCount(); i++) {
+            columnConfiguration.setColumnWidth(i,
+                    columnConfiguration.getColumnWidth(i));
+        }
     }
 }
