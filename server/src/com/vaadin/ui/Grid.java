@@ -3419,12 +3419,12 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     }
 
     /**
-     * Changes the Grid's selection mode.
+     * Sets the Grid's selection mode.
      * <p>
      * Grid supports three selection modes: multiselect, single select and no
-     * selection, and this is a conveniency method for choosing between one of
+     * selection, and this is a convenience method for choosing between one of
      * them.
-     * <P>
+     * <p>
      * Technically, this method is a shortcut that can be used instead of
      * calling {@code setSelectionModel} with a specific SelectionModel
      * instance. Grid comes with three built-in SelectionModel classes, and the
@@ -3470,8 +3470,8 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * Returns a collection of all the currently selected itemIds.
      * <p>
-     * This method is a shorthand that is forwarded to the object that is
-     * returned by {@link #getSelectionModel()}.
+     * This method is a shorthand that delegates to the
+     * {@link #getSelectionModel() selection model}.
      * 
      * @return a collection of all the currently selected itemIds
      */
@@ -3483,43 +3483,51 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
     /**
      * Gets the item id of the currently selected item.
      * <p>
-     * This method is a shorthand that is forwarded to the object that is
-     * returned by {@link #getSelectionModel()}. Only
+     * This method is a shorthand that delegates to the
+     * {@link #getSelectionModel() selection model}. Only
      * {@link SelectionModel.Single} is supported.
      * 
      * @return the item id of the currently selected item, or <code>null</code>
      *         if nothing is selected
      * @throws IllegalStateException
-     *             if the object that is returned by
-     *             {@link #getSelectionModel()} is not an instance of
-     *             {@link SelectionModel.Single}
+     *             if the selection model does not implement
+     *             {@code SelectionModel.Single}
      */
     // keep this javadoc in sync with SelectionModel.Single.getSelectedRow
     public Object getSelectedRow() throws IllegalStateException {
         if (selectionModel instanceof SelectionModel.Single) {
             return ((SelectionModel.Single) selectionModel).getSelectedRow();
+        } else if (selectionModel instanceof SelectionModel.Multi) {
+            throw new IllegalStateException("Cannot get unique selected row: "
+                    + "Grid is in multiselect mode "
+                    + "(the current selection model is "
+                    + selectionModel.getClass().getName() + ").");
+        } else if (selectionModel instanceof SelectionModel.None) {
+            throw new IllegalStateException("Cannot get selected row: "
+                    + "Grid selection is disabled "
+                    + "(the current selection model is "
+                    + selectionModel.getClass().getName() + ").");
         } else {
-            throw new IllegalStateException(Grid.class.getSimpleName()
-                    + " does not support the 'getSelectedRow' shortcut method "
-                    + "unless the selection model implements "
-                    + SelectionModel.Single.class.getName()
-                    + ". The current one does not ("
-                    + selectionModel.getClass().getName() + ")");
+            throw new IllegalStateException("Cannot get selected row: "
+                    + "Grid selection model does not implement "
+                    + SelectionModel.Single.class.getName() + " or "
+                    + SelectionModel.Multi.class.getName()
+                    + "(the current model is "
+                    + selectionModel.getClass().getName() + ").");
         }
     }
 
     /**
      * Marks an item as selected.
      * <p>
-     * This method is a shorthand that is forwarded to the object that is
-     * returned by {@link #getSelectionModel()}. Only
-     * {@link SelectionModel.Single} or {@link SelectionModel.Multi} are
+     * This method is a shorthand that delegates to the
+     * {@link #getSelectionModel() selection model}. Only
+     * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
      * supported.
-     * 
      * 
      * @param itemIds
      *            the itemId to mark as selected
-     * @return <code>true</code> if the selection state changed.
+     * @return <code>true</code> if the selection state changed,
      *         <code>false</code> if the itemId already was selected
      * @throws IllegalArgumentException
      *             if the {@code itemId} doesn't exist in the currently active
@@ -3528,11 +3536,10 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
      *             if the selection was illegal. One such reason might be that
      *             the implementation already had an item selected, and that
      *             needs to be explicitly deselected before re-selecting
-     *             something
+     *             something.
      * @throws IllegalStateException
-     *             if the object that is returned by
-     *             {@link #getSelectionModel()} does not implement
-     *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
+     *             if the selection model does not implement
+     *             {@code SelectionModel.Single} or {@code SelectionModel.Multi}
      */
     // keep this javadoc in sync with SelectionModel.Single.select
     public boolean select(Object itemId) throws IllegalArgumentException,
@@ -3541,41 +3548,43 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             return ((SelectionModel.Single) selectionModel).select(itemId);
         } else if (selectionModel instanceof SelectionModel.Multi) {
             return ((SelectionModel.Multi) selectionModel).select(itemId);
+        } else if (selectionModel instanceof SelectionModel.None) {
+            throw new IllegalStateException("Cannot select row '" + itemId
+                    + "': Grid selection is disabled "
+                    + "(the current selection model is "
+                    + selectionModel.getClass().getName() + ").");
         } else {
-            throw new IllegalStateException(Grid.class.getSimpleName()
-                    + " does not support the 'select' shortcut method "
-                    + "unless the selection model implements "
+            throw new IllegalStateException("Cannot select row '" + itemId
+                    + "': Grid selection model does not implement "
                     + SelectionModel.Single.class.getName() + " or "
                     + SelectionModel.Multi.class.getName()
-                    + ". The current one does not ("
+                    + "(the current model is "
                     + selectionModel.getClass().getName() + ").");
         }
     }
 
     /**
-     * Marks an item as deselected.
+     * Marks an item as unselected.
      * <p>
-     * This method is a shorthand that is forwarded to the object that is
-     * returned by {@link #getSelectionModel()}. Only
+     * This method is a shorthand that delegates to the
+     * {@link #getSelectionModel() selection model}. Only
      * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
      * supported.
      * 
      * @param itemId
      *            the itemId to remove from being selected
-     * @return <code>true</code> if the selection state changed.
-     *         <code>false</code> if the itemId already was selected
+     * @return <code>true</code> if the selection state changed,
+     *         <code>false</code> if the itemId was already selected
      * @throws IllegalArgumentException
      *             if the {@code itemId} doesn't exist in the currently active
      *             Container
      * @throws IllegalStateException
      *             if the deselection was illegal. One such reason might be that
-     *             the implementation already had an item selected, and that
-     *             needs to be explicitly deselected before re-selecting
-     *             something
+     *             the implementation requires one or more items to be selected
+     *             at all times.
      * @throws IllegalStateException
-     *             if the object that is returned by
-     *             {@link #getSelectionModel()} does not implement
-     *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
+     *             if the selection model does not implement
+     *             {@code SelectionModel.Single} or {code SelectionModel.Multi}
      */
     // keep this javadoc in sync with SelectionModel.Single.deselect
     public boolean deselect(Object itemId) throws IllegalStateException {
@@ -3586,13 +3595,17 @@ public class Grid extends AbstractComponent implements SelectionNotifier,
             return false;
         } else if (selectionModel instanceof SelectionModel.Multi) {
             return ((SelectionModel.Multi) selectionModel).deselect(itemId);
+        } else if (selectionModel instanceof SelectionModel.None) {
+            throw new IllegalStateException("Cannot deselect row '" + itemId
+                    + "': Grid selection is disabled "
+                    + "(the current selection model is "
+                    + selectionModel.getClass().getName() + ").");
         } else {
-            throw new IllegalStateException(Grid.class.getSimpleName()
-                    + " does not support the 'deselect' shortcut method "
-                    + "unless the selection model implements "
+            throw new IllegalStateException("Cannot deselect row '" + itemId
+                    + "': Grid selection model does not implement "
                     + SelectionModel.Single.class.getName() + " or "
                     + SelectionModel.Multi.class.getName()
-                    + ". The current one does not ("
+                    + "(the current model is "
                     + selectionModel.getClass().getName() + ").");
         }
     }
