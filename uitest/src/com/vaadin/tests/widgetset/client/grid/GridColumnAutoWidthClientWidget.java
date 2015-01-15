@@ -63,7 +63,7 @@ public class GridColumnAutoWidthClientWidget extends
     }
 
     private Col addColumn(String header) {
-        Col column = (Col) grid.addColumn(new Col(header));
+        Col column = grid.addColumn(new Col(header));
         grid.getHeaderRow(0).getCell(column)
                 .setHtml("<span>" + header + "</span>");
         return column;

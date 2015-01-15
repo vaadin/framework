@@ -3674,7 +3674,7 @@ public class Grid<T> extends ResizeComposite implements
      *            the column to add
      * @return given column
      */
-    public Column<?, T> addColumn(Column<?, T> column) {
+    public <C extends Column<?, T>> C addColumn(C column) {
         addColumn(column, getColumnCount());
         return column;
     }
@@ -3692,7 +3692,7 @@ public class Grid<T> extends ResizeComposite implements
      *             if Grid's current selection model renders a selection column,
      *             and {@code index} is 0.
      */
-    public Column<?, T> addColumn(Column<?, T> column, int index) {
+    public <C extends Column<?, T>> C addColumn(C column, int index) {
         if (column == selectionColumn) {
             throw new IllegalArgumentException("The selection column many "
                     + "not be added manually");
