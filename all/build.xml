@@ -41,14 +41,11 @@
     </target>
 
     <target name="javadoc" depends="copy-jars">
-        <!-- Ensure filtered webcontent files are available -->
-        <antcall target="common.filter.webcontent" />
-
         <antcontrib:if>
             <isset property="nojavadoc" />
             <then>
                 <jar file="${javadoc.jar}" compress="true">
-                    <fileset refid="common.files.for.all.jars" />
+                    <fileset dir="${common.jarfiles.dir}" />
                 </jar>
             </then>
             <else>
@@ -83,7 +80,7 @@
                 <!-- Create a javadoc jar -->
                 <jar file="${javadoc.jar}" compress="true">
                     <fileset dir="${javadoc.dir}" />
-                    <fileset refid="common.files.for.all.jars" />
+                    <fileset dir="${common.jarfiles.dir}" />
                 </jar>
             </else>
         </antcontrib:if>
@@ -105,9 +102,6 @@
 
     </target>
     <target name="zip" depends="copy-jars, javadoc">
-        <!-- Ensure filtered webcontent files are available -->
-        <antcall target="common.filter.webcontent" />
-
         <zip destfile="${zip.file}">
             <fileset dir="${temp.dir}">
                 <!-- Avoid conflicts with servlet and portlet API. They are 
@@ -121,9 +115,8 @@
                 <exclude name="*.pom" />
                 <exclude name="*-javadoc.jar" />
                 <exclude name="*-sources.jar" />
-
             </fileset>
-            <fileset refid="common.files.for.all.jars" />
+            <fileset dir="${common.jarfiles.dir}" />
             <fileset dir="${result.dir}/..">
                 <include name="README.TXT" />
             </fileset>

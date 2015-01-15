@@ -131,11 +131,8 @@
             <fileset dir="${deps.dir}" includes="servlet-api-*.jar" />
         </delete>
 
-        <!-- Ensure filtered webcontent files are available -->
-        <antcall target="common.filter.webcontent" />
-
         <war destfile="${result.war}" duplicate="fail" index="true">
-            <fileset refid="common.files.for.all.jars" />
+            <fileset dir="${common.jarfiles.dir}" />
             <fileset dir="${result.dir}">
                 <include name="VAADIN/widgetsets/**/*" />
                 <include name="VAADIN/themes/tests-valo*/**" />
