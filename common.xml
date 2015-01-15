@@ -30,82 +30,10 @@
 
     <union id="empty.reference" />
 
-    <property name="filtered.webcontent.dir" location="${vaadin.basedir}/result/filteredWebContent" />
-    <property name="release-notes-tickets-file" location="${vaadin.basedir}/result/release-notes-tickets.html" />
-    <property name="release-notes-authors-file" location="${vaadin.basedir}/result/release-notes-authors.html" />
-
-    <target name="filter.webcontent" unless="webcontent.filtered" depends="fetch-release-notes-tickets,fetch-release-notes-authors">
-        <property name="webcontent.filtered" value="true" />
-        <!-- Running without build.release-notes will cause an error, which 
-            is ignored -->
-        <loadfile property="release-notes-tickets" srcFile="${release-notes-tickets-file}" failonerror="false" />
-        <loadfile property="release-notes-authors" srcFile="${release-notes-authors-file}" failonerror="false" />
-
-        <delete dir="${filtered.webcontent.dir}" />
-        <copy todir="${filtered.webcontent.dir}">
-            <fileset dir="${vaadin.basedir}/WebContent">
-                <include name="img/**" />
-            </fileset>
-        </copy>
-        <copy todir="${filtered.webcontent.dir}">
-            <fileset dir="${vaadin.basedir}/WebContent">
-                <patternset>
-                    <include name="release-notes.html" />
-                    <include name="license.html" />
-                    <include name="licenses/**" />
-                    <include name="css/**" />
-                </patternset>
-            </fileset>
-            <filterchain>
-                <expandproperties />
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="version" value="${vaadin.version}" />
-                </replacetokens>
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="version-minor" value="${vaadin.version.major}.${vaadin.version.minor}" />
-                </replacetokens>
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="builddate" value="${build.date}" />
-                </replacetokens>
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="release-notes-tickets" value="${release-notes-tickets}" />
-                </replacetokens>
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="release-notes-authors" value="${release-notes-authors}" />
-                </replacetokens>
-            </filterchain>
-        </copy>
-    </target>
-
-    <target name="fetch-release-notes-tickets" unless="built.release-notes-tickets" if="build.release-notes">
-        <mkdir dir="${vaadin.basedir}/result" />
-        <subant buildpath="${vaadin.basedir}/buildhelpers" target="fetch-release-notes-tickets" antfile="build.xml" inheritall="true">
-            <property name="output" location="${release-notes-tickets-file}" />
-        </subant>
-        <property name="built.release-notes-tickets" value="1" />
-    </target>
-
-    <target name="fetch-release-notes-authors" unless="built.release-notes-authors" if="build.release-notes">
-        <mkdir dir="${vaadin.basedir}/result" />
-        <subant buildpath="${vaadin.basedir}/buildhelpers" target="fetch-release-notes-authors" antfile="build.xml" inheritall="true">
-            <property name="output" location="${release-notes-authors-file}" />
-        </subant>
-        <property name="built.release-notes-authors" value="1" />
-    </target>
-
-    <fileset dir="${filtered.webcontent.dir}" id="common.files.for.all.jars">
-        <patternset>
-            <include name="release-notes.html" />
-            <include name="license.html" />
-            <include name="licenses/**" />
-            <include name="css/**" />
-            <include name="img/**" />
-        </patternset>
-    </fileset>
-
-
     <target name="pom.xml" description="Generates a pom.xml based on the Ivy configuration. Either for a snapshot or a release version" depends="pom.xml.release,pom.xml.snapshot">
     </target>
+
+    <property name="common.jarfiles.dir" location="${vaadin.basedir}/buildhelpers/result/WebContent" />
 
     <target name="pom.xml.release" if="build.release">
         <fail unless="result.dir" message="No result.dir parameter given" />
@@ -141,7 +69,7 @@
     </target>
 
 
-    <target name="sources.jar" depends="compile, filter.webcontent">
+    <target name="sources.jar" depends="compile">
         <fail unless="result.dir" message="No result.dir parameter given" />
         <fail unless="module.name" message="No module.name parameter given" />
         <fail unless="src" message="No src directory parameter given" />
@@ -155,7 +83,7 @@
                     <include name="**/*.properties" />
                 </patternset>
             </fileset>
-            <fileset refid="common.files.for.all.jars" />
+            <fileset dir="${common.jarfiles.dir}" />
             <restrict>
                 <union refid="extra.jar.includes" />
                 <name name="*.java" />
@@ -164,8 +92,8 @@
 
     </target>
 
-    <target name="javadoc.jar" depends="dependencies, filter.webcontent">
-      <fail unless="result.dir" message="No result.dir parameter given" />
+    <target name="javadoc.jar" depends="dependencies">
+        <fail unless="result.dir" message="No result.dir parameter given" />
         <fail unless="module.name" message="No module.name parameter given" />
         <property name="src" location="{$result.dir}/../src" />
         <property name="javadoc.dir" value="${result.dir}/javadoc" />
@@ -178,34 +106,34 @@
               out without using conf attribute. Using conf would make internal
               dependency resolution unnecessary complicated.
              -->
-        	<isset property="nojavadoc" />
-              <then>
+            <isset property="nojavadoc" />
+            <then>
                 <jar file="${javadoc.jar}" compress="true">
-                  <fileset refid="common.files.for.all.jars" />
+                    <fileset dir="${common.jarfiles.dir}" />
                 </jar>
-              </then>
+            </then>
             <else>
-              <javadoc destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="${module.name}">
-                <packageset dir="${src}" excludes="${classes.exclude}" />
+                <javadoc destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="${module.name}">
+                    <packageset dir="${src}" excludes="${classes.exclude}" />
 
-                  <doctitle>&lt;h1>${module.name}&lt;/h1></doctitle>
-                  <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
-                  <bottom>${javadoc.bottom}</bottom>
-                  <link offline="true" href="http://docs.oracle.com/javase/6/docs/api/" packagelistLoc="build/javadoc/j2se-1.6.0" />
-                  <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
-                  <classpath refid="classpath.compile.dependencies" />
-              </javadoc>
+                    <doctitle>&lt;h1>${module.name}&lt;/h1></doctitle>
+                    <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
+                    <bottom>${javadoc.bottom}</bottom>
+                    <link offline="true" href="http://docs.oracle.com/javase/6/docs/api/" packagelistLoc="build/javadoc/j2se-1.6.0" />
+                    <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
+                    <classpath refid="classpath.compile.dependencies" />
+                </javadoc>
 
-              <!-- Create a javadoc jar -->
-              <jar file="${javadoc.jar}" compress="true">
-                <fileset dir="${javadoc.dir}" />
-                <fileset refid="common.files.for.all.jars" />
-              </jar>
+                <!-- Create a javadoc jar -->
+                <jar file="${javadoc.jar}" compress="true">
+                    <fileset dir="${javadoc.dir}" />
+                    <fileset dir="${common.jarfiles.dir}" />
+                </jar>
             </else>
         </antcontrib:if>
     </target>
 
-    <target name="jar" depends="compile, pom.xml, filter.webcontent">
+    <target name="jar" depends="compile, pom.xml">
         <fail unless="result.dir" message="No result.dir parameter given" />
         <fail unless="module.name" message="No module.name parameter given" />
 
@@ -214,9 +142,9 @@
         <property name="src" location="{$result.dir}/../src" />
 
         <union id="jar.files">
-            <fileset dir="${classes}" excludes="${classes.exclude}" erroronmissingdir="false"/>
+            <fileset dir="${classes}" excludes="${classes.exclude}" erroronmissingdir="false" />
             <fileset dir="${src}" excludes="${jar.exclude}" erroronmissingdir="false" />
-            <fileset refid="common.files.for.all.jars" />
+            <fileset dir="${common.jarfiles.dir}" />
             <union refid="extra.jar.includes" />
         </union>
 
@@ -291,11 +219,14 @@
             </then>
         </antcontrib:if>
 
+        <ivy:resolve inline="true" organisation="com.vaadin" module="vaadin-buildhelpers" revision="${vaadin.version}" keep="true" />
+        <ivy:cachepath pathid="buildhelpers.classpath" />
+
         <!-- Generate the Export-Package attribute in the manifest -->
         <java classname="com.vaadin.buildhelpers.GeneratePackageExports" failonerror="true" fork="yes">
             <arg value="${jar}" />
             <arg line="com/vaadin com/google ${osgi.extra.package.prefixes}" />
-            <classpath refid="vaadin.buildhelpers.classpath" />
+            <classpath refid="buildhelpers.classpath" />
             <jvmarg value="-Dvaadin.version=${vaadin.version}" />
         </java>
     </target>
@@ -308,18 +239,8 @@
             <classpath refid="classpath.compile.custom" />
         </javac>
         <copy todir="${classes}">
-            <fileset dir="${src}" includes="${extra.classes}"/>
+            <fileset dir="${src}" includes="${extra.classes}" />
         </copy>
-    </target>
-
-    <target name="exec-buildhelper" depends="compile">
-        <fail unless="main.class" message="No main class given in 'main.class'" />
-        <fail unless="output" message="No output file given in 'output'" />
-        <java classname="${main.class}" output="${output}" failonerror="true" fork="yes">
-            <classpath refid="vaadin.buildhelpers.classpath" />
-            <classpath refid="classpath.compile.dependencies" />
-            <jvmarg value="-Dvaadin.version=${vaadin.version}" />
-        </java>
     </target>
 
     <target name="directories">
@@ -380,10 +301,10 @@
         <!-- Copy resources -->
         <copy todir="${test.classes}" failonerror="false">
             <fileset dir="${test.resources}" />
-        	 <!-- include html templates used in declarative tests --> 
-   	        <fileset dir="${test.src}">
-                <include name="**/*.html"/>
-   	        </fileset>
+            <!-- include html templates used in declarative tests -->
+            <fileset dir="${test.src}">
+                <include name="**/*.html" />
+            </fileset>
         </copy>
     </target>
 
