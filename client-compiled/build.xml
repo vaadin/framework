@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-client-compiled" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="vaadin-client-compiled" basedir="." default="publish-local"
+    xmlns:ivy="antlib:org.apache.ivy.ant">
     <description>
         Compiled (JS+HTML) version of client side
     </description>
@@ -16,8 +17,10 @@
     <property name="gwtar.dir" location="${result.dir}/gwtar" />
     <property name="work.dir" location="${result.dir}/work" />
     <property name="module.output.dir" location="${result.dir}/VAADIN/widgetsets" />
-    <property name="compiled.jar" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
-    <property name="compiled-cache.jar" location="${result.dir}/lib/${module.name}-cache-${vaadin.version}.jar" />
+    <property name="compiled.jar"
+        location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
+    <property name="compiled-cache.jar"
+        location="${result.dir}/lib/${module.name}-cache-${vaadin.version}.jar" />
 
     <union id="jar.includes">
         <fileset dir="${result.dir}">
@@ -39,13 +42,18 @@
 
 
     <target name="compile-module-cache">
-        <fail unless="module" message="You must give the module to compile in the 'module' parameter" />
-        <ivy:resolve log="download-only" resolveid="common" conf="compile-module" />
-        <ivy:cachepath pathid="classpath.compile.widgetset" conf="compile-module" />
+        <fail unless="module"
+            message="You must give the module to compile in the 'module' parameter" />
+        <ivy:resolve log="download-only" resolveid="common"
+            conf="compile-module" />
+        <ivy:cachepath pathid="classpath.compile.widgetset"
+            conf="compile-module" />
         <echo>Creating gwtar files for ${module} in ${gwtar.dir}</echo>
 
         <!-- Produce gwtar files for the separate JAR -->
-        <java classname="com.google.gwt.dev.CompileModule" classpathref="classpath.compile.widgetset" failonerror="yes" fork="yes" maxmemory="512m">
+        <java classname="com.google.gwt.dev.CompileModule"
+            classpathref="classpath.compile.widgetset" failonerror="yes"
+            fork="yes" maxmemory="512m">
             <arg value="-out" />
             <arg value="${gwtar.dir}" />
             <arg value="-strict" />
@@ -58,20 +66,24 @@
     </target>
 
     <target name="compile-module">
-        <fail unless="module" message="You must give the module to compile in the 'module' parameter" />
+        <fail unless="module"
+            message="You must give the module to compile in the 'module' parameter" />
         <property name="style" value="OBF" />
         <property name="localWorkers" value="6" />
         <property name="extraParams" value="" />
 
-        <ivy:resolve log="download-only" resolveid="common" conf="compile-module" />
-        <ivy:cachepath pathid="classpath.compile.widgetset" conf="compile-module" />
+        <ivy:resolve log="download-only" resolveid="common"
+            conf="compile-module" />
+        <ivy:cachepath pathid="classpath.compile.widgetset"
+            conf="compile-module" />
 
         <mkdir dir="${module.output.dir}" />
 
         <echo>Compiling ${module} to ${module.output.dir}</echo>
 
         <!-- compile the module -->
-        <java classname="com.google.gwt.dev.Compiler" classpathref="classpath.compile.widgetset" failonerror="yes" fork="yes" maxmemory="512m">
+        <java classname="com.google.gwt.dev.Compiler" classpathref="classpath.compile.widgetset"
+            failonerror="yes" fork="yes" maxmemory="512m">
             <classpath location="${compiled-cache.jar}" />
             <arg value="-workDir" />
             <arg value="${work.dir}" />
@@ -86,7 +98,7 @@
             <arg value="${localWorkers}" />
             <arg value="-strict" />
             <!-- Disabled for now as it breaks code, e.g. ButtonWithShortcutNotRendered -->
-            <!-- <arg value="-XenableClosureCompiler" />-->
+            <!-- <arg value="-XenableClosureCompiler" /> -->
             <arg line="${extraParams}" />
             <arg value="${module}" />
 
