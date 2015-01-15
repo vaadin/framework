@@ -62,6 +62,12 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
 
     > * {
       line-height: $v-line-height;
+      vertical-align: middle;
+    }
+
+    // Force div elements to inline-blocks by default to enable vertical centering
+    > div {
+      display: inline-block;
     }
 
     &.frozen {
@@ -81,15 +87,11 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
 
   .#{$primaryStyleName}-row > td {
     border-left: $v-grid-cell-vertical-border;
-    border-top: $v-grid-cell-horizontal-border;
+    border-bottom: $v-grid-cell-horizontal-border;
 
     &:first-child {
       border-left: none;
     }
-  }
-
-  tbody > .#{$primaryStyleName}-row:first-child > td {
-    border-top: none;
   }
 
   .#{$primaryStyleName}-row-stripe > td {
@@ -149,6 +151,7 @@ $v-grid-editor-background-color: $v-grid-row-background-color !default;
       font-weight: inherit;
       border-left: $v-grid-footer-border;
       border-top: $v-grid-footer-border;
+      border-bottom: none;
       line-height: $v-grid-footer-row-height;
 
       &:first-child {
