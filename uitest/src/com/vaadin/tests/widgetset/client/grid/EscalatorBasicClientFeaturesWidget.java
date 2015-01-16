@@ -419,6 +419,34 @@ public class EscalatorBasicClientFeaturesWidget extends
                         insertColumns(0, 10);
                     }
                 }, menupath);
+
+        createSizeMenu();
+    }
+
+    private void createSizeMenu() {
+        String[] menupath = new String[] { "General", "Size" };
+
+        addSizeMenuItem(null, "height", menupath);
+        addSizeMenuItem("200px", "height", menupath);
+        addSizeMenuItem("400px", "height", menupath);
+        addSizeMenuItem(null, "width", menupath);
+        addSizeMenuItem("200px", "width", menupath);
+        addSizeMenuItem("400px", "width", menupath);
+    }
+
+    private void addSizeMenuItem(final String size, final String direction,
+            String[] menupath) {
+        final String title = (size != null ? size : "undefined");
+        addMenuCommand(title + " " + direction, new ScheduledCommand() {
+            @Override
+            public void execute() {
+                if (direction.equals("height")) {
+                    escalator.setHeight(size);
+                } else {
+                    escalator.setWidth(size);
+                }
+            }
+        }, menupath);
     }
 
     private void createColumnMenu() {
@@ -572,6 +600,14 @@ public class EscalatorBasicClientFeaturesWidget extends
                 int offset = container.getRowCount() - 1;
                 int number = 1;
                 removeRows(container, offset, number);
+            }
+        }, menupath);
+        addMenuCommand("Remove all rows", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                if (container.getRowCount() > 0) {
+                    removeRows(container, 0, container.getRowCount());
+                }
             }
         }, menupath);
     }

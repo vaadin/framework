@@ -753,8 +753,7 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
          * that the sizes of the scroll handles appear correct in the browser
          */
         public void recalculateScrollbarsForVirtualViewport() {
-            double scrollContentHeight = body
-                    .calculateEstimatedTotalRowHeight();
+            double scrollContentHeight = body.calculateTotalRowHeight();
             double scrollContentWidth = columnConfiguration.calculateRowWidth();
 
             double tableWrapperHeight = heightOfEscalator;
@@ -1495,12 +1494,9 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         abstract protected void recalculateSectionHeight();
 
         /**
-         * Returns the estimated height of all rows in the row container.
-         * <p>
-         * The estimate is promised to be correct as long as there are no rows
-         * with calculated heights.
+         * Returns the height of all rows in the row container.
          */
-        protected double calculateEstimatedTotalRowHeight() {
+        protected double calculateTotalRowHeight() {
             return getDefaultRowHeight() * getRowCount();
         }
 
@@ -2087,9 +2083,23 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
 
         @Override
         public void removeRows(int index, int numberOfRows) {
+
+            /*
+             * While the rows in a static section are removed, the scrollbar is
+             * temporarily shrunk and then re-expanded. This leads to the fact
+             * that the scroll position is scooted up a bit. This means that we
+             * need to reset the position here.
+             * 
+             * If Escalator, at some point, gets a JIT evaluation functionality,
+             * this re-setting is a strong candidate for removal.
+             */
+            double oldScrollPos = verticalScrollbar.getScrollPos();
+
             super.removeRows(index, numberOfRows);
             recalculateElementSizes();
             applyHeightByRows();
+
+            verticalScrollbar.setScrollPos(oldScrollPos);
         }
 
         @Override
@@ -2120,10 +2130,21 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
         protected void recalculateSectionHeight() {
             Profiler.enter("Escalator.AbstractStaticRowContainer.recalculateSectionHeight");
 
-            double newHeight = calculateEstimatedTotalRowHeight();
+            double newHeight = calculateTotalRowHeight();
             if (newHeight != heightOfSection) {
                 heightOfSection = newHeight;
                 sectionHeightCalculated();
+
+                /*
+                 * We need to update the scrollbar dimension at this point. If
+                 * we are scrolled too far down and the static section shrinks,
+                 * the body will try to render rows that don't exist during
+                 * body.verifyEscalatorCount. This is because the logical row
+                 * indices are calculated from the scrollbar position.
+                 */
+                verticalScrollbar.setOffsetSize(heightOfEscalator
+                        - header.heightOfSection - footer.heightOfSection);
+
                 body.verifyEscalatorCount();
             }
 
@@ -2648,12 +2669,13 @@ public class Escalator extends Widget implements RequiresResize, DeferredWorker 
                 throw new IllegalArgumentException(
                         "Visual target must not be greater than the number of escalator rows");
             } else if (logicalTargetIndex + visualSourceRange.length() > getRowCount()) {
-                final int logicalEndIndex = logicalTargetIndex
-                        + visualSourceRange.length() - 1;
-                throw new IllegalArgumentException(
-                        "Logical target leads to rows outside of the data range ("
-                                + logicalTargetIndex + ".." + logicalEndIndex
-                                + ")");
+                Range logicalTargetRange = Range.withLength(logicalTargetIndex,
+                        visualSourceRange.length());
+                Range availableRange = Range.withLength(0, getRowCount());
+                throw new IllegalArgumentException("Logical target leads "
+                        + "to rows outside of the data range ("
+                        + logicalTargetRange + " goes beyond " + availableRange
+                        + ")");
             }
 
             /*
