@@ -24,6 +24,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.logging.Logger;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
@@ -40,6 +43,8 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * <p>
@@ -1061,4 +1066,40 @@ public class DateField extends AbstractField<Date> implements
         }
 
     }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        if (design.hasAttr("value") && !design.attr("value").isEmpty()) {
+            Date date = DesignAttributeHandler.getFormatter().parse(
+                    design.attr("value"), Date.class);
+            // formatting will return null if it cannot parse the string
+            if (date == null) {
+                Logger.getLogger(DateField.class.getName()).info(
+                        "cannot parse " + design.attr("value") + " as date");
+            }
+            this.setValue(date);
+        }
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        if (getValue() != null) {
+            design.attr("value",
+                    DesignAttributeHandler.getFormatter().format(getValue()));
+        }
+    }
+
+    /**
+     * Returns current date-out-of-range error message.
+     * 
+     * @see #setDateOutOfRangeMessage(String)
+     * @since 7.4
+     * @return Current error message for dates out of range.
+     */
+    public String getDateOutOfRangeMessage() {
+        return dateOutOfRangeMessage;
+    }
+
 }
