@@ -61,6 +61,142 @@ public class SharedUtil implements Serializable {
     public static final String SIZE_PATTERN = "^(-?\\d*(?:\\.\\d+)?)(%|px|em|rem|ex|in|cm|mm|pt|pc)?$";
 
     /**
+     * Splits a camelCaseString into an array of words with the casing
+     * preserved.
+     * 
+     * @since 7.4
+     * @param camelCaseString
+     *            The input string in camelCase format
+     * @return An array with one entry per word in the input string
+     */
+    public static String[] splitCamelCase(String camelCaseString) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < camelCaseString.length(); i++) {
+            char c = camelCaseString.charAt(i);
+            if (Character.isUpperCase(c) && isWordComplete(camelCaseString, i)) {
+                sb.append(' ');
+            }
+            sb.append(c);
+        }
+        return sb.toString().split(" ");
+    }
+
+    private static boolean isWordComplete(String camelCaseString, int i) {
+        if (i == 0) {
+            // Word can't end at the beginning
+            return false;
+        } else if (!Character.isUpperCase(camelCaseString.charAt(i - 1))) {
+            // Word ends if previous char wasn't upper case
+            return true;
+        } else if (i + 1 < camelCaseString.length()
+                && !Character.isUpperCase(camelCaseString.charAt(i + 1))) {
+            // Word ends if next char isn't upper case
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Converts a camelCaseString to a human friendly format (Camel case
+     * string).
+     * <p>
+     * In general splits words when the casing changes but also handles special
+     * cases such as consecutive upper case characters. Examples:
+     * <p>
+     * {@literal MyBeanContainer} becomes {@literal My Bean Container}
+     * {@literal AwesomeURLFactory} becomes {@literal Awesome URL Factory}
+     * {@literal SomeUriAction} becomes {@literal Some Uri Action}
+     * 
+     * @since 7.4
+     * @param camelCaseString
+     *            The input string in camelCase format
+     * @return A human friendly version of the input
+     */
+    public static String camelCaseToHumanFriendly(String camelCaseString) {
+        String[] parts = splitCamelCase(camelCaseString);
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = capitalize(parts[i]);
+        }
+        return join(parts, " ");
+    }
+
+    private static boolean isAllUpperCase(String string) {
+        for (int i = 0; i < string.length(); i++) {
+            char c = string.charAt(i);
+            if (!Character.isUpperCase(c) && !Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Joins the words in the input array together into a single string by
+     * inserting the separator string between each word.
+     * 
+     * @since 7.4
+     * @param parts
+     *            The array of words
+     * @param separator
+     *            The separator string to use between words
+     * @return The constructed string of words and separators
+     */
+    public static String join(String[] parts, String separator) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < parts.length; i++) {
+            sb.append(parts[i]);
+            sb.append(separator);
+        }
+        return sb.substring(0, sb.length() - 1);
+    }
+
+    /**
+     * Capitalizes the first character in the given string
+     * 
+     * @since 7.4
+     * @param string
+     *            The string to capitalize
+     * @return The capitalized string
+     */
+    public static String capitalize(String string) {
+        if (string == null) {
+            return null;
+        }
+
+        if (string.length() <= 1) {
+            return string.toUpperCase();
+        }
+
+        return string.substring(0, 1).toUpperCase() + string.substring(1);
+    }
+
+    /**
+     * Converts a property id to a human friendly format. Handles nested
+     * properties by only considering the last part, e.g. "address.streetName"
+     * is equal to "streetName" for this method.
+     * 
+     * @since 7.4
+     * @param propertyId
+     *            The propertyId to format
+     * @return A human friendly version of the property id
+     */
+    public static String propertyIdToHumanFriendly(Object propertyId) {
+        String string = propertyId.toString();
+        if (string.isEmpty()) {
+            return "";
+        }
+
+        // For nested properties, only use the last part
+        int dotLocation = string.lastIndexOf('.');
+        if (dotLocation > 0 && dotLocation < string.length() - 1) {
+            string = string.substring(dotLocation + 1);
+        }
+
+        return camelCaseToHumanFriendly(string);
+    }
+
+    /**
      * Adds the get parameters to the uri and returns the new uri that contains
      * the parameters.
      *
@@ -86,18 +222,18 @@ public class SharedUtil implements Serializable {
             // The full uri before the fragment
             uri = uri.substring(0, hashPosition);
         }
-    
+
         if (uri.contains("?")) {
             uri += "&";
         } else {
             uri += "?";
         }
         uri += extraParams;
-    
+
         if (fragment != null) {
             uri += fragment;
         }
-    
+
         return uri;
     }
 

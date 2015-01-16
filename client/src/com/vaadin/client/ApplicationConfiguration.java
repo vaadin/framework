@@ -406,14 +406,14 @@ public class ApplicationConfiguration implements EntryPoint {
              * desired locations even if the base URL of the page changes later
              * (e.g. with pushState)
              */
-            serviceUrl = Util.getAbsoluteUrl(serviceUrl);
+            serviceUrl = WidgetUtil.getAbsoluteUrl(serviceUrl);
         }
         // Ensure there's an ending slash (to make appending e.g. UIDL work)
         if (!useServiceUrlPathParam() && !serviceUrl.endsWith("/")) {
             serviceUrl += '/';
         }
 
-        vaadinDirUrl = Util.getAbsoluteUrl(jsoConfiguration
+        vaadinDirUrl = WidgetUtil.getAbsoluteUrl(jsoConfiguration
                 .getConfigString(ApplicationConstants.VAADIN_DIR_URL));
         uiId = jsoConfiguration.getConfigInteger(UIConstants.UI_ID_PARAMETER)
                 .intValue();

@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.upload.UploadIFrameOnloadStrategy;
 
@@ -211,8 +212,7 @@ public class VUpload extends SimplePanel {
 
     private void setEnabledForSubmitButton(boolean enabled) {
         submitButton.setEnabled(enabled);
-        submitButton.setStyleName(ApplicationConnection.DISABLED_CLASSNAME,
-                !enabled);
+        submitButton.setStyleName(StyleConstants.DISABLED, !enabled);
     }
 
     /**

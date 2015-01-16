@@ -34,7 +34,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasValue;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 
 public class VSlider extends SimpleFocusablePanel implements Field,
@@ -299,7 +299,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
             feedbackPopup.show();
         }
-        if (Util.isTouchEvent(event)) {
+        if (WidgetUtil.isTouchEvent(event)) {
             event.preventDefault(); // avoid simulated events
             event.stopPropagation();
         }
@@ -423,9 +423,9 @@ public class VSlider extends SimpleFocusablePanel implements Field,
      */
     protected int getEventPosition(Event event) {
         if (isVertical()) {
-            return Util.getTouchOrMouseClientY(event);
+            return WidgetUtil.getTouchOrMouseClientY(event);
         } else {
-            return Util.getTouchOrMouseClientX(event);
+            return WidgetUtil.getTouchOrMouseClientX(event);
         }
     }
 

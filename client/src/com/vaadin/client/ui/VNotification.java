@@ -38,7 +38,7 @@ import com.vaadin.client.AnimationUtil.AnimationEndListener;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.ui.NotificationRole;
@@ -259,7 +259,7 @@ public class VNotification extends VOverlay {
          * nudge (#8551)
          */
         if (BrowserInfo.get().isAndroid()) {
-            Util.setStyleTemporarily(getElement(), "display", "none");
+            WidgetUtil.setStyleTemporarily(getElement(), "display", "none");
         }
     }
 
@@ -491,7 +491,7 @@ public class VNotification extends VOverlay {
             String caption = notification
                     .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION);
             if (onlyPlainText) {
-                caption = Util.escapeHTML(caption);
+                caption = WidgetUtil.escapeHTML(caption);
                 caption = caption.replaceAll("\\n", "<br />");
             }
             html += "<h1>" + caption + "</h1>";
@@ -501,7 +501,7 @@ public class VNotification extends VOverlay {
             String message = notification
                     .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE);
             if (onlyPlainText) {
-                message = Util.escapeHTML(message);
+                message = WidgetUtil.escapeHTML(message);
                 message = message.replaceAll("\\n", "<br />");
             }
             html += "<p>" + message + "</p>";

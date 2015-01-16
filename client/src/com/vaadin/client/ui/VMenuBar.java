@@ -50,6 +50,7 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 
 public class VMenuBar extends SimpleFocusablePanel implements
@@ -234,7 +235,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
             }
             String itemText = item.getStringAttribute("text");
             if (!htmlContentAllowed) {
-                itemText = Util.escapeHTML(itemText);
+                itemText = WidgetUtil.escapeHTML(itemText);
             }
             itemHTML.append(itemText);
             itemHTML.append("</span>");
@@ -658,7 +659,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
                 // Make room for the scroll bar by adjusting the width of the
                 // popup
-                style.setWidth(contentWidth + Util.getNativeScrollbarSize(),
+                style.setWidth(
+                        contentWidth + WidgetUtil.getNativeScrollbarSize(),
                         Unit.PX);
                 popup.positionOrSizeUpdated();
             }
@@ -983,7 +985,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
             // Sink the onload event for any icons. The onload
             // events are handled by the parent VMenuBar.
-            Util.sinkOnloadForImages(getElement());
+            WidgetUtil.sinkOnloadForImages(getElement());
         }
 
         @Override
@@ -993,7 +995,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
         @Override
         public void setText(String text) {
-            setHTML(Util.escapeHTML(text));
+            setHTML(WidgetUtil.escapeHTML(text));
         }
 
         public void setEnabled(boolean enabled) {

@@ -51,10 +51,6 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Command;
@@ -66,6 +62,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -84,6 +81,7 @@ import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
+import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.FontIcon;
@@ -107,6 +105,11 @@ import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 import com.vaadin.shared.util.SharedUtil;
+
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.JsonObject;
+import elemental.json.JsonValue;
 
 /**
  * This is the client side communication "engine", managing client-server
@@ -144,15 +147,20 @@ public class ApplicationConnection implements HasHandlers {
         private FastStringSet detachedConnectorIds = FastStringSet.create();
     }
 
-    public static final String MODIFIED_CLASSNAME = "v-modified";
+    @Deprecated
+    public static final String MODIFIED_CLASSNAME = StyleConstants.MODIFIED;
 
-    public static final String DISABLED_CLASSNAME = "v-disabled";
+    @Deprecated
+    public static final String DISABLED_CLASSNAME = StyleConstants.DISABLED;
 
-    public static final String REQUIRED_CLASSNAME = "v-required";
+    @Deprecated
+    public static final String REQUIRED_CLASSNAME = StyleConstants.REQUIRED;
 
-    public static final String REQUIRED_CLASSNAME_EXT = "-required";
+    @Deprecated
+    public static final String REQUIRED_CLASSNAME_EXT = StyleConstants.REQUIRED_EXT;
 
-    public static final String ERROR_CLASSNAME_EXT = "-error";
+    @Deprecated
+    public static final String ERROR_CLASSNAME_EXT = StyleConstants.ERROR_EXT;
 
     /**
      * A string that, if found in a non-JSON response to a UIDL request, will
@@ -796,7 +804,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     protected void repaintAll() {
-        makeUidlRequest(new JSONArray(), getRepaintAllParameters());
+        makeUidlRequest(Json.createArray(), getRepaintAllParameters());
     }
 
     /**
@@ -835,21 +843,19 @@ public class ApplicationConnection implements HasHandlers {
      *            no parameters should be added. Should not start with any
      *            special character.
      */
-    protected void makeUidlRequest(final JSONArray reqInvocations,
+    protected void makeUidlRequest(final JsonArray reqInvocations,
             final String extraParams) {
         startRequest();
 
-        JSONObject payload = new JSONObject();
+        JsonObject payload = Json.createObject();
         if (!getCsrfToken().equals(
                 ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE)) {
-            payload.put(ApplicationConstants.CSRF_TOKEN, new JSONString(
-                    getCsrfToken()));
+            payload.put(ApplicationConstants.CSRF_TOKEN, getCsrfToken());
         }
         payload.put(ApplicationConstants.RPC_INVOCATIONS, reqInvocations);
-        payload.put(ApplicationConstants.SERVER_SYNC_ID, new JSONNumber(
-                lastSeenServerSyncId));
+        payload.put(ApplicationConstants.SERVER_SYNC_ID, lastSeenServerSyncId);
 
-        VConsole.log("Making UIDL Request with params: " + payload);
+        VConsole.log("Making UIDL Request with params: " + payload.toJson());
         String uri = translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
                 + ApplicationConstants.UIDL_PATH + '/');
 
@@ -872,7 +878,7 @@ public class ApplicationConnection implements HasHandlers {
      * @param payload
      *            The contents of the request to send
      */
-    protected void doUidlRequest(final String uri, final JSONObject payload) {
+    protected void doUidlRequest(final String uri, final JsonObject payload) {
         doUidlRequest(uri, payload, true);
     }
 
@@ -888,7 +894,7 @@ public class ApplicationConnection implements HasHandlers {
      *            true when a status code 0 should be retried
      * @since 7.3.7
      */
-    protected void doUidlRequest(final String uri, final JSONObject payload,
+    protected void doUidlRequest(final String uri, final JsonObject payload,
             final boolean retry) {
         RequestCallback requestCallback = new RequestCallback() {
             @Override
@@ -1073,14 +1079,14 @@ public class ApplicationConnection implements HasHandlers {
      * @throws RequestException
      *             if the request could not be sent
      */
-    protected void doAjaxRequest(String uri, JSONObject payload,
+    protected void doAjaxRequest(String uri, JsonObject payload,
             RequestCallback requestCallback) throws RequestException {
         RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
         // TODO enable timeout
         // rb.setTimeoutMillis(timeoutMillis);
         // TODO this should be configurable
         rb.setHeader("Content-Type", JsonConstants.JSON_CONTENT_TYPE);
-        rb.setRequestData(payload.toString());
+        rb.setRequestData(payload.toJson());
         rb.setCallback(requestCallback);
 
         final Request request = rb.send();
@@ -1301,7 +1307,6 @@ public class ApplicationConnection implements HasHandlers {
         }
         hasActiveRequest = true;
         requestStartTime = new Date();
-        loadingIndicator.trigger();
         eventBus.fireEvent(new RequestStartingEvent(this));
     }
 
@@ -1326,7 +1331,8 @@ public class ApplicationConnection implements HasHandlers {
         Scheduler.get().scheduleDeferred(new Command() {
             @Override
             public void execute() {
-                if (!hasActiveRequest()) {
+                if (!isApplicationRunning()
+                        || !(hasActiveRequest() || deferredSendPending)) {
                     getLoadingIndicator().hide();
 
                     // If on Liferay and session expiration management is in
@@ -1591,6 +1597,8 @@ public class ApplicationConnection implements HasHandlers {
         }
 
         Command c = new Command() {
+            private boolean onlyNoLayoutUpdates = true;
+
             @Override
             public void execute() {
                 assert syncId == -1 || syncId == lastSeenServerSyncId;
@@ -1684,15 +1692,17 @@ public class ApplicationConnection implements HasHandlers {
 
                 updatingState = false;
 
-                Profiler.enter("Layout processing");
-                try {
-                    LayoutManager layoutManager = getLayoutManager();
-                    layoutManager.setEverythingNeedsMeasure();
-                    layoutManager.layoutNow();
-                } catch (final Throwable e) {
-                    VConsole.error(e);
+                if (!onlyNoLayoutUpdates) {
+                    Profiler.enter("Layout processing");
+                    try {
+                        LayoutManager layoutManager = getLayoutManager();
+                        layoutManager.setEverythingNeedsMeasure();
+                        layoutManager.layoutNow();
+                    } catch (final Throwable e) {
+                        VConsole.error(e);
+                    }
+                    Profiler.leave("Layout processing");
                 }
-                Profiler.leave("Layout processing");
 
                 if (ApplicationConfiguration.isDebugMode()) {
                     Profiler.enter("Dumping state changes to the console");
@@ -1763,11 +1773,12 @@ public class ApplicationConnection implements HasHandlers {
 
                 // Create fake server response that says that the uiConnector
                 // has no children
-                JSONObject fakeHierarchy = new JSONObject();
-                fakeHierarchy.put(uiConnectorId, new JSONArray());
-                JSONObject fakeJson = new JSONObject();
+                JsonObject fakeHierarchy = Json.createObject();
+                fakeHierarchy.put(uiConnectorId, Json.createArray());
+                JsonObject fakeJson = Json.createObject();
                 fakeJson.put("hierarchy", fakeHierarchy);
-                ValueMap fakeValueMap = fakeJson.getJavaScriptObject().cast();
+                ValueMap fakeValueMap = ((JavaScriptObject) fakeJson.toNative())
+                        .cast();
 
                 // Update hierarchy based on the fake response
                 ConnectorHierarchyUpdateResult connectorHierarchyUpdateResult = updateConnectorHierarchy(fakeValueMap);
@@ -1896,7 +1907,7 @@ public class ApplicationConnection implements HasHandlers {
                 } catch (NoDataException e) {
                     throw new RuntimeException(
                             "Missing data needed to invoke @DelegateToWidget for "
-                                    + Util.getSimpleName(component), e);
+                                    + component.getClass().getSimpleName(), e);
                 }
             }
 
@@ -2012,6 +2023,11 @@ public class ApplicationConnection implements HasHandlers {
                         if (connector != null) {
                             continue;
                         }
+
+                        // Always do layouts if there's at least one new
+                        // connector
+                        onlyNoLayoutUpdates = false;
+
                         int connectorType = Integer.parseInt(types
                                 .getString(connectorId));
 
@@ -2053,6 +2069,11 @@ public class ApplicationConnection implements HasHandlers {
                 JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
                 int length = changes.length();
 
+                // Must always do layout if there's even a single legacy update
+                if (length != 0) {
+                    onlyNoLayoutUpdates = false;
+                }
+
                 VConsole.log(" * Passing UIDL to Vaadin 6 style connectors");
                 // update paintables
                 for (int i = 0; i < length; i++) {
@@ -2067,7 +2088,8 @@ public class ApplicationConnection implements HasHandlers {
                             String key = null;
                             if (Profiler.isEnabled()) {
                                 key = "updateFromUIDL for "
-                                        + Util.getSimpleName(legacyConnector);
+                                        + legacyConnector.getClass()
+                                                .getSimpleName();
                                 Profiler.enter(key);
                             }
 
@@ -2167,30 +2189,44 @@ public class ApplicationConnection implements HasHandlers {
                             Profiler.enter("updateConnectorState inner loop");
                             if (Profiler.isEnabled()) {
                                 Profiler.enter("Decode connector state "
-                                        + Util.getSimpleName(connector));
+                                        + connector.getClass().getSimpleName());
                             }
 
-                            JSONObject stateJson = new JSONObject(
-                                    states.getJavaScriptObject(connectorId));
+                            JavaScriptObject jso = states
+                                    .getJavaScriptObject(connectorId);
+                            JsonObject stateJson = Util.jso2json(jso);
 
                             if (connector instanceof HasJavaScriptConnectorHelper) {
                                 ((HasJavaScriptConnectorHelper) connector)
                                         .getJavascriptConnectorHelper()
-                                        .setNativeState(
-                                                stateJson.getJavaScriptObject());
+                                        .setNativeState(jso);
                             }
 
                             SharedState state = connector.getState();
+                            Type stateType = new Type(state.getClass()
+                                    .getName(), null);
+
+                            if (onlyNoLayoutUpdates) {
+                                Profiler.enter("updateConnectorState @NoLayout handling");
+                                for (String propertyName : stateJson.keys()) {
+                                    Property property = stateType
+                                            .getProperty(propertyName);
+                                    if (!property.isNoLayout()) {
+                                        onlyNoLayoutUpdates = false;
+                                        break;
+                                    }
+                                }
+                                Profiler.leave("updateConnectorState @NoLayout handling");
+                            }
 
                             Profiler.enter("updateConnectorState decodeValue");
-                            JsonDecoder.decodeValue(new Type(state.getClass()
-                                    .getName(), null), stateJson, state,
-                                    ApplicationConnection.this);
+                            JsonDecoder.decodeValue(stateType, stateJson,
+                                    state, ApplicationConnection.this);
                             Profiler.leave("updateConnectorState decodeValue");
 
                             if (Profiler.isEnabled()) {
                                 Profiler.leave("Decode connector state "
-                                        + Util.getSimpleName(connector));
+                                        + connector.getClass().getSimpleName());
                             }
 
                             Profiler.enter("updateConnectorState create event");
@@ -2224,7 +2260,7 @@ public class ApplicationConnection implements HasHandlers {
                             .getConnector(connectorId);
 
                     StateChangeEvent event = new StateChangeEvent(connector,
-                            new JSONObject(), true);
+                            Json.createObject(), true);
 
                     events.add(event);
 
@@ -2403,6 +2439,10 @@ public class ApplicationConnection implements HasHandlers {
 
                 Profiler.leave("updateConnectorHierarchy detach removed connectors");
 
+                if (result.events.size() != 0) {
+                    onlyNoLayoutUpdates = false;
+                }
+
                 Profiler.leave("updateConnectorHierarchy");
 
                 return result;
@@ -2526,15 +2566,23 @@ public class ApplicationConnection implements HasHandlers {
 
                     VConsole.log(" * Performing server to client RPC calls");
 
-                    JSONArray rpcCalls = new JSONArray(
-                            json.getJavaScriptObject("rpc"));
+                    JsonArray rpcCalls = Util.jso2json(json
+                            .getJavaScriptObject("rpc"));
 
-                    int rpcLength = rpcCalls.size();
+                    int rpcLength = rpcCalls.length();
                     for (int i = 0; i < rpcLength; i++) {
                         try {
-                            JSONArray rpcCall = (JSONArray) rpcCalls.get(i);
-                            rpcManager.parseAndApplyInvocation(rpcCall,
-                                    ApplicationConnection.this);
+                            JsonArray rpcCall = rpcCalls.getArray(i);
+                            MethodInvocation invocation = rpcManager
+                                    .parseAndApplyInvocation(rpcCall,
+                                            ApplicationConnection.this);
+
+                            if (onlyNoLayoutUpdates
+                                    && !RpcManager.getMethod(invocation)
+                                            .isNoLayout()) {
+                                onlyNoLayoutUpdates = false;
+                            }
+
                         } catch (final Throwable e) {
                             VConsole.error(e);
                         }
@@ -2708,8 +2756,8 @@ public class ApplicationConnection implements HasHandlers {
      *
      */
     public void sendPendingVariableChanges() {
-        if (!deferedSendPending) {
-            deferedSendPending = true;
+        if (!deferredSendPending) {
+            deferredSendPending = true;
             Scheduler.get().scheduleFinally(sendPendingCommand);
         }
     }
@@ -2717,11 +2765,11 @@ public class ApplicationConnection implements HasHandlers {
     private final ScheduledCommand sendPendingCommand = new ScheduledCommand() {
         @Override
         public void execute() {
-            deferedSendPending = false;
+            deferredSendPending = false;
             doSendPendingVariableChanges();
         }
     };
-    private boolean deferedSendPending = false;
+    private boolean deferredSendPending = false;
 
     private void doSendPendingVariableChanges() {
         if (isApplicationRunning()) {
@@ -2756,22 +2804,19 @@ public class ApplicationConnection implements HasHandlers {
      */
     private void buildAndSendVariableBurst(
             LinkedHashMap<String, MethodInvocation> pendingInvocations) {
-
-        JSONArray reqJson = new JSONArray();
+        boolean showLoadingIndicator = false;
+        JsonArray reqJson = Json.createArray();
         if (!pendingInvocations.isEmpty()) {
             if (ApplicationConfiguration.isDebugMode()) {
                 Util.logVariableBurst(this, pendingInvocations.values());
             }
 
             for (MethodInvocation invocation : pendingInvocations.values()) {
-                JSONArray invocationJson = new JSONArray();
-                invocationJson.set(0,
-                        new JSONString(invocation.getConnectorId()));
-                invocationJson.set(1,
-                        new JSONString(invocation.getInterfaceName()));
-                invocationJson.set(2,
-                        new JSONString(invocation.getMethodName()));
-                JSONArray paramJson = new JSONArray();
+                JsonArray invocationJson = Json.createArray();
+                invocationJson.set(0, invocation.getConnectorId());
+                invocationJson.set(1, invocation.getInterfaceName());
+                invocationJson.set(2, invocation.getMethodName());
+                JsonArray paramJson = Json.createArray();
 
                 Type[] parameterTypes = null;
                 if (!isLegacyVariableChange(invocation)
@@ -2782,10 +2827,16 @@ public class ApplicationConnection implements HasHandlers {
                         Method method = type.getMethod(invocation
                                 .getMethodName());
                         parameterTypes = method.getParameterTypes();
+
+                        showLoadingIndicator |= !TypeDataStore
+                                .isNoLoadingIndicator(method);
                     } catch (NoDataException e) {
                         throw new RuntimeException("No type data for "
                                 + invocation.toString(), e);
                     }
+                } else {
+                    // Always show loading indicator for legacy requests
+                    showLoadingIndicator = true;
                 }
 
                 for (int i = 0; i < invocation.getParameters().length; ++i) {
@@ -2795,10 +2846,11 @@ public class ApplicationConnection implements HasHandlers {
                         type = parameterTypes[i];
                     }
                     Object value = invocation.getParameters()[i];
-                    paramJson.set(i, JsonEncoder.encode(value, type, this));
+                    JsonValue jsonValue = JsonEncoder.encode(value, type, this);
+                    paramJson.set(i, jsonValue);
                 }
                 invocationJson.set(3, paramJson);
-                reqJson.set(reqJson.size(), invocationJson);
+                reqJson.set(reqJson.length(), invocationJson);
             }
 
             pendingInvocations.clear();
@@ -2815,6 +2867,9 @@ public class ApplicationConnection implements HasHandlers {
             extraParams += "v-wsver=" + widgetsetVersion;
 
             getConfiguration().setWidgetsetVersionSent();
+        }
+        if (showLoadingIndicator) {
+            getLoadingIndicator().trigger();
         }
         makeUidlRequest(reqJson, extraParams);
     }
@@ -3562,7 +3617,7 @@ public class ApplicationConnection implements HasHandlers {
      * @return Connector for focused element or null.
      */
     private ComponentConnector getActiveConnector() {
-        Element focusedElement = Util.getFocusedElement();
+        Element focusedElement = WidgetUtil.getFocusedElement();
         if (focusedElement == null) {
             return null;
         }

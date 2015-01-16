@@ -32,7 +32,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
 
 public abstract class AbstractClickEventHandler implements MouseDownHandler,
@@ -72,8 +72,8 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
 
                 // Event's reported target not always correct if event
                 // capture is in use
-                Element elementUnderMouse = Util.getElementUnderMouse(event
-                        .getNativeEvent());
+                Element elementUnderMouse = WidgetUtil
+                        .getElementUnderMouse(event.getNativeEvent());
                 if (lastMouseDownTarget != null
                         && elementUnderMouse == lastMouseDownTarget) {
                     mouseUpPreviewMatched = true;
@@ -171,7 +171,8 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
          * When getting a mousedown event, we must detect where the
          * corresponding mouseup event if it's on a different part of the page.
          */
-        lastMouseDownTarget = Util.getElementUnderMouse(event.getNativeEvent());
+        lastMouseDownTarget = WidgetUtil.getElementUnderMouse(event
+                .getNativeEvent());
         mouseUpPreviewMatched = false;
         mouseUpEventPreviewRegistration = Event
                 .addNativePreviewHandler(mouseUpPreviewHandler);
@@ -188,7 +189,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
         if (hasEventListener()
                 && mouseUpPreviewMatched
                 && lastMouseDownTarget != null
-                && Util.getElementUnderMouse(event.getNativeEvent()) == lastMouseDownTarget
+                && WidgetUtil.getElementUnderMouse(event.getNativeEvent()) == lastMouseDownTarget
                 && shouldFireEvent(event)) {
             // "Click" with left, right or middle button
             fireClick(event.getNativeEvent());

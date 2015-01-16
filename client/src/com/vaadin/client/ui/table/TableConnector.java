@@ -31,7 +31,7 @@ import com.vaadin.client.Paintable;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.VScrollTable;
@@ -342,7 +342,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
                 @Override
                 public void execute() {
                     // IE8 needs some hacks to measure sizes correctly
-                    Util.forceIE8Redraw(getWidget().getElement());
+                    WidgetUtil.forceIE8Redraw(getWidget().getElement());
 
                     getLayoutManager().setNeedsMeasure(TableConnector.this);
                     ServerConnector parent = getParent();
@@ -394,7 +394,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
         TooltipInfo info = null;
 
         if (element != getWidget().getElement()) {
-            Object node = Util.findWidget(element, VScrollTableRow.class);
+            Object node = WidgetUtil.findWidget(element, VScrollTableRow.class);
 
             if (node != null) {
                 VScrollTableRow row = (VScrollTableRow) node;

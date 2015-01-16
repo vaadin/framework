@@ -22,13 +22,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONBoolean;
-import com.google.gwt.json.client.JSONNull;
-import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
-import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.metadata.NoDataException;
@@ -37,6 +30,11 @@ import com.vaadin.client.metadata.Type;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.UidlValue;
+
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.JsonObject;
+import elemental.json.JsonValue;
 
 /**
  * Encoder for converting RPC parameters and other values to JSON for transfer
@@ -60,27 +58,27 @@ public class JsonEncoder {
      * @param connection
      * @return JSON representation of the value
      */
-    public static JSONValue encode(Object value, Type type,
+    public static JsonValue encode(Object value, Type type,
             ApplicationConnection connection) {
         if (null == value) {
-            return JSONNull.getInstance();
-        } else if (value instanceof JSONValue) {
-            return (JSONValue) value;
+            return Json.createNull();
+        } else if (value instanceof JsonValue) {
+            return (JsonValue) value;
         } else if (value instanceof String[]) {
             String[] array = (String[]) value;
-            JSONArray jsonArray = new JSONArray();
+            JsonArray jsonArray = Json.createArray();
             for (int i = 0; i < array.length; ++i) {
-                jsonArray.set(i, new JSONString(array[i]));
+                jsonArray.set(i, array[i]);
             }
             return jsonArray;
         } else if (value instanceof String) {
-            return new JSONString((String) value);
+            return Json.create((String) value);
         } else if (value instanceof Boolean) {
-            return JSONBoolean.getInstance((Boolean) value);
+            return Json.create((Boolean) value);
         } else if (value instanceof Byte) {
-            return new JSONNumber((Byte) value);
+            return Json.create((Byte) value);
         } else if (value instanceof Character) {
-            return new JSONString(String.valueOf(value));
+            return Json.create(String.valueOf(value));
         } else if (value instanceof Object[] && type == null) {
             // Non-legacy arrays handed by generated serializer
             return encodeLegacyObjectArray((Object[]) value, connection);
@@ -90,7 +88,7 @@ public class JsonEncoder {
             return encodeMap((Map) value, type, connection);
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
-            return new JSONString(connector.getConnectorId());
+            return Json.create(connector.getConnectorId());
         } else if (value instanceof Collection) {
             return encodeCollection((Collection) value, type, connection);
         } else if (value instanceof UidlValue) {
@@ -108,21 +106,21 @@ public class JsonEncoder {
             String transportType = getTransportType(value);
             if (transportType != null) {
                 // Send the string value for remaining legacy types
-                return new JSONString(String.valueOf(value));
+                return Json.create(String.valueOf(value));
             } else if (type != null) {
                 // And finally try using bean serialization logic
                 try {
                     JsArrayObject<Property> properties = type
                             .getPropertiesAsArray();
 
-                    JSONObject jsonObject = new JSONObject();
+                    JsonObject jsonObject = Json.createObject();
 
                     int size = properties.size();
                     for (int i = 0; i < size; i++) {
                         Property property = properties.get(i);
                         Object propertyValue = property.getValue(value);
                         Type propertyType = property.getType();
-                        JSONValue encodedPropertyValue = encode(propertyValue,
+                        JsonValue encodedPropertyValue = encode(propertyValue,
                                 propertyType, connection);
                         jsonObject
                                 .put(property.getName(), encodedPropertyValue);
@@ -141,11 +139,11 @@ public class JsonEncoder {
         }
     }
 
-    private static JSONValue encodeVariableChange(UidlValue uidlValue,
+    private static JsonValue encodeVariableChange(UidlValue uidlValue,
             ApplicationConnection connection) {
         Object value = uidlValue.getValue();
 
-        JSONArray jsonArray = new JSONArray();
+        JsonArray jsonArray = Json.createArray();
         String transportType = getTransportType(value);
         if (transportType == null) {
             /*
@@ -159,13 +157,13 @@ public class JsonEncoder {
             throw new IllegalArgumentException("Cannot encode object of type "
                     + valueType);
         }
-        jsonArray.set(0, new JSONString(transportType));
+        jsonArray.set(0, Json.create(transportType));
         jsonArray.set(1, encode(value, null, connection));
 
         return jsonArray;
     }
 
-    private static JSONValue encodeMap(Map<Object, Object> map, Type type,
+    private static JsonValue encodeMap(Map<Object, Object> map, Type type,
             ApplicationConnection connection) {
         /*
          * As we have no info about declared types, we instead select encoding
@@ -174,7 +172,7 @@ public class JsonEncoder {
          * server-side decoding must check for. (see #8906)
          */
         if (map.isEmpty()) {
-            return new JSONArray();
+            return Json.createArray();
         }
 
         Object firstKey = map.keySet().iterator().next();
@@ -190,7 +188,7 @@ public class JsonEncoder {
         }
     }
 
-    private static JSONValue encodeChildValue(Object value,
+    private static JsonValue encodeChildValue(Object value,
             Type collectionType, int typeIndex, ApplicationConnection connection) {
         if (collectionType == null) {
             return encode(new UidlValue(value), null, connection);
@@ -204,35 +202,35 @@ public class JsonEncoder {
         }
     }
 
-    private static JSONValue encodeObjectMap(Map<Object, Object> map,
+    private static JsonArray encodeObjectMap(Map<Object, Object> map,
             Type type, ApplicationConnection connection) {
-        JSONArray keys = new JSONArray();
-        JSONArray values = new JSONArray();
+        JsonArray keys = Json.createArray();
+        JsonArray values = Json.createArray();
 
         assert type != null : "Should only be used for non-legacy types";
 
         for (Entry<?, ?> entry : map.entrySet()) {
-            keys.set(keys.size(),
+            keys.set(keys.length(),
                     encodeChildValue(entry.getKey(), type, 0, connection));
-            values.set(values.size(),
+            values.set(values.length(),
                     encodeChildValue(entry.getValue(), type, 1, connection));
         }
 
-        JSONArray keysAndValues = new JSONArray();
+        JsonArray keysAndValues = Json.createArray();
         keysAndValues.set(0, keys);
         keysAndValues.set(1, values);
 
         return keysAndValues;
     }
 
-    private static JSONValue encodeConnectorMap(Map<Object, Object> map,
+    private static JsonValue encodeConnectorMap(Map<Object, Object> map,
             Type type, ApplicationConnection connection) {
-        JSONObject jsonMap = new JSONObject();
+        JsonObject jsonMap = Json.createObject();
 
         for (Entry<?, ?> entry : map.entrySet()) {
             Connector connector = (Connector) entry.getKey();
 
-            JSONValue encodedValue = encodeChildValue(entry.getValue(), type,
+            JsonValue encodedValue = encodeChildValue(entry.getValue(), type,
                     1, connection);
 
             jsonMap.put(connector.getConnectorId(), encodedValue);
@@ -241,9 +239,9 @@ public class JsonEncoder {
         return jsonMap;
     }
 
-    private static JSONValue encodeStringMap(Map<Object, Object> map,
+    private static JsonValue encodeStringMap(Map<Object, Object> map,
             Type type, ApplicationConnection connection) {
-        JSONObject jsonMap = new JSONObject();
+        JsonObject jsonMap = Json.createObject();
 
         for (Entry<?, ?> entry : map.entrySet()) {
             String key = (String) entry.getKey();
@@ -255,14 +253,14 @@ public class JsonEncoder {
         return jsonMap;
     }
 
-    private static JSONValue encodeEnum(Enum<?> e,
+    private static JsonValue encodeEnum(Enum<?> e,
             ApplicationConnection connection) {
-        return new JSONString(e.toString());
+        return Json.create(e.toString());
     }
 
-    private static JSONValue encodeLegacyObjectArray(Object[] array,
+    private static JsonValue encodeLegacyObjectArray(Object[] array,
             ApplicationConnection connection) {
-        JSONArray jsonArray = new JSONArray();
+        JsonArray jsonArray = Json.createArray();
         for (int i = 0; i < array.length; ++i) {
             // TODO handle object graph loops?
             Object value = array[i];
@@ -271,12 +269,12 @@ public class JsonEncoder {
         return jsonArray;
     }
 
-    private static JSONValue encodeCollection(Collection collection, Type type,
+    private static JsonArray encodeCollection(Collection collection, Type type,
             ApplicationConnection connection) {
-        JSONArray jsonArray = new JSONArray();
+        JsonArray jsonArray = Json.createArray();
         int idx = 0;
         for (Object o : collection) {
-            JSONValue encodedObject = encodeChildValue(o, type, 0, connection);
+            JsonValue encodedObject = encodeChildValue(o, type, 0, connection);
             jsonArray.set(idx++, encodedObject);
         }
         if (collection instanceof Set) {

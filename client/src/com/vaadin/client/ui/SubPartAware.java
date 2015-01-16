@@ -16,11 +16,10 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.componentlocator.ComponentLocator;
 
 /**
  * Interface implemented by {@link Widget}s which can provide identifiers for at
- * least one element inside the component. Used by {@link ComponentLocator}.
+ * least one element inside the component.
  * 
  */
 public interface SubPartAware {

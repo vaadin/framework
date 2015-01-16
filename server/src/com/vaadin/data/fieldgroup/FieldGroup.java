@@ -344,7 +344,8 @@ public class FieldGroup implements Serializable {
                     .getWrappedProperty();
 
         }
-        if (fieldDataSource == getItemProperty(propertyId)) {
+        if (getItemDataSource() != null
+                && fieldDataSource == getItemProperty(propertyId)) {
             if (null != wrapper) {
                 wrapper.detachFromProperty();
             }

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-client-compiler" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="vaadin-client-compiler" basedir="." default="publish-local"
+    xmlns:ivy="antlib:org.apache.ivy.ant">
     <description>
         Compiles build helpers used when building other
         modules.
@@ -22,9 +23,8 @@
         </fileset>
     </path>
     <property name="extra.classes" value="**/*.properties" />
-    <!-- don't try to copy the same files twice (first from classes and then
-         from sources) in order for the build not to fail when packaging the
-         JAR -->
+    <!-- don't try to copy the same files twice (first from classes and then 
+        from sources) in order for the build not to fail when packaging the JAR -->
     <property name="jar.exclude" value="**/*.properties" />
     <union id="compiler.includes">
         <union refid="client-compiler.gwt.includes" />
@@ -35,7 +35,8 @@
 
     <target name="jar">
         <!-- Get Git revision -->
-        <exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
+        <exec executable="git" outputproperty="git.revision"
+            failifexecutionfails="false" errorproperty="">
             <arg value="describe" />
             <arg value="--tags" />
             <arg value="--always" />
@@ -72,7 +73,7 @@
 
     <target name="test" depends="checkstyle">
         <antcall target="common.test.run" />
-        <!--<echo>WHAT? No tests for ${module.name}!</echo>-->
+        <!--<echo>WHAT? No tests for ${module.name}!</echo> -->
     </target>
 
 </project>

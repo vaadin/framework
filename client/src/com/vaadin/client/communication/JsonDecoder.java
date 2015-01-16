@@ -24,10 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
-import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.FastStringSet;
@@ -38,15 +34,20 @@ import com.vaadin.client.metadata.Property;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.shared.Connector;
 
+import elemental.json.JsonArray;
+import elemental.json.JsonObject;
+import elemental.json.JsonType;
+import elemental.json.JsonValue;
+
 /**
  * Client side decoder for decodeing shared state and other values from JSON
  * received from the server.
- * 
+ *
  * Currently, basic data types as well as Map, String[] and Object[] are
  * supported, where maps and Object[] can contain other supported data types.
- * 
+ *
  * TODO extensible type support
- * 
+ *
  * @since 7.0
  */
 public class JsonDecoder {
@@ -72,62 +73,60 @@ public class JsonDecoder {
     /**
      * Decode a JSON array with two elements (type and value) into a client-side
      * type, recursively if necessary.
-     * 
+     *
      * @param jsonValue
      *            JSON value with encoded data
      * @param connection
      *            reference to the current ApplicationConnection
      * @return decoded value (does not contain JSON types)
      */
-    public static Object decodeValue(Type type, JSONValue jsonValue,
+    public static Object decodeValue(Type type, JsonValue jsonValue,
             Object target, ApplicationConnection connection) {
+        String baseTypeName = type.getBaseTypeName();
+        if (baseTypeName.startsWith("elemental.json.Json")) {
+            return jsonValue;
+        }
 
-        // Null is null, regardless of type
-        if (jsonValue.isNull() != null) {
+        // Null is null, regardless of type (except JSON)
+        if (jsonValue.getType() == JsonType.NULL) {
             return null;
         }
 
-        String baseTypeName = type.getBaseTypeName();
         if (Map.class.getName().equals(baseTypeName)
                 || HashMap.class.getName().equals(baseTypeName)) {
             return decodeMap(type, jsonValue, connection);
         } else if (List.class.getName().equals(baseTypeName)
                 || ArrayList.class.getName().equals(baseTypeName)) {
-            return decodeList(type, (JSONArray) jsonValue, connection);
+            assert jsonValue.getType() == JsonType.ARRAY;
+            return decodeList(type, (JsonArray) jsonValue, connection);
         } else if (Set.class.getName().equals(baseTypeName)) {
-            return decodeSet(type, (JSONArray) jsonValue, connection);
+            assert jsonValue.getType() == JsonType.ARRAY;
+            return decodeSet(type, (JsonArray) jsonValue, connection);
         } else if (String.class.getName().equals(baseTypeName)) {
-            return ((JSONString) jsonValue).stringValue();
+            return jsonValue.asString();
         } else if (Integer.class.getName().equals(baseTypeName)) {
-            return Integer.valueOf(String.valueOf(jsonValue));
+            return Integer.valueOf((int) jsonValue.asNumber());
         } else if (Long.class.getName().equals(baseTypeName)) {
-            // TODO handle properly
-            return Long.valueOf(String.valueOf(jsonValue));
+            return Long.valueOf((long) jsonValue.asNumber());
         } else if (Float.class.getName().equals(baseTypeName)) {
-            // TODO handle properly
-            return Float.valueOf(String.valueOf(jsonValue));
+            return Float.valueOf((float) jsonValue.asNumber());
         } else if (Double.class.getName().equals(baseTypeName)) {
-            // TODO handle properly
-            return Double.valueOf(String.valueOf(jsonValue));
+            return Double.valueOf(jsonValue.asNumber());
         } else if (Boolean.class.getName().equals(baseTypeName)) {
-            // TODO handle properly
-            return Boolean.valueOf(String.valueOf(jsonValue));
+            return Boolean.valueOf(jsonValue.asString());
         } else if (Byte.class.getName().equals(baseTypeName)) {
-            // TODO handle properly
-            return Byte.valueOf(String.valueOf(jsonValue));
+            return Byte.valueOf((byte) jsonValue.asNumber());
         } else if (Character.class.getName().equals(baseTypeName)) {
-            // TODO handle properly
-            return Character.valueOf(((JSONString) jsonValue).stringValue()
-                    .charAt(0));
+            return Character.valueOf(jsonValue.asString().charAt(0));
         } else if (Connector.class.getName().equals(baseTypeName)) {
             return ConnectorMap.get(connection).getConnector(
-                    ((JSONString) jsonValue).stringValue());
+                    jsonValue.asString());
         } else {
             return decodeObject(type, jsonValue, target, connection);
         }
     }
 
-    private static Object decodeObject(Type type, JSONValue jsonValue,
+    private static Object decodeObject(Type type, JsonValue jsonValue,
             Object target, ApplicationConnection connection) {
         Profiler.enter("JsonDecoder.decodeObject");
         JSONSerializer<Object> serializer = (JSONSerializer<Object>) type
@@ -152,14 +151,12 @@ public class JsonDecoder {
                 if (target == null) {
                     target = type.createInstance();
                 }
-                JSONObject jsonObject = jsonValue.isObject();
+                JsonObject jsonObject = (JsonObject) jsonValue;
 
                 int size = properties.size();
                 for (int i = 0; i < size; i++) {
                     Property property = properties.get(i);
-                    JSONValue encodedPropertyValue = jsonObject.get(property
-                            .getName());
-                    if (encodedPropertyValue == null) {
+                    if (!jsonObject.hasKey(property.getName())) {
                         continue;
                     }
 
@@ -173,6 +170,8 @@ public class JsonDecoder {
                     }
 
                     Profiler.leave("JsonDecoder.decodeObject meta data processing");
+                    JsonValue encodedPropertyValue = jsonObject.get(property
+                            .getName());
                     Object decodedValue = decodeValue(propertyType,
                             encodedPropertyValue, propertyReference, connection);
                     Profiler.enter("JsonDecoder.decodeObject meta data processing");
@@ -194,13 +193,13 @@ public class JsonDecoder {
         return !decodedWithoutReference.contains(type.getBaseTypeName());
     }
 
-    private static Map<Object, Object> decodeMap(Type type, JSONValue jsonMap,
+    private static Map<Object, Object> decodeMap(Type type, JsonValue jsonMap,
             ApplicationConnection connection) {
         // Client -> server encodes empty map as an empty array because of
         // #8906. Do the same for server -> client to maintain symmetry.
-        if (jsonMap instanceof JSONArray) {
-            JSONArray array = (JSONArray) jsonMap;
-            if (array.size() == 0) {
+        if (jsonMap.getType() == JsonType.ARRAY) {
+            JsonArray array = (JsonArray) jsonMap;
+            if (array.length() == 0) {
                 return new HashMap<Object, Object>();
             }
         }
@@ -209,26 +208,30 @@ public class JsonDecoder {
         Type valueType = type.getParameterTypes()[1];
 
         if (keyType.getBaseTypeName().equals(String.class.getName())) {
-            return decodeStringMap(valueType, jsonMap, connection);
+            assert jsonMap.getType() == JsonType.OBJECT;
+            return decodeStringMap(valueType, (JsonObject) jsonMap, connection);
         } else if (keyType.getBaseTypeName().equals(Connector.class.getName())) {
-            return decodeConnectorMap(valueType, jsonMap, connection);
+            assert jsonMap.getType() == JsonType.OBJECT;
+            return decodeConnectorMap(valueType, (JsonObject) jsonMap,
+                    connection);
         } else {
-            return decodeObjectMap(keyType, valueType, jsonMap, connection);
+            assert jsonMap.getType() == JsonType.ARRAY;
+            return decodeObjectMap(keyType, valueType, (JsonArray) jsonMap,
+                    connection);
         }
     }
 
     private static Map<Object, Object> decodeObjectMap(Type keyType,
-            Type valueType, JSONValue jsonValue,
+            Type valueType, JsonArray jsonValue,
             ApplicationConnection connection) {
         Map<Object, Object> map = new HashMap<Object, Object>();
 
-        JSONArray mapArray = (JSONArray) jsonValue;
-        JSONArray keys = (JSONArray) mapArray.get(0);
-        JSONArray values = (JSONArray) mapArray.get(1);
+        JsonArray keys = jsonValue.get(0);
+        JsonArray values = jsonValue.get(1);
 
-        assert (keys.size() == values.size());
+        assert (keys.length() == values.length());
 
-        for (int i = 0; i < keys.size(); i++) {
+        for (int i = 0; i < keys.length(); i++) {
             Object decodedKey = decodeValue(keyType, keys.get(i), null,
                     connection);
             Object decodedValue = decodeValue(valueType, values.get(i), null,
@@ -241,13 +244,12 @@ public class JsonDecoder {
     }
 
     private static Map<Object, Object> decodeConnectorMap(Type valueType,
-            JSONValue jsonValue, ApplicationConnection connection) {
+            JsonObject jsonMap, ApplicationConnection connection) {
         Map<Object, Object> map = new HashMap<Object, Object>();
 
-        JSONObject jsonMap = (JSONObject) jsonValue;
         ConnectorMap connectorMap = ConnectorMap.get(connection);
 
-        for (String connectorId : jsonMap.keySet()) {
+        for (String connectorId : jsonMap.keys()) {
             Object value = decodeValue(valueType, jsonMap.get(connectorId),
                     null, connection);
             map.put(connectorMap.getConnector(connectorId), value);
@@ -257,12 +259,10 @@ public class JsonDecoder {
     }
 
     private static Map<Object, Object> decodeStringMap(Type valueType,
-            JSONValue jsonValue, ApplicationConnection connection) {
+            JsonObject jsonMap, ApplicationConnection connection) {
         Map<Object, Object> map = new HashMap<Object, Object>();
 
-        JSONObject jsonMap = (JSONObject) jsonValue;
-
-        for (String key : jsonMap.keySet()) {
+        for (String key : jsonMap.keys()) {
             Object value = decodeValue(valueType, jsonMap.get(key), null,
                     connection);
             map.put(key, value);
@@ -271,7 +271,7 @@ public class JsonDecoder {
         return map;
     }
 
-    private static List<Object> decodeList(Type type, JSONArray jsonArray,
+    private static List<Object> decodeList(Type type, JsonArray jsonArray,
             ApplicationConnection connection) {
         List<Object> tokens = new ArrayList<Object>();
         decodeIntoCollection(type.getParameterTypes()[0], jsonArray,
@@ -279,7 +279,7 @@ public class JsonDecoder {
         return tokens;
     }
 
-    private static Set<Object> decodeSet(Type type, JSONArray jsonArray,
+    private static Set<Object> decodeSet(Type type, JsonArray jsonArray,
             ApplicationConnection connection) {
         Set<Object> tokens = new HashSet<Object>();
         decodeIntoCollection(type.getParameterTypes()[0], jsonArray,
@@ -288,12 +288,22 @@ public class JsonDecoder {
     }
 
     private static void decodeIntoCollection(Type childType,
-            JSONArray jsonArray, ApplicationConnection connection,
+            JsonArray jsonArray, ApplicationConnection connection,
             Collection<Object> tokens) {
-        for (int i = 0; i < jsonArray.size(); ++i) {
+        for (int i = 0; i < jsonArray.length(); ++i) {
             // each entry always has two elements: type and value
-            JSONValue entryValue = jsonArray.get(i);
+            JsonValue entryValue = jsonArray.get(i);
             tokens.add(decodeValue(childType, entryValue, null, connection));
         }
     }
+
+    /**
+     * Called by generated deserialization code to treat a generic object as a
+     * JsonValue. This is needed because GWT refuses to directly cast String
+     * typed as Object into a JSO.
+     */
+    public static native <T extends JsonValue> T obj2jso(Object object)
+    /*-{
+        return object;
+    }-*/;
 }

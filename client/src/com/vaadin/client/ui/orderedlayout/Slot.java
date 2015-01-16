@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.StyleConstants;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.FontIcon;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
@@ -74,7 +74,7 @@ public final class Slot extends SimplePanel {
         public void onElementResize(ElementResizeEvent e) {
             Element caption = getCaptionElement();
             if (caption != null) {
-                Util.forceIE8Redraw(caption);
+                WidgetUtil.forceIE8Redraw(caption);
             }
         }
     };
@@ -493,7 +493,7 @@ public final class Slot extends SimplePanel {
 
         // Caption wrappers
         Widget widget = getWidget();
-        final Element focusedElement = Util.getFocusedElement();
+        final Element focusedElement = WidgetUtil.getFocusedElement();
         // By default focus will not be lost
         boolean focusLost = false;
         if (captionText != null || icon != null || error != null || required) {
@@ -613,7 +613,7 @@ public final class Slot extends SimplePanel {
 
         if (focusLost) {
             // Find out what element is currently focused.
-            Element currentFocus = Util.getFocusedElement();
+            Element currentFocus = WidgetUtil.getFocusedElement();
             if (currentFocus != null
                     && currentFocus.equals(Document.get().getBody())) {
                 // Focus has moved to BodyElement and should be moved back to
@@ -627,12 +627,12 @@ public final class Slot extends SimplePanel {
 
                     @Override
                     public void run() {
-                        if (Util.getFocusedElement() == null) {
+                        if (WidgetUtil.getFocusedElement() == null) {
                             // This should never become an infinite loop and
                             // even if it does it will be stopped once something
                             // is done with the browser.
                             schedule(25);
-                        } else if (Util.getFocusedElement().equals(
+                        } else if (WidgetUtil.getFocusedElement().equals(
                                 Document.get().getBody())) {
                             // Focus found it's way to BodyElement. Now it can
                             // be restored

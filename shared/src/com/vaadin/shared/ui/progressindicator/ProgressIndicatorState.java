@@ -15,6 +15,8 @@
  */
 package com.vaadin.shared.ui.progressindicator;
 
+import com.vaadin.shared.annotations.NoLayout;
+
 @Deprecated
 public class ProgressIndicatorState extends ProgressBarState {
     public static final String PRIMARY_STYLE_NAME = "v-progressindicator";
@@ -23,5 +25,6 @@ public class ProgressIndicatorState extends ProgressBarState {
         primaryStyleName = PRIMARY_STYLE_NAME;
     }
 
+    @NoLayout
     public int pollingInterval = 1000;
 }

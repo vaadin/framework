@@ -382,7 +382,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
 
     /**
      * Forces IE8 to reinterpret CSS rules.
-     * {@link com.vaadin.client.Util#forceIE8Redraw(com.google.gwt.dom.client.Element)}
+     * {@link com.vaadin.client.WidgetUtil#forceIE8Redraw(com.google.gwt.dom.client.Element)}
      * doesn't work in this case.
      * 
      * @param element

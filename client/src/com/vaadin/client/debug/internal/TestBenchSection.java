@@ -41,6 +41,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.ValueMap;
+import com.vaadin.client.WidgetUtil;
 
 /**
  * Provides functionality for picking selectors for Vaadin TestBench.
@@ -62,7 +63,8 @@ public class TestBenchSection implements Section {
 
             String html = "<div class=\"" + VDebugWindow.STYLENAME
                     + "-selector\"><span class=\"tb-selector\">"
-                    + Util.escapeHTML(path.getElementQuery()) + "</span></div>";
+                    + WidgetUtil.escapeHTML(path.getElementQuery())
+                    + "</span></div>";
             setHTML(html);
 
             addMouseOverHandler(this);
@@ -216,7 +218,7 @@ public class TestBenchSection implements Section {
             }
             if (event.getTypeInt() == Event.ONMOUSEMOVE
                     || event.getTypeInt() == Event.ONCLICK) {
-                Element eventTarget = Util.getElementFromPoint(event
+                Element eventTarget = WidgetUtil.getElementFromPoint(event
                         .getNativeEvent().getClientX(), event.getNativeEvent()
                         .getClientY());
                 if (VDebugWindow.get().getElement().isOrHasChild(eventTarget)) {
@@ -230,8 +232,9 @@ public class TestBenchSection implements Section {
                 // make sure that not finding the highlight element only
                 Highlight.hideAll();
 
-                eventTarget = Util.getElementFromPoint(event.getNativeEvent()
-                        .getClientX(), event.getNativeEvent().getClientY());
+                eventTarget = WidgetUtil.getElementFromPoint(event
+                        .getNativeEvent().getClientX(), event.getNativeEvent()
+                        .getClientY());
                 ComponentConnector connector = findConnector(eventTarget);
 
                 if (event.getTypeInt() == Event.ONMOUSEMOVE) {

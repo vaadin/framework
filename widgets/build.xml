@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+
+<project name="vaadin-widgets" basedir="." default="publish-local"
+    xmlns:ivy="antlib:org.apache.ivy.ant">
+    <description>
+        Widgets package for using Vaadin widgets with GWT 2.7+
+    </description>
+    <include file="../common.xml" as="common" />
+    <include file="../build.xml" as="vaadin" />
+    <include file="../gwt-files.xml" as="gwtfiles" />
+
+    <!-- global properties -->
+    <property name="module.name" value="vaadin-widgets" />
+    <property name="module.symbolic" value="com.vaadin.widgets" />
+    <property name="result.dir" value="result" />
+    <property name="result.src" value="${result.dir}/src" />
+    <property name="result.deps" value="${result.dir}/deps" />
+
+    <path id="classpath.compile.custom">
+        <fileset file="${gwt.user.jar}" />
+        <fileset file="${gwt.dev.jar}" />
+    </path>
+    <path id="classpath.test.custom" />
+
+    <union id="jar.includes">
+
+    </union>
+
+    <target name="dependencies">
+        <antcall target="common.dependencies" />
+    </target>
+
+    <target name="copysrc" depends="dependencies">
+        <delete dir="${result.deps}" />
+
+        <ivy:resolve transitive="false" type="jar" conf="build-provided" />
+        <ivy:cachepath pathid="vaadin.jars" />
+        <unjar dest="${result.deps}">
+            <path refid="vaadin.jars" />
+        </unjar>
+
+        <copy todir="${result.src}">
+            <fileset dir="src" />
+            <fileset dir="${result.deps}">
+                <include name="com/vaadin/*.gwt.xml" />
+                <include name="com/vaadin/client/BrowserInfo.java" />
+                <include name="com/vaadin/client/DeferredWorker.java" />
+                <include name="com/vaadin/client/Profiler.java" />
+                <include name="com/vaadin/client/StyleConstants.java" />
+                <include name="com/vaadin/client/WidgetUtil.java" />
+                <include name="com/vaadin/client/data/**/*.java" />
+                <include name="com/vaadin/client/widget/**/*.java" />
+                <include name="com/vaadin/client/Focusable.java" />
+                <include name="com/vaadin/client/widgets/*.java" />
+                <include name="com/vaadin/client/renderers/*.java" />
+                <include name="com/vaadin/client/ui/SubPartAware.java" />
+                <include name="com/vaadin/client/ui/VProgressBar.java" />
+                <include name="com/vaadin/client/VSchedulerImpl.java" />
+
+                <include name="com/vaadin/shared/ui/grid/*.java" />
+                <include name="com/vaadin/shared/ui/grid/**/*.java" />
+                <include name="com/vaadin/shared/util/SharedUtil.java" />
+                <include name="com/vaadin/shared/VBrowserDetails.java" />
+                <include
+                    name="com/vaadin/shared/data/sort/SortDirection.java" />
+
+                <include name="com/vaadin/sass/linker/*.java" />
+
+                <exclude name="com/vaadin/shared/**/*Rpc.java" />
+                <exclude name="com/vaadin/shared/**/*State.java" />
+            </fileset>
+        </copy>
+
+        <mkdir dir="${result.src}/com/vaadin/themes" />
+        <copy todir="${result.src}/com/vaadin/themes/valo">
+            <fileset dir="${result.deps}/VAADIN/themes/valo" />
+        </copy>
+        <copy todir="${result.src}/com/vaadin/themes/base">
+            <fileset dir="${result.deps}/VAADIN/themes/base" />
+        </copy>
+    </target>
+    <target name="compile" description="Compiles the module"
+        depends="dependencies,copysrc">
+        <property name="classes" location="${result.dir}/classes" />
+        <mkdir dir="${classes}" />
+
+        <javac destdir="${classes}" source="${vaadin.java.version}"
+            target="${vaadin.java.version}" debug="true" encoding="UTF-8"
+            includeantruntime="false">
+            <src path="${result.src}" />
+            <classpath refid="classpath.compile.custom" />
+            <classpath refid="vaadin.jars" />
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <property name="jar.file"
+            location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
+        <antcall target="common.jar">
+            <param name="src" value="${result.dir}/src" />
+            <reference refid="jar.includes" torefid="extra.jar.includes" />
+        </antcall>
+    </target>
+
+    <target name="publish-local" depends="jar">
+        <antcall target="common.sources.jar">
+            <reference torefid="extra.jar.includes" refid="jar.includes" />
+        </antcall>
+        <antcall target="common.javadoc.jar" />
+
+        <antcall target="common.publish-local" />
+    </target>
+
+    <target name="clean">
+        <antcall target="common.clean" />
+    </target>
+
+    <target name="checkstyle">
+        <antcall target="common.checkstyle">
+            <param name="cs.src" location="src" />
+        </antcall>
+    </target>
+
+    <target name="test" depends="checkstyle">
+        <!-- <antcall target="common.test.run" /> -->
+    </target>
+
+</project>
