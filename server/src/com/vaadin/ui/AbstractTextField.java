@@ -182,11 +182,13 @@ public abstract class AbstractTextField extends AbstractField<String> implements
             }
 
             // Sets the text
-            if (variables.containsKey("text") && !isReadOnly()) {
+            if (variables.containsKey(TextFieldConstants.VAR_CUR_TEXT) &&
+                                                                !isReadOnly()) {
 
                 // Only do the setting if the string representation of the value
                 // has been updated
-                String newValue = (String) variables.get("text");
+                String newValue = (String)
+                        variables.get(TextFieldConstants.VAR_CUR_TEXT);
 
                 // server side check for max length
                 if (getMaxLength() != -1 && newValue.length() > getMaxLength()) {
