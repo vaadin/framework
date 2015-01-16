@@ -759,8 +759,8 @@ public class AbsoluteLayout extends AbstractLayout implements
     private void writePositionAttribute(Node node, String key, String symbol,
             Float value) {
         if (value != null) {
-            String valueString = DesignAttributeHandler.formatFloat(value
-                    .floatValue());
+            String valueString = DesignAttributeHandler.getFormatter().format(
+                    value);
             node.attr(key, valueString + symbol);
         }
     }
