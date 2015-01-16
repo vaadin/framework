@@ -43,11 +43,6 @@ public class CheckBoxNullValueTest extends MultiBrowserTest {
 
     }
 
-    private void click(CheckBoxElement checkbox) {
-        checkbox.findElement(By.xpath("input")).click();
-
-    }
-
     private void assertValid(CheckBoxElement checkbox, boolean valid) {
         boolean hasIndicator = false;
         List<WebElement> e = checkbox.findElements(By
